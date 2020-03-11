@@ -2,462 +2,301 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C14DC18E5C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9D5C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 15:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A92206BE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:49:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583938183;
-	bh=Hsnz4Ao9xNqhkuYjDk0OUIM5hZ/s9rmZwWuo2nFLzno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lN5C5xShj5YjZc461VTmL9gkunLDaPAtQl0VBuvksAzkLYq0fuY1/lBWHDumBsA1C
-	 3djbinKh+94wyQwp0/TQi9X+rUlWqANEgu8QAaeJ87O5acfhzV8TOGa55IIWfJLBXU
-	 0Zq+nFmZeuydOJ4mCl1VHPE87rv3/tXmK7eFqwgc=
+	by mail.kernel.org (Postfix) with ESMTP id 5BB32206C0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 15:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbgCKOtl (ORCPT
+        id S1729660AbgCKPG2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:49:41 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35504 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729100AbgCKOtk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 10:49:40 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k26so2238403otr.2;
-        Wed, 11 Mar 2020 07:49:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jAmQnkESq8xyxzPU1NSxQRhUYYEkaNDFnXmSP6WtBYY=;
-        b=Htt3+uNfyTs/wTaoNk7JA7ZsvozIaC7eOGtPnw33GXK2gkWfKkC4iNogRYqxHtkBkK
-         haBJdXjOesZCT5YZ0i+udTZBaOE5jP2PVJ5YQO3LDd5hjbb9C8Nlm1plc6ydGpY1IYR0
-         XPSSSjdd5VnEA70gUVg0MG8ODM988CQLy4iB+zSVWh1bgVvlrijxZjM/1NLbtVWf9mob
-         X4QIjdeURXVga8LeRQjs7iS5ZlQZtfxrpH6n5lbWSAGkgKv9WK9Jl6G0mIY1vhRbCMXH
-         fd+76EJhzR2lLnTCHWpIgQ9l4KI1ni2adlt2v4HlFTd0dwWOAoHk5SM19o+3EzxDl6fI
-         pudg==
-X-Gm-Message-State: ANhLgQ1EbGEPbtAvZ0vHJ0Bn9A8qminSjY5jgVGKeB1+j2gD2pzYwtQ9
-        7jJr1GEwJwqqNVDyUEmfvg==
-X-Google-Smtp-Source: ADFU+vuzwty++ZwrsQLj5rc05t2nqaYMetCAo/APIGmyGbyeZTO2NSm92bLiDJhZrGnvqTmd+5wmZQ==
-X-Received: by 2002:a9d:171e:: with SMTP id i30mr2693342ota.327.1583938177552;
-        Wed, 11 Mar 2020 07:49:37 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e22sm17545796ote.32.2020.03.11.07.49.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 07:49:34 -0700 (PDT)
-Received: (nullmailer pid 1034 invoked by uid 1000);
-        Wed, 11 Mar 2020 14:49:33 -0000
-Date:   Wed, 11 Mar 2020 09:49:33 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] dt-bindings: thermal: Add yaml bindings for
- thermal zones
-Message-ID: <20200311144933.GA21587@bogus>
-References: <cover.1583412540.git.amit.kucheria@linaro.org>
- <8a0cfe9e3018f7996c1563035bee76048941beb4.1583412540.git.amit.kucheria@linaro.org>
+        Wed, 11 Mar 2020 11:06:28 -0400
+Received: from regular1.263xmail.com ([211.150.70.195]:58740 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729521AbgCKPG2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 11:06:28 -0400
+X-Greylist: delayed 493 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Mar 2020 11:06:04 EDT
+Received: from localhost (unknown [192.168.167.13])
+        by regular1.263xmail.com (Postfix) with ESMTP id A0C77BB0;
+        Wed, 11 Mar 2020 22:56:53 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [192.168.2.106] (unknown [112.49.214.205])
+        by smtp.263.net (postfix) whith ESMTP id P30134T140169747363584S1583938607895180_;
+        Wed, 11 Mar 2020 22:56:54 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <d997085203b868c662318d0858d02951>
+X-RL-SENDER: hjc@rock-chips.com
+X-SENDER: hjc@rock-chips.com
+X-LOGIN-NAME: hjc@rock-chips.com
+X-FST-TO: linux-kernel@vger.kernel.org
+X-SENDER-IP: 112.49.214.205
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+Subject: Re: [PATCH v2] dt-bindings: display: convert rockchip vop bindings to
+ yaml
+To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
+Cc:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200311130515.10663-1-jbx6244@gmail.com>
+From:   "sandy.huang" <hjc@rock-chips.com>
+Message-ID: <28eb8ff1-b180-ebf7-a74c-966c6c7df2db@rock-chips.com>
+Date:   Wed, 11 Mar 2020 22:56:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a0cfe9e3018f7996c1563035bee76048941beb4.1583412540.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200311130515.10663-1-jbx6244@gmail.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 06:26:43PM +0530, Amit Kucheria wrote:
-> As part of moving the thermal bindings to YAML, split it up into 3
-> bindings: thermal sensors, cooling devices and thermal zones.
-> 
-> The thermal-zone binding is a software abstraction to capture the
-> properties of each zone - how often they should be checked, the
-> temperature thresholds (trips) at which mitigation actions need to be
-> taken and the level of mitigation needed at those thresholds.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Hi johan,
+
+ÔÚ 2020/3/11 21:05, Johan Jonker Ð´µÀ:
+> Current dts files with 'vop' nodes are manually verified.
+> In order to automate this process rockchip-vop.txt
+> has to be converted to yaml.
+>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
->  .../bindings/thermal/thermal-zones.yaml       | 325 ++++++++++++++++++
->  1 file changed, 325 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal-zones.yaml b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> Changes v2:
+>    No new properties
+> ---
+>   .../bindings/display/rockchip/rockchip-vop.txt     |  74 ------------
+>   .../bindings/display/rockchip/rockchip-vop.yaml    | 126 +++++++++++++++++++++
+>   2 files changed, 126 insertions(+), 74 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+>   create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+> deleted file mode 100644
+> index 8b3a5f514..000000000
+> --- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+> +++ /dev/null
+> @@ -1,74 +0,0 @@
+> -device-tree bindings for rockchip soc display controller (vop)
+> -
+> -VOP (Visual Output Processor) is the Display Controller for the Rockchip
+
+Can you change (Visual Out Processor) to (Video Out Processor) by the 
+way, we have change this at the latest TRM document. thanks.
+
+> -series of SoCs which transfers the image data from a video memory
+> -buffer to an external LCD interface.
+> -
+> -Required properties:
+> -- compatible: value should be one of the following
+> -		"rockchip,rk3036-vop";
+> -		"rockchip,rk3126-vop";
+> -		"rockchip,px30-vop-lit";
+> -		"rockchip,px30-vop-big";
+> -		"rockchip,rk3066-vop";
+> -		"rockchip,rk3188-vop";
+> -		"rockchip,rk3288-vop";
+> -		"rockchip,rk3368-vop";
+> -		"rockchip,rk3366-vop";
+> -		"rockchip,rk3399-vop-big";
+> -		"rockchip,rk3399-vop-lit";
+> -		"rockchip,rk3228-vop";
+> -		"rockchip,rk3328-vop";
+> -
+> -- reg: Must contain one entry corresponding to the base address and length
+> -	of the register space. Can optionally contain a second entry
+> -	corresponding to the CRTC gamma LUT address.
+> -
+> -- interrupts: should contain a list of all VOP IP block interrupts in the
+> -		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
+> -		 format depends on the interrupt controller used.
+> -
+> -- clocks: must include clock specifiers corresponding to entries in the
+> -		clock-names property.
+> -
+> -- clock-names: Must contain
+> -		aclk_vop: for ddr buffer transfer.
+> -		hclk_vop: for ahb bus to R/W the phy regs.
+> -		dclk_vop: pixel clock.
+> -
+> -- resets: Must contain an entry for each entry in reset-names.
+> -  See ../reset/reset.txt for details.
+> -- reset-names: Must include the following entries:
+> -  - axi
+> -  - ahb
+> -  - dclk
+> -
+> -- iommus: required a iommu node
+> -
+> -- port: A port node with endpoint definitions as defined in
+> -  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> -
+> -Example:
+> -SoC specific DT entry:
+> -	vopb: vopb@ff930000 {
+> -		compatible = "rockchip,rk3288-vop";
+> -		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
+> -		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> -		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
+> -		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+> -		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
+> -		reset-names = "axi", "ahb", "dclk";
+> -		iommus = <&vopb_mmu>;
+> -		vopb_out: port {
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+> -			vopb_out_edp: endpoint@0 {
+> -				reg = <0>;
+> -				remote-endpoint=<&edp_in_vopb>;
+> -			};
+> -			vopb_out_hdmi: endpoint@1 {
+> -				reg = <1>;
+> -				remote-endpoint=<&hdmi_in_vopb>;
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
 > new file mode 100644
-> index 0000000000000..f8f3b72bc3119
+> index 000000000..cb88849f2
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
-> @@ -0,0 +1,325 @@
-> +# SPDX-License-Identifier: (GPL-2.0)
-> +# Copyright 2020 Linaro Ltd.
+> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+> @@ -0,0 +1,126 @@
+> +# SPDX-License-Identifier: GPL-2.0
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
-> +$schema: http://devicetree.org/meta-schemas/base.yaml#
+> +$id: http://devicetree.org/schemas/display/rockchip/rockchip-vop.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Thermal zone binding
+> +title: Rockchip soc display controller (VOP)
+> +
+> +description:
+> +  VOP (Visual Output Processor) is the Display Controller for the Rockchip
+> +  series of SoCs which transfers the image data from a video memory
+> +  buffer to an external LCD interface.
 > +
 > +maintainers:
-> +  - Amit Kucheria <amitk@kernel.org>
-> +
-> +description: |
-> +  Thermal management is achieved in devicetree by describing the sensor hardware
-> +  and the software abstraction of cooling devices and thermal zones required to
-> +  take appropriate action to mitigate thermal overloads.
-> +
-> +  The following node types are used to completely describe a thermal management
-> +  system in devicetree:
-> +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
-> +   - cooling-device: device used to dissipate heat either passively or actively
-> +   - thermal-zones: a container of the following node types used to describe all
-> +     thermal data for the platform
-> +
-> +  This binding describes the thermal-zones.
-> +
-> +  The polling-delay properties of a thermal-zone are bound to the maximum dT/dt
-> +  (temperature derivative over time) in two situations for a thermal zone:
-> +    1. when passive cooling is activated (polling-delay-passive)
-> +    2. when the zone just needs to be monitored (polling-delay) or when
-> +       active cooling is activated.
-> +
-> +  The maximum dT/dt is highly bound to hardware power consumption and
-> +  dissipation capability. The delays should be chosen to account for said
-> +  max dT/dt, such that a device does not cross several trip boundaries
-> +  unexpectedly between polls. Choosing the right polling delays shall avoid
-> +  having the device in temperature ranges that may damage the silicon structures
-> +  and reduce silicon lifetime.
+> +  - Sandy Huang <hjc@rock-chips.com>
+> +  - Heiko Stuebner <heiko@sntech.de>
 > +
 > +properties:
-> +  thermal-zones:
+> +  compatible:
+> +    oneOf:
+> +      - const: rockchip,px30-vop-big
+> +      - const: rockchip,px30-vop-lit
+> +      - const: rockchip,rk3036-vop
+> +      - const: rockchip,rk3066-vop
+> +      - const: rockchip,rk3126-vop
+> +      - const: rockchip,rk3188-vop
+> +      - const: rockchip,rk3228-vop
+> +      - const: rockchip,rk3288-vop
+> +      - const: rockchip,rk3328-vop
+> +      - const: rockchip,rk3366-vop
+> +      - const: rockchip,rk3368-vop
+> +      - const: rockchip,rk3399-vop-big
+> +      - const: rockchip,rk3399-vop-lit
+> +
+> +  reg:
+> +    minItems: 1
+> +    items:
+> +      - description:
+> +          Must contain one entry corresponding to the base address and length
+> +          of the register space.
+> +      - description:
+> +          Can optionally contain a second entry corresponding to
+> +          the CRTC gamma LUT address.
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description:
+> +      Should contain a list of all VOP IP block interrupts in the
+> +      order VSYNC, LCD_SYSTEM. The interrupt specifier
+> +      format depends on the interrupt controller used.
+> +
+> +  clocks:
+> +    items:
+> +      - description: Clock for ddr buffer transfer.
+> +      - description: Pixel clock.
+> +      - description: Clock for the ahb bus to R/W the phy regs.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: aclk_vop
+> +      - const: dclk_vop
+> +      - const: hclk_vop
+> +
+> +  resets:
+> +    minItems: 3
+> +    maxItems: 3
+> +
+> +  reset-names:
+> +    items:
+> +      - const: axi
+> +      - const: ahb
+> +      - const: dclk
+> +
+> +  port:
 > +    type: object
 > +    description:
-> +      A /thermal-zones node is required in order to use the thermal framework to
-> +      manage input from the various thermal zones in the system in order to
-> +      mitigate thermal overload conditions. It does not represent a real device
-> +      in the system, but acts as a container to link thermal sensor devices,
-> +      platform-data regarding temperature thresholds and the mitigation actions
-> +      to take when the temperature crosses those thresholds.
+> +      A port node with endpoint definitions as defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
 > +
-
-> +    properties:
-> +      $nodename:
-> +        pattern: "^[a-zA-Z][a-zA-Z0-9,\\-]{1,12}-thermal$"
-
-These 3 lines should be:
-
-patternProperties:
-  "^[a-zA-Z][a-zA-Z0-9,\\-]{1,12}-thermal$":
-
-Though we should drop ',' as well.
-
-$nodename is only needed at the top level where it's kind of special.
-
-> +        type: object
-> +        description:
-> +          Each thermal zone node contains information about how frequently it
-> +          must be checked, the sensor responsible for reporting temperature for
-> +          this zone, one sub-node containing the various trip points for this
-> +          zone and one sub-node containing all the zone cooling-maps.
+> +  iommus:
+> +    maxItems: 1
 > +
-> +        properties:
-> +          polling-delay:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            minimum: 0
-
-The type is unsigned, so the min is already 0.
-
-> +            description:
-> +              The maximum number of milliseconds to wait between polls when
-> +              checking this thermal zone. Setting this to 0 disables the polling
-> +              timers setup by the thermal framework and assumes that the thermal
-> +              sensors in this zone support interrupts.
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - port
 > +
-> +          polling-delay-passive:
-> +            $ref: /schemas/types.yaml#/definitions/uint32
-> +            minimum: 0
-> +            description:
-> +              The maximum number of milliseconds to wait between polls when
-> +              checking this thermal zone while doing passive cooling. Setting
-> +              this to 0 disables the polling timers setup by the thermal
-> +              framework and assumes that the thermal sensors in this zone
-> +              support interrupts.
-> +
-> +          thermal-sensors:
-> +            $ref: /schemas/types.yaml#/definitions/phandle-array
-> +            description:
-> +              A list of thermal sensor phandles and sensor specifiers used to
-> +              monitor this thermal zone.
-> +
-> +          trips:
-> +            type: object
-> +            description:
-> +              This node describes a set of points in the temperature domain at
-> +              which the thermal framework needs to takes action. The actions to
-> +              be taken are defined in another node called cooling-maps.
-> +
-> +            patternProperties:
-> +              "^[a-zA-Z][a-zA-Z0-9,+\\._]{0,63}$":
-
-Drop ',', '+', '.', and ideally '_'. Probably need to add '-'.
-
-> +                type: object
-> +
-> +                properties:
-> +                  temperature:
-> +                    $ref: /schemas/types.yaml#/definitions/int32
-> +                    minimum: -273000
-> +                    maximum: 200000
-> +                    description:
-> +                      An integer expressing the trip temperature in millicelsius.
-> +
-> +                  hysteresis:
-> +                    $ref: /schemas/types.yaml#/definitions/uint32
-> +                    description:
-> +                      An unsigned integer expressing the hysteresis delta with
-> +                      respect to the trip temperature property above, also in
-> +                      millicelsius.
-> +
-> +                  type:
-
-Needs a type reference (string).
-
-> +                    enum:
-> +                        # active: enable active cooling e.g. fans
-> +                        - active
-
-Wrong indentation. Should be 2 less.
-
-Also, I think this would be more readable:
-
-- active  # enable active cooling e.g. fans
-  
-
-> +                        # passive: enable passive cooling e.g. throttling cpu
-> +                        - passive
-> +                        # hot: send notification to driver if .notify
-> +                        #      callback registered
-> +                        - hot
-> +                        # critical: send notification to driver if .notify
-> +                        #           callback registered and trigger a shutdown
-> +                        - critical
-> +                    description: |
-> +                      There are four valid trip types: active, passive, hot,
-> +                      critical.
-> +
-> +                      The critical trip type is used to set the maximum
-> +                      temperature threshold above which the HW becomes
-> +                      unstable and underlying firmware might even trigger a
-> +                      reboot. Hitting the critical threshold triggers a system
-> +                      shutdown.
-> +
-> +                      The hot trip type can be used to send a notification to
-> +                      the thermal driver (if a .notify callback is registered).
-> +                      The action to be taken is left to the driver.
-> +
-> +                      The passive trip type can be used to slow down HW e.g. run
-> +                      the CPU, GPU, bus at a lower frequency.
-> +
-> +                      The active trip type can be used to control other HW to
-> +                      help in cooling e.g. fans can be sped up or slowed down
-> +
-> +                required:
-> +                  - temperature
-> +                  - hysteresis
-> +                  - type
-> +
-> +            additionalProperties: false
-
-You need 'additionalProperties' on the child nodes too, or are there 
-vendor specific properties allowed?
-
-> +
-> +          cooling-maps:
-> +            type: object
-> +            description:
-> +              This node describes the action to be taken when a thermal zone
-> +              crosses one of the temperature thresholds described in the trips
-> +              node. The action takes the form of a mapping relation between a
-> +              trip and the target cooling device state.
-> +
-> +            patternProperties:
-> +              "^map[0-9][-a-zA-Z0-9]*$":
-> +                type: object
-> +
-> +                properties:
-> +                  trip:
-> +                    $ref: /schemas/types.yaml#/definitions/phandle
-> +                    description:
-> +                      A phandle of a trip point node within this thermal zone.
-> +
-> +                  cooling-device:
-> +                    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +                    description:
-> +                      A list of cooling device phandles along with the minimum
-> +                      and maximum cooling state specifiers for each cooling
-> +                      device. Using the THERMAL_NO_LIMIT (-1UL) constant in the
-> +                      cooling-device phandle limit specifier lets the framework
-> +                      use the minimum and maximum cooling state for that cooling
-> +                      device automatically.
-> +
-> +                  contribution:
-> +                    $ref: /schemas/types.yaml#/definitions/uint32
-> +                    minimum: 0
-> +                    maximum: 100
-> +                    description:
-> +                      The contribution of the cooling devices at the trip
-> +                      temperature, both referenced in this map, to this thermal
-> +                      zone as a percentage.
-> +
-> +                required:
-> +                  - trip
-> +                  - cooling-device
-> +
-
-'additionalProperties' for map* nodes?
-
-> +            additionalProperties: false
+> +additionalProperties: false
 > +
 > +examples:
 > +  - |
+> +    #include <dt-bindings/clock/rk3288-cru.h>
 > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/thermal/thermal.h>
-> +
-> +    // Example 1: SDM845 TSENS
-> +    soc: soc@0 {
-> +            #address-cells = <2>;
-> +            #size-cells = <2>;
-> +
-> +            /* ... */
-> +
-> +            tsens0: thermal-sensor@c263000 {
-> +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-> +                    reg = <0 0x0c263000 0 0x1ff>, /* TM */
-> +                          <0 0x0c222000 0 0x1ff>; /* SROT */
-> +                    #qcom,sensors = <13>;
-> +                    interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
-> +                                 <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
-> +                    interrupt-names = "uplow", "critical";
-> +                    #thermal-sensor-cells = <1>;
-> +            };
-> +
-> +            tsens1: thermal-sensor@c265000 {
-> +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-> +                    reg = <0 0x0c265000 0 0x1ff>, /* TM */
-> +                          <0 0x0c223000 0 0x1ff>; /* SROT */
-> +                    #qcom,sensors = <8>;
-> +                    interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
-> +                                 <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
-> +                    interrupt-names = "uplow", "critical";
-> +                    #thermal-sensor-cells = <1>;
-> +            };
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    vopb: vopb@ff930000 {
+> +      compatible = "rockchip,rk3288-vop";
+> +      reg = <0x0 0xff930000 0x0 0x19c>,
+> +            <0x0 0xff931000 0x0 0x1000>;
+> +      interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> +      clocks = <&cru ACLK_VOP0>,
+> +               <&cru DCLK_VOP0>,
+> +               <&cru HCLK_VOP0>;
+> +      clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+> +      resets = <&cru SRST_LCDC1_AXI>,
+> +               <&cru SRST_LCDC1_AHB>,
+> +               <&cru SRST_LCDC1_DCLK>;
+> +      reset-names = "axi", "ahb", "dclk";
+> +      iommus = <&vopb_mmu>;
+> +      vopb_out: port {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        vopb_out_edp: endpoint@0 {
+> +          reg = <0>;
+> +          remote-endpoint=<&edp_in_vopb>;
+> +        };
+> +        vopb_out_hdmi: endpoint@1 {
+> +          reg = <1>;
+> +          remote-endpoint=<&hdmi_in_vopb>;
+> +        };
+> +      };
 > +    };
-> +
-> +    /* ... */
-> +
-> +    thermal-zones {
-> +            cpu0-thermal {
-> +                    polling-delay-passive = <250>;
-> +                    polling-delay = <1000>;
-> +
-> +                    thermal-sensors = <&tsens0 1>;
-> +
-> +                    trips {
-> +                            cpu0_alert0: trip-point0 {
-> +                                    temperature = <90000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "passive";
-> +                            };
-> +
-> +                            cpu0_alert1: trip-point1 {
-> +                                    temperature = <95000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "passive";
-> +                            };
-> +
-> +                            cpu0_crit: cpu_crit {
-> +                                    temperature = <110000>;
-> +                                    hysteresis = <1000>;
-> +                                    type = "critical";
-> +                            };
-> +                    };
-> +
-> +                    cooling-maps {
-> +                            map0 {
-> +                                    trip = <&cpu0_alert0>;
-> +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
-> +                                                            THERMAL_NO_LIMIT>,
-> +                                                     <&CPU1 THERMAL_NO_LIMIT
-> +                                                            THERMAL_NO_LIMIT>,
-> +                                                     <&CPU2 THERMAL_NO_LIMIT
-> +                                                            THERMAL_NO_LIMIT>,
-> +                                                     <&CPU3 THERMAL_NO_LIMIT
-> +                                                            THERMAL_NO_LIMIT>;
-> +                            };
-> +
-> +                            map1 {
-> +                                    trip = <&cpu0_alert1>;
-> +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
-> +                                                            THERMAL_NO_LIMIT>,
-> +                                                     <&CPU1 THERMAL_NO_LIMIT
-> +                                                            THERMAL_NO_LIMIT>,
-> +                                                     <&CPU2 THERMAL_NO_LIMIT
-> +                                                            THERMAL_NO_LIMIT>,
-> +                                                     <&CPU3 THERMAL_NO_LIMIT
-> +                                                            THERMAL_NO_LIMIT>;
-> +                            };
-> +                    };
-> +            };
-> +
-> +            /* ... */
-> +
-> +            cluster0-thermal {
-> +                    polling-delay-passive = <250>;
-> +                    polling-delay = <1000>;
-> +
-> +                    thermal-sensors = <&tsens0 5>;
-> +
-> +                    trips {
-> +                            cluster0_alert0: trip-point0 {
-> +                                    temperature = <90000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "hot";
-> +                            };
-> +                            cluster0_crit: cluster0_crit {
-> +                                    temperature = <110000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "critical";
-> +                            };
-> +                    };
-> +            };
-> +
-> +            /* ... */
-> +
-> +            gpu-thermal-top {
 
-This one is not going to match (which should cause an error).
- 
-> +                    polling-delay-passive = <250>;
-> +                    polling-delay = <1000>;
-> +
-> +                    thermal-sensors = <&tsens0 11>;
-> +
-> +                    trips {
-> +                            gpu1_alert0: trip-point0 {
-> +                                    temperature = <90000>;
-> +                                    hysteresis = <2000>;
-> +                                    type = "hot";
-> +                            };
-> +                    };
-> +            };
-> +    };
-> +...
-> -- 
-> 2.20.1
-> 
+
