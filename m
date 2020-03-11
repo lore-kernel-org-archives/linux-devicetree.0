@@ -4,62 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79732C2BAEE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 20:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C682C0044D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 21:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB2E2074B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 20:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFEBA2074E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 21:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583960326;
-	bh=u2iync7lpoczXWBocKolL8o52SJtLc/5UVBqMHBnILY=;
+	s=default; t=1583960408;
+	bh=cgZnGVPb4sNdIH/d7qEKrXYWL0lUs+dV8Yjvgv2y6h4=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BUR92CtuUaU26DRpX0gDpwli1DqK+aBQ4TJmVLwytCAoESlTFr5noSXzrKVLZhHzD
-	 2hBjYFKssiYSXhefXF7XtQLtBRuaKXYb203haEIZg5TdiZ7BV3gXv50cp7MgPtdIkG
-	 vHhfDHOEdjenQF6XD8UsPSmOTHVAxNbuAtdEZJwc=
+	b=qIcZWZ8ObGFgBdn0LicVRtXh8E15HCEcEvoueI3TqTur90kkbKFbebDFjecPdH2B6
+	 5ZharEl78ZiJOBRf6NlBvn4Jw51en74Ll76XyIpJODDk8pwt4JiidxMCo3vVgR4+Oz
+	 o6iY4n4FqkdnqKVzmLndF6EdCFKrnlujV8S5Pj7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgCKU6o (ORCPT
+        id S1729354AbgCKVAG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 16:58:44 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39709 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgCKU6o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 16:58:44 -0400
-Received: by mail-ot1-f65.google.com with SMTP id a9so3656262otl.6;
-        Wed, 11 Mar 2020 13:58:44 -0700 (PDT)
+        Wed, 11 Mar 2020 17:00:06 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40180 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729309AbgCKVAG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 17:00:06 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y71so3302469oia.7;
+        Wed, 11 Mar 2020 14:00:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=uhg/0FAO3q/vHDALs56YJQeY3t0IUDUvD5cc2QPb2XM=;
-        b=KsYXVLQRf7/eboG8pK12yn3G6DKlj6g9mgA273x2UI0jjCeZNt191jSz+a/CK8dTwQ
-         30IVBMKU7hKf0iPmJudTX1xAlJYeAtVRrUrpjYcqz3G7moDbqNAf1/F9Axa9zIVOZ5L3
-         vIOgK4BOZ1rpl8ei8zbHOHqg7tofUwKeO5fEu+xZFoHyTSKYmwzvm7luzqTar9Ekq8Fr
-         s5nFuYxxs1+lz3bqelERtGnHBO1INxE6bPLvYigHvFP4QTc6x/VAx3Ei1a7p9t2EGQPk
-         zQZ7tHFfvvfk7kZq+fkvuYd7kkM+O+3mPk4Ip69ZVP/du7aTSPYvzN2sm77vGdBzq1gJ
-         v/lQ==
-X-Gm-Message-State: ANhLgQ2W3bhmXu4762S/DrIXzzxXh7+w8tykIEpo4TVel6qnv1k/q2JA
-        pUVZm+uVNj+anFftaWvsdg==
-X-Google-Smtp-Source: ADFU+vuv4liSgXNM9hk0LvRLrjr4VQeYNuyIQ2YCdJkyrlgfjAXq5rTb3WuF0vh5KOZNuIaLo8UO8Q==
-X-Received: by 2002:a9d:3d65:: with SMTP id a92mr3565544otc.326.1583960323590;
-        Wed, 11 Mar 2020 13:58:43 -0700 (PDT)
+        bh=7phUkchvkdDhI0qJQteXXrbvWqBV29LumyqHqAKAGfw=;
+        b=T+Y8EyLy5UhiYZsyuZPZJIIrj7m90yI8r7BLZZLB2HkAN4ZRw2+Yp59QAn40113cNa
+         vfBXmeCAoEIsX9ZobWLjj9Fg1Rarz1nD/J7blg0D534YD+yXbO6e85h0qNuspVV4oHQF
+         L9q/POeB7DmAv5VQur3J3N1cKRdsf+qvVgxQ5M/NQv3EuOOP2gRLCKunLPec818NB6vd
+         qinhpQ/T+1KYeaRXI3l6jRPRhqSF5Xs9dw87N+czBPjzQYYhw5z1RMTrIMayVW7A4sKt
+         XerJlWy5MEnSrK2aEBJ5J4t9FdqAS+N0p6cILFkKmMPZntlNIA4nyC0yBBjPV/qNxb7U
+         iCuQ==
+X-Gm-Message-State: ANhLgQ3Zr3H8CEDHmBn32Sl5v264gD+vFd93hrMexhDZV7zmA1A7YQ0C
+        dRxHwq2Pq4BLFsomn2S7jg==
+X-Google-Smtp-Source: ADFU+vt16JBJitN1b4tjKD/58wMS3bY1wUUrgmNH3EbK4CL9Ke6XCgMF9CDaBHhmiDnMFZbI7bhplQ==
+X-Received: by 2002:a05:6808:248:: with SMTP id m8mr403527oie.91.1583960403280;
+        Wed, 11 Mar 2020 14:00:03 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id c24sm638848oov.43.2020.03.11.13.58.42
+        by smtp.googlemail.com with ESMTPSA id z22sm634145oog.45.2020.03.11.14.00.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 13:58:42 -0700 (PDT)
+        Wed, 11 Mar 2020 14:00:02 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
+To:     dri-devel@lists.freedesktop.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Benson Leung <bleung@chromium.org>, alsa-devel@alsa-project.org
-Subject: [PATCH] ASoC: dt-bindings: google,cros-ec-codec: Fix dtc warnings in example
-Date:   Wed, 11 Mar 2020 15:58:41 -0500
-Message-Id: <20200311205841.2710-1-robh@kernel.org>
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Jyri Sarha <jsarha@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCH] dt-bindings: display: Fix dtc unit-address warnings in examples
+Date:   Wed, 11 Mar 2020 16:00:01 -0500
+Message-Id: <20200311210001.5102-1-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -70,76 +68,113 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Extra dtc warnings (roughly what W=1 enables) are now enabled by default
 when building the binding examples. These were fixed treewide in
-5.6-rc5, but the newly added google,cros-ec-codec schema adds some new
+5.6-rc5, but some new display bindings have been added with new
 warnings:
 
-Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:17.28-21.11:
-Warning (unit_address_vs_reg): /example-0/reserved_mem: node has a reg or ranges property, but no unit name
-Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:22.19-32.11:
-Warning (unit_address_vs_reg): /example-0/cros-ec@0: node has a unit name, but no reg property
-Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:26.37-31.15:
-Warning (unit_address_vs_reg): /example-0/cros-ec@0/ec-codec: node has a reg or ranges property, but no unit name
+Documentation/devicetree/bindings/display/panel/raydium,rm68200.example.dts:17.7-27.11: Warning (unit_address_vs_reg): /example-0/dsi@0: node has a unit name, but no reg property
+Documentation/devicetree/bindings/display/panel/panel-simple-dsi.example.dts:17.19-31.11: Warning (unit_address_vs_reg): /example-0/mdss_dsi@fd922800: node has a unit name, but no reg property
+Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.example.dts:17.7-26.11: Warning (unit_address_vs_reg): /example-0/dsi@0: node has a unit name, but no reg property
+Documentation/devicetree/bindings/display/ti/ti,am65x-dss.example.dts:21.27-49.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
+Documentation/devicetree/bindings/display/ti/ti,j721e-dss.example.dts:21.27-72.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
+Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dts:20.27-42.11: Warning (unit_address_format): /example-0/dss@02540000: unit name should not have leading 0s
 
-Fixing the above, then results in:
-
-Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:26.13-23:
-Warning (reg_format): /example-0/cros-ec@0:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:27.37-32.15:
-Warning (unit_address_vs_reg): /example-0/cros-ec@0/ec-codec: node has a reg or ranges property, but no unit name
-
-Fixes: eadd54c75f1e ("dt-bindings: Convert the binding file google, cros-ec-codec.txt to yaml format.")
-Cc: Cheng-Yi Chiang <cychiang@chromium.org>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Guenter Roeck <groeck@chromium.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>
-Cc: alsa-devel@alsa-project.org
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Jyri Sarha <jsarha@ti.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/sound/google,cros-ec-codec.yaml  | 27 +++++++++++--------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ .../devicetree/bindings/display/panel/orisetech,otm8009a.yaml  | 3 +--
+ .../devicetree/bindings/display/panel/panel-simple-dsi.yaml    | 2 +-
+ .../devicetree/bindings/display/panel/raydium,rm68200.yaml     | 2 +-
+ Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
+ Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml | 2 +-
+ Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml   | 2 +-
+ 6 files changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
-index 94a85d0cbf43..c84e656afb0a 100644
---- a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
-+++ b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
-@@ -44,19 +44,24 @@ additionalProperties: false
+diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
+index 6e6ac995c27b..2e7c65b093d7 100644
+--- a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
++++ b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
+@@ -39,7 +39,7 @@ required:
  
  examples:
    - |
--    reserved_mem: reserved_mem {
-+    reserved_mem: reserved-mem@52800000 {
-         compatible = "shared-dma-pool";
--        reg = <0 0x52800000 0 0x100000>;
-+        reg = <0x52800000 0x100000>;
-         no-map;
+-    dsi@0 {
++    dsi {
+       #address-cells = <1>;
+       #size-cells = <0>;
+       panel@0 {
+@@ -50,4 +50,3 @@ examples:
+       };
      };
--    cros-ec@0 {
--        compatible = "google,cros-ec-spi";
--        #address-cells = <2>;
--        #size-cells = <1>;
--        cros_ec_codec: ec-codec {
--            compatible = "google,cros-ec-codec";
--            #sound-dai-cells = <1>;
--            reg = <0x0 0x10500000 0x80000>;
--            memory-region = <&reserved_mem>;
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            #address-cells = <2>;
-+            #size-cells = <1>;
-+            reg = <0>;
-+            cros_ec_codec: ec-codec@10500000 {
-+                compatible = "google,cros-ec-codec";
-+                #sound-dai-cells = <1>;
-+                reg = <0x0 0x10500000 0x80000>;
-+                memory-region = <&reserved_mem>;
-+            };
-         };
-     };
+ ...
+-
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
+index 8b60368a2425..b2e8742fd6af 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
+@@ -50,7 +50,7 @@ required:
+ 
+ examples:
+   - |
+-    mdss_dsi@fd922800 {
++    dsi {
+       #address-cells = <1>;
+       #size-cells = <0>;
+       panel@0 {
+diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml b/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
+index 09149f140d5f..a35ba16fc000 100644
+--- a/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
++++ b/Documentation/devicetree/bindings/display/panel/raydium,rm68200.yaml
+@@ -42,7 +42,7 @@ required:
+ 
+ examples:
+   - |
+-    dsi@0 {
++    dsi {
+       #address-cells = <1>;
+       #size-cells = <0>;
+       panel@0 {
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+index cac61a998203..aa5543a64526 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
++++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+@@ -121,7 +121,7 @@ examples:
+     #include <dt-bindings/interrupt-controller/irq.h>
+     #include <dt-bindings/soc/ti,sci_pm_domain.h>
+ 
+-    dss: dss@04a00000 {
++    dss: dss@4a00000 {
+             compatible = "ti,am65x-dss";
+             reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
+                     <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+index ade9b2f513f5..6d47cd7206c2 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
++++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+@@ -154,7 +154,7 @@ examples:
+     #include <dt-bindings/interrupt-controller/irq.h>
+     #include <dt-bindings/soc/ti,sci_pm_domain.h>
+ 
+-    dss: dss@04a00000 {
++    dss: dss@4a00000 {
+             compatible = "ti,j721e-dss";
+             reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
+                     <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+index 385bd060ccf9..7cb37053e95b 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
++++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+@@ -81,7 +81,7 @@ examples:
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
+ 
+-    dss: dss@02540000 {
++    dss: dss@2540000 {
+             compatible = "ti,k2g-dss";
+             reg =   <0x02540000 0x400>,
+                     <0x02550000 0x1000>,
 -- 
 2.20.1
 
