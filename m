@@ -2,132 +2,89 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B57C2BAEE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 19:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E522C0044D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 20:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C8420751
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 19:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583956678;
-	bh=zWn91M4ieW3uyWmeopnLk/XJ/uaRZCNqXuoSYUTcaNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BKw7ed9pN9cN0JXnOvIO9dOsK6NER1bvK43cXK7exOwNTM/kKnFRa7UpdsssAgltU
-	 SZvz5pkMWE604oRJNqoe7kBiHPFg5TQcRzIcSCUzTS0R/LSjhy/x/gtEnMfX9HqwNr
-	 rNRb1wanhoWium7NQg0IwN1FjXVNEZgPJlP/f+a4=
+	by mail.kernel.org (Postfix) with ESMTP id 6656220739
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 20:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387429AbgCKT5y (ORCPT
+        id S1731102AbgCKUDr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 15:57:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:54778 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387409AbgCKT5y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 15:57:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 199F71FB;
-        Wed, 11 Mar 2020 12:57:53 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EEF73F534;
-        Wed, 11 Mar 2020 12:57:52 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 19:57:50 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Tudor.Ambarus@microchip.com
-Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        vigneshr@ti.com, richard@nod.at, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, miquel.raynal@bootlin.com,
-        matthias.bgg@gmail.com, gch981213@gmail.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 4/4] mtd: spi-nor: remove mtk-quadspi driver
-Message-ID: <20200311195750.GL5411@sirena.org.uk>
-References: <20200306085052.28258-1-gch981213@gmail.com>
- <20200309121020.GD4101@sirena.org.uk>
- <2471214.x7VzW1FXlQ@localhost.localdomain>
- <4427171.IzkiAjLLdB@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TnYVF1hk1c8rpHiF"
-Content-Disposition: inline
-In-Reply-To: <4427171.IzkiAjLLdB@localhost.localdomain>
-X-Cookie: I'm a Lisp variable -- bind me!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 11 Mar 2020 16:03:47 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:6517 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730960AbgCKUDr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 16:03:47 -0400
+X-IronPort-AV: E=Sophos;i="5.70,541,1574089200"; 
+   d="scan'208";a="41620347"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 12 Mar 2020 05:03:45 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id D63E640E06EA;
+        Thu, 12 Mar 2020 05:03:41 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v4 0/2] Add LVDS panel support to HiHope RZ/G2M
+Date:   Wed, 11 Mar 2020 20:03:38 +0000
+Message-Id: <1583957020-16359-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Dear All,
 
---TnYVF1hk1c8rpHiF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The HiHope RZ/G2M is advertised as supporting panel idk-1110wr from
+Advantech, but the panel doesn't come with the board, it has to purchased
+separatey, therefore this series adds panel support to a new DT.
 
-On Tue, Mar 10, 2020 at 09:11:29AM +0000, Tudor.Ambarus@microchip.com wrote:
+v3->v4
+ * Included rzg2-advantech-idk-1110wr-panel.dtsi in
+   r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts file instead of re-inventing
+   the wheel.
+ * Dropped the Ack from Laurent for patch 2/2 due to above changes
 
-> You can also create an immutable tag that I can merge in my spi-nor/next=
-=20
-> branch, so that Linus doesn't have to deal with the conflict.
+v2->v3
+ * Included Reviewed-by from Rob and Laurent
+ * Switched to dual license
+ * Added myself as the maintainer
+ * Updated copyright year
+ * Rebased the patches
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+v1->v2
+ * fixed a space according to Geert's feedback.
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+Thanks,
+Prabhakar
 
-are available in the Git repository at:
+Fabrizio Castro (2):
+  dt-bindings: display: Add idk-1110wr binding
+  arm64: dts: renesas: Add HiHope RZ/G2M board with idk-1110wr display
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/mtk-=
-mtd-spi-move
+ .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/Makefile               |  1 +
+ .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts        | 52 ++++++++++++++++
+ 3 files changed, 122 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
 
-for you to fetch changes up to e11e8473bcec748c3820636f11b986f611c9309b:
+-- 
+2.7.4
 
-  mtd: spi-nor: remove mtk-quadspi driver (2020-03-11 19:56:08 +0000)
-
-----------------------------------------------------------------
-spi: Rewrite mtk-quadspi spi-nor driver with spi-mem
-
-This patchset from Chuanhong Guo <gch981213@gmail.com> adds a spi-mem
-driver for Mediatek SPI-NOR controller, which already has limited
-support by mtk-quadspi. This new driver can make use of full quadspi
-capability of this controller.
-
-----------------------------------------------------------------
-Chuanhong Guo (4):
-      spi: make spi-max-frequency optional
-      spi: add support for mediatek spi-nor controller
-      dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
-      mtd: spi-nor: remove mtk-quadspi driver
-
- .../{mtd/mtk-quadspi.txt =3D> spi/spi-mtk-nor.txt}   |  15 +-
- drivers/mtd/spi-nor/Kconfig                        |   8 -
- drivers/mtd/spi-nor/Makefile                       |   1 -
- drivers/mtd/spi-nor/mtk-quadspi.c                  | 565 -----------------
- drivers/spi/Kconfig                                |  10 +
- drivers/spi/Makefile                               |   1 +
- drivers/spi/spi-mtk-nor.c                          | 689 +++++++++++++++++=
-++++
- drivers/spi/spi.c                                  |   9 +-
- 8 files changed, 708 insertions(+), 590 deletions(-)
- rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt =3D> spi/spi=
--mtk-nor.txt} (75%)
- delete mode 100644 drivers/mtd/spi-nor/mtk-quadspi.c
- create mode 100644 drivers/spi/spi-mtk-nor.c
-
---TnYVF1hk1c8rpHiF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5pQr0ACgkQJNaLcl1U
-h9BuJgf+J4BVeDZ89cXm1ecHsmkFxwEbC3B2+ALUZTKsTZ4n5rM4aliKanEGJ5XX
-llfEUpxE7QAnZE9vv8yoKCfE8njVTTmyYi2TBJKg0hrcXb1Q3pvbsQJTO8uXm57g
-iajxxjrO0mdISzR0gErKYgJjdDyIUThSR89v5b7YXpWP4dHf7JSA4qwIWFhOLCZd
-fX3G8RIjqXkSJx2yKPjK7+xkA7u7GvP7U9kt1Nynt1NOlRtGyUywUZblL5MhZ2MG
-Bjln0lpBnhN285Mvntm49LmpoEnPdeHzbozsMVZHmD0+sdpGZ8PIQSiILb/mGCJf
-jpg/Q++KbM01LDw26eSGVIsnqAFBdA==
-=Neg9
------END PGP SIGNATURE-----
-
---TnYVF1hk1c8rpHiF--
