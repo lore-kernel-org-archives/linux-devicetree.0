@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F51C5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37254C4CEC1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381B620735
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8008F20735
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 16:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbgCKQxg (ORCPT
+        id S1730377AbgCKQxt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 12:53:36 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60606 "EHLO
+        Wed, 11 Mar 2020 12:53:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60748 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730247AbgCKQxg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 12:53:36 -0400
+        with ESMTP id S1730342AbgCKQxs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 12:53:48 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 55DD9295FA6
+        with ESMTPSA id A9F3B2930CF
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
         p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
@@ -50,9 +50,9 @@ Cc:     Allison Randal <allison@lohutok.net>,
         Houlong Wei <houlong.wei@mediatek.com>,
         linux-kernel@vger.kernel.org, mtk01761 <wendell.lin@mediatek.com>,
         Richard Fontana <rfontana@redhat.com>
-Subject: [PATCH v12 1/5] drm/mediatek: Omit warning on probe defers
-Date:   Wed, 11 Mar 2020 17:53:18 +0100
-Message-Id: <20200311165322.1594233-2-enric.balletbo@collabora.com>
+Subject: [PATCH v12 5/5] soc / drm: mediatek: Fix mediatek-drm device probing
+Date:   Wed, 11 Mar 2020 17:53:22 +0100
+Message-Id: <20200311165322.1594233-6-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200311165322.1594233-1-enric.balletbo@collabora.com>
 References: <20200311165322.1594233-1-enric.balletbo@collabora.com>
@@ -63,169 +63,129 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Matthias Brugger <mbrugger@suse.com>
+In the actual implementation the same compatible string
+"mediatek,<chip>-mmsys" is used to bind the clock drivers
+(drivers/soc/mediatek) as well as to the gpu driver
+(drivers/gpu/drm/mediatek/mtk_drm_drv.c). This ends with the problem
+that the only probed driver is the clock driver and there is no display
+at all.
 
-It can happen that the mmsys clock drivers aren't probed before the
-platform driver gets invoked. The platform driver used to print a warning
-that the driver failed to get the clocks. Omit this error on
-the defered probe path.
+In any case having the same compatible string for two drivers is not
+correct and should be fixed. To fix this, and maintain backward
+compatibility, we can consider that the mmsys driver is the top-level
+entry point for the multimedia subsystem, so is not a pure clock
+controller but a system controller, and the drm driver is instantiated
+by that MMSYS driver.
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Acked-by: CK Hu <ck.hu@mediatek.com>
 ---
 
 Changes in v12: None
-Changes in v10: None
-Changes in v9: None
-Changes in v8: None
+Changes in v10:
+- Match driver data to get display routing.
+
+Changes in v9:
+- Do not move the display routing from the drm driver (CK)
+
+Changes in v8:
+- New patch introduced in this series.
+
 Changes in v7: None
 
- drivers/gpu/drm/mediatek/mtk_disp_color.c |  5 ++++-
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c   |  5 ++++-
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c  |  5 ++++-
- drivers/gpu/drm/mediatek/mtk_dpi.c        | 12 +++++++++---
- drivers/gpu/drm/mediatek/mtk_drm_ddp.c    |  3 ++-
- drivers/gpu/drm/mediatek/mtk_dsi.c        |  8 ++++++--
- drivers/gpu/drm/mediatek/mtk_hdmi.c       |  4 +++-
- 7 files changed, 32 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 31 ++++++++++++++++----------
+ drivers/soc/mediatek/mtk-mmsys.c       |  6 +++++
+ 2 files changed, 25 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_color.c b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-index 6fb0d6983a4a..3ae9c810845b 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_color.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-@@ -119,7 +119,10 @@ static int mtk_disp_color_probe(struct platform_device *pdev)
- 	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
- 				&mtk_disp_color_funcs);
- 	if (ret) {
--		dev_err(dev, "Failed to initialize component: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to initialize component: %d\n",
-+				ret);
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 208f9c5256ef..bb26e346750a 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -422,9 +422,21 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
+ 	{ }
+ };
+ 
++static const struct of_device_id mtk_drm_of_ids[] = {
++	{ .compatible = "mediatek,mt2701-mmsys",
++	  .data = &mt2701_mmsys_driver_data},
++	{ .compatible = "mediatek,mt2712-mmsys",
++	  .data = &mt2712_mmsys_driver_data},
++	{ .compatible = "mediatek,mt8173-mmsys",
++	  .data = &mt8173_mmsys_driver_data},
++	{ }
++};
 +
- 		return ret;
+ static int mtk_drm_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct device_node *phandle = dev->parent->of_node;
++	const struct of_device_id *of_id;
+ 	struct mtk_drm_private *private;
+ 	struct device_node *node;
+ 	struct component_match *match = NULL;
+@@ -442,8 +454,14 @@ static int mtk_drm_probe(struct platform_device *pdev)
+ 		return -ENODEV;
  	}
  
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index 891d80c73e04..28651bc579bc 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -386,7 +386,10 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- 	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
- 				&mtk_disp_ovl_funcs);
- 	if (ret) {
--		dev_err(dev, "Failed to initialize component: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to initialize component: %d\n",
-+				ret);
++	of_id = of_match_node(mtk_drm_of_ids, phandle);
++	if (!of_id)
++		return -ENODEV;
 +
- 		return ret;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-index 0cb848d64206..e04319fedf46 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-@@ -294,7 +294,10 @@ static int mtk_disp_rdma_probe(struct platform_device *pdev)
- 	ret = mtk_ddp_comp_init(dev, dev->of_node, &priv->ddp_comp, comp_id,
- 				&mtk_disp_rdma_funcs);
- 	if (ret) {
--		dev_err(dev, "Failed to initialize component: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to initialize component: %d\n",
-+				ret);
++	private->data = of_id->data;
 +
- 		return ret;
- 	}
+ 	/* Iterate over sibling DISP function blocks */
+-	for_each_child_of_node(dev->of_node->parent, node) {
++	for_each_child_of_node(phandle->parent, node) {
+ 		const struct of_device_id *of_id;
+ 		enum mtk_ddp_comp_type comp_type;
+ 		int comp_id;
+@@ -575,22 +593,11 @@ static int mtk_drm_sys_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(mtk_drm_pm_ops, mtk_drm_sys_suspend,
+ 			 mtk_drm_sys_resume);
  
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 01fa8b8d763d..1b219edef541 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -701,21 +701,27 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 	dpi->engine_clk = devm_clk_get(dev, "engine");
- 	if (IS_ERR(dpi->engine_clk)) {
- 		ret = PTR_ERR(dpi->engine_clk);
--		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get engine clock: %d\n", ret);
+-static const struct of_device_id mtk_drm_of_ids[] = {
+-	{ .compatible = "mediatek,mt2701-mmsys",
+-	  .data = &mt2701_mmsys_driver_data},
+-	{ .compatible = "mediatek,mt2712-mmsys",
+-	  .data = &mt2712_mmsys_driver_data},
+-	{ .compatible = "mediatek,mt8173-mmsys",
+-	  .data = &mt8173_mmsys_driver_data},
+-	{ }
+-};
+-
+ static struct platform_driver mtk_drm_platform_driver = {
+ 	.probe	= mtk_drm_probe,
+ 	.remove	= mtk_drm_remove,
+ 	.driver	= {
+ 		.name	= "mediatek-drm",
+-		.of_match_table = mtk_drm_of_ids,
+ 		.pm     = &mtk_drm_pm_ops,
+ 	},
+ };
+diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
+index 4b286b525cd3..32a92ec447c5 100644
+--- a/drivers/soc/mediatek/mtk-mmsys.c
++++ b/drivers/soc/mediatek/mtk-mmsys.c
+@@ -285,6 +285,7 @@ static int mtk_mmsys_probe(struct platform_device *pdev)
+ 	const struct mtk_mmsys_driver_data *data;
+ 	struct device *dev = &pdev->dev;
+ 	struct platform_device *clks;
++	struct platform_device *drm;
+ 	void __iomem *config_regs;
+ 	struct resource *mem;
+ 	int ret;
+@@ -307,6 +308,11 @@ static int mtk_mmsys_probe(struct platform_device *pdev)
+ 	if (IS_ERR(clks))
+ 		return PTR_ERR(clks);
+ 
++	drm = platform_device_register_data(&pdev->dev, "mediatek-drm",
++					    PLATFORM_DEVID_AUTO, NULL, 0);
++	if (IS_ERR(drm))
++		return PTR_ERR(drm);
 +
- 		return ret;
- 	}
- 
- 	dpi->pixel_clk = devm_clk_get(dev, "pixel");
- 	if (IS_ERR(dpi->pixel_clk)) {
- 		ret = PTR_ERR(dpi->pixel_clk);
--		dev_err(dev, "Failed to get pixel clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get pixel clock: %d\n", ret);
-+
- 		return ret;
- 	}
- 
- 	dpi->tvd_clk = devm_clk_get(dev, "pll");
- 	if (IS_ERR(dpi->tvd_clk)) {
- 		ret = PTR_ERR(dpi->tvd_clk);
--		dev_err(dev, "Failed to get tvdpll clock: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get tvdpll clock: %d\n", ret);
-+
- 		return ret;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-index 13035c906035..b885f60f474c 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-@@ -628,7 +628,8 @@ static int mtk_ddp_probe(struct platform_device *pdev)
- 	if (!ddp->data->no_clk) {
- 		ddp->clk = devm_clk_get(dev, NULL);
- 		if (IS_ERR(ddp->clk)) {
--			dev_err(dev, "Failed to get clock\n");
-+			if (PTR_ERR(ddp->clk) != -EPROBE_DEFER)
-+				dev_err(dev, "Failed to get clock\n");
- 			return PTR_ERR(ddp->clk);
- 		}
- 	}
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 5fa1073cf26b..a45ed0270531 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -1194,14 +1194,18 @@ static int mtk_dsi_probe(struct platform_device *pdev)
- 	dsi->engine_clk = devm_clk_get(dev, "engine");
- 	if (IS_ERR(dsi->engine_clk)) {
- 		ret = PTR_ERR(dsi->engine_clk);
--		dev_err(dev, "Failed to get engine clock: %d\n", ret);
-+
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get engine clock: %d\n", ret);
- 		goto err_unregister_host;
- 	}
- 
- 	dsi->digital_clk = devm_clk_get(dev, "digital");
- 	if (IS_ERR(dsi->digital_clk)) {
- 		ret = PTR_ERR(dsi->digital_clk);
--		dev_err(dev, "Failed to get digital clock: %d\n", ret);
-+
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get digital clock: %d\n", ret);
- 		goto err_unregister_host;
- 	}
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 5e4a4dbda443..69c6a146c561 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1451,7 +1451,9 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 
- 	ret = mtk_hdmi_get_all_clk(hdmi, np);
- 	if (ret) {
--		dev_err(dev, "Failed to get clocks: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get clocks: %d\n", ret);
-+
- 		return ret;
- 	}
+ 	return 0;
+ }
  
 -- 
 2.25.1
