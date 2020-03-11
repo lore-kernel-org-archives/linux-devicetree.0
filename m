@@ -2,120 +2,153 @@ Return-Path: <devicetree-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_NONE,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by archive.lwn.net (Postfix) with ESMTP id C97667D910
-	for <lwn-devicetree@archive.lwn.net>; Wed, 11 Mar 2020 16:09:59 +0000 (UTC)
+	by archive.lwn.net (Postfix) with ESMTP id 32EAF7D910
+	for <lwn-devicetree@archive.lwn.net>; Wed, 11 Mar 2020 16:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729995AbgCKQJ7 (ORCPT <rfc822;lwn-devicetree@archive.lwn.net>);
-        Wed, 11 Mar 2020 12:09:59 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33328 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729887AbgCKQJ7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 12:09:59 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g15so2579333otr.0
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 09:09:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qHCMeKPDxYeB8oLBoOVgW7eRt3m++jTxFNAqk0lBahg=;
-        b=T+2qbotF8YuwXHpWLAJaVZ3hVF/dquYCSRS05M1A7mvQV5LzfewtWVTsHWdk8Go9F/
-         2g/4Ym2nx7n5QV/sER4Txqu5rPTxqet8VHyUWGxCmwWAJt3qUQiSWGPET2xfNz9JfedF
-         5xwHqKoGb41geEImN2fUmeSQQF7St0SbGtqHlmlfn6i/7S3/hSGDeYa08lyFqq83sM5I
-         UZp8EKZAV1mUiq5TMGDkiQlDPoljkg8PtpjL06pqruUn0UYWL7pIycT6vZrXwQHxfMFV
-         S60j0XBqb/FAOJfDMpT+2LXN3h4M5o4PLyfEnFL6nPDVvmcVHwvYhv+3zKS43eS04L3G
-         EiGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qHCMeKPDxYeB8oLBoOVgW7eRt3m++jTxFNAqk0lBahg=;
-        b=OS2Bs5pODSj6BJCjA/5ru67cIzUnpDJxdlpJcN3LdczHJvHtPNV+HVj9qEU5KhUhVn
-         t4Dh7Jo2CJDYLbUMyn6rPORKPwr4gAkOV4LlHEExZbkb0WjV+cCNRFy8cGqyheIjBkvs
-         +b8zFNfZvyYz92F9XOIuEZUjp0xc0xznq8qRJgSyQfmLwryAnNyPjU4ZhtL4Pm0qL5yl
-         kHccrhhaP8N79AymoIqKNlTzPYEABlCipvQsV6FoHqJlI7MkC3B+GFME5jO2CLu9rkMG
-         9xzwEA2WwNv1FYxwVMojX1U6kBECnptyv6jx+AGiCz5YrwC7dAeZziz9Vg8eT5qshdZA
-         B07A==
-X-Gm-Message-State: ANhLgQ1Fc2mpooDp4X5nrEhP0no/OtvDTEHPMZb+BUeP/B9efMSzTo2n
-        giK/wqrbWMGUQeGguzem9tWocPdOI8bByDsqywDKyA==
-X-Google-Smtp-Source: ADFU+vsF0mYOWDUY9jeerFS7C1YHWPcdcvJokSfwKoYIwMy0iUuNQO8orU7ziwk2fzKINRWEir3a59IQXixeW7y6JDo=
-X-Received: by 2002:a4a:2a47:: with SMTP id x7mr790140oox.23.1583942995604;
- Wed, 11 Mar 2020 09:09:55 -0700 (PDT)
+        id S1730114AbgCKQRs (ORCPT <rfc822;lwn-devicetree@archive.lwn.net>);
+        Wed, 11 Mar 2020 12:17:48 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:42662 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729921AbgCKQRs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 12:17:48 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 2E35E634C87;
+        Wed, 11 Mar 2020 18:16:54 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jC42Q-0001TH-B5; Wed, 11 Mar 2020 18:16:54 +0200
+Date:   Wed, 11 Mar 2020 18:16:54 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        ben.kao@intel.com, Rob Herring <robh+dt@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [v1 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200311161654.GK2619@valkosipuli.retiisi.org.uk>
+References: <20200310134603.30260-1-robert.foss@linaro.org>
+ <20200310134603.30260-3-robert.foss@linaro.org>
+ <20200310142652.GK1922688@smile.fi.intel.com>
+ <CAG3jFyu5S1H=r6pV92tc_a2LoCUnhb0mDbOegP2BCO8a5C1nVg@mail.gmail.com>
+ <20200311114848.GJ2619@valkosipuli.retiisi.org.uk>
+ <CAG3jFyv8X=k=1EGMCHnSNqDaRBZ68pht42yDzc5hJPui0wdAjQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190430101230.21794-1-lokeshvutla@ti.com> <20190430101230.21794-8-lokeshvutla@ti.com>
- <CAJ+vNU2gnKKxX2YL1JUSnpF7qNqKVAsPhC2emv=Y79HPJbZXzw@mail.gmail.com> <87zhcmkicp.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87zhcmkicp.fsf@nanos.tec.linutronix.de>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Wed, 11 Mar 2020 09:09:43 -0700
-Message-ID: <CAJ+vNU2agPYq+Y3kXG40wcfUzA9q-27Cdvqj7gLT2o6RKCQK5Q@mail.gmail.com>
-Subject: Re: [PATCH v8 07/14] gpio: thunderx: Use the default parent apis for {request,release}_resources
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Lokesh Vutla <lokeshvutla@ti.com>
-Cc:     Marc Zyngier <marc.zyngier@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG3jFyv8X=k=1EGMCHnSNqDaRBZ68pht42yDzc5hJPui0wdAjQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
-Archived-At: <http://archive.lwn.net:8080/devicetree/CAJ+vNU2agPYq+Y3kXG40wcfUzA9q-27Cdvqj7gLT2o6RKCQK5Q@mail.gmail.com/>
+Archived-At: <http://archive.lwn.net:8080/devicetree/20200311161654.GK2619@valkosipuli.retiisi.org.uk/>
 List-Archive: <http://archive.lwn.net:8080/devicetree/>
 List-Post: <mailto:devicetree@vger.kernel.org>
 
-On Wed, Mar 11, 2020 at 8:43 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Tim,
->
-> Tim Harvey <tharvey@gateworks.com> writes:
-> > On Tue, Apr 30, 2019 at 3:14 AM Lokesh Vutla <lokeshvutla@ti.com> wrote:
-> >> -       if (parent_data && parent_data->chip->irq_request_resources) {
-> >> -               r = parent_data->chip->irq_request_resources(parent_data);
-> >> -               if (r)
-> >> -                       goto error;
-> >> -       }
-> >> +       r = irq_chip_request_resources_parent(data);
-> >> +       if (r)
-> >> +               gpiochip_unlock_as_irq(&txgpio->chip, txline->line);
+On Wed, Mar 11, 2020 at 02:32:30PM +0100, Robert Foss wrote:
+> Hey Sakari,
+> 
+> On Wed, 11 Mar 2020 at 12:49, Sakari Ailus <sakari.ailus@iki.fi> wrote:
 > >
-> > This patch breaks irq resources for thunderx-gpio as
-> > parent_data->chip->irq_request_resources is undefined thus your new
-> > irq_chip_request_resources_parent() returns -ENOSYS causing this
-> > function to return an error where as before it would happily return 0.
+> > Hi Robert,
 > >
-> > Is the following the correct fix or should we qualify
-> > data->parent_data->chip->irq_request_resources before calling
-> > irq_chip_request_resources_parent() in thunderx-gpio?
->
-> You are not supposed to fiddle with parent data at all. Just because C
-> allows you is no excuse to violate abstractions in the first place.
->
-> irq_chip_request_resources_parent() rightfully returns -ENOSYS when it
-> can't request a resource from the parent chip because that chip does not
-> have anything to offer.
->
-> It's up to the caller to do something sensible with the return code. If
-> your chip is happy with the parent not providing it then handle
-> -ENOSYS. None of the chip callbacks should return -ENOSYS. If one does
-> then that wants to be fixed.
->
+> > On Tue, Mar 10, 2020 at 04:55:20PM +0100, Robert Foss wrote:
+> > > Hi Andy,
+> > >
+> > > On Tue, 10 Mar 2020 at 15:26, Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > On Tue, Mar 10, 2020 at 02:46:02PM +0100, Robert Foss wrote:
+> > > > > Add devicetree match table, and enable ov8856_probe()
+> > > > > to initialize power, clocks and reset pins.
+> > > >
+> > > > ...
+> > > >
+> > > > > +#define OV8856_NUM_SUPPLIES ARRAY_SIZE(ov8856_supply_names)
+> > > >
+> > > > Use ARRAY_SIZE() directly.
+> > >
+> > > Ack.
+> > >
+> > > >
+> > > > Have you seen Sakari's comments?
+> > > > Sakari, do I have déją vu or you indeed commented this driver?
+> > >
+> > > Yes, I may have missed some part of it, so please tell me if I have.
+> > >
+> > > There is a patchset floating around that implements a larger chunk of
+> > > functionality,
+> > > including a couple of new modes. This is based on that series.
+> >
+> > Please see earlier comments given against an earlier variant of this set.
+> > They're on LMML.
+> >
+> > >
+> > > >
+> > > > ...
+> > > >
+> > > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
+> > > >
+> > > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
+> > > >
+> > > > Yes, seems this one is inverted.
+> > > >
+> > > > ...
+> > > >
+> > > > > +{
+> > > > > +     gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
+> > > > > +     regulator_bulk_disable(OV8856_NUM_SUPPLIES, ov8856->supplies);
+> > > > > +     clk_disable_unprepare(ov8856->xvclk);
+> > > > > +}
+> > > > > +
+> > > > > +
+> > > >
+> > > > One blank line is enough.
+> > > >
+> > > > ...
+> > > >
+> > > > > +     ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
+> > > > > +     if (IS_ERR(ov8856->xvclk)) {
+> > > > > +             dev_err(&client->dev, "failed to get xvclk\n");
+> > > > > +             return -EINVAL;
+> > > > > +     }
+> > > >
+> > > > Previously it worked without clock provider, now you make a dependency.
+> > > >
+> > > > This won't work.
+> > >
+> > > So the ideal behavior would be to only use the xclk if it is provided?
+> >
+> > See e.g. the smiapp driver on how to do this so it continues to work on
+> > ACPI.
+> 
+> Thanks for the pointer!
+> 
+> >
+> > I think it'd be also appropriate to add the usleep() after lifting reset
+> > only if the reset GPIO is defined for the device.
+> 
+> Ack
 
-Ok, makes sense. Thank you and Lokesh for the feedback. I just
-submitted a patch to fix the thunderx-gpio breakage.
+On second thought, that probably applies if any of the resources needed for
+powering the device on are defined. It could be that there's no reset GPIO
+but a regulator is still there, in which case a delay is needed.
 
-Best Regards,
-
-Tim
+-- 
+Sakari Ailus
