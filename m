@@ -2,107 +2,128 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9C6C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C110C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82794208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33DE21D56
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:46:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpYVxJok"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R8RuT72W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgCKMqJ (ORCPT
+        id S1729450AbgCKMq7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:46:09 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:36488 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729287AbgCKMqI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 08:46:08 -0400
-Received: by mail-wm1-f48.google.com with SMTP id g62so1975193wme.1;
-        Wed, 11 Mar 2020 05:46:06 -0700 (PDT)
+        Wed, 11 Mar 2020 08:46:59 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42445 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729452AbgCKMq6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 08:46:58 -0400
+Received: by mail-wr1-f65.google.com with SMTP id v11so2423369wrm.9
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 05:46:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=vX7xay1c272z5yWnR8Vm2AwXwafctOSlGFV/CAr3lyI=;
-        b=cpYVxJokDUEk+/C8NFK/CPVc5LRy+3ROB6BEZMu4V+wxk700micwN7r7SdhA9yluJh
-         a7KDXzoNYNN8xWsWkE2xGen+YUJtH0+ERwlKg5mVWshT5TJvTx63k1u+549yNls9xgT/
-         1/xXodKdej8umcgYWTpcmDw5IY5B9kCLgwe8bhN1LXtaSDGw87SkSfjR+GrkgioMRDGA
-         uNoEU8XQYPPFriqobX+KKIjlYT00KycIhNd1W1a5Z6hPmRbDrqGlWoEukQE9mcDe+jEi
-         CUfC7w9+Ev8k7Uu83l9IjeRQurJY29PCHDoTTz0FZs5tEfrgSLz8we+BX30VRQLjBl4v
-         FX5g==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=N4gyYG6pd1qHC2GjZUAc/a5emn2edBGVA7chcRhvAO8=;
+        b=R8RuT72WL1I4haJ6qD2A19NADfHGGL4h8E65a5bB32JeKEnVO9JbfE6y04C41FHnLL
+         AiH3yxrWmV4b4ouGsgZnYDvH6JyHDntuFb3/9DvYzPs3xRWl9CkmzwGARwuOAyD3ENG8
+         ExLs4O2EfRkqOxjujXUUTbIjhiAylBxQ8ybvym8Qyo1jwtRGcka/n1mIYt++nCi7pTJf
+         r7VZnDbXLgsvy6IWe8+Hwi6VVKzu0VjNNczUmct/KxpEmMqWQtjtAeb2DhsSv3KYbkPr
+         VSYMt4h9O6gpK0lYTWS8aMFDJFwbWDK7v4kkJazCh6yUcurLTvS7ONepD43137VO3oBz
+         gmyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=vX7xay1c272z5yWnR8Vm2AwXwafctOSlGFV/CAr3lyI=;
-        b=RXYfAx55O7wPVvu6I0KMFdNxwxPkMC6PCXGTnrCUrzWM3ZKO9q2G+nmONe8uBjfLjj
-         AB9v7PDLtiGJ9956Om3jLnZyg4RCBlm4cbjeIEhJoZ4pMSZB0fW4zb4PuqNrTGXMRO0t
-         CWA3FQibSLZd8OVIjo33/xn+cfR7D94NJxPmoCoRvE7rlleqZ3jbbZoWoP8ikfcbfiAh
-         SJQSPWgI7+wID3J1pZH81WXacxoRVMO77mBP5I9XIizB2USwqCXUBKp0+yyHoSiLKScZ
-         U3g6RE7k3xI+Qmn093MFUbAw+j548A6kfhUN2AWoM0EDh3Nfy1OXaH5MUecR3APLsqRc
-         hHMA==
-X-Gm-Message-State: ANhLgQ1ljkjlMucyup6ARnzzG+0/y6IkXgZfip3MSr0vK33TeuGxWkCx
-        aVr+vdhlp48pAi9gkQ5bl0vhWOq5hfM=
-X-Google-Smtp-Source: ADFU+vsVDxCVTN+N2Gw1D6GVC46ov+wXcq58elUBcCdzA8VarIJLUeD9zJfJLE7Z/1kCYEaZaD1GOg==
-X-Received: by 2002:a1c:f60d:: with SMTP id w13mr3702859wmc.171.1583930766069;
-        Wed, 11 Mar 2020 05:46:06 -0700 (PDT)
-Received: from AnsuelXPS (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.gmail.com with ESMTPSA id v10sm179900wml.44.2020.03.11.05.46.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Mar 2020 05:46:04 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Rob Herring'" <robh@kernel.org>
-Cc:     <sboyd@kernel.org>, "'John Crispin'" <john@phrozen.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Michael Turquette'" <mturquette@baylibre.com>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <sboyd@kernel.org> <20200310143756.244-1-ansuelsmth@gmail.com> <20200310184109.GA2508@bogus>
-In-Reply-To: <20200310184109.GA2508@bogus>
-Subject: R: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
-Date:   Wed, 11 Mar 2020 13:46:02 +0100
-Message-ID: <06a501d5f7a3$06ba72f0$142f58d0$@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=N4gyYG6pd1qHC2GjZUAc/a5emn2edBGVA7chcRhvAO8=;
+        b=NlbdNPip1FMKeeURT2J/+kxE5FwA1jac0v6E5hmHQ4Y6Bs6oU29Z/HNciQDA19zCdl
+         hhXnFks3rBgLPyrH/Ynzz/xrG6nmyoaNoOWSJn0hO/+xqBfYmiCULhQm3JFOqFtrPoOm
+         mb+vObFfM0pQ0IkzHq66+8AqLcxE9gGdQ/ftWPK6AceYqiDdwpko5JU7OpIqj3XRy0A9
+         znARal0llcfBXqgzfAoOy/cbaG0fFDj+gAXoN8mkENLc1zPAnY5PJeuL1CZvQqVryRdY
+         zQlZ2ObtAVCBbvGKZEt41+Nb+e/sbYGd3bCyauYtkbhmmIPl69ilk82kFbQt8fQ6/rs3
+         JsfQ==
+X-Gm-Message-State: ANhLgQ0nV696LC2HfBhiBpcyXeNtZL8ZENXjlhjqUiFCbxRYpS6XWyzh
+        ZG1o5OBKnolkG4h/krtfUnh9yo9VhMY=
+X-Google-Smtp-Source: ADFU+vtVplsLJKhJ5k96cjG7bQIJiqMwH6aOvBxLDVX3vK8y4Ou+veGu1hCYgxMQXp8PN1ugVbeDHg==
+X-Received: by 2002:adf:a555:: with SMTP id j21mr4427467wrb.409.1583930817062;
+        Wed, 11 Mar 2020 05:46:57 -0700 (PDT)
+Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id c2sm8380020wma.39.2020.03.11.05.46.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 05:46:56 -0700 (PDT)
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
+        joro@8bytes.org, baolu.lu@linux.intel.com, sudeep.holla@arm.com,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org
+Cc:     lorenzo.pieralisi@arm.com, corbet@lwn.net, mark.rutland@arm.com,
+        liviu.dudau@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
+        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: [PATCH v2 02/11] PCI: Add ats_supported host bridge flag
+Date:   Wed, 11 Mar 2020 13:44:57 +0100
+Message-Id: <20200311124506.208376-3-jean-philippe@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200311124506.208376-1-jean-philippe@linaro.org>
+References: <20200311124506.208376-1-jean-philippe@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQD2n4NGhC+p0cGdAsYRRjYyx9FyPQH+RYtGAlzKsDSp3y3+UA==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> On Tue, 10 Mar 2020 15:37:56 +0100, Ansuel Smith wrote:
-> > Add missing definition of rpm clk for ipq806x soc
-> >
-> > Signed-off-by: John Crispin <john@phrozen.org>
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > Acked-by: John Crispin <john@phrozen.org>
-> > ---
-> >  .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
-> >  drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
-> >  include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
-> >  3 files changed, 40 insertions(+)
-> >
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions.
-> However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
+Each vendor has their own way of describing whether a host bridge
+supports ATS.  The Intel and AMD ACPI tables selectively enable or
+disable ATS per device or sub-tree, while Arm has a single bit for each
+host bridge.  For those that need it, add an ats_supported bit to the
+host bridge structure.
 
-Sorry it was asked to resend this as there was a bug in the software used to
-apply this. 
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+---
+v1->v2: try to improve the comment
+---
+ drivers/pci/probe.c | 8 ++++++++
+ include/linux/pci.h | 1 +
+ 2 files changed, 9 insertions(+)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 512cb4312ddd..b5e36f06b40a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -598,6 +598,14 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
+ 	bridge->native_shpc_hotplug = 1;
+ 	bridge->native_pme = 1;
+ 	bridge->native_ltr = 1;
++
++	/*
++	 * Some systems (ACPI IORT, device-tree) declare ATS support at the host
++	 * bridge, and clear this bit when ATS isn't supported. Others (ACPI
++	 * DMAR and IVRS) declare ATS support with a smaller granularity, and
++	 * need this bit set.
++	 */
++	bridge->ats_supported = 1;
+ }
+ 
+ struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 3840a541a9de..9fe2e84d74d7 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -511,6 +511,7 @@ struct pci_host_bridge {
+ 	unsigned int	native_pme:1;		/* OS may use PCIe PME */
+ 	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
+ 	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
++	unsigned int	ats_supported:1;
+ 
+ 	/* Resource alignment requirements */
+ 	resource_size_t (*align_resource)(struct pci_dev *dev,
+-- 
+2.25.1
 
