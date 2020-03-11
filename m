@@ -2,101 +2,161 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9D9C4CEC0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB08C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9271520739
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840232076F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:21:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cmfGmGvz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gOSVv67g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbgCKRPA (ORCPT
+        id S1730211AbgCKRVB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:15:00 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:51907 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730321AbgCKRPA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 13:15:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583946899; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=6IQ1AtHbnG9BHfziFNEIWfdxwfTRRjVzrhnJiTYCmfU=; b=cmfGmGvzdJ4y2Px/u18shEcQRqHxq8oGcrZ2Azs5kMAOFa6icPsybbKTUxU82oos3IUSgY6J
- yP2eMBbRxfH5RYc8T5CFWkoYtR6iznE4csJJSXUoQXTK5oyYKnugcOEVE5YcRYXdJ5CHn6KE
- YOKiUGGLYjqXHcnHa7V5oZT+PkM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e691c85.7f13681f4030-smtp-out-n05;
- Wed, 11 Mar 2020 17:14:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6441DC43636; Wed, 11 Mar 2020 17:14:44 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85A97C433BA;
-        Wed, 11 Mar 2020 17:14:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85A97C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     bjorn.andersson@linaro.org, vkoul@kernel.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
+        Wed, 11 Mar 2020 13:21:01 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37938 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730349AbgCKRVB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 13:21:01 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n2so3034582wmc.3
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 10:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SRfkpp8M+7DY995ACFm0LV6S5x+iBdswbTCPLyuUHNI=;
+        b=gOSVv67gnHdiMys+M2xzhT5wvai2z320rCOPgcpkhbLpV97jJhkGTuNoAzU4NUZhAo
+         D4palYQ2HwAZ0OS3zCphC/Z0UmVcpqQChJKRV5WtqbpmM2Kk7ou5Arh8pFC1dF14OA91
+         YvbixzwQXk0u70G8Vh3zfpM+OulqR1vgcCxX7taDdz9nUBV0g31sMZ8Zdkh6mRxlcsTs
+         k7ViITXmIF2ThUhrJgslCTsg0VI0hsyFU4EZ42e60p4lK9bRT13xdjNMu02BkpZZYGSu
+         25CT18gafLV+OXQYAtWsVnW1Dg750/te3dKsDP4gIz5GRrHCxF6Gkn1WB+iu3pXgLxlZ
+         kF8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SRfkpp8M+7DY995ACFm0LV6S5x+iBdswbTCPLyuUHNI=;
+        b=DYL9bF4Nq3npeaImZlbQBkq9GzgDiWWtIP3Es37NrsEvzJq+qgZnfiXy8cx/UyvUlL
+         6zfNEKjAT6KFyUbIT4elyMZpZHZ7XfNOt6NBXVH4adVVp1sMJS0xE7e+XFeD/AxJCAqQ
+         bk1KGfWBfiEvjou9l0dk72fmlH60+ToLbCeArmhY4Osn5s6JvyXTDsq51nNB/vL0DhmB
+         DIN5GNq5Pci3X3b2qS7d5SIrNWV8m7IsiQapYhvT3/2drGQmX0akWkAiQSL530tfMzvs
+         CgPUxSp/kD1sd7ujDAtdtZWnPM1XWi1FVoiw7oA2tEhXyBvA1FKkaymYtZyrepfFZI+Y
+         AZhw==
+X-Gm-Message-State: ANhLgQ2K/3Bfv6VUO5tgaJWy4cxlTkVuviTM8iF26FQ1Oh1Vl+6eWQdB
+        AVJr3DJ63KuQ97HgmwMv7mLCOg==
+X-Google-Smtp-Source: ADFU+vtyzrRH95ggJTx87H/Dqq0PyilzrpER8xm/uf21w2cDs3NqJfLQfLdt9s5fY783+V17fSdyig==
+X-Received: by 2002:a1c:a78a:: with SMTP id q132mr4716824wme.107.1583947259380;
+        Wed, 11 Mar 2020 10:20:59 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id d18sm8611115wrq.22.2020.03.11.10.20.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 10:20:58 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 17:20:56 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH] arm64: dts: qcom: qcs404: Enable CQE support for eMMC
-Date:   Wed, 11 Mar 2020 22:44:21 +0530
-Message-Id: <1583946863-24308-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: power: supply: add cw2015_battery
+ bindings
+Message-ID: <20200311172056.wjn3574zrfqxipw6@holly.lan>
+References: <20200311093043.3636807-1-t.schramm@manjaro.org>
+ <20200311093043.3636807-3-t.schramm@manjaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311093043.3636807-3-t.schramm@manjaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enabling CQE support for eMMC by supplying the correct reg name
-and flag which indicates CQE support.
+On Wed, Mar 11, 2020 at 10:30:42AM +0100, Tobias Schramm wrote:
+> This patch adds the dts binding schema for the cw2015 fuel gauge.
+> 
+> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+> ---
+>  .../bindings/power/supply/cw2015_battery.yaml | 83 +++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml b/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+> new file mode 100644
+> index 000000000000..647dbc6e136e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/supply/cw2015_battery.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Battery driver for CW2015 shuntless fule gauge by CellWise.
 
-Also remove the redundant _mem suffix for reg names.
+s/fule/fuel/
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 1 +
- arch/arm64/boot/dts/qcom/qcs404.dtsi     | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 522d3ef..afe69e8 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -200,6 +200,7 @@
- &sdcc1 {
- 	status = "ok";
- 
-+	supports-cqe;
- 	mmc-ddr-1_8v;
- 	mmc-hs400-1_8v;
- 	bus-width = <8>;
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 1eea064..f149a53 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -687,7 +687,7 @@
- 		sdcc1: sdcc@7804000 {
- 			compatible = "qcom,qcs404-sdhci", "qcom,sdhci-msm-v5";
- 			reg = <0x07804000 0x1000>, <0x7805000 0x1000>;
--			reg-names = "hc_mem", "cmdq_mem";
-+			reg-names = "hc", "cqhci";
- 
- 			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+> +
+> +maintainers:
+> +  - Tobias Schramm <t.schramm@manjaro.org>
+> +
+> +description: |
+> +  The driver can utilize information from a simple-battery linked via a
+> +  phandle in monitored-battery. If specified the driver uses the
+> +  charge-full-design-microamp-hours property of the battery.
+> +
+> +properties:
+> +  compatible:
+> +    const: cellwise,cw2015
+> +
+> +  reg:
+> +    items:
+> +      - description: i2c address
+> +
+> +  cellwise,battery-profile:
+> +    description: |
+> +      This property specifies characteristics of the battery used. The format
+> +      of this binary blob is kept secret by CellWise. The only way to obtain
+> +      it is to mail two batteries to a test facility of CellWise and receive
+> +      back a test report with the binary blob.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint8-array
+> +    items:
+> +      - minItems: 64
+> +        maxItems: 64
+> +
+> +  cellwise,monitor-interval-ms:
+> +    description:
+> +      Specifies the interval in milliseconds gauge values are polled at
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  power-supplies:
+> +    description:
+> +      Specifies supplies used for charging the battery connected to this gauge
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
+> +      - minItems: 1
+> +        maxItems: 8 # Should be enough
+
+Is it necessary to set a maximum? power_supply.txt is still a text file
+but there is no mention of a maximum there.
+
+
+Daniel.
