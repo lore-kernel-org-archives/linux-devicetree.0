@@ -2,260 +2,147 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F92C10F25
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 06:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798B7C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 06:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18D021655
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 06:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583907706;
-	bh=bxHbcWq3Q5XazUANfBEywJc2ZDNiPxRoRkmScQum/gM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r8+Conhyzq0XMMXlENfPHhXJTQpd6rYls5oZuXsFcc6DEgMCC4OBiVSDAKGSoj9m+
-	 VlD9303OlFHUW9BwVgOjFB5FgqSFZ+RIMQzLZT4yrJu/4jKmNj6C+z25y/zSZvh62u
-	 8Bxf4FiuiR2mTSCWH/ErwL+rpDpPWwhnO+f7P2MM=
+	by mail.kernel.org (Postfix) with ESMTP id 49EEE21655
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 06:41:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UIjemNr3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbgCKGVp (ORCPT
+        id S1726254AbgCKGlC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 02:21:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgCKGVp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 02:21:45 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 11 Mar 2020 02:41:02 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:39570 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725976AbgCKGlC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 02:41:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583908861; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=9Ma3v93cOhH+P2MvDLMRQOh7LMKfyPwnXpDIHPd4gMM=;
+ b=UIjemNr37kuzt7UhJKuFwlnHFHMerb9RqTgdwCmNMZVAhayZnH4TGggS6a04zruUgu8ztV0j
+ Nq/R74yG9cX9ycj5mGkhHSC7RhQ2qvCPGdYA7ib11oeNo73qs8b4MCmtkcjU2stLRsKS2txU
+ HlCa1BNHDMq5S3xGDynrZCSRzxQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6887fd.7f3e91b80030-smtp-out-n02;
+ Wed, 11 Mar 2020 06:41:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 41753C433D2; Wed, 11 Mar 2020 06:41:01 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB053208E4;
-        Wed, 11 Mar 2020 06:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583907704;
-        bh=bxHbcWq3Q5XazUANfBEywJc2ZDNiPxRoRkmScQum/gM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KtC9c4umeXVYs3RkeQddsCzb5NHjtl182YykeKhuz95KjItwjyPJWsbYl6g1UcCTt
-         eQFG9GNzzXicUGy5alBx6ORZTBcr8L60hTuEhWIYGznCmTVJYAcSsjwDaCsNvt9+Bm
-         iXsI5Biw92smgp2SKMVUqX2uC4Ua9FuNU4YaZgyw=
-Date:   Wed, 11 Mar 2020 14:21:35 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anson.Huang@nxp.com,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com
-Subject: Re: [PATCH] ARM64: dts: imx8m: fix aips dts node
-Message-ID: <20200311062135.GD29269@dragon>
-References: <1582602242-28577-1-git-send-email-peng.fan@nxp.com>
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D1F7C433CB;
+        Wed, 11 Mar 2020 06:41:00 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582602242-28577-1-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 11 Mar 2020 12:11:00 +0530
+From:   kgunda@codeaurora.org
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V3 2/4] backlight: qcom-wled: Add callback functions
+In-Reply-To: <20200310152719.5hpzh6osq22y4qbn@holly.lan>
+References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
+ <1583760362-26978-3-git-send-email-kgunda@codeaurora.org>
+ <20200310152719.5hpzh6osq22y4qbn@holly.lan>
+Message-ID: <05ab744dfbd83b6704bd394ce3c3dfc9@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 11:44:02AM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 2020-03-10 20:57, Daniel Thompson wrote:
+> On Mon, Mar 09, 2020 at 06:56:00PM +0530, Kiran Gunda wrote:
+>> Add cabc_config, sync_toggle, wled_ovp_fault_status and wled_ovp_delay
+>> callback functions to prepare the driver for adding WLED5 support.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
 > 
-> Per binding doc fsl,aips-bus.yaml, compatible and reg is
-
-Where can I find this binding doc?
-
-> required. And for reg, the AIPS configuration space should be
-> used, not all the AIPS bus space.
+> Overall this code would a lot easier to review if
+>> ---
+>>  drivers/video/backlight/qcom-wled.c | 196 
+>> +++++++++++++++++++++++-------------
+>>  1 file changed, 126 insertions(+), 70 deletions(-)
+>> 
+>> diff --git a/drivers/video/backlight/qcom-wled.c 
+>> b/drivers/video/backlight/qcom-wled.c
+>> index 3d276b3..b73f273 100644
+>> --- a/drivers/video/backlight/qcom-wled.c
+>> +++ b/drivers/video/backlight/qcom-wled.c
+>> @@ -128,6 +128,7 @@ struct wled_config {
+>>  	bool cs_out_en;
+>>  	bool ext_gen;
+>>  	bool cabc;
+>> +	bool en_cabc;
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-
-Prefix 'arm64: ...' for arch/arm64 patches.
-
-Shawn
-
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 12 ++++++++----
->  arch/arm64/boot/dts/freescale/imx8mn.dtsi | 16 ++++++++--------
->  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 12 ++++++------
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 12 ++++++++----
->  4 files changed, 30 insertions(+), 22 deletions(-)
+> Does this ever get set to true?
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index b3d0b29d7007..a4356d2047cd 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -227,7 +227,8 @@
->  		ranges = <0x0 0x0 0x0 0x3e000000>;
->  
->  		aips1: bus@30000000 {
-> -			compatible = "simple-bus";
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x301f0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x30000000 0x30000000 0x400000>;
-> @@ -496,7 +497,8 @@
->  		};
->  
->  		aips2: bus@30400000 {
-> -			compatible = "simple-bus";
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x305f0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x30400000 0x30400000 0x400000>;
-> @@ -555,7 +557,8 @@
->  		};
->  
->  		aips3: bus@30800000 {
-> -			compatible = "simple-bus";
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x309f0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x30800000 0x30800000 0x400000>;
-> @@ -800,7 +803,8 @@
->  		};
->  
->  		aips4: bus@32c00000 {
-> -			compatible = "simple-bus";
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x32df0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x32c00000 0x32c00000 0x400000>;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> index f2775724377f..4848ce82f083 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-> @@ -203,8 +203,8 @@
->  		ranges = <0x0 0x0 0x0 0x3e000000>;
->  
->  		aips1: bus@30000000 {
-> -			compatible = "simple-bus";
-> -			reg = <0x30000000 0x400000>;
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x301f0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> @@ -401,8 +401,8 @@
->  		};
->  
->  		aips2: bus@30400000 {
-> -			compatible = "simple-bus";
-> -			reg = <0x30400000 0x400000>;
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x305f0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> @@ -461,8 +461,8 @@
->  		};
->  
->  		aips3: bus@30800000 {
-> -			compatible = "simple-bus";
-> -			reg = <0x30800000 0x400000>;
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x309f0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> @@ -707,8 +707,8 @@
->  		};
->  
->  		aips4: bus@32c00000 {
-> -			compatible = "simple-bus";
-> -			reg = <0x32c00000 0x400000>;
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x32df0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> index 71b0c8f23693..eb67f56cdfe2 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> @@ -144,8 +144,8 @@
->  		ranges = <0x0 0x0 0x0 0x3e000000>;
->  
->  		aips1: bus@30000000 {
-> -			compatible = "simple-bus";
-> -			reg = <0x30000000 0x400000>;
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x301f0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> @@ -309,8 +309,8 @@
->  		};
->  
->  		aips2: bus@30400000 {
-> -			compatible = "simple-bus";
-> -			reg = <0x30400000 0x400000>;
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x305f0000 0x400000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> @@ -369,8 +369,8 @@
->  		};
->  
->  		aips3: bus@30800000 {
-> -			compatible = "simple-bus";
-> -			reg = <0x30800000 0x400000>;
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x309f0000 0x400000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges;
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 6a1e83922c71..07070464063d 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -290,7 +290,8 @@
->  		dma-ranges = <0x40000000 0x0 0x40000000 0xc0000000>;
->  
->  		bus@30000000 { /* AIPS1 */
-> -			compatible = "simple-bus";
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x301f0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x30000000 0x30000000 0x400000>;
-> @@ -692,7 +693,8 @@
->  		};
->  
->  		bus@30400000 { /* AIPS2 */
-> -			compatible = "simple-bus";
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x305f0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x30400000 0x30400000 0x400000>;
-> @@ -751,7 +753,8 @@
->  		};
->  
->  		bus@30800000 { /* AIPS3 */
-> -			compatible = "simple-bus";
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x309f0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x30800000 0x30800000 0x400000>,
-> @@ -1023,7 +1026,8 @@
->  		};
->  
->  		bus@32c00000 { /* AIPS4 */
-> -			compatible = "simple-bus";
-> +			compatible = "fsl,aips", "simple-bus";
-> +			reg = <0x32df0000 0x10000>;
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			ranges = <0x32c00000 0x32c00000 0x400000>;
-> -- 
-> 2.16.4
+Yes. If user wants use the cabc pin to control the brightness and
+use the "qcom,cabc" DT property in the device tree.
+
+>>  	bool external_pfet;
+>>  	bool auto_detection_enabled;
+>>  };
+>> @@ -147,14 +148,20 @@ struct wled {
+>>  	u32 max_brightness;
+>>  	u32 short_count;
+>>  	u32 auto_detect_count;
+>> +	u32 version;
+>>  	bool disabled_by_short;
+>>  	bool has_short_detect;
+>> +	bool cabc_disabled;
+>>  	int short_irq;
+>>  	int ovp_irq;
+>> 
+>>  	struct wled_config cfg;
+>>  	struct delayed_work ovp_work;
+>>  	int (*wled_set_brightness)(struct wled *wled, u16 brightness);
+>> +	int (*cabc_config)(struct wled *wled, bool enable);
+>> +	int (*wled_sync_toggle)(struct wled *wled);
+>> +	int (*wled_ovp_fault_status)(struct wled *wled, bool *fault_set);
+>> +	int (*wled_ovp_delay)(struct wled *wled);
 > 
+> Let's get some doc comments explaining what these callbacks do (and
+> which versions they apply to).
+> 
+Sure. I will update it in the commit text in next post.
+
+> cabc_config() in particular appears to have a very odd interface for
+> wled4.  It looks like it relies on being initially called with enable
+> set a particular way and prevents itself from acting again. Therefore 
+> if
+> the comment you end up writing doesn't sound "right" then please also
+> fix the API!
+> 
+Actually this variable is useful for WLED5, where the default HW state 
+is
+CABC1 enabled mode. So, if the user doesn't want to use the CABC we are 
+configuring
+the HW state to "0" based on the DT property and then setting a flag to 
+not enable it again.
+This is not needed for WLED4. I will remove it for WLED4 in next post.
+
+> Finally, why is everything except cabc_config() prefixed with wled?
+> 
+It is typo. I will correct it in the next post.
+> 
+> Daniel.
