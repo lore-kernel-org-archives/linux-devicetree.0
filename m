@@ -2,139 +2,95 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5521CC10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F8EC10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F911204FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHqlZFnV"
+	by mail.kernel.org (Postfix) with ESMTP id D5CA820575
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbgCKObB (ORCPT
+        id S1729309AbgCKObn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:31:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39693 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729309AbgCKObB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 10:31:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r15so2906223wrx.6;
-        Wed, 11 Mar 2020 07:30:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VjzeEKChSA5U1RVRAuBtpoNW2CBTxFFw13vMlkz5Qxk=;
-        b=EHqlZFnV23fFnJW6akKlxvTs10LaICmJ/QCOlISSxIB0cw/p6s1ifiyS3OZVNq7Cra
-         /3936DKt8/JFJz9DaopJG5InbBeZvZQeuOQZ6Aed3ghopyfvrWaRZCF1LE/x6R5kBpJn
-         0/A1PFt0H4dOR0eMsY0VrYnR0krQmusq1cJRptn09df4Qfb6qmziQ+zua6UH2O+eMec2
-         Bw8N02JXEbs4uNpXpKNEvAUIqsava8YurAY6JtdU3NoMUaC9nfqn1m24q5apukcQLlnC
-         b1m2mUIIDODwT1Dp8udTeIrQeUioqm9GfvpINHA4RYsiD3ooKoLqmsKQjaZJENIv0tX0
-         dBGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VjzeEKChSA5U1RVRAuBtpoNW2CBTxFFw13vMlkz5Qxk=;
-        b=DzRst48KUcc5LxTJIMV84RcHd5Zq9i5tTZEs5gVRaQs+VNV+VEFCOeaNDmaVmg90uf
-         uaDyXF6E7KnF5SOSQjLZAq9GH2wJ2JRFDv3iF/XBG3ya8qXO819JHRDtDTVW+eaMIhxh
-         2yqb6Ld9lBAjxCAWH4ShfM5LTXwOvbb/02fgccV1/bN5RdzB1EBs1duAexRQeZVECQhF
-         T1OSBqaXSb4ZxX248UN56K82DJ5qwwu5M5g6+S9hTMk0pVVKNn9/iXwAOOSYketdqNXF
-         pIMhNthn+oMUFMfZMi25rfMPPFr+sepu3JP4Lm5p4E8pf7+e1ETjTGdgueRc44EGW2LL
-         lZlw==
-X-Gm-Message-State: ANhLgQ3/7b/RwVt7OfnVXNpbROxeoa+blDIczej8jd+bTiRrLFXidvRS
-        lSN+sJ1iGevVqig3tTHcvCc=
-X-Google-Smtp-Source: ADFU+vuCLwEwQ5JWv5ljZuN0njk0gngoUTdcQ0yYvpJ5vzAu66rQL6Q1YmXNCUN1Wmmj/p+P6gqpCA==
-X-Received: by 2002:a5d:5090:: with SMTP id a16mr4872952wrt.191.1583937058668;
-        Wed, 11 Mar 2020 07:30:58 -0700 (PDT)
-Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
-        by smtp.gmail.com with ESMTPSA id 138sm3297085wmb.21.2020.03.11.07.30.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 07:30:57 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 15:30:53 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
-        robh+dt@kernel.org, jonathanh@nvidia.com, andrew.murray@arm.com,
-        kishon@ti.com, gustavo.pimentel@synopsys.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 0/5] Add support for PCIe endpoint mode in Tegra194
-Message-ID: <20200311143053.GB494173@ulmo>
-References: <20200303181052.16134-1-vidyas@nvidia.com>
- <20200311105141.GA30083@e121166-lin.cambridge.arm.com>
+        Wed, 11 Mar 2020 10:31:43 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:43183 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729719AbgCKObn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 10:31:43 -0400
+Received: from mail-qv1-f51.google.com ([209.85.219.51]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MXpM2-1iop5V2Doy-00Y7pz; Wed, 11 Mar 2020 15:31:41 +0100
+Received: by mail-qv1-f51.google.com with SMTP id l17so951015qvu.4;
+        Wed, 11 Mar 2020 07:31:41 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0nb0jq9k7IMpYf08xQ+SH5299hnUKxYLLXj3/69SriKK/tNsXC
+        Fcm+OJWKHCA8ppinDQXhE7YRn4sCsk7Cu+nO93M=
+X-Google-Smtp-Source: ADFU+vs7vsHRRk5DF+sIH0AM5qI2NZuKa/my/Rqt4Fil9rQRSzu8NXrbadx7Co2qeP3BJvqRxzROzp3/R4yRw9+b1xg=
+X-Received: by 2002:ad4:52eb:: with SMTP id p11mr2880124qvu.211.1583937100255;
+ Wed, 11 Mar 2020 07:31:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
-Content-Disposition: inline
-In-Reply-To: <20200311105141.GA30083@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <20200311112120.30890-1-zhang.lyra@gmail.com>
+In-Reply-To: <20200311112120.30890-1-zhang.lyra@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 11 Mar 2020 15:31:24 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a12iN4HzN3HsRSBJPLpwJzdVwhrK7Mje0V6eW3Lvd77iw@mail.gmail.com>
+Message-ID: <CAK8P3a12iN4HzN3HsRSBJPLpwJzdVwhrK7Mje0V6eW3Lvd77iw@mail.gmail.com>
+Subject: Re: [RESEND PATCH] arm64: dts: specify console via command line
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:CLt4UGhYEFuPuQIoW/xfHJnWHUF1vh0zPPhR4y6r6NbTUEGmV5V
+ QLW9hYN9gDzNQV/Wu/cJtDhyP2/ljICttwKTgusnrim6lFYY9rvJfrIai8uevx8B/bSs/bt
+ eOxvC03C25dU8QvO2zeix7G602ro0VZkwwx3Ps6Oczh9hUZyagJIUWPfwwnn7tJJCvL6aXD
+ 78H8pb9nRwls4SGXSRvdg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+t3kxDfZUqE=:PY7qPIJNe78YFLzEC/WUWm
+ SqI6fl1r3EydEtOj4vQNOcDBzFrkUeJ1rNzS2iILUFo8ngrQyQ1Lxchglbh5IK0VGodjJxvms
+ 5dAyeO/NktaE29+8RLONAyeJEoKzVbegL78sIeEjMPYeK3DFhboSaZWxQCx+V5uHHQ0oQUXTk
+ pDWdbYdg8qalRE5d42VG3u04ZGPO4vUp49Mi+tqyKdbdziI9gis+GZrCqNIKxBPHnOcXzj3Lg
+ Bl8K2bGCwUEUR1VqGVC1HoL3PbZbZpgp51jTHfRNo2RugvXmZjWrGtgX3QIF5/IWuMp67mnPF
+ CKni6tFCkpsaE42L2DQi1llQKu/pvK0TUh7VEy+YgLYwljpwYEOE58IoZ2nDBPFeCTJFRNsg/
+ wSWuNCNyXJD7LIDbtXmeqznxj+eDHpnHI6woVCvDBFb2tzK92qiOBFZOaL800C8aIa2DiI0up
+ dm+VcMvYS2fwDfbfwh96MC9DzT22IGFZByET9a0H32seTB5MBjVSl/NnDxBXlfPn4PINTqaVV
+ /ZFsJCprS2n9AUbkkMi75avJXDWUF2nLa30oE7GQSYlU2YG3qjMw7XAuNy1W07L0j2HmqJLj/
+ MvLFJPfPhWUXwW1ysP/Jwz626XppZwVekyIFK8xY/5MJGCQHiDwsmBkh3pawqh7ObhO/e0aDQ
+ xKUrQZT9IhQ6ZWTegn/E01wqoME/vKo40gfO0ck2A2twSjl/Ima68NQ1otbhLxfGwwh1jW+vT
+ WNbwXMO0uEpYxjNXHtW9C69b2J0VuEPs0Y8EoZOCmRXPGJ7wisnYVr6v/xAyieSOIxG5hEHXD
+ UtrSmnYnhAceAhwZNqUTzcobE2OSf9FbeHcf8BV2E/DBucW9Qo=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Mar 11, 2020 at 12:21 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
 
---i9LlY+UWpKt15+FH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+> index 2047f7a74265..510f65f4d8b8 100644
+> --- a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+> +++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+> @@ -28,7 +28,7 @@
+>
+>         chosen {
+>                 stdout-path = "serial1:115200n8";
+> -               bootargs = "earlycon";
+> +               bootargs = "earlycon console=ttyS1";
+>         };
+>  };
 
-On Wed, Mar 11, 2020 at 10:52:00AM +0000, Lorenzo Pieralisi wrote:
-> On Tue, Mar 03, 2020 at 11:40:47PM +0530, Vidya Sagar wrote:
-> > Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can op=
-erate
-> > either in root port mode or in end point mode but only in one mode at a=
- time.
-> > Platform P2972-0000 supports enabling endpoint mode for C5 controller. =
-This
-> > patch series adds support for PCIe endpoint mode in both the driver as =
-well as
-> > in DT.
-> > This patch series depends on the changes made for Synopsys DesignWare e=
-ndpoint
-> > mode subsystem that are recently accepted.
-> > @ https://patchwork.kernel.org/project/linux-pci/list/?series=3D202211
-> > which in turn depends on the patch made by Kishon
-> > @ https://patchwork.kernel.org/patch/10975123/
-> > which is also under review.
-> >=20
-> > V5:
-> > * Rebased patch-2 on top of Lorenzo's pci/endpoint branch
-> > * Removed unwanted header files inclusion in patch-5
->=20
-> Applied patches 1,2,5 to pci/endpoint for v5.7, please let me know
-> if something is missing.
+Hi Chunyan,
 
-Great, thanks! I've picked up patches 3 and 4 into the Tegra tree for
-v5.7.
+I would expect that you need to either specify the stdout-path, or the console=
+kernel parameter, but not both.
 
-Thierry
+If earlycon was used, shouldn't the driver know which port is the console?
 
---i9LlY+UWpKt15+FH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5o9hkACgkQ3SOs138+
-s6EhXg//cjYE1EBraQovAb9Meb89XpZgwlbTBz4wVpX5gGBnmOdMVLAJdqSbXdVQ
-AxZT3EVQOzy24ZqGwb118iN3a28CNYU9FLUdZM/UoPnA4NHC0Dk62cIeWUly7FU7
-geukEaBFNJSl/6EPuAo0Qobgow0Yn5anvPjKgpZ+0BKK/e/+aUYZNzFs0vpde9xq
-9PPsB1rGj0KrrDSnAFS1hxrL85yL8B5Hz2X//Zm/WFgC3C7X2lSSCL9z4RWyeT1F
-pNc41o45blCOmcA2wZi7WbaMCYkyBvQyjEmBPBTnF/6P3R+J3XWtyWcTJOSwgjby
-MHLshrbG0T4HNxFtbZ38G14Q//mCu5kYuGWLW/P3187nejD2XF1wNGYSqmwE9Eny
-zcOH7tqEofowLvCjLa3BZtHiSiAxRdwuLY4Q6nh1tEydpQqo5bKp3A52B6vjdqoo
-7GBhLvJ6tIal+dZUxI7nMz7wPdb53TrMws6rhQ4/bcb1oprZwXQzL8DGoNij6aBl
-kYU0OvWb1Wh9t+EbLa3BKdupY/OuBVK1zu6/mH1+MYTD/FZviyj+EXH8rPLbzki5
-THwdnIDEs0dvf3nEfIjXnyVfr+QrVOsrsKOpyfjHq3N0yGeOXavt1Su/XHZ8mBDX
-r2nBg9NWA2vPlngiW49ndo080lFoiG3mGmRwgk21+1HJIDdPcys=
-=QA1n
------END PGP SIGNATURE-----
-
---i9LlY+UWpKt15+FH--
+      Arnd
