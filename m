@@ -2,212 +2,218 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7021DC10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C198FC10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4016222527
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583932451;
-	bh=nvA6BQl6PI2KP1cqD+maPlYuL84hxcsQenGC1RViT6c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=fuVnMrxwK95Vy+xzHK2Omhoj3UuW1lUJDvMfL1jOphD5ms+R+oMStPP75blBLzYCB
-	 GzriaJ0vBWNJ/P9paUIWjKaIpJpbAWDls2g3aPLu0NjRdjBz/CGrZ9fGqfOsKs83Fv
-	 HfG0LHz97MkIOOg0tovyZccikmhRKPK9WgROhX14=
+	by mail.kernel.org (Postfix) with ESMTP id 8FA5D222D9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:20:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="yGNmzbLo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729345AbgCKNOK (ORCPT
+        id S1729408AbgCKNUV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:14:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:49664 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729331AbgCKNOK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:14:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95FC731B;
-        Wed, 11 Mar 2020 06:14:09 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AA4C3F67D;
-        Wed, 11 Mar 2020 06:14:08 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 13:14:07 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        olivier.moysan@st.com, robh+dt@kernel.org
-Subject: Applied "ASoC: Convert cirrus,cs42l51 to json-schema" to the asoc tree
-In-Reply-To: <20200228152706.29749-1-benjamin.gaignard@st.com>
-Message-Id: <applied-20200228152706.29749-1-benjamin.gaignard@st.com>
-X-Patchwork-Hint: ignore
+        Wed, 11 Mar 2020 09:20:21 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:35792 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgCKNUV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 09:20:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583932818; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VBz3FZ3ocy9Q4rzBgIHqJzobg61gP/HChhqdayvs+kk=;
+        b=yGNmzbLo0S1R24n1OGPsGlftaQ2Z9STV+IYFchtu/eOrKBQs99T+Sg0QfS0jjJiM7iPlvB
+        fCXv+Kd2EdwpQ7DhAMRKSbOYjLnORPIaX8ySm/AoXTBk1KYarlZRCzenNsMs2lIS3yfGGO
+        mUxsbYR1ib0OtfKdfzzID+aaqdyuqWM=
+Date:   Wed, 11 Mar 2020 14:20:09 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [RFC v2 6/8] MIPS: DTS: jz4780: account for Synopsys HDMI driver
+ and LCD controller
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        MIPS Creator CI20 Development 
+        <mips-creator-ci20-dev@googlegroups.com>
+Message-Id: <1583932809.3.0@crapouillou.net>
+In-Reply-To: <F29E9DCC-29BC-4B88-9288-3E53BF8423C6@goldelico.com>
+References: <cover.1582913973.git.hns@goldelico.com>
+        <04b485165f38744816a0446e95150cafdeb716ee.1582913973.git.hns@goldelico.com>
+        <1583177253.3.5@crapouillou.net>
+        <F29E9DCC-29BC-4B88-9288-3E53BF8423C6@goldelico.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+Hi Nikolaus,
 
-   ASoC: Convert cirrus,cs42l51 to json-schema
 
-has been applied to the asoc tree at
+Le mer., mars 11, 2020 at 13:43, H. Nikolaus Schaller=20
+<hns@goldelico.com> a =E9crit :
+> Hi Paul,
+>=20
+>>  Am 02.03.2020 um 20:27 schrieb Paul Cercueil <paul@crapouillou.net>:
+>>=20
+>>  Hi Nikolaus,
+>>=20
+>>=20
+>>  Le ven., f=E9vr. 28, 2020 at 19:19, H. Nikolaus Schaller=20
+>> <hns@goldelico.com> a =E9crit :
+>>>  From: Paul Boddie <paul@boddie.org.uk>
+>>>  A specialisation of the generic Synopsys HDMI driver is employed=20
+>>> for JZ4780
+>>>  HDMI support. This requires a new driver, plus device tree and=20
+>>> configuration
+>>>  modifications.
+>>>  Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+>>>  Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>  ---
+>>>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 32=20
+>>> ++++++++++++++++++++++++++
+>>>  1 file changed, 32 insertions(+)
+>>>  diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi=20
+>>> b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  index f928329b034b..391d4e1efd35 100644
+>>>  --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+>>>  @@ -433,4 +433,36 @@
+>>>  		status =3D "disabled";
+>>>  	};
+>>>  +
+>>>  +	hdmi: hdmi@10180000 {
+>>>  +		compatible =3D "ingenic,jz4780-dw-hdmi";
+>>>  +		reg =3D <0x10180000 0x8000>;
+>>>  +		reg-io-width =3D <4>;
+>>>  +
+>>>  +		clocks =3D <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
+>>>  +		clock-names =3D "isfr" , "iahb";
+>>>  +
+>>>  +		assigned-clocks =3D <&cgu JZ4780_CLK_HDMI>;
+>>>  +		assigned-clock-rates =3D <27000000>;
+>>=20
+>>  I *think* this should go to the board file.
+>>=20
+>>>  +
+>>>  +		interrupt-parent =3D <&intc>;
+>>>  +		interrupts =3D <3>;
+>>>  +
+>>>  +		/* ddc-i2c-bus =3D <&i2c4>; */
+>>>  +
+>>>  +		status =3D "disabled";
+>>>  +	};
+>>>  +
+>>>  +	lcd: lcd@13050000 {
+>>=20
+>>  The node name should be 'lcd-controller'.
+>>=20
+>>>  +		compatible =3D "ingenic,jz4740-lcd";
+>>=20
+>>  The JZ4780's LCD controller is much newer than the JZ4740 one, so=20
+>> even if it works with the "ingenic,jz4740-lcd" compatible string,=20
+>> you want it as a fallback.
+>>  So this should be: compatible =3D "ingenic,jz4780-lcd",=20
+>> "ingenic,jz4740-lcd".
+>>=20
+>>  That means the YAML should be updated too.
+>=20
+> I have started to look into jz4780 HDMI setup again.
+>=20
+> Well, there is no driver compatible to "ingenic,jz4780-lcd" so far
+> and it is questionalbe if we need a different one.
+>=20
+> I think we should rather make the driver also compatible
+> than adding a fallback to ingenic,jz4740-lcdto the DTS.
+>=20
+> The reason why this is better even if both LCDC are almost
+> compatible is that the jz4780 allows for much bigger displays
+> and therefore should have its own jz_soc_info with 4k x 2k
+> as maximum.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
+Sure, feel free to extend the driver.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> Next I tried to find out if the LCDC are really compatible.
+>=20
+> Well the jz4780 has two lcdc instances but they are separated
+> by the reg addr. Next, there are unique features (like picture in
+> picture with alpha blending) but those are probably disabled
+> if not programmed from reset state. This may become a reason
+> to separate or augment the driver for the jz4780 but at the
+> moment we can ignore that.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Two LCDC instances -> two lcd-controller@... nodes. It's that simple.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+The other features you listed are outside the LCDC, so outside the=20
+scope of this driver.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+> There are also subtly different bit definitions and register
+> widths (e.g. 24 bit in addition to 16/18 bit modes or more bits
+> for the sync position) but it looks as if the ingenic_drm
+> driver already handles this.
+>=20
+> Then I tried to read back the registers. Strangely they
+> are all 0x00000000. So there is no programming of the
+> lcd-controller in our DT setup with HDMI at all!
 
-Thanks,
-Mark
+How did you read them?
+Do it from the regmap: should be "cat=20
+/sys/kernel/debug/regmap/13050000.lcd-controller/registers" (not sure=20
+about the path)
 
-From 97249a89c17e8f1288fed1ebc617ea2e9e88d501 Mon Sep 17 00:00:00 2001
-From: Benjamin Gaignard <benjamin.gaignard@st.com>
-Date: Fri, 28 Feb 2020 16:27:06 +0100
-Subject: [PATCH] ASoC: Convert cirrus,cs42l51 to json-schema
+> I also checked that ingenic_drm_probe() is called and
+> returns successfully 0. It also reports that a /dev/fb
+> has been created:
+>=20
+> [    7.908830] ingenic-drm 13050000.lcd-controller: fb0:=20
+> ingenic-drmdrmf frame buffer device
+>=20
+> But for example ingenic_drm_encoder_atomic_mode_set() is
+> never called which should write some registers of the LCDC.
+>=20
+> I only did see some calls to ingenic_drm_encoder_atomic_check().
+>=20
+> This of course explains why we have no HDMI signals despite
+> proper HPD and a /dev/fb0. Because the LCDC is not being
+> programmed.
 
-Convert cirrus,cs42l51 to yaml format.
+It won't be called until the HDMI driver says that the cable is=20
+plugged, and there's a client application (e.g. fbdev emulation)=20
+running. So the problem is most likely within the HDMI driver.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20200228152706.29749-1-benjamin.gaignard@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/sound/cirrus,cs42l51.yaml        | 69 +++++++++++++++++++
- .../devicetree/bindings/sound/cs42l51.txt     | 33 ---------
- 2 files changed, 69 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/cs42l51.txt
+Cheers,
+-Paul
 
-diff --git a/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml b/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
-new file mode 100644
-index 000000000000..efce847a3408
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/cirrus,cs42l51.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: CS42L51 audio codec DT bindings
-+
-+maintainers:
-+  - Olivier Moysan <olivier.moysan@st.com>
-+
-+properties:
-+  compatible:
-+      const: cirrus,cs42l51
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#sound-dai-cells":
-+    const: 0
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: MCLK
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  VL-supply:
-+    description: phandle to voltage regulator of digital interface section
-+
-+  VD-supply:
-+    description: phandle to voltage regulator of digital internal section
-+
-+  VA-supply:
-+    description: phandle to voltage regulator of analog internal section
-+
-+  VAHP-supply:
-+    description: phandle to voltage regulator of headphone
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#sound-dai-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    i2c@0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      cs42l51@4a {
-+        compatible = "cirrus,cs42l51";
-+        reg = <0x4a>;
-+        #sound-dai-cells = <0>;
-+        clocks = <&mclk_prov>;
-+        clock-names = "MCLK";
-+        VL-supply = <&reg_audio>;
-+        VD-supply = <&reg_audio>;
-+        VA-supply = <&reg_audio>;
-+        VAHP-supply = <&reg_audio>;
-+        reset-gpios = <&gpiog 9 GPIO_ACTIVE_LOW>;
-+      };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/sound/cs42l51.txt b/Documentation/devicetree/bindings/sound/cs42l51.txt
-deleted file mode 100644
-index acbd68ddd2cb..000000000000
---- a/Documentation/devicetree/bindings/sound/cs42l51.txt
-+++ /dev/null
-@@ -1,33 +0,0 @@
--CS42L51 audio CODEC
--
--Required properties:
--
--  - compatible : "cirrus,cs42l51"
--
--  - reg : the I2C address of the device for I2C.
--
--Optional properties:
--  - VL-supply, VD-supply, VA-supply, VAHP-supply: power supplies for the device,
--    as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
--
--  - reset-gpios : GPIO specification for the reset pin. If specified, it will be
--    deasserted before starting the communication with the codec.
--
--  - clocks : a list of phandles + clock-specifiers, one for each entry in
--    clock-names
--
--  - clock-names : must contain "MCLK"
--
--Example:
--
--cs42l51: cs42l51@4a {
--	compatible = "cirrus,cs42l51";
--	reg = <0x4a>;
--	clocks = <&mclk_prov>;
--	clock-names = "MCLK";
--	VL-supply = <&reg_audio>;
--	VD-supply = <&reg_audio>;
--	VA-supply = <&reg_audio>;
--	VAHP-supply = <&reg_audio>;
--	reset-gpios = <&gpiog 9 GPIO_ACTIVE_LOW>;
--};
--- 
-2.20.1
+> Any ideas / hints how to check or improve?
+>=20
+> BR and thanks,
+> Nikolaus
+>=20
+
+=
 
