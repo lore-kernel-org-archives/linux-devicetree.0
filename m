@@ -2,252 +2,113 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A06C2BAEE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AD8C0044D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86282073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C49320739
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:51:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IL8dp+f8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eNRE/qbm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbgCKRnh (ORCPT
+        id S1730603AbgCKRv5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:43:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46681 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730258AbgCKRnd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 13:43:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n15so3725331wrw.13;
-        Wed, 11 Mar 2020 10:43:31 -0700 (PDT)
+        Wed, 11 Mar 2020 13:51:57 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37351 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730505AbgCKRv5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 13:51:57 -0400
+Received: by mail-pj1-f66.google.com with SMTP id ca13so1389359pjb.2
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 10:51:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=1pJAR/sckcdLGJSwTx5sy+rsfwGpz9fPR5d1aK/vSAI=;
-        b=IL8dp+f8Ls3O4ZBKg0S7q07Ne+0KPwrBNYU44a8fqCPSWcItDMq7pjC/Pr4uqGqNmK
-         DHpK2vhTYvwwq0Lrf7gqR71/s3LT/NYqhabkqVpXujHAJfueU6HTfxAimK9nAYUlLRd7
-         lt3Gv4w90ahkiZKxkl7iR1T+1EJ076xesoMRWnNEAvwJEsgQzPHtq9PRL8W8ekuVzTf7
-         ioIU13aDkkHHPljPEklJFzPk4+p11P6iLhX8yW4vTwAqf94uLiO0QhJgwA/wvIMX4R4a
-         NYuws1oJ3ECaYpHh6LOWP8PdZ8f0hxSndx8shMo16QBEBlt9zWHv5E1zISbAf9wfK8VC
-         eliA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=a5g25PDEXPRR99KehOK1iE2Gu80HzFKYuNkkikGwIFI=;
+        b=eNRE/qbm63stiKXIvgwIlV+IxOrzorOkM4iow7B6RZUpJva1559bRWMvw2agkD7Mis
+         2YTH3veSMsgbKxZyscQrguxH0BD1nYGckFuQ/fdaY2NKujUR7G6NuenUZTTOfFuGSGgH
+         Qxht0ueO4ugRgmAZGeX2WtSxnNFHitwKoKXgM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1pJAR/sckcdLGJSwTx5sy+rsfwGpz9fPR5d1aK/vSAI=;
-        b=slWiPuWY4OjCvR1JF4hoQl3X86WSwW8hLBJufizXPHB4sdLnuBRCJNgnLAv7jpoghN
-         gI2WBhQwD41icBXjIuP615qUxpW2GHwgMQyoRLFR668Q3sckKu6CnfwxvOca/K/29Zfi
-         S+AR56C6dTajg1Yo4rLPuKgMAesiguH45DHPuVIN5RkQ0Knt8VSbYUetsiYx2iYF+R9U
-         2CMey7VS7Jr+YqeKxlqkbG7AnFtLf/NlKRIurQTtBOi71iZUta4VHlm9zQ4ThiCvXWxZ
-         a2nhdmEQy93mnQdnd5yTXEaQaTv/kVlPIFiSREH4GT21q5IrMqOfrPMeYz3HYeHquX0Q
-         btIg==
-X-Gm-Message-State: ANhLgQ1IXfhPBEWE9uUcWWqJZeuDwfV4JRt0LgL6WGH1PzbiFgbPn6xv
-        fQ9sFuY49Yit3ReFOoPcf/NfBAv4
-X-Google-Smtp-Source: ADFU+vvKDdOtWWEdNwVAEQZQ9mrYzweIQAoDItXSKaFgMXGnDq8K7Z+Mo7oErH9P/yJc80PGZda9wA==
-X-Received: by 2002:a5d:6544:: with SMTP id z4mr5535066wrv.298.1583948610652;
-        Wed, 11 Mar 2020 10:43:30 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id d1sm8933166wrw.52.2020.03.11.10.43.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Mar 2020 10:43:29 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     lgirdwood@gmail.com
-Cc:     broonie@kernel.org, heiko@sntech.de, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] dt-bindings: sound: convert rockchip i2s bindings to yaml
-Date:   Wed, 11 Mar 2020 18:43:21 +0100
-Message-Id: <20200311174322.23813-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a5g25PDEXPRR99KehOK1iE2Gu80HzFKYuNkkikGwIFI=;
+        b=kWUQGriL62k4aGfAwTo65jkxnHQQlkJEB5AqS3wSu0w6DewK8RxMLVY5YIo6RfKTCl
+         a6GkkjcJyAXd1uSMYW8Su4fwFhmGtPZ12DaoSrUAl8MycaWFLvNcfxhgAxi/HObDnzgh
+         6ZreEv3ptTTakUkWPTx3rR46Frqvbj2JSX/sJvx9iv5tm0yhFRmhaiuCmc4zU9hHssr6
+         Ra8+4UOYgn5XjA5Ang7MibUhZ6DZ1g1WOWArMxCiRf0iILetXnx0gbIp3MUcDgrGXaxN
+         QyuTIN6x12sC4DjHFPsCzSfLbBS2Xp4pmhVzmxyyzt6ce0ks9wkGg71SZBwKW+F81lNO
+         yb6A==
+X-Gm-Message-State: ANhLgQ3fHEbc9sNdxYEiQ1lbpbwzMdJepwfGzX7yjHdUPZVjgb9Mpbkm
+        DWwpqsT5mAGUa/N6AhWbdgfksw==
+X-Google-Smtp-Source: ADFU+vsBi+bUj1VxZCycAe0rgyooLlJtfjkUSx8xr00Nuup+ET1asdfp4FcWsNKm5fSW9KpT0NQn8w==
+X-Received: by 2002:a17:902:bc4c:: with SMTP id t12mr3853587plz.54.1583949115991;
+        Wed, 11 Mar 2020 10:51:55 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id d3sm5730078pfq.126.2020.03.11.10.51.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 10:51:54 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 10:51:53 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v4 4/4] arm64: dts: qcom: sc7180: Correct qmp phy reset
+ entries
+Message-ID: <20200311175153.GB144492@google.com>
+References: <1583928252-21246-1-git-send-email-sanm@codeaurora.org>
+ <1583928252-21246-5-git-send-email-sanm@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1583928252-21246-5-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Current dts files with 'i2s' nodes are manually verified.
-In order to automate this process rockchip-i2s.txt
-has to be converted to yaml.
+Hi Sandeep,
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- .../devicetree/bindings/sound/rockchip-i2s.txt     |  49 ----------
- .../devicetree/bindings/sound/rockchip-i2s.yaml    | 106 +++++++++++++++++++++
- 2 files changed, 106 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/rockchip-i2s.txt
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
+This patch landed in Bjorn's tree (arm64-for-5.7 branch). In case you have
+to re-spin the series there is no need to include it.
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-deleted file mode 100644
-index 54aefab71..000000000
---- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-+++ /dev/null
-@@ -1,49 +0,0 @@
--* Rockchip I2S controller
--
--The I2S bus (Inter-IC sound bus) is a serial link for digital
--audio data transfer between devices in the system.
--
--Required properties:
--
--- compatible: should be one of the following:
--   - "rockchip,rk3066-i2s": for rk3066
--   - "rockchip,px30-i2s", "rockchip,rk3066-i2s": for px30
--   - "rockchip,rk3036-i2s", "rockchip,rk3066-i2s": for rk3036
--   - "rockchip,rk3188-i2s", "rockchip,rk3066-i2s": for rk3188
--   - "rockchip,rk3228-i2s", "rockchip,rk3066-i2s": for rk3228
--   - "rockchip,rk3288-i2s", "rockchip,rk3066-i2s": for rk3288
--   - "rockchip,rk3328-i2s", "rockchip,rk3066-i2s": for rk3328
--   - "rockchip,rk3366-i2s", "rockchip,rk3066-i2s": for rk3366
--   - "rockchip,rk3368-i2s", "rockchip,rk3066-i2s": for rk3368
--   - "rockchip,rk3399-i2s", "rockchip,rk3066-i2s": for rk3399
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- interrupts: should contain the I2S interrupt.
--- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
--	Documentation/devicetree/bindings/dma/dma.txt
--- dma-names: should include "tx" and "rx".
--- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
--- clock-names: should contain the following:
--   - "i2s_hclk": clock for I2S BUS
--   - "i2s_clk" : clock for I2S controller
--- rockchip,playback-channels: max playback channels, if not set, 8 channels default.
--- rockchip,capture-channels: max capture channels, if not set, 2 channels default.
--
--Required properties for controller which support multi channels
--playback/capture:
--
--- rockchip,grf: the phandle of the syscon node for GRF register.
--
--Example for rk3288 I2S controller:
--
--i2s@ff890000 {
--	compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
--	reg = <0xff890000 0x10000>;
--	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
--	dmas = <&pdma1 0>, <&pdma1 1>;
--	dma-names = "tx", "rx";
--	clock-names = "i2s_hclk", "i2s_clk";
--	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
--	rockchip,playback-channels = <8>;
--	rockchip,capture-channels = <2>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-new file mode 100644
-index 000000000..eff06b4b5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
-@@ -0,0 +1,106 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/rockchip-i2s.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip I2S controller
-+
-+description:
-+  The I2S bus (Inter-IC sound bus) is a serial link for digital
-+  audio data transfer between devices in the system.
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: rockchip,rk3066-i2s
-+      - items:
-+          - enum:
-+            - rockchip,px30-i2s
-+            - rockchip,rk3036-i2s
-+            - rockchip,rk3188-i2s
-+            - rockchip,rk3228-i2s
-+            - rockchip,rk3288-i2s
-+            - rockchip,rk3328-i2s
-+            - rockchip,rk3366-i2s
-+            - rockchip,rk3368-i2s
-+            - rockchip,rk3399-i2s
-+          - const: rockchip,rk3066-i2s
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: clock for I2S controller
-+      - description: clock for I2S BUS
-+
-+  clock-names:
-+    items:
-+      - const: i2s_clk
-+      - const: i2s_hclk
-+
-+  dmas:
-+    items:
-+      - description: TX DMA Channel
-+      - description: RX DMA Channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+
-+  rockchip,capture-channels:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 2
-+    description:
-+      Max capture channels, if not set, 2 channels default.
-+
-+  rockchip,playback-channels:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 8
-+    description:
-+      Max playback channels, if not set, 8 channels default.
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      The phandle of the syscon node for the GRF register.
-+      Required property for controllers which support multi channel
-+      playback/capture.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3288-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2s@ff890000 {
-+      compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
-+      reg = <0xff890000 0x10000>;
-+      interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru SCLK_I2S0>, <&cru HCLK_I2S0>;
-+      clock-names = "i2s_clk", "i2s_hclk";
-+      dmas = <&pdma1 0>, <&pdma1 1>;
-+      dma-names = "tx", "rx";
-+      rockchip,capture-channels = <2>;
-+      rockchip,playback-channels = <8>;
-+    };
--- 
-2.11.0
-
+On Wed, Mar 11, 2020 at 05:34:12PM +0530, Sandeep Maheswaram wrote:
+> The phy reset entries were incorrect.so swapped them.
+> 
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 9d112aa..253274d 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1306,8 +1306,8 @@
+>  				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
+>  			clock-names = "aux", "cfg_ahb", "ref", "com_aux";
+>  
+> -			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
+> -				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
+> +			resets = <&gcc GCC_USB3_PHY_PRIM_BCR>,
+> +				 <&gcc GCC_USB3_DP_PHY_PRIM_BCR>;
+>  			reset-names = "phy", "common";
+>  
+>  			usb_1_ssphy: phy@88e9200 {
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
