@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C110C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69514C2BB58
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33DE21D56
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABD72253D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R8RuT72W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d0OldcPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729450AbgCKMq7 (ORCPT
+        id S1729460AbgCKMrB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:46:59 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42445 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729452AbgCKMq6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 08:46:58 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v11so2423369wrm.9
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 05:46:57 -0700 (PDT)
+        Wed, 11 Mar 2020 08:47:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36157 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729453AbgCKMrA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 08:47:00 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g62so1978033wme.1
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 05:46:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=N4gyYG6pd1qHC2GjZUAc/a5emn2edBGVA7chcRhvAO8=;
-        b=R8RuT72WL1I4haJ6qD2A19NADfHGGL4h8E65a5bB32JeKEnVO9JbfE6y04C41FHnLL
-         AiH3yxrWmV4b4ouGsgZnYDvH6JyHDntuFb3/9DvYzPs3xRWl9CkmzwGARwuOAyD3ENG8
-         ExLs4O2EfRkqOxjujXUUTbIjhiAylBxQ8ybvym8Qyo1jwtRGcka/n1mIYt++nCi7pTJf
-         r7VZnDbXLgsvy6IWe8+Hwi6VVKzu0VjNNczUmct/KxpEmMqWQtjtAeb2DhsSv3KYbkPr
-         VSYMt4h9O6gpK0lYTWS8aMFDJFwbWDK7v4kkJazCh6yUcurLTvS7ONepD43137VO3oBz
-         gmyQ==
+        bh=d7fzzw/5lEfLgru+68iO/J8krazqjJjWjKm9fH3TH5I=;
+        b=d0OldcPYPTwC6lUxav+jf6KB+UcGBjwxPVFVLOS8P+DRcf4Nq9+Cgk3ER62YCupyKO
+         n63Plm+lXXP1tDCSs66zuHCHs/M9n6CcfUD83j6S1A3sgTchEZWf/GNdy1+Sg6PJsXx7
+         v6vVCuz7+yMQ9U+jeSTzabfnBGdgbxAl7+8p5eiV0vMWAbcwpvxqhcw3kVlpD7RcuEis
+         e5lM+BenuFHNorZQvoPD0B0I5/lix/gZ+JhB+tlQQjDMmJ4sZt8Pupm67tdBc4wFY0mf
+         EgB/VSPg8NrV9V5qGawXDH19VqniDfIEy7gvlpILkFxSAN86lG2R7fZNu+SKWuDilrZc
+         hdmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=N4gyYG6pd1qHC2GjZUAc/a5emn2edBGVA7chcRhvAO8=;
-        b=NlbdNPip1FMKeeURT2J/+kxE5FwA1jac0v6E5hmHQ4Y6Bs6oU29Z/HNciQDA19zCdl
-         hhXnFks3rBgLPyrH/Ynzz/xrG6nmyoaNoOWSJn0hO/+xqBfYmiCULhQm3JFOqFtrPoOm
-         mb+vObFfM0pQ0IkzHq66+8AqLcxE9gGdQ/ftWPK6AceYqiDdwpko5JU7OpIqj3XRy0A9
-         znARal0llcfBXqgzfAoOy/cbaG0fFDj+gAXoN8mkENLc1zPAnY5PJeuL1CZvQqVryRdY
-         zQlZ2ObtAVCBbvGKZEt41+Nb+e/sbYGd3bCyauYtkbhmmIPl69ilk82kFbQt8fQ6/rs3
-         JsfQ==
-X-Gm-Message-State: ANhLgQ0nV696LC2HfBhiBpcyXeNtZL8ZENXjlhjqUiFCbxRYpS6XWyzh
-        ZG1o5OBKnolkG4h/krtfUnh9yo9VhMY=
-X-Google-Smtp-Source: ADFU+vtVplsLJKhJ5k96cjG7bQIJiqMwH6aOvBxLDVX3vK8y4Ou+veGu1hCYgxMQXp8PN1ugVbeDHg==
-X-Received: by 2002:adf:a555:: with SMTP id j21mr4427467wrb.409.1583930817062;
-        Wed, 11 Mar 2020 05:46:57 -0700 (PDT)
+        bh=d7fzzw/5lEfLgru+68iO/J8krazqjJjWjKm9fH3TH5I=;
+        b=sXgUWFVQzbOFTOSeK9J9YVg21y0BgjNBp8pBWGtzEGdViepUGHDlbhlTl+JtEa0dv3
+         rAzgEnGwdXvf11AyAEfn6bXIhVGelwm96XBiQlWuRGgcHfF2lMMZaInkc3AMB3h59MBW
+         TgCnR9Hxu78PT4/eNWJdBzJ7FkWg6/lUZLLwf1KfViRbMn6nizfu89Jj/70q1UPoDYQv
+         txK4VZnxyfFFahbdwffTt0fko06YlwZnvgTzvS4RgAOyqhrMjmn0khDA8NgPe5m+5ISg
+         WNtR109JwrQutq3NFjCYXN3ApEcHTo0fO8hopfVUGRJB9J1ECwzl41yyM2TXrXQyH0dZ
+         yu3Q==
+X-Gm-Message-State: ANhLgQ35fVcmmtgHPs05DqwnUxJK5Ez4uNBcP1OTg1KWEQ+yl2ObBjqo
+        gFkwl06NmuMG27D2GWLBrO2Pvw==
+X-Google-Smtp-Source: ADFU+vtrrbz3xW1uwROP0nlDBlOyziir6FkZYgi3Shk3F4IjgLnSc2vkzPiEnYQH9VQXQDGBOwBJWg==
+X-Received: by 2002:a1c:7e08:: with SMTP id z8mr3550520wmc.166.1583930818310;
+        Wed, 11 Mar 2020 05:46:58 -0700 (PDT)
 Received: from localhost.localdomain ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id c2sm8380020wma.39.2020.03.11.05.46.55
+        by smtp.gmail.com with ESMTPSA id c2sm8380020wma.39.2020.03.11.05.46.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 05:46:56 -0700 (PDT)
+        Wed, 11 Mar 2020 05:46:57 -0700 (PDT)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
         joro@8bytes.org, baolu.lu@linux.intel.com, sudeep.holla@arm.com,
@@ -66,9 +66,9 @@ Cc:     lorenzo.pieralisi@arm.com, corbet@lwn.net, mark.rutland@arm.com,
         lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
         amurray@thegoodpenguin.co.uk, frowand.list@gmail.com,
         Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v2 02/11] PCI: Add ats_supported host bridge flag
-Date:   Wed, 11 Mar 2020 13:44:57 +0100
-Message-Id: <20200311124506.208376-3-jean-philippe@linaro.org>
+Subject: [PATCH v2 03/11] PCI: OF: Check whether the host bridge supports ATS
+Date:   Wed, 11 Mar 2020 13:44:58 +0100
+Message-Id: <20200311124506.208376-4-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200311124506.208376-1-jean-philippe@linaro.org>
 References: <20200311124506.208376-1-jean-philippe@linaro.org>
@@ -79,51 +79,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Each vendor has their own way of describing whether a host bridge
-supports ATS.  The Intel and AMD ACPI tables selectively enable or
-disable ATS per device or sub-tree, while Arm has a single bit for each
-host bridge.  For those that need it, add an ats_supported bit to the
-host bridge structure.
+When setting up a generic host on a device-tree based system, copy the
+ats-supported flag into the pci_host_bridge structure.
 
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
-v1->v2: try to improve the comment
+v1->v2: keep the helper in pci-host-common.c
 ---
- drivers/pci/probe.c | 8 ++++++++
- include/linux/pci.h | 1 +
- 2 files changed, 9 insertions(+)
+ drivers/pci/controller/pci-host-common.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 512cb4312ddd..b5e36f06b40a 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -598,6 +598,14 @@ static void pci_init_host_bridge(struct pci_host_bridge *bridge)
- 	bridge->native_shpc_hotplug = 1;
- 	bridge->native_pme = 1;
- 	bridge->native_ltr = 1;
-+
-+	/*
-+	 * Some systems (ACPI IORT, device-tree) declare ATS support at the host
-+	 * bridge, and clear this bit when ATS isn't supported. Others (ACPI
-+	 * DMAR and IVRS) declare ATS support with a smaller granularity, and
-+	 * need this bit set.
-+	 */
-+	bridge->ats_supported = 1;
+diff --git a/drivers/pci/controller/pci-host-common.c b/drivers/pci/controller/pci-host-common.c
+index 250a3fc80ec6..2e800bc6ae7a 100644
+--- a/drivers/pci/controller/pci-host-common.c
++++ b/drivers/pci/controller/pci-host-common.c
+@@ -54,6 +54,16 @@ static struct pci_config_window *gen_pci_init(struct device *dev,
+ 	return ERR_PTR(err);
  }
  
- struct pci_host_bridge *pci_alloc_host_bridge(size_t priv)
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 3840a541a9de..9fe2e84d74d7 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -511,6 +511,7 @@ struct pci_host_bridge {
- 	unsigned int	native_pme:1;		/* OS may use PCIe PME */
- 	unsigned int	native_ltr:1;		/* OS may use PCIe LTR */
- 	unsigned int	preserve_config:1;	/* Preserve FW resource setup */
-+	unsigned int	ats_supported:1;
++static void of_pci_host_check_ats(struct pci_host_bridge *bridge)
++{
++	struct device_node *np = bridge->bus->dev.of_node;
++
++	if (!np)
++		return;
++
++	bridge->ats_supported = of_property_read_bool(np, "ats-supported");
++}
++
+ int pci_host_common_probe(struct platform_device *pdev,
+ 			  struct pci_ecam_ops *ops)
+ {
+@@ -92,6 +102,7 @@ int pci_host_common_probe(struct platform_device *pdev,
+ 		return ret;
+ 	}
  
- 	/* Resource alignment requirements */
- 	resource_size_t (*align_resource)(struct pci_dev *dev,
++	of_pci_host_check_ats(bridge);
+ 	platform_set_drvdata(pdev, bridge->bus);
+ 	return 0;
+ }
 -- 
 2.25.1
 
