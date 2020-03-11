@@ -2,98 +2,124 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944B7C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6A2C18E5A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D532082E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B0412082E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgCKIOw (ORCPT
+        id S1728514AbgCKIP0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:14:52 -0400
-Received: from mga11.intel.com ([192.55.52.93]:11849 "EHLO mga11.intel.com"
+        Wed, 11 Mar 2020 04:15:26 -0400
+Received: from mga04.intel.com ([192.55.52.120]:60039 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgCKIOv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:14:51 -0400
+        id S1726198AbgCKIPZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:15:25 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:14:51 -0700
-X-ExtLoop1: 1
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:15:24 -0700
 X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
-   d="scan'208";a="236215354"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Mar 2020 01:14:48 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jBwVu-008gZ3-U2; Wed, 11 Mar 2020 10:14:50 +0200
-Date:   Wed, 11 Mar 2020 10:14:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] power: supply: add CellWise cw2015 fuel gauge
- driver
-Message-ID: <20200311081450.GZ1922688@smile.fi.intel.com>
-References: <20200309160346.2203680-1-t.schramm@manjaro.org>
- <20200309160346.2203680-3-t.schramm@manjaro.org>
- <20200310101050.GG1922688@smile.fi.intel.com>
- <eb732216-dd19-f18d-9ace-e14c7e8de991@manjaro.org>
+   d="scan'208";a="236352943"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:15:21 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 0FA612096B; Wed, 11 Mar 2020 10:15:19 +0200 (EET)
+Date:   Wed, 11 Mar 2020 10:15:19 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
+        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
+        laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, linux-media@vger.kernel.org
+Subject: Re: [PATCH v12 04/19] media: v4l2-fwnode: add endpoint id field to
+ v4l2_fwnode_link
+Message-ID: <20200311081518.GE5379@paasikivi.fi.intel.com>
+References: <20200309101428.15267-1-m.felsch@pengutronix.de>
+ <20200309101428.15267-5-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eb732216-dd19-f18d-9ace-e14c7e8de991@manjaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200309101428.15267-5-m.felsch@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 07:55:42PM +0100, Tobias Schramm wrote:
+Hi Marco,
 
-> >> +static int cw_read_word(struct cw_battery *cw_bat, u8 reg, u16 *val)
-> >> +{
-> >> +	u8 reg_val[2];
-> >> +	int ret;
-> >> +
-> >> +	ret = regmap_raw_read(cw_bat->regmap, reg, reg_val, 2);
-> >> +	*val = (reg_val[0] << 8) + reg_val[1];
-> >> +	return ret;
-> >> +}
-> > 
-> > NIH BE type of readings? Can REGMAP_ENDIAN_BIG help?
+On Mon, Mar 09, 2020 at 11:14:13AM +0100, Marco Felsch wrote:
+> A link is between two endpoints not between two ports to be more
+> precise. Add the local_id/remote_id field which stores the endpoint
+> reg/port property to the link. Now the link holds all necessary
+> information about a link.
 > 
-> Not really, or can it? Registers on the cw2015 are a wild mix of single
-> bytes and words. There does not seem to be a per register override for
-> reg_/val_bits.
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+> 
+> v12:
+> - New in this serie
+> 
+>  drivers/media/v4l2-core/v4l2-fwnode.c | 2 ++
+>  include/media/v4l2-fwnode.h           | 4 ++++
+>  2 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> index 6ece4320e1d2..78c32aebbe03 100644
+> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> @@ -565,6 +565,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
+>  
+>  	memset(link, 0, sizeof(*link));
+>  
+> +	fwnode_property_read_u32(__fwnode, "reg", &link->local_id);
+>  	fwnode = fwnode_get_parent(__fwnode);
+>  	fwnode_property_read_u32(fwnode, port_prop, &link->local_port);
+>  	fwnode = fwnode_get_next_parent(fwnode);
+> @@ -578,6 +579,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
+>  		return -ENOLINK;
+>  	}
+>  
+> +	fwnode_property_read_u32(fwnode, "reg", &link->remote_id);
 
-I see.
-Perhaps
+This code really should use fwnode_graph_parse_endpoint(), and not
+implement the parsing locally.
 
-	__be16 value;
+I do think the end result would be better if the code using this function
+would be calling the fwnode graph APIs directly.
 
-
-	ret = regmap(..., (...)value, sizeof(value));
-	if (ret)
-		return ret; // note, you missed this in above.
-
-	*val = be16_to_cpu(value);
-	return 0;
+>  	fwnode = fwnode_get_parent(fwnode);
+>  	fwnode_property_read_u32(fwnode, port_prop, &link->remote_port);
+>  	fwnode = fwnode_get_next_parent(fwnode);
+> diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> index f6a7bcd13197..7bba6dfa3fd6 100644
+> --- a/include/media/v4l2-fwnode.h
+> +++ b/include/media/v4l2-fwnode.h
+> @@ -113,14 +113,18 @@ struct v4l2_fwnode_endpoint {
+>   * struct v4l2_fwnode_link - a link between two endpoints
+>   * @local_node: pointer to device_node of this endpoint
+>   * @local_port: identifier of the port this endpoint belongs to
+> + * @local_id: identifier of the id this endpoint belongs to
+>   * @remote_node: pointer to device_node of the remote endpoint
+>   * @remote_port: identifier of the port the remote endpoint belongs to
+> + * @remote_id: identifier of the id the remote endpoint belongs to
+>   */
+>  struct v4l2_fwnode_link {
+>  	struct fwnode_handle *local_node;
+>  	unsigned int local_port;
+> +	unsigned int local_id;
+>  	struct fwnode_handle *remote_node;
+>  	unsigned int remote_port;
+> +	unsigned int remote_id;
+>  };
+>  
+>  /**
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sakari Ailus
