@@ -2,179 +2,445 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D27FC10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 10:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF05C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 10:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5AB2192A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 10:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF43B21655
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 10:11:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="pafocN20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgCKKIZ (ORCPT
+        id S1726097AbgCKKLA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 06:08:25 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44989 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgCKKIZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 06:08:25 -0400
-Received: by mail-oi1-f193.google.com with SMTP id d62so1272582oia.11;
-        Wed, 11 Mar 2020 03:08:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/N+yzapZ4CfcV7bsbXkQFj5z2ofXrJQJFHA0Ipv5B8o=;
-        b=m1zJ/z7lnPk0ywDxPqrpzjGF/MBw4d0iiz+Ia4DByxMBLf69oJ3/6NVHcKXbg/h517
-         +vyLrgnw3UVedEgzgtXmBEyjH1pJo+ojoNb6OBZcP2vx5ea7uoH7cQq6QDhVPW3t99vm
-         IeF6eHiRD0s8BwebH3vyvg8+oH7L98RdkFRVpAFAzrW6xnKdFjhJtTZeDWecrEjLaJ8U
-         KE0aKU9ODhNUfNxvlMHpiedjMVYcMkB5A/F5q+IFa1FcKqqyK6EH/rkdfXeS01KhTEQI
-         wuFvWka161EinaP8IZlKyazo6Sy5pTR3N0MpbLVhc1hM6IpJqVODA3jwQ1QCp9eSO8jT
-         fdXQ==
-X-Gm-Message-State: ANhLgQ3oE0QoM3BgwtxA51mEycyg23O8NCMZDJy3ijRhzE1/UFOoS4ZC
-        rxXtuFNY9nfJnSmMdR5URQSYeXxMy6uF90K3UM4=
-X-Google-Smtp-Source: ADFU+vuJF5N7hcpWcUqis0h4qQPQ9BT3gGHT7sA30i5r95zDWMPwoXmGgIl1ccKJXdZJyPzfyRcoKuUqYhmzJwx2CTA=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr1304567oia.148.1583921304665;
- Wed, 11 Mar 2020 03:08:24 -0700 (PDT)
+        Wed, 11 Mar 2020 06:11:00 -0400
+Received: from web0081.zxcs.nl ([185.104.29.10]:51582 "EHLO web0081.zxcs.nl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728554AbgCKKLA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 06:11:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=pascalroeleven.nl; s=x; h=Message-ID:References:In-Reply-To:Subject:Cc:To:
+        From:Date:Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Reply-To
+        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=pxsnWL7fbrVMITF6Zef2MEtX+Yv4rG3hYhxrgf8TS48=; b=pafocN20pcCkV+R7kR9GLsRPha
+        Yk/qAVwPmim9ObXoNw8XqLrChIaApCXKhX9bN2eNdqhyoFqkAbCMqUbFuMyk1HV0EpaMy9dSKe3M8
+        EogWqlazXu4uRzuG6U8oM7BIs466eystkiZUkKhLrDPpe8jUZXsDRKsHqNNi0fIPaStUUvwt4Zeue
+        Ne0HHAReFjPenayvrsYlPKhnwsK86dGDuukMKmCJP346CCYlUJNfHugAHurfdPtYqHYbASFMpNH0u
+        N2Xui0Qz/9CevewQufTC4Qi+ORV0cC3qQMMLr0kBO9z2jkHhW6oxWB5BG5ZDLLq2GwQ1UCnjIXFuJ
+        /7PF/2Sw==;
+Received: from spamrelay.zxcs.nl ([185.104.28.12]:35692 helo=mail-slave01.zxcs.nl)
+        by web0081.zxcs.nl with esmtp (Exim 4.92.3)
+        (envelope-from <dev@pascalroeleven.nl>)
+        id 1jByK1-004H54-TJ; Wed, 11 Mar 2020 11:10:41 +0100
 MIME-Version: 1.0
-References: <1583872919-7757-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1583872919-7757-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1583872919-7757-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 11 Mar 2020 11:08:13 +0100
-Message-ID: <CAMuHMdVqwLEavjnPgZaevFqjTytAPMmT042yRrcDw9YpkjE3bg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: renesas: Add HiHope RZ/G2M board with
- idk-1110wr display
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 11 Mar 2020 11:10:41 +0100
+From:   Pascal Roeleven <dev@pascalroeleven.nl>
+To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
+Subject: Re: [linux-sunxi] [PATCH 2/2] ARM: dts: sun4i: Add support for
+ Topwise A721 tablet
+In-Reply-To: <20200310140202.ntydtg4seosb2aqs@core.my.home>
+References: <20200310102725.14591-1-dev@pascalroeleven.nl>
+ <20200310102725.14591-3-dev@pascalroeleven.nl>
+ <20200310140202.ntydtg4seosb2aqs@core.my.home>
+User-Agent: Roundcube Webmail/1.4.2
+Message-ID: <761a53d08ecf6fec63054cb1b0b5c4ce@pascalroeleven.nl>
+X-Sender: dev@pascalroeleven.nl
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lad,
+On 2020-03-10 15:02, Ondřej Jirman wrote:
+> Hello Pascal,
+> 
+> On Tue, Mar 10, 2020 at 11:27:24AM +0100, Pascal Roeleven wrote:
+>> The Topwise A721/LY-F1 tablet is a tablet sold around 2012 under
+>> different brands. The mainboard mentions A721 clearly, so this tablet
+>> is best known under this name.
+>> 
+>> Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
+>> ---
+>>  arch/arm/boot/dts/Makefile                   |   3 +-
+>>  arch/arm/boot/dts/sun4i-a10-topwise-a721.dts | 302 
+>> +++++++++++++++++++
+>>  2 files changed, 304 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/boot/dts/sun4i-a10-topwise-a721.dts
+>> 
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 78f144e33..6e6141e00 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -1040,7 +1040,8 @@ dtb-$(CONFIG_MACH_SUN4I) += \
+>>  	sun4i-a10-olinuxino-lime.dtb \
+>>  	sun4i-a10-pcduino.dtb \
+>>  	sun4i-a10-pcduino2.dtb \
+>> -	sun4i-a10-pov-protab2-ips9.dtb
+>> +	sun4i-a10-pov-protab2-ips9.dtb \
+>> +	sun4i-a10-topwise-a721.dtb
+>>  dtb-$(CONFIG_MACH_SUN5I) += \
+>>  	sun5i-a10s-auxtek-t003.dtb \
+>>  	sun5i-a10s-auxtek-t004.dtb \
+>> diff --git a/arch/arm/boot/dts/sun4i-a10-topwise-a721.dts 
+>> b/arch/arm/boot/dts/sun4i-a10-topwise-a721.dts
+>> new file mode 100644
+>> index 000000000..ff43c9c12
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun4i-a10-topwise-a721.dts
+>> @@ -0,0 +1,302 @@
+>> +/*
+>> + * Copyright 2020 Pascal Roeleven <dev@pascalroeleven.nl>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of 
+>> the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the 
+>> Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY 
+>> KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+>> WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+> 
+> You should use SPDX license identifier instead of boilerplate license
+> text.
+> 
+>> +/dts-v1/;
+>> +#include "sun4i-a10.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/pwm/pwm.h>
+>> +
+>> +/ {
+>> +	model = "Topwise A721";
+>> +	compatible = "topwise,a721", "allwinner,sun4i-a10";
+> 
+> topwise is not in vendor-prefixes.yaml
+> 
+>> +	aliases {
+>> +		serial0 = &uart0;
+>> +	};
+>> +
+>> +	backlight: backlight {
+>> +		compatible = "pwm-backlight";
+>> +		pwms = <&pwm 0 100000 PWM_POLARITY_INVERTED>;
+>> +		power-supply = <&reg_vbat>;
+>> +		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
+>> +		brightness-levels = <0 30 40 50 60 70 80 90 100>;
+>> +		default-brightness-level = <8>;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+>> +
+>> +	panel: panel {
+>> +		compatible = "starry,kr070pe2t";
+>> +		backlight = <&backlight>;
+>> +		power-supply = <&reg_lcd_power>;
+>> +
+>> +		port {
+>> +			panel_input: endpoint {
+>> +				remote-endpoint = <&tcon0_out_panel>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	reg_lcd_power: reg-lcd-power {
+>> +		compatible = "regulator-fixed";
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&lcd_power_pin>;
+>> +		regulator-name = "reg-lcd-power";
+>> +		gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
+>> +		enable-active-high;
+>> +	};
+>> +
+>> +	reg_vbat: reg-vbat {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vbat";
+>> +		regulator-min-microvolt = <3700000>;
+>> +		regulator-max-microvolt = <3700000>;
+>> +	};
+>> +
+>> +};
+>> +
+>> +&codec {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&cpu0 {
+>> +	cpu-supply = <&reg_dcdc2>;
+>> +};
+>> +
+>> +&de {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&ehci0 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&ehci1 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&i2c0 {
+>> +	status = "okay";
+>> +
+>> +	axp209: pmic@34 {
+>> +		reg = <0x34>;
+>> +		interrupts = <0>;
+>> +	};
+>> +};
+>> +
+>> +#include "axp209.dtsi"
+>> +
+>> +&ac_power_supply {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&battery_power_supply {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&i2c1 {
+>> +	status = "okay";
+>> +
+>> +	mma7660: accelerometer@4c {
+>> +		compatible = "fsl,mma7660";
+>> +		reg = <0x4c>;
+>> +	};
+>> +};
+>> +
+>> +&i2c2 {
+>> +	status = "okay";
+>> +
+>> +	ft5406ee8: touchscreen@38 {
+>> +		compatible = "edt,edt-ft5406";
+>> +		reg = <0x38>;
+>> +		interrupt-parent = <&pio>;
+>> +		interrupts = <7 21 IRQ_TYPE_EDGE_FALLING>;
+>> +		touchscreen-size-x = <800>;
+>> +		touchscreen-size-y = <480>;
+>> +		vcc-supply = <&reg_vcc3v3>;
+>> +	};
+>> +};
+>> +
+>> +&lradc {
+>> +	vref-supply = <&reg_ldo2>;
+>> +	status = "okay";
+>> +
+>> +	button-vol-down {
+>> +		label = "Volume Down";
+>> +		linux,code = <KEY_VOLUMEDOWN>;
+>> +		channel = <0>;
+>> +		voltage = <761904>;
+>> +	};
+>> +
+>> +	button-vol-up {
+>> +		label = "Volume Up";
+>> +		linux,code = <KEY_VOLUMEUP>;
+>> +		channel = <0>;
+>> +		voltage = <571428>;
+>> +	};
+>> +};
+>> +
+>> +&mmc0 {
+>> +	vmmc-supply = <&reg_vcc3v3>;
+>> +	bus-width = <4>;
+>> +	cd-gpios = <&pio 7 1 GPIO_ACTIVE_LOW>; /* PH01 */
+>> +	status = "okay";
+>> +};
+>> +
+>> +&ohci0 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&ohci1 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&otg_sram {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&pio {
+>> +	vcc-pb-supply = <&reg_vcc3v3>;
+>> +	vcc-pf-supply = <&reg_vcc3v3>;
+>> +	vcc-ph-supply = <&reg_vcc3v3>;
+>> +
+>> +	lcd_power_pin: lcd-power-pin {
+>> +		pins = "PH8";
+>> +		function = "gpio_out";
+>> +		bias-pull-up;
+>> +	};
+>> +
+>> +	usb0_id_detect_pin: usb0-id-detect-pin {
+>> +		pins = "PH4";
+>> +		function = "gpio_in";
+>> +		bias-pull-up;
+>> +	};
+>> +
+>> +	usb0_vbus_detect_pin: usb0-vbus-detect-pin {
+>> +		pins = "PH5";
+>> +		function = "gpio_in";
+>> +		bias-pull-down;
+>> +	};
+> 
+> All 3 nodes above can be replaced with appropriate GPIO_PULL_UP / 
+> GPIO_PULL_DOWN
+> macros inside the *-gpios property.
+> 
+>> +};
+>> +
+>> +&pwm {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pwm0_pin>;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&reg_dcdc2 {
+>> +	regulator-always-on;
+>> +	regulator-min-microvolt = <1000000>;
+>> +	regulator-max-microvolt = <1400000>;
+>> +	regulator-name = "vdd-cpu";
+>> +};
+>> +
+>> +&reg_dcdc3 {
+>> +	regulator-always-on;
+>> +	regulator-min-microvolt = <1250000>;
+>> +	regulator-max-microvolt = <1250000>;
+>> +	regulator-name = "vdd-int-dll";
+>> +};
+>> +
+>> +
+> 
+> You have extra space here ^
+> 
+>> +&reg_ldo1 {
+>> +	regulator-name = "vdd-rtc";
+>> +};
+>> +
+>> +&reg_ldo2 {
+>> +	regulator-always-on;
+>> +	regulator-min-microvolt = <3000000>;
+>> +	regulator-max-microvolt = <3000000>;
+>> +	regulator-name = "avcc";
+>> +};
+>> +
+>> +&reg_usb0_vbus {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&reg_usb1_vbus {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&reg_usb2_vbus {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&tcon0_out {
+>> +	tcon0_out_panel: endpoint@0 {
+>> +		reg = <0>;
+>> +		remote-endpoint = <&panel_input>;
+>> +	};
+>> +};
+>> +
+>> +&uart0 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&uart0_pb_pins>;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usb_otg {
+>> +	dr_mode = "otg";
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usb_power_supply {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&usbphy {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
+> 
+> No need to use pinctrl to configure regular GPIO functions anymore.
+> 
+> regards,
+> 	Ondrej
+> 
+>> +	usb0_id_det-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
+>> +	usb0_vbus_det-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
+>> +	usb0_vbus-supply = <&reg_usb0_vbus>;
+>> +	usb1_vbus-supply = <&reg_usb1_vbus>;
+>> +	usb2_vbus-supply = <&reg_usb2_vbus>;
+>> +	status = "okay";
+>> +};
+>> --
+>> 2.20.1
+>> 
+>> --
+>> You received this message because you are subscribed to the Google 
+>> Groups "linux-sunxi" group.
+>> To unsubscribe from this group and stop receiving emails from it, send 
+>> an email to linux-sunxi+unsubscribe@googlegroups.com.
+>> To view this discussion on the web, visit 
+>> https://groups.google.com/d/msgid/linux-sunxi/20200310102725.14591-3-dev%40pascalroeleven.nl.
 
-On Tue, Mar 10, 2020 at 9:42 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->
-> The HiHope RZ/G2M is advertised as compatible with panel idk-1110wr
-> from Advantech, however the panel isn't sold alongside the board.
-> A new dts, adding everything that's required to get the panel to
-> work the HiHope RZ/G2M, is the most convenient way to support the
-> HiHope RZ/G2M when it's connected to the idk-1110wr.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi Ondrej,
 
-Thanks for picking up this patch!
-
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
-> @@ -0,0 +1,86 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the HiHope RZ/G2M sub board connected to an
-> + * Advantech IDK-1110WR 10.1" LVDS panel
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +#include "r8a774a1-hihope-rzg2m-ex.dts"
-> +
-> +/ {
-> +       backlight {
-> +               compatible = "pwm-backlight";
-> +               pwms = <&pwm0 0 50000>;
-> +
-> +               brightness-levels = <0 2 8 16 32 64 128 255>;
-> +               default-brightness-level = <6>;
-> +       };
-> +
-> +       panel-lvds {
-> +               compatible = "advantech,idk-1110wr", "panel-lvds";
-> +
-> +               width-mm = <223>;
-> +               height-mm = <125>;
-> +
-> +               data-mapping = "jeida-24";
-> +
-> +               panel-timing {
-> +                       /* 1024x600 @60Hz */
-> +                       clock-frequency = <51200000>;
-> +                       hactive = <1024>;
-> +                       vactive = <600>;
-> +                       hsync-len = <240>;
-> +                       hfront-porch = <40>;
-> +                       hback-porch = <40>;
-> +                       vfront-porch = <15>;
-> +                       vback-porch = <10>;
-> +                       vsync-len = <10>;
-> +               };
-> +
-> +               port {
-> +                       panel_in: endpoint {
-> +                               remote-endpoint = <&lvds0_out>;
-> +                       };
-> +               };
-> +       };
-
-I believe the plan was to include the existing
-rzg2-advantech-idk-1110wr-panel.dtsi instead, to provide the
-panel-lvds node...
-
-> +};
-> +
-> +&gpio1 {
-> +       /*
-> +        * When GP1_20 is LOW LVDS0 is connected to the LVDS connector
-> +        * When GP1_20 is HIGH LVDS0 is connected to the LT8918L
-> +        */
-> +       lvds-connector-en-gpio {
-> +               gpio-hog;
-> +               gpios = <20 GPIO_ACTIVE_HIGH>;
-> +               output-low;
-> +               line-name = "lvds-connector-en-gpio";
-> +       };
-> +};
-> +
-> +&lvds0 {
-> +       status = "okay";
-> +
-> +       ports {
-> +               port@1 {
-> +                       lvds0_out: endpoint {
-> +                               remote-endpoint = <&panel_in>;
-> +                       };
-> +               };
-> +       };
-> +};
-
-... and the lvds_connector endpoint configuration.
-
-The rest looks good to me.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thank you for your review. I will be fixing these in v2.
