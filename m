@@ -2,263 +2,252 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B95C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E124C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0F7222C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583928755;
-	bh=QVxsETcRPWoRCxOeA/nWhlzZD95AnU1bOrahp1dqXog=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gXoHTwh+27VrhX5L4seEXcUXYH1FkcBdh8xnWcz+l4+E6Qwo9uW7l05GcjCwLblY3
-	 8v/jtOn0GNzff2BCnzm4AaT10ZfdhtCHkMWUJgelmZmmbtgCCMFuQtuupS3W5KG73k
-	 UQz9l+IL+4ZcnLzgSOBKq8F9H0nSjePx1iyY2D2g=
+	by mail.kernel.org (Postfix) with ESMTP id C839C2146E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:18:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="uSnwCeKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgCKMMf (ORCPT
+        id S1729233AbgCKMSq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:12:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:48812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbgCKMMf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 08:12:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 141AC1FB;
-        Wed, 11 Mar 2020 05:12:34 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8914C3F6CF;
-        Wed, 11 Mar 2020 05:12:33 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 12:12:32 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Eason Yen <eason.yen@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, jiaxin.yu@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH 2/2] ASoC: codec: mediatek: add mt6359 codec driver
-Message-ID: <20200311121232.GB5411@sirena.org.uk>
-References: <1583465622-16628-1-git-send-email-eason.yen@mediatek.com>
- <1583465622-16628-3-git-send-email-eason.yen@mediatek.com>
- <20200309131346.GF4101@sirena.org.uk>
- <1583918544.19248.69.camel@mtkswgap22>
+        Wed, 11 Mar 2020 08:18:46 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:26273 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729130AbgCKMSp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 08:18:45 -0400
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Ajay.Kathat@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ajay.Kathat@microchip.com";
+  x-sender="Ajay.Kathat@microchip.com"; x-conformance=spf_only;
+  x-record-type="v=spf1"; x-record-text="v=spf1 mx
+  a:ushub1.microchip.com a:smtpout.microchip.com
+  -exists:%{i}.spf.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ajay.Kathat@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Ajay.Kathat@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: rZCZpCZXBetH4feJSv6WkXSENj6HsSCal8z31pTALSxpa5N1Ws616sVPOdQrM0UQe+E0mrIKGP
+ 6wz64bPl/ALPXmVMTa5WKbPCKg1gLVwKYGBlzL3ipD3iTjvU6fGr7JFFOIoRZqlfiZkMORVJjj
+ quhQ3AeksmAiMz8rUwUPt4jYt5iyi35Bx3Jx2BBclZwZRANEGzaT/rs689EoTiuD91J9RZxaGQ
+ pUU9mZF2P2A/369LjJRy3ozFQtET0wNRrzy+hIVeN7dEdQ80UBbFFaLPKdLCRmMOTYWwI8Pzxj
+ 4Zs=
+X-IronPort-AV: E=Sophos;i="5.70,540,1574146800"; 
+   d="scan'208";a="5254831"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 11 Mar 2020 05:18:45 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 11 Mar 2020 05:18:44 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Wed, 11 Mar 2020 05:18:40 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mHw7cW03pINQXBptjFXBY/JkVTCC5NgU/WJrZf1qizBpSMAqu467eY420Xk1nb1qL5kg6UHRkX7VJuTO3l74rPyVTuNpSeIrMxVq1D0cNafCbDa8uhPjgtoIcnm/xSo28aOyeryfiC9TQo/PWe77nZ+kSDZ2iXZJxkEdJCxv3iowtYWm6oERndIqRXbf7jMzYgS6lVctjoT4MVqWamRpASKb5ZZD39qzBj4ialm6K9ipdYpWhB/izWCYqVgNBMG+El67fsfOVpL3zYUfz3fKLGMcjBwPXZT081lV3TCsfbckpSkpqSLXFGaZcrKqkSJhXbG+coqO5R1mkg/3EtmMmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pDvsFxJLCnCIUOOtZOx/3581ihF9dnWJ6NbD6L0oyxw=;
+ b=ieF0QVC6AkzHjnF3q6mZaZ8NEf/jD3QHXB/ud7Ukly9uVBbpYe8AQtSAKGlYUuATO9DPRX7EzUGQZ8gwcuEFMb7WuwoVrGh17Y49dWe/1xkUCgmLSolQKZM8X29yKxg3Vbt96v6rdDEXcf21YO/8wtt/cV2MqgAN6FJiffLIBKk7mjPyt5obAxvZU++KzapXtx9w4nsUkbbzh8WxCc5m8gFpPBlF4e7bW5HF7hUxgBHR1huAVyqEpRfeTpzqW3VVp99XKnTrc4qAotNDaALwz2T2LeZ2UJ3v6csAli9dPrlZ35vN7bMh13+GU+LVFz9XFnCBNH9RnHSCvU0uKyjcTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pDvsFxJLCnCIUOOtZOx/3581ihF9dnWJ6NbD6L0oyxw=;
+ b=uSnwCeKurtRA2LhAgc3hLBf0xV4i9sTmVejFOjoSXPawPjLScmDrCDbxH0MHNm5dVLvb2gyMV0jB2Wl/grCargCzcGiwTCnWW3ubv9fvUYA5iyEe6sga2+oMKA7pK/zxQrpNAKGpVCwexW/duosRmHTdfZnV3az0tGx2s1MS5SE=
+Received: from BYAPR11MB3125.namprd11.prod.outlook.com (2603:10b6:a03:8e::32)
+ by BYAPR11MB2805.namprd11.prod.outlook.com (2603:10b6:a02:c1::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14; Wed, 11 Mar
+ 2020 12:18:40 +0000
+Received: from BYAPR11MB3125.namprd11.prod.outlook.com
+ ([fe80::c27:87cf:ca4:d86e]) by BYAPR11MB3125.namprd11.prod.outlook.com
+ ([fe80::c27:87cf:ca4:d86e%4]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
+ 12:18:40 +0000
+From:   <Ajay.Kathat@microchip.com>
+To:     <linux-wireless@vger.kernel.org>
+CC:     <devel@driverdev.osuosl.org>, <devicetree@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <johannes@sipsolutions.net>,
+        <Adham.Abozaeid@microchip.com>, <Nicolas.Ferre@microchip.com>,
+        <Claudiu.Beznea@microchip.com>, <Venkateswara.Kaja@microchip.com>,
+        <Ajay.Kathat@microchip.com>
+Subject: [PATCH v5 00/17] wilc1000: move out of staging
+Thread-Topic: [PATCH v5 00/17] wilc1000: move out of staging
+Thread-Index: AQHV958yeak5o2ESX0m1/C56HtBz6w==
+Date:   Wed, 11 Mar 2020 12:18:39 +0000
+Message-ID: <20200311121809.5610-1-ajay.kathat@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [121.244.27.38]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0c3c4e1b-f4f7-416f-7ca3-08d7c5b65536
+x-ms-traffictypediagnostic: BYAPR11MB2805:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB28057F0A303ABB9F5BF5EC24E3FC0@BYAPR11MB2805.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0339F89554
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(346002)(396003)(366004)(199004)(478600001)(966005)(2906002)(71200400001)(8936002)(81166006)(81156014)(316002)(5660300002)(54906003)(6506007)(1076003)(8676002)(6512007)(86362001)(36756003)(107886003)(4326008)(6486002)(76116006)(91956017)(66476007)(64756008)(66446008)(66946007)(66556008)(6916009)(2616005)(186003)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB2805;H:BYAPR11MB3125.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BAAS3Cjd5wrI5h2eU4FBSGrT5ncalbRqPN8V3dM4HKMo6kkonSBX+J3QnSQjL+cLkCIQBmeY7J/HFwogjskIx2hhr7JkR6dSwTiiBpzG/Ksd0ZjV1ivnQioHuK7/wAkdJ4cG5CQzfqtkOs+9eO/LSIfiRJ4oumnr+xgDpjktRuq4+kCzaiQVQVs/BqtF9TNgGbLE0Y+wbP9HUViM+OJ2DLn82wc7Z0LpHBaR4HIMQvpAQwLOz2uit2rf8+e6iR0xrcqDm3ovQAszZuqlhJX+9U0BnztfrvTInhteYpDs/3azO+N0alwEO2TmoZBwq8HDd/O8FrLMGIW+TL46YVZZ2AnkDe8Rm6NjzpJMb25jXiI2ovO/xs8rYOOwZLZHS8D1sfwRl4SIKqRTnpxq/oSkzjYm2zEla5fQ4sBqtUMlP6W2cgdVK084ssXkyrg7skj9qoBVt9nZHmoDScvII7tyY/MKbqzwlXV7JvbaFNaAk8FXPRRlKRSWRfzz2S8dOBREMxTF6BdaHC4wNtlyrs7R7A==
+x-ms-exchange-antispam-messagedata: H7wqY7b7q0jDuR2QdBSqQtnQn+jccw2rCp/tR/pKXwp35lm0XIjBfStoBB+AdGxjGs7CBmQW5OMcfK1Iay+Nm2/zz4qJzXtydIOxCerW09P8EaU/ea6qfcifYf+O1eX/03zsfK899Mx6V8betvmZuQ==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GRPZ8SYKNexpdSJ7"
-Content-Disposition: inline
-In-Reply-To: <1583918544.19248.69.camel@mtkswgap22>
-X-Cookie: I'm a Lisp variable -- bind me!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c3c4e1b-f4f7-416f-7ca3-08d7c5b65536
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 12:18:39.8989
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Apoc0bCQhlOdgelK89IjVABAwzALAP5rGMw68dEUm73bP/ZiUTGzej/jPf0AvoTvIvn5OLh81nUx9F1G+XXdeLlYh0kh4kEdKlQBPea5biw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2805
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Ajay Singh <ajay.kathat@microchip.com>
 
---GRPZ8SYKNexpdSJ7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch series is to review and move wilc1000 driver out of staging.
+Most of the review comments received in [1] & [2] are addressed in the
+latest code. Please review and provide your inputs.
 
-On Wed, Mar 11, 2020 at 05:22:24PM +0800, Eason Yen wrote:
-> On Mon, 2020-03-09 at 13:13 +0000, Mark Brown wrote:
-> > On Fri, Mar 06, 2020 at 11:33:42AM +0800, Eason Yen wrote:
+[1]. https://lore.kernel.org/linux-wireless/1537957525-11467-1-git-send-ema=
+il-ajay.kathat@microchip.com/
+[2]. https://lore.kernel.org/linux-wireless/1562896697-8002-1-git-send-emai=
+l-ajay.kathat@microchip.com/
 
-> > This looks like things that might be better exposed via pinctrl and
-> > gpiolib for board specific configuration - what exactly are these GPIOs
-> > doing?  A lot of this code looks like it might be board specific.
+Changes since v4:
+  - merged wilc1000 SDIO and SPI DT binding into a single file.
+  - handle DT binding review comments suggested in below links:
+    * https://lore.kernel.org/linux-wireless/20200303015558.GA6876@bogus
+    * https://lore.kernel.org/linux-wireless/20200306144400.4269-2-ajay.kat=
+hat@microchip.com
 
-> MT6359 has some gpios (pad_aud_*) for downlink/uplink.
-> And these pins is connected between AP part and PMIC part.
-> (1) For AP part, user need to set gpio pinmux for these gpio using DT.
-> (2) For pmic part, gpio are configured at codec driver by default.
+Changes since v3:
+  - handle few Smatch static checker reported issues.
+  - use flexible-array member instead of zero-length array.
 
-> For PMIC part, user need to set in these register :
-> GPIO_MODE1/GPIO_MODE2/GPIO_MODE3
+Changes since v2:
+  - use 'struct' to extract FW info from received commands.
+  - make use of C style comments instead of C++.
+  - remove use of bool type for firmware struct.
+  - deleted unused code related to interrupt handling.
+  - make use of RCU list to maintain interfaces list.
+  - remove 'wilc_' prefix from file name.
+  - added 'WILC_' prefix for header guard macro.
+  - remove use of infinite loops(i.e. while(1)).
+  - move firmware related struct to a separate file.
+  - refactor SPI command handling by using 'struct'.
+  - use different functions to handle different SPI commands.
+  - cleanup spi.c and sdio.c by removing unused code.
+  - remove use of vendor specific IE for p2p handling.
+  - refactor p2p related code to avoid use of buf pointer operation.
+  - make use of FIELD_GET/PREP macro.
+  - use #define instead of magic values.
+  - use YAML schemes for DT binding documentation.
+  - deleted unused code from spi.c and sdio.c.
+  - added changes for few issues reported by smatch static code analyzer.
 
-> The following functions are used to set:
-> - playback_gpio_set/playback_gpio_reset
-> - capture_gpio_set/capture_gpio_reset
-> - vow_gpio_set/vow_gpio_reset
+Changes since v1:
+  - remove use of shadow buffer to keep scan result.
+  - remove internal messaging flow to handle cfg80211_ops.
+  - make use of cfg80211 provide API.
+  - use 'struct' for packing firmware commands.
+  - make use of kernel API's and Macro.
+  - remove unnecessary log messages
+  - supported dynamically add/remove interfaces.
+  - cleanup and deleted around 3.3k lines of code.
 
-This sounds like it should be handled at the machine driver level, it's
-possible some system integrator will wire things up differently.
+Ajay Singh (17):
+  wilc1000: add hif.h
+  wilc1000: add hif.c
+  wilc1000: add wlan_if.h
+  wilc1000: add wlan_cfg.h
+  wilc1000: add wlan_cfg.c
+  wilc1000: add cfg80211.c
+  wilc1000: add cfg80211.h
+  wilc1000: add netdev.h
+  wilc1000: add netdev.c
+  wilc1000: add mon.c
+  wilc1000: add spi.c
+  wilc1000: add wlan.h
+  wilc1000: add wlan.c
+  wilc1000: add sdio.c
+  wilc1000: add fw.h
+  dt: bindings: net: add microchip,wilc1000.yaml
+  wilc1000: add Makefile and Kconfig files for wilc1000 compilation
 
-> > > +/* use only when not govern by DAPM */
-> > > +static int mt6359_set_dcxo(struct mt6359_priv *priv, bool enable)
-> > > +{
+ .../net/wireless/microchip,wilc1000.yaml      |   72 +
+ drivers/net/wireless/Kconfig                  |    1 +
+ drivers/net/wireless/Makefile                 |    1 +
+ drivers/net/wireless/microchip/Kconfig        |   15 +
+ drivers/net/wireless/microchip/Makefile       |    2 +
+ .../net/wireless/microchip/wilc1000/Kconfig   |   42 +
+ .../net/wireless/microchip/wilc1000/Makefile  |   14 +
+ .../wireless/microchip/wilc1000/cfg80211.c    | 1850 ++++++++++++++++
+ .../wireless/microchip/wilc1000/cfg80211.h    |   29 +
+ drivers/net/wireless/microchip/wilc1000/fw.h  |  119 +
+ drivers/net/wireless/microchip/wilc1000/hif.c | 1959 +++++++++++++++++
+ drivers/net/wireless/microchip/wilc1000/hif.h |  214 ++
+ drivers/net/wireless/microchip/wilc1000/mon.c |  260 +++
+ .../net/wireless/microchip/wilc1000/netdev.c  |  932 ++++++++
+ .../net/wireless/microchip/wilc1000/netdev.h  |  294 +++
+ .../net/wireless/microchip/wilc1000/sdio.c    | 1023 +++++++++
+ drivers/net/wireless/microchip/wilc1000/spi.c |  988 +++++++++
+ .../net/wireless/microchip/wilc1000/wlan.c    | 1238 +++++++++++
+ .../net/wireless/microchip/wilc1000/wlan.h    |  397 ++++
+ .../wireless/microchip/wilc1000/wlan_cfg.c    |  413 ++++
+ .../wireless/microchip/wilc1000/wlan_cfg.h    |   54 +
+ .../net/wireless/microchip/wilc1000/wlan_if.h |  803 +++++++
+ drivers/staging/Kconfig                       |    2 -
+ drivers/staging/Makefile                      |    1 -
+ 24 files changed, 10720 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/microchi=
+p,wilc1000.yaml
+ create mode 100644 drivers/net/wireless/microchip/Kconfig
+ create mode 100644 drivers/net/wireless/microchip/Makefile
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/Kconfig
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/Makefile
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/cfg80211.c
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/cfg80211.h
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/fw.h
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/hif.c
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/hif.h
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/mon.c
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/netdev.c
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/netdev.h
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/sdio.c
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/spi.c
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/wlan.c
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/wlan.h
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/wlan_cfg.c
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/wlan_cfg.h
+ create mode 100644 drivers/net/wireless/microchip/wilc1000/wlan_if.h
 
-> > Why might this sometimes be controlled outside of DAPM?
-
-> mt6359_set_dcxo is used at mt6359_mtkaif_calibration_enable/disable.
-
-> mtkaif_calibration process needs be completed at booting stage once.
-> And it has a specific control sequence provided by codec designer.
-> So it need to be controlled outside of DAPM.
-
-OK, this should explicitly say that this is for use during calibration
-then.
-
-> > > +static const char *const mic_type_mux_map[] =3D {
-> > > +	"Idle",
-> > > +	"ACC",
-> > > +	"DMIC",
-> > > +	"DCC",
-> > > +	"DCC_ECM_DIFF",
-> > > +	"DCC_ECM_SINGLE",
-> > > +	"VOW_ACC",
-> > > +	"VOW_DMIC",
-> > > +	"VOW_DMIC_LP",
-> > > +	"VOW_DCC",
-> > > +	"VOW_DCC_ECM_DIFF",
-> > > +	"VOW_DCC_ECM_SINGLE"
-> > > +};
-
-> > This looks like something that should be being set by DT or other
-> > platform data rather than at runtime - we're not likely to change from a
-> > digital to analogue microphone at runtime for example.
-
-> For mic1, it's mic_type can set one of mic_type_mux_map[] at different
-> scenario.
-> (1) When mic1 is not used, it should be set as "Idle"
-> (2) When mic1 is ACC mode and used at normal capture scenario, it should
-> be set as "ACC"
-> (3) When mic1 is ACC mode and used at Voice Wakeup scenario, it should
-> be set as "VOW_ACC"
-
-That still doesn't mean you should have control over things like if the
-microphone is single ended or differential at runtime.  This at least
-needs to be a higher level control, it should be integrated with both
-board data and DAPM.  You can at least select idle mode with DAPM, and
-you may be able to select voice wakeup that way too (by looking at where
-things are routed).
-
-> > > +	SOC_SINGLE_EXT_TLV("LineoutR Volume",
-> > > +			   MT6359_ZCD_CON1, 7, 0x12, 0,
-> > > +			   snd_soc_get_volsw, mt6359_put_volsw, playback_tlv),
-
-> > These should be stereo controls not pairs of mono controls.
-
-> It is more flexible for customization.
-
-> For example, customer may use lineout path for stereo speaker amp.
-> And for specific amp, it need different gain on channel L and channel R.
-
-You can set the gains of stereo pairs independently, that's not a
-problem.
-
-> > > +static const char * const lo_in_mux_map[] =3D {
-> > > +	"Open", "Playback_L_DAC", "Playback", "Test Mode"
-> > > +};
-> > > +
-> > > +static int lo_in_mux_map_value[] =3D {
-> > > +	0x0, 0x1, 0x2, 0x3,
-> > > +};
-> >=20
-> > Why use a value enum here, a normal mux should be fine?
-> >=20
-
-> Could I modify as follow:
-
-> /* LOL MUX */
-> enum {
-> 	LO_MUX_OPEN =3D 0,
-> 	LO_MUX_L_DAC,
-> 	LO_MUX_3RD_DAC,
-> 	LO_MUX_TEST_MODE,
-> 	LO_MUX_MASK =3D 0x3,
-> };
-
-> static const char * const lo_in_mux_map[] =3D {
-> 	"Open", "Playback_L_DAC", "Playback", "Test Mode"
-> };
-
-> static int lo_in_mux_map_value[] =3D {
-> 	LO_MUX_OPEN,
-> 	LO_MUX_L_DAC,
-> 	LO_MUX_3RD_DAC,
-> 	LO_MUX_TEST_MODE,
-> };
-
-Why bother with the value mapping at all?
-
-> > > +static int mt_delay_250_event(struct snd_soc_dapm_widget *w,
-> > > +			      struct snd_kcontrol *kcontrol,
-> > > +			      int event)
-> > > +{
-> > > +	switch (event) {
-> > > +	case SND_SOC_DAPM_POST_PMU:
-> > > +	case SND_SOC_DAPM_PRE_PMD:
-> > > +		usleep_range(250, 270);
-
-> > Why would having a sleep before power down be useful?
-
-> It is based on designer's control sequence to add some delay while
-> PMU/PMD.
-
-But how does the designer know when the sequence starts?  Don't they
-mean to have a delay *after* power down?
-
-> > > +static int mt6359_codec_probe(struct snd_soc_component *cmpnt)
-> > > +{
-> > > +	struct mt6359_priv *priv =3D snd_soc_component_get_drvdata(cmpnt);
-> > > +	int ret;
-> > > +
-> > > +	snd_soc_component_init_regmap(cmpnt, priv->regmap);
-> > > +
-> > > +	snd_soc_add_component_controls(cmpnt,
-> > > +				       mt6359_snd_vow_controls,
-> > > +				       ARRAY_SIZE(mt6359_snd_vow_controls));
-
-> > Use the controls member of the component driver struct.
-
-> Do you mean that I should merge mt6359_snd_vow_controls into
-> mt6359_snd_controls?
-
-Yes, you're unconditionally registering these so there's no sense in
-splitting them.
-
-> > > +	priv->avdd_reg =3D devm_regulator_get(priv->dev, "vaud18");
-> > > +	if (IS_ERR(priv->avdd_reg)) {
-> > > +		dev_err(priv->dev, "%s(), have no vaud18 supply", __func__);
-> > > +		return PTR_ERR(priv->avdd_reg);
-> > > +	}
-
-> > The driver should request resources during device model probe rather
-> > than component probe.
-
-> Do you mean that it need be requested at mt6359_platform_driver_probe()
-> instead of mt6359_codec_probe() ?
-
-Yes.
-
-> > > +	ret =3D regulator_enable(priv->avdd_reg);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-
-> > There's nothing to disable this on remove.
-
-> Do you mean that I should add a remove function to execute
-> regulator_disable()?
-
-Yes.
-
---GRPZ8SYKNexpdSJ7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5o1a8ACgkQJNaLcl1U
-h9A3ZAf/fSGW262FFfaBIN8zruvv1AU7r7tMppnvX4z8VgxGv4Lky42aOvGd8NGT
-4KyygigtShycEcaPm32mKpgw7t9cEpGEhqMwHbS+k8xNWDNmsQLKoGuV+7EcNQxA
-LxvONiREyb+/DQvqvttPiS9KiWXz7b3DRVbI3gLFNEcECcYre6+A2lDxravhNRu5
-SflQyk+sW2S1Br54xNSeJu4d+FOatyVgxYg2GKSOoLrIhleu8p20cL6pZlWRVFMO
-lf7gMTnU0jwvL8/sjKSYWdAzLaFlOXYD7UtXyVHcQoVl+nEAnI4HSC3FLaWufL7M
-tWazpUSkZz0rbfpeN+E3z4NoL/cJPg==
-=i3NB
------END PGP SIGNATURE-----
-
---GRPZ8SYKNexpdSJ7--
+--=20
+2.24.0=
