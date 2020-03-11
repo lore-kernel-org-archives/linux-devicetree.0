@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CB3C2BAEE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F8EC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF1702074E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 397762074E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wzs9yWYI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rO+x2ooT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730569AbgCKRVf (ORCPT
+        id S1730554AbgCKRV0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:21:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43266 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730555AbgCKRV2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 13:21:28 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u12so1551089pgb.10
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 10:21:28 -0700 (PDT)
+        Wed, 11 Mar 2020 13:21:26 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36768 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730552AbgCKRV0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 13:21:26 -0400
+Received: by mail-pj1-f68.google.com with SMTP id l41so1353806pjb.1
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 10:21:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EGHWPlxApQjuktMa4xDP9Q063H+hJfu1b6AJ+NVENyk=;
-        b=wzs9yWYIHxuZrh+l83G2npKrDy1oqKA1xypVVS2U3HsnbNYgw41X9lhRBnp5I2yzT1
-         g5VgsJUrdt4LeNiaK2vJ/mH7MyOeWmpLGprY3DMJa9CbNM0R9zNZPcoJYAiL9T2Rdcj9
-         +LcoDzpvuTgfkwpvij9j9ByGn7+WdlzBB7svWaFuqsRzYYOtH7AnAG602VatDxsx6EF9
-         594VtuNPghhGM6IC4h6UAS0/ANrg2roTguqX5Lx8EvmYVVJDXFkKA9wFpYUK84uDLvjJ
-         Qk+4ms1LaPNgumDoE2yBA9ihADez2A0VyLMvk8/f567jxhIes7jevL9y497QVZCU0BzV
-         poOw==
+        bh=jz3XZ9gPuD/g+1P6LY7Aq8wTOFKwQIrTyqi7Mx3AGIU=;
+        b=rO+x2ooTJs6RHFaCLJeavaPqt1U0ldl4u5LGBhrS3ghIhNbtJ/WxxbmpLS6TJs3w01
+         kD2a2IMWmNi21t80CVUXRc13YMG7cAtzmsqnbBK6MBcGf5iSpF5uYvpizqQb2zgC1gNW
+         YWgvnFoGWncG1yk9vgnbuJ5eRbLorjb5fCobeqTv3+krW82txy+FBsVQuIEAY8RmI5mT
+         VC/QJyG/46z1Nn2Lfza1LbC59YDkh63IKsk09Z91z2HfEI5+wSK3/vqazrRF/ywOUIEj
+         IG+/KOEXs9LFceA10o3rwGyBgwqJH8XjJ+ifdsPbFGBv2e1zJij43YC+bPbbTVEogRnv
+         zGwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=EGHWPlxApQjuktMa4xDP9Q063H+hJfu1b6AJ+NVENyk=;
-        b=oZBFxBqKMM1Z887HmISkUwwPTNGez2VyyG1gxX7uDVmfV+5JlePDGJNbD6aflZKLaZ
-         wk0bn/5x4DNS5IEyYuboLbaEdVsGSTCQr8sEJ/O/ROkA/k3GBjbbEyHT9WSWdrw2t8iq
-         dTuJmuUcNCE12RHlCLStSc1P6vgmefIPjMMT8pVazgpBLv/86rXVKgqUgodJ75/Q8/3z
-         7TLJwykYfEgOaQsn4TUc8udJpo4a6pCtD/BCx2T86YUZ6fLA+ooOtSVXVI4vkjKXZptZ
-         igI5PLLwklID03IZcqe+43aapqZle2uHrlZRSWgzz9AUBWhns3OVNNArUOVkqgivt+mh
-         mk5g==
-X-Gm-Message-State: ANhLgQ2nDKqLR3UZbQLauZ1RNFn98fx2FMYFteAUlS20lDb93YIwumgq
-        6Kel5YzGUNASHV2zK65mc39iUw==
-X-Google-Smtp-Source: ADFU+vsIQvS6vI9A6/ZJeX7p5NOAE/vGwSitovbBlSU6A/ubzt4w/w/19x/VN1rAPQPkC6KZ7bZHVw==
-X-Received: by 2002:a62:382:: with SMTP id 124mr3867452pfd.11.1583947287937;
-        Wed, 11 Mar 2020 10:21:27 -0700 (PDT)
+        bh=jz3XZ9gPuD/g+1P6LY7Aq8wTOFKwQIrTyqi7Mx3AGIU=;
+        b=bKHQ2VwEKb2/ZD1lxpDe4Nh/ybSGRKGeEc0kiABTD0JVADmy1XypxCMkS8GZMUcoAg
+         pLQImOdKXxxDO/vrSYKz458SrEbe1bf5v0qBEBdP3jWDyNg6O4llpD5VAF+75ZWeorfz
+         vubhp3TpAr4wdoCr17GASvFSRWzXfd7Owcz0boiJJPg+dT3adpVYQ9KpK590f4fsMkPN
+         Nbrc3hXYqirV/V+jmaoHCcI4cpZWEanYICOMSlSIgf88t4JQsdvgO8hOVl8jRwBjjXQj
+         V6ROgJWfcmLXOg7IJFwTavcJ7M8usthagSwy3ORyeKRdcfnWFqiWFdfqBKbKG+VqrglM
+         zwgQ==
+X-Gm-Message-State: ANhLgQ3u47QWnzuqqP7NqaR2dcvR50eNhEENkot5QtO+IS5V4LIK5kIl
+        DIhRhXOU64beE3dq6joNcgC3Kg==
+X-Google-Smtp-Source: ADFU+vu2RYb/ys4TWWZMX1MZdw6Mdk95kbzQ9iGo2QeQeW5PGe1fsCKa7TEStuItFnNw2Np1vUjKiw==
+X-Received: by 2002:a17:902:61:: with SMTP id 88mr3962846pla.313.1583947284955;
+        Wed, 11 Mar 2020 10:21:24 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id b24sm14914053pfi.52.2020.03.11.10.21.26
+        by smtp.gmail.com with ESMTPSA id b24sm14914053pfi.52.2020.03.11.10.21.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 10:21:27 -0700 (PDT)
+        Wed, 11 Mar 2020 10:21:24 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     John Stultz <john.stultz@linaro.org>,
@@ -72,9 +72,9 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Guillaume Gardet <Guillaume.Gardet@arm.com>,
         Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [RESEND][PATCH v8 6/6] usb: dwc3: Rework resets initialization to be more flexible
-Date:   Wed, 11 Mar 2020 17:21:09 +0000
-Message-Id: <20200311172109.45134-7-john.stultz@linaro.org>
+Subject: [RESEND][PATCH v8 4/6] dt-bindings: usb: dwc3: Allow clock list & resets to be more flexible
+Date:   Wed, 11 Mar 2020 17:21:07 +0000
+Message-Id: <20200311172109.45134-5-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200311172109.45134-1-john.stultz@linaro.org>
 References: <20200311172109.45134-1-john.stultz@linaro.org>
@@ -83,20 +83,9 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The dwc3 core binding specifies one reset.
-
-However some variants of the hardware may have more. Previously
-this was handled by using the dwc3-of-simple glue driver, but
-that resulted in a proliferation of bindings for for every
-variant, when the only difference was the clocks and resets
-lists.
-
-So this patch reworks the reading of the resets to fetch all the
-resets specified in the dts together.
-
-This patch was recommended by Rob Herring <robh@kernel.org>
-as an alternative to creating multiple bindings for each variant
-of hardware.
+Rather then adding another device specific binding to support
+hikey960, Rob Herring suggested we expand the current dwc3
+binding to allow for variable numbers of clocks and resets.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -116,28 +105,35 @@ Cc: Jack Pham <jackp@codeaurora.org>
 Cc: linux-usb@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 Suggested-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v3: Rework dwc3 core rather then adding another dwc-of-simple
-    binding.
-v6: Re-introduce this patch, on Rob's suggestion
----
- drivers/usb/dwc3/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/dwc3.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index ba21af5c1204..2afcc04da338 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -1465,7 +1465,7 @@ static int dwc3_probe(struct platform_device *pdev)
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 66780a47ad85..29768b0ca923 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -7,7 +7,8 @@ Required properties:
+  - compatible: must be "snps,dwc3"
+  - reg : Address and length of the register set for the device
+  - interrupts: Interrupts used by the dwc3 controller.
+- - clock-names: should contain "ref", "bus_early", "suspend"
++ - clock-names: list of clock names. Ideally should be "ref",
++                "bus_early", "suspend" but may be less or more.
+  - clocks: list of phandle and clock specifier pairs corresponding to
+            entries in the clock-names property.
  
- 	dwc3_get_properties(dwc);
- 
--	dwc->reset = devm_reset_control_get_optional_shared(dev, NULL);
-+	dwc->reset = devm_reset_control_array_get(dev, true, true);
- 	if (IS_ERR(dwc->reset))
- 		return PTR_ERR(dwc->reset);
- 
+@@ -36,7 +37,7 @@ Optional properties:
+  - phys: from the *Generic PHY* bindings
+  - phy-names: from the *Generic PHY* bindings; supported names are "usb2-phy"
+ 	or "usb3-phy".
+- - resets: a single pair of phandle and reset specifier
++ - resets: set of phandle and reset specifier pairs
+  - snps,usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
+  - snps,usb3_lpm_capable: determines if platform is USB3 LPM capable
+  - snps,dis-start-transfer-quirk: when set, disable isoc START TRANSFER command
 -- 
 2.17.1
 
