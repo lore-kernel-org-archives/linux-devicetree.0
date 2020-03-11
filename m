@@ -2,136 +2,124 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA374C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 03:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F513C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 03:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DC2A21927
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 03:22:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rVXx1Hw9"
+	by mail.kernel.org (Postfix) with ESMTP id DEF7220637
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 03:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgCKDWi (ORCPT
+        id S1727588AbgCKDXs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:22:38 -0400
-Received: from mail-db8eur05on2056.outbound.protection.outlook.com ([40.107.20.56]:6017
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727307AbgCKDWh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 10 Mar 2020 23:22:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FQNlL3ZxzYgOATAHY6dc5/UJoXd7ftF8BZdKA488BHY19dQR+P7TyWRQgTfZUWVcuyj4nkANMKbTY3Zm//71E6DU5fnf1OLGjLArjz85G6+lT0PXpfYjoDuYBB46mKaEGxKPl255VpdQzP8F0aG9W8/nMHuxqHaa2qh0p1HsxMAOzPXTALtimQvBE6e4KSMi/Ohzbh10K9vkchnW8cS3Osg6MyM6yxrg63PAX+kD3KptnfKbVnTJ4QT6MX69t4rrYFAWsNKYeJxaNyd7YfTy6ICMSkPW46ovlvjvks5jqN7xOMoXZ6NMxNFU4YKBzb6yfysWypzg5YDbyXz82QS9CQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Je2YVo1kUJNHFYL0EYH5Nir7tjrKjvEMQHdvfBU23T8=;
- b=Aw85tMl8VKU/cr4VB2w/bL8S+iiXmH5M3LHStSqtWU8Auc1ZSYIJTu3W6METp7A8y+GZGoNvVBbGD7Pe3wGO75veA5cNIns0RlR8PyAPyjDnVBVbAkmhg969JGPIdSVyus7nXVxvMYckeoD55xNxIggVNvu3W0NBV6mPf/aaQQ/GuveRWzKVY37uM6ihU+9L2Y8gtsoN9fUtyqPufayk3qzhfgfBb89Fd1axIw0d/TwTXeRYTqVwTvWEwEcAR+MLkc5R9YtSaCLgMvtWmqV2WgIVoUejG5VJUMkdRVNgbPdENygeH4mHaNehSuIBZs0JVNXDq0J6E/0BKLxQ51yIeg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Je2YVo1kUJNHFYL0EYH5Nir7tjrKjvEMQHdvfBU23T8=;
- b=rVXx1Hw9ozNoxwVkH1wiR6pGiWTi6z0FIAdEWf5fHUaJBIMZA4VpXxNfy4LCbpzBe7cJdU8+BS/bg/hcibiPoxAy2LZQ5l3UeSzMB8Xvad3Na8CzMSger9QSU98Dp8rESoDkKvv1hJs4drOYi8v7sqOsqfEdhnoLV497EE+7tJ8=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6735.eurprd04.prod.outlook.com (20.179.234.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.11; Wed, 11 Mar 2020 03:22:33 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2793.013; Wed, 11 Mar 2020
- 03:22:33 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [RESEND v6  08/13] spi: imx: add new i.mx6ul compatible name in
- binding doc
-Thread-Topic: [RESEND v6  08/13] spi: imx: add new i.mx6ul compatible name in
- binding doc
-Thread-Index: AQHV9oxfw7CsQoETxUioWYNmo+gC4ahCKc6AgACQhpA=
-Date:   Wed, 11 Mar 2020 03:22:33 +0000
-Message-ID: <VE1PR04MB6638FF9C3ED1A93FD5A6C2C289FC0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-9-git-send-email-yibin.gong@nxp.com>
- <20200310184103.GA2192@bogus>
-In-Reply-To: <20200310184103.GA2192@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [92.121.68.129]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d933de75-8e82-4930-6acc-08d7c56b70a7
-x-ms-traffictypediagnostic: VE1PR04MB6735:|VE1PR04MB6735:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6735BBB1F617FFD91A1FD91D89FC0@VE1PR04MB6735.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0339F89554
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(39860400002)(396003)(366004)(199004)(66556008)(7696005)(54906003)(66946007)(64756008)(66446008)(52536014)(33656002)(5660300002)(478600001)(76116006)(4326008)(66476007)(86362001)(316002)(9686003)(55016002)(71200400001)(2906002)(81166006)(8936002)(81156014)(8676002)(4744005)(186003)(6506007)(6916009)(7416002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6735;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ny4Hh7E36twGFm9BQBpTW96RTok6vMqJ69xILpeBWWCe5i3zYCSpgjw8NvCeXjpHw3Y8/79hqFhYDxpzXiHYaoO1zLQmhDum1/lfM4oubDltD8hTkyS1XPFyfK3UPk4IXDclci0c7jBpsOiCE57IqZC6tGCH6wzShqVjWawynSvkcWVTVV8BecZlhEpCMv0pxugeLCVT4uS6d2PoznS/BjQ0IuKw9JxvCG+y5HMWe+Plpf/3MgOBvGh/nvdjsPTp9ux2pRyntfRhR/1nDIqX9cCgbzwyk2fY0cMIS2gbrrZOyjosP03vgq04XmT3TcMhtgbtzGxsAthSBBvtVnVPdvF+8yQJgEahInPM2UXXlDdBrcPGszaXoBDirNHbsVjgjA20b9ciiQHSQC5F0ixqo7SYjVPMrp1hEXJrdNf0CWK9Shp8WNCQBSQjU02jEOnl
-x-ms-exchange-antispam-messagedata: 1i2/kg39UMNcvHR8w6zcd4K8qMm2fWo7h6bNhqogRsYoNPBWzgT9tUp8KxfqyHKZblgulmRMPKOHZuLWOT7LlIqamkvcSzucLA1n0ouTcc2DLNsOtyiVv3tqdRtLAllKaXX8CyX2THEscAr0slOViA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Mar 2020 23:23:48 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37057 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727307AbgCKDXs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 23:23:48 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b23so1106723edx.4
+        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 20:23:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3ubNYkLFBm9LvnmdAtrDMZkV+T+QUMoRprRG4+zyFtg=;
+        b=OTDfIsAILA0MNsjsEV3HQI/gMMSIHUcAPsOk4nNOT3sgG1cZT+00c6DnmaOpNiHNxn
+         21tbc+y52Duo+2lupQsM5xhaiYhu+9ku2yKjPg1nkKmrUZUt7gsDzjfG1SMX5zSvcte7
+         q/Q7f61Q8+qSSmc/aXK7b5Jrs4aB92XImBqnbN3bQIMkrGqZX1QNUx/ZktiyzPFyEVle
+         i8CtTfgN47cGqef3laYuDAUTWUEWC8oReea6yw1XeQMCagFvICP1WWZGjPWSWW5AcMdk
+         +CHdUNldOLwsVhnBA3zyL/Yx9PLuVbSbdEZqoGAV1B3G7lqiqNUBouJ7VL6qmJfVHxgH
+         nkgQ==
+X-Gm-Message-State: ANhLgQ37HO4vc7ioJ0Rn6camgarU14kVX53qnJjNIS3WOZ+iGbpVJrgc
+        3MS7Nc4VXHgZ4tIDoCAOI2kh0npo8WQ=
+X-Google-Smtp-Source: ADFU+vtdrIAblf3P1Ljq74Scx8jjIb2VPWDqvB/32JPizK5YivoMjeMG00HWgOoicKDx5ZHacwFXNA==
+X-Received: by 2002:a50:cc9a:: with SMTP id q26mr896667edi.161.1583897025797;
+        Tue, 10 Mar 2020 20:23:45 -0700 (PDT)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
+        by smtp.gmail.com with ESMTPSA id n9sm3000847ejz.87.2020.03.10.20.23.45
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Mar 2020 20:23:45 -0700 (PDT)
+Received: by mail-wr1-f45.google.com with SMTP id t11so708730wrw.5
+        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 20:23:45 -0700 (PDT)
+X-Received: by 2002:a5d:5509:: with SMTP id b9mr1351435wrv.181.1583897024908;
+ Tue, 10 Mar 2020 20:23:44 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d933de75-8e82-4930-6acc-08d7c56b70a7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2020 03:22:33.6428
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ChaF6tWiTMb3S8P8VbiuOH1uiuCa4z09MrnqWI48OpFbpWfKxU5kNkQkBlYB0eUQfuP7KmP3QnQlLJxJacmQww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6735
+References: <20200311010308.11880-1-andre.przywara@arm.com>
+In-Reply-To: <20200311010308.11880-1-andre.przywara@arm.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 11 Mar 2020 11:23:33 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65gMgLKRwsSVg0i+-uXPWQ_KJhtBdhktB7oOgo+2VAOFQ@mail.gmail.com>
+Message-ID: <CAGb2v65gMgLKRwsSVg0i+-uXPWQ_KJhtBdhktB7oOgo+2VAOFQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: sun8i: R40: Fix SPI2 and SPI3 MMIO addresses
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        JuanEsf <juanesf91@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020/03/11 Rob Herring <robh@kernel.org> wrote:
-> On Tue, 10 Mar 2020 19:31:57 +0800, Robin Gong wrote:
-> > ERR009165 fixed from i.mx6ul, add its compatible name in binding doc.
-> >
-> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> > Acked-by: Mark Brown <broonie@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
->=20
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->=20
-> If a tag was not added on purpose, please state why and what changed.
-Sorry, Rob, I forgot to add your reviewed tag on v5, will add it back incid=
-entally in v7.
+On Wed, Mar 11, 2020 at 9:03 AM Andre Przywara <andre.przywara@arm.com> wrote:
+>
+> Copy&paste suggested an MMIO pattern that wasn't there, so the wrong
+> MMIO base addresses for SPI2 and SPI3 sneaked in.
+>
+> Fix them, now double checked against the manual and similar SoCs.
+>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> Fixes: 554581b79139 ("ARM: dts: sun8i: R40: Add SPI controllers nodes and pinmuxes")
+> Reported-by: JuanEsf <juanesf91@gmail.com>
+
+I posted a series fixing this, and some ordering issues yesterday:
+
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=254199
+
+I'll add the reported-by tag to my patch when applying.
+
+ChenYu
+
+> ---
+>  arch/arm/boot/dts/sun8i-r40.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+> index 8f09a24b36ec..8c4c4282a055 100644
+> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> @@ -679,10 +679,10 @@
+>                         #size-cells = <0>;
+>                 };
+>
+> -               spi2: spi@1c07000 {
+> +               spi2: spi@1c17000 {
+>                         compatible = "allwinner,sun8i-r40-spi",
+>                                      "allwinner,sun8i-h3-spi";
+> -                       reg = <0x01c07000 0x1000>;
+> +                       reg = <0x01c17000 0x1000>;
+>                         interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+>                         clocks = <&ccu CLK_BUS_SPI2>, <&ccu CLK_SPI2>;
+>                         clock-names = "ahb", "mod";
+> @@ -692,10 +692,10 @@
+>                         #size-cells = <0>;
+>                 };
+>
+> -               spi3: spi@1c0f000 {
+> +               spi3: spi@1c1f000 {
+>                         compatible = "allwinner,sun8i-r40-spi",
+>                                      "allwinner,sun8i-h3-spi";
+> -                       reg = <0x01c0f000 0x1000>;
+> +                       reg = <0x01c1f000 0x1000>;
+>                         interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+>                         clocks = <&ccu CLK_BUS_SPI3>, <&ccu CLK_SPI3>;
+>                         clock-names = "ahb", "mod";
+> --
+> 2.14.5
+>
