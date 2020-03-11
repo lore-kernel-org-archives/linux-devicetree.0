@@ -2,206 +2,97 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22446C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7CEC10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8A6C208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:31:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583915461;
-	bh=rIWT9c23MTBVlaTh1Eb6lpf59lA1osIAXiNlIrkeg/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bpXgFAvIYnAeaclxA/Oz5UMoIADqc7umiQUq9itS3uwyKO0//eYAXr1co5lKK1Wch
-	 WSmWx3Ir9SchgKhnkF32cXJvzXyXADwVPc6ZS8xgI0/yM6ovQuA4EBXY2bgrWOzYeq
-	 cWKEo+QpBYkE9E9ggKZX5HqV42Rn3meT1wU32nNg=
+	by mail.kernel.org (Postfix) with ESMTP id 5000820848
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgCKIbA (ORCPT
+        id S1728242AbgCKIeA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:31:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55944 "EHLO mail.kernel.org"
+        Wed, 11 Mar 2020 04:34:00 -0400
+Received: from mga14.intel.com ([192.55.52.115]:33320 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgCKIbA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:31:00 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C91AC20848;
-        Wed, 11 Mar 2020 08:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583915459;
-        bh=rIWT9c23MTBVlaTh1Eb6lpf59lA1osIAXiNlIrkeg/U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PmrV3SBmAO/5xRR+ybHP68yc0R7xxRl/oaiqY1r4hJ8wa9wRJUgPn1CQKEA9GHKVi
-         UA9LjjCVNtrwB+IJCS7PWZOgeeI5Br2yGlnux0CRVoPfmpPJkdPRvYXPkXeCwcZI1s
-         /cxWTtSI/ddBabdOgeSrp1Hzg7Vwmg6IJtKTd9Fk=
-Date:   Wed, 11 Mar 2020 16:30:52 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     viresh.kumar@linaro.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] ARM: dts: imx: add nvmem property for cpu0
-Message-ID: <20200311083052.GD29269@dragon>
-References: <1583201690-16068-1-git-send-email-peng.fan@nxp.com>
- <1583201690-16068-2-git-send-email-peng.fan@nxp.com>
+        id S1728146AbgCKIeA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:34:00 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:34:00 -0700
+X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
+   d="scan'208";a="242614654"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:33:57 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id E90572096B; Wed, 11 Mar 2020 10:33:54 +0200 (EET)
+Date:   Wed, 11 Mar 2020 10:33:54 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
+        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
+        laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, linux-media@vger.kernel.org
+Subject: Re: [PATCH v12 00/19] TVP5150 Features and Fixes
+Message-ID: <20200311083354.GG5379@paasikivi.fi.intel.com>
+References: <20200309101428.15267-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583201690-16068-2-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200309101428.15267-1-m.felsch@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 10:14:48AM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Add nvmem related property for cpu0, then nvmem API could be used
-> to read cpu speed grading to avoid directly read OCOTP registers
-> mapped which could not handle defer probe.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  arch/arm/boot/dts/imx6dl.dtsi  | 2 ++
->  arch/arm/boot/dts/imx6q.dtsi   | 2 ++
->  arch/arm/boot/dts/imx6qdl.dtsi | 7 +++++++
->  arch/arm/boot/dts/imx6sl.dtsi  | 9 +++++++++
->  arch/arm/boot/dts/imx6sll.dtsi | 6 ++++++
->  arch/arm/boot/dts/imx6sx.dtsi  | 6 ++++++
->  6 files changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-> index 4b3a128d9260..055f1d875bac 100644
-> --- a/arch/arm/boot/dts/imx6dl.dtsi
-> +++ b/arch/arm/boot/dts/imx6dl.dtsi
-> @@ -44,6 +44,8 @@
->  			arm-supply = <&reg_arm>;
->  			pu-supply = <&reg_pu>;
->  			soc-supply = <&reg_soc>;
-> +			nvmem-cells = <&cpu_speed_grade>;
-> +			nvmem-cell-names = "speed_grade";
->  		};
->  
->  		cpu@1 {
-> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> index 0fad13f9d336..d3ba9d4a1290 100644
-> --- a/arch/arm/boot/dts/imx6q.dtsi
-> +++ b/arch/arm/boot/dts/imx6q.dtsi
-> @@ -49,6 +49,8 @@
->  			arm-supply = <&reg_arm>;
->  			pu-supply = <&reg_pu>;
->  			soc-supply = <&reg_soc>;
-> +			nvmem-cells = <&cpu_speed_grade>;
-> +			nvmem-cell-names = "speed_grade";
->  		};
->  
->  		cpu1: cpu@1 {
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index 70fb8b56b1d7..982f546b0b89 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -1165,6 +1165,13 @@
->  				compatible = "fsl,imx6q-ocotp", "syscon";
->  				reg = <0x021bc000 0x4000>;
->  				clocks = <&clks IMX6QDL_CLK_IIM>;
-> +
+Hi Marco,
 
-Please drop such newline.  Do not really think they are necessary.
-
-Shawn
-
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +
-> +				cpu_speed_grade: speed-grade@10 {
-> +					reg = <0x10 4>;
-> +				};
->  			};
->  
->  			tzasc@21d0000 { /* TZASC1 */
-> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-> index c8ec46fe8302..de943341e4f2 100644
-> --- a/arch/arm/boot/dts/imx6sl.dtsi
-> +++ b/arch/arm/boot/dts/imx6sl.dtsi
-> @@ -74,6 +74,8 @@
->  			arm-supply = <&reg_arm>;
->  			pu-supply = <&reg_pu>;
->  			soc-supply = <&reg_soc>;
-> +			nvmem-cells = <&cpu_speed_grade>;
-> +			nvmem-cell-names = "speed_grade";
->  		};
->  	};
->  
-> @@ -953,6 +955,13 @@
->  				compatible = "fsl,imx6sl-ocotp", "syscon";
->  				reg = <0x021bc000 0x4000>;
->  				clocks = <&clks IMX6SL_CLK_OCOTP>;
-> +
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +
-> +				cpu_speed_grade: speed-grade@10 {
-> +					reg = <0x10 4>;
-> +				};
->  			};
->  
->  			audmux: audmux@21d8000 {
-> diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-> index 797f850492fe..6b7fb3cec9f6 100644
-> --- a/arch/arm/boot/dts/imx6sll.dtsi
-> +++ b/arch/arm/boot/dts/imx6sll.dtsi
-> @@ -72,6 +72,8 @@
->  				 <&clks IMX6SLL_CLK_PLL1_SYS>;
->  			clock-names = "arm", "pll2_pfd2_396m", "step",
->  				      "pll1_sw", "pll1_sys";
-> +			nvmem-cells = <&cpu_speed_grade>;
-> +			nvmem-cell-names = "speed_grade";
->  		};
->  	};
->  
-> @@ -791,6 +793,10 @@
->  				reg = <0x021bc000 0x4000>;
->  				clocks = <&clks IMX6SLL_CLK_OCOTP>;
->  
-> +				cpu_speed_grade: speed-grade@10 {
-> +					reg = <0x10 4>;
-> +				};
-> +
->  				tempmon_calib: calib@38 {
->  					reg = <0x38 4>;
->  				};
-> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-> index e47d346a3543..63aa19d81b42 100644
-> --- a/arch/arm/boot/dts/imx6sx.dtsi
-> +++ b/arch/arm/boot/dts/imx6sx.dtsi
-> @@ -87,6 +87,8 @@
->  				      "pll1_sw", "pll1_sys";
->  			arm-supply = <&reg_arm>;
->  			soc-supply = <&reg_soc>;
-> +			nvmem-cells = <&cpu_speed_grade>;
-> +			nvmem-cell-names = "speed_grade";
->  		};
->  	};
->  
-> @@ -1058,6 +1060,10 @@
->  				reg = <0x021bc000 0x4000>;
->  				clocks = <&clks IMX6SX_CLK_OCOTP>;
->  
-> +				cpu_speed_grade: speed-grade@10 {
-> +					reg = <0x10 4>;
-> +				};
-> +
->  				tempmon_calib: calib@38 {
->  					reg = <0x38 4>;
->  				};
-> -- 
-> 2.16.4
+On Mon, Mar 09, 2020 at 11:14:09AM +0100, Marco Felsch wrote:
+> Hi all,
 > 
+> here is the new and _hopefully_ last version :) This version contains
+> the discussion results with Sakari and some minor fixes from the v11.
+> 
+> Each patch has a dedicate log, so I avoid the details here and give only
+> an overview.
+> 
+> Patch 1-2:
+> Those where previously one patch.
+> 
+> Patch 3-6:
+> Prepare and implement the common v4l2-fwnode parsing code. I changed the
+> code from a single parse_and_add_links/free to parse/add_links/free. I
+> did the split to allow adding multiple links from different devices to a
+> _maybe_ coming global connector device. 
+> 
+> Patch 8:
+> I converted the parsing code to the new v4l2-fwnode-connector parsing
+> behaviour and fixed a two bugs during remove()
+> 
+> Patch 13:
+> This one is new due to the switch from the s_power() to the pm_runtime
+> as Sakari suggested.
+> 
+> Patch 14:
+> Also a new patch.
+> 
+> Patch 15:
+> New patch..
+> 
+> I've tested the series on a custom imx6-based board which uses the chip
+> directly (no-usb). I would appreciate if someone with a usb device can
+> test this too.
+
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+That assumes the comments (nothing major there) will be addressed later on.
+
+-- 
+Regards,
+
+Sakari Ailus
