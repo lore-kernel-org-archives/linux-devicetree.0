@@ -2,506 +2,245 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2103C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849E2C18E5A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB5B321D7E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E28421D56
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zNLw9uQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbgCKNzm (ORCPT
+        id S1729521AbgCKN5B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:55:42 -0400
-Received: from mga05.intel.com ([192.55.52.43]:38650 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729460AbgCKNzl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 09:55:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 06:55:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
-   d="scan'208";a="242688236"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 11 Mar 2020 06:55:34 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jC1pf-008kO4-Aj; Wed, 11 Mar 2020 15:55:35 +0200
-Date:   Wed, 11 Mar 2020 15:55:35 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Phong LE <ple@baylibre.com>
-Cc:     narmstrong@baylibre.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, sam@ravnborg.org, mripard@kernel.org,
-        heiko.stuebner@theobroma-systems.com, linus.walleij@linaro.org,
-        stephan@gerhold.net, icenowy@aosc.io, broonie@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] drm: bridge: add it66121 driver
-Message-ID: <20200311135535.GQ1922688@smile.fi.intel.com>
-References: <20200311125135.30832-1-ple@baylibre.com>
- <20200311125135.30832-4-ple@baylibre.com>
+        Wed, 11 Mar 2020 09:57:01 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50290 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729512AbgCKN5B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 09:57:01 -0400
+Received: by mail-wm1-f67.google.com with SMTP id a5so2214049wmb.0
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 06:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eP5B12Iin5AOGx+bY3oMJduGL6svVsZhG2x1oXXR+cM=;
+        b=zNLw9uQxLElP8LuET1P9o4KdhzosxlRz4R8y6Cg5HPqv1Jhv0uS92raV0LAe7ps+7C
+         YLkXl5cejzD73MpJPUFispu8IScfXL4G70GUEPjI9XpfggH/a/02vx5++1a0PlChNHLk
+         1eVExK0Y+7YOAqUjR+oVK2GVExIamCX+DruQI7j3Y/K0eW/m618ZMQEN/M+TGSS1a14+
+         jbKqvKLEs9Xe7VT5hVh3XrVrBgSLA1CVkCWiVSDCCH9kwuTAMjZ5r4RDEGN/0Y4uFdVp
+         ES9s0nkRM5SieZIzoHqAydDhrmJtj839ghHnAFjuJbdidlzSe1zX6rMGflsjmsxlpoF6
+         wMpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=eP5B12Iin5AOGx+bY3oMJduGL6svVsZhG2x1oXXR+cM=;
+        b=q1uKgpQOELnj8tbEMayUvXbwEEUCA5jQaFwo75lOYaKGyCnyLhXe+ECCl6KpOgQwPn
+         1d1KER9u+a0x/Exu5vOl08t0UZyDYwrpfMZZ42FwQRJKfuewJoDRnWeinmRg/3UARrc7
+         13FYWJiNrryX2Z52iCEsVW5hG0ByXY2xowP7MmhO5vQ1v0hYVDm7jmahNba9lEGMc+cT
+         bPRinhaAKJ+UDPP+lv4HvWCUm3A6Gzhu/nIh6h7Y0y5nTMqFZmJIdrlbKvLF/QWH1klU
+         ywLSFASQ2J5OU0eD92bPn504ICIGFp8lc6rabs+vI+CL+1H05BGzaPS/oInqqqOxd/oK
+         CpTg==
+X-Gm-Message-State: ANhLgQ0RZAyBxbVEvVPhvcIN4e1/7CG9HFvNwHOuumnlp5489tIiX4za
+        AabbCWCm/husqr3JRA9+QK6XyA==
+X-Google-Smtp-Source: ADFU+vuVCbxLxvwDV80YtRJPYtrM3jSj45mkKh6Zy9tISMTyxX1rJG46k0FTnRLAAsbDxBLEJOqRhQ==
+X-Received: by 2002:a05:600c:22d8:: with SMTP id 24mr1527490wmg.108.1583935018691;
+        Wed, 11 Mar 2020 06:56:58 -0700 (PDT)
+Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id e1sm59569460wrx.90.2020.03.11.06.56.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Mar 2020 06:56:58 -0700 (PDT)
+Subject: Re: [PATCH v13 5/6] drm/mediatek: dpi sample mode support
+To:     Jitao Shi <jitao.shi@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
+        huijuan.xie@mediatek.com, stonea168@163.com,
+        cawa.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        linux-arm-kernel@lists.infradead.org,
+        Boris Brezillon <boris.brezillon@collabora.com>
+References: <20200311071823.117899-1-jitao.shi@mediatek.com>
+ <20200311071823.117899-6-jitao.shi@mediatek.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <1753781a-7b99-bc1a-22e4-2df2f45a6419@baylibre.com>
+Date:   Wed, 11 Mar 2020 14:56:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311125135.30832-4-ple@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200311071823.117899-6-jitao.shi@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:51:34PM +0100, Phong LE wrote:
-> This commit is a simple driver for bridge HMDI it66121.
-> The input format is RBG and there is no color conversion.
-> Audio, HDCP and CEC are not supported yet.
-
-I guess you should have been told in your company how to use get_maintainer.pl
-to avoid spamming people.
-
-Hint:
-	scripts/get_maintainer.pl --git --git-min-percent=67 ...
-
-...
-
-> + * Copyright (C) 2020 BayLibre, SAS
-> + * Author: Phong LE <ple@baylibre.com>
-> + * Copyright (C) 2018-2019, Artem Mygaiev
-> + * Copyright (C) 2017, Fresco Logic, Incorporated.
-
-This too compact to read, perhaps squeeze blank line after your (c) note
-followed by description how the rest (c) appear in the file.
-
-> + *
-
-Redundant line.
-
-> + */
-
-...
-
-> +#include <linux/of.h>
-
-This can be replaced with property.h, see comments against ->probe().
-
-> +#include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
-
-I didn't find evidence of use of any of those.
-
-...
-
-> +#define IT66121_MASTER_SEL_REG			0x10
-
-> +#define IT66121_AFE_DRV_REG			0x61
-
-> +#define IT66121_INPUT_MODE_REG			0x70
-
-> +#define IT66121_INPUT_CSC_REG			0x72
-
-> +#define IT66121_AFE_XP_REG			0x62
-
-> +#define IT66121_AFE_IP_REG			0x64
-
-> +#define IT66121_AFE_XP_EC1_REG			0x68
-
-> +#define IT66121_SW_RST_REG			0x04
-
-> +#define IT66121_DDC_COMMAND_REG			0x15
-
-> +#define IT66121_HDCP_REG			0x20
-
-> +#define IT66121_INT_STATUS1_REG			0x06
-
-> +#define IT66121_DDC_HEADER_REG			0x11
-
-> +#define IT66121_DDC_OFFSET_REG			0x12
-> +#define IT66121_DDC_BYTE_REG			0x13
-> +#define IT66121_DDC_SEGMENT_REG			0x14
-> +#define IT66121_DDC_RD_FIFO_REG			0x17
-
-> +#define IT66121_CLK_BANK_REG			0x0F
-
-> +#define IT66121_INT_REG				0x05
-
-> +#define IT66121_INT_MASK1_REG			0x09
-
-> +#define IT66121_INT_CLR1_REG			0x0C
-
-> +#define IT66121_AV_MUTE_REG			0xC1
-
-> +#define IT66121_PKT_GEN_CTRL_REG		0xC6
-
-> +#define IT66121_AVIINFO_DB1_REG			0x158
-> +#define IT66121_AVIINFO_DB2_REG			0x159
-> +#define IT66121_AVIINFO_DB3_REG			0x15A
-> +#define IT66121_AVIINFO_DB4_REG			0x15B
-> +#define IT66121_AVIINFO_DB5_REG			0x15C
-> +#define IT66121_AVIINFO_CSUM_REG		0x15D
-> +#define IT66121_AVIINFO_DB6_REG			0x15E
-> +#define IT66121_AVIINFO_DB7_REG			0x15F
-> +#define IT66121_AVIINFO_DB8_REG			0x160
-> +#define IT66121_AVIINFO_DB9_REG			0x161
-> +#define IT66121_AVIINFO_DB10_REG		0x162
-> +#define IT66121_AVIINFO_DB11_REG		0x163
-> +#define IT66121_AVIINFO_DB12_REG		0x164
-> +#define IT66121_AVIINFO_DB13_REG		0x165
-> +
-> +#define IT66121_AVI_INFO_PKT_REG		0xCD
-
-> +#define IT66121_HDMI_MODE_REG			0xC0
-
-> +#define IT66121_SYS_STATUS_REG			0x0E
-
-> +#define IT66121_DDC_STATUS_REG			0x16
-
-It's better to
-a) keep register sorted by value (easy to be oriented);
-b) have them in fixed width, e.g. 0x0CD.
-
-...
-
-> +#define IT66121_DEVICE_MASK			0x0F
-
-GENMASK() ?
-
-> +#define IT66121_EDID_SLEEP			20000
-> +#define IT66121_EDID_TIMEOUT			200000
-
-Care to add units?
-
-> +#define IT66121_AFE_CLK_HIGH			80000
-
-Also, what is the unit of this?
-
-...
-
-> +	return regmap_write(ctx->regmap, IT66121_MASTER_SEL_REG,
-> +				IT66121_MASTER_SEL_HOST);
-
-Indentation?
-Same for other similar places.
-
-...
-
-> +static int it66121_configure_afe(struct it66121_ctx *ctx,
-> +				 const struct drm_display_mode *mode)
-
-...like this.
-
-...
-
-> +	if (val & (IT66121_DDC_STATUS_NOACK | IT66121_DDC_STATUS_WAIT_BUS |
-> +	    IT66121_DDC_STATUS_ARBI_LOSE))
-> +		return -EAGAIN;
-
-Perhaps better to
-
-	u32 busy = IT66121_DDC_STATUS_NOACK | IT66121_DDC_STATUS_WAIT_BUS |
-		   IT66121_DDC_STATUS_ARBI_LOSE;
-
-
-	if (val & busy)
-		return -EAGAIN;
-
-?
-
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int it66121_abort_ddc_ops(struct it66121_ctx *ctx)
+On 11/03/2020 08:18, Jitao Shi wrote:
+> DPI can sample on falling, rising or both edge.
+> When DPI sample the data both rising and falling edge.
+> It can reduce half data io pins.
+> 
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 27 +++++++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> index 087f5ce732e1..2871e68e7767 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -75,6 +75,7 @@ struct mtk_dpi {
+>  	enum mtk_dpi_out_bit_num bit_num;
+>  	enum mtk_dpi_out_channel_swap channel_swap;
+>  	int refcount;
+> +	u32 pclk_sample;
+>  };
+>  
+>  static inline struct mtk_dpi *mtk_dpi_from_encoder(struct drm_encoder *e)
+> @@ -348,6 +349,13 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
+>  		mtk_dpi_mask(dpi, dpi->conf->reg_h_fre_con, 0, EDGE_SEL_EN);
+>  }
+>  
+> +static void mtk_dpi_enable_pclk_sample_dual_edge(struct mtk_dpi *dpi)
 > +{
-> +	int ret;
-> +	unsigned int swreset, cpdesire;
-> +
-> +	ret = regmap_read(ctx->regmap, IT66121_SW_RST_REG, &swreset);
-> +	if (ret)
-> +		return ret;
-> +
-
-> +	ret = regmap_read(ctx->regmap, IT66121_HDCP_REG, &cpdesire);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(ctx->regmap, IT66121_HDCP_REG,
-> +			   cpdesire & (~IT66121_HDCP_CPDESIRED & 0xFF));
-> +	if (ret)
-> +		return ret;
-
-regmap_update_bits() ?
-
-> +
-> +	ret = regmap_write(ctx->regmap, IT66121_SW_RST_REG,
-> +			   swreset | IT66121_SW_RST_HDCP);
-> +	if (ret)
-> +		return ret;
-
-This should surround the inner update, correct? Otherwise, regmap_update_bits()
-can be used as well.
-
+> +	mtk_dpi_mask(dpi, DPI_DDR_SETTING, DDR_EN | DDR_4PHASE,
+> +		     DDR_EN | DDR_4PHASE);
+> +	mtk_dpi_mask(dpi, DPI_OUTPUT_SETTING, EDGE_SEL, EDGE_SEL);
 > +}
-
-...
-
-> +static int it66121_get_edid_block(void *context, u8 *buf,
-> +				  unsigned int block, size_t len)
-> +{
-
-> +		ret = regmap_write(ctx->regmap, IT66121_DDC_COMMAND_REG,
-> +				   IT66121_DDC_COMMAND_EDID_READ);
-> +		if (ret)
-> +			return ret;
 > +
-> +		offset += cnt;
-> +		remain -= cnt;
-
-> +		msleep(20);
-
-Should be explained.
-
-> +
-> +		ret = it66121_wait_ddc_ready(ctx);
-> +		if (ret)
-> +			return ret;
-> +
-
-> +		do {
-> +			ret = regmap_read(ctx->regmap,
-> +					  IT66121_DDC_RD_FIFO_REG, &val);
-> +			if (ret)
-> +				return ret;
-> +			*(buf++) = val;
-> +			cnt--;
-> +		} while (cnt > 0);
-
-I'm wondering if regmap API has a helper for above like cases.
-
+>  static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
+>  					enum mtk_dpi_out_color_format format)
+>  {
+> @@ -439,7 +447,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+>  	pll_rate = clk_get_rate(dpi->tvd_clk);
+>  
+>  	vm.pixelclock = pll_rate / factor;
+> -	clk_set_rate(dpi->pixel_clk, vm.pixelclock);
+> +	clk_set_rate(dpi->pixel_clk,
+> +		     vm.pixelclock * (dpi->pclk_sample > 1 ? 2 : 1));
+>  	vm.pixelclock = clk_get_rate(dpi->pixel_clk);
+>  
+>  	dev_dbg(dpi->dev, "Got  PLL %lu Hz, pixel clock %lu Hz\n",
+> @@ -450,7 +459,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+>  	limit.y_bottom = 0x0010;
+>  	limit.y_top = 0x0FE0;
+>  
+> -	dpi_pol.ck_pol = MTK_DPI_POLARITY_FALLING;
+> +	dpi_pol.ck_pol = dpi->pclk_sample == 1 ?
+> +			 MTK_DPI_POLARITY_RISING : MTK_DPI_POLARITY_FALLING;
+>  	dpi_pol.de_pol = MTK_DPI_POLARITY_RISING;
+>  	dpi_pol.hsync_pol = vm.flags & DISPLAY_FLAGS_HSYNC_HIGH ?
+>  			    MTK_DPI_POLARITY_FALLING : MTK_DPI_POLARITY_RISING;
+> @@ -504,6 +514,8 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
+>  	mtk_dpi_config_color_format(dpi, dpi->color_format);
+>  	mtk_dpi_config_2n_h_fre(dpi);
+>  	mtk_dpi_config_disable_edge(dpi);
+> +	if (dpi->pclk_sample > 1)
+> +		mtk_dpi_enable_pclk_sample_dual_edge(dpi);
+>  	mtk_dpi_sw_reset(dpi, false);
+>  
+>  	return 0;
+> @@ -693,6 +705,7 @@ static const struct mtk_dpi_conf mt8183_conf = {
+>  static int mtk_dpi_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> +	struct device_node *ep;
+>  	struct mtk_dpi *dpi;
+>  	struct resource *mem;
+>  	int comp_id;
+> @@ -705,6 +718,16 @@ static int mtk_dpi_probe(struct platform_device *pdev)
+>  	dpi->dev = dev;
+>  	dpi->conf = (struct mtk_dpi_conf *)of_device_get_match_data(dev);
+>  
+> +	ep = of_graph_get_endpoint_by_regs(dev->of_node, 0, 0);
+> +	if (!ep) {
+> +		dev_err(dev, "Failed get the endpoint port\n");
+> +		return -EINVAL;
 > +	}
 > +
-> +	return 0;
-> +}
+> +	/* Get the sampling edge from the endpoint. */
+> +	of_property_read_u32(ep, "pclk-sample", &dpi->pclk_sample);
+> +	of_node_put(ep);
 
-...
+Instead of having hard-coded value in DT, you should switch to bridge bus
+format negotiation instead.
 
-> +static int it66121_connector_get_modes(struct drm_connector *connector)
-> +{
+Boris pushed support a few weeks ago and the dw-hdmi bridge has been updated
+to work with it and negotiate the format between the encoder and the bridge.
 
-> +	struct it66121_ctx *ctx = container_of(connector, struct it66121_ctx,
-> +			connector);
+Phong is pushing the it66121 bridge driver which is used on a MT8183 board, and
+should make use of that to handle the dual edge support between the 8183 dpi and
+the it66121 bridge.
 
-Seems like it can be an inline helper and in all places you can use
-
-	struct it66121_ctx *ctx = to_it66121_ctx(connector);
-
-
-> +	ret = drm_connector_update_edid_property(connector,
-> +						 ctx->edid);
-
-It quite fits one line, perhaps configure your editor to see 80 limit sharp?
-Applies to all similar cases as well.
-
-> +	if (ret) {
-> +		DRM_ERROR("Failed to update EDID property: %d\n", ret);
-> +		goto unlock;
-> +	}
-
-> +}
-
-...
-
-> +	return (val & IT66121_SYS_STATUS_HPDETECT);
-
-Too many parentheses.
-
-...
-
-> +	max_clock = ctx->dual_edge ? 74250 : 148500;
-
-Magic numbers? Also, It seems one definition is enough.
-
-...
-
-> +	msleep(50);
-
-Should be explained.
-
-...
-
-> +	val = mute ? IT66121_AV_MUTE_ON : (~IT66121_AV_MUTE_ON & 0xFF);
-
-	val = mute ? IT66121_AV_MUTE_ON : 0;
-
-> +	ret = regmap_write_bits(ctx->regmap, IT66121_AV_MUTE_REG,
-> +				IT66121_AV_MUTE_ON, val);
-
-...or even
-
-	mask = IT66121_AV_MUTE_ON;
-	val = mute ? mask : 0;
-
-	ret = regmap_write_bits(ctx->regmap, IT66121_AV_MUTE_REG, mask, val);
-
-> +	if (ret)
-> +		return ret;
-
-...
-
-> +	regmap_write_bits(ctx->regmap, IT66121_CLK_BANK_REG,
-> +			  IT66121_CLK_BANK_PWROFF_TXCLK,
-> +			  ~IT66121_CLK_BANK_PWROFF_TXCLK & 0xFF);
-
-Same idea. What the point of all this operations in the value parameter?
-Please, fix over the code.
-
-...
-
-
-> +	if (val & IT66121_SYS_STATUS_ACTIVE_IRQ) {
-
-	if (!(val & IT66121_SYS_STATUS_ACTIVE_IRQ))
-		goto unlock;
-
-> +		ret = regmap_read(ctx->regmap, IT66121_INT_STATUS1_REG, &val);
-> +		if (ret) {
-> +			dev_err(dev, "Cannot read STATUS1_REG %d\n", ret);
-> +		} else {
-> +			if (val & IT66121_INT_STATUS1_DDC_FIFOERR)
-> +				it66121_clear_ddc_fifo(ctx);
-
-> +			if (val & (IT66121_INT_STATUS1_DDC_BUSHANG |
-> +					IT66121_INT_STATUS1_DDC_NOACK))
-
-Indentation.
-
-> +				it66121_abort_ddc_ops(ctx);
-> +			if (val & IT66121_INT_STATUS1_HPD_STATUS) {
-> +				regmap_write_bits(ctx->regmap,
-> +						  IT66121_INT_CLR1_REG,
-> +						  IT66121_INT_CLR1_HPD,
-> +						  IT66121_INT_CLR1_HPD);
-> +
-> +				if (!it66121_is_hpd_detect(ctx)) {
-> +					kfree(ctx->edid);
-> +					ctx->edid = NULL;
-> +				}
-> +				event = true;
-> +			}
-> +		}
-> +
-> +		regmap_write_bits(ctx->regmap, IT66121_SYS_STATUS_REG,
-> +				  IT66121_SYS_STATUS_CLEAR_IRQ,
-> +				  IT66121_SYS_STATUS_CLEAR_IRQ);
-> +	}
-> +
-> +unlock:
-> +	mutex_unlock(&ctx->lock);
-
-...
-
-> +static int it66121_probe(struct i2c_client *client,
-> +			 const struct i2c_device_id *id)
-> +{
-
-> +	u8 ids[4];
-
-Magic, also see below.
-
-> +	int i, ret;
-> +	struct it66121_ctx *ctx;
-> +	struct device *dev = &client->dev;
-
-> +	ctx->conf = (struct it66121_conf *)of_device_get_match_data(dev);
-
-device_get_match_data()
-
-In any case why explicit casting?
-
-> +	if (!ctx->conf)
-> +		return -ENODEV;
-> +
-
-> +	ctx->dual_edge = of_property_read_bool(dev->of_node, "pclk-dual-edge");
-
-device_property_read_bool()
-
-> +	for (i = 0; i < 4; i++) {
-
-Magic.
-
-> +		regmap_read(ctx->regmap, i, &ret);
-> +		ids[i] = ret;
-> +	}
+Neil
 
 > +
-> +	if (ids[0] != IT66121_VENDOR_ID0 ||
-> +	    ids[1] != IT66121_VENDOR_ID1 ||
-> +	    ids[2] != IT66121_DEVICE_ID0 ||
-> +	    ((ids[3] & IT66121_DEVICE_MASK) != IT66121_DEVICE_ID1)) {
-> +		ite66121_power_off(ctx);
-> +		return -ENODEV;
-> +	}
-> +
-> +	ctx->bridge.funcs = &it66121_bridge_funcs;
-> +	ctx->bridge.of_node = dev->of_node;
-> +
-> +	ret = devm_request_threaded_irq(dev, client->irq, NULL,
-> +					it66121_irq_threaded_handler,
-
-> +					IRQF_SHARED | IRQF_TRIGGER_LOW |
-> +					IRQF_ONESHOT,
-
-Shouldn't flags come from appropriate resource provider (DT / ACPI / etc)?
-
-> +					dev_name(dev),
-> +					ctx);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to request irq %d:%d\n", client->irq, ret);
-> +		ite66121_power_off(ctx);
-> +		return ret;
-> +	}
-> +
-> +	drm_bridge_add(&ctx->bridge);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static const struct of_device_id it66121_dt_match[] = {
-> +	{ .compatible = "ite,it66121",
-> +	  .data = &it66121_conf_simple,
-> +	},
-
-> +	{ },
-
-Terminator line doesn't need comma.
-
-> +};
-
-...
-
-> +static const struct i2c_device_id it66121_id[] = {
-> +	{ "it66121", 0 },
-
-> +	{ },
-
-Ditto.
-
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	dpi->regs = devm_ioremap_resource(dev, mem);
+>  	if (IS_ERR(dpi->regs)) {
+> 
 
