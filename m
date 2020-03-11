@@ -2,199 +2,158 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B15C4CC9E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 18:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A6BC0044D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 18:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E68BA2072F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 18:23:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="f/sLS2XO"
+	by mail.kernel.org (Postfix) with ESMTP id C5B5720737
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 18:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583951744;
+	bh=7mVJSo2mvNxvQh9d0kP/b85xTB/VkTxdptcJAa56iG8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=1tQsZ0alk1fhiYk8jzZ7Fp9+ZwRj80l7kI9b9cM9ZJ3IE/VtoxZ56ctR9kOIdp4ZQ
+	 wphlCaUZQL2ZYJLSqU1vttdgCOApUVou1dtxD7OEn7GL7G0g0OOKZxSRM8S5XNnIWQ
+	 TQTYLke7T6stXG+2WDIeDeetQl8oQBHc34Z1bJeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbgCKSXn (ORCPT
+        id S1730887AbgCKSfn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 14:23:43 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:51346 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730691AbgCKSXn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 14:23:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1583951010; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QboM6rXBouaMwAgrN8IO8KzOPqal71bApdk4LvjvUTk=;
-        b=f/sLS2XOj73Dbi4Z7qB+yO9DMhX6Wp7XqAhP1c9swekfCuMShAJDaQEyB2b5PsWpgj9Ud3
-        XFuNnSG/8Es/HT+I6ghtn3CzjSXZc2HUt/cepTlKSgIATlrL9IKxB0at3Uquvy8uvHTXaV
-        iBelRYORUKO83WnPlEY5P7Oc4VWwG60=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 3/3] dt-bindings: rtc: Convert and update jz4740-rtc doc to YAML
-Date:   Wed, 11 Mar 2020 19:23:18 +0100
-Message-Id: <20200311182318.22154-3-paul@crapouillou.net>
-In-Reply-To: <20200311182318.22154-1-paul@crapouillou.net>
-References: <20200311182318.22154-1-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 11 Mar 2020 14:35:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:53494 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730641AbgCKSfn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:35:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D62B7FA;
+        Wed, 11 Mar 2020 11:35:42 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D552B3F6CF;
+        Wed, 11 Mar 2020 11:35:41 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 18:35:40 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "moderated list:ARM/Mediatek SoC, open list
+        <linux-kernel@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Rob
+        Herring <robh+dt@kernel.org>, support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Applied "dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor" to the spi tree
+In-Reply-To:  <20200306085052.28258-4-gch981213@gmail.com>
+Message-Id:  <applied-20200306085052.28258-4-gch981213@gmail.com>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the jz4740-rtc doc to YAML, and update it to reflect the new
-changes in the driver:
-- More compatible strings are specified, with fallbacks if needed,
-- The vendor-specific properties are now properly prefixed with the
-  'ingenic,' prefix.
+The patch
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+   dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From efe72129f32cac0dee5a221399813b620e310b32 Mon Sep 17 00:00:00 2001
+From: Chuanhong Guo <gch981213@gmail.com>
+Date: Fri, 6 Mar 2020 16:50:51 +0800
+Subject: [PATCH] dt-bindings: convert mtk-quadspi binding doc for spi-mtk-nor
+
+spi-mtk-nor is a driver to replace mtk-quadspi and they have almost
+the same device-tree bindings. Reuse this binding documentation and
+convert it for new driver:
+
+1. "Mediatek SoCs" -> "Mediatek ARM SoCs" because MTK MIPS SoCs
+   use different controllers.
+2. document "interrupts" as a required property because it's
+   available on all SoCs with this controller and new driver takes
+   advantages of it. It's implemented as optional only to maintain
+   backward compatibility.
+3. add a dummy interrupt binding in example.
+
+Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+Link: https://lore.kernel.org/r/20200306085052.28258-4-gch981213@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/rtc/ingenic,jz4740-rtc.txt       | 37 ---------
- .../devicetree/bindings/rtc/ingenic,rtc.yaml  | 83 +++++++++++++++++++
- 2 files changed, 83 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
+ .../{mtd/mtk-quadspi.txt => spi/spi-mtk-nor.txt}  | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+ rename Documentation/devicetree/bindings/{mtd/mtk-quadspi.txt => spi/spi-mtk-nor.txt} (75%)
 
-diff --git a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt b/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-deleted file mode 100644
-index 41c7ae18fd7b..000000000000
---- a/Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--JZ4740 and similar SoCs real-time clock driver
+diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
+similarity index 75%
+rename from Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+rename to Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
+index a12e3b5c495d..984ae7fd4f94 100644
+--- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
+@@ -1,4 +1,4 @@
+-* Serial NOR flash controller for MediaTek SoCs
++* Serial NOR flash controller for MediaTek ARM SoCs
+ 
+ Required properties:
+ - compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
+@@ -13,6 +13,7 @@ Required properties:
+ 		  "mediatek,mt7629-nor", "mediatek,mt8173-nor"
+ 		  "mediatek,mt8173-nor"
+ - reg: 		  physical base address and length of the controller's register
++- interrupts:	  Interrupt number used by the controller.
+ - clocks: 	  the phandle of the clocks needed by the nor controller
+ - clock-names: 	  the names of the clocks
+ 		  the clocks should be named "spi" and "sf". "spi" is used for spi bus,
+@@ -22,20 +23,16 @@ Required properties:
+ - #address-cells: should be <1>
+ - #size-cells:	  should be <0>
+ 
+-The SPI flash must be a child of the nor_flash node and must have a
+-compatible property. Also see jedec,spi-nor.txt.
 -
 -Required properties:
--
--- compatible: One of:
--  - "ingenic,jz4740-rtc" - for use with the JZ4740 SoC
--  - "ingenic,jz4780-rtc" - for use with the JZ4780 SoC
--- reg: Address range of rtc register set
--- interrupts: IRQ number for the alarm interrupt
--- clocks: phandle to the "rtc" clock
--- clock-names: must be "rtc"
--
--Optional properties:
--- system-power-controller: To use this component as the
--  system power controller
--- reset-pin-assert-time-ms: Reset pin low-level assertion
--  time after wakeup (default 60ms; range 0-125ms if RTC clock
--  at 32 kHz)
--- min-wakeup-pin-assert-time-ms: Minimum wakeup pin assertion
--  time (default 100ms; range 0-2s if RTC clock at 32 kHz)
--
--Example:
--
--rtc@10003000 {
--	compatible = "ingenic,jz4740-rtc";
--	reg = <0x10003000 0x40>;
--
--	interrupt-parent = <&intc>;
--	interrupts = <32>;
--
--	clocks = <&rtc_clock>;
--	clock-names = "rtc";
--
--	system-power-controller;
--	reset-pin-assert-time-ms = <60>;
--	min-wakeup-pin-assert-time-ms = <100>;
--};
-diff --git a/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-new file mode 100644
-index 000000000000..4206bf8a2469
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rtc/ingenic,rtc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ingenic SoCs Real-Time Clock DT bindings
-+
-+maintainers:
-+  - Paul Cercueil <paul@crapouillou.net>
-+
-+allOf:
-+  - $ref: rtc.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+        - ingenic,jz4740-rtc
-+        - ingenic,jz4760-rtc
-+      - items:
-+        - const: ingenic,jz4725b-rtc
-+        - const: ingenic,jz4740-rtc
-+      - items:
-+        - enum:
-+          - ingenic,jz4770-rtc
-+          - ingenic,jz4780-rtc
-+        - const: ingenic,jz4760-rtc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: rtc
-+
-+  system-power-controller:
-+    description: |
-+      Indicates that the RTC is responsible for powering OFF
-+      the system.
-+    type: boolean
-+
-+  ingenic,reset-pin-assert-time-ms:
-+    minimum: 0
-+    maximum: 125
-+    default: 60
-+    description: |
-+      Reset pin low-level assertion time after wakeup
-+      (assuming RTC clock at 32 kHz)
-+
-+  ingenic,min-wakeup-pin-assert-time-ms:
-+    minimum: 0
-+    maximum: 2000
-+    default: 100
-+    description: |
-+      Minimum wakeup pin assertion time
-+      (assuming RTC clock at 32 kHz)
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4740-cgu.h>
-+    rtc_dev: rtc@10003000 {
-+      compatible = "ingenic,jz4740-rtc";
-+      reg = <0x10003000 0x40>;
-+
-+      interrupt-parent = <&intc>;
-+      interrupts = <15>;
-+
-+      clocks = <&cgu JZ4740_CLK_RTC>;
-+      clock-names = "rtc";
-+    };
+-- compatible:	  May include a device-specific string consisting of the manufacturer
+-		  and name of the chip. Must also include "jedec,spi-nor" for any
+-		  SPI NOR flash that can be identified by the JEDEC READ ID opcode (0x9F).
+-- reg :		  Chip-Select number
++There should be only one spi slave device following generic spi bindings.
++It's not recommended to use this controller for devices other than SPI NOR
++flash due to limited transfer capability of this controller.
+ 
+ Example:
+ 
+ nor_flash: spi@1100d000 {
+ 	compatible = "mediatek,mt8173-nor";
+ 	reg = <0 0x1100d000 0 0xe0>;
++	interrupts = <&spi_flash_irq>;
+ 	clocks = <&pericfg CLK_PERI_SPI>,
+ 		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+ 	clock-names = "spi", "sf";
 -- 
-2.25.1
+2.20.1
 
