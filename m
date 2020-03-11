@@ -2,99 +2,121 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F9FC10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA34C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1D420637
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A9420873
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583916359;
+	bh=Tx86wnCMyMjttXqHLNFN2Ue65Q0KtIi7r5++8isH6Jk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A4tIGS9hlXjQaiDypy9QDbW0wxEUDkTbL85XwoAnfw1lF08nlCdU1KDbNIbfT3I2z
+	 NvgZft9hKvAznmSnV2lAJ4ntb9lTWCknWFmH8B6U/C7LvBVN+B78wKr6s0isODRiUq
+	 mxzcRPuzNCSxBoAs73o3exKx3NvdOk9Nb3Xxt3vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgCKIoG (ORCPT
+        id S1728605AbgCKIpy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:44:06 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55715 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbgCKIoF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 04:44:05 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jBwy5-0006ae-OG; Wed, 11 Mar 2020 09:43:57 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jBwy5-0002zo-9A; Wed, 11 Mar 2020 09:43:57 +0100
-Date:   Wed, 11 Mar 2020 09:43:57 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
-        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
-        laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-media@vger.kernel.org
-Subject: Re: [PATCH v12 06/19] media: v4l2-fwnode: add initial connector
- parsing support
-Message-ID: <20200311084357.jodtsrcfaeanv7hz@pengutronix.de>
-References: <20200309101428.15267-1-m.felsch@pengutronix.de>
- <20200309101428.15267-7-m.felsch@pengutronix.de>
- <20200311081703.GF5379@paasikivi.fi.intel.com>
+        Wed, 11 Mar 2020 04:45:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728146AbgCKIpy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:45:54 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98BB820637;
+        Wed, 11 Mar 2020 08:45:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583916354;
+        bh=Tx86wnCMyMjttXqHLNFN2Ue65Q0KtIi7r5++8isH6Jk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ob1Ww4y2ywlV+9yX+rvEdfOXe53hUhRBtuHwXZ0b9xBD7ff3XrmsqP7SWdLXusxAX
+         quiXCdwZgcVMcOhHjOqgPu//MHoD9/5MokBLirBrZGKkdtieo0NHCkZuoEcNB9YdU9
+         2XtOny+8/I2kkg1EyaXIFL8qskh0gT3uWnZ6j4EA=
+Date:   Wed, 11 Mar 2020 16:45:45 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v1] ARM: dts: imx6dl-riotboard: properly define rgmii PHY
+Message-ID: <20200311084543.GF29269@dragon>
+References: <20200304065436.24917-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311081703.GF5379@paasikivi.fi.intel.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:40:08 up 116 days, 23:58, 136 users,  load average: 0.11, 0.10,
- 0.09
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200304065436.24917-1-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On 20-03-11 10:17, Sakari Ailus wrote:
-> Hi Marco,
+On Wed, Mar 04, 2020 at 07:54:36AM +0100, Oleksij Rempel wrote:
+> The Atheros AR8035 PHY can be autodetected but can't use interrupt
+> support provided on this board. Define MDIO bus and the PHY node to make
+> it work properly.
 > 
-> On Mon, Mar 09, 2020 at 11:14:15AM +0100, Marco Felsch wrote:
-> ...
-> > +void v4l2_fwnode_connector_free(struct v4l2_fwnode_connector *connector)
-> > +{
-> > +	struct v4l2_connector_link *link, *tmp;
-> > +
-> > +	if (IS_ERR_OR_NULL(connector) ||
-> > +	    connector->type == V4L2_CONN_UNKNOWN)
-> > +		return;
-> > +
-> > +	list_for_each_entry_safe(link, tmp, &connector->links, head) {
-> > +		v4l2_fwnode_put_link(&link->fwnode_link);
-> > +		list_del(&link->head);
-> > +		kfree(link);
-> > +	}
-> > +
-> > +	kfree(connector->label);
-> > +	connector->label = NULL;
-> > +	connector = NULL;
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  arch/arm/boot/dts/imx6dl-riotboard.dts | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 > 
-> No need to set connector NULL here.
+> diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
+> index 829654e1835a..17c637b66387 100644
+> --- a/arch/arm/boot/dts/imx6dl-riotboard.dts
+> +++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
+> @@ -89,11 +89,27 @@ &fec {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_enet>;
+>  	phy-mode = "rgmii-id";
+> -	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+> +	phy-handle = <&rgmii_phy>;
+>  	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+>  			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
+>  	fsl,err006687-workaround-present;
+>  	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		/* Atheros AR8035 PHY */
+> +		rgmii_phy: ethernet-phy@4 {
+> +			reg = <4>;
+> +
+> +			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
+> +
 
-My intention was to make it safe e.g. if a caller calls this twice for
-the same connector.
+Drop these unnecessary newlines.
 
-Regards,
-  Marco
+Shawn
 
-> > +}
-> 
+> +			reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+> +			reset-assert-us = <10000>;
+> +			reset-deassert-us = <1000>;
+> +		};
+> +	};
+>  };
+>  
+>  &gpio1 {
 > -- 
-> Sakari Ailus
+> 2.25.1
+> 
