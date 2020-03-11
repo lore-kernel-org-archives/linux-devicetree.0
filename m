@@ -2,113 +2,250 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AD8C0044D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9270EC0044D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 18:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C49320739
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 17:51:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eNRE/qbm"
+	by mail.kernel.org (Postfix) with ESMTP id 25F8220691
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 18:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583949603;
+	bh=13eyCeRbfnL23xSG0aEnKEidDw3DEzplrT4cMv4eihQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=r/N27oLENySc7XtdUU//hAB2zXPTmhzHcrPgdWCLQeiClJUwPuDffznJBNX5ZJMqM
+	 WGkviBPdr4Twf41hbmophrF8IZ27D0hM3bsZjjqstDpyxUH9VPoi4PwvMmBzG+ujpq
+	 h2QVCeX7G4V9Sna5/ORfCtItkb/3NW8ambxaH+qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbgCKRv5 (ORCPT
+        id S1730654AbgCKSAC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 13:51:57 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37351 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730505AbgCKRv5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 13:51:57 -0400
-Received: by mail-pj1-f66.google.com with SMTP id ca13so1389359pjb.2
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 10:51:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a5g25PDEXPRR99KehOK1iE2Gu80HzFKYuNkkikGwIFI=;
-        b=eNRE/qbm63stiKXIvgwIlV+IxOrzorOkM4iow7B6RZUpJva1559bRWMvw2agkD7Mis
-         2YTH3veSMsgbKxZyscQrguxH0BD1nYGckFuQ/fdaY2NKujUR7G6NuenUZTTOfFuGSGgH
-         Qxht0ueO4ugRgmAZGeX2WtSxnNFHitwKoKXgM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a5g25PDEXPRR99KehOK1iE2Gu80HzFKYuNkkikGwIFI=;
-        b=kWUQGriL62k4aGfAwTo65jkxnHQQlkJEB5AqS3wSu0w6DewK8RxMLVY5YIo6RfKTCl
-         a6GkkjcJyAXd1uSMYW8Su4fwFhmGtPZ12DaoSrUAl8MycaWFLvNcfxhgAxi/HObDnzgh
-         6ZreEv3ptTTakUkWPTx3rR46Frqvbj2JSX/sJvx9iv5tm0yhFRmhaiuCmc4zU9hHssr6
-         Ra8+4UOYgn5XjA5Ang7MibUhZ6DZ1g1WOWArMxCiRf0iILetXnx0gbIp3MUcDgrGXaxN
-         QyuTIN6x12sC4DjHFPsCzSfLbBS2Xp4pmhVzmxyyzt6ce0ks9wkGg71SZBwKW+F81lNO
-         yb6A==
-X-Gm-Message-State: ANhLgQ3fHEbc9sNdxYEiQ1lbpbwzMdJepwfGzX7yjHdUPZVjgb9Mpbkm
-        DWwpqsT5mAGUa/N6AhWbdgfksw==
-X-Google-Smtp-Source: ADFU+vsBi+bUj1VxZCycAe0rgyooLlJtfjkUSx8xr00Nuup+ET1asdfp4FcWsNKm5fSW9KpT0NQn8w==
-X-Received: by 2002:a17:902:bc4c:: with SMTP id t12mr3853587plz.54.1583949115991;
-        Wed, 11 Mar 2020 10:51:55 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id d3sm5730078pfq.126.2020.03.11.10.51.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 10:51:54 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 10:51:53 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v4 4/4] arm64: dts: qcom: sc7180: Correct qmp phy reset
- entries
-Message-ID: <20200311175153.GB144492@google.com>
-References: <1583928252-21246-1-git-send-email-sanm@codeaurora.org>
- <1583928252-21246-5-git-send-email-sanm@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1583928252-21246-5-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Wed, 11 Mar 2020 14:00:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:52924 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730507AbgCKSAB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 14:00:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DC541FB;
+        Wed, 11 Mar 2020 11:00:01 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C495F3F6CF;
+        Wed, 11 Mar 2020 11:00:00 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 17:59:59 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, olivier.moysan@st.com, perex@perex.cz,
+        robh@kernel.org, tiwai@suse.com
+Subject: Applied "ASoC: dt-bindings: stm32: convert spdfirx to json-schema" to the asoc tree
+In-Reply-To:  <20200117170352.16040-1-olivier.moysan@st.com>
+Message-Id:  <applied-20200117170352.16040-1-olivier.moysan@st.com>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sandeep,
+The patch
 
-This patch landed in Bjorn's tree (arm64-for-5.7 branch). In case you have
-to re-spin the series there is no need to include it.
+   ASoC: dt-bindings: stm32: convert spdfirx to json-schema
 
-On Wed, Mar 11, 2020 at 05:34:12PM +0530, Sandeep Maheswaram wrote:
-> The phy reset entries were incorrect.so swapped them.
-> 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 9d112aa..253274d 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1306,8 +1306,8 @@
->  				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
->  			clock-names = "aux", "cfg_ahb", "ref", "com_aux";
->  
-> -			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
-> -				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
-> +			resets = <&gcc GCC_USB3_PHY_PRIM_BCR>,
-> +				 <&gcc GCC_USB3_DP_PHY_PRIM_BCR>;
->  			reset-names = "phy", "common";
->  
->  			usb_1_ssphy: phy@88e9200 {
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 9032cdd96a2d4b0ef2f43499328f8a68050be2ec Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Fri, 17 Jan 2020 18:03:52 +0100
+Subject: [PATCH] ASoC: dt-bindings: stm32: convert spdfirx to json-schema
+
+Convert the STM32 SPDIFRX bindings to DT schema format using json-schema.
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20200117170352.16040-1-olivier.moysan@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/sound/st,stm32-spdifrx.txt       | 56 -------------
+ .../bindings/sound/st,stm32-spdifrx.yaml      | 80 +++++++++++++++++++
+ 2 files changed, 80 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+deleted file mode 100644
+index 33826f2459fa..000000000000
+--- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
++++ /dev/null
+@@ -1,56 +0,0 @@
+-STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
+-
+-The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
+-IEC-60958 and IEC-61937.
+-
+-Required properties:
+-  - compatible: should be "st,stm32h7-spdifrx"
+-  - reg: cpu DAI IP base address and size
+-  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
+-  - clock-names: must contain "kclk"
+-  - interrupts: cpu DAI interrupt line
+-  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
+-    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
+-  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
+-
+-Optional properties:
+-  - resets: Reference to a reset controller asserting the SPDIFRX
+-
+-The device node should contain one 'port' child node with one child 'endpoint'
+-node, according to the bindings defined in Documentation/devicetree/bindings/
+-graph.txt.
+-
+-Example:
+-spdifrx: spdifrx@40004000 {
+-	compatible = "st,stm32h7-spdifrx";
+-	reg = <0x40004000 0x400>;
+-	clocks = <&rcc SPDIFRX_CK>;
+-	clock-names = "kclk";
+-	interrupts = <97>;
+-	dmas = <&dmamux1 2 93 0x400 0x0>,
+-	       <&dmamux1 3 94 0x400 0x0>;
+-	dma-names = "rx", "rx-ctrl";
+-	pinctrl-0 = <&spdifrx_pins>;
+-	pinctrl-names = "default";
+-
+-	spdifrx_port: port {
+-		cpu_endpoint: endpoint {
+-			remote-endpoint = <&codec_endpoint>;
+-		};
+-	};
+-};
+-
+-spdif_in: spdif-in {
+-	compatible = "linux,spdif-dir";
+-
+-	codec_port: port {
+-		codec_endpoint: endpoint {
+-			remote-endpoint = <&cpu_endpoint>;
+-		};
+-	};
+-};
+-
+-soundcard {
+-	compatible = "audio-graph-card";
+-	dais = <&spdifrx_port>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+new file mode 100644
+index 000000000000..b7f7dc452231
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/st,stm32-spdifrx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 S/PDIF receiver (SPDIFRX)
++
++maintainers:
++  - Olivier Moysan <olivier.moysan@st.com>
++
++description: |
++  The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
++  IEC-60958 and IEC-61937.
++
++properties:
++  compatible:
++    enum:
++      - st,stm32h7-spdifrx
++
++  "#sound-dai-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: kclk
++
++  interrupts:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: audio data capture DMA
++      - description: IEC status bits capture DMA
++
++  dma-names:
++    items:
++      - const: rx
++      - const: rx-ctrl
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - "#sound-dai-cells"
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - dmas
++  - dma-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    spdifrx: spdifrx@40004000 {
++        compatible = "st,stm32h7-spdifrx";
++        #sound-dai-cells = <0>;
++        reg = <0x40004000 0x400>;
++        clocks = <&rcc SPDIF_K>;
++        clock-names = "kclk";
++        interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++        dmas = <&dmamux1 2 93 0x400 0x0>,
++               <&dmamux1 3 94 0x400 0x0>;
++        dma-names = "rx", "rx-ctrl";
++        pinctrl-0 = <&spdifrx_pins>;
++        pinctrl-names = "default";
++    };
++
++...
+-- 
+2.20.1
+
