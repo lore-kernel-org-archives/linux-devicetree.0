@@ -2,107 +2,210 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5507C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9C3C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEBDD206B1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:41:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Wf2ahhej"
+	by mail.kernel.org (Postfix) with ESMTP id 99C0D20575
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:42:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583937776;
+	bh=eovpXTvyVWEK9XWNC0b/YZgHbmJESrWMQgqo7YJfDec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hGYOSo/fdhMSoiv6DCf3pn/OkycQ+HRXjpzFnzvvkqJ3oomhc9r3V6k4/rqdaozUS
+	 zZns45aJQtQaHBLO43/oKi6J6tyH3K6rsXqowl4VZUUDY0S32pQnFII5xT52CZuL3q
+	 66sBhDV23EcPf2foKXJ7al/UuziVnt91cz64JpGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbgCKOl2 (ORCPT
+        id S1729738AbgCKOm5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:41:28 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50636 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729057AbgCKOl1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 10:41:27 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02BEfKo7103742;
-        Wed, 11 Mar 2020 09:41:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583937680;
-        bh=oRjWnok7UIPiyxHIO3B2i6YgljHO5Qr97OJNTqojet0=;
-        h=From:To:CC:Subject:Date;
-        b=Wf2ahhejV+C15Njyw4PX/2XHJji0YKivKzqwaNr24pOxTtjx1puUwy/uqi0JTdey3
-         2RF0kfnGQl5AzH0x4Z+7MCWHyteyy+geUY8wUxbt4/L5RnbgJIRdz6A1kBGLu48y9C
-         dkght+ys7KH0KHFwCiDOQBhQMeKuOD2iVMogIiOI=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02BEfKDS022778
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Mar 2020 09:41:20 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Mar 2020 09:41:19 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Mar 2020 09:41:19 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02BEfH6F043022;
-        Wed, 11 Mar 2020 09:41:17 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <t-kristo@ti.com>
-CC:     <nm@ti.com>, <d-gerlach@ti.com>, <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, <stable@kernel.org>
-Subject: [PATCH] arm64: dts: ti: k3-am65: Add clocks to dwc3 nodes
-Date:   Wed, 11 Mar 2020 16:41:11 +0200
-Message-ID: <20200311144111.7112-1-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 11 Mar 2020 10:42:57 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43443 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729057AbgCKOm5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 10:42:57 -0400
+Received: by mail-ed1-f66.google.com with SMTP id dc19so3133763edb.10;
+        Wed, 11 Mar 2020 07:42:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gKDUe9P2YUubturUxI0TRyVNid6URk2e+Ed9FtxvxKk=;
+        b=EMKmZ/MrgEuNGsTb/Ze9rt1U9+lWeztu9hI+HH0of+sRAzH/ExlqFbOIRZFSxC4ADK
+         5X/26f6R0Z/iTcCYTGKuGtP2nlbh4uQE27kLyGUwGHCD3jgSs3vXN7JQHlOpGJ8PvKBK
+         WfPgkD8gcbIKMi9IN3+NCDIBuDyPVbjA9c0GIzrV/aMUB6I/1ri7oKrc75+WBo6cr0wI
+         o5ID2MMultN8P9BStIBS4wxYgcFg9edOD1Rdv1sM6CUM5bZXJ46B7Xjs1ZdBbUyY/orQ
+         vAyryO2dUh1BIfRe/cIKRLd1XpjnA0BhOkuZTP3IfrsMvh+uB+boHC0YO6AFo69jRXBx
+         VZBg==
+X-Gm-Message-State: ANhLgQ2P/ulINIycY42dj86NuoBy33Ie2susWmo+v93rpw6wYCUPbnls
+        j3LiPI1ua4HqGDo/+cPH7QA=
+X-Google-Smtp-Source: ADFU+vuaPy05McHUkVwSVh+g/+/nj6uRC/r0ZhsuPI7+uwkM3c7CJcwerQSzNIOD7sx8YKwslv43/w==
+X-Received: by 2002:aa7:d45a:: with SMTP id q26mr3263099edr.350.1583937774579;
+        Wed, 11 Mar 2020 07:42:54 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id p4sm607572eju.57.2020.03.11.07.42.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Mar 2020 07:42:51 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 15:42:48 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCHv3 5/5] clk: samsung: exynos542x: Move FSYS subsystem
+ clocks to its sub-CMU
+Message-ID: <20200311144248.GA4455@kozik-lap>
+References: <20200310194854.831-1-linux.amoon@gmail.com>
+ <20200310194854.831-6-linux.amoon@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200310194854.831-6-linux.amoon@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach@ti.com>
+On Tue, Mar 10, 2020 at 07:48:54PM +0000, Anand Moon wrote:
+> FSYS power domain support usbdrd3, pdma and usb2 power gaiting,
+> hence move FSYS clk setting to sub-CMU block to support power domain
+> on/off sequences for device nodes.
+> 
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> New patch in the series
+> ---
+>  drivers/clk/samsung/clk-exynos5420.c | 45 +++++++++++++++++++++-------
+>  1 file changed, 34 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index c9e5a1fb6653..6c4c47dfcdce 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -859,12 +859,6 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
+>  	DIV(0, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
+>  	DIV(0, "dout_maupcm0", "dout_maudio0", DIV_MAU, 24, 8),
+>  
+> -	/* USB3.0 */
+> -	DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
+> -	DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
+> -	DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
+> -	DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
 
-The TI sci-clk driver can scan the DT for all clocks provided by system
-firmware and does this by checking the clocks property of all nodes, so
-we must add this to the dwc3 nodes so USB clocks are available.
+According to clock diagram these are still in CMU TOP, not FSYS.
 
-Without this USB does not work with latest system firmware i.e.
-[    1.714662] clk: couldn't get parent clock 0 for /interconnect@100000/dwc3@4020000
+> -
+>  	/* MMC */
+>  	DIV(0, "dout_mmc0", "mout_mmc0", DIV_FSYS1, 0, 10),
+>  	DIV(0, "dout_mmc1", "mout_mmc1", DIV_FSYS1, 10, 10),
+> @@ -1031,8 +1025,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+/>  
+>  	/* FSYS Block */
+>  	GATE(CLK_TSI, "tsi", "aclk200_fsys", GATE_BUS_FSYS0, 0, 0, 0),
+> -	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
+> -	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
+>  	GATE(CLK_UFS, "ufs", "aclk200_fsys2", GATE_BUS_FSYS0, 3, 0, 0),
+>  	GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_IP_FSYS, 9, 0, 0),
+>  	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
+> @@ -1040,9 +1032,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
+>  	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
+>  	GATE(CLK_SROMC, "sromc", "aclk200_fsys2",
+>  			GATE_IP_FSYS, 17, CLK_IGNORE_UNUSED, 0),
+> -	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
+> -	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
+> -	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
+>  	GATE(CLK_SCLK_UNIPRO, "sclk_unipro", "dout_unipro",
+>  			SRC_MASK_FSYS, 24, CLK_SET_RATE_PARENT, 0),
+>  
+> @@ -1258,6 +1247,28 @@ static struct exynos5_subcmu_reg_dump exynos5x_gsc_suspend_regs[] = {
+>  	{ DIV2_RATIO0, 0, 0x30 },	/* DIV dout_gscl_blk_300 */
+>  };
+>  
+> +/* USB3.0 */
+> +static const struct samsung_div_clock exynos5x_fsys_div_clks[] __initconst = {
+> +	DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
+> +	DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
+> +	DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
+> +	DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
+> +};
+> +
+> +static const struct samsung_gate_clock exynos5x_fsys_gate_clks[] __initconst = {
+> +	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
+> +	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
+> +	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
+> +	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
+> +	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
+> +};
+> +
+> +static struct exynos5_subcmu_reg_dump exynos5x_fsys_suspend_regs[] = {
+> +	{ GATE_IP_FSYS, 0xffffffff, 0xffffffff }, /* FSYS gates */
 
-Fixes: cc54a99464ccd ("arm64: dts: ti: k3-am6: add USB suppor")
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Cc: stable@kernel.org
----
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+This looks wrong. GATE_IP_FSYS has fields also for FSYS2 clocks which
+you are not suspending. They do not belong to this CMU.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index e5df20a2d2f9..d86c5c7b82fc 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -296,6 +296,7 @@
- 		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
- 		dma-coherent;
- 		power-domains = <&k3_pds 151 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 151 2>, <&k3_clks 151 7>;
- 		assigned-clocks = <&k3_clks 151 2>, <&k3_clks 151 7>;
- 		assigned-clock-parents = <&k3_clks 151 4>,	/* set REF_CLK to 20MHz i.e. PER0_PLL/48 */
- 					 <&k3_clks 151 9>;	/* set PIPE3_TXB_CLK to CLK_12M_RC/256 (for HS only) */
-@@ -335,6 +336,7 @@
- 		interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
- 		dma-coherent;
- 		power-domains = <&k3_pds 152 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 152 2>;
- 		assigned-clocks = <&k3_clks 152 2>;
- 		assigned-clock-parents = <&k3_clks 152 4>;	/* set REF_CLK to 20MHz i.e. PER0_PLL/48 */
- 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Don't you need to save also parts of GATE_BUS_FSYS0?
 
+> +	{ SRC_TOP3, 0, BIT(24) },                 /* SW_MUX_PCLK_200_FSYS_SEL */
+> +	{ SRC_TOP3, 0, BIT(28) },                 /* SW_MUX_ACLK_200_FSYS_SEL */
+
+Name of clocks from the driver please, not from datasheet. Look at other
+examples.
+
+Best regards,
+Krzysztof
+
+
+> +};
+> +
+>  static const struct samsung_gate_clock exynos5x_g3d_gate_clks[] __initconst = {
+>  	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9,
+>  	     CLK_SET_RATE_PARENT, 0),
+> @@ -1376,12 +1387,23 @@ static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
+>  	.pd_name	= "MAU",
+>  };
+>  
+> +static const struct exynos5_subcmu_info exynos5x_fsys_subcmu = {
+> +	.div_clks       = exynos5x_fsys_div_clks,
+> +	.nr_div_clks    = ARRAY_SIZE(exynos5x_fsys_div_clks),
+> +	.gate_clks	= exynos5x_fsys_gate_clks,
+> +	.nr_gate_clks	= ARRAY_SIZE(exynos5x_fsys_gate_clks),
+> +	.suspend_regs	= exynos5x_fsys_suspend_regs,
+> +	.nr_suspend_regs = ARRAY_SIZE(exynos5x_fsys_suspend_regs),
+> +	.pd_name	= "FSYS",
+> +};
+> +
+>  static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
+>  	&exynos5x_disp_subcmu,
+>  	&exynos5x_gsc_subcmu,
+>  	&exynos5x_g3d_subcmu,
+>  	&exynos5x_mfc_subcmu,
+>  	&exynos5x_mscl_subcmu,
+> +	&exynos5x_fsys_subcmu,
+>  };
+>  
+>  static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
+> @@ -1391,6 +1413,7 @@ static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
+>  	&exynos5x_mfc_subcmu,
+>  	&exynos5x_mscl_subcmu,
+>  	&exynos5800_mau_subcmu,
+> +	&exynos5x_fsys_subcmu,
+>  };
+>  
+>  static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __initconst = {
+> -- 
+> 2.25.1
+> 
