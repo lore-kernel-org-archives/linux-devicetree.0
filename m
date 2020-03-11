@@ -2,92 +2,138 @@ Return-Path: <devicetree-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_NONE,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_NONE,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by archive.lwn.net (Postfix) with ESMTP id ED6FF7D910
-	for <lwn-devicetree@archive.lwn.net>; Wed, 11 Mar 2020 15:47:24 +0000 (UTC)
+	by archive.lwn.net (Postfix) with ESMTP id D319A7D910
+	for <lwn-devicetree@archive.lwn.net>; Wed, 11 Mar 2020 15:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbgCKPrQ (ORCPT <rfc822;lwn-devicetree@archive.lwn.net>);
-        Wed, 11 Mar 2020 11:47:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:51138 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729742AbgCKPrQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:47:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDDA431B;
-        Wed, 11 Mar 2020 08:47:15 -0700 (PDT)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B4833F6CF;
-        Wed, 11 Mar 2020 08:47:14 -0700 (PDT)
-Subject: Re: [PATCH] ARM: dts: dra7: Add bus_dma_limit for L3 bus
-To:     Tony Lindgren <tony@atomide.com>, Roger Quadros <rogerq@ti.com>
-Cc:     Tero Kristo <t-kristo@ti.com>, hch@lst.de, robh+dt@kernel.org,
-        nm@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200310115309.31354-1-rogerq@ti.com>
- <e7df4db7-6fe1-cfa4-841b-ddd395864bb8@ti.com>
- <20200310154829.GS37466@atomide.com>
- <d2e217a4-4a45-bc46-4610-84e6c8567d5f@ti.com>
- <20200311152347.GW37466@atomide.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e031b768-8fb8-ce62-a644-69925757cbc6@arm.com>
-Date:   Wed, 11 Mar 2020 15:47:12 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1730023AbgCKPsL (ORCPT <rfc822;lwn-devicetree@archive.lwn.net>);
+        Wed, 11 Mar 2020 11:48:11 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1212 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729977AbgCKPsL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 11:48:11 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e69080d0001>; Wed, 11 Mar 2020 08:47:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 11 Mar 2020 08:48:10 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 11 Mar 2020 08:48:10 -0700
+Received: from [10.25.76.193] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Mar
+ 2020 15:48:05 +0000
+Subject: Re: [PATCH V5 0/5] Add support for PCIe endpoint mode in Tegra194
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        <thierry.reding@gmail.com>
+CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200303181052.16134-1-vidyas@nvidia.com>
+ <20200311105141.GA30083@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <e49b3c8d-f669-007b-5d35-b8ec4f0529aa@nvidia.com>
+Date:   Wed, 11 Mar 2020 21:18:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200311152347.GW37466@atomide.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20200311105141.GA30083@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583941645; bh=ywvixbNO+/N+yt4O8EWdBUGbwryGxLJH9bz6Oivel4E=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FUr9rm3ZDnaGkISW2fqFeQV6c9pGe4voXCRhfLm6YSBXRi1w8HYJNa8/I8bfNPJZ0
+         hrvJzdioW7B0VV1xDJZl38c+TJcJV+KIjyRryJyYj+nF9IqXosGb48Ru5Rzl7X9PuQ
+         xeqi9ruu0zODcJlLs68teXh/cON40ntYNfdx1DuZAkFrt9DKr8AE0NVAcbdP9PcPEg
+         y0TF7XWWQpo73L1oNJfHpDQX3qHnrJJ8qYBxYrWerdWJ6trWhksnPj6k/0qaZdNTVF
+         PkPHL/U5VcNEI8kIWQRmXkUai/qB8i/kSr2X+0RJw+0Am0rEg3tMthMIaAg/ooMlGN
+         n1/Ibsjw1TkiQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
-Archived-At: <http://archive.lwn.net:8080/devicetree/e031b768-8fb8-ce62-a644-69925757cbc6@arm.com/>
+Archived-At: <http://archive.lwn.net:8080/devicetree/e49b3c8d-f669-007b-5d35-b8ec4f0529aa@nvidia.com/>
 List-Archive: <http://archive.lwn.net:8080/devicetree/>
 List-Post: <mailto:devicetree@vger.kernel.org>
 
-On 11/03/2020 3:23 pm, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [200311 07:21]:
->>
->>
->> On 10/03/2020 17:48, Tony Lindgren wrote:
->>> * Tero Kristo <t-kristo@ti.com> [200310 14:46]:
->>>> On 10/03/2020 13:53, Roger Quadros wrote:
->>>>> The L3 interconnect can access only 32-bits of address.
->>>>> Add the dma-ranges property to reflect this limit.
->>>>>
->>>>> This will ensure that no device under L3 is
->>>>> given > 32-bit address for DMA.
->>>>>
->>>>> Issue was observed only with SATA on DRA7-EVM with 4GB RAM
->>>>> and CONFIG_ARM_LPAE enabled. This is because the controller
->>>>> can perform 64-bit DMA and was setting the dma_mask to 64-bit.
->>>>>
->>>>> Setting the correct bus_dma_limit fixes the issue.
->>>>
->>>> This seems kind of messy to modify almost every DT node because of this....
->>>> Are you sure this is the only way to get it done? No way to modify the sata
->>>> node only which is impacted somehow?
->>>>
->>>> Also, what if you just pass 0xffffffff to the dma-ranges property? That
->>>> would avoid modifying every node I guess.
->>>
->>> Also, I think these interconnects are not limited to 32-bit access.
->>
->> But from Table 2-1. L3_MAIN Memory Map
->>
->> Start address	0x0000_0000
->> End address	0xFFFF_FFFF
->>
->> So it is 32-bit limit, right?
+
+
+On 3/11/2020 4:22 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
 > 
-> Hmm so what war Robin saying earlier that DMA access seems to be
-> limited to lower 2GB only though?
+> 
+> On Tue, Mar 03, 2020 at 11:40:47PM +0530, Vidya Sagar wrote:
+>> Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
+>> either in root port mode or in end point mode but only in one mode at a time.
+>> Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
+>> patch series adds support for PCIe endpoint mode in both the driver as well as
+>> in DT.
+>> This patch series depends on the changes made for Synopsys DesignWare endpoint
+>> mode subsystem that are recently accepted.
+>> @ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
+>> which in turn depends on the patch made by Kishon
+>> @ https://patchwork.kernel.org/patch/10975123/
+>> which is also under review.
+>>
+>> V5:
+>> * Rebased patch-2 on top of Lorenzo's pci/endpoint branch
+>> * Removed unwanted header files inclusion in patch-5
+> 
+> Applied patches 1,2,5 to pci/endpoint for v5.7, please let me know
+> if something is missing.
+Thanks Lorenzo and Thierry.
 
-That's the lower 2GB *of DRAM*, which occupies the upper 2GB of the L3 
-memory map ;)
+Thanks,
+Vidya Sagar
 
-Robin.
+> 
+> Thanks,
+> Lorenzo
+> 
+>> V4:
+>> * Started using threaded irqs instead of kthreads
+>>
+>> V3:
+>> * Re-ordered patches in the series to make the driver change as the last patch
+>> * Took care of Thierry's review comments
+>>
+>> V2:
+>> * Addressed Thierry & Bjorn's review comments
+>> * Added EP mode specific binding documentation to already existing binding documentation file
+>> * Removed patch that enables GPIO controller nodes explicitly as they are enabled already
+>>
+>> Vidya Sagar (5):
+>>    soc/tegra: bpmp: Update ABI header
+>>    dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
+>>    arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+>>    arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
+>>      platform
+>>    PCI: tegra: Add support for PCIe endpoint mode in Tegra194
+>>
+>>   .../bindings/pci/nvidia,tegra194-pcie.txt     | 125 +++-
+>>   .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  18 +
+>>   arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  99 +++
+>>   drivers/pci/controller/dwc/Kconfig            |  30 +-
+>>   drivers/pci/controller/dwc/pcie-tegra194.c    | 679 +++++++++++++++++-
+>>   include/soc/tegra/bpmp-abi.h                  |  10 +-
+>>   6 files changed, 916 insertions(+), 45 deletions(-)
+>>
+>> --
+>> 2.17.1
+>>
