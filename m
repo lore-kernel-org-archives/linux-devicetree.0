@@ -2,71 +2,91 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E125CC10F25
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 07:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0895BC10F25
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 07:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B631920873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 07:44:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583912649;
-	bh=+KyRlV2jiWd0oJcPNhfaoXeqN5z9XYcvHTTz8nuuRz0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gCyahnI9TAxR19/qU/xsxxIP3JtvABWMFLs4z/lIGzNUi8oCkJmOooDxc/M/3fWjI
-	 oGkhpLJqA0WjMKy9c/PznToav6lX4LlhT6oNdmeAKMz3mV6lfDPOz5mOTJOpkHNmVt
-	 l/XXy7xA0xFS2ZhEi87wL+xYgpm1zKscuef5BB10=
+	by mail.kernel.org (Postfix) with ESMTP id DAB1320578
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 07:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgCKHoJ (ORCPT
+        id S1728339AbgCKHpq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 03:44:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbgCKHoJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 03:44:09 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC15C20578;
-        Wed, 11 Mar 2020 07:44:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583912648;
-        bh=+KyRlV2jiWd0oJcPNhfaoXeqN5z9XYcvHTTz8nuuRz0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dbuwx1Pe3m+xyRW7tFy+IMR3iWMXreENd3PhWBInTks5XsFBOIBiAiVFanqhmsj1c
-         +ZDUT2IyLjt7OH/F5iof3Q0m6z8A4TU2Vfb6y2XhpCmSDzx41OvY4GeW44ogIqpH4O
-         2OdOckaivbA8AmpGQVDWYKUcVePloLF3IplZGzsU=
-Date:   Wed, 11 Mar 2020 15:44:03 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: lx2160a-cex7: add on-module eeproms
-Message-ID: <20200311074402.GT29269@dragon>
-References: <E1j7Hvv-0004Vy-BO@rmk-PC.armlinux.org.uk>
+        Wed, 11 Mar 2020 03:45:46 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:51619 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbgCKHpq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 03:45:46 -0400
+X-Originating-IP: 90.89.41.158
+Received: from xps13 (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 314AD4000E;
+        Wed, 11 Mar 2020 07:45:41 +0000 (UTC)
+Date:   Wed, 11 Mar 2020 08:45:41 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        tglx@linutronix.de, juliensu@mxic.com.tw,
+        frieder.schrempf@kontron.de, allison@lohutok.net,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        yuehaibing@huawei.com
+Subject: Re: [PATCH v5 2/2] dt-bindings: mtd: Document Macronix NAND device
+ bindings
+Message-ID: <20200311084541.28ff4829@xps13>
+In-Reply-To: <1581922600-25461-3-git-send-email-masonccyang@mxic.com.tw>
+References: <1581922600-25461-1-git-send-email-masonccyang@mxic.com.tw>
+        <1581922600-25461-3-git-send-email-masonccyang@mxic.com.tw>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E1j7Hvv-0004Vy-BO@rmk-PC.armlinux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 12:06:27PM +0000, Russell King wrote:
-> From: Rabeeh Khoury <rabeeh@solid-run.com>
-> 
-> This patch adds 4 eeprom support on i2c mux channel #0 -
-> 1. Bootable 512Kbit eeprom at address 0x50.
-> 2. Memory SO-DIMMs SPD channels at 0x51 (upper SO-DIMM) and 0x53.
-> 3. 2Kb eeprom at 0x57 will be used by SolidRun to hold manufacturing
->    data.
-> 
-> Signed-off-by: Rabeeh Khoury <rabeeh@solid-run.com>
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Hi Mason,
 
-Applied, thanks.
+Mason Yang <masonccyang@mxic.com.tw> wrote on Mon, 17 Feb 2020 14:56:40
++0800:
+
+> Document the bindings used by the Macronix NAND device.
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/mtd/nand-macronix.txt      | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/nand-macronix.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/nand-macronix.txt b/Documentation/devicetree/bindings/mtd/nand-macronix.txt
+> new file mode 100644
+> index 0000000..1d7a895
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/nand-macronix.txt
+> @@ -0,0 +1,28 @@
+> +Macronix NANDs Device Tree Bindings
+> +-----------------------------------
+> +
+> +Macronix NANDs support randomizer operation for user data scrambled,
+> +which can be enabled with a SET_FEATURE. The penalty of randomizer are
+> +subpage accesses prohibited and more time period is needed in program
+> +operation, i.e., tPROG 300us to 340us(randomizer enabled).
+> +Randomizer enabled is a one time persistent and non reversible operatoin.
+> +
+> +For more high-reliability concern, if subpage write not available with
+> +hardware ECC and filesystem and then to enable randomizer is recommended
+> +by default.
+> +
+> +By adding a new specific property in children nodes to enable
+> +randomizer function.
+
+I also reworded slightly this text when applying.
+
+
+Thanks,
+Miquèl
