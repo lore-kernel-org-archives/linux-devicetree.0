@@ -2,100 +2,212 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A088C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7021DC10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009AF2465B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:09:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NTg7VaVE"
+	by mail.kernel.org (Postfix) with ESMTP id 4016222527
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583932451;
+	bh=nvA6BQl6PI2KP1cqD+maPlYuL84hxcsQenGC1RViT6c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=fuVnMrxwK95Vy+xzHK2Omhoj3UuW1lUJDvMfL1jOphD5ms+R+oMStPP75blBLzYCB
+	 GzriaJ0vBWNJ/P9paUIWjKaIpJpbAWDls2g3aPLu0NjRdjBz/CGrZ9fGqfOsKs83Fv
+	 HfG0LHz97MkIOOg0tovyZccikmhRKPK9WgROhX14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbgCKNJb (ORCPT
+        id S1729345AbgCKNOK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:09:31 -0400
-Received: from mail-wr1-f50.google.com ([209.85.221.50]:34292 "EHLO
-        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729320AbgCKNJa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 09:09:30 -0400
-Received: by mail-wr1-f50.google.com with SMTP id z15so2553026wrl.1;
-        Wed, 11 Mar 2020 06:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ellU5pOp/2uHnz6yN3yDSPmzaJ54IVdYIlW3Apzu9Qs=;
-        b=NTg7VaVEX6BOO5o/pOLHKcc4CuQbKwTLBNIC813vxD+3Nr7Mu9uAfTaDaXDsLOhoKu
-         15ZwbZcc+pG0womJxWVgEtOfoxfiiSBXl+0rAtI2Rw+TtKovn0e+6byNGzlmTS2JgTfn
-         hx+G6QVfMIed9yBbpkL83iSXSz3bGnygei4j8i/TLGw8wmHEqCy7FFpp3/M+KdRZ3OUq
-         vC9UJ8mbxSsCMyBCCcJAhBOY8Lw4qEdsUqZ7JC1efdhjI9r0qlSow4Vr/BcMQZF+RPS6
-         5NDf1+FT2vOvsLHed/jLxhuDAVaBjp/uounQFs7UBYuRtEeW2laEG5fgNPuEbmPXDB0a
-         XryQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ellU5pOp/2uHnz6yN3yDSPmzaJ54IVdYIlW3Apzu9Qs=;
-        b=mk9QlNoUWNwHAtgIsxqXWprvzEFhSw39uS+OorlQ01NCXEEDV2GBmb6ARi8fu1dwxd
-         mJSurfTsahU1dXV8HhNgPUwSwIx2ZjmVJwrfyHf9Apm33N493vGmCeN5fwr8aB5R51mq
-         tzXwT6/Q1kItvLL5u9+/5S9pCQVCwJCAhLmTlk7qmvl4mnVgwEKHi0A+onnVxoYq3Agj
-         daudCHJ7ZyiMKQ0/dSiGCxVWZs8O4Ho2N66MQmKXG+FJi1Exe9TUWvb8m5zOPStmv3Mt
-         0HXx3SLG/HAkGKBloozfhnRqtIs2aOqLsXetMo4QUFlXlMMnwBUeErcaYr0tXhA5f14r
-         C8KA==
-X-Gm-Message-State: ANhLgQ2yiBpiUzX1e8OGIksmATyrv30KfrowkopfVSUtqMizjljs4UGL
-        LBewLT88kkcueRAf3+LdHe4=
-X-Google-Smtp-Source: ADFU+vsppto8aqMNjL7HDJF95tTaGEFOwBm/yhxQzldNMaHKoCfXRE0mP4YL2et+imj3n+2XMNt9lg==
-X-Received: by 2002:adf:fa09:: with SMTP id m9mr4400451wrr.113.1583932168573;
-        Wed, 11 Mar 2020 06:09:28 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
-        by smtp.googlemail.com with ESMTPSA id f187sm4984036wme.31.2020.03.11.06.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 06:09:28 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     agross@kernel.org
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] devicetree: bindings: firmware: add ipq806x to qcom_scm
-Date:   Wed, 11 Mar 2020 14:09:18 +0100
-Message-Id: <20200311130918.753-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200311130918.753-1-ansuelsmth@gmail.com>
-References: <20200311130918.753-1-ansuelsmth@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 11 Mar 2020 09:14:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:49664 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729331AbgCKNOK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 09:14:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95FC731B;
+        Wed, 11 Mar 2020 06:14:09 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AA4C3F67D;
+        Wed, 11 Mar 2020 06:14:08 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 13:14:07 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        devicetree@vger.kernel.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        olivier.moysan@st.com, robh+dt@kernel.org
+Subject: Applied "ASoC: Convert cirrus,cs42l51 to json-schema" to the asoc tree
+In-Reply-To: <20200228152706.29749-1-benjamin.gaignard@st.com>
+Message-Id: <applied-20200228152706.29749-1-benjamin.gaignard@st.com>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add ipq806x to compatible list in qcom_scm Documentation
+The patch
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+   ASoC: Convert cirrus,cs42l51 to json-schema
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.7
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 97249a89c17e8f1288fed1ebc617ea2e9e88d501 Mon Sep 17 00:00:00 2001
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
+Date: Fri, 28 Feb 2020 16:27:06 +0100
+Subject: [PATCH] ASoC: Convert cirrus,cs42l51 to json-schema
+
+Convert cirrus,cs42l51 to yaml format.
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20200228152706.29749-1-benjamin.gaignard@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/firmware/qcom,scm.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/sound/cirrus,cs42l51.yaml        | 69 +++++++++++++++++++
+ .../devicetree/bindings/sound/cs42l51.txt     | 33 ---------
+ 2 files changed, 69 insertions(+), 33 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/cs42l51.txt
 
-diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-index 3f29ea04b5fe..354b448fc0c3 100644
---- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-+++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
-@@ -10,6 +10,7 @@ Required properties:
-  * "qcom,scm-apq8064"
-  * "qcom,scm-apq8084"
-  * "qcom,scm-ipq4019"
-+ * "qcom,scm-ipq806x"
-  * "qcom,scm-msm8660"
-  * "qcom,scm-msm8916"
-  * "qcom,scm-msm8960"
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml b/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
+new file mode 100644
+index 000000000000..efce847a3408
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/cirrus,cs42l51.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: CS42L51 audio codec DT bindings
++
++maintainers:
++  - Olivier Moysan <olivier.moysan@st.com>
++
++properties:
++  compatible:
++      const: cirrus,cs42l51
++
++  reg:
++    maxItems: 1
++
++  "#sound-dai-cells":
++    const: 0
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: MCLK
++
++  reset-gpios:
++    maxItems: 1
++
++  VL-supply:
++    description: phandle to voltage regulator of digital interface section
++
++  VD-supply:
++    description: phandle to voltage regulator of digital internal section
++
++  VA-supply:
++    description: phandle to voltage regulator of analog internal section
++
++  VAHP-supply:
++    description: phandle to voltage regulator of headphone
++
++required:
++  - compatible
++  - reg
++  - "#sound-dai-cells"
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    i2c@0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      cs42l51@4a {
++        compatible = "cirrus,cs42l51";
++        reg = <0x4a>;
++        #sound-dai-cells = <0>;
++        clocks = <&mclk_prov>;
++        clock-names = "MCLK";
++        VL-supply = <&reg_audio>;
++        VD-supply = <&reg_audio>;
++        VA-supply = <&reg_audio>;
++        VAHP-supply = <&reg_audio>;
++        reset-gpios = <&gpiog 9 GPIO_ACTIVE_LOW>;
++      };
++    };
++...
+diff --git a/Documentation/devicetree/bindings/sound/cs42l51.txt b/Documentation/devicetree/bindings/sound/cs42l51.txt
+deleted file mode 100644
+index acbd68ddd2cb..000000000000
+--- a/Documentation/devicetree/bindings/sound/cs42l51.txt
++++ /dev/null
+@@ -1,33 +0,0 @@
+-CS42L51 audio CODEC
+-
+-Required properties:
+-
+-  - compatible : "cirrus,cs42l51"
+-
+-  - reg : the I2C address of the device for I2C.
+-
+-Optional properties:
+-  - VL-supply, VD-supply, VA-supply, VAHP-supply: power supplies for the device,
+-    as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
+-
+-  - reset-gpios : GPIO specification for the reset pin. If specified, it will be
+-    deasserted before starting the communication with the codec.
+-
+-  - clocks : a list of phandles + clock-specifiers, one for each entry in
+-    clock-names
+-
+-  - clock-names : must contain "MCLK"
+-
+-Example:
+-
+-cs42l51: cs42l51@4a {
+-	compatible = "cirrus,cs42l51";
+-	reg = <0x4a>;
+-	clocks = <&mclk_prov>;
+-	clock-names = "MCLK";
+-	VL-supply = <&reg_audio>;
+-	VD-supply = <&reg_audio>;
+-	VA-supply = <&reg_audio>;
+-	VAHP-supply = <&reg_audio>;
+-	reset-gpios = <&gpiog 9 GPIO_ACTIVE_LOW>;
+-};
 -- 
-2.25.0
+2.20.1
 
