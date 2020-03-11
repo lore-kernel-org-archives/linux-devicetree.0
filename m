@@ -2,127 +2,115 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD93C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 11:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0BCC10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 11:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B45821655
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 11:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C94920848
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 11:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OzXiZdZx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMyvOyKn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgCKLDD (ORCPT
+        id S1726672AbgCKLVr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 07:03:03 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33233 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgCKLDD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 07:03:03 -0400
-Received: by mail-ed1-f66.google.com with SMTP id z65so2374363ede.0
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 04:03:02 -0700 (PDT)
+        Wed, 11 Mar 2020 07:21:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46142 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgCKLVr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 07:21:47 -0400
+Received: by mail-pg1-f194.google.com with SMTP id y30so1016638pga.13;
+        Wed, 11 Mar 2020 04:21:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jb6YNfpy0i4p0prPq7fXurxyCpu3UioYP/wK0SXZz40=;
-        b=OzXiZdZxcla8lff01e5y1xu8R1or7O5akJh7vkF0kGDv+FIl4k+KI5dt7+u7bNa22f
-         pEgi1+VeIA0u2roWjwGSIIVN7DccoliwZNCmhlmVo4+QDcI5e0XEPbQld3FfpR1P8z8I
-         MP4yhJz3sMk7jvtXq8o0TB7XLMZod2m/M8uIQ=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZLOM3TZpFx1G0FHmz3svWf38OoZ6qU4SfqgmqviPrrA=;
+        b=nMyvOyKn06Eu05BjFvjKHdDoGwU5OqfzypV+TNaTCAA6ghis9R4087GZKFVCDp0rD5
+         /6PkMMMNG/CN2oWPce4JJBu/28jlkGMz/BkV8FjtsuA64I1YuO1hKihDe92A8NLIKNW8
+         a5lX05gGYB/LQX2RUU35tSazpeA9/dat72/c8m1jm40V3I/7I2+PjsOoLr2NLFLpE3mu
+         zOmCxoyWkZGEkPhvEXZtH0Fh8gURctH2Eh4AmwMOpUtcWCWhS5jTQQPPHb6uMPz5+Hqb
+         n/ccwUfzJU6MYBuzY0VqXvZS/7UG7lxWvm93eEcI+LZnCDrgLeh7kFTOnEZzad8vTZ4M
+         sS0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jb6YNfpy0i4p0prPq7fXurxyCpu3UioYP/wK0SXZz40=;
-        b=Mg/sveJlrHJhdntk6Uii11TZqS8ycUaYnirJpO0+qhxDS1ui66f/pSddsY4Ol707o2
-         TwnaJPecPV91ZT8vbuM0pRVeh2woHsuGHt+LW8isqrEYjcnr/ROaC1kWnnlhyqeizHbG
-         i2LHsO4YR/hasjr0yRJuWYWL0GI3QsVLue3sJ11RImeAOnnr8WdAwMC0wcW0u2+mNOy0
-         Po9+e9o8qDPKaXQoOz93HoJBBbU5MluqeSaP/8cX82jSN5YGd8JCex8Wn27I/ZJ4V9DQ
-         jpyCmEIWYW8gPuK1qPhUfxazxP+zXVxEmj9AUmGs7a4ivFyd84pI5+VsZ+ln8F5HR/WE
-         3s7w==
-X-Gm-Message-State: ANhLgQ1X6cN1b1qG45JBrMMwLiyQdbgx/Zl7G6kFEyjhXtx6BSMEUj+T
-        b22BPA91SPa4CZtTgfCIdeeLgsobdlmnwg==
-X-Google-Smtp-Source: ADFU+vuUb4OtFe/ReI+k9Zq27ZMvryrWj5IG/n7tFpBU9c8inbGINxlqvXitPWjUH/DA2Ei4l1EVQQ==
-X-Received: by 2002:aa7:d702:: with SMTP id t2mr2306638edq.342.1583924581676;
-        Wed, 11 Mar 2020 04:03:01 -0700 (PDT)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id t24sm4546937edy.94.2020.03.11.04.03.00
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 04:03:01 -0700 (PDT)
-Received: by mail-wr1-f47.google.com with SMTP id v11so2000725wrm.9
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 04:03:00 -0700 (PDT)
-X-Received: by 2002:adf:f545:: with SMTP id j5mr3918965wrp.295.1583924580138;
- Wed, 11 Mar 2020 04:03:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZLOM3TZpFx1G0FHmz3svWf38OoZ6qU4SfqgmqviPrrA=;
+        b=Q4gV7XIFKng+ELLWwHERbuSRA7cwEKVEWvld0T3KxFs2A8PAy98JBHvkUQ0MNrJcka
+         GbBpcNgV71chauPplsTx7+tRF68raMxn8K0HVMckrmzTjkitB6SlvPvv7Pxo4Sq3jI+t
+         u69xbgM9M0tNdrljfsnjV4hF3IbmeH45qdFg33q53Y1nKSnUxDsO9PQL5vFtaqhyu22S
+         Wf0L6MitUMMozI93kWcTKWuziqOoXov+8xES8vwWVmJjTkWYE1kzStqX98l/i2YoAbh9
+         vC6QXOfapneP8/bitN2ESdycNZpCX0F3wni89lcuzqX0usbZ1NbMc1AJgnHUUsUZYkuO
+         N5kw==
+X-Gm-Message-State: ANhLgQ0Kv5gxl0TVY2CtYaqcUo/9gZkVLBwt2X/G+n+EVjuRekJ8wY3p
+        jz6/OSwYkLPFyCIEyQ9JYrg=
+X-Google-Smtp-Source: ADFU+vv+UdmZRNokjNxVghhbKD3QdqV2SqqxUwK/IWZx3ccnP2eMqufHRoP5QNbhibLWisVn7B6jqA==
+X-Received: by 2002:a63:6d4e:: with SMTP id i75mr2319830pgc.443.1583925706451;
+        Wed, 11 Mar 2020 04:21:46 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id x16sm24277019pfq.40.2020.03.11.04.21.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 04:21:45 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+List-Id: <soc.lore.kernel.org>
+To:     soc@kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [RESEND PATCH] arm64: dts: specify console via command line
+Date:   Wed, 11 Mar 2020 19:21:20 +0800
+Message-Id: <20200311112120.30890-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200303123446.20095-1-xia.jiang@mediatek.com> <20200303123446.20095-4-xia.jiang@mediatek.com>
-In-Reply-To: <20200303123446.20095-4-xia.jiang@mediatek.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 11 Mar 2020 20:02:48 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5AA6NtLDsqL3Ph8cwv5=ZYoPOiu4Wa85ky037qOyMH1QQ@mail.gmail.com>
-Message-ID: <CAAFQd5AA6NtLDsqL3Ph8cwv5=ZYoPOiu4Wa85ky037qOyMH1QQ@mail.gmail.com>
-Subject: Re: [PATCH v7 03/11] media: platform: Improve s_selection flow for
- bug fixing
-To:     Xia Jiang <xia.jiang@mediatek.com>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Xia,
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-On Tue, Mar 3, 2020 at 9:35 PM Xia Jiang <xia.jiang@mediatek.com> wrote:
->
-> Get correct compose value in mtk_jpeg_s_selection function.
+The SPRD serial driver need to know which serial port would be used as
+console in an early period during initialization, otherwise console
+init would fail since we added this feature[1].
 
-It's a good practice to describe why the current code is wrong and new is good.
+So this patch add console to command line via devicetree.
 
->
-> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
-> ---
->  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
+[1] https://lore.kernel.org/lkml/20190826072929.7696-4-zhang.lyra@gmail.com/
 
-Thanks for the patch. Please see my comment inline.
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+---
+I guess no comments on this, so resending this and add soc@kernel.org,
+hope Arnd or Olof can help to merge into arch_arm tree.
 
-> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> index da0dae4b0fc9..fb2c8d026580 100644
-> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-> @@ -492,8 +492,8 @@ static int mtk_jpeg_s_selection(struct file *file, void *priv,
->         case V4L2_SEL_TGT_COMPOSE:
->                 s->r.left = 0;
->                 s->r.top = 0;
-> -               s->r.width = ctx->out_q.w;
-> -               s->r.height = ctx->out_q.h;
-> +               ctx->out_q.w = s->r.width;
-> +               ctx->out_q.h = s->r.height;
->                 break;
->         default:
->                 return -EINVAL;
+Thanks,
+Chunyan
+---
+ arch/arm64/boot/dts/sprd/sp9863a-1h10.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The decoder compose target means the visible rectangle of the decoded
-image, which comes from the stream metadata. It's not something that
-can be set by the userspace.
+diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+index 2047f7a74265..510f65f4d8b8 100644
+--- a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
++++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+@@ -28,7 +28,7 @@
+ 
+ 	chosen {
+ 		stdout-path = "serial1:115200n8";
+-		bootargs = "earlycon";
++		bootargs = "earlycon console=ttyS1";
+ 	};
+ };
+ 
+-- 
+2.20.1
 
-Best regards,
-Tomasz
