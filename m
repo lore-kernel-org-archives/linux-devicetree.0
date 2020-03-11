@@ -2,56 +2,58 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5532EC10F29
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA4AC10F29
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB9E2468D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F00CA2146E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:51:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="b4DElPDm"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kQkT9Ezw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbgCKMvr (ORCPT
+        id S1729386AbgCKMvv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:51:47 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:32870 "EHLO
+        Wed, 11 Mar 2020 08:51:51 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:56160 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729287AbgCKMvq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 08:51:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r7so3109134wmg.0
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 05:51:44 -0700 (PDT)
+        with ESMTP id S1729429AbgCKMvu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 08:51:50 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 6so1947129wmi.5
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 05:51:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=6mmjs1zoy21HGdXRuhBisBs86sD1UMcUpSzszzdWpvA=;
-        b=b4DElPDmtlbb1xvN5jVD3o8QZeGR+7PKcSdOSRtSbXEFwkPrylJcMqnZvKNSJRh14V
-         6aqZwiXB5y2Av1kqYMGRFyyVSV3hRn51Jy2RF+Aq6a2j0g1Mf/fUv7KjHILYBHyInEdv
-         c5nB8+tBPOpMZgR4su7kn0zyVCJ/DZr2rT7LmbjigMSE74S+SNtoV6NIRDD1zpCuGcMV
-         TIP2Ui1s9OocJKnffxQPNBM+2cwn0nrQMe0Q11kYSdT43tjYvZJOEoOo+Fv0mlbQL4d3
-         aRgfdZLWl/+ZZvGmp+v4pwZpEdLZsof/+5jRrn7XJP6H0cnzRseS16efUHf3bVll7sxL
-         APOg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=pSjQ4E8m+1eJQtkq/G98lOplM8W5Ztx8OcIT9w8yzWE=;
+        b=kQkT9EzwcJjSKnzy+NKeVejeHTj4PwXiL/sGNgNxD5ZaWR1Gl4dCKxja87SheHDQx8
+         8ImI4VYg/nu2S/0ClrmWEnr6KQdwgfGkKdeJTWlsiUdtSndr+6MSPgLEEEkYReUq2I6Z
+         ewMbunHmOqMd8boJ6bNii0vJ/3rk22U87HDVcTTNjcPquRyC9zgyzOpedudW+3mXbto3
+         tTxmNB0bKRk1v3plqEL1e80H9WeG2y+c87mZ/NQgjm4/5xWWXoG9XwC6FQ7zuG0rjyux
+         NHYjgZvKrZmraz7RY5iLoHN2kGtHKJDT1tII7t5pzU+PSHso8d885+MUdvpWMQYVox76
+         GiKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6mmjs1zoy21HGdXRuhBisBs86sD1UMcUpSzszzdWpvA=;
-        b=a4hBo/ExVcyhsNAsLloOfb7H8asdLwdPruuP75s0/YCJpeXqdWgDCDOgDkcFGug64A
-         vpTy/WMnGB7MIErJ9c/4MbbrlsrMFb6N95yWInrElwtXxLVmIv4f8f8yrXBerX3lgJBv
-         znaYQpuBH6IVFgrdPu+jwvFGNkTHTCSbzIdIQnsJ3oRDtQzJwL/Uw6NmJ7k8x3kf701s
-         lKmsn9QTQhMCXH2tBa8bClCWhng9tMwFPItOAByUP6JfGg2VwBE0b55DbZGJqsvqV5rX
-         Zie/YvnjfVPE/FoJOqG7MAX5pcA/aYlKFQyD90gwzJkhZPVYrDtoOK0jG3pYcrXmOtLl
-         F1OQ==
-X-Gm-Message-State: ANhLgQ3WpYgGUC/VFcauX+fo31UfaO0OaxAVgh2T1X3JlPbOiqaxgSAk
-        FfBM8TgGefOCV0wq/umIkn9fNg==
-X-Google-Smtp-Source: ADFU+vvH+0ONZuHFXRlr54VYaPW++G9wGrbF1sWPr8MKp+jdH72w07T55RveDBX31y81xSMCnFPsBA==
-X-Received: by 2002:a7b:c0c7:: with SMTP id s7mr3536712wmh.187.1583931102518;
-        Wed, 11 Mar 2020 05:51:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=pSjQ4E8m+1eJQtkq/G98lOplM8W5Ztx8OcIT9w8yzWE=;
+        b=De6qwTlK/LkaNEiZw+COt/LFgi0qw1L4jz9sesBITCHXk+uL1GCAMNpNYV2F8lJoXP
+         xrxEbGhVIlLXohTwxym753dQ9jGXLL3nbAIVSM3/dqSR+SEGTVWDuP+Vij1Xqu8iv02Y
+         AhrX3q7neHAe1edgFrv73g5AK+eJcLksGJ/qe1fBSfhJzqt7QOioPlm+1QneTXLy3yva
+         5K1rm+Q9N/refw/KzKMRdKSr+SKeUwtRWh5/g959c+1cQTUowQ9y3Oh6GYO8HwtxizYd
+         IuQ8NvsWU47ndPZtA7Oz0+sVLMTEOFCrL3kbiIAaAdUTZR159rg4/eOlgzc6mzbWMEx9
+         yFPQ==
+X-Gm-Message-State: ANhLgQ28ZTPiSBMdZIIuT3Sl8GHh6uP6Gv1TAG02Pj/GvDfw8qagJ+l/
+        07wQKHxjKRN9ppXg2/uaBsbbCA==
+X-Google-Smtp-Source: ADFU+vsqrlP7LpT3iV/tyxVYbgWkwmJe3brNDlGyKZHhOh2/BIESgTAtpdl5ra7zbk0yaBxY2Y4sVQ==
+X-Received: by 2002:a1c:c906:: with SMTP id f6mr3806905wmb.16.1583931107436;
+        Wed, 11 Mar 2020 05:51:47 -0700 (PDT)
 Received: from robin.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o3sm8843538wme.36.2020.03.11.05.51.41
+        by smtp.gmail.com with ESMTPSA id o3sm8843538wme.36.2020.03.11.05.51.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 05:51:41 -0700 (PDT)
+        Wed, 11 Mar 2020 05:51:46 -0700 (PDT)
 From:   Phong LE <ple@baylibre.com>
 To:     narmstrong@baylibre.com, airlied@linux.ie, daniel@ffwll.ch,
         robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com
@@ -63,41 +65,43 @@ Cc:     Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
         gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
         andriy.shevchenko@linux.intel.com, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/4] Add it66121 driver
-Date:   Wed, 11 Mar 2020 13:51:31 +0100
-Message-Id: <20200311125135.30832-1-ple@baylibre.com>
+Subject: [PATCH v2 4/4] MAINTAINERS: add it66121 HDMI bridge driver entry
+Date:   Wed, 11 Mar 2020 13:51:35 +0100
+Message-Id: <20200311125135.30832-5-ple@baylibre.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200311125135.30832-1-ple@baylibre.com>
+References: <20200311125135.30832-1-ple@baylibre.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The IT66121 is a high-performance and low-power single channel HDMI
-transmitter, fully compliant with HDMI 1.3a, HDCP 1.2 and backward
-compatible to DVI 1.0 specifications.
-It supports pixel rates from 25MHz to 165MHz.
+Add Neil Armstrong and myself as maintainers
 
-This series contains document bindings, add vendor prefix, Kconfig to
-enable or not.
-For now, the driver handles only RGB without color conversion.
-Audio, CEC and HDCP are not implemented yet.
+Signed-off-by: Phong LE <ple@baylibre.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Phong LE (4):
-  dt-bindings: add ITE vendor
-  dt-bindings: display: bridge: add it66121 bindings
-  drm: bridge: add it66121 driver
-  MAINTAINERS: add it66121 HDMI bridge driver entry
-
- .../bindings/display/bridge/ite,it66121.yaml  |  98 ++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- MAINTAINERS                                   |   8 +
- drivers/gpu/drm/bridge/Kconfig                |   8 +
- drivers/gpu/drm/bridge/Makefile               |   1 +
- drivers/gpu/drm/bridge/ite-it66121.c          | 997 ++++++++++++++++++
- 6 files changed, 1114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
- create mode 100644 drivers/gpu/drm/bridge/ite-it66121.c
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 37c2963226d4..3d722d723686 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8977,6 +8977,14 @@ T:	git git://linuxtv.org/anttip/media_tree.git
+ S:	Maintained
+ F:	drivers/media/tuners/it913x*
+ 
++ITE IT66121 HDMI BRIDGE DRIVER
++M:	Phong LE <ple@baylibre.com>
++M:	Neil Armstrong <narmstrong@baylibre.com>
++S:	Maintained
++F:	drivers/gpu/drm/bridge/ite-it66121.c
++T:	git git://anongit.freedesktop.org/drm/drm-misc
++F:	Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
++
+ IVTV VIDEO4LINUX DRIVER
+ M:	Andy Walls <awalls@md.metrocast.net>
+ L:	linux-media@vger.kernel.org
 -- 
 2.17.1
 
