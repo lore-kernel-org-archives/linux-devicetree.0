@@ -2,97 +2,70 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7CEC10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D12C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5000820848
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B04120848
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583915692;
+	bh=MXW2z5LPp0WQucUkJT7tI/HgnXFy6BLbj6K20XcMANg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=slFoJRqApHKDtGUcsBLP48EDgSd1jn0yBYLHHMbew4EYNyrC1p22wiQZJDLhiIncD
+	 CKKvhvhBpV5d/8xBzL304xu40g2J5h1+kIyWDsaCtV1R+ixgCxVd82vpRTaws/TPN0
+	 5rIbJ2su7v6sijvlQeKoakJz9wtSBIYl6G8Obp1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbgCKIeA (ORCPT
+        id S1728146AbgCKIev (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:34:00 -0400
-Received: from mga14.intel.com ([192.55.52.115]:33320 "EHLO mga14.intel.com"
+        Wed, 11 Mar 2020 04:34:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbgCKIeA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 04:34:00 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:34:00 -0700
-X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
-   d="scan'208";a="242614654"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:33:57 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id E90572096B; Wed, 11 Mar 2020 10:33:54 +0200 (EET)
-Date:   Wed, 11 Mar 2020 10:33:54 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
-        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
-        laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-media@vger.kernel.org
-Subject: Re: [PATCH v12 00/19] TVP5150 Features and Fixes
-Message-ID: <20200311083354.GG5379@paasikivi.fi.intel.com>
-References: <20200309101428.15267-1-m.felsch@pengutronix.de>
+        id S1726362AbgCKIev (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:34:51 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E216420828;
+        Wed, 11 Mar 2020 08:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583915691;
+        bh=MXW2z5LPp0WQucUkJT7tI/HgnXFy6BLbj6K20XcMANg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r8TBtGrwq/ozgqTAaonxpvDixFBdqsY1wNC8Bk1qH6SheUDDFmbU3oHSYgPWjgVjP
+         MSWROiFHvc2W+1Rcnq+ClqGiGBoVRv8HPIIPSkK8qiWTkypgNUHMDIEyd3kIDAKnUa
+         IfKVPWLEV7xr8WkkdxNmmTX0e1PSQgj6x33ArmUo=
+Date:   Wed, 11 Mar 2020 16:34:44 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Kuldeep Singh <kuldeep.singh@nxp.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] arm64: dts: lx2160ardb: Update FSPI node properties
+Message-ID: <20200311083442.GE29269@dragon>
+References: <1583217512-27994-1-git-send-email-kuldeep.singh@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309101428.15267-1-m.felsch@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1583217512-27994-1-git-send-email-kuldeep.singh@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marco,
+On Tue, Mar 03, 2020 at 12:08:31PM +0530, Kuldeep Singh wrote:
+> Update fspi node compatibles of LX2160A-RDB to "jedec,spi-nor" for
+> automatic detection of flash.
+> 
+> This also helps in fixing below warning:
+> spi-nor spi0.0: found mt35xu512aba, expected m25p80
+> spi-nor spi0.1: found mt35xu512aba, expected m25p80
+> 
+> Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
 
-On Mon, Mar 09, 2020 at 11:14:09AM +0100, Marco Felsch wrote:
-> Hi all,
-> 
-> here is the new and _hopefully_ last version :) This version contains
-> the discussion results with Sakari and some minor fixes from the v11.
-> 
-> Each patch has a dedicate log, so I avoid the details here and give only
-> an overview.
-> 
-> Patch 1-2:
-> Those where previously one patch.
-> 
-> Patch 3-6:
-> Prepare and implement the common v4l2-fwnode parsing code. I changed the
-> code from a single parse_and_add_links/free to parse/add_links/free. I
-> did the split to allow adding multiple links from different devices to a
-> _maybe_ coming global connector device. 
-> 
-> Patch 8:
-> I converted the parsing code to the new v4l2-fwnode-connector parsing
-> behaviour and fixed a two bugs during remove()
-> 
-> Patch 13:
-> This one is new due to the switch from the s_power() to the pm_runtime
-> as Sakari suggested.
-> 
-> Patch 14:
-> Also a new patch.
-> 
-> Patch 15:
-> New patch..
-> 
-> I've tested the series on a custom imx6-based board which uses the chip
-> directly (no-usb). I would appreciate if someone with a usb device can
-> test this too.
-
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-That assumes the comments (nothing major there) will be addressed later on.
-
--- 
-Regards,
-
-Sakari Ailus
+Applied both, thanks.
