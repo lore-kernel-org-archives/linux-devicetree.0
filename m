@@ -2,124 +2,181 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F513C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 03:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 095F3C18E5A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 03:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF7220637
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 03:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D437220637
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 03:24:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CtPgrXa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbgCKDXs (ORCPT
+        id S1727693AbgCKDYq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:23:48 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37057 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727307AbgCKDXs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 23:23:48 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b23so1106723edx.4
-        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 20:23:47 -0700 (PDT)
+        Tue, 10 Mar 2020 23:24:46 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:39298 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727591AbgCKDYq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 23:24:46 -0400
+Received: by mail-vs1-f67.google.com with SMTP id a19so409431vsp.6
+        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 20:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0CaP0wmRgm/BeB7X7G0uC38j94dJCuNhBHwKXDeM8MY=;
+        b=CtPgrXa2cnSfiHSesbp0ZgIPKUi/e/8l6UQAKfhwBQeoYmLZENk2RTJeifkVDa4N2f
+         6TtIjeG759VrQk6UUS9OiVg5AhhTraLWaiYKRvJawx2Nu8X7hZSWYY36zxVFRzYyC/u9
+         CzSzh16ZRuZ92L+OvQ7dIu+0DnNo8kd2T144U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3ubNYkLFBm9LvnmdAtrDMZkV+T+QUMoRprRG4+zyFtg=;
-        b=OTDfIsAILA0MNsjsEV3HQI/gMMSIHUcAPsOk4nNOT3sgG1cZT+00c6DnmaOpNiHNxn
-         21tbc+y52Duo+2lupQsM5xhaiYhu+9ku2yKjPg1nkKmrUZUt7gsDzjfG1SMX5zSvcte7
-         q/Q7f61Q8+qSSmc/aXK7b5Jrs4aB92XImBqnbN3bQIMkrGqZX1QNUx/ZktiyzPFyEVle
-         i8CtTfgN47cGqef3laYuDAUTWUEWC8oReea6yw1XeQMCagFvICP1WWZGjPWSWW5AcMdk
-         +CHdUNldOLwsVhnBA3zyL/Yx9PLuVbSbdEZqoGAV1B3G7lqiqNUBouJ7VL6qmJfVHxgH
-         nkgQ==
-X-Gm-Message-State: ANhLgQ37HO4vc7ioJ0Rn6camgarU14kVX53qnJjNIS3WOZ+iGbpVJrgc
-        3MS7Nc4VXHgZ4tIDoCAOI2kh0npo8WQ=
-X-Google-Smtp-Source: ADFU+vtdrIAblf3P1Ljq74Scx8jjIb2VPWDqvB/32JPizK5YivoMjeMG00HWgOoicKDx5ZHacwFXNA==
-X-Received: by 2002:a50:cc9a:: with SMTP id q26mr896667edi.161.1583897025797;
-        Tue, 10 Mar 2020 20:23:45 -0700 (PDT)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
-        by smtp.gmail.com with ESMTPSA id n9sm3000847ejz.87.2020.03.10.20.23.45
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Mar 2020 20:23:45 -0700 (PDT)
-Received: by mail-wr1-f45.google.com with SMTP id t11so708730wrw.5
-        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 20:23:45 -0700 (PDT)
-X-Received: by 2002:a5d:5509:: with SMTP id b9mr1351435wrv.181.1583897024908;
- Tue, 10 Mar 2020 20:23:44 -0700 (PDT)
+        bh=0CaP0wmRgm/BeB7X7G0uC38j94dJCuNhBHwKXDeM8MY=;
+        b=uZgLSq+68cqa7QyP0eR035XZjgM31hUj14HDlAdubIx54NT+vB+92oEXRVPUJfrBCh
+         qYzWh2x8LRl1ulOFhOmpRZNYxFWptYb+BgmBU6Rc6R6iks5iL4jPELJweaMsGv1HCngi
+         s31R2zhnBbwuDPkWZ0fOo9Ysu7xs2UK2fQGRk0ZeXg/fstLeAYUYPqvrKrhcVNY2jA/5
+         ylezsTqh/QtMYnwT4P8uMsbqEJ0engtzOC+FGBeMQriNMYRq2yZrt2vn32IExMu0LdoX
+         i/+6OeOpqdq+qjLYyLFoui+TFfErLS9J1lOy13TQn/C0EXpJhhUZGdSoUzQx57KXfqOR
+         CQHg==
+X-Gm-Message-State: ANhLgQ1ifdfS//k8M+BzUwOXbPSzsKTY5/E+H8Lvzpkzlw9liBSEXzD1
+        /tTVGunPs6IAJS+Dtc+CKqS2Rv4SgmbKx/k3OKBdQQ==
+X-Google-Smtp-Source: ADFU+vvzY+bxois87ERnhOsmkCaLgyI2emx+UgxVfcr4o9pfSIalK4aZScMpftN+vS9C9nrgv5qWlZCt5m4WJIdzyeE=
+X-Received: by 2002:a67:3201:: with SMTP id y1mr765745vsy.54.1583897084227;
+ Tue, 10 Mar 2020 20:24:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200311010308.11880-1-andre.przywara@arm.com>
-In-Reply-To: <20200311010308.11880-1-andre.przywara@arm.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 11 Mar 2020 11:23:33 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65gMgLKRwsSVg0i+-uXPWQ_KJhtBdhktB7oOgo+2VAOFQ@mail.gmail.com>
-Message-ID: <CAGb2v65gMgLKRwsSVg0i+-uXPWQ_KJhtBdhktB7oOgo+2VAOFQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: sun8i: R40: Fix SPI2 and SPI3 MMIO addresses
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        JuanEsf <juanesf91@gmail.com>
+References: <1583835040-19157-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 11 Mar 2020 11:24:33 +0800
+Message-ID: <CANMq1KDF32v-YnFRcz8BT6tnD0yq2OOBy9t-R09yA+4zNUZj3A@mail.gmail.com>
+Subject: Re: [PATCH v9 3/5] mfd: Add support for the MediaTek MT6358 PMIC
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-rtc@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 9:03 AM Andre Przywara <andre.przywara@arm.com> wrote:
+Thanks, much better. Just one issue left.
+
+On Tue, Mar 10, 2020 at 6:10 PM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
 >
-> Copy&paste suggested an MMIO pattern that wasn't there, so the wrong
-> MMIO base addresses for SPI2 and SPI3 sneaked in.
+> This adds support for the MediaTek MT6358 PMIC. This is a
+> multifunction device with the following sub modules:
 >
-> Fix them, now double checked against the manual and similar SoCs.
+> - Regulator
+> - RTC
+> - Codec
+> - Interrupt
 >
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> Fixes: 554581b79139 ("ARM: dts: sun8i: R40: Add SPI controllers nodes and pinmuxes")
-> Reported-by: JuanEsf <juanesf91@gmail.com>
-
-I posted a series fixing this, and some ordering issues yesterday:
-
-https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=254199
-
-I'll add the reported-by tag to my patch when applying.
-
-ChenYu
-
+> It is interfaced to the host controller using SPI interface
+> by a proprietary hardware called PMIC wrapper or pwrap.
+> MT6358 MFD is a child device of the pwrap.
+>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 > ---
->  arch/arm/boot/dts/sun8i-r40.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/mfd/Makefile                 |   2 +-
+>  drivers/mfd/mt6358-irq.c             | 238 +++++++++++++++++++++++++++++
+>  drivers/mfd/mt6397-core.c            |  55 ++++++-
+>  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
+>  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/mt6397/core.h      |   3 +
+>  6 files changed, 733 insertions(+), 5 deletions(-)
+>  create mode 100644 drivers/mfd/mt6358-irq.c
+>  create mode 100644 include/linux/mfd/mt6358/core.h
+>  create mode 100644 include/linux/mfd/mt6358/registers.h
 >
-> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-> index 8f09a24b36ec..8c4c4282a055 100644
-> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-> @@ -679,10 +679,10 @@
->                         #size-cells = <0>;
->                 };
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index b83f172..9af1414 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -238,7 +238,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)        += intel-soc-pmic.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)     += intel_soc_pmic_bxtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)     += intel_soc_pmic_chtwc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)  += intel_soc_pmic_chtdc_ti.o
+> -mt6397-objs    := mt6397-core.o mt6397-irq.o
+> +mt6397-objs                    := mt6397-core.o mt6397-irq.o mt6358-irq.o
+>  obj-$(CONFIG_MFD_MT6397)       += mt6397.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)     += intel_soc_pmic_mrfld.o
 >
-> -               spi2: spi@1c07000 {
-> +               spi2: spi@1c17000 {
->                         compatible = "allwinner,sun8i-r40-spi",
->                                      "allwinner,sun8i-h3-spi";
-> -                       reg = <0x01c07000 0x1000>;
-> +                       reg = <0x01c17000 0x1000>;
->                         interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
->                         clocks = <&ccu CLK_BUS_SPI2>, <&ccu CLK_SPI2>;
->                         clock-names = "ahb", "mod";
-> @@ -692,10 +692,10 @@
->                         #size-cells = <0>;
->                 };
->
-> -               spi3: spi@1c0f000 {
-> +               spi3: spi@1c1f000 {
->                         compatible = "allwinner,sun8i-r40-spi",
->                                      "allwinner,sun8i-h3-spi";
-> -                       reg = <0x01c0f000 0x1000>;
-> +                       reg = <0x01c1f000 0x1000>;
->                         interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
->                         clocks = <&ccu CLK_BUS_SPI3>, <&ccu CLK_SPI3>;
->                         clock-names = "ahb", "mod";
-> --
-> 2.14.5
->
+> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
+> new file mode 100644
+> index 0000000..0b99a39
+> --- /dev/null
+> +++ b/drivers/mfd/mt6358-irq.c
+> @@ -0,0 +1,238 @@
+> [snip]
+> +static irqreturn_t mt6358_irq_handler(int irq, void *data)
+> +{
+> +       struct mt6397_chip *chip = data;
+> +       struct pmic_irq_data *mt6358_irq_data = chip->irq_data;
+> +       unsigned int bit, i, top_irq_status;
+> +       int ret;
+> +
+> +       ret = regmap_read(chip->regmap,
+> +                         mt6358_irq_data->top_int_status_reg,
+> +                         &top_irq_status);
+> +       if (ret) {
+> +               dev_err(chip->dev,
+> +                       "Failed to read status from the device, ret=%d\n", ret);
+> +               return IRQ_NONE;
+> +       }
+> +
+> +       for (i = 0; i < mt6358_irq_data->num_top; i++) {
+> +               for (i = 0; i < mt6358_irq_data->num_top; i++) {
+
+Only one loop needed.
+
+> +                       bit = BIT(mt6358_ints[i].top_offset);
+> +                       if (top_irq_status & bit) {
+> +                               mt6358_irq_sp_handler(chip, i);
+> +                               top_irq_status &= ~bit;
+> +                               if (!top_irq_status)
+> +                                       break;
+> +                       }
+> +               }
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int pmic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+> +                              irq_hw_number_t hw)
+> +{
+> +       struct mt6397_chip *mt6397 = d->host_data;
+> +
+> +       irq_set_chip_data(irq, mt6397);
+> +       irq_set_chip_and_handler(irq, &mt6358_irq_chip, handle_level_irq);
+> +       irq_set_nested_thread(irq, 1);
+> +       irq_set_noprobe(irq);
+> +
+> +       return 0;
+> +}
+> [snip]
