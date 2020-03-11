@@ -2,210 +2,142 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9C3C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8019BC10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C0D20575
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F10EB206F1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 14:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583937776;
-	bh=eovpXTvyVWEK9XWNC0b/YZgHbmJESrWMQgqo7YJfDec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hGYOSo/fdhMSoiv6DCf3pn/OkycQ+HRXjpzFnzvvkqJ3oomhc9r3V6k4/rqdaozUS
-	 zZns45aJQtQaHBLO43/oKi6J6tyH3K6rsXqowl4VZUUDY0S32pQnFII5xT52CZuL3q
-	 66sBhDV23EcPf2foKXJ7al/UuziVnt91cz64JpGw=
+	s=default; t=1583938021;
+	bh=ruBwn5wDj74e/K+r4986L1gfq+eU0+k3w7VbVctWE10=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F8UISzj/dt8ImUcM22RK3Vlnb2aV7LFtuUCmQFPRJuh7JGi6SVvqX+N3d1oZLYL8c
+	 lhreQM6uMri6IAjkPQG8Nhe2roTdasD7h2ZQxHkgxrIFPJoN3w512ilUmWGDC91ISL
+	 jT50lnXrzDLw9CtDnuWR2dgBuma4fMebII5TVLaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgCKOm5 (ORCPT
+        id S1729100AbgCKOrB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 10:42:57 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43443 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729057AbgCKOm5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 10:42:57 -0400
-Received: by mail-ed1-f66.google.com with SMTP id dc19so3133763edb.10;
-        Wed, 11 Mar 2020 07:42:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gKDUe9P2YUubturUxI0TRyVNid6URk2e+Ed9FtxvxKk=;
-        b=EMKmZ/MrgEuNGsTb/Ze9rt1U9+lWeztu9hI+HH0of+sRAzH/ExlqFbOIRZFSxC4ADK
-         5X/26f6R0Z/iTcCYTGKuGtP2nlbh4uQE27kLyGUwGHCD3jgSs3vXN7JQHlOpGJ8PvKBK
-         WfPgkD8gcbIKMi9IN3+NCDIBuDyPVbjA9c0GIzrV/aMUB6I/1ri7oKrc75+WBo6cr0wI
-         o5ID2MMultN8P9BStIBS4wxYgcFg9edOD1Rdv1sM6CUM5bZXJ46B7Xjs1ZdBbUyY/orQ
-         vAyryO2dUh1BIfRe/cIKRLd1XpjnA0BhOkuZTP3IfrsMvh+uB+boHC0YO6AFo69jRXBx
-         VZBg==
-X-Gm-Message-State: ANhLgQ2P/ulINIycY42dj86NuoBy33Ie2susWmo+v93rpw6wYCUPbnls
-        j3LiPI1ua4HqGDo/+cPH7QA=
-X-Google-Smtp-Source: ADFU+vuaPy05McHUkVwSVh+g/+/nj6uRC/r0ZhsuPI7+uwkM3c7CJcwerQSzNIOD7sx8YKwslv43/w==
-X-Received: by 2002:aa7:d45a:: with SMTP id q26mr3263099edr.350.1583937774579;
-        Wed, 11 Mar 2020 07:42:54 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id p4sm607572eju.57.2020.03.11.07.42.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Mar 2020 07:42:51 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 15:42:48 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCHv3 5/5] clk: samsung: exynos542x: Move FSYS subsystem
- clocks to its sub-CMU
-Message-ID: <20200311144248.GA4455@kozik-lap>
-References: <20200310194854.831-1-linux.amoon@gmail.com>
- <20200310194854.831-6-linux.amoon@gmail.com>
+        Wed, 11 Mar 2020 10:47:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729057AbgCKOrB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 10:47:01 -0400
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 117C2206EB;
+        Wed, 11 Mar 2020 14:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583938019;
+        bh=ruBwn5wDj74e/K+r4986L1gfq+eU0+k3w7VbVctWE10=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NzjBVMdxDd+Kl49LOjGaBd3WYnkCvYkNm1wU4P9GhVG5t0/K9oS+4AIwW69cVpoMV
+         FPtGYDiYkuwXkUld5nRYYBRD3nWNrbrJGDY5/wC8JnVTMzsNRttYPblFKwfKsM7WD3
+         T0z2XFq1FUMLJpWJd+zpaTrZ9ieDU6xdTQqMWoJI=
+Received: by mail-wr1-f43.google.com with SMTP id d5so2619762wrc.2;
+        Wed, 11 Mar 2020 07:47:00 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2VqtpSJHOVVtNYxMKjNo79jpup53wcZ/uPZnSk39/zha38kjTB
+        pl8KiKyH5yaM7/UsDxZOJtX8Oe0Q2GEGsZzP8M8=
+X-Google-Smtp-Source: ADFU+vs8B8EgCnwrcFOwMq4EMagcV8OTKEEHRsPEaHmM1MNKm2z5pWXx/gJgkDDoe/YZ41fGgMvzQ6EnRqYtBNoKsaY=
+X-Received: by 2002:adf:97c1:: with SMTP id t1mr618684wrb.365.1583938018853;
+ Wed, 11 Mar 2020 07:46:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200310194854.831-6-linux.amoon@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200310174709.24174-1-wens@kernel.org> <20200310174709.24174-2-wens@kernel.org>
+ <20200311105937.040cd947@donnerap.cambridge.arm.com>
+In-Reply-To: <20200311105937.040cd947@donnerap.cambridge.arm.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Wed, 11 Mar 2020 22:46:49 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66dWGSJD0sS6BmbT6nb3J0xFex=3ATwm2s9Hot4ua4kcw@mail.gmail.com>
+Message-ID: <CAGb2v66dWGSJD0sS6BmbT6nb3J0xFex=3ATwm2s9Hot4ua4kcw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: sun8i: r40: Move AHCI device node based on
+ address order
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@kernel.org>, Maxime Ripard <mripard@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 07:48:54PM +0000, Anand Moon wrote:
-> FSYS power domain support usbdrd3, pdma and usb2 power gaiting,
-> hence move FSYS clk setting to sub-CMU block to support power domain
-> on/off sequences for device nodes.
-> 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> New patch in the series
-> ---
->  drivers/clk/samsung/clk-exynos5420.c | 45 +++++++++++++++++++++-------
->  1 file changed, 34 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index c9e5a1fb6653..6c4c47dfcdce 100644
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -859,12 +859,6 @@ static const struct samsung_div_clock exynos5x_div_clks[] __initconst = {
->  	DIV(0, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
->  	DIV(0, "dout_maupcm0", "dout_maudio0", DIV_MAU, 24, 8),
->  
-> -	/* USB3.0 */
-> -	DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
-> -	DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
-> -	DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
-> -	DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
+On Wed, Mar 11, 2020 at 6:59 PM Andre Przywara <andre.przywara@arm.com> wrote:
+>
+> On Wed, 11 Mar 2020 01:47:07 +0800
+> Chen-Yu Tsai <wens@kernel.org> wrote:
+>
+> > From: Chen-Yu Tsai <wens@csie.org>
+> >
+> > When the AHCI device node was added, it was added in the wrong location
+> > in the device tree file. The device nodes should be sorted by register
+> > address.
+> >
+> > Move the device node to before EHCI1, where it belongs.
+> >
+> > Fixes: 41c64d3318aa ("ARM: dts: sun8i: r40: add sata node")
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > ---
+> >  arch/arm/boot/dts/sun8i-r40.dtsi | 22 +++++++++++-----------
+> >  1 file changed, 11 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+> > index d5442b5b6fd2..b278686d0c22 100644
+> > --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> > +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> > @@ -307,6 +307,17 @@ crypto: crypto@1c15000 {
+> >                       resets = <&ccu RST_BUS_CE>;
+> >               };
+> >
+> > +             ahci: sata@1c18000 {
+> > +                     compatible = "allwinner,sun8i-r40-ahci";
+> > +                     reg = <0x01c18000 0x1000>;
+> > +                     interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> > +                     clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
+> > +                     resets = <&ccu RST_BUS_SATA>;
+> > +                     reset-names = "ahci";
+> > +                     status = "disabled";
+> > +
+>
+> Did this empty line serve any particular purpose before? If not, you could remove it on the way.
 
-According to clock diagram these are still in CMU TOP, not FSYS.
+Can't say there is. Removed when applied.
 
-> -
->  	/* MMC */
->  	DIV(0, "dout_mmc0", "mout_mmc0", DIV_FSYS1, 0, 10),
->  	DIV(0, "dout_mmc1", "mout_mmc1", DIV_FSYS1, 10, 10),
-> @@ -1031,8 +1025,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
-/>  
->  	/* FSYS Block */
->  	GATE(CLK_TSI, "tsi", "aclk200_fsys", GATE_BUS_FSYS0, 0, 0, 0),
-> -	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
-> -	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
->  	GATE(CLK_UFS, "ufs", "aclk200_fsys2", GATE_BUS_FSYS0, 3, 0, 0),
->  	GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_IP_FSYS, 9, 0, 0),
->  	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
-> @@ -1040,9 +1032,6 @@ static const struct samsung_gate_clock exynos5x_gate_clks[] __initconst = {
->  	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
->  	GATE(CLK_SROMC, "sromc", "aclk200_fsys2",
->  			GATE_IP_FSYS, 17, CLK_IGNORE_UNUSED, 0),
-> -	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
-> -	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
-> -	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
->  	GATE(CLK_SCLK_UNIPRO, "sclk_unipro", "dout_unipro",
->  			SRC_MASK_FSYS, 24, CLK_SET_RATE_PARENT, 0),
->  
-> @@ -1258,6 +1247,28 @@ static struct exynos5_subcmu_reg_dump exynos5x_gsc_suspend_regs[] = {
->  	{ DIV2_RATIO0, 0, 0x30 },	/* DIV dout_gscl_blk_300 */
->  };
->  
-> +/* USB3.0 */
-> +static const struct samsung_div_clock exynos5x_fsys_div_clks[] __initconst = {
-> +	DIV(0, "dout_usbphy301", "mout_usbd301", DIV_FSYS0, 12, 4),
-> +	DIV(0, "dout_usbphy300", "mout_usbd300", DIV_FSYS0, 16, 4),
-> +	DIV(0, "dout_usbd301", "mout_usbd301", DIV_FSYS0, 20, 4),
-> +	DIV(0, "dout_usbd300", "mout_usbd300", DIV_FSYS0, 24, 4),
-> +};
-> +
-> +static const struct samsung_gate_clock exynos5x_fsys_gate_clks[] __initconst = {
-> +	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
-> +	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
-> +	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
-> +	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
-> +	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
-> +};
-> +
-> +static struct exynos5_subcmu_reg_dump exynos5x_fsys_suspend_regs[] = {
-> +	{ GATE_IP_FSYS, 0xffffffff, 0xffffffff }, /* FSYS gates */
+> With that fixed:
+>
+> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+>
+> Thanks,
+> Andre.
 
-This looks wrong. GATE_IP_FSYS has fields also for FSYS2 clocks which
-you are not suspending. They do not belong to this CMU.
+Thanks
+ChenYu
 
-Don't you need to save also parts of GATE_BUS_FSYS0?
-
-> +	{ SRC_TOP3, 0, BIT(24) },                 /* SW_MUX_PCLK_200_FSYS_SEL */
-> +	{ SRC_TOP3, 0, BIT(28) },                 /* SW_MUX_ACLK_200_FSYS_SEL */
-
-Name of clocks from the driver please, not from datasheet. Look at other
-examples.
-
-Best regards,
-Krzysztof
-
-
-> +};
-> +
->  static const struct samsung_gate_clock exynos5x_g3d_gate_clks[] __initconst = {
->  	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9,
->  	     CLK_SET_RATE_PARENT, 0),
-> @@ -1376,12 +1387,23 @@ static const struct exynos5_subcmu_info exynos5800_mau_subcmu = {
->  	.pd_name	= "MAU",
->  };
->  
-> +static const struct exynos5_subcmu_info exynos5x_fsys_subcmu = {
-> +	.div_clks       = exynos5x_fsys_div_clks,
-> +	.nr_div_clks    = ARRAY_SIZE(exynos5x_fsys_div_clks),
-> +	.gate_clks	= exynos5x_fsys_gate_clks,
-> +	.nr_gate_clks	= ARRAY_SIZE(exynos5x_fsys_gate_clks),
-> +	.suspend_regs	= exynos5x_fsys_suspend_regs,
-> +	.nr_suspend_regs = ARRAY_SIZE(exynos5x_fsys_suspend_regs),
-> +	.pd_name	= "FSYS",
-> +};
-> +
->  static const struct exynos5_subcmu_info *exynos5x_subcmus[] = {
->  	&exynos5x_disp_subcmu,
->  	&exynos5x_gsc_subcmu,
->  	&exynos5x_g3d_subcmu,
->  	&exynos5x_mfc_subcmu,
->  	&exynos5x_mscl_subcmu,
-> +	&exynos5x_fsys_subcmu,
->  };
->  
->  static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
-> @@ -1391,6 +1413,7 @@ static const struct exynos5_subcmu_info *exynos5800_subcmus[] = {
->  	&exynos5x_mfc_subcmu,
->  	&exynos5x_mscl_subcmu,
->  	&exynos5800_mau_subcmu,
-> +	&exynos5x_fsys_subcmu,
->  };
->  
->  static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __initconst = {
-> -- 
-> 2.25.1
-> 
+> > +             };
+> > +
+> >               ehci1: usb@1c19000 {
+> >                       compatible = "allwinner,sun8i-r40-ehci", "generic-ehci";
+> >                       reg = <0x01c19000 0x100>;
+> > @@ -733,17 +744,6 @@ spi3: spi@1c0f000 {
+> >                       #size-cells = <0>;
+> >               };
+> >
+> > -             ahci: sata@1c18000 {
+> > -                     compatible = "allwinner,sun8i-r40-ahci";
+> > -                     reg = <0x01c18000 0x1000>;
+> > -                     interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> > -                     clocks = <&ccu CLK_BUS_SATA>, <&ccu CLK_SATA>;
+> > -                     resets = <&ccu RST_BUS_SATA>;
+> > -                     reset-names = "ahci";
+> > -                     status = "disabled";
+> > -
+> > -             };
+> > -
+> >               gmac: ethernet@1c50000 {
+> >                       compatible = "allwinner,sun8i-r40-gmac";
+> >                       syscon = <&ccu>;
+>
