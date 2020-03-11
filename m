@@ -2,65 +2,84 @@ Return-Path: <devicetree-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_NONE,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by archive.lwn.net (Postfix) with ESMTP id 9E0947DE71
-	for <lwn-devicetree@archive.lwn.net>; Wed, 11 Mar 2020 15:45:05 +0000 (UTC)
+	by archive.lwn.net (Postfix) with ESMTP id E4A637D917
+	for <lwn-devicetree@archive.lwn.net>; Wed, 11 Mar 2020 15:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgCKPo5 (ORCPT <rfc822;lwn-devicetree@archive.lwn.net>);
-        Wed, 11 Mar 2020 11:44:57 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:43629 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729977AbgCKPo4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 11:44:56 -0400
-Received: from localhost.localdomain (lfbn-tou-1-1473-158.w90-89.abo.wanadoo.fr [90.89.41.158])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 46CA2200006;
-        Wed, 11 Mar 2020 15:44:46 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Kamal Dasu <kdasu.kdev@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
-        linux-mtd@lists.infradead.org, dri-devel@lists.freedesktop.org,
-        James Hogan <jhogan@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Brian Norris <computersforpeace@gmail.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH V4 1/3] dt: bindings: brcmnand: Add support for flash-edu
-Date:   Wed, 11 Mar 2020 16:44:45 +0100
-Message-Id: <20200311154445.25555-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200122213313.35820-2-kdasu.kdev@gmail.com>
-References: 
+        id S1729680AbgCKPXw (ORCPT <rfc822;lwn-devicetree@archive.lwn.net>);
+        Wed, 11 Mar 2020 11:23:52 -0400
+Received: from muru.com ([72.249.23.125]:59786 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729473AbgCKPXv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 11:23:51 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id DBC0380CD;
+        Wed, 11 Mar 2020 15:24:36 +0000 (UTC)
+Date:   Wed, 11 Mar 2020 08:23:47 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, hch@lst.de, robin.murphy@arm.com,
+        robh+dt@kernel.org, nm@ti.com, nsekhar@ti.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+Message-ID: <20200311152347.GW37466@atomide.com>
+References: <20200310115309.31354-1-rogerq@ti.com>
+ <e7df4db7-6fe1-cfa4-841b-ddd395864bb8@ti.com>
+ <20200310154829.GS37466@atomide.com>
+ <d2e217a4-4a45-bc46-4610-84e6c8567d5f@ti.com>
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: cdc6aba6719b9d7d85c6d411a43345ee12223268
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d2e217a4-4a45-bc46-4610-84e6c8567d5f@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
-Archived-At: <http://archive.lwn.net:8080/devicetree/20200311154445.25555-1-miquel.raynal@bootlin.com/>
+Archived-At: <http://archive.lwn.net:8080/devicetree/20200311152347.GW37466@atomide.com/>
 List-Archive: <http://archive.lwn.net:8080/devicetree/>
 List-Post: <mailto:devicetree@vger.kernel.org>
 
-On Wed, 2020-01-22 at 21:33:11 UTC, Kamal Dasu wrote:
-> Adding support for EBI DMA unit (EDU).
+* Roger Quadros <rogerq@ti.com> [200311 07:21]:
 > 
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> On 10/03/2020 17:48, Tony Lindgren wrote:
+> > * Tero Kristo <t-kristo@ti.com> [200310 14:46]:
+> > > On 10/03/2020 13:53, Roger Quadros wrote:
+> > > > The L3 interconnect can access only 32-bits of address.
+> > > > Add the dma-ranges property to reflect this limit.
+> > > > 
+> > > > This will ensure that no device under L3 is
+> > > > given > 32-bit address for DMA.
+> > > > 
+> > > > Issue was observed only with SATA on DRA7-EVM with 4GB RAM
+> > > > and CONFIG_ARM_LPAE enabled. This is because the controller
+> > > > can perform 64-bit DMA and was setting the dma_mask to 64-bit.
+> > > > 
+> > > > Setting the correct bus_dma_limit fixes the issue.
+> > > 
+> > > This seems kind of messy to modify almost every DT node because of this....
+> > > Are you sure this is the only way to get it done? No way to modify the sata
+> > > node only which is impacted somehow?
+> > > 
+> > > Also, what if you just pass 0xffffffff to the dma-ranges property? That
+> > > would avoid modifying every node I guess.
+> > 
+> > Also, I think these interconnects are not limited to 32-bit access.
+> 
+> But from Table 2-1. L3_MAIN Memory Map
+> 
+> Start address	0x0000_0000
+> End address	0xFFFF_FFFF
+> 
+> So it is 32-bit limit, right?
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+Hmm so what war Robin saying earlier that DMA access seems to be
+limited to lower 2GB only though?
 
-Miquel
+Regards,
+
+Tony
