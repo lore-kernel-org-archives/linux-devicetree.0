@@ -2,77 +2,66 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0CAC10F29
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 09:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EE3C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 09:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2505E2192A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 09:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3978A2146E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 09:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgCKJbm (ORCPT
+        id S1728864AbgCKJcz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 05:31:42 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:38104 "EHLO mail.manjaro.org"
+        Wed, 11 Mar 2020 05:32:55 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38330 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728263AbgCKJbm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 05:31:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id A2CA33702423;
-        Wed, 11 Mar 2020 10:31:40 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nmbumsFm0_s7; Wed, 11 Mar 2020 10:31:38 +0100 (CET)
-From:   Tobias Schramm <t.schramm@manjaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: [PATCH v3 1/3] dt-bindings: Document cellwise vendor-prefix
-Date:   Wed, 11 Mar 2020 10:30:41 +0100
-Message-Id: <20200311093043.3636807-2-t.schramm@manjaro.org>
-In-Reply-To: <20200311093043.3636807-1-t.schramm@manjaro.org>
-References: <20200311093043.3636807-1-t.schramm@manjaro.org>
+        id S1728349AbgCKJcz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 05:32:55 -0400
+Received: from p5b127c69.dip0.t-ipconnect.de ([91.18.124.105] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jBxjP-0000hs-6C; Wed, 11 Mar 2020 10:32:51 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ARM: dts: add bus to rockchip amba nodenames
+Date:   Wed, 11 Mar 2020 10:32:50 +0100
+Message-ID: <1741084.mhMtVdeNFd@phil>
+In-Reply-To: <20200302153047.17101-1-jbx6244@gmail.com>
+References: <20200302153047.17101-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Am Montag, 2. März 2020, 16:30:46 CET schrieb Johan Jonker:
+> A test with the command below gives for example this error:
+> 
+> arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: amba: $nodename:0:
+> 'amba' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> 
+> AMBA is a open standard for the connection and
+> management of functional blocks in a SoC.
+> It's compatible with 'simple-bus', so fix this error
+> by adding 'bus' to all Rockchip 'amba' nodes.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
+> schemas/simple-bus.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9e67944bec9c..af3d1aed8118 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -177,6 +177,8 @@ patternProperties:
-     description: Cadence Design Systems Inc.
-   "^cdtech,.*":
-     description: CDTech(H.K.) Electronics Limited
-+  "^cellwise,.*":
-+    description: CellWise Microelectronics Co., Ltd
-   "^ceva,.*":
-     description: Ceva, Inc.
-   "^chipidea,.*":
--- 
-2.24.1
+applied both for 5.7
+
+Thanks
+Heiko
+
 
