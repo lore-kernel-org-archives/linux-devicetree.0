@@ -2,177 +2,506 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE219C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2103C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9235721D56
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QhNq1Oy1"
+	by mail.kernel.org (Postfix) with ESMTP id AB5B321D7E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgCKNxU (ORCPT
+        id S1729695AbgCKNzm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:53:20 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34541 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729629AbgCKNxT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 09:53:19 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z15so2744948wrl.1
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 06:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eHwkeVxfO0gUnLqUCdk8e6YCrYOv+vU4eek8Koxv2A4=;
-        b=QhNq1Oy1b7vPsK6CCb4Vuu9L3ZaRw/kwy/TnZ7UZmW+gcK08dnYRVPkaV7SUvFE2dv
-         Lhnr/j3QVW+AgQ+XrC2BoW7BlwW+biR0Y5hS1oxB4/7lgXP8OT3OKp1nz1SQkhLqboth
-         grJIPfpHxdUmJRgKg9VBJZlPmhem2o+q2gQW0XyBpna09CU3eD2BLsquxwVmQlTxvr/I
-         vh1Wb5aGUzB8jpJHOwVGZm+ymjofp3bZQYuS2czZsPFf0v0+4dTOzjyC4Ie1r1e2ANhj
-         GqPzZHTOkLN9JFoA1AGcrX2aYzx9m0N5Fy/OacTIoRqytbSgbeWmzA9iFsAd0zX6mLyB
-         wtrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=eHwkeVxfO0gUnLqUCdk8e6YCrYOv+vU4eek8Koxv2A4=;
-        b=UTi6tMtzTWrZjXLKqxSTklQ4UxjylC3AGWSZ08/Kxcr70ouyZfngw4BRqjnAtN2itv
-         M1mnF+RnIYMtyBDgJfhGKbJ8HTvqAziIhy9A/tV900qQhSJgHx0beGNzlVuf7zcPXxjO
-         ANypapgUqvBN0vf8HHGFQuzgKIK/OycfkTAfPA7g7G2zqIPH8XZTySGWmMBhOio/p5aP
-         FJE3jEP4tBweTErv7/eAPYSU6W1OV6EJKP0HiUGFU4feFazDfyl9dkWIGEyJZm3wC7Od
-         JDe3Y0DxWwevtv73sZr6ybNvaVtwgNz51Rqv/cJ8wKExD/EFms+pXvwZ1qj58x4bJLsq
-         k3cw==
-X-Gm-Message-State: ANhLgQ0J9ttKxpTGboNfY7YTuwyD6gYfLyOwek/FPGeb0iz5zFj+cujf
-        xBUBqF2of5jUpRdBwdONE3Ieqw==
-X-Google-Smtp-Source: ADFU+vsVqorwQn7M8Op/RUAOJNd7SyRUX6Cug8+p6C05fmfENTXi0tJ6toOZvCeg8GUnbfj+iVFd1Q==
-X-Received: by 2002:adf:94a3:: with SMTP id 32mr4942375wrr.276.1583934797542;
-        Wed, 11 Mar 2020 06:53:17 -0700 (PDT)
-Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id k18sm20816731wru.94.2020.03.11.06.53.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Mar 2020 06:53:17 -0700 (PDT)
-Subject: Re: [PATCH v13 1/6] dt-bindings: media: add pclk-sample dual edge
- property
-To:     Jitao Shi <jitao.shi@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, srv_heupstream@mediatek.com,
-        huijuan.xie@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20200311071823.117899-1-jitao.shi@mediatek.com>
- <20200311071823.117899-2-jitao.shi@mediatek.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <c46e49e6-846f-4f41-a8e3-57d5503e1cd7@baylibre.com>
-Date:   Wed, 11 Mar 2020 14:53:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 11 Mar 2020 09:55:42 -0400
+Received: from mga05.intel.com ([192.55.52.43]:38650 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729460AbgCKNzl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 09:55:41 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 06:55:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,541,1574150400"; 
+   d="scan'208";a="242688236"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 11 Mar 2020 06:55:34 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jC1pf-008kO4-Aj; Wed, 11 Mar 2020 15:55:35 +0200
+Date:   Wed, 11 Mar 2020 15:55:35 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Phong LE <ple@baylibre.com>
+Cc:     narmstrong@baylibre.com, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, sam@ravnborg.org, mripard@kernel.org,
+        heiko.stuebner@theobroma-systems.com, linus.walleij@linaro.org,
+        stephan@gerhold.net, icenowy@aosc.io, broonie@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] drm: bridge: add it66121 driver
+Message-ID: <20200311135535.GQ1922688@smile.fi.intel.com>
+References: <20200311125135.30832-1-ple@baylibre.com>
+ <20200311125135.30832-4-ple@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311071823.117899-2-jitao.shi@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311125135.30832-4-ple@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Mar 11, 2020 at 01:51:34PM +0100, Phong LE wrote:
+> This commit is a simple driver for bridge HMDI it66121.
+> The input format is RBG and there is no color conversion.
+> Audio, HDCP and CEC are not supported yet.
 
-On 11/03/2020 08:18, Jitao Shi wrote:
-> Some chips's sample mode are rising, falling and dual edge (both
-> falling and rising edge).
-> Extern the pclk-sample property to support dual edge.
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/media/video-interfaces.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index f884ada0bffc..da9ad24935db 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -118,8 +118,8 @@ Optional endpoint properties
->  - data-enable-active: similar to HSYNC and VSYNC, specifies the data enable
->    signal polarity.
->  - field-even-active: field signal level during the even field data transmission.
-> -- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
-> -  signal.
-> +- pclk-sample: sample data on rising (1), falling (0) or both rising and
-> +  falling (2) edge of the pixel clock signal.
->  - sync-on-green-active: active state of Sync-on-green (SoG) signal, 0/1 for
->    LOW/HIGH respectively.
->  - data-lanes: an array of physical data lane indexes. Position of an entry
-> 
+I guess you should have been told in your company how to use get_maintainer.pl
+to avoid spamming people.
 
-This changes the bus format, but we recently introduced a bus format negociation
-between bridges to avoid adding such properties into DT, and make bus format setup
-dynamic between an encoder and a bridge.
+Hint:
+	scripts/get_maintainer.pl --git --git-min-percent=67 ...
 
-It would be great to use that instead.
+...
 
-Neil
+> + * Copyright (C) 2020 BayLibre, SAS
+> + * Author: Phong LE <ple@baylibre.com>
+> + * Copyright (C) 2018-2019, Artem Mygaiev
+> + * Copyright (C) 2017, Fresco Logic, Incorporated.
+
+This too compact to read, perhaps squeeze blank line after your (c) note
+followed by description how the rest (c) appear in the file.
+
+> + *
+
+Redundant line.
+
+> + */
+
+...
+
+> +#include <linux/of.h>
+
+This can be replaced with property.h, see comments against ->probe().
+
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+
+I didn't find evidence of use of any of those.
+
+...
+
+> +#define IT66121_MASTER_SEL_REG			0x10
+
+> +#define IT66121_AFE_DRV_REG			0x61
+
+> +#define IT66121_INPUT_MODE_REG			0x70
+
+> +#define IT66121_INPUT_CSC_REG			0x72
+
+> +#define IT66121_AFE_XP_REG			0x62
+
+> +#define IT66121_AFE_IP_REG			0x64
+
+> +#define IT66121_AFE_XP_EC1_REG			0x68
+
+> +#define IT66121_SW_RST_REG			0x04
+
+> +#define IT66121_DDC_COMMAND_REG			0x15
+
+> +#define IT66121_HDCP_REG			0x20
+
+> +#define IT66121_INT_STATUS1_REG			0x06
+
+> +#define IT66121_DDC_HEADER_REG			0x11
+
+> +#define IT66121_DDC_OFFSET_REG			0x12
+> +#define IT66121_DDC_BYTE_REG			0x13
+> +#define IT66121_DDC_SEGMENT_REG			0x14
+> +#define IT66121_DDC_RD_FIFO_REG			0x17
+
+> +#define IT66121_CLK_BANK_REG			0x0F
+
+> +#define IT66121_INT_REG				0x05
+
+> +#define IT66121_INT_MASK1_REG			0x09
+
+> +#define IT66121_INT_CLR1_REG			0x0C
+
+> +#define IT66121_AV_MUTE_REG			0xC1
+
+> +#define IT66121_PKT_GEN_CTRL_REG		0xC6
+
+> +#define IT66121_AVIINFO_DB1_REG			0x158
+> +#define IT66121_AVIINFO_DB2_REG			0x159
+> +#define IT66121_AVIINFO_DB3_REG			0x15A
+> +#define IT66121_AVIINFO_DB4_REG			0x15B
+> +#define IT66121_AVIINFO_DB5_REG			0x15C
+> +#define IT66121_AVIINFO_CSUM_REG		0x15D
+> +#define IT66121_AVIINFO_DB6_REG			0x15E
+> +#define IT66121_AVIINFO_DB7_REG			0x15F
+> +#define IT66121_AVIINFO_DB8_REG			0x160
+> +#define IT66121_AVIINFO_DB9_REG			0x161
+> +#define IT66121_AVIINFO_DB10_REG		0x162
+> +#define IT66121_AVIINFO_DB11_REG		0x163
+> +#define IT66121_AVIINFO_DB12_REG		0x164
+> +#define IT66121_AVIINFO_DB13_REG		0x165
+> +
+> +#define IT66121_AVI_INFO_PKT_REG		0xCD
+
+> +#define IT66121_HDMI_MODE_REG			0xC0
+
+> +#define IT66121_SYS_STATUS_REG			0x0E
+
+> +#define IT66121_DDC_STATUS_REG			0x16
+
+It's better to
+a) keep register sorted by value (easy to be oriented);
+b) have them in fixed width, e.g. 0x0CD.
+
+...
+
+> +#define IT66121_DEVICE_MASK			0x0F
+
+GENMASK() ?
+
+> +#define IT66121_EDID_SLEEP			20000
+> +#define IT66121_EDID_TIMEOUT			200000
+
+Care to add units?
+
+> +#define IT66121_AFE_CLK_HIGH			80000
+
+Also, what is the unit of this?
+
+...
+
+> +	return regmap_write(ctx->regmap, IT66121_MASTER_SEL_REG,
+> +				IT66121_MASTER_SEL_HOST);
+
+Indentation?
+Same for other similar places.
+
+...
+
+> +static int it66121_configure_afe(struct it66121_ctx *ctx,
+> +				 const struct drm_display_mode *mode)
+
+...like this.
+
+...
+
+> +	if (val & (IT66121_DDC_STATUS_NOACK | IT66121_DDC_STATUS_WAIT_BUS |
+> +	    IT66121_DDC_STATUS_ARBI_LOSE))
+> +		return -EAGAIN;
+
+Perhaps better to
+
+	u32 busy = IT66121_DDC_STATUS_NOACK | IT66121_DDC_STATUS_WAIT_BUS |
+		   IT66121_DDC_STATUS_ARBI_LOSE;
+
+
+	if (val & busy)
+		return -EAGAIN;
+
+?
+
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int it66121_abort_ddc_ops(struct it66121_ctx *ctx)
+> +{
+> +	int ret;
+> +	unsigned int swreset, cpdesire;
+> +
+> +	ret = regmap_read(ctx->regmap, IT66121_SW_RST_REG, &swreset);
+> +	if (ret)
+> +		return ret;
+> +
+
+> +	ret = regmap_read(ctx->regmap, IT66121_HDCP_REG, &cpdesire);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_write(ctx->regmap, IT66121_HDCP_REG,
+> +			   cpdesire & (~IT66121_HDCP_CPDESIRED & 0xFF));
+> +	if (ret)
+> +		return ret;
+
+regmap_update_bits() ?
+
+> +
+> +	ret = regmap_write(ctx->regmap, IT66121_SW_RST_REG,
+> +			   swreset | IT66121_SW_RST_HDCP);
+> +	if (ret)
+> +		return ret;
+
+This should surround the inner update, correct? Otherwise, regmap_update_bits()
+can be used as well.
+
+> +}
+
+...
+
+> +static int it66121_get_edid_block(void *context, u8 *buf,
+> +				  unsigned int block, size_t len)
+> +{
+
+> +		ret = regmap_write(ctx->regmap, IT66121_DDC_COMMAND_REG,
+> +				   IT66121_DDC_COMMAND_EDID_READ);
+> +		if (ret)
+> +			return ret;
+> +
+> +		offset += cnt;
+> +		remain -= cnt;
+
+> +		msleep(20);
+
+Should be explained.
+
+> +
+> +		ret = it66121_wait_ddc_ready(ctx);
+> +		if (ret)
+> +			return ret;
+> +
+
+> +		do {
+> +			ret = regmap_read(ctx->regmap,
+> +					  IT66121_DDC_RD_FIFO_REG, &val);
+> +			if (ret)
+> +				return ret;
+> +			*(buf++) = val;
+> +			cnt--;
+> +		} while (cnt > 0);
+
+I'm wondering if regmap API has a helper for above like cases.
+
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int it66121_connector_get_modes(struct drm_connector *connector)
+> +{
+
+> +	struct it66121_ctx *ctx = container_of(connector, struct it66121_ctx,
+> +			connector);
+
+Seems like it can be an inline helper and in all places you can use
+
+	struct it66121_ctx *ctx = to_it66121_ctx(connector);
+
+
+> +	ret = drm_connector_update_edid_property(connector,
+> +						 ctx->edid);
+
+It quite fits one line, perhaps configure your editor to see 80 limit sharp?
+Applies to all similar cases as well.
+
+> +	if (ret) {
+> +		DRM_ERROR("Failed to update EDID property: %d\n", ret);
+> +		goto unlock;
+> +	}
+
+> +}
+
+...
+
+> +	return (val & IT66121_SYS_STATUS_HPDETECT);
+
+Too many parentheses.
+
+...
+
+> +	max_clock = ctx->dual_edge ? 74250 : 148500;
+
+Magic numbers? Also, It seems one definition is enough.
+
+...
+
+> +	msleep(50);
+
+Should be explained.
+
+...
+
+> +	val = mute ? IT66121_AV_MUTE_ON : (~IT66121_AV_MUTE_ON & 0xFF);
+
+	val = mute ? IT66121_AV_MUTE_ON : 0;
+
+> +	ret = regmap_write_bits(ctx->regmap, IT66121_AV_MUTE_REG,
+> +				IT66121_AV_MUTE_ON, val);
+
+...or even
+
+	mask = IT66121_AV_MUTE_ON;
+	val = mute ? mask : 0;
+
+	ret = regmap_write_bits(ctx->regmap, IT66121_AV_MUTE_REG, mask, val);
+
+> +	if (ret)
+> +		return ret;
+
+...
+
+> +	regmap_write_bits(ctx->regmap, IT66121_CLK_BANK_REG,
+> +			  IT66121_CLK_BANK_PWROFF_TXCLK,
+> +			  ~IT66121_CLK_BANK_PWROFF_TXCLK & 0xFF);
+
+Same idea. What the point of all this operations in the value parameter?
+Please, fix over the code.
+
+...
+
+
+> +	if (val & IT66121_SYS_STATUS_ACTIVE_IRQ) {
+
+	if (!(val & IT66121_SYS_STATUS_ACTIVE_IRQ))
+		goto unlock;
+
+> +		ret = regmap_read(ctx->regmap, IT66121_INT_STATUS1_REG, &val);
+> +		if (ret) {
+> +			dev_err(dev, "Cannot read STATUS1_REG %d\n", ret);
+> +		} else {
+> +			if (val & IT66121_INT_STATUS1_DDC_FIFOERR)
+> +				it66121_clear_ddc_fifo(ctx);
+
+> +			if (val & (IT66121_INT_STATUS1_DDC_BUSHANG |
+> +					IT66121_INT_STATUS1_DDC_NOACK))
+
+Indentation.
+
+> +				it66121_abort_ddc_ops(ctx);
+> +			if (val & IT66121_INT_STATUS1_HPD_STATUS) {
+> +				regmap_write_bits(ctx->regmap,
+> +						  IT66121_INT_CLR1_REG,
+> +						  IT66121_INT_CLR1_HPD,
+> +						  IT66121_INT_CLR1_HPD);
+> +
+> +				if (!it66121_is_hpd_detect(ctx)) {
+> +					kfree(ctx->edid);
+> +					ctx->edid = NULL;
+> +				}
+> +				event = true;
+> +			}
+> +		}
+> +
+> +		regmap_write_bits(ctx->regmap, IT66121_SYS_STATUS_REG,
+> +				  IT66121_SYS_STATUS_CLEAR_IRQ,
+> +				  IT66121_SYS_STATUS_CLEAR_IRQ);
+> +	}
+> +
+> +unlock:
+> +	mutex_unlock(&ctx->lock);
+
+...
+
+> +static int it66121_probe(struct i2c_client *client,
+> +			 const struct i2c_device_id *id)
+> +{
+
+> +	u8 ids[4];
+
+Magic, also see below.
+
+> +	int i, ret;
+> +	struct it66121_ctx *ctx;
+> +	struct device *dev = &client->dev;
+
+> +	ctx->conf = (struct it66121_conf *)of_device_get_match_data(dev);
+
+device_get_match_data()
+
+In any case why explicit casting?
+
+> +	if (!ctx->conf)
+> +		return -ENODEV;
+> +
+
+> +	ctx->dual_edge = of_property_read_bool(dev->of_node, "pclk-dual-edge");
+
+device_property_read_bool()
+
+> +	for (i = 0; i < 4; i++) {
+
+Magic.
+
+> +		regmap_read(ctx->regmap, i, &ret);
+> +		ids[i] = ret;
+> +	}
+
+> +
+> +	if (ids[0] != IT66121_VENDOR_ID0 ||
+> +	    ids[1] != IT66121_VENDOR_ID1 ||
+> +	    ids[2] != IT66121_DEVICE_ID0 ||
+> +	    ((ids[3] & IT66121_DEVICE_MASK) != IT66121_DEVICE_ID1)) {
+> +		ite66121_power_off(ctx);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ctx->bridge.funcs = &it66121_bridge_funcs;
+> +	ctx->bridge.of_node = dev->of_node;
+> +
+> +	ret = devm_request_threaded_irq(dev, client->irq, NULL,
+> +					it66121_irq_threaded_handler,
+
+> +					IRQF_SHARED | IRQF_TRIGGER_LOW |
+> +					IRQF_ONESHOT,
+
+Shouldn't flags come from appropriate resource provider (DT / ACPI / etc)?
+
+> +					dev_name(dev),
+> +					ctx);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to request irq %d:%d\n", client->irq, ret);
+> +		ite66121_power_off(ctx);
+> +		return ret;
+> +	}
+> +
+> +	drm_bridge_add(&ctx->bridge);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static const struct of_device_id it66121_dt_match[] = {
+> +	{ .compatible = "ite,it66121",
+> +	  .data = &it66121_conf_simple,
+> +	},
+
+> +	{ },
+
+Terminator line doesn't need comma.
+
+> +};
+
+...
+
+> +static const struct i2c_device_id it66121_id[] = {
+> +	{ "it66121", 0 },
+
+> +	{ },
+
+Ditto.
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
