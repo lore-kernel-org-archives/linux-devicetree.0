@@ -2,197 +2,121 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2827C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420ACC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A49332146E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DCCA2146E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 13:03:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FeHfmLXP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OzyT8G5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbgCKNBy (ORCPT
+        id S1729435AbgCKNDC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 09:01:54 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58248 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729354AbgCKNBy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 09:01:54 -0400
-X-UUID: 530e16f6b4c34eda8033d39dc1f66c97-20200311
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/WVVWBfJZWBTP9PrYKh6PTL6LhgD9CaRZwh9r2ttw8o=;
-        b=FeHfmLXP6lg2ahvRdk64ty2LUW5cF4x0VuXOaLEeKE7Z284kDlDMEsrfRiSzGi7cqFtGAdKfpYCAPgpsSFHhPQSjsWOb8ReDdaoaPafwkK6FvSZG0VTPZvr0ykk5oDs3eP14P+zvxpb+jpS6X+mXXC25WmhCxpmgKIW8aDo4grQ=;
-X-UUID: 530e16f6b4c34eda8033d39dc1f66c97-20200311
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1205752028; Wed, 11 Mar 2020 21:01:47 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Mar 2020 21:01:45 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Mar 2020 21:00:54 +0800
-Message-ID: <1583931705.29614.3.camel@mtksdaap41>
-Subject: Re: [PATCH v11 0/5] arm/arm64: mediatek: Fix mt8173 mmsys device
- probing
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <p.zabel@pengutronix.de>, <airlied@linux.ie>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <ulrich.hecht+renesas@gmail.com>,
-        <laurent.pinchart@ideasonboard.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>,
-        "Allison Randal" <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-mediatek@lists.infradead.org>,
-        "Collabora Kernel ML" <kernel@collabora.com>,
-        <dri-devel@lists.freedesktop.org>,
-        "Seiya Wang" <seiya.wang@mediatek.com>,
-        <linux-kernel@vger.kernel.org>, <wens@csie.org>,
-        Daniel Vetter <daniel@ffwll.ch>, <linux-clk@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        <devicetree@vger.kernel.org>,
-        "Matthias Brugger" <mbrugger@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <frank-w@public-files.de>, <linux-arm-kernel@lists.infradead.org>,
-        <hsinyi@chromium.org>, Richard Fontana <rfontana@redhat.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>, <sean.wang@mediatek.com>,
-        <rdunlap@infradead.org>, <matthias.bgg@kernel.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Owen Chen <owen.chen@mediatek.com>
-Date:   Wed, 11 Mar 2020 21:01:45 +0800
-In-Reply-To: <20200311115614.1425528-1-enric.balletbo@collabora.com>
-References: <20200311115614.1425528-1-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 11 Mar 2020 09:03:02 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:23438 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729410AbgCKNDC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 09:03:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583931781; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=f7e0eWxDfW7nEaHlYSKRi90iftgXxefmOtrDot6oFE0=; b=OzyT8G5maR+SLIXpWDtc/taW8IjnZTtT+Nv8bvH2N3NpMZPVCP8V5EcfYSdOxCSBdzEivnwk
+ X8I5aGLD7SDml3pAn6pGtAvOVo9Z2tpKccS2v27NPlzXM+eMB8EgoVNr7ZDBUdteITPAurps
+ dMEp8MdBCCli2J2LbBPHAgl/aiY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e68e184.7f6a583953e8-smtp-out-n02;
+ Wed, 11 Mar 2020 13:03:00 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8C30AC433CB; Wed, 11 Mar 2020 13:02:59 +0000 (UTC)
+Received: from [10.252.222.65] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28AAFC433D2;
+        Wed, 11 Mar 2020 13:02:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28AAFC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH 0/6] Add interconnect support to UART, I2C, SPI and QSPI
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+References: <1581946205-27189-1-git-send-email-akashast@codeaurora.org>
+ <20200309175954.GX24720@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <9e0afe90-5480-2db5-48fb-39cd8db6e8d1@codeaurora.org>
+Date:   Wed, 11 Mar 2020 18:32:44 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: D0C530029DFB3D1C48B2A2ED83E49AE8D5F42442F09CD39392B33A38427356E82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200309175954.GX24720@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIEVucmljOg0KDQpJJ20gY29uZnVzZWQgdGhpcyBpcyB2MTEgb3IgdjEyLg0KRm9yIHYxMiwg
-eW91J3ZlIGxvc3Qgc29tZSAnQWNrZWQtYnknIGFuZCAnUmV2aWV3ZWQtYnknIHRhZy4NCg0KUmVn
-YXJkcywNCkNLDQoNCk9uIFdlZCwgMjAyMC0wMy0xMSBhdCAxMjo1NiArMDEwMCwgRW5yaWMgQmFs
-bGV0Ym8gaSBTZXJyYSB3cm90ZToNCj4gRGVhciBhbGwsDQo+IA0KPiBUaGVzZSBwYXRjaGVzIGFy
-ZSBpbnRlbmRlZCB0byBzb2x2ZSBhbiBvbGQgc3RhbmRpbmcgaXNzdWUgb24gc29tZQ0KPiBNZWRp
-YXRlayBkZXZpY2VzIChtdDgxNzMsIG10MjcwMSBhbmQgbXQyNzEyIGFyZSBhZmZlY3RlZCBieSB0
-aGlzIGlzc3VlKS4NCj4gDQo+IFVwIHRvIG5vdyBib3RoIGRyaXZlcnMsIGNsb2NrIGFuZCBkcm0g
-YXJlIHByb2JlZCB3aXRoIHRoZSBzYW1lIGRldmljZSB0cmVlDQo+IGNvbXBhdGlibGUuIEJ1dCBv
-bmx5IHRoZSBmaXJzdCBkcml2ZXIgZ2V0cyBwcm9iZWQsIHdoaWNoIGluIGVmZmVjdCBicmVha3MN
-Cj4gZ3JhcGhpY3Mgb24gdGhvc2UgZGV2aWNlcy4NCj4gDQo+IFRoZSBNTVNZUyAoTXVsdGltZWRp
-YSBzdWJzeXN0ZW0pIGluIE1lZGlhdGVrIFNvQ3MgaGFzIHNvbWUgcmVnaXN0ZXJzIHRvDQo+IGNv
-bnRyb2wgY2xvY2sgZ2F0ZXMgKHdoaWNoIGlzIHVzZWQgaW4gdGhlIGNsayBkcml2ZXIpIGFuZCBz
-b21lIHJlZ2lzdGVycw0KPiB0byBzZXQgdGhlIHJvdXRpbmcgYW5kIGVuYWJsZSB0aGUgZGlmZmVy
-bmV0IGJsb2NrcyBvZiB0aGUgZGlzcGxheQ0KPiBhbmQgTURQIChNZWRpYSBEYXRhIFBhdGgpIHN1
-YnN5c3RlbS4gT24gdGhpcyBzZXJpZXMgdGhlIGNsayBkcml2ZXIgaXMNCj4gbm90IGEgcHVyZSBj
-bG9jayBjb250cm9sbGVyIGJ1dCBhIHN5c3RlbSBjb250cm9sbGVyIHRoYXQgY2FuIHByb3ZpZGUN
-Cj4gYWNjZXNzIHRvIHRoZSBzaGFyZWQgcmVnaXN0ZXJzIGJldHdlZW4gdGhlIGRpZmZlcmVudCBk
-cml2ZXJzIHRoYXQgbmVlZA0KPiBpdCAobWVkaWF0ZWstZHJtIGFuZCBtZWRpYXRlay1tZHApLiBI
-ZW5jZSB0aGUgTU1TWVMgY2xrIGRyaXZlciB3YXMgbW92ZWQNCj4gdG8gZHJpdmVycy9zb2MvbWVk
-aWF0ZWsgYW5kIGlzIHRoZSBlbnRyeSBwb2ludCAocGFyZW50KSB3aGljaCB3aWxsIHRyaWdnZXIN
-Cj4gdGhlIHByb2JlIG9mIHRoZSBjb3JyZXNwb25kaW5nIG1lZGlhdGVrLWRybSBkcml2ZXIuDQo+
-IA0KPiAqKklNUE9SVEFOVCoqIFRoaXMgc2VyaWVzIG9ubHkgZml4ZXMgdGhlIGlzc3VlIG9uIG10
-ODE3MyB0byBtYWtlIGl0DQo+IHNpbXBsZSBhbmQgYXMgaXMgdGhlIG9ubHkgcGxhdGZvcm0gSSBj
-YW4gdGVzdC4gU2ltaWxhciBjaGFuZ2VzIHNob3VsZCBiZQ0KPiBhcHBsaWVkIGZvciBtdDI3MDEg
-YW5kIG10MjcxMiB0byBoYXZlIGRpc3BsYXkgd29ya2luZy4NCj4gDQo+IFRoZXNlIHBhdGNoZXMg
-YXBwbHkgb24gdG9wIG9mIGxpbnV4LW5leHQuDQo+IA0KPiBGb3IgcmVmZXJlbmNlLCBoZXJlIGFy
-ZSB0aGUgbGlua3MgdG8gdGhlIG9sZCBkaXNjdXNzaW9uczoNCj4gKiB2MTA6IGh0dHBzOi8vcGF0
-Y2h3b3JrLmtlcm5lbC5vcmcvcHJvamVjdC9saW51eC1tZWRpYXRlay9saXN0Lz9zZXJpZXM9MjQ4
-NTA1DQo+ICogdjk6IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcHJvamVjdC9saW51eC1j
-bGsvbGlzdC8/c2VyaWVzPTI0NzU5MQ0KPiAqIHY4OiBodHRwczovL3BhdGNod29yay5rZXJuZWwu
-b3JnL3Byb2plY3QvbGludXgtbWVkaWF0ZWsvbGlzdC8/c2VyaWVzPTI0NDg5MQ0KPiAqIHY3OiBo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtbWVkaWF0ZWsvbGlzdC8/
-c2VyaWVzPTI0MTIxNw0KPiAqIHY2OiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2pl
-Y3QvbGludXgtbWVkaWF0ZWsvbGlzdC8/c2VyaWVzPTIxMzIxOQ0KPiAqIHY1OiBodHRwczovL3Bh
-dGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtbWVkaWF0ZWsvbGlzdC8/c2VyaWVzPTQ0
-MDYzDQo+ICogdjQ6DQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEw
-NTMwODcxLw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDUzMDg4
-My8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA1MzA4ODUvDQo+
-ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNTMwOTExLw0KPiAgICog
-aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDUzMDkxMy8NCj4gKiB2MzoNCj4g
-ICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAzNjc4NTcvDQo+ICAgKiBo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3ODYxLw0KPiAgICogaHR0cHM6
-Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDM2Nzg3Ny8NCj4gICAqIGh0dHBzOi8vcGF0
-Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAzNjc4NzUvDQo+ICAgKiBodHRwczovL3BhdGNod29y
-ay5rZXJuZWwub3JnL3BhdGNoLzEwMzY3ODg1Lw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
-bmVsLm9yZy9wYXRjaC8xMDM2Nzg4My8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
-cmcvcGF0Y2gvMTAzNjc4ODkvDQo+ICAgKiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
-dGNoLzEwMzY3OTA3Lw0KPiAgICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8x
-MDM2NzkwOS8NCj4gICAqIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAzNjc5
-MDUvDQo+ICogdjI6IE5vIHJlbGV2YW50IGRpc2N1c3Npb24sIHNlZSB2Mw0KPiAqIHYxOg0KPiAg
-ICogaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDAxNjQ5Ny8NCj4gICAqIGh0
-dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAwMTY0OTkvDQo+ICAgKiBodHRwczov
-L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwMDE2NTA1Lw0KPiAgICogaHR0cHM6Ly9wYXRj
-aHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDAxNjUwNy8NCj4gDQo+IEJlc3QgcmVnYXJkcywNCj4g
-IEVucmljDQo+IA0KPiBDaGFuZ2VzIGluIHYxMToNCj4gLSBMZWF2ZSB0aGUgY2xvY2tzIHBhcnQg
-aW4gZHJpdmVycy9jbGsgKGNsay1tdDgxNzMtbW0pDQo+IC0gSW5zdGFudGlhdGUgdGhlIGNsb2Nr
-IGRyaXZlciBmcm9tIHRoZSBtdGstbW1zeXMgZHJpdmVyLg0KPiAtIEFkZCBkZWZhdWx0IGNvbmZp
-ZyBvcHRpb24gdG8gbm90IGJyZWFrIGFueXRoaW5nLg0KPiAtIFJlbW92ZWQgdGhlIFJldmlld2Vk
-LWJ5IENLIHRhZyBhcyBjaGFuZ2VkIHRoZSBvcmdhbml6YXRpb24uDQo+IA0KPiBDaGFuZ2VzIGlu
-IHYxMDoNCj4gLSBVcGRhdGUgdGhlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIG1tc3lz
-IHN5c3RlbSBjb250cm9sbGVyLg0KPiAtIFJlbmFtZWQgdG8gYmUgZ2VuZXJpYyBtdGstbW1zeXMN
-Cj4gLSBBZGQgZHJpdmVyIGRhdGEgc3VwcG9ydCB0byBiZSBhYmxlIHRvIHN1cHBvcnQgZGlmZXJl
-bnQgU29Dcw0KPiAtIFNlbGVjdCBDT05GSUdfTVRLX01NU1lTIChDSykNCj4gLSBQYXNzIGRldmlj
-ZSBwb2ludGVyIG9mIG1tc3lzIGRldmljZSBpbnN0ZWFkIG9mIGNvbmZpZyByZWdzIChDSykNCj4g
-LSBNYXRjaCBkcml2ZXIgZGF0YSB0byBnZXQgZGlzcGxheSByb3V0aW5nLg0KPiANCj4gQ2hhbmdl
-cyBpbiB2OToNCj4gLSBNb3ZlIG1tc3lzIHRvIGRyaXZlcnMvc29jL21lZGlhdGVrIChDSykNCj4g
-LSBJbnRyb2R1Y2VkIGEgbmV3IHBhdGNoIHRvIG1vdmUgcm91dGluZyBjb250cm9sIGludG8gbW1z
-eXMgZHJpdmVyLg0KPiAtIFJlbW92ZWQgdGhlIHBhdGNoIHRvIHVzZSByZWdtYXAgYXMgaXMgbm90
-IG5lZWRlZCBhbnltb3JlLg0KPiAtIERvIG5vdCBtb3ZlIHRoZSBkaXNwbGF5IHJvdXRpbmcgZnJv
-bSB0aGUgZHJtIGRyaXZlciAoQ0spDQo+IA0KPiBDaGFuZ2VzIGluIHY4Og0KPiAtIEJlIGEgYnVp
-bHRpbl9wbGF0Zm9ybV9kcml2ZXIgbGlrZSBvdGhlciBtZWRpYXRlayBtbXN5cyBkcml2ZXJzLg0K
-PiAtIE5ldyBwYXRjaCBpbnRyb2R1Y2VkIGluIHRoaXMgc2VyaWVzLg0KPiANCj4gQ2hhbmdlcyBp
-biB2NzoNCj4gLSBGcmVlIGNsa19kYXRhLT5jbGtzIGFzIHdlbGwNCj4gLSBHZXQgcmlkIG9mIHBy
-aXZhdGUgZGF0YSBzdHJ1Y3R1cmUNCj4gDQo+IEVucmljIEJhbGxldGJvIGkgU2VycmEgKDMpOg0K
-PiAgIGR0LWJpbmRpbmdzOiBtZWRpYXRlazogVXBkYXRlIG1tc3lzIGJpbmRpbmcgdG8gcmVmbGVj
-dCBpdCBpcyBhIHN5c3RlbQ0KPiAgICAgY29udHJvbGxlcg0KPiAgIHNvYyAvIGRybTogbWVkaWF0
-ZWs6IE1vdmUgcm91dGluZyBjb250cm9sIHRvIG1tc3lzIGRldmljZQ0KPiAgIHNvYyAvIGRybTog
-bWVkaWF0ZWs6IEZpeCBtZWRpYXRlay1kcm0gZGV2aWNlIHByb2JpbmcNCj4gDQo+IE1hdHRoaWFz
-IEJydWdnZXIgKDIpOg0KPiAgIGRybS9tZWRpYXRlazogT21pdCB3YXJuaW5nIG9uIHByb2JlIGRl
-ZmVycw0KPiAgIGNsayAvIHNvYzogbWVkaWF0ZWs6IE1vdmUgbXQ4MTczIE1NU1lTIHRvIHBsYXRm
-b3JtIGRyaXZlcg0KPiANCj4gIC4uLi9iaW5kaW5ncy9hcm0vbWVkaWF0ZWsvbWVkaWF0ZWssbW1z
-eXMudHh0ICB8ICAgNyArLQ0KPiAgZHJpdmVycy9jbGsvbWVkaWF0ZWsvS2NvbmZpZyAgICAgICAg
-ICAgICAgICAgIHwgICA3ICsNCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL01ha2VmaWxlICAgICAg
-ICAgICAgICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstbXQ4MTczLW1t
-LmMgICAgICAgICAgfCAxNDYgKysrKysrKysNCj4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1t
-dDgxNzMuYyAgICAgICAgICAgICB8IDEwNCAtLS0tLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9LY29uZmlnICAgICAgICAgICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2Rpc3BfY29sb3IuYyAgICAgfCAgIDUgKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgICAgICB8ICAgNSArLQ0KPiAgZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kaXNwX3JkbWEuYyAgICAgIHwgICA1ICstDQo+ICBkcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RwaS5jICAgICAgICAgICAgfCAgMTIgKy0NCj4gIGRyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyAgICAgICB8ICAxOSArLQ0KPiAgZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICAgIHwgMjU5ICstLS0tLS0tLS0tLS0t
-DQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaCAgICAgICAgfCAgIDcg
-LQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMgICAgICAgIHwgIDQ1
-ICstLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmggICAgICAgIHwg
-ICAyICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jICAgICAgICAgICAg
-fCAgIDggKy0NCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaS5jICAgICAgICAg
-ICB8ICAgNCArLQ0KPiAgZHJpdmVycy9zb2MvbWVkaWF0ZWsvS2NvbmZpZyAgICAgICAgICAgICAg
-ICAgIHwgICA4ICsNCj4gIGRyaXZlcnMvc29jL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAg
-ICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstbW1zeXMuYyAgICAgICAg
-ICAgICAgfCAzMzUgKysrKysrKysrKysrKysrKysrDQo+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRp
-YXRlay9tdGstbW1zeXMuaCAgICAgICAgfCAgMjAgKysNCj4gIDIxIGZpbGVzIGNoYW5nZWQsIDU5
-MCBpbnNlcnRpb25zKCspLCA0MTEgZGVsZXRpb25zKC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW10ODE3My1tbS5jDQo+ICBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lzLmMNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBpbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstbW1zeXMuaA0KPiANCg0K
 
+On 3/9/2020 11:29 PM, Matthias Kaehlcke wrote:
+> Hi Akash,
+>
+> do you plan to re-spin this series in the near future?
+>
+> Thanks
+>
+> Matthias
+
+Hi  Matthias,
+
+I will re-spin the series by 3/13.
+
+Regards,
+
+Akash
+
+>
+> On Mon, Feb 17, 2020 at 06:59:59PM +0530, Akash Asthana wrote:
+>> dt-binding patch for UART, I2C and SPI.
+>>   - https://patchwork.kernel.org/patch/11385965/ [Convert QUP bindings
+>> 	to YAML and add ICC, pin swap doc]
+>>
+>> dt-binding patch for QSPI.
+>>   - https://patchwork.kernel.org/cover/11386003/ [Convert QSPI binding
+>> 	to YAML and add interconnect doc]
+>>
+>> Akash Asthana (6):
+>>    soc: qcom: geni: Support for ICC voting
+>>    tty: serial: qcom_geni_serial: Add interconnect support
+>>    i2c: i2c-qcom-geni: Add interconnect support
+>>    spi: spi-geni-qcom: Add interconnect support
+>>    spi: spi-qcom-qspi: Add interconnect support
+>>    arm64: dts: sc7180: Add interconnect for QUP and QSPI
+>>
+>>   arch/arm64/boot/dts/qcom/sc7180.dtsi  | 199 ++++++++++++++++++++++++++++++++++
+>>   drivers/i2c/busses/i2c-qcom-geni.c    |  84 +++++++++++++-
+>>   drivers/spi/spi-geni-qcom.c           |  65 ++++++++++-
+>>   drivers/spi/spi-qcom-qspi.c           |  38 ++++++-
+>>   drivers/tty/serial/qcom_geni_serial.c |  84 ++++++++++++--
+>>   include/linux/qcom-geni-se.h          |  31 ++++++
+>>   6 files changed, 481 insertions(+), 20 deletions(-)
+>>
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
