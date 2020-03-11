@@ -2,117 +2,105 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E86C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 23:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82197C2BAEE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 23:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0A3E20756
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 23:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JIQhcXbX"
+	by mail.kernel.org (Postfix) with ESMTP id 8BCCE206B1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 23:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731554AbgCKXdA (ORCPT
+        id S1731417AbgCKXu2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 19:33:00 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35507 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731446AbgCKXdA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 19:33:00 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u68so2243074pfb.2
-        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 16:32:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jFtJxYlBXZPRO2RwKWg1G8l6JcMWYglI8HGTYAqmsew=;
-        b=JIQhcXbXfcHaRXV6xK9j9jFjaK04xEK2zK1aXYUk1j7g75HVKyVzZN8ZWYKEGKhE5s
-         D15NknBcABdy1udps3AWRACogBm1E8OKbegCeRR85Y3gGULyTGDZj0rLgGwoJnQf727o
-         RBjvHK+Ltv4XdwqEt3yLUZLDq0fgwJiG/wL6BYvlnvmAf2rMB3c9tjqGUPqT0Vp6B5LC
-         RrNF4tVBG115YsVipRxDRHQ6+tnmxaPuXJnX0NDq3eKhbUUOlo9wwQ2IOwhDf+9TajX7
-         PTkvxD/4PGnUj+P40BgHbI8FpimQnKZcUmEctRzkIJE7E2WDfV90prOz+CwrgTuXdCKy
-         tLRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jFtJxYlBXZPRO2RwKWg1G8l6JcMWYglI8HGTYAqmsew=;
-        b=cLud7eiut1WGMpfsjNs3cQnfFTUgY5l79kHGCPkCjQBEDwFVJQ+DjZmgPWoant32XP
-         d3LReL1ieIbeE8ODn28ajDErmychyfsghGL3zO0rc21CpCEhoBM7r7n61U/K+KJazBP2
-         fL3mjN/YB5XoVo0YXEFTlOQ9/8goqcFexDQMBUw1hwbWKsiSe8PEB5G76zzpq9TRWuwc
-         +/Ne9NRTYLlpVBEvMTiHu56A1FGHSRylnwze49XxD5+nYgECGmlKq9SknwE1F1fBJdvq
-         sAM2XJ7Z0vdh+mIg0QShlxVH82AtZtnSiJldz+G6o6BA2rk7w9Ul40jxl4+QQmLx/O99
-         fpwQ==
-X-Gm-Message-State: ANhLgQ346rQSL4ua80Ua0fZfYGKUfr5/s41qTdpw1Dg/lOOsmOSaOyKm
-        K1NRHU9QeO934xCpK0eZr6smUw==
-X-Google-Smtp-Source: ADFU+vvMr21MESHoF4Oe0h0WOAGy0rCZigPm46U7ljAkGUSqeE2xCnjBMD4fI7CoTlicLi0wluHDsw==
-X-Received: by 2002:aa7:8055:: with SMTP id y21mr5155708pfm.151.1583969579384;
-        Wed, 11 Mar 2020 16:32:59 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a143sm29450741pfd.108.2020.03.11.16.32.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Mar 2020 16:32:58 -0700 (PDT)
-Date:   Wed, 11 Mar 2020 16:32:56 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Wed, 11 Mar 2020 19:50:28 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:32976 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731399AbgCKXu2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 19:50:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 2A34437024CE;
+        Thu, 12 Mar 2020 00:50:26 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BuEVeWZmGOFA; Thu, 12 Mar 2020 00:50:23 +0100 (CET)
+Subject: Re: [PATCH v3 3/3] power: supply: add CellWise cw2015 fuel gauge
+ driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v4 2/5] remoteproc: qcom: Introduce driver to store pil
- info in IMEM
-Message-ID: <20200311233256.GB1214176@minitux>
-References: <20200310063338.3344582-1-bjorn.andersson@linaro.org>
- <20200310063338.3344582-3-bjorn.andersson@linaro.org>
- <158387214232.149997.3935472981193001512@swboyd.mtv.corp.google.com>
- <20200310212728.GQ264362@yoga>
- <158396914211.149997.8114928596665644267@swboyd.mtv.corp.google.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200311093043.3636807-1-t.schramm@manjaro.org>
+ <20200311093043.3636807-4-t.schramm@manjaro.org>
+ <20200311101830.GE1922688@smile.fi.intel.com>
+From:   Tobias Schramm <t.schramm@manjaro.org>
+Message-ID: <c93db959-1e8d-9823-8a4f-71bfea12afaf@manjaro.org>
+Date:   Thu, 12 Mar 2020 00:51:28 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158396914211.149997.8114928596665644267@swboyd.mtv.corp.google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200311101830.GE1922688@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US-large
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 11 Mar 16:25 PDT 2020, Stephen Boyd wrote:
+Hi Andy,
 
-> Quoting Bjorn Andersson (2020-03-10 14:27:28)
-> > On Tue 10 Mar 13:29 PDT 2020, Stephen Boyd wrote:
-> > 
-> > > Why can't we search in DT for the
-> > > imem node and then find the pil reloc info compatible string on the
-> > > first call to this library? Then we don't need an API to see if the
-> > > device has probed yet (qcom_pil_info_available)
-> > 
-> > I think this sounds reasonable.
-> 
-> Great!
-> 
-> > 
-> > > and we can just ioremap
-> > > some region of memory that's carved out for this reason. Forcing
-> > > everything through the regmap is mostly adding pain.
-> > > 
-> > 
-> > My concern here was simply that we'll end up ioremapping various small
-> > chunks of the imem region 10 (or so) times. But I agree that things
-> > would be cleaner here.
-> 
-> Alright. I'd like the ioremap() approach. ioremap() will "do the right
-> thing" and reuse mappings if they're already there and overlap in the
-> page. So it's OK that the syscon/simple-mfd exists and makes a device,
-> etc. etc., but we don't need to care about it. We can just ioremap() the
-> area and not worry that the regmap users may have a mapping to the same
-> place. This is a dedicated carveout inside IMEM so we're safe from other
-> meddling users.
+thanks for reviewing again.
 
-Agreed, thanks for the feedback!
+>> +	/* wait for gauge to become ready */
+>> +	for (i = 0; i < CW2015_READ_TRIES; i++) {
+>> +		ret = regmap_read(cw_bat->regmap, CW2015_REG_SOC, &reg_val);
+>> +		if (ret)
+>> +			return ret;
+>> +		/* SoC must not be more than 100% */
+>> +		else if (reg_val <= 100)
+>> +			break;
+>> +
+>> +		msleep(100);
+>> +	}
+> 
+> Have you considered to use regmap_read_poll_timeout()?
 
-Regards,
-Bjorn
+Neat! That is a much cleaner solution. Will use that in v4.
+
+> 
+>> +
+>> +	if (i >= CW2015_READ_TRIES) {
+>> +		reg_val = CW2015_MODE_SLEEP;
+>> +		regmap_write(cw_bat->regmap, CW2015_REG_MODE, reg_val);
+>> +		dev_err(cw_bat->dev,
+>> +			"Gauge did not become ready after profile upload");
+>> +		return -ETIMEDOUT;
+>> +	}
+> 
+> ...
+> 
+>> +		if (memcmp(bat_info, cw_bat->bat_profile,
+>> +				CW2015_SIZE_BATINFO)) {
+> 
+> I think it's pretty much okay to have this on one line, disregard 80 limit
+> (it's only 1 extra).
+
+Ok, will probably do that in a few places.
+
+
+Best Regards,
+
+Tobias
