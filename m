@@ -2,96 +2,98 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C2CC10F29
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944B7C10F27
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76FDE20873
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D532082E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 08:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbgCKII0 (ORCPT
+        id S1726923AbgCKIOw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 04:08:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38739 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728578AbgCKIIZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Mar 2020 04:08:25 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i14so1013593otp.5;
-        Wed, 11 Mar 2020 01:08:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1ZCSe7QWfMOzQQ3PCkmW4sMD3ngbByjQtOhyC6jqIEY=;
-        b=iM3roAG2M2ins5K6ZLqiLBLvKa8k6suyJuAo7A90VOQsCzDRjDwAhI0aDL9nCdLY/O
-         xLrA+wqYix1XWO14tT5l+HDYMPd1/dJ1F4ghEwmRUPsxa4bYQAlUSFCmYEGIVZ7gxyMO
-         VshHOQ4cNHmPMTtKfSn6FkM404fAXTdpQRvbUlfDSfuwvNYpsafL+MBDiJxTY3b2LyJH
-         tvvcIXRp01xlbm9E5zyMYkIx5cWWaXHZznIhuUi5jIVQMT2fWMIonYl066qyY1RZr537
-         nO66+l2JthpIZ/bKL5RPOCcLqabIbyUR+GGwhIlSXXWA/dUtPqFVr/7YhIvaSobpKB0O
-         o/nQ==
-X-Gm-Message-State: ANhLgQ2rej+SaabC4LTQBohO1EKplV3lK3ZOQsFowp97CLctMyVbSTDR
-        HX7VzrV2DgDExJ0BfVkDwuA8CNhZpHwX3RqQjKA=
-X-Google-Smtp-Source: ADFU+vtdA3bMWi79K8mxJuFPVQLhN8IjOjgpxHdBtcYZn6uR2DlMZ9emkM1RqnXxSoanwu5YiJmYje8PvUuFj2dXYlY=
-X-Received: by 2002:a9d:1708:: with SMTP id i8mr1416001ota.250.1583914104997;
- Wed, 11 Mar 2020 01:08:24 -0700 (PDT)
+        Wed, 11 Mar 2020 04:14:52 -0400
+Received: from mga11.intel.com ([192.55.52.93]:11849 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbgCKIOv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 04:14:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2020 01:14:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,540,1574150400"; 
+   d="scan'208";a="236215354"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Mar 2020 01:14:48 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jBwVu-008gZ3-U2; Wed, 11 Mar 2020 10:14:50 +0200
+Date:   Wed, 11 Mar 2020 10:14:50 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tobias Schramm <t.schramm@manjaro.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] power: supply: add CellWise cw2015 fuel gauge
+ driver
+Message-ID: <20200311081450.GZ1922688@smile.fi.intel.com>
+References: <20200309160346.2203680-1-t.schramm@manjaro.org>
+ <20200309160346.2203680-3-t.schramm@manjaro.org>
+ <20200310101050.GG1922688@smile.fi.intel.com>
+ <eb732216-dd19-f18d-9ace-e14c7e8de991@manjaro.org>
 MIME-Version: 1.0
-References: <20200303094848.23670-1-geert+renesas@glider.be> <20200310205504.GA27288@bogus>
-In-Reply-To: <20200310205504.GA27288@bogus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 11 Mar 2020 09:08:13 +0100
-Message-ID: <CAMuHMdXMSQtmJjmTnph5cKBLStCidzBij8giwvJszNxy1_yt9g@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: clock: renesas: cpg-mssr: Convert to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb732216-dd19-f18d-9ace-e14c7e8de991@manjaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 9:55 PM Rob Herring <robh@kernel.org> wrote:
-> On Tue,  3 Mar 2020 10:48:48 +0100, Geert Uytterhoeven wrote:
-> > Convert the Renesas Clock Pulse Generator / Module Standby and Software
-> > Reset Device Tree binding documentation to json-schema.
-> >
-> > Note that #reset-cells was incorrecty marked a required property for
-> > RZ/A2 before.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > To be queued in clk-renesas-for-v5.7.
-> >
-> > v2:
-> >   - Remove complex if-construct implementing per-SoC clocks/clock-names
-> >     constraints; list all possible clock-names upfront instead,
-> >   - Drop Clock Domain member example.
-> > ---
-> >  .../bindings/clock/renesas,cpg-mssr.txt       | 100 ---------------
-> >  .../bindings/clock/renesas,cpg-mssr.yaml      | 119 ++++++++++++++++++
-> >  2 files changed, 119 insertions(+), 100 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-> >  create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue, Mar 10, 2020 at 07:55:42PM +0100, Tobias Schramm wrote:
 
-Thanks, queued in renesas-devel for v5.7.
+> >> +static int cw_read_word(struct cw_battery *cw_bat, u8 reg, u16 *val)
+> >> +{
+> >> +	u8 reg_val[2];
+> >> +	int ret;
+> >> +
+> >> +	ret = regmap_raw_read(cw_bat->regmap, reg, reg_val, 2);
+> >> +	*val = (reg_val[0] << 8) + reg_val[1];
+> >> +	return ret;
+> >> +}
+> > 
+> > NIH BE type of readings? Can REGMAP_ENDIAN_BIG help?
+> 
+> Not really, or can it? Registers on the cw2015 are a wild mix of single
+> bytes and words. There does not seem to be a per register override for
+> reg_/val_bits.
 
-Gr{oetje,eeting}s,
+I see.
+Perhaps
 
-                        Geert
+	__be16 value;
+
+
+	ret = regmap(..., (...)value, sizeof(value));
+	if (ret)
+		return ret; // note, you missed this in above.
+
+	*val = be16_to_cpu(value);
+	return 0;
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
