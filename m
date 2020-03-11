@@ -2,150 +2,173 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B16C10F25
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 03:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7076C10F25
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 04:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 576E2215A4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 03:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8918E2082F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 04:24:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qXsTTh3r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="M2w0nZx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgCKDss (ORCPT
+        id S1725813AbgCKEY1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 10 Mar 2020 23:48:48 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:47795 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727659AbgCKDsr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 10 Mar 2020 23:48:47 -0400
-X-UUID: e20a39dccc694c7abdaad7ccee920932-20200311
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=cMby1nCgA1pDUmKWXFEsXyQ9QhGgBEre690yHGxnHko=;
-        b=qXsTTh3r0gGGJwE3in7s8hEI7gDm3EFS8mST4H1eGhl+D6/GzUo75Wfc2Y4HtGZlW7rnTQ49Nq2Tr1+/H6n29TO+8JyVQdtVKxq1GlZ/1o3/9gGeOlB9m4w6atDhFDO4IqNJnsoOJONLxB3utkv+JKG1VwV6yZcAtu8l+Zzhxe8=;
-X-UUID: e20a39dccc694c7abdaad7ccee920932-20200311
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 890007444; Wed, 11 Mar 2020 11:48:41 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Mar 2020 11:47:13 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Mar 2020 11:47:48 +0800
-Message-ID: <1583898520.17060.1.camel@mtksdaap41>
-Subject: Re: [PATCH v9 3/5] mfd: Add support for the MediaTek MT6358 PMIC
-From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Nicolas Boichat <drinkcat@chromium.org>
-CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "Frank Wunderlich" <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Date:   Wed, 11 Mar 2020 11:48:40 +0800
-In-Reply-To: <CANMq1KDF32v-YnFRcz8BT6tnD0yq2OOBy9t-R09yA+4zNUZj3A@mail.gmail.com>
-References: <1583835040-19157-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1583835040-19157-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <CANMq1KDF32v-YnFRcz8BT6tnD0yq2OOBy9t-R09yA+4zNUZj3A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 11 Mar 2020 00:24:27 -0400
+Received: from gateway21.websitewelcome.com ([192.185.45.154]:31685 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725379AbgCKEY1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 00:24:27 -0400
+X-Greylist: delayed 1201 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Mar 2020 00:24:26 EDT
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 0C762400E096D
+        for <devicetree@vger.kernel.org>; Tue, 10 Mar 2020 23:04:25 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id BsbZjvT0H8vkBBsbZjo4b5; Tue, 10 Mar 2020 23:04:25 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3mQ8efzp5o0AkNF9bZhfeVXit4yUM1qXe8Qn2DoH+uM=; b=M2w0nZx0+GhH4CQngfIEQ9sxdq
+        dPBJpztWkuF97hxTB23jiqquuyEfWqRtGR/dz6LZfloO8lVT6HRJBDCzlEgubKv2IueRb5FraSCwc
+        MZSd1X4ZFG8dJmaoRIn41Qh5FHZp4U4C1FQfc+zUnKbDr22t5pmLrfnPezI+nnvl5njb5lvQ2KWBm
+        0S/z022YqNNU0omGKoOKzoDJRKsIUFNQKG8p6BFMh9sQFvWrh5rEp549fjZc5EcgtBUv/lyoaTcI+
+        sZPFNjYuVX/3d4DFlVT75XME5sVGqYzR5Sc+yMA+NL5z9oCUri+zjNGywSZkWHU8uRqHuWv/7ptnK
+        PQxQcQoQ==;
+Received: from [191.31.204.9] (port=54190 helo=[192.168.15.3])
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1jBsbY-001Nn8-Lh; Wed, 11 Mar 2020 01:04:24 -0300
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Caninos Loucos
+To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Cc:     manivannan.sadhasivam@linaro.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br
+References: <20200229104358.GB19610@mani>
+ <20200307002453.350430-1-matheus@castello.eng.br>
+ <20200307002453.350430-2-matheus@castello.eng.br>
+ <62e115af-9d8c-572a-a400-91bdef9d9292@suse.de>
+From:   Matheus Castello <matheus@castello.eng.br>
+Message-ID: <143fea2e-3361-445a-a261-1860ffc435eb@castello.eng.br>
+Date:   Wed, 11 Mar 2020 01:04:20 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <62e115af-9d8c-572a-a400-91bdef9d9292@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.204.9
+X-Source-L: No
+X-Exim-ID: 1jBsbY-001Nn8-Lh
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.3]) [191.31.204.9]:54190
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 6
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQpJIHdpbGwgZml4IHRoZSBtaXN0YWtlIGluIHRo
-ZSBuZXh0IHZlcnNpb24uDQoNCk9uIFdlZCwgMjAyMC0wMy0xMSBhdCAxMToyNCArMDgwMCwgTmlj
-b2xhcyBCb2ljaGF0IHdyb3RlOg0KPiBUaGFua3MsIG11Y2ggYmV0dGVyLiBKdXN0IG9uZSBpc3N1
-ZSBsZWZ0Lg0KPiANCj4gT24gVHVlLCBNYXIgMTAsIDIwMjAgYXQgNjoxMCBQTSBIc2luLUhzaXVu
-ZyBXYW5nDQo+IDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4g
-PiBUaGlzIGFkZHMgc3VwcG9ydCBmb3IgdGhlIE1lZGlhVGVrIE1UNjM1OCBQTUlDLiBUaGlzIGlz
-IGENCj4gPiBtdWx0aWZ1bmN0aW9uIGRldmljZSB3aXRoIHRoZSBmb2xsb3dpbmcgc3ViIG1vZHVs
-ZXM6DQo+ID4NCj4gPiAtIFJlZ3VsYXRvcg0KPiA+IC0gUlRDDQo+ID4gLSBDb2RlYw0KPiA+IC0g
-SW50ZXJydXB0DQo+ID4NCj4gPiBJdCBpcyBpbnRlcmZhY2VkIHRvIHRoZSBob3N0IGNvbnRyb2xs
-ZXIgdXNpbmcgU1BJIGludGVyZmFjZQ0KPiA+IGJ5IGEgcHJvcHJpZXRhcnkgaGFyZHdhcmUgY2Fs
-bGVkIFBNSUMgd3JhcHBlciBvciBwd3JhcC4NCj4gPiBNVDYzNTggTUZEIGlzIGEgY2hpbGQgZGV2
-aWNlIG9mIHRoZSBwd3JhcC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhzaW4tSHNpdW5nIFdh
-bmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJz
-L21mZC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgfCAgIDIgKy0NCj4gPiAgZHJpdmVycy9tZmQv
-bXQ2MzU4LWlycS5jICAgICAgICAgICAgIHwgMjM4ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrDQo+ID4gIGRyaXZlcnMvbWZkL210NjM5Ny1jb3JlLmMgICAgICAgICAgICB8ICA1NSArKysr
-KystDQo+ID4gIGluY2x1ZGUvbGludXgvbWZkL210NjM1OC9jb3JlLmggICAgICB8IDE1OCArKysr
-KysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L21mZC9tdDYzNTgvcmVnaXN0ZXJz
-LmggfCAyODIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVk
-ZS9saW51eC9tZmQvbXQ2Mzk3L2NvcmUuaCAgICAgIHwgICAzICsNCj4gPiAgNiBmaWxlcyBjaGFu
-Z2VkLCA3MzMgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvbWZkL210NjM1OC1pcnEuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-aW5jbHVkZS9saW51eC9tZmQvbXQ2MzU4L2NvcmUuaA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
-aW5jbHVkZS9saW51eC9tZmQvbXQ2MzU4L3JlZ2lzdGVycy5oDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9tZmQvTWFrZWZpbGUgYi9kcml2ZXJzL21mZC9NYWtlZmlsZQ0KPiA+IGluZGV4
-IGI4M2YxNzIuLjlhZjE0MTQgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tZmQvTWFrZWZpbGUN
-Cj4gPiArKysgYi9kcml2ZXJzL21mZC9NYWtlZmlsZQ0KPiA+IEBAIC0yMzgsNyArMjM4LDcgQEAg
-b2JqLSQoQ09ORklHX0lOVEVMX1NPQ19QTUlDKSAgICAgICAgKz0gaW50ZWwtc29jLXBtaWMubw0K
-PiA+ICBvYmotJChDT05GSUdfSU5URUxfU09DX1BNSUNfQlhUV0MpICAgICArPSBpbnRlbF9zb2Nf
-cG1pY19ieHR3Yy5vDQo+ID4gIG9iai0kKENPTkZJR19JTlRFTF9TT0NfUE1JQ19DSFRXQykgICAg
-ICs9IGludGVsX3NvY19wbWljX2NodHdjLm8NCj4gPiAgb2JqLSQoQ09ORklHX0lOVEVMX1NPQ19Q
-TUlDX0NIVERDX1RJKSAgKz0gaW50ZWxfc29jX3BtaWNfY2h0ZGNfdGkubw0KPiA+IC1tdDYzOTct
-b2JqcyAgICA6PSBtdDYzOTctY29yZS5vIG10NjM5Ny1pcnEubw0KPiA+ICttdDYzOTctb2JqcyAg
-ICAgICAgICAgICAgICAgICAgOj0gbXQ2Mzk3LWNvcmUubyBtdDYzOTctaXJxLm8gbXQ2MzU4LWly
-cS5vDQo+ID4gIG9iai0kKENPTkZJR19NRkRfTVQ2Mzk3KSAgICAgICArPSBtdDYzOTcubw0KPiA+
-ICBvYmotJChDT05GSUdfSU5URUxfU09DX1BNSUNfTVJGTEQpICAgICArPSBpbnRlbF9zb2NfcG1p
-Y19tcmZsZC5vDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvbXQ2MzU4LWlycS5j
-IGIvZHJpdmVycy9tZmQvbXQ2MzU4LWlycS5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4g
-PiBpbmRleCAwMDAwMDAwLi4wYjk5YTM5DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2Ry
-aXZlcnMvbWZkL210NjM1OC1pcnEuYw0KPiA+IEBAIC0wLDAgKzEsMjM4IEBADQo+ID4gW3NuaXBd
-DQo+ID4gK3N0YXRpYyBpcnFyZXR1cm5fdCBtdDYzNThfaXJxX2hhbmRsZXIoaW50IGlycSwgdm9p
-ZCAqZGF0YSkNCj4gPiArew0KPiA+ICsgICAgICAgc3RydWN0IG10NjM5N19jaGlwICpjaGlwID0g
-ZGF0YTsNCj4gPiArICAgICAgIHN0cnVjdCBwbWljX2lycV9kYXRhICptdDYzNThfaXJxX2RhdGEg
-PSBjaGlwLT5pcnFfZGF0YTsNCj4gPiArICAgICAgIHVuc2lnbmVkIGludCBiaXQsIGksIHRvcF9p
-cnFfc3RhdHVzOw0KPiA+ICsgICAgICAgaW50IHJldDsNCj4gPiArDQo+ID4gKyAgICAgICByZXQg
-PSByZWdtYXBfcmVhZChjaGlwLT5yZWdtYXAsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICBtdDYzNThfaXJxX2RhdGEtPnRvcF9pbnRfc3RhdHVzX3JlZywNCj4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICZ0b3BfaXJxX3N0YXR1cyk7DQo+ID4gKyAgICAgICBpZiAocmV0KSB7DQo+
-ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIoY2hpcC0+ZGV2LA0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICJGYWlsZWQgdG8gcmVhZCBzdGF0dXMgZnJvbSB0aGUgZGV2aWNlLCByZXQ9JWRc
-biIsIHJldCk7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBJUlFfTk9ORTsNCj4gPiArICAg
-ICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgbXQ2MzU4X2lycV9kYXRh
-LT5udW1fdG9wOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgZm9yIChpID0gMDsgaSA8IG10
-NjM1OF9pcnFfZGF0YS0+bnVtX3RvcDsgaSsrKSB7DQo+IA0KPiBPbmx5IG9uZSBsb29wIG5lZWRl
-ZC4NCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYml0ID0gQklUKG10NjM1OF9pbnRz
-W2ldLnRvcF9vZmZzZXQpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmICh0b3BfaXJx
-X3N0YXR1cyAmIGJpdCkgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbXQ2
-MzU4X2lycV9zcF9oYW5kbGVyKGNoaXAsIGkpOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgdG9wX2lycV9zdGF0dXMgJj0gfmJpdDsNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGlmICghdG9wX2lycV9zdGF0dXMpDQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IH0NCj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAg
-ICAgIHJldHVybiBJUlFfSEFORExFRDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBw
-bWljX2lycV9kb21haW5fbWFwKHN0cnVjdCBpcnFfZG9tYWluICpkLCB1bnNpZ25lZCBpbnQgaXJx
-LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpcnFfaHdfbnVtYmVyX3QgaHcp
-DQo+ID4gK3sNCj4gPiArICAgICAgIHN0cnVjdCBtdDYzOTdfY2hpcCAqbXQ2Mzk3ID0gZC0+aG9z
-dF9kYXRhOw0KPiA+ICsNCj4gPiArICAgICAgIGlycV9zZXRfY2hpcF9kYXRhKGlycSwgbXQ2Mzk3
-KTsNCj4gPiArICAgICAgIGlycV9zZXRfY2hpcF9hbmRfaGFuZGxlcihpcnEsICZtdDYzNThfaXJx
-X2NoaXAsIGhhbmRsZV9sZXZlbF9pcnEpOw0KPiA+ICsgICAgICAgaXJxX3NldF9uZXN0ZWRfdGhy
-ZWFkKGlycSwgMSk7DQo+ID4gKyAgICAgICBpcnFfc2V0X25vcHJvYmUoaXJxKTsNCj4gPiArDQo+
-ID4gKyAgICAgICByZXR1cm4gMDsNCj4gPiArfQ0KPiA+IFtzbmlwXQ0KDQo=
+Hi Andreas,
 
+Em 3/7/20 9:34 AM, Andreas Färber escreveu:
+> Hi Matheus,
+> 
+> Am 07.03.20 um 01:24 schrieb Matheus Castello:
+>> The Caninos Loucos Program develops Single Board Computers with an open
+>> structure. The Program wants to form a community of developers to use
+>> the IoT technology and disseminate the learning of embedded systems in
+> 
+> I would suggest "IoT technologies" without "the".
+> 
+
+ack
+
+>> Brazil.
+>>
+>> The boards are designed and manufactured by LSI-TEC NPO.
+>>
+>> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+>> ---
+>>   Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml 
+>> b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> index 9e67944bec9c..3e974dd563cf 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> @@ -167,6 +167,8 @@ patternProperties:
+>>       description: Calxeda
+>>     "^capella,.*":
+>>       description: Capella Microsystems, Inc
+>> +  "^caninos,.*":
+>> +    description: Caninos Loucos LSI-TEC NPO
+> 
+
+I will change this to "Caninos Loucos Program"
+
+> Alphabetical order: n goes before p.
+> 
+> I'm confused by the description... Either this Caninos Loucos is an 
+> independent vendor and gets its own prefix, or it's LSI-Tec and uses 
+> something like lsi-tec,caninosloucos-foo. Please clarify commit message 
+> and/or description line, at least by inserting something like "program 
+> by", "brand by" or the like rather than just concatenating names. Maybe 
+> compare UDOO by SECO. Is caninos,foo unique enough or should it be 
+> caninosloucos,foo? (crazy canines?)
+> 
+
+Yes "Caninos Loucos" means crazy canines (or mad dog) in Portuguese. 
+This is a initiative that have as co-founder the Jon Maddog Hall, 
+because of Jon we have the "maddog", but in Portuguese, on the name of 
+program.
+
+ From their website: https://caninosloucos.org/en/program-en/:
+"It is an initiative of the Technological Integrated Systems Laboratory 
+(LSI-TEC) with the support of Polytechnic School of the University of 
+São Paulo (Poli-USP) and Jon “Maddog” Hall"
+
+So I think we can put this instead "The boards are designed and 
+manufactured by LSI-TEC NPO." on description.
+
+Let me know what you think about this.
+
+> Note that I usually attempt to CC the organizations I'm assigning a 
+> vendor prefix for. Do you represent them or coordinated with them?
+>
+
+Thanks for the review and tips. I am adding Edgar Bernardi Righi and 
+Igor Ruschi from Caninos team as CC on this patch series.
+
+Best Regards,
+Matheus Castello
+
+> Regards,
+> Andreas
+>
+>>     "^cascoda,.*":
+>>       description: Cascoda, Ltd.
+>>     "^catalyst,.*":
+> 
