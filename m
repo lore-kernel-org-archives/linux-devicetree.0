@@ -2,210 +2,93 @@ Return-Path: <devicetree-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by archive.lwn.net (Postfix) with ESMTP id 047117D910
-	for <lwn-devicetree@archive.lwn.net>; Wed, 11 Mar 2020 15:49:09 +0000 (UTC)
+	by archive.lwn.net (Postfix) with ESMTP id A83987D918
+	for <lwn-devicetree@archive.lwn.net>; Wed, 11 Mar 2020 15:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbgCKPsw (ORCPT <rfc822;lwn-devicetree@archive.lwn.net>);
-        Wed, 11 Mar 2020 11:48:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40460 "EHLO mail.kernel.org"
+        id S1729869AbgCKPtO (ORCPT <rfc822;lwn-devicetree@archive.lwn.net>);
+        Wed, 11 Mar 2020 11:49:14 -0400
+Received: from muru.com ([72.249.23.125]:59804 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729887AbgCKPsw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:48:52 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8A8120734;
-        Wed, 11 Mar 2020 15:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583941731;
-        bh=jfYGkmYlra2a5N3iuwek9u560UFwfYsQvuc4p7Zbdbc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=C4dnKoqY8DhDh9/7yt4hjN2EFwV1b8q/R9sZEOMnNN0w5BykJ2m39tux6UccgnknQ
-         j9Ohly+rcKZTu8lyDYBtSPc2g8o8CagFhIrNG7sRDX6QiG0HUo7zTx8sXx3TlanQLF
-         2bn9pcSGhlTD7tjYmi7rqeDrah4YGmEa8m5swZUo=
-Received: by mail-qk1-f170.google.com with SMTP id q18so2492613qki.10;
-        Wed, 11 Mar 2020 08:48:51 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3vmao97uNIG5cGULme00K0W5oACPN+/yxy/wJg74c7G+7OSetZ
-        FwAwSHb9p781p+riwbO0wWTCo24cYAUZkgT/lg==
-X-Google-Smtp-Source: ADFU+vvAB+Z11VQfdk19qa5/S6I+LyqGM7w1FEom7+wPc/gwP8aQbTYel7lRgRmSLNwcjFQbk1Bipnqdl+K0iWztAPY=
-X-Received: by 2002:a37:393:: with SMTP id 141mr3344508qkd.393.1583941730717;
- Wed, 11 Mar 2020 08:48:50 -0700 (PDT)
+        id S1730088AbgCKPtO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 11:49:14 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id C61F780CD;
+        Wed, 11 Mar 2020 15:49:58 +0000 (UTC)
+Date:   Wed, 11 Mar 2020 08:49:09 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        hch@lst.de, robh+dt@kernel.org, nm@ti.com, nsekhar@ti.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+Message-ID: <20200311154909.GX37466@atomide.com>
+References: <20200310115309.31354-1-rogerq@ti.com>
+ <e7df4db7-6fe1-cfa4-841b-ddd395864bb8@ti.com>
+ <20200310154829.GS37466@atomide.com>
+ <d2e217a4-4a45-bc46-4610-84e6c8567d5f@ti.com>
+ <20200311152347.GW37466@atomide.com>
+ <e031b768-8fb8-ce62-a644-69925757cbc6@arm.com>
 MIME-Version: 1.0
-References: <20200303172533.30602-1-dafna.hirschfeld@collabora.com>
- <20200310211437.GA18992@bogus> <f612396e-e5e2-db76-6297-a108b53e4000@collabora.com>
-In-Reply-To: <f612396e-e5e2-db76-6297-a108b53e4000@collabora.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 11 Mar 2020 10:48:39 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLTMdG-=_pTPsazspEO3LtDth=xm9s8sqzW+AswWttKJA@mail.gmail.com>
-Message-ID: <CAL_JsqLTMdG-=_pTPsazspEO3LtDth=xm9s8sqzW+AswWttKJA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: input: atmel_mxt_ts: convert
- atmel,maxtouch.txt to yaml
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     devicetree@vger.kernel.org, Nick Dyer <nick@shmanahar.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e031b768-8fb8-ce62-a644-69925757cbc6@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
-Archived-At: <http://archive.lwn.net:8080/devicetree/CAL_JsqLTMdG-=_pTPsazspEO3LtDth=xm9s8sqzW+AswWttKJA@mail.gmail.com/>
+Archived-At: <http://archive.lwn.net:8080/devicetree/20200311154909.GX37466@atomide.com/>
 List-Archive: <http://archive.lwn.net:8080/devicetree/>
 List-Post: <mailto:devicetree@vger.kernel.org>
 
-On Wed, Mar 11, 2020 at 10:23 AM Dafna Hirschfeld
-<dafna.hirschfeld@collabora.com> wrote:
->
-> Hi,
-> Thanks for the review
->
-> On 10.03.20 22:14, Rob Herring wrote:
-> > On Tue, Mar 03, 2020 at 07:25:33PM +0200, Dafna Hirschfeld wrote:
-> >> Convert the binding file atmel,maxtouch.txt to yaml format.
-> >> Also change the file name in the MAINTAINERS file.
-> >>
-> >> This was tested and verified on ARM and ARM64 with:
-> >>
-> >> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
-> >> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
-> >>
-> >> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> >> ---
-> >>   .../bindings/input/atmel,maxtouch.txt         | 41 ------------
-> >>   .../bindings/input/atmel,maxtouch.yaml        | 64 +++++++++++++++++++
-> >>   MAINTAINERS                                   |  2 +-
-> >>   3 files changed, 65 insertions(+), 42 deletions(-)
-> >>   delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> >>   create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> >> deleted file mode 100644
-> >> index c88919480d37..000000000000
-> >> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> >> +++ /dev/null
-> >> @@ -1,41 +0,0 @@
-> >> -Atmel maXTouch touchscreen/touchpad
-> >> -
-> >> -Required properties:
-> >> -- compatible:
-> >> -    atmel,maxtouch
-> >> -
-> >> -    The following compatibles have been used in various products but are
-> >> -    deprecated:
-> >> -    atmel,qt602240_ts
-> >> -    atmel,atmel_mxt_ts
-> >> -    atmel,atmel_mxt_tp
-> >> -    atmel,mXT224
-> >> -
-> >> -- reg: The I2C address of the device
-> >> -
-> >> -- interrupts: The sink for the touchpad's IRQ output
-> >> -    See ../interrupt-controller/interrupts.txt
-> >> -
-> >> -Optional properties for main touchpad device:
-> >> -
-> >> -- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
-> >> -    on GPIO bit changes. An array of up to 8 entries can be provided
-> >> -    indicating the Linux keycode mapped to each bit of the status byte,
-> >> -    starting at the LSB. Linux keycodes are defined in
-> >> -    <dt-bindings/input/input.h>.
-> >> -
-> >> -    Note: the numbering of the GPIOs and the bit they start at varies between
-> >> -    maXTouch devices. You must either refer to the documentation, or
-> >> -    experiment to determine which bit corresponds to which input. Use
-> >> -    KEY_RESERVED for unused padding values.
-> >> -
-> >> -- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
-> >> -
-> >> -Example:
-> >> -
-> >> -    touch@4b {
-> >> -            compatible = "atmel,maxtouch";
-> >> -            reg = <0x4b>;
-> >> -            interrupt-parent = <&gpio>;
-> >> -            interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
-> >> -    };
-> >> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
-> >> new file mode 100644
-> >> index 000000000000..024dc4ded4f3
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
-> >> @@ -0,0 +1,64 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Atmel maXTouch touchscreen/touchpad
-> >> +
-> >> +maintainers:
-> >> +  - Nick Dyer <nick@shmanahar.org>
-> >> +
-> >> +description: |
-> >> +  Atmel maXTouch touchscreen/touchpad
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    const: atmel,maxtouch
-> >> +
-> >> +  reg:
-> >> +    description: The I2C address of the device
-> >> +    maxItems: 1
-> >> +
-> >> +  interrupts:
-> >> +    description: The sink for the touchpad's IRQ output
-> >
-> > How many? Needs 'maxItems: 1'>
-> > You can drop the description.
-> >
-> >> +
-> >> +  linux,gpio-keymap:
-> >> +    description:
-> >> +      When enabled, the SPT_GPIOPWN_T19 object sends messages
-> >> +      on GPIO bit changes. An array of up to 8 entries can be provided
-> >> +      indicating the Linux keycode mapped to each bit of the status byte,
-> >> +      starting at the LSB. Linux keycodes are defined in
-> >> +      <dt-bindings/input/input.h>.
-> >> +      Note, the numbering of the GPIOs and the bit they start at varies between
-> >> +      maXTouch devices. You must either refer to the documentation, or
-> >> +      experiment to determine which bit corresponds to which input. Use
-> >> +      KEY_RESERVED for unused padding values.
-> >> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> >> +    maxItems: 8
-> >> +
-> >> +  reset-gpios:
-> >> +    description: GPIO specifier for the touchscreen's reset pin (active low)
-> >> +    maxItems: 1
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +  - interrupts
-> >> +
-> >> +additionalProperties: true
-> >
-> > That's the default and we generally want this to be 'false'.
-> but many nodes has more properties not described here so I could not
-> set it to false.
+* Robin Murphy <robin.murphy@arm.com> [200311 15:48]:
+> On 11/03/2020 3:23 pm, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq@ti.com> [200311 07:21]:
+> > > 
+> > > 
+> > > On 10/03/2020 17:48, Tony Lindgren wrote:
+> > > > * Tero Kristo <t-kristo@ti.com> [200310 14:46]:
+> > > > > On 10/03/2020 13:53, Roger Quadros wrote:
+> > > > > > The L3 interconnect can access only 32-bits of address.
+> > > > > > Add the dma-ranges property to reflect this limit.
+> > > > > > 
+> > > > > > This will ensure that no device under L3 is
+> > > > > > given > 32-bit address for DMA.
+> > > > > > 
+> > > > > > Issue was observed only with SATA on DRA7-EVM with 4GB RAM
+> > > > > > and CONFIG_ARM_LPAE enabled. This is because the controller
+> > > > > > can perform 64-bit DMA and was setting the dma_mask to 64-bit.
+> > > > > > 
+> > > > > > Setting the correct bus_dma_limit fixes the issue.
+> > > > > 
+> > > > > This seems kind of messy to modify almost every DT node because of this....
+> > > > > Are you sure this is the only way to get it done? No way to modify the sata
+> > > > > node only which is impacted somehow?
+> > > > > 
+> > > > > Also, what if you just pass 0xffffffff to the dma-ranges property? That
+> > > > > would avoid modifying every node I guess.
+> > > > 
+> > > > Also, I think these interconnects are not limited to 32-bit access.
+> > > 
+> > > But from Table 2-1. L3_MAIN Memory Map
+> > > 
+> > > Start address	0x0000_0000
+> > > End address	0xFFFF_FFFF
+> > > 
+> > > So it is 32-bit limit, right?
+> > 
+> > Hmm so what war Robin saying earlier that DMA access seems to be
+> > limited to lower 2GB only though?
+> 
+> That's the lower 2GB *of DRAM*, which occupies the upper 2GB of the L3
+> memory map ;)
 
-Like touchscreen-* properties? Then you should reference
-touchscreen.yaml. And add 'unevaluatedProperties: false' here. That
-doesn't yet do anything, but will when the tools support the lastest
-json-schema release.
+OK thanks for clarifying it.
 
-Rob
+Regards,
+
+Tony
