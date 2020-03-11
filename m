@@ -2,30 +2,30 @@ Return-Path: <SRS0=AZXu=44=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F28C10F27
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C392C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D86222C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EAE9208E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 11 Mar 2020 12:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgCKME5 (ORCPT
+        id S1729288AbgCKME4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 08:04:57 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:28645 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729279AbgCKME4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
         Wed, 11 Mar 2020 08:04:56 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:62732 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729084AbgCKMEz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 11 Mar 2020 08:04:55 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 11 Mar 2020 17:34:47 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 11 Mar 2020 17:34:25 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 11 Mar 2020 17:34:27 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 7212326C0; Wed, 11 Mar 2020 17:34:24 +0530 (IST)
+        id A712E26C2; Wed, 11 Mar 2020 17:34:26 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -38,44 +38,90 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v4 0/4] Add QMP V3 USB3 PHY support for SC7180 
-Date:   Wed, 11 Mar 2020 17:34:08 +0530
-Message-Id: <1583928252-21246-1-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v4 3/4] phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
+Date:   Wed, 11 Mar 2020 17:34:11 +0530
+Message-Id: <1583928252-21246-4-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583928252-21246-1-git-send-email-sanm@codeaurora.org>
+References: <1583928252-21246-1-git-send-email-sanm@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add QMP V3 USB3 PHY entries for SC7180 in phy driver and
-device tree bindings.
+Adding QMP v3 USB3 PHY support for SC7180.
+Adding only usb phy reset in the list to avoid
+reset of DP block.
 
-changes in v4:
-*Addressed comments from Matthias and Rob in yaml file.
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 38 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-changes in v3:
-*Addressed Rob's comments in yaml file.
-*Sepearated the SC7180 support in yaml patch.
-*corrected the phy reset entries in device tree.
-
-changes in v2:
-*Remove global phy reset in QMP PHY.
-*Convert QMP PHY bindings to yaml.
-
-Sandeep Maheswaram (4):
-  dt-bindings: phy: qcom,qmp: Convert QMP PHY bindings to yaml
-  dt-bindings: phy: qcom,qmp: Add support for SC7180
-  phy: qcom-qmp: Add QMP V3 USB3 PHY support for SC7180
-  arm64: dts: qcom: sc7180: Correct qmp phy reset entries
-
- .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 315 +++++++++++++++++++++
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 237 ----------------
- arch/arm64/boot/dts/qcom/sc7180.dtsi               |   4 +-
- drivers/phy/qualcomm/phy-qcom-qmp.c                |  38 +++
- 4 files changed, 355 insertions(+), 239 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 9733d75..be61f03 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -1380,6 +1380,10 @@ static const char * const msm8996_usb3phy_reset_l[] = {
+ 	"phy", "common",
+ };
+ 
++static const char * const sc7180_usb3phy_reset_l[] = {
++	"phy",
++};
++
+ static const char * const sdm845_pciephy_reset_l[] = {
+ 	"phy",
+ };
+@@ -1568,6 +1572,37 @@ static const struct qmp_phy_cfg qmp_v3_usb3phy_cfg = {
+ 	.is_dual_lane_phy	= true,
+ };
+ 
++static const struct qmp_phy_cfg sc7180_usb3phy_cfg = {
++	.type			= PHY_TYPE_USB3,
++	.nlanes			= 1,
++
++	.serdes_tbl		= qmp_v3_usb3_serdes_tbl,
++	.serdes_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_serdes_tbl),
++	.tx_tbl			= qmp_v3_usb3_tx_tbl,
++	.tx_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_tx_tbl),
++	.rx_tbl			= qmp_v3_usb3_rx_tbl,
++	.rx_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_rx_tbl),
++	.pcs_tbl		= qmp_v3_usb3_pcs_tbl,
++	.pcs_tbl_num		= ARRAY_SIZE(qmp_v3_usb3_pcs_tbl),
++	.clk_list		= qmp_v3_phy_clk_l,
++	.num_clks		= ARRAY_SIZE(qmp_v3_phy_clk_l),
++	.reset_list		= sc7180_usb3phy_reset_l,
++	.num_resets		= ARRAY_SIZE(sc7180_usb3phy_reset_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
++	.regs			= qmp_v3_usb3phy_regs_layout,
++
++	.start_ctrl		= SERDES_START | PCS_START,
++	.pwrdn_ctrl		= SW_PWRDN,
++
++	.has_pwrdn_delay	= true,
++	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
++	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
++
++	.has_phy_dp_com_ctrl	= true,
++	.is_dual_lane_phy	= true,
++};
++
+ static const struct qmp_phy_cfg qmp_v3_usb3_uniphy_cfg = {
+ 	.type			= PHY_TYPE_USB3,
+ 	.nlanes			= 1,
+@@ -2410,6 +2445,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+ 		.compatible = "qcom,ipq8074-qmp-pcie-phy",
+ 		.data = &ipq8074_pciephy_cfg,
+ 	}, {
++		.compatible = "qcom,sc7180-qmp-usb3-phy",
++		.data = &sc7180_usb3phy_cfg,
++	}, {
+ 		.compatible = "qcom,sdm845-qhp-pcie-phy",
+ 		.data = &sdm845_qhp_pciephy_cfg,
+ 	}, {
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
