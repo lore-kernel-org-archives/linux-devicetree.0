@@ -2,89 +2,98 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DF9C1975A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 11:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D42C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 11:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B661206EB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 11:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D56206F1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 11:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584012460;
+	bh=8LkXpjk/vT0XG4wsMPQXCP0zQWynqto8chp91dAaSOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nsslOlsUNC2CIom1p4HtOR2PCLJ6ABg63PAZ2FIKgbzJj8Wqegs4XAHX5Qyf89hj5
+	 Hw2mK5ip/gLtOYPW6SCP0J/BPJxxhRK2lWF2xnv1qMiUrawokkX9IjpPhKz8rB4Fbi
+	 UKKo9MsVdHEMqyY1UfPQNEc3BYQrTKbZebDnLoF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgCLLVj (ORCPT
+        id S1726194AbgCLL1j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:21:39 -0400
-Received: from sauhun.de ([88.99.104.3]:41300 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgCLLVj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 07:21:39 -0400
-Received: from localhost (p54B331A0.dip0.t-ipconnect.de [84.179.49.160])
-        by pokefinder.org (Postfix) with ESMTPSA id AB7A02C1ECC;
-        Thu, 12 Mar 2020 12:21:36 +0100 (CET)
-Date:   Thu, 12 Mar 2020 12:21:36 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH 7/7] i2c: core: hand over reserved devices when
- requesting ancillary addresses
-Message-ID: <20200312112136.GC1013@ninjato>
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
- <20200220172403.26062-8-wsa+renesas@sang-engineering.com>
- <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
+        Thu, 12 Mar 2020 07:27:39 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43551 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLL1j (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 07:27:39 -0400
+Received: by mail-lf1-f68.google.com with SMTP id n20so1154629lfl.10;
+        Thu, 12 Mar 2020 04:27:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OXQ9VWIqKeDLANditz4p9lg4cWOyyuLMtjlz1V83iJc=;
+        b=LqKsEbQAsW1b/2HFFqfkbc2i8G6X16o2JiXJ+ssQ4CIGboVQd2m5HOW60QoxmWrXgZ
+         y4sdOY/b991DVGx1k2/FgHZaoLpaL86u3EgtU7Aj/bcHIptEArcWToKHnC9YZQJJIB3N
+         wos8xr8T1x0yG+F5wd295L9LCrOTMpZf5ZPUwzceTCF5VXoUPsGR6jEpRFI1yejWfCMB
+         cwu882a8pgn17+HCyhgznuqzQLlWZHrkBfwCfigeeWFMAdN5Hqc1e18RG2uQ7x9LlDPD
+         2hkgIi0560em92mVqNkSRGrGKCOysAdoX3peDsLk8XGwC06LdPcG4JnJnHbe8/KnEcd3
+         Z0Mg==
+X-Gm-Message-State: ANhLgQ3InMMWUDfZPnhalmdgSZFLwrC6aqEvnAk2+a+dXf7THUSeNhFM
+        QxD9Ve13r8/0Y6KuCq8dQYY=
+X-Google-Smtp-Source: ADFU+vuBA5rWFfsjCDLNiiHqN7ljiTPaMOhypM0lcTpHmgnHoj9/YqImMIKVQ8T7CFBjgm2cVGaIGg==
+X-Received: by 2002:a19:7d04:: with SMTP id y4mr5076975lfc.111.1584012456800;
+        Thu, 12 Mar 2020 04:27:36 -0700 (PDT)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id o26sm22828518ljg.33.2020.03.12.04.27.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 04:27:36 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1jCLzo-0005qx-RH; Thu, 12 Mar 2020 12:27:24 +0100
+Date:   Thu, 12 Mar 2020 12:27:24 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Barry Song <Baohua.Song@csr.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 0/3] ARM: dts: atlas7: fix spaces in compatible strings
+Message-ID: <20200312112724.GP14211@localhost>
+References: <20200212104348.19940-1-johan@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LwW0XdcUbUexiWVK"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200212104348.19940-1-johan@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Feb 12, 2020 at 11:43:45AM +0100, Johan Hovold wrote:
+> I stumbled over a new driver in 5.6 whose compatible strings did not
+> match the corresponding binding due to spaces in the driver compatible
+> strings:
+> 
+> 	https://lkml.kernel.org/r/20200212092426.24012-1-johan@kernel.org
+> 
+> A quick grep revealed that we a couple of devicetrees in mainline with
+> similarly malformed compatible strings.
+> 
+> Note that there are no in-kernel drivers or bindings that use the
+> strings question, so I think simply dropping the spaces would be
+> acceptable. This is especially true for the flexnox nodes that also
+> specify "simple-bus" so therefore I split the fixes in three patches.
 
---LwW0XdcUbUexiWVK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No reply from the CSR people after a month.
 
+Rob, could you pick these up directly?
 
-> (perhaps i2c_verify_client() checking dev was not such a great idea, as
->  callers need to act on dev && !verified anyway?)
+Johan
 
-Can be argued. I will have a second thought about it.
-
-
---LwW0XdcUbUexiWVK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5qG0AACgkQFA3kzBSg
-KbZ1pw//a08b5SMNFzv8kd0sP91WzfI8fKmIuGx/frUmdIaZ30e5cNuotjUL02ek
-Tswmx+2eMxogD6/Q+N7jNbwFh/YghCpxY/hthdc9XKcwJBtCxzSgZzDyFo65aZ2d
-ZmMR1Yfh3O/bk3fzSU9HcRn9MiBksaPnPNOCQMXhu2BWc1ugDJiM4c8bSiGeqqVd
-4EMjxl+M8x4VvSRv26qwerrjyXWEU7rW0+NoBL704qgIKfgecOARCf8/2L96vX9A
-14U8VtRE6E8z07EvyQHdT+9S/Er0daYI+tb2iAP0S496Zaar/PBeaC8xoSXY1SKK
-lSXlthO8tgycRkyoZuYaai91+KPRq1WpYRPaHqkeVOmGzWR2INk7Ne8v/CRwL9f/
-hUhnMfylrIAE5F1/QRA67HrzFy/yX7bC918wCTk2hrmA8wWkkkn9e2Ab9ToXu9S+
-7rysp5gE82jgf2w/PqPhtkLbhtvcll3K9r9xBb0Mo11saIjk5UskUX4N45RpoIVx
-5Wptct5MKdnEUv2gAj4oNWJ4mvlQOgqfY+KWjjl4usR9KfYfbknhGSPxp4WNqXPX
-KrYPDcWnfFpHqHWPdOrbLd0aTpdxHMyswcj20jkmHPUDs1jnhroa8au5yiG67qEK
-mO2Q2Cvik/4H4A3HL1DuT64wnt5Ev9m35rYC1tYc14+WKkDBarw=
-=8zo1
------END PGP SIGNATURE-----
-
---LwW0XdcUbUexiWVK--
+> Johan Hovold (3):
+>   ARM: dts: atlas7: fix space in flexnoc compatible strings
+>   ARM: dts: atlas7: fix space in gmac compatible string
+>   ARM: dts: atlas7: fix space in g2d compatible string
+> 
+>  arch/arm/boot/dts/atlas7.dtsi | 30 +++++++++++++++---------------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
