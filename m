@@ -2,126 +2,99 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789F5C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89E7C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCF6206B7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584047681;
-	bh=kH7OpHtL5gqk6iZqiPRVZccVHyVSdTfxcqLyi8aRIww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=itJhmtiL5sNjs91ZsjJufDoIYv6XzgTTxotER+uauG43nP1GUWqi+8xMuOtmTGLT/
-	 0a+7zD7QD8yO5GHYprFEs4HkGv9g5MCNjprbsRecmGXGbQ6z1tfax907wp+F1pcjMD
-	 e536p+xJLSOPakX0HUh/Msg7b6HT/FEYhrAtfDDI=
+	by mail.kernel.org (Postfix) with ESMTP id 9B31E206B7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:16:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0enO67a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgCLVOk (ORCPT
+        id S1726534AbgCLVQX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:14:40 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34340 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbgCLVOk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 17:14:40 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j16so7876996otl.1;
-        Thu, 12 Mar 2020 14:14:40 -0700 (PDT)
+        Thu, 12 Mar 2020 17:16:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46899 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgCLVQX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 17:16:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n15so9368903wrw.13;
+        Thu, 12 Mar 2020 14:16:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OoRMJHL0lSK4lVACsrhjsoeS3m+0TZ7d70msLMcwZXM=;
+        b=f0enO67akTjopRTWqxr9OXsYNFl1y1vda7MC0cyMvXeSTXMulMQzzWpxOQmZjXWkw/
+         SvQ/PejNSH6KWtM48vIFSosY4KrvgVui3/hs1MtMZK/HlyubRuWEjmiZJzQ9X5Veo63V
+         zk9SANcBaya12IWkiMc0LXsLdHDe7O4M5/AeuKBfxJSZVQapD6ICkpOOyJTTloE5yeb2
+         7EY/J+nz6/VvDma5jFofVyrjRXvvMB5E65OmQAz6O4Ff/t3skTaLu8WDDUFn7q/1hE4V
+         8EabQ+PC6HPcBCbEmZTwnH9kN1XdgejpEkOhFgZ7Qi9IoE1vxx1W44F5M0HvoHH6xxe4
+         yBPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hb+jggLgxrgsVbgn5UC+wajZRLswbi9I3/cHFEMhG5A=;
-        b=I0hcORIboNsydVKFvFAMTfb5QsiIeJ7AD9yPDv/N/8rOEpXFiNdtdy7YGGIWvbbTiI
-         5eHd85Uzo7iXn0mLlEZ+9CdN4FJieilTXU7jGW79nktR5j2u0uJcYr++J7SMMTqiVC/q
-         pzDuZwuIeYIpmTH0KNtx19JsLc61wKJIcw+J9wRAmBhOrPQKvyv3QApMHJutYeuJ+6Lo
-         eRjyCru7rEelSwfCt3CGvgsA0rV+iFkuyj3KhyDweT7kJJabOWkWqGkjYQl2/idAe/J7
-         r2IIWOnXxrYhs1F90q4oLDOFovT7mI7KS3T4cmG/iJbzGq6zGLuNxQ/sNii8EKiKDkp9
-         cdNw==
-X-Gm-Message-State: ANhLgQ3E8J4dOKaWISXbRZujgN4cleF9CEkZDKoGUN+cyiuJEl8B/snm
-        zadyFtit0znC7JYIbRe11g==
-X-Google-Smtp-Source: ADFU+vuljXtmuwnM4UV2KeJttRiC0WN1lGhphK05ESUgIzEivH+NonbDuzc8edu6d6mjGc5QIpJOag==
-X-Received: by 2002:a9d:c61:: with SMTP id 88mr7164473otr.144.1584047679639;
-        Thu, 12 Mar 2020 14:14:39 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v12sm1633771otp.75.2020.03.12.14.14.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 14:14:39 -0700 (PDT)
-Received: (nullmailer pid 27028 invoked by uid 1000);
-        Thu, 12 Mar 2020 21:14:38 -0000
-Date:   Thu, 12 Mar 2020 16:14:38 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
- SYSCON reboot-mode bindings
-Message-ID: <20200312211438.GA21883@bogus>
-References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
- <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OoRMJHL0lSK4lVACsrhjsoeS3m+0TZ7d70msLMcwZXM=;
+        b=AS/kmQ4HoeUSOgwAbIXuRmxKr+WtY0T1Dw5MYzYj613FHx6kcOIpUP7HBGi+6UlK95
+         7KBl9o+9mbz0TLcSaiOrzdrJmmBHGrCo0lJ1w9PJ23c2r+1JxuVWgAcO7M54x+JtLmDa
+         NM29kI3lUeAF7niMnA1P4ZquCWwR1IhmGk7HuaiHvJyqZkUH+fYpSOADdKmcKKnk8oTc
+         1PDA14CylzaaNmZq38C+mxMbDCDHNStIOyu0QC35PaBXSCjSw0qLPGjQaNcFOwvr+5V8
+         5dpuZikx+j5hPir4TgXYWT4EGdsQtDlzJM+psk+zbUEHriWDMk2eACRYOJO89WaoP0+N
+         BnwA==
+X-Gm-Message-State: ANhLgQ045GjZTzx4WNdX9c9ET6yl+NN+tcHM1/CbbwboDgBSWYdJ37Fa
+        BlBwV0/tbomougoHpk3zwGsOHexuzSUZe9vAsxA=
+X-Google-Smtp-Source: ADFU+vsEHGHrexnu9ajEOuztTkNdb4fV9udOvVmtFGq+NVjQuWlQ8XfZ3prQYZRqoV0QXCYAc0BynI/yrz09GLW65GA=
+X-Received: by 2002:a5d:61c9:: with SMTP id q9mr13587880wrv.164.1584047781214;
+ Thu, 12 Mar 2020 14:16:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200210095817.13226-1-daniel.baluta@oss.nxp.com>
+ <20200210095817.13226-5-daniel.baluta@oss.nxp.com> <20200219221422.GA32379@bogus>
+In-Reply-To: <20200219221422.GA32379@bogus>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Thu, 12 Mar 2020 23:16:09 +0200
+Message-ID: <CAEnQRZA6PEhfO0y5xWvAJZcK784n_2FXgDgYAfdDFUa2Osj7XQ@mail.gmail.com>
+Subject: Re: [RESEND 4/4] dt-bindings: dsp: fsl: Add fsl,imx8qm-dsp entry
+To:     Rob Herring <robh@kernel.org>
+Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> Optional regmap property will be used to refer to a syscon-controller
-> having a reboot tolerant register mapped.
+On Thu, Feb 20, 2020 at 12:15 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, 10 Feb 2020 11:58:17 +0200, Daniel Baluta wrote:
+> > From: Paul Olaru <paul.olaru@nxp.com>
+> >
+> > This is the same DSP from the hardware point of view, but it gets a
+> > different compatible string due to usage in a separate platform.
+> >
+> > Signed-off-by: Paul Olaru <paul.olaru@nxp.com>
+> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> > Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > ---
+> >  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-NAK. It should simply be a child node of the 'syscon-controller'.
+Hi Rob,
 
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> ---
->  .../bindings/power/reset/syscon-reboot-mode.yaml         | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
-> index e09bb07b1abb..f47bf52ad983 100644
-> --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
-> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
-> @@ -13,9 +13,8 @@ description: |
->    This driver gets reboot mode magic value from reboot-mode driver
->    and stores it in a SYSCON mapped register. Then the bootloader
->    can read it and take different action according to the magic
-> -  value stored. The SYSCON mapped register is retrieved from the
-> -  parental dt-node plus the offset. So the SYSCON reboot-mode node
-> -  should be represented as a sub-node of a "syscon", "simple-mfd" node.
-> +  value stored. The SYSCON mapped register is retrieved either from
-> +  the parental dt-node or from a regmap phandle plus the offset.
->  
->  properties:
->    compatible:
-> @@ -29,6 +28,10 @@ properties:
->      $ref: /schemas/types.yaml#/definitions/uint32
->      description: Offset in the register map for the mode register (in bytes).
->  
-> +  regmap:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: Phandle to the register map node.
-> +
->  patternProperties:
->    "^mode-.+":
->      $ref: /schemas/types.yaml#/definitions/uint32
-> -- 
-> 2.25.1
-> 
+Who should take this patch? Mark applied first 3 patches in the series.
