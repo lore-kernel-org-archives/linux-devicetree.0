@@ -2,126 +2,90 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11304C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE49BC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA932067C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA51206FA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:27:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhZ1FUP/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZWu4/WVC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgCLJZd (ORCPT
+        id S1726385AbgCLJ1w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:25:33 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36776 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCLJZd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 05:25:33 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g62so5402136wme.1;
-        Thu, 12 Mar 2020 02:25:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=tZo5ZZ4tIC41ljTxXlaCIM/Fz/u40m/fyXeMfkYNLyw=;
-        b=YhZ1FUP/rMwvBvnBw7Izh4PEz309HMRj4HUaKJAaQJNqzBUUnWueYQAbcBOGuvTGj9
-         CIADtmBrZ/bMAUR+zgAVRIKZWZZofPH2M3ndSRGQKnKj4BWD5KJD/lHrYhnUGH2gIqMd
-         hxoX9o4W5PeSCzXqMh2LZGcjj41UgVIXOvE2yB1SfNgtb4NAO3YaMKT5nxRl/rm+gg2m
-         Xu8DYlMPSCehGN7WxWrIIcNpuzX91j4CsjDPOS91xuYfYVHoAMeg8WgXwMpND7VCmrc+
-         PtLPC/xF4cV7Xrda/NbQS3nbUQmitKHjN+UdEggfajHLV8VNKWiSnUZ8ps0EpG14KmQn
-         kJng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=tZo5ZZ4tIC41ljTxXlaCIM/Fz/u40m/fyXeMfkYNLyw=;
-        b=XJAIEaK9HbJagzpzB3KnH3BBdbdyYWsub0qS1VNtvwsVghg0VwRqeSHrDrV0KmGN4b
-         wI16F6PmRmBA+nvdmE2Wi9q/wPX1IFwQBu4DBSjAeMbFMeO63csLzE8+OBG46vq5Igye
-         RBhU28UYfAzgh8F3mpBG76Yzv6fDIsdv/oiG9og+tx3w1udOvsWwjHmkHc+0SxXtQRBu
-         wFl/7M/RAdWTUKfMQX2m4VvkQmjByqe2exDvBT1xNSdKcfYTl+7iz+cQ+Yavh9AynXPF
-         MCD3bBo5nAztMHHBaZfXmm404WGBJ79b7FlLgivC9egqiB4MqFsMXx/uYOETvj6aGoFU
-         VUrg==
-X-Gm-Message-State: ANhLgQ3P7mXbP8uSOMELuuZ+/Fsrmixh9NpkiQx+5Ysy/iuwdTh8hvyo
-        W+3VKHVBbdrjzACZNp9waRU=
-X-Google-Smtp-Source: ADFU+vsdOlYqq4H+9zCS3gDmdlLhT3AWt61eJ62oAqQOXttc+gmok2ZjHu1svwnWTs7TkHdvI8Tc/A==
-X-Received: by 2002:a1c:9d41:: with SMTP id g62mr3995118wme.131.1584005130211;
-        Thu, 12 Mar 2020 02:25:30 -0700 (PDT)
-Received: from AnsuelXPS ([2001:470:b467:1:598e:6e04:3a30:76a6])
-        by smtp.gmail.com with ESMTPSA id c23sm12093081wme.39.2020.03.12.02.25.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Mar 2020 02:25:29 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
-Cc:     <agross@kernel.org>, "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200311130918.753-1-ansuelsmth@gmail.com> <20200312054649.GG1098305@builder>
-In-Reply-To: <20200312054649.GG1098305@builder>
-Subject: R: [PATCH 1/2] firmware: qcom_scm: add ipq806x with no clock
-Date:   Thu, 12 Mar 2020 10:25:26 +0100
-Message-ID: <00aa01d5f850$2b6ddcb0$82499610$@gmail.com>
+        Thu, 12 Mar 2020 05:27:52 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54912 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLJ1v (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 05:27:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02C9RmOs129981;
+        Thu, 12 Mar 2020 04:27:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584005268;
+        bh=GqVcNEGCSqO43d8JjVZhJGIosXmnS9GliY5ZdDU3wF4=;
+        h=From:To:CC:Subject:Date;
+        b=ZWu4/WVCtugPrmgV1hR9v9eOvWZ41Fv98z1j7rM4L6OSulrB1ccu4sbYynb8gWi0V
+         3sqvta4Gyh0781QQ5oziCZKDV3B/8mlcSPAC7rdF6BQP3FhF+r6cfElMDSx6tJ6Eeu
+         R0SDJGr8rtJw6AIwrOzeaStrkdH/RXk/rd7Dqiig=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02C9Rm5x097588;
+        Thu, 12 Mar 2020 04:27:48 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
+ Mar 2020 04:27:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 12 Mar 2020 04:27:47 -0500
+Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02C9Rjpb036158;
+        Thu, 12 Mar 2020 04:27:45 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH 1/2] arm64: dts: ti: k3-am65-main: Add DMA entries for main_spi0
+Date:   Thu, 12 Mar 2020 14:58:22 +0530
+Message-ID: <20200312092823.21587-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQLDpUr6d+Ge4N83XEGEcKjyX1zZ/AG5FpfzpluLgMA=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> On Wed 11 Mar 06:09 PDT 2020, Ansuel Smith wrote:
-> 
-> > ipq806x rpm definition was missing for a long time.
-> > Add this to make this soc support rpm.
-> >
-> 
-> I merged the dt-binding patch, but please update dts to use:
-> 	compatible = "qcom,scm-ipq806x", "qcom,scm";
-> 
-> instead of adding the platform specific compatible in the driver.
-> 
-> Regards,
-> Bjorn
-> 
+Add DMA entry for main_spi0, that has SPI flash connected, for better
+throughput and reduced CPU load.
 
-Should I drop the added compatible in qcom_scm.c or just
-keep it and add the definition in the ipq806x dts?
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  drivers/firmware/qcom_scm.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/firmware/qcom_scm.c
-> b/drivers/firmware/qcom_scm.c
-> > index 059bb0fbae9e..d13ef3cd8cf5 100644
-> > --- a/drivers/firmware/qcom_scm.c
-> > +++ b/drivers/firmware/qcom_scm.c
-> > @@ -1144,6 +1144,7 @@ static const struct of_device_id
-> qcom_scm_dt_match[] = {
-> >
-> SCM_HAS_BUS_CLK)
-> >  	},
-> >  	{ .compatible = "qcom,scm-ipq4019" },
-> > +	{ .compatible = "qcom,scm-ipq806x" },
-> >  	{ .compatible = "qcom,scm-msm8660", .data = (void *)
-> SCM_HAS_CORE_CLK },
-> >  	{ .compatible = "qcom,scm-msm8960", .data = (void *)
-> SCM_HAS_CORE_CLK },
-> >  	{ .compatible = "qcom,scm-msm8916", .data = (void
-> *)(SCM_HAS_CORE_CLK |
-> > --
-> > 2.25.0
-> >
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index e5df20a2d2f9..0ff291ef2950 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -189,6 +189,8 @@ main_spi0: spi@2100000 {
+ 		power-domains = <&k3_pds 137 TI_SCI_PD_EXCLUSIVE>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		dmas = <&main_udmap 0xc500>, <&main_udmap 0x4500>;
++		dma-names = "tx0", "rx0";
+ 	};
+ 
+ 	main_spi1: spi@2110000 {
+-- 
+2.25.1
 
