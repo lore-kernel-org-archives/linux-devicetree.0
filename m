@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDC8C5ACDB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2DFC5ACD8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D510C206BE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FACE206BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgCLKcn (ORCPT
+        id S1727018AbgCLKcm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:32:43 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46867 "EHLO
+        Thu, 12 Mar 2020 06:32:42 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35419 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgCLKc1 (ORCPT
+        with ESMTP id S1726892AbgCLKc1 (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 06:32:27 -0400
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jCL8T-0002xp-At; Thu, 12 Mar 2020 11:32:17 +0100
+        id 1jCL8X-0002y2-Kd; Thu, 12 Mar 2020 11:32:21 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jCL8R-0001Jy-CL; Thu, 12 Mar 2020 11:32:15 +0100
+        id 1jCL8R-0001Ke-Nu; Thu, 12 Mar 2020 11:32:15 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
         hans.verkuil@cisco.com, jacopo+renesas@jmondi.org,
         robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
 Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
         linux-media@vger.kernel.org
-Subject: [PATCH v13 04/21] media: v4l2-fwnode: fix v4l2_fwnode_parse_link handling
-Date:   Thu, 12 Mar 2020 11:31:39 +0100
-Message-Id: <20200312103156.3178-5-m.felsch@pengutronix.de>
+Subject: [PATCH v13 17/21] media: tvp5150: add subdev open/close callbacks
+Date:   Thu, 12 Mar 2020 11:31:52 +0100
+Message-Id: <20200312103156.3178-18-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200312103156.3178-1-m.felsch@pengutronix.de>
 References: <20200312103156.3178-1-m.felsch@pengutronix.de>
@@ -50,31 +50,55 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently the driver differentiate the port number property handling for
-ACPI and DT. This is wrong as because ACPI should use the "reg" val too
-[1].
+Bring the device into a working state upon a open/close call. Currently
+this involves only the interrupt enable/disable process but can be
+extended in the future.
 
-[1] https://patchwork.kernel.org/patch/11421985/
-
-Fixes: ca50c197bd96 ("[media] v4l: fwnode: Support generic fwnode for parsing standardised properties")
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/tvp5150.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 6ece4320e1d2..d56eee9c09b8 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -560,7 +560,7 @@ EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_alloc_parse);
- int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
- 			   struct v4l2_fwnode_link *link)
- {
--	const char *port_prop = is_of_node(__fwnode) ? "reg" : "port";
-+	const char *port_prop = "reg";
- 	struct fwnode_handle *fwnode;
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index d59b52775334..f28739d5830c 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1618,6 +1618,26 @@ static int tvp5150_registered(struct v4l2_subdev *sd)
+ 	return 0;
+ }
  
- 	memset(link, 0, sizeof(*link));
++static int tvp5150_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
++{
++	int ret;
++
++	ret = pm_runtime_get_sync(sd->dev);
++	if (ret < 0) {
++		pm_runtime_put_noidle(sd->dev);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int tvp5150_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
++{
++	pm_runtime_put(sd->dev);
++
++	return 0;
++}
++
+ /* ----------------------------------------------------------------------- */
+ 
+ static const struct v4l2_ctrl_ops tvp5150_ctrl_ops = {
+@@ -1675,6 +1695,8 @@ static const struct v4l2_subdev_ops tvp5150_ops = {
+ 
+ static const struct v4l2_subdev_internal_ops tvp5150_internal_ops = {
+ 	.registered = tvp5150_registered,
++	.open = tvp5150_open,
++	.close = tvp5150_close,
+ };
+ 
+ /****************************************************************************
 -- 
 2.20.1
 
