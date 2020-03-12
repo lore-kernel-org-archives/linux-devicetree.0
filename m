@@ -3,127 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3769AC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6579EC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E30D206CD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDE120674
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584046921;
-	bh=/e9LLeJ5dACgdtAw3HHaj6wtWKVc0kxLbLGS8/Q25qw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=rez2sOm3df17hr2jubob7O9dIkbp9EhZeJBZlvOqYw4nQUQPizwT/TPo5y1fOgAbM
-	 2rFLCTgppJSseMEAGXV6QObCF4vC4e9u4oQwbwnK16fZ+/nvHLdFWzihLu9iPgE3Pj
-	 DVnaaMzOgsRWLlQu51fo9pQhuf2VnoxQDObcZFxw=
+	s=default; t=1584047467;
+	bh=IAMG84HZpyw2tpXzi5VZejrQM+Rn7EB22igvc2R8fME=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n2kJ39cw9yjLk8ZMRyU2zD4HZsK2mw79DxaWeY5eVvzQavlYUPN7ZO8IjRIaaNn1B
+	 IY2N1hEyXOmg1jlGeukcM20ibCdNlFTNAEbIxyRCA2ACgqGuN/zVl7vfHMo9YVBAvn
+	 e0Q5iig55OoMLLm2pmuVB84meUGZ+teqoO983Hi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgCLVCA (ORCPT
+        id S1726442AbgCLVLG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:02:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbgCLVCA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:02:00 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 158B320674;
-        Thu, 12 Mar 2020 21:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584046919;
-        bh=/e9LLeJ5dACgdtAw3HHaj6wtWKVc0kxLbLGS8/Q25qw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EdwLzcJvSjpI3Th7mp7lKFatB+Yn47XEfNY+YgjNT3ENbyGBE0r12eGlfupHp5IcO
-         TT8zsQMtI4TjFzhyJjyXL5LlLSL1a5GlHXoya30uKdsCtQVAkqrDLP566944IgMvPi
-         nkoB08xDowbPCi+qj0dPDSH9lPbxsLbhzikPdbJs=
-Date:   Thu, 12 Mar 2020 16:01:57 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     will@kernel.org, robh+dt@kernel.org, joro@8bytes.org,
-        baolu.lu@linux.intel.com, sudeep.holla@arm.com,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
-        lorenzo.pieralisi@arm.com, corbet@lwn.net, mark.rutland@arm.com,
-        liviu.dudau@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
-        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
-        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
-Subject: Re: [PATCH v2 05/11] PCI/ATS: Gather checks into pci_ats_supported()
-Message-ID: <20200312210157.GA180471@google.com>
+        Thu, 12 Mar 2020 17:11:06 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33709 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgCLVLG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 17:11:06 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r7so7093192oij.0;
+        Thu, 12 Mar 2020 14:11:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z1C/O9m/TAKtgL9ZhokPb6QEAILTEFVK153CVUT28Ak=;
+        b=scFdU+vHD1nyD2T+vMUD1p4+s6WIIwwleK8Bam7aZaqiGS8rVn6BLFNMo8YggiwFNZ
+         dpR5/itVmnGNqFTULZfWuRvvG5K19VxhS8bQStChI6tLFGSl2CUYP/e2QKsGFzBgVu57
+         yx6jOzlKS/wF173IyzhcnEkQYQaU4F2JuifHN0C0nmA7dkswCVkLvTR5kYDpUIlHVonj
+         +oByM5AWkj4nWZ5gXR8sv54+Erj84S4aDJlomNgSZY8uWa4aW+RQFDK0watN4n4qF7Cd
+         SxLxmO1dcwTgYV464h9bFZ+jsKPUf3FtSO1/rOazO8PQMJQM4T+jqu/7fyfI0bstnXMS
+         kYrg==
+X-Gm-Message-State: ANhLgQ0FWg8g/RQb9i33r+DBkTlkNT9IKm5/Y9Gik9AY+u8khRl64EMC
+        DD7+P/w9JJrMvtnEecDmbw==
+X-Google-Smtp-Source: ADFU+vsM8qWHegcdLt3Q2m7Gc6UyEn9KtddfGoHdlC/IxDspcPSBdxYiHo+WS7LgOCr6oVsfgRE3/w==
+X-Received: by 2002:aca:5317:: with SMTP id h23mr3092365oib.33.1584047465378;
+        Thu, 12 Mar 2020 14:11:05 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e1sm6848806oth.66.2020.03.12.14.11.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 14:11:03 -0700 (PDT)
+Received: (nullmailer pid 15344 invoked by uid 1000);
+        Thu, 12 Mar 2020 21:11:02 -0000
+Date:   Thu, 12 Mar 2020 16:11:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: syscon: Add syscon endian properties
+ support
+Message-ID: <20200312211102.GA21647@bogus>
+References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130356.D9FCD8030794@mail.baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311124506.208376-6-jean-philippe@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200306130356.D9FCD8030794@mail.baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:45:00PM +0100, Jean-Philippe Brucker wrote:
-> IOMMU drivers need to perform several tests when checking if a device
-> supports ATS.  Move them all into a new function that returns true when
-> a device and its host bridge support ATS.
+On Fri, Mar 06, 2020 at 04:03:38PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Since pci_enable_ats() now calls pci_ats_supported(), the following
-> new checks are now common:
-> * whether a device is trusted.  Devices plugged into external-facing
->   ports such as thunderbolt are untrusted.
-> * whether the host bridge supports ATS, which defaults to true unless
->   the firmware description states that ATS isn't supported by the host
->   bridge.
+> In accordance with the syscon-driver (drivers/mfd/syscon.c) the syscon
+> dts-nodes may accept endian properties of the boolean type: little-endian,
+> big-endian, native-endian. Lets make sure that syscon bindings json-schema
+> also supports them.
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
 > ---
->  drivers/pci/ats.c       | 30 +++++++++++++++++++++++++++++-
->  include/linux/pci-ats.h |  3 +++
->  2 files changed, 32 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/mfd/syscon.yaml | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index 390e92f2d8d1..bbfd0d42b8b9 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -30,6 +30,34 @@ void pci_ats_init(struct pci_dev *dev)
->  	dev->ats_cap = pos;
->  }
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> index 39375e4313d2..9ee404991533 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> @@ -61,6 +61,11 @@ properties:
+>      description:
+>        Reference to a phandle of a hardware spinlock provider node.
 >  
-> +/**
-> + * pci_ats_supported - check if the device can use ATS
-> + * @dev: the PCI device
-> + *
-> + * Returns true if the device supports ATS and is allowed to use it, false
-> + * otherwise.
-> + */
-> +bool pci_ats_supported(struct pci_dev *dev)
-> +{
-> +	struct pci_host_bridge *bridge;
-> +
-> +	if (!dev->ats_cap)
-> +		return false;
-> +
-> +	if (dev->untrusted)
-> +		return false;
-> +
-> +	bridge = pci_find_host_bridge(dev->bus);
-> +	if (!bridge)
-> +		return false;
-> +
-> +	if (!bridge->ats_supported)
-> +		return false;
-> +
-> +	return true;
+> +patternProperties:
+> +  "^(big|little|native)-endian$":
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +    description: Bytes order of the system controller memory space.
 
-I assume this is the same as
+Common properties should have a type definition in a common schema. For 
+this one, I'd like it in the core schema in dtschema. 
 
-  return bridge->ats_supported;
+I'd expect for any specific 'syscon', either none or only a subset of 
+these are valid, so I don't think this should be added here.
 
-Only "assuming" because I'm not a C language lawyer, but I assume it
-does the obvious conversion from unsigned:1 to bool.
-
-> +}
+Rob
