@@ -2,70 +2,80 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FA2C4CECE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 13:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC00FC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 13:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D16D20716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 13:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584020891;
-	bh=7Hsrma7qq44/X7MBPxsABvlq+86jNqUnUKNDmU/EK3g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aBMw+yXnqCBPBhZCibhAv9IbYN+dD5yMltf53SnNvneL4laYLSZ60l4ji4Y4tbjPW
-	 AXp+Uim8Fr35v+QObuFN9fpyLUi03SuvdSL13Q3yl3UBCrzwdDQ/Spd0c3GhKqazji
-	 b7k5FlNzok+QQCFkq/L3ioSpB38d1B5fqCljYqE4=
+	by mail.kernel.org (Postfix) with ESMTP id 81E0C206E7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 13:58:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rXeKEapu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbgCLNsL (ORCPT
+        id S1727179AbgCLN6p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:48:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgCLNsK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 09:48:10 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40DFF2073B;
-        Thu, 12 Mar 2020 13:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584020889;
-        bh=7Hsrma7qq44/X7MBPxsABvlq+86jNqUnUKNDmU/EK3g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0rGL/jpsOQtWPpISYU3YS9UbSv718nA4VU29jMbfh2EeRr5i+94lSA80lYuPPyAEn
-         jFe4jhSGpVPtG97sF9HhcgUNjSYKclxDZI2oYmYnKQwNhXcf4b3yziMqm0npUuVxBv
-         9TzS07zgrM49/ib8eVAsS+PCPDO3EsGR+8gmNujA=
-Received: by mail-qt1-f180.google.com with SMTP id e20so4354267qto.5;
-        Thu, 12 Mar 2020 06:48:09 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2dKxCd56aDwltycNo8Vht9ehpRm3LcSEq0hIgfZKxpqpAQTnX1
-        WGQU62fIVUet16EqvIotLXVtZ3q85m5nbg8OKA==
-X-Google-Smtp-Source: ADFU+vsh/ZBWJP0apj6nbHk+WLm+GcvhF1gv3m9rygFmR6SBqv5Cgnqha1TMbqVjnTFwGemnGfKB8a0ilVOxqUNA2lg=
-X-Received: by 2002:ac8:41d8:: with SMTP id o24mr2209547qtm.300.1584020888314;
- Thu, 12 Mar 2020 06:48:08 -0700 (PDT)
+        Thu, 12 Mar 2020 09:58:45 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:41537 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgCLN6p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 09:58:45 -0400
+Received: by mail-vs1-f68.google.com with SMTP id k188so3708269vsc.8
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 06:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fx0Vi5pKlEASKxiQYrtyhfY8y0s7akeECkpZVrG32d8=;
+        b=rXeKEapu6I/a+Rkozky+mQZ4L6h8ZEabo168RsNPZzBmC9GIm9krfQfUmMz+0tlj+5
+         FFQSg+3rQjPNnQx+goAU0Xu6wc/hBSdDv9f3bAxKMAaXvTsgwH+9dfcpUj1UQ+KnK8bL
+         s+xcmFDOmTp5fctcsFgIoCLgX41e9Dahfpif6O7BmLRAO7wKpQxqFruLhdOFuZS0KK7G
+         4vwuV5SyhZq3Oi5+eh4mUNulzObGO+/4DROaCHW+9bixq29Dd5YCMJYRJTd9mlGKR6su
+         DnK59NycxKsurK7Xsf+cJvdr4arFyZ0gVIyCElzxc6Kv116ZZSb+BCVydxFmAaYl+DK8
+         Tspw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fx0Vi5pKlEASKxiQYrtyhfY8y0s7akeECkpZVrG32d8=;
+        b=ZNxOx5YUapYfM44W7ZAdckEjDXPb5MY98Ipwtzx4pvlmfF98pFjLBI4d7/KCFC5KpW
+         cKPthlYu6aOedByC+atGGL2Nhhyj+AlN0dF5p0gRMJnNB5kdxA8QrRHnAcBqJkKasBUp
+         KP4Ye+vOJ5yEufBQYQ2Ask78zCWy24BlmbsTNOlqf6PzdXqIzhawmerCRsAkrdxvIaul
+         CIwHZ6HDQtevrSgqSalYZy6C0Wz0VB/2Rg0wRRRIpqJ1iTNbJigSekMn1ed+VDV7Rp0o
+         oylU7DYqymx1hqHEcV2onBf9jcGUhXru+eMLybcRVlDH6/XVWtHJLxrMaJpNvXjmALJ4
+         CcRg==
+X-Gm-Message-State: ANhLgQ1OVQ0JeIU6Uf0H0GnRBACrJM8snwkLGUYD4S94uIRjE1INZrgD
+        FHyD2fvpE/O9UNa1qbF7u9tKb9IlJHyU0ROsM5gGZQ==
+X-Google-Smtp-Source: ADFU+vvN/wcPPKIp5PaHkQBwl2RN9Ra1c1araaS1iOkyVaJDdcWSos4k3JEL50Yj40BdEIJrwcCNCVArAYW0s3YRVCU=
+X-Received: by 2002:a67:cb84:: with SMTP id h4mr5422265vsl.85.1584021524408;
+ Thu, 12 Mar 2020 06:58:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200306132448.13917-1-Sergey.Semin@baikalelectronics.ru> <20200306132510.AC2108030794@mail.baikalelectronics.ru>
-In-Reply-To: <20200306132510.AC2108030794@mail.baikalelectronics.ru>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 12 Mar 2020 08:47:56 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKRk+adXnej_XUU3dr9Z9G09oZTY+X1i=gYpD7vrbWCZg@mail.gmail.com>
-Message-ID: <CAL_JsqKRk+adXnej_XUU3dr9Z9G09oZTY+X1i=gYpD7vrbWCZg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: gpio: Replace DW APB GPIO legacy
- bindings with YAML-based one
+References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
+In-Reply-To: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Mar 2020 14:58:33 +0100
+Message-ID: <CACRpkdbq9aTkf6-DctXKabyd2=Rr8GPii02_8jQP49SFuTo_SQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] gpio: dwapb: Fix reference clocks usage
 To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
@@ -73,235 +83,50 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 7:25 AM <Sergey.Semin@baikalelectronics.ru> wrote:
->
+On Fri, Mar 6, 2020 at 2:25 PM <Sergey.Semin@baikalelectronics.ru> wrote:
 
-Subject is kind of long and wordy. Perhaps:
-
-dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema
-
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> From: Serge Semin <fancer.lancer@gmail.com>
 >
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with dt-schema. This commit replaces Synopsys DW GPIO
-> legacy bare text bindings with YAML file. As before the bindings file
-> states that the corresponding dts node is supposed to be compatible
-> with generic DW I2C controller indicated by the "snps,dw-apb-gpio"
-> compatible string and provide a mandatory registers memory range.
-> It may also have an optional clocks and resets phandle references.
+> There is no need in any fixes to have the Baikal-T1 SoC DW GPIO controllers
+> supported by the kernel DW APB GPIO driver. It works for them just fine with
+> no modifications. But still there is a room for optimizations there.
 >
-> There must be specified at least one subnode with
-> "snps,dw-apb-gpio-port" compatible string indicating the GPIO port,
-> which would actually export the GPIO controller functionality. Such
-> nodes should have traditional GPIO controller properties together
-> with optional interrupt-controller attributes if the corresponding
-> controller was synthesized to detected and report the input values
-> change to the parental IRQ controller.
+> First of all as it tends to be traditional for all Baikal-T1 SoC related
+> patchset we replaced the legacy plain text-based dt-binding file with
+> yaml-based one. Baikal-T1 DW GPIO port A supports a debounce functionality,
+> but in order to use it the corresponding reference clock must be enabled.
+> We added support of that clock in the driver and made sure the dt-bindings
+> had its declaration. In addition seeing both APB and debounce reference
+> clocks are optional, we replaced the standard devm_clk_get() usage with
+> the function of optional clocks acquisition.
+>
+> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> commit 98d54f81e36b ("Linux 5.6-rc4").
 >
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
 > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 > Cc: Paul Burton <paulburton@kernel.org>
 > Cc: Ralf Baechle <ralf@linux-mips.org>
->
-> ---
->
-> Synopsis DesignWare APB SSI controller has a bindings property
-> "snps,nr-gpios" of numeric type, which means the number of GPIO pins
-> exported by the corresponding controller port. There is also a generic
-> pattern-property "*-gpios", which corresponds to a GPIOs array. As you
-> can see the GPIOs array property wildcard matches the vendor-specific
-> property "snps,nr-gpios" property while having an incompatible type.
-> Due to this the DW APB GPIO dts-nodes evaluation will report the
-> following error:
->
-> snps,nr-gpios:0:0: 8 is not valid under any of the given schemas (Possible causes of the failure):
-> snps,nr-gpios:0:0: missing phandle tag in 8
->
-> I didn't manage to fix the problem by redefining the property schema (this
-> might be impossible anyway). In my opinion the best way to solve it would be
-> to change the DW APB SSI Controller bindings so the driver would accept the
-> standard "ngpios" property for the same purpose. But in this case we would have
-> to alter all the dts files currently having the "snps,dw-apb-ssi" compatible
-> nodes (it's a lot). I know the bindings modifications aren't that much welcome
-> in the kernel community and there are good reasons why. So what do you think
-> would be the better way to fix the problem with the property types collision?
+> Cc: Hoan Tran <hoan@os.amperecomputing.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 
-Does this change (to dt-schema) work for you?
+I like these patches, once Rob is happy with the bindings I'll be
+happy to merge them. I haven't heard from Hoan Tran in a while,
+so if we don't hear from him this time either I would suggest you
+also add yourself as maintainer for this driver, if you don't mind.
 
-diff --git a/schemas/gpio/gpio.yaml b/schemas/gpio/gpio.yaml
-index 1d9c109f9791..d1c08ccfdc1a 100644
---- a/schemas/gpio/gpio.yaml
-+++ b/schemas/gpio/gpio.yaml
-@@ -34,7 +34,7 @@ properties:
-       - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-
- patternProperties:
--  ".*-gpios?$":
-+  "(?<!,nr)-gpios?$":
-     $ref: "/schemas/types.yaml#/definitions/phandle-array"
-   "^gpios$":
-     $ref: "/schemas/types.yaml#/definitions/phandle-array"
-
-
-> ---
->  .../bindings/gpio/snps,dw-apb-gpio.yaml       | 136 ++++++++++++++++++
->  .../bindings/gpio/snps-dwapb-gpio.txt         |  65 ---------
->  2 files changed, 136 insertions(+), 65 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
->
-> diff --git a/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
-> new file mode 100644
-> index 000000000000..d9bc12e9e515
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
-> @@ -0,0 +1,136 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-
-Do you have rights to add BSD?
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/snps,dw-apb-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synopsys DesignWare APB GPIO controller
-> +
-> +description: |
-> +  Synopsys DesignWare GPIO controllers have a configurable number of ports,
-> +  each of which are intended to be represented as child nodes with the generic
-> +  GPIO-controller properties as desribed in this bindings file.
-> +
-> +maintainers:
-> +  - Hoan Tran <hoan@os.amperecomputing.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^gpio@[0-9a-fA-F]+$"
-
-Lowercase hex for unit-addresses.
-
-> +
-> +  compatible:
-> +    const: snps,dw-apb-gpio
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: APB interface clock source
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-fA-F]+$":
-
-Shouldn't it be "^gpio@..." And unit-addresses should be lowercase.
-
-> +    type: object
-> +    properties:
-> +      compatible:
-> +        const: snps,dw-apb-gpio-port
-> +
-> +      reg:
-> +        maxItems: 1
-> +
-> +      gpio-controller: true
-> +
-> +      '#gpio-cells':
-> +        const: 2
-> +
-> +      snps,nr-gpios:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: The number of GPIO pins exported by the port.
-> +        default: 32
-> +        minimum: 1
-> +        maximum: 32
-> +
-> +      interrupts:
-> +        description: |
-> +          The interrupts to the parent controller raised when GPIOs generate
-> +          the interrupts. If the controller provides one combined interrupt
-> +          for all GPIOs, specify a single interrupt. If the controller provides
-> +          one interrupt for each GPIO, provide a list of interrupts that
-> +          correspond to each of the GPIO pins.
-> +        minItems: 1
-> +        maxItems: 32
-> +
-> +      interrupts-extended:
-
-Drop this. It gets added by the tools automatically.
-
-> +        description: |
-> +          When specifying multiple interrupts, if any are unconnected, use
-> +          this property to specify the interrupts and set the interrupt
-> +          controller handle for unused interrupts to 0.
-> +        minItems: 1
-> +        maxItems: 32
-> +
-> +      interrupt-controller: true
-> +
-> +      '#interrupt-cells':
-> +        const: 2
-> +
-> +    required:
-> +      - compatible
-> +      - reg
-> +      - gpio-controller
-> +      - '#gpio-cells'
-> +
-> +    dependencies:
-> +      interrupt-controller: [ interrupts ]
-> +
-> +    additionalProperties: false
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    gpio: gpio@20000 {
-> +      compatible = "snps,dw-apb-gpio";
-> +      reg = <0x20000 0x1000>;
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      porta: gpio@0 {
-> +        compatible = "snps,dw-apb-gpio-port";
-> +        reg = <0>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        snps,nr-gpios = <8>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        interrupt-parent = <&vic1>;
-> +        interrupts = <0>;
-> +      };
-> +
-> +      portb: gpio@1 {
-> +        compatible = "snps,dw-apb-gpio-port";
-> +        reg = <1>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        snps,nr-gpios = <8>;
-> +      };
-> +    };
-> +...
+Thanks,
+Linus Walleij
