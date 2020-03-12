@@ -2,161 +2,179 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2481C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D83AC4CECE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93987205F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:35:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ns03hq69"
+	by mail.kernel.org (Postfix) with ESMTP id 2010D20736
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgCLVf3 (ORCPT
+        id S1726608AbgCLVls (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:35:29 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42596 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgCLVf3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 17:35:29 -0400
-Received: by mail-ed1-f65.google.com with SMTP id n18so9344678edw.9;
-        Thu, 12 Mar 2020 14:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w1zcQ0pwsk6Sv5HkuPglXPmgpcyE2cmpz+kIS0DS4nw=;
-        b=Ns03hq698c5nJGC7j/6c5N9u3dyz/UKqOCtYtrfKIIrjDDTWfxUyd2jEas6KNqlSmI
-         Ld+BKVByi4vsTqlmcAENsFHkbaraOdhSfotILQOcUREF4Wr8Gvch7+9HK/pW48ygG9N9
-         zP9ub4iFy6Oq+NeRdx1ceKEDkdlpyrLpL5HSY0AnNqDioQDmFwlSC2FFeWVTCSlsGPg9
-         hiLLtO0NsC0jVvy2RP1EaRwB9D4U4lGYVFxmN05EKPV76oRZ4r36Ttk73BzYsg7uy3vC
-         ph8W4hF6XzQSy8FczqEZ8QyVw3G/uExf9L8sYjfjKS8wzdZz224ncurQFa6PKElVa6D1
-         C+hA==
+        Thu, 12 Mar 2020 17:41:48 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37608 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgCLVls (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 17:41:48 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w13so7176239oih.4;
+        Thu, 12 Mar 2020 14:41:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w1zcQ0pwsk6Sv5HkuPglXPmgpcyE2cmpz+kIS0DS4nw=;
-        b=szMqfQiWsShxXw4Gbif1FedP+rhR1a2GfUT81T7DYX1taUkJzGsZqDpoSnj81JApm8
-         jZORb92zT7ps3Yd9+xTQj4J/11KHVV+45fqfmWhNEmtqA2QZzBIfP19KcI6IPJpJIdap
-         NHlhOMBUdycFj2v5/zHlGBdOx3KI9gMgqMf9FD9YHEdABpTY/O8ttrHh67zwX8+y1Anp
-         bBzGVO8ywP7/345dsbWdGSVS9A5SHQW/UNbOSQHU+KhWNQP9j81NGZkVjeo/WGMZ6rJF
-         X86VgJnyLZueRjy/NyHuAcb/RQt0tnm3lYh8Kqsz4TnxwO6aufeyma1+ObmV9Fi52/nT
-         /5Iw==
-X-Gm-Message-State: ANhLgQ15xqXzA/YqGzuGN0S2hfcCs4E9TiAjwLFkBNEtrVhCAbP800X7
-        0C81YUuc5x5vhSZ/X6GV2lkwMLvHrS/0+ybFVnE=
-X-Google-Smtp-Source: ADFU+vsiyvjYIkOLbK9gTV05LGSSgyCx7Z0cDMbSZLbMQjbrdyinTU8gUMl1VUDmDLUkNlpuLq769IWuinYNYh/M5kg=
-X-Received: by 2002:a05:6402:1c0c:: with SMTP id ck12mr10249138edb.145.1584048926737;
- Thu, 12 Mar 2020 14:35:26 -0700 (PDT)
+        bh=2UGW4bHfX08GEbePww+EddI/NsbhfU55Uie8iNExZVk=;
+        b=lE843qE4tcSbZpfHiIMYB+9KGDMc3l13E6OOvmGboWSkUJkxntGI2QLLLfCPn+W0th
+         lPT4TmIlYUrWXNde62hc7r1ePbmuvMPb83ExEDqRKAWID3Vt/609ONpIE3wUzCJgsdhx
+         n55csuXAq5mS7jiZEUPw4MLKaz56vTbQSbI42vGJb7IkTkEnuzGkpk55216YSaz/ZZxa
+         JJwFYkZ0xuH87jMn3lSO6gjYNWemBVXOz3ikBiF9Z/bPZE2MWNVQ/eXC/7GFANGWzWLy
+         LS4veansW+ISmA5hp7HLZxU+3VXidzOAk0AVUprmt2M+GRc9xaZ54Xoqr4vNjKIUntnb
+         Sd9w==
+X-Gm-Message-State: ANhLgQ3ZhCkwAv+LmTQuGpbjA47fB5AiqFXWh1hRU+XvouxS/lxSz5H6
+        56W2dCKLWy04HjvpQ2WyXe7jSPOieKF/NJFey20=
+X-Google-Smtp-Source: ADFU+vuDUW/4+kTvvOXt43MMd+pd/8k57mMKsg695zk0cUiXBtsY6UfW2Bd3hR2zkhh7QvO+6ko15uTV55E52TqiQyA=
+X-Received: by 2002:aca:cdd1:: with SMTP id d200mr4238410oig.153.1584049307407;
+ Thu, 12 Mar 2020 14:41:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200312164320.22349-1-michael@walle.cc>
-In-Reply-To: <20200312164320.22349-1-michael@walle.cc>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 12 Mar 2020 23:35:15 +0200
-Message-ID: <CA+h21hoHMxtxUjHthx2ta9CzQbkF_08Svi7wLU99NqJmoEr36Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] net: dsa: felix: allow the device to be disabled
-To:     Michael Walle <michael@walle.cc>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
+References: <1584047552-20166-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584047552-20166-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1584047552-20166-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Mar 2020 22:41:36 +0100
+Message-ID: <CAMuHMdUgMHjU_ZANzJbxQji6K7Pdc-jD4C7JatQc-OtN=jJt_w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] media: i2c: ov5645: Switch to assigned-clock-rates
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 12 Mar 2020 at 18:44, Michael Walle <michael@walle.cc> wrote:
+Hi Prabhakar,
+
+On Thu, Mar 12, 2020 at 10:13 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> This patch switches to assigned-clock-rates for specifying the clock rate.
+> The clk-conf.c internally handles setting the clock rate when
+> assigned-clock-rates is passed.
 >
-> If there is no specific configuration of the felix switch in the device
-> tree, but only the default configuration (ie. given by the SoCs dtsi
-> file), the probe fails because no CPU port has been set. On the other
-> hand you cannot set a default CPU port because that depends on the
-> actual board using the switch.
+> The driver now sets the clock frequency only if the deprecated property
+> clock-frequency is defined instead assigned-clock-rates, this is to avoid
+> breakage with existing DT binaries.
 >
-> [    2.701300] DSA: tree 0 has no CPU port
-> [    2.705167] mscc_felix 0000:00:00.5: Failed to register DSA switch: -22
-> [    2.711844] mscc_felix: probe of 0000:00:00.5 failed with error -22
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+Thanks for your patch!
+
+> --- a/drivers/media/i2c/ov5645.c
+> +++ b/drivers/media/i2c/ov5645.c
+> @@ -1055,6 +1055,7 @@ static int ov5645_probe(struct i2c_client *client)
+>         struct device_node *endpoint;
+>         struct ov5645 *ov5645;
+>         u8 chip_id_high, chip_id_low;
+> +       bool set_clk = false;
+>         unsigned int i;
+>         u32 xclk_freq;
+>         int ret;
+> @@ -1094,10 +1095,17 @@ static int ov5645_probe(struct i2c_client *client)
+>                 return PTR_ERR(ov5645->xclk);
+>         }
 >
-> Thus let the device tree disable this device entirely, like it is also
-> done with the enetc driver of the same SoC.
+> -       ret = of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
+> +       ret = of_property_read_u32(dev->of_node, "assigned-clock-rates",
+> +                                  &xclk_freq);
+>         if (ret) {
+
+I think you can just leave out the above check...
+
+> -               dev_err(dev, "could not get xclk frequency\n");
+> -               return ret;
+> +               /* check if deprecated property clock-frequency is defined */
+> +               ret = of_property_read_u32(dev->of_node, "clock-frequency",
+> +                                          &xclk_freq);
+> +               if (ret) {
+
+... and ignore the absence of the deprecated property.
+
+> +                       dev_err(dev, "could not get xclk frequency\n");
+> +                       return ret;
+> +               }
+> +               set_clk = true;
+
+I.e. just
+
+        /* check if deprecated property clock-frequency is defined */
+        xclk_freq = 0;
+        of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
+        if (xclk_freq) {
+                ret = clk_set_rate(ov5645->xclk, xclk_freq);
+                if (ret) {
+                        dev_err(dev, "could not set xclk frequency\n");
+                        return ret;
+                }
+        } else {
+                xclk_freq = clk_get_rate(ov5645->xclk, xclk_freq);
+        }
+
+>         }
 >
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/net/dsa/ocelot/felix.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>         /* external clock must be 24MHz, allow 1% tolerance */
+> @@ -1107,10 +1115,12 @@ static int ov5645_probe(struct i2c_client *client)
+>                 return -EINVAL;
+>         }
 >
-> diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-> index 69546383a382..531c7710063f 100644
-> --- a/drivers/net/dsa/ocelot/felix.c
-> +++ b/drivers/net/dsa/ocelot/felix.c
-> @@ -699,6 +699,11 @@ static int felix_pci_probe(struct pci_dev *pdev,
->         struct felix *felix;
->         int err;
+> -       ret = clk_set_rate(ov5645->xclk, xclk_freq);
+> -       if (ret) {
+> -               dev_err(dev, "could not set xclk frequency\n");
+> -               return ret;
+> +       if (set_clk) {
+> +               ret = clk_set_rate(ov5645->xclk, xclk_freq);
+> +               if (ret) {
+> +                       dev_err(dev, "could not set xclk frequency\n");
+> +                       return ret;
+> +               }
+
+>         }
 >
-> +       if (pdev->dev.of_node && !of_device_is_available(pdev->dev.of_node)) {
-> +               dev_info(&pdev->dev, "device is disabled, skipping\n");
-> +               return -ENODEV;
-> +       }
-> +
-
-IMHO since DSA is already dependent on device tree for PHY bindings,
-it would make more sense to move this there:
-
-diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
-index e7c30b472034..f7ca01d93928 100644
---- a/net/dsa/dsa2.c
-+++ b/net/dsa/dsa2.c
-@@ -878,7 +878,7 @@ static int dsa_switch_probe(struct dsa_switch *ds)
-        if (!ds->num_ports)
-                return -EINVAL;
-
--       if (np) {
-+       if (np && of_device_is_available(np)) {
-                err = dsa_switch_parse_of(ds, np);
-                if (err)
-                        dsa_switch_release_ports(ds);
-
-so that we could enforce more uniform behavior across device drivers.
-Then you might want to make felix shut up:
-
-diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-index 35124ef7e75b..fbd17fa94bff 100644
---- a/drivers/net/dsa/ocelot/felix.c
-+++ b/drivers/net/dsa/ocelot/felix.c
-@@ -712,10 +712,8 @@ static int felix_pci_probe(struct pci_dev *pdev,
-        felix->ds = ds;
-
-        err = dsa_register_switch(ds);
--       if (err) {
--               dev_err(&pdev->dev, "Failed to register DSA switch: %d\n", err);
-+       if (err)
-                goto err_register_ds;
--       }
-
-        return 0;
-
-This has the disadvantage of not printing the "nice" "device is
-disabled, skipping" message (useless in my opinion), but the advantage
-of also shutting up on -EPROBE_DEFER.
-
->         err = pci_enable_device(pdev);
->         if (err) {
->                 dev_err(&pdev->dev, "device enable failed\n");
+>         for (i = 0; i < OV5645_NUM_SUPPLIES; i++)
 > --
-> 2.20.1
+> 2.7.4
 >
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Thanks,
--Vladimir
+
+
+-- 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
