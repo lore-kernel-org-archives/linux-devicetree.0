@@ -2,95 +2,160 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4ECC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 11:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F402C1975A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 11:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D218C2067C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 11:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFC9206BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 11:16:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jr1m+7HL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgCLLPA (ORCPT
+        id S1727148AbgCLLQH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:15:00 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44105 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgCLLPA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 07:15:00 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jCLnh-0000ai-SG; Thu, 12 Mar 2020 12:14:53 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1jCLnf-0005LE-Uz; Thu, 12 Mar 2020 12:14:51 +0100
-Date:   Thu, 12 Mar 2020 12:14:51 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
-        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
-        laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-media@vger.kernel.org
-Subject: Re: [PATCH v13 04/21] media: v4l2-fwnode: fix v4l2_fwnode_parse_link
- handling
-Message-ID: <20200312111451.fg7t7qflnxq4ka6u@pengutronix.de>
-References: <20200312103156.3178-1-m.felsch@pengutronix.de>
- <20200312103156.3178-5-m.felsch@pengutronix.de>
- <20200312104222.GN5379@paasikivi.fi.intel.com>
- <20200312104312.GO5379@paasikivi.fi.intel.com>
+        Thu, 12 Mar 2020 07:16:07 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37673 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbgCLLQG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 07:16:06 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a141so5802704wme.2
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 04:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+PxMuIwKtl+ixE2AtSYTfhWGbQ9gMTjf02fTm60ZP7c=;
+        b=jr1m+7HLMmM5PiITqiOg987W2zJYyNfP43CKovuiaXcsfbva+cKmLEYZGL62WVHdxm
+         6arz+z6ljhVBLaKM3JJwLWaQ+6oFVdhRCCqN1qhYYztT2NNyR2FbIj+6EB5YuF0b4KzV
+         V9ouTe3vHADqNZdxpjG5dys+AoFYxMyc2VuEaoLfhu7zoGyTeU3CAX6kUkmCRYfR/uwI
+         OoLyfy5bzFVzBNvcE3bC0oLqKUmzwwEh+yUFknti7vz9umR9MrMZIlU73mP7T/plgA5m
+         rN35VG1sfSrI7M6BeubprVJr7un3Y1jK5OwHFtgn8WcM6kjEgX170h//CLxoIynE6RRu
+         zynA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=+PxMuIwKtl+ixE2AtSYTfhWGbQ9gMTjf02fTm60ZP7c=;
+        b=l+HJpBNcyuB0MDMsXNbOetrXK3vHFsdQJ5ptCRZXB7ZEIMdOf2GMzICDUek5Ae8NTQ
+         7UhAEvyAPtLO9pQUigbw+qzxBMjnSLXNX8Lh2GuGRJTXKpSEwCDSPFLbY00DcjPHfHP0
+         YsgMXxWCuBsijjbIbltb22kIwlOmuLq7XnX3hhlwRmADNonx5lEsQVfC4SUY8zMWdDiR
+         FJri5PdeJ+tkj6snIT41C9ntSnPzUIjRxzboQedxVxPPytDtWxiRFWUjfvQ7sp0cVyl0
+         rTgBruRl7KFuaHwAY18xIdqdmvUoH90XFxwjDo7b2TAB6Hmvi/JkxgFs8qAno1M7Q3Pu
+         bqTg==
+X-Gm-Message-State: ANhLgQ2cSCuO4Rqb2NNYxNntNntfqKdPsN7vU3RRXTjzo+aDJ6f1IOKL
+        FnlXt0fR8x36qoPLyUHonZ1KSw==
+X-Google-Smtp-Source: ADFU+vtOa09vIvlIBcshskPiSoJnGoQkpo7Z6zli2NVBiOgUphWPT5Ln6EesZ7BTe4/eKq0G78qxUQ==
+X-Received: by 2002:a1c:7209:: with SMTP id n9mr4316836wmc.188.1584011764077;
+        Thu, 12 Mar 2020 04:16:04 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:3880:fdc2:ef6b:879f? ([2a01:e34:ed2f:f020:3880:fdc2:ef6b:879f])
+        by smtp.googlemail.com with ESMTPSA id o3sm13013857wme.36.2020.03.12.04.16.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Mar 2020 04:16:03 -0700 (PDT)
+Subject: Re: [PATCH 0/2] thermal: Add support for Renesas R-Car M3-W+
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <20200306105503.24267-1-geert+renesas@glider.be>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <05f4b69f-e54a-0f86-d0ac-b44a86158b4b@linaro.org>
+Date:   Thu, 12 Mar 2020 12:16:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312104312.GO5379@paasikivi.fi.intel.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:12:17 up 118 days,  2:30, 135 users,  load average: 0.03, 0.11,
- 0.14
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200306105503.24267-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On 20-03-12 12:43, Sakari Ailus wrote:
-> On Thu, Mar 12, 2020 at 12:42:22PM +0200, Sakari Ailus wrote:
-> > On Thu, Mar 12, 2020 at 11:31:39AM +0100, Marco Felsch wrote:
-> > > Currently the driver differentiate the port number property handling for
-> > > ACPI and DT. This is wrong as because ACPI should use the "reg" val too
-> > > [1].
-> > > 
-> > > [1] https://patchwork.kernel.org/patch/11421985/
-> > > 
-> > > Fixes: ca50c197bd96 ("[media] v4l: fwnode: Support generic fwnode for parsing standardised properties")
-> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > 
-> > Oh well, I guess this is OK; I noticed the next patch that depends on this
-> > one. But it should be merged with the next patch so that it won't be
-> > accidentally backported alone.
-> > 
-> > Then, please add:
-> > 
-> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+On 06/03/2020 11:55, Geert Uytterhoeven wrote:
+> 	Hi,
 > 
-> Forgot that no ACPI driver uses it. So _no_ changes are needed to this, and
-> you can add the ack.
+> This patch series adds support for the Thermal Sensor/Chip Internal
+> Voltage Monitor in the R-Car M3-W+ (R8A77961) SoC.
 > 
-> Thanks.
+> It has been tested on a Salvator-XS development board with R-Car M3-W+.
+> 
+> Geert Uytterhoeven (2):
+>   dt-bindings: thermal: rcar-gen3-thermal: Add r8a77961 support
+>   thermal: rcar_gen3_thermal: Add r8a77961 support
+> 
+>  .../devicetree/bindings/thermal/rcar-gen3-thermal.txt         | 1 +
+>  drivers/thermal/rcar_gen3_thermal.c                           | 4 ++++
+>  2 files changed, 5 insertions(+)
 
-I thought about it too and in the end I splitted the patche for possible
-backport reasons. Squashing shouldn't be a problem for Hans?
+Applied, thanks
 
-Regards,
-  Marco
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
