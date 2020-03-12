@@ -2,295 +2,333 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8738FC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 20:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12B4C1975A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 20:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC7520738
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 20:49:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ga8j1Iur"
+	by mail.kernel.org (Postfix) with ESMTP id 83D70206BE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 20:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584046217;
+	bh=3owZskGdeD7GUKRiKLvODK9G/f3cdxg71TXQWjtskPM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sF4EISrxF/9o7uYFUbb89O7yGs8TzeN/VhALEBgx/5o1lOWA1Kg3K3UrcIIZUfZJT
+	 UKS5CUR1hRstC3iLHiyjYB60gHHjO3fZDlpIJKmGHjqS0q37rzsItIUKU8GEkrlnK2
+	 TTVUPwgL3tETN9Uib+rakHUn15i2oOWni34hRVRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgCLUtl (ORCPT
+        id S1727154AbgCLUuO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 16:49:41 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38381 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbgCLUtk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 16:49:40 -0400
-Received: by mail-pj1-f65.google.com with SMTP id m15so2450131pje.3
-        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 13:49:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8tdcN4NnkMfqmyh0gTGOOia172RsAybBpYZntXd7Nqs=;
-        b=ga8j1IurUn1zgapYDjTowi9NOYHdzZj9RRmRWOE7h2G2c2CRKoHTXvBqyZh7LdiPKb
-         GHmulodPZSbKh3RZU2Tg352u4qZgLHlewGIVPz1LcAMjeUZUjNhZBRH53pa3QNDdZxO1
-         1uWchComPc/4QwdOjNoIO9PbIYVKYFLPTZyEU=
+        Thu, 12 Mar 2020 16:50:14 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42420 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgCLUuO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 16:50:14 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 66so7783401otd.9;
+        Thu, 12 Mar 2020 13:50:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8tdcN4NnkMfqmyh0gTGOOia172RsAybBpYZntXd7Nqs=;
-        b=ArkhV20Us6CxmoOO7n0kDX+DTI9kPc1Oz0hkHIQc6BL6gpOjA5Hr+2teMGF4mQZ37H
-         q99rT6Gz8YR0W/g9zqbSV6H6P/27AlCj+jiwzhEvtXdfll1SKPAsLkfNiXACm4mO4Vzk
-         0rLxN7NaJOaRqQKXF4NTJPArhA9UVbCZU3xkWpiBlk2HKK4pVDwbLtN0Z7W+QhpZ9D0l
-         wKehdB/jfHM6tvzi3FQ2bVakP2zTstbF9NPqqRo3GDD/A8ImEmqLf6xc57doUMLKyAJz
-         x/+EgY2ijjXVa2aOsfukUqUO4IB0n7vetJt7nfWA7njRRSLGJGWUkl8loRJH/WiTDTdt
-         IJCw==
-X-Gm-Message-State: ANhLgQ1KUCJP1bml8rC2a6jwvw6G4rVQAHg6h6jk8tha383QIEROUUCa
-        i/JgcTmy2PO3qkRlqPtVUjYE3Q==
-X-Google-Smtp-Source: ADFU+vsiPPlt1e1Q1qAOAXpv2voOnmVVwkqPBW1KQV9rDf5At6Gzha6L+H+5e9eu/8Ey6tjYcAKDHA==
-X-Received: by 2002:a17:902:6504:: with SMTP id b4mr9569558plk.291.1584046177701;
-        Thu, 12 Mar 2020 13:49:37 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id b2sm2179084pjc.6.2020.03.12.13.49.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 13:49:36 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 13:49:35 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        linux-mmc-owner@vger.kernel.org,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Subject: Re: [RFC v5 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth
- scaling support
-Message-ID: <20200312204935.GF144492@google.com>
-References: <1583992911-12001-1-git-send-email-ppvk@codeaurora.org>
- <1583992911-12001-2-git-send-email-ppvk@codeaurora.org>
+        bh=54SQIsOq6jTtoYFq0ah9FTI+kR+4WkSQB/K3Tm3pXKg=;
+        b=lSl3qHF37+AnFyZb0l81wKljHvWPU3pe69Nr8mjPkqsyMDbZ8qMx0NP0CW5cev5ogi
+         mqPc6uZombvPqmXwQc6W/2QOnkIKO5Skwn6nxX94tPfTnGN7+Dd5t/yp9gyziWwXYwFa
+         QCWg706xhWYyybho/4/WdirLkdxbG7i5BIKtJTg8vbHw+4EiARuLtJiZUOWcbZIC5rEn
+         4ooaiqVpc1zc4O9fcnwkQrPF/TCr0+iBYYBwb4d2qANjNrrj2SZ9GSHJllsXe7vDw9sq
+         dHNNzLPgJdPGVji2G9Fa/Y+K9hVmbqyXolcUgBg6liud1QmaX/PFa7x/vkoOVfy2NwFf
+         E/jw==
+X-Gm-Message-State: ANhLgQ3ca41d9/YfoV6oCyTz4rPvBylypfsitG2eaUx9/zM/vfhJeGzq
+        GqfahrXfNce2G2/xFuudEA==
+X-Google-Smtp-Source: ADFU+vtX/mxGBEX6bfmwnZs1NsucNTTS2Oeq0V4O1l0lzxGUpGPIfGTOAwtjklpt9+NqqWBdYayhcg==
+X-Received: by 2002:a9d:a51:: with SMTP id 75mr7843593otg.112.1584046213127;
+        Thu, 12 Mar 2020 13:50:13 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k17sm7162518oic.45.2020.03.12.13.50.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 13:50:12 -0700 (PDT)
+Received: (nullmailer pid 16536 invoked by uid 1000);
+        Thu, 12 Mar 2020 20:50:11 -0000
+Date:   Thu, 12 Mar 2020 15:50:11 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] dt-bindings: clk: Add Baikal-T1 AXI-bus CCU bindings
+Message-ID: <20200312205011.GA10607@bogus>
+References: <20200306130048.8868-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130055.7F70E8030793@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583992911-12001-2-git-send-email-ppvk@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200306130055.7F70E8030793@mail.baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Pradeep,
-
-On Thu, Mar 12, 2020 at 11:31:50AM +0530, Pradeep P V K wrote:
-> Add interconnect bandwidths for SDHC driver using OPP framework that
-> is required by SDHC driver based on the clock frequency and bus width
-> of the card. Otherwise, the system clocks may run at minimum clock
-> speed and thus affecting the performance.
+On Fri, Mar 06, 2020 at 04:00:45PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> This change is based on
-> [RFC] mmc: host: sdhci-msm: Use the interconnect API
-> (https://lkml.org/lkml/2018/10/11/499) and
+> After being gained by the CCU PLLs the signals must be transformed to
+> be suitable for the clock-consumers. This is done by a set of dividers
+> embedded into the CCU. A first block of dividers is used to create
+> reference clocks for AXI-bus of high-speed peripheral IP-cores of the
+> chip. So the AXI-bus CCU dts-node is an ordinary clock-provider with
+> standard set of properties supported. But in addition to that each
+> AXI-bus clock divider provide a way to reset the corresponding clock
+> domain. This makes the AXI-bus CCU dts-node to be also a reset-provider.
 > 
-> [PATCH v6] Introduce Bandwidth OPPs for interconnects
-> (https://lkml.org/lkml/2019/12/6/740)
-> 
-> Co-developed-by: Sahitya Tummala <stummala@codeaurora.org>
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> Co-developed-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
 > ---
+>  .../bindings/clock/be,bt1-ccu-axi.yaml        | 151 ++++++++++++++++++
+>  include/dt-bindings/clock/bt1-ccu.h           |  13 ++
+>  include/dt-bindings/reset/bt1-ccu.h           |  23 +++
+>  3 files changed, 187 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/be,bt1-ccu-axi.yaml
+>  create mode 100644 include/dt-bindings/reset/bt1-ccu.h
 > 
-> RFC v4 -> v5:
-> - Rewrote the icc interconnect get handlers and its error handling
->   and allocated vote data after handling all icc get handler errors.
-> - Removed explicit error check on ICC handlers.
-> - Addressed minor code style comments.
-> 
->  drivers/mmc/host/sdhci-msm.c | 231 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 227 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 09ff731..5fe8fad 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
->
-> ...
->
+> diff --git a/Documentation/devicetree/bindings/clock/be,bt1-ccu-axi.yaml b/Documentation/devicetree/bindings/clock/be,bt1-ccu-axi.yaml
+> new file mode 100644
+> index 000000000000..6b1eefdead27
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/be,bt1-ccu-axi.yaml
+> @@ -0,0 +1,151 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Dual license new bindings:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +#
+> +# Copyright (C) 2019 - 2020 BAIKAL ELECTRONICS, JSC
+> +#
+> +# Baikal-T1 AXI-bus Clocks Control Unit Device Tree Bindings.
+
+As Stephen said, drop this. You can keep the copyright, just make it 
+line 2.
+
+> +#
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/be,bt1-ccu-axi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Baikal-T1 AXI-bus Clock Control Unit
+> +
+> +maintainers:
+> +  - Serge Semin <fancer.lancer@gmail.com>
+> +
+> +description: |
+> +  Clocks Control Unit is the core of Baikal-T1 SoC responsible for the chip
+> +  subsystems clocking and resetting. The CCU is connected with an external
+> +  fixed rate oscillator, which signal is transformed into clocks of various
+> +  frequencies and then propagated to either individual IP-blocks or to groups
+> +  of blocks (clock domains). The transformation is done by means of an embedded
+> +  into CCU PLLs and gateable/non-gateable dividers. Each clock domain can be
+> +  also individually reset by using the domain clocks divider configuration
+> +  registers. Baikal-T1 CCU is logically divided into the next components:
+> +  1) External oscillator (normally XTAL's 25 MHz crystal oscillator, but
+> +     in general can provide any frequency supported by the CCU PLLs).
+> +  2) PLLs clocks generators (PLLs).
+> +  3) AXI-bus clock dividers (AXI) - described in this bindings file.
+> +  4) System devices reference clock dividers (SYS).
+> +  which are connected with each other as shown on the next figure:
+> +          +---------------+
+> +          | Baikal-T1 CCU |
+> +          |   +----+------|- MIPS P5600 cores
+> +          | +-|PLLs|------|- DDR controller
+> +          | | +----+      |
+> +  +----+  | |  |  |       |
+> +  |XTAL|--|-+  |  | +---+-|
+> +  +----+  | |  |  +-|AXI|-|- AXI-bus
+> +          | |  |    +---+-|
+> +          | |  |          |
+> +          | |  +----+---+-|- APB-bus
+> +          | +-------|SYS|-|- Low-speed Devices
+> +          |         +---+-|- High-speed Devices
+> +          +---------------+
+> +  Each sub-block is represented as a separate dts-node and has an individual
+> +  driver to be bound with.
+> +
+> +  In order to create signals of wide range frequencies the external oscillator
+> +  output is primarily connected to a set of CCU PLLs. Some of PLLs CLKOUT are
+> +  then passed over CCU dividers to create signals required for the target clock
+> +  domain (like AXI-bus consumers). The dividers have the following structure:
+> +          +--------------+
+> +  CLKIN --|->+----+ 1|\  |
+> +  SETCLK--|--|/DIV|->| | |
+> +  CLKDIV--|--|    |  | |-|->CLKLOUT
+> +  LOCK----|--+----+  | | |
+> +          |          |/  |
+> +          |           |  |
+> +  EN------|-----------+  |
+> +  RST-----|--------------|->RSTOUT
+> +          +--------------+
+> +  where CLKIN is the reference clock coming either from a CCU PLL, SETCLK - a
+> +  command to update the output clock in accordance with a set divider,
+> +  CLKDIV - clocks divider, LOCK - a signal of the output clock stabilization,
+> +  EN - enable/disable the divider block, RST/RSTOUT - reset clocks domain
+> +  signal. Depending on the consumer IP-core peculiarities the dividers may lack
+> +  of some functionality depicted on the figure above (like EN,
+> +  CLKDIV/LOCK/SETCLK). In this case the corresponding clock provider just
+> +  doesn't expose either switching functions, or the rate configuration, or
+> +  both of them.
+> +
+> +  The CCU AXI dts-node uses the common clock bindings [1] with no custom
+> +  properties. The list of exported clocks and reset signals can be found in
+> +  the files: 'dt-bindings/clock/bt1-ccu.h' and 'dt-bindings/reset/bt1-ccu.h'.
+> +
+> +  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +allOf:
+> +  - $ref: /schemas/clock/clock.yaml#
+
+Drop this, not needed (clock.yaml is applied to every node).
+
+> +
+> +properties:
+> +  compatible:
+> +    const: be,bt1-ccu-axi
+> +
+> +  reg:
+> +    description: AXI-bus CCU dividers sub-block base address.
+
+Don't really need this.
+
+> +    maxItems: 1
+> +
+> +  "#clock-cells":
+> +    description: |
+> +      Clocks are referenced by the node phandle and an unique identifier
+> +      from 'dt-bindings/clock/bt1-ccu.h'.
+> +    const: 1
+> +
+> +  "#reset-cells":
+> +    description: |
+> +      AXI-bus CCU sub-block provides a reset signal for each clock domain,
+> +      which unique identifiers are in 'dt-bindings/reset/bt1-ccu.h'.
+> +    const: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: CCU SATA PLL output clock.
+> +      - description: CCU PCIe PLL output clock.
+> +      - description: CCU Ethernet PLL output clock.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: sata_clk
+> +      - const: pcie_clk
+> +      - const: eth_clk
+> +
+> +  clock-output-names: true
+> +
+> +  assigned-clocks: true
+> +
+> +  assigned-clock-rates: true
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#clock-cells"
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/bt1-ccu.h>
+> +
+> +    ccu_axi: ccu_axi@1F04D030 {
+
+clock-controller@1f04d030
+
+> +      compatible = "be,bt1-ccu-axi";
+> +      reg = <0x1F04D030 0x030>;
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +
+> +      clocks = <&ccu_pll CCU_SATA_PLL>,
+> +               <&ccu_pll CCU_PCIE_PLL>,
+> +               <&ccu_pll CCU_ETH_PLL>;
+> +      clock-names = "sata_clk", "pcie_clk", "eth_clk";
+> +
+> +      clock-output-names = "axi_main_clk", "axi_ddr_clk",
+> +                           "axi_sata_clk", "axi_gmac0_clk",
+> +                           "axi_gmac1_clk", "axi_xgmac_clk",
+> +                           "axi_pcie_m_clk", "axi_pcie_s_clk",
+> +                           "axi_usb_clk", "axi_hwa_clk",
+> +                           "axi_sram_clk";
+> +    };
+> +...
+> diff --git a/include/dt-bindings/clock/bt1-ccu.h b/include/dt-bindings/clock/bt1-ccu.h
+> index 86e63162ade0..ebe723c6e0a8 100644
+> --- a/include/dt-bindings/clock/bt1-ccu.h
+> +++ b/include/dt-bindings/clock/bt1-ccu.h
+> @@ -14,4 +14,17 @@
+>  #define CCU_PCIE_PLL			3
+>  #define CCU_ETH_PLL			4
+>  
+> +/* Baikal-T1 AXI-bus CCU Clocks indeces. */
+> +#define CCU_AXI_MAIN_CLK		0
+> +#define CCU_AXI_DDR_CLK			1
+> +#define CCU_AXI_SATA_CLK		2
+> +#define CCU_AXI_GMAC0_CLK		3
+> +#define CCU_AXI_GMAC1_CLK		4
+> +#define CCU_AXI_XGMAC_CLK		5
+> +#define CCU_AXI_PCIE_M_CLK		6
+> +#define CCU_AXI_PCIE_S_CLK		7
+> +#define CCU_AXI_USB_CLK			8
+> +#define CCU_AXI_HWA_CLK			9
+> +#define CCU_AXI_SRAM_CLK		10
+> +
+>  #endif /* __DT_BINDINGS_CLOCK_BT1_CCU_H */
+> diff --git a/include/dt-bindings/reset/bt1-ccu.h b/include/dt-bindings/reset/bt1-ccu.h
+> new file mode 100644
+> index 000000000000..4de5b6bcd433
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/bt1-ccu.h
+> @@ -0,0 +1,23 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
 > +/*
-> + * This function sets the interconnect bus bandwidth
-> + * vote based on bw (bandwidth) argument.
+> + * Copyright (C) 2019 BAIKAL ELECTRONICS, JSC
+> + *
+> + * Baikal-T1 CCU reset indeces.
 > + */
-> +#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
-> +static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
-> +						unsigned int bw)
-> +{
-> +	int i, err;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
-> +	struct device *dev = &msm_host->pdev->dev;
-> +	struct dev_pm_opp *opp;
-> +	unsigned long freq = bw;
-> +	unsigned long peak_bw[BUS_INTERCONNECT_PATHS] = {0};
-> +	unsigned long avg_bw[BUS_INTERCONNECT_PATHS] = {0};
+> +#ifndef __DT_BINDINGS_RESET_BT1_CCU_H
+> +#define __DT_BINDINGS_RESET_BT1_CCU_H
 > +
-> +	if (bw == vote_data->curr_freq)
-> +		return;
+> +/* Baikal-T1 AXI-bus CCU Reset indeces. */
+> +#define CCU_AXI_MAIN_RST		0
+> +#define CCU_AXI_DDR_RST			1
+> +#define CCU_AXI_SATA_RST		2
+> +#define CCU_AXI_GMAC0_RST		3
+> +#define CCU_AXI_GMAC1_RST		4
+> +#define CCU_AXI_XGMAC_RST		5
+> +#define CCU_AXI_PCIE_M_RST		6
+> +#define CCU_AXI_PCIE_S_RST		7
+> +#define CCU_AXI_USB_RST			8
+> +#define CCU_AXI_HWA_RST			9
+> +#define CCU_AXI_SRAM_RST		10
 > +
-> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
-> +		opp = sdhci_msm_find_opp_for_freq(msm_host, freq);
-> +		if (opp) {
-> +			avg_bw[i] = dev_pm_opp_get_bw(opp, &peak_bw[i]);
-> +			freq += 1; /* Next bandwidth vote */
-> +			dev_pm_opp_put(opp);
-> +		}
-> +	}
-> +	pr_debug("%s: freq:%d sdhc_to_ddr avg_bw:%lu peak_bw:%lu cpu_to_sdhc avg_bw:%lu peak_bw:%lu\n",
-> +			mmc_hostname(host->mmc), bw, avg_bw[0], peak_bw[0],
-> +				avg_bw[1], peak_bw[1]);
-> +	err = icc_set_bw(vote_data->sdhc_to_ddr, 0, peak_bw[0]);
-> +	if (err) {
-> +		dev_err(dev, "icc_set() failed for 'sdhc-ddr' path err:%d\n",
-> +							err);
-
-nit: the alignment is odd, either align with 'dev' or a tab after 'dev_err'
-
-> +		return;
-> +	}
-> +	err = icc_set_bw(vote_data->cpu_to_sdhc, 0, peak_bw[1]);
-> +	if (err) {
-> +		dev_err(dev, "icc_set() failed for 'cpu-sdhc' path err:%d\n",
-> +							err);
-
-ditto
-
-> +		return;
-> +	}
-> +	vote_data->curr_freq = bw;
-> +}
-> +
-> +/*
-> + * Helper function to register for OPP and interconnect
-> + * frameworks.
-> + */
-> +static struct sdhci_msm_bus_vote_data
-> +		*sdhci_msm_bus_register(struct sdhci_msm_host *host,
-> +				struct platform_device *pdev)
-> +{
-> +	struct sdhci_msm_bus_vote_data *vote_data;
-> +	struct device *dev = &pdev->dev;
-> +	int ret, i, err;
-
-nit: you can get rid of 'ret' and use 'err' instead.
-
-> +	struct icc_path *icc_paths[BUS_INTERCONNECT_PATHS];
-> +	const char *path_names[] = {
-> +		"sdhc-ddr",
-> +		"cpu-sdhc",
-> +	};
-> +
-> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++)
-> +		icc_paths[i] = of_icc_get(&pdev->dev, path_names[i]);
-> +
-> +	if (!icc_paths[0] && !icc_paths[1]) {
-> +		dev_info(&pdev->dev, "ICC DT property is missing.Skip vote!!\n");
-> +		return NULL;
-> +	}
-> +
-> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
-> +		if (!icc_paths[i]) {
-> +			dev_err(&pdev->dev, "interconnect path '%s' is not configured\n",
-> +					path_names[i]);
-> +			err = -EINVAL;
-> +			goto handle_err;
-> +		}
-> +		if (IS_ERR(icc_paths[i])) {
-> +			err = PTR_ERR(icc_paths[i]);
-> +
-> +			if (err != -EPROBE_DEFER)
-> +				dev_err(&pdev->dev, "interconnect path '%s' is invalid:%d\n",
-> +					path_names[i], err);
-> +			goto handle_err;
-> +		}
-> +	}
-> +
-> +	ret = dev_pm_opp_of_add_table(dev);
-> +	if (ret) {
-> +		if (ret == -ENODEV || ret == -ENODATA)
-> +			dev_err(dev, "OPP dt properties missing:%d\n", ret);
-> +		else
-> +			dev_err(dev, "OPP registration failed:%d\n", ret);
-
-need to call icc_put() for the two paths?
-
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
-> +	if (!vote_data)
-
-ditto
-
-probably you want to do this with a jump to an error handler below.
-
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	vote_data->sdhc_to_ddr = icc_paths[0];
-> +	vote_data->cpu_to_sdhc = icc_paths[1];
-> +	return vote_data;
-
-nit: add empty line
-
-> +handle_err:
-> +	if (err) {
-> +		int other = (i == 0) ? 1 : 0;
-> +
-> +		if (!IS_ERR_OR_NULL(icc_paths[other]))
-> +			icc_put(icc_paths[other]);
-> +	}
-
-doing this at the end (as opposed to my suggestion from
-https://patchwork.kernel.org/patch/11388409/#23165321) has the advantage of
-keeping the above loop cleaner from error handling cruft, on the downside it
-is probably easier to understand right away in the context of the loop. I
-guess you can do it either way.
-
-It might get a bit more messy if you also handle the case where both paths are
-valid. If that gets too involved I'd suggest to hnadle the above case inside
-the loop.
-
-> +	return ERR_PTR(err);
-> +}
-> +
-> +static void sdhci_msm_bus_unregister(struct device *dev,
-> +				struct sdhci_msm_host *host)
-> +{
-> +	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
-> +
-> +	if (IS_ERR_OR_NULL(vote_data))
-
-I think 'if (!vote_data)' would be sufficient, since _probe() aborts in
-case of an error.
-
-> +		return;
-> +
-> +	icc_put(vote_data->sdhc_to_ddr);
-> +	icc_put(vote_data->cpu_to_sdhc);
-> +}
-> +
-> +static void sdhci_msm_bus_voting(struct sdhci_host *host, bool enable)
-> +{
-> +	struct mmc_ios *ios = &host->mmc->ios;
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-> +	unsigned int bw;
-> +
-> +	if (IS_ERR_OR_NULL(msm_host->bus_vote_data))
-> +		return;
-
-ditto
+> +#endif /* __DT_BINDINGS_RESET_BT1_CCU_H */
+> -- 
+> 2.25.1
+> 
