@@ -2,84 +2,118 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F51CC0044D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 03:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D019C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 04:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62ABF20754
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 03:26:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583983585;
-	bh=08jCRw8Qsj1MjgSuweg+nOPCezUdYX+IRjWXZqx9YBc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UqSTsqjisQ7fqHtdoljFmoTNSyJsCF8Ufk2g+zQ9Pewn5BqMfM/76lm3aBQzK0Yvk
-	 XWsvFZ+C4/h0tfO36TFKFSIeR8jB7qKblBgsMf+He+mUvYDG2LHgMjvLglwglysiHQ
-	 ExAItCCYPooge5TkRnrHPlsHRHAGMDS4PFHqjNQU=
+	by mail.kernel.org (Postfix) with ESMTP id 2F08720746
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 04:39:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3ats9uK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730994AbgCLD0Y (ORCPT
+        id S1726678AbgCLEi7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 11 Mar 2020 23:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36578 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730913AbgCLD0Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 11 Mar 2020 23:26:24 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B05620758;
-        Thu, 12 Mar 2020 03:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583983584;
-        bh=08jCRw8Qsj1MjgSuweg+nOPCezUdYX+IRjWXZqx9YBc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hzOFLFjg2PWhvcyUB4aLAMVeI5qLIAzUua4pwXOKzZYX3LXaGSyDcInJyq2cqMLc7
-         g727Gnz9pK9osugdw1h3volU8+VAuoy6OqxBHXzluVRgzdeEge8s46jQiOnwPBXXDa
-         R4Ck6zMNCMZHyzXyrA7idrS8QaOdpJi1ZJAovpoo=
-Received: by mail-wm1-f52.google.com with SMTP id g62so4638174wme.1;
-        Wed, 11 Mar 2020 20:26:23 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ03TDs59qYr0RPdWDkjUtDPskW+KCeJGkW2pl0DLl6EWewCskQL
-        qWVH4TaWHwAiGvWBwWWVW68It9LWoEHw5ZViggw=
-X-Google-Smtp-Source: ADFU+vv74O22275eZMI1PdvaJPZT0b+o0VzwOCB2XmgL16YTTbB4Y8QeGcErTTfFc2dfeiZjtHZvaLJaxKFiUACk2D0=
-X-Received: by 2002:a7b:c118:: with SMTP id w24mr2114631wmi.77.1583983582122;
- Wed, 11 Mar 2020 20:26:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200310174709.24174-1-wens@kernel.org> <20200310181003.wgryf373em5zwlvb@gilmour.lan>
-In-Reply-To: <20200310181003.wgryf373em5zwlvb@gilmour.lan>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Thu, 12 Mar 2020 11:26:08 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64MeW-qNLa9-ffCvRRYV9sa7FbM9R+c-8z40GW=FajOtQ@mail.gmail.com>
-Message-ID: <CAGb2v64MeW-qNLa9-ffCvRRYV9sa7FbM9R+c-8z40GW=FajOtQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] ARM: dts: sun8i: r40: fix SPI address and reorder nodes
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 12 Mar 2020 00:38:59 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42207 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgCLEi7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 00:38:59 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q19so4805002ljp.9;
+        Wed, 11 Mar 2020 21:38:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=BjPdSfl+t8YwAch/qVVID02ShhhB89UbCThPW66gWLQ=;
+        b=J3ats9uK0YN0GDUacQWNhZ9Q+7kDlCcWnN2vo0ccfIY/D3nP6F87eOqtg56zTZKdyv
+         CIPDgyovCi42xIbwEjbJptkhrFt6J1VIDK0K8sgS4/uyGJnteNpmeleMaQXBP/kLznr2
+         NjAXhin+/hMJlRmbULU6cMXlgpXagldRgTBye+Sly4TOUII2c4u2Li3K9LlqxJwceFG6
+         JcIAR4YpMPOfMRSY4M10O0dMCwd9Y1ayWRsbdwOY/rx0tlSZepQKKpO3+mwTC09NaC8J
+         y716+pTEZsxs26RxQeajI2AO4rO5xD2z2F2kpmE58X655V2354h59GHVVZQ4hGTYLRhv
+         5CrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BjPdSfl+t8YwAch/qVVID02ShhhB89UbCThPW66gWLQ=;
+        b=BambwGLTlHnUm2A6RMsUIfMDqeEPab4t9WyAGZFhS66h0SSckeQq4UZZVRox13BHt0
+         6VuW5sH5CUTxojQXTpoYjp55ajwOL0/oID5M2IBH0Kr6Ue2tEA0n76dkSB1wWEiFnyZm
+         cqYM3pCE6g/JOinBJGuCaVLFvTt7bFe9JWQ1odZVldFHAn3MwgDmYbO6RDTmIDgaVRgU
+         TTCIopQbojxoS+teQqVLdAwUcL0BKDSqPr/1gDa3IiNyUPj5QGHD4osc5INl/VMIEOvy
+         F2VTMlByrlqBuUxmFQ+y9Uz4QDRvuWAfdtorXiE1a3Z26Zu7lYumHqwhV7NTZTMJkt9R
+         khOA==
+X-Gm-Message-State: ANhLgQ1usjzstU2mSit4ESn/uHwKNkdiH6yco2qed6wlXoXH8FUpaaY2
+        xJNFqf1bWeKBNROAnBhMV2Y=
+X-Google-Smtp-Source: ADFU+vu2LZt4dQBS1XvD9C73vqG+rDKvlOnUkwd2xy1BWVo1NQdNEU4cWSfzVugfz8Nv6UzykF9sbA==
+X-Received: by 2002:a2e:9b94:: with SMTP id z20mr3926494lji.147.1583987937218;
+        Wed, 11 Mar 2020 21:38:57 -0700 (PDT)
+Received: from localhost.localdomain ([87.200.95.144])
+        by smtp.gmail.com with ESMTPSA id u2sm8872866lfu.3.2020.03.11.21.38.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 11 Mar 2020 21:38:56 -0700 (PDT)
+From:   Christian Hewitt <christianshewitt@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        =?UTF-8?q?Jer=C3=B4me=20Brunet?= <jbrunet@baylibre.com>
+Subject: [PATCH v7 0/3] arm64: dts: meson: add dts/bindings for SmartLabs SML-5442TW
+Date:   Thu, 12 Mar 2020 08:38:03 +0400
+Message-Id: <1583987886-6288-1-git-send-email-christianshewitt@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 2:10 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Wed, Mar 11, 2020 at 01:47:06AM +0800, Chen-Yu Tsai wrote:
-> > From: Chen-Yu Tsai <wens@csie.org>
-> >
-> > Hi,
-> >
-> > Here are some fixes for the R40 device tree for v5.6. The base addresses
-> > for SPI2 and SPI3 were incorrect and are fixed. I also found some nodes
-> > were not added in the proper order, possibly because git matched the
-> > incorrect place when applying the patch. These are fixed as well.
-> >
-> > ChenYu
->
-> Acked-by: Maxime Ripard <mripard@kernel.org>
+This series adds new bindings and a device-tree file for the Smartlabs
+SML-5442TW set-top box. The original attempt [1] was 15-months ago but
+nothing has really changed apart from a change to yaml bindings.
 
-Merged all three for v5.6 with Andre's Reviewed-by and a reported-by
-for the SPI address base patch.
+The QCA9377 BT device does not have bindings and early experiments to add
+them are partially successful but need further work. I have dropped the
+gpio-hog from the device-tree and will submit changes to add BT once the
+supporting bits exist elsewhere in the kernel.
+
+v7 - update gpio-led nodes
+   - remove gpio-hog for BT enable
+   - add bindings acks from Rob
+
+v6 - removed audio nodes again
+
+v5 - typo in card name
+
+v4 - typos/corrections from Andreas
+   - convert to yaml bindings
+   - add sound node back
+   - confirmed gpio-hog is necessary
+
+v3 - change to Smartlabs LLC
+   - removed sound node
+
+v2 - removed audio nodes
+   - changes soundcard name to "meson-gx-audio"
+   - added missing uart-has-rtscts;
+
+[1] https://patchwork.kernel.org/cover/10674939/
+
+Christian Hewitt (3):
+  dt-bindings: add vendor prefix for SmartLabs LLC
+  dt-bindings: arm: amlogic: add support for the SmartLabs SML-5442TW
+  arm64: dts: meson: add support for the SmartLabs SML-5442TW
+
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts | 284 +++++++++++++++++++++
+ 4 files changed, 288 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
+
+-- 
+2.7.4
+
