@@ -2,77 +2,193 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B279C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABD1C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150D520650
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:27:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584023259;
-	bh=NBfZaoPVGopy564X9jgj14gpTLz9p4AtaD57fbxxlBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sCHB15uP9zO38trBIeAU9Z6tugW92s4x6GNMwGNgUxdeslwTUk9dfbGr8a78EB9tD
-	 SC5rWBBQnP9Yx+bTlLxaMR+VE+Cmh8KB9LQ6xMV9lImGyIDm66iiSWmIrFpcnjllFl
-	 YHrtbSJsxFUUz3G4rY3jj9TD7XWh9ubk1MoruokY=
+	by mail.kernel.org (Postfix) with ESMTP id C4AFE206F7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o1ZWF37M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgCLO1f (ORCPT
+        id S1727688AbgCLOan (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:27:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbgCLO1f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:27:35 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 095EE20650;
-        Thu, 12 Mar 2020 14:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584023254;
-        bh=NBfZaoPVGopy564X9jgj14gpTLz9p4AtaD57fbxxlBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q/VzJofeHWyEZaMZ4TO3oapRN+d4deZwCz/ZgR9waOARWpnw4C+EdWAQXMvbGxxNi
-         fjFr/M1u+iH9Yys4vFp8Oc3vZPpIA9Cf2x6INiJFNJymPQ4zeovLQOGz8g7mp4jqxg
-         Rsj+433EcZYFxIp9Qg8SYcEkI+zfwKS0RaAczCck=
-Date:   Thu, 12 Mar 2020 22:27:22 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
-        peng.fan@nxp.com, aford173@gmail.com, ping.bai@nxp.com,
-        jun.li@nxp.com, shengjiu.wang@nxp.com, bjorn.andersson@linaro.org,
-        olof@lixom.net, vkoul@kernel.org, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 RESEND 4/4] arm64: dts: imx8mm: Add thermal zone
- support
-Message-ID: <20200312142721.GC1249@dragon>
-References: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
- <1582947862-11073-4-git-send-email-Anson.Huang@nxp.com>
+        Thu, 12 Mar 2020 10:30:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52922 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727668AbgCLOak (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 10:30:40 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 11so6330367wmo.2
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 07:30:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hBXPWLtpelw+nY/LZOxH+qmAA9K7eLUZ7Wq/7/BkEO4=;
+        b=o1ZWF37MxgjQAr/NGtbotHA0HyhQKxcepooGBHi1c28euwuBPp010CPFsms+PYs/Rv
+         Z88aGw/b/0UERM2StdBnELgH7WsH0LA+3Z2PXvPmJsUkokbLkpl+8bRXIwWxZZRLD8Lk
+         s3cXvIKtnWDJndGNjfnyCO3gK7ZGRum/wvTtML6Nh4T7w4gaaOpfjv1yNDr0pmNn3M2X
+         mEi0GS5BOVfZz7RyC/R5EIesUhB+CEYTHZ/mxkzARbEb/gn5E3FSGydEkRfbKUfWxdOs
+         KWv6UQAG1qpmQGarBr/c9u58LU7G7EjpygLvsLELKWahMy5ilCXMWP+BaZq6p+eDyUR+
+         jNgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hBXPWLtpelw+nY/LZOxH+qmAA9K7eLUZ7Wq/7/BkEO4=;
+        b=kTLtNNjdZjAW1YpC4ZQtYLX1I3P4ar2u2qBwvrdkGh+UeDpvNqD6ui7w61ZdKSD+fa
+         GcTfGah1nvYa6X7jl5fYIXKsFfR9QE46s4dQGymZgTnrat7zStxWjUs/5JS6WmYgg0CK
+         aQq8jW+rsISzesv6S/01nhekOyeuqQ/xpKoZ3hgg02B34MlVaGklqHUGasG5+B2oEH62
+         2a7hkHel9RIRZi6uzaACkmm6jdJ/LTW1M7HYwqjv7aYCql9QFI7lhQde2T4i04XzQa2Q
+         ggv05RclDxxdeCplOFR2pFg/ln9In7eZb0nke97ALpxjyuFesn7EG2SANjSUTEUrezD3
+         bkPQ==
+X-Gm-Message-State: ANhLgQ2ufBxa97mgJia4tndLtwlE6gO/8nY6W/YWVn49B+7Rz5aNP14w
+        108dBQ8sw6zt1o4VZXnqmlMksw==
+X-Google-Smtp-Source: ADFU+vszacSrrYCqDnuXEegLa5Dey9rPmnEFWaW9TRWiYpa8u7G+L5dPmOvEn9MsrZAcEP72NArz0A==
+X-Received: by 2002:a1c:b4d4:: with SMTP id d203mr5234251wmf.85.1584023437473;
+        Thu, 12 Mar 2020 07:30:37 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id v8sm72860454wrw.2.2020.03.12.07.30.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 07:30:36 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 1/5] arm64: dts: qcom: sdm845: add slimbus nodes
+Date:   Thu, 12 Mar 2020 14:30:20 +0000
+Message-Id: <20200312143024.11059-2-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
+References: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582947862-11073-4-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 11:44:22AM +0800, Anson Huang wrote:
-> Add thermal zone and tmu node to support i.MX8MM thermal
-> driver, ONLY cpu thermal zone is supported, and cpu cooling
-> is also added.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 93 ++++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
 
-Applied, thanks.
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 8798df6a1a7c..3f9fb719bfaa 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2653,6 +2653,87 @@
+ 			status = "disabled";
+ 		};
+ 
++		slim: slim@171c0000 {
++			compatible = "qcom,slim-ngd-v2.1.0";
++			reg = <0 0x171c0000 0 0x2c000>;
++			interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
++
++			qcom,apps-ch-pipes = <0x780000>;
++			qcom,ea-pc = <0x270>;
++			status = "okay";
++			dmas =	<&slimbam 3>, <&slimbam 4>,
++				<&slimbam 5>, <&slimbam 6>;
++			dma-names = "rx", "tx", "tx2", "rx2";
++
++			iommus = <&apps_smmu 0x1806 0x0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ngd@1 {
++				reg = <1>;
++				#address-cells = <2>;
++				#size-cells = <0>;
++
++				wcd9340_ifd: ifd@0{
++					compatible = "slim217,250";
++					reg  = <0 0>;
++				};
++
++				wcd9340: codec@1{
++					compatible = "slim217,250";
++					reg  = <1 0>;
++					slim-ifc-dev  = <&wcd9340_ifd>;
++
++					#sound-dai-cells = <1>;
++
++					interrupts-extended = <&tlmm 54 IRQ_TYPE_LEVEL_HIGH>;
++					interrupt-controller;
++					#interrupt-cells = <1>;
++
++					#clock-cells = <0>;
++					clock-frequency = <9600000>;
++					clock-output-names = "mclk";
++					qcom,micbias1-millivolt = <1800>;
++					qcom,micbias2-millivolt = <1800>;
++					qcom,micbias3-millivolt = <1800>;
++					qcom,micbias4-millivolt = <1800>;
++
++					#address-cells = <1>;
++					#size-cells = <1>;
++
++					wcdgpio: gpio-controller@42 {
++						compatible = "qcom,wcd9340-gpio";
++						gpio-controller;
++						#gpio-cells = <2>;
++						reg = <0x42 0x2>;
++					};
++
++					swm: swm@c85 {
++						compatible = "qcom,soundwire-v1.3.0";
++						reg = <0xc85 0x40>;
++						interrupts-extended = <&wcd9340 20>;
++
++						qcom,dout-ports	= <6>;
++						qcom,din-ports	= <2>;
++						qcom,ports-sinterval-low =/bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
++						qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
++						qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
++
++						#sound-dai-cells = <1>;
++						clocks = <&wcd9340>;
++						clock-names = "iface";
++						#address-cells = <2>;
++						#size-cells = <0>;
++
++
++					};
++				};
++			};
++		};
++
++		sound: sound {
++		};
++
+ 		usb_1_hsphy: phy@88e2000 {
+ 			compatible = "qcom,sdm845-qusb2-phy";
+ 			reg = <0 0x088e2000 0 0x400>;
+@@ -3497,6 +3578,18 @@
+ 			};
+ 		};
+ 
++		slimbam: dma@17184000 {
++			compatible = "qcom,bam-v1.7.0";
++			qcom,controlled-remotely;
++			reg = <0 0x17184000 0 0x2a000>;
++			num-channels  = <31>;
++			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
++			#dma-cells = <1>;
++			qcom,ee = <1>;
++			qcom,num-ees = <2>;
++			iommus = <&apps_smmu 0x1806 0x0>;
++		};
++
+ 		timer@17c90000 {
+ 			#address-cells = <2>;
+ 			#size-cells = <2>;
+-- 
+2.21.0
+
