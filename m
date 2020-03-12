@@ -2,117 +2,72 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FEAC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DF1C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B4E206E7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA1D2071B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584023794;
-	bh=tA9u82x+mBuMvX0imflvPkNR7cfJJBjdnn1jG5Npcug=;
+	s=default; t=1584024127;
+	bh=3V+qE2bmVHwG3+3FnGVMnNeT4gbtWXLMegY28bMW1zg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iPraY80t4ZOOyu80RLiHQmzwYnuZx/TSaAij2hJHTQsnBstSfLq63na+LVB/oRhd0
-	 F+oi/Y3yMQOeyxpTpeENjLajU6blj0m5D0jDZ5DQ3I9XP+gJj7gVwjf28xo9noDuPQ
-	 GXY6yMgubxuTk/yLCuy6Q5y53A9FTzfMbIBW1CNI=
+	b=XKLrYuQQCLR1xQ1AW7JeUTS53B0TiL2OejAwYGOTQYEzLAt9DMkAlUP6SnZskZxq+
+	 SOGFfDseVgba43xyQAMALhoUie5039uSZYP2liaeQPCSSrasmCavlB80OrfAOdvPVq
+	 bXGeHht14v6+v0lHZK8OSRn3QLjsgQZFMB70Bi5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgCLOge (ORCPT
+        id S1727512AbgCLOmD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:36:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60096 "EHLO mail.kernel.org"
+        Thu, 12 Mar 2020 10:42:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727450AbgCLOge (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:36:34 -0400
+        id S1727083AbgCLOmC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:42:02 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CBBD20663;
-        Thu, 12 Mar 2020 14:36:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E51C2071B;
+        Thu, 12 Mar 2020 14:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584023793;
-        bh=tA9u82x+mBuMvX0imflvPkNR7cfJJBjdnn1jG5Npcug=;
+        s=default; t=1584024122;
+        bh=3V+qE2bmVHwG3+3FnGVMnNeT4gbtWXLMegY28bMW1zg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lUGEe582YRpKTnG8i9OWpZeKCS0w2sKbrZrH+wNKDMwTbcv40YsTGVN7EDD9WAB+c
-         WcnXpZKVBz1VdLv8TKiuRGPLpXFSTRSI8dDGMW/rOgcvdbghZ9dS1s5snK+RHSSuGV
-         KW1ASOZmiwp/vVcu4bnb5sE34/Uflsq6JaJ9APSQ=
-Date:   Thu, 12 Mar 2020 22:36:22 +0800
+        b=jgC1NrhTkMGsvXTSlMZr4SUqqkR6Z2K7ruSHOPy+HXUOJpWt47qnwyRWvVuPQ8VR8
+         voHPgnOT9JH+uq7t4y3CR/eUpupi5T3LtWlyG/N84+ctoA4S61UVedJxYOUQ6Z3ziZ
+         Ry/CeiriWisbaO9wvsJoQQug289ZhMjFzdvAnwvk=
+Date:   Thu, 12 Mar 2020 22:41:53 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
+        Han Xu <han.xu@nxp.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1] ARM: dts: imx6q-marsboard: properly define rgmii PHY
-Message-ID: <20200312143621.GD1249@dragon>
-References: <20200306080353.9284-1-o.rempel@pengutronix.de>
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3] arm64: dts: enable fspi in imx8mm dts
+Message-ID: <20200312144152.GE1249@dragon>
+References: <20200306101957.1229406-1-aford173@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306080353.9284-1-o.rempel@pengutronix.de>
+In-Reply-To: <20200306101957.1229406-1-aford173@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 09:03:53AM +0100, Oleksij Rempel wrote:
-> The Atheros AR8035 PHY can be autodetected but can't use interrupt
-> support provided on this board. Define MDIO bus and the PHY node to make
-> it work properly.
+On Fri, Mar 06, 2020 at 04:19:57AM -0600, Adam Ford wrote:
+> Pull in upstream patch from NXP repo to:
+> enable fspi in imx8mm DT file
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  arch/arm/boot/dts/imx6q-marsboard.dts | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
-> index 84b30bd6908f..019488aaa30b 100644
-> --- a/arch/arm/boot/dts/imx6q-marsboard.dts
-> +++ b/arch/arm/boot/dts/imx6q-marsboard.dts
-> @@ -111,8 +111,23 @@ &fec {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_enet>;
->  	phy-mode = "rgmii-id";
-> -	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
->  	status = "okay";
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		/* Atheros AR8035 PHY */
-> +		rgmii_phy: ethernet-phy@4 {
-> +			reg = <4>;
-> +
-> +			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
-> +
+> Signed-off-by: Han Xu <han.xu@nxp.com>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Drop these newlines.
-
-Shawn
-
-> +			reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
-> +			reset-assert-us = <10000>;
-> +			reset-deassert-us = <1000>;
-> +		};
-> +	};
->  };
->  
->  &hdmi {
-> -- 
-> 2.25.1
-> 
+Applied, thanks.
