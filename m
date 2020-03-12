@@ -2,97 +2,81 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D08C1975A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57224C1975A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAAA20724
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:45:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mT9aYb42"
+	by mail.kernel.org (Postfix) with ESMTP id 3B7E720691
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgCLJpR (ORCPT
+        id S1726436AbgCLJy2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:45:17 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44248 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCLJpR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 05:45:17 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a10so5600694ljp.11
-        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 02:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pODGPcrOCo99BFK0Xjb4rhW9q/kdwVYGIJ2RjyD6fxs=;
-        b=mT9aYb42BoD8Blfh/Y8c4VPMYR6LI1miBJ07ovTPv3ci4OfSA2Dj6/vckh9GL3HnyE
-         yQ/5equoB5oGfS2ZL3RCijubgZtR0uVQNXxSNKZ+LsI2aihc2rQ/U39N2Fz3y5CalgbC
-         42NxHFjXctecJAI12xhPWsg9Ti5dOxMm/F60YF2DAYbAJpCP+vhKYiDVCchp4z396f8Q
-         qCNAIbtPV8v6cUhiYdm3s4iM0tWI8GqTHE+f57xwEkLT1jYLfdJJvlhcPnGxvsZMx0hc
-         g9qiPkvFKD3fL0BJj5BT5G9qHu2wyxMJcxvn2FD5DF2A8sahkkICe2gqFLIK72lwZeC9
-         jVQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pODGPcrOCo99BFK0Xjb4rhW9q/kdwVYGIJ2RjyD6fxs=;
-        b=iJrLo73ynWyYk8BLzpmeo4ez8QDZ2j8hADPJQcF/AFR+7VUTUiqchnA0brNj2WUg9F
-         q2gC8N0Cq5pzFceOSMZ30MCvyxyjR8xAuCq/C8YvJrtmDcGcOod6hs+zx1QkMCGO8cMq
-         Isu/M97Rt3m+M3kaZTnV8JeUoTbxs6zqnDEcB0Sh9+FYJxn87ut/YKmCy7rDBM+pwFQY
-         3/0Hx+KLoJ7nJFNXO3c7fxLPuwc16NdQiGt+bgKjXLZOj8Oe91SMh6dQjeeTSogTXd8J
-         IPRHWOkldfHP+THI3LDOXPhLILAvC2A4SW0TcfMXv9fM3JvgR4R7r3UFvuGzqVlJJjMj
-         NPpw==
-X-Gm-Message-State: ANhLgQ1TJ+jUzWJPslWuOx/Ce+zyaukbu7J4D+1Wyqb35gEDod/uA0FV
-        H06nTvw4hHVbIq+XfqOkEqPzCeTC5HyGo0feQG2diQ==
-X-Google-Smtp-Source: ADFU+vtCa8+SAjbo+XfDHquYUdyP/1RvO9lPi7QEw1xwTxgVgOSXWqDiS5mP6Y7qbippLNSQT46Y+Db+ZJCx+QAfgyU=
-X-Received: by 2002:a2e:9a90:: with SMTP id p16mr4719590lji.277.1584006315513;
- Thu, 12 Mar 2020 02:45:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200308115017.18563-1-sam@ravnborg.org> <20200308115017.18563-2-sam@ravnborg.org>
-In-Reply-To: <20200308115017.18563-2-sam@ravnborg.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Mar 2020 10:45:03 +0100
-Message-ID: <CACRpkdaFWp2DbKf+tm9VqeOzdshMypwN_mBbEgihw5COPeaUFQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] dt-bindings: display: fix panel warnings
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 12 Mar 2020 05:54:28 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:39628 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbgCLJy2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 05:54:28 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A445F200DC5;
+        Thu, 12 Mar 2020 10:54:26 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3ED7D200DF3;
+        Thu, 12 Mar 2020 10:54:18 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0EB6F402A5;
+        Thu, 12 Mar 2020 17:54:07 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        alifer.wsdm@gmail.com, shengjiu.wang@nxp.com, ping.bai@nxp.com,
+        jun.li@nxp.com, abel.vesa@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] arm64: dts: imx8mm-evk: Add secondary cpus supply
+Date:   Thu, 12 Mar 2020 17:47:44 +0800
+Message-Id: <1584006465-28494-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 8, 2020 at 12:50 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+Each cpu-core is supposed to list its supply separately, add
+supply for secondary cpus.
 
-> Fix following type af warnings in the panel bindings:
->
-> Warning (unit_address_vs_reg): /example-0/dsi/panel: node has a reg or ranges property, but no unit name
-> Warning (unit_address_vs_reg): /example-0/dsi@ff450000: node has a unit name, but no reg property
->
-> Removing the "@xxx" from the node name fixed first warning.
-> Adding a missing reg property fixed the second warning
->
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+index 951e14a..e5ec832 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -82,6 +82,18 @@
+ 	cpu-supply = <&buck2_reg>;
+ };
+ 
++&A53_1 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_2 {
++	cpu-supply = <&buck2_reg>;
++};
++
++&A53_3 {
++	cpu-supply = <&buck2_reg>;
++};
++
+ &ddrc {
+ 	operating-points-v2 = <&ddrc_opp_table>;
+ 
+-- 
+2.7.4
 
-Yours,
-Linus Walleij
