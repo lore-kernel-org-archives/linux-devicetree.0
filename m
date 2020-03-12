@@ -2,136 +2,92 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED14C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376B3C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A438C2067C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED96D2071B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584034738;
-	bh=x7j4e2lX4FBuJXa9tKzNF5KUj7yNomg3+sgejuK/t58=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Tuu+RAeyp8O5hJWG8JaHjkmBczrLLB8Ef1XcK21dXcKxCPiDTdhEWxZySZrW+s82a
-	 75H7fE2RIk3lhhpDSgC14x7K4haYLZg5vs45e//GTVbTk/28U6gjKY+Hmhm457kLjC
-	 wwxoy5fArmJk2zWtajWOEGppG9c6xZelpbOTvehg=
+	s=default; t=1584035193;
+	bh=0xugY3eBjcWN0mHlOPkR37sG1nv9DlkZJ2yQg22bCZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y6xEpeT8zh93wtC1nO3FHnjll5ZMOQiepLkT15tgkPX1ask5OTxehF1jHzb2GplvR
+	 Kyl3QCdzIq7q1hAZTDXavvchemqZ5vL6jgFMdu+bh27sUqkBJIvNIItdGq7qpWgsRi
+	 GlS37pZPxItQ09qWg/8yeKXp246VDlBdJ5iLSHwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgCLRi6 (ORCPT
+        id S1726420AbgCLRqc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:38:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:38854 "EHLO foss.arm.com"
+        Thu, 12 Mar 2020 13:46:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:39110 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgCLRi6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:38:58 -0400
+        id S1726385AbgCLRqc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 13:46:32 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5BE830E;
-        Thu, 12 Mar 2020 10:38:57 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C597930E;
+        Thu, 12 Mar 2020 10:46:31 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B6153F6CF;
-        Thu, 12 Mar 2020 10:38:57 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 17:38:55 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4565A3F67D;
+        Thu, 12 Mar 2020 10:46:31 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 17:46:29 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     broonie@kernel.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: dt-bindings: amlogic, meson-gx-spicc: add Amlogic G12A compatible" to the spi tree
-In-Reply-To:  <20200312133131.26430-9-narmstrong@baylibre.com>
-Message-Id:  <applied-20200312133131.26430-9-narmstrong@baylibre.com>
-X-Patchwork-Hint: ignore
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>, timur@kernel.org,
+        Xiubo.Lee@gmail.com, festevam@gmail.com,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/7] ASoC: fsl_asrc: rename asrc_priv to asrc
+Message-ID: <20200312174629.GI4038@sirena.org.uk>
+References: <cover.1583725533.git.shengjiu.wang@nxp.com>
+ <8282b290d39dd8dae5da02f5cbb3f647fa778aa0.1583725533.git.shengjiu.wang@nxp.com>
+ <20200309213016.GC11333@Asurada-Nvidia.nvidia.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PWfwoUCx3AFJRUBq"
+Content-Disposition: inline
+In-Reply-To: <20200309213016.GC11333@Asurada-Nvidia.nvidia.com>
+X-Cookie: Security check:  =?ISO-8859-1?Q?=20=07=07=07INTRUDER?= ALERT!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
 
-   spi: dt-bindings: amlogic, meson-gx-spicc: add Amlogic G12A compatible
+--PWfwoUCx3AFJRUBq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-has been applied to the spi tree at
+On Mon, Mar 09, 2020 at 02:30:17PM -0700, Nicolin Chen wrote:
+> On Mon, Mar 09, 2020 at 11:58:31AM +0800, Shengjiu Wang wrote:
+> > In order to move common structure to fsl_asrc_common.h
+> > we change the name of asrc_priv to asrc, the asrc_priv
+> > will be used by new struct fsl_asrc_priv.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+> This actually could be a cleanup patch which comes as the
+> first one in this series, so that we could ack it and get
+> merged without depending on others. Maybe next version?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Yes, please.  Or even just send it separately.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+--PWfwoUCx3AFJRUBq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+-----BEGIN PGP SIGNATURE-----
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5qdXQACgkQJNaLcl1U
+h9BEJgf+LDZKX86NoQW0sAyHfoI5bU8JDqMp0vov4A8JY6xc4HBhugGfdjg8WRoa
+CaqNzRLw0m6VFU+a/AxSv5OADsO1vkjA08+yXeuWr7wKxasqSAmBwq7tjsa9Cu7S
+QB0UowCO1N3Zn7zeWYFoJxiJ1iPlz9rUTDLw6U50yckkct9JlCnTKLmPpO7q5SRN
+DSqUC5+8Hc/SZGOSKLoYc1SFqFaNLUxuF7O2harTjFRbWeuEaptWcgmf2CeXgtI0
+pFBfaexsGndY8dFMvwkNeD74Yctt4xnefQRXwbMsbfhDpJFdruxSXYNkBHYMsIUk
+YzSFifSaFrNhKESXNDY0arVypHltMg==
+=rfH4
+-----END PGP SIGNATURE-----
 
-Thanks,
-Mark
-
-From 9ea7db818d9dcbbde581925b82bbe259e1926e20 Mon Sep 17 00:00:00 2001
-From: Neil Armstrong <narmstrong@baylibre.com>
-Date: Thu, 12 Mar 2020 14:31:30 +0100
-Subject: [PATCH] spi: dt-bindings: amlogic, meson-gx-spicc: add Amlogic G12A
- compatible
-
-The Amlogic G12A SPICC controllers uses a secondary clock used to feed the
-baud rate generator and the delay control logic.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://lore.kernel.org/r/20200312133131.26430-9-narmstrong@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/spi/amlogic,meson-gx-spicc.yaml  | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
-index 49b617c98ae7..9147df29022a 100644
---- a/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
-+++ b/Documentation/devicetree/bindings/spi/amlogic,meson-gx-spicc.yaml
-@@ -22,6 +22,7 @@ properties:
-     enum:
-       - amlogic,meson-gx-spicc # SPICC controller on Amlogic GX and compatible SoCs
-       - amlogic,meson-axg-spicc # SPICC controller on Amlogic AXG and compatible SoCs
-+      - amlogic,meson-g12a-spicc # SPICC controller on Amlogic G12A and compatible SoCs
- 
-   interrupts:
-     maxItems: 1
-@@ -40,6 +41,27 @@ properties:
-     items:
-       - const: core
- 
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - amlogic,meson-g12a-spicc
-+
-+then:
-+  properties:
-+    clocks:
-+      contains:
-+        items:
-+          - description: controller register bus clock
-+          - description: baud rate generator and delay control clock
-+
-+    clock-names:
-+      minItems: 2
-+      items:
-+        - const: core
-+        - const: pclk
-+
- required:
-   - compatible
-   - reg
--- 
-2.20.1
-
+--PWfwoUCx3AFJRUBq--
