@@ -2,31 +2,31 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D13DC1975A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 06:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFD7C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 06:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8645F20575
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 06:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C16B20575
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 06:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388002AbgCLGen (ORCPT
+        id S2387998AbgCLGej (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 02:34:43 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39209 "EHLO
+        Thu, 12 Mar 2020 02:34:39 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49987 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387784AbgCLGef (ORCPT
+        with ESMTP id S2387971AbgCLGef (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 02:34:35 -0400
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jCHQF-0006xL-Lz; Thu, 12 Mar 2020 07:34:23 +0100
+        id 1jCHQF-0006xO-Lz; Thu, 12 Mar 2020 07:34:23 +0100
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jCHQE-00069u-8z; Thu, 12 Mar 2020 07:34:22 +0100
+        id 1jCHQE-0006AD-B2; Thu, 12 Mar 2020 07:34:22 +0100
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -39,10 +39,12 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
         devicetree@vger.kernel.org
-Subject: [PATCH v3 0/4] add TJA1102 support
-Date:   Thu, 12 Mar 2020 07:34:15 +0100
-Message-Id: <20200312063419.23615-1-o.rempel@pengutronix.de>
+Subject: [PATCH v3 2/4] net: phy: tja11xx: add initial TJA1102 support
+Date:   Thu, 12 Mar 2020 07:34:17 +0100
+Message-Id: <20200312063419.23615-3-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200312063419.23615-1-o.rempel@pengutronix.de>
+References: <20200312063419.23615-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
@@ -54,29 +56,152 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-changes v3:
-- export part of of_mdiobus_register_phy() and reuse it in tja11xx
-  driver
-- coding style fixes
+TJA1102 is an dual T1 PHY chip. Both PHYs are separately addressable.
+Both PHYs are similar but have different amount of functionality. For
+example PHY 1 has no PHY ID and no health monitor.
 
-changes v2:
-- use .match_phy_device
-- add irq support
-- add add delayed registration for PHY1
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/nxp-tja11xx.c | 91 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 91 insertions(+)
 
-Oleksij Rempel (4):
-  dt-bindings: net: phy: Add support for NXP TJA11xx
-  net: phy: tja11xx: add initial TJA1102 support
-  net: mdio: of: export part of of_mdiobus_register_phy()
-  net: phy: tja11xx: add delayed registration of TJA1102 PHY1
-
- .../devicetree/bindings/net/nxp,tja11xx.yaml  |  61 ++++++
- drivers/net/phy/nxp-tja11xx.c                 | 201 +++++++++++++++++-
- drivers/of/of_mdio.c                          |  74 ++++---
- include/linux/of_mdio.h                       |  11 +-
- 4 files changed, 309 insertions(+), 38 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-
+diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+index b705d0bd798b..a064e4ab3616 100644
+--- a/drivers/net/phy/nxp-tja11xx.c
++++ b/drivers/net/phy/nxp-tja11xx.c
+@@ -15,6 +15,7 @@
+ #define PHY_ID_MASK			0xfffffff0
+ #define PHY_ID_TJA1100			0x0180dc40
+ #define PHY_ID_TJA1101			0x0180dd00
++#define PHY_ID_TJA1102			0x0180dc80
+ 
+ #define MII_ECTRL			17
+ #define MII_ECTRL_LINK_CONTROL		BIT(15)
+@@ -40,6 +41,10 @@
+ #define MII_INTSRC_TEMP_ERR		BIT(1)
+ #define MII_INTSRC_UV_ERR		BIT(3)
+ 
++#define MII_INTEN			22
++#define MII_INTEN_LINK_FAIL		BIT(10)
++#define MII_INTEN_LINK_UP		BIT(9)
++
+ #define MII_COMMSTAT			23
+ #define MII_COMMSTAT_LINK_UP		BIT(15)
+ 
+@@ -190,6 +195,7 @@ static int tja11xx_config_init(struct phy_device *phydev)
+ 			return ret;
+ 		break;
+ 	case PHY_ID_TJA1101:
++	case PHY_ID_TJA1102:
+ 		ret = phy_set_bits(phydev, MII_COMMCFG, MII_COMMCFG_AUTO_OP);
+ 		if (ret)
+ 			return ret;
+@@ -354,6 +360,55 @@ static int tja11xx_probe(struct phy_device *phydev)
+ 	return PTR_ERR_OR_ZERO(priv->hwmon_dev);
+ }
+ 
++static int tja1102_match_phy_device(struct phy_device *phydev, bool port0)
++{
++	int ret;
++
++	if ((phydev->phy_id & PHY_ID_MASK) != PHY_ID_TJA1102)
++		return 0;
++
++	ret = phy_read(phydev, MII_PHYSID2);
++	if (ret < 0)
++		return ret;
++
++	/* TJA1102 Port 1 has phyid 0 and doesn't support temperature
++	 * and undervoltage alarms.
++	 */
++	if (port0)
++		return ret ? 1 : 0;
++
++	return !ret;
++}
++
++static int tja1102_p0_match_phy_device(struct phy_device *phydev)
++{
++	return tja1102_match_phy_device(phydev, true);
++}
++
++static int tja1102_p1_match_phy_device(struct phy_device *phydev)
++{
++	return tja1102_match_phy_device(phydev, false);
++}
++
++static int tja11xx_ack_interrupt(struct phy_device *phydev)
++{
++	int ret;
++
++	ret = phy_read(phydev, MII_INTSRC);
++
++	return (ret < 0) ? ret : 0;
++}
++
++static int tja11xx_config_intr(struct phy_device *phydev)
++{
++	int value = 0;
++
++	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
++		value = MII_INTEN_LINK_FAIL | MII_INTEN_LINK_UP;
++
++	return phy_write(phydev, MII_INTEN, value);
++}
++
+ static struct phy_driver tja11xx_driver[] = {
+ 	{
+ 		PHY_ID_MATCH_MODEL(PHY_ID_TJA1100),
+@@ -385,6 +440,41 @@ static struct phy_driver tja11xx_driver[] = {
+ 		.get_sset_count = tja11xx_get_sset_count,
+ 		.get_strings	= tja11xx_get_strings,
+ 		.get_stats	= tja11xx_get_stats,
++	}, {
++		.name		= "NXP TJA1102 Port 0",
++		.features       = PHY_BASIC_T1_FEATURES,
++		.probe		= tja11xx_probe,
++		.soft_reset	= tja11xx_soft_reset,
++		.config_init	= tja11xx_config_init,
++		.read_status	= tja11xx_read_status,
++		.match_phy_device = tja1102_p0_match_phy_device,
++		.suspend	= genphy_suspend,
++		.resume		= genphy_resume,
++		.set_loopback   = genphy_loopback,
++		/* Statistics */
++		.get_sset_count = tja11xx_get_sset_count,
++		.get_strings	= tja11xx_get_strings,
++		.get_stats	= tja11xx_get_stats,
++		.ack_interrupt	= tja11xx_ack_interrupt,
++		.config_intr	= tja11xx_config_intr,
++
++	}, {
++		.name		= "NXP TJA1102 Port 1",
++		.features       = PHY_BASIC_T1_FEATURES,
++		/* currently no probe for Port 1 is need */
++		.soft_reset	= tja11xx_soft_reset,
++		.config_init	= tja11xx_config_init,
++		.read_status	= tja11xx_read_status,
++		.match_phy_device = tja1102_p1_match_phy_device,
++		.suspend	= genphy_suspend,
++		.resume		= genphy_resume,
++		.set_loopback   = genphy_loopback,
++		/* Statistics */
++		.get_sset_count = tja11xx_get_sset_count,
++		.get_strings	= tja11xx_get_strings,
++		.get_stats	= tja11xx_get_stats,
++		.ack_interrupt	= tja11xx_ack_interrupt,
++		.config_intr	= tja11xx_config_intr,
+ 	}
+ };
+ 
+@@ -393,6 +483,7 @@ module_phy_driver(tja11xx_driver);
+ static struct mdio_device_id __maybe_unused tja11xx_tbl[] = {
+ 	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1100) },
+ 	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1101) },
++	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1102) },
+ 	{ }
+ };
+ 
 -- 
 2.25.1
 
