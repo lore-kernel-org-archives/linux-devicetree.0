@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38134C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4333C4CECE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0509620724
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD4E206F7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jgrChhvT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lUAoS3jB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbgCLOaz (ORCPT
+        id S1727692AbgCLOao (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:30:55 -0400
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:33009 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727716AbgCLOav (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 10:30:51 -0400
-Received: by mail-wr1-f46.google.com with SMTP id a25so7784133wrd.0
-        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 07:30:49 -0700 (PDT)
+        Thu, 12 Mar 2020 10:30:44 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:56117 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727680AbgCLOao (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 10:30:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 6so6324956wmi.5
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 07:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Avkf50vmIXVLn6vftt8SeIEwKsLAXThhjPmhmV2jMv0=;
-        b=jgrChhvTkmqOK/HunW66SirMl/ynwIK6Aeod19ZbOXj6bEX/phSlSiC5vD2OtZWrVz
-         8lVfAAu2i5M+sFpr54NOgqEvPfO3XOK/hR9BF0+Or+jMIBHDkTOEAU26s9cL8Ma0DekB
-         1hkbYg4mlcEEmQN7OkgBMjVdgsb1KqfCLPxRQDrN/VEROg5hesseT+r0olW+OvhUcs+q
-         U16MHvf4JgGOuxb3rKXVytWFMTubvZeSAg1e198v0MRFKRO4XywUz2MD+UkOWAPO7cWs
-         QSZ6l94A0TUiYpz23tB7wzF+P9JeN0m0dPhlf1Yu/H+RBC7+FwDZSTTDAePIzo0N67Ez
-         bdiA==
+        bh=5XoF79W8hq9UCrrBx/AuXGekRPOiQVW+xhnnvppC058=;
+        b=lUAoS3jBfhTrogWCN/eWOlymGPzOVIO6uDkaK0S5k0U9fLUCmKAHSz1LANgPR5TiAi
+         5VM0/zo3qGWkTjuUTRBXdLN4WmS1f0NvErUE0RQYO5dNGdbgJoQM9D+W7r1GIBGAKYWD
+         eH1UwC7fzN0jFB5oXcbc/8m7wQmDipDdCczvrhkHXqXPxW0MBDnKbHfaBtqA1K67HLbB
+         gzVKrxka8Pwf3v+RVW4w6GAQBBIzSWQTJ2RNqILsI4+Iav2+NLcve+b1A9YclVWGy/Gt
+         VzsyOSrxJz7fskso54Q8D1ODeKdyxWn/r4vi+lxrFzyL7HB3YDaTPL7jZJFDk8+sxTha
+         9qZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Avkf50vmIXVLn6vftt8SeIEwKsLAXThhjPmhmV2jMv0=;
-        b=okpZiEOHwUwWiRBw5X6Aw014tt4zlkealyHRltcXv5rM1oTLwJvlRCuT0bjUOXYkY7
-         KSvqZ7Rg4C4GFFc5FMfGH4FJLnTctA2/MQ0uTmxB5fhO5XLuA377B0NQAriuVjt+JB8F
-         RCGAetgn1WNOpEq4xm1OIpkJQreaJvyM61wA1nXtFbf9TMf/BqCEKaBZPxtkWbGtxY5P
-         eAgq0Bk2eDRFgDUh5ES7fhLz0fUilJb99DGotYRQl4mYxLSSAfzUgKLMaKPxdR+0ODYk
-         Afk4VJP5sAMCvz+4rBUSJfPvt0HilSjRhbZogyhvjW4YMFQG1F1JMc1shZ1xOVTjoWXW
-         ZA0w==
-X-Gm-Message-State: ANhLgQ3DZ3KcVmCIZbXfeGA4hXfmPsyXjYJsQatPGNe9nmICzZSjkZJE
-        qZmP7KD2TBNgnpcASE++OlWUhsB6xqw=
-X-Google-Smtp-Source: ADFU+vsXVtVEuVdxGV3DL215cc14Vmb07eGBnvaa7iMqhEAt7kSzEw36/IKC+StZ02WGLY/NpcRSog==
-X-Received: by 2002:a5d:640a:: with SMTP id z10mr6984140wru.301.1584023448654;
-        Thu, 12 Mar 2020 07:30:48 -0700 (PDT)
+        bh=5XoF79W8hq9UCrrBx/AuXGekRPOiQVW+xhnnvppC058=;
+        b=Jql0/HiQTUV55MSndKqqGgmfYWZ1VTMjdCUWszWW8L6Owcev1jgkmhwqi4I0pyKfeE
+         mjPKRdssTzyU1nJF5ysVtSFLgY+rNriGIirBxF8cTZcPPz2imo6KyxoNTVJEvqWajHhb
+         DGXvq1wT+xad0VJWR9ROnDe0wp1QoNmw8HWeWF1zSop0Gan+Z+w5B3NOTvgFZvbayLPa
+         WsxFUVvqICfRzSYuYtjBwMxjmiYLv5ZkMMgUxKyNS3Cg/dm08V7veaNX50bGtExYZpBg
+         HTMUvMiBz+NIB7w0p0a2CnUYX4uYvGMKUN6MvQrpb+G6+xRBuc2Oi7thJ+QSVupf+eHk
+         nU9w==
+X-Gm-Message-State: ANhLgQ3j3oz8ndERntn6MlgeUwQWKICrNAuPhQnpNomHJaewZM36jhUI
+        Z2pava8EJRjNjMzhO4xxGINWBw==
+X-Google-Smtp-Source: ADFU+vuuWNlQxlgGu2yhvuHymuCNafA2USYTRTh+T/glr6LKiSEs7bnZmv957ExHfmjBQSq7VJZivQ==
+X-Received: by 2002:a1c:2048:: with SMTP id g69mr5253520wmg.187.1584023442365;
+        Thu, 12 Mar 2020 07:30:42 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id v8sm72860454wrw.2.2020.03.12.07.30.46
+        by smtp.gmail.com with ESMTPSA id v8sm72860454wrw.2.2020.03.12.07.30.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 07:30:47 -0700 (PDT)
+        Thu, 12 Mar 2020 07:30:41 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     bjorn.andersson@linaro.org, agross@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         robh+dt@kernel.org, linux-kernel@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 5/5] arm64: dts: qcom: db845c: add analog audio support
-Date:   Thu, 12 Mar 2020 14:30:24 +0000
-Message-Id: <20200312143024.11059-6-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 3/5] arm64: dts: qcom: c630: Enable audio support
+Date:   Thu, 12 Mar 2020 14:30:22 +0000
+Message-Id: <20200312143024.11059-4-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
 References: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
@@ -73,31 +73,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support to Analog audio via WSA881x speakers.
+This patch add support to audio via WSA881x Speakers and Headset.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 159 +++++++++++++++++++++
- 1 file changed, 159 insertions(+)
+ .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 113 ++++++++++++++++++
+ 1 file changed, 113 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index 6e60e81f8db7..94aa9227ca51 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -8,6 +8,8 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+index b255be3a4a0a..31c22836f84e 100644
+--- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
++++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+@@ -7,7 +7,10 @@
+ 
+ /dts-v1/;
+ 
++#include <dt-bindings/gpio/gpio.h>
  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
 +#include <dt-bindings/sound/qcom,q6afe.h>
 +#include <dt-bindings/sound/qcom,q6asm.h>
  #include "sdm845.dtsi"
  #include "pm8998.dtsi"
- #include "pmi8998.dtsi"
-@@ -200,6 +202,40 @@
- 	firmware-name = "qcom/sdm845/adsp.mdt";
+ 
+@@ -353,6 +356,107 @@
+ 	status = "okay";
  };
  
-+
 +&wcd9340{
 +	pinctrl-0 = <&wcd_intr_default>;
 +	pinctrl-names = "default";
@@ -109,11 +110,10 @@ index 6e60e81f8db7..94aa9227ca51 100644
 +	vdd-tx-supply = <&vreg_s4a_1p8>;
 +	vdd-rx-supply = <&vreg_s4a_1p8>;
 +	vdd-io-supply = <&vreg_s4a_1p8>;
-+
 +	swm: swm@c85 {
 +		left_spkr: wsa8810-left{
-+			compatible = "sdw10217201000";
-+			reg = <0 1>;
++			compatible = "sdw10217211000";
++			reg = <0 3>;
 +			powerdown-gpios = <&wcdgpio 2 GPIO_ACTIVE_HIGH>;
 +			#thermal-sensor-cells = <0>;
 +			sound-name-prefix = "SpkrLeft";
@@ -121,45 +121,13 @@ index 6e60e81f8db7..94aa9227ca51 100644
 +		};
 +
 +		right_spkr: wsa8810-right{
-+			compatible = "sdw10217201000";
-+			powerdown-gpios = <&wcdgpio 2 GPIO_ACTIVE_HIGH>;
-+			reg = <0 2>;
++			compatible = "sdw10217211000";
++			powerdown-gpios = <&wcdgpio 3 GPIO_ACTIVE_HIGH>;
++			reg = <0 4>;
 +			#thermal-sensor-cells = <0>;
 +			sound-name-prefix = "SpkrRight";
 +			#sound-dai-cells = <0>;
 +		};
-+	};
-+};
-+
- &apps_rsc {
- 	pm8998-rpmh-regulators {
- 		compatible = "qcom,pm8998-rpmh-regulators";
-@@ -535,6 +571,15 @@
- 		function = "gpio";
- 		bias-pull-up;
- 	};
-+
-+	wcd_intr_default: wcd_intr_default {
-+		pins = <54>;
-+		function = "gpio";
-+
-+		input-enable;
-+		bias-pull-down;
-+		drive-strength = <2>;
-+	};
- };
- 
- &uart6 {
-@@ -674,3 +719,117 @@
- 		bias-pull-up;
- 	};
- };
-+
-+/* QUAT I2S Uses 4 I2S SD Lines for audio on LT9611 HDMI Bridge */
-+&q6afedai {
-+	qi2s@22 {
-+		reg = <22>;
-+		qcom,sd-lines = <0 1 2 3>;
 +	};
 +};
 +
@@ -171,44 +139,21 @@ index 6e60e81f8db7..94aa9227ca51 100644
 +
 +	dai@1 {
 +		reg = <1>;
-+		direction = <2>;
-+	};
-+
-+	dai@2 {
-+		reg = <2>;
 +		direction = <1>;
-+	};
-+
-+	dai@3 {
-+		reg = <3>;
-+		direction = <2>;
-+		is-compress-dai;
 +	};
 +};
 +
 +&sound {
 +	compatible = "qcom,db845c-sndcard";
-+	pinctrl-0 = <&quat_mi2s_active
-+			 &quat_mi2s_sd0_active
-+			 &quat_mi2s_sd1_active
-+			 &quat_mi2s_sd2_active
-+			 &quat_mi2s_sd3_active>;
-+	pinctrl-names = "default";
-+	model = "DB845c";
++	model = "Lenovo-YOGA-C630-13Q50";
++
 +	audio-routing =
 +		"RX_BIAS", "MCLK",
-+		"AMIC1", "MIC BIAS1",
 +		"AMIC2", "MIC BIAS2",
-+		"DMIC0", "MIC BIAS1",
-+		"DMIC1", "MIC BIAS1",
-+		"DMIC2", "MIC BIAS3",
-+		"DMIC3", "MIC BIAS3",
 +		"SpkrLeft IN", "SPK1 OUT",
 +		"SpkrRight IN", "SPK2 OUT",
 +		"MM_DL1",  "MultiMedia1 Playback",
-+		"MM_DL2",  "MultiMedia2 Playback",
-+		"MM_DL4",  "MultiMedia4 Playback",
-+		"MultiMedia3 Capture", "MM_UL3";
++		"MultiMedia2 Capture", "MM_UL2";
 +
 +	mm1-dai-link {
 +		link-name = "MultiMedia1";
@@ -221,20 +166,6 @@ index 6e60e81f8db7..94aa9227ca51 100644
 +		link-name = "MultiMedia2";
 +		cpu {
 +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA2>;
-+		};
-+	};
-+
-+	mm3-dai-link {
-+		link-name = "MultiMedia3";
-+		cpu {
-+			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA3>;
-+		};
-+	};
-+
-+	mm4-dai-link {
-+		link-name = "MultiMedia4";
-+		cpu {
-+			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA4>;
 +		};
 +	};
 +
@@ -268,6 +199,26 @@ index 6e60e81f8db7..94aa9227ca51 100644
 +		};
 +	};
 +};
++
+ &tlmm {
+ 	gpio-reserved-ranges = <0 4>, <81 4>;
+ 
+@@ -382,6 +486,15 @@
+ 		bias-pull-up;
+ 		drive-strength = <2>;
+ 	};
++
++	wcd_intr_default: wcd_intr_default {
++		pins = <54>;
++		function = "gpio";
++
++		input-enable;
++		bias-pull-down;
++		drive-strength = <2>;
++	};
+ };
+ 
+ &uart6 {
 -- 
 2.21.0
 
