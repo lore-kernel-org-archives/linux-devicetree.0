@@ -2,100 +2,100 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F7BC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 11:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A8EC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 12:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D21962071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 11:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3278C206E7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 12:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgCLLog (ORCPT
+        id S1726390AbgCLME5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 07:44:36 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:54575 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLLog (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 07:44:36 -0400
-X-Originating-IP: 90.66.181.224
-Received: from localhost (lfbn-lyo-1-2013-224.w90-66.abo.wanadoo.fr [90.66.181.224])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7A727240004;
-        Thu, 12 Mar 2020 11:44:32 +0000 (UTC)
-Date:   Thu, 12 Mar 2020 12:44:32 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>, Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH 3/7] i2c: allow DT nodes without 'compatible'
-Message-ID: <20200312114432.GA3384@piout.net>
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
- <20200220172403.26062-4-wsa+renesas@sang-engineering.com>
- <CAMuHMdWaPfc050dZiRr+gAFzsdjSo9Vo70ztWgrMGPJxLUqupw@mail.gmail.com>
- <e43eaaf1-a294-902f-9a52-ebf8b29acab1@lucaceresoli.net>
- <20200312111950.GA1013@ninjato>
+        Thu, 12 Mar 2020 08:04:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:33302 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbgCLME5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 08:04:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDDB231B;
+        Thu, 12 Mar 2020 05:04:56 -0700 (PDT)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25B963F67D;
+        Thu, 12 Mar 2020 05:04:55 -0700 (PDT)
+Subject: Re: [PATCH 0/3] Request direct mapping for modem firmware subdevice
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     ohad@wizery.com, devicetree@vger.kernel.org,
+        linux-kernel-owner@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, iommu@lists.linux-foundation.org,
+        robh+dt@kernel.org, Sibi Sankar <sibis@codeaurora.org>,
+        agross@kernel.org
+References: <20200309182255.20142-1-sibis@codeaurora.org>
+ <20200310112332.GG3794@8bytes.org>
+ <4ed6ddd667a3e6f670084a443d141474@codeaurora.org>
+ <20200310162320.GL3794@8bytes.org>
+ <a50040a9-54fe-f682-dd7e-b2991b48d633@arm.com>
+ <ff805c5c647326c5edaddf2efec5cb87@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <497e40b8-300f-1b83-4312-93a58c459d1d@arm.com>
+Date:   Thu, 12 Mar 2020 12:05:00 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312111950.GA1013@ninjato>
+In-Reply-To: <ff805c5c647326c5edaddf2efec5cb87@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/03/2020 12:19:51+0100, Wolfram Sang wrote:
-> > Clearly this does not fit the case reported by Alexandre: a device
-> > having a driver which is known to be badly buggy, so we don't want to
-> > instantiate it. But again, this should not affect DT as it is not
-> > describing the HW, but only an implementation detail. Probably disabling
-> > or blacklisting the driver would be a better option there?
+On 2020-03-12 6:28 am, Sai Prakash Ranjan wrote:
+> Hi Robin,
 > 
-> "Fixing the driver" is the first thing coming to my mind ;) But yeah,
-> blacklisting would be another good solution. With only the information
-> above, DT is not the right place to fix a broken driver.
+> On 2020-03-10 22:14, Robin Murphy wrote:
+>> On 10/03/2020 4:23 pm, Joerg Roedel wrote:
+>>> On Tue, Mar 10, 2020 at 07:30:50PM +0530, Sibi Sankar wrote:
+>>>> The accesses are initiated by the firmware
+>>>> and they access modem reserved regions.
+>>>> However as explained in ^^ any accesses
+>>>> outside the region will result in a violation
+>>>> and is controlled through XPUs (protection units).
+>>>
+>>> Okay, this sounds like a case for arm_smmu_get_resv_region(). It should
+>>> return an entry for the reserved memory region the firmware needs to
+>>> access, so that generic iommu can setup this mapping.
+>>>
+>>> Note that it should return that entry only for your device, not for all
+>>> devices. Maybe there is a property in DT or IORT you can set to
+>>> transport this information into the arm-smmu driver.
+>>>
+>>> This is pretty similar to RMRR mapping on the Intel VT-d IOMMU or
+>>> Unity-mapped ranges in the AMD-Vi IOMMU.
+>>
+>> Yup, a way to describe boot-time memory regions in IORT is in the
+>> process of being specced out; the first attempt at an equivalent for
+>> DT is here:
+>>
+>> https://lore.kernel.org/linux-iommu/20191209150748.2471814-1-thierry.reding@gmail.com/ 
+>>
+>>
+>> If that's not enough and the SMMU still needs to treat certain Stream
+>> IDs specially because they may be untranslatable (due to having direct
+>> access to memory as a side-channel), then that should be handled in
+>> the SoC-specific corner of the SMMU driver, not delegated to
+>> individual endpoint drivers.
+>>
 > 
+> Are you talking about this one for SoC specific change - 
+> https://lore.kernel.org/patchwork/patch/1183530/
 
-To be clear, the driver is working properly but the HW isn't. It is a
-PMIC and we need to avoid linux talking to it so the PMIC doesn't end up
-killing the bus.
+Exactly - this particular wheel needs no reinventing at all.
 
-We end up with a node properly described in the device tree but with
-status = "disabled". The relevance to the discussion was that you know
-what is there and you want to avoid using its address.
+[ I guess I should go review those patches properly... :) ]
 
-See the pmic node on i2c1 in arch/arm/boot/dts/at91-sama5d3_xplained.dts
-for what I'm referring to.
-
-> > My apologies to Wolfram, I appreciate a lot the effort you are doing,
-> > but before reviewing this patch I have never realized what I tried to
-> > explain above.
-> 
-> All good, Luca! Talking over code usually brings in viewpoints which
-> have been missed so far. This is expected. Actually, I am very happy to
-> have this discussion!
-> 
-> All the best,
-> 
->    Wolfram
-> 
-
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Robin.
