@@ -2,88 +2,92 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6579EC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3241C1975A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDE120674
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9845A20739
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584047467;
-	bh=IAMG84HZpyw2tpXzi5VZejrQM+Rn7EB22igvc2R8fME=;
+	s=default; t=1584047572;
+	bh=kb7D+0MHbzrfqYAjWpLRVtucXss7W+zZ4rviXPThsSM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n2kJ39cw9yjLk8ZMRyU2zD4HZsK2mw79DxaWeY5eVvzQavlYUPN7ZO8IjRIaaNn1B
-	 IY2N1hEyXOmg1jlGeukcM20ibCdNlFTNAEbIxyRCA2ACgqGuN/zVl7vfHMo9YVBAvn
-	 e0Q5iig55OoMLLm2pmuVB84meUGZ+teqoO983Hi4=
+	b=ZBVTR4IC83IZUZ2Y5/tA6y7lOr6KNfq9qg91Wp6ege7GgkgrVZatbJ/uZcxW0enUu
+	 JDT1+YiDwys3HTMb5zSnnsR0v3a3dUbGo05FqpTSGdvl23rIfRH6ifAWTwA0y4yRU9
+	 eej7bPJeiFdPtpmeA0rd7vMHnmxECAW0y3RlCcr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgCLVLG (ORCPT
+        id S1726594AbgCLVMs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:11:06 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33709 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbgCLVLG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 17:11:06 -0400
-Received: by mail-oi1-f193.google.com with SMTP id r7so7093192oij.0;
-        Thu, 12 Mar 2020 14:11:05 -0700 (PDT)
+        Thu, 12 Mar 2020 17:12:48 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46082 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgCLVMr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 17:12:47 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a22so7049124oid.13;
+        Thu, 12 Mar 2020 14:12:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z1C/O9m/TAKtgL9ZhokPb6QEAILTEFVK153CVUT28Ak=;
-        b=scFdU+vHD1nyD2T+vMUD1p4+s6WIIwwleK8Bam7aZaqiGS8rVn6BLFNMo8YggiwFNZ
-         dpR5/itVmnGNqFTULZfWuRvvG5K19VxhS8bQStChI6tLFGSl2CUYP/e2QKsGFzBgVu57
-         yx6jOzlKS/wF173IyzhcnEkQYQaU4F2JuifHN0C0nmA7dkswCVkLvTR5kYDpUIlHVonj
-         +oByM5AWkj4nWZ5gXR8sv54+Erj84S4aDJlomNgSZY8uWa4aW+RQFDK0watN4n4qF7Cd
-         SxLxmO1dcwTgYV464h9bFZ+jsKPUf3FtSO1/rOazO8PQMJQM4T+jqu/7fyfI0bstnXMS
-         kYrg==
-X-Gm-Message-State: ANhLgQ0FWg8g/RQb9i33r+DBkTlkNT9IKm5/Y9Gik9AY+u8khRl64EMC
-        DD7+P/w9JJrMvtnEecDmbw==
-X-Google-Smtp-Source: ADFU+vsM8qWHegcdLt3Q2m7Gc6UyEn9KtddfGoHdlC/IxDspcPSBdxYiHo+WS7LgOCr6oVsfgRE3/w==
-X-Received: by 2002:aca:5317:: with SMTP id h23mr3092365oib.33.1584047465378;
-        Thu, 12 Mar 2020 14:11:05 -0700 (PDT)
+        bh=iHfZC1DChvttHXlnAFmMQXIUQJ7bISj0py1yPTC621o=;
+        b=Tn/6NeMQ1p7hgFE5tx12v8I1TqaNdlvFASRGW45RvN2zO18ggO9XUh59HJcm+da3aW
+         nUcajGo88aJ02H/7nz6JlLm28eXgA2hFkmStcUYneCa/k6zdMXpTqyzkvYj5y/g3JaOR
+         OUk3zXVZllE+BlXIq4H/sGFPJUx7wwLVZLAkr2gygyqOPWa0qxkYUjBErJ6M4Vbqa52I
+         aoACI9eSBs3iCTbIUQoVQbOzVSoTJK1DSWapm6MSYuC3rrEP7N51eJAhQcOVnF5QgxAo
+         r12qVd3OM3iO1T4jpUSMKKg8M4jNfCIGos23BCvGQbbOaErSX/30af+xXy4fWelY6Gd0
+         rQzQ==
+X-Gm-Message-State: ANhLgQ0+b+8FMrbQ4MwfHTwsRDA2Wd5Y/DsTmcSc3B411iceLx0kbu2o
+        WkMP2yddCNOdO5zaYZkMhw==
+X-Google-Smtp-Source: ADFU+vuqGomNwPy8gx+w21w80uogekI1AzXVgz+tHdFM9c90dK3d+sY1MwkzmMtYOWXvju3IzdcFDw==
+X-Received: by 2002:aca:5317:: with SMTP id h23mr3098489oib.33.1584047566566;
+        Thu, 12 Mar 2020 14:12:46 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e1sm6848806oth.66.2020.03.12.14.11.03
+        by smtp.gmail.com with ESMTPSA id e15sm7086620oie.3.2020.03.12.14.12.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 14:11:03 -0700 (PDT)
-Received: (nullmailer pid 15344 invoked by uid 1000);
-        Thu, 12 Mar 2020 21:11:02 -0000
-Date:   Thu, 12 Mar 2020 16:11:02 -0500
+        Thu, 12 Mar 2020 14:12:46 -0700 (PDT)
+Received: (nullmailer pid 21730 invoked by uid 1000);
+        Thu, 12 Mar 2020 21:12:45 -0000
+Date:   Thu, 12 Mar 2020 16:12:45 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Lee Jones <lee.jones@linaro.org>,
+Cc:     Sebastian Reichel <sre@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: syscon: Add syscon endian properties
- support
-Message-ID: <20200312211102.GA21647@bogus>
+        Ralf Baechle <ralf@linux-mips.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] dt-bindings: power: reset: Replace SYSCON
+ reboot-mode legacy bindings with YAML-based one
+Message-ID: <20200312211245.GA21628@bogus>
 References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
- <20200306130356.D9FCD8030794@mail.baikalelectronics.ru>
+ <20200306130401.C07838030795@mail.baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306130356.D9FCD8030794@mail.baikalelectronics.ru>
+In-Reply-To: <20200306130401.C07838030795@mail.baikalelectronics.ru>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:03:38PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+On Fri, 6 Mar 2020 16:03:39 +0300, <Sergey.Semin@baikalelectronics.ru> wrote:
 > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> In accordance with the syscon-driver (drivers/mfd/syscon.c) the syscon
-> dts-nodes may accept endian properties of the boolean type: little-endian,
-> big-endian, native-endian. Lets make sure that syscon bindings json-schema
-> also supports them.
+> Modern device tree bindings are supposed to be created as YAML-files
+> in accordance with dt-schema. This commit replaces SYSCON reboot-mode
+> legacy bare text bindings with YAML file. As before the bindings file
+> states that the corresponding dts node is supposed to be compatible
+> "syscon-reboot-mode" device and necessarily have an offset property
+> to determine which register from the regmap is supposed to keep the
+> mode on reboot.
 > 
 > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -91,26 +95,11 @@ On Fri, Mar 06, 2020 at 04:03:38PM +0300, Sergey.Semin@baikalelectronics.ru wrot
 > Cc: Paul Burton <paulburton@kernel.org>
 > Cc: Ralf Baechle <ralf@linux-mips.org>
 > ---
->  Documentation/devicetree/bindings/mfd/syscon.yaml | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  .../power/reset/syscon-reboot-mode.txt        | 35 ------------
+>  .../power/reset/syscon-reboot-mode.yaml       | 55 +++++++++++++++++++
+>  2 files changed, 55 insertions(+), 35 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-> index 39375e4313d2..9ee404991533 100644
-> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-> @@ -61,6 +61,11 @@ properties:
->      description:
->        Reference to a phandle of a hardware spinlock provider node.
->  
-> +patternProperties:
-> +  "^(big|little|native)-endian$":
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description: Bytes order of the system controller memory space.
 
-Common properties should have a type definition in a common schema. For 
-this one, I'd like it in the core schema in dtschema. 
-
-I'd expect for any specific 'syscon', either none or only a subset of 
-these are valid, so I don't think this should be added here.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
