@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABD1C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FCBC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AFE206F7
+	by mail.kernel.org (Postfix) with ESMTP id EED282074D
 	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o1ZWF37M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D4rQxAGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbgCLOan (ORCPT
+        id S1727684AbgCLOam (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:30:43 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52922 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727668AbgCLOak (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 10:30:40 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 11so6330367wmo.2
-        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 07:30:38 -0700 (PDT)
+        Thu, 12 Mar 2020 10:30:42 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:56110 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727680AbgCLOal (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 10:30:41 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 6so6324807wmi.5
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 07:30:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hBXPWLtpelw+nY/LZOxH+qmAA9K7eLUZ7Wq/7/BkEO4=;
-        b=o1ZWF37MxgjQAr/NGtbotHA0HyhQKxcepooGBHi1c28euwuBPp010CPFsms+PYs/Rv
-         Z88aGw/b/0UERM2StdBnELgH7WsH0LA+3Z2PXvPmJsUkokbLkpl+8bRXIwWxZZRLD8Lk
-         s3cXvIKtnWDJndGNjfnyCO3gK7ZGRum/wvTtML6Nh4T7w4gaaOpfjv1yNDr0pmNn3M2X
-         mEi0GS5BOVfZz7RyC/R5EIesUhB+CEYTHZ/mxkzARbEb/gn5E3FSGydEkRfbKUfWxdOs
-         KWv6UQAG1qpmQGarBr/c9u58LU7G7EjpygLvsLELKWahMy5ilCXMWP+BaZq6p+eDyUR+
-         jNgw==
+        bh=SrNGkCGGs9iZ9NyVy5uKVQ/RwyzbDUi+g2m1wLgGoLw=;
+        b=D4rQxAGFy94k2dAHm0ROepPHj2K7vit2D6GE1QsoJFz91IrG5EF84ZhJ+JfYj+4S+t
+         J5Syzl8Bb8S9ZTld5nfdGPhlZOkgSHJd0pTzuqZXEjzDvxR4m4bOHTkZxEpreEuNTobS
+         qGGGJb5UXvN7Z+OVXlGvfn95cIBiT45kzk+ze3D/vZ9MkDd6VmxiUGT8JOUz8be/jYp1
+         V5IVRirZAVqJlvm0xzefqxJPAqb6Kf9o+uCYfemYlCIa3UZQwfB0uev1xZc12Eg7KqFx
+         xdWqnJSZy2dYWrvWDo+BXoh9wDZCCJGfoZmSGp5eDmWK8HlCX8hclbhim9jmLcZF4nr4
+         D+IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hBXPWLtpelw+nY/LZOxH+qmAA9K7eLUZ7Wq/7/BkEO4=;
-        b=kTLtNNjdZjAW1YpC4ZQtYLX1I3P4ar2u2qBwvrdkGh+UeDpvNqD6ui7w61ZdKSD+fa
-         GcTfGah1nvYa6X7jl5fYIXKsFfR9QE46s4dQGymZgTnrat7zStxWjUs/5JS6WmYgg0CK
-         aQq8jW+rsISzesv6S/01nhekOyeuqQ/xpKoZ3hgg02B34MlVaGklqHUGasG5+B2oEH62
-         2a7hkHel9RIRZi6uzaACkmm6jdJ/LTW1M7HYwqjv7aYCql9QFI7lhQde2T4i04XzQa2Q
-         ggv05RclDxxdeCplOFR2pFg/ln9In7eZb0nke97ALpxjyuFesn7EG2SANjSUTEUrezD3
-         bkPQ==
-X-Gm-Message-State: ANhLgQ2ufBxa97mgJia4tndLtwlE6gO/8nY6W/YWVn49B+7Rz5aNP14w
-        108dBQ8sw6zt1o4VZXnqmlMksw==
-X-Google-Smtp-Source: ADFU+vszacSrrYCqDnuXEegLa5Dey9rPmnEFWaW9TRWiYpa8u7G+L5dPmOvEn9MsrZAcEP72NArz0A==
-X-Received: by 2002:a1c:b4d4:: with SMTP id d203mr5234251wmf.85.1584023437473;
-        Thu, 12 Mar 2020 07:30:37 -0700 (PDT)
+        bh=SrNGkCGGs9iZ9NyVy5uKVQ/RwyzbDUi+g2m1wLgGoLw=;
+        b=aBiNKrzxfldncH5nW1PJ9LwV3n2pNVvTWP4ySBrq6daogMyCpw0wYICT1kTmxKroLD
+         1NOJatjkkHBMQJHGoi/sNZRND+i4n3CRxXdJ7m1VlCicUXjx6dESttpJDrdhv2REU0es
+         L0RO9Sk9RfMetVuZl5zjI2LWiGa7jzPrQLkecgWnZXWbXDeYcUwxT7o/UEa/FvOflRie
+         0X/VSTaCmndIKMCdK9qaTOmdkE7FT05QaqyKLEKZoZEuU9jmFgTVJTc/wW7ruDQDquil
+         MgvIg9aCWVJZ36J9bfi8GV/B/gjd6kfOgHnMsCssuxxvoo9mOj6l7/31F7JKtCxzh3xS
+         2b/g==
+X-Gm-Message-State: ANhLgQ04QEzJBGDuyLdZJRM4MZ8n//iLKZa+C+Z11XxzGAJnzVeO3n2X
+        PmF0FyslYNSZpeMDWCvkxBbJBA==
+X-Google-Smtp-Source: ADFU+vuJj0o8QlwG2W3+jIY/Xgyi3mnCHF/7Y+tx6b0KN47miv5zepvBtXsr3VgPnZUh/MK0yaDsnw==
+X-Received: by 2002:a1c:418b:: with SMTP id o133mr5313833wma.165.1584023440172;
+        Thu, 12 Mar 2020 07:30:40 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id v8sm72860454wrw.2.2020.03.12.07.30.34
+        by smtp.gmail.com with ESMTPSA id v8sm72860454wrw.2.2020.03.12.07.30.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 07:30:36 -0700 (PDT)
+        Thu, 12 Mar 2020 07:30:38 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     bjorn.andersson@linaro.org, agross@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         robh+dt@kernel.org, linux-kernel@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 1/5] arm64: dts: qcom: sdm845: add slimbus nodes
-Date:   Thu, 12 Mar 2020 14:30:20 +0000
-Message-Id: <20200312143024.11059-2-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 2/5] arm64: dts: qcom: sdm845: add apr nodes
+Date:   Thu, 12 Mar 2020 14:30:21 +0000
+Message-Id: <20200312143024.11059-3-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
 References: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
@@ -75,120 +75,79 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 93 ++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 52 ++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8798df6a1a7c..3f9fb719bfaa 100644
+index 3f9fb719bfaa..5b7626f2a27b 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2653,6 +2653,87 @@
- 			status = "disabled";
- 		};
- 
-+		slim: slim@171c0000 {
-+			compatible = "qcom,slim-ngd-v2.1.0";
-+			reg = <0 0x171c0000 0 0x2c000>;
-+			interrupts = <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>;
+@@ -17,6 +17,7 @@
+ #include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+ #include <dt-bindings/reset/qcom,sdm845-pdc.h>
++#include <dt-bindings/soc/qcom,apr.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+ #include <dt-bindings/thermal/thermal.h>
+@@ -491,6 +492,57 @@
+ 			label = "lpass";
+ 			qcom,remote-pid = <2>;
+ 			mboxes = <&apss_shared 8>;
 +
-+			qcom,apps-ch-pipes = <0x780000>;
-+			qcom,ea-pc = <0x270>;
-+			status = "okay";
-+			dmas =	<&slimbam 3>, <&slimbam 4>,
-+				<&slimbam 5>, <&slimbam 6>;
-+			dma-names = "rx", "tx", "tx2", "rx2";
-+
-+			iommus = <&apps_smmu 0x1806 0x0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ngd@1 {
-+				reg = <1>;
-+				#address-cells = <2>;
++			apr {
++				compatible = "qcom,apr-v2";
++				qcom,glink-channels = "apr_audio_svc";
++				qcom,apr-domain = <APR_DOMAIN_ADSP>;
++				#address-cells = <1>;
 +				#size-cells = <0>;
++				qcom,intents = <512 20>;
 +
-+				wcd9340_ifd: ifd@0{
-+					compatible = "slim217,250";
-+					reg  = <0 0>;
++				apr-service@3 {
++					reg = <APR_SVC_ADSP_CORE>;
++					compatible = "qcom,q6core";
++					qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
 +				};
 +
-+				wcd9340: codec@1{
-+					compatible = "slim217,250";
-+					reg  = <1 0>;
-+					slim-ifc-dev  = <&wcd9340_ifd>;
-+
-+					#sound-dai-cells = <1>;
-+
-+					interrupts-extended = <&tlmm 54 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-controller;
-+					#interrupt-cells = <1>;
-+
-+					#clock-cells = <0>;
-+					clock-frequency = <9600000>;
-+					clock-output-names = "mclk";
-+					qcom,micbias1-millivolt = <1800>;
-+					qcom,micbias2-millivolt = <1800>;
-+					qcom,micbias3-millivolt = <1800>;
-+					qcom,micbias4-millivolt = <1800>;
-+
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					wcdgpio: gpio-controller@42 {
-+						compatible = "qcom,wcd9340-gpio";
-+						gpio-controller;
-+						#gpio-cells = <2>;
-+						reg = <0x42 0x2>;
-+					};
-+
-+					swm: swm@c85 {
-+						compatible = "qcom,soundwire-v1.3.0";
-+						reg = <0xc85 0x40>;
-+						interrupts-extended = <&wcd9340 20>;
-+
-+						qcom,dout-ports	= <6>;
-+						qcom,din-ports	= <2>;
-+						qcom,ports-sinterval-low =/bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
-+						qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
-+						qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
-+
-+						#sound-dai-cells = <1>;
-+						clocks = <&wcd9340>;
-+						clock-names = "iface";
-+						#address-cells = <2>;
++				q6afe: apr-service@4 {
++					compatible = "qcom,q6afe";
++					reg = <APR_SVC_AFE>;
++					qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
++					q6afedai: dais {
++						compatible = "qcom,q6afe-dais";
++						#address-cells = <1>;
 +						#size-cells = <0>;
++						#sound-dai-cells = <1>;
++					};
++				};
 +
++				q6asm: apr-service@7 {
++					compatible = "qcom,q6asm";
++					reg = <APR_SVC_ASM>;
++					qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
++					q6asmdai: dais {
++						compatible = "qcom,q6asm-dais";
++						#address-cells = <1>;
++						#size-cells = <0>;
++						#sound-dai-cells = <1>;
++						iommus = <&apps_smmu 0x1821 0x0>;
++					};
++				};
 +
++				q6adm: apr-service@8 {
++					compatible = "qcom,q6adm";
++					reg = <APR_SVC_ADM>;
++					qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
++					q6routing: routing {
++						compatible = "qcom,q6adm-routing";
++						#sound-dai-cells = <0>;
 +					};
 +				};
 +			};
-+		};
 +
-+		sound: sound {
-+		};
-+
- 		usb_1_hsphy: phy@88e2000 {
- 			compatible = "qcom,sdm845-qusb2-phy";
- 			reg = <0 0x088e2000 0 0x400>;
-@@ -3497,6 +3578,18 @@
- 			};
- 		};
- 
-+		slimbam: dma@17184000 {
-+			compatible = "qcom,bam-v1.7.0";
-+			qcom,controlled-remotely;
-+			reg = <0 0x17184000 0 0x2a000>;
-+			num-channels  = <31>;
-+			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			qcom,ee = <1>;
-+			qcom,num-ees = <2>;
-+			iommus = <&apps_smmu 0x1806 0x0>;
-+		};
-+
- 		timer@17c90000 {
- 			#address-cells = <2>;
- 			#size-cells = <2>;
+ 			fastrpc {
+ 				compatible = "qcom,fastrpc";
+ 				qcom,glink-channels = "fastrpcglink-apps-dsp";
 -- 
 2.21.0
 
