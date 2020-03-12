@@ -2,121 +2,99 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF3EC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 13:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46589C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 13:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B8C206FA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 13:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NeWi4sT4"
+	by mail.kernel.org (Postfix) with ESMTP id 15B6F20663
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 13:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584018823;
+	bh=OLCs9wDW5DLwK6glkoG1xXvwb8u+w1JpNNt/MSUzvEw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XueWFaIB/XYREz9d9tywzA/D7O/4JCkZPzi9Mb9uIT6875S1SvH97sNfUpmv6dqGD
+	 jau+Rkq+xQPl21pG8ZbVhsP70hqYO72P/ggisqzQDYXVRtHry/wYXfR1sRj/Y95bA9
+	 ++SE+/N1ajWpAnPc5iAuGckT4ZsqBfYHGA4qhtBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgCLNJR (ORCPT
+        id S1727123AbgCLNNm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 09:09:17 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:35941 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbgCLNJR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 09:09:17 -0400
-Received: by mail-ua1-f68.google.com with SMTP id 8so2078336uar.3
-        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 06:09:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LyzsKuloOrXeAT1eDgIMEyFoe/19CJB+RPiJ8KPwQIw=;
-        b=NeWi4sT4tcbOtVyLPuM+OlmGb0SVww73M2/R4+x0yevjrTcctku9ZniQ0wxvDpbhJ3
-         I4R/OYEqZArLPzoutN66dWfc7JJ37NZL/mNx9nxoeLvvnrgJEWcc1CXVMf+zn3Au+w3U
-         okoA4mIsV2nkwV65aXMAwIswdl64TXCOqmu4YYKwjkzos3miKzEHnZ+GpHOuYx7uLGaE
-         zHIWyCppm77BMtgL6QzXZ1Hmzbggl/6H03ugd/cIfkOT8qbVLz6/gLHeUuFfSjA9Xeoa
-         MPG4tdiKgMXWO+eh5rsKNsC90o+9x14NA86uN0lqIQ3Mf/DoxgdetNVvKcjGiJ0mRcBA
-         R3aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LyzsKuloOrXeAT1eDgIMEyFoe/19CJB+RPiJ8KPwQIw=;
-        b=MAwQE7TW1Pn3LliTXV8bS+WrbHYvJee4Qqsa1fyoiKb5YhOYp3mJLmGPDWbL3o7iWR
-         unDiXTbRrZqOWBjM+SdBLf+5xCPK7CsO6fX+B9qAxZCExIyWZWHZidf8WFoKWUnoNiCM
-         goLSaH4XGIKEiBxYJ1jzgVjOLxq6Lf82xGFHwlboKp1RSFGPJVcNten23HyR15sH/jXx
-         gQzpvkx1HCOjQQ9yM/H/9dri8KN86v4ticfgiDHEOgX5ba4UZJbISCyzJ/XZa+bP6BOe
-         pUSKF3wrTPyngWKWK8jkumEtMp6qFSAYQYVGvEPY4h+ppo/C9vh3tgxJNOBg5ngMLnh7
-         TQJw==
-X-Gm-Message-State: ANhLgQ3oGVh0yxDwIP82GC5F+UsqLStf6nYQuVWooCIOHCpv39T7k9yl
-        mn+IhgNTIrtArfNA3wHgCsbzcUhLzQWGQWoZLTSKGw==
-X-Google-Smtp-Source: ADFU+vvpfThPEsySr4RvSlP6UPDA5AYK/x2Ak/VHoJ9GoNUgCMWeZ+k5a42yKU7sePemyrIkQzJo3xMLVDtx8jEJPkw=
-X-Received: by 2002:ab0:7381:: with SMTP id l1mr4821390uap.104.1584018547554;
- Thu, 12 Mar 2020 06:09:07 -0700 (PDT)
+        Thu, 12 Mar 2020 09:13:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgCLNNm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 09:13:42 -0400
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F0622071C
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 13:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584018821;
+        bh=OLCs9wDW5DLwK6glkoG1xXvwb8u+w1JpNNt/MSUzvEw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ESG9DyqOBtb3RY9JZ8+KWe4xtjArS1LrAi62Ut7Q9YGKrM49cnixegAQl2+B//l1p
+         5vF1N7TMBktea7/YfUwAOe6WZZSUS9hFlfar8X+r16vp9X58Fve69WgAVHhGpGeQ/C
+         F3Awe52tsGjZQOvFr+uhrxusXABsT1jl1XnEamKM=
+Received: by mail-qk1-f169.google.com with SMTP id b5so5990958qkh.8
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 06:13:41 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3SiJOaJIBCgkKh3ZW8H69BaqmtP2U4gOwtVCtdyqPjUSBz6B/e
+        mpDW/L3DfKKcwBetNXXQke2Qo0NhHwZUBCepmA==
+X-Google-Smtp-Source: ADFU+vsl+NWGl4RtiFZjKswLmhm4fAbnZDjrreYI1ja6LxDiRHZLHZlRiEDnADMNoidWwaIebO8AI/TFTKYi20bRWw0=
+X-Received: by 2002:a37:aa92:: with SMTP id t140mr6922921qke.119.1584018820626;
+ Thu, 12 Mar 2020 06:13:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
-In-Reply-To: <20200306174413.20634-1-nsaenzjulienne@suse.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 12 Mar 2020 14:08:31 +0100
-Message-ID: <CAPDyKFp+XwGog_w+8Sv1hYA-Umi6Rt2LYR1fyMEEb9abdb9nGQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] Raspbery Pi 4 vmmc regulator support
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        phil@raspberrypi.com,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        linux-rpi-kernel@lists.infradead.org,
-        DTML <devicetree@vger.kernel.org>
+References: <20200308115017.18563-1-sam@ravnborg.org> <20200308115017.18563-2-sam@ravnborg.org>
+ <e584e779-aab3-1a41-f198-a5585d9be2e8@st.com>
+In-Reply-To: <e584e779-aab3-1a41-f198-a5585d9be2e8@st.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 12 Mar 2020 08:13:25 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK4Wa-Z+2EOOTsUqfcXwV33o18eaUzq5-cYE5Zpirtyzw@mail.gmail.com>
+Message-ID: <CAL_JsqK4Wa-Z+2EOOTsUqfcXwV33o18eaUzq5-cYE5Zpirtyzw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] dt-bindings: display: fix panel warnings
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 6 Mar 2020 at 18:44, Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+On Thu, Mar 12, 2020 at 5:21 AM Benjamin GAIGNARD
+<benjamin.gaignard@st.com> wrote:
 >
-> The series first cleans up a common pattern, which is ultimately needed
-> to integrate the regulator with bcm2711's sdhci-iproc. It then
-> introduces the relevant device-tree changes.
 >
-> ---
 >
-> Changes since v1:
->  - Use helper function istead of quirk
->  - Add GPIO label
+> On 3/8/20 12:50 PM, Sam Ravnborg wrote:
+> > Fix following type af warnings in the panel bindings:
+> >
+> > Warning (unit_address_vs_reg): /example-0/dsi/panel: node has a reg or ranges property, but no unit name
+> > Warning (unit_address_vs_reg): /example-0/dsi@ff450000: node has a unit name, but no reg property
+> >
+> > Removing the "@xxx" from the node name fixed first warning.
+> > Adding a missing reg property fixed the second warning
+> >
+> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > Cc: Maxime Ripard <mripard@kernel.org>
+> > Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 >
-> Nicolas Saenz Julienne (11):
->   mmc: sdhci: Introduce sdhci_set_power_and_bus_voltage()
->   mmc: sdhci: arasan: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: milbeaut: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: at91: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: pxav3: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: xenon: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: am654: Use sdhci_set_power_and_voltage()
->   mmc: sdhci: Unexport sdhci_set_power_noreg()
->   mmc: sdhci: iproc: Add custom set_power() callback for bcm2711
->   ARM: dts: bcm2711: Update expgpio's GPIO labels
->   ARM: dts: bcm2711: Add vmmc regulator in emmc2
->
->  arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 13 ++++++++++++-
->  drivers/mmc/host/sdhci-iproc.c        | 17 ++++++++++++++++-
->  drivers/mmc/host/sdhci-milbeaut.c     | 13 +------------
->  drivers/mmc/host/sdhci-of-arasan.c    | 15 ++-------------
->  drivers/mmc/host/sdhci-of-at91.c      | 18 +-----------------
->  drivers/mmc/host/sdhci-pxav3.c        | 20 +-------------------
->  drivers/mmc/host/sdhci-xenon.c        | 20 +-------------------
->  drivers/mmc/host/sdhci.c              | 24 +++++++++++++++++++++---
->  drivers/mmc/host/sdhci.h              |  5 +++--
->  drivers/mmc/host/sdhci_am654.c        | 17 +++--------------
->  10 files changed, 61 insertions(+), 101 deletions(-)
->
-> --
-> 2.25.1
->
+> I will add W=1 in my command line when check the yaml files to not
+> reproduce this later.
 
-Patch 1-4, 6, 9 applied for next, thanks!
+No need to starting in 5.7.
 
-Kind regards
-Uffe
+Rob
