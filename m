@@ -6,95 +6,87 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E47C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 15:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36BFC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 15:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA462067C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 15:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99234206E7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 15:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584027920;
-	bh=4fVGaIU71xTNpLdmugzDT40zURtQ9MqF2B6hG903oWc=;
+	s=default; t=1584028247;
+	bh=9RvY5MzlFwRKcPZWSEbnNYJ3vmrk3Gq0u1qQFSSh8nA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W/Syw138qtRZiDpx6P2pxBXqGbQ3VJkufHYPJNGEv0U5IJ6LpR3kt9SCYM1M0fbHI
-	 EXrk18OBst0c6nHTxhF+S7UQV8BxWK9ZYtIv4dNPYu754sq5c5G43SpLDh+NVbkMLZ
-	 LbT+OYoc33XLqk3cXXg294eIjdxvGmXGhGrA+ObU=
+	b=Q2x13GUqXh1tVeNCiuhCY8STDGUk3hd3JgpbfMOC6oSgE8BraDEhObyuKGsIwEJec
+	 KMrpnF7F9Oxk2b4dUt37G86mjikyNsLOjTGH2fAw6GNLq9hs5dHGFv7FMCzbLVHaDK
+	 J3jjXaa9yDyP05Dv3i4ChVqr5ig7cdncKsp5fNz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727526AbgCLPpU (ORCPT
+        id S1727481AbgCLPur (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:45:20 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43842 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbgCLPpU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 11:45:20 -0400
-Received: by mail-ot1-f66.google.com with SMTP id a6so6699596otb.10;
-        Thu, 12 Mar 2020 08:45:19 -0700 (PDT)
+        Thu, 12 Mar 2020 11:50:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40496 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727240AbgCLPuq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 11:50:46 -0400
+Received: by mail-ot1-f65.google.com with SMTP id h17so6753492otn.7;
+        Thu, 12 Mar 2020 08:50:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=omZBFYa2QsjHQtBNswRRHIFur2RG8M6Zjr+ms/JBsZg=;
-        b=QXUuHuUYBoA/8e9b1gHRmgszsKnxmH2vFEXgNXtXgXGVxUkEJjrU2McG7XcDfygCCj
-         1LQODehBr+L4Ie+4vG+L34Z5lb/eGHbVDwz17fIlPW1D5UdINhCcAVzfhQPSyEwwLmyL
-         ikDBPL1dnvudoAkbT/SQEuboKB008Mt8BZ7kxv6cQ0hqkTrr2ss7IjGMjgE20xoGT7aZ
-         Ja5YolFfNCGMS6TgMVtkTU0kCCzq6tj9rZC9Cg+MY8cEA8CNyTquvcTYmVhcg0t0TtXc
-         tuCWQeV2jJ1ExHSp3+z/EOtH0Ox27gzpSAjKBmrmKrR4mXyIQsI4tR0IG4rlTDHCMOGl
-         vlDw==
-X-Gm-Message-State: ANhLgQ1nLmG6ocaZPpAIT2P/RpTE4cgR5RZ6DS6daUF7qKi2QAHrrwvX
-        cBhU2JKPc3WLBpqtlDIxuA==
-X-Google-Smtp-Source: ADFU+vuRP1xVylZgCCtabXwadQXw7mcqdokmzky4hJinvtfoqJ4Nvw8V3ns+ImZHIsyS57UPZPelDw==
-X-Received: by 2002:a9d:18f:: with SMTP id e15mr6454176ote.42.1584027919060;
-        Thu, 12 Mar 2020 08:45:19 -0700 (PDT)
+        bh=VmSnjUg0wpW0rLa5TeV8iHT4CfQoAhuM8tvfmUdklCI=;
+        b=dk/dw4TzGWxjDvOBxagGNuaP763REENZC9LsEIVgPOdedkuZX4tK2foU1JN2Tzlbcw
+         Tq+2lNdbl7R0cdlVFQI9C+q9v6BgkzzLP8E0FB7KO00fZ3csfLdBGLiFaY7u3h6OhDa1
+         sxbOnEtR5rLqWKGdnZdrZewetSJk/EP79J6QGun6/ZBRTO0ZSmV8PIpQrTNOaLvkXAuX
+         cr/H2Dv2Yo9WJN7yHdcddGSa90f6IfyHMPmsTRs/ZAeaMxv9J6wUkQXZhRTOZoKbSU4W
+         woBaKcPzfO7o8BHwIkl++ehtfy/ICGfcihyIZToLwAFFB8H4XGC5dYh9Od0KW+rusFOs
+         Z8xA==
+X-Gm-Message-State: ANhLgQ18yj8UJGYRY20TkIK9Zj4OAAw4U8c40ltQzqP1Ui88A6pIcYp5
+        kzv0nBpSa4RnTuJ01qFnyA==
+X-Google-Smtp-Source: ADFU+vtZdELV7BCrf8YMUOe0vH5ZKPB7JioeAIO2CIRABTehRRGFIR2nr2WBf9t9ELKW/BQbZJCPgw==
+X-Received: by 2002:a9d:404b:: with SMTP id o11mr6582435oti.368.1584028245722;
+        Thu, 12 Mar 2020 08:50:45 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k25sm12639065otl.34.2020.03.12.08.45.17
+        by smtp.gmail.com with ESMTPSA id 81sm7075701otu.51.2020.03.12.08.50.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 08:45:18 -0700 (PDT)
-Received: (nullmailer pid 17128 invoked by uid 1000);
-        Thu, 12 Mar 2020 15:45:17 -0000
-Date:   Thu, 12 Mar 2020 10:45:17 -0500
+        Thu, 12 Mar 2020 08:50:45 -0700 (PDT)
+Received: (nullmailer pid 25348 invoked by uid 1000);
+        Thu, 12 Mar 2020 15:50:44 -0000
+Date:   Thu, 12 Mar 2020 10:50:44 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Chen-Yu Tsai <wens@csie.org>,
-        Ondrej Jirman <megous@megous.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [PATCH 2/5] dt-bindings: panel: add binding for Xingbangda
- XBD599 panel
-Message-ID: <20200312154517.GB15635@bogus>
-References: <20200311163329.221840-1-icenowy@aosc.io>
- <20200311163329.221840-3-icenowy@aosc.io>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, robh+dt@kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/5] dt-bindings: i2c: convert rockchip i2c bindings
+ to yaml
+Message-ID: <20200312155044.GA25292@bogus>
+References: <20200305143611.10733-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311163329.221840-3-icenowy@aosc.io>
+In-Reply-To: <20200305143611.10733-1-jbx6244@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 12 Mar 2020 00:33:26 +0800, Icenowy Zheng wrote:
-> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI LCD panel.
+On Thu,  5 Mar 2020 15:36:07 +0100, Johan Jonker wrote:
+> Current dts files with 'i2c' nodes are manually verified.
+> In order to automate this process i2c-rk3x.txt
+> has to be converted to yaml. In the new setup
+> i2c-rk3x.yaml will inherit properties from
+> i2c-controller.yaml.
 > 
-> Add its device tree binding.
+> Also change document name in MAINTAINERS.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
->  .../display/panel/xingbangda,xbd599.yaml      | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/xingbangda,xbd599.yaml
+>  Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  68 -----------
+>  .../devicetree/bindings/i2c/i2c-rk3x.yaml          | 129 +++++++++++++++++++++
+>  MAINTAINERS                                        |   2 +-
+>  3 files changed, 130 insertions(+), 69 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Error: Documentation/devicetree/bindings/display/panel/xingbangda,xbd599.example.dts:17.1-5 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/display/panel/xingbangda,xbd599.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/display/panel/xingbangda,xbd599.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1253057
-Please check and re-submit.
+Reviewed-by: Rob Herring <robh@kernel.org>
