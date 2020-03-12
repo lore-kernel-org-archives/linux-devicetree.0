@@ -2,99 +2,105 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB01BC1975A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 08:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11130C1975A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 08:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28F220716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 08:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B3420737
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 08:35:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cBt/nf07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgCLIaR (ORCPT
+        id S1726310AbgCLIfX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:30:17 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45809 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCLIaQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 04:30:16 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f21so5211597otp.12;
-        Thu, 12 Mar 2020 01:30:16 -0700 (PDT)
+        Thu, 12 Mar 2020 04:35:23 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44648 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgCLIfX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 04:35:23 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l18so6214645wru.11;
+        Thu, 12 Mar 2020 01:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Sc+ZcHvv4+8Y0JehjCkVMYBTnshyW1dRffEc1sDr2kY=;
+        b=cBt/nf07cfPvPHFHC9IdWDrxvDOJRqwBlGQE5eFmFXv/bzoBVSChf3BLbYu/Zp5ygf
+         uesy7OOJKb23uz7xctfhdY7Dk1pE05o+lOrWczNdnXV5XvWlqxCcBnP7oU4Iz+qoIICg
+         F6oAQtqxivabsR+F2f5kwesho0Jty1nUDcjL6+keOlj1CN8NEHRC6yiXHlycJI0ZEcoU
+         EQlvrEbDMxXhiCRfB+nZyaQugTK9KS0escIJgVJBDOUw7T74VdakviLO3aZ82VTUHyZq
+         +5cDY5z84hJWAN+WEIaZ8OFm7qKiyn79561sJ53m4JCzroe+DtCoFdYsyXC5ktBLmOgz
+         5uyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VKG8yNfRKLFF13WE7drzafjAJK7p5JW49JiEc3PE2PE=;
-        b=JyUKMh1yEWrAtPjZ0Qdu9YcB1t3PeHPImykOrsbSZEGXUSglCY7C7vxry8UC8awcqx
-         8Pp6f6SvMPI+N+8yQM4UZl/sdFZsVEdk3Gzkhim5oLeJa37xYR1onC5r1UgpTmdQkv3B
-         iQha9T4twEaKqTk69fHgPaMagKFIBYnubSuFy4EMI5klNW74vIfBj31isEENLZPgooeV
-         LlgzKPZLH1l3nIyeke09PZ/ufCfW2Gt//qBHyiv6aH+usqwTYiyXWRy/8Zy53xGd+OQW
-         EreQg6c9YUnR3VwbNGb1KihHrgTxDJli8RA1AXvqnOAEjWwFmdA17h/nvpa3AFIdIVcU
-         cpQw==
-X-Gm-Message-State: ANhLgQ0ZHQ7H3WX7umVZ460AuunYoF25an6EdfRtmss2GJL/xfq8wwfs
-        vAgBRUIAtiGZFCV8IB3XCyCnVe5Pd6vgL7c8+zs=
-X-Google-Smtp-Source: ADFU+vsP0HKdXKOf5hUEjBxHEb6q7+o7ka6DErZh1aQdfavQ60ZLfs7xrBkLLXjDkW8pDmS5vdd8h0MkxlKsgPn5Vog=
-X-Received: by 2002:a9d:4d02:: with SMTP id n2mr5139172otf.107.1584001815982;
- Thu, 12 Mar 2020 01:30:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Sc+ZcHvv4+8Y0JehjCkVMYBTnshyW1dRffEc1sDr2kY=;
+        b=WkcWgh1F9OZByCPXauZrcA7BnBJTQeV46brp1rA/awjArsQZj0cT5BRmXHl+r/FZbu
+         R3cLkJn2HTzRdlQ0Xs2H2WpWTsZE58oh8yiSni/vg0FnvwqWv+515ROybgBRHNry03zB
+         GJvCsNRLVGMQTHOMI8SYG4fr/klXtVWw0om9+UiXO8xZviY2Lf3TTLfl8Qe0cljDESyy
+         wyAYzbIOJCn7+zf+ablUTvzBFmF3UGYht8dHgL+sNQJZFZMTiJaEWw7I0mspWF2Orlgq
+         zqFxiks9mCRYsKczUeaYICGMOxIh4/Imt0YXhZIRc0RK0+xGMCABDqDSZW/qsr4KaBoo
+         jytw==
+X-Gm-Message-State: ANhLgQ3teMRnH+zshypxQbObTd/7T7kMCOmbQKLJArK8ixbARBtKgdw+
+        I7FKLds7Rtp5J75zGp57Jc3wMcc7pU0=
+X-Google-Smtp-Source: ADFU+vsE7CKw0z7E9j255GcPqiZnSdEVpBlkVnUDYIzlFyBHlAwhZIDYsfICUgS9rb+0R59WlO0poA==
+X-Received: by 2002:adf:b317:: with SMTP id j23mr9713915wrd.413.1584002120044;
+        Thu, 12 Mar 2020 01:35:20 -0700 (PDT)
+Received: from localhost.localdomain ([188.26.73.247])
+        by smtp.gmail.com with ESMTPSA id 9sm11543334wmo.38.2020.03.12.01.35.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 01:35:19 -0700 (PDT)
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+X-Google-Original-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     jic23@kernel.org, robh+dt@kernel.org, Laszlo.Nagy@analog.com,
+        Andrei.Grozav@analog.com, Michael.Hennerich@analog.com,
+        Istvan.Csomortani@analog.com, Adrian.Costina@analog.com,
+        Dragos.Bogdan@analog.com,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Moritz Fischer <mdf@kernel.org>
+Subject: [PATCH v9 1/8] include: fpga: adi-axi-common.h: fixup whitespace tab -> space
+Date:   Thu, 12 Mar 2020 10:35:04 +0200
+Message-Id: <20200312083511.28832-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200312083511.28832-1-alexandru.ardelean@analog.com>
+References: <20200312083511.28832-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-References: <20200303094848.23670-1-geert+renesas@glider.be>
- <20200310205504.GA27288@bogus> <CAMuHMdXMSQtmJjmTnph5cKBLStCidzBij8giwvJszNxy1_yt9g@mail.gmail.com>
-In-Reply-To: <CAMuHMdXMSQtmJjmTnph5cKBLStCidzBij8giwvJszNxy1_yt9g@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Mar 2020 09:30:04 +0100
-Message-ID: <CAMuHMdU0W5h_gUsnCm2CY4Wteb2EwXYzCx9XGfAOrMq1rfN7Jw@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: clock: renesas: cpg-mssr: Convert to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 9:08 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Tue, Mar 10, 2020 at 9:55 PM Rob Herring <robh@kernel.org> wrote:
-> > On Tue,  3 Mar 2020 10:48:48 +0100, Geert Uytterhoeven wrote:
-> > > Convert the Renesas Clock Pulse Generator / Module Standby and Software
-> > > Reset Device Tree binding documentation to json-schema.
-> > >
-> > > Note that #reset-cells was incorrecty marked a required property for
-> > > RZ/A2 before.
-> > >
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > ---
-> > > To be queued in clk-renesas-for-v5.7.
-> > >
-> > > v2:
-> > >   - Remove complex if-construct implementing per-SoC clocks/clock-names
-> > >     constraints; list all possible clock-names upfront instead,
-> > >   - Drop Clock Domain member example.
-> > > ---
-> > >  .../bindings/clock/renesas,cpg-mssr.txt       | 100 ---------------
-> > >  .../bindings/clock/renesas,cpg-mssr.yaml      | 119 ++++++++++++++++++
-> > >  2 files changed, 119 insertions(+), 100 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
->
-> Thanks, queued in renesas-devel for v5.7.
+The initial version use a tab between '#define' & 'ADI_AXI_REG_VERSION'.
+This changes it to space. The change is purely cosmetic.
 
-Oops, clk-renesas-for-v5.7, of course.
+Acked-by: Moritz Fischer <mdf@kernel.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ include/linux/fpga/adi-axi-common.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
+index 7fc95d5c95bb..ebd4e07ae3d8 100644
+--- a/include/linux/fpga/adi-axi-common.h
++++ b/include/linux/fpga/adi-axi-common.h
+@@ -11,7 +11,7 @@
+ #ifndef ADI_AXI_COMMON_H_
+ #define ADI_AXI_COMMON_H_
+ 
+-#define	ADI_AXI_REG_VERSION			0x0000
++#define ADI_AXI_REG_VERSION			0x0000
+ 
+ #define ADI_AXI_PCORE_VER(major, minor, patch)	\
+ 	(((major) << 16) | ((minor) << 8) | (patch))
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
