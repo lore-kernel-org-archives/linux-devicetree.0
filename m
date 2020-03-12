@@ -2,100 +2,125 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EC3C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 22:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EA8C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 22:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA4D20716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 22:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584051725;
-	bh=ug/sSOWyyTVyAWvCH2fhBBqrr5Uv0KCqQN3bnOwmj5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jHADFqEFn35Fj9w5VKJBBuVm97rqKabLoBqFjx8A2X8A7lbIEYvUoDcKLM9NkCyRF
-	 YJD0wQHe5eHvNNeqrZxi4Li4WqTIxqAonW//a2l28Bgalj6Y2uI6mtaAnQKBUThBX5
-	 z/XHRBy2LBm/8La/8iXCaOyR9fmKmy+aN5r3i4YQ=
+	by mail.kernel.org (Postfix) with ESMTP id C62C32072F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 22:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgCLWWF (ORCPT
+        id S1726710AbgCLWZD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 18:22:05 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36726 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgCLWWF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 18:22:05 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k18so7282984oib.3;
-        Thu, 12 Mar 2020 15:22:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OsTug+wFPYvu1dsEP+HjJTVY8zFYC98KWDkMm6y/bAM=;
-        b=Q/34E52L5C2ETz37DXsW+OokQGk6gUzXI4rferXXtbhguw3iL/oGUTC/OHmxFhGg4v
-         2rKLKcopkbKD0AmcBHU2fR9stX3WV7jjY07kBpIZn/EqTKSancu9okcZiEFiFFgszjZx
-         6MP7K83fw22aLFUvxCDiRHoJvSv6hQ2qBR3KyamLyqP8LhPyyf3OQlwykDqA+zYTQdIW
-         +D9Gwv0Jca/O+QTnNdyow03ctkKCgUGqX+sODAYl2Ht9Xjztksikuco2zG7Omqvsww7V
-         BXUjxDX+JH67zHxL5nemWpfSbZiXIDY7iWs0DyVd02Cg4Dj5EXifZO/C/mD3uoh2Ajs8
-         mIoA==
-X-Gm-Message-State: ANhLgQ34MTr9zdN4OknHjVhmW8OrqJerDZPdetbn7C0fmkKlPzAUtscf
-        MReApFmOo/2btsbsMp79xg==
-X-Google-Smtp-Source: ADFU+vt7wLxkZF+SNDSBgEsIFB/+M2Ofk3SegkM60wYe0M9i2VazpAmQDww4IoWy/Oa5AfmBoQ1EQQ==
-X-Received: by 2002:aca:cdcd:: with SMTP id d196mr4574031oig.16.1584051724248;
-        Thu, 12 Mar 2020 15:22:04 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k101sm9796724otk.6.2020.03.12.15.22.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 15:22:03 -0700 (PDT)
-Received: (nullmailer pid 19309 invoked by uid 1000);
-        Thu, 12 Mar 2020 22:22:02 -0000
-Date:   Thu, 12 Mar 2020 17:22:02 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Thu, 12 Mar 2020 18:25:03 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:58826 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726715AbgCLWZD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 18:25:03 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 212C037025E5;
+        Thu, 12 Mar 2020 23:25:01 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ZTCbUDLXMtRJ; Thu, 12 Mar 2020 23:24:58 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/7] dt-bindings: watchdog: dw-wdt: Add watchdog TOPs
- array property
-Message-ID: <20200312222202.GA19251@bogus>
-References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132818.98D7F80307C2@mail.baikalelectronics.ru>
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: [PATCH v4 0/3] Add support for CellWise cw2015 fuel gauge
+Date:   Thu, 12 Mar 2020 23:24:45 +0100
+Message-Id: <20200312222448.25097-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306132818.98D7F80307C2@mail.baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 6 Mar 2020 16:27:42 +0300, <Sergey.Semin@baikalelectronics.ru> wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> In case if DW Watchdog IP core is built with WDT_USE_FIX_TOP == false,
-> a custom timeout periods are used to preset the timer counter. In
-> this case that periods should be specified in a new "snps,watchdog-tops"
-> property of the DW watchdog dts node.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> ---
->  .../bindings/watchdog/snps,dw-wdt.yaml        | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
+This patchset adds support for the CellWise cw2015 fuel gauge.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The CellWise cw2015 fuel gauge is a shuntless, single-cell Li-Ion fuel
+gauge. It is used in the pine64 Pinebook Pro laptop.
+
+This is v4 of the patchset. This version incorporates an additional review
+by Andy and a small spelling fix.
+
+I've kept the cellwise,battery-profile property in the device tree. Its
+content describes characteristics of the battery built into a device. The
+exact format is unknown and not publicly documented. It is likely
+comprised of some key parameters of the battery (chemistry, voltages,
+design capacity) and parameters for tuning the internal state of charge
+approximation function.
+Since v2 CellWise has confirmed to me that the only way to obtain the
+profile blob is to mail them batteries for testing. Thus we will need to
+keep that property.
+
+In general I'm not 100 % sure about my json-schema binding for the gauge.
+It is my first time ever writing a json-schema binding and I'm not sure
+whether properties like power-supplies or monitored-battery need to be
+added to a separate, common schema for power supplies or not.
+
+
+Best Regards,
+
+Tobias Schramm
+
+Changelog:
+ v2:
+  * Change subject to "Add support for CellWise cw2015 fuel gauge"
+  * Rewrite bindings as json-schema
+  * Use default power-supplies handling
+  * Use regmap for register access
+  * Use standard simple-battery node
+  * Replace printk/pr_* by dev_{dbg,info,warn,err}
+  * Use cancel_delayed_work_sync in remove
+  * General code cleanup
+ v3:
+  * Incorporate review by Andy
+  * Add cellwise vendor prefix
+  * Rename cellwise,bat-config-info property to cellwise,battery-profile
+  * Remove most state of charge post-processing
+  * Use fwnode interface
+  * General code cleanup
+  * Lots of code style fixes
+ v4:
+  * Implement additional changes requested by Andy
+  * Use fwnode inline wrappers
+  * Clean up waiting for gauge
+  * Minor code style fixes
+
+Tobias Schramm (3):
+  dt-bindings: Document cellwise vendor-prefix
+  dt-bindings: power: supply: add cw2015_battery bindings
+  power: supply: add CellWise cw2015 fuel gauge driver
+
+ .../bindings/power/supply/cw2015_battery.yaml |  83 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   6 +
+ drivers/power/supply/Kconfig                  |   8 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/cw2015_battery.c         | 759 ++++++++++++++++++
+ 6 files changed, 859 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+ create mode 100644 drivers/power/supply/cw2015_battery.c
+
+-- 
+2.24.1
+
