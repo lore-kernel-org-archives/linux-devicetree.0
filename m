@@ -4,240 +4,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77784C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169C4C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 575452071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA7D206EB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zJY872Vk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EpWXmU25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388081AbgCLHn3 (ORCPT
+        id S2387973AbgCLHyq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:43:29 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45929 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387930AbgCLHn2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 03:43:28 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m9so6044850wro.12
-        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 00:43:26 -0700 (PDT)
+        Thu, 12 Mar 2020 03:54:46 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35108 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387869AbgCLHyq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 03:54:46 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d5so5753050wrc.2
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 00:54:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cBmBbvO3DHaF6ZM0Ex0exZ5k7RaaVlRVHw8bBFWLk68=;
-        b=zJY872Vk0ENk8O9d1/vF4yt70XpjK4CvqiV/jZntDVQUqS80bWe8M3JDoQzVB2mdAr
-         Qc9DIw3jkmvCLCE4pWVQlGw7esiFPP18VbCIapmO8bV1ZJyYLWeUB4/pbD7zJWNuDI6l
-         m8Dq+6Z+4xikqbyHkN0QJkXNKYQdT0ZwUYnVO7fF12DVmV3UIQATSea0lhdWYZr7Rj6V
-         +1pxYJsfUUeUpc3rdNrXcVqazEDQvQ8muPih69KFxJrwguJJy23f2cEXiVM3A2I+Kmca
-         2EoYdG3eelt6WlAUGye4Y3+/wsWgbqoIIt61Pdoju38ymhdHYPghCFAcZtG9v7zloTcN
-         II5w==
+         :content-disposition:in-reply-to;
+        bh=pr04BKgViz7j88JBgxuUWEhe3OvdyJ6JSxyYo6mbxRM=;
+        b=EpWXmU25L0YGiiRM8vJA3DFaYTd2tQHV/7f1WBTrWn3S4r9BSEwymIHqNVZSw4dMvj
+         iyFMVzICUPU+kCGh2X+TFBzft2lxPcpMbo2NwY076sG0P7S8cnI2qb5nx+YdVFbTNEKI
+         Z7BthyeuRMPKwkqWfD4mJzybiJp3XzMU1lUrJoyP65Uc00FpC6n2iQcNwChNa9vNvld+
+         k7pTldNv6wbqW9jcOZyltSbxgDfSmSCexv+/zHWUc0V2kqkQvsQi0AAyblBeXyXYdrQm
+         tiByVIzqJB4Lcq46F6IOlGlYJts4l+kW8g962H+cWT1VTDfEKGKKH9N9Zr/wVINNVYVX
+         QiYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cBmBbvO3DHaF6ZM0Ex0exZ5k7RaaVlRVHw8bBFWLk68=;
-        b=T+atG5w9leAXDC0NlHMY6ZcH3QT05fsWi5JqWzFfZnHQ6dloQz3EJcaccVzADCi02M
-         mtH+GDgPzRvO4ILbEbpOv8hRU0pzMPZ/d8rTn3Fylo4Q21bwz9gx++K8HlaGuk+ylYwN
-         f9YkM6qdZkqc1K8a3AvG95D/k4uc79sU+kTgtPEk2QU87yRqMyb67eo6cWeImlKuyp6M
-         DUJgkixCylWvXeek6hurZcghs8A/wlarUKup/9l6lO7JibWE+TFOhVDO2PpP/EN6+tBv
-         NPbV1mfNe/sWuqO2mJ74CQySwH0yS8AbEgufgbLDdTNlvu66q45h0kW4vP3fsgyxSEPo
-         /jiQ==
-X-Gm-Message-State: ANhLgQ1XiuulYv2h6ff0hvFpbkgddhkZKyeXJidoSW08XX9tPw9oyz6y
-        bSOmydcc3y73z8CeH28QT1HN7g==
-X-Google-Smtp-Source: ADFU+vtvxDiPA/GMHD+H5t3DWhluKuQ2jWG2EYeSH9Gtd2RzLo/KFy2SCx51K12MuuqOtu0airE3Hw==
-X-Received: by 2002:adf:e64f:: with SMTP id b15mr6233670wrn.424.1583999005153;
-        Thu, 12 Mar 2020 00:43:25 -0700 (PDT)
-Received: from dell ([2.27.167.19])
-        by smtp.gmail.com with ESMTPSA id n2sm5659471wrr.62.2020.03.12.00.43.23
+         :mime-version:content-disposition:in-reply-to;
+        bh=pr04BKgViz7j88JBgxuUWEhe3OvdyJ6JSxyYo6mbxRM=;
+        b=YuVLYNu0NvU3TaC7VJLJq91DAPaFJBkn9eBZGCoTr+rd8due56js+2/QwCB04Bh8Go
+         VUTDaIdVPj8OUrCIzd7aYVP51tw6URlqwTkUTUFcinEhfl79Tq7hmbkcSEh1W/UNEnfM
+         94GYfgZZMdpbzysIIQbhQumHm6SE6oDT6cOfHtHIe3MIwj8Fwq525y7NVKfP84PYSc0F
+         WdVFPwK8/7AkOsmmyuILTgz6JpKG57Z7gERb9Q8rK18GlN2ZN4Ct3r+YwingA12GHH6b
+         5jnbiOx32zIZrWZTCySYmBoPcDUT+ZmG8GVnvpQg7QSB36bJ/+9lw+FMvqPyMlzq8mGv
+         9l9A==
+X-Gm-Message-State: ANhLgQ03j2BYzBfpTtjFxJiuUws7RN9+H6ISO9vfYrgYgCS7qITCVBGZ
+        QEP9RUCj+r6Tw2Om107zbFA3mw==
+X-Google-Smtp-Source: ADFU+vtT5PIgJyJgbHd5navhTh3TzppWQ7now/ZfW46dAJfhZnjJPv9XMBdkmY0dc+S4uOHKFCAEpQ==
+X-Received: by 2002:a5d:474d:: with SMTP id o13mr9266723wrs.162.1583999684449;
+        Thu, 12 Mar 2020 00:54:44 -0700 (PDT)
+Received: from myrica ([2001:171b:c9a8:fbc0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id f207sm12446498wme.9.2020.03.12.00.54.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 00:43:24 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 07:44:07 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v10 4/5] rtc: mt6397: Add support for the MediaTek MT6358
- RTC
-Message-ID: <20200312074407.GA3142@dell>
-References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Thu, 12 Mar 2020 00:54:43 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 08:54:36 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     bhelgaas@google.com, will@kernel.org, robh+dt@kernel.org,
+        joro@8bytes.org, sudeep.holla@arm.com, linux-doc@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+        iommu@lists.linux-foundation.org, lorenzo.pieralisi@arm.com,
+        corbet@lwn.net, mark.rutland@arm.com, liviu.dudau@arm.com,
+        guohanjun@huawei.com, rjw@rjwysocki.net, lenb@kernel.org,
+        robin.murphy@arm.com, dwmw2@infradead.org,
+        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
+Subject: Re: [PATCH v2 08/11] iommu/vt-d: Use pci_ats_supported()
+Message-ID: <20200312075436.GA568802@myrica>
+References: <20200311124506.208376-1-jean-philippe@linaro.org>
+ <20200311124506.208376-9-jean-philippe@linaro.org>
+ <7019230c-3c56-e6db-6704-d73f23fa39b5@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1583918223-22506-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <7019230c-3c56-e6db-6704-d73f23fa39b5@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 11 Mar 2020, Hsin-Hsiung Wang wrote:
+Hi Baolu,
 
-> From: Ran Bi <ran.bi@mediatek.com>
+On Thu, Mar 12, 2020 at 09:44:16AM +0800, Lu Baolu wrote:
+> Hi Jean,
 > 
-> This add support for the MediaTek MT6358 RTC. Driver using
-> compatible data to store different RTC_WRTGR address offset.
-> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
-> driver which only needed by armv7 CPU without ATF.
+> On 2020/3/11 20:45, Jean-Philippe Brucker wrote:
+> > The pci_ats_supported() function checks if a device supports ATS and is
+> > allowed to use it.
+> > 
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > ---
+> >   drivers/iommu/intel-iommu.c | 9 +++------
+> >   1 file changed, 3 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> > index 6fa6de2b6ad5..17208280ef5c 100644
+> > --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -1454,8 +1454,7 @@ static void iommu_enable_dev_iotlb(struct device_domain_info *info)
+> >   	    !pci_reset_pri(pdev) && !pci_enable_pri(pdev, 32))
+> >   		info->pri_enabled = 1;
+> >   #endif
+> > -	if (!pdev->untrusted && info->ats_supported &&
+> > -	    pci_ats_page_aligned(pdev) &&
+> > +	if (info->ats_supported && pci_ats_page_aligned(pdev) &&
+> >   	    !pci_enable_ats(pdev, VTD_PAGE_SHIFT)) {
+> >   		info->ats_enabled = 1;
+> >   		domain_update_iotlb(info->domain);
+> > @@ -2611,10 +2610,8 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
+> >   	if (dev && dev_is_pci(dev)) {
+> >   		struct pci_dev *pdev = to_pci_dev(info->dev);
+> > -		if (!pdev->untrusted &&
+> > -		    !pci_ats_disabled() &&
 > 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/power/reset/mt6323-poweroff.c |  2 +-
->  drivers/rtc/rtc-mt6397.c              | 32 ++++++++++++++++++++++++--------
->  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
->  3 files changed, 33 insertions(+), 10 deletions(-)
+> The pci_ats_disabled() couldn't be replaced by pci_ats_supported(). Even
+> pci_ats_supported() returns true, user still can disable it. Or move
+> ats_disabled into pci_ats_supported()?
+
+It is already there, but hidden behind the "if (!dev->ats_cap)":
+pci_ats_init() only sets dev->ats_cap after checking that
+pci_ats_disabled() returns false.
+
+Thanks,
+Jean
+
 > 
-> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
-> index 1caf43d..0532803 100644
-> --- a/drivers/power/reset/mt6323-poweroff.c
-> +++ b/drivers/power/reset/mt6323-poweroff.c
-> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
->  	int ret;
->  
->  	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
-> -	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
-> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
->  
->  	ret = regmap_read_poll_timeout(pwrc->regmap,
->  					pwrc->base + RTC_BBPU, val,
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index cda238d..7a5a9e2 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -9,18 +9,38 @@
->  #include <linux/mfd/mt6397/core.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
->  #include <linux/mfd/mt6397/rtc.h>
->  #include <linux/mod_devicetable.h>
->  
-> +static const struct mtk_rtc_data mt6358_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6358,
-> +};
-> +
-> +static const struct mtk_rtc_data mt6397_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6397,
-> +};
-> +
-> +static const struct of_device_id mt6397_rtc_of_match[] = {
-> +	{ .compatible = "mediatek,mt6323-rtc",
-> +		.data = (void *)&mt6397_rtc_data, },
-> +	{ .compatible = "mediatek,mt6358-rtc",
-> +		.data = (void *)&mt6358_rtc_data, },
-> +	{ .compatible = "mediatek,mt6397-rtc",
-> +		.data = (void *)&mt6397_rtc_data, },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
-> +
->  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  {
->  	int ret;
->  	u32 data;
->  
-> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> +	ret = regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -269,6 +289,9 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	rtc->addr_base = res->start;
->  
-> +	rtc->data = (struct mtk_rtc_data *)
-> +			of_device_get_match_data(&pdev->dev);
-> +
->  	rtc->irq = platform_get_irq(pdev, 0);
->  	if (rtc->irq < 0)
->  		return rtc->irq;
-> @@ -325,13 +348,6 @@ static int mt6397_rtc_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->  			mt6397_rtc_resume);
->  
-> -static const struct of_device_id mt6397_rtc_of_match[] = {
-> -	{ .compatible = "mediatek,mt6323-rtc", },
-> -	{ .compatible = "mediatek,mt6397-rtc", },
-> -	{ }
-> -};
-> -MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
-> -
->  static struct platform_driver mtk_rtc_driver = {
->  	.driver = {
->  		.name = "mt6397-rtc",
-> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-> index 7dfb63b..66534ed 100644
-> --- a/include/linux/mfd/mt6397/rtc.h
-> +++ b/include/linux/mfd/mt6397/rtc.h
-> @@ -18,7 +18,9 @@
->  #define RTC_BBPU_CBUSY         BIT(6)
->  #define RTC_BBPU_KEY            (0x43 << 8)
->  
-> -#define RTC_WRTGR              0x003c
-> +#define RTC_WRTGR_MT6358       0x3a
-> +#define RTC_WRTGR_MT6397       0x3c
-> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
->  
->  #define RTC_IRQ_STA            0x0002
->  #define RTC_IRQ_STA_AL         BIT(0)
-> @@ -65,6 +67,10 @@
->  #define MTK_RTC_POLL_DELAY_US  10
->  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
->  
-> +struct mtk_rtc_data {
-> +	u32			wrtgr;
-> +};
-
-Do you expect to add more properties to this struct?
-
-If not, it seems a bit overkill.
-
->  struct mt6397_rtc {
->  	struct device           *dev;
->  	struct rtc_device       *rtc_dev;
-> @@ -74,6 +80,7 @@ struct mt6397_rtc {
->  	struct regmap           *regmap;
->  	int                     irq;
->  	u32                     addr_base;
-> +	const struct mtk_rtc_data *data;
-
-'data' is a terrible variable name.
-
-Why do you need to store this?
-
-It's one variable which is used once AFAICT.
-
->  };
->  
->  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> Best regards,
+> baolu
+> 
+> > -		    ecap_dev_iotlb_support(iommu->ecap) &&
+> > -		    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ATS) &&
+> > +		if (ecap_dev_iotlb_support(iommu->ecap) &&
+> > +		    pci_ats_supported(pdev) &&
+> >   		    dmar_find_matched_atsr_unit(pdev))
+> >   			info->ats_supported = 1;
