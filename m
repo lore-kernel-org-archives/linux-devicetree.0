@@ -2,92 +2,180 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376B3C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D75C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED96D2071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:46:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584035193;
-	bh=0xugY3eBjcWN0mHlOPkR37sG1nv9DlkZJ2yQg22bCZ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y6xEpeT8zh93wtC1nO3FHnjll5ZMOQiepLkT15tgkPX1ask5OTxehF1jHzb2GplvR
-	 Kyl3QCdzIq7q1hAZTDXavvchemqZ5vL6jgFMdu+bh27sUqkBJIvNIItdGq7qpWgsRi
-	 GlS37pZPxItQ09qWg/8yeKXp246VDlBdJ5iLSHwA=
+	by mail.kernel.org (Postfix) with ESMTP id 13AFF206B1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgCLRqc (ORCPT
+        id S1726426AbgCLRtk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:46:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:39110 "EHLO foss.arm.com"
+        Thu, 12 Mar 2020 13:49:40 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16068 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbgCLRqc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 13:46:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C597930E;
-        Thu, 12 Mar 2020 10:46:31 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4565A3F67D;
-        Thu, 12 Mar 2020 10:46:31 -0700 (PDT)
-Date:   Thu, 12 Mar 2020 17:46:29 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>, timur@kernel.org,
-        Xiubo.Lee@gmail.com, festevam@gmail.com,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/7] ASoC: fsl_asrc: rename asrc_priv to asrc
-Message-ID: <20200312174629.GI4038@sirena.org.uk>
-References: <cover.1583725533.git.shengjiu.wang@nxp.com>
- <8282b290d39dd8dae5da02f5cbb3f647fa778aa0.1583725533.git.shengjiu.wang@nxp.com>
- <20200309213016.GC11333@Asurada-Nvidia.nvidia.com>
+        id S1726420AbgCLRtj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 13:49:39 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2020 10:49:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,545,1574150400"; 
+   d="scan'208";a="246448945"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga006.jf.intel.com with ESMTP; 12 Mar 2020 10:49:32 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jCRxd-00944x-F9; Thu, 12 Mar 2020 19:49:33 +0200
+Date:   Thu, 12 Mar 2020 19:49:33 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, fabrice.gasnier@st.com,
+        beniamin.bia@analog.com, linus.walleij@linaro.org,
+        u.kleine-koenig@pengutronix.de, fabrizio.castro@bp.renesas.com,
+        info@metux.net, hancock@sedsystems.ca, gregory.clement@bootlin.com,
+        renatogeh@gmail.com, plr.vincent@gmail.com,
+        miquel.raynal@bootlin.com, marcelo.schmitt1@gmail.com,
+        paul@crapouillou.net, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH 2/5] mfd: mp2629: Add support for mps battery charger
+Message-ID: <20200312174933.GJ1922688@smile.fi.intel.com>
+References: <20200312172649.13702-1-sravanhome@gmail.com>
+ <20200312172649.13702-3-sravanhome@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="PWfwoUCx3AFJRUBq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309213016.GC11333@Asurada-Nvidia.nvidia.com>
-X-Cookie: Security check:  =?ISO-8859-1?Q?=20=07=07=07INTRUDER?= ALERT!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200312172649.13702-3-sravanhome@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Mar 12, 2020 at 06:26:46PM +0100, Saravanan Sekar wrote:
+> mp2629 is a highly-integrated switching-mode battery charge management
+> device for single-cell Li-ion or Li-polymer battery.
+> 
+> Add MFD core enables chip access for ADC driver for battery readings,
+> and a power supply battery-charger driver
 
---PWfwoUCx3AFJRUBq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+...
 
-On Mon, Mar 09, 2020 at 02:30:17PM -0700, Nicolin Chen wrote:
-> On Mon, Mar 09, 2020 at 11:58:31AM +0800, Shengjiu Wang wrote:
-> > In order to move common structure to fsl_asrc_common.h
-> > we change the name of asrc_priv to asrc, the asrc_priv
-> > will be used by new struct fsl_asrc_priv.
+>  drivers/mfd/Kconfig        |  43 +++++----------
 
-> This actually could be a cleanup patch which comes as the
-> first one in this series, so that we could ack it and get
-> merged without depending on others. Maybe next version?
+Why do you have unrelated changes here?
 
-Yes, please.  Or even just send it separately.
+...
 
---PWfwoUCx3AFJRUBq
-Content-Type: application/pgp-signature; name="signature.asc"
+> +int mp2629_set_value(struct regmap *map, u8 reg, u8 mask, unsigned int val)
+> +{
+> +	return regmap_update_bits(map, reg, mask, val);
+> +}
+> +EXPORT_SYMBOL(mp2629_set_value);
+> +
+> +int mp2629_get_value(struct regmap *map, u8 reg, unsigned int *val)
+> +{
+> +	return regmap_read(map, reg, val);
+> +}
+> +EXPORT_SYMBOL(mp2629_get_value);
 
------BEGIN PGP SIGNATURE-----
+I'm wondering why a child can get access to parent's regmap?
+I.o.w. why is this being exported?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5qdXQACgkQJNaLcl1U
-h9BEJgf+LDZKX86NoQW0sAyHfoI5bU8JDqMp0vov4A8JY6xc4HBhugGfdjg8WRoa
-CaqNzRLw0m6VFU+a/AxSv5OADsO1vkjA08+yXeuWr7wKxasqSAmBwq7tjsa9Cu7S
-QB0UowCO1N3Zn7zeWYFoJxiJ1iPlz9rUTDLw6U50yckkct9JlCnTKLmPpO7q5SRN
-DSqUC5+8Hc/SZGOSKLoYc1SFqFaNLUxuF7O2harTjFRbWeuEaptWcgmf2CeXgtI0
-pFBfaexsGndY8dFMvwkNeD74Yctt4xnefQRXwbMsbfhDpJFdruxSXYNkBHYMsIUk
-YzSFifSaFrNhKESXNDY0arVypHltMg==
-=rfH4
------END PGP SIGNATURE-----
+...
 
---PWfwoUCx3AFJRUBq--
+> +static int mp2629_probe(struct i2c_client *client)
+> +{
+> +	struct mp2629_info *info;
+> +	int ret;
+> +
+
+> +	info = devm_kzalloc(&client->dev, sizeof(struct mp2629_info),
+> +					 GFP_KERNEL);
+
+	info = devm_kzalloc(&client->dev, sizeof(*info), GFP_KERNEL);
+
+will be shorter.
+
+> +	if (!info)
+> +		return -ENOMEM;
+
+
+> +	ret = devm_mfd_add_devices(info->dev, -1, mp2629mfd,
+> +				ARRAY_SIZE(mp2629mfd), NULL,
+> +				0, NULL);
+
+-1 has a defined name in this case.
+
+> +	if (ret)
+> +		dev_err(info->dev, "Failed to add mfd %d\n", ret);
+> +
+> +	return ret;
+> +}
+
+...
+
+> +static const struct of_device_id mp2629_of_match[] = {
+> +	{ .compatible = "mps,mp2629"},
+
+> +	{},
+
+Terminator line doesn't require comma.
+
+> +};
+
+...
+
+> +static const struct i2c_device_id mp2629_id[] = {
+> +	{ "mp2629", },
+
+> +	{ },
+
+Ditto.
+
+> +};
+> +MODULE_DEVICE_TABLE(i2c, mp2629_id);
+
+...
+
+> +		.of_match_table = of_match_ptr(mp2629_of_match),
+
+of_match_ptr() is redundant and even might provoke compiler warning...
+
+> +	.probe_new	= mp2629_probe,
+
+...especially taking into consideration ->probe_new().
+
+...
+
+> +#include <linux/platform_device.h>
+
+No user here. (Hint: Use forward declaration of struct device instead)
+
+> +#include <linux/i2c.h>
+
+Ditto.
+
+> +#include <linux/regmap.h>
+
+Ditto. (Hint: Use forward declaration of struct regmap instead)
+
+But linux/types.h is actually missed.
+
+> +int mp2629_set_value(struct regmap *map, u8 reg, u8 mask, unsigned int val);
+> +int mp2629_get_value(struct regmap *map, u8 reg, unsigned int *val);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
