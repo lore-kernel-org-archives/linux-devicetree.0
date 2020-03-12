@@ -2,115 +2,161 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AFDC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2481C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB4C206E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584048813;
-	bh=j2jnXxs3FnwPCEKL+XFoy6xgaFNrQJnqzO6HGsM1xBU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qHK2VeR3hXO37ACBcVPU8n5s0X2cwunWzHWWroeS6YnEvu9cuXZgx3l5M7SO/QJRO
-	 /u4VniDl4HEGx3Y+4pkbxjbnFfoehA84rWM1IWn2jK3MP9vAmL5uaM+EKSJ66BDmzU
-	 ZPWOHZ7j07IDeM4iR1etgZhg7xyMzZdyIkvGE9Yk=
+	by mail.kernel.org (Postfix) with ESMTP id 93987205F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:35:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ns03hq69"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgCLVdc (ORCPT
+        id S1726513AbgCLVf3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:33:32 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37946 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgCLVdc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 17:33:32 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t28so5297973ott.5;
-        Thu, 12 Mar 2020 14:33:32 -0700 (PDT)
+        Thu, 12 Mar 2020 17:35:29 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42596 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgCLVf3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 17:35:29 -0400
+Received: by mail-ed1-f65.google.com with SMTP id n18so9344678edw.9;
+        Thu, 12 Mar 2020 14:35:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w1zcQ0pwsk6Sv5HkuPglXPmgpcyE2cmpz+kIS0DS4nw=;
+        b=Ns03hq698c5nJGC7j/6c5N9u3dyz/UKqOCtYtrfKIIrjDDTWfxUyd2jEas6KNqlSmI
+         Ld+BKVByi4vsTqlmcAENsFHkbaraOdhSfotILQOcUREF4Wr8Gvch7+9HK/pW48ygG9N9
+         zP9ub4iFy6Oq+NeRdx1ceKEDkdlpyrLpL5HSY0AnNqDioQDmFwlSC2FFeWVTCSlsGPg9
+         hiLLtO0NsC0jVvy2RP1EaRwB9D4U4lGYVFxmN05EKPV76oRZ4r36Ttk73BzYsg7uy3vC
+         ph8W4hF6XzQSy8FczqEZ8QyVw3G/uExf9L8sYjfjKS8wzdZz224ncurQFa6PKElVa6D1
+         C+hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rNfJtMUZ9AtdFlrm/x22oDH4yXo8oQDRHF0dEFmtX8A=;
-        b=L+E5IF0NuarUxOuSowCnRK7BnwtzBe78MVnvHj2hAqijZ0RFRHb7MhNW1DaEBHpX4g
-         UwxR5vrwHgPiRPMY3mVN77z+UY6rD+LvcCvUIEFvn9Tlgzz/9Ku61hcM4d15yks73Ico
-         UJHkQkOmBFLUc30tYsZOHJ3NKyxYs3qqjB/3xJIYZ7q6KGr+lGAzPO+Gg136FY2V3jgp
-         kBH/5l9F1eCuEra4YCk6Up9v28l+li8Qz9iDCXQ6PnO3HxWUgIL4ScE5BTAYjNNDzUhG
-         ggJVb+KDuN8HZ6m13HLBTxxT9PjRZT9sWYZcQC8h8j+gHFdOIJ0p+oYCD8i8ThiDlLVx
-         1oHA==
-X-Gm-Message-State: ANhLgQ0pIWe1c0t9jUnIsTMo7RgkIOadkVYWATLjtkVD9OGzYUV+9ssX
-        IGsM0MZNGig9QI5EnAtgEypuC/E=
-X-Google-Smtp-Source: ADFU+vsW7Zr/jjjZYXDJ9E7f4Lz3HnH6GhbmY8U8zErlnGILP92rFq5L2irBkuf1ecow5ypK68rg7w==
-X-Received: by 2002:a05:6830:12d0:: with SMTP id a16mr7357673otq.218.1584048811700;
-        Thu, 12 Mar 2020 14:33:31 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm7014819oij.19.2020.03.12.14.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 14:33:31 -0700 (PDT)
-Received: (nullmailer pid 16495 invoked by uid 1000);
-        Thu, 12 Mar 2020 21:33:30 -0000
-Date:   Thu, 12 Mar 2020 16:33:30 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] dt-bindings: dma: dw: Add max burst transaction
- length property bindings
-Message-ID: <20200312213330.GA30463@bogus>
-References: <20200306131035.10937-1-Sergey.Semin@baikalelectronics.ru>
- <20200306131049.37EDD8030708@mail.baikalelectronics.ru>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w1zcQ0pwsk6Sv5HkuPglXPmgpcyE2cmpz+kIS0DS4nw=;
+        b=szMqfQiWsShxXw4Gbif1FedP+rhR1a2GfUT81T7DYX1taUkJzGsZqDpoSnj81JApm8
+         jZORb92zT7ps3Yd9+xTQj4J/11KHVV+45fqfmWhNEmtqA2QZzBIfP19KcI6IPJpJIdap
+         NHlhOMBUdycFj2v5/zHlGBdOx3KI9gMgqMf9FD9YHEdABpTY/O8ttrHh67zwX8+y1Anp
+         bBzGVO8ywP7/345dsbWdGSVS9A5SHQW/UNbOSQHU+KhWNQP9j81NGZkVjeo/WGMZ6rJF
+         X86VgJnyLZueRjy/NyHuAcb/RQt0tnm3lYh8Kqsz4TnxwO6aufeyma1+ObmV9Fi52/nT
+         /5Iw==
+X-Gm-Message-State: ANhLgQ15xqXzA/YqGzuGN0S2hfcCs4E9TiAjwLFkBNEtrVhCAbP800X7
+        0C81YUuc5x5vhSZ/X6GV2lkwMLvHrS/0+ybFVnE=
+X-Google-Smtp-Source: ADFU+vsiyvjYIkOLbK9gTV05LGSSgyCx7Z0cDMbSZLbMQjbrdyinTU8gUMl1VUDmDLUkNlpuLq769IWuinYNYh/M5kg=
+X-Received: by 2002:a05:6402:1c0c:: with SMTP id ck12mr10249138edb.145.1584048926737;
+ Thu, 12 Mar 2020 14:35:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306131049.37EDD8030708@mail.baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200312164320.22349-1-michael@walle.cc>
+In-Reply-To: <20200312164320.22349-1-michael@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 12 Mar 2020 23:35:15 +0200
+Message-ID: <CA+h21hoHMxtxUjHthx2ta9CzQbkF_08Svi7wLU99NqJmoEr36Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] net: dsa: felix: allow the device to be disabled
+To:     Michael Walle <michael@walle.cc>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:10:31PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> This array property is used to indicate the maximum burst transaction
-> length supported by each DMA channel.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
+On Thu, 12 Mar 2020 at 18:44, Michael Walle <michael@walle.cc> wrote:
+>
+> If there is no specific configuration of the felix switch in the device
+> tree, but only the default configuration (ie. given by the SoCs dtsi
+> file), the probe fails because no CPU port has been set. On the other
+> hand you cannot set a default CPU port because that depends on the
+> actual board using the switch.
+>
+> [    2.701300] DSA: tree 0 has no CPU port
+> [    2.705167] mscc_felix 0000:00:00.5: Failed to register DSA switch: -22
+> [    2.711844] mscc_felix: probe of 0000:00:00.5 failed with error -22
+>
+> Thus let the device tree disable this device entirely, like it is also
+> done with the enetc driver of the same SoC.
+>
+> Signed-off-by: Michael Walle <michael@walle.cc>
 > ---
->  .../devicetree/bindings/dma/snps,dma-spear1340.yaml  | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-> index d7f9383ceb8f..308ec6482064 100644
-> --- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-> +++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
-> @@ -126,6 +126,18 @@ properties:
->            enum: [0, 1]
->            default: 0
->  
-> +  snps,max-burst-len:
-> +    description: |
-> +      Maximum length of burst transactions supported by hardware.
-> +      It's an array property with one cell per channel in units of
-> +      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH field.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - maxItems: 8
-> +        items:
-> +          enum: [4, 8, 16, 32, 64, 128, 256]
-> +          default: 0
+>  drivers/net/dsa/ocelot/felix.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+> index 69546383a382..531c7710063f 100644
+> --- a/drivers/net/dsa/ocelot/felix.c
+> +++ b/drivers/net/dsa/ocelot/felix.c
+> @@ -699,6 +699,11 @@ static int felix_pci_probe(struct pci_dev *pdev,
+>         struct felix *felix;
+>         int err;
+>
+> +       if (pdev->dev.of_node && !of_device_is_available(pdev->dev.of_node)) {
+> +               dev_info(&pdev->dev, "device is disabled, skipping\n");
+> +               return -ENODEV;
+> +       }
+> +
 
-The default needs to be an allowed value in the enum.
+IMHO since DSA is already dependent on device tree for PHY bindings,
+it would make more sense to move this there:
 
-Rob
+diff --git a/net/dsa/dsa2.c b/net/dsa/dsa2.c
+index e7c30b472034..f7ca01d93928 100644
+--- a/net/dsa/dsa2.c
++++ b/net/dsa/dsa2.c
+@@ -878,7 +878,7 @@ static int dsa_switch_probe(struct dsa_switch *ds)
+        if (!ds->num_ports)
+                return -EINVAL;
+
+-       if (np) {
++       if (np && of_device_is_available(np)) {
+                err = dsa_switch_parse_of(ds, np);
+                if (err)
+                        dsa_switch_release_ports(ds);
+
+so that we could enforce more uniform behavior across device drivers.
+Then you might want to make felix shut up:
+
+diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+index 35124ef7e75b..fbd17fa94bff 100644
+--- a/drivers/net/dsa/ocelot/felix.c
++++ b/drivers/net/dsa/ocelot/felix.c
+@@ -712,10 +712,8 @@ static int felix_pci_probe(struct pci_dev *pdev,
+        felix->ds = ds;
+
+        err = dsa_register_switch(ds);
+-       if (err) {
+-               dev_err(&pdev->dev, "Failed to register DSA switch: %d\n", err);
++       if (err)
+                goto err_register_ds;
+-       }
+
+        return 0;
+
+This has the disadvantage of not printing the "nice" "device is
+disabled, skipping" message (useless in my opinion), but the advantage
+of also shutting up on -EPROBE_DEFER.
+
+>         err = pci_enable_device(pdev);
+>         if (err) {
+>                 dev_err(&pdev->dev, "device enable failed\n");
+> --
+> 2.20.1
+>
+
+Thanks,
+-Vladimir
