@@ -2,103 +2,97 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111A2C5ACBF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D08C1975A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F472067C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AAAA20724
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:45:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a0UXAzmT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mT9aYb42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgCLJ1z (ORCPT
+        id S1726558AbgCLJpR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:27:55 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33298 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgCLJ1y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 05:27:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02C9RoYx050647;
-        Thu, 12 Mar 2020 04:27:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584005270;
-        bh=93Ozw0w3LdMCurx6cSWHKlJdaVIKSKUirOz+tIwd5Us=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=a0UXAzmTDP0go4sAocD8McRdDKrtf2BGKWAjmMa2GxRhGTOz/nLKWZdZiFs+p//Sr
-         PdcnNQAI/xtfy6ia944ma6Y37ecyFcwnmYwK4RroXpWfwXFH7ukvvJlnNVYk47LNyn
-         DTsg8X9JtzXAp5f/TdnNDGdhCCs045zIzKIWww4s=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02C9RoEV096529
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Mar 2020 04:27:50 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Mar 2020 04:27:50 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Mar 2020 04:27:50 -0500
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02C9Rjpc036158;
-        Thu, 12 Mar 2020 04:27:48 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-am65-mcu: Add DMA entries for ADC
-Date:   Thu, 12 Mar 2020 14:58:23 +0530
-Message-ID: <20200312092823.21587-2-vigneshr@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200312092823.21587-1-vigneshr@ti.com>
-References: <20200312092823.21587-1-vigneshr@ti.com>
+        Thu, 12 Mar 2020 05:45:17 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44248 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCLJpR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 05:45:17 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a10so5600694ljp.11
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 02:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pODGPcrOCo99BFK0Xjb4rhW9q/kdwVYGIJ2RjyD6fxs=;
+        b=mT9aYb42BoD8Blfh/Y8c4VPMYR6LI1miBJ07ovTPv3ci4OfSA2Dj6/vckh9GL3HnyE
+         yQ/5equoB5oGfS2ZL3RCijubgZtR0uVQNXxSNKZ+LsI2aihc2rQ/U39N2Fz3y5CalgbC
+         42NxHFjXctecJAI12xhPWsg9Ti5dOxMm/F60YF2DAYbAJpCP+vhKYiDVCchp4z396f8Q
+         qCNAIbtPV8v6cUhiYdm3s4iM0tWI8GqTHE+f57xwEkLT1jYLfdJJvlhcPnGxvsZMx0hc
+         g9qiPkvFKD3fL0BJj5BT5G9qHu2wyxMJcxvn2FD5DF2A8sahkkICe2gqFLIK72lwZeC9
+         jVQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pODGPcrOCo99BFK0Xjb4rhW9q/kdwVYGIJ2RjyD6fxs=;
+        b=iJrLo73ynWyYk8BLzpmeo4ez8QDZ2j8hADPJQcF/AFR+7VUTUiqchnA0brNj2WUg9F
+         q2gC8N0Cq5pzFceOSMZ30MCvyxyjR8xAuCq/C8YvJrtmDcGcOod6hs+zx1QkMCGO8cMq
+         Isu/M97Rt3m+M3kaZTnV8JeUoTbxs6zqnDEcB0Sh9+FYJxn87ut/YKmCy7rDBM+pwFQY
+         3/0Hx+KLoJ7nJFNXO3c7fxLPuwc16NdQiGt+bgKjXLZOj8Oe91SMh6dQjeeTSogTXd8J
+         IPRHWOkldfHP+THI3LDOXPhLILAvC2A4SW0TcfMXv9fM3JvgR4R7r3UFvuGzqVlJJjMj
+         NPpw==
+X-Gm-Message-State: ANhLgQ1TJ+jUzWJPslWuOx/Ce+zyaukbu7J4D+1Wyqb35gEDod/uA0FV
+        H06nTvw4hHVbIq+XfqOkEqPzCeTC5HyGo0feQG2diQ==
+X-Google-Smtp-Source: ADFU+vtCa8+SAjbo+XfDHquYUdyP/1RvO9lPi7QEw1xwTxgVgOSXWqDiS5mP6Y7qbippLNSQT46Y+Db+ZJCx+QAfgyU=
+X-Received: by 2002:a2e:9a90:: with SMTP id p16mr4719590lji.277.1584006315513;
+ Thu, 12 Mar 2020 02:45:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200308115017.18563-1-sam@ravnborg.org> <20200308115017.18563-2-sam@ravnborg.org>
+In-Reply-To: <20200308115017.18563-2-sam@ravnborg.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Mar 2020 10:45:03 +0100
+Message-ID: <CACRpkdaFWp2DbKf+tm9VqeOzdshMypwN_mBbEgihw5COPeaUFQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] dt-bindings: display: fix panel warnings
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DMA entries for ADC nodes
+On Sun, Mar 8, 2020 at 12:50 PM Sam Ravnborg <sam@ravnborg.org> wrote:
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+> Fix following type af warnings in the panel bindings:
+>
+> Warning (unit_address_vs_reg): /example-0/dsi/panel: node has a reg or ranges property, but no unit name
+> Warning (unit_address_vs_reg): /example-0/dsi@ff450000: node has a unit name, but no reg property
+>
+> Removing the "@xxx" from the node name fixed first warning.
+> Adding a missing reg property fixed the second warning
+>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index 92629cbdc184..e85498f0dd05 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -82,6 +82,9 @@ tscadc0: tscadc@40200000 {
- 		assigned-clocks = <&k3_clks 0 2>;
- 		assigned-clock-rates = <60000000>;
- 		clock-names = "adc_tsc_fck";
-+		dmas = <&mcu_udmap 0x7100>,
-+			<&mcu_udmap 0x7101 >;
-+		dma-names = "fifo0", "fifo1";
- 
- 		adc {
- 			#io-channel-cells = <1>;
-@@ -97,6 +100,9 @@ tscadc1: tscadc@40210000 {
- 		assigned-clocks = <&k3_clks 1 2>;
- 		assigned-clock-rates = <60000000>;
- 		clock-names = "adc_tsc_fck";
-+		dmas = <&mcu_udmap 0x7102>,
-+			<&mcu_udmap 0x7103>;
-+		dma-names = "fifo0", "fifo1";
- 
- 		adc {
- 			#io-channel-cells = <1>;
--- 
-2.25.1
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Yours,
+Linus Walleij
