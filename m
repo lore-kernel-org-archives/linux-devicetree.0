@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDFBC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B279C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 050122071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150D520650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584023130;
-	bh=IJZgWyzQXOaK+PHYHTp3+TM2BySWKiwXl8P6u6C0DTc=;
+	s=default; t=1584023259;
+	bh=NBfZaoPVGopy564X9jgj14gpTLz9p4AtaD57fbxxlBg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m9Je0Ew5AXaMDcIZj76C9FqR4D/QNfUypqOHnGdbGm4YdowIPLUvyzXToxNaHE7sY
-	 GUGM7/2Jxrr5t0k7OUmc7ecjCsWKdW24DUDiYPv3MVSln0Y4zUJldcGT5Stnssy7GW
-	 qXRhCGmVdqyw7ldBj1b6nB6UrQIRdQsld+n8NSy4=
+	b=sCHB15uP9zO38trBIeAU9Z6tugW92s4x6GNMwGNgUxdeslwTUk9dfbGr8a78EB9tD
+	 SC5rWBBQnP9Yx+bTlLxaMR+VE+Cmh8KB9LQ6xMV9lImGyIDm66iiSWmIrFpcnjllFl
+	 YHrtbSJsxFUUz3G4rY3jj9TD7XWh9ubk1MoruokY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgCLOZ0 (ORCPT
+        id S1727507AbgCLO1f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:25:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56514 "EHLO mail.kernel.org"
+        Thu, 12 Mar 2020 10:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbgCLOZ0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 10:25:26 -0400
+        id S1727340AbgCLO1f (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:27:35 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3148320650;
-        Thu, 12 Mar 2020 14:25:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 095EE20650;
+        Thu, 12 Mar 2020 14:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584023125;
-        bh=IJZgWyzQXOaK+PHYHTp3+TM2BySWKiwXl8P6u6C0DTc=;
+        s=default; t=1584023254;
+        bh=NBfZaoPVGopy564X9jgj14gpTLz9p4AtaD57fbxxlBg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kz3ZHSch0M2pneIcsz38LoTBcir99AOr/mi2y0EjQfznsWLEIjFIMcP8jnrDBD+3b
-         5oBM+G7S7+HRr+APwIIOYZkeYd3dqDVVbPUNXoitJ8uZfOv4yKGd/T2u0YTciVdWSF
-         vMDNSVWvAjpuVCxI7eOyqmXolp5B61QgkS+BXytM=
-Date:   Thu, 12 Mar 2020 22:25:14 +0800
+        b=q/VzJofeHWyEZaMZ4TO3oapRN+d4deZwCz/ZgR9waOARWpnw4C+EdWAQXMvbGxxNi
+         fjFr/M1u+iH9Yys4vFp8Oc3vZPpIA9Cf2x6INiJFNJymPQ4zeovLQOGz8g7mp4jqxg
+         Rsj+433EcZYFxIp9Qg8SYcEkI+zfwKS0RaAczCck=
+Date:   Thu, 12 Mar 2020 22:27:22 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Anson Huang <Anson.Huang@nxp.com>
 Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
@@ -53,24 +53,25 @@ Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
         marcin.juszkiewicz@linaro.org, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 RESEND 3/4] arm64: defconfig: Enable
- CONFIG_IMX8MM_THERMAL as module
-Message-ID: <20200312142513.GB1249@dragon>
+Subject: Re: [PATCH V2 RESEND 4/4] arm64: dts: imx8mm: Add thermal zone
+ support
+Message-ID: <20200312142721.GC1249@dragon>
 References: <1582947862-11073-1-git-send-email-Anson.Huang@nxp.com>
- <1582947862-11073-3-git-send-email-Anson.Huang@nxp.com>
+ <1582947862-11073-4-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582947862-11073-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1582947862-11073-4-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 11:44:21AM +0800, Anson Huang wrote:
-> Enable CONFIG_IMX8MM_THERMAL as module to support i.MX8MM
-> thermal driver.
+On Sat, Feb 29, 2020 at 11:44:22AM +0800, Anson Huang wrote:
+> Add thermal zone and tmu node to support i.MX8MM thermal
+> driver, ONLY cpu thermal zone is supported, and cpu cooling
+> is also added.
 > 
 > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
