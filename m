@@ -2,117 +2,105 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD2C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F65C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0657206FA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B0F920716
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:12:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G+UNAh6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbgCLKKY (ORCPT
+        id S1726302AbgCLKMm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:10:24 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42490 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgCLKKX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 06:10:23 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w17so2629053oic.9;
-        Thu, 12 Mar 2020 03:10:22 -0700 (PDT)
+        Thu, 12 Mar 2020 06:12:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45039 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgCLKMl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 06:12:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b72so3022021pfb.11
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 03:12:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g2ic8RCgE8xfXSotQsLJPMX+SIIxXdgAWghsG0UmqWY=;
+        b=G+UNAh6wj/c0SGz5GhPSr+VYq88055m5ZZtvU0lGNrZyPFoDBu4p2FqlJVbHL/0EUl
+         6ARFETg2dQqDIZvvCsZcC4vZgzQ/u3QoEqcHtqMHvJUDVrmr3IDXqXgtNF8Jk2zJj0Bo
+         SkAT9oTLszdsWdZwcJ1HgX6P1ICWSXNQdtu/iGNnBZyYFIPlEeqB33DuXHZ9T1e6nCNm
+         qsdslFvy+BKwlPpw7fWakLpmb321bPsUvyvoOvrkrCz7G/hpLnLamMC3W3UN4XnrgEoL
+         SJ/l+N9kwwd6BEVVF+n3HteQBjQY1arEZRxvnFSreA83IHR9Q9hU6IEvl6EZDs+yDaji
+         uUcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zwwoiowfHNPz9HpeeIjPtaOJgNXOTQ/vvDnMi1D629A=;
-        b=n9l2/tq382/vlPmvwJU2vWJ9Ts81d+MELVbuk+qaQfyUs9mB+vmZjEu0OvMtR2O9hE
-         +6b1gXkWQMZt8lFS50RhT0UtPLn/Cjry7YO1tdxmIg9RC3MjW5oPUyFxNBi353XXSPdA
-         Q+d1pql2n2V86pIKLhvbJoDnQzKcSeVAM5/Ep8AM0EB52tp/gUK01asqSfzkch+YIE7/
-         kZJ5ddpSeUNZuGFleCY0LfT12fGlfWhc1hRo/eNsGIablE+ObOYJa3WTKi8USaj0qpyd
-         djCHxqAsM+3iFIY8LkWK5U2BdlEDavjLOiOSaEUGAGy6bv65Fo1oXT0TM2WnjiqtLyNO
-         Z5/A==
-X-Gm-Message-State: ANhLgQ0OmuvEacVrXlbrogc0zinv/wvMjmSWJpHhdPve2VgZNBx5S4Lj
-        I2yQaDnIY5s5Fv0w2pmXca7tneWkrkHS8sqQr24=
-X-Google-Smtp-Source: ADFU+vt2xrdAlnM+K+3Hl7KD8Ot0CPxqX+cCiLIRU6jFW7JpfLC+f9+Lgd1azWcf6NufNcnKkmCIgjYifaSTuSjCeA8=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr1923995oia.148.1584007822268;
- Thu, 12 Mar 2020 03:10:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <1583957020-16359-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1583957020-16359-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Mar 2020 11:10:11 +0100
-Message-ID: <CAMuHMdWqMHGeENswnfk-Hra4JrfELQkLuzY_6JHFRJZWJZPJog@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] Add LVDS panel support to HiHope RZ/G2M
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g2ic8RCgE8xfXSotQsLJPMX+SIIxXdgAWghsG0UmqWY=;
+        b=Jh6uwZ1ui+4LLkSaEYjzFcqd/ZyUjC5mo+86RPke9flwA0uoYnbeB6OW/wQf8biyeC
+         9lGAq60kcfqq8TmyIEQEQblQGynqdFnC8/4gPxy9kkYark0T3YdkIH/84ZbTVev6KrBP
+         8rGSUacVwgEGQX5LDUvnqg6X+UsRwTx29gj24o9isInEH+gv8+YpYIlyWAIhPCvbd8E7
+         4V0ilQExPxX/vUjj0ToAeBVMCzpuZHbptAKuc0Cj5qlNBQ5knZ2/GdCfLlA3pgNj65mw
+         D5V8/q9OnNdaJsD8XL85XuU79PCYj9AgdT0UXGd7Is+dc2+tgpfTPv5iQrKUQEImLX9v
+         tshA==
+X-Gm-Message-State: ANhLgQ1yNt6tjcej3LsL3LKearSuJ+49k0e0l5mZMiTrudoFtaAoDl2q
+        24QxmiWd0mARDJuzrIQg6FkbXg==
+X-Google-Smtp-Source: ADFU+vsNpY0Hm54zBz9SHVmV3vmk513jLZGv0nsBMg1SxW2mhGr4zvQGzyTXRNQMCzGHjdW03YDzuA==
+X-Received: by 2002:a63:b216:: with SMTP id x22mr6869446pge.198.1584007960467;
+        Thu, 12 Mar 2020 03:12:40 -0700 (PDT)
+Received: from localhost ([122.171.122.128])
+        by smtp.gmail.com with ESMTPSA id k5sm8173410pju.29.2020.03.12.03.12.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Mar 2020 03:12:39 -0700 (PDT)
+Date:   Thu, 12 Mar 2020 15:42:32 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Sricharan R <sricharan@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilia Lin <ilia.lin@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: qcom: Add support for krait based socs
+Message-ID: <20200312101232.fmjs3zjl3gud5myh@vireshk-i7>
+References: <20200219205546.6800-1-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219205546.6800-1-ansuelsmth@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lad,
+On 19-02-20, 21:55, Ansuel Smith wrote:
+> In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
+> that has KRAIT processors the voltage/current value of each OPP
+> varies based on the silicon variant in use.
+> 
+> The required OPP related data is determined based on
+> the efuse value. This is similar to the existing code for
+> kryo cores. So adding support for krait cores here.
+> 
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  .../bindings/opp/qcom-nvmem-cpufreq.txt       |   3 +-
+>  drivers/cpufreq/Kconfig.arm                   |   2 +-
+>  drivers/cpufreq/cpufreq-dt-platdev.c          |   5 +
+>  drivers/cpufreq/qcom-cpufreq-nvmem.c          | 181 ++++++++++++++++--
+>  4 files changed, 173 insertions(+), 18 deletions(-)
 
-On Wed, Mar 11, 2020 at 9:03 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> The HiHope RZ/G2M is advertised as supporting panel idk-1110wr from
-> Advantech, but the panel doesn't come with the board, it has to purchased
-> separatey, therefore this series adds panel support to a new DT.
->
-> v3->v4
->  * Included rzg2-advantech-idk-1110wr-panel.dtsi in
->    r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts file instead of re-inventing
->    the wheel.
->  * Dropped the Ack from Laurent for patch 2/2 due to above changes
->
-> v2->v3
->  * Included Reviewed-by from Rob and Laurent
->  * Switched to dual license
->  * Added myself as the maintainer
->  * Updated copyright year
->  * Rebased the patches
->
-> v1->v2
->  * fixed a space according to Geert's feedback.
->
-> Thanks,
-> Prabhakar
->
-> Fabrizio Castro (2):
->   dt-bindings: display: Add idk-1110wr binding
->   arm64: dts: renesas: Add HiHope RZ/G2M board with idk-1110wr display
->
->  .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
->  arch/arm64/boot/dts/renesas/Makefile               |  1 +
->  .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts        | 52 ++++++++++++++++
->  3 files changed, 122 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
-
-Thanks for the update!
-I've queued the second patch in renesas-devel for v5.7.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Can someone from Qcom team review this ?
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+viresh
