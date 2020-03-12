@@ -2,261 +2,117 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6343EC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FEAC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEE520663
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:33:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ujwItTFW"
+	by mail.kernel.org (Postfix) with ESMTP id A6B4E206E7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:36:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584023794;
+	bh=tA9u82x+mBuMvX0imflvPkNR7cfJJBjdnn1jG5Npcug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iPraY80t4ZOOyu80RLiHQmzwYnuZx/TSaAij2hJHTQsnBstSfLq63na+LVB/oRhd0
+	 F+oi/Y3yMQOeyxpTpeENjLajU6blj0m5D0jDZ5DQ3I9XP+gJj7gVwjf28xo9noDuPQ
+	 GXY6yMgubxuTk/yLCuy6Q5y53A9FTzfMbIBW1CNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgCLOdM (ORCPT
+        id S1727519AbgCLOge (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:33:12 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:53012 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbgCLOdM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 10:33:12 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B9FC65F;
-        Thu, 12 Mar 2020 15:33:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584023590;
-        bh=HcQB9Xy2uexkm38VBtX52etqOWXe+C3DlyJo4F6NXB4=;
+        Thu, 12 Mar 2020 10:36:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727450AbgCLOge (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:36:34 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CBBD20663;
+        Thu, 12 Mar 2020 14:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584023793;
+        bh=tA9u82x+mBuMvX0imflvPkNR7cfJJBjdnn1jG5Npcug=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ujwItTFWan1VCw9gjNez+hwU1uYE5Q8fFPGn+HqVz7GGlwFMCNWOrM82L2bmzrDaJ
-         yjHrilVwq8Xhi5XfevmbaYUeFl/mYXjdEiuUGJKSZN8LhwyVSeU9dDQTuoxShVda8q
-         M0GjH+zB5oAfoFeMhmdlaBMhiqgg8CT+Vmtsxwm4=
-Date:   Thu, 12 Mar 2020 16:33:07 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vinay Simha BN <simhavcs@gmail.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        b=lUGEe582YRpKTnG8i9OWpZeKCS0w2sKbrZrH+wNKDMwTbcv40YsTGVN7EDD9WAB+c
+         WcnXpZKVBz1VdLv8TKiuRGPLpXFSTRSI8dDGMW/rOgcvdbghZ9dS1s5snK+RHSSuGV
+         KW1ASOZmiwp/vVcu4bnb5sE34/Uflsq6JaJ9APSQ=
+Date:   Thu, 12 Mar 2020 22:36:22 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
-Message-ID: <20200312143307.GC4876@pendragon.ideasonboard.com>
-References: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v1] ARM: dts: imx6q-marsboard: properly define rgmii PHY
+Message-ID: <20200312143621.GD1249@dragon>
+References: <20200306080353.9284-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200306080353.9284-1-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Vinay,
-
-Please take into account the review comments from v1. We can discuss
-them in replies to v1 if you have any question. I'll skip reviewing this
-version.
-
-On Wed, Mar 11, 2020 at 03:18:24PM +0530, Vinay Simha BN wrote:
-> Add yaml documentation for DSI/LVDS tc358775 bridge
+On Fri, Mar 06, 2020 at 09:03:53AM +0100, Oleksij Rempel wrote:
+> The Atheros AR8035 PHY can be autodetected but can't use interrupt
+> support provided on this board. Define MDIO bus and the PHY node to make
+> it work properly.
 > 
-> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > ---
-> v1:
->  Initial version
-> ---
->  .../bindings/display/bridge/toshiba-tc358775.yaml  | 174 +++++++++++++++++++++
->  1 file changed, 174 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+>  arch/arm/boot/dts/imx6q-marsboard.dts | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-> new file mode 100644
-> index 0000000..e9a9544
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-> @@ -0,0 +1,174 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/toshiba-tc358775.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
+> index 84b30bd6908f..019488aaa30b 100644
+> --- a/arch/arm/boot/dts/imx6q-marsboard.dts
+> +++ b/arch/arm/boot/dts/imx6q-marsboard.dts
+> @@ -111,8 +111,23 @@ &fec {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_enet>;
+>  	phy-mode = "rgmii-id";
+> -	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+>  	status = "okay";
 > +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 > +
-> +title: Toshiba TC358775 DSI to LVDS bridge bindings
+> +		/* Atheros AR8035 PHY */
+> +		rgmii_phy: ethernet-phy@4 {
+> +			reg = <4>;
 > +
-> +maintainers:
-> +	- Vinay Simha BN <simhavcs@gmail.com>
+> +			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
 > +
-> +description: |
-> +	This binding supports DSI to LVDS bridge TC358775
-> +
-> +properties:
-> + compatible:
-> +	const: toshiba,tc358775
-> +
-> + reg:
-> +   maxItems: 1
-> +   description: i2c address of the bridge, 0x0f
-> +
-> + tc, dsi-lanes: 1
-> +   maxItems: 1
-> +   description: Number of DSI data lanes connected to the DSI host. It should
-> +  be one of 1, 2, 3 or 4.
-> +
-> + tc, dual-link: 1
-> +   maxItems: 1
-> +   description: To configure the LVDS transmitter either as single-link or dual-link.
-> +
-> + vdd-supply:
-> +   maxItems: 1
-> +   description:  1.2V LVDS Power Supply
-> +
-> + vddio-supply:
-> +   maxItems: 1
-> +   description: 1.8V IO Power Supply
-> +
-> + stby-gpios:
-> +   maxItems: 1
-> +   description: Standby pin, Low active
-> +
-> + reset-gpios:
-> +   maxItems: 1
-> +   description: Hardware reset, Low active
-> +
-> + ports:
-> +   type: object
-> +
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description: |
-> +          DSI Input. The remote endpoint phandle should be a
-> +	  reference to a valid mipi_dsi_host device node.
-> +      port@1:
-> +        type: object
-> +        description: |
-> +          Video port for LVDS output (panel or connector).
-> +
-> +      required:
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> + - compatible
-> + - reg
-> + - dsi-lanes
-> + - vdd-supply
-> + - vddio-supply
-> + - stby-gpios
-> + - reset-gpios
-> + - ports
-> +
-> +examples:
-> + - |
-> +   i2c@78b8000 {
-> +	/* On High speed expansion */
-> +	label = "HS-I2C2";
-> +	status = "okay";
-> +
-> +	tc_bridge: bridge@f {
-> +		status = "okay";
-> +
-> +		compatible = "toshiba,tc358775";
-> +		reg = <0x0f>;
-> +
-> +		tc,dsi-lanes = <4>;
-> +		tc,dual-link = <0>;
-> +
-> +		vdd-supply = <&pm8916_l2>;
-> +		vddio-supply = <&pm8916_l6>;
-> +
-> +		stby-gpio = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-> +		reset-gpio = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				d2l_in: endpoint {
-> +					remote-endpoint = <&dsi0_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				d2l_out: endpoint {
-> +					remote-endpoint = <&panel_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +  };
-> +
-> +  panel: auo,b101xtn01 {
-> +		status = "okay";
-> +		compatible = "auo,b101xtn01", "panel-lvds";
-> +		power-supply = <&pm8916_l14>;
-> +
-> +		width-mm = <223>;
-> +		height-mm = <125>;
-> +
-> +		data-mapping = "jeida-24";
-> +
-> +		panel-timing {
-> +			/* 1366x768 @60Hz */
-> +			clock-frequency = <72000000>;
-> +			hactive = <1366>;
-> +			vactive = <768>;
-> +			hsync-len = <70>;
-> +			hfront-porch = <20>;
-> +			hback-porch = <0>;
-> +			vsync-len = <42>;
-> +			vfront-porch = <14>;
-> +			vback-porch = <0>;
-> +		};
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&d2l_out>;
-> +			};
-> +		};
-> + };
-> +
-> +  mdss@1a00000 {
-> +	status = "okay";
-> +
-> +	mdp@1a01000 {
-> +		status = "okay";
-> +	};
-> +
-> +	dsi@1a98000 {
-> +		status = "okay";
-> +		..
-> +		ports {
-> +			port@1 {
-> +				dsi0_out: endpoint {
-> +					remote-endpoint = <&d2l_in>;
-> +					data-lanes = <0 1 2 3>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	dsi-phy@1a98300 {
-> +		status = "okay";
-> +		..
-> +	};
-> + };
 
--- 
-Regards,
+Drop these newlines.
 
-Laurent Pinchart
+Shawn
+
+> +			reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+> +			reset-assert-us = <10000>;
+> +			reset-deassert-us = <1000>;
+> +		};
+> +	};
+>  };
+>  
+>  &hdmi {
+> -- 
+> 2.25.1
+> 
