@@ -7,99 +7,82 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8581DC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 19:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E8BC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 19:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6283B20739
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 19:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30E0206F1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 19:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584040661;
-	bh=3PMqZzDow1WhvI9JdkWAyw/5pF4kCmbsUR+q4PkPHdM=;
+	s=default; t=1584040826;
+	bh=gDlP6IS20MYaUDt9v7gWSUx62Nn2xCH0m6LIkR05+zk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oZf+pP/F+RGQspRCH0eCUIx4rFyVcUUJsmVQcQoOcBojx8TW5nHp/CfRBtTKoE2ad
-	 2HNKoAxggrZtBzXLeaz2rzNyDKWvyPP3Bq3CO6vqP3EbFFIR17fVdEvH7qLWxLq8Py
-	 4donlYGr0A9tCmy5ANL2acaKI7cjN0MB0YZg9H7k=
+	b=Lzl0SpGfT6vqEExFETXYGaeGrhqodjBupwxB1vKxkfb6PnXk3RcbDRjbfJsS3c5mm
+	 rXhn7J15hYPrq14PDrIt5L8TeAJvNEtm14P5RG4ZIV3D0yrGLdosaorY2nVH63HWmH
+	 PyKOhA7ciXa8tNJPzBjxRfjB2gy0RrYYm9r6VP0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgCLTRk (ORCPT
+        id S1726788AbgCLTUZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 15:17:40 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34792 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgCLTRk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 15:17:40 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j16so7509586otl.1;
-        Thu, 12 Mar 2020 12:17:38 -0700 (PDT)
+        Thu, 12 Mar 2020 15:20:25 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44127 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbgCLTUZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 15:20:25 -0400
+Received: by mail-oi1-f196.google.com with SMTP id d62so6671059oia.11;
+        Thu, 12 Mar 2020 12:20:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hd21tx8Q98roPfOH6LhR20KwY0U6rAJTkIh4maqUe/M=;
-        b=tF4+UlySQK9fk1be5Dxp7a8cvo6liyZ54AMwJ/9kakHt4uc17/WnBv5jllZ/aHVUOu
-         6UojVapQ+fWswSoVqOy2DB3YAmfulyv+vNv/KVA0UGueWKqlDks2yEjI24FLYy2CS0/i
-         pvsQPDtaBYy7wNgVoLdhqFxj5L5LOC93wfRRimbEQgYuqdpjfsi+Uu9JWz2xk9W1gVKK
-         GlR88hPdHLHtQ+dGAZ+VNkTXccElkHRG7Dl/fTVcJdMnXlSmVPPVPIGRORN7Tfp/jKq8
-         IVvAl1FW3BND7H/b0k/7XmVT7Lxq3GRoO+g27s/phVFoo5UKC3Cqrik3AcvXTkyBWrGm
-         pQfA==
-X-Gm-Message-State: ANhLgQ3uWLYpkpBnNX7I4mbIw1lEZo46kqP+v85iW3QvLp1+wrqSIz6X
-        3/wRlcFz7Rn73SunABTN1Q==
-X-Google-Smtp-Source: ADFU+vspFHk47a5o9XBHxgyTVqmKFkvmz7PWngFVdlZqCUssDvxYhcc4V8uIJqJwJ6RGpki4SQQyQA==
-X-Received: by 2002:a9d:734f:: with SMTP id l15mr1007301otk.55.1584040658124;
-        Thu, 12 Mar 2020 12:17:38 -0700 (PDT)
+        bh=GhJvI6SXnxumTZiju604gArYxIMDgxUFSUD1KLJ0wAU=;
+        b=mDkniB9vNS8TOCzn3rFZLBSzWPxNbBq73VtdXHzixo4E01EMSVqG8x/AnhCqcoI+64
+         +qLp+RpT2w4n43D+IfNP6j+FleP5F9/N7mzZqiMYeuLgJzhQPCQkPG9F0QZxwCkda3W6
+         wfp3WU4p/pQ4ddGstes5w60yOfpsQWlOG1woDqg7dLvv53CIuHCkuYzCYVUZk+qQWe9y
+         1fr4bU65uRd3rvCWNru683vRsLGyuHYfygO5DnnEs0XIyIl9ulCHaTZKx4Qk+v4MqZdM
+         nD2oZK92JFvZQEUFgelQNG1SsNkTbn5KR4aQ9Gp/Tf6DbD33lf4GMKWbPNgMij8fI9Pz
+         6XRQ==
+X-Gm-Message-State: ANhLgQ0AcWhSefhYuoa0GBGtYsbY1bZ+oXmO1Krtm8UmVquQMbJWMKyz
+        Pja5HdaxpBtiQDKXAo++aQ==
+X-Google-Smtp-Source: ADFU+vt+tKHi0IfSz+DZ3wsjyAwIH9cWufc6MEOwUwwMLPydxHHr0G4bItnb3g1/44KQYNly7aWvNg==
+X-Received: by 2002:aca:4a86:: with SMTP id x128mr3989088oia.29.1584040824868;
+        Thu, 12 Mar 2020 12:20:24 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l4sm6149840oti.65.2020.03.12.12.17.37
+        by smtp.gmail.com with ESMTPSA id c12sm7039643oic.27.2020.03.12.12.20.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 12:17:37 -0700 (PDT)
-Received: (nullmailer pid 15919 invoked by uid 1000);
-        Thu, 12 Mar 2020 19:17:36 -0000
-Date:   Thu, 12 Mar 2020 14:17:36 -0500
+        Thu, 12 Mar 2020 12:20:24 -0700 (PDT)
+Received: (nullmailer pid 19761 invoked by uid 1000);
+        Thu, 12 Mar 2020 19:20:23 -0000
+Date:   Thu, 12 Mar 2020 14:20:23 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v3 2/2] spi: dt-bindings: spi-controller: Fix
- spi-[rt]x-bus-width for slave mode
-Message-ID: <20200312191736.GA15869@bogus>
-References: <20200306085038.8111-1-geert+renesas@glider.be>
- <20200306085038.8111-3-geert+renesas@glider.be>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     devicetree@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        linux-input@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>
+Subject: Re: [PATCH v7] dt-bindings: mfd: Convert ChromeOS EC bindings to
+ json-schema
+Message-ID: <20200312192023.GA19701@bogus>
+References: <20200306085513.76024-1-ikjn@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306085038.8111-3-geert+renesas@glider.be>
+In-Reply-To: <20200306085513.76024-1-ikjn@chromium.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri,  6 Mar 2020 09:50:38 +0100, Geert Uytterhoeven wrote:
-> The descriptions for the spi-rx-bus-width and spi-tx-bus-width
-> properties refer to "MISO" and "MOSI", which are not explained in the
-> document.  While these abbreviations are fairly common when talking
-> about SPI, and thus may not need an explanation, they are not entirely
-> correct in this context, as the SPI controller may be used in slave mode
-> instead of master mode.
+On Fri,  6 Mar 2020 16:55:13 +0800, Ikjoon Jang wrote:
+> Convert the ChromeOS EC bindings to json-schema.
 > 
-> Fix this by replacing them by "read transfers" resp. "write transfers",
-> like is done for the spi-rx-delay-us and spi-tx-delay-us properties.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
-> v3:
->   - No changes,
-> 
-> v2:
->   - New.
-> 
-> This issue was present in the .txt version of the bindings, too, so
-> technically it needs
-> Fixes: a8830cb19cfea04e ("spi: Document DT bindings for SPI controllers in slave mode")
-> but of course it won't apply to that version.
-> ---
->  Documentation/devicetree/bindings/spi/spi-controller.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/mfd/cros-ec.txt       |  76 -----------
+>  .../bindings/mfd/google,cros-ec.yaml          | 129 ++++++++++++++++++
+>  2 files changed, 129 insertions(+), 76 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
