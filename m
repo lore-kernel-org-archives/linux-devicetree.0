@@ -2,215 +2,162 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FB2C1975A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026D5C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 22:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E33220716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 21:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C641020716
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 22:07:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="BSFuDGiA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NeCAbPd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgCLVwp (ORCPT
+        id S1726647AbgCLWHv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 17:52:45 -0400
-Received: from mail-eopbgr1400109.outbound.protection.outlook.com ([40.107.140.109]:9568
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726246AbgCLVwp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 17:52:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D9cjXGCAB3/p/hSmywiPoRVib28S3L+tk5mPIqg0EUSSIwYVh21nGC4Zjuh2GQpXU4hSf4zTp0Icv9woD9g53WU69miv0+3u7eohcinCUDt6xR4SIpL3wWmlnph+CPWFbfZRjJwuaD/SYLUxeJsPHbku5HQaR1GA6tq4i7q0ek3aZ/L89e934Yd12n/A9RJqF+MeOQEjwhzRX4KnHpPFHUY38rVVlc8yjaWD3wd3YYeemVmNSBPCeheBv2IJjd6RZFb997lM2QatHbSbyS9irQVi2L7hhuwH6DH+M9sMMCJxiagF8A5cykqVPJmIk8BIDtHogWrJHsujUg4BEjimzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sfQ78igUNeotD8hWxHNWXdmcPmyHb/QIAHDKwYIVw6I=;
- b=gTs2mQKK+bXg9op6yZtDYAekgu+/HSADqc4dLlhODxwr8Vh1flJtiAEtgemBn3MN3gk0mL6TLBQN2RrPMzhwadrnUzlRoBXS639bAkd5f6Q/bE9URYsKm+8MDP0q6XOFvXLb9ZgwSMN8Z+lBxcvRhVSFZhVnkIpmul3QFmVRgS7nQ+33lGlOzEzBsuk0PhI97uPNzJR6RxUJ6Gr8eZAXh7mEShJVVQkeIKkCaumvnStrgOi3gvJ0LT98smwkDVoxLnXM1BzPnXjF+IBhCe+sM0SNhqSm4m3j8oIGsrlkXjEkk/q0M7G/AoZ9cXb2ePaFyJub2AoPilyve44CRLO2iA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+        Thu, 12 Mar 2020 18:07:51 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38118 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgCLWHv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 18:07:51 -0400
+Received: by mail-ed1-f65.google.com with SMTP id h5so9459018edn.5;
+        Thu, 12 Mar 2020 15:07:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sfQ78igUNeotD8hWxHNWXdmcPmyHb/QIAHDKwYIVw6I=;
- b=BSFuDGiA83X/YWFwb4ddC0gQW3/bhXTd/93JK+JDvlsaqGUpNSytIJd5etGNccoLVsOuDDP9vJV8OjfqRtgrhPse+yWXlzLJkmbrlICPCsMN/0RoRJonhgsscLNByEwNMyed0t3k323E7qV62X1JkqfeyLim/njLd1U5rQGr/TA=
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
- OSBPR01MB4311.jpnprd01.prod.outlook.com (20.179.181.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.13; Thu, 12 Mar 2020 21:52:38 +0000
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::6df0:eb47:a259:b94b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::6df0:eb47:a259:b94b%7]) with mapi id 15.20.2793.018; Thu, 12 Mar 2020
- 21:52:38 +0000
-From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Subject: RE: [PATCH v2 2/3] media: i2c: ov5645: Switch to assigned-clock-rates
-Thread-Topic: [PATCH v2 2/3] media: i2c: ov5645: Switch to
- assigned-clock-rates
-Thread-Index: AQHV+LMHriTg1O9fLki5YHCWHclgDahFfJwAgAABE5A=
-Date:   Thu, 12 Mar 2020 21:52:38 +0000
-Message-ID: <OSBPR01MB3590906C6121D1DFFF4ABF0DAAFD0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-References: <1584047552-20166-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584047552-20166-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdUgMHjU_ZANzJbxQji6K7Pdc-jD4C7JatQc-OtN=jJt_w@mail.gmail.com>
-In-Reply-To: <CAMuHMdUgMHjU_ZANzJbxQji6K7Pdc-jD4C7JatQc-OtN=jJt_w@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 98f0e848-2158-42ed-f487-08d7c6cfaeb3
-x-ms-traffictypediagnostic: OSBPR01MB4311:
-x-microsoft-antispam-prvs: <OSBPR01MB4311E4575F484661DA876AF2AAFD0@OSBPR01MB4311.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0340850FCD
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(199004)(52536014)(71200400001)(54906003)(478600001)(2906002)(7696005)(6916009)(4326008)(81156014)(966005)(86362001)(81166006)(6506007)(8676002)(26005)(186003)(5660300002)(66556008)(66476007)(64756008)(66446008)(53546011)(7416002)(8936002)(316002)(33656002)(76116006)(55016002)(9686003)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB4311;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nV2u5k2zErab0XQ5x6xbF/r7m3Dq2FIWBjXzNiiAXqw2NZ0qkozvJD7w26BUyQeemelGNHRCMVGgZ9Bw1Iw9mPaFB4dOrH/IfMozrqCnzguNIuVodI0vQROzq+YxP2ql0CsUKKITAKS3STFwGKw/Qcji4SlPE9suDhTU0yaJl562fNqkfCp13Yw3oFT25SggJKt/mZZQ54S21F+aQFZBtq7Ap9xP839uWsnNnihi8EFBLeLJY/+0qeb2xsZBxOT/o4FfoJYrquQXs7O0ZnA+IA4ihkhHI9eXWkSznFmGhefIxiCCrlPxVevwhqyMpm0njMm5Cr4YQNVWIbVPM2NI6msPInos1iwxccNFFLV4j8zWTQwbODSNcLNihW8a3KuXtwCWZQpY8p7omJB/7RHKtG061QfHa1yRwRDZpKToQpfGj6MmE0zVs6SaknJKW12I//T/6qqorkhqcOHZy40wYIDcqrnlwsU2wfrCo0hxRxWSmszgFf3xyA3ho+WNwFLlPAbaSctJXtsnkzLWaM2cpA==
-x-ms-exchange-antispam-messagedata: flsNdWR17UCS7gNR8tB2PBvE5hORFfAIN6doAlo+Opx8GoLxAyWT6gEHYmmTvDG7y3miGg58/10TToeYwCjk8cfK0jgLDp6wGyc7F2d8qD21a5/fxnWlXVnUGqhrLzmjSCdgQo3Y/LP2UhN6cIatQw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=09HoQ5yKKTzC52h8DcFum9TdRrDdU+q3hWjuJoEs67M=;
+        b=NeCAbPd46VNfEXE/GihhtpSTXB6ri3ZXEQPFz1pFr7zwBKof5kilpHWiLqxuzUQ+rR
+         PzsxPDGD2VTa6vvrkYDUmDlUBg5Q6KJRbr2NnpoF1xxqOvhNM0WdwAQqc/n5gNurbg/A
+         GMOq/LGBtgK0AYf15pZflLJtbe4zvq48tugK1M3DiFGzMr6ehYwEdkr94iEkbehJfMKf
+         VXe43ZlvCvmI+wGAlgpIwUVj1wq5lPV8K1LJ8wU41ffVhkV1qHQSZmcp7IBpzHprvJ4o
+         Ki/GgtCTlu/8e+55iXIK+T1Rn3/hhHXisRtChqa5N30/eBVNZeSnYeUmgg8gdVKwG80k
+         tzRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=09HoQ5yKKTzC52h8DcFum9TdRrDdU+q3hWjuJoEs67M=;
+        b=epQshqUJvrgjP6AorcT5lx3WVe7DR++Pr8o+TY4y++ekX2L3Qf1Gmwly0FbU0j86me
+         rA5IjaGXwsfWXbk41J2BdT41FXUwdub13JxxMzTxiM2ZRaEi6vF5ypYiZJEpnuWfuIL1
+         kuUr0CsyxkIPjAwZ8/IoI7lzq1i1jAJcKvxYo4XqyU3mEg5KhStXgVTjviiHPzFUZnSj
+         82rinJH4Z3lLcLmKEWjTg9nwpwYrNG0kukKOIUv/KPR/12hrFA4XlRCfwuxZ3orp4a5t
+         +bnit4Nta5rgM58FWebVaEHlf+X/jCitytcBaIQlmrhNlw5BSIORPjPZUYOydGJOkf/I
+         6UDg==
+X-Gm-Message-State: ANhLgQ3huUcgJ5y9jl6d8XuCR83PqPlHTWEcVaU3sW1mNL0pXpEwwqbN
+        d+06iiY2SVR+VRFVcoVqfRZJgnIvOSj0f76hLCw=
+X-Google-Smtp-Source: ADFU+vv29LV+LrHrAX74+0u8zlCtfmsF/tpTKCLUjivUWOJdldY59uyR0/VG72OTulhoqTqPuaKSJTEcVeLL/ygAGT0=
+X-Received: by 2002:a17:906:76c6:: with SMTP id q6mr8622638ejn.176.1584050868783;
+ Thu, 12 Mar 2020 15:07:48 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98f0e848-2158-42ed-f487-08d7c6cfaeb3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2020 21:52:38.4725
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RZ4gvB8xrBKpoMhRoiL2a1G9h7Nkc1gnPsFFME1Z1mDu+jtCGRVk53f12BwCvBZs6eu4fWHaBY0yAmCT6qKXzZWTIwGFeGWzXhBoPdKxhkhfJyjCL+Iy0XPK0TpF4Q1l
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4311
+References: <20200312164320.22349-1-michael@walle.cc> <CA+h21hoHMxtxUjHthx2ta9CzQbkF_08Svi7wLU99NqJmoEr36Q@mail.gmail.com>
+ <55374edd-2698-6841-569c-cccf1151cfb1@gmail.com>
+In-Reply-To: <55374edd-2698-6841-569c-cccf1151cfb1@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Fri, 13 Mar 2020 00:07:37 +0200
+Message-ID: <CA+h21hrHGJxV8zbG4NSsHEAUucA8s+P6eyFAtWn-C6yk=52ehA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] net: dsa: felix: allow the device to be disabled
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Michael Walle <michael@walle.cc>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgdGhlIHF1aWNrIHJldmlldy4NCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxp
-bnV4LW02OGsub3JnPg0KPiBTZW50OiAxMiBNYXJjaCAyMDIwIDIxOjQyDQo+IFRvOiBQcmFiaGFr
-YXIgTWFoYWRldiBMYWQgPHByYWJoYWthci5tYWhhZGV2LWxhZC5yakBicC5yZW5lc2FzLmNvbT4N
-Cj4gQ2M6IE1hdXJvIENhcnZhbGhvIENoZWhhYiA8bWNoZWhhYkBrZXJuZWwub3JnPjsgU2hhd24g
-R3VvDQo+IDxzaGF3bmd1b0BrZXJuZWwub3JnPjsgU2FzY2hhIEhhdWVyIDxzLmhhdWVyQHBlbmd1
-dHJvbml4LmRlPjsNCj4gUGVuZ3V0cm9uaXggS2VybmVsIFRlYW0gPGtlcm5lbEBwZW5ndXRyb25p
-eC5kZT47IFJvYiBIZXJyaW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQg
-PG1hcmsucnV0bGFuZEBhcm0uY29tPjsgU2FrYXJpDQo+IEFpbHVzIDxzYWthcmkuYWlsdXNAbGlu
-dXguaW50ZWwuY29tPjsgTlhQIExpbnV4IFRlYW0gPGxpbnV4LWlteEBueHAuY29tPjsNCj4gTWFn
-bnVzIERhbW0gPG1hZ251cy5kYW1tQGdtYWlsLmNvbT47IEV6ZXF1aWVsIEdhcmNpYQ0KPiA8ZXpl
-cXVpZWxAY29sbGFib3JhLmNvbT47IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVO
-RUQNCj4gREVWSUNFIFRSRUUgQklORElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsg
-TGludXggS2VybmVsIE1haWxpbmcNCj4gTGlzdCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-Zz47IExpbnV4LVJlbmVzYXMgPGxpbnV4LXJlbmVzYXMtDQo+IHNvY0B2Z2VyLmtlcm5lbC5vcmc+
-OyBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+OyBMaW51eCBBUk0NCj4gPGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IExpbnV4IE1lZGlhIE1haWxpbmcgTGlz
-dCA8bGludXgtDQo+IG1lZGlhQHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRD
-SCB2MiAyLzNdIG1lZGlhOiBpMmM6IG92NTY0NTogU3dpdGNoIHRvIGFzc2lnbmVkLWNsb2NrLQ0K
-PiByYXRlcw0KPg0KPiBIaSBQcmFiaGFrYXIsDQo+DQo+IE9uIFRodSwgTWFyIDEyLCAyMDIwIGF0
-IDEwOjEzIFBNIExhZCBQcmFiaGFrYXIgPHByYWJoYWthci5tYWhhZGV2LQ0KPiBsYWQucmpAYnAu
-cmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggc3dpdGNoZXMgdG8gYXNzaWduZWQt
-Y2xvY2stcmF0ZXMgZm9yIHNwZWNpZnlpbmcgdGhlIGNsb2NrIHJhdGUuDQo+ID4gVGhlIGNsay1j
-b25mLmMgaW50ZXJuYWxseSBoYW5kbGVzIHNldHRpbmcgdGhlIGNsb2NrIHJhdGUgd2hlbg0KPiA+
-IGFzc2lnbmVkLWNsb2NrLXJhdGVzIGlzIHBhc3NlZC4NCj4gPg0KPiA+IFRoZSBkcml2ZXIgbm93
-IHNldHMgdGhlIGNsb2NrIGZyZXF1ZW5jeSBvbmx5IGlmIHRoZSBkZXByZWNhdGVkDQo+ID4gcHJv
-cGVydHkgY2xvY2stZnJlcXVlbmN5IGlzIGRlZmluZWQgaW5zdGVhZCBhc3NpZ25lZC1jbG9jay1y
-YXRlcywgdGhpcw0KPiA+IGlzIHRvIGF2b2lkIGJyZWFrYWdlIHdpdGggZXhpc3RpbmcgRFQgYmlu
-YXJpZXMuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMYWQgUHJhYmhha2FyIDxwcmFiaGFrYXIu
-bWFoYWRldi0NCj4gbGFkLnJqQGJwLnJlbmVzYXMuY29tPg0KPg0KPiBUaGFua3MgZm9yIHlvdXIg
-cGF0Y2ghDQo+DQo+ID4gLS0tIGEvZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQ1LmMNCj4gPiArKysg
-Yi9kcml2ZXJzL21lZGlhL2kyYy9vdjU2NDUuYw0KPiA+IEBAIC0xMDU1LDYgKzEwNTUsNyBAQCBz
-dGF0aWMgaW50IG92NTY0NV9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQ0KPiA+ICAg
-ICAgICAgc3RydWN0IGRldmljZV9ub2RlICplbmRwb2ludDsNCj4gPiAgICAgICAgIHN0cnVjdCBv
-djU2NDUgKm92NTY0NTsNCj4gPiAgICAgICAgIHU4IGNoaXBfaWRfaGlnaCwgY2hpcF9pZF9sb3c7
-DQo+ID4gKyAgICAgICBib29sIHNldF9jbGsgPSBmYWxzZTsNCj4gPiAgICAgICAgIHVuc2lnbmVk
-IGludCBpOw0KPiA+ICAgICAgICAgdTMyIHhjbGtfZnJlcTsNCj4gPiAgICAgICAgIGludCByZXQ7
-DQo+ID4gQEAgLTEwOTQsMTAgKzEwOTUsMTcgQEAgc3RhdGljIGludCBvdjU2NDVfcHJvYmUoc3Ry
-dWN0IGkyY19jbGllbnQNCj4gKmNsaWVudCkNCj4gPiAgICAgICAgICAgICAgICAgcmV0dXJuIFBU
-Ul9FUlIob3Y1NjQ1LT54Y2xrKTsNCj4gPiAgICAgICAgIH0NCj4gPg0KPiA+IC0gICAgICAgcmV0
-ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2LT5vZl9ub2RlLCAiY2xvY2stZnJlcXVlbmN5IiwN
-Cj4gJnhjbGtfZnJlcSk7DQo+ID4gKyAgICAgICByZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihk
-ZXYtPm9mX25vZGUsICJhc3NpZ25lZC1jbG9jay1yYXRlcyIsDQo+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAmeGNsa19mcmVxKTsNCj4gPiAgICAgICAgIGlmIChyZXQpIHsN
-Cj4NCj4gSSB0aGluayB5b3UgY2FuIGp1c3QgbGVhdmUgb3V0IHRoZSBhYm92ZSBjaGVjay4uLg0K
-Pg0KPiA+IC0gICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgImNvdWxkIG5vdCBnZXQgeGNsayBm
-cmVxdWVuY3lcbiIpOw0KPiA+IC0gICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAg
-ICAgICAgICAgICAvKiBjaGVjayBpZiBkZXByZWNhdGVkIHByb3BlcnR5IGNsb2NrLWZyZXF1ZW5j
-eSBpcyBkZWZpbmVkICovDQo+ID4gKyAgICAgICAgICAgICAgIHJldCA9IG9mX3Byb3BlcnR5X3Jl
-YWRfdTMyKGRldi0+b2Zfbm9kZSwgImNsb2NrLWZyZXF1ZW5jeSIsDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZ4Y2xrX2ZyZXEpOw0KPiA+ICsgICAgICAg
-ICAgICAgICBpZiAocmV0KSB7DQo+DQo+IC4uLiBhbmQgaWdub3JlIHRoZSBhYnNlbmNlIG9mIHRo
-ZSBkZXByZWNhdGVkIHByb3BlcnR5Lg0KPg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGRl
-dl9lcnIoZGV2LCAiY291bGQgbm90IGdldCB4Y2xrIGZyZXF1ZW5jeVxuIik7DQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+
-ICsgICAgICAgICAgICAgICBzZXRfY2xrID0gdHJ1ZTsNCj4NCj4gSS5lLiBqdXN0DQo+DQo+ICAg
-ICAgICAgLyogY2hlY2sgaWYgZGVwcmVjYXRlZCBwcm9wZXJ0eSBjbG9jay1mcmVxdWVuY3kgaXMg
-ZGVmaW5lZCAqLw0KPiAgICAgICAgIHhjbGtfZnJlcSA9IDA7DQo+ICAgICAgICAgb2ZfcHJvcGVy
-dHlfcmVhZF91MzIoZGV2LT5vZl9ub2RlLCAiY2xvY2stZnJlcXVlbmN5IiwgJnhjbGtfZnJlcSk7
-DQo+ICAgICAgICAgaWYgKHhjbGtfZnJlcSkgew0KPiAgICAgICAgICAgICAgICAgcmV0ID0gY2xr
-X3NldF9yYXRlKG92NTY0NS0+eGNsaywgeGNsa19mcmVxKTsNCj4gICAgICAgICAgICAgICAgIGlm
-IChyZXQpIHsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJjb3VsZCBu
-b3Qgc2V0IHhjbGsgZnJlcXVlbmN5XG4iKTsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgcmV0
-dXJuIHJldDsNCj4gICAgICAgICAgICAgICAgIH0NCj4gICAgICAgICB9IGVsc2Ugew0KPiAgICAg
-ICAgICAgICAgICAgeGNsa19mcmVxID0gY2xrX2dldF9yYXRlKG92NTY0NS0+eGNsaywgeGNsa19m
-cmVxKTsNCj4gICAgICAgICB9DQo+DQpJIGRpZCB0aGluayBhYm91dCBpdCBpbml0aWFsbHksIGJ1
-dCByZWFsaXplZCB0aGUgY2xrX2dldF9yYXRlIG1heSB2YXJ5IHBsYXRmb3JtIHRvIHBsYXRmb3Jt
-DQpmb3IgZXhhbXBsZSBpbiBHMkUgY2xrX2dldF9yYXRlKCkgcmV0dXJucyBhIGZyZXF1ZW5jeSBv
-ZiAyNDI0MjQyNCB3aXRoDQphc3NpZ25lZC1jbG9jay1yYXRlcyBzZXQgdG8gIDI0MDAwMDAwIGFu
-ZCBwcm9iZSB3b3VsZCBmYWlsIGR1ZSB0byBhIGNoZWNrIGZvcg0KZXh0ZXJuYWwgY2xvY2sgbXVz
-dCBiZSAyNE1Ieiwgd2l0aCAxJSB0b2xlcmFuY2UuDQoNCkNoZWVycywNCi0tUHJhYmhha2FyDQoN
-Cj4gPiAgICAgICAgIH0NCj4gPg0KPiA+ICAgICAgICAgLyogZXh0ZXJuYWwgY2xvY2sgbXVzdCBi
-ZSAyNE1IeiwgYWxsb3cgMSUgdG9sZXJhbmNlICovIEBADQo+ID4gLTExMDcsMTAgKzExMTUsMTIg
-QEAgc3RhdGljIGludCBvdjU2NDVfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCj4g
-PiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4gICAgICAgICB9DQo+ID4NCj4g
-PiAtICAgICAgIHJldCA9IGNsa19zZXRfcmF0ZShvdjU2NDUtPnhjbGssIHhjbGtfZnJlcSk7DQo+
-ID4gLSAgICAgICBpZiAocmV0KSB7DQo+ID4gLSAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAi
-Y291bGQgbm90IHNldCB4Y2xrIGZyZXF1ZW5jeVxuIik7DQo+ID4gLSAgICAgICAgICAgICAgIHJl
-dHVybiByZXQ7DQo+ID4gKyAgICAgICBpZiAoc2V0X2Nsaykgew0KPiA+ICsgICAgICAgICAgICAg
-ICByZXQgPSBjbGtfc2V0X3JhdGUob3Y1NjQ1LT54Y2xrLCB4Y2xrX2ZyZXEpOw0KPiA+ICsgICAg
-ICAgICAgICAgICBpZiAocmV0KSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2X2Vy
-cihkZXYsICJjb3VsZCBub3Qgc2V0IHhjbGsgZnJlcXVlbmN5XG4iKTsNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAgICAgICAgICAgICB9DQo+DQo+ID4g
-ICAgICAgICB9DQo+ID4NCj4gPiAgICAgICAgIGZvciAoaSA9IDA7IGkgPCBPVjU2NDVfTlVNX1NV
-UFBMSUVTOyBpKyspDQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo+ID4NCj4gPiBfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+IGxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-DQo+ID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsDQo+DQo+DQo+DQo+IC0tDQo+IEdye29ldGplLGVldGluZ31zLA0KPg0KPiAgICAg
-ICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4g
-LS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBt
-NjhrLm9yZw0KPg0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBl
-b3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8g
-am91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhh
-dC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
-DQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEdtYkgsIEdlc2NoYWVmdHNmdWVocmVyL1By
-ZXNpZGVudDogQ2Fyc3RlbiBKYXVjaCwgU2l0eiBkZXIgR2VzZWxsc2NoYWZ0L1JlZ2lzdGVyZWQg
-b2ZmaWNlOiBEdWVzc2VsZG9yZiwgQXJjYWRpYXN0cmFzc2UgMTAsIDQwNDcyIER1ZXNzZWxkb3Jm
-LCBHZXJtYW55LCBIYW5kZWxzcmVnaXN0ZXIvQ29tbWVyY2lhbCBSZWdpc3RlcjogRHVlc3NlbGRv
-cmYsIEhSQiAzNzA4IFVTdC1JRE5yLi9UYXggaWRlbnRpZmljYXRpb24gbm8uOiBERSAxMTkzNTM0
-MDYgV0VFRS1SZWcuLU5yLi9XRUVFIHJlZy4gbm8uOiBERSAxNDk3ODY0Nw0K
+On Thu, 12 Mar 2020 at 23:45, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> On 3/12/20 2:35 PM, Vladimir Oltean wrote:
+> > On Thu, 12 Mar 2020 at 18:44, Michael Walle <michael@walle.cc> wrote:
+> >>
+> >> If there is no specific configuration of the felix switch in the device
+> >> tree, but only the default configuration (ie. given by the SoCs dtsi
+> >> file), the probe fails because no CPU port has been set. On the other
+> >> hand you cannot set a default CPU port because that depends on the
+> >> actual board using the switch.
+> >>
+> >> [    2.701300] DSA: tree 0 has no CPU port
+> >> [    2.705167] mscc_felix 0000:00:00.5: Failed to register DSA switch: -22
+> >> [    2.711844] mscc_felix: probe of 0000:00:00.5 failed with error -22
+> >>
+> >> Thus let the device tree disable this device entirely, like it is also
+> >> done with the enetc driver of the same SoC.
+> >>
+> >> Signed-off-by: Michael Walle <michael@walle.cc>
+> >> ---
+> >>  drivers/net/dsa/ocelot/felix.c | 5 +++++
+> >>  1 file changed, 5 insertions(+)
+> >>
+> >> diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+> >> index 69546383a382..531c7710063f 100644
+> >> --- a/drivers/net/dsa/ocelot/felix.c
+> >> +++ b/drivers/net/dsa/ocelot/felix.c
+> >> @@ -699,6 +699,11 @@ static int felix_pci_probe(struct pci_dev *pdev,
+> >>         struct felix *felix;
+> >>         int err;
+> >>
+> >> +       if (pdev->dev.of_node && !of_device_is_available(pdev->dev.of_node)) {
+> >> +               dev_info(&pdev->dev, "device is disabled, skipping\n");
+> >> +               return -ENODEV;
+> >> +       }
+> >> +
+> >
+> > IMHO since DSA is already dependent on device tree for PHY bindings,
+> > it would make more sense to move this there:
+>
+> Michael's solution makes more sense, as this is a driver specific
+> problem whereby you have a pci_dev instance that is created and does not
+> honor the status property provided in Device Tree. If you were to look
+> for a proper solution it would likely be within the PCI core actually.
+>
+> No other DSA switch has that problem because they use the
+> I2C/SPI/platform_device/GPIO/whatever entry points into the driver model.
+
+True, my problem with doing it in the PCI core is that "the book" [0]
+doesn't actually say anything about the "status" property, so this
+patch might get some pushback from the PCI maintainers (but I don't
+actually know):
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 512cb4312ddd..50c2b3da134a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2281,6 +2281,12 @@ static struct pci_dev *pci_scan_device(struct
+pci_bus *bus, int devfn)
+
+        pci_set_of_node(dev);
+
++       if (dev->dev.of_node && !of_device_is_available(dev->dev.of_node)) {
++               pci_bus_put(dev->bus);
++               kfree(dev);
++               return NULL;
++       }
++
+        if (pci_setup_device(dev)) {
+                pci_bus_put(dev->bus);
+                kfree(dev);
+
+OF bindings are completely optional with PCI, as you probably already
+know. But there's nothing "driver" specific in disabling (i.e. not
+probing) a device.
+
+> --
+>
+
+[0] https://www.openfirmware.info/data/docs/bus.pci.pdf
+
+Thanks,
+-Vladimir
