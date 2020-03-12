@@ -2,396 +2,145 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973E3C1975A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 04:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E514C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 04:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F9620739
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 04:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDE9206EB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 04:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GW/HqYbg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u05buOnh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731667AbgCLEjK (ORCPT
+        id S2387677AbgCLEuR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 00:39:10 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36866 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgCLEjJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 00:39:09 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r24so4852929ljd.4;
-        Wed, 11 Mar 2020 21:39:07 -0700 (PDT)
+        Thu, 12 Mar 2020 00:50:17 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55470 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387657AbgCLEuR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 00:50:17 -0400
+Received: by mail-pj1-f68.google.com with SMTP id mj6so1881338pjb.5
+        for <devicetree@vger.kernel.org>; Wed, 11 Mar 2020 21:50:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yBuGv/QITRC/Igo7HSUN1dH5kTCAjwfuFijzguA/jYw=;
-        b=GW/HqYbg9lETiK4yfwbUs4BmicgdKhjRPIqlh5ukEXfbM3X9HCDg3QNNczw+mIOLqD
-         PUAEVyTpFnG/S5qwpz3FFD7JfVFurX8pxSKwH+HSlBOrVe6xUMnYVOvBsn7wpWD+xwcw
-         cMaCU7mmyKcRq4xOYkiwIUs+gY3AqsG/aHMaU8juMyIiaBJ9wXn5ZS68VMiTQU4APNAw
-         T/lKMQKvF15EXz3hq80eCCQqeO4l0xnWn00eiZfGDj+gEWoWL5LrEa2QGJ4rgkXhuDbF
-         srN4IRpbzOsswO3RgbjZLmNdxKQrhz0KuzC0RjltrS6VIHRPQ80DGqg7PG/oaNFjgmHF
-         KYYQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9Huysc9k69DOetuyPT37xPzZ+YLOLRqnJ/FtV19WEDc=;
+        b=u05buOnhB2ZaHjx7I2VFVZdDS3meih0mc6WZaP2ubEFIX5IRV5PakdbMoocuP1aMet
+         136201rU4y6u8Z/BRJWEayhmgq6izg7StoG+xiBHPWeICaxzekOrFwczJDFN37vhaqhG
+         1kw58XU/mfyf4/4oZnJjk92aE03UU/a077dE71+PFVLVGLx6/iA3tlkGQl5FIdnhviBh
+         3XsuPkEDF8xtLyCuU6ZrY2qrQhM265xHA2AbYFz8FY43oNPUUHgB4+ccFwqE47xUd2S6
+         W4eYzRJufanpih+BqCLI38xka2OLJnMdlWxDNUS1RZnkjiP6U9kMQyeitCgIeZxffQ0S
+         Klvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=yBuGv/QITRC/Igo7HSUN1dH5kTCAjwfuFijzguA/jYw=;
-        b=OgxOHvyh9X2huZ6+4k1KElkOKrChQVXKQLJISFaWJa+5m41bnh/rogDowX5eITBsJS
-         D0SqTxv5PJPJye/gkfM+W/UBbeYMVtIx1LdvQW2kDwmO8LQ4HZnEu3NWAUUtoWaAH39K
-         fbjQYR8+VATz9yzvLuOghb8V7aki0rv6qKx9KmJXfhAF+zryssRu+YemrkTdXT7JWsNj
-         rNgrSfogMNsawSW3ckqNKrgVsuzmGe8P0CiNMWx2x2LcJnJcHvG7ivAhooNY7zJfq4Fi
-         r65Po5LfjtysrCE0jv4yvJZJUmygFDJAAUWp9VsMT2jFtk6abgWtAQF2AJsppUqyVzLs
-         IkXw==
-X-Gm-Message-State: ANhLgQ0vqagXsqiRYESvulF2rNN4agpOJWNDeZMMmtwCKfw86ya2AyWh
-        swf9WxKM6+iBCO+FW0IRD0A=
-X-Google-Smtp-Source: ADFU+vv/avWPuNlcSanWTUq+T5awWfyEHOqBG+6RFcqPYYYY7B7raYyexrvQWxO++h3EWUiwVe2HSg==
-X-Received: by 2002:a05:651c:50a:: with SMTP id o10mr4092570ljp.189.1583987946148;
-        Wed, 11 Mar 2020 21:39:06 -0700 (PDT)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id u2sm8872866lfu.3.2020.03.11.21.39.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 11 Mar 2020 21:39:05 -0700 (PDT)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        =?UTF-8?q?Jer=C3=B4me=20Brunet?= <jbrunet@baylibre.com>
-Subject: [PATCH v7 3/3] arm64: dts: meson: add support for the SmartLabs SML-5442TW
-Date:   Thu, 12 Mar 2020 08:38:06 +0400
-Message-Id: <1583987886-6288-4-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583987886-6288-1-git-send-email-christianshewitt@gmail.com>
-References: <1583987886-6288-1-git-send-email-christianshewitt@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9Huysc9k69DOetuyPT37xPzZ+YLOLRqnJ/FtV19WEDc=;
+        b=lida53446J4eTN4UYeMP36HrNJuCVEzHlNpKt/Yj/uE+N1SzmZDxu/CHvSefWuFRpy
+         tAiEqAKvimEewFMvlk/d6oBdFPkqyPsaVhVkZv60P6ye/vowp1hEm4WQIIrtXYJDrOzZ
+         5ZRGpLQ+mlKCSq4YO0CL5lCVLeeZXco2iVDjbE5Uoxwbt0R4JTAna9JB70xzR1zxBXge
+         Hq1DUorz+Zxre+g75V61CNf175Qd0/AwK92NEcyr5410bL//TsWFHknvOrzWKY4JZFva
+         xkaeIIqY+Tb94Kt+WEaKx2VRe7jCIV974k5hu/6fZUJo4GK55r8DOZRBts7aMJ+hvFxM
+         jpgw==
+X-Gm-Message-State: ANhLgQ2gpoRfD0Fkz7Ws/4d/9lPvZZlV8nqzLqy2fH7j5JTAkBb2Ai4W
+        0W2hjVSqGHCCKX+/bcyXlrZbAA==
+X-Google-Smtp-Source: ADFU+vtQv6XCgFYw5CWT4cXp6fyTARSMSkMReQUHbK2N7f/ufSK/IBPreQ4I9vHrUgXhd7/6d78Hww==
+X-Received: by 2002:a17:902:7c0d:: with SMTP id x13mr6162264pll.93.1583988615935;
+        Wed, 11 Mar 2020 21:50:15 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q12sm52827529pfh.158.2020.03.11.21.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Mar 2020 21:50:15 -0700 (PDT)
+Date:   Wed, 11 Mar 2020 21:50:12 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        catalin.marinas@arm.com, will@kernel.org, shawnguo@kernel.org,
+        olof@lixom.net, Anson.Huang@nxp.com, maxime@cerno.tech,
+        leonard.crestez@nxp.com, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Loic Poulain <loic.poulain@linaro.org>
+Subject: Re: [v1 1/6] arm64: dts: msm8916: Add i2c-qcom-cci node
+Message-ID: <20200312045012.GT264362@yoga>
+References: <20200311123501.18202-1-robert.foss@linaro.org>
+ <20200311123501.18202-2-robert.foss@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311123501.18202-2-robert.foss@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SmartLabs SML-5442TW is broadly similar to the P231 reference design
-but with the following differences:
+On Wed 11 Mar 05:34 PDT 2020, Robert Foss wrote:
 
-- The Yellow and Blue LEDs are available but disabled
-- The Red and Green LEDs are used to signal off/on status
-- uart_AO can be accessed after opening the case; soldered pins exist
-- GPIOX_17 is forced high to enable the QCA9377 module
+> From: Loic Poulain <loic.poulain@linaro.org>
+> 
+> The msm8916 CCI controller provides one CCI/I2C bus.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index 9f31064f2374..afe1d73e5cd3 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -1503,6 +1503,33 @@
+>  			};
+>  		};
+>  
+> +		cci@1b0c000 {
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- arch/arm64/boot/dts/amlogic/Makefile               |   1 +
- .../boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts | 284 +++++++++++++++++++++
- 2 files changed, 285 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
+This deserves a label, so that it's possible to reference it and alter
+the status in the board dts.
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index eef0045..6cf8c4a 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -27,6 +27,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-phicomm-n1.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-sml5442tw.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s805x-p241.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-p281.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905w-tx3-mini.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
-new file mode 100644
-index 0000000..03723b7
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dts
-@@ -0,0 +1,284 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2016 Endless Computers, Inc.
-+ * Author: Carlo Caione <carlo@endlessm.com>
-+ * Copyright (c) 2018 BayLibre, SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxl-s905d.dtsi"
-+
-+/ {
-+	compatible = "smartlabs,sml5442tw", "amlogic,s905d", "amlogic,meson-gxl";
-+	model = "SmartLabs SML-5442TW";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+		ethernet0 = &ethmac;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		yellow {
-+			color = <LED_COLOR_ID_YELLOW>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio_ao GPIOAO_6 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		blue {
-+			color = <LED_COLOR_ID_BLUE>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio GPIODV_28 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		green {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		red {
-+			color = <LED_COLOR_ID_RED>;
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio GPIODV_27 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	hdmi_5v: regulator-hdmi-5v {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "HDMI_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+
-+		gpio = <&gpio GPIOH_3 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	vddio_ao18: regulator-vddio_ao18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vddio_boot: regulator-vddio_boot {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_BOOT";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vddao_3v3: regulator-vddao_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	wifi32k: wifi32k {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+		clocks = <&wifi32k>;
-+		clock-names = "ext_clock";
-+	};
-+
-+	cvbs-connector {
-+		compatible = "composite-video-connector";
-+
-+		port {
-+			cvbs_connector_in: endpoint {
-+				remote-endpoint = <&cvbs_vdac_out>;
-+			};
-+		};
-+	};
-+
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_tx_tmds_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&cec_AO {
-+	status = "okay";
-+	pinctrl-0 = <&ao_cec_pins>;
-+	pinctrl-names = "default";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
-+
-+&cvbs_vdac_port {
-+	cvbs_vdac_out: endpoint {
-+		remote-endpoint = <&cvbs_connector_in>;
-+	};
-+};
-+
-+&ethmac {
-+	status = "okay";
-+	phy-mode = "rmii";
-+	phy-handle = <&internal_phy>;
-+};
-+
-+&hdmi_tx {
-+	status = "okay";
-+	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-+	pinctrl-names = "default";
-+	hdmi-supply = <&hdmi_5v>;
-+};
-+
-+&hdmi_tx_tmds_port {
-+	hdmi_tx_tmds_out: endpoint {
-+		remote-endpoint = <&hdmi_connector_in>;
-+	};
-+};
-+
-+&i2c_A {
-+	status = "okay";
-+	pinctrl-0 = <&i2c_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&internal_phy {
-+	pinctrl-0 = <&eth_link_led_pins>, <&eth_act_led_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&pwm_ef {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_FCLK_DIV4>;
-+	clock-names = "clkin0";
-+};
-+
-+&saradc {
-+	status = "okay";
-+	vref-supply = <&vddio_ao18>;
-+};
-+
-+/* Wireless SDIO Module */
-+&sd_emmc_a {
-+	status = "okay";
-+	pinctrl-0 = <&sdio_pins>;
-+	pinctrl-1 = <&sdio_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <100000000>;
-+
-+	non-removable;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_pins>;
-+	pinctrl-1 = <&sdcard_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <100000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
-+	pinctrl-1 = <&emmc_clk_gate_pins>;
-+	pinctrl-names = "default", "clk-gate";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	max-frequency = <100000000>;
-+	non-removable;
-+	disable-wp;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+/* This is connected to the Bluetooth module: */
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+};
-+
-+/* This UART is brought out to the debug header */
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
--- 
-2.7.4
+> +			compatible = "qcom,msm8916-cci";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x1b0c000 0x1000>;
 
+Please sort nodes my address (and then by name).
+
+Apart from these two nits, this looks good.
+
+Regards,
+Bjorn
+
+> +			interrupts = <GIC_SPI 50 IRQ_TYPE_EDGE_RISING>;
+> +			clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
+> +				<&gcc GCC_CAMSS_CCI_AHB_CLK>,
+> +				<&gcc GCC_CAMSS_CCI_CLK>,
+> +				<&gcc GCC_CAMSS_AHB_CLK>;
+> +			clock-names = "camss_top_ahb", "cci_ahb",
+> +				      "cci", "camss_ahb";
+> +			assigned-clocks = <&gcc GCC_CAMSS_CCI_AHB_CLK>,
+> +					  <&gcc GCC_CAMSS_CCI_CLK>;
+> +			assigned-clock-rates = <80000000>, <19200000>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&cci0_default>;
+> +			status = "disabled";
+> +
+> +			cci0: i2c-bus@0 {
+> +				reg = <0>;
+> +				clock-frequency = <400000>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +		};
+> +
+>  		camss: camss@1b00000 {
+>  			compatible = "qcom,msm8916-camss";
+>  			reg = <0x1b0ac00 0x200>,
+> -- 
+> 2.20.1
+> 
