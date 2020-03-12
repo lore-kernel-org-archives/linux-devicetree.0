@@ -2,125 +2,134 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30298C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 08:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D4DC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 08:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D516206B7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 08:40:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TYU7Fc2f"
+	by mail.kernel.org (Postfix) with ESMTP id 40E7120578
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 08:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725980AbgCLIk5 (ORCPT
+        id S1726548AbgCLIz7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 04:40:57 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:32938 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgCLIk5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 04:40:57 -0400
-Received: by mail-pj1-f67.google.com with SMTP id dw20so517992pjb.0;
-        Thu, 12 Mar 2020 01:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B66v4eXPQ7K83ouJ2mPSLQXCELI/fDI8PZuRhUCkLnE=;
-        b=TYU7Fc2fKR+lYRhdC12JYyZExBYrzc3NrCl6ugsTHfm8MzFBfhvhUw+s6jbUgTo+R+
-         fDraAnZ+8JGEkVg+ImFpwiwiewaq+qaHw0CrmmgNCR8VyNfrVwQ/CQYEhIp493bdEoYP
-         m2F/HdSYgp9LccmIbihcO6NjIJ+omW9sm28hz+JjxXEBJerHu6L2FRWNID1pepwD5AYM
-         dIsldxeMszGF09fsj3Vc0AE+MZGMTmO6NQApXPZ2zaQrEo0mZ7Us6GxQa7p004K0mwkZ
-         xTnixzieTBUen4tV/j0C2YQM/sbdrtSc9S0NMMKAraw/NkxTB84MvcAqRD7AmOUJKAaS
-         d3gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B66v4eXPQ7K83ouJ2mPSLQXCELI/fDI8PZuRhUCkLnE=;
-        b=A95dgAVs25IiPOof0m05hd+ACwXXdI5BTJ3GiJDteib9RsA3H4bgLcUm+xS/2iF6bh
-         JQGuWCRfaGRnlb43jaLpV87gDCbWFevSvxmpput0c4qoNc+rk2RnYdpFrCmNbosrpcGB
-         XdbHd1ymy72T4jGyOFP0mVMzhiPIv+5lZ30L/0YhPTM0QljQne4PGvvUNT+bSZksk7a7
-         ONsJOiwxN6AsCM0RHinl6mD9494ZqfvG3qtEBNnCL5F+fVakqp1wdklce2BJNIGlHlLc
-         Pe7PPYbWiQqGklOVa2UrAjpj/RKw2Dw+6AaIzIQhg/sPBvzbVFEA2lBsqVGddHu5a+A0
-         iMXg==
-X-Gm-Message-State: ANhLgQ32ry3e8UXbSNh5fJ9r66eVeZmSOQbQwMv1e+fiCUYj4nWVmrsH
-        VrvJDhabHMt99G8mRrcMDsO7zeOjyODSGtxR7UY=
-X-Google-Smtp-Source: ADFU+vuCKsscjSBeYXkw3i4mhPJxhdDEyr6X9XyMUb7h5TIyA/i3v2HoTj6+Kfbm9VvcmM/QGsM3gb/gwmJ8NJ7ImUc=
-X-Received: by 2002:a17:90a:77c3:: with SMTP id e3mr2939586pjs.143.1584002454410;
- Thu, 12 Mar 2020 01:40:54 -0700 (PDT)
+        Thu, 12 Mar 2020 04:55:59 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39716 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbgCLIz7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 04:55:59 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 47F8C29642E
+Subject: Re: [PATCH] ASoC: dt-bindings: google,cros-ec-codec: Fix dtc warnings
+ in example
+To:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Benson Leung <bleung@chromium.org>, alsa-devel@alsa-project.org
+References: <20200311205841.2710-1-robh@kernel.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <d6c612db-d4fd-e0e5-aff0-c3963322830c@collabora.com>
+Date:   Thu, 12 Mar 2020 09:55:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200311125135.30832-1-ple@baylibre.com> <20200311125135.30832-4-ple@baylibre.com>
- <20200311135535.GQ1922688@smile.fi.intel.com> <20200312005333.GH1639@pendragon.ideasonboard.com>
-In-Reply-To: <20200312005333.GH1639@pendragon.ideasonboard.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 12 Mar 2020 10:40:46 +0200
-Message-ID: <CAHp75Vc8oREKpiz6pR_QiTDHbymh-KKEP5ZzcT8iDJhZs=0bMw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] drm: bridge: add it66121 driver
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Phong LE <ple@baylibre.com>, narmstrong@baylibre.com,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrzej Hajda <a.hajda@samsung.com>, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        heiko.stuebner@theobroma-systems.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>, icenowy@aosc.io,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200311205841.2710-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 2:56 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Wed, Mar 11, 2020 at 03:55:35PM +0200, Andy Shevchenko wrote:
-> > On Wed, Mar 11, 2020 at 01:51:34PM +0100, Phong LE wrote:
-> > > This commit is a simple driver for bridge HMDI it66121.
-> > > The input format is RBG and there is no color conversion.
-> > > Audio, HDCP and CEC are not supported yet.
-> >
-> > I guess you should have been told in your company how to use get_maintainer.pl
-> > to avoid spamming people.
-> >
-> > Hint:
-> >       scripts/get_maintainer.pl --git --git-min-percent=67 ...
+Hi Rob,
 
-> I didn't even know about those options...
+On 11/3/20 21:58, Rob Herring wrote:
+> Extra dtc warnings (roughly what W=1 enables) are now enabled by default
+> when building the binding examples. These were fixed treewide in
+> 5.6-rc5, but the newly added google,cros-ec-codec schema adds some new
+> warnings:
+> 
+> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:17.28-21.11:
+> Warning (unit_address_vs_reg): /example-0/reserved_mem: node has a reg or ranges property, but no unit name
+> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:22.19-32.11:
+> Warning (unit_address_vs_reg): /example-0/cros-ec@0: node has a unit name, but no reg property
+> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:26.37-31.15:
+> Warning (unit_address_vs_reg): /example-0/cros-ec@0/ec-codec: node has a reg or ranges property, but no unit name
+> 
+> Fixing the above, then results in:
+> 
+> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:26.13-23:
+> Warning (reg_format): /example-0/cros-ec@0:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
+> Documentation/devicetree/bindings/sound/google,cros-ec-codec.example.dts:27.37-32.15:
+> Warning (unit_address_vs_reg): /example-0/cros-ec@0/ec-codec: node has a reg or ranges property, but no unit name
+> 
+> Fixes: eadd54c75f1e ("dt-bindings: Convert the binding file google, cros-ec-codec.txt to yaml format.")
+> Cc: Cheng-Yi Chiang <cychiang@chromium.org>
+> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Cc: Guenter Roeck <groeck@chromium.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Benson Leung <bleung@chromium.org>
+> Cc: alsa-devel@alsa-project.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Doesn't one usually look at the help of the tool they are using?
-How does one know what it does by default?
+Just a minor nit, but the patch looks good to me, so:
 
-> I don't think we can't expect
-> contributors to know about this if it's not even documented in
-> Documentation/process/.
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-This is indeed not good and there is room for improvement.
 
-> And even in that case, if this is what every
-> contribution should use by default, then those options should become the
-> default for the get_maintainer.pl script.
+> ---
+>  .../bindings/sound/google,cros-ec-codec.yaml  | 27 +++++++++++--------
+>  1 file changed, 16 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+> index 94a85d0cbf43..c84e656afb0a 100644
+> --- a/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+> +++ b/Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+> @@ -44,19 +44,24 @@ additionalProperties: false
+>  
+>  examples:
+>    - |
+> -    reserved_mem: reserved_mem {
+> +    reserved_mem: reserved-mem@52800000 {
+>          compatible = "shared-dma-pool";
+> -        reg = <0 0x52800000 0 0x100000>;
+> +        reg = <0x52800000 0x100000>;
+>          no-map;
+>      };
+> -    cros-ec@0 {
+> -        compatible = "google,cros-ec-spi";
+> -        #address-cells = <2>;
+> -        #size-cells = <1>;
+> -        cros_ec_codec: ec-codec {
+> -            compatible = "google,cros-ec-codec";
+> -            #sound-dai-cells = <1>;
+> -            reg = <0x0 0x10500000 0x80000>;
+> -            memory-region = <&reserved_mem>;
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        cros-ec@0 {
+> +            compatible = "google,cros-ec-spi";
+> +            #address-cells = <2>;
+> +            #size-cells = <1>;
+> +            reg = <0>;
+> +            cros_ec_codec: ec-codec@10500000 {
 
-I don't think so. There is a common sense rule in play.
-By default get_maintainer.pl shows the roles of the people, so, when
-one puts the name at least they may read what the role of the
-recipient in question. If I see too many people in the list (let's say
-4+), I definitely will start looking for the explanation why.
+nit: shouldn't this be just codec@105500000 to match the class? However I am not
+sure codec is a class itself.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +                compatible = "google,cros-ec-codec";
+> +                #sound-dai-cells = <1>;
+> +                reg = <0x0 0x10500000 0x80000>;
+> +                memory-region = <&reserved_mem>;
+> +            };
+>          };
+>      };
+> 
