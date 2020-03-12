@@ -2,58 +2,59 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF72C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 16:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946C7C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 16:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EDD3206F1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 16:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DE9206F1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 16:44:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lHh7D1bf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ps6uYL78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgCLQog (ORCPT
+        id S1726659AbgCLQom (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 12:44:36 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45095 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgCLQof (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 12:44:35 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z8so1516112qto.12
-        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 09:44:34 -0700 (PDT)
+        Thu, 12 Mar 2020 12:44:42 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41913 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgCLQoi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 12:44:38 -0400
+Received: by mail-qt1-f196.google.com with SMTP id l21so4871908qtr.8
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 09:44:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TPpZsYGTKZBLfF6RD/jxlsWhzogKeQ1x8M78zICj+mw=;
-        b=lHh7D1bfakOBhGH6SadI25EDS7GDUKMoeWYcfjflB0boeChcYsncL+EpWkqvsiJYN2
-         BPlUvNiByfH3lwaLBDk4i06Mos0YJ8zH4PRWVWjLnPWfvy7rRvtr+R58A/KVfpt5blmD
-         EKh8PWEKgeYNRrQ706K6W5eq9x6Cf3b8zICua5o8TIhxMttOH/d/d8pbD+sANGY5XwkJ
-         1U00shblSJLdkzBVBmr1FKj+ZZNQSW71M2LehyGoeRgWEWFd7KMWxOgVnRx/u1QQarWq
-         vcHK1j3x1UZ6KgZpM93q3f7cYm4O0CURL4h3F92obcB8B7GH4Qlhh7HMM4xMMKmPZkds
-         HoXA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=M8I0tibm0x9o216WA6J8pQVPILtFuntNhRaRSj7eG4A=;
+        b=Ps6uYL78L8tiiefDveevpxYZYKo1t9+cCCagwNnkPLBaPSV2pPdfXTIXk604ph2xpw
+         faAVSCi08gDu/GHSdCihjkCKqIZSC2IleEQoObaiVDFlTPmjYm52pvdzdaISQ9hf//Pv
+         FodTrRUDCzthOuurF7NFtvTYK4oPZVJw9M/IozV4SMQzttu16TI5wTezqHL46bbcltwQ
+         /kSxZi3YBmPrNogjVuKfjbEAmaL6NE7CmpTD/CO+q3VYSldYo70H8zjtDyhMYExHBeHf
+         iV3HE8sYXetkWPcjjwtfAJNRiW034zFfHwuVUuIIQo35aeFKxDYrLLidYWAh9MJ0tHKD
+         WFXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TPpZsYGTKZBLfF6RD/jxlsWhzogKeQ1x8M78zICj+mw=;
-        b=JzgdWkYxVIMN07+ZDQREvDZgVvRlQnf1tdgE2SlRLK7O7CZv5n5QEaTtn46iQ4Pq9s
-         h2ytXzv86yJHMRgWvXH0AJy0ptNXBAzzY2vTpt2scHiAPe5ps1ZXlY/Hjni/YmKONh5B
-         GCPRA46PFOfbascRxjmwUyebEzVT0IoHWdNGyh92wviPCS3kmV4r6591CTGttUSBqX0D
-         go/3jep9ibw2qeykRYIRBosHWA5r5u0BPh3W2ai+NVokmF+d03Et+4jvFchFwwIuiqXl
-         VGtPdnzgro2AtdOfS23Zjeu8bMyltZy1rZfilsIiWhJBuAfFiC70hsvGU+IBlw/9nVRI
-         kq+A==
-X-Gm-Message-State: ANhLgQ3U+pO7RgP+Eqlj9slyePzzCGDaaxUgm93OUEM9yzHp18rftIyG
-        T3tzq+AyWE8BJ1u2Aew2IEEMJQ==
-X-Google-Smtp-Source: ADFU+vtE3JG0NWN6jyn3K+8asK/VcYwtDNTb1ZiL3MvdApqkx+AqIYGQY+eEJgi2kY+L7P2QZ1RSIQ==
-X-Received: by 2002:ac8:369d:: with SMTP id a29mr8559874qtc.338.1584031473533;
-        Thu, 12 Mar 2020 09:44:33 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=M8I0tibm0x9o216WA6J8pQVPILtFuntNhRaRSj7eG4A=;
+        b=MYvBsmvhMJuRSuy8tepAom4tPoZUvb0/Aj2uNdLHaf9zeUPf5OVmiaLtdi0Vb7uLRX
+         VnhnQmdPfyQ13Ey6myhbh69DL4j45g5CAPjFTkwOq/d5pKa5eEBKmaWufFnJw5GUuID/
+         1g4b+dw2lzBivsJri231/U+yAK8M62+Pay/6J51UmvfaY54ewSYz3Ag4doRPb3rw/9Mj
+         DBvYnk1v1m++WbkFR8UbUBPBQGSfnAc/oOlbcI6MVVhEr/d8VBXrcLh/9GzfNTXXjvzZ
+         RpyEBs8BBap/l071ICpJ11v2lpbJ2Cqibhj2UxB7B/Uy7onO9vKqSXsmQiW8WfoiDUZX
+         n/pw==
+X-Gm-Message-State: ANhLgQ2kqJLwALUiA3d8MHopLiAYDZt/47eBGcbfe2TOf8sx5CWpg4zv
+        XvAhib1dg3Og8p2iN30cGEXtYw==
+X-Google-Smtp-Source: ADFU+vtn1v3TaOzby5HYYtlyHy9Ftixfhi2XKzOU4sP3mHDxuJyhG7MDqq56wClzWXEfwdgTOCMy0w==
+X-Received: by 2002:ac8:1e90:: with SMTP id c16mr8251707qtm.265.1584031477341;
+        Thu, 12 Mar 2020 09:44:37 -0700 (PDT)
 Received: from localhost.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id j4sm7244743qtn.78.2020.03.12.09.44.30
+        by smtp.gmail.com with ESMTPSA id j4sm7244743qtn.78.2020.03.12.09.44.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 09:44:32 -0700 (PDT)
+        Thu, 12 Mar 2020 09:44:36 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     David Miller <davem@davemloft.net>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -62,10 +63,12 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 0/2] net: fix net-next
-Date:   Thu, 12 Mar 2020 11:44:26 -0500
-Message-Id: <20200312164428.18132-1-elder@linaro.org>
+Subject: [PATCH 2/2] Revert "arm64: dts: sdm845: add IPA information"
+Date:   Thu, 12 Mar 2020 11:44:28 -0500
+Message-Id: <20200312164428.18132-3-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200312164428.18132-1-elder@linaro.org>
+References: <20200312164428.18132-1-elder@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -73,31 +76,92 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-David:	These patches resolve two issues caused by the IPA driver
-	being incorporated into net-next.  I hope you will merge
-	them as soon as you can.
+This reverts commit 9cc5ae125f0eaee471bc87fb5cbf29385fd9272a.
 
-The IPA driver was merged into net-next last week, but two problems
-arise as a result, affecting net-next and linux-next:
-  - The patch that defines field_max() was not incorporated into
-    net-next, but is required by the IPA code
-  - A patch that updates "sdm845.dtsi" *was* incorporated into
-    net-next, but other changes to that file in the Qualcomm
-    for-next branch lead to errors
+This commit:
+  b303f9f0050b arm64: dts: sdm845: Redefine interconnect provider DT nodes
+found in the Qualcomm for-next tree removes/redefines the interconnect
+provider node(s) used for IPA.  I'm not sure whether it technically
+conflicts with the IPA change to "sdm845.dtsi" in for-next, but it renders
+it broken.
 
-Bjorn has agreed to incorporate the DTS file change into the
-Qualcomm tree after it is reverted from net-next.
+Revert this commit in the for-next tree, with the plan to incorporate
+it into the Qualcomm tree instead.
 
-					-Alex
-
-Alex Elder (2):
-  bitfield.h: add FIELD_MAX() and field_max()
-  Revert "arm64: dts: sdm845: add IPA information"
-
+Signed-off-by: Alex Elder <elder@linaro.org>
+---
  arch/arm64/boot/dts/qcom/sdm845.dtsi | 51 ----------------------------
- include/linux/bitfield.h             | 14 ++++++++
- 2 files changed, 14 insertions(+), 51 deletions(-)
+ 1 file changed, 51 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 58fd1c611849..d42302b8889b 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -675,17 +675,6 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 		};
+-
+-		ipa_smp2p_out: ipa-ap-to-modem {
+-			qcom,entry-name = "ipa";
+-			#qcom,smem-state-cells = <1>;
+-		};
+-
+-		ipa_smp2p_in: ipa-modem-to-ap {
+-			qcom,entry-name = "ipa";
+-			interrupt-controller;
+-			#interrupt-cells = <2>;
+-		};
+ 	};
+ 
+ 	smp2p-slpi {
+@@ -1446,46 +1435,6 @@
+ 			};
+ 		};
+ 
+-		ipa@1e40000 {
+-			compatible = "qcom,sdm845-ipa";
+-
+-			modem-init;
+-			modem-remoteproc = <&mss_pil>;
+-
+-			reg = <0 0x1e40000 0 0x7000>,
+-			      <0 0x1e47000 0 0x2000>,
+-			      <0 0x1e04000 0 0x2c000>;
+-			reg-names = "ipa-reg",
+-				    "ipa-shared",
+-				    "gsi";
+-
+-			interrupts-extended =
+-					<&intc 0 311 IRQ_TYPE_EDGE_RISING>,
+-					<&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
+-					<&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+-					<&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
+-			interrupt-names = "ipa",
+-					  "gsi",
+-					  "ipa-clock-query",
+-					  "ipa-setup-ready";
+-
+-			clocks = <&rpmhcc RPMH_IPA_CLK>;
+-			clock-names = "core";
+-
+-			interconnects =
+-				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
+-				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
+-				<&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
+-			interconnect-names = "memory",
+-					     "imem",
+-					     "config";
+-
+-			qcom,smem-states = <&ipa_smp2p_out 0>,
+-					   <&ipa_smp2p_out 1>;
+-			qcom,smem-state-names = "ipa-clock-enabled-valid",
+-						"ipa-clock-enabled";
+-		};
+-
+ 		tcsr_mutex_regs: syscon@1f40000 {
+ 			compatible = "syscon";
+ 			reg = <0 0x01f40000 0 0x40000>;
 -- 
 2.20.1
 
