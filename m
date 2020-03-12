@@ -2,162 +2,117 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3679FC4CECE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD2C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEA820716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 09:59:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AyulOqRn"
+	by mail.kernel.org (Postfix) with ESMTP id C0657206FA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCLJ6z (ORCPT
+        id S1726044AbgCLKKY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 05:58:55 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37998 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgCLJ6z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 05:58:55 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02C9wT4i003925;
-        Thu, 12 Mar 2020 04:58:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584007109;
-        bh=7XS2rSf9do7vLAHsmt3lKnrTGG4y/3+r+6Om922Y3Ys=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=AyulOqRngq8OXqFkwBn72rJjV6K5rT5qbX/iVnHNLIz5yACZwBsOR2Lg3TwtVIypd
-         C8gslIozumgOF1UnkY2PbNjv/HE0PlH6Ka7tpJfDt7gARUk8XqX+J7wU1mM78fbN8n
-         MOyhfhBltWprcY+eCgr6vHS5ECp87y1Vw+0ZZCYQ=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02C9wTZZ104222
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Mar 2020 04:58:29 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Mar 2020 04:58:28 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Mar 2020 04:58:28 -0500
-Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02C9wOR6089783;
-        Thu, 12 Mar 2020 04:58:26 -0500
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <linux-watchdog@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCHv4 1/4] dt-bindings: watchdog: Add support for TI K3 RTI watchdog
-Date:   Thu, 12 Mar 2020 11:58:05 +0200
-Message-ID: <20200312095808.19907-2-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200312095808.19907-1-t-kristo@ti.com>
-References: <20200312095808.19907-1-t-kristo@ti.com>
+        Thu, 12 Mar 2020 06:10:24 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42490 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgCLKKX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 06:10:23 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w17so2629053oic.9;
+        Thu, 12 Mar 2020 03:10:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zwwoiowfHNPz9HpeeIjPtaOJgNXOTQ/vvDnMi1D629A=;
+        b=n9l2/tq382/vlPmvwJU2vWJ9Ts81d+MELVbuk+qaQfyUs9mB+vmZjEu0OvMtR2O9hE
+         +6b1gXkWQMZt8lFS50RhT0UtPLn/Cjry7YO1tdxmIg9RC3MjW5oPUyFxNBi353XXSPdA
+         Q+d1pql2n2V86pIKLhvbJoDnQzKcSeVAM5/Ep8AM0EB52tp/gUK01asqSfzkch+YIE7/
+         kZJ5ddpSeUNZuGFleCY0LfT12fGlfWhc1hRo/eNsGIablE+ObOYJa3WTKi8USaj0qpyd
+         djCHxqAsM+3iFIY8LkWK5U2BdlEDavjLOiOSaEUGAGy6bv65Fo1oXT0TM2WnjiqtLyNO
+         Z5/A==
+X-Gm-Message-State: ANhLgQ0OmuvEacVrXlbrogc0zinv/wvMjmSWJpHhdPve2VgZNBx5S4Lj
+        I2yQaDnIY5s5Fv0w2pmXca7tneWkrkHS8sqQr24=
+X-Google-Smtp-Source: ADFU+vt2xrdAlnM+K+3Hl7KD8Ot0CPxqX+cCiLIRU6jFW7JpfLC+f9+Lgd1azWcf6NufNcnKkmCIgjYifaSTuSjCeA8=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr1923995oia.148.1584007822268;
+ Thu, 12 Mar 2020 03:10:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1583957020-16359-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1583957020-16359-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Mar 2020 11:10:11 +0100
+Message-ID: <CAMuHMdWqMHGeENswnfk-Hra4JrfELQkLuzY_6JHFRJZWJZPJog@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] Add LVDS panel support to HiHope RZ/G2M
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TI K3 SoCs contain an RTI (Real Time Interrupt) module which can be
-used to implement a windowed watchdog functionality. Windowed watchdog
-will generate an error if it is petted outside the time window, either
-too early or too late.
+Hi Lad,
 
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
-v4:
-  * changed license to dual
-  * added documentation for missing properties
-  * added ref to watchdog.yaml
-  * renamed main_rti0 to watchdog0 in example
+On Wed, Mar 11, 2020 at 9:03 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> The HiHope RZ/G2M is advertised as supporting panel idk-1110wr from
+> Advantech, but the panel doesn't come with the board, it has to purchased
+> separatey, therefore this series adds panel support to a new DT.
+>
+> v3->v4
+>  * Included rzg2-advantech-idk-1110wr-panel.dtsi in
+>    r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts file instead of re-inventing
+>    the wheel.
+>  * Dropped the Ack from Laurent for patch 2/2 due to above changes
+>
+> v2->v3
+>  * Included Reviewed-by from Rob and Laurent
+>  * Switched to dual license
+>  * Added myself as the maintainer
+>  * Updated copyright year
+>  * Rebased the patches
+>
+> v1->v2
+>  * fixed a space according to Geert's feedback.
+>
+> Thanks,
+> Prabhakar
+>
+> Fabrizio Castro (2):
+>   dt-bindings: display: Add idk-1110wr binding
+>   arm64: dts: renesas: Add HiHope RZ/G2M board with idk-1110wr display
+>
+>  .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
+>  arch/arm64/boot/dts/renesas/Makefile               |  1 +
+>  .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts        | 52 ++++++++++++++++
+>  3 files changed, 122 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
+>  create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
 
- .../bindings/watchdog/ti,rti-wdt.yaml         | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+Thanks for the update!
+I've queued the second patch in renesas-devel for v5.7.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-new file mode 100644
-index 000000000000..e83026fef2e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/ti,rti-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments K3 SoC Watchdog Timer
-+
-+maintainers:
-+  - Tero Kristo <t-kristo@ti.com>
-+
-+description:
-+  The TI K3 SoC watchdog timer is implemented via the RTI (Real Time
-+  Interrupt) IP module. This timer adds a support for windowed watchdog
-+  mode, which will signal an error if it is pinged outside the watchdog
-+  time window, meaning either too early or too late. The error signal
-+  generated can be routed to either interrupt a safety controller or
-+  to directly reset the SoC.
-+
-+allOf:
-+  - $ref: "watchdog.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,j7-rti-wdt
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  assigned-clocks:
-+    maxItems: 1
-+
-+  assigned-clocks-parents:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - power-domains
-+
-+examples:
-+  - |
-+    /*
-+     * RTI WDT in main domain on J721e SoC. Assigned clocks are used to
-+     * select the source clock for the watchdog, forcing it to tick with
-+     * a 32kHz clock in this case.
-+     */
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+
-+    watchdog0: rti@2200000 {
-+        compatible = "ti,rti-wdt";
-+        reg = <0x0 0x2200000 0x0 0x100>;
-+        clocks = <&k3_clks 252 1>;
-+        power-domains = <&k3_pds 252 TI_SCI_PD_EXCLUSIVE>;
-+        assigned-clocks = <&k3_clks 252 1>;
-+        assigned-clock-parents = <&k3_clks 252 5>;
-+    };
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
