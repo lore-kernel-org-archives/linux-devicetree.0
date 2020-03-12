@@ -2,102 +2,114 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7816C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8321EC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895602071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F862071C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 17:27:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+5Z+2xK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TjcM4aRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgCLRWv (ORCPT
+        id S1726559AbgCLR1K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 13:22:51 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39280 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgCLRWv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 13:22:51 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f7so7257039wml.4;
-        Thu, 12 Mar 2020 10:22:48 -0700 (PDT)
+        Thu, 12 Mar 2020 13:27:10 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:56056 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbgCLR1J (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 13:27:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 6so6988378wmi.5;
+        Thu, 12 Mar 2020 10:27:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=Wy+lE/1lzqrBWgr4qGqulWltQuGidDCwcinzvkx26bY=;
-        b=J+5Z+2xKMn1aIC0Uo2VC9f/lb55f3cqFfWZj5j1p0lphY5XIDra1fpkc65qmhCFKGH
-         PWYVvNENVeQHN+rQtmr87GkugtvbXMwwNydg0Qsdf6YQnMJlQRwKgC3ksC/LDYm6iVbV
-         tqs8r3NS9FDGtv1emvZBbMXBcYjJWE5q/fdFEzYgRjxbIWDvxT64WYyIVnpf+oFv9Hil
-         ibu/wC1ULKbyQWjmFxELT7Z3UuIYKv+VAdw5v5dG0YIdU9haHa2rx7MRDMlZg3oJ6Qsu
-         nW1NcF7FhtB7L+7XNshghcODee93iH5lj+FVmjHqbCEmSOr3M37pYB1rn+aFKC4zSis7
-         ddkg==
+        bh=tRTDOcE7fsHdxjFeBfBurtdDlWQU7ALainfjoKXuLXI=;
+        b=TjcM4aRz1p/IqKh4CQdcsbwb2mgAPvnbhOmgUrimuwIXMpQVbERUjJDZmrOpOarfsv
+         bn9yID81q+YU12MHrYQXR8vHmjsYXTPJ6WrrDgq6deBLyVCxPlAxvJPG1P6UEG9g0qvQ
+         47cqkrfUKaUa463o+u1JB8FrdF20ib0cHxUq6pHy/vtrtb0lrGflpK0bwe8+6nGpZrEu
+         oPtb89RqXEGkW1paPiSIgnTwfixG6EwyK9+i1ROtkjq4s2dffq7F61MlbP+LUuXtPMO/
+         MRI3h2tLYB+7Kc9T2ZWUt6ITMVSisKcshx0nTMN67inQyaA7Ms+5XhmZX3pKgYoOl2lk
+         ibzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Wy+lE/1lzqrBWgr4qGqulWltQuGidDCwcinzvkx26bY=;
-        b=VAybQWX48TcKds+LU6WvEXgTyo1PJd6fylvNRb/XSLkr2+lXz+q4g0ij0UBrwqduhl
-         70G9g5XbJYp8z/RMUfxtUL3FjixrGeqLm2Fke6RB2yFrutmK1qm/DJosUl9cGKm0OqK6
-         guS9SANTMF9KdT6epdk2pxScpiIdt4JVcZFnq6thhD2ib4YBcpp9/rJ3YhXxUxlxkCbo
-         EYeZOmzy1mYd+IvtwZgqKdw8AsLKWzpf6F3daqeJ23DEIrK+dadTSIxuLgmr5g5TmQbd
-         Pf+dAAEBme41HrM74RCofpdxOgdbyeUz5MB9mWlwt49p4/HDuqYp6z6zeIcZEiCYUurD
-         zyrg==
-X-Gm-Message-State: ANhLgQ1ZdwJ06I1w4fz47le9b3f+XJLKd1jFifWzKZ1auCgph3IIXoQz
-        W7e43AnRA7GB2FBUyrEQ/p8=
-X-Google-Smtp-Source: ADFU+vvfIDpBkUD9w0w0y9O0EdtJTyviZVdZcBsPGD0KGGOBs+1FdKuhcvmu1jQbjlNqHpBDIAFSCA==
-X-Received: by 2002:a7b:cc6a:: with SMTP id n10mr5831317wmj.170.1584033767636;
-        Thu, 12 Mar 2020 10:22:47 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id d7sm2064492wrc.25.2020.03.12.10.22.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Mar 2020 10:22:47 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] arm64: dts: rockchip: remove properties from spdif node RK3399 Excavator
-Date:   Thu, 12 Mar 2020 18:22:39 +0100
-Message-Id: <20200312172240.21362-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        bh=tRTDOcE7fsHdxjFeBfBurtdDlWQU7ALainfjoKXuLXI=;
+        b=MWHv6Pg7ToE7pJCnGr7WBLvo1iA6NS/RxQnryDMCmolaggStQg68guwUXge6Xf3cKL
+         2xoHwvWn+c47bs+syz36ja1vFkAU3B1ruEjdynDKYaqcLDCxeOiVaY/ILIqW1TtUzMIa
+         s9xQi91u7+QCz6XYwcA4sYAz8H0dDTpsr+DMjHgimQt29pLL43BrwTkvkNPO3q4VmnVc
+         Y6EMDlKAN8i27EiNrxGlPD7s3+iSR94prhpVpJ8jskfTJqu4WQbZHScwMQbsM35oAPPi
+         y9j4f0Nr9edFF83TjQlVzq8f1SL8NzBnU8nSOCmpthHTBouK9CAxIxLFNq0t6UMA+jEO
+         EzyQ==
+X-Gm-Message-State: ANhLgQ2+G9KdCSJUf0LOWMhEpSrJpLxPCNrEUOwV+f2MuknkFAYo46XH
+        gxAAAG+foyBhiH4HvcCZN5M=
+X-Google-Smtp-Source: ADFU+vv2JNeETUkjt4XRMjD4pOUY3SEKCruuQnXZ1av+RQOoWdPdemVl/9NQ0PuV5rljgBWWyEb1FA==
+X-Received: by 2002:a7b:ca58:: with SMTP id m24mr5661568wml.76.1584034027225;
+        Thu, 12 Mar 2020 10:27:07 -0700 (PDT)
+Received: from localhost.localdomain (p5B3F6C4B.dip0.t-ipconnect.de. [91.63.108.75])
+        by smtp.gmail.com with ESMTPSA id c11sm76254500wrp.51.2020.03.12.10.27.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 10:27:05 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        sre@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        fabrice.gasnier@st.com, beniamin.bia@analog.com,
+        linus.walleij@linaro.org, u.kleine-koenig@pengutronix.de,
+        fabrizio.castro@bp.renesas.com, info@metux.net,
+        hancock@sedsystems.ca, gregory.clement@bootlin.com,
+        renatogeh@gmail.com, plr.vincent@gmail.com,
+        miquel.raynal@bootlin.com, marcelo.schmitt1@gmail.com,
+        paul@crapouillou.net
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH 0/5] Add battery charger driver support for MP2629
+Date:   Thu, 12 Mar 2020 18:26:44 +0100
+Message-Id: <20200312172649.13702-1-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-An expermental test with the command below gives this error:
+This patch series add support for Battery charger control driver for Monolithic
+Power System's MP2629 chipset, includes MFD driver for ADC battery & input
+power supply measurement and battery charger control driver.
 
-arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml:
-spdif@ff870000:
-'i2c-scl-falling-time-ns', 'i2c-scl-rising-time-ns', 'power-domains'
-do not match any of the regexes: 'pinctrl-[0-9]+'
+Thanks,
+Saravanan
 
-'i2c-scl-falling-time-ns', 'i2c-scl-rising-time-ns'
-are not valid properties for 'spdif' nodes, so remove them.
+Saravanan Sekar (5):
+  dt-bindings: mfd: add document bindings for mp2629
+  mfd: mp2629: Add support for mps battery charger
+  iio: adc: mp2629: Add support for mp2629 ADC driver
+  power: supply: Add support for mps mp2629 battery charger
+  MAINTAINERS: Add entry for mp2629 Battery Charger driver
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+ .../devicetree/bindings/mfd/mps,mp2629.yaml   |  62 ++
+ MAINTAINERS                                   |   5 +
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/mp2629_adc.c                  | 211 ++++++
+ drivers/mfd/Kconfig                           |  43 +-
+ drivers/mfd/Makefile                          |   4 +-
+ drivers/mfd/mp2629.c                          | 109 +++
+ drivers/power/supply/Kconfig                  |  14 +-
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/mp2629_charger.c         | 709 ++++++++++++++++++
+ include/linux/mfd/mp2629.h                    |  34 +
+ 12 files changed, 1169 insertions(+), 34 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ create mode 100644 drivers/iio/adc/mp2629_adc.c
+ create mode 100644 drivers/mfd/mp2629.c
+ create mode 100644 drivers/power/supply/mp2629_charger.c
+ create mode 100644 include/linux/mfd/mp2629.h
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
-index b4d8f60b7..73e269a8a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
-@@ -230,7 +230,5 @@
- };
- 
- &spdif {
--	i2c-scl-rising-time-ns = <450>;
--	i2c-scl-falling-time-ns = <15>;
- 	status = "okay";
- };
 -- 
-2.11.0
+2.17.1
 
