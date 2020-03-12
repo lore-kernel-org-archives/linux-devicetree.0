@@ -2,152 +2,70 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05956C1975A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB37C1975A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E376A20716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:35:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="fgdpxqDX"
+	by mail.kernel.org (Postfix) with ESMTP id CBBB620691
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388134AbgCLHfT (ORCPT
+        id S2388027AbgCLHku (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:35:19 -0400
-Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:5711 "EHLO
-        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387958AbgCLHfT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:35:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1583998517; x=1615534517;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=kaKhqPmS3AUt/zYib0JPaZapl7OncUILdewH8kFaYpE=;
-  b=fgdpxqDXtWq2HbtTkeJy2QXMMpATFtYPouUkSbREwblFf5TbDITveZ9P
-   ZWzoqaxD14zaT1PaxFm0An73IfVqL8aBAFUSvzTIiqGMga3AnfsBImVeE
-   8jMnQ0q4O9WdumlzcDRPmlxFsuNbjbkHd3sP9mrJlGy4G1zvp463+DxlM
-   cS8Lglxjj3O7DvYWYqFIlS2rloChxRzHTv7+BmgG/mgvZBY+rE4PVzYoR
-   RGBD9bJg7QzfaTBcqD1hH1Ngs77EdcjFMKQMnk2QDgNo6fPHOCUexUe0/
-   d5hPuD8Ec3CShMfoXTGO7iOx0n/RqUA+XfIv7/TtjSAs381ARVfykRyQB
-   w==;
-IronPort-SDR: nSYO8Cw8uP1k1vk/+XRYlFAhVWKCmVqxKsPi4x1vTin/VDEyM281RVkdoKYJIt5zVubMlR4Kqf
- GkuA2p3xIl4w==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "pavel@ucw.cz" <pavel@ucw.cz>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
-Subject: Re: [PATCH v2] leds: pwm: add support for default-state device
- property
-Thread-Topic: [PATCH v2] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHV9tn/0ZJlTn83ZkK/QE6qVZtMD6hD2tmAgACoNgA=
-Date:   Thu, 12 Mar 2020 07:35:14 +0000
-Message-ID: <80bee197ed44ca6cd169caf7245c568ac61c6ddc.camel@diehl.com>
-References: <20200310123126.4709-1-Denis.Osterland@diehl.com>
-         <20200311213309.GB18398@amd>
-In-Reply-To: <20200311213309.GB18398@amd>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <35B434C1D45DCB4296F42B169D4BA9C4@diehl.internal>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: 415AWy8o668fDtCxszluz1FmQmTayKBil+65oOyKL1t+St//BRrRHC1y3u+8xIiw
+        Thu, 12 Mar 2020 03:40:50 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:53052 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387898AbgCLHku (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:40:50 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7B7F71A0E7E;
+        Thu, 12 Mar 2020 08:40:48 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id DBE541A0E85;
+        Thu, 12 Mar 2020 08:40:41 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3A94D402A5;
+        Thu, 12 Mar 2020 15:40:33 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        horia.geanta@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] arm64: dts: imx8mn: Add snvs clock to powerkey
+Date:   Thu, 12 Mar 2020 15:34:09 +0800
+Message-Id: <1583998450-19292-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgUGF2ZWwsDQoNCkFtIE1pdHR3b2NoLCBkZW4gMTEuMDMuMjAyMCwgMjI6MzMgKzAxMDAg
-c2NocmllYiBQYXZlbCBNYWNoZWs6DQo+IEhpIQ0KPiANCj4gPiBUaGlzIHBhdGNoIGFkZHMg
-c3VwcG9ydCBmb3IgImRlZmF1bHQtc3RhdGUiIGRldmljZXRyZWUgcHJvcGVydHksIHdoaWNo
-DQo+ID4gYWxsb3dzIHRvIGRlZmVyIHB3bSBpbml0IHRvIGZpcnN0IHVzZSBvZiBsZWQuDQo+
-ID4gDQo+ID4gVGhpcyBhbGxvd3MgdG8gY29uZmlndXJlIHRoZSBQV00gZWFybHkgaW4gYm9v
-dGxvYWRlciB0byBsZXQgdGhlIExFRA0KPiA+IGJsaW5rIHVudGlsIGFuIGFwcGxpY2F0aW9u
-IGluIExpbnV4IHVzZXJzcGFjZSBzZXQgc29tZXRoaW5nIGRpZmZlcmVudC4NCj4gDQo+ICJz
-ZXRzIi4NCmRvbmUNCg0KPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBEZW5pcyBPc3RlcmxhbmQt
-SGVpbSA8RGVuaXMuT3N0ZXJsYW5kQGRpZWhsLmNvbT4NCj4gDQo+IExvb2tzIGdvb2QsIEkn
-bGwgcHJvYmFibHkganVzdCBhcHBseSBpdC4NCkkgd2lsbCByZWJhc2Ugb24geW91ciBuZXh0
-IGJyYW5jaCwgc28gdGhhdCBpdCB1c2VzIGF0b21pYyBQV00gQVBJLCBzb29uLg0KDQo+IA0K
-PiA+IGluZGV4IDZjNjU4M2MzNWYyZi4uZDBmNDg5NjgwNTk0IDEwMDY0NA0KPiA+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2xlZHMtcHdtLnR4dA0K
-PiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2xlZHMt
-cHdtLnR4dA0KPiA+IEBAIC0xOSw2ICsxOSw4IEBAIExFRCBzdWItbm9kZSBwcm9wZXJ0aWVz
-Og0KPiA+ICAgIHNlZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbGVkcy9j
-b21tb24udHh0DQo+ID4gIC0gbGludXgsZGVmYXVsdC10cmlnZ2VyIDogIChvcHRpb25hbCkN
-Cj4gPiAgICBzZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvY29t
-bW9uLnR4dA0KPiA+ICstIGRlZmF1bHQtc3RhdGUgOiAob3B0aW9uYWwpDQo+ID4gKyAgc2Vl
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sZWRzL2NvbW1vbi55YW1sDQo+
-ID4gIA0KPiANCj4gU2hvdWxkIG90aGVyIHJlZmVyZW5jZXMgYmUgdXBkYXRlZCB0byBjb21t
-b24ueWFtbCAoYXMgYSBzZXBhcmF0ZSBwYXRjaCk/DQp3ZWxsLCB0aGUgd2hvbGUgdHh0IGZp
-bGUgc2hvdWxkIGJlIGNvbnZlcnRlZCB0byB5YW1sLi4uDQpjdXJyZW50bHkgY29tbW9uLnR4
-dCBleGlzdHMgYW5kIHBvaW50cyB0byBjb21tb24ueWFtbCwgc28gbm8gdXJnZW50IG5lZWQN
-Cg0KPiANCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9sZWRzX3B3bS5oIGIvaW5j
-bHVkZS9saW51eC9sZWRzX3B3bS5oDQo+ID4gaW5kZXggOTNkMTAxZDI4OTQzLi5jOWVmOTAx
-MjkxM2QgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9sZWRzX3B3bS5oDQo+ID4g
-KysrIGIvaW5jbHVkZS9saW51eC9sZWRzX3B3bS5oDQo+ID4gQEAgLTEwLDYgKzEwLDcgQEAg
-c3RydWN0IGxlZF9wd20gew0KPiA+ICAJY29uc3QgY2hhcgkqZGVmYXVsdF90cmlnZ2VyOw0K
-PiA+ICAJdW5zaWduZWQJcHdtX2lkIF9fZGVwcmVjYXRlZDsNCj4gPiAgCXU4IAkJYWN0aXZl
-X2xvdzsNCj4gPiArCXU4CQlkZWZhdWx0X3N0YXRlOw0KPiA+ICAJdW5zaWduZWQgCW1heF9i
-cmlnaHRuZXNzOw0KPiA+ICAJdW5zaWduZWQJcHdtX3BlcmlvZF9uczsNCj4gPiAgfTsNCj4g
-DQo+IGxlZHMtcHdtLmMgYnV0IGxlZHNfcHdtLmguIEhtbS4gVGhpcyByZWFsbHkgc2hvdWxk
-IGJlIGxlZHMtcHdtLmguDQo+IA0KPiBBY3R1YWxseSwgbGVkcy1wd20uYyBpcyBvbmx5IHVz
-ZXIgb2YgbGVkc19wd20uaCwgc28gdGhhdCBvbmUgc2hvdWxkDQo+IGp1c3QgZGlzYXBwZWFy
-Li4uDQpJIGNhbiBtb3ZlIGl0IGluIGEgc2Vjb25kIHBhdGNoLCBpZiB5b3Ugd2FudA0KDQpS
-ZWdhcmRzIERlbmlzDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IAkJCQkJCQkJCVBhdmVsDQo+
-IA0KPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsNCj4gPiBaMSBTZWN1cmVNYWlsIEdhdGV3YXkgUHJv
-Y2Vzc2luZyBJbmZvICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+IA0KPiAr
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLSsNCj4gPiAtIFRoZSBtZXNzYWdlIHdhcyBzaWduZWQgYnkgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+ID4gICBbTm8gSW5m
-byBhdmFpbGFibGVdICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgfA0KPiA+ICAgU2lnbmF0dXJlIG5vdCB2ZXJpZmlhYmxlICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwNCj4gPiAgIC0gTWVzc2FnZSBjb250ZW50
-IG5vdCB2ZXJpZmlhYmxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8DQo+
-ID4gICAtIENlcnRpZmljYXRlIG5vdCB2ZXJpZmlhYmxlICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfA0KPiANCj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rDQoNCg0KRGll
-aGwgQ29ubmVjdGl2aXR5IFNvbHV0aW9ucyBHbWJIDQpHZXNjaMOkZnRzZsO8aHJ1bmc6IEhv
-cnN0IExlb25iZXJnZXINClNpdHogZGVyIEdlc2VsbHNjaGFmdDogTsO8cm5iZXJnIC0gUmVn
-aXN0ZXJnZXJpY2h0OiBBbXRzZ2VyaWNodA0KTsO8cm5iZXJnOiBIUkIgMzIzMTUNCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQpEZXIgSW5oYWx0
-IGRlciB2b3JzdGVoZW5kZW4gRS1NYWlsIGlzdCBuaWNodCByZWNodGxpY2ggYmluZGVuZC4g
-RGllc2UgRS1NYWlsIGVudGhhZWx0IHZlcnRyYXVsaWNoZSB1bmQvb2RlciByZWNodGxpY2gg
-Z2VzY2h1ZXR6dGUgSW5mb3JtYXRpb25lbi4NCkluZm9ybWllcmVuIFNpZSB1bnMgYml0dGUs
-IHdlbm4gU2llIGRpZXNlIEUtTWFpbCBmYWVsc2NobGljaGVyd2Vpc2UgZXJoYWx0ZW4gaGFi
-ZW4uIEJpdHRlIGxvZXNjaGVuIFNpZSBpbiBkaWVzZW0gRmFsbCBkaWUgTmFjaHJpY2h0Lg0K
-SmVkZSB1bmVybGF1YnRlIEZvcm0gZGVyIFJlcHJvZHVrdGlvbiwgQmVrYW5udGdhYmUsIEFl
-bmRlcnVuZywgVmVydGVpbHVuZyB1bmQvb2RlciBQdWJsaWthdGlvbiBkaWVzZXIgRS1NYWls
-IGlzdCBzdHJlbmdzdGVucyB1bnRlcnNhZ3QuDQotIEluZm9ybWF0aW9uZW4genVtIERhdGVu
-c2NodXR6LCBpbnNiZXNvbmRlcmUgenUgSWhyZW4gUmVjaHRlbiwgZXJoYWx0ZW4gU2llIHVu
-dGVyIGh0dHBzOi8vd3d3LmRpZWhsLmNvbS9ncm91cC9kZS90cmFuc3BhcmVuei11bmQtaW5m
-b3JtYXRpb25zcGZsaWNodGVuLw0KDQpUaGUgY29udGVudHMgb2YgdGhlIGFib3ZlIG1lbnRp
-b25lZCBlLW1haWwgaXMgbm90IGxlZ2FsbHkgYmluZGluZy4gVGhpcyBlLW1haWwgY29udGFp
-bnMgY29uZmlkZW50aWFsIGFuZC9vciBsZWdhbGx5IHByb3RlY3RlZCBpbmZvcm1hdGlvbi4g
-UGxlYXNlIGluZm9ybSB1cyBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBieQ0K
-bWlzdGFrZSBhbmQgZGVsZXRlIGl0IGluIHN1Y2ggYSBjYXNlLiBFYWNoIHVuYXV0aG9yaXpl
-ZCByZXByb2R1Y3Rpb24sIGRpc2Nsb3N1cmUsIGFsdGVyYXRpb24sIGRpc3RyaWJ1dGlvbiBh
-bmQvb3IgcHVibGljYXRpb24gb2YgdGhpcyBlLW1haWwgaXMgc3RyaWN0bHkgcHJvaGliaXRl
-ZC4gDQotIEZvciBnZW5lcmFsIGluZm9ybWF0aW9uIG9uIGRhdGEgcHJvdGVjdGlvbiBhbmQg
-eW91ciByZXNwZWN0aXZlIHJpZ2h0cyBwbGVhc2UgdmlzaXQgaHR0cHM6Ly93d3cuZGllaGwu
-Y29tL2dyb3VwL2VuL3RyYW5zcGFyZW5jeS1hbmQtaW5mb3JtYXRpb24tb2JsaWdhdGlvbnMv
-DQo=
+SNVS powerkey driver needs snvs clock for proper clock management,
+add support for it.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index e3f6b28..ba9e415 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -410,6 +410,8 @@
+ 					compatible = "fsl,sec-v4.0-pwrkey";
+ 					regmap = <&snvs>;
+ 					interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++					clocks = <&clk IMX8MN_CLK_SNVS_ROOT>;
++					clock-names = "snvs-pwrkey";
+ 					linux,keycode = <KEY_POWER>;
+ 					wakeup-source;
+ 					status = "disabled";
+-- 
+2.7.4
+
