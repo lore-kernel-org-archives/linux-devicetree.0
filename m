@@ -2,136 +2,120 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA51C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 16:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B00C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 16:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452992067C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 16:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160472067C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 16:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K9wdZeHL"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="g+uHbd3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgCLQhp (ORCPT
+        id S1726328AbgCLQnj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 12:37:45 -0400
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:35493 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgCLQhp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 12:37:45 -0400
-Received: by mail-ot1-f41.google.com with SMTP id k26so6973981otr.2
-        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 09:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MYtEPdrTksnGvDZU5deL4CbY9Pr9ioIV5tkxQ/zHu9E=;
-        b=K9wdZeHL5rkylrZz3QIeSH+2rSRaU/h8JfwlYHPQVkc1YTeX3aYZHzKozu1Uh9dGmW
-         al/g5ZOeGmatS1po/OOiwYPpVnuwgNjRDMnm37LUrARxdr2D7c+UQ8BfOm773vJ38KB4
-         WyJL6FoyqANhVa43OkIu37Qm+iMm4zKxaNoyM1dwCOxiTEHUeCvSpIqJa5SWrNPYI0mG
-         7FEO4d6rMrB+CWnvO+a1xme3jdmlAWODxkI6xVbkFJ7KojYC/IAy1zx8BHJZZW4NU2XD
-         duN5csFpY+MN/H6Y4wwobhExb+fpRbdG/uyLFsrcm7iHlXNPYNlOPB4/MKHiQ8sgTL20
-         wivg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MYtEPdrTksnGvDZU5deL4CbY9Pr9ioIV5tkxQ/zHu9E=;
-        b=i1rFLNGQPteXF7GiPI2oC/t3wGWaDbZe6liStaVZpnZQCZPjubD/XS7BtZHr2gLUGH
-         mvBD10vAWMxMSmP334v8zCt+ZUiydAKBFkWPTLGkuXMRmGC1JhrdrfeZwC5ZFQsATPr2
-         dzLRsblM5YeMPNKQ8e0JB0elKnZmstKpHGORd9JxOKEmVfO9mJpUgB01cEHXFjt1UJlI
-         4AXmY/62Ksc8cjSThD9ntiry5qXwmhym7FNutLJOaILkJMliZXElt4QeH4rQarmLEZhL
-         EjVM/3PVAdnzwxn+5uSN+zrHqM61xcprDf0ufDKlZWmZslaEISS9+7hwpyis/cZvR7QP
-         NSqA==
-X-Gm-Message-State: ANhLgQ20lDcdThCRdfRU5Ww6+7OBzLV0WoJlPDKe6gqI0Dsqyr4Sw4/7
-        R9kuLWTiK9Gj+R0azb9fRwu9wF9lAAq0D+KKPy2vRQ==
-X-Google-Smtp-Source: ADFU+vtZrRh7IowOp5OH0oSfDw8psJiJhEtJqqx6lihfLrI2TL2niHppJIGBv22OqVb3O+3TasH0O7liOBZUKkgfp2I=
-X-Received: by 2002:a9d:7756:: with SMTP id t22mr6718289otl.272.1584031064139;
- Thu, 12 Mar 2020 09:37:44 -0700 (PDT)
+        Thu, 12 Mar 2020 12:43:39 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:37841 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726099AbgCLQnj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 12:43:39 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 4213522FAC;
+        Thu, 12 Mar 2020 17:43:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1584031416;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=HS9Jluiw3aH4k9JB9HHtP7Vj2kevfscXj08g+xTVVFY=;
+        b=g+uHbd3j4G8NKRgBCj3beTqKYGvZi/44UY29w7C1ZPxkdnBtQdiwWgoROMyCpoxtejYd7V
+        T1diw/OyZs9D1AQdxOhb+Ftq5R8ydxUnSIvowKfRY0htWDNm12ok3DfUa+qVR2YTRfNhbx
+        zAFprAgr3ByJV8kqKYSgvskzqy2sBFc=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH 1/2] net: dsa: felix: allow the device to be disabled
+Date:   Thu, 12 Mar 2020 17:43:19 +0100
+Message-Id: <20200312164320.22349-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200310134603.30260-1-robert.foss@linaro.org>
- <20200310134603.30260-4-robert.foss@linaro.org> <20200310143014.GL1922688@smile.fi.intel.com>
-In-Reply-To: <20200310143014.GL1922688@smile.fi.intel.com>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Thu, 12 Mar 2020 17:37:33 +0100
-Message-ID: <CAG3jFyuSj4NRAPHk0qch4SXg3iS7zss6tbRuC3mBnVL=MsLwVw@mail.gmail.com>
-Subject: Re: [v1 3/3] media: ov8856: Implement sensor module revision identification
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     ben.kao@intel.com, linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 4213522FAC
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[14];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         FREEMAIL_CC(0.00)[davemloft.net,gmail.com,lunn.ch,nxp.com,kernel.org,walle.cc];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Andy,
+If there is no specific configuration of the felix switch in the device
+tree, but only the default configuration (ie. given by the SoCs dtsi
+file), the probe fails because no CPU port has been set. On the other
+hand you cannot set a default CPU port because that depends on the
+actual board using the switch.
 
-On Tue, 10 Mar 2020 at 15:30, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Mar 10, 2020 at 02:46:03PM +0100, Robert Foss wrote:
-> > Query the sensor for its module revision, and compare it
-> > to known revisions.
-> > Currently only the '1B' revision has been added.
->
-> Are you sure you send latest version?
->
-> I have a d=C3=A9j=C4=85 vu that I have seen this already and this one doe=
-sn't address any
-> comment given.
+[    2.701300] DSA: tree 0 has no CPU port
+[    2.705167] mscc_felix 0000:00:00.5: Failed to register DSA switch: -22
+[    2.711844] mscc_felix: probe of 0000:00:00.5 failed with error -22
 
-I think pulled a series Dongchun Zhus earlier series apart and used some of=
- it,
-I may have missed some of the feedback given to his v3. Sorry about that.
+Thus let the device tree disable this device entirely, like it is also
+done with the enetc driver of the same SoC.
 
->
-> ...
->
-> > +     dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x=
-\n",
-> > +             val,
->
-> > +             val =3D=3D OV8856_1B_MODULE ? "1B" : "unknown revision",
->
-> This is weird. Can you add a bit more general way of showing revision?
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/net/dsa/ocelot/felix.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-This is modeled after the ov7251 driver, since that output came in
-handy during bringup.
+diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+index 69546383a382..531c7710063f 100644
+--- a/drivers/net/dsa/ocelot/felix.c
++++ b/drivers/net/dsa/ocelot/felix.c
+@@ -699,6 +699,11 @@ static int felix_pci_probe(struct pci_dev *pdev,
+ 	struct felix *felix;
+ 	int err;
+ 
++	if (pdev->dev.of_node && !of_device_is_available(pdev->dev.of_node)) {
++		dev_info(&pdev->dev, "device is disabled, skipping\n");
++		return -ENODEV;
++	}
++
+ 	err = pci_enable_device(pdev);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "device enable failed\n");
+-- 
+2.20.1
 
-    dev_info(dev, "OV7251 revision %x (%s) detected at address 0x%02x\n",
-         chip_rev,
-         chip_rev =3D=3D 0x4 ? "1A / 1B" :
-         chip_rev =3D=3D 0x5 ? "1C / 1D" :
-         chip_rev =3D=3D 0x6 ? "1E" :
-         chip_rev =3D=3D 0x7 ? "1F" : "unknown",
-         client->addr);
-
-To me this is pretty general approach, at least until this revision
-information is used in other places.
-I'm not quite sure what you had in mind. Maybe the current
-implementation is a little bit clunky in the case of ov8856 since
-there's only one revision number known currently.
-
-Either way, I'll happily change it. But I don't quite know what you
-have in mind.
-
->
-> > +             client->addr);
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
