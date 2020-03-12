@@ -2,97 +2,136 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C0EC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 15:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA51C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 16:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F827206BE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 15:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584028484;
-	bh=0UZegBixcyJR2eQTPQLl5os/jIw6DlEF0GVOiCD3z9w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lh8DcVLNP77elS4ZwsVr/AlIuw1Znz2B9bDCCTiCS9cOnd/HEh3W25NULYMo71cAi
-	 YN4XRll7XAl10Ms0s/uy20HGiWQrhBUxIk7xuVdyDN7UQRpRImq2/sAQbnyCLqtVI+
-	 Ic6b2hJ9CAfacrcd3o25x8xKb0x73bzrYf2x4A+A=
+	by mail.kernel.org (Postfix) with ESMTP id 452992067C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 16:37:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K9wdZeHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbgCLPyo (ORCPT
+        id S1726395AbgCLQhp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:54:44 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39518 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727210AbgCLPyn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 11:54:43 -0400
-Received: by mail-ot1-f66.google.com with SMTP id a9so6780555otl.6;
-        Thu, 12 Mar 2020 08:54:43 -0700 (PDT)
+        Thu, 12 Mar 2020 12:37:45 -0400
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:35493 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgCLQhp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 12:37:45 -0400
+Received: by mail-ot1-f41.google.com with SMTP id k26so6973981otr.2
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 09:37:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MYtEPdrTksnGvDZU5deL4CbY9Pr9ioIV5tkxQ/zHu9E=;
+        b=K9wdZeHL5rkylrZz3QIeSH+2rSRaU/h8JfwlYHPQVkc1YTeX3aYZHzKozu1Uh9dGmW
+         al/g5ZOeGmatS1po/OOiwYPpVnuwgNjRDMnm37LUrARxdr2D7c+UQ8BfOm773vJ38KB4
+         WyJL6FoyqANhVa43OkIu37Qm+iMm4zKxaNoyM1dwCOxiTEHUeCvSpIqJa5SWrNPYI0mG
+         7FEO4d6rMrB+CWnvO+a1xme3jdmlAWODxkI6xVbkFJ7KojYC/IAy1zx8BHJZZW4NU2XD
+         duN5csFpY+MN/H6Y4wwobhExb+fpRbdG/uyLFsrcm7iHlXNPYNlOPB4/MKHiQ8sgTL20
+         wivg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VQckKS4bw2Pbga6pTDzSkr9i3TfwNTVPnuQDLWOAQ2o=;
-        b=GTyJrd5J18rANcdI5AGiJwgRnhjS1OToaSDJ+BJEjbfQJl/UxQgrZi1CBpmwT+Nqy6
-         XYm6iMRAvd7srjSv0CoIPThYdSj3mzMY7Vvmh8cDwfXLevYWF+cq2vlegKsouPwOHK8p
-         t4e4STpInmSyUzT0Ra9MTyDCUYKaubgq58Rq8SyWs3pUrLWXiss6CY7I6hYqO9PHHTot
-         /Uusp/j7YVpUAsfmqvDou+Y3udi2fON1v1J7kfucCwGSNFy83yxG2GDsxPj7hRMhxpCg
-         69Dh1x8HKej01Tpu02ZbjGAI1OG5GAvF0BDHbqpLo5RWmxqnSc3l3cEvS/JmyUFv6zEh
-         UVpA==
-X-Gm-Message-State: ANhLgQ1dVyFwqjeUKQu5Kq7Hr3IcbOktGiN/hnJ0ZKll1TaTjLEv3Gqj
-        NMFQQnnS0FO6zD+60ajo+Q==
-X-Google-Smtp-Source: ADFU+vsGpjXso/ZYnCWUaOJlyDF4Nk3XtOo/HVgAz+QgUT8q9zV+Axq0QTIkMiZ673RL/MJBnJmIiQ==
-X-Received: by 2002:a05:6830:2361:: with SMTP id r1mr6580348oth.88.1584028482902;
-        Thu, 12 Mar 2020 08:54:42 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t15sm4318535otl.62.2020.03.12.08.54.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 08:54:41 -0700 (PDT)
-Received: (nullmailer pid 31196 invoked by uid 1000);
-        Thu, 12 Mar 2020 15:54:40 -0000
-Date:   Thu, 12 Mar 2020 10:54:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/5] dt-bindings: i2c: convert rockchip i2c bindings
- to yaml
-Message-ID: <20200312155440.GA29613@bogus>
-References: <20200305143611.10733-1-jbx6244@gmail.com>
- <20200312155044.GA25292@bogus>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MYtEPdrTksnGvDZU5deL4CbY9Pr9ioIV5tkxQ/zHu9E=;
+        b=i1rFLNGQPteXF7GiPI2oC/t3wGWaDbZe6liStaVZpnZQCZPjubD/XS7BtZHr2gLUGH
+         mvBD10vAWMxMSmP334v8zCt+ZUiydAKBFkWPTLGkuXMRmGC1JhrdrfeZwC5ZFQsATPr2
+         dzLRsblM5YeMPNKQ8e0JB0elKnZmstKpHGORd9JxOKEmVfO9mJpUgB01cEHXFjt1UJlI
+         4AXmY/62Ksc8cjSThD9ntiry5qXwmhym7FNutLJOaILkJMliZXElt4QeH4rQarmLEZhL
+         EjVM/3PVAdnzwxn+5uSN+zrHqM61xcprDf0ufDKlZWmZslaEISS9+7hwpyis/cZvR7QP
+         NSqA==
+X-Gm-Message-State: ANhLgQ20lDcdThCRdfRU5Ww6+7OBzLV0WoJlPDKe6gqI0Dsqyr4Sw4/7
+        R9kuLWTiK9Gj+R0azb9fRwu9wF9lAAq0D+KKPy2vRQ==
+X-Google-Smtp-Source: ADFU+vtZrRh7IowOp5OH0oSfDw8psJiJhEtJqqx6lihfLrI2TL2niHppJIGBv22OqVb3O+3TasH0O7liOBZUKkgfp2I=
+X-Received: by 2002:a9d:7756:: with SMTP id t22mr6718289otl.272.1584031064139;
+ Thu, 12 Mar 2020 09:37:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312155044.GA25292@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200310134603.30260-1-robert.foss@linaro.org>
+ <20200310134603.30260-4-robert.foss@linaro.org> <20200310143014.GL1922688@smile.fi.intel.com>
+In-Reply-To: <20200310143014.GL1922688@smile.fi.intel.com>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Thu, 12 Mar 2020 17:37:33 +0100
+Message-ID: <CAG3jFyuSj4NRAPHk0qch4SXg3iS7zss6tbRuC3mBnVL=MsLwVw@mail.gmail.com>
+Subject: Re: [v1 3/3] media: ov8856: Implement sensor module revision identification
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     ben.kao@intel.com, linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 10:50:44AM -0500, Rob Herring wrote:
-> On Thu,  5 Mar 2020 15:36:07 +0100, Johan Jonker wrote:
-> > Current dts files with 'i2c' nodes are manually verified.
-> > In order to automate this process i2c-rk3x.txt
-> > has to be converted to yaml. In the new setup
-> > i2c-rk3x.yaml will inherit properties from
-> > i2c-controller.yaml.
-> > 
-> > Also change document name in MAINTAINERS.
-> > 
-> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |  68 -----------
-> >  .../devicetree/bindings/i2c/i2c-rk3x.yaml          | 129 +++++++++++++++++++++
-> >  MAINTAINERS                                        |   2 +-
-> >  3 files changed, 130 insertions(+), 69 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-rk3x.txt
-> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-rk3x.yaml
-> > 
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Hey Andy,
 
-As this series is all binding changes, I'll take it via the DT tree.
+On Tue, 10 Mar 2020 at 15:30, Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Mar 10, 2020 at 02:46:03PM +0100, Robert Foss wrote:
+> > Query the sensor for its module revision, and compare it
+> > to known revisions.
+> > Currently only the '1B' revision has been added.
+>
+> Are you sure you send latest version?
+>
+> I have a d=C3=A9j=C4=85 vu that I have seen this already and this one doe=
+sn't address any
+> comment given.
 
-Rob
+I think pulled a series Dongchun Zhus earlier series apart and used some of=
+ it,
+I may have missed some of the feedback given to his v3. Sorry about that.
+
+>
+> ...
+>
+> > +     dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x=
+\n",
+> > +             val,
+>
+> > +             val =3D=3D OV8856_1B_MODULE ? "1B" : "unknown revision",
+>
+> This is weird. Can you add a bit more general way of showing revision?
+
+This is modeled after the ov7251 driver, since that output came in
+handy during bringup.
+
+    dev_info(dev, "OV7251 revision %x (%s) detected at address 0x%02x\n",
+         chip_rev,
+         chip_rev =3D=3D 0x4 ? "1A / 1B" :
+         chip_rev =3D=3D 0x5 ? "1C / 1D" :
+         chip_rev =3D=3D 0x6 ? "1E" :
+         chip_rev =3D=3D 0x7 ? "1F" : "unknown",
+         client->addr);
+
+To me this is pretty general approach, at least until this revision
+information is used in other places.
+I'm not quite sure what you had in mind. Maybe the current
+implementation is a little bit clunky in the case of ov8856 since
+there's only one revision number known currently.
+
+Either way, I'll happily change it. But I don't quite know what you
+have in mind.
+
+>
+> > +             client->addr);
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
