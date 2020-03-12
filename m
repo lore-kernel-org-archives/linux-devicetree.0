@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96819C10DCE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D790C1975A
 	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F18A206BE
+	by mail.kernel.org (Postfix) with ESMTP id 52439206BE
 	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgCLKcs (ORCPT
+        id S1727020AbgCLKcr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:32:48 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55129 "EHLO
+        Thu, 12 Mar 2020 06:32:47 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55361 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgCLKcr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 06:32:47 -0400
+        with ESMTP id S1726487AbgCLKc0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 06:32:26 -0400
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jCL8T-0002xn-Ax; Thu, 12 Mar 2020 11:32:17 +0100
+        id 1jCL8X-0002y4-L7; Thu, 12 Mar 2020 11:32:21 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jCL8R-0001Jr-BJ; Thu, 12 Mar 2020 11:32:15 +0100
+        id 1jCL8R-0001Kk-Px; Thu, 12 Mar 2020 11:32:15 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
         hans.verkuil@cisco.com, jacopo+renesas@jmondi.org,
         robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
 Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
-        linux-media@vger.kernel.org
-Subject: [PATCH v13 02/21] dt-bindings: display: add sdtv-standards defines
-Date:   Thu, 12 Mar 2020 11:31:37 +0100
-Message-Id: <20200312103156.3178-3-m.felsch@pengutronix.de>
+        linux-media@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH v13 19/21] media: dt-bindings: tvp5150: add optional sdtv standards documentation
+Date:   Thu, 12 Mar 2020 11:31:54 +0100
+Message-Id: <20200312103156.3178-20-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200312103156.3178-1-m.felsch@pengutronix.de>
 References: <20200312103156.3178-1-m.felsch@pengutronix.de>
@@ -50,100 +50,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add defines which can be included to easily describe the supported
-standard tv norms 'sdtv-standards' within the device tree.
+Document the optional binding to limit the possible sdtv standards on the
+input connectors.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
+
 ---
 v12:
-- new patch because of splitting: https://patchwork.linuxtv.org/patch/58491/
+-fix wrong dt-property enum in examples
 
- include/dt-bindings/display/sdtv-standards.h | 76 ++++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100644 include/dt-bindings/display/sdtv-standards.h
+v8:
+- adapt to new sdtv-standards
+- adapt commit message
+- fix missing include within example code
+---
+ .../devicetree/bindings/media/i2c/tvp5150.txt          | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/dt-bindings/display/sdtv-standards.h b/include/dt-bindings/display/sdtv-standards.h
-new file mode 100644
-index 000000000000..fbc1a3db2ea7
---- /dev/null
-+++ b/include/dt-bindings/display/sdtv-standards.h
-@@ -0,0 +1,76 @@
-+/* SPDX-License-Identifier: GPL-2.0-only or X11 */
-+/*
-+ * Copyright 2019 Pengutronix, Marco Felsch <kernel@pengutronix.de>
-+ */
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+index cc98b38c7e73..6c88ce858d08 100644
+--- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
++++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+@@ -49,13 +49,22 @@ Required Endpoint Properties for parallel synchronization on output port:
+ Note: Do not specify any of these properties if you want to use the embedded
+       BT.656 synchronization.
+ 
++Optional Connector Properties:
++==============================
 +
-+#ifndef _DT_BINDINGS_DISPLAY_SDTV_STDS_H
-+#define _DT_BINDINGS_DISPLAY_SDTV_STDS_H
++- sdtv-standards: Set the possible signals to which the hardware tries to lock
++                  instead of using the autodetection mechnism. Please look at
++                  [1] for more information.
 +
-+/*
-+ * Attention: Keep the SDTV_STD_* bit definitions in sync with
-+ * include/uapi/linux/videodev2.h V4L2_STD_* bit definitions.
-+ */
-+/* One bit for each standard */
-+#define SDTV_STD_PAL_B		0x00000001
-+#define SDTV_STD_PAL_B1		0x00000002
-+#define SDTV_STD_PAL_G		0x00000004
-+#define SDTV_STD_PAL_H		0x00000008
-+#define SDTV_STD_PAL_I		0x00000010
-+#define SDTV_STD_PAL_D		0x00000020
-+#define SDTV_STD_PAL_D1		0x00000040
-+#define SDTV_STD_PAL_K		0x00000080
-+
-+#define SDTV_STD_PAL		(SDTV_STD_PAL_B		| \
-+				 SDTV_STD_PAL_B1	| \
-+				 SDTV_STD_PAL_G		| \
-+				 SDTV_STD_PAL_H		| \
-+				 SDTV_STD_PAL_I		| \
-+				 SDTV_STD_PAL_D		| \
-+				 SDTV_STD_PAL_D1	| \
-+				 SDTV_STD_PAL_K)
-+
-+#define SDTV_STD_PAL_M		0x00000100
-+#define SDTV_STD_PAL_N		0x00000200
-+#define SDTV_STD_PAL_Nc		0x00000400
-+#define SDTV_STD_PAL_60		0x00000800
-+
-+#define SDTV_STD_NTSC_M		0x00001000	/* BTSC */
-+#define SDTV_STD_NTSC_M_JP	0x00002000	/* EIA-J */
-+#define SDTV_STD_NTSC_443	0x00004000
-+#define SDTV_STD_NTSC_M_KR	0x00008000	/* FM A2 */
-+
-+#define SDTV_STD_NTSC		(SDTV_STD_NTSC_M	| \
-+				 SDTV_STD_NTSC_M_JP	| \
-+				 SDTV_STD_NTSC_M_KR)
-+
-+#define SDTV_STD_SECAM_B	0x00010000
-+#define SDTV_STD_SECAM_D	0x00020000
-+#define SDTV_STD_SECAM_G	0x00040000
-+#define SDTV_STD_SECAM_H	0x00080000
-+#define SDTV_STD_SECAM_K	0x00100000
-+#define SDTV_STD_SECAM_K1	0x00200000
-+#define SDTV_STD_SECAM_L	0x00400000
-+#define SDTV_STD_SECAM_LC	0x00800000
-+
-+#define SDTV_STD_SECAM		(SDTV_STD_SECAM_B	| \
-+				 SDTV_STD_SECAM_D	| \
-+				 SDTV_STD_SECAM_G	| \
-+				 SDTV_STD_SECAM_H	| \
-+				 SDTV_STD_SECAM_K	| \
-+				 SDTV_STD_SECAM_K1	| \
-+				 SDTV_STD_SECAM_L	| \
-+				 SDTV_STD_SECAM_LC)
-+
-+/* Standards for Countries with 60Hz Line frequency */
-+#define SDTV_STD_525_60		(SDTV_STD_PAL_M		| \
-+				 SDTV_STD_PAL_60	| \
-+				 SDTV_STD_NTSC		| \
-+				 SDTV_STD_NTSC_443)
-+
-+/* Standards for Countries with 50Hz Line frequency */
-+#define SDTV_STD_625_50		(SDTV_STD_PAL		| \
-+				 SDTV_STD_PAL_N		| \
-+				 SDTV_STD_PAL_Nc	| \
-+				 SDTV_STD_SECAM)
-+
-+#endif /* _DT_BINDINGS_DISPLAY_SDTV_STDS_H */
+ [1] Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt.
+ 
+ Example - three input sources:
++#include <dt-bindings/display/sdtv-standards.h>
+ 
+ comp_connector_0 {
+ 	compatible = "composite-video-connector";
+ 	label = "Composite0";
++	sdtv-standards = <SDTV_STD_PAL_M>; /* limit to pal-m signals */
+ 
+ 	port {
+ 		composite0_to_tvp5150: endpoint {
+@@ -67,6 +76,7 @@ comp_connector_0 {
+ comp_connector_1 {
+ 	compatible = "composite-video-connector";
+ 	label = "Composite1";
++	sdtv-standards = <SDTV_STD_NTSC_M>; /* limit to ntsc-m signals */
+ 
+ 	port {
+ 		composite1_to_tvp5150: endpoint {
 -- 
 2.20.1
 
