@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1E3C5ACDC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE87C5ACDA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 628742071B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5752071B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgCLKcf (ORCPT
+        id S1726971AbgCLKch (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:32:35 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50045 "EHLO
+        Thu, 12 Mar 2020 06:32:37 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59585 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgCLKc1 (ORCPT
+        with ESMTP id S1726390AbgCLKc1 (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 06:32:27 -0400
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jCL8T-0002xr-As; Thu, 12 Mar 2020 11:32:17 +0100
+        id 1jCL8T-0002y1-At; Thu, 12 Mar 2020 11:32:17 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jCL8R-0001K3-D8; Thu, 12 Mar 2020 11:32:15 +0100
+        id 1jCL8R-0001Kb-MQ; Thu, 12 Mar 2020 11:32:15 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
         hans.verkuil@cisco.com, jacopo+renesas@jmondi.org,
         robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
 Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
         linux-media@vger.kernel.org
-Subject: [PATCH v13 06/21] media: v4l2-fwnode: add endpoint id field to v4l2_fwnode_link
-Date:   Thu, 12 Mar 2020 11:31:41 +0100
-Message-Id: <20200312103156.3178-7-m.felsch@pengutronix.de>
+Subject: [PATCH v13 16/21] media: tvp5150: add v4l2-event support
+Date:   Thu, 12 Mar 2020 11:31:51 +0100
+Message-Id: <20200312103156.3178-17-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200312103156.3178-1-m.felsch@pengutronix.de>
 References: <20200312103156.3178-1-m.felsch@pengutronix.de>
@@ -50,63 +50,68 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A link is between two endpoints not between two ports to be more
-precise. Add the local_id/remote_id field which stores the endpoint
-reg/port property to the link. Now the link holds all necessary
-information about a link.
+Currently the driver notifies internal subdevs if the signal is locked
+or not. This information is also useful for userpace applications e.g. to
+switch to another input device upon a signal lost event.
+
+This commit adds the support for the userspace to subscribe to the
+V4L2_EVENT_SOURCE_CHANGE and V4L2_EVENT_CTRL events.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
-v13:
-- port to simplified v4l2_fwnode_parse_link() code
+ drivers/media/i2c/tvp5150.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
- drivers/media/v4l2-core/v4l2-fwnode.c | 2 ++
- include/media/v4l2-fwnode.h           | 4 ++++
- 2 files changed, 6 insertions(+)
-
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 316e19615d88..cd5325b752f8 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -565,6 +565,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
- 	memset(link, 0, sizeof(*link));
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index 06ca3081f3d1..d59b52775334 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -17,6 +17,7 @@
+ #include <linux/regmap.h>
+ #include <media/v4l2-async.h>
+ #include <media/v4l2-device.h>
++#include <media/v4l2-event.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-fwnode.h>
+ #include <media/v4l2-mc.h>
+@@ -1526,6 +1527,19 @@ static int tvp5150_s_register(struct v4l2_subdev *sd, const struct v4l2_dbg_regi
+ }
+ #endif
  
- 	fwnode_graph_parse_endpoint(fwnode, &fwep);
-+	link->local_id = fwep.id;
- 	link->local_port = fwep.port;
- 	link->local_node = fwnode_graph_get_port_parent(fwnode);
- 
-@@ -575,6 +576,7 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
- 	}
- 
- 	fwnode_graph_parse_endpoint(fwnode, &fwep);
-+	link->remote_id = fwep.id;
- 	link->remote_port = fwep.port;
- 	link->remote_node = fwnode_graph_get_port_parent(fwnode);
- 
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index f6a7bcd13197..7bba6dfa3fd6 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -113,14 +113,18 @@ struct v4l2_fwnode_endpoint {
-  * struct v4l2_fwnode_link - a link between two endpoints
-  * @local_node: pointer to device_node of this endpoint
-  * @local_port: identifier of the port this endpoint belongs to
-+ * @local_id: identifier of the id this endpoint belongs to
-  * @remote_node: pointer to device_node of the remote endpoint
-  * @remote_port: identifier of the port the remote endpoint belongs to
-+ * @remote_id: identifier of the id the remote endpoint belongs to
-  */
- struct v4l2_fwnode_link {
- 	struct fwnode_handle *local_node;
- 	unsigned int local_port;
-+	unsigned int local_id;
- 	struct fwnode_handle *remote_node;
- 	unsigned int remote_port;
-+	unsigned int remote_id;
++static int tvp5150_subscribe_event(struct v4l2_subdev *sd, struct v4l2_fh *fh,
++				   struct v4l2_event_subscription *sub)
++{
++	switch (sub->type) {
++	case V4L2_EVENT_SOURCE_CHANGE:
++		return v4l2_src_change_event_subdev_subscribe(sd, fh, sub);
++	case V4L2_EVENT_CTRL:
++		return v4l2_ctrl_subdev_subscribe_event(sd, fh, sub);
++	default:
++		return -EINVAL;
++	}
++}
++
+ static int tvp5150_g_tuner(struct v4l2_subdev *sd, struct v4l2_tuner *vt)
+ {
+ 	int status = tvp5150_read(sd, 0x88);
+@@ -1617,6 +1631,8 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
+ 	.g_register = tvp5150_g_register,
+ 	.s_register = tvp5150_s_register,
+ #endif
++	.subscribe_event = tvp5150_subscribe_event,
++	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
  };
  
- /**
+ static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
+@@ -2045,7 +2061,7 @@ static int tvp5150_probe(struct i2c_client *c)
+ 	sd = &core->sd;
+ 	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+ 	sd->internal_ops = &tvp5150_internal_ops;
+-	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
++	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_HAS_EVENTS;
+ 
+ 	if (IS_ENABLED(CONFIG_OF) && np) {
+ 		res = tvp5150_parse_dt(core, np);
 -- 
 2.20.1
 
