@@ -2,154 +2,187 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE05C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5ECC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0224206F7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC5820578
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 07:32:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="SzeoIq58"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="AwuxN5z7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387973AbgCLHZO (ORCPT
+        id S2388017AbgCLHcX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 03:25:14 -0400
-Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:5068 "EHLO
-        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387869AbgCLHZO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 03:25:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1583997912; x=1615533912;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=J4B2ajPGzNPBzhJPoWpe3dg4EPRxooVyV7W7B1Paxso=;
-  b=SzeoIq58qEB1SNEgXqeYpYQpC9oSrvdM9AKhtcY653//AD537Zd+audH
-   t3vuaAHg2YLhLImp4IZ5JHnZTI9lpdQQuw6s2DOdbdgYJeHPXZWtrKIhe
-   wAR6nPtsKsanaLxt7M8FXH8mBS7n7FiqnU0UbWm4Tt7OTTK1nVMvPAGTp
-   UUkcbpqGpjXeTRoXL90bK55036ziNtujVt6ZHLpHMWU7X+cjzyR02AO2G
-   3U1oRQLolu4hulZFgNu1J8hC/toF3UgCUcT2aOLtIvWJ8LZWzCZoj9UXP
-   lgxB0yc1n09PPjKJZWYZgvgsCiLiET3JRTSFNBfSPORZKTJrT9adn0Dt2
-   w==;
-IronPort-SDR: WKUCkgsNy2vrW7l5Xdu0w7vORGPy3zJzGlI7j1N+5BWVgYQKa2kYWvuqLvHo1pR4JbCs87Kjso
- EhJpMj33JQvw==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2] leds: pwm: add support for default-state device
- property
-Thread-Topic: [PATCH v2] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHV9tn/0ZJlTn83ZkK/QE6qVZtMD6hB4AuAgABjeACAAJ9TgIABCOIAgACUhoA=
-Date:   Thu, 12 Mar 2020 07:25:08 +0000
-Message-ID: <7f267c4298a0108a562846bcef7012188c743118.camel@diehl.com>
-References: <20200310123126.4709-1-Denis.Osterland@diehl.com>
-         <4c16da22994de29c2fbb23c877d55685bcbf8993.camel@diehl.com>
-         <ccb718b2-d0e5-20d8-f30a-95f8f31a10ef@gmail.com>
-         <9e4bd43d14d00266bab4695dd37019bb1a103dd2.camel@diehl.com>
-         <c8c23a9b-b468-b88b-17b2-4726de1f6ae3@gmail.com>
-In-Reply-To: <c8c23a9b-b468-b88b-17b2-4726de1f6ae3@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <143CA685B8FA4646B453A806106960CB@diehl.internal>
-Content-Transfer-Encoding: base64
+        Thu, 12 Mar 2020 03:32:23 -0400
+Received: from mail-bn8nam11on2058.outbound.protection.outlook.com ([40.107.236.58]:15041
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387930AbgCLHcX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 03:32:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yxb0r/bBgrJpqzin2Amp9Byd8aLI7AzMpYri41wm7VaSQlDvow1zqjQxHRjM8Wkd1eEAvn3nvWLHQuGh6gsX9my0Ix/s03iua+XfX7x8KXqYnaXOuilxKB0pAysAhL6cKDAbW8pPd9VjYdl6Q71EG+2AbQOZ25MyG7yLKHroUp1ukNcTsHKCcBEjrKXZFV0YzeXj/aVjS2yobFHGinLHo94lU7Sh++i+5+xBq77UlzPZeyhlFkOuYEcJJ2O/fs88paLq0w/bdB+iL/pOPaC+GBo7dkrOviYdgjpRiczhTpvEyoXlzSp/OcJkXIJUucK2m/uYvfr+bI6kkQfhQMaVkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ILKe4tO3bnfssvWnx/3cUr+LFaZe92AjLpSYHCCSs5w=;
+ b=liv76c1C4BaIQSSZ8J1KERLOJk2ywBhrKFj9VN3plngsGkTi34jq9eaSKAHvnWPoGGtmKxbkkxCqDjHy5BUxRoLFD57RHkiUGZY+7U96iPjqRcaj9ATG76HrnMsls+VY5npnBiHDDIB4G31/LBIQGUmtPVdaGjkIoeeAnSHG2OTsfdcZq8ztTBxRh0wgaIjYoBIVodqqaVj8entpSL3kZlKApa6PtOyc3WOZE7GuQANbLsQJqvgUj/OFj1/cccjlCBLhLtzGcv5OZlYuKXaSed5HhzDCsBn9trAx+Cq7p3EYIcM/JzaGpLocEIyIWOgOkyYCQ0W5utcNl7LBHnQTow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ILKe4tO3bnfssvWnx/3cUr+LFaZe92AjLpSYHCCSs5w=;
+ b=AwuxN5z7vslCRCVx/pwHv4UxsV1D7vDrVDFxEC1+9cwMm0ZhsZoP0K9ep8TF3BtgNEOILSvrQypExpK+r45Aa0M945khcJsAf7rUdiPHfxF9nE50pXHCuolP5czoffdCNYe9B0/fh5K2q57ejU07FYnP5OZAZyspBgK/1S7PB2E=
+Received: from DM6PR08CA0018.namprd08.prod.outlook.com (2603:10b6:5:80::31) by
+ DM6PR02MB4410.namprd02.prod.outlook.com (2603:10b6:5:1e::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Thu, 12 Mar 2020 07:32:20 +0000
+Received: from CY1NAM02FT020.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:80:cafe::9f) by DM6PR08CA0018.outlook.office365.com
+ (2603:10b6:5:80::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend
+ Transport; Thu, 12 Mar 2020 07:32:19 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT020.mail.protection.outlook.com (10.152.75.191) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2814.13
+ via Frontend Transport; Thu, 12 Mar 2020 07:32:19 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jCIKJ-0008Ln-A1; Thu, 12 Mar 2020 00:32:19 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jCIKE-0003Fh-78; Thu, 12 Mar 2020 00:32:14 -0700
+Received: from [172.30.17.108]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jCIK4-0003DC-JB; Thu, 12 Mar 2020 00:32:04 -0700
+Subject: Re: [PATCH 1/5] firmware: xilinx: Add ZynqMP firmware ioctl enums for
+ RPU configuration.
+To:     Ben Levinsky <ben.levinsky@xilinx.com>, ohad@wizery.com,
+        bjorn.andersson@linaro.org, michal.simek@xilinx.com,
+        jollys@xilinx.com, rajan.vaja@xilinx.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1582566751-13118-1-git-send-email-ben.levinsky@xilinx.com>
+ <1582566751-13118-2-git-send-email-ben.levinsky@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <4d95f021-c3cc-3238-665d-8d5825c6a123@xilinx.com>
+Date:   Thu, 12 Mar 2020 08:32:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: PkB65aL1SqtESF35r/jQn8LdMDxe30TMLLBAS2IcrfJ3rMSy7PrM4+QgE2BSLTng
+In-Reply-To: <1582566751-13118-2-git-send-email-ben.levinsky@xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(346002)(376002)(396003)(199004)(356004)(426003)(478600001)(9786002)(8676002)(31686004)(36756003)(81166006)(8936002)(4326008)(70586007)(6666004)(81156014)(70206006)(186003)(31696002)(316002)(2616005)(26005)(336012)(5660300002)(44832011)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB4410;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d8a0345e-4862-4ac9-afde-08d7c6577f6c
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4410:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB44103B4529EEA8FAD9606DC3C6FD0@DM6PR02MB4410.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:525;
+X-Forefront-PRVS: 0340850FCD
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: juEt3ycHiV2q6n/SKCuAIGDPZhhPglb7da2gee+MzGlhTt6drCevMJblJKmkiyLczOCBD8yPCh12e8IPpCyt5dkV+M6a0FAp0yQbBMaWKXXEj0lJ8248fnSrfFqGm4nAeKWLBQC9LPw167XP1bb8IeLJehG29JrFJnMfRS/ngHeTcOXSW0wQmNY0ZFVOvGQUk/3som5T5jLGIQAJneHiOpdCe9u3rT8vytDw+5lZv8ouXzYndqwV5hxjXCpciwlQUPrAZNkx4bwGz+b6z514NmJiGIc6xc8HuJEkn8MawFWg1ED0Iz3IetIRQiJ3qoJlxnCHoO2imB/XpHf87VN1GsDwN5D5+5evhn+xNfHBXTRN/2220OgjArCKcrpLlixyZp5jGW1GBQY/EbxCELfSssO7MZ6vqj/hiDh071uSiUqLkopoLmIG3MvlLzeSDiZy
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2020 07:32:19.7187
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8a0345e-4862-4ac9-afde-08d7c6577f6c
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4410
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgSmFjZWssDQoNCnRoYW5rcyBmb3IgdGhlIGhpbnQuDQpQZXJmZWt0ISBPbmUgdGhpbmcg
-bGVzcyB0byBkbyA6RA0KDQpSZWdhcmRzIERlbmlzDQoNCkFtIE1pdHR3b2NoLCBkZW4gMTEu
-MDMuMjAyMCwgMjM6MzMgKzAxMDAgc2NocmllYiBKYWNlayBBbmFzemV3c2tpOg0KPiBEZW5p
-cywNCj4gDQo+IE9uIDMvMTEvMjAgNzo0NSBBTSwgRGVuaXMgT3N0ZXJsYW5kLUhlaW0gd3Jv
-dGU6DQo+ID4gSGkgSmFjZWssDQo+ID4gDQo+ID4gQW0gRGllbnN0YWcsIGRlbiAxMC4wMy4y
-MDIwLCAyMjoxNSArMDEwMCBzY2hyaWViIEphY2VrIEFuYXN6ZXdza2k6DQo+ID4gPiBIaSBE
-ZW5pcywNCj4gPiA+IA0KPiA+ID4gVGhhbmsgeW91IGZvciB0aGUgdXBkYXRlLiBQbGVhc2Ug
-ZmluZCBteSByZW1hcmtzIGJlbG93Lg0KPiA+ID4gDQo+ID4gPiBPbiAzLzEwLzIwIDQ6MTkg
-UE0sIERlbmlzIE9zdGVybGFuZC1IZWltIHdyb3RlOg0KPiA+ID4gPiBIaSwNCj4gPiA+ID4g
-DQo+ID4gDQo+ID4gLi4uDQo+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9sZWRzL2xlZHMtcHdt
-LmMNCj4gPiA+ID4gPiArKysgYi9kcml2ZXJzL2xlZHMvbGVkcy1wd20uYw0KPiA+ID4gPiA+
-IEBAIC03NSw3ICs3NSw4IEBAIHN0YXRpYyBpbnQgbGVkX3B3bV9hZGQoc3RydWN0IGRldmlj
-ZSAqZGV2LCBzdHJ1Y3QgbGVkX3B3bV9wcml2ICpwcml2LA0KPiA+ID4gPiA+ICAJbGVkX2Rh
-dGEtPmFjdGl2ZV9sb3cgPSBsZWQtPmFjdGl2ZV9sb3c7DQo+ID4gPiA+ID4gIAlsZWRfZGF0
-YS0+Y2Rldi5uYW1lID0gbGVkLT5uYW1lOw0KPiA+ID4gPiA+ICAJbGVkX2RhdGEtPmNkZXYu
-ZGVmYXVsdF90cmlnZ2VyID0gbGVkLT5kZWZhdWx0X3RyaWdnZXI7DQo+ID4gPiA+ID4gLQls
-ZWRfZGF0YS0+Y2Rldi5icmlnaHRuZXNzID0gTEVEX09GRjsNCj4gPiA+ID4gPiArCXJldCA9
-IGxlZC0+ZGVmYXVsdF9zdGF0ZSA9PSBMRURTX0dQSU9fREVGU1RBVEVfT047DQo+ID4gPiAN
-Cj4gPiA+IHJldCBpcyBmb3IgcmV0dXJuIHZhbHVlIGFuZCBpdCBzaG91bGQgbm90IGJlIHVz
-ZWQgZm9yIGFueXRoaW5nDQo+ID4gPiBlbHNlIGp1c3QgYmVjYXVzZSBpdCBpcyBhdCBoYW5k
-LiBBbHNvIExFRFNfR1BJTyogZGVmaW5pdGlvbnMgaGF2ZQ0KPiA+ID4gbm90aGluZyB0byBk
-byB3aXRoIHB3bSBsZWRzLiBUaGlzIGlzIGxlZ2FjeSBiZWNhdXNlIGRlZmF1bHQtc3RhdGUN
-Cj4gPiA+IHByb3BlcnR5IHdhcyBwcmltYXJpbHkgc3BlY2lmaWMgdG8gbGVkcy1ncGlvIGJp
-bmRpbmdzIGFuZCBvbmx5DQo+ID4gPiBsYXRlciB3YXMgbWFkZSBjb21tb24uDQo+ID4gPiAN
-Cj4gPiA+IFBsZWFzZSBpbnRyb2R1Y2UgY29ycmVzcG9uZGluZyBMRURTX1BXTSBkZWZpbml0
-aW9ucywgYnV0IGluIGxlZHMtcHdtLmMuDQo+ID4gDQo+ID4gd2lsbCBjaGFuZ2UNCj4gPiAN
-Cj4gPiA+IA0KPiA+ID4gPiA+ICsJbGVkX2RhdGEtPmNkZXYuYnJpZ2h0bmVzcyA9IHJldCA/
-IGxlZC0+bWF4X2JyaWdodG5lc3MgOiBMRURfT0ZGOw0KPiA+ID4gDQo+ID4gPiBJbnN0ZWFk
-IG9mIGFib3ZlIHR3byBjaGFuZ2VzIEknZCBhZGQgYmVsb3c6DQo+ID4gPiANCj4gPiA+IGlm
-IChsZWQtPmRlZmF1bHRfc3RhdGUgPT0gTEVEU19QV01fREVGU1RBVEVfT04pIHsNCj4gPiA+
-IAlsZWRfZGF0YS0+Y2Rldi5icmlnaHRuZXNzID0gbGVkLT5tYXhfYnJpZ2h0bmVzczsNCj4g
-PiA+IH0gZWxzZSBpZiAobGVkLT5kZWZhdWx0X3N0YXRlID09IExFRFNfUFdNX0RFRlNUQVRF
-X0tFRVApKSB7DQo+ID4gPiAJLy8gaGVyZSBwdXQgd2hhdCB5b3UncmUgYWRkaW5nIGJlbG93
-LCBidXQgcGxlYXNlIHVzZQ0KPiA+ID4gCS8vIHB3bV9nZXRfc3RhdGUoKSBpbnN0ZWFkIG9m
-IGFjY2Vzc2luZyBvcHMgZGlyZWN0bHkNCj4gPiA+IH0NCj4gPiA+IA0KPiA+ID4gTEVEX09G
-RiBjYXNlIGlzIGNvdmVyZWQgYnkga3phbGxvYygpIGluIGxlZF9wd21fcHJvYmUoKS4NCj4g
-PiANCj4gPiBMb29rcyB2ZXJ5IGVsZWdhbnQsIEkgd2lsbCBhcHBseSB0aGlzLg0KPiA+IHB3
-bV9nZXRfc3RhdGUoKSBpcyBub3Qgc3VmZmljaWVudCBoZXJlIGJlY2F1c2UgaXQgb25seSBy
-ZXR1cm5zIHRoZSB2YWx1ZXMgZnJvbSBzdHJ1Y3R1cmUsDQo+ID4gd2hpY2ggd2VyZSBub3Qg
-cmVhZCByZWFkIGZyb20gcmVnaXN0ZXJzIGF0IHB3bV9kZXZpY2VfcmVxdWVzdCgpLg0KPiA+
-IFNvbWV0aGluZyBsaWtlIHB3bV9nZXRfc3RhdGVfdW5jYWNoZWQoKSB3b3VsZCBiZSByZXF1
-aXJlZCwgd2hpY2ggSSBoYXZlIG5vdCBmb3VuZCB5ZXQuDQo+ID4gDQo+ID4gSSBsb29rZWQg
-YXQgdGhlIGF0b21pYyBQV00gQVBJICg1ZWM4MDNlZGNiNzAzZmUzNzk4MzZmMTM1NjBiNzlk
-ZmFjNzliMDFkKSwNCj4gPiB3aGljaCBjbGFpbXMgdG8gcHJvdmlkZSBhIHNtb290aCBoYW5k
-b3ZlciBmcm9tIGJvb3Rsb2FkZXIgdG8ga2VybmVsLg0KPiA+IFNvIGl0IHNlZW1zIGl0IHdv
-dWxkIGJlIGJldHRlciB0byBmaXggdGhlIEZJWE1FIGZpcnN0LCBpbiBhIGZpcnN0IHBhdGNo
-Lg0KPiANCj4gSSBtaXNzZWQgdGhhdCBpdCdzIGJlZW4gcmVjZW50bHkgZG9uZS4gWW91J3Zl
-IGdvdCB0byByZWJhc2Ugb250byBQYXZlbCdzDQo+IGZvci1uZXh0IGJyYW5jaCBbMF0uDQo+
-IA0KPiBbMF0NCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5l
-bC9naXQvcGF2ZWwvbGludXgtbGVkcy5naXQvbG9nLz9oPWZvci1uZXh0DQo+IA0KDQoNCkRp
-ZWhsIENvbm5lY3Rpdml0eSBTb2x1dGlvbnMgR21iSA0KR2VzY2jDpGZ0c2bDvGhydW5nOiBI
-b3JzdCBMZW9uYmVyZ2VyDQpTaXR6IGRlciBHZXNlbGxzY2hhZnQ6IE7DvHJuYmVyZyAtIFJl
-Z2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQNCk7DvHJuYmVyZzogSFJCIDMyMzE1DQpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCg0KRGVyIEluaGFs
-dCBkZXIgdm9yc3RlaGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVjaHRsaWNoIGJpbmRlbmQu
-IERpZXNlIEUtTWFpbCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5kL29kZXIgcmVjaHRsaWNo
-IGdlc2NodWV0enRlIEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJlbiBTaWUgdW5zIGJpdHRl
-LCB3ZW5uIFNpZSBkaWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndlaXNlIGVyaGFsdGVuIGhh
-YmVuLiBCaXR0ZSBsb2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwgZGllIE5hY2hyaWNodC4N
-CkplZGUgdW5lcmxhdWJ0ZSBGb3JtIGRlciBSZXByb2R1a3Rpb24sIEJla2FubnRnYWJlLCBB
-ZW5kZXJ1bmcsIFZlcnRlaWx1bmcgdW5kL29kZXIgUHVibGlrYXRpb24gZGllc2VyIEUtTWFp
-bCBpc3Qgc3RyZW5nc3RlbnMgdW50ZXJzYWd0Lg0KLSBJbmZvcm1hdGlvbmVuIHp1bSBEYXRl
-bnNjaHV0eiwgaW5zYmVzb25kZXJlIHp1IElocmVuIFJlY2h0ZW4sIGVyaGFsdGVuIFNpZSB1
-bnRlciBodHRwczovL3d3dy5kaWVobC5jb20vZ3JvdXAvZGUvdHJhbnNwYXJlbnotdW5kLWlu
-Zm9ybWF0aW9uc3BmbGljaHRlbi8NCg0KVGhlIGNvbnRlbnRzIG9mIHRoZSBhYm92ZSBtZW50
-aW9uZWQgZS1tYWlsIGlzIG5vdCBsZWdhbGx5IGJpbmRpbmcuIFRoaXMgZS1tYWlsIGNvbnRh
-aW5zIGNvbmZpZGVudGlhbCBhbmQvb3IgbGVnYWxseSBwcm90ZWN0ZWQgaW5mb3JtYXRpb24u
-IFBsZWFzZSBpbmZvcm0gdXMgaWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgYnkN
-Cm1pc3Rha2UgYW5kIGRlbGV0ZSBpdCBpbiBzdWNoIGEgY2FzZS4gRWFjaCB1bmF1dGhvcml6
-ZWQgcmVwcm9kdWN0aW9uLCBkaXNjbG9zdXJlLCBhbHRlcmF0aW9uLCBkaXN0cmlidXRpb24g
-YW5kL29yIHB1YmxpY2F0aW9uIG9mIHRoaXMgZS1tYWlsIGlzIHN0cmljdGx5IHByb2hpYml0
-ZWQuIA0KLSBGb3IgZ2VuZXJhbCBpbmZvcm1hdGlvbiBvbiBkYXRhIHByb3RlY3Rpb24gYW5k
-IHlvdXIgcmVzcGVjdGl2ZSByaWdodHMgcGxlYXNlIHZpc2l0IGh0dHBzOi8vd3d3LmRpZWhs
-LmNvbS9ncm91cC9lbi90cmFuc3BhcmVuY3ktYW5kLWluZm9ybWF0aW9uLW9ibGlnYXRpb25z
-Lw0K
+On 24. 02. 20 18:52, Ben Levinsky wrote:
+> Add ZynqMP firmware ioctl enums for RPU configuration.
+> 
+> Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
+> ---
+>  drivers/firmware/xilinx/zynqmp.c     |  4 ++++
+>  include/linux/firmware/xlnx-zynqmp.h | 19 +++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+> index ecc339d..20e4574 100644
+> --- a/drivers/firmware/xilinx/zynqmp.c
+> +++ b/drivers/firmware/xilinx/zynqmp.c
+> @@ -512,6 +512,10 @@ static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
+>  static inline int zynqmp_is_valid_ioctl(u32 ioctl_id)
+>  {
+>  	switch (ioctl_id) {
+> +	case IOCTL_GET_RPU_OPER_MODE:
+> +	case IOCTL_SET_RPU_OPER_MODE:
+> +	case IOCTL_RPU_BOOT_ADDR_CONFIG:
+> +	case IOCTL_TCM_COMB_CONFIG:
+>  	case IOCTL_SET_PLL_FRAC_MODE:
+>  	case IOCTL_GET_PLL_FRAC_MODE:
+>  	case IOCTL_SET_PLL_FRAC_DATA:
+> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+> index 2cd12eb..b8ca118 100644
+> --- a/include/linux/firmware/xlnx-zynqmp.h
+> +++ b/include/linux/firmware/xlnx-zynqmp.h
+> @@ -100,6 +100,10 @@ enum pm_ret_status {
+>  };
+>  
+>  enum pm_ioctl_id {
+> +	IOCTL_GET_RPU_OPER_MODE = 0,
+> +	IOCTL_SET_RPU_OPER_MODE,
+> +	IOCTL_RPU_BOOT_ADDR_CONFIG,
+> +	IOCTL_TCM_COMB_CONFIG,
+>  	IOCTL_SET_SD_TAPDELAY = 7,
+>  	IOCTL_SET_PLL_FRAC_MODE,
+>  	IOCTL_GET_PLL_FRAC_MODE,
+> @@ -118,6 +122,21 @@ enum pm_query_id {
+>  	PM_QID_CLOCK_GET_MAX_DIVISOR,
+>  };
+>  
+> +enum rpu_oper_mode {
+> +	PM_RPU_MODE_LOCKSTEP,
+> +	PM_RPU_MODE_SPLIT,
+> +};
+> +
+> +enum rpu_boot_mem {
+> +	PM_RPU_BOOTMEM_LOVEC,
+> +	PM_RPU_BOOTMEM_HIVEC,
+> +};
+> +
+> +enum rpu_tcm_comb {
+> +	PM_RPU_TCM_SPLIT,
+> +	PM_RPU_TCM_COMB,
+> +};
+> +
+>  enum zynqmp_pm_reset_action {
+>  	PM_RESET_ACTION_RELEASE,
+>  	PM_RESET_ACTION_ASSERT,
+> 
+
+This is fine.
+
+M
