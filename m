@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2D5C5ACD8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF70BC4CECE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6847D20736
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BFF20724
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 10:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCLKca (ORCPT
+        id S1726822AbgCLKc2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 06:32:30 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60743 "EHLO
+        Thu, 12 Mar 2020 06:32:28 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51643 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgCLKc3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 06:32:29 -0400
+        with ESMTP id S1726845AbgCLKc1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 06:32:27 -0400
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jCL8T-0002xq-B1; Thu, 12 Mar 2020 11:32:17 +0100
+        id 1jCL8T-0002xo-Au; Thu, 12 Mar 2020 11:32:17 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1jCL8R-0001K1-Cj; Thu, 12 Mar 2020 11:32:15 +0100
+        id 1jCL8R-0001Jv-By; Thu, 12 Mar 2020 11:32:15 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     mchehab@kernel.org, sakari.ailus@linux.intel.com,
         hans.verkuil@cisco.com, jacopo+renesas@jmondi.org,
         robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
 Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
         linux-media@vger.kernel.org
-Subject: [PATCH v13 05/21] media: v4l2-fwnode: simplify v4l2_fwnode_parse_link
-Date:   Thu, 12 Mar 2020 11:31:40 +0100
-Message-Id: <20200312103156.3178-6-m.felsch@pengutronix.de>
+Subject: [PATCH v13 03/21] media: v4l: link dt-bindings and uapi
+Date:   Thu, 12 Mar 2020 11:31:38 +0100
+Message-Id: <20200312103156.3178-4-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200312103156.3178-1-m.felsch@pengutronix.de>
 References: <20200312103156.3178-1-m.felsch@pengutronix.de>
@@ -50,61 +50,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This helper was introduced before those helpers where awailable. Convert
-it to cleanup the code and improbe readability.
+Since we expose the definition to the dt-bindings we need to keep those
+definitions in sync. To address this the patch adds a simple cross
+reference to the dt-bindings.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+Changelog:
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index d56eee9c09b8..316e19615d88 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -557,33 +557,26 @@ int v4l2_fwnode_endpoint_alloc_parse(struct fwnode_handle *fwnode,
- }
- EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoint_alloc_parse);
+v11:
+- new patch since the split https://patchwork.linuxtv.org/patch/58491/
+
+v2-v10:
+- nothing
+
+ include/uapi/linux/videodev2.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 5f9357dcb060..f48e47e230c3 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -1242,6 +1242,10 @@ struct v4l2_selection {
  
--int v4l2_fwnode_parse_link(struct fwnode_handle *__fwnode,
-+int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
- 			   struct v4l2_fwnode_link *link)
- {
--	const char *port_prop = "reg";
--	struct fwnode_handle *fwnode;
-+	struct fwnode_endpoint fwep;
+ typedef __u64 v4l2_std_id;
  
- 	memset(link, 0, sizeof(*link));
- 
--	fwnode = fwnode_get_parent(__fwnode);
--	fwnode_property_read_u32(fwnode, port_prop, &link->local_port);
--	fwnode = fwnode_get_next_parent(fwnode);
--	if (is_of_node(fwnode) && of_node_name_eq(to_of_node(fwnode), "ports"))
--		fwnode = fwnode_get_next_parent(fwnode);
--	link->local_node = fwnode;
-+	fwnode_graph_parse_endpoint(fwnode, &fwep);
-+	link->local_port = fwep.port;
-+	link->local_node = fwnode_graph_get_port_parent(fwnode);
- 
--	fwnode = fwnode_graph_get_remote_endpoint(__fwnode);
-+	fwnode = fwnode_graph_get_remote_endpoint(fwnode);
- 	if (!fwnode) {
- 		fwnode_handle_put(fwnode);
- 		return -ENOLINK;
- 	}
- 
--	fwnode = fwnode_get_parent(fwnode);
--	fwnode_property_read_u32(fwnode, port_prop, &link->remote_port);
--	fwnode = fwnode_get_next_parent(fwnode);
--	if (is_of_node(fwnode) && of_node_name_eq(to_of_node(fwnode), "ports"))
--		fwnode = fwnode_get_next_parent(fwnode);
--	link->remote_node = fwnode;
-+	fwnode_graph_parse_endpoint(fwnode, &fwep);
-+	link->remote_port = fwep.port;
-+	link->remote_node = fwnode_graph_get_port_parent(fwnode);
- 
- 	return 0;
- }
++/*
++ * Attention: Keep the V4L2_STD_* bit definitions in sync with
++ * include/dt-bindings/display/sdtv-standards.h SDTV_STD_* bit definitions.
++ */
+ /* one bit for each */
+ #define V4L2_STD_PAL_B          ((v4l2_std_id)0x00000001)
+ #define V4L2_STD_PAL_B1         ((v4l2_std_id)0x00000002)
 -- 
 2.20.1
 
