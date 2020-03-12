@@ -2,230 +2,87 @@ Return-Path: <SRS0=4Y7L=45=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C67C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 20:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D357C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 20:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4716206E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 20:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264A8206F7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 20:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584044591;
-	bh=lK+DbZu+ysfioTaOjQp7MwFz+Cg7MyJVUs9MvHtpsk0=;
+	s=default; t=1584045516;
+	bh=30GKTE6rjttestopawcDOyoaImV4Srd/+iHkb1Dq0Gw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AZQaZQe3MgJmpTCZS2G7w7aYCbUznHDyV1GX0umlD5hIFzcTEkHcKyWcV2O2BdKjq
-	 Nt1/ExavlJLK9cZlzWsOZeJuDXVSF89HugrYD/FKpAyYAuLq4+04VbjLLVKeiuMLqy
-	 +BrTThNcuk70S5M+/YuwA7Yb7Cx3PO+L6FpYzMxU=
+	b=hNshZvXxdwBFZBNWKZaSawHCZ9ZN4/1w+OMsSZDmO1Ug5bdnJ3h/LSvDCWREjN13s
+	 9t4/WL5bwVdXavcOR+FIDJnO9EJOdPToq62Kn6MzO1N3sUoD8xG2Xlr9ebTTDnZzLs
+	 fTPM6Gv7Nwb/52N84v8YBiosLuL8IWycIJR+ZCFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgCLUXK (ORCPT
+        id S1726922AbgCLUif (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 16:23:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45466 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgCLUXK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 16:23:10 -0400
-Received: by mail-ot1-f67.google.com with SMTP id e9so507381otr.12;
-        Thu, 12 Mar 2020 13:23:10 -0700 (PDT)
+        Thu, 12 Mar 2020 16:38:35 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41800 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgCLUif (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 16:38:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s15so7753121otq.8;
+        Thu, 12 Mar 2020 13:38:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=edf5TR5CVR3TN5pRGNKw9mhGgcBOLphtKYRyAygi4sY=;
-        b=QQhr5uZJGjtNzJQYLqDEl5pPyg0tHdFHW7T2iP3nu1ZyBt5N8WJSjwG19AZKXo4aH6
-         aFAwJdzS3taS4F3XYCJZLmIRBpNyexkZfEXpE7kjv1klKLjIV3q7rzQfI1aJIPJvR273
-         evvPtNtkKZOxp/cgBMlU4TNHoNP2mDy3kzeZCSvYV4gKL4NYx/ZsA4eYSjIn+hiJrdx2
-         oaiLEG83faoHIka9fDLHGNMPP6xRjey8EfQ32ZvW+5BACTJCRNHDwbBmbknWsR7nIw1F
-         sEUPRDeMfPhboSUiczs6srj7cI7OMlTKz49zin/uZaJ1Z7KeTJHX9qhkq9SEgj5yADf2
-         uM8w==
-X-Gm-Message-State: ANhLgQ1JjwX81rUjeCFNAvb94FGxWc52q8WUwCe0LiJdBFkr/1sMXGql
-        kQX4XyG60kDYLoftHpDaYn6+DdE=
-X-Google-Smtp-Source: ADFU+vvOQCNhP9ZLDZQxkhEt/jrr6BlY7/vHQ5vgiZhlBHGBv/gpom62mtJzEUMw2/nTR4mZwAQuMA==
-X-Received: by 2002:a9d:6452:: with SMTP id m18mr7677326otl.366.1584044588129;
-        Thu, 12 Mar 2020 13:23:08 -0700 (PDT)
+        bh=qsyf53fDOW2kIfBB6h9PfXR888dEi0c9UB48kNqadU0=;
+        b=QPB6LM82y2odDnTq56W6yLN1rE16wNdbqX6RsAkrEd3pYcP0/bzpjowgedpPA0ncpA
+         pdM5woVUK6XLDPasFI5QP9RWbKOQZeGr/oqGLTwq+8wC26h55WNMWXf2BhtE5USf/fcv
+         zwu8D/+y1l4uAZ0IG65k2GkkgO7JDVpdSCRQ3H8fHPdkA9pP0aKhMwStxTy1PEfzHPPL
+         nC4YZhCdPkJ87i4ZB5p89lFrISv2NvVCBblC03SLHKXQAGns1QAoP5X627z+ei9xmzV5
+         jughoKTwZlnrQVHu4pxJmUM5nQcwbUoif14ruyMNQUgvtGIctTglKVN5BHisNloQEN20
+         6SBg==
+X-Gm-Message-State: ANhLgQ0TCWfjGHFKAsOFKTO8hx9G5YsaxSQSNTItuXTGQRr6dABSK6GD
+        ImP8qtz7bz7H3ZH0T4UlbQ==
+X-Google-Smtp-Source: ADFU+vtjBZJYB7cBB6cNsWPMGuK7UPYILgJCWYhGg99znHQiTnDlaIOyzFbSRtAcjckQTwHpwGhpCA==
+X-Received: by 2002:a9d:b8f:: with SMTP id 15mr7962990oth.256.1584045514482;
+        Thu, 12 Mar 2020 13:38:34 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w18sm12789082otl.60.2020.03.12.13.23.06
+        by smtp.gmail.com with ESMTPSA id u205sm7065396oia.37.2020.03.12.13.38.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 13:23:07 -0700 (PDT)
-Received: (nullmailer pid 10568 invoked by uid 1000);
-        Thu, 12 Mar 2020 20:23:06 -0000
-Date:   Thu, 12 Mar 2020 15:23:06 -0500
+        Thu, 12 Mar 2020 13:38:33 -0700 (PDT)
+Received: (nullmailer pid 31724 invoked by uid 1000);
+        Thu, 12 Mar 2020 20:38:31 -0000
+Date:   Thu, 12 Mar 2020 15:38:31 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
-Cc:     pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
-        kuninori.morimoto.gx@renesas.com, peter.ujfalusi@ti.com,
-        broonie@kernel.org, linux-imx@nxp.com, devicetree@vger.kernel.org,
-        Xiubo.Lee@gmail.com, shengjiu.wang@nxp.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        ranjani.sridharan@linux.intel.com, liam.r.girdwood@linux.intel.com,
-        sound-open-firmware@alsa-project.org,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: sound: Add FSL CPU DAI bindings
-Message-ID: <20200312202306.GA18767@bogus>
-References: <20200306111353.12906-1-daniel.baluta@oss.nxp.com>
- <20200306111353.12906-2-daniel.baluta@oss.nxp.com>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-fpga@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        ley.foon.tan@intel.com, robh+dt@kernel.org, mdf@kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH 1/2] arch: nios2: rename 'altr,gpio-bank-width' ->
+ 'altr,ngpio'
+Message-ID: <20200312203831.GA31683@bogus>
+References: <20200306115450.3352-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306111353.12906-2-daniel.baluta@oss.nxp.com>
+In-Reply-To: <20200306115450.3352-1-alexandru.ardelean@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 01:13:52PM +0200, Daniel Baluta wrote:
-> From: Daniel Baluta <daniel.baluta@nxp.com>
+On Fri, 6 Mar 2020 13:54:49 +0200, Alexandru Ardelean wrote:
+> There is no more 'altr,gpio-bank-width' in the 'altr,pio-1.0' driver.
+> There is a 'altr,ngpio' which is  what the property wants to configure.
 > 
-> Add dt bindings for he Generic FSL CPU DAI.
+> This change updates all occurrences of 'altr,gpio-bank-width' to
+> 'altr,ngpio'.
 > 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 > ---
->  .../devicetree/bindings/sound/fsl,dai.yaml    | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/fsl,dai.yaml
+>  Documentation/devicetree/bindings/fpga/fpga-region.txt | 4 ++--
+>  arch/nios2/boot/dts/10m50_devboard.dts                 | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl,dai.yaml b/Documentation/devicetree/bindings/sound/fsl,dai.yaml
-> new file mode 100644
-> index 000000000000..e6426af67d30
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/fsl,dai.yaml
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Dual license new bindings please:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/fsl,dai.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic CPU FSL DAI driver for resource management
-
-Bindings are for h/w devices, not drivers.
-
-> +
-> +maintainers:
-> +  - Daniel Baluta <daniel.baluta@nxp.com>
-> +
-> +description: |
-> +  On platforms with a DSP we need to split the resource handling between
-> +  Application Processor (AP) and DSP. On platforms where the DSP doesn't
-> +  have an easy access to resources, the AP will take care of
-> +  configuring them. Resources handled by this generic driver are: clocks,
-> +  power domains, pinctrl.
-
-The DT should define a DSP node with resources that are part of the 
-DSP. What setup the AP has to do should be implied by the compatible 
-string and possibly what resources are described.
-
-Or maybe the audio portion of the DSP is a child node...
-
-> +
-> +properties:
-> +  '#sound-dai-cells':
-> +    const: 0
-> +
-> +  compatible:
-> +    enum:
-> +      - fsl,esai-dai
-> +      - fsl,sai-dai
-
-Not very specific. There's only 2 versions of the DSP and ways it is 
-integrated?
-
-> +
-> +  clocks:
-> +    oneOf:
-> +      - items: # for ESAI
-> +          - description: Core clock used to access registers.
-> +          - description: ESAI baud clock for ESAI controller used to derive
-> +                         HCK, SCK and FS.
-> +          - description: The system clock derived from ahb clock used to derive
-> +                         HCK, SCK and FS.
-> +          - description: SPBA clock is required when ESAI is placed as a bus
-> +                         slave of the SP Bus and when two or more bus masters
-> +                         (CPU, DMA or DSP) try to access it. This property is
-> +                         optional depending on SoC design.
-> +      - items: # for SAI
-> +          - description: Bus clock for accessing registers
-> +          - description: Master clock 0 for providing bit clock and frame clock
-> +          - description: Master clock 1 for providing bit clock and frame clock
-> +          - description: Master clock 2 for providing bit clock and frame clock
-> +          - description: Master clock 3 for providing bit clock and frame clock
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - items: # for ESAI
-> +          - const: core
-> +          - const: extal
-> +          - const: fsys
-> +          - const: spba
-> +      - items: # for SAI
-> +          - const: bus
-> +          - const: mclk0
-> +          - const: mclk1
-> +          - const: mclk2
-> +          - const: mclk3
-> +
-> +  pinctrl-0:
-> +    description: Should specify pin control groups used for this controller.
-> +
-> +  pinctrl-names:
-> +    const: default
-
-pinctrl properties are implicitly allowed an don't have to be listed 
-here.
-
-> +
-> +  power-domains:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle-array'
-
-Don't need a type.
-
-> +    description:
-> +      List of phandles and PM domain specifiers, as defined by bindings of the
-> +      PM domain provider.
-
-Don't need to re-define common properties.
-
-You do need to say how many power domains (maxItems: 1?).
-
-> +
-> +  fsl,dai-index:
-> +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> +    description: Physical DAI index, must match the index from topology file
-
-Sorry, we don't do indexes in DT.
-
-What's a topology file?
-
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - clock-names
-> +  - fsl,dai-index
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/imx8-clock.h>
-> +    esai0_port: esai-port {
-> +         #sound-dai-cells = <0>;
-> +        compatible = "fsl,esai-dai";
-> +
-> +        fsl,dai-index = <0>;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&pinctrl_esai0>;
-> +
-> +        clocks = <&esai0_lpcg 1>, <&esai0_lpcg 0>,  <&esai0_lpcg 1>,
-> +            <&clk_dummy>;
-> +        clock-names = "core", "extal", "fsys", "spba";
-> +    };
-> -- 
-> 2.17.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
