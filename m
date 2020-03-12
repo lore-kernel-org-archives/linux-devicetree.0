@@ -4,134 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67A0C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 15:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37C1C1975A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 15:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 859A120674
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 15:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AA4206E7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 15:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584026200;
-	bh=SZEg4wWy8H11le7Oa0MVf7a4y384yEIniXmktsgnbyc=;
+	s=default; t=1584026239;
+	bh=R5gSdaG1zdoCoOI9m10uKnNmczMvXk+yWnrNxw4Nwdo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IhAOLEE+KDnXykBejt3uLUZbjneSBdQoenRK2fy0UZ0U4a8ENtem+x1dxtRIracIg
-	 IFLHGlE1x57oJUlvdtkexHGi6Mp7jLWPT/xKFs9JM5K3F1V0yS+UwWHtwQR/nMjiSj
-	 ZimSal83vC4az7I9p9Emzzq+AfMiC1sHq92Kp3HM=
+	b=Pdv2PApiMamGKuqLKISN79WCjbLA3J2zOFytDKxIhgLFjpfKhH6//iSmmgGP0uX6+
+	 uPyRCTgTB6R6qUkx+YR9DwjqocLmcvQBGUW7V+HUAKloePLQnhCXgx207nPVwmSZyC
+	 6YliuUvI0Bpjn0BdQZlNNaghzDg3dL/W/d+zPEL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgCLPQj (ORCPT
+        id S1727773AbgCLPRT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 11:16:39 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45923 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbgCLPQj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 11:16:39 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v19so5797332oic.12;
-        Thu, 12 Mar 2020 08:16:38 -0700 (PDT)
+        Thu, 12 Mar 2020 11:17:19 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40389 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727455AbgCLPRS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 11:17:18 -0400
+Received: by mail-oi1-f196.google.com with SMTP id y71so5807999oia.7;
+        Thu, 12 Mar 2020 08:17:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2nVd6kVQeC4fmgj6PS1Xm+z10xV+uawDTTNUDTAtSz0=;
-        b=LaOimdN6f4qP3pk5A0rIsuxhuMVxwo75aGCldNz4IWeYWfZmTAjYH4WlhxuURxMow/
-         FodnrjSVvSYAlqHZsYIDJ9UdAR3dwjAu05ste3Nn1v+di05ySxjgmhTlhm8SVIvapCuw
-         DpMzh5E8ZncB4PGJoEVpmDS7kXRksiNPayTYRR0kMu+fCxJNF70+fQaz7jLJMoECKqz9
-         3Qjs8UHfjwl/tFVQN48atvZHPkn1QbloJQJhHd6s5DKVsz71YyBBmbjyjfrQfee8WGxp
-         KczCYNqQ4RQ3cLfIxqCylIPJjlnkXOzGO+cInauxvVGTAqO5AVUpaZYGq/lcKz44c/8k
-         0yyw==
-X-Gm-Message-State: ANhLgQ2jJM3OHcxHA/YwDIacxgBZOkviQ70CpD4gd7WNqPZN8nhiHIJD
-        8XL2zvLKqRCTDbbw9zexyQ==
-X-Google-Smtp-Source: ADFU+vtpLTSI6Asr97Z+Fb8vk1osZZ4RtTebCFker8BuzujVU9OrD/qT5bTh+3jkwn/IuxGrg+rn8Q==
-X-Received: by 2002:a05:6808:651:: with SMTP id z17mr2882892oih.160.1584026197598;
-        Thu, 12 Mar 2020 08:16:37 -0700 (PDT)
+        bh=Jzpwe77Abgtv1XYYx0fhdTAjqfD6Awmd08c56L163dU=;
+        b=R4Usgqot9FMkEJa3WE/U/jhC3R34PTs6ftAqGcZY06HEA46dnUTv7VDfAnCZrD9Vsq
+         /4K0WHqGJANAQR+e57yQZ9t8n0eryxoKzXOe9eWIx0iRAiXo/UQPoI6TecRWvMlhZttY
+         NVq8gnobKtGeB/7gkLLOf5ubyrfFbrRx+EhJ/olR3x6V+eA+r0+N0ttIKm3m3K4YzTm1
+         8wEvxcE3tYsdI5Qjv8zQ4bOy9NG3cWB6LxGzqiEG2Ehd7hBCqvhwckQpFLiTBgn0h4qF
+         l24VwTvCq6W4PdgeyQHPu6Qce+JDKDDH8cP491aWltqo0I76k/7kaWc8YabWmn7LpcJ4
+         UQlQ==
+X-Gm-Message-State: ANhLgQ0nWGYu1FNXxXfVi1pXr2lqMhkzaBIUdwMNF2MvbaU4+ahG50Bz
+        D0H+6blHwkW0v9vJEOis/A==
+X-Google-Smtp-Source: ADFU+vsdmoOYjMIj0gWOrimsXEvO/w7aUb1U+jTQ6bLux3L7/gaZQojIdHDA7NxmCJ5EzsCb3gNUbQ==
+X-Received: by 2002:aca:5c46:: with SMTP id q67mr3034917oib.75.1584026237750;
+        Thu, 12 Mar 2020 08:17:17 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r20sm4604114oic.56.2020.03.12.08.16.35
+        by smtp.gmail.com with ESMTPSA id j5sm18380490otl.71.2020.03.12.08.17.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 08:16:36 -0700 (PDT)
-Received: (nullmailer pid 6272 invoked by uid 1000);
-        Thu, 12 Mar 2020 15:16:35 -0000
-Date:   Thu, 12 Mar 2020 10:16:35 -0500
+        Thu, 12 Mar 2020 08:17:17 -0700 (PDT)
+Received: (nullmailer pid 7330 invoked by uid 1000);
+        Thu, 12 Mar 2020 15:17:16 -0000
+Date:   Thu, 12 Mar 2020 10:17:16 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v8] dt-bindings: display: Add idk-2121wr binding
-Message-ID: <20200312151635.GA5799@bogus>
-References: <1583869169-1006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Harigovindan P <harigovi@codeaurora.org>, robdclark@gmail.com,
+        seanpaul@chromium.org, sean@poorly.run
+Subject: Re: [PATCH v6 1/2] dt-bindings: display: add visionox rm69299 panel
+ variant
+Message-ID: <20200312151716.GA7045@bogus>
+References: <20200311085807.21984-1-harigovi@codeaurora.org>
+ <20200311085807.21984-2-harigovi@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583869169-1006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200311085807.21984-2-harigovi@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 10 Mar 2020 19:39:29 +0000, Lad Prabhakar wrote:
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+On Wed, 11 Mar 2020 14:28:06 +0530, Harigovindan P wrote:
+> Add bindings for visionox rm69299 panel.
 > 
-> Add binding for the idk-2121wr LVDS panel from Advantech.
-> 
-> Some panel-specific documentation can be found here:
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 > ---
 > 
-> Hi All,
-> This patch is part of series [1] ("Add dual-LVDS panel support to EK874),
-> all the patches have been accepted from it except this one. I have fixed
-> Rob's comments in this version of the patch.
+> Changes in v2:
+> 	- Removed unwanted properties from description.
+> 	- Creating source files without execute permissions(Rob Herring).
+> Changes in v3:
+> 	- Changing txt file into yaml
+> Changes in v4:
+> 	- Updating license identifier.
+> 	- Moving yaml file inside panel directory.
+> 	- Removing pinctrl entries.
+> 	- Adding documentation for reset-gpios.
+> Changes in v5:
+> 	- No changes. Updated 2/2 Patch.
+> Changes in v6:
+> 	- Removing patternProperties.
+> 	- Added " |" after description.
+> 	- Setting port and reset-gpios to true.
+> 	- Removing @ae94000 for dsi node.
 > 
-> [1] https://patchwork.kernel.org/cover/11297589/
-> 
-> V7->8
->  * Dropped ref to lvds.yaml, since the panel a dual channel LVDS, as a
->    result the root port is called as ports instead of port and the child
->    node port@0 and port@1 are used for even and odd pixels, hence binding
->    has required property as ports instead of port.
-> 
-> v6->7
->  * Added reference to lvds.yaml
->  * Changed maintainer to myself
->  * Switched to dual license
->  * Dropped required properties except for ports as rest are already listed
->    in lvds.panel
->  * Dropped Reviewed-by tag of Laurent, due to the changes made it might not
->    be valid.
-> 
-> v5->v6:
->  * No change
-> 
-> v4->v5:
-> * No change
-> 
-> v3->v4:
-> * Absorbed patch "dt-bindings: display: Add bindings for LVDS
->   bus-timings"
-> * Big restructuring after Rob's and Laurent's comments
-> 
-> v2->v3:
-> * New patch
-> 
->  .../display/panel/advantech,idk-2121wr.yaml        | 122 +++++++++++++++++++++
->  1 file changed, 122 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
+>  .../display/panel/visionox,rm69299.yaml       | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.example.dt.yaml: panel-lvds: 'port' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/panel/visionox,rm69299.example.dt.yaml: panel@0: 'reg' is a required property
 
-See https://patchwork.ozlabs.org/patch/1252386
+See https://patchwork.ozlabs.org/patch/1252722
 Please check and re-submit.
