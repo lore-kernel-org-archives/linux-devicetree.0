@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FCBC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38134C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED282074D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0509620724
+	for <linux-devicetree@archiver.kernel.org>; Thu, 12 Mar 2020 14:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D4rQxAGF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jgrChhvT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbgCLOam (ORCPT
+        id S1727714AbgCLOaz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 10:30:42 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:56110 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727680AbgCLOal (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 10:30:41 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 6so6324807wmi.5
-        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 07:30:41 -0700 (PDT)
+        Thu, 12 Mar 2020 10:30:55 -0400
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:33009 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727716AbgCLOav (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 10:30:51 -0400
+Received: by mail-wr1-f46.google.com with SMTP id a25so7784133wrd.0
+        for <devicetree@vger.kernel.org>; Thu, 12 Mar 2020 07:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SrNGkCGGs9iZ9NyVy5uKVQ/RwyzbDUi+g2m1wLgGoLw=;
-        b=D4rQxAGFy94k2dAHm0ROepPHj2K7vit2D6GE1QsoJFz91IrG5EF84ZhJ+JfYj+4S+t
-         J5Syzl8Bb8S9ZTld5nfdGPhlZOkgSHJd0pTzuqZXEjzDvxR4m4bOHTkZxEpreEuNTobS
-         qGGGJb5UXvN7Z+OVXlGvfn95cIBiT45kzk+ze3D/vZ9MkDd6VmxiUGT8JOUz8be/jYp1
-         V5IVRirZAVqJlvm0xzefqxJPAqb6Kf9o+uCYfemYlCIa3UZQwfB0uev1xZc12Eg7KqFx
-         xdWqnJSZy2dYWrvWDo+BXoh9wDZCCJGfoZmSGp5eDmWK8HlCX8hclbhim9jmLcZF4nr4
-         D+IQ==
+        bh=Avkf50vmIXVLn6vftt8SeIEwKsLAXThhjPmhmV2jMv0=;
+        b=jgrChhvTkmqOK/HunW66SirMl/ynwIK6Aeod19ZbOXj6bEX/phSlSiC5vD2OtZWrVz
+         8lVfAAu2i5M+sFpr54NOgqEvPfO3XOK/hR9BF0+Or+jMIBHDkTOEAU26s9cL8Ma0DekB
+         1hkbYg4mlcEEmQN7OkgBMjVdgsb1KqfCLPxRQDrN/VEROg5hesseT+r0olW+OvhUcs+q
+         U16MHvf4JgGOuxb3rKXVytWFMTubvZeSAg1e198v0MRFKRO4XywUz2MD+UkOWAPO7cWs
+         QSZ6l94A0TUiYpz23tB7wzF+P9JeN0m0dPhlf1Yu/H+RBC7+FwDZSTTDAePIzo0N67Ez
+         bdiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SrNGkCGGs9iZ9NyVy5uKVQ/RwyzbDUi+g2m1wLgGoLw=;
-        b=aBiNKrzxfldncH5nW1PJ9LwV3n2pNVvTWP4ySBrq6daogMyCpw0wYICT1kTmxKroLD
-         1NOJatjkkHBMQJHGoi/sNZRND+i4n3CRxXdJ7m1VlCicUXjx6dESttpJDrdhv2REU0es
-         L0RO9Sk9RfMetVuZl5zjI2LWiGa7jzPrQLkecgWnZXWbXDeYcUwxT7o/UEa/FvOflRie
-         0X/VSTaCmndIKMCdK9qaTOmdkE7FT05QaqyKLEKZoZEuU9jmFgTVJTc/wW7ruDQDquil
-         MgvIg9aCWVJZ36J9bfi8GV/B/gjd6kfOgHnMsCssuxxvoo9mOj6l7/31F7JKtCxzh3xS
-         2b/g==
-X-Gm-Message-State: ANhLgQ04QEzJBGDuyLdZJRM4MZ8n//iLKZa+C+Z11XxzGAJnzVeO3n2X
-        PmF0FyslYNSZpeMDWCvkxBbJBA==
-X-Google-Smtp-Source: ADFU+vuJj0o8QlwG2W3+jIY/Xgyi3mnCHF/7Y+tx6b0KN47miv5zepvBtXsr3VgPnZUh/MK0yaDsnw==
-X-Received: by 2002:a1c:418b:: with SMTP id o133mr5313833wma.165.1584023440172;
-        Thu, 12 Mar 2020 07:30:40 -0700 (PDT)
+        bh=Avkf50vmIXVLn6vftt8SeIEwKsLAXThhjPmhmV2jMv0=;
+        b=okpZiEOHwUwWiRBw5X6Aw014tt4zlkealyHRltcXv5rM1oTLwJvlRCuT0bjUOXYkY7
+         KSvqZ7Rg4C4GFFc5FMfGH4FJLnTctA2/MQ0uTmxB5fhO5XLuA377B0NQAriuVjt+JB8F
+         RCGAetgn1WNOpEq4xm1OIpkJQreaJvyM61wA1nXtFbf9TMf/BqCEKaBZPxtkWbGtxY5P
+         eAgq0Bk2eDRFgDUh5ES7fhLz0fUilJb99DGotYRQl4mYxLSSAfzUgKLMaKPxdR+0ODYk
+         Afk4VJP5sAMCvz+4rBUSJfPvt0HilSjRhbZogyhvjW4YMFQG1F1JMc1shZ1xOVTjoWXW
+         ZA0w==
+X-Gm-Message-State: ANhLgQ3DZ3KcVmCIZbXfeGA4hXfmPsyXjYJsQatPGNe9nmICzZSjkZJE
+        qZmP7KD2TBNgnpcASE++OlWUhsB6xqw=
+X-Google-Smtp-Source: ADFU+vsXVtVEuVdxGV3DL215cc14Vmb07eGBnvaa7iMqhEAt7kSzEw36/IKC+StZ02WGLY/NpcRSog==
+X-Received: by 2002:a5d:640a:: with SMTP id z10mr6984140wru.301.1584023448654;
+        Thu, 12 Mar 2020 07:30:48 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id v8sm72860454wrw.2.2020.03.12.07.30.37
+        by smtp.gmail.com with ESMTPSA id v8sm72860454wrw.2.2020.03.12.07.30.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Mar 2020 07:30:38 -0700 (PDT)
+        Thu, 12 Mar 2020 07:30:47 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     bjorn.andersson@linaro.org, agross@kernel.org
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         robh+dt@kernel.org, linux-kernel@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 2/5] arm64: dts: qcom: sdm845: add apr nodes
-Date:   Thu, 12 Mar 2020 14:30:21 +0000
-Message-Id: <20200312143024.11059-3-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 5/5] arm64: dts: qcom: db845c: add analog audio support
+Date:   Thu, 12 Mar 2020 14:30:24 +0000
+Message-Id: <20200312143024.11059-6-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
 References: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
@@ -73,81 +73,201 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patch adds support to Analog audio via WSA881x speakers.
+
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 52 ++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 159 +++++++++++++++++++++
+ 1 file changed, 159 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 3f9fb719bfaa..5b7626f2a27b 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -17,6 +17,7 @@
- #include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/reset/qcom,sdm845-aoss.h>
- #include <dt-bindings/reset/qcom,sdm845-pdc.h>
-+#include <dt-bindings/soc/qcom,apr.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
- #include <dt-bindings/thermal/thermal.h>
-@@ -491,6 +492,57 @@
- 			label = "lpass";
- 			qcom,remote-pid = <2>;
- 			mboxes = <&apss_shared 8>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index 6e60e81f8db7..94aa9227ca51 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -8,6 +8,8 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++#include <dt-bindings/sound/qcom,q6afe.h>
++#include <dt-bindings/sound/qcom,q6asm.h>
+ #include "sdm845.dtsi"
+ #include "pm8998.dtsi"
+ #include "pmi8998.dtsi"
+@@ -200,6 +202,40 @@
+ 	firmware-name = "qcom/sdm845/adsp.mdt";
+ };
+ 
 +
-+			apr {
-+				compatible = "qcom,apr-v2";
-+				qcom,glink-channels = "apr_audio_svc";
-+				qcom,apr-domain = <APR_DOMAIN_ADSP>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				qcom,intents = <512 20>;
++&wcd9340{
++	pinctrl-0 = <&wcd_intr_default>;
++	pinctrl-names = "default";
++	clock-names = "extclk";
++	clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
++	reset-gpios = <&tlmm 64 0>;
++	vdd-buck-supply = <&vreg_s4a_1p8>;
++	vdd-buck-sido-supply = <&vreg_s4a_1p8>;
++	vdd-tx-supply = <&vreg_s4a_1p8>;
++	vdd-rx-supply = <&vreg_s4a_1p8>;
++	vdd-io-supply = <&vreg_s4a_1p8>;
 +
-+				apr-service@3 {
-+					reg = <APR_SVC_ADSP_CORE>;
-+					compatible = "qcom,q6core";
-+					qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-+				};
++	swm: swm@c85 {
++		left_spkr: wsa8810-left{
++			compatible = "sdw10217201000";
++			reg = <0 1>;
++			powerdown-gpios = <&wcdgpio 2 GPIO_ACTIVE_HIGH>;
++			#thermal-sensor-cells = <0>;
++			sound-name-prefix = "SpkrLeft";
++			#sound-dai-cells = <0>;
++		};
 +
-+				q6afe: apr-service@4 {
-+					compatible = "qcom,q6afe";
-+					reg = <APR_SVC_AFE>;
-+					qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-+					q6afedai: dais {
-+						compatible = "qcom,q6afe-dais";
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+						#sound-dai-cells = <1>;
-+					};
-+				};
++		right_spkr: wsa8810-right{
++			compatible = "sdw10217201000";
++			powerdown-gpios = <&wcdgpio 2 GPIO_ACTIVE_HIGH>;
++			reg = <0 2>;
++			#thermal-sensor-cells = <0>;
++			sound-name-prefix = "SpkrRight";
++			#sound-dai-cells = <0>;
++		};
++	};
++};
 +
-+				q6asm: apr-service@7 {
-+					compatible = "qcom,q6asm";
-+					reg = <APR_SVC_ASM>;
-+					qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-+					q6asmdai: dais {
-+						compatible = "qcom,q6asm-dais";
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+						#sound-dai-cells = <1>;
-+						iommus = <&apps_smmu 0x1821 0x0>;
-+					};
-+				};
+ &apps_rsc {
+ 	pm8998-rpmh-regulators {
+ 		compatible = "qcom,pm8998-rpmh-regulators";
+@@ -535,6 +571,15 @@
+ 		function = "gpio";
+ 		bias-pull-up;
+ 	};
 +
-+				q6adm: apr-service@8 {
-+					compatible = "qcom,q6adm";
-+					reg = <APR_SVC_ADM>;
-+					qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-+					q6routing: routing {
-+						compatible = "qcom,q6adm-routing";
-+						#sound-dai-cells = <0>;
-+					};
-+				};
-+			};
++	wcd_intr_default: wcd_intr_default {
++		pins = <54>;
++		function = "gpio";
 +
- 			fastrpc {
- 				compatible = "qcom,fastrpc";
- 				qcom,glink-channels = "fastrpcglink-apps-dsp";
++		input-enable;
++		bias-pull-down;
++		drive-strength = <2>;
++	};
+ };
+ 
+ &uart6 {
+@@ -674,3 +719,117 @@
+ 		bias-pull-up;
+ 	};
+ };
++
++/* QUAT I2S Uses 4 I2S SD Lines for audio on LT9611 HDMI Bridge */
++&q6afedai {
++	qi2s@22 {
++		reg = <22>;
++		qcom,sd-lines = <0 1 2 3>;
++	};
++};
++
++&q6asmdai {
++	dai@0 {
++		reg = <0>;
++		direction = <2>;
++	};
++
++	dai@1 {
++		reg = <1>;
++		direction = <2>;
++	};
++
++	dai@2 {
++		reg = <2>;
++		direction = <1>;
++	};
++
++	dai@3 {
++		reg = <3>;
++		direction = <2>;
++		is-compress-dai;
++	};
++};
++
++&sound {
++	compatible = "qcom,db845c-sndcard";
++	pinctrl-0 = <&quat_mi2s_active
++			 &quat_mi2s_sd0_active
++			 &quat_mi2s_sd1_active
++			 &quat_mi2s_sd2_active
++			 &quat_mi2s_sd3_active>;
++	pinctrl-names = "default";
++	model = "DB845c";
++	audio-routing =
++		"RX_BIAS", "MCLK",
++		"AMIC1", "MIC BIAS1",
++		"AMIC2", "MIC BIAS2",
++		"DMIC0", "MIC BIAS1",
++		"DMIC1", "MIC BIAS1",
++		"DMIC2", "MIC BIAS3",
++		"DMIC3", "MIC BIAS3",
++		"SpkrLeft IN", "SPK1 OUT",
++		"SpkrRight IN", "SPK2 OUT",
++		"MM_DL1",  "MultiMedia1 Playback",
++		"MM_DL2",  "MultiMedia2 Playback",
++		"MM_DL4",  "MultiMedia4 Playback",
++		"MultiMedia3 Capture", "MM_UL3";
++
++	mm1-dai-link {
++		link-name = "MultiMedia1";
++		cpu {
++			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA1>;
++		};
++	};
++
++	mm2-dai-link {
++		link-name = "MultiMedia2";
++		cpu {
++			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA2>;
++		};
++	};
++
++	mm3-dai-link {
++		link-name = "MultiMedia3";
++		cpu {
++			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA3>;
++		};
++	};
++
++	mm4-dai-link {
++		link-name = "MultiMedia4";
++		cpu {
++			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA4>;
++		};
++	};
++
++	slim-dai-link {
++		link-name = "SLIM Playback";
++		cpu {
++			sound-dai = <&q6afedai SLIMBUS_0_RX>;
++		};
++
++		platform {
++			sound-dai = <&q6routing>;
++		};
++
++		codec {
++			sound-dai =  <&left_spkr>, <&right_spkr>, <&swm 0>, <&wcd9340 0>;
++		};
++	};
++
++	slimcap-dai-link {
++		link-name = "SLIM Capture";
++		cpu {
++			sound-dai = <&q6afedai SLIMBUS_0_TX>;
++		};
++
++		platform {
++			sound-dai = <&q6routing>;
++		};
++
++		codec {
++			sound-dai = <&wcd9340 1>;
++		};
++	};
++};
 -- 
 2.21.0
 
