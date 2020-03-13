@@ -2,125 +2,111 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3BBC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 09:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8091AC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 09:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D432073E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 09:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5505420746
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 09:47:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W0rvU+KL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgCMJlE (ORCPT
+        id S1726461AbgCMJrb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:41:04 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60082 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgCMJlD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 05:41:03 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7CA7B8030886;
-        Fri, 13 Mar 2020 09:41:00 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id teOI_MFyEwyH; Fri, 13 Mar 2020 12:40:59 +0300 (MSK)
-Date:   Fri, 13 Mar 2020 12:40:17 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/22] dt-bindings: Add vendor prefix for Baikal
- Electronics, JSC
-Message-ID: <20200313094017.y7nko4sx2dfcadnp@ubsrv2.baikal.int>
-References: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
- <20200306124832.986FE8030793@mail.baikalelectronics.ru>
- <20200312204406.GA4654@bogus>
+        Fri, 13 Mar 2020 05:47:31 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38200 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgCMJrb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 05:47:31 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02D9lM2A008991;
+        Fri, 13 Mar 2020 04:47:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584092842;
+        bh=mFzRNpBAm8x3OIHFlE8PDdI7a4X4HaLXzV5MEkFtlhc=;
+        h=From:To:CC:Subject:Date;
+        b=W0rvU+KLaYvI7S2b8FRlhtGfW1Q/C/VchZIVjvSBWkjjJq+0q4sXU40yJFRSSJIgw
+         HaFgmWwOYPMnjx+IrY6UnYHjh8lu+l5Wo+aH+9GWF8pKYCOuduk0HVOyGsMM22PwnT
+         lFrfA5K85HOlSwLrvgRJHyPtvleIZWb1KYSXFe9w=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02D9lMsN019353;
+        Fri, 13 Mar 2020 04:47:22 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Mar 2020 04:47:21 -0500
+Received: from localhost.localdomain (10.64.41.19) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Mar 2020 04:47:21 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02D9lInb126551;
+        Fri, 13 Mar 2020 04:47:18 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <tony@atomide.com>
+CC:     <hch@lst.de>, <robin.murphy@arm.com>, <robh+dt@kernel.org>,
+        <nm@ti.com>, <t-kristo@ti.com>, <nsekhar@ti.com>,
+        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <stable@kernel.org>
+Subject: [PATCH v2] ARM: dts: dra7: Add bus_dma_limit for L3 bus
+Date:   Fri, 13 Mar 2020 11:47:17 +0200
+Message-ID: <20200313094717.6671-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200312204406.GA4654@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 03:44:06PM -0500, Rob Herring wrote:
-> On Fri, Mar 06, 2020 at 03:46:47PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <fancer.lancer@gmail.com>
-> > 
-> > Add "BAIKAL ELECTRONICS, JSC" to the list of devicetree vendor prefixes
-> > as "be".
-> > 
-> > Website: http://www.baikalelectronics.com
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > index 9e67944bec9c..8568713396af 100644
-> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > @@ -141,6 +141,8 @@ patternProperties:
-> >      description: Shenzhen AZW Technology Co., Ltd.
-> >    "^bananapi,.*":
-> >      description: BIPAI KEJI LIMITED
-> > +  "^be,.*":
-> > +    description: BAIKAL ELECTRONICS, JSC
-> 
-> Also, is 'be' a well known abbreviation for this company. Perhaps 
-> 'baikal' instead?
-> 
+The L3 interconnect's memory map is from 0x0 to
+0xffffffff. Out of this, System memory (SDRAM) can be
+accessed from 0x80000000 to 0xffffffff (2GB)
 
-Hm, I don't think that baikal is a well known synonym of the company
-either. Seeing the company isn't well known in general.) Here the
-'Baikal' name is mostly associated with the deepest lake in the world.)
+DRA7 does support 4GB of SDRAM but upper 2GB can only be
+accessed by the MPU subsystem.
 
-We had a discussion amongst our team developers what abbreviation to choose.
-Some of us suggested to use 'baikal' prefix too. But after all we agreed to
-set the 'be' one as being short and yet compatible with company name. However
-it's unlikely that developers looking at vendor prefix would think of a lake
-first and, you are right, that 'baikal' word would point to the original
-company name better than 'be'. On the other hand the chips the company
-produces also have 'baikal' in their names: Baikal-T1, Baikal-M1, etc.
-So the compatible strings of the SoC components either would look like:
-- be,bt1; be,baikal-t1 (SoC/machine compatible strings)
-- be,bt1-i2c; be,bt1-pvt; be,bt1-efuse; be,bt1-axi-ic; etc (individual
-  SoC subdevices compatible strings)
-or
-- baikal,bt1; baikal,baikal-t1
-- baikal,bt1-i2c; baikal,bt1-pvt; baikal,bt1-efuse; baikal,bt1-axi-ic; etc
+Add the dma-ranges property to reflect the physical address limit
+of the L3 bus.
 
-First version seemed less cumbersome, having less 'baikal' in the
-compatible strings. In the second case the vendor prefix turned to be
-longer than the rest of the component name, which is supposed to be the
-main part of the string.
+Issues ere observed only with SATA on DRA7-EVM with 4GB RAM
+and CONFIG_ARM_LPAE enabled. This is because the controller
+supports 64-bit DMA and its driver sets the dma_mask to 64-bit
+thus resulting in DMA accesses beyond L3 limit of 2G.
 
-So you think 'baikal' would be better anyway? It would be great to hear
-your opinion about this in details, because we still have doubts which
-prefix is better.
+Setting the correct bus_dma_limit fixes the issue.
 
-(I'm so persistent in describing why we chose 'be' prefix, because in
-case of changing it to 'baikal' I would have to alter all the drivers
-we wrote, which you must agree isn't that pleasant work.)
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Cc: stable@kernel.org
+---
 
--Sergey
+Changelog:
+v2:
+- Revised patch with minimal intrusion. i.e. don't change #size-cells
+  of device node.
 
-> >    "^bhf,.*":
-> >      description: Beckhoff Automation GmbH & Co. KG
-> >    "^bitmain,.*":
-> > -- 
-> > 2.25.1
-> > 
+ arch/arm/boot/dts/dra7.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index d78b684e7fca..058b8cbb8ef3 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -148,6 +148,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0x0 0x0 0x0 0xc0000000>;
++		dma-ranges = <0x80000000 0x0 0x80000000 0x80000000>;
+ 		ti,hwmods = "l3_main_1", "l3_main_2";
+ 		reg = <0x0 0x44000000 0x0 0x1000000>,
+ 		      <0x0 0x45000000 0x0 0x1000>;
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
