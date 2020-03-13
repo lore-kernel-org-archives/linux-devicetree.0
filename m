@@ -2,98 +2,106 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08B4C4CECE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1EAC4CECE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A622074A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAFDB2074D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:18:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbgCMQMn (ORCPT
+        id S1726794AbgCMQSl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:12:43 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:12635 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgCMQMn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 12:12:43 -0400
-Received: from [10.28.90.144] (10.28.90.144) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Sat, 14 Mar 2020
- 00:13:10 +0800
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
- arm,smc-wdt compatible
-To:     Julius Werner <jwerner@chromium.org>
-CC:     Evan Benn <evanbenn@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Yonghui Yu <yonghui.yu@amlogic.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Fri, 13 Mar 2020 12:18:41 -0400
+Received: from mga07.intel.com ([134.134.136.100]:11114 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbgCMQSk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 12:18:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 09:18:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
+   d="scan'208";a="261935961"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 13 Mar 2020 09:18:35 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jCn1A-009IkE-Vj; Fri, 13 Mar 2020 18:18:36 +0200
+Date:   Fri, 13 Mar 2020 18:18:36 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Al Cooper <alcooperx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        bcm-kernel-feedback-list@broadcom.com,
         "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <20200219223046.GA16537@bogus>
- <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
- <20200219232005.GA9737@roeck-us.net>
- <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
- <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com>
- <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
- <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
- <CAODwPW8WwntWb_=dg2J3AMy-gHw2QvNj_g98SufN13+AuGnUSg@mail.gmail.com>
- <b4ba821a-eef6-4aea-1eba-897171b92c41@amlogic.com>
- <CAKz_xw2T1UceCwFZnBxg6WVp2D4+MziyvQPdU6tEnR_BdLh-PQ@mail.gmail.com>
- <ad28aa47-0490-937f-898f-0e4695ef6ec6@amlogic.com>
- <CAODwPW9oxx33hkO3kv2_G8YyLWvigVHkfJU7xUHLVgB7QU2i3Q@mail.gmail.com>
-From:   Xingyu Chen <xingyu.chen@amlogic.com>
-Message-ID: <6e846246-dfd5-c002-cd61-41c2d11a2e54@amlogic.com>
-Date:   Sat, 14 Mar 2020 00:13:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 0/4] Add XHCI, EHCI and OHCI support for Broadcom STB
+ SoS's
+Message-ID: <20200313161836.GX1922688@smile.fi.intel.com>
+References: <20200313141545.31943-1-alcooperx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAODwPW9oxx33hkO3kv2_G8YyLWvigVHkfJU7xUHLVgB7QU2i3Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.28.90.144]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313141545.31943-1-alcooperx@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Julius
+On Fri, Mar 13, 2020 at 10:15:41AM -0400, Al Cooper wrote:
+> This adds support for the XHCI, EHCI and OHCI host controllers found
+> in Broadcom STB SoC's. These drivers depend on getting access to the
+> new Broadcom STB USB PHY driver through a device-tree phandle and
+> will fail if the driver is not available.
 
-On 2020/3/12 3:24, Julius Werner wrote:
->> - *_INIT and *GETTIMEOUT.      Although your driver does not need them, could you take them as options in your driver ?
-> The driver already has SMCWD_INFO which is used during probe to
-> retrieve the minimum and maximum timeout values supported by the
-> hardware at probe time. Maybe it would make sense to rename that to
-> INIT (which would still return those values, but can also do whatever
-> initialization needs to be done in TF)?
-Yes，INIT would make sense for me.
-> GETTIMELEFT I agree we can
-> implement optionally, and other platforms would just return a
-> PSCI_RET_NOT_SUPPORTED for that.
->
->> - *_RESETNOW.      It is used to reset the system right now, similar to your SOFT RESET. could you reserve an operation index in ATF ?
-> Just curious, why do you need this? Shouldn't you use the PSCI
-> standard SYSTEM_RESET SMC for that? (If you want to control exactly
-> how the platform is reset, you could also use SYSTEM_RESET2 with a
-> vendor-defined reset_type.)
-I just wanted it to be compatible with other OS，and I  think it over, 
-maybe I can also use the
-PSCI interface to execuate the system reset on the other OS. Anyway, 
-please ignore this request.
+Hint to the future:
 
-Thanks.
->
-> .
+	scripts/get_maintainer.pl --git --git-min-percent=67 ...
+
+> 
+> Al Cooper (4):
+>   dt-bindings: Add Broadcom STB USB support
+>   usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
+>   usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+>   usb: host: Add ability to build new Broadcom STB USB drivers
+> 
+>  .../bindings/usb/brcm,bcm7445-ehci.yaml       |  60 ++++
+>  .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
+>  MAINTAINERS                                   |   9 +
+>  drivers/usb/host/Kconfig                      |  20 ++
+>  drivers/usb/host/Makefile                     |  20 +-
+>  drivers/usb/host/ehci-brcm.c                  | 288 ++++++++++++++++++
+>  drivers/usb/host/xhci-brcm.c                  |  16 +
+>  drivers/usb/host/xhci-brcm.h                  |  16 +
+>  drivers/usb/host/xhci-plat.c                  |  11 +
+>  9 files changed, 435 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+>  create mode 100644 drivers/usb/host/ehci-brcm.c
+>  create mode 100644 drivers/usb/host/xhci-brcm.c
+>  create mode 100644 drivers/usb/host/xhci-brcm.h
+> 
+> -- 
+> 2.17.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
