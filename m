@@ -2,93 +2,135 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C630C4CECE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6906BC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A6920746
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D84E206EB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BZOzPLz4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UGBliQoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgCMK3v (ORCPT
+        id S1726545AbgCMKhf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:29:51 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:13920 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726553AbgCMK3p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 06:29:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584095385; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=fgDWAMgUeJqRKJwknQJfUuQdOToB6apgOLXfL6tOhyY=; b=BZOzPLz4GpYtD9pxsWJ0Y/uM9LwEvXkdWI+HHJAjCrC2r6DKrdJ50dHGU+KUMRfGqW3ps5PF
- XpeKXI8eePES3NLVH9Nrka8sRq/8gfQIJjxUpi3px49DEovOcn4rnZwjsl4Z6eFo9+spkN65
- nvndH018EpSyeaynmpyiqa6pts4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6b6097.7fba7a8ea960-smtp-out-n01;
- Fri, 13 Mar 2020 10:29:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ABF4EC44792; Fri, 13 Mar 2020 10:29:43 +0000 (UTC)
-Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 45019C432C2;
-        Fri, 13 Mar 2020 10:29:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 45019C432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-From:   Akash Asthana <akashast@codeaurora.org>
-To:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, c_skakit@codeaurora.org, mka@chromium.org,
-        Akash Asthana <akashast@codeaurora.org>
-Subject: [PATCH V5 3/3] dt-bindings: geni-se: Add binding for UART pin swap
-Date:   Fri, 13 Mar 2020 15:59:10 +0530
-Message-Id: <1584095350-841-4-git-send-email-akashast@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
-References: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
+        Fri, 13 Mar 2020 06:37:35 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52362 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbgCMKhf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 06:37:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 11so9336366wmo.2;
+        Fri, 13 Mar 2020 03:37:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=rQjq8uKoRrlLiAy2jC9SVIhkfPttmNZUWXbQLhDZM9k=;
+        b=UGBliQojrFTzcrINN1hj7VaIxQhifS1a+pj8O7CpftaSMpdX/jXa/e2ShvDTKrPtDg
+         /fRJICfUaCPHZHAL/PoJGQZLQbqzlIcyPGAvhNetLxmKmIuVbhuVT/3YC2+sLn6/l/lz
+         YcEuUOumTYQtWC8aSHnVQVQmxI50A+8b/Z1vom5CTboDz/Mr5ZUAmZNTd8D4XkhhACEO
+         2qdHlYmOrqcec5DzyzF0TDDIPkPkJowmXOs3vydQavbqCyfGBQgcpKRnRAiVbOG50JRJ
+         4VXELyeSJOTeO7IQmWQtFWAg96CAYdDzO7cj57V0b5pfjxV5jJWQRlXM66ff9YFUmnVx
+         dDBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rQjq8uKoRrlLiAy2jC9SVIhkfPttmNZUWXbQLhDZM9k=;
+        b=n27B3IQO7RURQVW+annWOAR+hjkzkq4sHop+7Hac/sy/hZT+wzosTBvnPB2DZyZHaM
+         9RSLSHWQ0g+zZEiClrVH639hI5xmaFbE8gcsMXGVa50MNI9SB3kkdf3A+zKIOg4S7HhH
+         6s9fm4486gLcoBjTh1MiDPnuNBhFJgLNmxx695efZt2Aj/hWV7MkFZkpD+YvJ09t7Uxj
+         hg2OwKAL5b7Ld/UJxT6K8PxmtcHo10Abo2wRcy3+m808b+PafH5hrIRyLxWdIlnGa4ut
+         XOKmLlEzR1xQs78Ekk6njsmigwe0x/t5Z1scImYtgy2Sprr4TmMrEf1dHQeenquu0rfj
+         Vuug==
+X-Gm-Message-State: ANhLgQ3MNUVX19FxLbxKjaFyXSHEEmTYA9Tm73NfqyceM1X6rhfq3PV2
+        UQCrPI3/zuG+JxSWYgYRDlvDOiL6
+X-Google-Smtp-Source: ADFU+vsvWMWzKMxNqeNsKtP8NvCy424vINQYoxocmtCUEXMyobJjwyOn9tG53zX72IKMsG6O9hK2aw==
+X-Received: by 2002:a1c:2048:: with SMTP id g69mr10462496wmg.187.1584095853079;
+        Fri, 13 Mar 2020 03:37:33 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id o3sm17688551wme.36.2020.03.13.03.37.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 13 Mar 2020 03:37:32 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] ARM: dts: rockchip: add missing @0 to memory nodenames
+Date:   Fri, 13 Mar 2020 11:37:25 +0100
+Message-Id: <20200313103726.1678-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add documentation to support RX/TX/CTS/RTS pin swap in HW.
+A test with the command below gives for example this error:
 
-Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
+False schema does not allow
+{'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
+
+The memory nodes all have a reg property that requires '@' in
+the nodename. Fix this error by adding the missing '@0' to
+the involved memory nodenames.
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
+schemas/root-node.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
-Changes in V5:
- -  As per Matthias's comment, remove rx-tx-cts-rts-swap property from UART 
-    child node.
+Changes v2:
+  Skip rk3288-veyron
+---
+ arch/arm/boot/dts/rk3288-phycore-som.dtsi | 2 +-
+ arch/arm/boot/dts/rk3288-tinker.dtsi      | 2 +-
+ arch/arm/boot/dts/rk3288-vyasa.dts        | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
- Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-index 533400b..85f9028 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
-@@ -172,6 +172,12 @@ patternProperties:
-           - description: UART core irq
-           - description: Wakeup irq (RX GPIO)
+diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+index 77a47b9b7..9e76166c3 100644
+--- a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
++++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+@@ -16,7 +16,7 @@
+ 	 * Set the minimum memory size here and
+ 	 * let the bootloader set the real size.
+ 	 */
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x8000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+index 312582c1b..77ae303b0 100644
+--- a/arch/arm/boot/dts/rk3288-tinker.dtsi
++++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+@@ -12,7 +12,7 @@
+ 		stdout-path = "serial2:115200n8";
+ 	};
  
-+      rx-tx-swap:
-+        description: RX and TX pins are swapped
-+
-+      cts-rts-swap:
-+        description: CTS and RTS pins are swapped
-+
-     required:
-       - compatible
-       - interrupts
+-	memory {
++	memory@0 {
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 		device_type = "memory";
+ 	};
+diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
+index ba06e9f97..889b95e95 100644
+--- a/arch/arm/boot/dts/rk3288-vyasa.dts
++++ b/arch/arm/boot/dts/rk3288-vyasa.dts
+@@ -14,7 +14,7 @@
+ 		stdout-path = &uart2;
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 		device_type = "memory";
+ 	};
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+2.11.0
+
