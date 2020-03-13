@@ -2,109 +2,121 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E39C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 22:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2907C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 22:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1737720752
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 22:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758822074A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 22:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584136926;
-	bh=CqkCJEyVopSKtTtmPK6XpPSIbCTDJ2KS3Po38Nx630U=;
+	s=default; t=1584137201;
+	bh=rGelNk+SkQCdQi0lqOoN/nBA1Tkvw/DSuALNSAJMJ9E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fMz5lAPYcpXZCospxMhr0YJhS4J511/YvffW/BwO2+TMzOvhOmZtAku/8yVhMGV0f
-	 6wrn4T59dC97gVPTsa1T16rgh89DXxuzfmw7t1+nPFRexxUI6+/X33qjli48d4ANP2
-	 EfZGuOm5uSQP7IWpOjrtB5w6OcVSzJ+FyMVOyWH8=
+	b=Zs2FyS5qrShZEwlo/IY/afIQE5ErY9gPi74ku3UFzGBUIxL1SAaZzlUndYSMxbsX7
+	 EQTeXehzkgklKzC0zYVe0C/H5b19sD55TmRXe1gjIi1rnw+6iZBPwiUYAZCL6pAeyi
+	 h/dQw4K1sm9Cfe5I85CeYvZMBW0fCFRUKEO7GKZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgCMWCF (ORCPT
+        id S1726637AbgCMWGl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 18:02:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41734 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbgCMWCF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 18:02:05 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i1so11070080oie.8;
-        Fri, 13 Mar 2020 15:02:04 -0700 (PDT)
+        Fri, 13 Mar 2020 18:06:41 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39592 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbgCMWGk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 18:06:40 -0400
+Received: by mail-oi1-f194.google.com with SMTP id d63so11113788oig.6;
+        Fri, 13 Mar 2020 15:06:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h+LbMp0wWLD3yyfWZGdmqW/q3jmbK4PSdXUPMZElXqk=;
-        b=jZ7jTpwuN3myyLan7UFw16RMKiATPbMoBfHyMucwN/IZkCbUDmVEixvglLGvCyVclv
-         7X22ixludocU0lYHJ3SttpTBgZMI7AyWhxUNaQSEo2vcPi63UIo0BYcS52TCuEebQaVK
-         txonBLkWk9dz2K4/ZIG86WNQsJw/20tLEA+7EEllXR1IMIN+0Jchl7BqpCoIv57Sy1J3
-         +lp9EQ+lV3RQtBSo6E5fpXs1RLdFxD8GbNbe/xiwaMnz/JRIc0s9VhSauv6qrqs2stLJ
-         h9UKeVwT34xpdNs0KlsbJUzFkQyzfpHCK1mjlu9+VJ6SB8ZLggpynRHcy1YYxawVw8iL
-         l1VQ==
-X-Gm-Message-State: ANhLgQ1QGRgzegZ+MDUsp+SIxl+1kt6wxqAskfUPUF1b03i1IG1dvgHL
-        K+S5TpdiV5E7vbTB2YG3Hg==
-X-Google-Smtp-Source: ADFU+vs/T3x4IUHm5oOlrPweulylbQR9uLmQne91+JKK5gdtsqTLFtZDXS2oeURgjSXrtiRh37cYcQ==
-X-Received: by 2002:aca:cc81:: with SMTP id c123mr8599085oig.74.1584136924263;
-        Fri, 13 Mar 2020 15:02:04 -0700 (PDT)
+        bh=ilzS0hJrGQZ6eyLJRBMPCbAkFbNW8hu+JqnsWG5936I=;
+        b=FMB1uWI5bE3snfrdo8OWuN5f+AQegdsYzLmOpXmzCBaEs3zaLgP6YckrC7824RnDWm
+         5PCAtaW9fUz/I14Ke83ThYWmiW+KSnxVhahqOOmoSfGlEOQbgfRnqCpfAtyL+iKAjz7d
+         YXluz5F2azda8faLqdNDyHDDRxP4mNKKDhx5+TGvuZCpp9bsi6Le8GqEkfT7JitwWhgP
+         5aQJHnrU7aVKWRz+TQcHN3nLIQRnka1Qs6kcd0bFQHVzDadim32980TMnqj3i4rxcp85
+         e3vb2ZlLpJyf4KUIggSg3HB/QxSK3pFAkD++52/r9/zubB6i8Bs81IVDmZ57yafoSqh7
+         ZYHQ==
+X-Gm-Message-State: ANhLgQ2GR2ZDcfG1GqZ7MMBkuZ8Zfitc9eCGGIO2yzVmUW2/glrVPxrD
+        qeHq45sbWVjyQ7kw5g1e4Q==
+X-Google-Smtp-Source: ADFU+vuN0h/7UXuNud4g4VDHnWNmJuW+Wfhs0pZvp6rDUJ7bcR6HzbpLy9YcuoijqL6RjgUhj/8JYA==
+X-Received: by 2002:aca:5ad5:: with SMTP id o204mr8463583oib.2.1584137199554;
+        Fri, 13 Mar 2020 15:06:39 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a64sm4411203oif.49.2020.03.13.15.02.03
+        by smtp.gmail.com with ESMTPSA id w21sm3324370otm.10.2020.03.13.15.06.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 15:02:03 -0700 (PDT)
-Received: (nullmailer pid 26133 invoked by uid 1000);
-        Fri, 13 Mar 2020 22:02:02 -0000
-Date:   Fri, 13 Mar 2020 17:02:02 -0500
+        Fri, 13 Mar 2020 15:06:39 -0700 (PDT)
+Received: (nullmailer pid 2933 invoked by uid 1000);
+        Fri, 13 Mar 2020 22:06:38 -0000
+Date:   Fri, 13 Mar 2020 17:06:38 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Al Cooper <alcooperx@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Al Cooper <alcooperx@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: Add Broadcom STB USB support
-Message-ID: <20200313220202.GA23539@bogus>
-References: <20200313141545.31943-1-alcooperx@gmail.com>
- <20200313141545.31943-2-alcooperx@gmail.com>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, c_skakit@codeaurora.org, mka@chromium.org
+Subject: Re: [PATCH V5 2/3] dt-bindings: geni-se: Add interconnect binding
+ for GENI QUP
+Message-ID: <20200313220638.GA30287@bogus>
+References: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
+ <1584095350-841-3-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313141545.31943-2-alcooperx@gmail.com>
+In-Reply-To: <1584095350-841-3-git-send-email-akashast@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Mar 2020 10:15:42 -0400, Al Cooper wrote:
-> Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
+On Fri, Mar 13, 2020 at 03:59:09PM +0530, Akash Asthana wrote:
+> Add documentation for the interconnect and interconnect-names properties
+> for the GENI QUP.
 > 
-> NOTE: The OHCI driver is not included because it uses the generic
->       platform driver.
-> 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
 > ---
->  .../bindings/usb/brcm,bcm7445-ehci.yaml       | 60 +++++++++++++++++++
->  .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
->  2 files changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+> Changes in V5:
+>  - Add interconnect property for QUP wrapper (parent node).
+>  - Add minItems = 2 for interconnect property in child nodes
 > 
+>  .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml       | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+> index 23282ab..533400b 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+> @@ -46,6 +46,12 @@ properties:
+>  
+>    ranges: true
+>  
+> +  interconnects:
+> +    maxItems: 1
+> +
+> +  interconnect-names:
+> +    const: qup-core
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -73,6 +79,16 @@ patternProperties:
+>          description: Serial engine core clock needed by the device.
+>          maxItems: 1
+>  
+> +      interconnects:
+> +         minItems: 2
+> +         maxItems: 3
+> +
+> +      interconnect-names:
+> +         items:
+> +           - const: qup-core
+> +           - const: qup-config
+> +           - const: qup-memory
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Don't you need 'minItems: 2' here?
 
-Error: Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dts:24.13-14 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1254417
-Please check and re-submit.
+Rob
