@@ -2,132 +2,149 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B928C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21791C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AB9520749
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:39:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="opfjYDwA"
+	by mail.kernel.org (Postfix) with ESMTP id 04E2420724
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgCMMjH (ORCPT
+        id S1726731AbgCMMmV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:39:07 -0400
-Received: from mail-vi1eur05on2063.outbound.protection.outlook.com ([40.107.21.63]:35649
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726621AbgCMMjH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:39:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dp9aMt/iQ3PAIlxMhxZ8VbWgGaF0futb8wXNbF1/4yJ5skx5wo7IxQYQ2G94LTnZwWZ5HxZxsPZCItj8cw/MheP6Vyv+fanP/9Vo2K7MyFq2Y65LylvANwY2mCdYIcmRTpuSyY7901Yj1TEwdJ4DBE0/ASk42EnE80VbwIdYjPKp6xErkUaG3HWa/DbBPyeQcabUpMEoOtx00MAa5OTZfNF9sB5Ttn2drds5YbLvOgauOTzkdgvHq0EFK+60G/Pbl6E875dFAQWz6o6XqJyRxdbtPWZdhtPEBemWmk3FUPHz5NW4oPST5sTsiVTPFbTodlQ+Jhu6IVMJeom7N8MZQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fydtms8A53pjXcwLQgyG68sUXzFH4iiB0fcBIYkX7lk=;
- b=AiUVm0jsjGgBOfIjnsp+v/jdmMwaPAe6+vGDFCtUZVFswKODUqAt4bywvyGWsYAgQgcFAs4DiwcKocpai7lIzwyi0YaIAt4d2bDkjk4rBrcqAEvUSj1kLprwPfz0SWDRo1LBKaO3FeTg1VYDe0ZdVTk+pipmzcj1ODidiJHnNDDyEJJ+XgAAVAp8IFkOX1iHwrS+zMSDyrjouJDMQK/FHfVnXOPJQF5uOPcDoxgZWfGD2kr0Xt7xIxbwrqtUkS8odGyfEN+WbyPT6Tldt60IhfPF16uitp80TT/oQOYcSy61nAmj+pFsBNcZYcUGvxHrojpvnrrgb9hILeFU1/Z89Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fydtms8A53pjXcwLQgyG68sUXzFH4iiB0fcBIYkX7lk=;
- b=opfjYDwA/VXbgUfDb6acfRiVp6oeTDT6QXnb8s6UIFo0wib5yfu2vZCUfBClyopVqGgJ3nZHhb9X4n25S58jtpmGp+KrX3L7wwZ2JwtX/10TSsi1xb0ve0KRGJKKLBvRzAy4LcVYx/y6Sz8xOfB2fg2E9/YrL+EsE7SKUgucEPw=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5553.eurprd04.prod.outlook.com (20.178.114.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Fri, 13 Mar 2020 12:39:04 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
- 12:39:03 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] ARM: dts: Makefile: build arm64 device tree
-Thread-Topic: [PATCH] ARM: dts: Makefile: build arm64 device tree
-Thread-Index: AQHV+OjclUu1XSl6U0KqPUg7uT17oKhGURQAgAAk21A=
-Date:   Fri, 13 Mar 2020 12:39:03 +0000
-Message-ID: <AM0PR04MB4481CD81915F8A9FB115A97788FA0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1584070314-26495-1-git-send-email-peng.fan@nxp.com>
- <CAK8P3a0r1stgYw2DGtsHpMWdBN7GM9miAsUo20NaJxwasQy4iA@mail.gmail.com>
-In-Reply-To: <CAK8P3a0r1stgYw2DGtsHpMWdBN7GM9miAsUo20NaJxwasQy4iA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fc415373-257f-453d-3945-08d7c74b838d
-x-ms-traffictypediagnostic: AM0PR04MB5553:|AM0PR04MB5553:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB5553238E243EBD8F8890352988FA0@AM0PR04MB5553.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 034119E4F6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(376002)(136003)(396003)(366004)(199004)(66556008)(52536014)(7696005)(6506007)(71200400001)(54906003)(8936002)(81156014)(33656002)(86362001)(186003)(53546011)(2906002)(55016002)(478600001)(64756008)(44832011)(4326008)(26005)(81166006)(76116006)(316002)(66446008)(66476007)(5660300002)(66946007)(9686003)(6916009)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5553;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4jq32IziV3+8VhusD/1KFMFxLBF34SKs/DHYAD32beWNHKSrbCBy/h22jRQfYM1613UQSAtB/Y5uRcZeXtQ958W8I7gr1wiMQTOp8f+c0PuzrIIj4zBq4AY6eKmIXb6Nzw/iuIj6hrCvMXA7+qLdJG1fE72Iv16FrJuvXEvobBbUItBDHFN12HItUpd1aUn34bqD3T0gWsgqbK9IM+80r5DaB3oKQFHUR8o843Dr8QPntdgz5P9tbjIodZApA3PFfakJgWM3h3i0W1qrn2ynVlAmhOboAxG+acjhSjzbiMZLDM9gYZp/i06bfQhYMeGp9rKnBvm0Vee8h1niwrPMe/GObpi9RCfpy9oZPPAf0LtU6rZJdsQibShAEkJ3KWRepE5TJqEzackjqWH9fQRnDPYmVEpybV3ui/DZ7fcLgXrRw8wh37LRDb2KSgdsGD9Z
-x-ms-exchange-antispam-messagedata: m8TOgXIZ89y/Vyd13b5kOc442PwI8kKNhB8nrd/PAk3aL9oSG95Hi85ilnpbwE5bR5aTHOv64NUxU1IBm5o8YBNjkAGvuqfLAhQrb1HoA266XHdiPOI6Vb9lOx9cQPUe1pwIT2f0V9MBz0GgPEJZoQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 13 Mar 2020 08:42:21 -0400
+Received: from sauhun.de ([88.99.104.3]:51458 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726681AbgCMMmV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:42:21 -0400
+Received: from localhost (p54B3314F.dip0.t-ipconnect.de [84.179.49.79])
+        by pokefinder.org (Postfix) with ESMTPSA id ED39D2C1ED4;
+        Fri, 13 Mar 2020 13:42:17 +0100 (CET)
+Date:   Fri, 13 Mar 2020 13:42:14 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-i3c@lists.infradead.org,
+        Kieran Bingham <kieran@ksquared.org.uk>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 7/7] i2c: core: hand over reserved devices when
+ requesting ancillary addresses
+Message-ID: <20200313124214.GA1299@ninjato>
+References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
+ <20200220172403.26062-8-wsa+renesas@sang-engineering.com>
+ <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc415373-257f-453d-3945-08d7c74b838d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2020 12:39:03.8900
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tIvbdiooAmJ+nUhq1iJooJXomtdeC/ihOtdeRo31pVAmNrP/TwfnPa0hDcCZPCFagTO4chXfRYlbGHrvGJMUAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5553
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQXJuZCwNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czogTWFrZWZpbGU6IGJ1
-aWxkIGFybTY0IGRldmljZSB0cmVlDQo+IA0KPiBPbiBGcmksIE1hciAxMywgMjAyMCBhdCA0OjM4
-IEFNIDxwZW5nLmZhbkBueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IFBlbmcgRmFuIDxw
-ZW5nLmZhbkBueHAuY29tPg0KPiA+DQo+ID4gVG8gc3VwcG9ydCBhYXJjaDMyIG1vZGUgbGludXgg
-b24gYWFyY2g2NCBoYXJkd2FyZSwgd2UgbmVlZCBidWlsZCB0aGUNCj4gPiBkZXZpY2UgdHJlZSwg
-c28gaW5jbHVkZSB0aGUgYXJtNjQgZGV2aWNlIHRyZWUgcGF0aC4NCj4gPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiA+IC0tLQ0KPiANCj4gVGhlcmUg
-YXJlIGEgZmV3IG90aGVyIHBsYXRmb3JtcyB3aXRoIHNpbWlsYXIgcmVxdWlyZW1lbnRzLCBpbiBw
-YXJ0aWN1bGFyDQo+IGJjbTI4MzcsIHNvIG1heWJlIHRyeSBkb2luZyBpdCB0aGUgc2FtZSB3YXkg
-dGhleSBkbywgc2VlDQo+IGFyY2gvYXJtNjQvYm9vdC9kdHMvYnJvYWRjb20vYmNtMjgzNy1ycGkt
-My1iLmR0cw0KPiANCj4gPiBWMToNCj4gPiAgVGhpcyBpcyBqdXN0IHRoZSBkZXZpY2UgdHJlZSBw
-YXJ0LiBCZXNpZGVzIHRoaXMsICBJIGFtIG5vdCBzdXJlDQo+ID4gd2hldGhlciBuZWVkIHRvIGNy
-ZWF0ZSBhIHN0YW5kYWxvbmUgZGVmY29uZmlnIHVuZGVyIGFybTMyICBmb3IgYWFyY2gzMg0KPiA+
-IG1vZGUgbGludXggb24gYWFyY2g2NCBoYXJkd2FyZSwgb3IgdXNlIG11bHRpX3Y3X2RlZmNvbmZp
-Zy4NCj4gPiAgbXVsdGlfdjdfZGVmY29uZmlnIHNob3VsZCBiZSBvaywgbmVlZCB0byBpbmNsdWRl
-IExQQUUgY29uZmlnLg0KPiANCj4gSSdkIHJhdGhlciBub3QgaGF2ZSBhIHN0YW5kYWxvbmUgZGVm
-Y29uZmlnIGZvciBpdCwgZ2l2ZW4gdGhhdCB3ZSBoYXZlIGEgc2luZ2xlDQo+IGRlZmNvbmZpZyBm
-b3IgYWxsIGFybXY2L2FybXY3L2FybXY3aGYgaS5teCBtYWNoaW5lcy4NCj4gDQo+IFRoZXJlIHdh
-cyBhIHN1Z2dlc3Rpb24gdG8gdXNlIGEgZnJhZ21lbnQgZm9yIGVuYWJsaW5nIGFuIExQQUUNCj4g
-bXVsdGlfdjdfZGVmY29uZmlnIHJlY2VudGx5LCB3aGljaCBJIHRoaW5rIGlzIHN0aWxsIHVuZGVy
-IGRpc2N1c3Npb24gYnV0IHNob3VsZA0KPiBhbHNvIGhlbHAgaGVyZSwgYm90aCB3aXRoIGlteF92
-Nl92N19kZWZjb25maWcgYW5kIG11bHRpX3Y3X2RlZmNvbmZpZy4NCj4gDQo+IENhbiB5b3UgcmVt
-aW5kIHVzIHdoeSB0aGlzIHBsYXRmb3JtIG5lZWRzIExQQUU/IElzIGl0IG9ubHkgbmVlZGVkIHRv
-IHN1cHBvcnQNCj4gbW9yZSB0aGFuIDRHQiBvZiBSQU0sIG9yIHNvbWV0aGluZyBlbHNlIG9uIHRv
-cCBvZiB0aGF0Pw0KDQpDdXJyZW50bHkgSSBvbmx5IHRlc3RlZCBMUEFFIGVuYWJsZWQgYXJtMzIg
-a2VybmVsLCBJJ2xsIGdpdmUgYSB0cnkgd2l0aCBMUEFFDQpkaXNhYmxlZCBsYXRlci4NCg0KVGhh
-bmtzLA0KUGVuZy4NCj4gTm90ZSB0aGF0IHVzZXJzIHRoYXQgYWN0dWFsbHkgaGF2ZSA0R0Igb3Ig
-bW9yZSBvbiBpLm14OCBzaG91bGQgcmVhbGx5IHJ1biBhDQo+IDY0LWJpdCBrZXJuZWwgYW55d2F5
-LCBldmVuIGlmIHRoZXkgcHJlZmVyIHVzaW5nIDMyLWJpdCB1c2VyIHNwYWNlLg0KPiANCj4gVHVy
-bmluZyBvbiBMUEFFIG5vdCBvbmx5IGRpc2FibGVzIGlteDMgYW5kIGlteDUgYnV0IGFsc28gdGhl
-IENvcnRleC1BOSBiYXNlZA0KPiBpbXg2IHZhcmlhbnRzLg0KPiANCj4gICAgICAgQXJuZA0K
+
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+> > @@ -984,7 +986,21 @@ struct i2c_client *i2c_new_ancillary_device(struct=
+ i2c_client *client,
+> >                         of_property_read_u32_index(np, "reg", i, &addr);
+> >         }
+> >
+> > -       dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name,=
+ addr);
+> > +       dev_info(adapter_dev, "Address for %s : 0x%x\n", name, addr);
+> > +
+> > +       /* No need to scan muxes, siblings must sit on the same adapter=
+ */
+> > +       reserved_dev =3D device_find_child(adapter_dev, &addr, __i2c_ch=
+eck_addr_busy);
+> > +       reserved_client =3D i2c_verify_client(reserved_dev);
+> > +
+> > +       if (reserved_client) {
+> > +               if (reserved_client->dev.of_node !=3D np ||
+> > +                   strcmp(reserved_client->name, I2C_RESERVED_DRV_NAME=
+) !=3D 0)
+> > +                       return ERR_PTR(-EBUSY);
+>=20
+> Missing put_device(reserved_dev).
+
+Actually, I think the code could even be like this:
+
+	struct i2c_client *reserved_client =3D NULL;
+
+	...
+
+	reserved_dev =3D device_find_child(adapter_dev, &addr, __i2c_check_addr_bu=
+sy);
+	if (reserved_dev) {
+		reserved_np =3D reserved_dev->of_node;
+		reserved_client =3D i2c_verify_client(reserved_dev);
+		put_device(reserved_dev);
+	}
+
+	if (reserved_client) {
+		if (reserved_np !=3D np ||
+		    strcmp(reserved_client->name, I2C_RESERVED_DRV_NAME) !=3D 0)
+			return ERR_PTR(-EBUSY);
+
+		strlcpy(reserved_client->name, I2C_DUMMY_DRV_NAME, sizeof(client->name));
+		return reserved_client;
+	}
+
+	return i2c_new_dummy_device(client->adapter, addr);
+
+We put the device early - as soon we don't access the struct anymore. I
+think we don't need the refcnt any further because what we are doing
+here is to hand over the initial refcnt from the core to the requesting
+driver. We turn the device from "reserved" (internally managed) to
+"dummy" (managed by the driver). So, I think the code is okay regarding
+the struct device. I will have a second look when it comes to
+concurrency problems regarding the struct i2c_client, though.
+
+> (perhaps i2c_verify_client() checking dev was not such a great idea, as
+>  callers need to act on dev && !verified anyway?)
+
+Yeah, since I refactored the ACPI code as well, patch 1 from this series
+can probably go.
+
+Thanks again for your review, Geert!
+
+
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5rf6IACgkQFA3kzBSg
+KbbLIw/+MOFwZSkWXt3ikwM+7rKei/WFEDfa/TZK7lKKvujaNfalPdxSx8w7M5dc
+V5uUDpEeCiJAn+TO+vOv+i5McITg+GDMiUQvbIqAtzVh+2jqNEkJIaMz+5wlefWG
+hcpujZdvPfrQNPf1FM77HO0WI9oChGBJkMb9tLbzm5yHLYh4zMq0aK+Z+oZQ7441
+Lz2t2Yp+u4ikEHCvZWQVzOfyGRb2r/4nI5VuLbk8BhnlctKB3ALytdGws0QSctjH
+qPz0ePJQ4kXQ/Ch1oVOh9LfTGRGlk3hA2Sa1G0Kk9t42e+C2DmFWh8AYV16kZ8n7
+8MF/mUVBrebEzijOyDcUbBt9LYJwr+lsuej94/afVqk68b+s/cal2ZTYjNrX5QM3
+/FNYqVV/tvmzmxPoO93IxFBPYethKY7i0jFgflmkzFhWGZv2H6UyU9U0UbH0dDlC
+Cw8hjC1de2zxLP2xezv2vv5DH7Py1SFDfAU4xc9Xh/7HQFE9kLYbESG9cEh7mWLU
+FC6T9KRrrzkkFNn0cCo0wqmqn+yrA5a9YGkTfQg733bxB0DQINcfo7m7FQPiS1OY
+7ZxNfj9IVIpOShOi+/26bTkj8AemRPnRCy9MAHREFza55LU+7GGDkHQJKDqKZI2q
+6oI1uERpxeyZoQMTEhRiR8IM2CGy9LtL3ZGe11+NI6aXGe+hdL4=
+=VJ9d
+-----END PGP SIGNATURE-----
+
+--d6Gm4EdcadzBjdND--
