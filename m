@@ -3,36 +3,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3059EC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CEEC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F6C205F4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA8D2074C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgCMUc7 (ORCPT
+        id S1727210AbgCMUfb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 16:32:59 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:49123 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbgCMUc7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 16:32:59 -0400
+        Fri, 13 Mar 2020 16:35:31 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:40789 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgCMUfb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 16:35:31 -0400
 X-Originating-IP: 87.231.134.186
 Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
         (Authenticated sender: gregory.clement@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 327F51C0005;
-        Fri, 13 Mar 2020 20:32:57 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 3A460240009;
+        Fri, 13 Mar 2020 20:35:27 +0000 (UTC)
 From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Tomasz Maciej Nowak <tmn505@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: marvell: build ESPRESSObin variants
-In-Reply-To: <20200227164842.11116-2-tmn505@gmail.com>
-References: <20200227164842.11116-1-tmn505@gmail.com> <20200227164842.11116-2-tmn505@gmail.com>
-Date:   Fri, 13 Mar 2020 21:32:56 +0100
-Message-ID: <87zhckxafb.fsf@FE-laptop>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>,
+        Vadym Kochan <vadym.kochan@plvision.eu>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH] arm64: dts: marvell: fix non-existed cpu referrence in armada-ap806-dual.dtsi
+In-Reply-To: <20200209212016.27062-1-vadym.kochan@plvision.eu>
+References: <20200209212016.27062-1-vadym.kochan@plvision.eu>
+Date:   Fri, 13 Mar 2020 21:35:26 +0100
+Message-ID: <87v9n8xab5.fsf@FE-laptop>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
@@ -40,14 +48,14 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Hi Vadym,
 
-> The commit adding ESPRESSObin variants didn't include those in Makefile to
-> be built.
+> armada-ap806-dual.dtsi includes armada-ap806.dtsi which describes
+> thermal zones for 4 cpus but only cpu0 and cpu1 only exists for dual
+> configuration, this makes dtb compilation fail. Fix it by removing
+> thermal zone nodes for non-existed cpus for dual configuration.
 >
-> Fixes: 447b878935 ("arm64: dts: marvell: add ESPRESSObin variants")
-> Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-
+> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
 
 Applied on mvebu/dt64
 
@@ -56,25 +64,25 @@ Thanks,
 Gregory
 
 > ---
->  arch/arm64/boot/dts/marvell/Makefile | 3 +++
->  1 file changed, 3 insertions(+)
+>  arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-> index f1b5127f0b89..3e5f2e7a040c 100644
-> --- a/arch/arm64/boot/dts/marvell/Makefile
-> +++ b/arch/arm64/boot/dts/marvell/Makefile
-> @@ -2,6 +2,9 @@
->  # Mvebu SoC Family
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
-> +dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin-emmc.dtb
-> +dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin-v7.dtb
-> +dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin-v7-emmc.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-turris-mox.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-uDPU.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+> index 09849558a776..fcab5173fe67 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+> @@ -53,4 +53,9 @@
+>  			cache-sets = <512>;
+>  		};
+>  	};
+> +
+> +	thermal-zones {
+> +		/delete-node/ ap-thermal-cpu2;
+> +		/delete-node/ ap-thermal-cpu3;
+> +	};
+>  };
 > -- 
-> 2.25.1
+> 2.17.1
 >
 
 -- 
