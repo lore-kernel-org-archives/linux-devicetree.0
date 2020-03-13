@@ -2,203 +2,136 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FFBC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 14:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 826B4C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 14:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4C7206FA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 14:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2F6206FA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 14:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sq4XHVmj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AEkeXok9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgCMORT (ORCPT
+        id S1726691AbgCMOUL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:17:19 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49282 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgCMORT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 10:17:19 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 548C75F;
-        Fri, 13 Mar 2020 15:17:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584109036;
-        bh=cNWnjF6VI23jiFmMB2Z9kPjXU1GPF9FYUM8c0rkqsfs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sq4XHVmjlbnnW+wogjp1YdiXGbDHSx42KHhulBqivBzTCxtqFKJ8mFo0dlzHTI9ar
-         9Cn1ADG+fwz17GazAhlgeNdfuDglKJiKysVreka8tsoddZZ9lLKGEhEGt5OkqwC8RU
-         bPX/VD6oJDBoujSTb8b7SL+xL1BOwc//jiVaDlRg=
-Date:   Fri, 13 Mar 2020 16:17:13 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Phong LE <ple@baylibre.com>, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net, sam@ravnborg.org,
-        mripard@kernel.org, heiko.stuebner@theobroma-systems.com,
-        linus.walleij@linaro.org, stephan@gerhold.net, icenowy@aosc.io,
-        broonie@kernel.org, mchehab+samsung@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, andriy.shevchenko@linux.intel.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: add it66121 bindings
-Message-ID: <20200313141713.GG4751@pendragon.ideasonboard.com>
-References: <20200311125135.30832-1-ple@baylibre.com>
- <20200311125135.30832-3-ple@baylibre.com>
- <20200313134013.GC4751@pendragon.ideasonboard.com>
- <03d5bb7f-db1b-79df-bd46-3ac0f3b4feb1@baylibre.com>
+        Fri, 13 Mar 2020 10:20:11 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42922 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgCMOUK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 10:20:10 -0400
+Received: by mail-qt1-f193.google.com with SMTP id g16so7568971qtp.9;
+        Fri, 13 Mar 2020 07:20:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w7SDY5/fpOjOmdh4X9ZXg63Zr2hkjByLSGBRaJDpBEA=;
+        b=AEkeXok98OUd++fJAFsQzgZI2Rx8lH6Bi9saeiY1p9H0oX1jYZLJl1sH0mNOKnYTU9
+         njtVRtqSPxM3Dg6HM2jr0isPpzBTGdjgzTP6e3fkijeAIvbiHbuZCnvfqckuxn1TxCyn
+         5ptAPXcE8oWNWjC2bYN+BvoRRbXPEKy87cayb7b5HLMbjvpMxOXVb2VOK5ZpoXGjlisM
+         UqkPV5nkySCedyoBdpoe4Yq8Z88pVB/+5DluVDdcK7J7HlWVGgWiIVebk41x7FZtJAKn
+         ILly808MHtTAwsXCx/0G9F7BgLpyhc0iOCrk1f9HW+sCgfnKIipfV3oKbdW6aF1h9wE5
+         fYbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w7SDY5/fpOjOmdh4X9ZXg63Zr2hkjByLSGBRaJDpBEA=;
+        b=nbWQzXfdZu4T9kWKoraaO+Gv6iFIv1byAgFkUgxhdk4iqgtnAFcyeQbs1EM8TesIc+
+         R23cWBatHcTDxBHSs6LnNn52RMjhrXmQ9raRj+ywpY9h97rlimHJXSfm4FEukX2Swb/4
+         E9cu0XY2/M3XWLed/YBe2Zvc/waPjO3qRWvbpu1RQ/MAzPkz/G65ZKgLSqjXQn4hQyQH
+         PRTXhX4q+WloSHfv97QPbSR9yzE1pXDY/KPlsxaLfhyALVPcn5PWBRsH8Lp3lome/Q9B
+         m297dOihwBZyNveJTtgRSdfsCUHlLlfahwerJlWt0xdNrnFXziIEIe9vNGX2bZC0NPEq
+         OH8g==
+X-Gm-Message-State: ANhLgQ3HU1oNgHC6rfhRt9UKBoRy1S1oXo5SIYLYG6SF8AuChgSvmkiM
+        DzZmWUNUIgfyE0KpGS8GaKY7QD7n
+X-Google-Smtp-Source: ADFU+vv44sZ1pQy3T+J2li3c8ABbUHHJlzuJSLbRGaJg931Ig1LRAWuHc9eLbkCwWLxwovm62Xo6tA==
+X-Received: by 2002:ac8:385b:: with SMTP id r27mr5330556qtb.145.1584109209322;
+        Fri, 13 Mar 2020 07:20:09 -0700 (PDT)
+Received: from ubuntu (ool-45785633.dyn.optonline.net. [69.120.86.51])
+        by smtp.gmail.com with ESMTPSA id 68sm12623853qkh.75.2020.03.13.07.20.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 07:20:07 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 10:20:05 -0400
+From:   Vivek Unune <npcomplete13@gmail.com>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        ezequiel@collabora.com, akash@openedev.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: Add Hugsun X99 IR receiver and
+ power led
+Message-ID: <20200313142005.GA25349@ubuntu>
+References: <20200313000112.19419-1-npcomplete13@gmail.com>
+ <7f294dd5-3188-e2d6-dd49-4b2afb04455a@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <03d5bb7f-db1b-79df-bd46-3ac0f3b4feb1@baylibre.com>
+In-Reply-To: <7f294dd5-3188-e2d6-dd49-4b2afb04455a@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Neil,
-
-On Fri, Mar 13, 2020 at 03:12:13PM +0100, Neil Armstrong wrote:
-> On 13/03/2020 14:40, Laurent Pinchart wrote:
-> > On Wed, Mar 11, 2020 at 01:51:33PM +0100, Phong LE wrote:
-> >> Add the ITE bridge HDMI it66121 bindings.
-> >>
-> >> Signed-off-by: Phong LE <ple@baylibre.com>
-> >> ---
-> >>  .../bindings/display/bridge/ite,it66121.yaml  | 98 +++++++++++++++++++
-> >>  1 file changed, 98 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> >> new file mode 100644
-> >> index 000000000000..1717e880d130
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> >> @@ -0,0 +1,98 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/display/bridge/ite,it66121.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: ITE it66121 HDMI bridge Device Tree Bindings
-> >> +
-> >> +maintainers:
-> >> +  - Phong LE <ple@baylibre.com>
-> >> +  - Neil Armstrong <narmstrong@baylibre.com>
-> >> +
-> >> +description: |
-> >> +  The IT66121 is a high-performance and low-power single channel HDMI
-> >> +  transmitter, fully compliant with HDMI 1.3a, HDCP 1.2 and backward compatible
-> >> +  to DVI 1.0 specifications.
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    const: ite,it66121
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +    description: base I2C address of the device
-> >> +
-> >> +  reset-gpios:
-> >> +    maxItems: 1
-> >> +    description: GPIO connected to active low reset
-> >> +
-> >> +  vrf12-supply:
-> >> +    maxItems: 1
-> >> +    description: Regulator for 1.2V analog core power.
-> >> +
-> >> +  vcn33-supply:
-> >> +    maxItems: 1
-> >> +    description: Regulator for 3.3V digital core power.
-> >> +
-> >> +  vcn18-supply:
-> >> +    maxItems: 1
-> >> +    description: Regulator for 1.8V IO core power.
-> >> +
-> >> +  interrupts:
-> >> +    maxItems: 1
-> >> +
-> >> +  pclk-dual-edge:
-> >> +    maxItems: 1
-> >> +    description: enable pclk dual edge mode.
-> > 
-> > I'm having a bit of trouble understanding how this operates. Looking at
-> > the driver code the property is only taken into account to calculate the
-> > maximum allowed frequency. How is the IT66121 configured for single vs.
-> > dual pixel clock edge mode ?
+On Fri, Mar 13, 2020 at 09:32:27AM +0100, Johan Jonker wrote:
+> Hi Vivek,
 > 
-> Dual edge mode is Dual-Data-Rate mode, the normal mode is MEDIA_BUS_FMT_RGB888_1X24 and dual edge is
-> MEDIA_BUS_FMT_RGB888_2X12_LE (or MEDIA_BUS_FMT_RGB888_2X12_BE, not sure) on a single clock period.
+> The 'power-led' need some changes.
 > 
-> This should be negociated at runtime, but the bus width should be specified somewhere to select
-> one of the modes.
+> From leds-gpio.yaml:
+> 
+> patternProperties:
+>   # The first form is preferred, but fall back to just 'led' anywhere in the
+>   # node name to at least catch some child nodes.
+>   "(^led-[0-9a-f]$|led)":
+>     type: object
+> 
+> Test with:
+> make -k ARCH=arm64 dtbs_check
+> 
+> arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dt.yaml: leds:
+> power-led:linux,default-trigger:0: 'none' is not one of ['backlight',
+> 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
+> 
+> On 3/13/20 1:01 AM, Vivek Unune wrote:
+> >  - Add Hugsun X99 IR receiver and power led
+> >  - Remove pwm0 node as it interferes with pwer LED gpio
+> 
+> pwer => power
+> 
 
-How about replacing this property by bus-width to report the connected
-bus width ? It should then become an endpoint property.
+Hi Johan,
 
-> >> +
-> >> +  port:
-> >> +    type: object
-> >> +
-> >> +    properties:
-> >> +      endpoint:
-> >> +        type: object
-> >> +        description: |
-> >> +          Input endpoints of the bridge.
-> >> +
-> >> +    required:
-> >> +      - endpoint
-> > 
-> > You should have two ports, one for the bridge input, and one for the
-> > bridge output.
-> > 
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +  - reset-gpios
-> >> +  - vrf12-supply
-> >> +  - vcn33-supply
-> >> +  - vcn18-supply
-> >> +  - interrupts
-> >> +  - port
-> >> +
-> >> +additionalProperties: false
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    i2c6 {
-> >> +      #address-cells = <1>;
-> >> +      #size-cells = <0>;
-> >> +
-> >> +      it66121hdmitx: it66121hdmitx@4c {
-> >> +        compatible = "ite,it66121";
-> >> +        pinctrl-names = "default";
-> >> +        pinctrl-0 = <&ite_pins_default>;
-> >> +        vcn33-supply = <&mt6358_vcn33_wifi_reg>;
-> >> +        vcn18-supply = <&mt6358_vcn18_reg>;
-> >> +        vrf12-supply = <&mt6358_vrf12_reg>;
-> >> +        reset-gpios = <&pio 160 1 /* GPIO_ACTIVE_LOW */>;
-> >> +        interrupt-parent = <&pio>;
-> >> +        interrupts = <4 8 /* IRQ_TYPE_LEVEL_LOW */>;
-> >> +        reg = <0x4c>;
-> >> +        pclk-dual-edge;
-> >> +
-> >> +        port {
-> >> +          it66121_in: endpoint {
-> >> +            remote-endpoint = <&display_out>;
-> >> +          };
-> >> +        };
-> >> +      };
-> >> +    };
+I'll fix those in my next version. Here's what I intended to to:
 
--- 
-Regards,
+1. Rename 'power-led' node to 'led-power'
+2. Remove 'linux,default-trigger' entirely since this led is always on
 
-Laurent Pinchart
+Thanks,
+
+Vivek 
+
+> > index d69a613fb65a..df425e164a2e 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> > @@ -29,6 +29,26 @@
+> >  		regulator-max-microvolt = <5000000>;
+> >  	};
+> >  
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&power_led_gpio>;
+> > +
+> > +		power-led {
+> > +			label = "blue:power";
+> > +			gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_HIGH>;
+> > +			default-state = "on";
+> > +			linux,default-trigger = "none";
+> > +		};
+> > +	};
+> > +
