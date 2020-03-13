@@ -2,148 +2,156 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 788E8C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76829C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474F9206E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584117716;
-	bh=b1JjrYlTSusNR1LnoA6/BWQqaqnamEJmX74yctv21Ko=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bpkIVHer8nweIZrEX/RSYD3iF52SpYbTBAkyqbiAry43jXasRKgG3PcRNsYDaT2Lp
-	 vIAqHpUVynW3AGIp9LNPqKgeLMv8VY5PvelS4fPVWeLraL3+tnivcP5XhaoxLOjde8
-	 r8K+9xegBWzkJEaAkFdSriYSifc/Ibjl4EuuKVhs=
+	by mail.kernel.org (Postfix) with ESMTP id 4D129206E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:42:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DttVEW2n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgCMQlz (ORCPT
+        id S1726616AbgCMQmK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:41:55 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41796 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCMQlz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 12:41:55 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i1so10020365oie.8;
-        Fri, 13 Mar 2020 09:41:54 -0700 (PDT)
+        Fri, 13 Mar 2020 12:42:10 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45145 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbgCMQmK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 12:42:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id m15so5285852pgv.12
+        for <devicetree@vger.kernel.org>; Fri, 13 Mar 2020 09:42:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=s6WkIo0+SONpzpcf5vdQfXHZIbN30Eo2H37KqgrmrxU=;
+        b=DttVEW2nj1EWSDDOPAqrLLZt8g+bnvGlaARDGsCefbz0lJa0fkaU79++VphmD90RWh
+         UnQj9RjqDaeZWKRCdE3Id3MY1vagTSWVlA+rTHZfPTI7Cej3kjCgak0gEmE5WQfcr12y
+         51f602qcmq41xfOrMgNMi6K8S5NTF5EniRzlw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/HLgmkdRLNPltZNGuU7hAz+YtJP12He0zQoCgae73Yg=;
-        b=eoXAv6yj47KXxzlNdJdd+KbcFBjs4VHzDnxyKFJcudQ/CkKosLVpJPkBw4VgXBC03/
-         /s+hp+efc8MnOH15kpovNsFA1GWWOxUewJquqkXqvqQDXlZdLnSJljMozTiA8SIgBDne
-         qFqAqR1PhPt2OmY63ycCWWcRJpCdgaIZu+tW6zTXeJcAtLN2NbAn2igG2fdGhoQikpUH
-         jBj2Qadb4zpzHwZ7Xc0wCvlITDaKhpecidqSV0XTruDHzuuulyQtMlc9FH1D4bid1j1X
-         ojFg4VEFzv1O5NOLyIoEm09nw8iVKRlxqCcCs2lr8QX34hljMZw+v2bEvDiJ+fDVuKY5
-         jMQw==
-X-Gm-Message-State: ANhLgQ242arLXiYCwCxFAQ3JVSxUeCNv+2sKyzIQr1f9yRZzpbM1hki5
-        KNlJIn8DKR7Ng3gl2phuMt7AyRY=
-X-Google-Smtp-Source: ADFU+vtGkTx32ssJ2N8vNIBiwqCwcw6XXdljoT8NcuFXrsnpp+6auMz1cU2iPFIF1qmipKmEGtjKXg==
-X-Received: by 2002:a05:6808:5c7:: with SMTP id d7mr7798363oij.136.1584117714020;
-        Fri, 13 Mar 2020 09:41:54 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id j23sm2014066oib.32.2020.03.13.09.41.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 09:41:53 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
-Subject: [PATCH] scripts/dtc: Remove unused makefile fragments
-Date:   Fri, 13 Mar 2020 11:41:52 -0500
-Message-Id: <20200313164152.15182-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s6WkIo0+SONpzpcf5vdQfXHZIbN30Eo2H37KqgrmrxU=;
+        b=mKnKJ9d2LPofscKJ8KtiUKS4prw1mcNajDdJXFPh49HRXSkE/78Xi0+eV1aTTVOsBx
+         r9MjbVmL8n98gMfCcvzNC6YJU9cGIAiMhb93VeoQAKpVHLF1uji9SM+VSqZxN4tMfu+s
+         +eVRg9CdPstiytJIqtoMyAK3UkXaeZREMnkYz5WKB6xGSYgyyK504WNjoQviypb5fE+D
+         S0A+ns9/piAkQPmtDG2Rm08GmfT/hUn7IIbIam3nT2BzWG3mxUSMWLu+qvpW789M1+SG
+         FYseG+U9aDu5ASsIQdu1Euene6im/9EceF8IDUmpFmOmWCFKcj/zGWXQwqsQVIiHD15G
+         g2Bw==
+X-Gm-Message-State: ANhLgQ0OLOchl9BgGzfVajn8sgP0epZ/tTAUzfoJQm/DJZgmT9LsqINP
+        L8Rj9ZW2rqvT/GXGiEX8qc3apQ==
+X-Google-Smtp-Source: ADFU+vuwQbkLvdp2XzbaSrPiVctBFMJhZahqG7wDTFBRWfwoOXucPUHkefVUt19G+294ACbzJPzTXw==
+X-Received: by 2002:a62:ab07:: with SMTP id p7mr13046568pff.318.1584117729446;
+        Fri, 13 Mar 2020 09:42:09 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id q43sm11520128pjc.40.2020.03.13.09.42.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 09:42:08 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 09:42:07 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+Subject: Re: [PATCH V2 2/8] soc: qcom: geni: Support for ICC voting
+Message-ID: <20200313164207.GH144492@google.com>
+References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
+ <1584105134-13583-3-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1584105134-13583-3-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Makefile.dtc and Makefile.libfdt fragments from upstream dtc aren't
-used by the kernel build, so let's remove them and stop syncing them.
+Hi Akash,
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- scripts/dtc/Makefile.dtc           | 23 -----------------------
- scripts/dtc/libfdt/Makefile.libfdt | 18 ------------------
- scripts/dtc/update-dtc-source.sh   |  4 ++--
- 3 files changed, 2 insertions(+), 43 deletions(-)
- delete mode 100644 scripts/dtc/Makefile.dtc
- delete mode 100644 scripts/dtc/libfdt/Makefile.libfdt
+On Fri, Mar 13, 2020 at 06:42:08PM +0530, Akash Asthana wrote:
+> Add necessary macros and structure variables to support ICC BW
+> voting from individual SE drivers.
+> 
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Bjorn's comment dropped enums for ICC paths, given the three
+>    paths individual members
+> 
+>  include/linux/qcom-geni-se.h | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+> index dd46494..eaae16e 100644
+> --- a/include/linux/qcom-geni-se.h
+> +++ b/include/linux/qcom-geni-se.h
+> @@ -6,6 +6,8 @@
+>  #ifndef _LINUX_QCOM_GENI_SE
+>  #define _LINUX_QCOM_GENI_SE
+>  
+> +#include <linux/interconnect.h>
+> +
+>  /* Transfer mode supported by GENI Serial Engines */
+>  enum geni_se_xfer_mode {
+>  	GENI_SE_INVALID,
+> @@ -33,6 +35,15 @@ struct clk;
+>   * @clk:		Handle to the core serial engine clock
+>   * @num_clk_levels:	Number of valid clock levels in clk_perf_tbl
+>   * @clk_perf_tbl:	Table of clock frequency input to serial engine clock
+> + * @icc_path_geni_to_core:	ICC path handle for geni to core
+> + * @icc_path_cpu_to_geni:	ICC path handle for cpu to geni
+> + * @icc_path_geni_to_ddr:	ICC path handle for geni to ddr
+> + * @avg_bw_core:	Average bus bandwidth value for QUP core 2x clock
+> + * @peak_bw_core:	Peak bus bandwidth value for QUP core 2x clock
+> + * @avg_bw_cpu:		Average bus bandwidth value for CPU
+> + * @peak_bw_cpu:	Peak bus bandwidth value for CPU
+> + * @avg_bw_ddr:		Average bus bandwidth value for DDR
+> + * @peak_bw_ddr:	Peak bus bandwidth value for DDR
+>   */
+>  struct geni_se {
+>  	void __iomem *base;
+> @@ -41,6 +52,15 @@ struct geni_se {
+>  	struct clk *clk;
+>  	unsigned int num_clk_levels;
+>  	unsigned long *clk_perf_tbl;
+> +	struct icc_path *icc_path_geni_to_core;
+> +	struct icc_path *icc_path_cpu_to_geni;
+> +	struct icc_path *icc_path_geni_to_ddr;
+> +	unsigned int avg_bw_core;
+> +	unsigned int peak_bw_core;
+> +	unsigned int avg_bw_cpu;
+> +	unsigned int peak_bw_cpu;
+> +	unsigned int avg_bw_ddr;
+> +	unsigned int peak_bw_ddr;
 
-diff --git a/scripts/dtc/Makefile.dtc b/scripts/dtc/Makefile.dtc
-deleted file mode 100644
-index 9c467b096f03..000000000000
---- a/scripts/dtc/Makefile.dtc
-+++ /dev/null
-@@ -1,23 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-or-later
--# Makefile.dtc
--#
--# This is not a complete Makefile of itself.  Instead, it is designed to
--# be easily embeddable into other systems of Makefiles.
--#
--DTC_SRCS = \
--	checks.c \
--	data.c \
--	dtc.c \
--	flattree.c \
--	fstree.c \
--	livetree.c \
--	srcpos.c \
--	treesource.c \
--	util.c
--
--ifneq ($(NO_YAML),1)
--DTC_SRCS += yamltree.c
--endif
--
--DTC_GEN_SRCS = dtc-lexer.lex.c dtc-parser.tab.c
--DTC_OBJS = $(DTC_SRCS:%.c=%.o) $(DTC_GEN_SRCS:%.c=%.o)
-diff --git a/scripts/dtc/libfdt/Makefile.libfdt b/scripts/dtc/libfdt/Makefile.libfdt
-deleted file mode 100644
-index e54639738c8e..000000000000
---- a/scripts/dtc/libfdt/Makefile.libfdt
-+++ /dev/null
-@@ -1,18 +0,0 @@
--# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
--# Makefile.libfdt
--#
--# This is not a complete Makefile of itself.  Instead, it is designed to
--# be easily embeddable into other systems of Makefiles.
--#
--LIBFDT_soname = libfdt.$(SHAREDLIB_EXT).1
--LIBFDT_INCLUDES = fdt.h libfdt.h libfdt_env.h
--LIBFDT_VERSION = version.lds
--LIBFDT_SRCS = fdt.c fdt_ro.c fdt_wip.c fdt_sw.c fdt_rw.c fdt_strerror.c fdt_empty_tree.c \
--	fdt_addresses.c fdt_overlay.c
--LIBFDT_OBJS = $(LIBFDT_SRCS:%.c=%.o)
--LIBFDT_LIB = libfdt-$(DTC_VERSION).$(SHAREDLIB_EXT)
--
--libfdt_clean:
--	@$(VECHO) CLEAN "(libfdt)"
--	rm -f $(STD_CLEANFILES:%=$(LIBFDT_dir)/%)
--	rm -f $(LIBFDT_dir)/$(LIBFDT_soname)
-diff --git a/scripts/dtc/update-dtc-source.sh b/scripts/dtc/update-dtc-source.sh
-index 7dd29a0362b8..bc704e2a6a4a 100755
---- a/scripts/dtc/update-dtc-source.sh
-+++ b/scripts/dtc/update-dtc-source.sh
-@@ -32,9 +32,9 @@ DTC_UPSTREAM_PATH=`pwd`/../dtc
- DTC_LINUX_PATH=`pwd`/scripts/dtc
- 
- DTC_SOURCE="checks.c data.c dtc.c dtc.h flattree.c fstree.c livetree.c srcpos.c \
--		srcpos.h treesource.c util.c util.h version_gen.h yamltree.c Makefile.dtc \
-+		srcpos.h treesource.c util.c util.h version_gen.h yamltree.c \
- 		dtc-lexer.l dtc-parser.y"
--LIBFDT_SOURCE="Makefile.libfdt fdt.c fdt.h fdt_addresses.c fdt_empty_tree.c \
-+LIBFDT_SOURCE="fdt.c fdt.h fdt_addresses.c fdt_empty_tree.c \
- 		fdt_overlay.c fdt_ro.c fdt_rw.c fdt_strerror.c fdt_sw.c \
- 		fdt_wip.c libfdt.h libfdt_env.h libfdt_internal.h"
- 
--- 
-2.20.1
+Those are a lot of new individual struct members. How about clustering
+them, e.g.:
 
+struct geni_icc_path {
+	struct icc_path *path;
+	unsigned int avg_bw;
+	unsigned int peak_bw;
+};
+
+struct geni_iccs_paths {
+	struct geni_icc_path to_core;
+	struct geni_icc_path from_cpu;
+	struct geni_icc_path to_ddr;
+};
+
+And 'struct geni_se' just gets this entry:
+
+	struct geni_icc_paths icc;
+
+or alternatively three 'struct geni_icc_path' entries.
