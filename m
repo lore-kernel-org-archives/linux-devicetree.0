@@ -2,133 +2,87 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7781C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 00:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD0C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 00:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89698206E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 00:54:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U51NKX5Y"
+	by mail.kernel.org (Postfix) with ESMTP id 29B2820716
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 00:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgCMAy5 (ORCPT
+        id S1726834AbgCMA6e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 20:54:57 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:35729 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgCMAy4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 20:54:56 -0400
-Received: by mail-vs1-f68.google.com with SMTP id m9so5056494vso.2;
-        Thu, 12 Mar 2020 17:54:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rpSdT3coCHP/ZOncgVyzEi26Ip6gZfmV5Ehd2LJuS98=;
-        b=U51NKX5YvgpXhwF3sD8sQdMxvnkeZ8nWJbYaTHy2741bS/1qA1G7qs45vuLdrN0IZJ
-         CsWeAyq7LDQ+IlJ2GVfhVk060RH0LDPMSpLgBbT7OI70xEQGzQqNfiUY98fb6xv+o4rX
-         pMiLS0f4FA3JkSc+OjoVQYsIlHgLAESMHsE9zWTk5fC6P6RspghhcUtXYQPLQyxWZRIk
-         7SFlATZabNF6PXawxPmCvo1uD/AUk/jb+FtZUdyy02v1aD5fs8UvYcR7vUFiHLV0vEUp
-         XafsqffAe2Qj4tnGtZZlGgzNhpH2cWMSGAPH6as0WXzdLqib/QauGHV0aPKDIeFNrmK8
-         dsjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rpSdT3coCHP/ZOncgVyzEi26Ip6gZfmV5Ehd2LJuS98=;
-        b=ldLxDuMtQX8qUbE44qSLuex5m2+wQkpPIknP37+qE4n0BZ2xAP92THLctb7vQ5Bda7
-         SqbYy9+EHdF/BN2Y7dSNwgeHR/9SCVsVvZ9wsj6Q6VgX7fK+1SGAgH0myuURJkJ8+6XL
-         3ewt2ftods+NZ+nVrA44D4l3CV+4z15h1yoNJLhuTkxOLSVvr0wSgHQGfxTVm9sIjjt7
-         33Nf4S+gQCdBG3lVgQq773IFajqRNT9jfZ9oiGAcJ2OoyOXL1oHgfL7eI5SC4DcKxots
-         vkzq0qEg6djNIMhQvnZPbv/sTQCXKiwatmmx5pWublu43qFg7g+wvNvq2XzxTnmUURmG
-         ARRg==
-X-Gm-Message-State: ANhLgQ3ZwY0+UD5JtI9blxoLkeiEaRVge7u+uUOLcQq6VXj1i+zOL+d7
-        tvSa0yFFqRp/+OGdhcedVK+mfgDDJSMjg26vXA8=
-X-Google-Smtp-Source: ADFU+vstfEVVNoaWK6nVnl9WOsHYQYiMsIvEB24vHZ2mqKTMO6kzIQQLjUhLx2U0OlcrMCCjINBAvIyRgYUTUjlPBoU=
-X-Received: by 2002:a67:eb91:: with SMTP id e17mr3115816vso.179.1584060893760;
- Thu, 12 Mar 2020 17:54:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20200306151019epcas5p11f5fcf849ece9a808396d9aa3a65410d@epcas5p1.samsung.com>
- <20200306150529.3370-1-alim.akhtar@samsung.com>
-In-Reply-To: <20200306150529.3370-1-alim.akhtar@samsung.com>
-From:   Alim Akhtar <alim.akhtar@gmail.com>
-Date:   Fri, 13 Mar 2020 06:24:17 +0530
-Message-ID: <CAGOxZ50_XwsQ68gqGf1=S=WJJ-pc10h2_J8B4zzU7OMbgJna9A@mail.gmail.com>
-Subject: Re: [PATCH 0/5] exynos-ufs: Add support for UFS HCI
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     "robh+dt" <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Kiwoong Kim <kwmad.kim@samsung.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Can Guo <cang@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 12 Mar 2020 20:58:34 -0400
+Received: from mx.socionext.com ([202.248.49.38]:4518 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbgCMA6e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 20:58:34 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 13 Mar 2020 09:58:32 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 011E3603AB;
+        Fri, 13 Mar 2020 09:58:33 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 13 Mar 2020 09:58:32 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id CB11F1A01BB;
+        Fri, 13 Mar 2020 09:58:32 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 00/10] Add devicetree features and fixes for UniPhier SoCs
+Date:   Fri, 13 Mar 2020 09:58:06 +0900
+Message-Id: <1584061096-23686-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Ping!!!
+This series adds new features that includes XDMAC for each SoC,
+USB controller for Pro5, SPI for PXs3-ref, and thermal zone for PXs3.
 
+And more, this adds ethernet aliases to determine device name assignments
+and fixes for SCSSI clock/reset IDs and stabilization for ethernet.
 
-On Fri, Mar 6, 2020 at 8:40 PM Alim Akhtar <alim.akhtar@samsung.com> wrote:
->
-> This patch-set introduces UFS (Universal Flash Storage) host controller support
-> for Samsung family SoC. Mostly, it consists of UFS PHY and host specific driver.
->
-> patch 1/5: define devicetree bindings for UFS PHY
-> patch 2/5: Adds UFS PHY driver
-> patch 3/5: define devicetree bindings for UFS HCI
-> patch 4/5: Adds Samsung UFS HCI driver
-> patch 5/5: Enabled UFS on exynos7 platform
->
-> Note: This series is based on Linux-5.6-rc2
->       In past there was couple of attempt to upstream this driver, but
->       it didn't went upstream for some or other reason.
->
-> Alim Akhtar (5):
->   dt-bindings: phy: Document Samsung UFS PHY bindings
->   phy: samsung-ufs: add UFS PHY driver for samsung SoC
->   Documentation: devicetree: ufs: Add DT bindings for exynos UFS host
->     controller
->   scsi: ufs-exynos: add UFS host support for Exynos SoCs
->   arm64: dts: Add node for ufs exynos7
->
->  .../bindings/phy/samsung,ufs-phy.yaml         |   60 +
->  .../devicetree/bindings/ufs/ufs-exynos.txt    |  104 ++
->  .../boot/dts/exynos/exynos7-espresso.dts      |   16 +
->  arch/arm64/boot/dts/exynos/exynos7.dtsi       |   56 +-
->  drivers/phy/samsung/Kconfig                   |    9 +
->  drivers/phy/samsung/Makefile                  |    1 +
->  drivers/phy/samsung/phy-exynos7-ufs.h         |   85 +
->  drivers/phy/samsung/phy-samsung-ufs.c         |  311 ++++
->  drivers/phy/samsung/phy-samsung-ufs.h         |  100 ++
->  drivers/scsi/ufs/Kconfig                      |   12 +
->  drivers/scsi/ufs/Makefile                     |    1 +
->  drivers/scsi/ufs/ufs-exynos.c                 | 1399 +++++++++++++++++
->  drivers/scsi/ufs/ufs-exynos.h                 |  268 ++++
->  drivers/scsi/ufs/unipro.h                     |   41 +
->  include/linux/phy/phy-samsung-ufs.h           |   70 +
->  15 files changed, 2531 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
->  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
->  create mode 100644 drivers/phy/samsung/phy-exynos7-ufs.h
->  create mode 100644 drivers/phy/samsung/phy-samsung-ufs.c
->  create mode 100644 drivers/phy/samsung/phy-samsung-ufs.h
->  create mode 100644 drivers/scsi/ufs/ufs-exynos.c
->  create mode 100644 drivers/scsi/ufs/ufs-exynos.h
->  create mode 100644 include/linux/phy/phy-samsung-ufs.h
->
-> --
-> 2.17.1
->
+Kunihiko Hayashi (10):
+  ARM: dts: uniphier: Add XDMAC node
+  arm64: dts: uniphier: Add XDMAC node
+  ARM: dts: uniphier: Add USB3 controller nodes for Pro5
+  arm64: dts: uniphier: Enable spi node for PXs3 reference board
+  arm64: dts: uniphier: Add nodes of thermal monitor and thermal zone
+    for PXs3
+  ARM: dts: uniphier: Add ethernet aliases
+  arm64: dts: uniphier: Add ethernet aliases
+  ARM: dts: uniphier: Set SCSSI clock and reset IDs for each channel
+  arm64: dts: uniphier: Set SCSSI clock and reset IDs for each channel
+  arm64: dts: uniphier: Stabilize Ethernet RGMII mode of LD20 global and
+    PXs3 ref board
 
+ arch/arm/boot/dts/uniphier-ld6b-ref.dts            |   1 +
+ arch/arm/boot/dts/uniphier-pro4-ace.dts            |   1 +
+ arch/arm/boot/dts/uniphier-pro4-ref.dts            |   1 +
+ arch/arm/boot/dts/uniphier-pro4-sanji.dts          |   1 +
+ arch/arm/boot/dts/uniphier-pro4.dtsi               |   8 ++
+ arch/arm/boot/dts/uniphier-pro5.dtsi               | 160 ++++++++++++++++++++-
+ arch/arm/boot/dts/uniphier-pxs2-gentil.dts         |   1 +
+ arch/arm/boot/dts/uniphier-pxs2-vodka.dts          |   1 +
+ arch/arm/boot/dts/uniphier-pxs2.dtsi               |  12 +-
+ .../boot/dts/socionext/uniphier-ld11-global.dts    |   1 +
+ .../arm64/boot/dts/socionext/uniphier-ld11-ref.dts |   1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   |  12 +-
+ .../boot/dts/socionext/uniphier-ld20-global.dts    |  14 ++
+ .../arm64/boot/dts/socionext/uniphier-ld20-ref.dts |   1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   |  20 ++-
+ .../arm64/boot/dts/socionext/uniphier-pxs3-ref.dts |  28 ++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi   |  55 ++++++-
+ 17 files changed, 304 insertions(+), 14 deletions(-)
 
---
-Regards,
-Alim
+-- 
+2.7.4
+
