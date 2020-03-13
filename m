@@ -2,162 +2,117 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADC6C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 02:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4C0C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 02:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E75F2071C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 02:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A88206F1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 02:37:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTVHpbRo"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bkjZUC84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgCMCTw (ORCPT
+        id S1726436AbgCMChm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 22:19:52 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33313 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgCMCTv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 22:19:51 -0400
-Received: by mail-qk1-f193.google.com with SMTP id p62so10077126qkb.0;
-        Thu, 12 Mar 2020 19:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pktZUkJhZ989W+vJIraSaCZ1FCtyBz516+gaNJ90Vgs=;
-        b=jTVHpbRoj6btsip1/T8KXdZbo5gKq4gzME+ntCVbqmvcInzGNiW53fmLzwm2XkxRaO
-         KOwN+i9La1jPNywjDdWVchmnjqCTfr7OM/l39xDrNHMYOYbbAX1gBTC9E8y4OSP/iQiE
-         mtGsTQjv/wUV5NtR8LIEPRnccTllHMBhCYsefg3izwHPaWeTDZn2Rk/sOdLYly3UOc/c
-         b6VzcqTQOsF/FLX6Zy09BD6hKMHEFDLvbrI9ILdq8klobIZBbkGwTnXlX2u7aRmqELQy
-         DMFTil5s5fKtJw79AiDs5rU65enLZIAvf/tEQKExMCuIoqBP1byi9B+/qRsxbm/58Jd7
-         xgeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pktZUkJhZ989W+vJIraSaCZ1FCtyBz516+gaNJ90Vgs=;
-        b=Txduk106H9dMDonKd3LEfq9we8pZB7zeKZiPbozLaeuo0Uoo3nvJOnX03dQ3o9/J66
-         zSsa189DcYVHkr8PJyb68s9ArewcNl44r4/6jkBTJtHAOFh50CiKuL4roQt8H0l9Kzxi
-         bl5ExE/Kq6DSr2cdIXKd0L/f5XJtG54oBeMDzHc6RvORlwgCutmUyQrgqDSRaZ59S0wK
-         MrR69TxZG70VQpkBUUFfMTcIGjDF2J5M30vP5WU4hB3YzjM6IvkkQfntl6Gt+G0Q92Pu
-         23N4L0qnG7eLxNJLqoTdKUyy7wB+BhCOvmhYHa6MLtCG3FfSLMT8/DcCcDhMayZu9U7U
-         fdBQ==
-X-Gm-Message-State: ANhLgQ34WF4fiGmPkQIP+LZaZL3p52ABmq72Gbw3Q8PdhvLoyywCM6Ux
-        ixPDG7czoqPEKoKO9i4YcS7qZpOIKpL95jvk4OQ=
-X-Google-Smtp-Source: ADFU+vtodrMhsnbgv1DLR4VQsEBdTtkVF8ZTLE1OXuNkcbtF3C7RnOKjx77zI5S8mvl36ghHLA3xzg/bHHw/B0DVzlQ=
-X-Received: by 2002:a05:620a:539:: with SMTP id h25mr4196246qkh.395.1584065989504;
- Thu, 12 Mar 2020 19:19:49 -0700 (PDT)
+        Thu, 12 Mar 2020 22:37:42 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:44234 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726331AbgCMChl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 22:37:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584067061; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=8+Fp02besIsFwZ5qqgYlxtsBb8MnCynSCHmXef2Td1g=;
+ b=bkjZUC8433QzzqJ0v2iAJJmbtpByCQ+CpHmCSgnQ1mSk6k7/JvJZA/o2L9zKPGh7/BgRu1Og
+ n0AxkhfpK/T3Zc87+n/GvdjWHpVPE/IAZjIiL+uByIqEzI3RUot/sguA8FAu66hcs2OybKc6
+ J7jjSLAXrZ05x8Ub14ak2LSB21g=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6af1f4.7f0d07e552d0-smtp-out-n01;
+ Fri, 13 Mar 2020 02:37:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 627C9C433BA; Fri, 13 Mar 2020 02:37:40 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C57FBC433D2;
+        Fri, 13 Mar 2020 02:37:39 +0000 (UTC)
 MIME-Version: 1.0
-References: <9bc2631ff3ab60fc607a5215e561aace83c0e8ca.1583464821.git.baolin.wang7@gmail.com>
- <20200312191616.GA9697@bogus>
-In-Reply-To: <20200312191616.GA9697@bogus>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Fri, 13 Mar 2020 10:19:38 +0800
-Message-ID: <CADBw62r6xvRW6i3f8NDf-OWTNimE_B8ewoFuOfcMgRUkM8B7gA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: mailbox: Add the Spreadtrum mailbox documentation
-To:     Rob Herring <robh@kernel.org>
-Cc:     mark.rutland@arm.com, jassisinghbrar@gmail.com,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 13 Mar 2020 08:07:39 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc
+ firmware
+In-Reply-To: <20200302020757.551483-1-bjorn.andersson@linaro.org>
+References: <20200302020757.551483-1-bjorn.andersson@linaro.org>
+Message-ID: <05311a9c9899a13c6479f6628d506f08@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On 2020-03-02 07:37, Bjorn Andersson wrote:
+> Update the firmware-name of the remoteproc nodes to mimic the firmware
+> structure on other 845 devices.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index 09ad37b0dd71..fa7f4373a668 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -50,6 +50,7 @@ vreg_s4a_1p8: pm8998-smps4 {
+> 
+>  &adsp_pas {
+>  	status = "okay";
+> +	firmware-name = "qcom/sdm845/adsp.mdt";
+>  };
+> 
+>  &apps_rsc {
+> @@ -350,6 +351,7 @@ vreg_s3c_0p6: smps3 {
+> 
+>  &cdsp_pas {
+>  	status = "okay";
+> +	firmware-name = "qcom/sdm845/cdsp.mdt";
+>  };
+> 
+>  &gcc {
+> @@ -372,6 +374,11 @@ &i2c10 {
+>  	clock-frequency = <400000>;
+>  };
+> 
+> +&mss_pil {
+> +	status = "okay";
 
-On Fri, Mar 13, 2020 at 3:16 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Mar 06, 2020 at 02:07:21PM +0800, Baolin Wang wrote:
-> > From: Baolin Wang <baolin.wang@unisoc.com>
-> >
-> > Add the Spreadtrum mailbox documentation.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > ---
-> >  .../devicetree/bindings/mailbox/sprd-mailbox.yaml  | 56 ++++++++++++++++++++++
-> >  1 file changed, 56 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
-> > new file mode 100644
-> > index 0000000..2f2fdcf
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
-> > @@ -0,0 +1,56 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/mailbox/sprd-mailbox.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: Spreadtrum mailbox controller bindings
-> > +
-> > +maintainers:
-> > +  - Orson Zhai <orsonzhai@gmail.com>
-> > +  - Baolin Wang <baolin.wang7@gmail.com>
-> > +  - Chunyan Zhang <zhang.lyra@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - sprd,sc9860-mailbox
-> > +
-> > +  reg:
-> > +    minItems: 2
->
-> Need to define what each entry is.
+status okay isn't really needed...
 
-Sure
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
->
-> > +
-> > +  interrupts:
-> > +    minItems: 2
-> > +    description:
-> > +      Contains the inbox and outbox interrupt information.
->
-> The description should be split to define each entry:
->
-> items:
->   - description: inbox interrupt
->   - description: outbox interrupt
-
-Sure.
-
->
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: enable
-> > +
-> > +  "#mbox-cells":
-> > +    const: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - "#mbox-cells"
-> > +  - clocks
-> > +  - clock-names
->
-> Add:
->
-> additionalProperties: false
-
-OK. Thanks for your comments.
+> +	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mbn";
+> +};
+> +
+>  &qupv3_id_1 {
+>  	status = "okay";
+>  };
 
 -- 
-Baolin Wang
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
