@@ -2,149 +2,172 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21791C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E59C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E2420724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07362206FA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgCMMmV (ORCPT
+        id S1726667AbgCMMo4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:42:21 -0400
-Received: from sauhun.de ([88.99.104.3]:51458 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726681AbgCMMmV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:42:21 -0400
-Received: from localhost (p54B3314F.dip0.t-ipconnect.de [84.179.49.79])
-        by pokefinder.org (Postfix) with ESMTPSA id ED39D2C1ED4;
-        Fri, 13 Mar 2020 13:42:17 +0100 (CET)
-Date:   Fri, 13 Mar 2020 13:42:14 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH 7/7] i2c: core: hand over reserved devices when
- requesting ancillary addresses
-Message-ID: <20200313124214.GA1299@ninjato>
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
- <20200220172403.26062-8-wsa+renesas@sang-engineering.com>
- <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
+        Fri, 13 Mar 2020 08:44:56 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:34186 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726652AbgCMMo4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:44:56 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id F3C2F634C89;
+        Fri, 13 Mar 2020 14:43:53 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jCjfO-0001it-7j; Fri, 13 Mar 2020 14:43:54 +0200
+Date:   Fri, 13 Mar 2020 14:43:54 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [v2 3/3] media: ov8856: Implement sensor module revision
+ identification
+Message-ID: <20200313124354.GE5730@valkosipuli.retiisi.org.uk>
+References: <20200313110350.10864-1-robert.foss@linaro.org>
+ <20200313110350.10864-4-robert.foss@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
+In-Reply-To: <20200313110350.10864-4-robert.foss@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Robert,
 
---d6Gm4EdcadzBjdND
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 13, 2020 at 12:03:50PM +0100, Robert Foss wrote:
+> Query the sensor for its module revision, and compare it
+> to known revisions.
+> Currently only the '1B' revision has been added.
+> 
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+>  drivers/media/i2c/ov8856.c | 54 +++++++++++++++++++++++++++++++++-----
+>  1 file changed, 48 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
+> index db61eed223e8..39662d3d86dd 100644
+> --- a/drivers/media/i2c/ov8856.c
+> +++ b/drivers/media/i2c/ov8856.c
+> @@ -34,6 +34,18 @@
+>  #define OV8856_MODE_STANDBY		0x00
+>  #define OV8856_MODE_STREAMING		0x01
+>  
+> +/* define 1B module revision */
+> +#define OV8856_1B_MODULE		0x02
+> +
+> +/* the OTP read-out buffer is at 0x7000 and 0xf is the offset
+> + * of the byte in the OTP that means the module revision
+> + */
+> +#define OV8856_MODULE_REVISION		0x700f
+> +#define OV8856_OTP_MODE_CTRL		0x3d84
+> +#define OV8856_OTP_LOAD_CTRL		0x3d81
+> +#define OV8856_OTP_MODE_AUTO		0x00
+> +#define OV8856_OTP_LOAD_CTRL_ENABLE	BIT(0)
+> +
+>  /* vertical-timings from sensor */
+>  #define OV8856_REG_VTS			0x380e
+>  #define OV8856_VTS_MAX			0x7fff
+> @@ -711,6 +723,25 @@ static int ov8856_test_pattern(struct ov8856 *ov8856, u32 pattern)
+>  				OV8856_REG_VALUE_08BIT, pattern);
+>  }
+>  
+> +static int ov8856_check_revision(struct ov8856 *ov8856)
 
+There are no version checks being done here, nor apparently the version is
+read by this function. 
 
-> > @@ -984,7 +986,21 @@ struct i2c_client *i2c_new_ancillary_device(struct=
- i2c_client *client,
-> >                         of_property_read_u32_index(np, "reg", i, &addr);
-> >         }
-> >
-> > -       dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name,=
- addr);
-> > +       dev_info(adapter_dev, "Address for %s : 0x%x\n", name, addr);
-> > +
-> > +       /* No need to scan muxes, siblings must sit on the same adapter=
- */
-> > +       reserved_dev =3D device_find_child(adapter_dev, &addr, __i2c_ch=
-eck_addr_busy);
-> > +       reserved_client =3D i2c_verify_client(reserved_dev);
-> > +
-> > +       if (reserved_client) {
-> > +               if (reserved_client->dev.of_node !=3D np ||
-> > +                   strcmp(reserved_client->name, I2C_RESERVED_DRV_NAME=
-) !=3D 0)
-> > +                       return ERR_PTR(-EBUSY);
->=20
-> Missing put_device(reserved_dev).
+> +{
+> +	int ret;
+> +
+> +	ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
+> +			       OV8856_REG_VALUE_08BIT, OV8856_MODE_STREAMING);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ov8856_write_reg(ov8856, OV8856_OTP_MODE_CTRL,
+> +			       OV8856_REG_VALUE_08BIT, OV8856_OTP_MODE_AUTO);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ov8856_write_reg(ov8856, OV8856_OTP_LOAD_CTRL,
+> +				OV8856_REG_VALUE_08BIT,
+> +				OV8856_OTP_LOAD_CTRL_ENABLE);
 
-Actually, I think the code could even be like this:
+If streaming is started to read the EEPROM, shouldn't it be stopped after
+reading it as well?
 
-	struct i2c_client *reserved_client =3D NULL;
+> +}
+> +
+>  static int ov8856_set_ctrl(struct v4l2_ctrl *ctrl)
+>  {
+>  	struct ov8856 *ov8856 = container_of(ctrl->handler,
+> @@ -1144,6 +1175,23 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
+>  		return -ENXIO;
+>  	}
+>  
+> +	/* check sensor hardware revision */
+> +	ret = ov8856_check_revision(ov8856);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to check sensor revision");
+> +		return ret;
+> +	}
+> +
+> +	ret = ov8856_read_reg(ov8856, OV8856_MODULE_REVISION,
+> +			      OV8856_REG_VALUE_08BIT, &val);
+> +	if (ret)
+> +		return ret;
 
-	...
+How about moving this inside the check_revision function above? It looks as
+if it's dependent on that.
 
-	reserved_dev =3D device_find_child(adapter_dev, &addr, __i2c_check_addr_bu=
-sy);
-	if (reserved_dev) {
-		reserved_np =3D reserved_dev->of_node;
-		reserved_client =3D i2c_verify_client(reserved_dev);
-		put_device(reserved_dev);
-	}
+> +
+> +	dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x\n",
+> +		val,
+> +		val == OV8856_1B_MODULE ? "1B" : "unknown revision",
+> +		client->addr);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1254,12 +1302,6 @@ static int ov8856_probe(struct i2c_client *client)
+>  		return PTR_ERR(ov8856->xvclk);
+>  	}
+>  
+> -	ret = clk_set_rate(ov8856->xvclk, OV8856_XVCLK_24);
 
-	if (reserved_client) {
-		if (reserved_np !=3D np ||
-		    strcmp(reserved_client->name, I2C_RESERVED_DRV_NAME) !=3D 0)
-			return ERR_PTR(-EBUSY);
+This seems like an unrelated change.
 
-		strlcpy(reserved_client->name, I2C_DUMMY_DRV_NAME, sizeof(client->name));
-		return reserved_client;
-	}
+> -	if (ret < 0) {
+> -		dev_err(&client->dev, "failed to set xvclk rate (24MHz)\n");
+> -		return ret;
+> -	}
+> -
+>  	ov8856->reset_gpio = devm_gpiod_get(&client->dev, "reset",
+>  					       GPIOD_OUT_HIGH);
+>  	if (IS_ERR(ov8856->reset_gpio)) {
 
-	return i2c_new_dummy_device(client->adapter, addr);
+-- 
+Regards,
 
-We put the device early - as soon we don't access the struct anymore. I
-think we don't need the refcnt any further because what we are doing
-here is to hand over the initial refcnt from the core to the requesting
-driver. We turn the device from "reserved" (internally managed) to
-"dummy" (managed by the driver). So, I think the code is okay regarding
-the struct device. I will have a second look when it comes to
-concurrency problems regarding the struct i2c_client, though.
-
-> (perhaps i2c_verify_client() checking dev was not such a great idea, as
->  callers need to act on dev && !verified anyway?)
-
-Yeah, since I refactored the ACPI code as well, patch 1 from this series
-can probably go.
-
-Thanks again for your review, Geert!
-
-
---d6Gm4EdcadzBjdND
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5rf6IACgkQFA3kzBSg
-KbbLIw/+MOFwZSkWXt3ikwM+7rKei/WFEDfa/TZK7lKKvujaNfalPdxSx8w7M5dc
-V5uUDpEeCiJAn+TO+vOv+i5McITg+GDMiUQvbIqAtzVh+2jqNEkJIaMz+5wlefWG
-hcpujZdvPfrQNPf1FM77HO0WI9oChGBJkMb9tLbzm5yHLYh4zMq0aK+Z+oZQ7441
-Lz2t2Yp+u4ikEHCvZWQVzOfyGRb2r/4nI5VuLbk8BhnlctKB3ALytdGws0QSctjH
-qPz0ePJQ4kXQ/Ch1oVOh9LfTGRGlk3hA2Sa1G0Kk9t42e+C2DmFWh8AYV16kZ8n7
-8MF/mUVBrebEzijOyDcUbBt9LYJwr+lsuej94/afVqk68b+s/cal2ZTYjNrX5QM3
-/FNYqVV/tvmzmxPoO93IxFBPYethKY7i0jFgflmkzFhWGZv2H6UyU9U0UbH0dDlC
-Cw8hjC1de2zxLP2xezv2vv5DH7Py1SFDfAU4xc9Xh/7HQFE9kLYbESG9cEh7mWLU
-FC6T9KRrrzkkFNn0cCo0wqmqn+yrA5a9YGkTfQg733bxB0DQINcfo7m7FQPiS1OY
-7ZxNfj9IVIpOShOi+/26bTkj8AemRPnRCy9MAHREFza55LU+7GGDkHQJKDqKZI2q
-6oI1uERpxeyZoQMTEhRiR8IM2CGy9LtL3ZGe11+NI6aXGe+hdL4=
-=VJ9d
------END PGP SIGNATURE-----
-
---d6Gm4EdcadzBjdND--
+Sakari Ailus
