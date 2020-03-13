@@ -2,112 +2,205 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2F9C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 00:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40F6C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 01:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 729A1206E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 00:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA7220637
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 01:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584061268;
+	bh=uy2OXM73oGUesqzxIxuGWbUgIsrh1BViYety9ik44ic=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=F+TkKINnB4s+mEQXqQV3hfahkEg9iTnEiyMupg+3x4jluIyy1aatwQYtsawCfEsot
+	 HJ1x/m9oPsaXJL/4Opv64aFKc8htL5aLH6yBxXkpkJapWqkAM4Cnc8WoMT2PHBqrHC
+	 8WkaHuUUZGafoSjt47w0jbDT71GfEvzv75Zcye0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgCMA6p (ORCPT
+        id S1726647AbgCMBBD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 20:58:45 -0400
-Received: from mx.socionext.com ([202.248.49.38]:4532 "EHLO mx.socionext.com"
+        Thu, 12 Mar 2020 21:01:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727085AbgCMA6o (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 20:58:44 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 13 Mar 2020 09:58:43 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 873CA603AB;
-        Fri, 13 Mar 2020 09:58:43 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 13 Mar 2020 09:58:43 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id EB6E41A01BB;
-        Fri, 13 Mar 2020 09:58:42 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH 10/10] arm64: dts: uniphier: Stabilize Ethernet RGMII mode of LD20 global and PXs3 ref board
-Date:   Fri, 13 Mar 2020 09:58:16 +0900
-Message-Id: <1584061096-23686-11-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584061096-23686-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1584061096-23686-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S1727070AbgCMBBC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 12 Mar 2020 21:01:02 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F27620637;
+        Fri, 13 Mar 2020 01:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584061260;
+        bh=uy2OXM73oGUesqzxIxuGWbUgIsrh1BViYety9ik44ic=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=we+k4V9lzqruvFLtqWB8xUS0uM6m3loDgI5ykV4MA6/qVEsIJ4FoazOCXo3sheqUs
+         sSKld74yTBvSmF5NmECSVX8YJNH4g3t/aBR1ZtUykLsz32eEIE+ryxDzeM84gJG5DM
+         QEyHcbC3597nFJuFP5EtLRoNe3Ed4HeJBOFGX4NI=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <6dd6bd48e894c1e8ee85c29a30ba1b18041d83c4.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech> <6dd6bd48e894c1e8ee85c29a30ba1b18041d83c4.1582533919.git-series.maxime@cerno.tech>
+Subject: Re: [PATCH 27/89] clk: bcm: Add BCM2711 DVP driver
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org
+To:     Eric Anholt <eric@anholt.net>, Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date:   Thu, 12 Mar 2020 18:00:59 -0700
+Message-ID: <158406125965.149997.13919203635322854760@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The RGMII PHY needs to change drive-strength properties of the Ethernet
-Tx pins to stabilize the PHY.
+Quoting Maxime Ripard (2020-02-24 01:06:29)
+> diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-bcm2=
+711-dvp.c
+> new file mode 100644
+> index 000000000000..f4773cc92724
+> --- /dev/null
+> +++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
+> @@ -0,0 +1,113 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +// Copyright 2020 Cerno
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/reset/reset-simple.h>
+> +
+> +#define DVP_HT_RPI_SW_INIT     0x04
+> +#define DVP_HT_RPI_MISC_CONFIG 0x08
+> +
+> +#define NR_CLOCKS      2
+> +#define NR_RESETS      6
+> +
+> +struct clk_dvp {
+> +       struct clk                      *clks[NR_CLOCKS];
+> +       struct clk_onecell_data         clk_data;
+> +       struct reset_simple_data        reset;
+> +};
+> +
+> +static int clk_dvp_probe(struct platform_device *pdev)
+> +{
+> +       struct resource *res;
+> +       struct clk_dvp *dvp;
+> +       void __iomem *base;
+> +       const char *parent;
+> +       int ret;
+> +
+> +       dvp =3D devm_kzalloc(&pdev->dev, sizeof(*dvp), GFP_KERNEL);
+> +       if (!dvp)
+> +               return -ENOMEM;
+> +       platform_set_drvdata(pdev, dvp);
+> +
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       base =3D devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+> +
+> +       dvp->reset.rcdev.owner =3D THIS_MODULE;
+> +       dvp->reset.rcdev.nr_resets =3D NR_RESETS;
+> +       dvp->reset.rcdev.ops =3D &reset_simple_ops;
+> +       dvp->reset.rcdev.of_node =3D pdev->dev.of_node;
+> +       dvp->reset.membase =3D base + DVP_HT_RPI_SW_INIT;
+> +       spin_lock_init(&dvp->reset.lock);
+> +
+> +       ret =3D reset_controller_register(&dvp->reset.rcdev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       parent =3D of_clk_get_parent_name(pdev->dev.of_node, 0);
+> +       if (!parent)
+> +               goto unregister_reset;
+> +
+> +       dvp->clks[0] =3D clk_register_gate(&pdev->dev, "hdmi0-108MHz",
+> +                                        parent, CLK_IS_CRITICAL,
+> +                                        base + DVP_HT_RPI_MISC_CONFIG, 3,
+> +                                        CLK_GATE_SET_TO_DISABLE, &dvp->r=
+eset.lock);
+> +       if (IS_ERR(dvp->clks[0])) {
+> +               ret =3D PTR_ERR(dvp->clks[0]);
+> +               goto unregister_reset;
+> +       }
+> +
+> +       dvp->clks[1] =3D clk_register_gate(&pdev->dev, "hdmi1-108MHz",
+> +                                        parent, CLK_IS_CRITICAL,
+> +                                        base + DVP_HT_RPI_MISC_CONFIG, 4,
+> +                                        CLK_GATE_SET_TO_DISABLE, &dvp->r=
+eset.lock);
 
-The devicetree for LD20 global board specifies RMII PHY in the ethernet
-node as default, however, there is also another board that has RGMII PHY.
-The devicetree for the board doesn't exist, so the users should change
-the ethernet properties by outside way.
+Can we use clk_hw APIs, document why CLK_IS_CRITICAL, and use something
+like clk_hw_register_gate_parent_data() so that we don't have to use
+of_clk_get_parent_name() above?
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts | 13 +++++++++++++
- arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts    | 16 ++++++++++++++++
- 2 files changed, 29 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-index 2c00008..89b133f 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-@@ -146,6 +146,19 @@
- 	};
- };
- 
-+&pinctrl_ether_rgmii {
-+	tx {
-+		pins = "RGMII_TXD0", "RGMII_TXD1", "RGMII_TXD2",
-+		       "RGMII_TXD3", "RGMII_TXCTL";
-+		drive-strength = <12>;
-+	};
-+
-+	txclk {
-+		pins = "RGMII_TXCLK";
-+		drive-strength = <9>;
-+	};
-+};
-+
- &usb {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts
-index fcab6d1..d74a6c6 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts
-+++ b/arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts
-@@ -132,3 +132,19 @@
- 		reg = <0>;
- 	};
- };
-+
-+&pinctrl_ether_rgmii {
-+	tx {
-+		pins = "RGMII0_TXCLK", "RGMII0_TXD0", "RGMII0_TXD1",
-+		       "RGMII0_TXD2", "RGMII0_TXD3", "RGMII0_TXCTL";
-+		drive-strength = <9>;
-+	};
-+};
-+
-+&pinctrl_ether1_rgmii {
-+	tx {
-+		pins = "RGMII1_TXCLK", "RGMII1_TXD0", "RGMII1_TXD1",
-+		       "RGMII1_TXD2", "RGMII1_TXD3", "RGMII1_TXCTL";
-+		drive-strength = <9>;
-+	};
-+};
--- 
-2.7.4
+> +       if (IS_ERR(dvp->clks[1])) {
+> +               ret =3D PTR_ERR(dvp->clks[1]);
+> +               goto unregister_clk0;
+> +       }
+> +
+> +       dvp->clk_data.clks =3D dvp->clks;
+> +       dvp->clk_data.clk_num =3D NR_CLOCKS;
+> +       of_clk_add_provider(pdev->dev.of_node, of_clk_src_onecell_get,
+> +                           &dvp->clk_data);
 
+This can fail. Please recover. Also, please use clk_hw based APIs.
+
+> +
+> +       return 0;
+> +
+> +
+> +unregister_clk0:
+> +       clk_unregister_gate(dvp->clks[0]);
+> +
+> +unregister_reset:
+> +       reset_controller_unregister(&dvp->reset.rcdev);
+> +       return ret;
+> +};
+> +
+> +static int clk_dvp_remove(struct platform_device *pdev)
+> +{
+> +       struct clk_dvp *dvp =3D platform_get_drvdata(pdev);
+> +
+> +       clk_unregister_gate(dvp->clks[1]);
+> +       clk_unregister_gate(dvp->clks[0]);
+> +       reset_controller_unregister(&dvp->reset.rcdev);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id clk_dvp_dt_ids[] =3D {
+> +       { .compatible =3D "brcm,brcm2711-dvp", },
+> +       { /* sentinel */ },
+
+Please drop comma after this so we can't put anything after lest it
+cause a compiler error.
+
+> +};
+> +
+> +static struct platform_driver clk_dvp_driver =3D {
+> +       .probe  =3D clk_dvp_probe,
+> +       .remove =3D clk_dvp_remove,
+> +       .driver =3D {
+> +               .name           =3D "brcm2711-dvp",
+> +               .of_match_table =3D clk_dvp_dt_ids,
+> +       },
+> +};
+> +module_platform_driver(clk_dvp_driver);
+> --=20
+> git-series 0.9.1
