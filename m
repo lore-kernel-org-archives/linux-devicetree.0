@@ -2,109 +2,119 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58091C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1B8C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3091020746
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:50:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vsgXryl3"
+	by mail.kernel.org (Postfix) with ESMTP id B79952073E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgCMMuV (ORCPT
+        id S1726216AbgCMNDR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:50:21 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:59864 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726534AbgCMMuV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:50:21 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DClBBG009053;
-        Fri, 13 Mar 2020 13:50:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=r4gx10/wtvNnRN5cGMpKMfyjngW05Zoe7Hit39sNOOI=;
- b=vsgXryl3gsHhysTHeFNVOvbdWiNlUdW0cEZqWoEBwuAtx9dMlhCnEfi1/5P/RApZgbKE
- cFQh5E/t/8unfbgFBVUzql5SDo5MBvM6I92G1WOpcqjzWwUcJsjgB2LhIUPkGK4XAsAv
- Phah9YYFe5kZnCjZgQkj8JUuhs3kjHxLI1jtmZ4X4Z/Iz2wLi6CJrJB2Z7fV6t3001op
- e7fXivhc9aGBE8JH6UpU/GXsCjU9aIsEtIr3Kfu4xCVIFDQVDiNHsKmwRPBY9eHrOq+j
- 6ez0T8BGwCkFOybaUdKVuy2LE/0Qp96LR8FnLJIjTdqUvD/xY93n7gDmmsPenQDO7olc og== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yqt82gm58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Mar 2020 13:50:12 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E27DF100038;
-        Fri, 13 Mar 2020 13:50:11 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CED582A7F68;
-        Fri, 13 Mar 2020 13:50:11 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 13 Mar
- 2020 13:50:10 +0100
-Subject: Re: [PATCH] ARM: dts: stm32: set i2c4 bus freq to 400KHz on stm32mp15
- DK boards
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>,
-        <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
-        <mcoquelin.stm32@gmail.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1581355056-13884-1-git-send-email-alain.volmat@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <7f8a5f6d-4d62-3649-efda-3d02f89a4d07@st.com>
-Date:   Fri, 13 Mar 2020 13:50:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 13 Mar 2020 09:03:17 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60776 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbgCMNDR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 09:03:17 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 67C3E80307C4;
+        Fri, 13 Mar 2020 13:03:14 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id m3F-eTf_XM1G; Fri, 13 Mar 2020 16:03:13 +0300 (MSK)
+Date:   Fri, 13 Mar 2020 16:02:31 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
+ SYSCON reboot-mode bindings
+Message-ID: <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
+References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
+ <20200312211438.GA21883@bogus>
 MIME-Version: 1.0
-In-Reply-To: <1581355056-13884-1-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-13_04:2020-03-12,2020-03-13 signatures=0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200312211438.GA21883@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alain
-
-On 2/10/20 6:17 PM, Alain Volmat wrote:
-> On DK boards, all I2C4 bus slaves supports I2C Fast Mode hence setting
-> the bus frequency to 400 KHz.
+On Thu, Mar 12, 2020 at 04:14:38PM -0500, Rob Herring wrote:
+> On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Optional regmap property will be used to refer to a syscon-controller
+> > having a reboot tolerant register mapped.
 > 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
->   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> index 7f5fcb2c5b03..2521f428ae67 100644
-> --- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-> @@ -221,6 +221,7 @@
->   	pinctrl-1 = <&i2c4_pins_sleep_a>;
->   	i2c-scl-rising-time-ns = <185>;
->   	i2c-scl-falling-time-ns = <20>;
-> +	clock-frequency = <400000>;
->   	status = "okay";
->   	/* spare dmas for other usage */
->   	/delete-property/dmas;
-> 
+> NAK. It should simply be a child node of the 'syscon-controller'.
 
-Applied on stm32-next.
+Hm, It's dilemma. The driver maintainer said ack, while you disagree.)
+So the code change will be merged while the doc-part won't? Lets discuss then
+to settle the issue.
 
-Thanks.
-Alex
+Why 'syscon-reboot' can be out of syscon-controller node, while
+'syscon-reboot-mode' can't? They both belong to the same usecase: save
+cause id and reboot. So having similar properties-set and declaring their
+nodes someplace nearby is natural. According to the driver 'syscon-reboot'
+can't lack the regmap property because it's mandatory, while here you refuse
+to have even optional support. Additionally in most of the cases the
+'syscon-reboot' nodes aren't declared as a child of a system controller
+node. Why 'syscon-reboot-mode' can't work in a similar way?
+
+Regards,
+-Sergey
+
+> 
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > ---
+> >  .../bindings/power/reset/syscon-reboot-mode.yaml         | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
+> > index e09bb07b1abb..f47bf52ad983 100644
+> > --- a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
+> > +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.yaml
+> > @@ -13,9 +13,8 @@ description: |
+> >    This driver gets reboot mode magic value from reboot-mode driver
+> >    and stores it in a SYSCON mapped register. Then the bootloader
+> >    can read it and take different action according to the magic
+> > -  value stored. The SYSCON mapped register is retrieved from the
+> > -  parental dt-node plus the offset. So the SYSCON reboot-mode node
+> > -  should be represented as a sub-node of a "syscon", "simple-mfd" node.
+> > +  value stored. The SYSCON mapped register is retrieved either from
+> > +  the parental dt-node or from a regmap phandle plus the offset.
+> >  
+> >  properties:
+> >    compatible:
+> > @@ -29,6 +28,10 @@ properties:
+> >      $ref: /schemas/types.yaml#/definitions/uint32
+> >      description: Offset in the register map for the mode register (in bytes).
+> >  
+> > +  regmap:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: Phandle to the register map node.
+> > +
+> >  patternProperties:
+> >    "^mode-.+":
+> >      $ref: /schemas/types.yaml#/definitions/uint32
+> > -- 
+> > 2.25.1
+> > 
