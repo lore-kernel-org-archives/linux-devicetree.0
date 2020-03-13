@@ -2,137 +2,94 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A61C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78D1C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D7020749
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:37:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="VJFK31Pl"
+	by mail.kernel.org (Postfix) with ESMTP id 8C87C20749
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgCMIhZ (ORCPT
+        id S1726365AbgCMIxn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:37:25 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:38291 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726300AbgCMIhZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:37:25 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id Cfokj1LVWhVf8CfoojOB6e; Fri, 13 Mar 2020 09:37:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1584088642; bh=NPDVj0hDHGTudN6m2hDl5vDuc6roQ9SfR7NRCqmST08=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=VJFK31PlgtKdUTAxIara79MLK1CVGweGI7JNsxuMwfny6tUCzfmjwR/Ok+rBhCKm4
-         vp/K0TVQtSUjMWbHGxUDrQAFg7qn36l23L1SrvnibLCOJVEAiy0hPhG8AMB+eahLBa
-         zBe/m0OAedra3RvsdPdODrLiTOW3jDKEcC/EpK0Q8d9B93ZuZGt2RhsIF/OzDtjWVj
-         FIMNOITjFlfVHzTCZY99QEPe0KVgRhKor1Lg31JEZ7/mj4l1aWUv6jkWdC7zcu52cX
-         6H+m3TxXVjNJB49bjlSU+JZS/43x61R9UZfQ3u086crPMOhFkaelvXKp62VVnWtQA6
-         +irAiNbazUH4Q==
-Subject: Re: [PATCH 0/8] media: i2c: adv748x: add support for HDMI audio
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <20200113141459.GA3606@pflmari>
- <e93e6e1e-11dc-d505-7287-46b115a4a609@xs4all.nl>
- <20200313083107.GB3832@pflmari>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <4ab3dd9f-26fb-ce38-170c-bba4b3777455@xs4all.nl>
-Date:   Fri, 13 Mar 2020 09:37:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 04:53:43 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:59810 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgCMIxn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 04:53:43 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8FE5E80307C4;
+        Fri, 13 Mar 2020 08:53:37 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9zVlvYQXHBqm; Fri, 13 Mar 2020 11:53:35 +0300 (MSK)
+Date:   Fri, 13 Mar 2020 11:52:48 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/22] dt-bindings: Add vendor prefix for Baikal
+ Electronics, JSC
+Message-ID: <20200313085248.haa6vxultay4ktqn@ubsrv2.baikal.int>
+References: <20200306124705.6595-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306124832.986FE8030793@mail.baikalelectronics.ru>
+ <20200312204124.GA1756@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20200313083107.GB3832@pflmari>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEcFIdVlB9n0Nfwlt2moC+Rr0T6Ztdr9G19F2RB1eRFOSl2wOxKv/b8i6Fz/VKQa8SUmHLYTHSddHNm5REyThEuU4PFzEJRphQtUmiTZzUYoCoyecA3w
- +BVXVJyWIZrIZKDL8z9L1TKRYFZknkUQyQ49SMwmjXgVCW4xmoRqsX9rdGNHDMGRTUtODvQOlV2as0WcL9kKkaPO9suFLNN2HM061XgDf45b28+2X69DP51V
- WNRc6ARJs1Bv9pdWRHNTHVEg3pqd+pdo8nAQctf0AIlR7RzV7c2RSeuDVFwTUFoid+F/7XZaPTxrDH1j+C2P8nuQ87NdnuDSfJ6vNyjmGjbl2TW6jHfeWGRh
- JYcODhFG4JNDPDKexZmMwpUJzeuwmLQ8b1rDhNGXOFYGfSphmsMzNazI5OMqMuAU45q9BeIBFuYDZCGq8gmIfAVr1MYc/neBUfTmc6DPYAUOHHUuytXTLOXU
- RfrwpaDirMluhPP5UUgb7Vqn6kstrSTyRvV9R6EIRuJOu+sSXC/0tQgGdni3Fdoe/CpFGmI9TVCVpRDc3K91dCYoqvYoFGxxyYOuGoGpfFQr2qWrkIoCMsNs
- OMs=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200312204124.GA1756@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/13/20 9:31 AM, Alex Riesen wrote:
-> Hi Hans,
+On Thu, Mar 12, 2020 at 03:41:24PM -0500, Rob Herring wrote:
+> On Fri, Mar 06, 2020 at 03:46:47PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <fancer.lancer@gmail.com>
+> > 
+> > Add "BAIKAL ELECTRONICS, JSC" to the list of devicetree vendor prefixes
+> > as "be".
+> > 
+> > Website: http://www.baikalelectronics.com
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Hans Verkuil, Fri, Mar 13, 2020 09:21:05 +0100:
->> As a general note for this series: it might be better to have two
->> patch series: one for patches 1 and 3-6 (not sure whether 5 can be included
->> or not), and one where the public API changes (i.e. new V4L2 audio controls)
->> are added. The first can probably be merged fairly quickly, the second will
->> likely require more iterations since public API patches always take much longer
->> before they are mature.
+> checkpatch is not happy that the author and S-o-b don't match.
 > 
-> I see. After the discussion started, I started to have suspicions of my own
-> regarding the V4L2 ioctls. Except for log-status, which is a practical
-> diagnostics feature (even supported by v4l2-ctl), I'm thinking about dropping
-> them altogether in favor of audio soc DAI implementation.
-> The DAI implementation does all we ever needed from the device. Besides,
-> selecting a I2S protocol variant from user space (I2S vs I2S/TDM) never felt
-> right.
 
-That sounds like what everyone else does as well.
+Sorry. Missed that. I'll fix it up in v2.
 
-> 
-> Shall I submit the log-status separately?
+-Sergey
 
-Yes please. In my experience, log status is a very nice and very useful feature.
-
-If you have other sensible cleanups, then feel free to add those as well.
-
-Regards,
-
-	Hans
-
-> 
-> Regards,
-> Alex
-> 
->> On 1/13/20 3:14 PM, Alex Riesen wrote:
->>> This adds minimal support for controlling the audio output I2S port available
->>> on ADV7481 and ADV7482 HDMI decoder devices by ADI. The port carries audio
->>> signal from the decoded HDMI stream.
->>>
->>> An ADV7482 on the Renesas Salvator-X ES1.1 was used during development of this
->>> code.
->>>
->>> Alex Riesen (8):
->>>  1. media: adv748x: add a device-specific wrapper for register block read
->>>  2. media: adv748x: add audio mute control and output selection ioctls
->>>  3. media: adv748x: add log_status ioctl
->>>  4. media: adv748x: reserve space for the audio (I2S) port in the driver
->>>     structures
->>>  5. media: adv748x: add an ASoC DAI definition to the driver
->>>  6. media: adv748x: reduce amount of code for bitwise modification of
->>>     device registers
->>>  7. dt-bindings: adv748x: add information about serial audio interface
->>>     (I2S/TDM)
->>>  8. arm64: dts: renesas: salvator: add a connection from adv748x codec
->>>     (HDMI input) to the R-Car SoC
->>>
->>>  .../devicetree/bindings/media/i2c/adv748x.txt |  13 +-
->>>  .../dts/renesas/r8a7795-es1-salvator-x.dts    |  24 +-
->>>  .../boot/dts/renesas/salvator-common.dtsi     |  35 +-
->>>  drivers/media/i2c/adv748x/adv748x-core.c      |  54 +++
->>>  drivers/media/i2c/adv748x/adv748x-hdmi.c      | 355 ++++++++++++++++++
->>>  drivers/media/i2c/adv748x/adv748x.h           |  53 ++-
->>>  6 files changed, 523 insertions(+), 11 deletions(-)
->>>
-
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > index 9e67944bec9c..8568713396af 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> > @@ -141,6 +141,8 @@ patternProperties:
+> >      description: Shenzhen AZW Technology Co., Ltd.
+> >    "^bananapi,.*":
+> >      description: BIPAI KEJI LIMITED
+> > +  "^be,.*":
+> > +    description: BAIKAL ELECTRONICS, JSC
+> >    "^bhf,.*":
+> >      description: Beckhoff Automation GmbH & Co. KG
+> >    "^bitmain,.*":
+> > -- 
+> > 2.25.1
+> > 
