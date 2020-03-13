@@ -2,253 +2,125 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D9CC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CBEC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B12FC20746
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF4120746
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgCMMUv (ORCPT
+        id S1726642AbgCMM11 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 08:20:51 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:33938 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726534AbgCMMUv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 08:20:51 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 6E41A634C87;
-        Fri, 13 Mar 2020 14:19:49 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jCjI5-0001il-Np; Fri, 13 Mar 2020 14:19:49 +0200
-Date:   Fri, 13 Mar 2020 14:19:49 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [v2 1/3] media: dt-bindings: ov8856: Document YAML bindings
-Message-ID: <20200313121949.GD5730@valkosipuli.retiisi.org.uk>
-References: <20200313110350.10864-1-robert.foss@linaro.org>
- <20200313110350.10864-2-robert.foss@linaro.org>
+        Fri, 13 Mar 2020 08:27:27 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60628 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgCMM11 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 08:27:27 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id D2E2C80307C4;
+        Fri, 13 Mar 2020 12:27:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Dm24oyUx6UoH; Fri, 13 Mar 2020 15:27:23 +0300 (MSK)
+Date:   Fri, 13 Mar 2020 15:26:34 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: syscon: Add syscon endian properties
+ support
+Message-ID: <20200313122634.lfdharbhxvnoew6r@ubsrv2.baikal.int>
+References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130356.D9FCD8030794@mail.baikalelectronics.ru>
+ <20200312211102.GA21647@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200313110350.10864-2-robert.foss@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200312211102.GA21647@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robert,
+On Thu, Mar 12, 2020 at 04:11:02PM -0500, Rob Herring wrote:
+> On Fri, Mar 06, 2020 at 04:03:38PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > In accordance with the syscon-driver (drivers/mfd/syscon.c) the syscon
+> > dts-nodes may accept endian properties of the boolean type: little-endian,
+> > big-endian, native-endian. Lets make sure that syscon bindings json-schema
+> > also supports them.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/syscon.yaml | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> > index 39375e4313d2..9ee404991533 100644
+> > --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
+> > +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> > @@ -61,6 +61,11 @@ properties:
+> >      description:
+> >        Reference to a phandle of a hardware spinlock provider node.
+> >  
+> > +patternProperties:
+> > +  "^(big|little|native)-endian$":
+> > +    $ref: /schemas/types.yaml#/definitions/flag
+> > +    description: Bytes order of the system controller memory space.
+> 
+> Common properties should have a type definition in a common schema. For 
+> this one, I'd like it in the core schema in dtschema. 
 
-On Fri, Mar 13, 2020 at 12:03:48PM +0100, Robert Foss wrote:
-> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> 
-> This patch adds documentation of device tree in YAML schema for the
-> OV8856 CMOS image sensor.
-> 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> ---
-> 
-> - Changes since v4:
->   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
->   * Add clock-lanes property to example
->   * robher: Fix syntax error in devicetree example
-> 
-> - Changes since v3:
->   * robher: Fix syntax error
->   * robher: Removed maxItems
->   * Fixes yaml 'make dt-binding-check' errors
-> 
-> - Changes since v2:
->   Fixes comments from from Andy, Tomasz, Sakari, Rob.
->   * Convert text documentation to YAML schema.
-> 
-> - Changes since v1:
->   Fixes comments from Sakari, Tomasz
->   * Add clock-frequency and link-frequencies in DT
-> 
->  .../devicetree/bindings/media/i2c/ov8856.yaml | 133 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> new file mode 100644
-> index 000000000000..f5cb9add9277
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> @@ -0,0 +1,133 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (c) 2019 MediaTek Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
-> +
-> +maintainers:
-> +  - Ben Kao <ben.kao@intel.com>
+So what do you suggest then? Will you move this file to the dt-scheme/schemas
+in your repo? What shall I do with this patch, just drop? Or would you like me
+to fork your dt-schema repo, add dt-schemas/schemas/mfd/syscon.yaml file similar
+to this one with "*-endian" property supported, then pull-request or
+send a patch with the alteration back to your repo?
 
-Is Ben aware of this?
+> 
+> I'd expect for any specific 'syscon', either none or only a subset of 
+> these are valid, so I don't think this should be added here.
 
-> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-> +
-> +description: |-
-> +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
-> +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
-> +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
-> +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
-> +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
-> +  serial data output (up to 4-lane).
-> +
-> +properties:
-> +  compatible:
-> +    const: ovti,ov8856
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    description:
-> +      Input clock for the sensor.
-> +    items:
-> +      - const: xvclk
-> +
-> +  clock-frequency:
-> +    description:
-> +      Frequency of the xvclk clock in Hertz.
-> +
-> +  dovdd-supply:
-> +    description:
-> +      Definition of the regulator used as interface power supply.
-> +
-> +  avdd-supply:
-> +    description:
-> +      Definition of the regulator used as analog power supply.
-> +
-> +  dvdd-supply:
-> +    description:
-> +      Definition of the regulator used as digital power supply.
-> +
-> +  reset-gpios:
-> +    description:
-> +      The phandle and specifier for the GPIO that controls sensor reset.
-> +      This corresponds to the hardware pin XSHUTDOWN which is physically
-> +      active low.
-> +
-> +  port:
-> +    type: object
-> +    additionalProperties: false
-> +    description:
-> +      A node containing input and output port nodes with endpoint definitions
-> +      as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +
-> +        properties:
-> +          clock-lanes:
-> +            maxItems: 1
-> +
-> +          data-lanes:
-> +            maxItems: 1
-> +
-> +          remote-endpoint: true
-> +
-> +        required:
-> +          - clock-lanes
+AFAIU mfd/syscon.yaml describes a generic syscon compatible with generic
+driver drivers/mfd/syscon.c, which may have any of these properties
+declared in its dt-node. We can't predict which one because, well, it's
+generic. At the same time, yes, only a subset of these properties can be
+supported by a specific system controller, which one can be determined
+by the controller specific dt schema. So if we left the property here in
+the generic syscon.yaml, then the controller dt-schema would have had a
+pattern like:
 
-Do you need the clock-lanes property, i.e. does the device support lane
-reordering? If not, it should be removed.
+>
+> allOf:
+>   - $ref: ../../mfd/syscon.yaml#
+>
+> properties:
+>   little-endian: true
+>
+> additionalProperties: false
+>
 
-> +          - data-lanes
-> +          - remote-endpoint
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - clock-frequency
-> +  - dovdd-supply
-> +  - avdd-supply
-> +  - dvdd-supply
-> +  - reset-gpios
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/clock/qcom,camcc-sdm845.h>
-> +
-> +    ov8856: camera-sensor@10 {
-> +        compatible = "ovti,ov8856";
-> +        reg = <0x10>;
-> +        reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&clk_24m_cam>;
-> +
-> +        clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
-> +        clock-names = "xvclk";
-> +        clock-frequency = <19200000>;
-> +
-> +        avdd-supply = <&mt6358_vcama2_reg>;
-> +        dvdd-supply = <&mt6358_vcamd_reg>;
-> +        dovdd-supply = <&mt6358_vcamio_reg>;
-> +
-> +        port {
-> +            wcam_out: endpoint {
-> +                remote-endpoint = <&mipi_in_wcam>;
-> +                clock-lanes = <0>;
-> +                data-lanes = <1 2 3 4>;
-> +                link-frequencies = /bits/ 64 <360000000 180000000>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> \ No newline at end of file
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a6fbdf354d34..0f99e863978a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12355,6 +12355,7 @@ L:	linux-media@vger.kernel.org
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Maintained
->  F:	drivers/media/i2c/ov8856.c
-> +F:	Documentation/devicetree/bindings/media/i2c/ov8856.yaml
->  
->  OMNIVISION OV9650 SENSOR DRIVER
->  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+as I did for soc/baikal-t1/be,bt1-l2-ctl.yaml. See the patch: "dt-bindings:
+Add Baikal-T1 L2-cache Control Block dts bindings file" in the corresponding
+patchset in your email Inbox.
 
--- 
 Regards,
+-Sergey
 
-Sakari Ailus
+> 
+> Rob
