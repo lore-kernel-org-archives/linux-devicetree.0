@@ -2,75 +2,71 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630AFC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 09:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5F7C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBA420746
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 09:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8360D206E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:01:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="6XG5MzlO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="v7Cd0vhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgCMJ4I (ORCPT
+        id S1726437AbgCMKBY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:56:08 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33208 "EHLO vps0.lunn.ch"
+        Fri, 13 Mar 2020 06:01:24 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33238 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgCMJ4I (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 05:56:08 -0400
+        id S1726406AbgCMKBY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:01:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=vl8CYxpZLJVDwCydW3SUEJKySszv1ZXkhRykMBoOzoU=; b=6XG5MzlOdJETHHDVpQZE7zJCp0
-        jRtMUsSx1AxddQ9NqCTuECxLQBgMDW0dtZe87/bs41L8oYm5TP5N+TgpfmO/99soBox7FgcxH6/l7
-        UgVXlnMLhnfD52rc1gVsshIRyHkreqq786avxZ4QvFJEOybEq7xh21F0lViQDQVRAgss=;
+        bh=6yt4N6aS69xIX5Kbrw2cM1AnDJ8rQ7egHTUgXYLVIAM=; b=v7Cd0vhbgk73eUQFMe9nc6E9C7
+        3ZojQM+yAeCEjn8jJ4KVEMXoRVLKVsTeb1lzpIBad8MEl2WK0FmKOV/fYCA6fxvN5WsPGb3GdCnIx
+        XbnDeDQucnczXJF/nd1U6aFz3ZVh1PAJnLjNSplWa3kCXbdbmb3UgLNPE9cbnMj1QITg=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
         (envelope-from <andrew@lunn.ch>)
-        id 1jCh2w-00046a-Ih; Fri, 13 Mar 2020 10:56:02 +0100
-Date:   Fri, 13 Mar 2020 10:56:02 +0100
+        id 1jCh82-00049X-Ts; Fri, 13 Mar 2020 11:01:18 +0100
+Date:   Fri, 13 Mar 2020 11:01:18 +0100
 From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx6dl-riotboard: properly define rgmii
- PHY
-Message-ID: <20200313095602.GE14553@lunn.ch>
-References: <20200313053224.8172-1-o.rempel@pengutronix.de>
- <20200313053224.8172-2-o.rempel@pengutronix.de>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Michael Walle <michael@walle.cc>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2] net: dsa: felix: allow the device to be disabled
+Message-ID: <20200313100118.GF14553@lunn.ch>
+References: <20200312164320.22349-1-michael@walle.cc>
+ <CA+h21hoHMxtxUjHthx2ta9CzQbkF_08Svi7wLU99NqJmoEr36Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313053224.8172-2-o.rempel@pengutronix.de>
+In-Reply-To: <CA+h21hoHMxtxUjHthx2ta9CzQbkF_08Svi7wLU99NqJmoEr36Q@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 06:32:23AM +0100, Oleksij Rempel wrote:
-> The Atheros AR8035 PHY can be autodetected but can't use interrupt
-> support provided on this board. Define MDIO bus and the PHY node to make
-> it work properly.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+e> IMHO since DSA is already dependent on device tree for PHY bindings,
+> it would make more sense to move this there:
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+That is not really true. You can instantiate a marvell switch using a
+platform device. So long any you only have C22 PHYs in a sane
+configuration, it will just work. There are boards out there do this,
+on x86 platforms without device tree.
 
-    Andrew
+	Andrew
