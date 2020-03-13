@@ -2,138 +2,218 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D0BC5ACC1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 21:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F625C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 21:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8526D20754
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 21:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE16F2074A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 21:28:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D7pb2p+J"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ggDjeYlG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgCMV1Y (ORCPT
+        id S1727015AbgCMV2g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 17:27:24 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58454 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgCMV1Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 17:27:24 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7D6F32D6;
-        Fri, 13 Mar 2020 22:27:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584134841;
-        bh=8poZMY3yZ6/FoJSTyQeb76xDXBHs9PcDxedIYUmrXTk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D7pb2p+JuF9dSBS2cwX4W3N474YB7Twx9kegIH4Ym5JpP9XzqN5qQyiEbaAmis1IF
-         MnkiNLtwbAfhiXLOgQbpEah0Xg9MsCDmOMdF+lAvIJVo+wyQoidkxCQE4/jOqKESP+
-         tiVwAhxLtbTfG+CPWMTYFLQSJzhw4dHhlyCeCK1w=
-Date:   Fri, 13 Mar 2020 23:27:17 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to
- assigned-clock-rates
-Message-ID: <20200313212717.GO4751@pendragon.ideasonboard.com>
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200313212012.GL4751@pendragon.ideasonboard.com>
- <OSBPR01MB35905D6D72DCBF154FCF7C88AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+        Fri, 13 Mar 2020 17:28:36 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38717 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgCMV2g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 17:28:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z5so6033705pfn.5
+        for <devicetree@vger.kernel.org>; Fri, 13 Mar 2020 14:28:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ry88+WJ8l0zWh9VRcHO/WsgTmwawfbzUY5Sw04fN+Yo=;
+        b=ggDjeYlGjr6G0AJm0Zxysz575eO62jPbvdaICQoeCJ5IGHTMeQzePj2ysK0BS6LCqs
+         SC647aPJJqcGyGBZBw6pUVQvAJtoiEC46JBlSlDO+610X0NKreH+BLpUqvtIY60mS45f
+         ocVCeNv/bGgOluQS1qH4cHDDpbZKucXC2R8iA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ry88+WJ8l0zWh9VRcHO/WsgTmwawfbzUY5Sw04fN+Yo=;
+        b=g5gxOgBfRkH2DZXavLazOc8CiBlb9R0bazvm3+cs8CSrvG9OcDj+RuM+f4a0c0+4D+
+         YXbtXvQXftgt9opJRO1YCx7lFWiaRcToTjrY++LWpQfnUJDe6j7PWZ/Wi53KyYT7V+dX
+         vpz8NUDZUWXk0pkMV6TBYDwAzJigf9dxI/wCXQKRulzYlS29UWT0oR4pOj4Ir7hXOsXZ
+         WeMIp+z+jqabgAUc4jVUoSYKnthengBHWzwjneAN63Mqn8verxIEyMkH2q4ROui6RXm+
+         +moYg7j+GTB5Hi5d78ydB3cWmVbrWvXUU3J9LCmEDhao2z4tHSlQum4a7O2aReocXE1b
+         6bNg==
+X-Gm-Message-State: ANhLgQ0Z65zfjf9YcG00oCYcwQNsXV1qWbxFWKG8T25ySVejjAD+bvnz
+        l8wh5mAa8jOsULrMA/9SzN7NSw==
+X-Google-Smtp-Source: ADFU+vucKwFZgC8dkfJ9UvKffgEL6ZoV8n8BdGBDjTsqiUyK9EqnqQYB/EWe1+STtFklrWlFl90CNQ==
+X-Received: by 2002:aa7:83cb:: with SMTP id j11mr13454955pfn.241.1584134915113;
+        Fri, 13 Mar 2020 14:28:35 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id z3sm59387463pfz.155.2020.03.13.14.28.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 14:28:34 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 14:28:33 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+Subject: Re: [PATCH V2 4/8] tty: serial: qcom_geni_serial: Add interconnect
+ support
+Message-ID: <20200313212833.GK144492@google.com>
+References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
+ <1584105134-13583-5-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <OSBPR01MB35905D6D72DCBF154FCF7C88AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1584105134-13583-5-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+Hi Akash,
 
-On Fri, Mar 13, 2020 at 09:25:01PM +0000, Prabhakar Mahadev Lad wrote:
-> On Sent: 13 March 2020 21:20, Laurent Pinchart wrote:
-> > On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
-> > > Use assigned-clock-rates to specify the clock rate. Also mark
-> > > clock-frequency property as deprecated.
-> >
-> > I would phrase it the other way around, this patch mainly deprecates clock-
-> > frequency, and as a side effect recommends usage of assigned-clock-rates.
-> >
-> > "Deprecate usage of the clock-frequency propertly. The preferred method
-> > to set clock rates is to use assigned-clock-rates."
->
-> Agreed will do that.
+On Fri, Mar 13, 2020 at 06:42:10PM +0530, Akash Asthana wrote:
+> Get the interconnect paths for Uart based Serial Engine device
+> and vote according to the baud rate requirement of the driver.
 > 
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > index 72ad992..e62fe82 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > @@ -8,7 +8,7 @@ Required Properties:
-> > >  - compatible: Value should be "ovti,ov5645".
-> > >  - clocks: Reference to the xclk clock.
-> > >  - clock-names: Should be "xclk".
-> > > -- clock-frequency: Frequency of the xclk clock.
-> > > +- clock-frequency (deprecated): Frequency of the xclk clock.
-> >
-> > I would drop this completely. Drivers need to ensure backward compatibility,
-> > but DT bindings should only document the latest version, the history is
-> > available in git.
-> >
-> Sure will drop it.
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Bjorn's comment, removed se == NULL check from geni_serial_icc_get
+>  - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
+>  - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>    path handle
+>  - As per Matthias comment, added error handling for icc_set_bw call
 > 
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >
-> > While at it, can I enlist you to convert these bindings to yaml ? :-)
-> >
-> Sure will do the honours 😊, will make sure yaml patch is ontop of this patch too.
+>  drivers/tty/serial/qcom_geni_serial.c | 69 +++++++++++++++++++++++++++++++++--
+>  1 file changed, 65 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 272bae0..c8ad7e9 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -184,6 +184,19 @@ static struct qcom_geni_serial_port qcom_geni_console_port = {
+>  	},
+>  };
+>  
+> +static int geni_serial_icc_get(struct geni_se *se)
+> +{
+> +	se->icc_path_geni_to_core = devm_of_icc_get(se->dev, "qup-core");
+> +	if (IS_ERR(se->icc_path_geni_to_core))
+> +		return PTR_ERR(se->icc_path_geni_to_core);
+> +
+> +	se->icc_path_cpu_to_geni = devm_of_icc_get(se->dev, "qup-config");
+> +	if (IS_ERR(se->icc_path_cpu_to_geni))
+> +		return PTR_ERR(se->icc_path_cpu_to_geni);
+> +
+> +	return 0;
+> +}
+> +
+>  static int qcom_geni_serial_request_port(struct uart_port *uport)
+>  {
+>  	struct platform_device *pdev = to_platform_device(uport->dev);
+> @@ -962,6 +975,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>  	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+>  	unsigned long clk_rate;
+>  	u32 ver, sampling_rate;
+> +	int ret;
+>  
+>  	qcom_geni_serial_stop_rx(uport);
+>  	/* baud rate */
+> @@ -983,6 +997,18 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>  	ser_clk_cfg = SER_CLK_EN;
+>  	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>  
+> +	/*
+> +	 * Put BW vote only on CPU path as driver supports FIFO mode only.
+> +	 * Assume peak_bw as twice of avg_bw.
+> +	 */
+> +	port->se.avg_bw_cpu = Bps_to_icc(baud);
+> +	port->se.peak_bw_cpu = Bps_to_icc(2 * baud);
+> +	ret = icc_set_bw(port->se.icc_path_cpu_to_geni, port->se.avg_bw_cpu,
+> +			port->se.peak_bw_cpu);
+> +	if (ret)
+> +		dev_err(uport->dev, "%s: ICC BW voting failed for cpu\n",
+> +			__func__);
 
-Thank you :-)
+Should this return an error? The port might not operate properly if the ICC
+bandwidth couldn't be configured
 
-> > >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > >    to the hardware pin PWDNB which is physically active low.
-> > >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > > @@ -37,7 +37,8 @@ Example:
-> > >
-> > >  clocks = <&clks 200>;
-> > >  clock-names = "xclk";
-> > > -clock-frequency = <24000000>;
-> > > +assigned-clocks = <&clks 200>;
-> > > +assigned-clock-rates = <24000000>;
-> > >
-> > >  vdddo-supply = <&camera_dovdd_1v8>;
-> > >  vdda-supply = <&camera_avdd_2v8>;
 
--- 
-Regards,
+> +
+>  	/* parity */
+>  	tx_trans_cfg = readl(uport->membase + SE_UART_TX_TRANS_CFG);
+>  	tx_parity_cfg = readl(uport->membase + SE_UART_TX_PARITY_CFG);
+> @@ -1208,16 +1234,40 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
+>  		unsigned int new_state, unsigned int old_state)
+>  {
+>  	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+> -
+> +	int ret;
+>  	/* If we've never been called, treat it as off */
+>  	if (old_state == UART_PM_STATE_UNDEFINED)
+>  		old_state = UART_PM_STATE_OFF;
+>  
+> -	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
+> +	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF) {
+> +		/* Put BW vote for core clocks and CPU */
+> +		ret = icc_set_bw(port->se.icc_path_geni_to_core,
+> +			port->se.avg_bw_core, port->se.peak_bw_core);
+> +		if (ret)
+> +			dev_err(uport->dev, "%s: ICC BW voting failed for core\n",
+> +				__func__);
+> +
+> +		ret = icc_set_bw(port->se.icc_path_cpu_to_geni,
+> +			port->se.avg_bw_cpu, port->se.peak_bw_cpu);
+> +		if (ret)
+> +			dev_err(uport->dev, "%s: ICC BW voting failed for cpu\n",
+> +				__func__);
+> +
+>  		geni_se_resources_on(&port->se);
+> -	else if (new_state == UART_PM_STATE_OFF &&
+> -			old_state == UART_PM_STATE_ON)
+> +	} else if (new_state == UART_PM_STATE_OFF &&
+> +			old_state == UART_PM_STATE_ON) {
+>  		geni_se_resources_off(&port->se);
+> +		/* Remove BW vote from core clocks and CPU */
+> +		ret = icc_set_bw(port->se.icc_path_geni_to_core, 0, 0);
+> +		if (ret)
+> +			dev_err(uport->dev, "%s: ICC BW remove failed for core\n",
+> +				__func__);
+> +
+> +		ret = icc_set_bw(port->se.icc_path_cpu_to_geni, 0, 0);
+> +		if (ret)
+> +			dev_err(uport->dev, "%s: ICC BW remove failed for cpu\n",
+> +				__func__);
+> +	}
+>  }
+>  
+>  static const struct uart_ops qcom_geni_console_pops = {
+> @@ -1308,6 +1358,17 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+>  	port->rx_fifo_depth = DEF_FIFO_DEPTH_WORDS;
+>  	port->tx_fifo_width = DEF_FIFO_WIDTH_BITS;
+>  
+> +	ret = geni_serial_icc_get(&port->se);
+> +	if (ret)
+> +		return ret;
+> +	/* Set the bus quota to a reasonable value */
+> +	port->se.avg_bw_core = console ? Bps_to_icc(1000) :
+> +		Bps_to_icc(CORE_2X_50_MHZ);
 
-Laurent Pinchart
+Why different settings for console vs. non-console?
+
+> +	port->se.peak_bw_core = console ? Bps_to_icc(1000) :
+> +		Bps_to_icc(CORE_2X_100_MHZ);
+> +	port->se.avg_bw_cpu = Bps_to_icc(1000);
+> +	port->se.peak_bw_cpu = Bps_to_icc(1000);
+
+'Bps_to_icc(1000)' is a recurring theme in this series, could it be worth
+to have a constant for that? Could be GENI_DEFAULT_BW or similar.
