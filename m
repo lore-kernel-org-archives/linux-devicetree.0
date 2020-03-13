@@ -2,130 +2,109 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33813C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83325C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E00206E9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584122851;
-	bh=dqIuswp1RKk/FdTFaLj3rD9WStIXPmXy//brccWYJDs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iakfJ5fJ5wiy470eV5aprrxjdq+EjdQEaKhMEttWtNCETyV0CYxcCrs3a8TfJHDgZ
-	 CzbAi7vXDFBa8jmLQRLiLknYAQqAzyWwYViFpjXwU9jIM1lxFA3S5Ey/29b3F1wljI
-	 Pkuyf6QZbWgUoowNKAAkquWJ6spR7sodS+/QCdqQ=
+	by mail.kernel.org (Postfix) with ESMTP id 46C8620674
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:11:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VZNpBmBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgCMSHa (ORCPT
+        id S1726526AbgCMSLE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:07:30 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34906 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgCMSHa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 14:07:30 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k8so8913139oik.2;
-        Fri, 13 Mar 2020 11:07:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XfdUP3YGPmXKGkwHkk+uuVO8kCTOJvEs+/FfsSsBG+o=;
-        b=TsImVrcyGRWLdZ+ghcPIMZerBiFeMOY3FYbeIXP2tDC9gcSf7HAqba+rZzv/Zc/xoQ
-         3JgZwcUifupmtoYxzbVFvoLDzB3LYqu54s5tLfn+hE/9XSEQ/do+U4oKs+DdfPKjY/Qt
-         nTkumcqPdGgR7VrF2bu6xcRhnFztFi0beZ2T1AKdGfive17Ne3Cs0Dk+tkmGXMxnbM8p
-         EBu9lvGbV6+F/3zpLDlccfDxj8uszf/ukmv3JshExtoK9ac3pzocoL4j+N2Cyv1413/G
-         98WVZRYXuTzcMraRuc9FTssb7wPtvsBRBdI0Y4nqC74K+go0kLaYXUmqeiDw7Oa/0dnK
-         1Eyg==
-X-Gm-Message-State: ANhLgQ2oGc/3PxgkVog/1mrmhKXpEYTcd+Wf7QuHynWT2Hc3TgIGklCi
-        jxrXeatIZ44Qu8QG/9aR6w==
-X-Google-Smtp-Source: ADFU+vvVX5P8LfcDS2EEYM59OmWbE1ipOo1GIc6HBscLEHtBCb9LizJUYnklHCLbjBQQR2+W7LYBFg==
-X-Received: by 2002:a05:6808:9bb:: with SMTP id e27mr2718525oig.36.1584122849148;
-        Fri, 13 Mar 2020 11:07:29 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id w18sm13886991otl.60.2020.03.13.11.07.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 11:07:28 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     dri-devel@lists.freedesktop.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sam Ravnborg <sam@ravnborg.org>, Jyri Sarha <jsarha@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH v2] dt-bindings: display: ti: Fix dtc unit-address warnings in examples
-Date:   Fri, 13 Mar 2020 13:07:27 -0500
-Message-Id: <20200313180727.23044-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 13 Mar 2020 14:11:04 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34188 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726414AbgCMSLE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 14:11:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=W9a+0fAfmG82n7GJfhOGZ1nPwnwMa9XduCIBZsnFc4w=; b=VZNpBmBl5ZDoTsrw2KG7/2ePeo
+        rrMX3dnNGMHXy4ZbZf385u23KVedALl8eCkeIyeRUI+rFglkBfZBJh/BI41sIcZAbj05KU48ihh9a
+        IYcYP5VhpedG8cV73sM6yY9PlBh+ZcICtocOUkNvx9x2127drCFT9mW8GNZbKF6lHB0Y=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jCols-0007vu-Mk; Fri, 13 Mar 2020 19:10:56 +0100
+Date:   Fri, 13 Mar 2020 19:10:56 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
+Message-ID: <20200313181056.GA29732@lunn.ch>
+References: <20200313052252.25389-1-o.rempel@pengutronix.de>
+ <20200313052252.25389-2-o.rempel@pengutronix.de>
+ <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Extra dtc warnings (roughly what W=1 enables) are now enabled by default
-when building the binding examples. These were fixed treewide in
-5.6-rc5, but some new display bindings have been added with new
-warnings:
+> > diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> > new file mode 100644
+> > index 000000000000..42be0255512b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> > @@ -0,0 +1,61 @@
+> > +# SPDX-License-Identifier: GPL-2.0+
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: NXP TJA11xx PHY
+> > +
+> > +maintainers:
+> > +  - Andrew Lunn <andrew@lunn.ch>
+> > +  - Florian Fainelli <f.fainelli@gmail.com>
+> > +  - Heiner Kallweit <hkallweit1@gmail.com>
+> > +
+> > +description:
+> > +  Bindings for NXP TJA11xx automotive PHYs
+> > +
+> > +allOf:
+> > +  - $ref: ethernet-phy.yaml#
+> > +
+> > +patternProperties:
+> > +  "^ethernet-phy@[0-9a-f]+$":
+> > +    type: object
+> > +    description: |
+> > +      Some packages have multiple PHYs. Secondary PHY should be defines as
+> > +      subnode of the first (parent) PHY.
+> 
+> 
+> There are QSGMII PHYs which have 4 PHYs embedded and AFAICT they are
+> defined as 4 separate Ethernet PHY nodes and this would not be quite a
+> big stretch to represent them that way compared to how they are.
+> 
+> I would recommend doing the same thing and not bend the MDIO framework
+> to support the registration of "nested" Ethernet PHY nodes.
 
-Documentation/devicetree/bindings/display/ti/ti,am65x-dss.example.dts:21.27-49.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
-Documentation/devicetree/bindings/display/ti/ti,j721e-dss.example.dts:21.27-72.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
-Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dts:20.27-42.11: Warning (unit_address_format): /example-0/dss@02540000: unit name should not have leading 0s
+Hi Florian
 
-Cc: Jyri Sarha <jsarha@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v2:
- - Drop panel fixes as there's another patch fixing the 3 panels plus
-   others.
----
- Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
- Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml | 2 +-
- Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+The issue here is the missing PHY ID in the secondary PHY. Because of
+that, the secondary does not probe in the normal way. We need the
+primary to be involved to some degree. It needs to register it. What
+i'm not so clear on is if it just needs to register it, or if these
+sub nodes are actually needed, given the current code.
 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-index cac61a998203..aa5543a64526 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-@@ -121,7 +121,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/irq.h>
-     #include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
--    dss: dss@04a00000 {
-+    dss: dss@4a00000 {
-             compatible = "ti,am65x-dss";
-             reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
-                     <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-index ade9b2f513f5..6d47cd7206c2 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-@@ -154,7 +154,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/irq.h>
-     #include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
--    dss: dss@04a00000 {
-+    dss: dss@4a00000 {
-             compatible = "ti,j721e-dss";
-             reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
-                     <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-index 385bd060ccf9..7cb37053e95b 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-@@ -81,7 +81,7 @@ examples:
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/interrupt-controller/irq.h>
- 
--    dss: dss@02540000 {
-+    dss: dss@2540000 {
-             compatible = "ti,k2g-dss";
-             reg =   <0x02540000 0x400>,
-                     <0x02550000 0x1000>,
--- 
-2.20.1
-
+    Andrew
