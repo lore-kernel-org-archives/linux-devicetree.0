@@ -2,178 +2,87 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B4AC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 19:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD32C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 19:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F80B2071C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 19:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oMwn2l4h"
+	by mail.kernel.org (Postfix) with ESMTP id EC234206B1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 19:19:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584127174;
+	bh=u/YdNrWdkp2l2Y+ZcshY5dnTxoc3Q36CBOYuokFz5v8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ke/HDCkFbEx/c7LEwbRLb9PDZpmf6RTwPAV2pKWVY2Lwnh1M5gtJ3CshheN3C3Pw5
+	 oYarR9MmGtx1khgovlbAvriS1FGEkxc+2HrxMJ7Oa9j68Nq53jg61cuYC22wBfJpru
+	 Fgty5ZTDoCSy7OCjD23I5HDP9+/WoWReyThhiMgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgCMTN2 (ORCPT
+        id S1726543AbgCMTTd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 15:13:28 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:43533 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgCMTN2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 15:13:28 -0400
-Received: by mail-qv1-f66.google.com with SMTP id c28so5197095qvb.10
-        for <devicetree@vger.kernel.org>; Fri, 13 Mar 2020 12:13:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PPCktG6nEvhXmf9moRkI6GaBpVzb4qfjuLIfr4oX24U=;
-        b=oMwn2l4h8Tx8PfqTSSs7jcFo6p6SGfbk2paFxxCwDo4UjReV48Ea0WeynOCfP0UESg
-         D5Wx42yUB6XE+ECNQi7oshT1K/ITK0SF6QPuBytfQjClq48PdGDZYZkEX2mV44jsJSIZ
-         JmfVZzlPCGi2MhuzvTGwSFBdDoRlPsRM31IIJc35bnTCaDgjPvUbOxtPlMnxXel6a7FY
-         S2aBIZ8kX+EntSYh+k5ozLPfkAcPFTOlfbRQwTdgkhhTV0n44gq50oUncZS8eLjHICPI
-         cRSxnBCKNdjtgvnQfhAC9bltqGz7vdFDc4E/CspLPEX7CV9xxZf3RANkXlRVD60eUYDj
-         pyIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PPCktG6nEvhXmf9moRkI6GaBpVzb4qfjuLIfr4oX24U=;
-        b=kwClVfkwtlNefPVG+vGRdxu4Ghn28Oh3KCOpq8qRgZ2iCS24+yTnRQwudi1n4q5D/+
-         7p+28DzTKElEfuRawdRpVUUE9LPuvJ8Xvhbsna1x9j6yV/MkOpW8cEa6qM+bpqu5ghRE
-         fjcV+YtefJ8QwPYj2+FxrNsA/DaV9zLuqL3lKkJ/awUDTlresP1EM7cunB9K5B8V8+ki
-         yV3TQCiRnykAP6nxv5Q6WwICWNpF1nlkCPO7+zYJnN9hjfcSfBTplSwxlvJxP56CPuPP
-         8QqOtbzvgoO3VY7YNBkT3eDINp7V9egtxHFncRMVN1FqtLFFeM6ohCVoNU2ewKevQs7r
-         w8jA==
-X-Gm-Message-State: ANhLgQ2bSDlwtpUsqR/zLuQ0WRvPhSy5PMIhCOIFsn+cj94Y9Rg3qi//
-        TtJCgsd7GOmBoqWH9oCLBII2vQ==
-X-Google-Smtp-Source: ADFU+vutgg3YrWNjonghOGBQTDVm29PBDy/u3g+sX5DbKZ/TP9j/X7cNOJItzK6P4dCcACQHzOv8kg==
-X-Received: by 2002:ad4:458d:: with SMTP id x13mr13168915qvu.155.1584126806856;
-        Fri, 13 Mar 2020 12:13:26 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id b10sm9121866qto.60.2020.03.13.12.13.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 13 Mar 2020 12:13:26 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jCpkK-000463-VD; Fri, 13 Mar 2020 16:13:24 -0300
-Date:   Fri, 13 Mar 2020 16:13:24 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, will@kernel.org,
-        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
-        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
-        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        iommu@lists.linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        robin.murphy@arm.com, christian.koenig@amd.com
-Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200313191324.GG31668@ziepe.ca>
-References: <20200228144844.GQ31668@ziepe.ca>
- <20200228150427.GF2156@myrica>
- <20200228151339.GS31668@ziepe.ca>
- <20200306095614.GA50020@myrica>
- <20200306130919.GJ31668@ziepe.ca>
- <20200306143556.GA99609@myrica>
- <20200306145245.GK31668@ziepe.ca>
- <20200306161519.GB99609@myrica>
- <20200306174239.GM31668@ziepe.ca>
- <20200313184929.GC2574@myrica>
+        Fri, 13 Mar 2020 15:19:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726528AbgCMTTd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 15:19:33 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A58DA206B1;
+        Fri, 13 Mar 2020 19:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584127172;
+        bh=u/YdNrWdkp2l2Y+ZcshY5dnTxoc3Q36CBOYuokFz5v8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=u+Kw50OjBbzrHYAElZpjew80DqhAXUFN1hhXU4vU2wOdVt9P/NVjtrQZvvT9p5Zxb
+         veAw/oyz4V2n1HuuwuSFUsJ4mdNMKpwRfyRlEkUiBzo9sw5efnqpHqcGt/dxu3cF9o
+         siomM+1AaZ7PYOoyNUKJrPfQx7TrpedbDUAn+hUw=
+Received: by mail-qt1-f181.google.com with SMTP id l21so8508603qtr.8;
+        Fri, 13 Mar 2020 12:19:32 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2/CMu7JqQG1/jF6jB3lqQ+2or0oq99OPiTsvW0YfsMyF9GaLJJ
+        7i7KIt7Ut7/VUpKqS8IilQ45qqNqJyzJ1nVR9g==
+X-Google-Smtp-Source: ADFU+vtzFniWDb7ap1vMQkeG/nhau8hPIsmJMnWM+RrFZ7uXGaIVa3RBdSZj2jLCJWmfgdvozj/TJtkIM+Qo4xGK3lk=
+X-Received: by 2002:ac8:554a:: with SMTP id o10mr14380809qtr.224.1584127171827;
+ Fri, 13 Mar 2020 12:19:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313184929.GC2574@myrica>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200313180543.20497-1-robh@kernel.org> <20200313185555.GM5528@sirena.org.uk>
+In-Reply-To: <20200313185555.GM5528@sirena.org.uk>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 13 Mar 2020 14:19:20 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+pihBa4NCYQJrVnNiRgJzx_Q7f5zDTExud0y0tPXwWNw@mail.gmail.com>
+Message-ID: <CAL_Jsq+pihBa4NCYQJrVnNiRgJzx_Q7f5zDTExud0y0tPXwWNw@mail.gmail.com>
+Subject: Re: [PATCH v2] ASoC: dt-bindings: google,cros-ec-codec: Fix dtc
+ warnings in example
+To:     Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Benson Leung <bleung@chromium.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 07:49:29PM +0100, Jean-Philippe Brucker wrote:
-> On Fri, Mar 06, 2020 at 01:42:39PM -0400, Jason Gunthorpe wrote:
-> > On Fri, Mar 06, 2020 at 05:15:19PM +0100, Jean-Philippe Brucker wrote:
-> > > On Fri, Mar 06, 2020 at 10:52:45AM -0400, Jason Gunthorpe wrote:
-> > > > On Fri, Mar 06, 2020 at 03:35:56PM +0100, Jean-Philippe Brucker wrote:
-> > > > > On Fri, Mar 06, 2020 at 09:09:19AM -0400, Jason Gunthorpe wrote:
-> > > > > > On Fri, Mar 06, 2020 at 10:56:14AM +0100, Jean-Philippe Brucker wrote:
-> > > > > > > I tried to keep it simple like that: normally mmu_notifier_get() is called
-> > > > > > > in bind(), and mmu_notifier_put() is called in unbind(). 
-> > > > > > > 
-> > > > > > > Multiple device drivers may call bind() with the same mm. Each bind()
-> > > > > > > calls mmu_notifier_get(), obtains the same io_mm, and returns a new bond
-> > > > > > > (a device<->mm link). Each bond is freed by calling unbind(), which calls
-> > > > > > > mmu_notifier_put().
-> > > > > > > 
-> > > > > > > That's the most common case. Now if the process is killed and the mm
-> > > > > > > disappears, we do need to avoid use-after-free caused by DMA of the
-> > > > > > > mappings and the page tables. 
-> > > > > > 
-> > > > > > This is why release must do invalidate all - but it doesn't need to do
-> > > > > > any more - as no SPTE can be established without a mmget() - and
-> > > > > > mmget() is no longer possible past release.
-> > > > > 
-> > > > > In our case we don't have SPTEs, the whole pgd is shared between MMU and
-> > > > > IOMMU (isolated using PASID tables).
-> > > > 
-> > > > Okay, but this just means that 'invalidate all' also requires
-> > > > switching the PASID to use some pgd that is permanently 'all fail'.
-> > > > 
-> > > > > At this point no one told the device to stop working on this queue,
-> > > > > it may still be doing DMA on this address space.
-> > > > 
-> > > > Sure, but there are lots of cases where a defective user space can
-> > > > cause pages under active DMA to disappear, like munmap for
-> > > > instance. Process exit is really no different, the PASID should take
-> > > > errors and the device & driver should do whatever error flow it has.
-> > > 
-> > > We do have the possibility to shut things down in order, so to me this
-> > > feels like a band-aid. 
-> > 
-> > ->release() is called by exit_mmap which is called by mmput. There are
-> > over a 100 callsites to mmput() and I'm not totally sure what the
-> > rules are for release(). We've run into problems before with things
-> > like this.
-> 
-> A concrete example of something that could go badly if mmput() takes too
-> long would greatly help. Otherwise I'll have a hard time justifying the
-> added complexity.
+On Fri, Mar 13, 2020 at 1:55 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Fri, Mar 13, 2020 at 01:05:43PM -0500, Rob Herring wrote:
+> > Extra dtc warnings (roughly what W=1 enables) are now enabled by default
+> > when building the binding examples. These were fixed treewide in
+> > 5.6-rc5, but the newly added google,cros-ec-codec schema adds some new
+> > warnings:
+>
+> v1 got applied, could you send an incremental diff please?
 
-It is not just takes too long, but also accidently causing locking
-problems by doing very complex code in the release callback. Unless
-you audit all the mmput call sites to define the calling conditions I
-can't even say what the risk is here. 
+Indeed, missed that. While I wish Gmail could just learn to thread
+emails properly, it would help Gmail users a lot if you kept the
+$subject on your applied emails.
 
-Particularly, calling something with impossible to audit locking like
-the dma_fence stuff from release is probably impossible to prove
-safety and then keep safe.
+I'll just worry about the node name again when and if we start checking that...
 
-It is easy enough to see where takes too long can have a bad impact,
-mmput is called all over the place. Just in the RDMA code slowing it
-down would block ODP page faulting completely for all processes.
-This is not acceptable.
-
-For this reason release callbacks must be simple/fast and must have
-trivial locking.
-
-> > Errors should not be printed to the kernel log for PASID cases
-> > anyhow. PASID will be used by unpriv user, and unpriv user should not
-> > be able to trigger kernel prints at will, eg by doing dma to nmap VA
-> > or whatever. 
-> 
-> I agree. There is a difference, though, between invalid mappings and the
-> absence of a pgd. The former comes from userspace issuing DMA on unmapped
-> buffers, while the latter is typically a device/driver error which
-> normally needs to be reported.
-
-Why not make the pgd present as I suggested? Point it at a static
-dummy pgd that always fails to page fault during release? Make the pgd
-not present only once the PASID is fully destroyed.
-
-That really is the only thing release is supposed to mean -> unmap all
-VAs.
-
-Jason
+Rob
