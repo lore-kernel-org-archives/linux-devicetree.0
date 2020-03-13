@@ -2,176 +2,179 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA3DC5ACBF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2437C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2262120724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743312073E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P3bpoRPd"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="sp3Yszxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgCMNOB (ORCPT
+        id S1726534AbgCMNOL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:14:01 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:57569 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726733AbgCMNOB (ORCPT
+        Fri, 13 Mar 2020 09:14:11 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1585 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726550AbgCMNOK (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:14:01 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584105240; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Hbs2mqQuJre9Ca3a/9mu15Sk4jZBWOzpZ6YsP3vGO2Y=; b=P3bpoRPd1iHx9LN/TrxLtZAJJEv//wzDeWlJlXtlj3mWRVwq6URU7SnWTirBIWynVmcjYPAB
- 73t6E7AkJb0Vthdt7PeFdiEjONo/8kNwq68wN2DNIwIioY2qk2jbSwzkPp4JiyO6SPYV2LaD
- f7H62zOLH5yo+F3ZYVl7/voUf/g=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6b8702.7f3b515eadf8-smtp-out-n01;
- Fri, 13 Mar 2020 13:13:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 82845C44793; Fri, 13 Mar 2020 13:13:36 +0000 (UTC)
-Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 59B07C433D2;
-        Fri, 13 Mar 2020 13:13:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 59B07C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-From:   Akash Asthana <akashast@codeaurora.org>
-To:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, evgreen@chromium.org,
-        Akash Asthana <akashast@codeaurora.org>
-Subject: [PATCH V2 7/8] spi: spi-qcom-qspi: Add interconnect support
-Date:   Fri, 13 Mar 2020 18:42:13 +0530
-Message-Id: <1584105134-13583-8-git-send-email-akashast@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
+        Fri, 13 Mar 2020 09:14:10 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DDDJ24004637;
+        Fri, 13 Mar 2020 14:14:01 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=j30vDKcN8v+9iOfnpvN2SvzZxqqkSw6kVhxLOmAqkK0=;
+ b=sp3YszxuO0VPz/8w+rReK8aI6FfHkyGpIn8qTGDCURWbMkKbq/FtgZ9AzX75A2jymgzx
+ oH54NnPK6tqrpGRCQdFSiPqS7XLPSBw3nlVPxhbNVATVecm27m1Ic56hwJgmotrB1TXN
+ 3RuzPqD+x8kyP4GzfFkC1FgvhRR/0Df6mcuO8Ga68TrARk7SSHxalU6142cRwwJpbd/H
+ C8da+g1yLybN5Mi4bNUDDNyAzRBpVPTp1Zlovu1ieKJVBQa6IIDgn985GTVD1U4zEc1I
+ 8kcLHGbaBjluR5B60NCn/89yi/E1C5K/+/VzP1zZjLDmHWe0yNuXiPgauacfD0dMzWYR rw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yqt818vdw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Mar 2020 14:14:01 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1DB2A10002A;
+        Fri, 13 Mar 2020 14:13:57 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0E7DA2A8914;
+        Fri, 13 Mar 2020 14:13:57 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 13 Mar
+ 2020 14:13:56 +0100
+Subject: Re: [PATCH] ARM: dts: stm32: Do clean up in stmpic nodes
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        <mcoquelin.stm32@gmail.com>, <robh+dt@kernel.org>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200228125205.8126-1-benjamin.gaignard@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <4b2c303d-48cb-4e1e-aa4a-faa72852ff55@st.com>
+Date:   Fri, 13 Mar 2020 14:13:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200228125205.8126-1-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-13_04:2020-03-12,2020-03-13 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Get the interconnect paths for QSPI device and vote according to the
-current bus speed of the driver.
+Hi Benjamin
 
-Signed-off-by: Akash Asthana <akashast@codeaurora.org>
----
- - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
-   path handle
- - As per Matthias comment, added error handling for icc_set_bw call
+On 2/28/20 1:52 PM, Benjamin Gaignard wrote:
+> Remove unused properties from stpmic node.
+> The issues have been detected by running dtbs_check.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 
- drivers/spi/spi-qcom-qspi.c | 46 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 45 insertions(+), 1 deletion(-)
+Applied on stm32-next with commit title updated.
 
-diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
-index 3c4f83b..ad48f43 100644
---- a/drivers/spi/spi-qcom-qspi.c
-+++ b/drivers/spi/spi-qcom-qspi.c
-@@ -2,6 +2,7 @@
- // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
- 
- #include <linux/clk.h>
-+#include <linux/interconnect.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
-@@ -139,7 +140,10 @@ struct qcom_qspi {
- 	struct device *dev;
- 	struct clk_bulk_data *clks;
- 	struct qspi_xfer xfer;
--	/* Lock to protect xfer and IRQ accessed registers */
-+	struct icc_path *icc_path_cpu_to_qspi;
-+	unsigned int avg_bw_cpu;
-+	unsigned int peak_bw_cpu;
-+	/* Lock to protect data accessed by IRQs */
- 	spinlock_t lock;
- };
- 
-@@ -241,6 +245,20 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
- 		return ret;
- 	}
- 
-+	/*
-+	 * Set BW quota for CPU as driver supports FIFO mode only.
-+	 * Assume peak bw as twice of avg bw.
-+	 */
-+	ctrl->avg_bw_cpu = Bps_to_icc(speed_hz);
-+	ctrl->peak_bw_cpu = Bps_to_icc(2 * speed_hz);
-+	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, ctrl->avg_bw_cpu,
-+		ctrl->peak_bw_cpu);
-+	if (ret) {
-+		dev_err(ctrl->dev, "%s: ICC BW voting failed for cpu\n",
-+			__func__);
-+		return ret;
-+	}
-+
- 	spin_lock_irqsave(&ctrl->lock, flags);
- 
- 	/* We are half duplex, so either rx or tx will be set */
-@@ -458,6 +476,15 @@ static int qcom_qspi_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto exit_probe_master_put;
- 
-+	ctrl->icc_path_cpu_to_qspi = devm_of_icc_get(dev, "qspi-config");
-+	if (IS_ERR(ctrl->icc_path_cpu_to_qspi)) {
-+		ret = PTR_ERR(ctrl->icc_path_cpu_to_qspi);
-+		goto exit_probe_master_put;
-+	}
-+	/* Put BW vote on CPU path for register access */
-+	ctrl->avg_bw_cpu = Bps_to_icc(1000);
-+	ctrl->peak_bw_cpu = Bps_to_icc(1000);
-+
- 	ret = platform_get_irq(pdev, 0);
- 	if (ret < 0)
- 		goto exit_probe_master_put;
-@@ -511,9 +538,17 @@ static int __maybe_unused qcom_qspi_runtime_suspend(struct device *dev)
- {
- 	struct spi_master *master = dev_get_drvdata(dev);
- 	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
-+	int ret;
- 
- 	clk_bulk_disable_unprepare(QSPI_NUM_CLKS, ctrl->clks);
- 
-+	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, 0, 0);
-+	if (ret) {
-+		dev_err_ratelimited(ctrl->dev, "%s: ICC BW remove failed for cpu\n",
-+			__func__);
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
-@@ -521,6 +556,15 @@ static int __maybe_unused qcom_qspi_runtime_resume(struct device *dev)
- {
- 	struct spi_master *master = dev_get_drvdata(dev);
- 	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
-+	int ret;
-+
-+	ret = icc_set_bw(ctrl->icc_path_cpu_to_qspi, ctrl->avg_bw_cpu,
-+		ctrl->peak_bw_cpu);
-+	if (ret) {
-+		dev_err_ratelimited(ctrl->dev, "%s: ICC BW voting failed for cpu\n",
-+			__func__);
-+		return ret;
-+	}
- 
- 	return clk_bulk_prepare_enable(QSPI_NUM_CLKS, ctrl->clks);
- }
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Thanks.
+Alex
+
+
+> ---
+>   arch/arm/boot/dts/stm32mp157a-avenger96.dts | 8 --------
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts       | 3 ---
+>   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi      | 3 ---
+>   3 files changed, 14 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+> index cbfa4075907e..1583be1966eb 100644
+> --- a/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+> +++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+> @@ -135,10 +135,6 @@
+>   		#interrupt-cells = <2>;
+>   		status = "okay";
+>   
+> -		st,main-control-register = <0x04>;
+> -		st,vin-control-register = <0xc0>;
+> -		st,usb-control-register = <0x30>;
+> -
+>   		regulators {
+>   			compatible = "st,stpmic1-regulators";
+>   
+> @@ -173,7 +169,6 @@
+>   				regulator-min-microvolt = <3300000>;
+>   				regulator-max-microvolt = <3300000>;
+>   				regulator-always-on;
+> -				st,mask_reset;
+>   				regulator-initial-mode = <0>;
+>   				regulator-over-current-protection;
+>   			};
+> @@ -213,8 +208,6 @@
+>   
+>   			vdd_usb: ldo4 {
+>   				regulator-name = "vdd_usb";
+> -				regulator-min-microvolt = <3300000>;
+> -				regulator-max-microvolt = <3300000>;
+>   				interrupts = <IT_CURLIM_LDO4 0>;
+>   				interrupt-parent = <&pmic>;
+>   			};
+> @@ -240,7 +233,6 @@
+>   			vref_ddr: vref_ddr {
+>   				regulator-name = "vref_ddr";
+>   				regulator-always-on;
+> -				regulator-over-current-protection;
+>   			};
+>   
+>   			bst_out: boost {
+> diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+> index 1fc43251d697..0c304a024e51 100644
+> --- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
+> +++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+> @@ -218,8 +218,6 @@
+>   
+>   			vdd_usb: ldo4 {
+>   				regulator-name = "vdd_usb";
+> -				regulator-min-microvolt = <3300000>;
+> -				regulator-max-microvolt = <3300000>;
+>   				interrupts = <IT_CURLIM_LDO4 0>;
+>   			};
+>   
+> @@ -241,7 +239,6 @@
+>   			vref_ddr: vref_ddr {
+>   				regulator-name = "vref_ddr";
+>   				regulator-always-on;
+> -				regulator-over-current-protection;
+>   			};
+>   
+>   			bst_out: boost {
+> diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+> index f6672e87aef3..e50ae7faa0ec 100644
+> --- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+> @@ -304,8 +304,6 @@
+>   
+>   			vdd_usb: ldo4 {
+>   				regulator-name = "vdd_usb";
+> -				regulator-min-microvolt = <3300000>;
+> -				regulator-max-microvolt = <3300000>;
+>   				interrupts = <IT_CURLIM_LDO4 0>;
+>   			};
+>   
+> @@ -328,7 +326,6 @@
+>   			vref_ddr: vref_ddr {
+>   				regulator-name = "vref_ddr";
+>   				regulator-always-on;
+> -				regulator-over-current-protection;
+>   			};
+>   
+>   			 bst_out: boost {
+> 
