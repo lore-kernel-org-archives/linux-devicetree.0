@@ -2,130 +2,170 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4A4C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25C4C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E98320724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584114424;
-	bh=nYK9bKTo6sVM7g/LliKCCc+yDn8kHdNBK723JyvmyWU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=t4XNWbW8brvitIrq1pTNThFHpW6Z3O4OoqFyxB5i0Ztgg/+zhCLVHqj6K9pTAw2NC
-	 H4an466ASFTJ9HGtNIzNce1vYo6rYzmUTOBdllCJI/n+S2nJZ+BJGLu5tUsudqrTmE
-	 uLdHQy3v7+Frau1tNFkltXhSb0pf/wDMqR9nIJz8=
+	by mail.kernel.org (Postfix) with ESMTP id A8A502074E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAIDs6Wq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbgCMPrE (ORCPT
+        id S1726810AbgCMPrK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:47:04 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40120 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbgCMPrE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 11:47:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y71so9820377oia.7
-        for <devicetree@vger.kernel.org>; Fri, 13 Mar 2020 08:47:03 -0700 (PDT)
+        Fri, 13 Mar 2020 11:47:10 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43883 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgCMPrK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 11:47:10 -0400
+Received: by mail-ot1-f68.google.com with SMTP id a6so10507271otb.10;
+        Fri, 13 Mar 2020 08:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g2F6bNMNbjYMOmG6AT0+6XH/uYDDsMXrJ7rvJH7Wv54=;
+        b=gAIDs6WqqY4C6m2b5QdZWRTmIT3xf9Ik6Np8m+/Z/J5ikCql9gM3IwFQvuOl178Nzr
+         3IZ3HkdzXqzSrRImXqzs86OwH+pAqPX8nDIT3mW1Ilmq8XWcuyISAxCtav2E5OxoXkJd
+         a2/19fycsXGRTcGjxcuP0a4HCJbtcxuT8E/3Qd61YjhSuJj8H7bt5BJQisMoSsu6OF3r
+         8isHVQs3wlSr7wkc0M+N89U79Mnd2s08qw4ocvTBql6Eg+sDcwjF1Pu6TDMJAIo8zT6Y
+         gfs62X7oCtBvDY2WKFVGT1I4sbyDSbi3FtifMvad/OCwI0ELcGXTZnGrLvH6ugFlEC4R
+         c8YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tMfy8/E6oXzJJx/8VpRV3tj4/ckSsq/8G43sIQgZQ7U=;
-        b=czUQs5daMOGZ8mc2tQRL9AILd/K6SkUf/czTpvkbfK/OQuet9UZhmlxYefNZeVyTLz
-         UdHkdId5K49m4sutgjqR3NTB8j+g161WOF8ZZ1azns4UvnZcd+nxdqj7nlAwgN477+kD
-         VIAriXsKrKLsJIbznNJER461AG92L+XYHFKBO7LmEis23RFs9Gu3t9VGTrwPhlEOY0Vy
-         LH5D6lw5VlzMRsK7ndIVsy0TI/69WcSr3Qpp5PkREz3hN3G0PbLqMV3W+JQNuKebHv8m
-         g1WzpBJZmtv+lBbSsiLG4p/47Rdgrm67CkY9M8POCs8cSdegsZWf7rwTA9GDkB+wf3G3
-         p5Nw==
-X-Gm-Message-State: ANhLgQ00WYXWAx9ksGONvyeM/BGbHFDjgkj6kIEyjypysK4zWH0qIV6Q
-        ncTPu3iUljetlFkC9J46sw==
-X-Google-Smtp-Source: ADFU+vtE/jAJa6g5NqFQM+VkazVXWPBMZUEMY66SKGWqXr6JceMIiuB6q4UOhUn9lUCRUfb+R5SqfQ==
-X-Received: by 2002:a05:6808:14a:: with SMTP id h10mr7551170oie.81.1584114423061;
-        Fri, 13 Mar 2020 08:47:03 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id t21sm6884983otp.80.2020.03.13.08.47.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 08:47:02 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: sunxi: Fix dtc 'dma-ranges' warnings
-Date:   Fri, 13 Mar 2020 10:47:01 -0500
-Message-Id: <20200313154701.948-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g2F6bNMNbjYMOmG6AT0+6XH/uYDDsMXrJ7rvJH7Wv54=;
+        b=XVE0VxwrCVLEO5V98fKz8acmFiGv/jUojnE2W++fOjpwFofD87GyP01HwEhGJ/j/vV
+         NSQ92Bc3uFZBDBmw79VNs321qnswRbVk9pjaWHHZWQBsGSVhVlLUT312SGFLQ0Bsbp8E
+         CEmm2f12k95wtqVAN5jBDSf7rAAzMtGprx3O/eZDgLzh/n3EKHlK6X4kkOhjgVbL9vAw
+         N+hepm5fDcpOZ9JhNixxOF2XEv3tbUuxknh3PaaYbMA5TLQZzv1spsyRY0lqJVAxkX8d
+         hjEqvZLbi8XCNvwNudE2cIdyM7imThEvEsH83z9yqARld5Zlf8rQjsJPosBN8UdJ1Pi7
+         eYEw==
+X-Gm-Message-State: ANhLgQ3TP83z58uukKKZiBgiYo8b/71g979ylFZ5hsJ/lwMLQShyJE52
+        MlR+Y6ZO1GpjHT46BshifjfcsbLgkXA+ZvDoEUM=
+X-Google-Smtp-Source: ADFU+vu760GpCPmD7yZUXlIQeGa3R1i+fs+y1tbGVZM1WMb4f80I+07TGxLiEF8SFrU09Xrxz1LyHjcMcOFDGWeTS2I=
+X-Received: by 2002:a05:6830:20c9:: with SMTP id z9mr11632227otq.44.1584114429233;
+ Fri, 13 Mar 2020 08:47:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 13 Mar 2020 15:46:42 +0000
+Message-ID: <CA+V-a8vchrpa-1N1J+yVdo6-3zouOHX6=G4epWm68yirPirzag@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] Add support for PCIe controller to work in
+ endpoint mode on R-Car SoCs
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-'#address-cells' and '#size-cells' are needed in the same node (for the
-child bus) as 'dma-ranges' in order to parse it. The kernel is more lax
-and will walk up the tree to get the properties from a parent node, but
-it's better to be explicit. dtc now does checks on 'dma-ranges' and is
-more strict:
+Hi Bjorn/Kishon,
 
-arch/arm/boot/dts/sun5i.dtsi:189.4-52: Warning (dma_ranges_format): \
-/soc/dram-controller@1c01000:dma-ranges: "dma-ranges" property has invalid length (12 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/sun8i-r40.dtsi:742.4-52: Warning (dma_ranges_format): \
-/soc/dram-controller@1c62000:dma-ranges: "dma-ranges" property has invalid length (12 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/sunxi-h3-h5.dtsi:563.4-52: Warning (dma_ranges_format): \
-/soc/dram-controller@1c62000:dma-ranges: "dma-ranges" property has invalid length (12 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 1)
+On Fri, Feb 28, 2020 at 3:41 PM Lad Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+>
+> This patch series adds support for PCIe controller on rcar to work in
+> endpoint mode, this also extends the epf framework to handle base region
+> for mapping PCI address locally.
+>
+> Note:
+> The cadence/rockchip/designware endpoint drivers are build tested only.
+>
+> Changes for v5:
+> 1] Rebased the patches on next branch of https://git.kernel.org/pub/scm/
+>    linux/kernel/git/helgaas/pci.git
+> 2] Fixed review comments reported by Kishon while fetching the matching
+>    window in function pci_epc_get_matching_window()
+> 3] Fixed review comments reported by Bjorn
+>    a] Split patch up first patch so that its easier to review and incremental
+>    b] Fixed typos
+> 4] Included Reviewed tag from Rob for the dt-binding patch
+> 5] Fixed issue reported by Nathan for assigning variable to itself
+>
+> Changes for v4:
+> 1] Fixed dtb_check error reported by Rob
+> 2] Fixed review comments reported by Kishon
+>    a] Dropped pci_epc_find_best_fit_window()
+>    b] Fixed initializing mem ptr in __pci_epc_mem_init()
+>    c] Dropped map_size from pci_epc_mem_window structure
+>
+> Changes for v3:
+> 1] Fixed review comments from Bjorn and Kishon.
+> 3] Converted to DT schema
+>
+> Changes for v2:
+> 1] Fixed review comments from Biju for dt-bindings to include an example
+>    for a tested platform.
+> 2] Fixed review comments from Kishon to extend the features of outbound
+>    regions in epf framework.
+> 3] Added support to parse outbound-ranges in OF.
+>
+> Lad Prabhakar (7):
+>   PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
+>   PCI: rcar: Move shareable code to a common file
+>   PCI: rcar: Fix calculating mask for PCIEPAMR register
+>   PCI: endpoint: Add support to handle multiple base for mapping
+>     outbound memory
+>   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+>     controller
+>   PCI: rcar: Add support for rcar PCIe controller in endpoint mode
+>   misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
+>
+Gentle ping.
 
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-I'm updating dtc for 5.7 which will introduce this warning.
+Cheers,
+--Prabhakar Lad
 
- arch/arm/boot/dts/sun5i.dtsi       | 2 ++
- arch/arm/boot/dts/sun8i-r40.dtsi   | 2 ++
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 ++
- 3 files changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-index 0b526e6e5a95..b8bb58b0180e 100644
---- a/arch/arm/boot/dts/sun5i.dtsi
-+++ b/arch/arm/boot/dts/sun5i.dtsi
-@@ -186,6 +186,8 @@
- 			compatible = "allwinner,sun5i-a13-mbus";
- 			reg = <0x01c01000 0x1000>;
- 			clocks = <&ccu CLK_MBUS>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
- 			dma-ranges = <0x00000000 0x40000000 0x20000000>;
- 			#interconnect-cells = <1>;
- 		};
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 8f09a24b36ec..b9c45aa8f21f 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -739,6 +739,8 @@
- 			compatible = "allwinner,sun8i-r40-mbus";
- 			reg = <0x01c62000 0x1000>;
- 			clocks = <&ccu 155>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
- 			dma-ranges = <0x00000000 0x40000000 0x80000000>;
- 			#interconnect-cells = <1>;
- 		};
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index 5e9c3060aa08..62ca0d287008 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -560,6 +560,8 @@
- 			compatible = "allwinner,sun8i-h3-mbus";
- 			reg = <0x01c62000 0x1000>;
- 			clocks = <&ccu CLK_MBUS>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
- 			dma-ranges = <0x00000000 0x40000000 0xc0000000>;
- 			#interconnect-cells = <1>;
- 		};
--- 
-2.20.1
-
+>  .../devicetree/bindings/pci/rcar-pci-ep.yaml       |   76 ++
+>  arch/arm64/configs/defconfig                       |    2 +-
+>  drivers/misc/pci_endpoint_test.c                   |    3 +
+>  drivers/pci/controller/Kconfig                     |   15 +-
+>  drivers/pci/controller/Makefile                    |    3 +-
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c   |    7 +-
+>  drivers/pci/controller/dwc/pcie-designware-ep.c    |   29 +-
+>  drivers/pci/controller/pcie-rcar-ep.c              |  490 ++++++++
+>  drivers/pci/controller/pcie-rcar-host.c            | 1053 +++++++++++++++++
+>  drivers/pci/controller/pcie-rcar.c                 | 1229 +-------------------
+>  drivers/pci/controller/pcie-rcar.h                 |  129 ++
+>  drivers/pci/controller/pcie-rockchip-ep.c          |    7 +-
+>  drivers/pci/endpoint/pci-epc-mem.c                 |  167 ++-
+>  include/linux/pci-epc.h                            |   39 +-
+>  14 files changed, 1985 insertions(+), 1264 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+>  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+>  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+>  create mode 100644 drivers/pci/controller/pcie-rcar.h
+>
+> --
+> 2.7.4
+>
