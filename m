@@ -2,116 +2,145 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232B3C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F90CC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC83D20746
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="f9n1dUEo"
+	by mail.kernel.org (Postfix) with ESMTP id 2569F2073E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584087840;
+	bh=ETyKrmP0hGRDdxES6XCncS3YWPghJvpIb0l2B7LnEqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=08JJJpvrNmqFKWKmpJNaSC5tO1Fr23ACwM+jdJlPBbrg1uGEgJ5rlW6s/RVxgxJYU
+	 /mMv8pCjcO2MjKZrjNK1PVOOiRXYG9ITR6OVFTz7w5H+LjdyFS7CKBWVRMwj3MUAYC
+	 5AbzXqt3vn6b5ip83pdLKGEkJ08tJ+1oPzprqX2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgCMIVL (ORCPT
+        id S1726365AbgCMIX7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:21:11 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:54945 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726230AbgCMIVL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:21:11 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id CfZ3j1HP0hVf8CfZ6jO98M; Fri, 13 Mar 2020 09:21:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1584087669; bh=XOx2gtrl0/QdQw4FtDRbotgoOYOMw8gbaDUKtBrXmIU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=f9n1dUEocS4ZbKtJv1ujdPQ+Sb6+Z2baEEGpQe73vOdLOHnQ+fKmXsMHIzatbxnmB
-         xxTdqa1lUSHiJJjqlPfzZRbuVmAiOPa4azzajjYqywen+hYMgRi54ELArDDahA69Ip
-         WauM5r0lewkJgbCuYfeG3LlmhKrEAqC79D5U1qPCAmdCusSk9StFd8NTEjIdGQYwYk
-         8iO/QUfWGN5Chb+4+44oxWG0wbfLBZmX9cyY7SIGKK1YuqtETz3onH/+kx01Vqv67T
-         8iX++s7J6iwO4BuZhkge0tINE7y4PkYeOVPaoWlhaNgdNG8SW3ixQ2FWMYoaz7zU0g
-         y0B87Pixn+Jjg==
-Subject: Re: [PATCH 0/8] media: i2c: adv748x: add support for HDMI audio
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <20200113141459.GA3606@pflmari>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <e93e6e1e-11dc-d505-7287-46b115a4a609@xs4all.nl>
-Date:   Fri, 13 Mar 2020 09:21:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 04:23:59 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33260 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgCMIX7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 04:23:59 -0400
+Received: by mail-ed1-f66.google.com with SMTP id z65so10906380ede.0;
+        Fri, 13 Mar 2020 01:23:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4tR4fgeFAv7oNvf3SR9Y+PFPOqEFlOUKa/4AnEg5Ajc=;
+        b=lPnKSzEIuQVqXhQnKtAbEt+yIyxl5IuPZOnlE67J7SO9QzsxMklKlQyoLEzzIZdOtY
+         7co7Dz0V/7gt3xAXjaHKtERQI85u/4ikQX8ClUk8RbU7nnZtoXx/LfoJ8zXDGpcNW/yw
+         XnuVIEwAb6p0CuBwGGdjzxpPL8VQKwL4E6do2ZOnboQ5bvwJnQ2RCAbKyiMmb7UVx3Hx
+         OherazbC1cnS3XAjTJhchGuAvheF6SEi5EeRdI+b2xDKkmMfRUt7PcfKHeCxNUK4vYjg
+         2oW4ARz3j/FWsdvLoLN+3nXmfhRiO8nxCkGAJeafQyhCwSU3YrpKBW8rgdj38MO/gsrD
+         d+yA==
+X-Gm-Message-State: ANhLgQ3Q300fru7nTNjXRiP+Yd3VpR4Q9uSuinKyAMXSLAvVqoVvk0bo
+        EnItPK+h3McFLd1/JVxWAyM=
+X-Google-Smtp-Source: ADFU+vtDIGMumVvwsMfchwX0nbGRN7NDG8oDGe83g2SJLn6cIBS7QBe76XzUd1cuNOlmNMvjAs4hEw==
+X-Received: by 2002:a17:906:689:: with SMTP id u9mr10624912ejb.78.1584087837029;
+        Fri, 13 Mar 2020 01:23:57 -0700 (PDT)
+Received: from pi3 ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id ck21sm1816975ejb.51.2020.03.13.01.23.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Mar 2020 01:23:56 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 09:23:54 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Alim Akhtar <alim.akhtar@gmail.com>
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        robh+dt <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kiwoong Kim <kwmad.kim@samsung.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Can Guo <cang@codeaurora.org>
+Subject: Re: [PATCH 0/5] exynos-ufs: Add support for UFS HCI
+Message-ID: <20200313082354.GA7381@pi3>
+References: <CGME20200306151019epcas5p11f5fcf849ece9a808396d9aa3a65410d@epcas5p1.samsung.com>
+ <20200306150529.3370-1-alim.akhtar@samsung.com>
+ <CAGOxZ50_XwsQ68gqGf1=S=WJJ-pc10h2_J8B4zzU7OMbgJna9A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200113141459.GA3606@pflmari>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfO/W7Ox867vsX2/fQCV+/X9vTuQGo/HQDazp7UvW8nqZsCyj7IkNo50nZuDB6xx2OB/oqZxaNPwA2ybQtLJHH4UFyKbbfRIjzY2yy2WZUa/2NA93YL7a
- TwkUzK5wcpPQlxxDkuWlo7xW9lU5KjOcElOLWDktwzE3kfCXyt22exvZfmWCfKpLFQkIno+fjRS1S95ikcDhW/wGnpQO/kws0BiaQ912gCuoer1N9+A3/vmf
- J7TTAxuUEkb/yFMnBNXhEh7z9TOMY3Qo9ifmd32AiEnE6z+TgZlt2ts2I4xgRbEuVVWEyCPtUTW2hJjkHv9QaiZtkKrGqaUvyfM0sPiSJR6jVqra1cwq+Ghm
- 3MTkO0zdiBsRBPNjeb8lURM1QubTtoCRIgOX9NRaoKGcpNQVtgZbhdQ+63hyTssfm7VWy1PluCwjwCI1mknicCKA0qD1to86bTC0CdfIZoWT+XghdJYwJOzA
- KiX4tmq2ccDiBA3wqJP+IMrbXN7FR5FsVx7OFt2TKyZLXQS5UlOEhkFq9kz4m9ZJvNYpwEgr5rUbhPZBgIEaPCzelCBO9VmcogrHCvc5meY7CUDHQHg7+bcP
- jFk=
+Content-Disposition: inline
+In-Reply-To: <CAGOxZ50_XwsQ68gqGf1=S=WJJ-pc10h2_J8B4zzU7OMbgJna9A@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alex,
+On Fri, Mar 13, 2020 at 06:24:17AM +0530, Alim Akhtar wrote:
+> Ping!!!
 
-Again, sorry for the late reply.
+Hi,
 
-Patch 2/8 has its own comment since that approach won't work.
+Please use the get_maintainers script to get list of Cc addresses. The
+DTS patch for example misses the samsung-soc mailing list therefore it
+is not in the patchwork. Patches to ARM/ARM64 Samsung SoC tree go from
+patchwork:
+https://patchwork.kernel.org/project/linux-samsung-soc/list/
 
-As a general note for this series: it might be better to have two
-patch series: one for patches 1 and 3-6 (not sure whether 5 can be included
-or not), and one where the public API changes (i.e. new V4L2 audio controls)
-are added. The first can probably be merged fairly quickly, the second will
-likely require more iterations since public API patches always take much longer
-before they are mature.
+Best regards,
+Krzysztof
 
-Regards,
-
-	Hans
-
-On 1/13/20 3:14 PM, Alex Riesen wrote:
-> This adds minimal support for controlling the audio output I2S port available
-> on ADV7481 and ADV7482 HDMI decoder devices by ADI. The port carries audio
-> signal from the decoded HDMI stream.
 > 
-> An ADV7482 on the Renesas Salvator-X ES1.1 was used during development of this
-> code.
 > 
-> Alex Riesen (8):
->   media: adv748x: add a device-specific wrapper for register block read
->   media: adv748x: add audio mute control and output selection ioctls
->   media: adv748x: add log_status ioctl
->   media: adv748x: reserve space for the audio (I2S) port in the driver
->     structures
->   media: adv748x: add an ASoC DAI definition to the driver
->   media: adv748x: reduce amount of code for bitwise modification of
->     device registers
->   dt-bindings: adv748x: add information about serial audio interface
->     (I2S/TDM)
->   arm64: dts: renesas: salvator: add a connection from adv748x codec
->     (HDMI input) to the R-Car SoC
+> On Fri, Mar 6, 2020 at 8:40 PM Alim Akhtar <alim.akhtar@samsung.com> wrote:
+> >
+> > This patch-set introduces UFS (Universal Flash Storage) host controller support
+> > for Samsung family SoC. Mostly, it consists of UFS PHY and host specific driver.
+> >
+> > patch 1/5: define devicetree bindings for UFS PHY
+> > patch 2/5: Adds UFS PHY driver
+> > patch 3/5: define devicetree bindings for UFS HCI
+> > patch 4/5: Adds Samsung UFS HCI driver
+> > patch 5/5: Enabled UFS on exynos7 platform
+> >
+> > Note: This series is based on Linux-5.6-rc2
+> >       In past there was couple of attempt to upstream this driver, but
+> >       it didn't went upstream for some or other reason.
+> >
+> > Alim Akhtar (5):
+> >   dt-bindings: phy: Document Samsung UFS PHY bindings
+> >   phy: samsung-ufs: add UFS PHY driver for samsung SoC
+> >   Documentation: devicetree: ufs: Add DT bindings for exynos UFS host
+> >     controller
+> >   scsi: ufs-exynos: add UFS host support for Exynos SoCs
+> >   arm64: dts: Add node for ufs exynos7
+> >
+> >  .../bindings/phy/samsung,ufs-phy.yaml         |   60 +
+> >  .../devicetree/bindings/ufs/ufs-exynos.txt    |  104 ++
+> >  .../boot/dts/exynos/exynos7-espresso.dts      |   16 +
+> >  arch/arm64/boot/dts/exynos/exynos7.dtsi       |   56 +-
+> >  drivers/phy/samsung/Kconfig                   |    9 +
+> >  drivers/phy/samsung/Makefile                  |    1 +
+> >  drivers/phy/samsung/phy-exynos7-ufs.h         |   85 +
+> >  drivers/phy/samsung/phy-samsung-ufs.c         |  311 ++++
+> >  drivers/phy/samsung/phy-samsung-ufs.h         |  100 ++
+> >  drivers/scsi/ufs/Kconfig                      |   12 +
+> >  drivers/scsi/ufs/Makefile                     |    1 +
+> >  drivers/scsi/ufs/ufs-exynos.c                 | 1399 +++++++++++++++++
+> >  drivers/scsi/ufs/ufs-exynos.h                 |  268 ++++
+> >  drivers/scsi/ufs/unipro.h                     |   41 +
+> >  include/linux/phy/phy-samsung-ufs.h           |   70 +
+> >  15 files changed, 2531 insertions(+), 2 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+> >  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-exynos.txt
+> >  create mode 100644 drivers/phy/samsung/phy-exynos7-ufs.h
+> >  create mode 100644 drivers/phy/samsung/phy-samsung-ufs.c
+> >  create mode 100644 drivers/phy/samsung/phy-samsung-ufs.h
+> >  create mode 100644 drivers/scsi/ufs/ufs-exynos.c
+> >  create mode 100644 drivers/scsi/ufs/ufs-exynos.h
+> >  create mode 100644 include/linux/phy/phy-samsung-ufs.h
+> >
+> > --
+> > 2.17.1
+> >
 > 
->  .../devicetree/bindings/media/i2c/adv748x.txt |  13 +-
->  .../dts/renesas/r8a7795-es1-salvator-x.dts    |  24 +-
->  .../boot/dts/renesas/salvator-common.dtsi     |  35 +-
->  drivers/media/i2c/adv748x/adv748x-core.c      |  54 +++
->  drivers/media/i2c/adv748x/adv748x-hdmi.c      | 355 ++++++++++++++++++
->  drivers/media/i2c/adv748x/adv748x.h           |  53 ++-
->  6 files changed, 523 insertions(+), 11 deletions(-)
 > 
-
+> --
+> Regards,
+> Alim
