@@ -2,170 +2,87 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25C4C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5508BC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 15:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A502074E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 15:47:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gAIDs6Wq"
+	by mail.kernel.org (Postfix) with ESMTP id 25D2D20724
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 15:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgCMPrK (ORCPT
+        id S1726908AbgCMPz7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:47:10 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43883 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgCMPrK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 11:47:10 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a6so10507271otb.10;
-        Fri, 13 Mar 2020 08:47:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g2F6bNMNbjYMOmG6AT0+6XH/uYDDsMXrJ7rvJH7Wv54=;
-        b=gAIDs6WqqY4C6m2b5QdZWRTmIT3xf9Ik6Np8m+/Z/J5ikCql9gM3IwFQvuOl178Nzr
-         3IZ3HkdzXqzSrRImXqzs86OwH+pAqPX8nDIT3mW1Ilmq8XWcuyISAxCtav2E5OxoXkJd
-         a2/19fycsXGRTcGjxcuP0a4HCJbtcxuT8E/3Qd61YjhSuJj8H7bt5BJQisMoSsu6OF3r
-         8isHVQs3wlSr7wkc0M+N89U79Mnd2s08qw4ocvTBql6Eg+sDcwjF1Pu6TDMJAIo8zT6Y
-         gfs62X7oCtBvDY2WKFVGT1I4sbyDSbi3FtifMvad/OCwI0ELcGXTZnGrLvH6ugFlEC4R
-         c8YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g2F6bNMNbjYMOmG6AT0+6XH/uYDDsMXrJ7rvJH7Wv54=;
-        b=XVE0VxwrCVLEO5V98fKz8acmFiGv/jUojnE2W++fOjpwFofD87GyP01HwEhGJ/j/vV
-         NSQ92Bc3uFZBDBmw79VNs321qnswRbVk9pjaWHHZWQBsGSVhVlLUT312SGFLQ0Bsbp8E
-         CEmm2f12k95wtqVAN5jBDSf7rAAzMtGprx3O/eZDgLzh/n3EKHlK6X4kkOhjgVbL9vAw
-         N+hepm5fDcpOZ9JhNixxOF2XEv3tbUuxknh3PaaYbMA5TLQZzv1spsyRY0lqJVAxkX8d
-         hjEqvZLbi8XCNvwNudE2cIdyM7imThEvEsH83z9yqARld5Zlf8rQjsJPosBN8UdJ1Pi7
-         eYEw==
-X-Gm-Message-State: ANhLgQ3TP83z58uukKKZiBgiYo8b/71g979ylFZ5hsJ/lwMLQShyJE52
-        MlR+Y6ZO1GpjHT46BshifjfcsbLgkXA+ZvDoEUM=
-X-Google-Smtp-Source: ADFU+vu760GpCPmD7yZUXlIQeGa3R1i+fs+y1tbGVZM1WMb4f80I+07TGxLiEF8SFrU09Xrxz1LyHjcMcOFDGWeTS2I=
-X-Received: by 2002:a05:6830:20c9:: with SMTP id z9mr11632227otq.44.1584114429233;
- Fri, 13 Mar 2020 08:47:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 13 Mar 2020 15:46:42 +0000
-Message-ID: <CA+V-a8vchrpa-1N1J+yVdo6-3zouOHX6=G4epWm68yirPirzag@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] Add support for PCIe controller to work in
- endpoint mode on R-Car SoCs
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
+        Fri, 13 Mar 2020 11:55:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59633 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgCMPz7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 11:55:59 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jCmf7-00012X-Sk; Fri, 13 Mar 2020 16:55:49 +0100
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jCmf6-00054P-27; Fri, 13 Mar 2020 16:55:48 +0100
+Message-ID: <3aedf6357f321efaf1d59a0b654300803ad51cef.camel@pengutronix.de>
+Subject: Re: [RFC 10/11] reset: imx: Add audiomix reset controller support
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Fri, 13 Mar 2020 16:55:47 +0100
+In-Reply-To: <20200313141606.euumtuizm562zghv@fsr-ub1664-175>
+References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+         <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
+         <ac6eb54c01cce4ec52560ac622e024ab47f2136c.camel@pengutronix.de>
+         <20200313141606.euumtuizm562zghv@fsr-ub1664-175>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn/Kishon,
+On Fri, 2020-03-13 at 16:16 +0200, Abel Vesa wrote:
+[...]
+> > > +	if (assert) {
+> > > +		pm_runtime_get_sync(rcdev->dev);
+> > 
+> > This seems wrong. Why is the runtime PM reference count incremented when
+> > a reset is asserted ...
+> 
+> The audiomix IP has its own power domain. 
 
-On Fri, Feb 28, 2020 at 3:41 PM Lad Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
->
-> This patch series adds support for PCIe controller on rcar to work in
-> endpoint mode, this also extends the epf framework to handle base region
-> for mapping PCI address locally.
->
-> Note:
-> The cadence/rockchip/designware endpoint drivers are build tested only.
->
-> Changes for v5:
-> 1] Rebased the patches on next branch of https://git.kernel.org/pub/scm/
->    linux/kernel/git/helgaas/pci.git
-> 2] Fixed review comments reported by Kishon while fetching the matching
->    window in function pci_epc_get_matching_window()
-> 3] Fixed review comments reported by Bjorn
->    a] Split patch up first patch so that its easier to review and incremental
->    b] Fixed typos
-> 4] Included Reviewed tag from Rob for the dt-binding patch
-> 5] Fixed issue reported by Nathan for assigning variable to itself
->
-> Changes for v4:
-> 1] Fixed dtb_check error reported by Rob
-> 2] Fixed review comments reported by Kishon
->    a] Dropped pci_epc_find_best_fit_window()
->    b] Fixed initializing mem ptr in __pci_epc_mem_init()
->    c] Dropped map_size from pci_epc_mem_window structure
->
-> Changes for v3:
-> 1] Fixed review comments from Bjorn and Kishon.
-> 3] Converted to DT schema
->
-> Changes for v2:
-> 1] Fixed review comments from Biju for dt-bindings to include an example
->    for a tested platform.
-> 2] Fixed review comments from Kishon to extend the features of outbound
->    regions in epf framework.
-> 3] Added support to parse outbound-ranges in OF.
->
-> Lad Prabhakar (7):
->   PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
->   PCI: rcar: Move shareable code to a common file
->   PCI: rcar: Fix calculating mask for PCIEPAMR register
->   PCI: endpoint: Add support to handle multiple base for mapping
->     outbound memory
->   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
->     controller
->   PCI: rcar: Add support for rcar PCIe controller in endpoint mode
->   misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
->
-Gentle ping.
+The reset controller does not control the power domain for its
+consumers. The consumer of this reset should implement runtime PM.
 
-Cheers,
---Prabhakar Lad
+> The way I see it, when the last deassert is done, there is no point
+> in keeping the audiomix on. So, unless the clock controller part of it does it,
+> the audiomix will be powered down.
 
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml       |   76 ++
->  arch/arm64/configs/defconfig                       |    2 +-
->  drivers/misc/pci_endpoint_test.c                   |    3 +
->  drivers/pci/controller/Kconfig                     |   15 +-
->  drivers/pci/controller/Makefile                    |    3 +-
->  drivers/pci/controller/cadence/pcie-cadence-ep.c   |    7 +-
->  drivers/pci/controller/dwc/pcie-designware-ep.c    |   29 +-
->  drivers/pci/controller/pcie-rcar-ep.c              |  490 ++++++++
->  drivers/pci/controller/pcie-rcar-host.c            | 1053 +++++++++++++++++
->  drivers/pci/controller/pcie-rcar.c                 | 1229 +-------------------
->  drivers/pci/controller/pcie-rcar.h                 |  129 ++
->  drivers/pci/controller/pcie-rockchip-ep.c          |    7 +-
->  drivers/pci/endpoint/pci-epc-mem.c                 |  167 ++-
->  include/linux/pci-epc.h                            |   39 +-
->  14 files changed, 1985 insertions(+), 1264 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
->  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
->  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
->  create mode 100644 drivers/pci/controller/pcie-rcar.h
->
-> --
-> 2.7.4
->
+You mean when the last assert is done? Presumably the driver wants to
+use the hardware after deasserting the reset and asserts the reset when
+it is done.
+
+regards
+Philipp
