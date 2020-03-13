@@ -2,139 +2,111 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A432CC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BF4C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E19E2074C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D9B20749
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:29:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GbcfdfAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgCMK0P (ORCPT
+        id S1726514AbgCMK3h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:26:15 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:43193 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbgCMK0P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 06:26:15 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MkYsS-1jbbb229de-00m1eV; Fri, 13 Mar 2020 11:26:02 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 67EE36501F5;
-        Fri, 13 Mar 2020 10:26:01 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tXMM2uOgK3Nx; Fri, 13 Mar 2020 11:26:01 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id EB9EA64FEE5;
-        Fri, 13 Mar 2020 11:26:00 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.10.2.141) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 13 Mar 2020 11:26:01 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 9500F804F8; Fri, 13 Mar 2020 11:26:00 +0100 (CET)
-Date:   Fri, 13 Mar 2020 11:26:00 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 2/8] media: adv748x: add audio mute control and output
- selection ioctls
-Message-ID: <20200313102600.GF3832@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
- <20200113141521.GC3606@pflmari>
- <ff34078d-895d-08c8-c64f-768e75388038@xs4all.nl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ff34078d-895d-08c8-c64f-768e75388038@xs4all.nl>
-X-Originating-IP: [10.10.2.141]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A627061
-X-Provags-ID: V03:K1:pmRc/dG1ku1hUco+cU0pJmJkIsZimoq3eyRDNsQtuHdsIPbBkC0
- 4FCaHFoQiKJCY0LxHdfYTK1gYRbqBfebjsEZ1NWa81AK/HJcPe3lDMnxRIBZQXl11KLhx7z
- SD0etOc+nneciAeV9I24SK6kUDjeCXMy8a9P6dTWq9DppjM3ma11hS3SENmDP6Jm1padRlH
- Ka0SLqEinwp4UtQcH/BlQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZaxZ+24ibLo=:c1xj2HmOiiT7P0OF2k8DOW
- XaX2A2wFTELxyxbYE1tVYCvlNEsu3ed81azir53chhnbQyrwPWu5utikSlnKeHf4xu2cMRTxy
- Oyjj18HpP+dB8eW6QCm6iweyWKVcP1NTLMtJOTx8h4FPKaCgajswc03QZRxLJRwNoJGWCgtIn
- KVpNLJ9p1yCq9l4ZWbLGKwVhdOjyCWvRDnlSDlKtxxHugKbRLJv7Mvt/ec5NYwoXE5qOOuP4L
- 0MQAn1IUf6HQyqDmlRW8zOwOl/dxSHL+4zFp1GvsNieo5BDRGo/UjEvSlGbSPIcPo7K+c7eqI
- IpFTCFMnVlmoFJopsAyUQye3GapWvVGshe7cIwbR54q8DiJB1tUQWtn996S2Mnd4j0C8CMDek
- 0wRgcsXVYDO1bZqAa0WwkhfZzqXRAUFona7kUzUajvBZ8xbqCklN+c5ES+r7kzGyleoE2pbP5
- QfjdKLmYzC1XUDAuoFLma8D2OxvFrxJFEjXLAteYUVp0cklq10g0HceJuNlQtTeFY61gbDUJd
- 7eCb4qAE137EfA+jIarEcDvJcS3UDDwq7UZRiTENCv3eUdT/0sJln8DwR/ZhWiOvxaSA8Of3q
- 0piztpK/tcpiZ1f+5nZ+FHIGjGIGvso2/JxpBANut6UwCu2Xdf0A6G9JezUhgc1KTbhEhwrTo
- hR1OmvSD+dqV2M/KyJH4hmC0W2rW3ViyLNLWUUfUIRTsmqzaUQ0cVgsv9oTumkbLOyGXm+B8k
- HTn+D6XWixhHB1gDESYUKWk36vLSQhXBNifaYJckd/U6y4HXEPIlhDzLNa4mhZXRkRqXZP0mK
- 7etH9sAqT59s35QgmTdHzUaYFHAVWZ3OWakuGbIvXImobhwMIMd4BH6b8nD/9jQYXAVD/a/
+        Fri, 13 Mar 2020 06:29:37 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:32622 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726508AbgCMK3h (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:29:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584095376; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=zwyBfEdJUO8dhaPzBlME2A8euUXfo1kYJC5G8JyMx5g=; b=GbcfdfAO6MsvACroeg53TpNcetY6lquqypHv6aMJQynOpKoyQoPqWOXNU5xgH/fNvDvHWndl
+ wDnLzFbIPK1ycvLht/RAlWUqSBizgiD4sbuMgmcg5LOcYPfzCYJ7OK9kiAcvRKMxEwZICtOj
+ Oxm2WrQSbMespghdh/tQPebPIY0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6b6090.7f312662ebc8-smtp-out-n02;
+ Fri, 13 Mar 2020 10:29:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 738F6C44791; Fri, 13 Mar 2020 10:29:36 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B63AC433CB;
+        Fri, 13 Mar 2020 10:29:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B63AC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, c_skakit@codeaurora.org, mka@chromium.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH V5 2/3] dt-bindings: geni-se: Add interconnect binding for GENI QUP
+Date:   Fri, 13 Mar 2020 15:59:09 +0530
+Message-Id: <1584095350-841-3-git-send-email-akashast@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
+References: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hans,
+Add documentation for the interconnect and interconnect-names properties
+for the GENI QUP.
 
-Hans Verkuil, Fri, Mar 13, 2020 09:16:11 +0100:
-> On 1/13/20 3:15 PM, Alex Riesen wrote:
-> > This change implements audio-related V4L2 ioctls for the HDMI subdevice.
-> 
-> This is really where things go wrong. These V4L2 audio ioctls are meant for
-> old PCI TV tuner devices where the audio was implemented as audio jack outputs
-> that are typically looped back to audio inputs on a (PCI) soundcard. And when
-> these ioctls were designed ALSA didn't even exist.
+Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+---
+Changes in V5:
+ - Add interconnect property for QUP wrapper (parent node).
+ - Add minItems = 2 for interconnect property in child nodes
 
-I see. That was before my time :)
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml       | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-> Generally an hdmi driver will configure the i2s audio automatically, which is
-> typically connected to the SoC and controlled by the ALSA driver of the SoC,
-> but there may well be missing features (audio never got a lot of attention in
-> hdmi receivers). So what I would like to know is: what features are missing?
-
-Well, the audio is missing. The current adv748x driver does not export the
-audio features of the device at all. There is no code to enable the I2S audio
-output and it is disabled (all clock and the data lines) by default.
-
-But, by now it seems to be clear that implementation of ALSA SoC DAI
-interfaces is the way to support the audio.
-
-And I am already slowly working on it.
-
-> Anything missing can likely be resolved by adding HDMI audio specific V4L2 controls,
-> which would be the right approach for this.
-> 
-> So I would expect to see a proposal for V4L2_CID_DV_RX_AUDIO_ controls to be
-> added here:
-> 
-> https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/ext-ctrls-dv.html
-
-This seems to be an explicitly "digital video" control class. And it has no
-control option for mute. Or did you mean a similarly structured new class for
-"digital audio"?
-
-This feels like an overkill for this particular driver...
-
-Regards,
-Alex
-
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+index 23282ab..533400b 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+@@ -46,6 +46,12 @@ properties:
+ 
+   ranges: true
+ 
++  interconnects:
++    maxItems: 1
++
++  interconnect-names:
++    const: qup-core
++
+ required:
+   - compatible
+   - reg
+@@ -73,6 +79,16 @@ patternProperties:
+         description: Serial engine core clock needed by the device.
+         maxItems: 1
+ 
++      interconnects:
++         minItems: 2
++         maxItems: 3
++
++      interconnect-names:
++         items:
++           - const: qup-core
++           - const: qup-config
++           - const: qup-memory
++
+     required:
+       - reg
+       - clock-names
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
