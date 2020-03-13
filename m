@@ -2,130 +2,123 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3F1C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 22:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FCDC4CECE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 23:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B1F2074E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 22:34:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+TIiwsK"
+	by mail.kernel.org (Postfix) with ESMTP id 125A52074C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 23:05:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgCMWeM (ORCPT
+        id S1726777AbgCMXF3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 18:34:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35807 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgCMWeM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 18:34:12 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d5so13725609wrc.2;
-        Fri, 13 Mar 2020 15:34:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=u2/KsbMRst5bOqjjozeqv6hTnglC4BshRp2rjl0jtkE=;
-        b=J+TIiwsKperfrX263SHYpVChqgx2ehGPtuTPCxNhG61/OgzX0SeZROV+/dZCwtr0UL
-         iQZm5u345orMAsMTyYca+AHmpt7gL8VOm7ijkJKezhhW/iUqOwWa64hZfI2TT4M+OQ5w
-         +GNCtW/wxOyQAEP2qsJog8CdrpPRNg8NAN2Qv4h9vPcNJgbKNbdwWvNY/9ujuPLNB29t
-         O3y2tzPrHhfQ9oojPZ2C3mNhtXjGydVi7kdkJ4joFq1S9GhS+YbzFMUZ6c+3K9hRNk5U
-         OhFRXx35CcfyIkEDhJDiTyyHkrJVSoCFtRnXy6C32sR3x4QRvhHrASLMB6ls3CaG6MCE
-         tXjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=u2/KsbMRst5bOqjjozeqv6hTnglC4BshRp2rjl0jtkE=;
-        b=cjaLJ530orLqSUMw+uLGJSdQY8KkzXU9oqP+g1mOtPvzi2LZsw87K4ZdslmHdipVvg
-         BfY3Qc8O1GU9ki2bv1g7BKYRy+YLI7yhnuJpFD1DEYmBzV6LGWvCnwIGOPk9Mf3Qu8ti
-         Y78vebQkv3N76vTMLJ0rWMxuAl6aMLny8BEcVIoG1KI67nbs9h1QHzzAjeQflJ3+iVU8
-         uAnShiBl8eUo1bLFHqj+cmUMU7vxU8CPRi3JFuQIGNnTEZhaCnM2E8X34QQT9wITrLhT
-         P0T9p/qEIfWFT+837doki3J5DNocTcIDF3T1kiq621Q5mJ02aj8GF95cXAiqyLVJLBsa
-         5p3w==
-X-Gm-Message-State: ANhLgQ0CcOhQnjuCK0BTRCH10RGPkf23n2K1Mf+jjkvXY3GMRnIfTCM2
-        i/Ve68pENr/xNqSPlBYjHkw=
-X-Google-Smtp-Source: ADFU+vuwl9wZQqUu+AK3esARk//0MO9KcaK6BM7g9CGUYNYklmt4SgOYLGnFRB6MFLNXN1F+2JzSiQ==
-X-Received: by 2002:adf:e98c:: with SMTP id h12mr20476792wrm.345.1584138849748;
-        Fri, 13 Mar 2020 15:34:09 -0700 (PDT)
-Received: from AnsuelXPS ([2001:470:b467:1:44af:5966:96b9:9aa4])
-        by smtp.gmail.com with ESMTPSA id t1sm36023991wrq.36.2020.03.13.15.34.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 13 Mar 2020 15:34:09 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stephen Boyd'" <sboyd@kernel.org>, <agross@kernel.org>
-Cc:     "'Mathieu Olivari'" <mathieu@codeaurora.org>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Michael Turquette'" <mturquette@baylibre.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>
-References: <20200313195816.12435-1-ansuelsmth@gmail.com> <158413179776.164562.8295974225127853050@swboyd.mtv.corp.google.com>
-In-Reply-To: <158413179776.164562.8295974225127853050@swboyd.mtv.corp.google.com>
-Subject: R: [PATCH] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
-Date:   Fri, 13 Mar 2020 23:34:05 +0100
-Message-ID: <014101d5f987$82790c90$876b25b0$@gmail.com>
+        Fri, 13 Mar 2020 19:05:29 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:48890 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726681AbgCMXF3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 19:05:29 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 4408C20029;
+        Sat, 14 Mar 2020 00:05:23 +0100 (CET)
+Date:   Sat, 14 Mar 2020 00:05:21 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2] dt-bindings: display: ti: Fix dtc unit-address
+ warnings in examples
+Message-ID: <20200313230521.GA8476@ravnborg.org>
+References: <20200313180727.23044-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFhpnVMu9aClkJmE4H4ViqLWFkkBwJI+//GqR16BZA=
-Content-Language: it
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313180727.23044-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=sozttTNsAAAA:8
+        a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8 a=k4r3PqWcPq6Qy1X7_v8A:9
+        a=rbD8nFOAu45xlIuL:21 a=UehPyaCQOHXEbEJC:21 a=CjuIK1q_8ugA:10
+        a=aeg5Gbbo78KNqacMgKqU:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Quoting Ansuel Smith (2020-03-13 12:58:16)
-> > diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> > index 554c65e7aa0e..580aec63030d 100644
-> > --- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> > +++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
-> > @@ -21,14 +21,5 @@ mux {
-> >                                 };
-> >                         };
-> >                 };
-> > -
-> > -               gsbi@16300000 {
-> > -                       i2c@16380000 {
-> > -                               status = "ok";
-> > -                               clock-frequency = <200000>;
-> > -                               pinctrl-0 = <&i2c4_pins>;
-> > -                               pinctrl-names = "default";
-> > -                       };
-> > -               };
-> >         };
-> >  };
-> > diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-
-> ipq806x.c
-> > index b0eee0903807..75706807e6cf 100644
-> > --- a/drivers/clk/qcom/gcc-ipq806x.c
-> > +++ b/drivers/clk/qcom/gcc-ipq806x.c
-> > @@ -782,7 +782,7 @@ static struct clk_rcg gsbi4_qup_src = {
-> >                         .parent_names = gcc_pxo_pll8,
-> >                         .num_parents = 2,
-> >                         .ops = &clk_rcg_ops,
-> > -                       .flags = CLK_SET_PARENT_GATE,
-> > +                       .flags = CLK_SET_PARENT_GATE | CLK_IGNORE_UNUSED,
+On Fri, Mar 13, 2020 at 01:07:27PM -0500, Rob Herring wrote:
+> Extra dtc warnings (roughly what W=1 enables) are now enabled by default
+> when building the binding examples. These were fixed treewide in
+> 5.6-rc5, but some new display bindings have been added with new
+> warnings:
 > 
-> A better solution is to use the protected-clocks property so we don't
-> try to touch these clks at all on this device. So this whole patch can
-> be routed through arm-soc and remove the i2c node and add some dt
-> property to the gcc node.
+> Documentation/devicetree/bindings/display/ti/ti,am65x-dss.example.dts:21.27-49.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
+> Documentation/devicetree/bindings/display/ti/ti,j721e-dss.example.dts:21.27-72.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
+> Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dts:20.27-42.11: Warning (unit_address_format): /example-0/dss@02540000: unit name should not have leading 0s
 > 
+> Cc: Jyri Sarha <jsarha@ti.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
-Should I add a comment where the i2c is removed or I can remove it
-directly?
+> ---
+> v2:
+>  - Drop panel fixes as there's another patch fixing the 3 panels plus
+>    others.
+Will revisit the panel/ fixes patch and apply tomorrow.
 
-> >                 },
-> >         },
-> >  };
+	Sam
 
+> ---
+>  Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
+>  Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml | 2 +-
+>  Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml   | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> index cac61a998203..aa5543a64526 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> @@ -121,7 +121,7 @@ examples:
+>      #include <dt-bindings/interrupt-controller/irq.h>
+>      #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>  
+> -    dss: dss@04a00000 {
+> +    dss: dss@4a00000 {
+>              compatible = "ti,am65x-dss";
+>              reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
+>                      <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> index ade9b2f513f5..6d47cd7206c2 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> @@ -154,7 +154,7 @@ examples:
+>      #include <dt-bindings/interrupt-controller/irq.h>
+>      #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>  
+> -    dss: dss@04a00000 {
+> +    dss: dss@4a00000 {
+>              compatible = "ti,j721e-dss";
+>              reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
+>                      <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> index 385bd060ccf9..7cb37053e95b 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> @@ -81,7 +81,7 @@ examples:
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+>      #include <dt-bindings/interrupt-controller/irq.h>
+>  
+> -    dss: dss@02540000 {
+> +    dss: dss@2540000 {
+>              compatible = "ti,k2g-dss";
+>              reg =   <0x02540000 0x400>,
+>                      <0x02550000 0x1000>,
+> -- 
+> 2.20.1
