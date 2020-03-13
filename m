@@ -2,92 +2,92 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34037C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0CDC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F396A206EB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:04:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584129882;
-	bh=gRupmyo00Wss0GIjIjppM9vlDUc8QcO3JGaB5bZDcw0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Z5S2QTZ9KR1ADcLswX/5m19tkqSTmNLfVibK3GWtMeJkbReNRkCJ2ALwqHUfdMJVS
-	 wxnw7O7/U/5oA72si4c7QtU7ZASjVnDPnjOOnNmK0/UaWSJWwx94yCsu2LaqZGZQGp
-	 TG+apHZPSKkzvWVzDNX33yKPrEgi8KRncvIPhNuQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5DC052074A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:13:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgCMUEl (ORCPT
+        id S1727320AbgCMUNk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 16:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgCMUEl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 16:04:41 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43E55206E9;
-        Fri, 13 Mar 2020 20:04:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584129880;
-        bh=gRupmyo00Wss0GIjIjppM9vlDUc8QcO3JGaB5bZDcw0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wySOpkgqxbQJD5g6KiD7Zg9QaqgMlV9nM//LIsKidQZPlSi35BhoWmnPJoYTDf+w2
-         tQfgbmd7Vtz0ji8O10i8+9uumn1r44l5hDq8yHiPBYyPJozrmY+Wo9KkTlD+ZzOH2r
-         6zG3luklOjIkQ3hsJwDIgKN+uluqbVvNazS5Mjog=
-Date:   Fri, 13 Mar 2020 13:04:38 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH net-next v3 05/10] net: ethernet: ti: introduce
- am65x/j721e gigabit eth subsystem driver
-Message-ID: <20200313130438.73d9a56c@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200313175511.2155-6-grygorii.strashko@ti.com>
-References: <20200313175511.2155-1-grygorii.strashko@ti.com>
-        <20200313175511.2155-6-grygorii.strashko@ti.com>
+        Fri, 13 Mar 2020 16:13:40 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:42831 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgCMUNk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 16:13:40 -0400
+X-Originating-IP: 87.231.134.186
+Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 5E8881BF206;
+        Fri, 13 Mar 2020 20:13:35 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: clearfog-gt-8k: set gigabit PHY reset deassert delay
+In-Reply-To: <E1j6YeG-00026g-08@rmk-PC.armlinux.org.uk>
+References: <E1j6YeG-00026g-08@rmk-PC.armlinux.org.uk>
+Date:   Fri, 13 Mar 2020 21:13:34 +0100
+Message-ID: <87eetwypw1.fsf@FE-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Mar 2020 19:55:06 +0200 Grygorii Strashko wrote:
-> +static void am65_cpsw_nuss_free_tx_chns(void *data)
-> +{
-> +	struct am65_cpsw_common *common = data;
-> +	int i;
-> +
-> +	for (i = 0; i < common->tx_ch_num; i++) {
-> +		struct am65_cpsw_tx_chn	*tx_chn = &common->tx_chns[i];
+Hi Russell,
 
-nit: stray tab?
+> If the mv88e6xxx DSA driver is built as a module, it causes the
+> ethernet driver to re-probe when it's loaded. This in turn causes
+> the gigabit PHY to be momentarily reset and reprogrammed. However,
+> we attempt to reprogram the PHY immediately after deasserting reset,
+> and the PHY ignores the writes.
+>
+> This results in the PHY operating in the wrong mode, and the copper
+> link states down.
+>
+> Set a reset deassert delay of 10ms for the gigabit PHY to avoid this.
+>
+> Fixes: babc5544c293 ("arm64: dts: clearfog-gt-8k: 1G eth PHY reset signal")
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-> +
-> +		if (!IS_ERR_OR_NULL(tx_chn->tx_chn))
-> +			k3_udma_glue_release_tx_chn(tx_chn->tx_chn);
-> +
-> +		if (!IS_ERR_OR_NULL(tx_chn->desc_pool))
-> +			k3_udma_desc_pool_destroy(tx_chn->desc_pool);
-> +
-> +		memset(tx_chn, 0, sizeof(*tx_chn));
-> +	};
 
-nit: you also got some stray semicolons in a few places
+Applied on mvebu/dt64
 
-Thanks for the changes, looks better. Hopefully someone who knows 
-the HW better can have a look as well.
+Thanks,
 
+Gregory
+
+> ---
+>  arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+> index bd881497b872..dc531d136273 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
+> @@ -367,6 +367,7 @@
+>  		pinctrl-0 = <&cp0_copper_eth_phy_reset>;
+>  		reset-gpios = <&cp0_gpio2 11 GPIO_ACTIVE_LOW>;
+>  		reset-assert-us = <10000>;
+> +		reset-deassert-us = <10000>;
+>  	};
+>  
+>  	switch0: switch0@4 {
+> -- 
+> 2.20.1
+>
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
