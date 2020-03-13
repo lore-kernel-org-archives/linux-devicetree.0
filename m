@@ -6,52 +6,48 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEC6C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B826C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 19:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FD720658
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA729206B7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 19:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584125758;
-	bh=UlTaerllM47iYcjXS8C5PL2oou6TgOmYUpkeKI2kt/w=;
+	s=default; t=1584126025;
+	bh=3qCWzqWyuOHNhRzyEpiloypzkxroKjixOqkCJfXv3ZI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eTwcBvj4QdV3HDzD3b9K7BszFJOSHAg3GKCn7mtn72TgQZGTOohbdyHuwRdqR8+Ar
-	 IJsLtC4Yl3vlF5Hfboit/shI34y49dbAAsgbxzxZAfFrgoWU2GkVWPAIkRkETtmEUn
-	 QnbwVRKRNPsXcy65guHyvv39wLUCURmAWoAHFbhg=
+	b=VvZffPmSDZNPttGYhdBNLUKZIeX/fS/KQtXP6AibAGLWMjiZSCTbzAQgTKuNkMFkR
+	 wzVF4lowcdcou21r+lMNF0cvsmg40TP+VIv92ERE7dwK0yH9kgVmtqEx4PYu347qkJ
+	 ksTM9E7UrdEHRXT8r8QCbscp6lAmspwCu1oFB0+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgCMSz5 (ORCPT
+        id S1726543AbgCMTAZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:55:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:34896 "EHLO foss.arm.com"
+        Fri, 13 Mar 2020 15:00:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:34950 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgCMSz5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:55:57 -0400
+        id S1726297AbgCMTAZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 15:00:25 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1E2D431B;
-        Fri, 13 Mar 2020 11:55:57 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BED6E31B;
+        Fri, 13 Mar 2020 12:00:24 -0700 (PDT)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 967893F534;
-        Fri, 13 Mar 2020 11:55:56 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 18:55:55 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 427EB3F534;
+        Fri, 13 Mar 2020 12:00:24 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 19:00:22 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Benson Leung <bleung@chromium.org>,
-        alsa-devel@alsa-project.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: Re: [PATCH v2] ASoC: dt-bindings: google,cros-ec-codec: Fix dtc
- warnings in example
-Message-ID: <20200313185555.GM5528@sirena.org.uk>
-References: <20200313180543.20497-1-robh@kernel.org>
+To:     Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 4/4] regulator: mp886x: add MP8867 support
+Message-ID: <20200313190022.GA55551@sirena.org.uk>
+References: <20200313224739.17b5ed70@xhacker>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EOHJn1TVIJfeVXv2"
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
 Content-Disposition: inline
-In-Reply-To: <20200313180543.20497-1-robh@kernel.org>
-X-Cookie: This page intentionally left blank.
+In-Reply-To: <20200313224739.17b5ed70@xhacker>
+X-Cookie: All celebrity voices impersonated.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -59,31 +55,33 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---EOHJn1TVIJfeVXv2
+--tThc/1wpZn/ma/RB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 13, 2020 at 01:05:43PM -0500, Rob Herring wrote:
-> Extra dtc warnings (roughly what W=1 enables) are now enabled by default
-> when building the binding examples. These were fixed treewide in
-> 5.6-rc5, but the newly added google,cros-ec-codec schema adds some new
-> warnings:
+On Fri, Mar 13, 2020 at 10:47:39PM +0800, Jisheng Zhang wrote:
+> From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+>=20
+> MP8867 is an I2C-controlled adjustable voltage regulator made by
+> Monolithic Power Systems. The difference between MP8867 and MP8869
+> are:
 
-v1 got applied, could you send an incremental diff please?
+This doesn't apply against current code, please check and resend.
 
---EOHJn1TVIJfeVXv2
+--tThc/1wpZn/ma/RB
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5r1zoACgkQJNaLcl1U
-h9A9xQf8D4qo5BE4kR0B6Xezo7p/pdK91FrKE6y5FfQTFK+hVGgN3ysMlWcUxwsR
-hB1NLaFz/0f4w9iHu+vqbd3kZVt6WleRvq/MLJEVI+JHQEIKLfr+XGch+30iPwM7
-lKwLR6O4N0XXDzXAQfXtsM/mP2NQo5iyEtlXIVAn7FI04zuzIuYu+TvU8XxhWn1P
-OTg9c/D0/5P3fakLSPHFFVRTRnNBqgVrI+zh4P+Be4JNjRniOnUBLooa5hu0pWWE
-+FyalDVC07RI/LTubgW+S2fkxk5HVjNIgrgOwYkd9sCFvshCO+3D/J8bYRnnRNub
-Uxrn3/ec7Vd/yXBu2B0gpAQyqI8K5Q==
-=pQ/m
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5r2EYACgkQJNaLcl1U
+h9DnNQf/eKEzZuxb4Ue3z4VQzMjboPv6c1BAIsCW7SkFUWQUgZlowly7DLJEh+hW
+7kCM3p+DOnYESLgpwX90Crz4Pc8XjxWMo06Uwy4/zsuirJyJ/geLNKMiL7O/GIsz
+1vY3JWaVCZBlgOm2quR7+/LPcIpw9joaS6ID/mlB97gaezVBanW/vcHIezpvMEFu
+5RVYttFf9j74UESE+a9566siJlt3gMCqpzqvEU3hAgzHxSTdZImGenTRT7NRHIhx
+IaxOjVTsJt/0IKhRKCKewo1CTuAiDdv5h7mH8ngfsdx76mFAW3xKzpQrhgYQ9Z30
+qxNbHvrHQRpf9WtpgBMTw9jPtrgElw==
+=gKdg
 -----END PGP SIGNATURE-----
 
---EOHJn1TVIJfeVXv2--
+--tThc/1wpZn/ma/RB--
