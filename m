@@ -2,31 +2,32 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B43C10DCE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04C3C5ACBF
 	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A6520746
+	by mail.kernel.org (Postfix) with ESMTP id AF9F02073E
 	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgCMK0G (ORCPT
+        id S1726055AbgCMK0G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Fri, 13 Mar 2020 06:26:06 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37871 "EHLO
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32797 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgCMKZw (ORCPT
+        with ESMTP id S1726423AbgCMKZw (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 06:25:52 -0400
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jChVf-0006nH-Mn; Fri, 13 Mar 2020 11:25:43 +0100
+        id 1jChVg-0006o9-Mf; Fri, 13 Mar 2020 11:25:44 +0100
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jChVf-0001Qp-0O; Fri, 13 Mar 2020 11:25:43 +0100
+        id 1jChVg-0001R9-BL; Fri, 13 Mar 2020 11:25:44 +0100
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -44,10 +45,12 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v2 0/2] properly define some of PHYs 
-Date:   Fri, 13 Mar 2020 11:25:32 +0100
-Message-Id: <20200313102534.5438-1-o.rempel@pengutronix.de>
+Subject: [PATCH v3 2/2] ARM: dts: imx6q-marsboard: properly define rgmii PHY
+Date:   Fri, 13 Mar 2020 11:25:34 +0100
+Message-Id: <20200313102534.5438-3-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200313102534.5438-1-o.rempel@pengutronix.de>
+References: <20200313102534.5438-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
@@ -59,20 +62,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-changes v3:
-- add phy-handle on the marsboard
+The Atheros AR8035 PHY can be autodetected but can't use interrupt
+support provided on this board. Define MDIO bus and the PHY node to make
+it work properly.
 
-changes v2:
-- remove spaces
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6q-marsboard.dts | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-Oleksij Rempel (2):
-  ARM: dts: imx6dl-riotboard: properly define rgmii PHY
-  ARM: dts: imx6q-marsboard: properly define rgmii PHY
-
- arch/arm/boot/dts/imx6dl-riotboard.dts | 16 +++++++++++++++-
- arch/arm/boot/dts/imx6q-marsboard.dts  | 16 +++++++++++++++-
- 2 files changed, 30 insertions(+), 2 deletions(-)
-
+diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
+index 84b30bd6908f..05ee28388229 100644
+--- a/arch/arm/boot/dts/imx6q-marsboard.dts
++++ b/arch/arm/boot/dts/imx6q-marsboard.dts
+@@ -111,8 +111,22 @@ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+ 	phy-mode = "rgmii-id";
+-	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
++	phy-handle = <&rgmii_phy>;
+ 	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		/* Atheros AR8035 PHY */
++		rgmii_phy: ethernet-phy@4 {
++			reg = <4>;
++			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
++			reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <10000>;
++			reset-deassert-us = <1000>;
++		};
++	};
+ };
+ 
+ &hdmi {
 -- 
 2.25.1
 
