@@ -2,172 +2,92 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC1C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 09:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB89C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 09:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1A320746
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 09:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5194820746
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 09:56:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pYdPIASj"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pJqmMLtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgCMJsB (ORCPT
+        id S1726395AbgCMJz7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 05:48:01 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43598 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgCMJsB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 05:48:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b2so4975737wrj.10;
-        Fri, 13 Mar 2020 02:47:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XQL/ya+7buqNZWgLcV53EPIchP1Jf2XAfvnaPJGA1KA=;
-        b=pYdPIASjYoqpQoZ+d0D1BtbpFxOaL31zy7s2vppMa61ioYUMdqnfucab9xSLprGaDe
-         KGicwSl2z64hVgJwPPxeOtKJSWJRP0vq189Vy1BPL+jTmMa+VMOWe/NXV//VrMWJCkUy
-         5m9fX3NLEGm86NabuYrtSJ5drAQItP1zom27YjfmHKtnXn03WFVN39BlGaUpr3OKh/pW
-         useVs+j1RAHP31DeNOzwEI0F8RdbySDuG9ZwxP0fv0m+LSQJyq6zpF54I/BNiIJyB5d9
-         rkMCgtLU6AMeSCqrgPTrLvm1L6c3kAt+8Ak/s+CyalMgFapywFDRN8dOqKsEWuSOeWRt
-         3qew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XQL/ya+7buqNZWgLcV53EPIchP1Jf2XAfvnaPJGA1KA=;
-        b=r+fCloiLMutgB2s9NtcLvX3XC+urR5oQJNA3Y7xfoig4DV4yezMhii8k6v8CdXp4sK
-         Bz41nOo5OVDtcn7ZZ/KSS49QphnxwIF2Wkxfzjd6JlKsl1ltB8boeQJhbSWzTEUvneRe
-         6vLlzQRH5naz6Wwv+z+jT+hu4jgphOZRonKvXEd1SXhFQ72u1ydYeQ6gLijfjP/u+rtg
-         L7TYFzbESftkr3xpsVWu5qMWbQEvcVTZAlbBeeScSHt9lVotqyOAmuJ3xrStZ/Vxyod6
-         O0+o0VD0CEaMLZvvhpp8vwLNRchver0D9tBKZveA7XGXUFcPAP2H0VmIjRbkyVh4Wqyp
-         hyOQ==
-X-Gm-Message-State: ANhLgQ2DmiIa82AryWt8I+VlVc7DvHtuCjfQN8ml04BQGFW/YJJ3GRLT
-        kzRGp/HBBzx8yNjkgVmRipInR7nO
-X-Google-Smtp-Source: ADFU+vtaxHOPeIyS6PgzifyQThwGs16+e+1vFL082dvhCXY95j+M8YBn6L+ANelNhAcd5SM3g8oOtQ==
-X-Received: by 2002:adf:94c2:: with SMTP id 60mr16813347wrr.396.1584092877688;
-        Fri, 13 Mar 2020 02:47:57 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id u7sm8109776wme.43.2020.03.13.02.47.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 02:47:57 -0700 (PDT)
-Subject: Re: [PATCH 2/3] ARM: dts: rockchip: add missing @0 to memory
- nodenames
-To:     Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200304074051.8742-1-jbx6244@gmail.com>
- <1784340.9KJLpVao5L@phil> <2a5ef6fc-2487-91ef-24ce-97dd47b0a137@gmail.com>
- <7869677.iSBujUIW6u@phil>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <5af5bdfd-3522-9066-8bde-84a5e468be32@gmail.com>
-Date:   Fri, 13 Mar 2020 10:47:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 13 Mar 2020 05:55:59 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33188 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726055AbgCMJz7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 05:55:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=y5jMrVQ1rAmzFXJgVqMw4/HO7DqIcglA8Q3MOxQde5c=; b=pJqmMLtzgUNGpjUJSu2CBoZO+H
+        35G+hZ9wBhF01fL7YN2ghhtcenyHC4VjrRk/Zq6tnoEVKr1/LLSw4/SSfuayre8E+a34p2NjGFp05
+        6t16FcATEI6wA7e54dEMMdfZz1FJSrcgNqY2m+2Yd6oMfqHD+AByv9xrcYLwZVNs4ys0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jCh2f-00045u-0c; Fri, 13 Mar 2020 10:55:45 +0100
+Date:   Fri, 13 Mar 2020 10:55:45 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v2 2/2] ARM: dts: imx6q-marsboard: properly define rgmii
+ PHY
+Message-ID: <20200313095545.GD14553@lunn.ch>
+References: <20200313053224.8172-1-o.rempel@pengutronix.de>
+ <20200313053224.8172-3-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <7869677.iSBujUIW6u@phil>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313053224.8172-3-o.rempel@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Heiko, Rob,
+On Fri, Mar 13, 2020 at 06:32:24AM +0100, Oleksij Rempel wrote:
+> The Atheros AR8035 PHY can be autodetected but can't use interrupt
+> support provided on this board. Define MDIO bus and the PHY node to make
+> it work properly.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  arch/arm/boot/dts/imx6q-marsboard.dts | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
+> index 84b30bd6908f..1f31d86a217b 100644
+> --- a/arch/arm/boot/dts/imx6q-marsboard.dts
+> +++ b/arch/arm/boot/dts/imx6q-marsboard.dts
+> @@ -111,8 +111,21 @@ &fec {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_enet>;
+>  	phy-mode = "rgmii-id";
+> -	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
+>  	status = "okay";
 
-From https://coreboot.org/status/board-status.html
+Hi Oleksij 
 
-The only supported boards listed are:
+I don't see a phy-handle here. So is it still using phy_find_first()?
 
-Veyron Rockchip RK3288 boards
-Veyron Mickey Rockchip RK3288 board
-Veyron Rialto Rockchip RK3288 board
-Gru Rockchip RK3399 reference board
-
-Fixed with:
-ARM: dts: rockchip: Remove @0 from the veyron memory node
-https://patchwork.kernel.org/patch/10688081/
-
-The problem is rk3288-veyron only I think.
-Else fix coreboot to comply with DT rules, not the other way around.
-Will make v2.
-
-Can robh give advice here?
-
-Thanks
-
-On 3/6/20 12:58 AM, Heiko Stuebner wrote:
-> Hi Johan, Rob,
-> 
-> Am Donnerstag, 5. März 2020, 23:21:52 CET schrieb Johan Jonker:
->> Goal was to reduce the error output of existing code a little bit,
->> so that we can use it for the review of new patches.
->> Some questions:
->> As I don't have the hardware, where else is coreboot used?
->> Is this a rk3288-veyron.dtsi problem only?
->> ie. Is it a option to produce a patch serie v2 without veyron?
->> Can someone help testing?
-> 
-> I believe that is more question for @Rob :
-> 
-> In the past we said that it would be ok to have "memory" nodes without
-> address, so "memory {}" instead of "memory@0 {}", simply because
-> bootloaders mess up sometimes.
-> 
-> Question now would be how to make the yaml bindings happy.
-> 
-> Thanks
-> Heiko
-> 
-> 
->>
->> Johan
->>
->> On 3/5/20 10:31 PM, Heiko Stuebner wrote:
->>> Hi Johan,
->>>
->>> Am Mittwoch, 4. März 2020, 08:40:50 CET schrieb Johan Jonker:
->>>> A test with the command below gives for example this error:
->>>>
->>>> arch/arm/boot/dts/rk3288-tinker.dt.yaml: /: memory:
->>>> False schema does not allow
->>>> {'device_type': ['memory'], 'reg': [[0, 0, 0, 2147483648]]}
->>>>
->>>> The memory nodes all have a reg property that requires '@' in
->>>> the nodename. Fix this error by adding the missing '@0' to
->>>> the involved memory nodenames.
->>>>
->>>> make ARCH=arm dtbs_check
->>>> DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
->>>> schemas/root-node.yaml
->>>
->>> changes to memory nodes you sadly cannot do in such an automated fashion.
->>> If you read the comment in rk3288-veyron.dtsi you'll see that a previous
->>> similar iteration broke all of those machines as their coreboot doesn't
->>> copy with memory@0 and would insert another memory node without @0
->>>
->>> In the past iteration the consensus then was that memory without @0
->>> is also ok (as it isn't changeable anyway).
->>>
->>
->>> As I don't really want to repeat that, I'd like actual hardware tests
->>> before touching memory nodes.
->>
->> Any suggestion/feedback rapport welcome.
->>
->>>
->>> Heiko
->>>
->>>
->>
-> 
-> 
-> 
-> 
-
+  Andrew
