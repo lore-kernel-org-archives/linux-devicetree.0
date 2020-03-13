@@ -2,159 +2,82 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B583C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 11:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671F1C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A59206EB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 11:52:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="smMtm7UL"
+	by mail.kernel.org (Postfix) with ESMTP id 40FE7206FA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 12:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgCMLwp (ORCPT
+        id S1726495AbgCMMEb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 07:52:45 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]:38750 "EHLO
-        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgCMLwp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 07:52:45 -0400
-Received: by mail-qk1-f180.google.com with SMTP id h14so11922201qke.5
-        for <devicetree@vger.kernel.org>; Fri, 13 Mar 2020 04:52:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UJ8xSSCkhQZKbzWiANWRk5A03053ARYS7+yZlu2NNEg=;
-        b=smMtm7ULHqM+dfuhiVEGQ/7r96mu4nexYpUcA1rBx01rGnJh7Vu2au/AEaCQAlFzIh
-         M9RZBVJctWBOlMEtvnrcpcfGVJj5PaHrQtDU35QB85aBOwjc1SVP56aYzgtmP08X6hQn
-         ycXwQCpmxgIskgrlPzmoHtGZGGSqYZ+AHmVnwshhVMBddwtuDLw04bLTiuoZ9brsfImO
-         c2cVIb0ePJsmI414HFVW/6qinwTEnYJ68Vj4AYJ+R1RrejPyqH+qSMlBiQ3sQAo9y+9G
-         anG7FgekOfQ81AhTRN0X94X+A5OoaF+ab69JZeg8wVgvYWzy2ibgQcjVylW61EwP3QkI
-         Drwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UJ8xSSCkhQZKbzWiANWRk5A03053ARYS7+yZlu2NNEg=;
-        b=hiNH52F2bGSqfGCCSRJDeL9PnNlcwy8cBKbDElf3J/gA56o4P9MnvqU3+zEnIweazF
-         rt40m3S10Y2EI7Sw/kizUV432uW+0nftvycpVyCY9n4Gr00wwVr1oy9c+ApLZrk/ugif
-         ABJBbTGMBJjHmepLER+POPMZSYzOOWATrd2DI7rNuyhxHdISuIq6cMlQEyj11YrfZ+OH
-         c+R2xdovzwqMuPe2ol0bou/eDoHehrGe8ia0jat4hR5PW59QRE+duwLm9F4A4HWR+fdL
-         HNhvc0MhiqEKSYiQQMztBCNcjeLNPSQLcMOlPrdAkO7SxxR+qG5b4+VJbyh76Ehxfrse
-         Y+AQ==
-X-Gm-Message-State: ANhLgQ09ud2F4AumMXArM0uCSIySIokEQ8dpXEjLQzG3cLNVIVCWQ5K+
-        wYpuRkn+RjflWNG0pmdOp14JPA==
-X-Google-Smtp-Source: ADFU+vvci9y7EIeFeKKTsPP0ctv9BIRy71CzpxrY4rf6mDJwA/mHF2m44kf9fpLrCHIUVGZ2lyv1Aw==
-X-Received: by 2002:a05:620a:1102:: with SMTP id o2mr1350183qkk.26.1584100363691;
-        Fri, 13 Mar 2020 04:52:43 -0700 (PDT)
-Received: from localhost.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id 199sm11031143qkm.7.2020.03.13.04.52.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 04:52:43 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        David Dai <daidavid1@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Miller <davem@davemloft.net>,
-        Evan Green <evgreen@chromium.org>,
-        Odelu Kukatla <okukatla@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] arm64: dts: sdm845: add IPA information
-Date:   Fri, 13 Mar 2020 06:52:36 -0500
-Message-Id: <20200313115237.10491-2-elder@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200313115237.10491-1-elder@linaro.org>
-References: <20200313115237.10491-1-elder@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 13 Mar 2020 08:04:31 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:51924 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgCMMEb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 08:04:31 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 849271A1419;
+        Fri, 13 Mar 2020 13:04:29 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 781461A13E3;
+        Fri, 13 Mar 2020 13:04:29 +0100 (CET)
+Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 111ED203CE;
+        Fri, 13 Mar 2020 13:04:29 +0100 (CET)
+From:   Madalin Bucur <madalin.bucur@oss.nxp.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, shawnguo@kernel.org,
+        leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>
+Subject: [PATCH net 0/3] QorIQ DPAA ARM RDBs need internal delay on RGMII
+Date:   Fri, 13 Mar 2020 14:04:22 +0200
+Message-Id: <1584101065-3482-1-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: git-send-email 2.1.0
+Content-Type: text/plain; charset="us-ascii"
+Reply-to: madalin.bucur@oss.nxp.com
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add IPA-related nodes and definitions to "sdm845.dtsi".
+The QorIQ DPAA 1 based RDB boards require internal delay on
+both Tx and Rx to be set. The patch set ensures all RGMII
+modes are treated correctly by the FMan driver and sets the
+phy-connection-type to "rgmii-id" to restore functionality.
+Previously Rx internal delay was set by board pull-ups and
+was left untouched by the PHY driver. Since commit
+1b3047b5208a80 ("net: phy: realtek: add support for
+configuring the RX delay on RTL8211F") the Realtek 8211F PHY
+driver has control over the RGMII RX delay and it is
+disabling it for other modes than RGMII_RXID and RGMII_ID.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 51 ++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+Please note that u-boot in particular performs a fix-up of
+the PHY connection type and will overwrite the values from
+the Linux device tree. Another patch set was sent for u-boot
+and one needs to apply that [1] to the boot loader, to ensure
+this fix is complete, unless a different bootloader is used.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index c7ddf215c57e..0ebe12e4c07f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -675,6 +675,17 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 		};
-+
-+		ipa_smp2p_out: ipa-ap-to-modem {
-+			qcom,entry-name = "ipa";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		ipa_smp2p_in: ipa-modem-to-ap {
-+			qcom,entry-name = "ipa";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
- 	};
- 
- 	smp2p-slpi {
-@@ -1696,6 +1707,46 @@
- 			};
- 		};
- 
-+		ipa@1e40000 {
-+			compatible = "qcom,sdm845-ipa";
-+
-+			modem-init;
-+			modem-remoteproc = <&mss_pil>;
-+
-+			reg = <0 0x1e40000 0 0x7000>,
-+			      <0 0x1e47000 0 0x2000>,
-+			      <0 0x1e04000 0 0x2c000>;
-+			reg-names = "ipa-reg",
-+				    "ipa-shared",
-+				    "gsi";
-+
-+			interrupts-extended =
-+					<&intc 0 311 IRQ_TYPE_EDGE_RISING>,
-+					<&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
-+					<&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					<&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "ipa",
-+					  "gsi",
-+					  "ipa-clock-query",
-+					  "ipa-setup-ready";
-+
-+			clocks = <&rpmhcc RPMH_IPA_CLK>;
-+			clock-names = "core";
-+
-+			interconnects =
-+				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
-+				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
-+				<&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
-+			interconnect-names = "memory",
-+					     "imem",
-+					     "config";
-+
-+			qcom,smem-states = <&ipa_smp2p_out 0>,
-+					   <&ipa_smp2p_out 1>;
-+			qcom,smem-state-names = "ipa-clock-enabled-valid",
-+						"ipa-clock-enabled";
-+		};
-+
- 		tcsr_mutex_regs: syscon@1f40000 {
- 			compatible = "syscon";
- 			reg = <0 0x01f40000 0 0x40000>;
+[1] u-boot patches, Madalin Bucur (3):
+  net: fman: add support for all RGMII delay modes
+  armv8/ls1043ardb: RGMII ports require internal delay
+  armv8/ls1046ardb: RGMII ports require internal delay
+
+Madalin Bucur (3):
+  net: fsl/fman: treat all RGMII modes in memac_adjust_link()
+  arm64: dts: ls1043a-rdb: correct RGMII delay mode to rgmii-id
+  arm64: dts: ls1046ardb: set RGMII interfaces to RGMII_ID mode
+
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 4 ++--
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 4 ++--
+ drivers/net/ethernet/freescale/fman/fman_memac.c  | 5 ++++-
+ 3 files changed, 8 insertions(+), 5 deletions(-)
+
 -- 
-2.20.1
+2.1.0
 
