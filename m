@@ -2,142 +2,228 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA09C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1D3C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9119620724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584096507;
-	bh=a6txgNXfztlpDXsm+HN+g9Av0HS6f69StdVU8egSo6U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=knQeZN8sNUy9DZHWrsaYu+TIPy1gWaObmGKBluWABkii3Dq0eX4r/1VIzm4v8Ofvi
-	 Witcw8OY1nA9BWK7VNa1RARdu0tqjOQodMa9Lcpa1Qt0oAkED4yby+afdztPYwgg/K
-	 uyIn7gXyG2oq0za9PWy4v2nOTAYkTC4o9+re1a2w=
+	by mail.kernel.org (Postfix) with ESMTP id AA32C20749
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:51:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="taRcVzN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbgCMKs1 (ORCPT
+        id S1726605AbgCMKvg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:48:27 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:49668 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgCMKs1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 06:48:27 -0400
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 02DAmKLN010761;
-        Fri, 13 Mar 2020 19:48:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 02DAmKLN010761
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584096501;
-        bh=JPUSYJFjWhyniU1qgq95NHuOfe3MBhxe5TPFalXRYjg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QteD1KVq/gcwv2TvVNwXkdXsbfX1rI+maoy/IhK032uvjS2VCV/sqcFWmNPn9IAUR
-         pIh/actlxHN76YvlD4YnzNstDgF5P3qe+VvqBV+uQzzjV+tYPxFsjxd4Z45LvsNEe0
-         ZpBdmNhNKDTtNw+ZKVsWfov8n3LHeYR9tBmVT0w9TSnSZa9LOecurdv9n0kBACOyEB
-         DP78bH/c6GqqBY22r3eP5XdImTul+lKHvP7PH1vVqA6HJf6+qjn1Vw2eBgf7Mky+Nf
-         fY9dSVIgvSDRhf8vjrW5vEWmxcHNlbghcllEEDANydiXDjFGITqvqUwZf+t2fMbyO4
-         EiPj6f2aT8dAw==
-X-Nifty-SrcIP: [209.85.217.51]
-Received: by mail-vs1-f51.google.com with SMTP id c18so5765804vsq.7;
-        Fri, 13 Mar 2020 03:48:21 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1GBhK/hYn0pMR3CFiYW2nO3te6l71evjyIEjSbDyhQINIW9CZ4
-        hswPnbRH2qqN1fOjIG2CqDKFkj+gbNZ4C0Yb3hg=
-X-Google-Smtp-Source: ADFU+vvsYSgrvwDt40Kwaoojzk6PijqEahzLfY9nrBKpISQsGBKm7+XYq0rwc0V+iwP1dc8lh5aX38CLJblGDTzjd5E=
-X-Received: by 2002:a67:3201:: with SMTP id y1mr9085168vsy.54.1584096500083;
- Fri, 13 Mar 2020 03:48:20 -0700 (PDT)
+        Fri, 13 Mar 2020 06:51:36 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:34777 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726426AbgCMKvd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 06:51:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584096692; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
+ Subject: From: Sender; bh=kBNQDM77aAPD7s08izeo3UtypHJmtrzkhedefworo6c=;
+ b=taRcVzN2vD2o1/gfpx7fMurJjRDj/9xJKMFZfG1NFbWotOgyUwenVuwsHXr+DAoN5VjKAAqE
+ kOy2W+o40zYqXaJA9PWPKngfkFgNSjRt3xsTixjPLMfnp+3JnG8vCDKx2hgNJK5sBaCowfqT
+ v/nj9AagNcf1QWJjLWyGhFXrSXc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6b65b2.7f246bda0fb8-smtp-out-n02;
+ Fri, 13 Mar 2020 10:51:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E9C05C432C2; Fri, 13 Mar 2020 10:51:29 +0000 (UTC)
+Received: from [10.252.222.65] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C2900C433D2;
+        Fri, 13 Mar 2020 10:51:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C2900C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Convert QSPI bindings to YAML
+To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org
+References: <1581932974-21654-1-git-send-email-akashast@codeaurora.org>
+ <1581932974-21654-2-git-send-email-akashast@codeaurora.org>
+ <158216578112.184098.9357700822184458798@swboyd.mtv.corp.google.com>
+Message-ID: <66c79dcb-4102-e138-cf4f-303f17367175@codeaurora.org>
+Date:   Fri, 13 Mar 2020 16:21:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <1584070314-26495-1-git-send-email-peng.fan@nxp.com> <CAK8P3a0r1stgYw2DGtsHpMWdBN7GM9miAsUo20NaJxwasQy4iA@mail.gmail.com>
-In-Reply-To: <CAK8P3a0r1stgYw2DGtsHpMWdBN7GM9miAsUo20NaJxwasQy4iA@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 13 Mar 2020 19:47:44 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASfQmpVxG7N9_ZL4uTaMY2DeP-Y1aAdP72eatD936zkYA@mail.gmail.com>
-Message-ID: <CAK7LNASfQmpVxG7N9_ZL4uTaMY2DeP-Y1aAdP72eatD936zkYA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: Makefile: build arm64 device tree
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peng Fan <peng.fan@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <158216578112.184098.9357700822184458798@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 7:23 PM Arnd Bergmann <arnd@arndb.de> wrote:
+Hi Stephen,
+
+On 2/20/2020 7:59 AM, Stephen Boyd wrote:
+> Quoting Akash Asthana (2020-02-17 01:49:33)
+>> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
+>> new file mode 100644
+>> index 0000000..977070a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
+>> @@ -0,0 +1,89 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +
+>> +%YAML 1.2
+>> +---
+>> +$id:"http://devicetree.org/schemas/spi/qcom,spi-qcom-qspi.yaml#"
+>> +$schema:"http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Qualcomm Quad Serial Peripheral Interface (QSPI)
+>> +
+>> +maintainers:
+>> + - Mukesh Savaliya<msavaliy@codeaurora.org>
+>> + - Akash Asthana<akashast@codeaurora.org>
+>> +
+>> +description: |
+> Drop the | because it doesn't look like any formatting needs to be
+> maintained in the text for the description.
+ok
+>> + The QSPI controller allows SPI protocol communication in single, dual, or quad
+>> + wire transmission modes for read/write access to slaves such as NOR flash.
+>> +
+>> +allOf:
+>> +  - $ref: /spi/spi-controller.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - const: qcom,sdm845-qspi
+>> +      - const: qcom,qspi-v1
+>> +
+>> +  reg:
+>> +    description: Base register location and length.
+> Drop description? It doesn't seem useful.
+ok
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: iface
+>> +      - const: core
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: AHB clock
+>> +      - description: QSPI core clock.
+> Please drop the full-stop on core clock.
+ok
+>> +
+>> +  "#address-cells":
+>> +     const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 0
+> Aren't these two unnecessary because they're covered by the
+> spi-controller.yaml binding?
+ok
 >
-> On Fri, Mar 13, 2020 at 4:38 AM <peng.fan@nxp.com> wrote:
-> >
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > To support aarch32 mode linux on aarch64 hardware, we need
-> > build the device tree, so include the arm64 device tree path.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clock-names
+>> +  - clocks
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+> These last two are also covered by spi-controller binding.
+ok will remove
+>> +
+>> +
+> Why two newlines instead of one?
 >
-> There are a few other platforms with similar requirements, in
-> particular bcm2837,
-> so maybe try doing it the same way they do, see
-> arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +    soc: soc@0 {
+> Remove this node from example please.
 
-I think this was discussed over again,
-but it is odd to tightly couple
-DT and Linux arch.
+If I remove this node I am getting below compilation error.
 
-
-Maybe, a long time solution might be to
-create a new directory, dts/
-and collect all DT stuff into it.
-
-dts/<vendor>/<board>.dts
-
-
-Then, also move like follows:
-
-Documentation/devicetree/bindings/
- ->  dts/Bindings/
-
-include/dt-bingins/
- -> dts/include/dt-bindings/
-
-
-
-
-
+Error: 
+Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.example.dts:46.1-2 
+syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:311: recipe for target 
+'Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.example.dt.yaml' 
+failed
+make[1]: *** 
+[Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.example.dt.yaml] 
+Error 1
+Makefile:1264: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
 >
-> > V1:
-> >  This is just the device tree part. Besides this,
-> >  I am not sure whether need to create a standalone defconfig under arm32
-> >  for aarch32 mode linux on aarch64 hardware, or use multi_v7_defconfig.
-> >  multi_v7_defconfig should be ok, need to include LPAE config.
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        qspi: spi@88df000 {
+>> +            compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
+>> +            reg = <0 0x88df000 0 0x600>;
+>> +            #address-cells = <1>;
+>> +            #size-cells = <0>;
+>> +            interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+>> +            clock-names = "iface", "core";
+>> +            clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+>> +                <&gcc GCC_QSPI_CORE_CLK>;
+> Weird tabbing here. Just use spaces and align it up.
+Ok, I will align it better.
 >
-> I'd rather not have a standalone defconfig for it, given that we have a
-> single defconfig for all armv6/armv7/armv7hf i.mx machines.
+>> +
+>> +                flash@0 {
+>> +                    compatible = "jedec,spi-nor";
+>> +                    reg = <0>;
+>> +                    spi-max-frequency = <25000000>;
+>> +                    spi-tx-bus-width = <2>;
+>> +                    spi-rx-bus-width = <2>;
+>> +                };
+> Is this flash node necessary for the example?
+
+It's not neccessary.
+
+I just preserved the original example from .txt binding file.
+
 >
-> There was a suggestion to use a fragment for enabling an LPAE
-> multi_v7_defconfig recently, which I think is still under discussion but
-> should also help here, both with imx_v6_v7_defconfig and multi_v7_defconfig.
->
-> Can you remind us why this platform needs LPAE? Is it only needed to
-> support more than 4GB of RAM, or something else on top of that?
-> Note that users that actually have 4GB or more on i.mx8 should
-> really run a 64-bit kernel anyway, even if they prefer using 32-bit user
-> space.
->
-> Turning on LPAE not only disables imx3 and imx5 but also the Cortex-A9
-> based imx6 variants.
->
->       Arnd
+>> +        };
+>> +    };
+>> +
+> Nitpick: Why newline here?
+
+Will remove it.
+
+Thankyou for reviewing the patch.
 
 
+Regards,
+
+Akash
+
+>
+>> +...
 
 -- 
-Best Regards
-Masahiro Yamada
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
