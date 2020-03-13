@@ -2,33 +2,40 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58EA4C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 21:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD48C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 21:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB7E2074F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 21:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3469A2074F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 21:16:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jrkQANpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCMVMs (ORCPT
+        id S1726620AbgCMVQv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 17:12:48 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:33087 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726637AbgCMVMs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 17:12:48 -0400
-X-IronPort-AV: E=Sophos;i="5.70,550,1574089200"; 
-   d="scan'208";a="41835027"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 14 Mar 2020 06:12:43 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id E2D6B40E09D5;
-        Sat, 14 Mar 2020 06:12:38 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Fri, 13 Mar 2020 17:16:51 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58190 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbgCMVQv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 17:16:51 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8F4B52D6;
+        Fri, 13 Mar 2020 22:16:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584134208;
+        bh=fxHorn7UuM1fDLI8Lt271tTqm19pZ50gn9WZ1vomREk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jrkQANpqeapfaL9IR9Njcr1VtSfnoFE2jelP11Ih3QgxWSSROriCC9L2GLM4YSzEq
+         uMwmqth3Dz5ezP297vQaVogADiGPFXbsjFGLMEjgp6JJrt9fwiiUYgQK7KQThkriPu
+         4O9OE75PAOWovQfBEyDkNvQY5m9REWdC9USeBQaY=
+Date:   Fri, 13 Mar 2020 23:16:44 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -38,52 +45,101 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         Magnus Damm <magnus.damm@gmail.com>,
         Ezequiel Garcia <ezequiel@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Fabio Estevam <festevam@gmail.com>,
         linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 0/4] ov5645: Switch to assigned-clock-rates
-Date:   Fri, 13 Mar 2020 21:12:30 +0000
-Message-Id: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+Subject: Re: [PATCH v3 2/4] media: i2c: ov5645: Switch to assigned-clock-rates
+Message-ID: <20200313211644.GK4751@pendragon.ideasonboard.com>
+References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584133954-6953-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1584133954-6953-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+Hi Prabakhar,
 
-This patch series adds support for using assigned-clock-rates for
-specifying clock rates for ov5645 driver
+Thank you for the patch.
 
-Thanks,
-Prabhakar
+On Fri, Mar 13, 2020 at 09:12:32PM +0000, Lad Prabhakar wrote:
+> This patch switches to assigned-clock-rates for specifying the clock rate.
+> The clk-conf.c internally handles setting the clock rate when
+> assigned-clock-rates is passed.
+> 
+> The driver now sets the clock frequency only if the deprecated property
+> clock-frequency is defined instead assigned-clock-rates, this is to avoid
+> breakage with existing DT binaries.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/media/i2c/ov5645.c | 21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+> index a6c17d1..4fbabf3 100644
+> --- a/drivers/media/i2c/ov5645.c
+> +++ b/drivers/media/i2c/ov5645.c
+> @@ -1055,6 +1055,7 @@ static int ov5645_probe(struct i2c_client *client)
+>  	struct device_node *endpoint;
+>  	struct ov5645 *ov5645;
+>  	u8 chip_id_high, chip_id_low;
+> +	bool set_clk = false;
 
-Changed for v3:
-* Dropped reading assigned-clock-rates
-* Increased the maximum clock frequency to 24480000
+This isn't used.
 
-Changes for v2:
-* Instead of completely dropping clock-frequency property marked it as
-  deprecated.
-* Split up imx6qdl-wandboard.dtsi changes as separate patch.
+>  	unsigned int i;
+>  	u32 xclk_freq;
+>  	int ret;
+> @@ -1094,12 +1095,18 @@ static int ov5645_probe(struct i2c_client *client)
+>  		return PTR_ERR(ov5645->xclk);
+>  	}
+>  
+> -	ret = of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
+> -	if (ret) {
+> -		dev_err(dev, "could not get xclk frequency\n");
+> -		return ret;
+> +	/* check if deprecated property clock-frequency is defined */
+> +	ret = of_property_read_u32(dev->of_node, "clock-frequency",
+> +				   &xclk_freq);
+> +	if (!ret) {
+> +		ret = clk_set_rate(ov5645->xclk, xclk_freq);
+> +		if (ret) {
+> +			dev_err(dev, "could not set xclk frequency\n");
+> +			return ret;
+> +		}
+>  	}
+>  
+> +	xclk_freq = clk_get_rate(ov5645->xclk);
 
-Lad Prabhakar (4):
-  media: dt-bindings: media: i2c: Switch to assigned-clock-rates
-  media: i2c: ov5645: Switch to assigned-clock-rates
-  media: i2c: ov5645: Set maximum leverage of external clock frequency
-    to 24480000
-  ARM: dts: imx6qdl-wandboard: Switch to assigned-clock-rates for ov5645
-    node
+I would move this line below the comment.
 
- .../devicetree/bindings/media/i2c/ov5645.txt       |  5 ++--
- arch/arm/boot/dts/imx6qdl-wandboard.dtsi           |  3 ++-
- drivers/media/i2c/ov5645.c                         | 27 ++++++++++++----------
- 3 files changed, 20 insertions(+), 15 deletions(-)
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  	/* external clock must be 24MHz, allow 1% tolerance */
+>  	if (xclk_freq < 23760000 || xclk_freq > 24240000) {
+>  		dev_err(dev, "external clock frequency %u is not supported\n",
+> @@ -1107,12 +1114,6 @@ static int ov5645_probe(struct i2c_client *client)
+>  		return -EINVAL;
+>  	}
+>  
+> -	ret = clk_set_rate(ov5645->xclk, xclk_freq);
+> -	if (ret) {
+> -		dev_err(dev, "could not set xclk frequency\n");
+> -		return ret;
+> -	}
+> -
+>  	for (i = 0; i < OV5645_NUM_SUPPLIES; i++)
+>  		ov5645->supplies[i].supply = ov5645_supply_name[i];
+>  
 
 -- 
-2.7.4
+Regards,
 
+Laurent Pinchart
