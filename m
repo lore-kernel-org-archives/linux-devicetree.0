@@ -2,175 +2,183 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD83C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04022C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211252074D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFD8320754
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CPlF42vx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgCMUmj (ORCPT
+        id S1726637AbgCMUop (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 16:42:39 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:38667 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgCMUmj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 16:42:39 -0400
-X-Originating-IP: 87.231.134.186
-Received: from localhost (87-231-134-186.rev.numericable.fr [87.231.134.186])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7B93A240007;
-        Fri, 13 Mar 2020 20:42:36 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 4/4] arm64: dts: marvell: Fix cpu compatible for AP807-quad
-In-Reply-To: <2f56a89b8f88583b60446050efc523a781556e3a.1583445235.git.amit.kucheria@linaro.org>
-References: <cover.1583445235.git.amit.kucheria@linaro.org> <2f56a89b8f88583b60446050efc523a781556e3a.1583445235.git.amit.kucheria@linaro.org>
-Date:   Fri, 13 Mar 2020 21:42:36 +0100
-Message-ID: <87pndgx9z7.fsf@FE-laptop>
+        Fri, 13 Mar 2020 16:44:45 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34783 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726949AbgCMUop (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 16:44:45 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a23so4840586plm.1
+        for <devicetree@vger.kernel.org>; Fri, 13 Mar 2020 13:44:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Jm5Dj0ov0bLEKUnCUDp+GTiB8QYXuMsD/enp2SLRqtE=;
+        b=CPlF42vxnGjT8TuMoMfeeyJwgnESJ1DVdt2qaM/M/qRehpLmZq0JUtaKYmrr7GkxOZ
+         1QhxmDBQaDO9MH5K/v6aaToStLgxm8QiANL7MJaelbkuZ6zCiqIbWZTwVjZ0ZC6Y2Qms
+         E96Tkik3ZzkoHXRrtjp5RpinK35zOUUotaotY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jm5Dj0ov0bLEKUnCUDp+GTiB8QYXuMsD/enp2SLRqtE=;
+        b=gP3S8cQ8u9Sixjhyjl3XR2SichssJ+aC3u6cBu40jZAtPPA0KWX55FnSLZc0NrPIym
+         /UwDRC3paPNCj1W5m9J10xociUYOAQuQ0NG4jlbnSW81kDjzqkzDChOiIYnnIqF4T0fS
+         LXsPLR9QriAlfYgVM/gixkEijGE1q+QvyRMcNxu72rwT+WECaBh1kZoo4PAQI+2ZcxCq
+         mMBTzNderIoJt9l3+MZZ0m/B3YY+jCsl5aPmBdCIGJpAzqx7YnG8znrFnsJalyWczrN9
+         ALLklTOIGlPJsTvLv7zEvNvRmhO3bC/3Io4Ma3NqsC/clumANWF6fSUGnR7Qr3kq1Htq
+         wEhg==
+X-Gm-Message-State: ANhLgQ0ul9zaO2//urAVykxfOaQcRPbu3YHOYwU1IzZM0L27KeYCNqzI
+        AzwG6b4KpjNjrRKHHnMpc8hUsUxrT0A=
+X-Google-Smtp-Source: ADFU+vvwLYkUPozmWPS6nvhtF5NXWxHJAADNzreXeBl82FkwIORc1kdaOAWmAL56xMO8b0A8kZdukQ==
+X-Received: by 2002:a17:90a:c244:: with SMTP id d4mr11645366pjx.133.1584132283167;
+        Fri, 13 Mar 2020 13:44:43 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id e10sm16793926pfm.121.2020.03.13.13.44.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 13:44:42 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 13:44:41 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+Subject: Re: [PATCH V2 3/8] soc: qcom-geni-se: Add interconnect support to
+ fix earlycon crash
+Message-ID: <20200313204441.GJ144492@google.com>
+References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
+ <1584105134-13583-4-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1584105134-13583-4-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Amit,
+Hi Akash,
 
-> make -k ARCH=arm64 dtbs_check shows the following errors. Fix them by
-> removing the "arm,armv8" compatible.
->
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-> cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-> cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long CHECK
-> arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dt.yaml
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-> cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-> cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-> cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-> cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-> cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9130-db.dt.yaml:
-> cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
->
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-> cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-> cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-> cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-> cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-> cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-> cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-> cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9131-db.dt.yaml:
-> cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
->
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-> cpu@0: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-> cpu@0: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-> cpu@1: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-> cpu@1: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-> cpu@100: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-> cpu@100: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-> cpu@101: compatible: Additional items are not allowed ('arm,armv8' was
-> unexpected)
-> /home/amit/work/builds/build-check/arch/arm64/boot/dts/marvell/cn9132-db.dt.yaml:
-> cpu@101: compatible: ['arm,cortex-a72', 'arm,armv8'] is too long
->
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+On Fri, Mar 13, 2020 at 06:42:09PM +0530, Akash Asthana wrote:
+> V1 patch@https://patchwork.kernel.org/patch/11386469/ caused SC7180 system
+> to reset at boot time.
 
+The v1 patch isn't relevant in the commit message, please just describe the
+problem. Also the crash only occurs when earlycon is used.
 
-Applied on mvebu/dt64
+> As QUP core clock is shared among all the SE drivers present on particular
+> QUP wrapper, the reset seen is due to earlycon usage after QUP core clock
+> is put to 0 from other SE drivers before real console comes up.
+> 
+> As earlycon can't vote for it's QUP core need, to fix this add ICC
+> support to common/QUP wrapper driver and put vote for QUP core from
+> probe on behalf of earlycon and remove vote during sys suspend.
 
-Thanks,
+Only removing the vote on suspend isn't ideal, the system might never get
+suspended. That said I don't have a really good alternative suggestion.
 
-Gregory
+One thing you could possibly do is to launch a delayed work, check
+console_device() every second or so and remove the vote when it returns
+non-NULL. Not claiming this would be a great solution ...
 
+The cleanest solution might be a notifier when the early console is
+unregistered, it seems somewhat over-engineered though ... Then again
+other (future) uart drivers with interconnect support might run into
+the same problem.
+
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> Reported-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->  arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-> index 840466e143b47..68782f161f122 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-> @@ -17,7 +17,7 @@
+>  drivers/soc/qcom/qcom-geni-se.c | 41 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+> 
+> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> index 7d622ea..d244dfc 100644
+> --- a/drivers/soc/qcom/qcom-geni-se.c
+> +++ b/drivers/soc/qcom/qcom-geni-se.c
+> @@ -90,6 +90,7 @@ struct geni_wrapper {
+>  	struct device *dev;
+>  	void __iomem *base;
+>  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+> +	struct icc_path *icc_path_geni_to_core;
+>  };
 >  
->  		cpu0: cpu@0 {
->  			device_type = "cpu";
-> -			compatible = "arm,cortex-a72", "arm,armv8";
-> +			compatible = "arm,cortex-a72";
->  			reg = <0x000>;
->  			enable-method = "psci";
->  			#cooling-cells = <2>;
-> @@ -32,7 +32,7 @@
->  		};
->  		cpu1: cpu@1 {
->  			device_type = "cpu";
-> -			compatible = "arm,cortex-a72", "arm,armv8";
-> +			compatible = "arm,cortex-a72";
->  			reg = <0x001>;
->  			enable-method = "psci";
->  			#cooling-cells = <2>;
-> @@ -47,7 +47,7 @@
->  		};
->  		cpu2: cpu@100 {
->  			device_type = "cpu";
-> -			compatible = "arm,cortex-a72", "arm,armv8";
-> +			compatible = "arm,cortex-a72";
->  			reg = <0x100>;
->  			enable-method = "psci";
->  			#cooling-cells = <2>;
-> @@ -62,7 +62,7 @@
->  		};
->  		cpu3: cpu@101 {
->  			device_type = "cpu";
-> -			compatible = "arm,cortex-a72", "arm,armv8";
-> +			compatible = "arm,cortex-a72";
->  			reg = <0x101>;
->  			enable-method = "psci";
->  			#cooling-cells = <2>;
-> -- 
-> 2.20.1
->
+>  #define QUP_HW_VER_REG			0x4
+> @@ -747,11 +748,50 @@ static int geni_se_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +#ifdef CONFIG_SERIAL_EARLYCON
+> +	wrapper->icc_path_geni_to_core = devm_of_icc_get(dev, "qup-core");
+> +	if (IS_ERR(wrapper->icc_path_geni_to_core))
+> +		return PTR_ERR(wrapper->icc_path_geni_to_core);
+> +	/*
+> +	 * Put minmal BW request on core clocks on behalf of early console.
+> +	 * The vote will be removed in suspend call.
+> +	 */
+> +	ret = icc_set_bw(wrapper->icc_path_geni_to_core, Bps_to_icc(1000),
+> +			Bps_to_icc(1000));
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "%s: ICC BW voting failed for core\n",
+> +			__func__);
+> +		return ret;
+> +	}
 
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+What is ugly about this is that it's done for every QUP, not only the one
+with the early console. Again, I don't have a good solution for it, maybe
+it's a limitation we have to live with :(
+
+> +#endif
+> +
+>  	dev_set_drvdata(dev, wrapper);
+>  	dev_dbg(dev, "GENI SE Driver probed\n");
+>  	return devm_of_platform_populate(dev);
+>  }
+>  
+> +static int __maybe_unused geni_se_sys_suspend(struct device *dev)
+> +{
+> +	struct geni_wrapper *wrapper = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +#ifdef CONFIG_SERIAL_EARLYCON
+> +	ret = icc_set_bw(wrapper->icc_path_geni_to_core, 0, 0);
+
+I think you only want to do this on the first suspend.
+
+Do we need to handle the case where no 'real' console is configured?
+In this case the early console would be active forever and setting
+the bandwidths to 0 might cause a similar crash than the one you are
+trying to fix. Not sure if that's a real world use case, but wanted to
+mention it. Maybe this is an argument of the notifier approach?
+
+> +	if (ret) {
+> +		dev_err(dev, "%s: ICC BW remove failed for core\n",
+> +			__func__);
+> +		return ret;
+
+Aborting suspend seems too harsh since the QUP should still be fully
+functional unless there is a general problem with the interconnects.
+
+I would suggest to change the log to dev_warn() and return 0.
+
