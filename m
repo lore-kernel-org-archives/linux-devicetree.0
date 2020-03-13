@@ -2,87 +2,277 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5508BC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 15:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9702C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D2D20724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 15:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B400D206EB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:07:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Sbm3XzXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgCMPz7 convert rfc822-to-8bit (ORCPT
+        id S1726794AbgCMQHN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 11:55:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59633 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgCMPz7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 11:55:59 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jCmf7-00012X-Sk; Fri, 13 Mar 2020 16:55:49 +0100
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jCmf6-00054P-27; Fri, 13 Mar 2020 16:55:48 +0100
-Message-ID: <3aedf6357f321efaf1d59a0b654300803ad51cef.camel@pengutronix.de>
-Subject: Re: [RFC 10/11] reset: imx: Add audiomix reset controller support
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Date:   Fri, 13 Mar 2020 16:55:47 +0100
-In-Reply-To: <20200313141606.euumtuizm562zghv@fsr-ub1664-175>
-References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
-         <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
-         <ac6eb54c01cce4ec52560ac622e024ab47f2136c.camel@pengutronix.de>
-         <20200313141606.euumtuizm562zghv@fsr-ub1664-175>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 13 Mar 2020 12:07:13 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:34791 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbgCMQHM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 12:07:12 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id CA5DF23EC2;
+        Fri, 13 Mar 2020 17:07:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1584115630;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EdJOEklCGNc4MOP7NsgRfesvmIzFSxGDZJkVUdK2A1g=;
+        b=Sbm3XzXtHK4jjR8MLIql6/oOrZb4dyCI6UiH8NYVS/daIn/crTPuvHn2VBpoGdsCkb/2sJ
+        q5DE6ywjfxnN5mQsWgopjnwSuIoAUMwxhk+IzY71OzNnDs+u5eZsDFsNOTC3oRq6gdyPc5
+        MTxr+ixZH8Jzp0Lxj0lDbLcsIzERa84=
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 13 Mar 2020 17:07:07 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Subject: Re: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
+In-Reply-To: <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
+References: <20200310125542.5939-1-olteanv@gmail.com>
+ <615284875b709f602d57e4a4621a83c1@walle.cc>
+ <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
+ <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
+Message-ID: <4ba077c80143c8ec679066e6d8cedca2@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: CA5DF23EC2
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 2020-03-13 at 16:16 +0200, Abel Vesa wrote:
-[...]
-> > > +	if (assert) {
-> > > +		pm_runtime_get_sync(rcdev->dev);
-> > 
-> > This seems wrong. Why is the runtime PM reference count incremented when
-> > a reset is asserted ...
+Am 2020-03-10 16:22, schrieb Michael Walle:
+> Hi Vladimir,
 > 
-> The audiomix IP has its own power domain. 
+> Am 2020-03-10 15:56, schrieb Vladimir Oltean:
+>>> (2) Also, reading the flash, every second time there is 
+>>> (reproducibly)
+>>> an
+>>> IO error:
+>>> 
+>>> # hexdump -C /dev/mtd0
+>>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>>> |huhu............|
+>>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>>> |................|
+>>> *
+>>> 01000000
+>>> # hexdump -C /dev/mtd0
+>>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>>> |huhu............|
+>>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>>> |................|
+>>> *
+>>> hexdump: /dev/mtd0: Input/output error
+>>> 00dc0000
+>>> # hexdump -C /dev/mtd0
+>>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>>> |huhu............|
+>>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>>> |................|
+>>> *
+>>> 01000000
+>>> # hexdump -C /dev/mtd0
+>>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
+>>> |huhu............|
+>>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+>>> |................|
+>>> *
+>>> hexdump: /dev/mtd0: Input/output error
+>>> 00e6a000
+>>> 
+>> 
+>> Just to be clear, issue 2 is seen only after you abort another
+>> transaction, right?
+> 
+> No, just normal uninterrupted reading. Just tried it right after
+> reboot. Doesn't seem to be every second time though, just random
+> which makes me wonder if that is another problem now. Also the
+> last successful reading is random.
 
-The reset controller does not control the power domain for its
-consumers. The consumer of this reset should implement runtime PM.
 
-> The way I see it, when the last deassert is done, there is no point
-> in keeping the audiomix on. So, unless the clock controller part of it does it,
-> the audiomix will be powered down.
+Ok I guess I know what the root cause is. This is an extract of
+the current code:
 
-You mean when the last assert is done? Presumably the driver wants to
-use the hardware after deasserting the reset and asserts the reset when
-it is done.
+> static int dspi_transfer_one_message(struct spi_controller *ctlr,
+> 				     struct spi_message *message)
+> {
+> ..
+> 	/* Kick off the interrupt train */
+> 	dspi_fifo_write(dspi);
+> 
+> 	status = wait_event_interruptible(dspi->waitq,
+> 					  dspi->waitflags);
+> 	dspi->waitflags = 0;
+> ..
+> }
+> 
+> static int dspi_rxtx(struct fsl_dspi *dspi)
+> {
+> 	dspi_fifo_read(dspi);
+> 
+> 	if (!dspi->len)
+> 		/* Success! */
+> 		return 0;
+> 
+> 	dspi_fifo_write(dspi);
+> 
+> 	return -EINPROGRESS;
+> }
 
-regards
-Philipp
+dspi_rxtx() is used in the ISR. Both dspi_fifo_write() and dspi_rxtx()
+access shared data like, dspi->words_in_flight. In the EIO error case
+the following bytes_sent is -1, because dspi->words_in_flight is -1.
+
+> /* Update total number of bytes that were transferred */
+> bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
+
+words_in_flight is always -1 after dspi_fifo_read() was called. In
+the error case, the ISR kicks in right in the middle of the execution
+of dspi_fifo_write() in dspi_transfer_one_message().
+
+> static void dspi_fifo_write(struct fsl_dspi *dspi)
+> {
+> ..
+> 	if (dspi->devtype_data->trans_mode == DSPI_EOQ_MODE)
+> 		dspi_eoq_fifo_write(dspi);
+> 	 else
+> 		dspi_xspi_fifo_write(dspi);
+
+Now if the ISR is executed right here..
+
+> 
+> 	/* Update total number of bytes that were transferred */
+> 	bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
+
+.. words_in_flight might be -1.
+
+> 	msg->actual_length += bytes_sent;
+
+and bytes_sent is negative. And this causes an IO error because
+the returned overall message length doesn't match.
+
+> 	dspi->progress += bytes_sent / DIV_ROUND_UP(xfer->bits_per_word, 8);
+> ..
+> }
+
+I could not reproduce the issue with the following patch. I don't
+know if I got the locking correct though or if there is a better
+way to go.
+
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 8b16de9ed382..578fedeb16a0 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -224,6 +224,7 @@ struct fsl_dspi {
+         u16                                     tx_cmd;
+         const struct fsl_dspi_devtype_data      *devtype_data;
+
++       spinlock_t lock;
+         wait_queue_head_t                       waitq;
+         u32                                     waitflags;
+
+@@ -873,14 +874,20 @@ static void dspi_fifo_write(struct fsl_dspi *dspi)
+
+  static int dspi_rxtx(struct fsl_dspi *dspi)
+  {
++       unsigned long flags;
++
++       spin_lock_irqsave(&dspi->lock, flags);
+         dspi_fifo_read(dspi);
+
+-       if (!dspi->len)
++       if (!dspi->len) {
+                 /* Success! */
++               spin_unlock_irqrestore(&dspi->lock, flags);
+                 return 0;
++       }
+
+         dspi_fifo_write(dspi);
+
++       spin_unlock_irqrestore(&dspi->lock, flags);
+         return -EINPROGRESS;
+  }
+
+@@ -950,7 +957,9 @@ static int dspi_transfer_one_message(struct 
+spi_controller *ctlr,
+         struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+         struct spi_device *spi = message->spi;
+         struct spi_transfer *transfer;
++       unsigned long flags;
+         int status = 0;
++       int i = 0;
+
+         if (dspi->irq)
+                 dspi_enable_interrupts(dspi, true);
+@@ -1009,7 +1018,9 @@ static int dspi_transfer_one_message(struct 
+spi_controller *ctlr,
+                                 goto out;
+                 } else if (dspi->irq) {
+                         /* Kick off the interrupt train */
++                       spin_lock_irqsave(&dspi->lock, flags);
+                         dspi_fifo_write(dspi);
++                       spin_unlock_irqrestore(&dspi->lock, flags);
+
+                         status = wait_event_interruptible(dspi->waitq,
+                                                           
+dspi->waitflags);
+@@ -1301,6 +1312,7 @@ static int dspi_probe(struct platform_device 
+*pdev)
+         ctlr->cleanup = dspi_cleanup;
+         ctlr->slave_abort = dspi_slave_abort;
+         ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
++       spin_lock_init(&dspi->lock);
+
+         pdata = dev_get_platdata(&pdev->dev);
+         if (pdata) {
+
+
+
+-michael
