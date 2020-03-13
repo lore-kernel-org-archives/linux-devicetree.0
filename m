@@ -2,163 +2,92 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3107DC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 14:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B48C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 14:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1278220409
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 14:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2130206FA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 14:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgCMOtf (ORCPT
+        id S1726528AbgCMO7I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 10:49:35 -0400
-Received: from smtp2.ustc.edu.cn ([202.38.64.46]:58941 "EHLO ustc.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726591AbgCMOtf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 10:49:35 -0400
-Received: from xhacker (unknown [101.86.20.80])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygDn7ZF7nWteRsk8AA--.11228S2;
-        Fri, 13 Mar 2020 22:49:31 +0800 (CST)
-Date:   Fri, 13 Mar 2020 22:47:39 +0800
-From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 4/4] regulator: mp886x: add MP8867 support
-Message-ID: <20200313224739.17b5ed70@xhacker>
+        Fri, 13 Mar 2020 10:59:08 -0400
+Received: from mga01.intel.com ([192.55.52.88]:22278 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgCMO7I (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 10:59:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 07:58:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
+   d="scan'208";a="243401951"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 13 Mar 2020 07:58:44 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jCllu-009Huq-2a; Fri, 13 Mar 2020 16:58:46 +0200
+Date:   Fri, 13 Mar 2020 16:58:46 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Al Cooper <alcooperx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/4] usb: xhci: xhci-plat: Add support for Broadcom STB
+ SoC's
+Message-ID: <20200313145846.GU1922688@smile.fi.intel.com>
+References: <20200313141545.31943-1-alcooperx@gmail.com>
+ <20200313141545.31943-3-alcooperx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LkAmygDn7ZF7nWteRsk8AA--.11228S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWry5Wr1rWFyUGryDuw1DAwb_yoW5Aw1DpF
-        W5WrsIkrWkXa4xGF4xCFya93Wa9wn7t3s7ZryIkw4ay3ZxJF4fXFn7ZFySvFyrCrWkJF1j
-        yayUCry09F4UJrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyFb7Iv0xC_Cr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E
-        4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-        WUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-        Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
-        W3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
-        JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8TCJPUUUUU==
-X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313141545.31943-3-alcooperx@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+On Fri, Mar 13, 2020 at 10:15:43AM -0400, Al Cooper wrote:
+> Add support for Broadcom STB SoC's to the xhci platform driver
 
-MP8867 is an I2C-controlled adjustable voltage regulator made by
-Monolithic Power Systems. The difference between MP8867 and MP8869
-are:
-1.If V_BOOT, the vref of MP8869 is fixed at 600mv while vref of
-MP8867 is determined by the I2C control.
-2.For MP8867, when setting voltage, if the steps is within 5, we
-need to manually set the GO BIT to 0.
+...
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/regulator/mp886x.c | 62 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 61 insertions(+), 1 deletion(-)
+>  #include "xhci-plat.h"
+>  #include "xhci-mvebu.h"
+>  #include "xhci-rcar.h"
+> +#include "xhci-brcm.h"
 
-diff --git a/drivers/regulator/mp886x.c b/drivers/regulator/mp886x.c
-index 2f0f54b..721f982 100644
---- a/drivers/regulator/mp886x.c
-+++ b/drivers/regulator/mp886x.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- //
--// MP8869 regulator driver
-+// MP8867/MP8869 regulator driver
- //
- // Copyright (C) 2020 Synaptics Incorporated
- //
-@@ -118,6 +118,62 @@ static const struct regulator_ops mp8869_regulator_ops = {
- 	.get_mode = mp886x_get_mode,
- };
- 
-+static int mp8867_set_voltage_sel(struct regulator_dev *rdev, unsigned sel)
-+{
-+	struct mp886x_device_info *di = rdev_get_drvdata(rdev);
-+	int ret, delta;
-+
-+	ret = mp8869_set_voltage_sel(rdev, sel);
-+	if (ret < 0)
-+		return ret;
-+
-+	delta = di->sel - sel;
-+	if (abs(delta) <= 5)
-+		ret = regmap_update_bits(rdev->regmap, MP886X_SYSCNTLREG1,
-+					 MP886X_GO, 0);
-+	di->sel = sel;
-+
-+	return ret;
-+}
-+
-+static int mp8867_get_voltage_sel(struct regulator_dev *rdev)
-+{
-+	struct mp886x_device_info *di = rdev_get_drvdata(rdev);
-+	int ret, uv;
-+	unsigned int val;
-+	bool fbloop;
-+
-+	ret = regmap_read(rdev->regmap, rdev->desc->vsel_reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	fbloop = val & MP886X_V_BOOT;
-+
-+	val &= rdev->desc->vsel_mask;
-+	val >>= ffs(rdev->desc->vsel_mask) - 1;
-+
-+	if (fbloop) {
-+		uv = regulator_list_voltage_linear(rdev, val);
-+		uv = mp8869_scale(uv, di->r[0], di->r[1]);
-+		return regulator_map_voltage_linear(rdev, uv, uv);
-+	}
-+
-+	return val;
-+}
-+
-+static const struct regulator_ops mp8867_regulator_ops = {
-+	.set_voltage_sel = mp8867_set_voltage_sel,
-+	.get_voltage_sel = mp8867_get_voltage_sel,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.map_voltage = regulator_map_voltage_linear,
-+	.list_voltage = regulator_list_voltage_linear,
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.set_mode = mp886x_set_mode,
-+	.get_mode = mp886x_get_mode,
-+};
-+
- static int mp886x_regulator_register(struct mp886x_device_info *di,
- 				     struct regulator_config *config)
- {
-@@ -201,6 +257,10 @@ static int mp886x_i2c_probe(struct i2c_client *client,
- 
- static const struct of_device_id mp886x_dt_ids[] = {
- 	{
-+		.compatible = "mps,mp8867",
-+		.data = &mp8867_regulator_ops
-+	},
-+	{
- 		.compatible = "mps,mp8869",
- 		.data = &mp8869_regulator_ops
- 	},
+Perhaps put it in order, i.e. after xhci-plat.h?
+
+...
+
+> +static const struct xhci_plat_priv xhci_plat_brcm = {
+> +	.init_quirk = xhci_plat_brcm_init_quirk
+
+Add comma at the end, it might help to reduce burden on update.
+
+> +};
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
 
 
