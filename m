@@ -2,156 +2,93 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB7EC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E70C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6562074A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F46206BE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:32:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xcv1Kr+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgCMQ00 (ORCPT
+        id S1726533AbgCMQcu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:26:26 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54986 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgCMQ00 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 12:26:26 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 7AD87297056
-Subject: Re: [PATCH v4 1/4] dt-bindings: Add cros-ec Type C port driver
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Benson Leung <bleung@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20200312225719.14753-1-pmalani@chromium.org>
- <20200312225719.14753-2-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <a2a08abd-ce6b-d045-5e56-1dd9c0a3360c@collabora.com>
-Date:   Fri, 13 Mar 2020 17:26:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 12:32:50 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34740 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgCMQcu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 12:32:50 -0400
+Received: by mail-lf1-f67.google.com with SMTP id i19so8397849lfl.1;
+        Fri, 13 Mar 2020 09:32:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dyWHs35Zg2C+2jMgWyB6ZqLQON5LgYusa6mcsNSwpOs=;
+        b=Xcv1Kr+8IFwzuD6hNma9cvqU70N6nUjy6f8SZmAp2FfPzMUaJ6fqlTTDsKOLXRcR0S
+         xXp/8jazrBQbQMyITDTbtKZgOsD8ZLUTP/LL+ZBJsglA2J3R3PLLnG/KmwnpxE1yYjg4
+         Ob3NjrD5/kyRZHIJqtrXOpoph5Pxl63S3KAj1XCqD+PNF5L3mKcabF1ifOAwZdbLa87j
+         wo6GpZNYUWDy02LSYJrteCvZWpUnKxSQByRK/Ct1BAK2rpC2AEDmcl7AMIu9k8yGm7yF
+         oHzZ4Vyf4teoiPh1t4sC3kO2Xj4CTTgfzK10UAIiKbbWj6vC1QvT1w/ZX+ZJmQeCuutP
+         MpHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dyWHs35Zg2C+2jMgWyB6ZqLQON5LgYusa6mcsNSwpOs=;
+        b=gflOL8Nrr46/DRjooe5T7M2t5k+6nQdl453oG7p94K/MNNB0bNnKZiemG5AjsXVVmY
+         UsJ2lhKdRDP0s/tD8bmaky8nKgdtNo9/f/AXa4HN5v4ZvQUtjHpvTJjeq6H0bvCkpVRl
+         f8jWAu04POgJxPkXyeisYQaBnVM4EqZIcZJhTLlhmcdwlCKxfWGaAHYcshh2+uucmIKJ
+         fPGU0avvr5MOO39oQvqHElganD/YlnVcY0F2SuZ9j5bCfr++7QwKp9h98AJQjBxT0beJ
+         j0ludxKgU/l/s9pnWI6TdMVFUDvNe59Js6GTodnADJQkGvXpbdZeZ3sVbe1l4y/SJede
+         DVKA==
+X-Gm-Message-State: ANhLgQ21AoVp8EPSrKj9ize4ZDY9prebc4EaFMIczI3V3b0s9ds2o5Qu
+        goeaz+lB7rbZ8l5/FOC/cRS30WilGshEvi93t5w=
+X-Google-Smtp-Source: ADFU+vuiG+I/daEBy3iVb2g5dsQ6DmHXLJUJbOmeFdpRT4K641xxd/jzOZblQxR+z5Zm9BaEgWmC+ODAoVQQzYMaYyY=
+X-Received: by 2002:a05:6512:30f:: with SMTP id t15mr1937812lfp.7.1584117168302;
+ Fri, 13 Mar 2020 09:32:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200312225719.14753-2-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200306104219.6434-1-alifer.wsdm@gmail.com>
+In-Reply-To: <20200306104219.6434-1-alifer.wsdm@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 13 Mar 2020 13:32:37 -0300
+Message-ID: <CAOMZO5BjAN8rJ25n2n3i=gVQ_noo-X8CTsFDZWBQB88SyZ-SNg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx8mq-phanbell: Fix Ethernet PHY post-reset duration
+To:     Alifer Moraes <alifer.wsdm@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Marco Franchi <marco.franchi@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prashant,
+Hi Alifer,
 
-On 12/3/20 23:57, Prashant Malani wrote:
-> Some Chrome OS devices with Embedded Controllers (EC) can read and
-> modify Type C port state.
-> 
-> Add an entry in the DT Bindings documentation that lists out the logical
-> device and describes the relevant port information, to be used by the
-> corresponding driver.
-> 
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
-> 
-> Changes in v4:
-> - Rebased on top of usb-connector.yaml file, so the â€œconnectorâ€ property
->   now directly references the â€œusb-connectorâ€ DT binding.
-> 
-> Changes in v3:
-> - Fixed license identifier.
-> - Renamed "port" to "connector".
-> - Made "connector" be a "usb-c-connector" compatible property.
-> - Updated port-number description to explain min and max values,
->   and removed $ref which was causing dt_binding_check errors.
-> - Fixed power-role, data-role and try-power-role details to make
->   dt_binding_check pass.
-> - Fixed example to include parent EC SPI DT Node.
-> 
-> Changes in v2:
-> - No changes. Patch first introduced in v2 of series.
-> 
->  .../bindings/chrome/google,cros-ec-typec.yaml | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> new file mode 100644
-> index 0000000000000..6668d678dbcb4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
+On Fri, Mar 6, 2020 at 7:41 AM Alifer Moraes <alifer.wsdm@gmail.com> wrote:
+>
+> i.MX8MQ Phanbell board uses Realtek RTL8211FD as Ethernet PHY.
+> Its datasheet states that the proper post reset duration should be at least 50 ms.
 
-Could you use dual licensing here (GPL-2.0-only OR BSD-2-Clause). In general
-Google is fine with it for bindings.
+The datasheet I found in the web states:
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
-> +
-> +maintainers:
-> +  - Benson Leung <bleung@chromium.org>
-> +  - Prashant Malani <pmalani@chromium.org>
-> +
-> +description:
-> +  Chrome OS devices have an Embedded Controller(EC) which has access to
-> +  Type C port state. This node is intended to allow the host to read and
-> +  control the Type C ports. The node for this device should be under a
-> +  cros-ec node like google,cros-ec-spi.
-> +
-> +properties:
-> +  compatible:
-> +    const: google,cros-ec-typec
-> +
-> +  connector:
-> +    $ref: /schemas/connector/usb-connector.yaml#
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |+
-> +    cros_ec: ec {
-> +      compatible = "google,cros-ec-spi";
-> +
+"The RTL8211F(I)/RTL8211FD(I) has a PHYRSTB pin to reset the chip. For
+a complete PHY reset, this pin must be asserted low for at least 10ms
+(Tgap in Figure 9) for the internal regulator. Wait for a further 30ms
+(for internal circuits settling time) before accessing the PHY
+register"
 
-I guess that it will trigger some warnings once google,cros-ec.yaml is merged.
-Use a full example.
+Where does the 50ms requirement come from? Do you have an updated
+datasheet that says 50ms instead?
 
-+examples:
-+  - |
-+    spi0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        cros-ec@0 {
-+            compatible = "google,cros-ec-spi";
-+            reg = <0>;
+Please clarify.
 
-
-> +      typec {
-> +        compatible = "google,cros-ec-typec";
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        connector@0 {
-> +          compatible = "usb-c-connector";
-> +          reg = <0>;
-> +          power-role = "dual";
-> +          data-role = "dual";
-> +          try-power-role = "source";
-> +        };
-> +      };
-> +    };
-> 
+Thanks
