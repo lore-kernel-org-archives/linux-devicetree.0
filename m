@@ -2,192 +2,109 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6063C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D31C4CECE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D812074B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC7620724
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wNjll5P4"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="C0AKIxz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgCMNkU (ORCPT
+        id S1726526AbgCMNpb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:40:20 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:48456 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgCMNkT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 09:40:19 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B60DD5F;
-        Fri, 13 Mar 2020 14:40:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584106816;
-        bh=F7N9mKjetm9h4v3eByCsaRQPgqXelP60n5xxonpCD5c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wNjll5P4bFQRFi/OaEo6+XJQYs7WsNIgv6PVfVqfK+xbGXVXu3pywVy1PFlZdkTge
-         3PaHsuL/FjN1dGV4CCjbqMwtEFH90pMnLUJ/csFSetiYKW1glllgtpoQ1KDDQ8P/Eu
-         IkXjIu0BKDEqZ0l2FsA3NzqTWHsX/ZDMaMc2k43k=
-Date:   Fri, 13 Mar 2020 15:40:13 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Phong LE <ple@baylibre.com>
-Cc:     narmstrong@baylibre.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net, sam@ravnborg.org,
-        mripard@kernel.org, heiko.stuebner@theobroma-systems.com,
-        linus.walleij@linaro.org, stephan@gerhold.net, icenowy@aosc.io,
-        broonie@kernel.org, mchehab+samsung@kernel.org,
-        davem@davemloft.net, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, andriy.shevchenko@linux.intel.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: display: bridge: add it66121 bindings
-Message-ID: <20200313134013.GC4751@pendragon.ideasonboard.com>
-References: <20200311125135.30832-1-ple@baylibre.com>
- <20200311125135.30832-3-ple@baylibre.com>
+        Fri, 13 Mar 2020 09:45:31 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7244 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726327AbgCMNpb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 09:45:31 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DDhImK025110;
+        Fri, 13 Mar 2020 14:45:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=BzB5x9BXZs8Iatgp2DsUFoNfkqOLF0WtU1RaDu8c6yo=;
+ b=C0AKIxz6AMmzFUGv9Ii97U25jySGU0BnwGzQ1zblOatfce7HuFpUZody8thgAtC7M9sE
+ Fsh3hBpyeuZVrZkEpNNWaYv+UWLrG0g05Awhspf7EEsNfOP2dXpFh8i+xJUsNpGXrhS2
+ sNmAE7AaSztqUOSXVevUOdVz+PARM22UcC2cWR3jCoykZzlKyA0uGpAsC//8RuT3WsUh
+ 9/EwwsD93SK3hTfF1ayQ8+/2yToB6s+/+gypbo+9PSigH5zalfWtE8Zl/6CDjr+DlUWy
+ bhSt56ZmNlA38r1MyF4jZDLk+ef/cRTJd1AYDWn8NWviV1v8lzsXqhsnxE9RsvutAAMu +A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yqt8196eb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Mar 2020 14:45:10 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A212A100038;
+        Fri, 13 Mar 2020 14:45:09 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8C28C2A906E;
+        Fri, 13 Mar 2020 14:45:09 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 13 Mar
+ 2020 14:45:08 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Fri, 13 Mar 2020 14:45:09 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Pascal PAILLET-LME <p.paillet@st.com>
+Subject: Re: [PATCH v4 3/3] clocksource: Add Low Power STM32 timers driver
+Thread-Topic: [PATCH v4 3/3] clocksource: Add Low Power STM32 timers driver
+Thread-Index: AQHV59mpsik/WRqXdUuknFgx3rC1tqgj1SiAgAAFrQCAIr0VgIAAAtYA
+Date:   Fri, 13 Mar 2020 13:45:09 +0000
+Message-ID: <1cd9e136-ebdd-f604-9ed8-1f21d4c70adb@st.com>
+References: <20200217134546.14562-1-benjamin.gaignard@st.com>
+ <20200217134546.14562-4-benjamin.gaignard@st.com>
+ <687ab83c-6381-57aa-3bc1-3628e27644b5@linaro.org>
+ <9cc4af9e-27d0-96c3-b3f1-20c88f89b70a@st.com>
+ <ee131515-cd4c-00b2-5e1f-3abefb634bdd@linaro.org>
+ <4f21f3db-50dd-f412-35dc-1fde7a139c52@linaro.org>
+In-Reply-To: <4f21f3db-50dd-f412-35dc-1fde7a139c52@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <845C408BCC80DC4391DEC3D041AB6476@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200311125135.30832-3-ple@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-13_05:2020-03-12,2020-03-13 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Phong,
-
-Thank you for the patch.
-
-On Wed, Mar 11, 2020 at 01:51:33PM +0100, Phong LE wrote:
-> Add the ITE bridge HDMI it66121 bindings.
-> 
-> Signed-off-by: Phong LE <ple@baylibre.com>
-> ---
->  .../bindings/display/bridge/ite,it66121.yaml  | 98 +++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> new file mode 100644
-> index 000000000000..1717e880d130
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it66121.yaml
-> @@ -0,0 +1,98 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/ite,it66121.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ITE it66121 HDMI bridge Device Tree Bindings
-> +
-> +maintainers:
-> +  - Phong LE <ple@baylibre.com>
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +
-> +description: |
-> +  The IT66121 is a high-performance and low-power single channel HDMI
-> +  transmitter, fully compliant with HDMI 1.3a, HDCP 1.2 and backward compatible
-> +  to DVI 1.0 specifications.
-> +
-> +properties:
-> +  compatible:
-> +    const: ite,it66121
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: base I2C address of the device
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: GPIO connected to active low reset
-> +
-> +  vrf12-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.2V analog core power.
-> +
-> +  vcn33-supply:
-> +    maxItems: 1
-> +    description: Regulator for 3.3V digital core power.
-> +
-> +  vcn18-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.8V IO core power.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  pclk-dual-edge:
-> +    maxItems: 1
-> +    description: enable pclk dual edge mode.
-
-I'm having a bit of trouble understanding how this operates. Looking at
-the driver code the property is only taken into account to calculate the
-maximum allowed frequency. How is the IT66121 configured for single vs.
-dual pixel clock edge mode ?
-
-> +
-> +  port:
-> +    type: object
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +        description: |
-> +          Input endpoints of the bridge.
-> +
-> +    required:
-> +      - endpoint
-
-You should have two ports, one for the bridge input, and one for the
-bridge output.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - vrf12-supply
-> +  - vcn33-supply
-> +  - vcn18-supply
-> +  - interrupts
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c6 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      it66121hdmitx: it66121hdmitx@4c {
-> +        compatible = "ite,it66121";
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&ite_pins_default>;
-> +        vcn33-supply = <&mt6358_vcn33_wifi_reg>;
-> +        vcn18-supply = <&mt6358_vcn18_reg>;
-> +        vrf12-supply = <&mt6358_vrf12_reg>;
-> +        reset-gpios = <&pio 160 1 /* GPIO_ACTIVE_LOW */>;
-> +        interrupt-parent = <&pio>;
-> +        interrupts = <4 8 /* IRQ_TYPE_LEVEL_LOW */>;
-> +        reg = <0x4c>;
-> +        pclk-dual-edge;
-> +
-> +        port {
-> +          it66121_in: endpoint {
-> +            remote-endpoint = <&display_out>;
-> +          };
-> +        };
-> +      };
-> +    };
-
--- 
-Regards,
-
-Laurent Pinchart
+DQoNCk9uIDMvMTMvMjAgMjozNCBQTSwgRGFuaWVsIExlemNhbm8gd3JvdGU6DQo+IEhpIEJlbmph
+bWluLA0KPg0KPiBPbiAyMC8wMi8yMDIwIDEyOjA1LCBEYW5pZWwgTGV6Y2FubyB3cm90ZToNCj4N
+Cj4gWyAuLi4gXQ0KPg0KPj4+IEl0IGhhcyBiZSBleGNsdXNpdmUgYW5kIHRoYXQgZXhjbHVkZSB0
+aGUgcHJvYmxlbSB5b3UgZGVzY3JpYmUgYWJvdmUuDQo+PiBPaywgdGhlIHJlZ21hcF93cml0ZSBp
+cyBub3QgYSBmcmVlIG9wZXJhdGlvbiBhbmQgaW4gdGhpcyBjYXNlIHlvdSBjYW4NCj4+IGdldCBy
+aWQgb2YgYWxsIHRoZSByZWdtYXAtaXNoIGluIHRoaXMgZHJpdmVyLg0KPiBBcmUgeW91IHBsYW5u
+aW5nIHRvIHNlbmQgdGhlIG5vbi1yZWdtYXAgdmVyc2lvbj8NCk5vIGJlY2F1c2UgdGhlIHJlZ21h
+cCBpcyBpbmhlcml0ZWQgZnJvbSB0aGUgbWZkIHBhcmVudC4NCkkgY291bGQgdXNlIGZhc3QtaW8g
+dG8gaW1wcm92ZSB0aGF0Lg0KDQpCZW5qYW1pbg0KPg0KPg0KPg0K
