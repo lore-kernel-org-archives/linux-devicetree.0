@@ -2,106 +2,90 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1EAC4CECE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04355C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFDB2074D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1E1206FA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VCLEFuMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgCMQSl (ORCPT
+        id S1726571AbgCMQ0S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:18:41 -0400
-Received: from mga07.intel.com ([134.134.136.100]:11114 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726622AbgCMQSk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 12:18:40 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2020 09:18:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,549,1574150400"; 
-   d="scan'208";a="261935961"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 13 Mar 2020 09:18:35 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jCn1A-009IkE-Vj; Fri, 13 Mar 2020 18:18:36 +0200
-Date:   Fri, 13 Mar 2020 18:18:36 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Al Cooper <alcooperx@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 0/4] Add XHCI, EHCI and OHCI support for Broadcom STB
- SoS's
-Message-ID: <20200313161836.GX1922688@smile.fi.intel.com>
-References: <20200313141545.31943-1-alcooperx@gmail.com>
+        Fri, 13 Mar 2020 12:26:18 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40813 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgCMQ0S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 12:26:18 -0400
+Received: by mail-pl1-f195.google.com with SMTP id h11so4489016plk.7
+        for <devicetree@vger.kernel.org>; Fri, 13 Mar 2020 09:26:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9duP3dH+aH6CT7yB4gVvhjVC0X7MYOO6kZ8y2HY41wc=;
+        b=VCLEFuMQYF1m6BKJsL0oksC1WBq5jRVxRxsQiEcPt3NRwsUKL0k0NyLz3a9pa/pOnH
+         jyhGgAShULjHz9oLPPVA99S5lBDFkR2Nu+7RrA7dbetqqjQ/v0xOn462W2t/zEHEgJ/Y
+         QmsCOKz/KFqGhQfWhmlxttlq+xColL+tKFLLI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9duP3dH+aH6CT7yB4gVvhjVC0X7MYOO6kZ8y2HY41wc=;
+        b=GAIGQre8eWBf0KT87BYD1ULpRKhWK0kAMm8nBD12/skA0wC6AvDSj7UvJhNxkK1GIj
+         MEscUptRtUl+injSk+608IiEzSwB6pugshKiPogg/8uRc1iDasxsguf38HBTBIreWGSh
+         DmdAx5WAEn+o4ZHC3h93T3q/DIOH8kEtG3/KAs/8JS6qaqFTqt2oDoMAy4fXxaBViQmN
+         niN/5DR261hpPB9weD+UHA22x9YNfVe3Fd5Zc7xy/yuK0bzcrDt6Ij/kzBTKt6r12+Jb
+         T5PYhZJ/fnh5TSnuEfit7LeuIoKMwvZemNkhDzCW3J8CIBWidbEaWpuFF6uQ/8FLd8SS
+         C3sQ==
+X-Gm-Message-State: ANhLgQ35VmNvPtuD7QEaeTcF8DLlHU+rm7lG1lhdtnEl61rMwYJ5KN6g
+        r9XlWRTy7m3Hv8PoKh5PPUJytw==
+X-Google-Smtp-Source: ADFU+vsPsA3vvdpbgpspQcOzaz1fjLOJRiNK9x2Pzp04oC9rV4EJ/KR3BicBI9malNEFSPehXIWYmg==
+X-Received: by 2002:a17:90a:714a:: with SMTP id g10mr10400527pjs.155.1584116776171;
+        Fri, 13 Mar 2020 09:26:16 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id nl7sm3616751pjb.36.2020.03.13.09.26.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Mar 2020 09:26:15 -0700 (PDT)
+Date:   Fri, 13 Mar 2020 09:26:14 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+Subject: Re: [PATCH V2 1/8] interconnect: Add devm_of_icc_get() as exported
+ API for users
+Message-ID: <20200313162614.GG144492@google.com>
+References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
+ <1584105134-13583-2-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200313141545.31943-1-alcooperx@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1584105134-13583-2-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 10:15:41AM -0400, Al Cooper wrote:
-> This adds support for the XHCI, EHCI and OHCI host controllers found
-> in Broadcom STB SoC's. These drivers depend on getting access to the
-> new Broadcom STB USB PHY driver through a device-tree phandle and
-> will fail if the driver is not available.
-
-Hint to the future:
-
-	scripts/get_maintainer.pl --git --git-min-percent=67 ...
-
+On Fri, Mar 13, 2020 at 06:42:07PM +0530, Akash Asthana wrote:
+> Users can use devm version of of_icc_get() to benefit from automatic
+> resource release.
 > 
-> Al Cooper (4):
->   dt-bindings: Add Broadcom STB USB support
->   usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
->   usb: ehci: Add new EHCI driver for Broadcom STB SoC's
->   usb: host: Add ability to build new Broadcom STB USB drivers
-> 
->  .../bindings/usb/brcm,bcm7445-ehci.yaml       |  60 ++++
->  .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
->  MAINTAINERS                                   |   9 +
->  drivers/usb/host/Kconfig                      |  20 ++
->  drivers/usb/host/Makefile                     |  20 +-
->  drivers/usb/host/ehci-brcm.c                  | 288 ++++++++++++++++++
->  drivers/usb/host/xhci-brcm.c                  |  16 +
->  drivers/usb/host/xhci-brcm.h                  |  16 +
->  drivers/usb/host/xhci-plat.c                  |  11 +
->  9 files changed, 435 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
->  create mode 100644 drivers/usb/host/ehci-brcm.c
->  create mode 100644 drivers/usb/host/xhci-brcm.c
->  create mode 100644 drivers/usb/host/xhci-brcm.h
-> 
-> -- 
-> 2.17.1
-> 
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+>  drivers/interconnect/core.c  | 25 +++++++++++++++++++++++++
+>  include/linux/interconnect.h |  7 +++++++
+>  2 files changed, 32 insertions(+)
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Reviewed by: Matthias Kaehlcke <mka@chromium.org>
