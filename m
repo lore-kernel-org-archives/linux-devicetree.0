@@ -2,277 +2,98 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9702C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08B4C4CECE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B400D206EB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:07:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Sbm3XzXt"
+	by mail.kernel.org (Postfix) with ESMTP id B3A622074A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 16:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgCMQHN (ORCPT
+        id S1726613AbgCMQMn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 12:07:13 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:34791 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgCMQHM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 12:07:12 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id CA5DF23EC2;
-        Fri, 13 Mar 2020 17:07:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584115630;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EdJOEklCGNc4MOP7NsgRfesvmIzFSxGDZJkVUdK2A1g=;
-        b=Sbm3XzXtHK4jjR8MLIql6/oOrZb4dyCI6UiH8NYVS/daIn/crTPuvHn2VBpoGdsCkb/2sJ
-        q5DE6ywjfxnN5mQsWgopjnwSuIoAUMwxhk+IzY71OzNnDs+u5eZsDFsNOTC3oRq6gdyPc5
-        MTxr+ixZH8Jzp0Lxj0lDbLcsIzERa84=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 13 Mar 2020 17:07:07 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 13 Mar 2020 12:12:43 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:12635 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgCMQMn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 12:12:43 -0400
+Received: from [10.28.90.144] (10.28.90.144) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Sat, 14 Mar 2020
+ 00:13:10 +0800
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+To:     Julius Werner <jwerner@chromium.org>
+CC:     Evan Benn <evanbenn@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Subject: Re: [PATCH v3 0/7] NXP DSPI bugfixes and support for LS1028A
-In-Reply-To: <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
-References: <20200310125542.5939-1-olteanv@gmail.com>
- <615284875b709f602d57e4a4621a83c1@walle.cc>
- <CA+h21hrYoHVDvsxT1EPWhYprL+zNHfE4MW7k4HxiK7ma4ZWn1g@mail.gmail.com>
- <59b07b7d70603c6b536a7354ed0ea8d8@walle.cc>
-Message-ID: <4ba077c80143c8ec679066e6d8cedca2@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: CA5DF23EC2
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+        <devicetree@vger.kernel.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Yonghui Yu <yonghui.yu@amlogic.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus>
+ <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+ <20200219232005.GA9737@roeck-us.net>
+ <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+ <e42320b8-266f-0b0e-b20b-b72228510e81@amlogic.com>
+ <CAODwPW94KX46PzSrf_uuEFPKudXor=26d=g3Qta5veRfxmMDUA@mail.gmail.com>
+ <1326f594-3cfd-c03d-4f2c-50eeb75724b2@amlogic.com>
+ <CAODwPW8WwntWb_=dg2J3AMy-gHw2QvNj_g98SufN13+AuGnUSg@mail.gmail.com>
+ <b4ba821a-eef6-4aea-1eba-897171b92c41@amlogic.com>
+ <CAKz_xw2T1UceCwFZnBxg6WVp2D4+MziyvQPdU6tEnR_BdLh-PQ@mail.gmail.com>
+ <ad28aa47-0490-937f-898f-0e4695ef6ec6@amlogic.com>
+ <CAODwPW9oxx33hkO3kv2_G8YyLWvigVHkfJU7xUHLVgB7QU2i3Q@mail.gmail.com>
+From:   Xingyu Chen <xingyu.chen@amlogic.com>
+Message-ID: <6e846246-dfd5-c002-cd61-41c2d11a2e54@amlogic.com>
+Date:   Sat, 14 Mar 2020 00:13:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <CAODwPW9oxx33hkO3kv2_G8YyLWvigVHkfJU7xUHLVgB7QU2i3Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.28.90.144]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-03-10 16:22, schrieb Michael Walle:
-> Hi Vladimir,
-> 
-> Am 2020-03-10 15:56, schrieb Vladimir Oltean:
->>> (2) Also, reading the flash, every second time there is 
->>> (reproducibly)
->>> an
->>> IO error:
->>> 
->>> # hexdump -C /dev/mtd0
->>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->>> |huhu............|
->>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->>> |................|
->>> *
->>> 01000000
->>> # hexdump -C /dev/mtd0
->>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->>> |huhu............|
->>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->>> |................|
->>> *
->>> hexdump: /dev/mtd0: Input/output error
->>> 00dc0000
->>> # hexdump -C /dev/mtd0
->>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->>> |huhu............|
->>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->>> |................|
->>> *
->>> 01000000
->>> # hexdump -C /dev/mtd0
->>> 00000000  68 75 68 75 0a ff ff ff  ff ff ff ff ff ff ff ff
->>> |huhu............|
->>> 00000010  ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
->>> |................|
->>> *
->>> hexdump: /dev/mtd0: Input/output error
->>> 00e6a000
->>> 
->> 
->> Just to be clear, issue 2 is seen only after you abort another
->> transaction, right?
-> 
-> No, just normal uninterrupted reading. Just tried it right after
-> reboot. Doesn't seem to be every second time though, just random
-> which makes me wonder if that is another problem now. Also the
-> last successful reading is random.
+Hi, Julius
 
+On 2020/3/12 3:24, Julius Werner wrote:
+>> - *_INIT and *GETTIMEOUT.      Although your driver does not need them, could you take them as options in your driver ?
+> The driver already has SMCWD_INFO which is used during probe to
+> retrieve the minimum and maximum timeout values supported by the
+> hardware at probe time. Maybe it would make sense to rename that to
+> INIT (which would still return those values, but can also do whatever
+> initialization needs to be done in TF)?
+Yes，INIT would make sense for me.
+> GETTIMELEFT I agree we can
+> implement optionally, and other platforms would just return a
+> PSCI_RET_NOT_SUPPORTED for that.
+>
+>> - *_RESETNOW.      It is used to reset the system right now, similar to your SOFT RESET. could you reserve an operation index in ATF ?
+> Just curious, why do you need this? Shouldn't you use the PSCI
+> standard SYSTEM_RESET SMC for that? (If you want to control exactly
+> how the platform is reset, you could also use SYSTEM_RESET2 with a
+> vendor-defined reset_type.)
+I just wanted it to be compatible with other OS，and I  think it over, 
+maybe I can also use the
+PSCI interface to execuate the system reset on the other OS. Anyway, 
+please ignore this request.
 
-Ok I guess I know what the root cause is. This is an extract of
-the current code:
-
-> static int dspi_transfer_one_message(struct spi_controller *ctlr,
-> 				     struct spi_message *message)
-> {
-> ..
-> 	/* Kick off the interrupt train */
-> 	dspi_fifo_write(dspi);
-> 
-> 	status = wait_event_interruptible(dspi->waitq,
-> 					  dspi->waitflags);
-> 	dspi->waitflags = 0;
-> ..
-> }
-> 
-> static int dspi_rxtx(struct fsl_dspi *dspi)
-> {
-> 	dspi_fifo_read(dspi);
-> 
-> 	if (!dspi->len)
-> 		/* Success! */
-> 		return 0;
-> 
-> 	dspi_fifo_write(dspi);
-> 
-> 	return -EINPROGRESS;
-> }
-
-dspi_rxtx() is used in the ISR. Both dspi_fifo_write() and dspi_rxtx()
-access shared data like, dspi->words_in_flight. In the EIO error case
-the following bytes_sent is -1, because dspi->words_in_flight is -1.
-
-> /* Update total number of bytes that were transferred */
-> bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
-
-words_in_flight is always -1 after dspi_fifo_read() was called. In
-the error case, the ISR kicks in right in the middle of the execution
-of dspi_fifo_write() in dspi_transfer_one_message().
-
-> static void dspi_fifo_write(struct fsl_dspi *dspi)
-> {
-> ..
-> 	if (dspi->devtype_data->trans_mode == DSPI_EOQ_MODE)
-> 		dspi_eoq_fifo_write(dspi);
-> 	 else
-> 		dspi_xspi_fifo_write(dspi);
-
-Now if the ISR is executed right here..
-
-> 
-> 	/* Update total number of bytes that were transferred */
-> 	bytes_sent = dspi->words_in_flight * dspi->oper_word_size;
-
-.. words_in_flight might be -1.
-
-> 	msg->actual_length += bytes_sent;
-
-and bytes_sent is negative. And this causes an IO error because
-the returned overall message length doesn't match.
-
-> 	dspi->progress += bytes_sent / DIV_ROUND_UP(xfer->bits_per_word, 8);
-> ..
-> }
-
-I could not reproduce the issue with the following patch. I don't
-know if I got the locking correct though or if there is a better
-way to go.
-
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 8b16de9ed382..578fedeb16a0 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -224,6 +224,7 @@ struct fsl_dspi {
-         u16                                     tx_cmd;
-         const struct fsl_dspi_devtype_data      *devtype_data;
-
-+       spinlock_t lock;
-         wait_queue_head_t                       waitq;
-         u32                                     waitflags;
-
-@@ -873,14 +874,20 @@ static void dspi_fifo_write(struct fsl_dspi *dspi)
-
-  static int dspi_rxtx(struct fsl_dspi *dspi)
-  {
-+       unsigned long flags;
-+
-+       spin_lock_irqsave(&dspi->lock, flags);
-         dspi_fifo_read(dspi);
-
--       if (!dspi->len)
-+       if (!dspi->len) {
-                 /* Success! */
-+               spin_unlock_irqrestore(&dspi->lock, flags);
-                 return 0;
-+       }
-
-         dspi_fifo_write(dspi);
-
-+       spin_unlock_irqrestore(&dspi->lock, flags);
-         return -EINPROGRESS;
-  }
-
-@@ -950,7 +957,9 @@ static int dspi_transfer_one_message(struct 
-spi_controller *ctlr,
-         struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
-         struct spi_device *spi = message->spi;
-         struct spi_transfer *transfer;
-+       unsigned long flags;
-         int status = 0;
-+       int i = 0;
-
-         if (dspi->irq)
-                 dspi_enable_interrupts(dspi, true);
-@@ -1009,7 +1018,9 @@ static int dspi_transfer_one_message(struct 
-spi_controller *ctlr,
-                                 goto out;
-                 } else if (dspi->irq) {
-                         /* Kick off the interrupt train */
-+                       spin_lock_irqsave(&dspi->lock, flags);
-                         dspi_fifo_write(dspi);
-+                       spin_unlock_irqrestore(&dspi->lock, flags);
-
-                         status = wait_event_interruptible(dspi->waitq,
-                                                           
-dspi->waitflags);
-@@ -1301,6 +1312,7 @@ static int dspi_probe(struct platform_device 
-*pdev)
-         ctlr->cleanup = dspi_cleanup;
-         ctlr->slave_abort = dspi_slave_abort;
-         ctlr->mode_bits = SPI_CPOL | SPI_CPHA | SPI_LSB_FIRST;
-+       spin_lock_init(&dspi->lock);
-
-         pdata = dev_get_platdata(&pdev->dev);
-         if (pdata) {
-
-
-
--michael
+Thanks.
+>
+> .
