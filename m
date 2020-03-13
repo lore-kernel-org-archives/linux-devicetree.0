@@ -2,74 +2,91 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B038C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB456C4CECE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 21:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233452074E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 20:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584133053;
-	bh=B4l8ndTJzmvb3eEAPRS7jp/F3ynzjAo+Jf9vLnUAo9c=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=LxIRGLVPghXYwoKH9YttwY6WwU87Hm7q6M+XANdKgwXyQmK8xYNB6o1py5JGdrUKE
-	 dgi/X0p+1HzngG3LpUZme/B44ygEUojZj6UL/OpFJeI0Xpg8YY/EHlKtymRVaY9iSa
-	 XrQjPBS8vJ0FEtTlRM20AQb0ihI7bK5EjbObJsoU=
+	by mail.kernel.org (Postfix) with ESMTP id 9A9FA20754
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 21:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgCMU5c (ORCPT
+        id S1727366AbgCMVMt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 16:57:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgCMU5c (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 16:57:32 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2D3F2074A;
-        Fri, 13 Mar 2020 20:57:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584133051;
-        bh=B4l8ndTJzmvb3eEAPRS7jp/F3ynzjAo+Jf9vLnUAo9c=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=KO4D24a3uDptIHeuIwRUqwXWmDeMDdQM5pfycl4dinBY44n+xxSgSX/dCwIW66QJU
-         upMPDamHWwFOmMXnkIQQhP97lQrdLq4B+gI3wEQJqSueNUv7s41E7aal04cRMSk2ta
-         i39ZlcU7+gycWGFMUS+o1H25g1OHO0gw3qyVYC/0=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200310143756.244-1-ansuelsmth@gmail.com>
-References: <sboyd@kernel.org> <20200310143756.244-1-ansuelsmth@gmail.com>
-Subject: Re: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
+        Fri, 13 Mar 2020 17:12:49 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:8667 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726681AbgCMVMt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 17:12:49 -0400
+X-IronPort-AV: E=Sophos;i="5.70,550,1574089200"; 
+   d="scan'208";a="41620048"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 14 Mar 2020 06:12:47 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 79AFD40E09D5;
+        Sat, 14 Mar 2020 06:12:43 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Date:   Fri, 13 Mar 2020 13:57:30 -0700
-Message-ID: <158413305090.164562.262956401824904582@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to assigned-clock-rates
+Date:   Fri, 13 Mar 2020 21:12:31 +0000
+Message-Id: <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Ansuel Smith (2020-03-10 07:37:56)
-> Add missing definition of rpm clk for ipq806x soc
->=20
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Acked-by: John Crispin <john@phrozen.org>
-> ---
+Use assigned-clock-rates to specify the clock rate. Also mark
+clock-frequency property as deprecated.
 
-Applied to clk-next and added Rob's review tag from v1. Please help and
-do it next time.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+index 72ad992..e62fe82 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+@@ -8,7 +8,7 @@ Required Properties:
+ - compatible: Value should be "ovti,ov5645".
+ - clocks: Reference to the xclk clock.
+ - clock-names: Should be "xclk".
+-- clock-frequency: Frequency of the xclk clock.
++- clock-frequency (deprecated): Frequency of the xclk clock.
+ - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+   to the hardware pin PWDNB which is physically active low.
+ - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+@@ -37,7 +37,8 @@ Example:
+ 
+ 			clocks = <&clks 200>;
+ 			clock-names = "xclk";
+-			clock-frequency = <24000000>;
++			assigned-clocks = <&clks 200>;
++			assigned-clock-rates = <24000000>;
+ 
+ 			vdddo-supply = <&camera_dovdd_1v8>;
+ 			vdda-supply = <&camera_avdd_2v8>;
+-- 
+2.7.4
+
