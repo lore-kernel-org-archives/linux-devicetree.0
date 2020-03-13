@@ -2,41 +2,35 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83325C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD31C4CECE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46C8620674
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:11:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="VZNpBmBl"
+	by mail.kernel.org (Postfix) with ESMTP id AE71420674
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgCMSLE (ORCPT
+        id S1727146AbgCMSQN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:11:04 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34188 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726414AbgCMSLE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 14:11:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=W9a+0fAfmG82n7GJfhOGZ1nPwnwMa9XduCIBZsnFc4w=; b=VZNpBmBl5ZDoTsrw2KG7/2ePeo
-        rrMX3dnNGMHXy4ZbZf385u23KVedALl8eCkeIyeRUI+rFglkBfZBJh/BI41sIcZAbj05KU48ihh9a
-        IYcYP5VhpedG8cV73sM6yY9PlBh+ZcICtocOUkNvx9x2127drCFT9mW8GNZbKF6lHB0Y=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jCols-0007vu-Mk; Fri, 13 Mar 2020 19:10:56 +0100
-Date:   Fri, 13 Mar 2020 19:10:56 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Fri, 13 Mar 2020 14:16:13 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59697 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgCMSQN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 14:16:13 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jCoqp-0007rb-Gk; Fri, 13 Mar 2020 19:16:03 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jCoqn-0002TA-On; Fri, 13 Mar 2020 19:16:01 +0100
+Date:   Fri, 13 Mar 2020 19:16:01 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -46,65 +40,124 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
         devicetree@vger.kernel.org
 Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
-Message-ID: <20200313181056.GA29732@lunn.ch>
+Message-ID: <20200313181601.sbxdrqdjqfj3xn3e@pengutronix.de>
 References: <20200313052252.25389-1-o.rempel@pengutronix.de>
  <20200313052252.25389-2-o.rempel@pengutronix.de>
  <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
+ <20200313181056.GA29732@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="h5xqpdlw2psmzsqz"
 Content-Disposition: inline
-In-Reply-To: <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
+In-Reply-To: <20200313181056.GA29732@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 19:11:37 up 119 days,  9:30, 137 users,  load average: 0.10, 0.06,
+ 0.01
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> > new file mode 100644
-> > index 000000000000..42be0255512b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> > @@ -0,0 +1,61 @@
-> > +# SPDX-License-Identifier: GPL-2.0+
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: NXP TJA11xx PHY
-> > +
-> > +maintainers:
-> > +  - Andrew Lunn <andrew@lunn.ch>
-> > +  - Florian Fainelli <f.fainelli@gmail.com>
-> > +  - Heiner Kallweit <hkallweit1@gmail.com>
-> > +
-> > +description:
-> > +  Bindings for NXP TJA11xx automotive PHYs
-> > +
-> > +allOf:
-> > +  - $ref: ethernet-phy.yaml#
-> > +
-> > +patternProperties:
-> > +  "^ethernet-phy@[0-9a-f]+$":
-> > +    type: object
-> > +    description: |
-> > +      Some packages have multiple PHYs. Secondary PHY should be defines as
-> > +      subnode of the first (parent) PHY.
-> 
-> 
-> There are QSGMII PHYs which have 4 PHYs embedded and AFAICT they are
-> defined as 4 separate Ethernet PHY nodes and this would not be quite a
-> big stretch to represent them that way compared to how they are.
-> 
-> I would recommend doing the same thing and not bend the MDIO framework
-> to support the registration of "nested" Ethernet PHY nodes.
 
-Hi Florian
+--h5xqpdlw2psmzsqz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The issue here is the missing PHY ID in the secondary PHY. Because of
-that, the secondary does not probe in the normal way. We need the
-primary to be involved to some degree. It needs to register it. What
-i'm not so clear on is if it just needs to register it, or if these
-sub nodes are actually needed, given the current code.
+On Fri, Mar 13, 2020 at 07:10:56PM +0100, Andrew Lunn wrote:
+> > > diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml b=
+/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> > > new file mode 100644
+> > > index 000000000000..42be0255512b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> > > @@ -0,0 +1,61 @@
+> > > +# SPDX-License-Identifier: GPL-2.0+
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: NXP TJA11xx PHY
+> > > +
+> > > +maintainers:
+> > > +  - Andrew Lunn <andrew@lunn.ch>
+> > > +  - Florian Fainelli <f.fainelli@gmail.com>
+> > > +  - Heiner Kallweit <hkallweit1@gmail.com>
+> > > +
+> > > +description:
+> > > +  Bindings for NXP TJA11xx automotive PHYs
+> > > +
+> > > +allOf:
+> > > +  - $ref: ethernet-phy.yaml#
+> > > +
+> > > +patternProperties:
+> > > +  "^ethernet-phy@[0-9a-f]+$":
+> > > +    type: object
+> > > +    description: |
+> > > +      Some packages have multiple PHYs. Secondary PHY should be defi=
+nes as
+> > > +      subnode of the first (parent) PHY.
+> >=20
+> >=20
+> > There are QSGMII PHYs which have 4 PHYs embedded and AFAICT they are
+> > defined as 4 separate Ethernet PHY nodes and this would not be quite a
+> > big stretch to represent them that way compared to how they are.
+> >=20
+> > I would recommend doing the same thing and not bend the MDIO framework
+> > to support the registration of "nested" Ethernet PHY nodes.
+>=20
+> Hi Florian
+>=20
+> The issue here is the missing PHY ID in the secondary PHY. Because of
+> that, the secondary does not probe in the normal way. We need the
+> primary to be involved to some degree. It needs to register it. What
+> i'm not so clear on is if it just needs to register it, or if these
+> sub nodes are actually needed, given the current code.
 
-    Andrew
+There are a bit more dependencies:
+- PHY0 is responsible for health monitoring. If some thing wrong, it may
+  shut down complete chip.
+- We have shared reset. It make no sense to probe PHY1 before PHY0 with
+  more controlling options will be probed
+- It is possible bat dangerous to use PHY1 without PHY0.
+
+Regards,
+Oleksij
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--h5xqpdlw2psmzsqz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5rzd0ACgkQ4omh9DUa
+UbNpEw/+LHH8MzgLbJS3H6AZLbBx73nKWAZSeS0xsINrSfeBd5XgyBHIUOVugm0p
+wML9tUFMXvgemYhgB1vJkywFsB2gJjw1Yc2RwJI5W1j9agZmOIeAJX0cgbHhTBFP
+NX9DitLsN1+AnaTHj/q7OTbf3B/PBnh9qPjNrMjGuyEvN0UZP36dUw7mVe+KjUEo
+NkOejzVqDEvGB4Vnq0TjOx4aJla8bpOI95X4NAbGEMb9bTg/+9f/W3RBzVpKk9k4
+gi2qX3hAzryMmgVEOsPzjSZD5a4Y8oF5Ioc4PRxzFS8axtF38UMKYn2E3rTpkfBH
+xGnk5sQMoRv5wFLY6xkg61qrZEY1GzJWXTMWvo9oyjvRF1EIq90dFRGBCyouDJPu
+3lHmWY0WaoLw45E7UFonbEEt3aAaZ1tjhf4QT3cytgJmCTh1hcUmW0nzn9xQRmAQ
+eS7W+4Q4dK1mjn98BkUwyxgXYIo1SS4OQhHCpYpnvglTlwTZCbKgjEBE4nvLpTGn
++JlOvqAOZt0uxtnPRM5TJAriNIOYqXPmC+sP5CoVUOSNvYl+HBVZB7OYGOkJg1/N
+A9NlW5HOp1iFL2ytNDdE8yPDigjdCuJB+lW6qKtNr7a0YVgVltWpNaKlbpJhSngE
+GWwdUPlHkGPSm6IBh3aeWNPV42Lof8KuUgIpffFBjrsAF5J1308=
+=l+DD
+-----END PGP SIGNATURE-----
+
+--h5xqpdlw2psmzsqz--
