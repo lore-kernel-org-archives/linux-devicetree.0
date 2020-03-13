@@ -2,125 +2,130 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19BEC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 03:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEEFBC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 04:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E54720723
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 03:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A336A206E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 04:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="jMx/eEV5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rc+0rrd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgCMDif (ORCPT
+        id S1726300AbgCMEoA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 23:38:35 -0400
-Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:12848
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726299AbgCMDie (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Mar 2020 23:38:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xw3O+xCyXl1BH24oLTqPmx12huJNfZRW/EKLsDgz37VNx5QXvAjYQF9D2oUKyeLUa11H5XiGb7KKL57ZOC8+kraLSco+D0P6gXrRCv5O0aerR2ELzDi1qk2Els2aHXkHj4GghxgGozdXbS1Moa4DHV/gxR/mivV51Ft4uw1y/WwtNIC/tW4noMJOk6A0FLD1jj5BioDxvRGR8Luiv+1tNpDJ5+WTClwKRLTM0FISAZ4J2M3fz1A0XUcdtsyiBa7a81wWYwqyuTWzjLdxoPeBxir124LNNvK8MVRMkCkp4F7m5kwbFsJ7a8dYlHHBBIhx0XwsnxXPohEAHwvHrDCE1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=25tS1woafAGnBsmjPt2TuVzG3pkzNgKxfL60vBicqkc=;
- b=IJDIb0lL6QijCapYomR6qg4vTzovdqSahv6gsDHtMoxsMkKzmtQElOxsnWw1SzbRJcWfq8v5Qjl/ErG88U4bOrtnrW7HrWggNowNnway3M5cZlRUd2BUl06yy9+4+8O4s7Bu8NusZb8dEPQ1mSldQj4cXUezPUQX15dTTJ3OSoiSGvaObPgCY1Uc4zjQK0TwtBJa4+iGXa/Z328jNSrqnc4Z0+HqU5Q7EU5C0tqM9bSSZZPiuEt0uGzO328gaQZKbFu734z6HoSlmebnRfuhRSWCqYPWk65jTRS+MpYJ/YYgOiLtmhWpFBF4WjkDuZz1ynpnduJ5v3RRqDFn0KUfnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=25tS1woafAGnBsmjPt2TuVzG3pkzNgKxfL60vBicqkc=;
- b=jMx/eEV5UPupXev39wQ7+M/eB+lOgpIinTJuoDxU4mr/7oU01F6PSlEKmVxMkomxasMrBXTAY0liTnVnEQcy+gfkcmkU3wmfSsaZi8zKG9IBrazLorKZgsZXEpQ32Ygom8K5SwsrBLbfTqMKo+sLBHb6ecOSOt29PMSNulrBGeo=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4979.eurprd04.prod.outlook.com (20.177.40.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.17; Fri, 13 Mar 2020 03:38:30 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::548f:4941:d4eb:4c11%6]) with mapi id 15.20.2793.018; Fri, 13 Mar 2020
- 03:38:29 +0000
-From:   peng.fan@nxp.com
-To:     robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de,
-        shawnguo@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] ARM: dts: Makefile: build arm64 device tree
-Date:   Fri, 13 Mar 2020 11:31:54 +0800
-Message-Id: <1584070314-26495-1-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0158.apcprd06.prod.outlook.com
- (2603:1096:1:1e::12) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        Fri, 13 Mar 2020 00:44:00 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59434 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCMEoA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 00:44:00 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02D4hmM2019617;
+        Thu, 12 Mar 2020 23:43:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584074628;
+        bh=XpUwsYDH/tbEiw9bK9EeXQskLAoqJ6LteWN9NgyZdl4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rc+0rrd5mK+hpp1qXDueWMnJ+xVaNuRe4JNuHPRBgh+l2k9lxqWLzA+M4TzdAqh1l
+         4gcaA3aKJdqF5/bDmdHL/dt0N5s59RD+uSAHCOmll67WkRC0y22b+tb1M77vB0ovrP
+         crI699YeDGzoMFwL6tL9zop3mm8/WGFSMAd7UIM8=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02D4hluL001597
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Mar 2020 23:43:47 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
+ Mar 2020 23:43:47 -0500
+Received: from localhost.localdomain (10.64.41.19) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 12 Mar 2020 23:43:47 -0500
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02D4hhuU126810;
+        Thu, 12 Mar 2020 23:43:44 -0500
+Subject: Re: [Patch V5 00/21] Tegra XUSB OTG support
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nagarjuna Kristam <nkristam@nvidia.com>,
+        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581322307-11140-1-git-send-email-nkristam@nvidia.com>
+ <20200217085130.GJ1339021@ulmo> <20200227173226.GA1114616@ulmo>
+ <20200304070100.GA1271591@kroah.com> <20200312092232.GA1199023@ulmo>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <3e76c44e-f2b0-3c8a-c7b3-0461ff1176d3@ti.com>
+Date:   Fri, 13 Mar 2020 10:18:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0158.apcprd06.prod.outlook.com (2603:1096:1:1e::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2814.13 via Frontend Transport; Fri, 13 Mar 2020 03:38:26 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5429b77c-0beb-4d50-c3b4-08d7c6fffef7
-X-MS-TrafficTypeDiagnostic: AM0PR04MB4979:|AM0PR04MB4979:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB497929438D651F14C28037F988FA0@AM0PR04MB4979.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 034119E4F6
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39860400002)(396003)(136003)(346002)(199004)(81156014)(66476007)(478600001)(66556008)(8936002)(956004)(8676002)(52116002)(66946007)(2616005)(81166006)(4744005)(26005)(69590400007)(86362001)(6486002)(4326008)(36756003)(6666004)(316002)(6506007)(2906002)(5660300002)(9686003)(6512007)(186003)(16526019);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4979;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +gYT5VLb5ntIxlEwM+D0BK36fxtrg2ALS8Vb80aq5tayv5hD4rQAkHcitJaLIXcKdWO43ixnS/zDDG0/A7LRrYvFpNy8KwWR60ZwtYDLslRN5yvIIi9mEf0UhJW4IOiMCzq9B+6KN5n5qVsVY1j2IBRcIXrSzaz6sNIS9+K15stjWHRwEkAkoaQDcKaTNVF116+yJmxfEV5jnmAOU2wCZyu8rzAqfPFT3xGqe88FzplB3XYomiRIirfjCR5I35gBn8lLM1qBQ0QRaWV6ytuti7Q1kuKyoOE+e//Tlar9n7cDhDe227JgPHKS1hv9kj7JeydbSXUDei337JwtUxI5iGdjndV/COHiRShrhCfCtGmylMa7PrT9SJqZH2Z0ODNAyEzgq6ek+9kNrx97DCFYDgzkKtukh/F7xe6Pubxj0fLnWgozAqXyo+Kx1ecjan7H/WvOemDkVFuvyKohj+k+eVfO7p6SBnYMVNqWcGDZZMYRIJ2DEN2SGQFGbraBaAzI
-X-MS-Exchange-AntiSpam-MessageData: R7976ptjbbfFsFcMbIDNmBRI5ic1Ixs/U3dJBE6o30vL3I3HqsK9+vmrI3UmFh43SxM6FKlE4It2qW95E6OcbRm+CSUAAoKxD2EGHjWUAUF1+AU1TwmZ+nGojcABt52T9/2rb0zNAZ0hUS29lQ9kPw==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5429b77c-0beb-4d50-c3b4-08d7c6fffef7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2020 03:38:29.8181
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ntTFqXvUg+bDR69zV4EdPYQkW+dNzG5AxoYuZVTgojbfYYkcJ8Fw5+58clQoVB2TU0GHhRchAgJFxGnO0XkAmg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4979
+In-Reply-To: <20200312092232.GA1199023@ulmo>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+Hi,
 
-To support aarch32 mode linux on aarch64 hardware, we need
-build the device tree, so include the arm64 device tree path.
+On 12/03/20 2:52 pm, Thierry Reding wrote:
+> On Wed, Mar 04, 2020 at 08:01:00AM +0100, Greg Kroah-Hartman wrote:
+>> On Thu, Feb 27, 2020 at 06:32:26PM +0100, Thierry Reding wrote:
+>>> On Mon, Feb 17, 2020 at 09:51:30AM +0100, Thierry Reding wrote:
+>>>> On Mon, Feb 10, 2020 at 01:41:26PM +0530, Nagarjuna Kristam wrote:
+>>>>> This patch series adds OTG support on XUSB hardware used in Tegra210 and
+>>>>> Tegra186 SoCs.
+>>>>>
+>>>>> This patchset is composed with :
+>>>>>  - dt bindings of XUSB Pad Controller
+>>>>>  - dt bindings for XUSB device Driver
+>>>>>  - Tegra PHY driver for usb-role-switch and usb-phy
+>>>>>  - Tegra XUSB host mode driver to support OTG mode
+>>>>>  - Tegra XUSB device mode driver to use usb-phy and multi device mode
+>>>>>  - dts for XUSB pad controller
+>>>>>  - dts for xudc for Jetson TX1 and TX2
+>>>>>  - dts for Jetson-TK1
+>>>>>  - dts for Jetson-Nano
+>>>>>
+>>>>> Tegra Pad controller driver register for role switch updates for
+>>>>> OTG/peripheral capable USB ports and adds usb-phy for that corresponding
+>>>>> USB ports.
+>>>>>
+>>>>> Host and Device mode drivers gets usb-phy from USB2's phy and registers
+>>>>> notifier for role changes to perform corresponding role tasks.
+>>>>>
+>>>>> Order of merging Patches:
+>>>>> Please merge DT changes first followed Tegra PHY driver changes and then
+>>>>> USB driver changes.
+>>>>
+>>>> Felipe, Greg, Kishon,
+>>>>
+>>>> Given the runtime dependencies between these various parts, I could pick
+>>>> these up into the Tegra tree if you provide an Acked-by.
+>>>
+>>> Ping. Are you guys okay if I pick these up into the Tegra tree?
+>>
+>> That's up to Felipe, I have no opinion :)
+> 
+> Felipe, Kishon,
+> 
+> I've picked up the device tree changes into the Tegra tree. Let me know
+> if you also want me to pick up the USB and PHY driver changes.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+The PHY and USB changes can only go together since xhci-tegra.c seems to
+use an export symbol of xusb PHY. So I'm fine if someone takes the PHY
+changes along with USB changes.
 
-V1:
- This is just the device tree part. Besides this,
- I am not sure whether need to create a standalone defconfig under arm32
- for aarch32 mode linux on aarch64 hardware, or use multi_v7_defconfig.
- multi_v7_defconfig should be ok, need to include LPAE config.
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 
- arch/arm/boot/dts/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e874fbf5a1f3..ff0161c1df5f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1341,3 +1341,5 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-bmc-opp-zaius.dtb \
- 	aspeed-bmc-portwell-neptune.dtb \
- 	aspeed-bmc-quanta-q71l.dtb
-+
-+subdir-y += ../../../../arch/arm64/boot/dts
--- 
-2.16.4
-
+Thanks
+Kishon
