@@ -2,178 +2,196 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F30CC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479C8C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C943206E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:49:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YSCViQJZ"
+	by mail.kernel.org (Postfix) with ESMTP id 28699206B7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgCMStj (ORCPT
+        id S1726480AbgCMSxc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 14:49:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35148 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgCMStj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 14:49:39 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d5so13095243wrc.2
-        for <devicetree@vger.kernel.org>; Fri, 13 Mar 2020 11:49:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=n5mYtOCDtTMhVqWWtnAYZbOGWU/dWKTocyI6VDmvai0=;
-        b=YSCViQJZaGg2DUvC/y9nWfadomBbGcG6Yc2H1OzXvnfHCKOuZVoCgMGn/pjslTo8ya
-         0cl9MB7EDnEVotRPszN48POnmTkQGumr6H3obdLPoAWYA04nArvbSjghLml7sbLgiUxb
-         7XpW9HHmFFMVxGNAaXedK13YK/1mI8EIC0NIjBdgdQoCL77sjAW/ySBJYrlGyuv7WGlB
-         d6NJdvFcy9BFs6QhNYKyv7z3Thd1SgkVBg6YaK1lBR4L9Qcc2snz6UzGUpAY5cFgnbMT
-         Vsh/RJI2Ynibx4KNap+8iDk9GkG/+0n1sP5+aXXNQGxZA0vXUbyrBsYzH1wJ2H9n+gnb
-         YF9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=n5mYtOCDtTMhVqWWtnAYZbOGWU/dWKTocyI6VDmvai0=;
-        b=Mx4a0ZFTpAcbxUetVEdJkCvCtWwVrz7pGeDviZUasS59Ya/GTnGtYDZ8In4bMBSwQn
-         bEFJZc7uNRcI9hYMEYr6M5+tDOpK1hqWD/elnM3StOrZi8k4ohn2tdWST4seqyvd7Eh9
-         2cOIExvwwoxUkTt/NSqoSN5R1GFGv9F4xGmAOvZD07AiD7m70Y8rdhBp4pb8hpA9EU4D
-         CosclF9euQQ67ZaRGSAo/Pq+YnacH9KKraHAUiRDvaMXtyEkxkVYn6mx/NA4E8/SwduD
-         BfE2Q5a4D9xr8qlE2OTaKUQrDmwVNbQGKVD5Qeilk1M9DLPjFDLiRk7DqDZN0SgefkqA
-         syHA==
-X-Gm-Message-State: ANhLgQ31E9GCUZ2mC962/Ko1n1JGoFx3EDNEwsq0RvHu12UfUrpEeJro
-        c7tpdaz9sPn21uTig8IigPSBag==
-X-Google-Smtp-Source: ADFU+vvN3FXAj9zYtlcNhBdDVRPxlJ9d7a3bWAHNRudXD8VnpMI2LVPHlm82JRtMsY6Srjdmj0HUuA==
-X-Received: by 2002:a5d:56c4:: with SMTP id m4mr5691817wrw.182.1584125376843;
-        Fri, 13 Mar 2020 11:49:36 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id b203sm18625270wmc.45.2020.03.13.11.49.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 11:49:36 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 19:49:29 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     mark.rutland@arm.com, linux-pci@vger.kernel.org,
-        linux-mm@kvack.org, will@kernel.org,
-        Dimitri Sivanich <sivanich@sgi.com>, catalin.marinas@arm.com,
-        zhangfei.gao@linaro.org, devicetree@vger.kernel.org,
-        kevin.tian@intel.com, Arnd Bergmann <arnd@arndb.de>,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        iommu@lists.linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        robin.murphy@arm.com, christian.koenig@amd.com
-Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200313184929.GC2574@myrica>
-References: <20200228143935.GA2156@myrica>
- <20200228144844.GQ31668@ziepe.ca>
- <20200228150427.GF2156@myrica>
- <20200228151339.GS31668@ziepe.ca>
- <20200306095614.GA50020@myrica>
- <20200306130919.GJ31668@ziepe.ca>
- <20200306143556.GA99609@myrica>
- <20200306145245.GK31668@ziepe.ca>
- <20200306161519.GB99609@myrica>
- <20200306174239.GM31668@ziepe.ca>
+        Fri, 13 Mar 2020 14:53:32 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54553 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgCMSxc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 14:53:32 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jCpR4-0002TT-It; Fri, 13 Mar 2020 19:53:30 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jCpR1-0003M7-7O; Fri, 13 Mar 2020 19:53:27 +0100
+Date:   Fri, 13 Mar 2020 19:53:27 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Mark Rutland <mark.rutland@arm.com>,
+        Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
+Message-ID: <20200313185327.nawcp2imfldyhpqa@pengutronix.de>
+References: <20200313052252.25389-1-o.rempel@pengutronix.de>
+ <20200313052252.25389-2-o.rempel@pengutronix.de>
+ <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
+ <20200313181056.GA29732@lunn.ch>
+ <20200313181601.sbxdrqdjqfj3xn3e@pengutronix.de>
+ <15dafdcd-1979-bf35-3968-c80ffc113001@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yrnswsmuwla7326n"
 Content-Disposition: inline
-In-Reply-To: <20200306174239.GM31668@ziepe.ca>
+In-Reply-To: <15dafdcd-1979-bf35-3968-c80ffc113001@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 19:46:17 up 119 days, 10:04, 137 users,  load average: 0.20, 0.09,
+ 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 01:42:39PM -0400, Jason Gunthorpe wrote:
-> On Fri, Mar 06, 2020 at 05:15:19PM +0100, Jean-Philippe Brucker wrote:
-> > On Fri, Mar 06, 2020 at 10:52:45AM -0400, Jason Gunthorpe wrote:
-> > > On Fri, Mar 06, 2020 at 03:35:56PM +0100, Jean-Philippe Brucker wrote:
-> > > > On Fri, Mar 06, 2020 at 09:09:19AM -0400, Jason Gunthorpe wrote:
-> > > > > On Fri, Mar 06, 2020 at 10:56:14AM +0100, Jean-Philippe Brucker wrote:
-> > > > > > I tried to keep it simple like that: normally mmu_notifier_get() is called
-> > > > > > in bind(), and mmu_notifier_put() is called in unbind(). 
-> > > > > > 
-> > > > > > Multiple device drivers may call bind() with the same mm. Each bind()
-> > > > > > calls mmu_notifier_get(), obtains the same io_mm, and returns a new bond
-> > > > > > (a device<->mm link). Each bond is freed by calling unbind(), which calls
-> > > > > > mmu_notifier_put().
-> > > > > > 
-> > > > > > That's the most common case. Now if the process is killed and the mm
-> > > > > > disappears, we do need to avoid use-after-free caused by DMA of the
-> > > > > > mappings and the page tables. 
-> > > > > 
-> > > > > This is why release must do invalidate all - but it doesn't need to do
-> > > > > any more - as no SPTE can be established without a mmget() - and
-> > > > > mmget() is no longer possible past release.
-> > > > 
-> > > > In our case we don't have SPTEs, the whole pgd is shared between MMU and
-> > > > IOMMU (isolated using PASID tables).
-> > > 
-> > > Okay, but this just means that 'invalidate all' also requires
-> > > switching the PASID to use some pgd that is permanently 'all fail'.
-> > > 
-> > > > At this point no one told the device to stop working on this queue,
-> > > > it may still be doing DMA on this address space.
-> > > 
-> > > Sure, but there are lots of cases where a defective user space can
-> > > cause pages under active DMA to disappear, like munmap for
-> > > instance. Process exit is really no different, the PASID should take
-> > > errors and the device & driver should do whatever error flow it has.
-> > 
-> > We do have the possibility to shut things down in order, so to me this
-> > feels like a band-aid. 
-> 
-> ->release() is called by exit_mmap which is called by mmput. There are
-> over a 100 callsites to mmput() and I'm not totally sure what the
-> rules are for release(). We've run into problems before with things
-> like this.
 
-A concrete example of something that could go badly if mmput() takes too
-long would greatly help. Otherwise I'll have a hard time justifying the
-added complexity.
+--yrnswsmuwla7326n
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I wrote a prototype that removes the device driver callback from
-release(). It works with SMMUv3, but complicates the PASID descriptor
-code, which is already awful with my recent changes and this series.
+On Fri, Mar 13, 2020 at 11:20:35AM -0700, Florian Fainelli wrote:
+>=20
+>=20
+> On 3/13/2020 11:16 AM, Oleksij Rempel wrote:
+> > On Fri, Mar 13, 2020 at 07:10:56PM +0100, Andrew Lunn wrote:
+> >>>> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml =
+b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> >>>> new file mode 100644
+> >>>> index 000000000000..42be0255512b
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
+> >>>> @@ -0,0 +1,61 @@
+> >>>> +# SPDX-License-Identifier: GPL-2.0+
+> >>>> +%YAML 1.2
+> >>>> +---
+> >>>> +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
+> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>> +
+> >>>> +title: NXP TJA11xx PHY
+> >>>> +
+> >>>> +maintainers:
+> >>>> +  - Andrew Lunn <andrew@lunn.ch>
+> >>>> +  - Florian Fainelli <f.fainelli@gmail.com>
+> >>>> +  - Heiner Kallweit <hkallweit1@gmail.com>
+> >>>> +
+> >>>> +description:
+> >>>> +  Bindings for NXP TJA11xx automotive PHYs
+> >>>> +
+> >>>> +allOf:
+> >>>> +  - $ref: ethernet-phy.yaml#
+> >>>> +
+> >>>> +patternProperties:
+> >>>> +  "^ethernet-phy@[0-9a-f]+$":
+> >>>> +    type: object
+> >>>> +    description: |
+> >>>> +      Some packages have multiple PHYs. Secondary PHY should be def=
+ines as
+> >>>> +      subnode of the first (parent) PHY.
+> >>>
+> >>>
+> >>> There are QSGMII PHYs which have 4 PHYs embedded and AFAICT they are
+> >>> defined as 4 separate Ethernet PHY nodes and this would not be quite a
+> >>> big stretch to represent them that way compared to how they are.
+> >>>
+> >>> I would recommend doing the same thing and not bend the MDIO framework
+> >>> to support the registration of "nested" Ethernet PHY nodes.
+> >>
+> >> Hi Florian
+> >>
+> >> The issue here is the missing PHY ID in the secondary PHY. Because of
+> >> that, the secondary does not probe in the normal way. We need the
+> >> primary to be involved to some degree. It needs to register it. What
+> >> i'm not so clear on is if it just needs to register it, or if these
+> >> sub nodes are actually needed, given the current code.
+> >=20
+> > There are a bit more dependencies:
+> > - PHY0 is responsible for health monitoring. If some thing wrong, it may
+> >   shut down complete chip.
+> > - We have shared reset. It make no sense to probe PHY1 before PHY0 with
+> >   more controlling options will be probed
+> > - It is possible bat dangerous to use PHY1 without PHY0.
+>=20
+> probing is a software problem though. If we want to describe the PHY
+> package more correctly, we should be using a container node, something
+> like this maybe:
+>
+> phy-package {
+> 	compatible =3D "nxp,tja1102";
+>=20
+> 	ethernet-phy@4 {
+> 		reg =3D <4>;
+> 	};
+>=20
+> 	ethernet-phy@5 {
+> 		reg =3D <5>;
+> 	};
+> };
 
-> IMHO, due to this, it is best for release to be simple and have
-> conservative requirements on context like all the other notifier
-> callbacks. It is is not a good place to put complex HW fencing driver
-> code.
-> 
-> In particular that link you referenced is suggesting the driver tear
-> down could take minutes - IMHO it is not OK to block mmput() for
-> minutes.
-> 
-> > The idea has come up before though [1], and I'm not strongly opposed
-> > to this model, but I'm still not convinced it's necessary. It does
-> > add more complexity to IOMMU drivers, to avoid printing out the
-> > errors that we wouldn't otherwise see, whereas device drivers need
-> > in any case to implement the logic that forces stop DMA.
-> 
-> Errors should not be printed to the kernel log for PASID cases
-> anyhow. PASID will be used by unpriv user, and unpriv user should not
-> be able to trigger kernel prints at will, eg by doing dma to nmap VA
-> or whatever. 
+Yes, this is almost the same as it is currently done:
 
-I agree. There is a difference, though, between invalid mappings and the
-absence of a pgd. The former comes from userspace issuing DMA on unmapped
-buffers, while the latter is typically a device/driver error which
-normally needs to be reported.
+phy-package {
+	reg =3D <4>;
+=20
+ 	ethernet-phy@5 {
+ 		reg =3D <5>;
+ 	};
+};
 
-On Arm SMMUv3 they are handled differently by the hardware. But instead of
-disabling the whole PASID context on mm exit, we can quietly abort
-incoming transactions while waiting for unbind().
+Because the primary PHY0 can be autodetected by the bus scan.
+But I have nothing against your suggestions. Please, some one should say the
+last word here, how exactly it should be implemented?
 
-And I think the other IOMMUs treat invalid PASID descriptor the same as
-invalid translation table descriptor. At least VT-d quietly returns a
-no-translation response to ATS TR and rejects PRI PR. I haven't found the
-equivalent in the AMD IOMMU spec yet.
+Regards,
+Oleksij
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-Thanks,
-Jean
+--yrnswsmuwla7326n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5r1qMACgkQ4omh9DUa
+UbOGdRAAmDhBqloB1t+KikfgqS6pVFUKUz5Jizm+mm7mEVGA/O7i42ZyW68QDm6m
+ZUqN7a8ZHqnqKH0Qs94ZroMwmcVyfYOnX3Wpryh71s3maHvyow/c03t2cJByiFal
+OvvE0eE9fOBH3ZZEmqUEA4yAlr62Q1zsJH9SgY5ZKn+4rJfIvHboKokynKejvQkX
+1QrZa9bMqVu6odPjpwkTO6aCesUN2ThtltoEC4jOxAbMm/Su9jIY5jnw+Cs88m2t
+G1QQAvneSlRzBd2WBpydUa5rvCvDW4vMmzB5ZGcTJYxVQCfrdDA73n1GTWkqLf0F
+NDwgazuU7zEd7ed+f3A6CwyocyJjbF1Dty24saK4Z7BZfbVUxKZDD0W6ALvDV3Yu
+tcpIq9u4eAYNJJCKF+MnDlkfMkHDOKcGLpgHHs3drB8qUlYLlKq41ltpkO5LuMCj
+T8et0XQ/FTnXS/hho9X6c7YFzmZTwNhkbvrJvy9YyU9L942YX7kpqeytSNvLGJTI
+P8pzutpMR9E/2qPgYx57ujRWjxrwFVze13LDKCStMXwfXfpTfJDFQE3zvuy1t+MK
+qZ1bmJ0K2x7nEVHGzrmiIdemsLDYBPc2WW4s3P8+5hqgU9FpNnv9f9DXFPP3/fGk
+zIaZN08rxT+Cpu2LguR695vYAEJEVoQMXqKj+6GxUxk1Oed4zko=
+=Cgfa
+-----END PGP SIGNATURE-----
+
+--yrnswsmuwla7326n--
