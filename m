@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11EAC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 05:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562E1C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 05:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F4A20737
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 05:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAF7206FA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 05:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgCMFco (ORCPT
+        id S1726467AbgCMFci (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 01:32:44 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44713 "EHLO
+        Fri, 13 Mar 2020 01:32:38 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55927 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgCMFcn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 01:32:43 -0400
+        with ESMTP id S1726300AbgCMFci (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 01:32:38 -0400
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jCcvr-0001A7-NA; Fri, 13 Mar 2020 06:32:27 +0100
+        id 1jCcvs-0001Af-PN; Fri, 13 Mar 2020 06:32:28 +0100
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jCcvr-00028y-5w; Fri, 13 Mar 2020 06:32:27 +0100
+        id 1jCcvs-000298-BY; Fri, 13 Mar 2020 06:32:28 +0100
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
@@ -45,9 +45,9 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v2 1/2] ARM: dts: imx6dl-riotboard: properly define rgmii PHY
-Date:   Fri, 13 Mar 2020 06:32:23 +0100
-Message-Id: <20200313053224.8172-2-o.rempel@pengutronix.de>
+Subject: [PATCH v2 2/2] ARM: dts: imx6q-marsboard: properly define rgmii PHY
+Date:   Fri, 13 Mar 2020 06:32:24 +0100
+Message-Id: <20200313053224.8172-3-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200313053224.8172-1-o.rempel@pengutronix.de>
 References: <20200313053224.8172-1-o.rempel@pengutronix.de>
@@ -68,22 +68,18 @@ it work properly.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- arch/arm/boot/dts/imx6dl-riotboard.dts | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6q-marsboard.dts | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
-index 829654e1835a..065d3ab0f50a 100644
---- a/arch/arm/boot/dts/imx6dl-riotboard.dts
-+++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
-@@ -89,11 +89,25 @@ &fec {
+diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/imx6q-marsboard.dts
+index 84b30bd6908f..1f31d86a217b 100644
+--- a/arch/arm/boot/dts/imx6q-marsboard.dts
++++ b/arch/arm/boot/dts/imx6q-marsboard.dts
+@@ -111,8 +111,21 @@ &fec {
  	pinctrl-names = "default";
  	pinctrl-0 = <&pinctrl_enet>;
  	phy-mode = "rgmii-id";
 -	phy-reset-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
-+	phy-handle = <&rgmii_phy>;
- 	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
- 			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
- 	fsl,err006687-workaround-present;
  	status = "okay";
 +
 +	mdio {
@@ -101,7 +97,7 @@ index 829654e1835a..065d3ab0f50a 100644
 +	};
  };
  
- &gpio1 {
+ &hdmi {
 -- 
 2.25.1
 
