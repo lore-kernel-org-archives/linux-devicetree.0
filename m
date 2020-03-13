@@ -2,456 +2,420 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B67C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17523C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54F69206B1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF062206B1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:17:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="QWyeXvAy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gQkal9PT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbgCMIQU (ORCPT
+        id S1726485AbgCMIRf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:16:20 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:60833 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726371AbgCMIQU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 04:16:20 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id CfUKj1GG5hVf8CfUNjO8bW; Fri, 13 Mar 2020 09:16:17 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1584087377; bh=nP79N0yOwSx8yKGwqAW504OdT/Y72TUWVCiVmG3B1A4=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=QWyeXvAy9Guf59EIPaFULSKa6qK31U3k2LLk7Jock2ge5n5DcKjiyCTebt+wY8iz1
-         BOCkCRQPC1aitJ0UL/eF6RWWKCG2725+S9vqRv31s2TGXnBC8Tqq5HgU1U7Der+LeX
-         qd3qz19cif3ZAIg7IbVli7020SRQxbBZoLqOp9yFEIdbZfQNYsZt1Ngt6SvzkfScTn
-         IzamoCLGQMk8EPt6pkUrU9BGRhGd0v+Xml4j0pe/lO+1EdC/+jzu8oyeanidqaG56R
-         vDWS8xf6qIHxSPjn2qRqa47Qer494bH6E4VBXxOj3QrJuRIzEbPyIkew5hsWK1mgoz
-         bDw/pKJVyAwpQ==
-Subject: Re: [PATCH 2/8] media: adv748x: add audio mute control and output
- selection ioctls
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
- <20200113141521.GC3606@pflmari>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <ff34078d-895d-08c8-c64f-768e75388038@xs4all.nl>
-Date:   Fri, 13 Mar 2020 09:16:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 13 Mar 2020 04:17:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42620 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgCMIRe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 04:17:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02D8HV4S121316;
+        Fri, 13 Mar 2020 03:17:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584087451;
+        bh=LI2rZkfC4J047jlh5L4xgWEFE5MDz7Ta72s6fzJJ89U=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=gQkal9PTe91grUlMn7nl8WsYepSBCX8rQo9WoOrtrOYD/K6QYCLYTJsOqxeAYkHBU
+         efSwpDFrkj/YAaLQc+VQNAdbA4plN8m1iEAELAlr2fm7f2I0QSzwm2uTDtiqjPRhCm
+         44dKH9h8mOEhaO/YzXfT+e4XiiztXjPj7O56JDPU=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02D8HVZh087633
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Mar 2020 03:17:31 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
+ Mar 2020 03:17:31 -0500
+Received: from localhost.localdomain (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 13 Mar 2020 03:17:31 -0500
+Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02D8HQlX097835;
+        Fri, 13 Mar 2020 03:17:28 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <s-anna@ti.com>, <afd@ti.com>, Rob Herring <robh@kernel.org>,
+        <devicetree@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv8 01/15] dt-bindings: remoteproc: Add OMAP remoteproc bindings
+Date:   Fri, 13 Mar 2020 10:17:04 +0200
+Message-ID: <20200313081718.30612-2-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200313081718.30612-1-t-kristo@ti.com>
+References: <20200313081718.30612-1-t-kristo@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200113141521.GC3606@pflmari>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKfeYNFFGRobPFSOTEI7B9w8TK8aojO5c062aoWeZ3/mtuWJfxdHCSCOUpa16sOCyNspr5wgKwX5TT40iEWHjUh+S5npKQCL8BLzkTwNpIyskWxt7HgN
- hxFnIp1iMExxpo95KQnf1bWvjbsLiCVONyJ3XK+4j3GlqPn4IujImFC+Wb7FqDBzFtAy+9CdSbjMDN4kLWphnYL9QwjzLEw+RNXZLWCGPF4nUag6TV1jDsJN
- TkakaYHL6wsXTi95DfE1puENWphP4SR12XK7wM9OOfjJ+i6WiQ4LDrckS1zzpY+yTLWXYx1OQne/p/q+CG8d6LH+fgWhQKFTIvMJ0lCH6rlSmNHTwS4kSmms
- HNUoDJSF46NxoHf6ZMsthh5eXpPJYVexb/SgxgYEM0pPvBVFR+KcdCiKwimsvozXxFmEwFErjro38ULkqxAWgA6OA+WBv+ZIf5dbSNRMSK+2Y0Vf2kHRPdiO
- UN4MqYGa2MX1p6TQqCatFZl5XLmGq6CrHQZhhfK0rBQdPg4yupf7Od+AsD6wATpQhXAxqm7RLDTiV90pK9dravuzk55J85hIrbyfeXN7ueSLS7l62HRgtxzB
- 620=
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alex,
+From: Suman Anna <s-anna@ti.com>
 
-I apologize for the (very) slow reply, but better late than never.
+Add the device tree bindings document for the IPU and DSP
+remote processor devices on OMAP4+ SoCs.
 
-On 1/13/20 3:15 PM, Alex Riesen wrote:
-> This change implements audio-related V4L2 ioctls for the HDMI subdevice.
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Suman Anna <s-anna@ti.com>
+[t-kristo@ti.com: converted to schema]
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Reviewed-by: Andrew F. Davis <afd@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../remoteproc/ti,omap-remoteproc.yaml        | 324 ++++++++++++++++++
+ 1 file changed, 324 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
 
-This is really where things go wrong. These V4L2 audio ioctls are meant for
-old PCI TV tuner devices where the audio was implemented as audio jack outputs
-that are typically looped back to audio inputs on a (PCI) soundcard. And when
-these ioctls were designed ALSA didn't even exist.
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+new file mode 100644
+index 000000000000..084960a8f17a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+@@ -0,0 +1,324 @@
++# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/remoteproc/ti,omap-remoteproc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: OMAP4+ Remoteproc Devices
++
++maintainers:
++  - Suman Anna <s-anna@ti.com>
++
++description:
++  The OMAP family of SoCs usually have one or more slave processor sub-systems
++  that are used to offload some of the processor-intensive tasks, or to manage
++  other hardware accelerators, for achieving various system level goals.
++
++  The processor cores in the sub-system are usually behind an IOMMU, and may
++  contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
++  caches, an Interrupt Controller, a Cache Controller etc.
++
++  The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
++  sub-system. The DSP processor sub-system can contain any of the TI's C64x,
++  C66x or C67x family of DSP cores as the main execution unit. The IPU processor
++  sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core
++  Cortex-M4 processors.
++
++  Each remote processor sub-system is represented as a single DT node. Each node
++  has a number of required or optional properties that enable the OS running on
++  the host processor (MPU) to perform the device management of the remote
++  processor and to communicate with the remote processor. The various properties
++  can be classified as constant or variable. The constant properties are
++  dictated by the SoC and does not change from one board to another having the
++  same SoC. Examples of constant properties include 'iommus', 'reg'. The
++  variable properties are dictated by the system integration aspects such as
++  memory on the board, or configuration used within the corresponding firmware
++  image. Examples of variable properties include 'mboxes', 'memory-region',
++  'timers', 'watchdog-timers' etc.
++
++properties:
++  compatible:
++    enum:
++      - ti,omap4-dsp
++      - ti,omap5-dsp
++      - ti,dra7-dsp
++      - ti,omap4-ipu
++      - ti,omap5-ipu
++      - ti,dra7-ipu
++
++  iommus:
++    minItems: 1
++    maxItems: 2
++    description: |
++      phandles to OMAP IOMMU nodes, that need to be programmed
++      for this remote processor to access any external RAM memory or
++      other peripheral device address spaces. This property usually
++      has only a single phandle. Multiple phandles are used only in
++      cases where the sub-system has different ports for different
++      sub-modules within the processor sub-system (eg: DRA7 DSPs),
++      and need the same programming in both the MMUs.
++
++  mboxes:
++    minItems: 1
++    maxItems: 2
++    description: |
++      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
++      communication with the remote processor. The specifier format is
++      as per the bindings,
++      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
++      This property should match with the sub-mailbox node used in
++      the firmware image.
++
++  clocks:
++    description: |
++      Main functional clock for the remote processor
++
++  resets:
++    description: |
++      Reset handles for the remote processor
++
++  firmware-name:
++    description: |
++      Default name of the firmware to load to the remote processor.
++
++# Optional properties:
++# --------------------
++# Some of these properties are mandatory on some SoCs, and some are optional
++# depending on the configuration of the firmware image to be executed on the
++# remote processor. The conditions are mentioned for each property.
++#
++# The following are the optional properties:
++
++  memory-region:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      phandle to the reserved memory node to be associated
++      with the remoteproc device. The reserved memory node
++      can be a CMA memory node, and should be defined as
++      per the bindings,
++      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++
++  reg:
++    description: |
++      Address space for any remoteproc memories present on
++      the SoC. Should contain an entry for each value in
++      'reg-names'. These are mandatory for all DSP and IPU
++      processors that have them (OMAP4/OMAP5 DSPs do not have
++      any RAMs)
++
++  reg-names:
++    description: |
++      Required names for each of the address spaces defined in
++      the 'reg' property. Expects the names from the following
++      list, in the specified order, each representing the corresponding
++      internal RAM memory region.
++    minItems: 1
++    maxItems: 3
++    items:
++      - const: l2ram
++      - const: l1pram
++      - const: l1dram
++
++  ti,bootreg:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      Should be a triple of the phandle to the System Control
++      Configuration region that contains the boot address
++      register, the register offset of the boot address
++      register within the System Control module, and the bit
++      shift within the register. This property is required for
++      all the DSP instances on OMAP4, OMAP5 and DRA7xx SoCs.
++
++  ti,autosuspend-delay-ms:
++    description: |
++      Custom autosuspend delay for the remoteproc in milliseconds.
++      Recommended values is preferable to be in the order of couple
++      of seconds. A negative value can also be used to disable the
++      autosuspend behavior.
++
++  ti,timers:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      One or more phandles to OMAP DMTimer nodes, that serve
++      as System/Tick timers for the OS running on the remote
++      processors. This will usually be a single timer if the
++      processor sub-system is running in SMP mode, or one per
++      core in the processor sub-system. This can also be used
++      to reserve specific timers to be dedicated to the
++      remote processors.
++
++      This property is mandatory on remote processors requiring
++      external tick wakeup, and to support Power Management
++      features. The timers to be used should match with the
++      timers used in the firmware image.
++
++  ti,watchdog-timers:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      One or more phandles to OMAP DMTimer nodes, used to
++      serve as Watchdog timers for the processor cores. This
++      will usually be one per executing processor core, even
++      if the processor sub-system is running a SMP OS.
++
++      The timers to be used should match with the watchdog
++      timers used in the firmware image.
++
++if:
++  properties:
++    compatible:
++      enum:
++        - ti,dra7-dsp
++then:
++  properties:
++    reg:
++      minItems: 3
++      maxItems: 3
++  required:
++    - reg
++    - reg-names
++    - ti,bootreg
++
++else:
++  if:
++    properties:
++      compatible:
++        enum:
++          - ti,omap4-ipu
++          - ti,omap5-ipu
++          - ti,dra7-ipu
++  then:
++    properties:
++      reg:
++        minItems: 1
++        maxItems: 1
++      ti,bootreg: false
++    required:
++      - reg
++      - reg-names
++
++  else:
++    properties:
++      reg: false
++    required:
++      - ti,bootreg
++
++required:
++  - compatible
++  - iommus
++  - mboxes
++  - clocks
++  - resets
++  - firmware-name
++
++additionalProperties: false
++
++examples:
++  - |
++
++    //Example 1: OMAP4 DSP
++
++    /* DSP Reserved Memory node */
++    #include <dt-bindings/clock/omap4.h>
++    reserved-memory {
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        dsp_memory_region: dsp-memory@98000000 {
++            compatible = "shared-dma-pool";
++            reg = <0x98000000 0x800000>;
++            reusable;
++        };
++    };
++
++    /* DSP node */
++    ocp {
++        dsp: dsp {
++            compatible = "ti,omap4-dsp";
++            ti,bootreg = <&scm_conf 0x304 0>;
++            iommus = <&mmu_dsp>;
++            mboxes = <&mailbox &mbox_dsp>;
++            memory-region = <&dsp_memory_region>;
++            ti,timers = <&timer5>;
++            ti,watchdog-timers = <&timer6>;
++            clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
++            resets = <&prm_tesla 0>, <&prm_tesla 1>;
++            firmware-name = "omap4-dsp-fw.xe64T";
++        };
++    };
++
++  - |+
++
++    //Example 2: OMAP5 IPU
++
++    /* IPU Reserved Memory node */
++    #include <dt-bindings/clock/omap5.h>
++    reserved-memory {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        ipu_memory_region: ipu-memory@95800000 {
++            compatible = "shared-dma-pool";
++            reg = <0 0x95800000 0 0x3800000>;
++            reusable;
++        };
++    };
++
++    /* IPU node */
++    ocp {
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        ipu: ipu@55020000 {
++            compatible = "ti,omap5-ipu";
++            reg = <0x55020000 0x10000>;
++            reg-names = "l2ram";
++            iommus = <&mmu_ipu>;
++            mboxes = <&mailbox &mbox_ipu>;
++            memory-region = <&ipu_memory_region>;
++            ti,timers = <&timer3>, <&timer4>;
++            ti,watchdog-timers = <&timer9>, <&timer11>;
++            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
++            resets = <&prm_core 2>;
++            firmware-name = "omap5-ipu-fw.xem4";
++        };
++    };
++
++  - |+
++
++    //Example 3: DRA7xx/AM57xx DSP
++
++    /* DSP1 Reserved Memory node */
++    #include <dt-bindings/clock/dra7.h>
++    reserved-memory {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        dsp1_memory_region: dsp1-memory@99000000 {
++            compatible = "shared-dma-pool";
++            reg = <0x0 0x99000000 0x0 0x4000000>;
++            reusable;
++        };
++    };
++
++    /* DSP1 node */
++    ocp {
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        dsp1: dsp@40800000 {
++            compatible = "ti,dra7-dsp";
++            reg = <0x40800000 0x48000>,
++                  <0x40e00000 0x8000>,
++                  <0x40f00000 0x8000>;
++            reg-names = "l2ram", "l1pram", "l1dram";
++            ti,bootreg = <&scm_conf 0x55c 0>;
++            iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
++            mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
++            memory-region = <&dsp1_memory_region>;
++            ti,timers = <&timer5>;
++            ti,watchdog-timers = <&timer10>;
++            resets = <&prm_dsp1 0>;
++            clocks = <&dsp1_clkctrl DRA7_DSP1_MMU0_DSP1_CLKCTRL 0>;
++            firmware-name = "dra7-dsp1-fw.xe66";
++        };
++    };
+-- 
+2.17.1
 
-None of that applies here.
-
-Generally an hdmi driver will configure the i2s audio automatically, which is
-typically connected to the SoC and controlled by the ALSA driver of the SoC,
-but there may well be missing features (audio never got a lot of attention in
-hdmi receivers). So what I would like to know is: what features are missing?
-
-Anything missing can likely be resolved by adding HDMI audio specific V4L2 controls,
-which would be the right approach for this.
-
-So I would expect to see a proposal for V4L2_CID_DV_RX_AUDIO_ controls to be
-added here:
-
-https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/ext-ctrls-dv.html
-
-Regards,
-
-	Hans
-
-> 
-> The master audio clock is configured for 256fs, as supported by the only
-> device available at the moment. For the same reason, the TDM slot is
-> formatted using left justification of its bits.
-> 
-> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-> ---
->  drivers/media/i2c/adv748x/adv748x-core.c |   6 +
->  drivers/media/i2c/adv748x/adv748x-hdmi.c | 182 +++++++++++++++++++++++
->  drivers/media/i2c/adv748x/adv748x.h      |  42 ++++++
->  3 files changed, 230 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-> index bc49aa93793c..b6067ffb1e0d 100644
-> --- a/drivers/media/i2c/adv748x/adv748x-core.c
-> +++ b/drivers/media/i2c/adv748x/adv748x-core.c
-> @@ -150,6 +150,12 @@ static int adv748x_write_check(struct adv748x_state *state, u8 page, u8 reg,
->  	return *error;
->  }
->  
-> +int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg, u8 mask,
-> +			u8 value)
-> +{
-> +	return regmap_update_bits(state->regmap[page], reg, mask, value);
-> +}
-> +
->  /* adv748x_write_block(): Write raw data with a maximum of I2C_SMBUS_BLOCK_MAX
->   * size to one or more registers.
->   *
-> diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-> index c557f8fdf11a..9bc9237c9116 100644
-> --- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
-> +++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-> @@ -5,6 +5,7 @@
->   * Copyright (C) 2017 Renesas Electronics Corp.
->   */
->  
-> +#include <linux/version.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  
-> @@ -603,11 +604,186 @@ static const struct v4l2_subdev_pad_ops adv748x_pad_ops_hdmi = {
->  	.enum_dv_timings = adv748x_hdmi_enum_dv_timings,
->  };
->  
-> +static int adv748x_hdmi_audio_mute(struct adv748x_hdmi *hdmi, int enable)
-> +{
-> +	struct adv748x_state *state = adv748x_hdmi_to_state(hdmi);
-> +
-> +	return hdmi_update(state, ADV748X_HDMI_MUTE_CTRL,
-> +			   ADV748X_HDMI_MUTE_CTRL_MUTE_AUDIO,
-> +			   enable ? 0xff : 0);
-> +}
-> +
-> +
-> +#define HDMI_AOUT_NONE 0
-> +#define HDMI_AOUT_I2S 1
-> +#define HDMI_AOUT_I2S_TDM 2
-> +
-> +static int adv748x_hdmi_enumaudout(struct adv748x_hdmi *hdmi,
-> +				   struct v4l2_audioout *a)
-> +{
-> +	switch (a->index) {
-> +	case HDMI_AOUT_NONE:
-> +		strlcpy(a->name, "None", sizeof(a->name));
-> +		break;
-> +	case HDMI_AOUT_I2S:
-> +		strlcpy(a->name, "I2S/stereo", sizeof(a->name));
-> +		break;
-> +	case HDMI_AOUT_I2S_TDM:
-> +		strlcpy(a->name, "I2S-TDM/multichannel", sizeof(a->name));
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int adv748x_hdmi_g_audout(struct adv748x_hdmi *hdmi,
-> +				 struct v4l2_audioout *a)
-> +{
-> +	a->index = hdmi->audio_out;
-> +	return adv748x_hdmi_enumaudout(hdmi, a);
-> +}
-> +
-> +static int set_audio_pads_state(struct adv748x_state *state, int on)
-> +{
-> +	return io_update(state, ADV748X_IO_PAD_CONTROLS,
-> +			 ADV748X_IO_PAD_CONTROLS_TRI_AUD |
-> +			 ADV748X_IO_PAD_CONTROLS_PDN_AUD,
-> +			 on ? 0 : 0xff);
-> +}
-> +
-> +static int set_dpll_mclk_fs(struct adv748x_state *state, int fs)
-> +{
-> +	if (fs % 128 || fs > 768)
-> +		return -EINVAL;
-> +	return dpll_update(state, ADV748X_DPLL_MCLK_FS,
-> +			   ADV748X_DPLL_MCLK_FS_N_MASK, (fs / 128) - 1);
-> +}
-> +
-> +static int set_i2s_format(struct adv748x_state *state, uint outmode,
-> +			  uint bitwidth)
-> +{
-> +	return hdmi_update(state, ADV748X_HDMI_I2S,
-> +			   ADV748X_HDMI_I2SBITWIDTH_MASK |
-> +			   ADV748X_HDMI_I2SOUTMODE_MASK,
-> +			   (outmode << ADV748X_HDMI_I2SOUTMODE_SHIFT) |
-> +			   bitwidth);
-> +}
-> +
-> +static int set_i2s_tdm_mode(struct adv748x_state *state, int is_tdm)
-> +{
-> +	int ret;
-> +
-> +	ret = hdmi_update(state, ADV748X_HDMI_AUDIO_MUTE_SPEED,
-> +			  ADV748X_MAN_AUDIO_DL_BYPASS |
-> +			  ADV748X_AUDIO_DELAY_LINE_BYPASS,
-> +			  is_tdm ? 0xff : 0);
-> +	if (ret < 0)
-> +		goto fail;
-> +	ret = hdmi_update(state, ADV748X_HDMI_REG_6D,
-> +			  ADV748X_I2S_TDM_MODE_ENABLE,
-> +			  is_tdm ? 0xff : 0);
-> +	if (ret < 0)
-> +		goto fail;
-> +	ret = set_i2s_format(state, ADV748X_I2SOUTMODE_LEFT_J, 24);
-> +fail:
-> +	return ret;
-> +}
-> +
-> +static int set_audio_out(struct adv748x_state *state, int aout)
-> +{
-> +	int ret;
-> +
-> +	switch (aout) {
-> +	case HDMI_AOUT_NONE:
-> +		ret = set_audio_pads_state(state, 0);
-> +		break;
-> +	case HDMI_AOUT_I2S:
-> +		ret = set_dpll_mclk_fs(state, 256);
-> +		if (ret < 0)
-> +			goto fail;
-> +		ret = set_i2s_tdm_mode(state, 1);
-> +		if (ret < 0)
-> +			goto fail;
-> +		ret = set_audio_pads_state(state, 1);
-> +		if (ret < 0)
-> +			goto fail;
-> +		break;
-> +	case HDMI_AOUT_I2S_TDM:
-> +		ret = set_dpll_mclk_fs(state, 256);
-> +		if (ret < 0)
-> +			goto fail;
-> +		ret = set_i2s_tdm_mode(state, 1);
-> +		if (ret < 0)
-> +			goto fail;
-> +		ret = set_audio_pads_state(state, 1);
-> +		if (ret < 0)
-> +			goto fail;
-> +		break;
-> +	default:
-> +		ret = -EINVAL;
-> +		goto fail;
-> +	}
-> +	return 0;
-> +fail:
-> +	return ret;
-> +}
-> +
-> +static int adv748x_hdmi_s_audout(struct adv748x_hdmi *hdmi,
-> +				 const struct v4l2_audioout *a)
-> +{
-> +	struct adv748x_state *state = adv748x_hdmi_to_state(hdmi);
-> +	int ret = set_audio_out(state, a->index);
-> +
-> +	if (ret == 0)
-> +		hdmi->audio_out = a->index;
-> +	return ret;
-> +}
-> +
-> +static long adv748x_hdmi_querycap(struct adv748x_hdmi *hdmi,
-> +				  struct v4l2_capability *cap)
-> +{
-> +	struct adv748x_state *state = adv748x_hdmi_to_state(hdmi);
-> +
-> +	cap->version = LINUX_VERSION_CODE;
-> +	strlcpy(cap->driver, state->dev->driver->name, sizeof(cap->driver));
-> +	strlcpy(cap->card, "hdmi", sizeof(cap->card));
-> +	snprintf(cap->bus_info, sizeof(cap->bus_info), "i2c:%d-%04x",
-> +		 i2c_adapter_id(state->client->adapter),
-> +		 state->client->addr);
-> +	cap->device_caps = V4L2_CAP_AUDIO | V4L2_CAP_VIDEO_CAPTURE;
-> +	cap->capabilities = V4L2_CAP_DEVICE_CAPS;
-> +	return 0;
-> +}
-> +
-> +static long adv748x_hdmi_ioctl(struct v4l2_subdev *sd,
-> +			       unsigned int cmd, void *arg)
-> +{
-> +	struct adv748x_hdmi *hdmi = adv748x_sd_to_hdmi(sd);
-> +
-> +	switch (cmd) {
-> +	case VIDIOC_ENUMAUDOUT:
-> +		return adv748x_hdmi_enumaudout(hdmi, arg);
-> +	case VIDIOC_S_AUDOUT:
-> +		return adv748x_hdmi_s_audout(hdmi, arg);
-> +	case VIDIOC_G_AUDOUT:
-> +		return adv748x_hdmi_g_audout(hdmi, arg);
-> +	case VIDIOC_QUERYCAP:
-> +		return adv748x_hdmi_querycap(hdmi, arg);
-> +	}
-> +	return -ENOTTY;
-> +}
-> +
-> +static const struct v4l2_subdev_core_ops adv748x_core_ops_hdmi = {
-> +	.ioctl = adv748x_hdmi_ioctl,
-> +};
-> +
->  /* -----------------------------------------------------------------------------
->   * v4l2_subdev_ops
->   */
->  
->  static const struct v4l2_subdev_ops adv748x_ops_hdmi = {
-> +	.core = &adv748x_core_ops_hdmi,
->  	.video = &adv748x_video_ops_hdmi,
->  	.pad = &adv748x_pad_ops_hdmi,
->  };
-> @@ -633,6 +809,8 @@ static int adv748x_hdmi_s_ctrl(struct v4l2_ctrl *ctrl)
->  	int ret;
->  	u8 pattern;
->  
-> +	if (ctrl->id == V4L2_CID_AUDIO_MUTE)
-> +		return adv748x_hdmi_audio_mute(hdmi, ctrl->val);
->  	/* Enable video adjustment first */
->  	ret = cp_clrset(state, ADV748X_CP_VID_ADJ,
->  			ADV748X_CP_VID_ADJ_ENABLE,
-> @@ -697,6 +875,8 @@ static int adv748x_hdmi_init_controls(struct adv748x_hdmi *hdmi)
->  	v4l2_ctrl_new_std(&hdmi->ctrl_hdl, &adv748x_hdmi_ctrl_ops,
->  			  V4L2_CID_HUE, ADV748X_CP_HUE_MIN,
->  			  ADV748X_CP_HUE_MAX, 1, ADV748X_CP_HUE_DEF);
-> +	v4l2_ctrl_new_std(&hdmi->ctrl_hdl, &adv748x_hdmi_ctrl_ops,
-> +			  V4L2_CID_AUDIO_MUTE, 0, 1, 1, 1);
->  
->  	/*
->  	 * Todo: V4L2_CID_DV_RX_POWER_PRESENT should also be supported when
-> @@ -755,6 +935,8 @@ int adv748x_hdmi_init(struct adv748x_hdmi *hdmi)
->  
->  void adv748x_hdmi_cleanup(struct adv748x_hdmi *hdmi)
->  {
-> +	adv748x_hdmi_audio_mute(hdmi, 1);
-> +	set_audio_out(adv748x_hdmi_to_state(hdmi), HDMI_AOUT_NONE);
->  	v4l2_device_unregister_subdev(&hdmi->sd);
->  	media_entity_cleanup(&hdmi->sd.entity);
->  	v4l2_ctrl_handler_free(&hdmi->ctrl_hdl);
-> diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-> index db6346a06351..fdda6982e437 100644
-> --- a/drivers/media/i2c/adv748x/adv748x.h
-> +++ b/drivers/media/i2c/adv748x/adv748x.h
-> @@ -128,6 +128,7 @@ struct adv748x_hdmi {
->  		u32 present;
->  		unsigned int blocks;
->  	} edid;
-> +	int audio_out;
->  };
->  
->  #define adv748x_ctrl_to_hdmi(ctrl) \
-> @@ -224,6 +225,11 @@ struct adv748x_state {
->  
->  #define ADV748X_IO_VID_STD		0x05
->  
-> +#define ADV748X_IO_PAD_CONTROLS		0x0e
-> +#define ADV748X_IO_PAD_CONTROLS_TRI_AUD	BIT(5)
-> +#define ADV748X_IO_PAD_CONTROLS_PDN_AUD	BIT(1)
-> +#define ADV748X_IO_PAD_CONTROLS1	0x1d
-> +
->  #define ADV748X_IO_10			0x10	/* io_reg_10 */
->  #define ADV748X_IO_10_CSI4_EN		BIT(7)
->  #define ADV748X_IO_10_CSI1_EN		BIT(6)
-> @@ -246,7 +252,21 @@ struct adv748x_state {
->  #define ADV748X_IO_REG_FF		0xff
->  #define ADV748X_IO_REG_FF_MAIN_RESET	0xff
->  
-> +/* DPLL Map */
-> +#define ADV748X_DPLL_MCLK_FS		0xb5
-> +#define ADV748X_DPLL_MCLK_FS_N_MASK	GENMASK(2, 0)
-> +
->  /* HDMI RX Map */
-> +#define ADV748X_HDMI_I2S		0x03	/* I2S mode and width */
-> +#define ADV748X_HDMI_I2SBITWIDTH_MASK	GENMASK(4, 0)
-> +#define ADV748X_HDMI_I2SOUTMODE_SHIFT	5
-> +#define ADV748X_HDMI_I2SOUTMODE_MASK	\
-> +	GENMASK(6, ADV748X_HDMI_I2SOUTMODE_SHIFT)
-> +#define ADV748X_I2SOUTMODE_I2S 0
-> +#define ADV748X_I2SOUTMODE_RIGHT_J 1
-> +#define ADV748X_I2SOUTMODE_LEFT_J 2
-> +#define ADV748X_I2SOUTMODE_SPDIF 3
-> +
->  #define ADV748X_HDMI_LW1		0x07	/* line width_1 */
->  #define ADV748X_HDMI_LW1_VERT_FILTER	BIT(7)
->  #define ADV748X_HDMI_LW1_DE_REGEN	BIT(5)
-> @@ -258,6 +278,16 @@ struct adv748x_state {
->  #define ADV748X_HDMI_F1H1		0x0b	/* field1 height_1 */
->  #define ADV748X_HDMI_F1H1_INTERLACED	BIT(5)
->  
-> +#define ADV748X_HDMI_MUTE_CTRL		0x1a
-> +#define ADV748X_HDMI_MUTE_CTRL_MUTE_AUDIO BIT(4)
-> +#define ADV748X_HDMI_MUTE_CTRL_WAIT_UNMUTE_MASK	GENMASK(3, 1)
-> +#define ADV748X_HDMI_MUTE_CTRL_NOT_AUTO_UNMUTE	BIT(0)
-> +
-> +#define ADV748X_HDMI_AUDIO_MUTE_SPEED	0x0f
-> +#define ADV748X_HDMI_AUDIO_MUTE_SPEED_MASK	GENMASK(4, 0)
-> +#define ADV748X_MAN_AUDIO_DL_BYPASS BIT(7)
-> +#define ADV748X_AUDIO_DELAY_LINE_BYPASS BIT(6)
-> +
->  #define ADV748X_HDMI_HFRONT_PORCH	0x20	/* hsync_front_porch_1 */
->  #define ADV748X_HDMI_HFRONT_PORCH_MASK	0x1fff
->  
-> @@ -279,6 +309,9 @@ struct adv748x_state {
->  #define ADV748X_HDMI_TMDS_1		0x51	/* hdmi_reg_51 */
->  #define ADV748X_HDMI_TMDS_2		0x52	/* hdmi_reg_52 */
->  
-> +#define ADV748X_HDMI_REG_6D		0x6d	/* hdmi_reg_6d */
-> +#define ADV748X_I2S_TDM_MODE_ENABLE BIT(7)
-> +
->  /* HDMI RX Repeater Map */
->  #define ADV748X_REPEATER_EDID_SZ	0x70	/* primary_edid_size */
->  #define ADV748X_REPEATER_EDID_SZ_SHIFT	4
-> @@ -393,14 +426,23 @@ int adv748x_write(struct adv748x_state *state, u8 page, u8 reg, u8 value);
->  int adv748x_write_block(struct adv748x_state *state, int client_page,
->  			unsigned int init_reg, const void *val,
->  			size_t val_len);
-> +int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg,
-> +			u8 mask, u8 value);
->  
->  #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
->  #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
->  #define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~m) | v)
-> +#define io_update(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_IO, r, m, v)
->  
->  #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
->  #define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, r+1)) & m)
->  #define hdmi_write(s, r, v) adv748x_write(s, ADV748X_PAGE_HDMI, r, v)
-> +#define hdmi_update(s, r, m, v) \
-> +	adv748x_update_bits(s, ADV748X_PAGE_HDMI, r, m, v)
-> +
-> +#define dpll_read(s, r) adv748x_read(s, ADV748X_PAGE_DPLL, r)
-> +#define dpll_update(s, r, m, v) \
-> +	adv748x_update_bits(s, ADV748X_PAGE_DPLL, r, m, v)
->  
->  #define repeater_read(s, r) adv748x_read(s, ADV748X_PAGE_REPEATER, r)
->  #define repeater_write(s, r, v) adv748x_write(s, ADV748X_PAGE_REPEATER, r, v)
-> 
-
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
