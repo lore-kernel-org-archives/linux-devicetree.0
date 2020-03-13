@@ -6,115 +6,105 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF6CC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 22:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E39C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 22:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F042074A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 22:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1737720752
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 22:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584136807;
-	bh=9+o01eEyRF/r+Y6iAFd3ZfoNfxNgGfiwA87JE+Vw5D8=;
+	s=default; t=1584136926;
+	bh=CqkCJEyVopSKtTtmPK6XpPSIbCTDJ2KS3Po38Nx630U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xrb2eVyHmAD7VN8asuJ/70whx5TM6yEe+oVsmWZB0Ir4tBnch94l8VyThwLgGWYo1
-	 oyxIa57KnoEW0rSr9RM8NfeolrpEz6vD2ukwyzHbQwGlPCGyO7x882woavJCrGcn5+
-	 rYtc2F63aJvqUe2satyYTRCA6mN1ctV/yz3cLF9Q=
+	b=fMz5lAPYcpXZCospxMhr0YJhS4J511/YvffW/BwO2+TMzOvhOmZtAku/8yVhMGV0f
+	 6wrn4T59dC97gVPTsa1T16rgh89DXxuzfmw7t1+nPFRexxUI6+/X33qjli48d4ANP2
+	 EfZGuOm5uSQP7IWpOjrtB5w6OcVSzJ+FyMVOyWH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgCMWAG (ORCPT
+        id S1726838AbgCMWCF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 18:00:06 -0400
-Received: from mail-oi1-f172.google.com ([209.85.167.172]:41493 "EHLO
-        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726543AbgCMWAG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 18:00:06 -0400
-Received: by mail-oi1-f172.google.com with SMTP id i1so11064741oie.8;
-        Fri, 13 Mar 2020 15:00:05 -0700 (PDT)
+        Fri, 13 Mar 2020 18:02:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41734 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726543AbgCMWCF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 18:02:05 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i1so11070080oie.8;
+        Fri, 13 Mar 2020 15:02:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TVkybssqDWjwLerq8jhj8SF+k5jpdyCgdrT+O+aW7Hk=;
-        b=bxxK84ZqQLqozYBkr8gGWuoJiA/6veN5kh8FbWE8vFkMXXCqc9Hy/3gbC/nRPZt/Xa
-         JkEZTVQC+AMOQTJRVHTX/cFBpuxo3F25OvWR5xwIGkVNu5xV4L99ZE4JGDQShBjcdlaj
-         h3JAETc2CNa6zzTDefkbySGIB6hU6Z8QxpYkTsgRyseM6Nhzf7W0hHbGXINyecnC8NJw
-         nbfy0Emjt79r6IdQjYW1a/RjWrO30IutiBYGvksraNxxkcxfNIQIU5Y1Rg0ouJKWr7m4
-         /SfBmRNl+eFrjVow6Lg8mSlY+TWQuMFbyu8oPGlnE9uSFDSVe4TOSXcGAp3ybZvGdMVi
-         KbCQ==
-X-Gm-Message-State: ANhLgQ320ThGkrakVOyGmwiPDKpBZtslFmMU6n6+8BujLYEbjkS3wpx+
-        Nm9MyiNqC/eWxOUmMIo85g==
-X-Google-Smtp-Source: ADFU+vvD7pkfAG68OdNj/jO4fB2W3uBtGliVneJu4/Kb/0djYQ6eqwv1N6WfcVv5x9z1WO/Gbr9vpg==
-X-Received: by 2002:a54:408d:: with SMTP id i13mr2298979oii.42.1584136804853;
-        Fri, 13 Mar 2020 15:00:04 -0700 (PDT)
+        bh=h+LbMp0wWLD3yyfWZGdmqW/q3jmbK4PSdXUPMZElXqk=;
+        b=jZ7jTpwuN3myyLan7UFw16RMKiATPbMoBfHyMucwN/IZkCbUDmVEixvglLGvCyVclv
+         7X22ixludocU0lYHJ3SttpTBgZMI7AyWhxUNaQSEo2vcPi63UIo0BYcS52TCuEebQaVK
+         txonBLkWk9dz2K4/ZIG86WNQsJw/20tLEA+7EEllXR1IMIN+0Jchl7BqpCoIv57Sy1J3
+         +lp9EQ+lV3RQtBSo6E5fpXs1RLdFxD8GbNbe/xiwaMnz/JRIc0s9VhSauv6qrqs2stLJ
+         h9UKeVwT34xpdNs0KlsbJUzFkQyzfpHCK1mjlu9+VJ6SB8ZLggpynRHcy1YYxawVw8iL
+         l1VQ==
+X-Gm-Message-State: ANhLgQ1QGRgzegZ+MDUsp+SIxl+1kt6wxqAskfUPUF1b03i1IG1dvgHL
+        K+S5TpdiV5E7vbTB2YG3Hg==
+X-Google-Smtp-Source: ADFU+vs/T3x4IUHm5oOlrPweulylbQR9uLmQne91+JKK5gdtsqTLFtZDXS2oeURgjSXrtiRh37cYcQ==
+X-Received: by 2002:aca:cc81:: with SMTP id c123mr8599085oig.74.1584136924263;
+        Fri, 13 Mar 2020 15:02:04 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e22sm20340907ote.32.2020.03.13.15.00.03
+        by smtp.gmail.com with ESMTPSA id a64sm4411203oif.49.2020.03.13.15.02.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Mar 2020 15:00:04 -0700 (PDT)
-Received: (nullmailer pid 23358 invoked by uid 1000);
-        Fri, 13 Mar 2020 22:00:03 -0000
-Date:   Fri, 13 Mar 2020 17:00:03 -0500
+        Fri, 13 Mar 2020 15:02:03 -0700 (PDT)
+Received: (nullmailer pid 26133 invoked by uid 1000);
+        Fri, 13 Mar 2020 22:02:02 -0000
+Date:   Fri, 13 Mar 2020 17:02:02 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
+To:     Al Cooper <alcooperx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Al Cooper <alcooperx@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Robert Foss <robert.foss@linaro.org>
-Subject: Re: [v2 1/3] media: dt-bindings: ov8856: Document YAML bindings
-Message-ID: <20200313220003.GA21160@bogus>
-References: <20200313110350.10864-1-robert.foss@linaro.org>
- <20200313110350.10864-2-robert.foss@linaro.org>
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: Add Broadcom STB USB support
+Message-ID: <20200313220202.GA23539@bogus>
+References: <20200313141545.31943-1-alcooperx@gmail.com>
+ <20200313141545.31943-2-alcooperx@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313110350.10864-2-robert.foss@linaro.org>
+In-Reply-To: <20200313141545.31943-2-alcooperx@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Mar 2020 12:03:48 +0100, Robert Foss wrote:
-> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+On Fri, 13 Mar 2020 10:15:42 -0400, Al Cooper wrote:
+> Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
 > 
-> This patch adds documentation of device tree in YAML schema for the
-> OV8856 CMOS image sensor.
+> NOTE: The OHCI driver is not included because it uses the generic
+>       platform driver.
 > 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 > ---
-> 
-> - Changes since v4:
->   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
->   * Add clock-lanes property to example
->   * robher: Fix syntax error in devicetree example
-> 
-> - Changes since v3:
->   * robher: Fix syntax error
->   * robher: Removed maxItems
->   * Fixes yaml 'make dt-binding-check' errors
-> 
-> - Changes since v2:
->   Fixes comments from from Andy, Tomasz, Sakari, Rob.
->   * Convert text documentation to YAML schema.
-> 
-> - Changes since v1:
->   Fixes comments from Sakari, Tomasz
->   * Add clock-frequency and link-frequencies in DT
-> 
->  .../devicetree/bindings/media/i2c/ov8856.yaml | 133 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+>  .../bindings/usb/brcm,bcm7445-ehci.yaml       | 60 +++++++++++++++++++
+>  .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
+>  2 files changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/media/i2c/ov8856.example.dts:22.13-26: Warning (reg_format): /example-0/camera-sensor@10:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-Documentation/devicetree/bindings/media/i2c/ov8856.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/media/i2c/ov8856.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/media/i2c/ov8856.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Error: Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dts:24.13-14 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1254346
+See https://patchwork.ozlabs.org/patch/1254417
 Please check and re-submit.
