@@ -2,130 +2,233 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8A0C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AD6C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E0320724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD11C2073E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CMYrR8XB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ThCfPjPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgCMNNR (ORCPT
+        id S1726526AbgCMNN2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:13:17 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36178 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726526AbgCMNNR (ORCPT
+        Fri, 13 Mar 2020 09:13:28 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:18754 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726695AbgCMNN2 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:13:17 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DD7L64023461;
-        Fri, 13 Mar 2020 14:13:01 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=oUI8ZXDq4EiPObS+0wbkrkh1Q7HpkSyN8K/N9gjWHwY=;
- b=CMYrR8XBBnQtWJkA0eWefudDD9tn9gsZT+GMJWILTLOZQXISvjGUkZozI5RgrAlEej7E
- K26gR/vCvzJnXvccC54NJ5ZY7qlXk61EkVin6FWr+6iogkfVCuvRjv1Z3qK+viYZyNCz
- Al4pVtZs3kkxEH7UgQ6ZzB19S8CcN4dhLO1Wkrd1mHzpl6q0+crBBGjg0FT2Ru5QYzbN
- Ac1lulXTPrDkN6+Zpqlce1abtkUexXV0v7QcHq5VUzr3C8LzIbe0y4+YTqFfFPmq+m6e
- QVf95UmlFyj9+62dckN+X2O6Nrqcl4GZh1EYhaGTrWTH6d3n0wMgjPy468bX+P2eQzo+ Cg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yqt82guej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Mar 2020 14:13:01 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CA20310002A;
-        Fri, 13 Mar 2020 14:13:00 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 849672A8913;
-        Fri, 13 Mar 2020 14:13:00 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 13 Mar
- 2020 14:12:59 +0100
-Subject: Re: [PATCH] ARM: dts: stm32: add cpu clock-frequency property on
- stm32mp15x
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <kernel@pengutronix.de>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200224172031.27868-1-a.fatoum@pengutronix.de>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <e5a6ce75-061d-fa75-8fe6-285b4259952f@st.com>
-Date:   Fri, 13 Mar 2020 14:12:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200224172031.27868-1-a.fatoum@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-13_04:2020-03-12,2020-03-13 signatures=0
+        Fri, 13 Mar 2020 09:13:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584105207; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=TMCjXiCd22oaTIvt1nqWA3krN7Avu7WdjmJ3LXbEBQU=; b=ThCfPjPE3BKDmAOkq6mjsOR6pPuwYhSgDV3DtAH8zKwDNJ23r2IPIirgS+C2tnjRMDJmpkob
+ 52cTqBC++yLzG15t6Z+83mFygp8PdC/igo53nMoa89b8cIW5TqngmuXRH2iSceW8S2I2D3Eb
+ J8rJHJriJSYxPmNHwyYj/NEyHY4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6b86f1.7f1981611c00-smtp-out-n01;
+ Fri, 13 Mar 2020 13:13:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BF9F0C44793; Fri, 13 Mar 2020 13:13:21 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D8E6BC44793;
+        Fri, 13 Mar 2020 13:13:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D8E6BC44793
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH V2 5/8] i2c: i2c-qcom-geni: Add interconnect support
+Date:   Fri, 13 Mar 2020 18:42:11 +0530
+Message-Id: <1584105134-13583-6-git-send-email-akashast@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
+References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ahmad
+Get the interconnect paths for I2C based Serial Engine device
+and vote according to the bus speed of the driver.
 
-On 2/24/20 6:20 PM, Ahmad Fatoum wrote:
-> All of the STM32MP151[1], STM32MP153[2] and STM32MP157[3] have their
-> Cortex-A7 cores running at 650 MHz.
-> 
-> Add the clock-frequency property to CPU nodes to avoid warnings about
-> them missing.
-> 
-> [1]: https://www.st.com/en/microcontrollers-microprocessors/stm32mp151.html
-> [2]: https://www.st.com/en/microcontrollers-microprocessors/stm32mp153.html
-> [3]: https://www.st.com/en/microcontrollers-microprocessors/stm32mp157.html
-> 
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+---
+Changes in V2:
+ - As per Bjorn's comment, removed se == NULL check from geni_i2c_icc_get
+ - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
+ - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+   path handle
+ - As per Matthias comment, added error handling for icc_set_bw call
 
-Applied on stm32-next.
+ drivers/i2c/busses/i2c-qcom-geni.c | 110 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
 
-Thanks.
-Alex
-
-> ---
->   arch/arm/boot/dts/stm32mp151.dtsi | 1 +
->   arch/arm/boot/dts/stm32mp153.dtsi | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-> index fb41d0778b00..fd46a8e11126 100644
-> --- a/arch/arm/boot/dts/stm32mp151.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp151.dtsi
-> @@ -17,6 +17,7 @@ cpus {
->   
->   		cpu0: cpu@0 {
->   			compatible = "arm,cortex-a7";
-> +			clock-frequency = <650000000>;
->   			device_type = "cpu";
->   			reg = <0>;
->   		};
-> diff --git a/arch/arm/boot/dts/stm32mp153.dtsi b/arch/arm/boot/dts/stm32mp153.dtsi
-> index 2d759fc6015c..6d9ab08667fc 100644
-> --- a/arch/arm/boot/dts/stm32mp153.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp153.dtsi
-> @@ -10,6 +10,7 @@ / {
->   	cpus {
->   		cpu1: cpu@1 {
->   			compatible = "arm,cortex-a7";
-> +			clock-frequency = <650000000>;
->   			device_type = "cpu";
->   			reg = <1>;
->   		};
-> 
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index 17abf60c..33ab685 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -163,6 +163,23 @@ static void qcom_geni_i2c_conf(struct geni_i2c_dev *gi2c)
+ 	writel_relaxed(val, gi2c->se.base + SE_I2C_SCL_COUNTERS);
+ }
+ 
++static int geni_i2c_icc_get(struct geni_se *se)
++{
++	se->icc_path_geni_to_core = devm_of_icc_get(se->dev, "qup-core");
++	if (IS_ERR(se->icc_path_geni_to_core))
++		return PTR_ERR(se->icc_path_geni_to_core);
++
++	se->icc_path_cpu_to_geni = devm_of_icc_get(se->dev, "qup-config");
++	if (IS_ERR(se->icc_path_cpu_to_geni))
++		return PTR_ERR(se->icc_path_cpu_to_geni);
++
++	se->icc_path_geni_to_ddr = devm_of_icc_get(se->dev, "qup-memory");
++	if (IS_ERR(se->icc_path_geni_to_ddr))
++		return PTR_ERR(se->icc_path_geni_to_ddr);
++
++	return 0;
++}
++
+ static void geni_i2c_err_misc(struct geni_i2c_dev *gi2c)
+ {
+ 	u32 m_cmd = readl_relaxed(gi2c->se.base + SE_GENI_M_CMD0);
+@@ -563,6 +580,39 @@ static int geni_i2c_probe(struct platform_device *pdev)
+ 	gi2c->adap.dev.of_node = pdev->dev.of_node;
+ 	strlcpy(gi2c->adap.name, "Geni-I2C", sizeof(gi2c->adap.name));
+ 
++	ret = geni_i2c_icc_get(&gi2c->se);
++	if (ret)
++		return ret;
++	/*
++	 * Set the bus quota for core and cpu to a reasonable value for
++	 * register access.
++	 * Set quota for DDR based on bus speed, assume peak requirement
++	 * as twice of avg bw.
++	 */
++	gi2c->se.avg_bw_core = Bps_to_icc(1000);
++	gi2c->se.peak_bw_core = Bps_to_icc(CORE_2X_100_MHZ);
++	gi2c->se.avg_bw_cpu = Bps_to_icc(1000);
++	gi2c->se.peak_bw_cpu = Bps_to_icc(1000);
++	gi2c->se.avg_bw_ddr = Bps_to_icc(gi2c->clk_freq_out);
++	gi2c->se.peak_bw_ddr = Bps_to_icc(2 * gi2c->clk_freq_out);
++
++	/* Vote for core clocks and CPU for register access */
++	ret = icc_set_bw(gi2c->se.icc_path_geni_to_core, gi2c->se.avg_bw_core,
++				gi2c->se.peak_bw_core);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: ICC BW voting failed for core\n",
++			__func__);
++		return ret;
++	}
++
++	ret = icc_set_bw(gi2c->se.icc_path_cpu_to_geni, gi2c->se.avg_bw_cpu,
++				gi2c->se.peak_bw_cpu);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: ICC BW voting failed for cpu\n",
++			__func__);
++		return ret;
++	}
++
+ 	ret = geni_se_resources_on(&gi2c->se);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Error turning on resources %d\n", ret);
+@@ -584,6 +634,19 @@ static int geni_i2c_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "Error turning off resources %d\n", ret);
+ 		return ret;
+ 	}
++	/* Remove vote from core clocks and CPU */
++	ret = icc_set_bw(gi2c->se.icc_path_geni_to_core, 0, 0);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: ICC BW remove failed for core\n",
++			__func__);
++		return ret;
++	}
++
++	ret = icc_set_bw(gi2c->se.icc_path_cpu_to_geni, 0, 0);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: ICC BW remove failed for cpu\n",
++			__func__);
++	}
+ 
+ 	dev_dbg(&pdev->dev, "i2c fifo/se-dma mode. fifo depth:%d\n", tx_depth);
+ 
+@@ -629,6 +692,28 @@ static int __maybe_unused geni_i2c_runtime_suspend(struct device *dev)
+ 		gi2c->suspended = 1;
+ 	}
+ 
++	/* Remove BW votes */
++	ret = icc_set_bw(gi2c->se.icc_path_geni_to_core, 0, 0);
++	if (ret) {
++		dev_err_ratelimited(gi2c->se.dev, "%s: ICC BW remove failed for core\n",
++			__func__);
++		return ret;
++	}
++
++	ret = icc_set_bw(gi2c->se.icc_path_cpu_to_geni, 0, 0);
++	if (ret) {
++		dev_err_ratelimited(gi2c->se.dev, "%s: ICC BW remove failed for cpu\n",
++			__func__);
++		return ret;
++	}
++
++	ret = icc_set_bw(gi2c->se.icc_path_geni_to_ddr, 0, 0);
++	if (ret) {
++		dev_err_ratelimited(gi2c->se.dev, "%s: ICC BW remove failed for ddr\n",
++			__func__);
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -637,6 +722,31 @@ static int __maybe_unused geni_i2c_runtime_resume(struct device *dev)
+ 	int ret;
+ 	struct geni_i2c_dev *gi2c = dev_get_drvdata(dev);
+ 
++	/* Vote on Core, CPU and DDR path respectively */
++	ret = icc_set_bw(gi2c->se.icc_path_geni_to_core, gi2c->se.avg_bw_core,
++		gi2c->se.peak_bw_core);
++	if (ret) {
++		dev_err_ratelimited(gi2c->se.dev, "%s: ICC BW voting failed for core\n",
++			__func__);
++		return ret;
++	}
++
++	ret = icc_set_bw(gi2c->se.icc_path_cpu_to_geni, gi2c->se.avg_bw_cpu,
++		gi2c->se.peak_bw_cpu);
++	if (ret) {
++		dev_err_ratelimited(gi2c->se.dev, "%s: ICC BW voting failed for cpu\n",
++			__func__);
++		return ret;
++	}
++
++	ret = icc_set_bw(gi2c->se.icc_path_geni_to_ddr, gi2c->se.avg_bw_ddr,
++		gi2c->se.peak_bw_ddr);
++	if (ret) {
++		dev_err_ratelimited(gi2c->se.dev, "%s: ICC BW voting failed for ddr\n",
++			__func__);
++		return ret;
++	}
++
+ 	ret = geni_se_resources_on(&gi2c->se);
+ 	if (ret)
+ 		return ret;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
