@@ -2,130 +2,113 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C2BC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EAAC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5223C2073E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E83206BE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 13:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="X35JI2fx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzAls5VP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgCMNO7 (ORCPT
+        id S1726495AbgCMNPq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 09:14:59 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1895 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726426AbgCMNO7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 13 Mar 2020 09:14:59 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02DDDJIv004634;
-        Fri, 13 Mar 2020 14:14:50 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=96tzSx1sjU99KhvK259+0KWD9N1uJtRZcwvduWLOsSU=;
- b=X35JI2fxlbiM+NNfrY/7YkoajwAjKup2jGRyKlAjK+lHVVSwzfopoqwnJD5df/1QmbPK
- Zx1juGiGvAyl2QnW7CEq7wjV0RNZkMg5AkpzV7943BJ7q1bISviR/4X9z8rXJEzCO3IQ
- aDRz8ix/OvkHp30sBLiPH6oxlAhWKKBYBs6X8tEQpZsHWS8ILfg6ikEULxq+AuJjar2E
- Cj4kSLfrJAs+UrbQpUEeHZo8OHcZFLW9HsVYK7wpz2WkTNjR2DM/G0ZpyW1skb8beXMR
- 85+kkgE+RdVB+0YKl/h41nAee4dx1HT5cGGdkOZz/6iMby8Y37CDSrOwp9IxWX9SCLVH uQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yqt818vpq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Mar 2020 14:14:50 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 647BF10003E;
-        Fri, 13 Mar 2020 14:14:45 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 584C02A8914;
-        Fri, 13 Mar 2020 14:14:45 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 13 Mar
- 2020 14:14:44 +0100
-Subject: Re: [PATCH] ARM: dts: stm32: Rename stmfx node names
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        <mcoquelin.stm32@gmail.com>, <robh+dt@kernel.org>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200228125205.8126-1-benjamin.gaignard@st.com>
- <20200228125205.8126-2-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <594855ac-2d50-ccf9-6c75-07bb5ef47e82@st.com>
-Date:   Fri, 13 Mar 2020 14:14:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 13 Mar 2020 09:15:46 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40962 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbgCMNPq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 09:15:46 -0400
+Received: by mail-lf1-f65.google.com with SMTP id q10so7822168lfo.8;
+        Fri, 13 Mar 2020 06:15:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KIlDjbCvX/lL3/UnPy9wEqymHeVXohWQ8Y8B1yC6PRM=;
+        b=KzAls5VPN5rgeewhLttE0V+ho/T3Ym0N8W6508ZiquWU0EYsOUdidva2DssKJ4lYxn
+         uHXqUJDkB86E2t5r/eB9iGlGisYdIMLmBQiH9MPnfYOmEDVnllOVfQLj9HF709kiHpnp
+         cwU1mUkswFKeNpF3GtRHEYFOlpNkR2g1mgkD2dORECKUvUHKGYiLIRo6j++y873uepg7
+         jaerNMJFJshhCNfgPdd2sD5V+MMOfB4oM7iQax4TYMZN9TQHwN9KxGIUJHtaOGJEmqTg
+         oipHY3FV1tu/xMXCFIhIZ57QRrzeaB7TMzVGFXmdex3iWpZ6c3VDdxKiIXzNYMUC+Ad3
+         q5lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KIlDjbCvX/lL3/UnPy9wEqymHeVXohWQ8Y8B1yC6PRM=;
+        b=SnjqDp86+FZAmAp0xTcYDN+BUZWqFba29Oc8MOxb31udC4pYRAQo1eKPq/Irt9hSdM
+         ourFXHZ/0jQR0xhg1GJZVrZPa3xE95SXeT+uKCpYD/qXAN0KJcrySfWE2dA0weNJnSzP
+         jB2k73IhpoIcQowKyQ7tVuoSB9rxjHBnJTuuznEK4xOAbukhXyPxlCouGUkPCdwW7XnA
+         6VG/JRuhUhSHSzobGCIwzzIQoNDyV0YkpqOQz+qmVX8tc7CPWGrPXRq0pI1p3UYdBDm9
+         CfNzEoaZxUYcWEJ8H8x5AlZ4qyBVP8PE/sK1BHgJ3prKY90dgOU07MTEVdk2MQabwnXr
+         eUkw==
+X-Gm-Message-State: ANhLgQ3JA3o0VINVtw5bIqmu82Ib+y/10n4geJb/zgWSN9IS0JLNw0VP
+        H3OAg3fbIgP9HTSuS4OEiG0LsA+Q2is+2LjnMHE=
+X-Google-Smtp-Source: ADFU+vu3syumX09pf4wOKGU3FAmPDFh1VT9bOFZcHAgG0CF2SaVacKKBMemJsFE1v+otRGv8dY21fvqrZd57AKGk+4w=
+X-Received: by 2002:a05:6512:1054:: with SMTP id c20mr8394251lfb.69.1584105343706;
+ Fri, 13 Mar 2020 06:15:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200228125205.8126-2-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-13_04:2020-03-12,2020-03-13 signatures=0
+References: <20200313110350.10864-1-robert.foss@linaro.org> <20200313110350.10864-3-robert.foss@linaro.org>
+In-Reply-To: <20200313110350.10864-3-robert.foss@linaro.org>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 13 Mar 2020 10:15:31 -0300
+Message-ID: <CAOMZO5D9bmXt9_qGTXw+qUG6JDHfuNtx++fJPJtn+mj1Dzsbag@mail.gmail.com>
+Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Benjamin
+Hi Robert,
 
-On 2/28/20 1:52 PM, Benjamin Gaignard wrote:
-> Rename stmfx node names according to yaml description.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
+On Fri, Mar 13, 2020 at 8:04 AM Robert Foss <robert.foss@linaro.org> wrote:
 
-Applied on stm32-next with commit title updated.
+> +static int __ov8856_power_on(struct ov8856 *ov8856)
+> +{
+> +       struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
+> +       int ret;
+> +
+> +       ret = clk_prepare_enable(ov8856->xvclk);
+> +       if (ret < 0) {
+> +               dev_err(&client->dev, "failed to enable xvclk\n");
+> +               return ret;
+> +       }
+> +
+> +       gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
 
-Thanks.
-Alex
+The parameter of gpiod_set_value_cansleep() is typically 0 (inactive
+state) or 1 (active state), so:
 
->   arch/arm/boot/dts/stm32746g-eval.dts  | 2 +-
->   arch/arm/boot/dts/stm32mp157c-ev1.dts | 4 ++--
->   2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
-> index fcc804e3c158..4ea3f98dd275 100644
-> --- a/arch/arm/boot/dts/stm32746g-eval.dts
-> +++ b/arch/arm/boot/dts/stm32746g-eval.dts
-> @@ -165,7 +165,7 @@
->   		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
->   		interrupt-parent = <&gpioi>;
->   
-> -		stmfx_pinctrl: stmfx-pin-controller {
-> +		stmfx_pinctrl: pinctrl {
->   			compatible = "st,stmfx-0300-pinctrl";
->   			gpio-controller;
->   			#gpio-cells = <2>;
-> diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> index 228e35e16884..3f4668a43afe 100644
-> --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> @@ -210,7 +210,7 @@
->   		interrupt-parent = <&gpioi>;
->   		vdd-supply = <&v3v3>;
->   
-> -		stmfx_pinctrl: stmfx-pin-controller {
-> +		stmfx_pinctrl: pinctrl {
->   			compatible = "st,stmfx-0300-pinctrl";
->   			gpio-controller;
->   			#gpio-cells = <2>;
-> @@ -218,7 +218,7 @@
->   			#interrupt-cells = <2>;
->   			gpio-ranges = <&stmfx_pinctrl 0 0 24>;
->   
-> -			joystick_pins: joystick {
-> +			joystick_pins: joystick-pins {
->   				pins = "gpio0", "gpio1", "gpio2", "gpio3", "gpio4";
->   				bias-pull-down;
->   			};
-> 
+ gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
+
+> +
+> +       ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
+> +                                   ov8856->supplies);
+> +       if (ret < 0) {
+> +               dev_err(&client->dev, "failed to enable regulators\n");
+> +               goto disable_clk;
+> +       }
+> +
+> +       gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_LOW);
+
+and here it should be:
+
+gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
+
+Also, don't you need a reset period between the two?
