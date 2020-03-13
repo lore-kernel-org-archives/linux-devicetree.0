@@ -2,113 +2,122 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5DFC1975A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 01:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38633C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 01:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29FC206FA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 01:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097F7206EB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 01:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SQbL/xPi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjSAOZwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgCMBXx (ORCPT
+        id S1726230AbgCMB6R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 12 Mar 2020 21:23:53 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19182 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgCMBXw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 21:23:52 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e6ae04b0000>; Thu, 12 Mar 2020 18:22:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 12 Mar 2020 18:23:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 12 Mar 2020 18:23:52 -0700
-Received: from [10.2.175.141] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 13 Mar
- 2020 01:23:51 +0000
-Subject: Re: [PATCH v1] arm64: tegra: Add reset-cells to mc
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <nkristam@nvidia.com>
-CC:     <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1583899366-1588-1-git-send-email-skomatineni@nvidia.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <407b5d00-4a79-d063-31a2-74e3154625f6@nvidia.com>
-Date:   Thu, 12 Mar 2020 18:23:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Mar 2020 21:58:17 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37244 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgCMB6R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Mar 2020 21:58:17 -0400
+Received: by mail-qt1-f195.google.com with SMTP id l20so6287329qtp.4;
+        Thu, 12 Mar 2020 18:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=88CKdz/NKjVak04/lN/5uD3uM5mQKrmtijz9vSkeFgg=;
+        b=pjSAOZwt9ryPLjEr9Hn+KApbAgGbTkRLnUUH65gnKwCdCkYwq6qZSG+nWJ2u4BqHK0
+         tY7/ToQXdluH6nYEh0LlaNONnotFWYeWQs7ksBcJwWZSMbZAKiWOCD/mpDmNLmNx73Zs
+         gCrn6ASGGxo23xeiOF+49pKCeuxy0UG9CtM2APILEqad5ipMKu2R/gDgkETqpzZY0S9l
+         KsgrTyJW49G/BOUCKMgudmmuBywylqv8Xu4EXoXh0YXqE5BxR3lmju3MMUSBinST6SAC
+         uYWe7YaaLMmgtI9jRzkTANe0kcvacI7UN5ylAZgsiCvqfGuyG00pqVMrO+S0hdF49UYM
+         RSNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=88CKdz/NKjVak04/lN/5uD3uM5mQKrmtijz9vSkeFgg=;
+        b=udlrYVGVyAHLu67RuvmwUjZvJeN4PzC1q2oa114gKwLMZNDRE4QIJqCTWctMwHmDoR
+         wc6u4afJkd2aMQ+BcG0pvzGBJSZWFaqbBSN3L06VXhJD+KZoxVqCbEYSOub7JctnSplT
+         lHOgOrWt0yRnDro8swQ12ocN7aXdr00L3/a0wIXSlLxsdh4zjHElsTCOFdiG9t5mMQgT
+         TKiiQfXnjWkRlAXpjlRYZq9DLJ/vu6qoibTqBSk2CEsF2HxnOoq86nKtbekE0JQXcwld
+         KZvtazrmSDZY9MDLTMcCIR1PVNOhAMUHoIh8Y2rdlFhi/1jJOUAIYm7zqVQ8ufRYoZ0q
+         tzuw==
+X-Gm-Message-State: ANhLgQ03DQsh6lNzIa9OdbLEz/OXtHri+2T4KY7XTzaANq/Xurr0JXir
+        s/xbKvtoM8+px1dtX3QdAhfLKO/tuPhq6HZ5QavsGQ==
+X-Google-Smtp-Source: ADFU+vvK5+cSY2SJjGHWhKW0xQKWTvae4atVpKpb9h+cuGuLEZkISiyaRiiGVQ5/eNNFTISVK0wd8Lq7pxHaHGITVPM=
+X-Received: by 2002:ac8:5298:: with SMTP id s24mr10110299qtn.54.1584064696061;
+ Thu, 12 Mar 2020 18:58:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1583899366-1588-1-git-send-email-skomatineni@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584062539; bh=wFF0EY/KkghrKnMj1Y0t6Hft+dTR9Y4gWUc7Q+aNSFU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=SQbL/xPi9OslwaGdzRO5hgYJcjCHAllPHjK0/ojl0gUeLYaSkCjwFWZTbSHxvblIP
-         U5ftV8XSwKkGDGIlmEOBRq1Ua797+B2Xi4z2u/j9ZGW83BaKDsoLJ2qJOCiw9OoPoQ
-         yqgOJYVJCVwz4nCI/7pY9RmS0C0UddX7iln3TA7zGIP+sBwC4wcRkG/Fbehd47tYsi
-         gGd3amqEwD3rTAIkxBi/sZQEfHFhxBRdyUgj8OVDJJsqfs/k2EbnZWlhTYJv70aL7g
-         kXWQJAbnM+ucFU/dLm1khEwSEk9g3KiQxxrZ5jmazYBuHhnoBGXNAYsE0F3DysW5bV
-         6wJpr0zvs8jtA==
+References: <cover.1583725533.git.shengjiu.wang@nxp.com> <24f69c50925b93afd7a706bd888ee25d27247c78.1583725533.git.shengjiu.wang@nxp.com>
+ <20200309211943.GB11333@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <20200309211943.GB11333@Asurada-Nvidia.nvidia.com>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Fri, 13 Mar 2020 09:58:05 +0800
+Message-ID: <CAA+D8ANwQ_orAxtVCxsAOJ8b2bRxM9myD+N8Ce7okNZK7q9g9w@mail.gmail.com>
+Subject: Re: [PATCH v5 1/7] ASoC: dt-bindings: fsl_asrc: Add new property fsl,asrc-format
+To:     Nicolin Chen <nicoleotsuka@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+Hi Rob
 
-Sorry for inconvenience.
+On Tue, Mar 10, 2020 at 5:20 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+>
+> On Mon, Mar 09, 2020 at 11:58:28AM +0800, Shengjiu Wang wrote:
+> > In order to support new EASRC and simplify the code structure,
+> > We decide to share the common structure between them. This bring
+> > a problem that EASRC accept format directly from devicetree, but
+> > ASRC accept width from devicetree.
+> >
+> > In order to align with new ESARC, we add new property fsl,asrc-format.
+> > The fsl,asrc-format can replace the fsl,asrc-width, then driver
+> > can accept format from devicetree, don't need to convert it to
+> > format through width.
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > index cb9a25165503..780455cf7f71 100644
+> > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > @@ -51,6 +51,11 @@ Optional properties:
+> >                         will be in use as default. Otherwise, the big endian
+> >                         mode will be in use for all the device registers.
+> >
+> > +   - fsl,asrc-format : Defines a mutual sample format used by DPCM Back
+> > +                       Ends, which can replace the fsl,asrc-width.
+> > +                       The value is SNDRV_PCM_FORMAT_S16_LE, or
+> > +                       SNDRV_PCM_FORMAT_S24_LE
+>
+> I am still holding the concern at the DT binding of this format,
+> as it uses values from ASoC header file instead of a dt-binding
+> header file -- not sure if we can do this. Let's wait for Rob's
+> comments.
 
-Please ignore this patch. This is needed before next updated patches for 
-tegra video as they use mc reset on Tegra210.
+Could you please share your comments or proposal about
+Nicolin's concern?
 
-So will include this patch as part of tegra-video patch series so 
-dependencies are taken care.
-
-Thanks
-
-Sowjanya
-
-On 3/10/20 9:02 PM, Sowjanya Komatineni wrote:
-> External email: Use caution opening links or attachments
->
->
-> Tegra210 device tree is missing reset-cells property for mc node.
->
-> This patch fixes it.
->
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->   arch/arm64/boot/dts/nvidia/tegra210.dtsi | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> index 66dd1df..9241163 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> @@ -935,6 +935,7 @@
->                  interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
->
->                  #iommu-cells = <1>;
-> +               #reset-cells = <1>;
->          };
->
->          sata@70020000 {
-> --
-> 2.7.4
->
+best regards
+wang shengjiu
