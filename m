@@ -2,137 +2,106 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AEDC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38BBC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512DB2074C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D833620746
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 10:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgCMKMO (ORCPT
+        id S1726365AbgCMKXx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 06:12:14 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50027 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgCMKMO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 06:12:14 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jChIV-0005CP-9b; Fri, 13 Mar 2020 11:12:07 +0100
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jChIU-000271-00; Fri, 13 Mar 2020 11:12:05 +0100
-Date:   Fri, 13 Mar 2020 11:12:05 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v2 2/2] ARM: dts: imx6q-marsboard: properly define rgmii
- PHY
-Message-ID: <20200313101205.pxctcainreac7a6j@pengutronix.de>
-References: <20200313053224.8172-1-o.rempel@pengutronix.de>
- <20200313053224.8172-3-o.rempel@pengutronix.de>
- <20200313095545.GD14553@lunn.ch>
+        Fri, 13 Mar 2020 06:23:53 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:40929 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgCMKXx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 06:23:53 -0400
+Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MNL2Y-1iwefF1he6-00OkjQ; Fri, 13 Mar 2020 11:23:51 +0100
+Received: by mail-qk1-f174.google.com with SMTP id e16so11524503qkl.6;
+        Fri, 13 Mar 2020 03:23:51 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ24k8eOENtIYiud4zkwexFqM3w9+zACEQYpvETucADmdnEptKpO
+        bLj9W9LQhDv926st46fMDku8V643+dj9tlrdbJQ=
+X-Google-Smtp-Source: ADFU+vsfaaXYmPUQjslMErhWJ/7BvzHgLpx+ZaRka5jikHGLM6PMuhOsS2wljIY0klh7xwIHigG91vLUduJxNabWMiQ=
+X-Received: by 2002:a37:a4d6:: with SMTP id n205mr12564191qke.352.1584095030201;
+ Fri, 13 Mar 2020 03:23:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="btk4uzvcft3s7ycb"
-Content-Disposition: inline
-In-Reply-To: <20200313095545.GD14553@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:11:16 up 119 days,  1:29, 146 users,  load average: 0.01, 0.07,
- 0.06
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <1584070314-26495-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1584070314-26495-1-git-send-email-peng.fan@nxp.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 13 Mar 2020 11:23:34 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0r1stgYw2DGtsHpMWdBN7GM9miAsUo20NaJxwasQy4iA@mail.gmail.com>
+Message-ID: <CAK8P3a0r1stgYw2DGtsHpMWdBN7GM9miAsUo20NaJxwasQy4iA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: Makefile: build arm64 device tree
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:GYi++AP6j9j2XxjU9mbIA92RCdmrg0YEULM7da0/JU26Z7pmxot
+ 8K1u1ntVwNw3cHkOLDds2HphH5/A/D671faepELJ/5+GPIpbZtePTnx4pNCRHM0Cha/NCu3
+ rS+stg5SNKxXFwty6gi7sF0wgfX2MhpC8NL/byr5DHipzDZ/ycOmO9PBbB2F04zOT49hzns
+ A5A6A4mPKah31B8/dQ6KA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qihaRHoDAgw=:LH8RWLl8m+4ye4gEfDDKXv
+ 2NfTtFYI3hx7oFzT0I0b13mac6Ii//p5pjCkt06yVogAw34obkIXbgWd9kuOa+dg1F4iByEOs
+ fkPy9fFj0wbXZ2vt/Fl3EgyEe4LJSi4xfHJ68LvMwJdz9GeHE0LYl5kPP7w1xUBpR2Tn8FJRn
+ jV0pkNxxzcn6AFjxp/+SXF8EiDqu87ADYxQuVSkjC4vuNw7Tfkza7DZspIZmOmhWhfuHzTXkr
+ BXLCchmqhgYg10M0zSswujj7WcbwknuE9XW/Yi18Hr/KJdtlPmrZlaXzfPXIQFgwir9Xf+ShN
+ gAhq3KOHppdVHG+nRy7rc0aivE1bTqgwXCRuDBmumTNpTkzj1JFvh2Frp6Xu/cNSS/5C1p0y+
+ hYr5nxnkg8XDJ3GhqYdfUqCHrGaKQbr1DZ14iI8jYxr/Ii4nDbZHh6Pye6vonVXxm2XCFjfeD
+ AoTWW7gbH8Ba1G7zD43a7TiZQG/Qv/Jv42CymDiQl+siKikp64/HSg2wMmpR0Zs3MvtAu+oge
+ WBaJAeSEuEGrdHLoTwaDo4r92TyuWvSxGnN2nZ7d6MXPeddWqx/e5JFEXVywoTabaLuxGX5GE
+ 1zPoTF8+sZ+IQo4DLsdlU7GKKUje1iVzn5nIi9e7GkYTPeMgULLB1nguo8yYkf0TKARmePfgE
+ ickx651s2Un8Sxl7F+0sfjFaOYdGikCizZxVHiwB6saf1GK+TweIUaysbIuSH6+BEG+QxaEnb
+ bW/xJ7uC3o3VKQw1EOmyPj2FLhOnNXN5r0xMtJasnObpsqCGs/SG7r8ZlUMqq35i1FKaxct98
+ gl4Zn3atdGppCX0W2iwrAHNQBdG3zgJsGEDPifSke7eZ3B1s0A=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Mar 13, 2020 at 4:38 AM <peng.fan@nxp.com> wrote:
+>
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> To support aarch32 mode linux on aarch64 hardware, we need
+> build the device tree, so include the arm64 device tree path.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
 
---btk4uzvcft3s7ycb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There are a few other platforms with similar requirements, in
+particular bcm2837,
+so maybe try doing it the same way they do, see
+arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
 
-On Fri, Mar 13, 2020 at 10:55:45AM +0100, Andrew Lunn wrote:
-> On Fri, Mar 13, 2020 at 06:32:24AM +0100, Oleksij Rempel wrote:
-> > The Atheros AR8035 PHY can be autodetected but can't use interrupt
-> > support provided on this board. Define MDIO bus and the PHY node to make
-> > it work properly.
-> >=20
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  arch/arm/boot/dts/imx6q-marsboard.dts | 15 ++++++++++++++-
-> >  1 file changed, 14 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/arch/arm/boot/dts/imx6q-marsboard.dts b/arch/arm/boot/dts/=
-imx6q-marsboard.dts
-> > index 84b30bd6908f..1f31d86a217b 100644
-> > --- a/arch/arm/boot/dts/imx6q-marsboard.dts
-> > +++ b/arch/arm/boot/dts/imx6q-marsboard.dts
-> > @@ -111,8 +111,21 @@ &fec {
-> >  	pinctrl-names =3D "default";
-> >  	pinctrl-0 =3D <&pinctrl_enet>;
-> >  	phy-mode =3D "rgmii-id";
-> > -	phy-reset-gpios =3D <&gpio3 31 GPIO_ACTIVE_LOW>;
-> >  	status =3D "okay";
->=20
-> Hi Oleksij=20
->=20
-> I don't see a phy-handle here. So is it still using phy_find_first()?
+> V1:
+>  This is just the device tree part. Besides this,
+>  I am not sure whether need to create a standalone defconfig under arm32
+>  for aarch32 mode linux on aarch64 hardware, or use multi_v7_defconfig.
+>  multi_v7_defconfig should be ok, need to include LPAE config.
 
-Uff... right. Thx for pointing it.
+I'd rather not have a standalone defconfig for it, given that we have a
+single defconfig for all armv6/armv7/armv7hf i.mx machines.
 
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+There was a suggestion to use a fragment for enabling an LPAE
+multi_v7_defconfig recently, which I think is still under discussion but
+should also help here, both with imx_v6_v7_defconfig and multi_v7_defconfig.
 
---btk4uzvcft3s7ycb
-Content-Type: application/pgp-signature; name="signature.asc"
+Can you remind us why this platform needs LPAE? Is it only needed to
+support more than 4GB of RAM, or something else on top of that?
+Note that users that actually have 4GB or more on i.mx8 should
+really run a 64-bit kernel anyway, even if they prefer using 32-bit user
+space.
 
------BEGIN PGP SIGNATURE-----
+Turning on LPAE not only disables imx3 and imx5 but also the Cortex-A9
+based imx6 variants.
 
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5rXHEACgkQ4omh9DUa
-UbPogg//XjGtdb1pUZbPSkZBCCQhrYX8rLqM7CcGPmyDbDMo1EMZycc/B8pUPYir
-Ea/Xipv8Uj0SFZ8Sd3NApY1u+wtotDYyIYFe3oh9QCD9W8RI3o1DyiD6d7w4DjKR
-JqjSuj7pKbpRaFlGz6d724tuf8xImEumliUHJj7Smjhvz2srctfWBK5SODa1gj2x
-CE8Y3fVmSDIbiq9tlJCNgjyUe9rzjgQAOAbKyTaRuUi/WJNOu0SUT3l+Ggh5f6VQ
-OWXFKposcaFJWMVWyeqRttdsE+7396Pyk5T1W14YLKkBOY8CQrmdD7EnvjwYwsKX
-WbGfYU/TTyCjcMI3YbuiachfU6k+uZO/uIihnlYax/tzNIslZg7Pi+8GAGadNpxo
-pgZ6PUUUvAKEmfPNc2w9FJ9EGTHDrG6+KxobutnliGbsOtLSki6anNbbd/9cB3Qg
-4ZCkD5oXOeH340aSzTG19QMdf0ACBKpwoMUHA97KWFMSLgl/7WHi9+ZogAb/bII2
-+kb65UNwWsXdEOhtTcDWDk5hVTIRVmiSndJkdjam6LAdidZjEPct7ByXvPmefcHA
-/qWcFUxPP1Wmoy5CJLALzRqIsW5LyonWhxnBwDA+Hl0u9POP28oCU7TY8qRoTCeS
-oRR0ZGXS10zVLRJGC99Di0g5elRP8xyaOcuEK/zPxD0bBVlzGRA=
-=ucl/
------END PGP SIGNATURE-----
-
---btk4uzvcft3s7ycb--
+      Arnd
