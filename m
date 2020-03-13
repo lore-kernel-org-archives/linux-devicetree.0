@@ -2,156 +2,78 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57435C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 17:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC87C4CECE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E843206EB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 17:56:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B6Je0YbX"
+	by mail.kernel.org (Postfix) with ESMTP id 6C7A620724
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 18:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584122466;
+	bh=0Atpr6ZtF5yQD78BdGzERxlwoaiekMUryGsAon4sBCc=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=iUmVhW43jTEwP2nNYTB5clfOLmeXaljQUVstF6RriLkq2ZPhT2TDriG20X3o0sQNb
+	 eMFdei4WfzPuOLncBrd9+ZqztjJqKtjaIMiIIyiosR9Nvrxp/a0wOKQuHpEVeyOQDg
+	 YXzAQAVmjdD5dJv2A4NDO/o+ZEn15fxEx6G1hVf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgCMR4c (ORCPT
+        id S1726550AbgCMSBD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 13:56:32 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37534 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbgCMR4c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 13:56:32 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02DHuM5l001025;
-        Fri, 13 Mar 2020 12:56:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584122182;
-        bh=i/TegccITaPMoMi6UVP/BPk+ArR8UaOpWaWzIsURoBI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=B6Je0YbXBggKqgKqBWjhkue5CvpE76CcLWRmQlQ52oseCmKh3D2R+g69SaJ4J/Ggp
-         vCaHl+/kZjChbI8DaXSI0bLqDO+KK2vHiFvxUP6V+UcrRMhzHJL/mBiErrB5OyL8fY
-         pzzEqWqMYMc0eV328yhbrRp6CT9pHFe7WIh+pmwE=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02DHuMJZ010836
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 13 Mar 2020 12:56:22 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 13
- Mar 2020 12:56:22 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 13 Mar 2020 12:56:22 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02DHuL4u074681;
-        Fri, 13 Mar 2020 12:56:21 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
-CC:     Murali Karicheri <m-karicheri2@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v3 08/10] arm64: dts: ti: k3-j721e-mcu: add mcu cpsw nuss node
-Date:   Fri, 13 Mar 2020 19:55:09 +0200
-Message-ID: <20200313175511.2155-9-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200313175511.2155-1-grygorii.strashko@ti.com>
-References: <20200313175511.2155-1-grygorii.strashko@ti.com>
+        Fri, 13 Mar 2020 14:01:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726414AbgCMSBD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 14:01:03 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6FD20674;
+        Fri, 13 Mar 2020 18:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584122462;
+        bh=0Atpr6ZtF5yQD78BdGzERxlwoaiekMUryGsAon4sBCc=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=He88vEq+9HRxEG4fEVgDj9kFX9XEaRGY5yIP3KzKueEJGC4wYnBfAMnAG19TNBDX5
+         L2mRoHAyRvzp5Jq2dyN3l9hppcUVVTh1j2AvJhY9a6OKsLbLLghX9ocvMpcAc38c87
+         CSO0YQKob5qwOqIIz+RU5E8fz3pNsSQbeOaMYIDU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200304170939.GR24720@google.com>
+References: <1581423236-21341-1-git-send-email-tdas@codeaurora.org> <1581423236-21341-2-git-send-email-tdas@codeaurora.org> <20200303201629.GP24720@google.com> <f0529793-c51d-4baf-5217-173c552f4cbe@codeaurora.org> <20200304170939.GR24720@google.com>
+Subject: Re: [PATCH v1 2/2] clk: qcom: dispcc: Remove support of disp_cc_mdss_rscc_ahb_clk
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>, robh@kernel.org,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Doug Anderson <dianders@chromium.org>
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Fri, 13 Mar 2020 11:01:01 -0700
+Message-ID: <158412246142.149997.5548337390525905687@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DT node for The TI J721E MCU SoC Gigabit Ethernet
-subsystem (MCU CPSW NUSS).
+Quoting Matthias Kaehlcke (2020-03-04 09:09:39)
+> Hi Taniya,
+>=20
+> On Wed, Mar 04, 2020 at 09:05:20AM +0530, Taniya Das wrote:
+> >=20
+> > Hi Matthias,
+> >=20
+> > The display device node is not present and we encounter this crash, wou=
+ld it
+> > be possible to add ALWAYS_ON for the MDSS GDSC and give it a try.
+>=20
+> It still crashes when ALWAYS_ON is set for the MDSS GDSC.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      | 49 +++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-j721e.dtsi          |  1 +
- 2 files changed, 50 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 6f961d5f077a..dc047273f101 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -284,4 +284,53 @@
- 			ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
- 		};
- 	};
-+
-+	mcu_cpsw: ethernet@46000000 {
-+		compatible = "ti,j721e-cpsw-nuss";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		reg = <0x0 0x46000000 0x0 0x200000>;
-+		reg-names = "cpsw_nuss";
-+		ranges = <0x0 0x0 0x0 0x46000000 0x0 0x200000>;
-+		dma-coherent;
-+		clocks = <&k3_clks 18 22>;
-+		clock-names = "fck";
-+		power-domains = <&k3_pds 18 TI_SCI_PD_EXCLUSIVE>;
-+
-+		dmas = <&mcu_udmap 0xf000>,
-+		       <&mcu_udmap 0xf001>,
-+		       <&mcu_udmap 0xf002>,
-+		       <&mcu_udmap 0xf003>,
-+		       <&mcu_udmap 0xf004>,
-+		       <&mcu_udmap 0xf005>,
-+		       <&mcu_udmap 0xf006>,
-+		       <&mcu_udmap 0xf007>,
-+		       <&mcu_udmap 0x7000>;
-+		dma-names = "tx0", "tx1", "tx2", "tx3",
-+			    "tx4", "tx5", "tx6", "tx7",
-+			    "rx";
-+
-+		ethernet-ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			cpsw_port1: port@1 {
-+				reg = <1>;
-+				ti,mac-only;
-+				label = "port1";
-+				ti,syscon-efuse = <&mcu_conf 0x200>;
-+				phys = <&phy_gmii_sel 1>;
-+			};
-+		};
-+
-+		davinci_mdio: mdio@f00 {
-+			compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-+			reg = <0x0 0xf00 0x0 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&k3_clks 18 22>;
-+			clock-names = "fck";
-+			bus_freq = <1000000>;
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e.dtsi b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-index 027bd1febafa..2f9a56d9b114 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e.dtsi
-@@ -30,6 +30,7 @@
- 		serial9 = &main_uart7;
- 		serial10 = &main_uart8;
- 		serial11 = &main_uart9;
-+		ethernet0 = &cpsw_port1;
- 	};
- 
- 	chosen { };
--- 
-2.17.1
-
+Any updates here? I'm about to send this patch off to Linus and I'm
+wondering if there will be a resolution besides reverting it.
