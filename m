@@ -2,990 +2,456 @@ Return-Path: <SRS0=byNV=46=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25086C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B67C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3621206E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F69206B1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 13 Mar 2020 08:16:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="REQQf0F5"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="QWyeXvAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgCMIDz (ORCPT
+        id S1726230AbgCMIQU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 04:03:55 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52020 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCMIDz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 04:03:55 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200313080352euoutp01e9c2fe2549f4361d657edd5927cbf33e~7zmYwRV9u2270922709euoutp01V
-        for <devicetree@vger.kernel.org>; Fri, 13 Mar 2020 08:03:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200313080352euoutp01e9c2fe2549f4361d657edd5927cbf33e~7zmYwRV9u2270922709euoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584086632;
-        bh=l+xFSYzab9qcwUJNCs+hKgqLCxBff1J2xXqYnlDNlGU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=REQQf0F55aDEvBbX9APO8oSKw/dQhuyh8WQ1x04Kg2cP9rczzbY+4aljbChBijT7n
-         jqbYxJpBUKwOaMLNDeS5i7YWZjerc1Kyj/tc8ngOl+yFzZX31hFAQF5OhjQs1VBNPG
-         RhyNIKo2GiAg7So5MyiaJsyAA4JISmE/j7CqEFK0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200313080352eucas1p2c6e14bf9136bfa8806c2fabb2469f374~7zmYknL5y3141831418eucas1p2t;
-        Fri, 13 Mar 2020 08:03:52 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id DF.28.61286.76E3B6E5; Fri, 13
-        Mar 2020 08:03:51 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200313080351eucas1p117b78e3237bbdf027928a61f9fb99f4f~7zmYJGxF-2251222512eucas1p1y;
-        Fri, 13 Mar 2020 08:03:51 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200313080351eusmtrp294fd7bd264e15fbda99eaa724078a26e~7zmYIZy392832928329eusmtrp2S;
-        Fri, 13 Mar 2020 08:03:51 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-cc-5e6b3e67f584
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id E3.6D.07950.76E3B6E5; Fri, 13
-        Mar 2020 08:03:51 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200313080350eusmtip2a3350f0bbefa20ac1dbb0f5f62714d44~7zmXljotl1828318283eusmtip2b;
-        Fri, 13 Mar 2020 08:03:50 +0000 (GMT)
-Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        Fri, 13 Mar 2020 04:16:20 -0400
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:60833 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726371AbgCMIQU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 04:16:20 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id CfUKj1GG5hVf8CfUNjO8bW; Fri, 13 Mar 2020 09:16:17 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1584087377; bh=nP79N0yOwSx8yKGwqAW504OdT/Y72TUWVCiVmG3B1A4=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=QWyeXvAy9Guf59EIPaFULSKa6qK31U3k2LLk7Jock2ge5n5DcKjiyCTebt+wY8iz1
+         BOCkCRQPC1aitJ0UL/eF6RWWKCG2725+S9vqRv31s2TGXnBC8Tqq5HgU1U7Der+LeX
+         qd3qz19cif3ZAIg7IbVli7020SRQxbBZoLqOp9yFEIdbZfQNYsZt1Ngt6SvzkfScTn
+         IzamoCLGQMk8EPt6pkUrU9BGRhGd0v+Xml4j0pe/lO+1EdC/+jzu8oyeanidqaG56R
+         vDWS8xf6qIHxSPjn2qRqa47Qer494bH6E4VBXxOj3QrJuRIzEbPyIkew5hsWK1mgoz
+         bDw/pKJVyAwpQ==
+Subject: Re: [PATCH 2/8] media: adv748x: add audio mute control and output
+ selection ioctls
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <222f90d6-effa-6ddd-f525-34516314b0e2@samsung.com>
-Date:   Fri, 13 Mar 2020 09:03:50 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.5.0
+        Mark Rutland <mark.rutland@arm.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1578924232.git.alexander.riesen@cetitec.com>
+ <20200113141521.GC3606@pflmari>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <ff34078d-895d-08c8-c64f-768e75388038@xs4all.nl>
+Date:   Fri, 13 Mar 2020 09:16:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200312153411.13535-2-paul@crapouillou.net>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200113141521.GC3606@pflmari>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2zk7O44mn/P2olY00rTIS/XjkKUGBSuIohBK8LL0pDZvbGo6
-        qETTagSKROoULS/YvN9NScWpmUabzmtmgmhJ5f6kIsasnEfLf8/7PO/7Pc/78tGEuJvvREfH
-        JbKKOFmMhBKSbW83DMcj/eQh3oONvkxJv57PZC/8IBiDoUHANC1M8pmxziKKyTd085iKqVEe
-        k11mJJnMrn4B86y8QBAglNYU1yBptfERJe3QfBZIm6qeUNLm8gfSlaYDV6kg4ZkINiY6mVV4
-        +YUJo9qzFAlVdSjly2YmlYaGHyI1sqIBn4L5jFzKgsX4FYJC82U1Em7hVQTvdGYeV6wgaNP1
-        8HYncvvKCE6oRKCfHqW4woRgOLt9S6FpWyyFnqVwy4Ad7kAwYg619BC4FcFcfjphESjsA2qT
-        ettbhP0gb+bjdiYSu8Lo1Nw2tsfBUKjtI7keGxgqWCQt71vh09Dctd9CE/ggtJuKCA47wsxi
-        yXZqwHoBvGmbFXCpz8PmJy3JYVv4Ptiyw7vAn47dgQwE8/paAVc8RTCWnr9zJV+Y1f+iLM4E
-        9oD6Ti+OPge54808Cw3YGqZNNlwIa8htyyM4WgSPs8RctxtoBuv+2faOGIkcJNHs2UyzZx3N
-        nnU0/31fILIKObJJythIVukTx971VMpilUlxkZ7h8bFNaOtXvf89+PM1WjPe0iFMI8k+kbfD
-        nRAxX5asTI3VIaAJiZ3I214eIhZFyFJVrCI+VJEUwyp1yJkmJY6ik6XfgsU4UpbIylk2gVXs
-        qjzayikNuVeoVEsBy+7Xq0p9c4IMVHF1/UtX84cRudtzpF3z6Nhcap7IamwdTylbvbiefMjG
-        u9fEv+k6HHi2V+vgny5ZzzrcE2pWVx6BpQ1GdaKg9f7tC9Xy1KHa6pTGY/e+ykWTLlqvRVmL
-        Ew87XxsYqL2yPCq+IWoIDGMG/Gsm9JfiJaQySuZzlFAoZX8BTYuY9FEDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xe7rpdtlxBiu3KVrMP3KO1aL/8Wtm
-        i/PnN7BbbHp8jdXi8q45bBYzzu9jslh6/SKTRf/iSywWrXuPsFtMWTKT3YHLY828NYweqy+1
-        s3nsnHWX3WPTqk42j81L6j0+b5ILYIvSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaP
-        tTIyVdK3s0lJzcksSy3St0vQy9jeVlSwah1jxdO/rWwNjKdaGLsYOTkkBEwkJh1ezAxiCwks
-        ZZQ4dN0SIi4jcXJaAyuELSzx51oXWxcjF1DNa0aJTwcnAjVwcAgLeEjsf54MEhcR2MkoceH+
-        SXaQBmaBrUCDeishGvYyStyfc5sNJMEmYCjR9bYLzOYVsJOYfusm2BUsAqoSF6/fA7NFBWIl
-        bszsYIKoEZQ4OfMJC8gyTgEric17ZSHmm0nM2/yQGcKWl9j+dg6ULS5x68l8pgmMQrOQdM9C
-        0jILScssJC0LGFlWMYqklhbnpucWG+kVJ+YWl+al6yXn525iBMbmtmM/t+xg7HoXfIhRgINR
-        iYfXQCwrTog1say4MvcQowQHs5IIr4FodpwQb0piZVVqUX58UWlOavEhRlOg3yYyS4km5wPT
-        Rl5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBsaEH5sMLQJjGXee
-        VKxc8viSi5yoYPsk/8Wnjp8Pa3yy08imiftc7bx14X6f1WO8hY82LLONiF2775jvdEaT1dMX
-        1P2U7Y6PkXgUdP/Jee+2iqnO13aunPNbUFBHSE1s4tynXyU61h5kCOzuDuQV7F8dfqTi0UIb
-        W3GvOS2nZ//1YuwIvr9oR7kSS3FGoqEWc1FxIgDeRBqb4wIAAA==
-X-CMS-MailID: 20200313080351eucas1p117b78e3237bbdf027928a61f9fb99f4f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200312153430eucas1p21948620c871efdc5edbff18a0e075d07
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200312153430eucas1p21948620c871efdc5edbff18a0e075d07
-References: <20200312153411.13535-1-paul@crapouillou.net>
-        <CGME20200312153430eucas1p21948620c871efdc5edbff18a0e075d07@eucas1p2.samsung.com>
-        <20200312153411.13535-2-paul@crapouillou.net>
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKfeYNFFGRobPFSOTEI7B9w8TK8aojO5c062aoWeZ3/mtuWJfxdHCSCOUpa16sOCyNspr5wgKwX5TT40iEWHjUh+S5npKQCL8BLzkTwNpIyskWxt7HgN
+ hxFnIp1iMExxpo95KQnf1bWvjbsLiCVONyJ3XK+4j3GlqPn4IujImFC+Wb7FqDBzFtAy+9CdSbjMDN4kLWphnYL9QwjzLEw+RNXZLWCGPF4nUag6TV1jDsJN
+ TkakaYHL6wsXTi95DfE1puENWphP4SR12XK7wM9OOfjJ+i6WiQ4LDrckS1zzpY+yTLWXYx1OQne/p/q+CG8d6LH+fgWhQKFTIvMJ0lCH6rlSmNHTwS4kSmms
+ HNUoDJSF46NxoHf6ZMsthh5eXpPJYVexb/SgxgYEM0pPvBVFR+KcdCiKwimsvozXxFmEwFErjro38ULkqxAWgA6OA+WBv+ZIf5dbSNRMSK+2Y0Vf2kHRPdiO
+ UN4MqYGa2MX1p6TQqCatFZl5XLmGq6CrHQZhhfK0rBQdPg4yupf7Od+AsD6wATpQhXAxqm7RLDTiV90pK9dravuzk55J85hIrbyfeXN7ueSLS7l62HRgtxzB
+ 620=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Alex,
 
-On 12.03.2020 16:34, Paul Cercueil wrote:
-> From: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
->
-> Add devicetree file for the Exynos 4210 based Galaxy S2 (i9100 version).
->
-> Signed-off-by: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+I apologize for the (very) slow reply, but better late than never.
+
+On 1/13/20 3:15 PM, Alex Riesen wrote:
+> This change implements audio-related V4L2 ioctls for the HDMI subdevice.
+
+This is really where things go wrong. These V4L2 audio ioctls are meant for
+old PCI TV tuner devices where the audio was implemented as audio jack outputs
+that are typically looped back to audio inputs on a (PCI) soundcard. And when
+these ioctls were designed ALSA didn't even exist.
+
+None of that applies here.
+
+Generally an hdmi driver will configure the i2s audio automatically, which is
+typically connected to the SoC and controlled by the ALSA driver of the SoC,
+but there may well be missing features (audio never got a lot of attention in
+hdmi receivers). So what I would like to know is: what features are missing?
+
+Anything missing can likely be resolved by adding HDMI audio specific V4L2 controls,
+which would be the right approach for this.
+
+So I would expect to see a proposal for V4L2_CID_DV_RX_AUDIO_ controls to be
+added here:
+
+https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/ext-ctrls-dv.html
+
+Regards,
+
+	Hans
+
+> 
+> The master audio clock is configured for 256fs, as supported by the only
+> device available at the moment. For the same reason, the TDM slot is
+> formatted using left justification of its bits.
+> 
+> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
 > ---
->   arch/arm/boot/dts/Makefile             |   1 +
->   arch/arm/boot/dts/exynos4210-i9100.dts | 816 +++++++++++++++++++++++++
->   2 files changed, 817 insertions(+)
->   create mode 100644 arch/arm/boot/dts/exynos4210-i9100.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index d6546d2676b9..522436d30690 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -181,6 +181,7 @@ dtb-$(CONFIG_ARCH_EXYNOS3) += \
->   	exynos3250-monk.dtb \
->   	exynos3250-rinato.dtb
->   dtb-$(CONFIG_ARCH_EXYNOS4) += \
-> +	exynos4210-i9100.dtb \
->   	exynos4210-origen.dtb \
->   	exynos4210-smdkv310.dtb \
->   	exynos4210-trats.dtb \
-> diff --git a/arch/arm/boot/dts/exynos4210-i9100.dts b/arch/arm/boot/dts/exynos4210-i9100.dts
-> new file mode 100644
-> index 000000000000..c218e34959be
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos4210-i9100.dts
-> @@ -0,0 +1,816 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Samsung's Exynos4210 based Galaxy S2 (i9100 version) device tree
-> + *
-> + * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + * Copyright (c) 2020 Stenkin Evgeniy <stenkinevgeniy@gmail.com>
-> + * Copyright (c) 2020 Paul Cercueil <paul@crapouillou.net>
-> + *
-> + * Device tree source file for Samsung's Galaxy S2 smartphone (i9100 version),
-> + * which is based on Samsung's Exynos4210 SoC.
-> + */
+>  drivers/media/i2c/adv748x/adv748x-core.c |   6 +
+>  drivers/media/i2c/adv748x/adv748x-hdmi.c | 182 +++++++++++++++++++++++
+>  drivers/media/i2c/adv748x/adv748x.h      |  42 ++++++
+>  3 files changed, 230 insertions(+)
+> 
+> diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+> index bc49aa93793c..b6067ffb1e0d 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-core.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-core.c
+> @@ -150,6 +150,12 @@ static int adv748x_write_check(struct adv748x_state *state, u8 page, u8 reg,
+>  	return *error;
+>  }
+>  
+> +int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg, u8 mask,
+> +			u8 value)
+> +{
+> +	return regmap_update_bits(state->regmap[page], reg, mask, value);
+> +}
 > +
-> +/dts-v1/;
-> +#include "exynos4210.dtsi"
-> +#include "exynos4412-ppmu-common.dtsi"
+>  /* adv748x_write_block(): Write raw data with a maximum of I2C_SMBUS_BLOCK_MAX
+>   * size to one or more registers.
+>   *
+> diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+> index c557f8fdf11a..9bc9237c9116 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+> @@ -5,6 +5,7 @@
+>   * Copyright (C) 2017 Renesas Electronics Corp.
+>   */
+>  
+> +#include <linux/version.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  
+> @@ -603,11 +604,186 @@ static const struct v4l2_subdev_pad_ops adv748x_pad_ops_hdmi = {
+>  	.enum_dv_timings = adv748x_hdmi_enum_dv_timings,
+>  };
+>  
+> +static int adv748x_hdmi_audio_mute(struct adv748x_hdmi *hdmi, int enable)
+> +{
+> +	struct adv748x_state *state = adv748x_hdmi_to_state(hdmi);
 > +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/linux-event-codes.h>
-> +
-> +/ {
-> +	model = "Samsung Galaxy S2 (i9100)";
-> +	compatible = "samsung,i9100", "samsung,exynos4210", "samsung,exynos4";
+> +	return hdmi_update(state, ADV748X_HDMI_MUTE_CTRL,
+> +			   ADV748X_HDMI_MUTE_CTRL_MUTE_AUDIO,
+> +			   enable ? 0xff : 0);
+> +}
 > +
 > +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0x40000000 0x40000000>;
-> +	};
+> +#define HDMI_AOUT_NONE 0
+> +#define HDMI_AOUT_I2S 1
+> +#define HDMI_AOUT_I2S_TDM 2
 > +
-> +	vemmc_reg: regulator-0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VMEM_VDD_2.8V";
-> +		regulator-min-microvolt = <2800000>;
-> +		regulator-max-microvolt = <2800000>;
-> +		gpio = <&gpk0 2 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
+> +static int adv748x_hdmi_enumaudout(struct adv748x_hdmi *hdmi,
+> +				   struct v4l2_audioout *a)
+> +{
+> +	switch (a->index) {
+> +	case HDMI_AOUT_NONE:
+> +		strlcpy(a->name, "None", sizeof(a->name));
+> +		break;
+> +	case HDMI_AOUT_I2S:
+> +		strlcpy(a->name, "I2S/stereo", sizeof(a->name));
+> +		break;
+> +	case HDMI_AOUT_I2S_TDM:
+> +		strlcpy(a->name, "I2S-TDM/multichannel", sizeof(a->name));
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
 > +
-> +	tsp_reg: regulator-1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "TSP_FIXED_VOLTAGES";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
-> +		startup-delay-us = <70000>;
-> +		enable-active-high;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
+> +static int adv748x_hdmi_g_audout(struct adv748x_hdmi *hdmi,
+> +				 struct v4l2_audioout *a)
+> +{
+> +	a->index = hdmi->audio_out;
+> +	return adv748x_hdmi_enumaudout(hdmi, a);
+> +}
 > +
-> +	cam_af_28v_reg: regulator-3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "8M_AF_2.8V_EN";
-> +		regulator-min-microvolt = <2800000>;
-> +		regulator-max-microvolt = <2800000>;
-> +		gpio = <&gpk1 1 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
+> +static int set_audio_pads_state(struct adv748x_state *state, int on)
+> +{
+> +	return io_update(state, ADV748X_IO_PAD_CONTROLS,
+> +			 ADV748X_IO_PAD_CONTROLS_TRI_AUD |
+> +			 ADV748X_IO_PAD_CONTROLS_PDN_AUD,
+> +			 on ? 0 : 0xff);
+> +}
 > +
-> +	cam_io_en_reg: regulator-4 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "CAM_IO_EN";
-> +		regulator-min-microvolt = <2800000>;
-> +		regulator-max-microvolt = <2800000>;
-> +		gpio = <&gpe2 1 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
+> +static int set_dpll_mclk_fs(struct adv748x_state *state, int fs)
+> +{
+> +	if (fs % 128 || fs > 768)
+> +		return -EINVAL;
+> +	return dpll_update(state, ADV748X_DPLL_MCLK_FS,
+> +			   ADV748X_DPLL_MCLK_FS_N_MASK, (fs / 128) - 1);
+> +}
 > +
-> +	cam_io_12v_reg: regulator-5 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "8M_1.2V_EN";
-> +		regulator-min-microvolt = <1200000>;
-> +		regulator-max-microvolt = <1200000>;
-> +		gpio = <&gpe2 5 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
+> +static int set_i2s_format(struct adv748x_state *state, uint outmode,
+> +			  uint bitwidth)
+> +{
+> +	return hdmi_update(state, ADV748X_HDMI_I2S,
+> +			   ADV748X_HDMI_I2SBITWIDTH_MASK |
+> +			   ADV748X_HDMI_I2SOUTMODE_MASK,
+> +			   (outmode << ADV748X_HDMI_I2SOUTMODE_SHIFT) |
+> +			   bitwidth);
+> +}
 > +
-> +	vt_core_15v_reg: regulator-6 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VT_CORE_1.5V";
-> +		regulator-min-microvolt = <1500000>;
-> +		regulator-max-microvolt = <1500000>;
-> +		gpio = <&gpe2 2 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +	};
+> +static int set_i2s_tdm_mode(struct adv748x_state *state, int is_tdm)
+> +{
+> +	int ret;
 > +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
+> +	ret = hdmi_update(state, ADV748X_HDMI_AUDIO_MUTE_SPEED,
+> +			  ADV748X_MAN_AUDIO_DL_BYPASS |
+> +			  ADV748X_AUDIO_DELAY_LINE_BYPASS,
+> +			  is_tdm ? 0xff : 0);
+> +	if (ret < 0)
+> +		goto fail;
+> +	ret = hdmi_update(state, ADV748X_HDMI_REG_6D,
+> +			  ADV748X_I2S_TDM_MODE_ENABLE,
+> +			  is_tdm ? 0xff : 0);
+> +	if (ret < 0)
+> +		goto fail;
+> +	ret = set_i2s_format(state, ADV748X_I2SOUTMODE_LEFT_J, 24);
+> +fail:
+> +	return ret;
+> +}
 > +
-> +		vol-down {
-> +			gpios = <&gpx2 1 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_VOLUMEDOWN>;
-> +			label = "volume down";
-> +			debounce-interval = <10>;
-> +		};
+> +static int set_audio_out(struct adv748x_state *state, int aout)
+> +{
+> +	int ret;
 > +
-> +		vol-up {
-> +			gpios = <&gpx2 0 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_VOLUMEUP>;
-> +			label = "volume up";
-> +			debounce-interval = <10>;
-> +		};
+> +	switch (aout) {
+> +	case HDMI_AOUT_NONE:
+> +		ret = set_audio_pads_state(state, 0);
+> +		break;
+> +	case HDMI_AOUT_I2S:
+> +		ret = set_dpll_mclk_fs(state, 256);
+> +		if (ret < 0)
+> +			goto fail;
+> +		ret = set_i2s_tdm_mode(state, 1);
+> +		if (ret < 0)
+> +			goto fail;
+> +		ret = set_audio_pads_state(state, 1);
+> +		if (ret < 0)
+> +			goto fail;
+> +		break;
+> +	case HDMI_AOUT_I2S_TDM:
+> +		ret = set_dpll_mclk_fs(state, 256);
+> +		if (ret < 0)
+> +			goto fail;
+> +		ret = set_i2s_tdm_mode(state, 1);
+> +		if (ret < 0)
+> +			goto fail;
+> +		ret = set_audio_pads_state(state, 1);
+> +		if (ret < 0)
+> +			goto fail;
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		goto fail;
+> +	}
+> +	return 0;
+> +fail:
+> +	return ret;
+> +}
 > +
-> +		power {
-> +			gpios = <&gpx2 7 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_POWER>;
-> +			label = "power";
-> +			debounce-interval = <10>;
-> +			wakeup-source;
-> +		};
+> +static int adv748x_hdmi_s_audout(struct adv748x_hdmi *hdmi,
+> +				 const struct v4l2_audioout *a)
+> +{
+> +	struct adv748x_state *state = adv748x_hdmi_to_state(hdmi);
+> +	int ret = set_audio_out(state, a->index);
 > +
-> +		ok {
-> +			gpios = <&gpx3 5 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_OK>;
-> +			label = "ok";
-> +			debounce-interval = <10>;
-> +		};
-> +	};
+> +	if (ret == 0)
+> +		hdmi->audio_out = a->index;
+> +	return ret;
+> +}
 > +
-> +	wlan_pwrseq: sdhci3-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		reset-gpios = <&gpl1 2 GPIO_ACTIVE_LOW>;
-> +	};
+> +static long adv748x_hdmi_querycap(struct adv748x_hdmi *hdmi,
+> +				  struct v4l2_capability *cap)
+> +{
+> +	struct adv748x_state *state = adv748x_hdmi_to_state(hdmi);
 > +
-> +	i2c_max17042_fuel: i2c-gpio-3 {
-> +		compatible = "i2c-gpio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> +	cap->version = LINUX_VERSION_CODE;
+> +	strlcpy(cap->driver, state->dev->driver->name, sizeof(cap->driver));
+> +	strlcpy(cap->card, "hdmi", sizeof(cap->card));
+> +	snprintf(cap->bus_info, sizeof(cap->bus_info), "i2c:%d-%04x",
+> +		 i2c_adapter_id(state->client->adapter),
+> +		 state->client->addr);
+> +	cap->device_caps = V4L2_CAP_AUDIO | V4L2_CAP_VIDEO_CAPTURE;
+> +	cap->capabilities = V4L2_CAP_DEVICE_CAPS;
+> +	return 0;
+> +}
 > +
-> +		sda-gpios = <&gpy4 0 GPIO_ACTIVE_HIGH>;
-> +		scl-gpios = <&gpy4 1 GPIO_ACTIVE_HIGH>;
-> +		i2c-gpio,delay-us = <5>;
+> +static long adv748x_hdmi_ioctl(struct v4l2_subdev *sd,
+> +			       unsigned int cmd, void *arg)
+> +{
+> +	struct adv748x_hdmi *hdmi = adv748x_sd_to_hdmi(sd);
 > +
-> +		battery@36 {
-> +			compatible = "maxim,max17042";
+> +	switch (cmd) {
+> +	case VIDIOC_ENUMAUDOUT:
+> +		return adv748x_hdmi_enumaudout(hdmi, arg);
+> +	case VIDIOC_S_AUDOUT:
+> +		return adv748x_hdmi_s_audout(hdmi, arg);
+> +	case VIDIOC_G_AUDOUT:
+> +		return adv748x_hdmi_g_audout(hdmi, arg);
+> +	case VIDIOC_QUERYCAP:
+> +		return adv748x_hdmi_querycap(hdmi, arg);
+> +	}
+> +	return -ENOTTY;
+> +}
 > +
-> +			interrupt-parent = <&gpx2>;
-> +			interrupts = <3 2>;
-> +
-> +			pinctrl-0 = <&max17042_fuel_irq>;
-> +			pinctrl-names = "default";
-> +
-> +			reg = <0x36>;
-> +			maxim,over-heat-temp = <700>;
-> +			maxim,over-volt = <4500>;
-> +
-> +		};
-> +	};
-> +
-> +	spi-lcd {
-> +		compatible = "spi-gpio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		num-chipselects = <1>;
-> +		cs-gpios = <&gpy4 3 GPIO_ACTIVE_HIGH>;
-LD9040 CS is active low, so this board needs probably the same fix a 
-Universal C210 board: https://patchwork.kernel.org/patch/11420231/ Are 
-you sure it really works now with v5.6-rcX kernels? Or you just got the 
-panel working only because the bootloader enabled it?
-> +		sck-gpios = <&gpy3 1 GPIO_ACTIVE_HIGH>;
-> +		mosi-gpios = <&gpy3 3 GPIO_ACTIVE_HIGH>;
-> +
-> +		lcd@0 {
-> +			compatible = "samsung,ld9040";
-> +			reg = <0>;
-> +
-> +			spi-max-frequency = <1200000>;
-> +			spi-cpol;
-> +			spi-cpha;
-> +
-> +			vdd3-supply = <&vmipi_reg>;
-> +			vci-supply = <&vcclcd_reg>;
-> +
-> +			reset-gpios = <&gpy4 5 GPIO_ACTIVE_HIGH>;
-> +			power-on-delay = <10>;
-> +			reset-delay = <10>;
-> +
-> +			panel-width-mm = <90>;
-> +			panel-height-mm = <154>;
-> +
-> +			display-timings {
-> +				timing {
-> +					clock-frequency = <23492370>;
-> +					hactive = <480>;
-> +					vactive = <800>;
-> +					hback-porch = <16>;
-> +					hfront-porch = <16>;
-> +					vback-porch = <2>;
-> +					vfront-porch = <28>;
-> +					hsync-len = <2>;
-> +					vsync-len = <1>;
-> +					hsync-active = <0>;
-> +					vsync-active = <0>;
-> +					de-active = <0>;
-> +					pixelclk-active = <0>;
-> +				};
-> +			};
-> +
-> +			port {
-> +				lcd_ep: endpoint {
-> +					remote-endpoint = <&fimd_dpi_ep>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	fixed-rate-clocks {
-> +		xxti {
-> +			compatible = "samsung,clock-xxti";
-> +			clock-frequency = <0>;
-> +		};
-> +
-> +		xusbxti {
-> +			compatible = "samsung,clock-xusbxti";
-> +			clock-frequency = <24000000>;
-> +		};
-> +	};
-> +
-> +	thermal-zones {
-> +		cpu_thermal: cpu-thermal {
-> +			cooling-maps {
-> +				map0 {
-> +					/* Corresponds to 800MHz */
-> +					cooling-device = <&cpu0 2 2>;
-> +				};
-> +				map1 {
-> +					/* Corresponds to 200MHz */
-> +					cooling-device = <&cpu0 4 4>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
+> +static const struct v4l2_subdev_core_ops adv748x_core_ops_hdmi = {
+> +	.ioctl = adv748x_hdmi_ioctl,
 > +};
 > +
-> +&camera {
-> +	status = "okay";
-> +};
-> +
-> +&cpu0 {
-> +	cpu0-supply = <&varm_breg>;
-> +};
-> +
-> +&exynos_usbphy {
-> +	status = "okay";
-> +
-> +	vbus-supply = <&safe1_sreg>;
-> +};
-> +
-> +&fimc_0 {
-> +	status = "okay";
-> +
-> +	assigned-clocks = <&clock CLK_MOUT_FIMC0>, <&clock CLK_SCLK_FIMC0>;
-> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
-> +	assigned-clock-rates = <0>, <160000000>;
-> +};
-> +
-> +&fimc_1 {
-> +	status = "okay";
-> +
-> +	assigned-clocks = <&clock CLK_MOUT_FIMC1>, <&clock CLK_SCLK_FIMC1>;
-> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
-> +	assigned-clock-rates = <0>, <160000000>;
-> +};
-> +
-> +&fimc_2 {
-> +	status = "okay";
-> +
-> +	assigned-clocks = <&clock CLK_MOUT_FIMC2>, <&clock CLK_SCLK_FIMC2>;
-> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
-> +	assigned-clock-rates = <0>, <160000000>;
-> +};
-> +
-> +&fimc_3 {
-> +	status = "okay";
-> +
-> +	assigned-clocks = <&clock CLK_MOUT_FIMC3>, <&clock CLK_SCLK_FIMC3>;
-> +	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
-> +	assigned-clock-rates = <0>, <160000000>;
-> +};
-> +
-> +&fimd {
-> +	status = "okay";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	samsung,invert-vden;
-> +	samsung,invert-vclk;
-> +
-> +	pinctrl-0 = <&lcd_clk>, <&lcd_data24>;
-> +	pinctrl-names = "default";
-> +
-> +	port@3 {
-> +		reg = <3>;
-> +
-> +		fimd_dpi_ep: endpoint {
-> +			remote-endpoint = <&lcd_ep>;
-> +		};
-> +	};
-> +};
-> +
-> +&hsotg {
-> +	status = "okay";
-> +
-> +	dr_mode = "otg";
-The the host mode really works with DWC2? Afair the host mode worked 
-only when it was rerouted by PHY to the EHCI (at least on UniversalC210 
-board, which is very similar to GS2).
-> +	vusb_d-supply = <&vusb_reg>;
-> +	vusb_a-supply = <&vusbdac_reg>;
-> +};
-> +
-> +&ehci {
-> +	status = "okay";
-> +
-> +	port@0 {
-> +		status = "okay";
-> +	};
-> +
-> +	port@1 {
-> +		status = "okay";
-> +	};
-> +
-> +	port@2 {
-> +		status = "okay";
-> +	};
-> +};
-
-This is the old, obsolete exynos-ehci binding. Please remove 'port' 
-nodes and use standard USB phy bindings like it has been done in the 
-following patch: https://patchwork.kernel.org/patch/11060465/
-
-BTW, do you really need all 3 phys/ports?
-
-> +
-> +
-> +&i2c_3 {
-> +	status = "okay";
-> +
-> +	samsung,i2c-sda-delay = <100>;
-> +	samsung,i2c-slave-addr = <0x10>;
-> +	samsung,i2c-max-bus-freq = <100000>;
-> +
-> +	pinctrl-0 = <&i2c3_bus>;
-> +	pinctrl-names = "default";
-> +
-> +	mxt224-touchscreen@4a {
-> +		compatible = "atmel,maxtouch";
-> +		reg = <0x4a>;
-> +
-> +		interrupt-parent = <&gpx0>;
-> +		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +		avdd-supply = <&tsp_reg>;
-> +		vdd-supply = <&tsp_reg>;
-> +	};
-> +};
-> +
-> +&i2c_7 {
-> +	status = "okay";
-> +
-> +	samsung,i2c-sda-delay = <100>;
-> +	samsung,i2c-slave-addr = <0x10>;
-> +	samsung,i2c-max-bus-freq = <400000>;
-> +
-> +	pinctrl-0 = <&i2c7_bus>;
-> +	pinctrl-names = "default";
-> +
-> +	ak8975@c {
-> +		compatible = "asahi-kasei,ak8975";
-> +		reg = <0x0c>;
-> +
-> +		gpios = <&gpx2 2 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> +
-> +
-> +&i2c_5 {
-> +	status = "okay";
-> +
-> +	samsung,i2c-sda-delay = <100>;
-> +	samsung,i2c-slave-addr = <0x10>;
-> +	samsung,i2c-max-bus-freq = <100000>;
-> +
-> +	pinctrl-0 = <&i2c5_bus>;
-> +	pinctrl-names = "default";
-> +
-> +	max8997_pmic@66 {
-> +		compatible = "maxim,max8997-pmic";
-> +		reg = <0x66>;
-> +
-> +		interrupts-extended = <&gpx0 7 0>, <&gpx2 3 2>;
-> +		interrupt-parent = <&gpx0>;
-> +		interrupts = <7 IRQ_TYPE_NONE>;
-> +
-> +		otg_en-gpios = <&gpx3 3 0>;
-> +		usb_sel-gpios = <&gpl0 6 0>;
-> +
-> +		max8997,pmic-buck1-uses-gpio-dvs;
-> +		max8997,pmic-buck2-uses-gpio-dvs;
-> +		max8997,pmic-buck5-uses-gpio-dvs;
-> +
-> +		max8997,pmic-ignore-gpiodvs-side-effect;
-> +		max8997,pmic-buck125-default-dvs-idx = <0>;
-> +
-> +		max8997,pmic-buck125-dvs-gpios = <&gpx0 5 GPIO_ACTIVE_HIGH>,
-> +						 <&gpx0 6 GPIO_ACTIVE_HIGH>,
-> +						 <&gpl0 0 GPIO_ACTIVE_HIGH>;
-> +
-> +		max8997,pmic-buck1-dvs-voltage = <1350000>, <1300000>,
-> +						 <1250000>, <1200000>,
-> +						 <1150000>, <1100000>,
-> +						 <1000000>, <950000>;
-> +
-> +		max8997,pmic-buck2-dvs-voltage = <1100000>, <1000000>,
-> +						 <950000>,  <900000>,
-> +						 <1100000>, <1000000>,
-> +						 <950000>,  <900000>;
-> +
-> +		max8997,pmic-buck5-dvs-voltage = <1200000>, <1200000>,
-> +						 <1200000>, <1200000>,
-> +						 <1200000>, <1200000>,
-> +						 <1200000>, <1200000>;
-> +
-> +		pinctrl-0 = <&max8997_irq>, <&otg_gp>, <&usb_sel>;
-> +		pinctrl-names = "default";
-> +
-> +		regulators {
-> +			vadc_reg: LDO1 {
-> +				regulator-name = "VADC_3.3V_C210";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-always-on;
-> +
-> +			};
-> +			valive_reg: LDO2 {
-> +				regulator-name = "VALIVE_1.1V_C210";
-> +				regulator-min-microvolt = <1100000>;
-> +				regulator-max-microvolt = <1100000>;
-> +				regulator-always-on;
-> +
-> +			};
-> +
-> +			vusb_reg: LDO3 {
-> +				regulator-name = "VUSB_1.1V_C210";
-> +				regulator-min-microvolt = <1100000>;
-> +				regulator-max-microvolt = <1100000>;
-> +			};
-> +
-> +			vmipi_reg: LDO4 {
-> +				regulator-name = "VMIPI_1.8V";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vhsic_reg: LDO5 {
-> +				regulator-name = "VHSIC_1.2V";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1200000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vpda_reg: LDO6 {
-> +				regulator-name = "VCC_1.8V_PDA";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vcam_reg: LDO7 {
-> +				regulator-name = "CAM_ISP_1.8V";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +			};
-> +
-> +			vusbdac_reg: LDO8 {
-> +				regulator-name = "VUSB+VDAC_3.3V_C210";
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +			};
-> +
-> +			vccpda_reg: LDO9 {
-> +				regulator-name = "VCC_2.8V_PDA";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vtouch_reg: LDO11 {
-> +				regulator-name = "TOUCH_2.8V";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vpll_reg: LDO10 {
-> +				regulator-name = "VPLL_1.1V";
-> +				regulator-min-microvolt = <1100000>;
-> +				regulator-max-microvolt = <1100000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vtcam_reg: LDO12 {
-> +				regulator-name = "VT_CAM_1.8V";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +			};
-> +
-> +			vcclcd_reg: LDO13 {
-> +				regulator-name = "VCC_3.0V_LCD";
-> +				regulator-min-microvolt = <3000000>;
-> +				regulator-max-microvolt = <3000000>;
-> +			};
-> +
-> +			vmotor_reg: LDO14 {
-> +				regulator-name = "VCC_2.8V_MOTOR";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +			};
-> +
-> +			vled_reg: LDO15 {
-> +				regulator-name = "LED_A_2.8V";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +			};
-> +
-> +			camsensor_reg: LDO16 {
-> +				regulator-name = "CAM_SENSOR_IO_1.8V";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +			};
-> +
-> +			vtf_reg: LDO17 {
-> +				regulator-name = "VTF_2.8V";
-> +				regulator-min-microvolt = <2800000>;
-> +				regulator-max-microvolt = <2800000>;
-> +			};
-> +
-> +			vtouchled_reg: LDO18 {
-> +				regulator-name = "TOUCH_LED_3.3V";
-> +				regulator-min-microvolt = <2500000>;
-> +				regulator-max-microvolt = <3300000>;
-> +			};
-> +
-> +			vddq_reg: LDO21 {
-> +				regulator-name = "VDDQ_M1M2_1.2V";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1200000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			varm_breg: BUCK1 {
-> +				//regulator-name = "VARM_1.2V_C210";
-> +				regulator-name = "vdd_arm";
-> +				regulator-min-microvolt = <65000>;
-> +				regulator-max-microvolt = <2225000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vint_breg: BUCK2 {
-> +				regulator-name = "VINT_1.1V_C210";
-> +				regulator-min-microvolt = <65000>;
-> +				regulator-max-microvolt = <2225000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vg3d_breg: BUCK3 {
-> +				regulator-name = "G3D_1.1V";
-> +				regulator-min-microvolt = <900000>;
-> +				regulator-max-microvolt = <1200000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			camisp_breg: BUCK4 {
-> +				regulator-name = "CAM_ISP_CORE_1.2V";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1200000>;
-> +			};
-> +
-> +			vmem_breg: BUCK5 {
-> +				regulator-name = "VMEM_1.2V";
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1200000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			vccsub_breg: BUCK7 {
-> +				regulator-name = "VCC_SUB_2.0V";
-> +				regulator-min-microvolt = <2000000>;
-> +				regulator-max-microvolt = <2000000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			safe1_sreg: ESAFEOUT1 {
-> +				regulator-name = "SAFEOUT1";
-> +			};
-> +
-> +			safe2_sreg: ESAFEOUT2 {
-> +				regulator-name = "SAFEOUT2";
-> +				regulator-boot-on;
-> +			};
-> +
-> +			charger_reg: CHARGER {
-> +				regulator-name = "CHARGER";
-> +				regulator-min-microamp = <60000>;
-> +				regulator-max-microamp = <2580000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			chargercv_reg: CHARGER_CV {
-> +				regulator-name = "CHARGER_CV";
-> +				regulator-min-microvolt = <3800000>;
-> +				regulator-max-microvolt = <4100000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +		};
-> +
-> +	};
-> +};
-> +
-> +
-> +&gpu {
-> +	status = "okay";
-> +
-> +	mali-supply = <&vg3d_breg>;
-> +	regulator-microvolt-offset = <50000>;
-> +	regulator-microsecs-delay = <50>;
-> +};
-> +
-> +
-> +&sdhci_0 {
-> +	status = "okay";
-> +
-> +	bus-width = <8>;
-> +	non-removable;
-> +	vmmc-supply = <&vemmc_reg>;
-> +
-> +	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_bus8>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&sdhci_2 {
-> +	status = "okay";
-> +
-> +	bus-width = <4>;
-> +	cd-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>;
-> +	vmmc-supply = <&vtf_reg>;
-> +
-> +	pinctrl-0 = <&sd2_clk>, <&sd2_cmd>, <&sd2_bus4>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&ehci {
-> +	port@0 {
-> +		status = "okay";
-> +	};
-> +
-> +	port@1 {
-> +		status = "okay";
-> +	};
-> +
-> +	port@2 {
-> +		status = "okay";
-> +	};
-> +
-> +};
-
-This is duplicated 'ehci' node, probable an artifact from the earlier 
-rebase. Please remove it.
-
-> +
-> +
-> +&sdhci_3 {
-> +	status = "okay";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	non-removable;
-> +	bus-width = <4>;
-> +	mmc-pwrseq = <&wlan_pwrseq>;
-> +	vmmc-supply = <&vtf_reg>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sd3_clk>, <&sd3_cmd>, <&sd3_bus4>;
-> +
-> +	brcmf: wifi@1 {
-> +		compatible = "brcm,bcm4330-fmac";
-> +		reg = <1>;
-> +
-> +		interrupt-parent = <&gpx2>;
-> +		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "host-wake";
-> +	};
-> +};
-> +
-> +
-> +&serial_0 {
-> +	status = "okay";
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&bt_en>, <&bt_res>, <&uart0_data>, <&uart0_fctl>;
-> +
-> +	bluetooth {
-> +		compatible = "brcm,bcm4330-bt";
-> +
-> +		shutdown-gpios = <&gpl0 4 GPIO_ACTIVE_HIGH>;
-> +		reset-gpios = <&gpl1 0 GPIO_ACTIVE_HIGH>;
-> +		device-wakeup-gpios = <&gpx3 1 GPIO_ACTIVE_HIGH>;
-> +		host-wakeup-gpios = <&gpx2 6 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
-> +
-> +&serial_1 {
-> +	status = "okay";
-> +};
-> +
-> +&serial_2 {
-> +	status = "okay";
-> +};
-> +
-> +&serial_3 {
-> +	status = "okay";
-> +};
-> +
-> +&tmu {
-> +	status = "okay";
-> +};
-> +
-> +
-> +&pinctrl_0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sleep0>;
-> +
-> +
-> +	sleep0: sleep-states {
-> +		gpa0-0 {
-> +			samsung,pins = "gpa0-0";
-> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
-> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-> +		};
-> +
-> +		gpa0-1 {
-> +			samsung,pins = "gpa0-1";
-> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT0>;
-> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-> +		};
-> +
-> +		gpa0-2 {
-> +			samsung,pins = "gpa0-2";
-> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
-> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-> +		};
-> +
-> +		gpa0-3 {
-> +			samsung,pins = "gpa0-3";
-> +			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT1>;
-> +			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-> +		};
-> +	};
-> +};
-> +
-> +&pinctrl_1 {
-> +	mhl_int: mhl-int {
-> +		samsung,pins = "gpf3-5";
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	i2c_mhl_bus: i2c-mhl-bus {
-> +		samsung,pins = "gpf0-4", "gpf0-6";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +	};
-> +
-> +	usb_sel: usb-sel {
-> +		samsung,pins = "gpl0-6";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +		samsung,pin-val = <0>;
-> +	};
-> +
-> +	bt_en: bt-en {
-> +		samsung,pins = "gpl0-4";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
-> +		samsung,pin-val = <0>;
-> +	};
-> +
-> +	bt_res: bt-res {
-> +		samsung,pins = "gpl1-0";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
-> +		samsung,pin-val = <0>;
-> +	};
-> +
-> +
-> +	otg_gp: otg-gp {
-> +		samsung,pins = "gpx3-3";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-> +		samsung,pin-val = <0>;
-> +	};
-> +
-> +	mag_mhl_gpio: mag-mhl-gpio {
-> +		samsung,pins = "gpd0-2";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +
-> +	max8997_irq: max8997-irq {
-> +		samsung,pins = "gpx0-7";
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	max17042_fuel_irq: max17042-fuel-irq {
-> +		samsung,pins = "gpx2-3";
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +	};
-> +
-> +	tsp224_irq: tsp224-irq {
-> +		samsung,pins = "gpx0-4";
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-> +	};
-> +};
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+>  /* -----------------------------------------------------------------------------
+>   * v4l2_subdev_ops
+>   */
+>  
+>  static const struct v4l2_subdev_ops adv748x_ops_hdmi = {
+> +	.core = &adv748x_core_ops_hdmi,
+>  	.video = &adv748x_video_ops_hdmi,
+>  	.pad = &adv748x_pad_ops_hdmi,
+>  };
+> @@ -633,6 +809,8 @@ static int adv748x_hdmi_s_ctrl(struct v4l2_ctrl *ctrl)
+>  	int ret;
+>  	u8 pattern;
+>  
+> +	if (ctrl->id == V4L2_CID_AUDIO_MUTE)
+> +		return adv748x_hdmi_audio_mute(hdmi, ctrl->val);
+>  	/* Enable video adjustment first */
+>  	ret = cp_clrset(state, ADV748X_CP_VID_ADJ,
+>  			ADV748X_CP_VID_ADJ_ENABLE,
+> @@ -697,6 +875,8 @@ static int adv748x_hdmi_init_controls(struct adv748x_hdmi *hdmi)
+>  	v4l2_ctrl_new_std(&hdmi->ctrl_hdl, &adv748x_hdmi_ctrl_ops,
+>  			  V4L2_CID_HUE, ADV748X_CP_HUE_MIN,
+>  			  ADV748X_CP_HUE_MAX, 1, ADV748X_CP_HUE_DEF);
+> +	v4l2_ctrl_new_std(&hdmi->ctrl_hdl, &adv748x_hdmi_ctrl_ops,
+> +			  V4L2_CID_AUDIO_MUTE, 0, 1, 1, 1);
+>  
+>  	/*
+>  	 * Todo: V4L2_CID_DV_RX_POWER_PRESENT should also be supported when
+> @@ -755,6 +935,8 @@ int adv748x_hdmi_init(struct adv748x_hdmi *hdmi)
+>  
+>  void adv748x_hdmi_cleanup(struct adv748x_hdmi *hdmi)
+>  {
+> +	adv748x_hdmi_audio_mute(hdmi, 1);
+> +	set_audio_out(adv748x_hdmi_to_state(hdmi), HDMI_AOUT_NONE);
+>  	v4l2_device_unregister_subdev(&hdmi->sd);
+>  	media_entity_cleanup(&hdmi->sd.entity);
+>  	v4l2_ctrl_handler_free(&hdmi->ctrl_hdl);
+> diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+> index db6346a06351..fdda6982e437 100644
+> --- a/drivers/media/i2c/adv748x/adv748x.h
+> +++ b/drivers/media/i2c/adv748x/adv748x.h
+> @@ -128,6 +128,7 @@ struct adv748x_hdmi {
+>  		u32 present;
+>  		unsigned int blocks;
+>  	} edid;
+> +	int audio_out;
+>  };
+>  
+>  #define adv748x_ctrl_to_hdmi(ctrl) \
+> @@ -224,6 +225,11 @@ struct adv748x_state {
+>  
+>  #define ADV748X_IO_VID_STD		0x05
+>  
+> +#define ADV748X_IO_PAD_CONTROLS		0x0e
+> +#define ADV748X_IO_PAD_CONTROLS_TRI_AUD	BIT(5)
+> +#define ADV748X_IO_PAD_CONTROLS_PDN_AUD	BIT(1)
+> +#define ADV748X_IO_PAD_CONTROLS1	0x1d
+> +
+>  #define ADV748X_IO_10			0x10	/* io_reg_10 */
+>  #define ADV748X_IO_10_CSI4_EN		BIT(7)
+>  #define ADV748X_IO_10_CSI1_EN		BIT(6)
+> @@ -246,7 +252,21 @@ struct adv748x_state {
+>  #define ADV748X_IO_REG_FF		0xff
+>  #define ADV748X_IO_REG_FF_MAIN_RESET	0xff
+>  
+> +/* DPLL Map */
+> +#define ADV748X_DPLL_MCLK_FS		0xb5
+> +#define ADV748X_DPLL_MCLK_FS_N_MASK	GENMASK(2, 0)
+> +
+>  /* HDMI RX Map */
+> +#define ADV748X_HDMI_I2S		0x03	/* I2S mode and width */
+> +#define ADV748X_HDMI_I2SBITWIDTH_MASK	GENMASK(4, 0)
+> +#define ADV748X_HDMI_I2SOUTMODE_SHIFT	5
+> +#define ADV748X_HDMI_I2SOUTMODE_MASK	\
+> +	GENMASK(6, ADV748X_HDMI_I2SOUTMODE_SHIFT)
+> +#define ADV748X_I2SOUTMODE_I2S 0
+> +#define ADV748X_I2SOUTMODE_RIGHT_J 1
+> +#define ADV748X_I2SOUTMODE_LEFT_J 2
+> +#define ADV748X_I2SOUTMODE_SPDIF 3
+> +
+>  #define ADV748X_HDMI_LW1		0x07	/* line width_1 */
+>  #define ADV748X_HDMI_LW1_VERT_FILTER	BIT(7)
+>  #define ADV748X_HDMI_LW1_DE_REGEN	BIT(5)
+> @@ -258,6 +278,16 @@ struct adv748x_state {
+>  #define ADV748X_HDMI_F1H1		0x0b	/* field1 height_1 */
+>  #define ADV748X_HDMI_F1H1_INTERLACED	BIT(5)
+>  
+> +#define ADV748X_HDMI_MUTE_CTRL		0x1a
+> +#define ADV748X_HDMI_MUTE_CTRL_MUTE_AUDIO BIT(4)
+> +#define ADV748X_HDMI_MUTE_CTRL_WAIT_UNMUTE_MASK	GENMASK(3, 1)
+> +#define ADV748X_HDMI_MUTE_CTRL_NOT_AUTO_UNMUTE	BIT(0)
+> +
+> +#define ADV748X_HDMI_AUDIO_MUTE_SPEED	0x0f
+> +#define ADV748X_HDMI_AUDIO_MUTE_SPEED_MASK	GENMASK(4, 0)
+> +#define ADV748X_MAN_AUDIO_DL_BYPASS BIT(7)
+> +#define ADV748X_AUDIO_DELAY_LINE_BYPASS BIT(6)
+> +
+>  #define ADV748X_HDMI_HFRONT_PORCH	0x20	/* hsync_front_porch_1 */
+>  #define ADV748X_HDMI_HFRONT_PORCH_MASK	0x1fff
+>  
+> @@ -279,6 +309,9 @@ struct adv748x_state {
+>  #define ADV748X_HDMI_TMDS_1		0x51	/* hdmi_reg_51 */
+>  #define ADV748X_HDMI_TMDS_2		0x52	/* hdmi_reg_52 */
+>  
+> +#define ADV748X_HDMI_REG_6D		0x6d	/* hdmi_reg_6d */
+> +#define ADV748X_I2S_TDM_MODE_ENABLE BIT(7)
+> +
+>  /* HDMI RX Repeater Map */
+>  #define ADV748X_REPEATER_EDID_SZ	0x70	/* primary_edid_size */
+>  #define ADV748X_REPEATER_EDID_SZ_SHIFT	4
+> @@ -393,14 +426,23 @@ int adv748x_write(struct adv748x_state *state, u8 page, u8 reg, u8 value);
+>  int adv748x_write_block(struct adv748x_state *state, int client_page,
+>  			unsigned int init_reg, const void *val,
+>  			size_t val_len);
+> +int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg,
+> +			u8 mask, u8 value);
+>  
+>  #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
+>  #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
+>  #define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~m) | v)
+> +#define io_update(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_IO, r, m, v)
+>  
+>  #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
+>  #define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, r+1)) & m)
+>  #define hdmi_write(s, r, v) adv748x_write(s, ADV748X_PAGE_HDMI, r, v)
+> +#define hdmi_update(s, r, m, v) \
+> +	adv748x_update_bits(s, ADV748X_PAGE_HDMI, r, m, v)
+> +
+> +#define dpll_read(s, r) adv748x_read(s, ADV748X_PAGE_DPLL, r)
+> +#define dpll_update(s, r, m, v) \
+> +	adv748x_update_bits(s, ADV748X_PAGE_DPLL, r, m, v)
+>  
+>  #define repeater_read(s, r) adv748x_read(s, ADV748X_PAGE_REPEATER, r)
+>  #define repeater_write(s, r, v) adv748x_write(s, ADV748X_PAGE_REPEATER, r, v)
+> 
 
