@@ -2,107 +2,183 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1867C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 05:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CEAC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 06:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A814620722
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 05:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2100B206E9
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 06:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rT4Fsdqj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f/bl7Gzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgCOFXo (ORCPT
+        id S1727128AbgCOGU6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 01:23:44 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34615 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727503AbgCOFXm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 01:23:42 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t3so7588404pgn.1
-        for <devicetree@vger.kernel.org>; Sat, 14 Mar 2020 22:23:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wR8nFRPEBNLxmIrRh2XX942TMuucAJ5R0/7i6Fo9p5k=;
-        b=rT4FsdqjKQBVFo3+uu3fzLfB762MuezwSN1LOBD3ukiXZTdXlSwwQK0uPYMfrGKpBw
-         HStP0LAwyHUgCf+9x10UYRCF9UJunuqcsp28aLez8GE2hFDyi0ofXM8Dr154ZCspaaDE
-         VtH1KqHCF1ohopOvbBe7ipKJhL7UEUPpzwYNws75GT7CW6MhGKCWLuE60W0BotyCDLvo
-         r4veXdZGi+c7XAXXCQaraojq3143FgIV7X78c33GlZQNlXCKwXQtmByc8TvqoSmTlHRH
-         Cgon8IVWrL7L1XDgxXdvlKuzPupzlbR94v3hnlq4+LXltc9bPmrXUZb2Ky4pFUwuc1FI
-         26Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wR8nFRPEBNLxmIrRh2XX942TMuucAJ5R0/7i6Fo9p5k=;
-        b=NZLFpjDuyyjLVGQTpAtTg8xeiGedMj0cmK5JcOo/8xlZj/BisukUq3G5syecw2X3+K
-         v0+Fs0mTdT3WfyIjRFGucGZn2mw9SSCEdsoylaxYOlRa55v4uxbqKGsFGmzX0vHrW7rP
-         pPpi9BVgSht9yUDz94iHlA5KbV2Hvckr054lgH6pSI89zNkRrMrH8GgRizndOCEZ9HnZ
-         qzwzn+xkevZkYe+q49rCxOnxtzfhO1ivhRvnp85Qa62EJpo5zo3logPZqTekNV67QQrr
-         db4cVnz1ZAHZTCtaVJ/LVm66TOD66VlNAFl1RThiiViAw0OrSN989mzSgksKeGO/Tso7
-         BbUQ==
-X-Gm-Message-State: ANhLgQ0dmHVDeeajm+4w2S4CmFVNLqXmuUXKwzz319G36H2z3JyCr5N/
-        ukec0JROVaLnNu0UK0yjRXYU+Q==
-X-Google-Smtp-Source: ADFU+vs5W6pKhDasxst/A96FZNjz5ZlLsLbn4MZHDngTRdMpMnXsBjfTrhf9HXmupeey+hIoU1207w==
-X-Received: by 2002:a63:514f:: with SMTP id r15mr20218986pgl.432.1584249822088;
-        Sat, 14 Mar 2020 22:23:42 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s12sm33303143pgi.38.2020.03.14.22.23.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2020 22:23:41 -0700 (PDT)
-Date:   Sat, 14 Mar 2020 22:23:39 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] arm64: dts: qcom: sdm845: add audio support
-Message-ID: <20200315052339.GH1098305@builder>
-References: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
+        Sun, 15 Mar 2020 02:20:58 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36894 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbgCOGU6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 02:20:58 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02EIGXJJ057712;
+        Sat, 14 Mar 2020 13:16:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584209793;
+        bh=1lwJPvwq3CWt6lu29dsx5P0wKL1ky88ljQV85C0kOk0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=f/bl7Gzgbcnd3eMLfvWxPNyl/ky5CJ0W2N/4ATfZ30oW4ndD5ECenql2F53YUBqxB
+         UZP0B+1dV62iPIKhcczvEDn6kTI8OAqQOKHJFzhXmABPkm8fA8MbC3Dd4+O/CvyMLW
+         +nB1k/M/k6Mh2vhjPd/pHFSyWM9b2DVdoIfEmIZw=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02EIGXGo005896;
+        Sat, 14 Mar 2020 13:16:33 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sat, 14
+ Mar 2020 13:16:33 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sat, 14 Mar 2020 13:16:33 -0500
+Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02EIGVZR040802;
+        Sat, 14 Mar 2020 13:16:31 -0500
+Subject: Re: [PATCH v2] dt-bindings: display: ti: Fix dtc unit-address
+ warnings in examples
+To:     Rob Herring <robh@kernel.org>, <dri-devel@lists.freedesktop.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>
+References: <20200313180727.23044-1-robh@kernel.org>
+From:   Jyri Sarha <jsarha@ti.com>
+Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0699349c-83a8-fb34-2287-ed02b26bfe4d@ti.com>
+Date:   Sat, 14 Mar 2020 20:16:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312143024.11059-1-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200313180727.23044-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 12 Mar 07:30 PDT 2020, Srinivas Kandagatla wrote:
+On 13/03/2020 20:07, Rob Herring wrote:
+> Extra dtc warnings (roughly what W=1 enables) are now enabled by default
+> when building the binding examples. These were fixed treewide in
+> 5.6-rc5, but some new display bindings have been added with new
+> warnings:
+> 
+> Documentation/devicetree/bindings/display/ti/ti,am65x-dss.example.dts:21.27-49.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
+> Documentation/devicetree/bindings/display/ti/ti,j721e-dss.example.dts:21.27-72.11: Warning (unit_address_format): /example-0/dss@04a00000: unit name should not have leading 0s
+> Documentation/devicetree/bindings/display/ti/ti,k2g-dss.example.dts:20.27-42.11: Warning (unit_address_format): /example-0/dss@02540000: unit name should not have leading 0s
+> 
+> Cc: Jyri Sarha <jsarha@ti.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-> This patchset adds analog audio support for sdm845 based boards.
+Acked-by: Jyri Sarha <jsarha@ti.com>
+
+> ---
+> v2:
+>  - Drop panel fixes as there's another patch fixing the 3 panels plus
+>    others.
+> ---
+>  Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml | 2 +-
+>  Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml | 2 +-
+>  Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml   | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> 
-> Changes since v1:
-> 	- various trival cleanups done as suggested by Bjorn
-> 	- added compressed audio dai for db845c
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> index cac61a998203..aa5543a64526 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+> @@ -121,7 +121,7 @@ examples:
+>      #include <dt-bindings/interrupt-controller/irq.h>
+>      #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>  
+> -    dss: dss@04a00000 {
+> +    dss: dss@4a00000 {
+>              compatible = "ti,am65x-dss";
+>              reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
+>                      <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> index ade9b2f513f5..6d47cd7206c2 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> @@ -154,7 +154,7 @@ examples:
+>      #include <dt-bindings/interrupt-controller/irq.h>
+>      #include <dt-bindings/soc/ti,sci_pm_domain.h>
+>  
+> -    dss: dss@04a00000 {
+> +    dss: dss@4a00000 {
+>              compatible = "ti,j721e-dss";
+>              reg =   <0x00 0x04a00000 0x00 0x10000>, /* common_m */
+>                      <0x00 0x04a10000 0x00 0x10000>, /* common_s0*/
+> diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> index 385bd060ccf9..7cb37053e95b 100644
+> --- a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> +++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+> @@ -81,7 +81,7 @@ examples:
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+>      #include <dt-bindings/interrupt-controller/irq.h>
+>  
+> -    dss: dss@02540000 {
+> +    dss: dss@2540000 {
+>              compatible = "ti,k2g-dss";
+>              reg =   <0x02540000 0x400>,
+>                      <0x02550000 0x1000>,
 > 
 
-Thanks Srini!
 
-I fixed up the sort order per Vinod's feedback and applied these, with
-Vinod's acks.
-
-Regards,
-Bjorn
-
-> Srinivas Kandagatla (5):
->   arm64: dts: qcom: sdm845: add slimbus nodes
->   arm64: dts: qcom: sdm845: add apr nodes
->   arm64: dts: qcom: c630: Enable audio support
->   arm64: dts: qcom: sdm845: add pinctrl nodes for quat i2s
->   arm64: dts: qcom: db845c: add analog audio support
-> 
->  arch/arm64/boot/dts/qcom/sdm845-db845c.dts    | 159 ++++++++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 281 ++++++++++++++++++
->  .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 113 +++++++
->  3 files changed, 553 insertions(+)
-> 
-> -- 
-> 2.21.0
-> 
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
