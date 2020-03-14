@@ -2,129 +2,137 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937A8C4CECE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C9EC1975A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673A420637
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3072076A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hvu9wNtE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TUuRdVpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgCOBaX (ORCPT
+        id S1726713AbgCOBd6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:30:23 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33936 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgCOBaV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Mar 2020 21:30:21 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x3so10619014wmj.1;
-        Sat, 14 Mar 2020 18:30:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=JBPKD7LpU3yqMiH8MVzfGEsgDmj4SrKt4IrZ9Xh2cD4=;
-        b=Hvu9wNtERwqWL9oTqlv0Mt0p+j+G7ms1qpFerKoFgE4QFNqSPNzNPYHEToTRVI0q+1
-         3rL36OWzXWhyeiTllCadGwccizkgzkUVIzs4l81DnDHmMNyz5Ci1eTzjWWunyqDMNjhS
-         l/tDTSlPCI0tI39EOrdKfTwsZzdwmfArskef/EVRf3e2yID1R4rkHyJzqO2XPYAsPFYa
-         XUSSTeDwWQb5tb2s6XciBN0NS9+H7gJqgqmV92guWC/E8yF+gxzqhZbz9H5mhDLP5pb4
-         KWgWpfi+tsjUZngGfETxntwka9lTMu0hsO0QCfuBFQcRZfEwwao8DVyC29Qb25BOKWW8
-         Ks7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=JBPKD7LpU3yqMiH8MVzfGEsgDmj4SrKt4IrZ9Xh2cD4=;
-        b=MtuvJzHbcupV0XLc4JYOPfjtVSGX62tVHV96zpWVfd5VyQQhBhN0VCubzfS06S5Kx8
-         V+3wws8qfr+5TJABMiUrZPrJP+NDOynYA8FCFgvk9Sw3TePJnwJqQlOczt2fha3LIThP
-         2daksCL6qD/sOuOewc5lRd3yKsRDajXDL4Ps5NKKNL3ELq+FN93vcd5SPQ7w+ga1l7ld
-         hsP1o9MrJiCTkEpi13GUtiSnLQCeqQR7l4geJWvCbZww0vc6EJQUJvjeo0uEbx3vSo6N
-         q1kMAcYxdXrfqH5MT1kmodWDH114A1rnjD+pkMDQzsYgCVEzU0Dyt3F2chrNdMIYkAfY
-         EkwA==
-X-Gm-Message-State: ANhLgQ0op2xONHXeXYNrTBm/KG6IjJ/AwxWfRUV9pliY+HJNmwe5W9zm
-        q1enCbh4jqIRHfeQx61+v6CR9orrM3Y=
-X-Google-Smtp-Source: ADFU+vvbbydBra6U/4TidOrG8bvR2ZNiPt2/6iHMVjTXnibkGLn6+r72iDETXFJiDWgGUdwBkgmYIA==
-X-Received: by 2002:a1c:6387:: with SMTP id x129mr18412016wmb.58.1584225851584;
-        Sat, 14 Mar 2020 15:44:11 -0700 (PDT)
-Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id 133sm23690732wmd.5.2020.03.14.15.44.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2020 15:44:11 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v3 11/12] arm64: dts: ls1028a: Specify the DMA channels for the DSPI controllers
-Date:   Sun, 15 Mar 2020 00:43:39 +0200
-Message-Id: <20200314224340.1544-12-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200314224340.1544-1-olteanv@gmail.com>
-References: <20200314224340.1544-1-olteanv@gmail.com>
+        Sat, 14 Mar 2020 21:33:58 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55730 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726825AbgCOBd6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:33:58 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584236037; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=VXbg0PkR8DzxPJz/MiykCW0CnZd/L0YGnzp2Lz0Y0eE=; b=TUuRdVpc8vph+M4LOH6n6A7k37QDn/mwImwjjBvsm1VySBK1/WbDq+3U6yWKZscIQHYzuryQ
+ /BBJu4BXvMogbQFgbAt1M8NOEI2gsMoGiAw0aVa2zpxAF6+r48ov2+l5YBP2vi5WT18a8R2l
+ IVj0TWAlGy4OajkjUjkJKURpfDw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6d268b.7fb83f309a40-smtp-out-n01;
+ Sat, 14 Mar 2020 18:46:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6AE8FC432C2; Sat, 14 Mar 2020 18:46:35 +0000 (UTC)
+Received: from [192.168.0.104] (unknown [183.82.137.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1366FC433CB;
+        Sat, 14 Mar 2020 18:46:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1366FC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v5 3/5] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+To:     Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
+ <1582540703-6328-4-git-send-email-tdas@codeaurora.org>
+ <20200224184201.GA6030@bogus>
+ <eec22330-2bf4-f4f5-3d28-6b69aa71f992@codeaurora.org>
+ <CAL_JsqKRr3aOpcbPOtkArxnnJOBd-XaUGRVesR_CnA11pFHYXQ@mail.gmail.com>
+ <158267707817.177367.4165827948994155128@swboyd.mtv.corp.google.com>
+ <CAL_JsqJiB08vtDKP18Xzdzan-2TFVxJJ-rFgvXsqVHKB5-L18g@mail.gmail.com>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <888d1371-2eea-1cf2-5633-715fb047bbbb@codeaurora.org>
+Date:   Sun, 15 Mar 2020 00:16:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJiB08vtDKP18Xzdzan-2TFVxJJ-rFgvXsqVHKB5-L18g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+I have combined all the bindings in the same patch to avoid any YAML 
+dependency.
 
-LS1028A has a functional connection to the eDMA module. Even if the
-spi-fsl-dspi.c driver is not using DMA for LS1028A now, define the slots
-in the DMAMUX for connecting the eDMA channels to the 3 DSPI
-controllers.
+On 2/26/2020 7:40 PM, Rob Herring wrote:
+> On Tue, Feb 25, 2020 at 6:31 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>>
+>> Quoting Rob Herring (2020-02-25 05:58:19)
+>>> On Mon, Feb 24, 2020 at 11:49 PM Taniya Das <tdas@codeaurora.org> wrote:
+>>>>
+>>>> Hi Rob,
+>>>>
+>>>> On 2/25/2020 12:12 AM, Rob Herring wrote:
+>>>>
+>>>>>
+>>>>> My bot found errors running 'make dt_binding_check' on your patch:
+>>>>>
+>>>>> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+>>>>> Error: Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dts:21.26-27 syntax error
+>>>>> FATAL ERROR: Unable to parse input tree
+>>>>> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml' failed
+>>>>> make[1]: *** [Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml] Error 1
+>>>>> Makefile:1263: recipe for target 'dt_binding_check' failed
+>>>>> make: *** [dt_binding_check] Error 2
+>>>>>
+>>>>> See https://patchwork.ozlabs.org/patch/1242999
+>>>>> Please check and re-submit.
+>>>>>
+>>>>
+>>>> The error shows syntax error at line 21, below is the example.dts from
+>>>> my tree and would compile for me as I have the dependency of the include
+>>>> file when I compile.
+>>>
+>>> The header should be part of this patch if possible.
+>>>
+>>
+>> Are patches tested in isolation instead of in series? I see this define
+>> in the first patch in this series so it seems like automated checkers
+>> should be able to apply the patches in series and see if they still
+>> work, unless that is broken somehow.
+> 
+> The series should be applied, but it's all very fragile. It's going to
+> stay that way until someone else writes and maintains the applying
+> patches to git logic.
+> 
+> In any case, the header is part of the binding (being an ABI) not the
+> driver, so it belongs in the binding patch.
+> 
+> 
+> However, in this case, the problem was pointed out in v4 to be a typo
+> in GCC_MSS_MFAB_AXIS_CLK.
+> 
+> Rob
+> 
 
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
-Changes in v4:
-None.
-
-Changes in v3:
-None.
-
-Changes in v2:
-None.
-
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 515e0a1b934f..18155273a46e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -298,6 +298,8 @@
- 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&clockgen 4 1>;
-+			dmas = <&edma0 0 62>, <&edma0 0 60>;
-+			dma-names = "tx", "rx";
- 			spi-num-chipselects = <4>;
- 			little-endian;
- 			status = "disabled";
-@@ -311,6 +313,8 @@
- 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&clockgen 4 1>;
-+			dmas = <&edma0 0 58>, <&edma0 0 56>;
-+			dma-names = "tx", "rx";
- 			spi-num-chipselects = <4>;
- 			little-endian;
- 			status = "disabled";
-@@ -324,6 +328,8 @@
- 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-names = "dspi";
- 			clocks = <&clockgen 4 1>;
-+			dmas = <&edma0 0 54>, <&edma0 0 2>;
-+			dma-names = "tx", "rx";
- 			spi-num-chipselects = <3>;
- 			little-endian;
- 			status = "disabled";
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
+--
