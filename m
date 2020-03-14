@@ -2,174 +2,123 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234D1C0044D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B46AC0044D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F012320637
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:39:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hNE4bLEx"
+	by mail.kernel.org (Postfix) with ESMTP id D235820637
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCOBjU (ORCPT
+        id S1726952AbgCOBj1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:39:20 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:38233 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726579AbgCOBjU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:39:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584236359; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=lXhkIBcKbtLstxQRyAkgmmBBedPpvtcrGcYCAgn01SQ=; b=hNE4bLExzK9ZpKV+ddeYiu71flugWwVoMWOb80OA6tHdkBZZ+8VnD/UFcqp4ZZ9+fVRI2z3f
- 0yRUVcPlQpsdxkH7d3yDMiYFcRw0oSRoz66/BiVoB2WX8OvPyIMeWv+v11I+81NHPBGsv9lD
- djO/VJ8UwaMfLaaSn5WFuBncKa8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6d24e5.7f8eb9e4ded8-smtp-out-n03;
- Sat, 14 Mar 2020 18:39:33 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3066CC432C2; Sat, 14 Mar 2020 18:39:32 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6B123C433D2;
-        Sat, 14 Mar 2020 18:39:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6B123C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v6 2/3] clk: qcom: gcc: Add support for modem clocks in GCC
-Date:   Sun, 15 Mar 2020 00:09:06 +0530
-Message-Id: <1584211147-5570-3-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584211147-5570-1-git-send-email-tdas@codeaurora.org>
-References: <1584211147-5570-1-git-send-email-tdas@codeaurora.org>
+        Sat, 14 Mar 2020 21:39:27 -0400
+Received: from muru.com ([72.249.23.125]:60426 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbgCOBj1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:39:27 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id AA1D48043;
+        Sat, 14 Mar 2020 17:24:54 +0000 (UTC)
+Date:   Sat, 14 Mar 2020 10:24:05 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Arthur Demchenkov <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] ARM: dts: omap4-droid4: Fix sgx clock rate
+Message-ID: <20200314172405.GH37466@atomide.com>
+References: <20200310201818.15989-1-tony@atomide.com>
+ <20200310210944.GU37466@atomide.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310210944.GU37466@atomide.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the required modem clocks in global clock controller which are
-required to bring the modem out of reset.
+* Tony Lindgren <tony@atomide.com> [200310 21:10]:
+> * Tony Lindgren <tony@atomide.com> [200310 20:19]:
+> > +&sgx_module {
+> 
+> Sorry the sgx_module label came from the linux_openpvrsgx branch
+> I had merged in as Arthur noticed.
+> 
+> Below is an updated patch against v5.6-rc series.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
+And looks like this is also needed for at least duovero, so let's
+change the clock for all 4430.
+
+Regards,
+
+Tony
+
+8< ----------------------
+From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Tue, 10 Mar 2020 14:02:48 -0700
+Subject: [PATCH] ARM: dts: omap4: Fix sgx clock rate for 4430
+
+We currently have a different clock rate for droid4 compared to the
+stock v3.0.8 based Android Linux kernel:
+
+# cat /sys/kernel/debug/clk/dpll_*_m7x2_ck/clk_rate
+266666667
+307200000
+# cat /sys/kernel/debug/clk/l3_gfx_cm:clk:0000:0/clk_rate
+307200000
+
+Let's fix this by configuring sgx to use 153.6 MHz instead of 307.2 MHz.
+Looks like also at least duover needs this change to avoid hangs, so
+let's apply it for all 4430.
+
+This helps a bit with thermal issues that seem to be related to memory
+corruption when using sgx. It seems that other driver related issues
+still remain though.
+
+Cc: Arthur Demchenkov <spinal.by@gmail.com>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/clk/qcom/gcc-sc7180.c | 72 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 71 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/omap4.dtsi    |  2 +-
+ arch/arm/boot/dts/omap443x.dtsi | 10 ++++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-index 7f59fb8..6a51b5b 100644
---- a/drivers/clk/qcom/gcc-sc7180.c
-+++ b/drivers/clk/qcom/gcc-sc7180.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
-  */
-
- #include <linux/clk-provider.h>
-@@ -2165,6 +2165,71 @@ static struct clk_branch gcc_video_xo_clk = {
- 	},
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -390,7 +390,7 @@ abb_iva: regulator-abb-iva {
+ 			status = "disabled";
+ 		};
+ 
+-		target-module@56000000 {
++		sgx_module: target-module@56000000 {
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			reg = <0x5600fe00 0x4>,
+ 			      <0x5600fe10 0x4>;
+diff --git a/arch/arm/boot/dts/omap443x.dtsi b/arch/arm/boot/dts/omap443x.dtsi
+--- a/arch/arm/boot/dts/omap443x.dtsi
++++ b/arch/arm/boot/dts/omap443x.dtsi
+@@ -74,3 +74,13 @@ &cpu_thermal {
  };
-
-+static struct clk_branch gcc_mss_cfg_ahb_clk = {
-+	.halt_reg = 0x8a000,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x8a000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_cfg_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
+ 
+ /include/ "omap443x-clocks.dtsi"
 +
-+static struct clk_branch gcc_mss_mfab_axis_clk = {
-+	.halt_reg = 0x8a004,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x8a004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_mfab_axis_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
++/*
++ * Use dpll_per for sgx at 153.6MHz like droid4 stock v3.0.8 Android kernel
++ */
++&sgx_module {
++	assigned-clocks = <&l3_gfx_clkctrl OMAP4_GPU_CLKCTRL 24>,
++			  <&dpll_per_m7x2_ck>;
++	assigned-clock-rates = <0>, <153600000>;
++	assigned-clock-parents = <&dpll_per_m7x2_ck>;
 +};
-+
-+static struct clk_branch gcc_mss_nav_axi_clk = {
-+	.halt_reg = 0x8a00c,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x8a00c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_nav_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_snoc_axi_clk = {
-+	.halt_reg = 0x8a150,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x8a150,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_snoc_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_q6_memnoc_axi_clk = {
-+	.halt_reg = 0x8a154,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x8a154,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_q6_memnoc_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct gdsc ufs_phy_gdsc = {
- 	.gdscr = 0x77004,
- 	.pd = {
-@@ -2336,6 +2401,11 @@ static struct clk_regmap *gcc_sc7180_clocks[] = {
- 	[GPLL7] = &gpll7.clkr,
- 	[GPLL4] = &gpll4.clkr,
- 	[GPLL1] = &gpll1.clkr,
-+	[GCC_MSS_CFG_AHB_CLK] = &gcc_mss_cfg_ahb_clk.clkr,
-+	[GCC_MSS_MFAB_AXIS_CLK] = &gcc_mss_mfab_axis_clk.clkr,
-+	[GCC_MSS_NAV_AXI_CLK] = &gcc_mss_nav_axi_clk.clkr,
-+	[GCC_MSS_Q6_MEMNOC_AXI_CLK] = &gcc_mss_q6_memnoc_axi_clk.clkr,
-+	[GCC_MSS_SNOC_AXI_CLK] = &gcc_mss_snoc_axi_clk.clkr,
- };
-
- static const struct qcom_reset_map gcc_sc7180_resets[] = {
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+-- 
+2.25.1
