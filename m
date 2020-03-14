@@ -2,122 +2,114 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5F6C0044D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8592C0044D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39C02071C
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:22:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eeZgAO11"
+	by mail.kernel.org (Postfix) with ESMTP id 8D1D4205ED
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584239099;
+	bh=UhPNJ294fjCXqVxkid7P8jGGC9UBtD1iMM/BKx+zfyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WTRCUCM4D3s8xtHuuRDeWFcW7hOsFqjfzHEoyMdncC158mUGYKXOmflrbTTXwO+f/
+	 eNu5Q5d7/b/UXDXAPApmZNr0Wv8em+dS45mlIC04To942bLtWEsk2qUsN/EkTbJwxg
+	 WvzS+bA2K8+eVclOQMwhCPBSmKpuQDvpmM0ojNT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgCOCWC (ORCPT
+        id S1727936AbgCOCYO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:22:02 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35734 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgCOCWC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Mar 2020 22:22:02 -0400
-Received: by mail-lf1-f67.google.com with SMTP id 5so3964224lfr.2
-        for <devicetree@vger.kernel.org>; Sat, 14 Mar 2020 19:22:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=s4J2rgtw2eg/k9wTAwL2QWWPRrjouBROxRXix47qXXA=;
-        b=eeZgAO11rjVHokvwfCwtvNYv1RnJFDSvsZAI8b10ImlXxVkVm3jvuEKwTasfF+VfrJ
-         jU8/y/JQD20cGXpk+pKPplmXiRYW44YNPwQPGQsKhnVPknMPzsLtitvFooALy9SZj37u
-         WjipD5nFDcXtUwKPsCiVQNVijmuDtQ0a92gmdW9kSc9f0FYnVsBAG0A2edWw70WjVxyN
-         9pVx6hPNAcsJCFEaE7qnuM0TUoL0rdaqWrBkLYGBI+EXgwaCP7D++7Mm81U+Wn3l2/Wy
-         0i4DJnpYdpWV/t8QCh4jkOtfO6JzpnktmspxnuHujd951KVtCUG2d7Ix2M4SHHC5X6XS
-         UVCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=s4J2rgtw2eg/k9wTAwL2QWWPRrjouBROxRXix47qXXA=;
-        b=KZQgArnfLMww+id+tR04sVie0bFanmPdil1WRW9gQYYk3UhzI6S/6fhQvP0jMTp40s
-         hKjkxXdQp6HQzGSkv0H84HBYMeZ9eMZropQ3Cgs9CrGoqR3IIHhiHH9tEX9pOTL9szT2
-         OGLXws2oJbUG8YO5tty+5/gh3XO68U8YpYfdE2KPUoEv4ms4Sldt9cX6v6tCWT5DDY7j
-         2B+RdaAZmTiRpUhjAW1xBzKxy7L29fVg+KXKV2CZhrsFWCRsfdYuCPRN8C4YlqheK50k
-         y4IxKHNDzDqmFSJ7IFkOol+GPXFwTiTNx95qrcMV23BE3Qps8WhYELAuZm6p/3PfiTXp
-         s80Q==
-X-Gm-Message-State: ANhLgQ0OnZ7IEpJl/NO9toOAsKqtlV1zO2hYrdHmlq4fAPAc1n9ouGVT
-        /29f9DRW4Sjmb+tWVbC9khc8GJ8G
-X-Google-Smtp-Source: ADFU+vtrVcONFH7pz/7NWnIu9V/AlfW3A2RKEfrD4+SRdas3uaHOlK6KWEbm4MJiqWyDE6iRUsRPKg==
-X-Received: by 2002:a2e:2e11:: with SMTP id u17mr11366418lju.90.1584199858438;
-        Sat, 14 Mar 2020 08:30:58 -0700 (PDT)
-Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id n200sm15650418lfa.50.2020.03.14.08.30.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2020 08:30:58 -0700 (PDT)
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v1 2/3] drm/panel-simple: drop use of data-mapping property
-Date:   Sat, 14 Mar 2020 16:30:46 +0100
-Message-Id: <20200314153047.2486-3-sam@ravnborg.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200314153047.2486-1-sam@ravnborg.org>
-References: <20200314153047.2486-1-sam@ravnborg.org>
+        Sat, 14 Mar 2020 22:24:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727693AbgCOCYN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 14 Mar 2020 22:24:13 -0400
+Received: from earth.universe (dyndsl-095-033-168-153.ewe-ip-backbone.de [95.33.168.153])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9510020788;
+        Sat, 14 Mar 2020 18:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584209051;
+        bh=UhPNJ294fjCXqVxkid7P8jGGC9UBtD1iMM/BKx+zfyA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lGMT6Zjq+9MI4uKGs/48pJCp19OHsF/Zxuy5tfnv7IWYCnZFUfpZRWijw01yV9kbg
+         xVQFYsqaBWqq5Oipuhuw7Cpp/V9wHrqgJe7hog3KYAE4rxhAXyW5/Bmr0jyx7VNNQg
+         BGS9zRLu90M7rF9Np84xdrydH/jWfNAzUHWEEolo=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 58A193C0C82; Sat, 14 Mar 2020 19:04:09 +0100 (CET)
+Date:   Sat, 14 Mar 2020 19:04:09 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
+ SYSCON reboot-mode bindings
+Message-ID: <20200314180409.5nbnrajtf4q7rriu@earth.universe>
+References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
+ <20200312211438.GA21883@bogus>
+ <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lztyclr74vqeyf6d"
+Content-Disposition: inline
+In-Reply-To: <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The "data-mapping" property may not be the best way to describe the
-interface between panels and display interfaces.
-Drop use of in the panel-simple driver, so we have time to find
-the right way to describe this interface.
 
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/gpu/drm/panel/panel-simple.c | 11 -----------
- 1 file changed, 11 deletions(-)
+--lztyclr74vqeyf6d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 0ce81b1f36af..3ad828eaefe1 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -361,7 +361,6 @@ static int panel_dpi_probe(struct device *dev,
- 	struct panel_desc *desc;
- 	unsigned int bus_flags;
- 	struct videomode vm;
--	const char *mapping;
- 	int ret;
- 
- 	np = dev->of_node;
-@@ -386,16 +385,6 @@ static int panel_dpi_probe(struct device *dev,
- 	of_property_read_u32(np, "width-mm", &desc->size.width);
- 	of_property_read_u32(np, "height-mm", &desc->size.height);
- 
--	of_property_read_string(np, "data-mapping", &mapping);
--	if (!strcmp(mapping, "rgb24"))
--		desc->bus_format = MEDIA_BUS_FMT_RGB888_1X24;
--	else if (!strcmp(mapping, "rgb565"))
--		desc->bus_format = MEDIA_BUS_FMT_RGB565_1X16;
--	else if (!strcmp(mapping, "bgr666"))
--		desc->bus_format = MEDIA_BUS_FMT_RGB666_1X18;
--	else if (!strcmp(mapping, "lvds666"))
--		desc->bus_format = MEDIA_BUS_FMT_RGB666_1X24_CPADHI;
--
- 	/* Extract bus_flags from display_timing */
- 	bus_flags = 0;
- 	vm.flags = timing->flags;
--- 
-2.20.1
+Hi,
 
+On Fri, Mar 13, 2020 at 04:02:31PM +0300, Sergey Semin wrote:
+> On Thu, Mar 12, 2020 at 04:14:38PM -0500, Rob Herring wrote:
+> > On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronic=
+s.ru wrote:
+> > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > Optional regmap property will be used to refer to a syscon-controller
+> > > having a reboot tolerant register mapped.
+> >=20
+> > NAK. It should simply be a child node of the 'syscon-controller'.
+>=20
+> Hm, It's dilemma. The driver maintainer said ack, while you
+> disagree. So the code change will be merged while the doc-part
+> won't?
+
+FWIW I do not merge with bindings being NAK'd by Rob.
+
+-- Sebastian
+
+--lztyclr74vqeyf6d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5tHI4ACgkQ2O7X88g7
++poY6Q/8C31JO6yaOpuYy3gpP+cvQDk+qcMDKREcMJ2a0IweUsYQIjqb9YogeFYn
+AGXWI8mro35GAgPbKr79toHgily7PT+bMBSFZxqv0oHG6uQW7EPMxTTwIbpN5mk9
+3iJnWdp/gLXXqM8jvUh3nMOGeA+WXHorxpG9Tf0f2yGD7fhir7o3mIGNFaXjahgS
+I2uV16ESz6+10+fa2iCCPEfv6LBx/azfGDF9YmD0j61fn5V57S+nWbs8foLmucbC
+264b6O82tqYq9+tu+GEWL3E/2epVLLNMLpZZnptSK1F/F5qoQR2lBeZ3t0nS28rB
+zVRh7kVxs1KudZOITmLfF68AXdCASbuk9HMdL+qC1covhyQvEDjbJI3Npjb3kmyX
+O9LIrfBPxpnxuFDCsnKJedPcJ5lZqwGqnpttGdXGf1Nr0TWDBU8IwRVj0YoNF0xF
+QLCFq9O4s8n/DQXM8wpqi0hT1SFDJ6GaVagqgvaBURQsrJEweKX3Vrnzus3d0ocA
+1qx476q34aQINOL0VqjRuaCCo1VtT78p8DE9UKGa832eo2lu2i67gcCe0rFv2HC9
+K9JtpSJfVZfuUVy2bppD+K6f/0uofeZmcAFmzHfFmJXNREtsnv9JMzNwoRcvJiBa
+dQgjX0+DSis/TrOupSJp157LauxG79beDRJ2o14ly9c+uVDdMVc=
+=9xPE
+-----END PGP SIGNATURE-----
+
+--lztyclr74vqeyf6d--
