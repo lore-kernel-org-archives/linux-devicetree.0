@@ -2,164 +2,142 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA187C0044D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B6FC0044D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF1220575
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0235205F4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:31:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="leXggBwf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgCOC06 (ORCPT
+        id S1727743AbgCOCbO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:26:58 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:46590 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbgCOC05 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Mar 2020 22:26:57 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 8E42D804EB;
-        Sat, 14 Mar 2020 08:38:14 +0100 (CET)
-Date:   Sat, 14 Mar 2020 08:38:12 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: display: Add idk-1110wr binding
-Message-ID: <20200314073812.GC5783@ravnborg.org>
-References: <1583957020-16359-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1583957020-16359-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583957020-16359-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=yC-0_ovQAAAA:8
-        a=NcFk6D9gAAAA:8 a=VwQbUJbxAAAA:8 a=P1BnusSwAAAA:8 a=gEfo2CItAAAA:8
-        a=pGLkceISAAAA:8 a=rdn2N8ET07tcJGP0fp8A:9 a=CjuIK1q_8ugA:10
-        a=woH39XMaDYAA:10 a=-FEs8UIgK8oA:10 a=CojVow1nldcA:10 a=NWVoK91CQyQA:10
-        a=QsnFDINu91a9xkgZirup:22 a=dT0RXAwTRpxWjiziVLXF:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=D0XLA9XvdZm18NrgonBM:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+        Sat, 14 Mar 2020 22:31:14 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36138 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727772AbgCOCbO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Mar 2020 22:31:14 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g62so14311144wme.1;
+        Sat, 14 Mar 2020 19:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=UBLq+DVYQxDs8a8x/M0DoStKIVGMho+f5uexM3U5eEY=;
+        b=leXggBwfI+U1mWn9FkJboIpHLw2O7MMsTzSZS+64xWyOc7KeCL+60U99o9EA1ZOS9r
+         TSj5FrW+W2yycJdhgWvH4125L3H0s/YQOe5JR6a41E5kljCBg30DaO+etyRBRehHO3gd
+         aFaIVKIIsufg/vipykTMARGle92PNXW8R5Rjkk3iS/AflBqQbQaE6kufHBiBF2qdgjP0
+         8OFPu5rOdlRXq32GBpkAf5UQsHkGkGtsZBh8QjzR9XkprPDk0SvN6iRJK3DVjH/XXOms
+         syZsOcE5IDKrwzFjiIsscgk1ZehZ40F0cy2NaJwgijxv/ipEyv/hvXAy8F7tVjl/XawB
+         siEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=UBLq+DVYQxDs8a8x/M0DoStKIVGMho+f5uexM3U5eEY=;
+        b=swWVusZ62otMBbZ1yb4vHuQeaD2bPde30rXin/qDolaVTW0X18u6E/VIgAVlmDSYJh
+         f71jnbtfgTHN5O8lZVIBkLjTwtNsn/BgIGT8gzGXWJ+UL8pbqvvacdLBCmTzzPIaQRHL
+         ca8LG8MydcTp/HMFKgmAgy9vOj2Bi95Crh/pTSAkn3SxBfNwOydxspabqrOtHimRuMxd
+         2I2Uwb+/7NnBsnQ+JkCl10xBYSKmwL0v5h8ck+XNrjutYxJsCnM1z0Pph+VVU/BFS7Xh
+         e1WnJmG54+rULx3ddh6yvMn9nVu2coo6eu8avoxND5K9bT9J1VQmuqZdpL0WJeWDZBJY
+         d5rw==
+X-Gm-Message-State: ANhLgQ3Sod/D/fyzkbx7azSTWanVEzeImgRwC76ZKs7HixZpx7XZAGbC
+        ZgL/QHgCOlCACKrPTITnuPzb8dQVnW0=
+X-Google-Smtp-Source: ADFU+vvfxGr4VcbjzdQ9Qc5anz+ZVnL17sKm3kWOf89+oaVzDiigT8qEB6jG10BXVSEFtxosOh6erQ==
+X-Received: by 2002:a1c:a502:: with SMTP id o2mr17828001wme.94.1584225850211;
+        Sat, 14 Mar 2020 15:44:10 -0700 (PDT)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id 133sm23690732wmd.5.2020.03.14.15.44.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2020 15:44:09 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: [PATCH v3 10/12] spi: spi-fsl-dspi: Add support for LS1028A
+Date:   Sun, 15 Mar 2020 00:43:38 +0200
+Message-Id: <20200314224340.1544-11-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200314224340.1544-1-olteanv@gmail.com>
+References: <20200314224340.1544-1-olteanv@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-On Wed, Mar 11, 2020 at 08:03:39PM +0000, Lad Prabhakar wrote:
-> From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> 
-> Add binding for the idk-1110wr LVDS panel from Advantech.
-> 
-> Some panel-specific documentation can be found here:
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-LCD-Kit-Modules/model-IDK-1110WR-55WSA1E.htm
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+This is similar to the DSPI instantiation on LS1028A, except that:
+ - The A-011218 erratum has been fixed, so DMA works
+ - The endianness is different, which has implications on XSPI mode
 
-Applied, and pushed to drm-misc-next.
+Some benchmarking with the following command:
 
-	Sam
+spidev_test --device /dev/spidev2.0 --bpw 8 --size 256 --cpha --iter 10000000 --speed 20000000
 
-> ---
->  .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
-> new file mode 100644
-> index 0000000..93878c2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/advantech,idk-1110wr.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Advantech IDK-1110WR 10.1" WSVGA LVDS Display Panel
-> +
-> +maintainers:
-> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +
-> +allOf:
-> +  - $ref: lvds.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: advantech,idk-1110wr
-> +      - {} # panel-lvds, but not listed here to avoid false select
-> +
-> +  data-mapping:
-> +    const: jeida-24
-> +
-> +  width-mm:
-> +    const: 223
-> +
-> +  height-mm:
-> +    const: 125
-> +
-> +  panel-timing: true
-> +  port: true
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |+
-> +    panel {
-> +      compatible = "advantech,idk-1110wr", "panel-lvds";
-> +
-> +      width-mm = <223>;
-> +      height-mm = <125>;
-> +
-> +      data-mapping = "jeida-24";
-> +
-> +      panel-timing {
-> +        /* 1024x600 @60Hz */
-> +        clock-frequency = <51200000>;
-> +        hactive = <1024>;
-> +        vactive = <600>;
-> +        hsync-len = <240>;
-> +        hfront-porch = <40>;
-> +        hback-porch = <40>;
-> +        vsync-len = <10>;
-> +        vfront-porch = <15>;
-> +        vback-porch = <10>;
-> +      };
-> +
-> +      port {
-> +        panel_in: endpoint {
-> +          remote-endpoint = <&lvds_encoder>;
-> +        };
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
+shows that in DMA mode, it can achieve around 2400 kbps, and in XSPI
+mode, the same command goes up to 4700 kbps. This is somewhat to be
+expected, since the DMA buffer size is extremely small at 8 bytes, the
+winner becomes whomever can prepare the buffers for transmission
+quicker, and DMA mode has higher overhead there. So XSPI FIFO mode has
+been chosen as the operating mode for this chip.
+
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+Changes in v4:
+None.
+
+Changes in v3:
+Removed the dma_bufsize variable (obsoleted by 03/12).
+
+Changes in v2:
+Switch to DSPI_XSPI_MODE.
+
+ drivers/spi/spi-fsl-dspi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 86255d38ffcf..b6d7e6f383ec 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -124,6 +124,7 @@ struct fsl_dspi_devtype_data {
+ enum {
+ 	LS1021A,
+ 	LS1012A,
++	LS1028A,
+ 	LS1043A,
+ 	LS1046A,
+ 	LS2080A,
+@@ -151,6 +152,11 @@ static const struct fsl_dspi_devtype_data devtype_data[] = {
+ 		.max_clock_factor	= 8,
+ 		.fifo_size		= 16,
+ 	},
++	[LS1028A] = {
++		.trans_mode		= DSPI_XSPI_MODE,
++		.max_clock_factor	= 8,
++		.fifo_size		= 4,
++	},
+ 	[LS1043A] = {
+ 		/* Has A-011218 DMA erratum */
+ 		.trans_mode		= DSPI_XSPI_MODE,
+@@ -1059,6 +1065,9 @@ static const struct of_device_id fsl_dspi_dt_ids[] = {
+ 	}, {
+ 		.compatible = "fsl,ls1012a-dspi",
+ 		.data = &devtype_data[LS1012A],
++	}, {
++		.compatible = "fsl,ls1028a-dspi",
++		.data = &devtype_data[LS1028A],
+ 	}, {
+ 		.compatible = "fsl,ls1043a-dspi",
+ 		.data = &devtype_data[LS1043A],
+-- 
+2.17.1
+
