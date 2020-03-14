@@ -2,174 +2,81 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4A4C5ACBF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDB1C0044D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B1B2051A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:07:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Dot6HVFP"
+	by mail.kernel.org (Postfix) with ESMTP id 1D7672071C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgCOCHs (ORCPT
+        id S1727067AbgCOCLz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:07:48 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:63181 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727566AbgCOCHs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:07:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584238067; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=lXhkIBcKbtLstxQRyAkgmmBBedPpvtcrGcYCAgn01SQ=; b=Dot6HVFPxjm/BWBzdSJbs4Pl3BKJabmP8ooFrlrd+KkrvmOoXdqkeqzh2dfuuT7ZOTuG6DoT
- epSDFF6R6Q/rX2fGHZGRokb9NuDFK9Wm1hMwxMLvgnGXIC04b0Ts2jIDe0U0DIE0XUaVE4St
- 9H+KWFzbES4mPd8r/XLbnhOe32E=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6d2775.7fec2d82f6f8-smtp-out-n02;
- Sat, 14 Mar 2020 18:50:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B9F7AC432C2; Sat, 14 Mar 2020 18:50:27 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Sat, 14 Mar 2020 22:11:55 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:45830 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726699AbgCOCLz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Mar 2020 22:11:55 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1153CC433BA;
-        Sat, 14 Mar 2020 18:50:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1153CC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v6 2/3] clk: qcom: gcc: Add support for modem clocks in GCC
-Date:   Sun, 15 Mar 2020 00:19:57 +0530
-Message-Id: <1584211798-10332-3-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
-References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
+        by asavdk4.altibox.net (Postfix) with ESMTPS id D8B9E80441;
+        Sat, 14 Mar 2020 08:26:45 +0100 (CET)
+Date:   Sat, 14 Mar 2020 08:26:44 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v1 1/1] dt-bindings: display: fix panel warnings
+Message-ID: <20200314072644.GA5783@ravnborg.org>
+References: <20200308115017.18563-1-sam@ravnborg.org>
+ <20200308115017.18563-2-sam@ravnborg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200308115017.18563-2-sam@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=NXpJzYs8AAAA:8
+        a=8b9GpE9nAAAA:8 a=P1BnusSwAAAA:8 a=Pee4ZP3FOyBMgpAkGhEA:9
+        a=IMsPZ164TeEKhWQk:21 a=G0AN_tx5KeaSc1yx:21 a=CjuIK1q_8ugA:10
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=cvBusfyB2V15izCimMoJ:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=cwV61pgf2j4Cq8VD9hE_:22
+        a=T3LWEMljR5ZiDmsYVIUa:22 a=D0XLA9XvdZm18NrgonBM:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the required modem clocks in global clock controller which are
-required to bring the modem out of reset.
+On Sun, Mar 08, 2020 at 12:50:17PM +0100, Sam Ravnborg wrote:
+> Fix following type af warnings in the panel bindings:
+> 
+> Warning (unit_address_vs_reg): /example-0/dsi/panel: node has a reg or ranges property, but no unit name
+> Warning (unit_address_vs_reg): /example-0/dsi@ff450000: node has a unit name, but no reg property
+> 
+> Removing the "@xxx" from the node name fixed first warning.
+> Adding a missing reg property fixed the second warning
+> 
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/gcc-sc7180.c | 72 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 71 insertions(+), 1 deletion(-)
+Applied and pushed to drm-misc-next with Rob's fix.
+Thanks for the reviews!
 
-diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-index 7f59fb8..6a51b5b 100644
---- a/drivers/clk/qcom/gcc-sc7180.c
-+++ b/drivers/clk/qcom/gcc-sc7180.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
-  */
-
- #include <linux/clk-provider.h>
-@@ -2165,6 +2165,71 @@ static struct clk_branch gcc_video_xo_clk = {
- 	},
- };
-
-+static struct clk_branch gcc_mss_cfg_ahb_clk = {
-+	.halt_reg = 0x8a000,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x8a000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_cfg_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_mfab_axis_clk = {
-+	.halt_reg = 0x8a004,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x8a004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_mfab_axis_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_nav_axi_clk = {
-+	.halt_reg = 0x8a00c,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x8a00c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_nav_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_snoc_axi_clk = {
-+	.halt_reg = 0x8a150,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x8a150,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_snoc_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_mss_q6_memnoc_axi_clk = {
-+	.halt_reg = 0x8a154,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x8a154,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_mss_q6_memnoc_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct gdsc ufs_phy_gdsc = {
- 	.gdscr = 0x77004,
- 	.pd = {
-@@ -2336,6 +2401,11 @@ static struct clk_regmap *gcc_sc7180_clocks[] = {
- 	[GPLL7] = &gpll7.clkr,
- 	[GPLL4] = &gpll4.clkr,
- 	[GPLL1] = &gpll1.clkr,
-+	[GCC_MSS_CFG_AHB_CLK] = &gcc_mss_cfg_ahb_clk.clkr,
-+	[GCC_MSS_MFAB_AXIS_CLK] = &gcc_mss_mfab_axis_clk.clkr,
-+	[GCC_MSS_NAV_AXI_CLK] = &gcc_mss_nav_axi_clk.clkr,
-+	[GCC_MSS_Q6_MEMNOC_AXI_CLK] = &gcc_mss_q6_memnoc_axi_clk.clkr,
-+	[GCC_MSS_SNOC_AXI_CLK] = &gcc_mss_snoc_axi_clk.clkr,
- };
-
- static const struct qcom_reset_map gcc_sc7180_resets[] = {
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+	Sam
