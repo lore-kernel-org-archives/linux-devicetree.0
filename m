@@ -2,230 +2,407 @@ Return-Path: <SRS0=X1fx=47=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1F8C4CECE
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Mar 2020 00:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A36C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 561AF2074C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Mar 2020 00:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE36620753
+	for <linux-devicetree@archiver.kernel.org>; Sat, 14 Mar 2020 00:55:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J19NXz25"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mJ6G8Uvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgCNAlL (ORCPT
+        id S1727770AbgCNAzF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 13 Mar 2020 20:41:11 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35941 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgCNAlL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Mar 2020 20:41:11 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i13so6306878pfe.3
-        for <devicetree@vger.kernel.org>; Fri, 13 Mar 2020 17:41:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+YSW3mt80z9CCjuJH3Ji36iqGwKRMrlrk+wnvIOhyhk=;
-        b=J19NXz25semJfpPmXTe2dsLok9m4rW42I1oyw5NHxb0O2a6Vjl62K+sZ9w/SQORQO9
-         L1Rbe1NFtubgURSHIWzm5RxqISGjxGR4aJkxCdsPpHwp8ezEA3nD9X8jjMILcriSbUgm
-         f771O4qHMnRMrjejAFe65UCv5+yRetWPts7QI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+YSW3mt80z9CCjuJH3Ji36iqGwKRMrlrk+wnvIOhyhk=;
-        b=X0laWFBhNIps8JlyAhKoO0fdhm27olrYi/Ywcd10hMFraO1TLn1W4nvTY0Lcw1RqQY
-         8iaqbzvU6nPtTZpnZ+jJaRnpIUxLa6f23HjrPjW4ceU6XDGw+h6xsaG3MeiWQRVK0F6h
-         Ueph9OKobnN+o2dgb17+qy0nvqAYR5jYOM6AWemi3kA2pOsLNh17i2MWNG4eDQHuqfft
-         LSInE5YUlbrYrtYyiZROAG+Lwj04AfeqUt7jeZJqs4xfuYTILOGYzqvpnbFkYCjd1iIw
-         03724q/K6OW3z8I5DO9nuDSwmavBmMR+WtHKbjY+cAGElTqy/1SxdciYkcyorXyMKy9x
-         b8aA==
-X-Gm-Message-State: ANhLgQ1RU6zYRZW8lhcoYG0/fSCz9Lemd3KI/FUwk1+47CF2V9Ck5PQS
-        kv/jEkaOC9SCerBX08yb+EXmGA==
-X-Google-Smtp-Source: ADFU+vuslQLGf4xcYGRQe1z6Yvr3ZzcUBM4XSOaWv9bdeBRUPS3wI9MzredWsYK1bA8n9Q8+YpIbDg==
-X-Received: by 2002:aa7:914b:: with SMTP id 11mr16871749pfi.69.1584146468392;
-        Fri, 13 Mar 2020 17:41:08 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id q30sm13469970pjh.5.2020.03.13.17.41.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Mar 2020 17:41:07 -0700 (PDT)
-Date:   Fri, 13 Mar 2020 17:41:06 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org
-Subject: Re: [PATCH V2 6/8] spi: spi-geni-qcom: Add interconnect support
-Message-ID: <20200314004106.GM144492@google.com>
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-7-git-send-email-akashast@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1584105134-13583-7-git-send-email-akashast@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Fri, 13 Mar 2020 20:55:05 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:60425 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726853AbgCNAzF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 13 Mar 2020 20:55:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584147304; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=nALwPpErI0tmpPl/u2qgJ2QyUPPUBMZvO++osQxPMNI=; b=mJ6G8UvtOVsWUAeYGPZ//9tDmFRViZCVxAZcM8zcVHUHlDWYEMy/7jY7Fvwgigve2LKI+rMU
+ UWz23+I9YArMFamNbUm1fcYtrR/l7ojFYSRUmuUKv+Asx2HBVEmBeE1D3e02BxbX8Eswqwn5
+ aQln8CYqAStwB7XUsOld1Lm2sTo=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6c2b68.7f142f6f0030-smtp-out-n01;
+ Sat, 14 Mar 2020 00:55:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A38C9C44792; Sat, 14 Mar 2020 00:55:02 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 795B4C43636;
+        Sat, 14 Mar 2020 00:55:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 795B4C43636
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH 2/4] phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
+Date:   Fri, 13 Mar 2020 17:54:51 -0700
+Message-Id: <1584147293-6763-3-git-send-email-wcheng@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
+References: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Akash,
+This adds the SNPS FemtoPHY driver used in QCOM SOCs.  There
+are potentially multiple instances of this UTMI PHY on the
+SOC, all which can utilize this driver.
 
-On Fri, Mar 13, 2020 at 06:42:12PM +0530, Akash Asthana wrote:
-> Get the interconnect paths for SPI based Serial Engine device
-> and vote according to the current bus speed of the driver.
-> 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> ---
->  - As per Bjorn's comment, removed se == NULL check from geni_spi_icc_get
->  - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
->  - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
->    path handle
->  - As per Matthias comment, added error handling for icc_set_bw call
-> 
->  drivers/spi/spi-geni-qcom.c | 74 ++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 73 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-> index c397242..09c4709 100644
-> --- a/drivers/spi/spi-geni-qcom.c
-> +++ b/drivers/spi/spi-geni-qcom.c
-> @@ -118,6 +118,19 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
->  	return ret;
->  }
->  
-> +static int geni_spi_icc_get(struct geni_se *se)
-> +{
-> +	se->icc_path_geni_to_core = devm_of_icc_get(se->dev, "qup-core");
-> +	if (IS_ERR(se->icc_path_geni_to_core))
-> +		return PTR_ERR(se->icc_path_geni_to_core);
-> +
-> +	se->icc_path_cpu_to_geni = devm_of_icc_get(se->dev, "qup-config");
-> +	if (IS_ERR(se->icc_path_cpu_to_geni))
-> +		return PTR_ERR(se->icc_path_cpu_to_geni);
-> +
-> +	return 0;
-> +}
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+ drivers/phy/qualcomm/Kconfig             |  10 ++
+ drivers/phy/qualcomm/Makefile            |   1 +
+ drivers/phy/qualcomm/phy-qcom-snps-7nm.c | 294 +++++++++++++++++++++++++++++++
+ 3 files changed, 305 insertions(+)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
 
-As per my comments on (https://patchwork.kernel.org/patch/11436895/#23222713),
-the above function could be replaced by calling a 'geni_icc_get()' (or so, to
-be created) provided by the geni SE driver.
-
-> +
->  static void handle_fifo_timeout(struct spi_master *spi,
->  				struct spi_message *msg)
->  {
-> @@ -234,6 +247,20 @@ static int setup_fifo_params(struct spi_device *spi_slv,
->  		return ret;
->  	}
->  
-> +	/*
-> +	 * Set BW quota for CPU as driver supports FIFO mode only.
-> +	 * Assume peak bw as twice of avg bw.
-> +	 */
-> +	se->avg_bw_cpu = Bps_to_icc(mas->cur_speed_hz);
-> +	se->peak_bw_cpu = Bps_to_icc(2 * mas->cur_speed_hz);
-> +	ret = icc_set_bw(se->icc_path_cpu_to_geni, se->avg_bw_cpu,
-> +			se->peak_bw_cpu);
-> +	if (ret) {
-> +		dev_err(mas->dev, "%s: ICC BW voting failed for cpu\n",
-> +			__func__);
-> +		return ret;
-> +	}
-> +
->  	clk_sel = idx & CLK_SEL_MSK;
->  	m_clk_cfg = (div << CLK_DIV_SHFT) | SER_CLK_EN;
->  	spi_setup_word_len(mas, spi_slv->mode, spi_slv->bits_per_word);
-> @@ -578,6 +605,15 @@ static int spi_geni_probe(struct platform_device *pdev)
->  	spin_lock_init(&mas->lock);
->  	pm_runtime_enable(dev);
->  
-> +	ret = geni_spi_icc_get(&mas->se);
-> +	if (ret)
-> +		goto spi_geni_probe_runtime_disable;
-> +	/* Set the bus quota to a reasonable value for register access */
-> +	mas->se.avg_bw_core = Bps_to_icc(CORE_2X_50_MHZ);
-> +	mas->se.peak_bw_core = Bps_to_icc(CORE_2X_100_MHZ);
-> +	mas->se.avg_bw_cpu = Bps_to_icc(1000);
-> +	mas->se.peak_bw_cpu = Bps_to_icc(1000);
-> +
->  	ret = spi_geni_init(mas);
->  	if (ret)
->  		goto spi_geni_probe_runtime_disable;
-> @@ -616,14 +652,50 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
->  {
->  	struct spi_master *spi = dev_get_drvdata(dev);
->  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
-> +	int ret;
-> +
-> +	ret = geni_se_resources_off(&mas->se);
-> +	if (ret)
-> +		return ret;
->  
-> -	return geni_se_resources_off(&mas->se);
-> +	ret = icc_set_bw(mas->se.icc_path_geni_to_core, 0, 0);
-> +	if (ret) {
-> +		dev_err_ratelimited(mas->dev, "%s: ICC BW remove failed for core\n",
-> +			__func__);
-> +		return ret;
-> +	}
-> +
-> +	ret = icc_set_bw(mas->se.icc_path_cpu_to_geni, 0, 0);
-> +	if (ret) {
-> +		dev_err_ratelimited(mas->dev, "%s: ICC BW remove failed for cpu\n",
-> +			__func__);
-> +		return ret;
-> +	}
-
-the ICC stuff above would become:
-
-	ret = geni_icc_vote_off(&mas->se);
-	if (ret)
-		return ret;
-
-with the consolidated code in geni SE.
-
-> +
-> +	return 0;
->  }
->  
->  static int __maybe_unused spi_geni_runtime_resume(struct device *dev)
->  {
->  	struct spi_master *spi = dev_get_drvdata(dev);
->  	struct spi_geni_master *mas = spi_master_get_devdata(spi);
-> +	int ret;
-> +
-> +	ret = icc_set_bw(mas->se.icc_path_geni_to_core, mas->se.avg_bw_core,
-> +		mas->se.peak_bw_core);
-> +	if (ret) {
-> +		dev_err_ratelimited(mas->dev, "%s: ICC BW voting failed for core\n",
-> +			__func__);
-> +		return ret;
-> +	}
-> +
-> +	ret = icc_set_bw(mas->se.icc_path_cpu_to_geni, mas->se.avg_bw_cpu,
-> +		mas->se.peak_bw_cpu);
-> +	if (ret) {
-> +		dev_err_ratelimited(mas->dev, "%s: ICC BW voting failed for cpu\n",
-> +			__func__);
-> +		return ret;
-> +	}
-
-and this:
-
-	ret = geni_icc_vote_on(&mas->se);
-	if (ret)
-		return ret;
-
->  	return geni_se_resources_on(&mas->se);
-
-possibly you could even do the ICC voting from geni_se_resources_on/off()
-it seems the two are always done together for UART, I2C and SPI.
+diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+index e46824d..3158c14 100644
+--- a/drivers/phy/qualcomm/Kconfig
++++ b/drivers/phy/qualcomm/Kconfig
+@@ -85,6 +85,16 @@ config PHY_QCOM_USB_HS
+ 	  Support for the USB high-speed ULPI compliant phy on Qualcomm
+ 	  chipsets.
+ 
++config PHY_QCOM_USB_SNPS_HS_7NM
++	tristate "Qualcomm 7nm USB HS PHY module"
++	depends on OF && (ARCH_QCOM || COMPILE_TEST)
++	select GENERIC_PHY
++	help
++	  Enable support for the USB high-speed SNPS phy on Qualcomm 7nm
++	  chipsets.  This PHY has differences in the register map compared
++	  to the 28nm variant.  The PHY is paired with a Synopsys DWC3 USB
++	  controller on MSM SOCs.
++
+ config PHY_QCOM_USB_HSIC
+ 	tristate "Qualcomm USB HSIC ULPI PHY module"
+ 	depends on USB_ULPI_BUS
+diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
+index 283251d..06bdb40 100644
+--- a/drivers/phy/qualcomm/Makefile
++++ b/drivers/phy/qualcomm/Makefile
+@@ -10,3 +10,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
+ obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
+ obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
+ obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
++obj-$(CONFIG_PHY_QCOM_USB_SNPS_HS_7NM)		+= phy-qcom-snps-7nm.o
+diff --git a/drivers/phy/qualcomm/phy-qcom-snps-7nm.c b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+new file mode 100644
+index 0000000..8d4ba53
+--- /dev/null
++++ b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+@@ -0,0 +1,294 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++#include <linux/reset.h>
++#include <linux/slab.h>
++
++#define USB2_PHY_USB_PHY_UTMI_CTRL0		(0x3c)
++#define OPMODE_MASK					GENMASK(4, 3)
++#define OPMODE_NORMAL				(0x00)
++#define OPMODE_NONDRIVING			BIT(3)
++#define SLEEPM						BIT(0)
++#define TERMSEL						BIT(5)
++
++#define USB2_PHY_USB_PHY_UTMI_CTRL1		(0x40)
++#define XCVRSEL						BIT(0)
++
++#define USB2_PHY_USB_PHY_UTMI_CTRL5		(0x50)
++#define POR							BIT(1)
++
++#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON0	(0x54)
++#define RETENABLEN							BIT(3)
++#define FSEL_MASK							GENMASK(7, 5)
++#define FSEL_DEFAULT						(0x3 << 4)
++
++#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1	(0x58)
++#define VBUSVLDEXTSEL0						BIT(4)
++#define PLLBTUNE							BIT(5)
++
++#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON2	(0x5c)
++#define VREGBYPASS							BIT(0)
++
++#define USB2_PHY_USB_PHY_HS_PHY_CTRL1	(0x60)
++#define VBUSVLDEXT0					BIT(0)
++
++#define USB2_PHY_USB_PHY_HS_PHY_CTRL2	(0x64)
++#define USB2_AUTO_RESUME			BIT(0)
++#define USB2_SUSPEND_N				BIT(2)
++#define USB2_SUSPEND_N_SEL			BIT(3)
++
++#define USB2_PHY_USB_PHY_CFG0					(0x94)
++#define UTMI_PHY_DATAPATH_CTRL_OVERRIDE_EN	BIT(0)
++#define UTMI_PHY_CMN_CTRL_OVERRIDE_EN		BIT(1)
++
++#define USB2_PHY_USB_PHY_REFCLK_CTRL	(0xa0)
++#define REFCLK_SEL_MASK				GENMASK(1, 0)
++#define REFCLK_SEL_DEFAULT			(0x2 << 0)
++
++static const char * const qcom_snps_hsphy_vreg_names[] = {
++	"vdda-pll", "vdda33", "vdda18",
++};
++
++#define SNPS_HS_NUM_VREGS		ARRAY_SIZE(qcom_snps_hsphy_vreg_names)
++
++/**
++ * struct qcom_snps_hsphy - structure holding snps hs phy attributes
++ *
++ * @phy: generic phy
++ * @base: iomapped memory space for qubs2 phy
++ *
++ * @cfg_ahb_clk: AHB2PHY interface clock
++ * @ref_clk: phy reference clock
++ * @iface_clk: phy interface clock
++ * @phy_reset: phy reset control
++ * @vregs: regulator supplies bulk data
++
++ * @phy_initialized: if PHY has been initialized correctly
++ *
++ */
++struct qcom_snps_hsphy {
++	struct phy *phy;
++	void __iomem *base;
++
++	struct clk *cfg_ahb_clk;
++	struct clk *ref_clk;
++	struct reset_control *phy_reset;
++	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
++
++	bool phy_initialized;
++};
++
++static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
++				    u32 mask, u32 val)
++{
++	u32 reg;
++
++	reg = readl(base + offset);
++	reg &= ~mask;
++	reg |= val & mask;
++	writel(reg, base + offset);
++
++	/* Ensure above write is completed */
++	readl(base + offset);
++}
++
++static int qcom_snps_hsphy_init(struct phy *phy)
++{
++	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
++	int ret;
++
++	dev_vdbg(&phy->dev, "%s(): Initializing SNPS HS phy\n", __func__);
++
++	/* turn on regulator supplies */
++	ret = regulator_bulk_enable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
++	if (ret)
++		return ret;
++
++	/* enable ahb interface clock to program phy */
++	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
++	if (ret) {
++		dev_err(&phy->dev, "failed to enable cfg ahb clock, %d\n", ret);
++		goto poweroff_phy;
++	}
++
++	/* Perform phy reset */
++	ret = reset_control_assert(hsphy->phy_reset);
++	if (ret) {
++		dev_err(&phy->dev, "failed to assert phy_reset, %d\n", ret);
++		goto disable_ahb_clk;
++	}
++
++	/* 100 us delay to keep PHY in reset mode */
++	usleep_range(100, 150);
++
++	ret = reset_control_deassert(hsphy->phy_reset);
++	if (ret) {
++		dev_err(&phy->dev, "failed to de-assert phy_reset, %d\n", ret);
++		goto disable_ahb_clk;
++	}
++
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
++							UTMI_PHY_CMN_CTRL_OVERRIDE_EN,
++							UTMI_PHY_CMN_CTRL_OVERRIDE_EN);
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL5,
++							POR, POR);
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON0,
++							FSEL_MASK, 0);
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1,
++					PLLBTUNE, PLLBTUNE);
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_REFCLK_CTRL,
++					REFCLK_SEL_DEFAULT, REFCLK_SEL_MASK);
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1,
++					VBUSVLDEXTSEL0, VBUSVLDEXTSEL0);
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL1,
++					VBUSVLDEXT0, VBUSVLDEXT0);
++
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON2,
++					VREGBYPASS, VREGBYPASS);
++
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
++					USB2_SUSPEND_N_SEL | USB2_SUSPEND_N,
++					USB2_SUSPEND_N_SEL | USB2_SUSPEND_N);
++
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL0,
++					SLEEPM, SLEEPM);
++
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL5,
++					POR, 0);
++
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
++					USB2_SUSPEND_N_SEL, 0);
++
++	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
++					UTMI_PHY_CMN_CTRL_OVERRIDE_EN, 0);
++
++	hsphy->phy_initialized = true;
++
++	return 0;
++
++disable_ahb_clk:
++	clk_disable_unprepare(hsphy->cfg_ahb_clk);
++poweroff_phy:
++	regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
++
++	return ret;
++}
++
++static int qcom_snps_hsphy_exit(struct phy *phy)
++{
++	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
++
++	reset_control_assert(hsphy->phy_reset);
++	clk_disable_unprepare(hsphy->cfg_ahb_clk);
++	regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
++	hsphy->phy_initialized = false;
++
++	return 0;
++}
++
++static const struct phy_ops qcom_snps_hsphy_gen_ops = {
++	.init		= qcom_snps_hsphy_init,
++	.exit		= qcom_snps_hsphy_exit,
++	.owner		= THIS_MODULE,
++};
++
++static const struct of_device_id qcom_snps_hsphy_of_match_table[] = {
++	{
++		.compatible	= "qcom,sm8150-usb-hs-phy",
++	},
++	{
++		.compatible	= "qcom,usb-snps-hs-7nm-phy",
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
++
++static int qcom_snps_hsphy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct qcom_snps_hsphy *hsphy;
++	struct phy_provider *phy_provider;
++	struct phy *generic_phy;
++	struct resource *res;
++	int ret, i;
++	int num;
++
++	hsphy = devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
++	if (!hsphy)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	hsphy->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(hsphy->base))
++		return PTR_ERR(hsphy->base);
++
++	hsphy->ref_clk = devm_clk_get(dev, "ref");
++	if (IS_ERR(hsphy->ref_clk)) {
++		ret = PTR_ERR(hsphy->ref_clk);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to get ref clk, %d\n", ret);
++		return ret;
++	}
++
++	hsphy->phy_reset = devm_reset_control_get_by_index(&pdev->dev, 0);
++	if (IS_ERR(hsphy->phy_reset)) {
++		dev_err(dev, "failed to get phy core reset\n");
++		return PTR_ERR(hsphy->phy_reset);
++	}
++
++	num = ARRAY_SIZE(hsphy->vregs);
++	for (i = 0; i < num; i++)
++		hsphy->vregs[i].supply = qcom_snps_hsphy_vreg_names[i];
++
++	ret = devm_regulator_bulk_get(dev, num, hsphy->vregs);
++	if (ret) {
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to get regulator supplies: %d\n",
++				ret);
++		return ret;
++	}
++
++	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
++	if (IS_ERR(generic_phy)) {
++		ret = PTR_ERR(generic_phy);
++		dev_err(dev, "failed to create phy, %d\n", ret);
++		return ret;
++	}
++	hsphy->phy = generic_phy;
++
++	dev_set_drvdata(dev, hsphy);
++	phy_set_drvdata(generic_phy, hsphy);
++
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	if (!IS_ERR(phy_provider))
++		dev_info(dev, "Registered Qcom-SNPS HS phy\n");
++
++	return PTR_ERR_OR_ZERO(phy_provider);
++}
++
++static struct platform_driver qcom_snps_hsphy_driver = {
++	.probe		= qcom_snps_hsphy_probe,
++	.driver = {
++		.name	= "qcom-snps-hs-7nm-phy",
++		.of_match_table = qcom_snps_hsphy_of_match_table,
++	},
++};
++
++module_platform_driver(qcom_snps_hsphy_driver);
++
++MODULE_DESCRIPTION("Qualcomm 7nm USB HS PHY driver");
++MODULE_LICENSE("GPL v2");
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
