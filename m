@@ -2,114 +2,81 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37562C1975A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D56CC0044D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10ADF20637
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:43:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ra+ddgpY"
+	by mail.kernel.org (Postfix) with ESMTP id 20F3F206D5
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgCOBnj (ORCPT
+        id S1726852AbgCOBo0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:43:39 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:60386 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726879AbgCOBni (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:43:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584236618; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=bab8s4tBbO8m9drWNuWpC59mcIOm3kFwBEnRSL7ZdyI=; b=ra+ddgpYZbzV9Ves6Qe32dwbxd0aY0Q6mMneN0fVQjtA7omtFxSrgNyg1fEmdSw4rk8jW0wJ
- ppPvpHgk/jL5HjW/gzAn/7zNCQLx4WBKzi/mI8+LZYBnhM2aSo2rHcI751pnYHlidkPTdHVr
- V37EH9r4hZ/gMprsXIVuv/Pz9f0=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6d24d9.7f79699e3f80-smtp-out-n04;
- Sat, 14 Mar 2020 18:39:21 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 94DFDC43636; Sat, 14 Mar 2020 18:39:20 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8278DC433BA;
-        Sat, 14 Mar 2020 18:39:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8278DC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v6 0/3] Add modem Clock controller (MSS CC) driver for SC7180
-Date:   Sun, 15 Mar 2020 00:09:04 +0530
-Message-Id: <1584211147-5570-1-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Sat, 14 Mar 2020 21:44:26 -0400
+Received: from muru.com ([72.249.23.125]:60428 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbgCOBo0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 14 Mar 2020 21:44:26 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 16C308167;
+        Sat, 14 Mar 2020 20:55:53 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, maemo-leste@lists.dyne.org,
+        Arthur Demchenkov <spinal.by@gmail.com>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH] ARM: dts: omap4-droid4: Fix lost touchscreen interrupts
+Date:   Sat, 14 Mar 2020 13:55:05 -0700
+Message-Id: <20200314205505.44953-1-tony@atomide.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-[v6]
- * Combine the Documentation YAML schema and clock IDs for GCC MSS and
-   MSS clocks.
- * Remove a unnecessary header file inclusion, define the max_registers for
-   regmap and also update the fw_name to remove _clk suffix.
- * Update the copyright year.
+Looks like we can have the maxtouch touchscreen stop producing interrupts
+if an edge interrupt is lost. This can happen easily when the SoC idles as
+the gpio controller may not see any state for an edge interrupt if it
+is briefly triggered when the system is idle.
 
-[v5]
- * Update the clock ID for GCC_MSS_NAV_AXIS_CLK to GCC_MSS_NAV_AXI_CLK
+Also it looks like maxtouch stops sending any further interrupts if the
+interrupt is not handled. And we do have several cases of maxtouch already
+configured with a level interrupt, so let's do that.
 
-[v4]
- * Split the GCC MSS clocks and Modem clock driver.
- * Update mss_regmap_config to const.
- * Rename the Documentation binding as per the latest convention.
- * Minor comments of clock-names/clocks properties updated.
+With level interrupt the gpio controller has the interrupt state visible
+after idle. Note that eventually we will probably also be using the
+Linux generic wakeirq configured for the controller, but that cannot be
+done until the maxtouch driver supports runtime PM.
 
-[v3]
-  * Add clocks/clock-names required for the MSS clock controller.
-  * Add pm_ops to enable/disable the required dependent clock.
-  * Add parent_data for the MSS clocks.
-  * Update the GCC MSS clocks from _CBCR to _CLK.
+Cc: maemo-leste@lists.dyne.org
+Cc: Arthur Demchenkov <spinal.by@gmail.com>
+Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/motorola-mapphone-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[v2]
-  * Update the license for the documentation and fix minor comments in the
-    YAML bindings.
-
-[v1]
-  * Add driver support for Modem clock controller for SC7180 and also
-    update device tree bindings for the various clocks supported in the
-    clock controller.
-
-Taniya Das (3):
-  dt-bindings: clock: Add YAML schemas for the QCOM MSS clock bindings
-  clk: qcom: gcc: Add support for modem clocks in GCC
-  clk: qcom: Add modem clock controller driver for SC7180
-
- .../devicetree/bindings/clock/qcom,sc7180-mss.yaml |  62 +++++++++
- drivers/clk/qcom/Kconfig                           |   9 ++
- drivers/clk/qcom/Makefile                          |   1 +
- drivers/clk/qcom/gcc-sc7180.c                      |  72 ++++++++++-
- drivers/clk/qcom/mss-sc7180.c                      | 143 +++++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-sc7180.h        |   7 +-
- include/dt-bindings/clock/qcom,mss-sc7180.h        |  12 ++
- 7 files changed, 304 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
- create mode 100644 drivers/clk/qcom/mss-sc7180.c
- create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
-
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+--- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
++++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+@@ -429,7 +429,7 @@ touchscreen@4a {
+ 		reset-gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>; /* gpio173 */
+ 
+ 		/* gpio_183 with sys_nirq2 pad as wakeup */
+-		interrupts-extended = <&gpio6 23 IRQ_TYPE_EDGE_FALLING>,
++		interrupts-extended = <&gpio6 23 IRQ_TYPE_LEVEL_LOW>,
+ 				      <&omap4_pmx_core 0x160>;
+ 		interrupt-names = "irq", "wakeup";
+ 		wakeup-source;
+-- 
+2.25.1
