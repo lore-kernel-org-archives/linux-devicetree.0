@@ -2,137 +2,108 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C9EC1975A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44755C0044D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3072076A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1927B2076D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 01:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TUuRdVpc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMwz6uwy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgCOBd6 (ORCPT
+        id S1726858AbgCOBeZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Mar 2020 21:33:58 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55730 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726825AbgCOBd6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 14 Mar 2020 21:33:58 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584236037; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=VXbg0PkR8DzxPJz/MiykCW0CnZd/L0YGnzp2Lz0Y0eE=; b=TUuRdVpc8vph+M4LOH6n6A7k37QDn/mwImwjjBvsm1VySBK1/WbDq+3U6yWKZscIQHYzuryQ
- /BBJu4BXvMogbQFgbAt1M8NOEI2gsMoGiAw0aVa2zpxAF6+r48ov2+l5YBP2vi5WT18a8R2l
- IVj0TWAlGy4OajkjUjkJKURpfDw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6d268b.7fb83f309a40-smtp-out-n01;
- Sat, 14 Mar 2020 18:46:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6AE8FC432C2; Sat, 14 Mar 2020 18:46:35 +0000 (UTC)
-Received: from [192.168.0.104] (unknown [183.82.137.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1366FC433CB;
-        Sat, 14 Mar 2020 18:46:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1366FC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v5 3/5] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-To:     Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-References: <1582540703-6328-1-git-send-email-tdas@codeaurora.org>
- <1582540703-6328-4-git-send-email-tdas@codeaurora.org>
- <20200224184201.GA6030@bogus>
- <eec22330-2bf4-f4f5-3d28-6b69aa71f992@codeaurora.org>
- <CAL_JsqKRr3aOpcbPOtkArxnnJOBd-XaUGRVesR_CnA11pFHYXQ@mail.gmail.com>
- <158267707817.177367.4165827948994155128@swboyd.mtv.corp.google.com>
- <CAL_JsqJiB08vtDKP18Xzdzan-2TFVxJJ-rFgvXsqVHKB5-L18g@mail.gmail.com>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <888d1371-2eea-1cf2-5633-715fb047bbbb@codeaurora.org>
-Date:   Sun, 15 Mar 2020 00:16:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJiB08vtDKP18Xzdzan-2TFVxJJ-rFgvXsqVHKB5-L18g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sat, 14 Mar 2020 21:34:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38353 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgCOBeZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Mar 2020 21:34:25 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t13so7882694wmi.3;
+        Sat, 14 Mar 2020 18:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=W4LsChYiYRCfil6DjkYr2p/X2niUsvURlPsrKK9vuOs=;
+        b=mMwz6uwyECazDiJCgbOUHKlUEAMtQg38/g8Xqg6k2LoiSVVVtZOOsgSya5j7XcIH9w
+         iMAPxKZjs03JXneZ9diWGvngfP7GIfFYVuL10HYcGY18z4749N7UlgdbhwjzLmuKuc7J
+         RBJ4PI8kUSp15b1pBT9Kaj83C8rF95WKh6ZXOnlET7I3PpKUl8F3vLPK039Hp0C6tMK0
+         ZHmYR7isWCkR+IlSZNxGDqzsFgTsSewABn1yNSes9aSqqYCjqNqO0VVny5CYiuXh/9dW
+         2SPJvOWX1drqOcChY8n/FV4YN3Qt6xArmBkRY0tmEkNqLFGistf4v/WBG+JAfy7fvLJ0
+         KejQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=W4LsChYiYRCfil6DjkYr2p/X2niUsvURlPsrKK9vuOs=;
+        b=IRe3u+PP5EZBy4BHaCxh/Wg8g/cOqq2TjHFpdm4NvHi4NDXOEdCy1NoqEH0+DTeAvM
+         nmuz8GasvZlAmWcmEemd5mCa4Eo7OuJfc3k8CiCpBegIPvZTg7VTFcgPCjqQxWKnxPbu
+         ERgLezibL4CW6AP+PyrippgP+RlK30JZhsOppwEc2gjcHfgORGbSwcFuzNIiNkDptU8T
+         KQ/KawdBkwES7RpcxJ8ydLOAuYRfe9ZwLioJnR1bEl7pelldDB38L55TAnueXpwg9b5c
+         et9Lc6ZNNWM+TkZI+wreIuq37N6QyKJoIU8vnWT1bRmY+Gscs4cOhV525MFbJZuK7Z9X
+         qeZg==
+X-Gm-Message-State: ANhLgQ2bs/wvq5iG/b2jyASZKdjgGdkLSiBACVvibBNZdzuCv7mvtsai
+        /P78/YWg9Njg6Yuf8JzPWBnj0ps9q9U=
+X-Google-Smtp-Source: ADFU+vvceGKe918gmUtPax/Kpa0CuJ0cxHQlIzPaPbiI7CPBUaRWpfSTLBN2KPObAmrLXkH/4FDSfw==
+X-Received: by 2002:a1c:9802:: with SMTP id a2mr18615176wme.117.1584225846132;
+        Sat, 14 Mar 2020 15:44:06 -0700 (PDT)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id 133sm23690732wmd.5.2020.03.14.15.44.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2020 15:44:05 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: [PATCH v3 07/12] spi: spi-fsl-dspi: Avoid NULL pointer in dspi_slave_abort for non-DMA mode
+Date:   Sun, 15 Mar 2020 00:43:35 +0200
+Message-Id: <20200314224340.1544-8-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200314224340.1544-1-olteanv@gmail.com>
+References: <20200314224340.1544-1-olteanv@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-I have combined all the bindings in the same patch to avoid any YAML 
-dependency.
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-On 2/26/2020 7:40 PM, Rob Herring wrote:
-> On Tue, Feb 25, 2020 at 6:31 PM Stephen Boyd <sboyd@kernel.org> wrote:
->>
->> Quoting Rob Herring (2020-02-25 05:58:19)
->>> On Mon, Feb 24, 2020 at 11:49 PM Taniya Das <tdas@codeaurora.org> wrote:
->>>>
->>>> Hi Rob,
->>>>
->>>> On 2/25/2020 12:12 AM, Rob Herring wrote:
->>>>
->>>>>
->>>>> My bot found errors running 'make dt_binding_check' on your patch:
->>>>>
->>>>> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
->>>>> Error: Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dts:21.26-27 syntax error
->>>>> FATAL ERROR: Unable to parse input tree
->>>>> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml' failed
->>>>> make[1]: *** [Documentation/devicetree/bindings/clock/qcom,sc7180-mss.example.dt.yaml] Error 1
->>>>> Makefile:1263: recipe for target 'dt_binding_check' failed
->>>>> make: *** [dt_binding_check] Error 2
->>>>>
->>>>> See https://patchwork.ozlabs.org/patch/1242999
->>>>> Please check and re-submit.
->>>>>
->>>>
->>>> The error shows syntax error at line 21, below is the example.dts from
->>>> my tree and would compile for me as I have the dependency of the include
->>>> file when I compile.
->>>
->>> The header should be part of this patch if possible.
->>>
->>
->> Are patches tested in isolation instead of in series? I see this define
->> in the first patch in this series so it seems like automated checkers
->> should be able to apply the patches in series and see if they still
->> work, unless that is broken somehow.
-> 
-> The series should be applied, but it's all very fragile. It's going to
-> stay that way until someone else writes and maintains the applying
-> patches to git logic.
-> 
-> In any case, the header is part of the binding (being an ABI) not the
-> driver, so it belongs in the binding patch.
-> 
-> 
-> However, in this case, the problem was pointed out in v4 to be a typo
-> in GCC_MSS_MFAB_AXIS_CLK.
-> 
-> Rob
-> 
+The driver does not create the dspi->dma structure unless operating in
+DSPI_DMA_MODE, so it makes sense to check for that.
 
+Fixes: f4b323905d8b ("spi: Introduce dspi_slave_abort() function for NXP's dspi SPI driver")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+Changes in v4:
+Patch is new.
+
+ drivers/spi/spi-fsl-dspi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 78c891e441cd..a8aef5690c5d 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1201,8 +1201,10 @@ static int dspi_slave_abort(struct spi_master *master)
+ 	 * Terminate all pending DMA transactions for the SPI working
+ 	 * in SLAVE mode.
+ 	 */
+-	dmaengine_terminate_sync(dspi->dma->chan_rx);
+-	dmaengine_terminate_sync(dspi->dma->chan_tx);
++	if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
++		dmaengine_terminate_sync(dspi->dma->chan_rx);
++		dmaengine_terminate_sync(dspi->dma->chan_tx);
++	}
+ 
+ 	/* Clear the internal DSPI RX and TX FIFO buffers */
+ 	regmap_update_bits(dspi->regmap, SPI_MCR,
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+2.17.1
 
---
