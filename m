@@ -7,258 +7,133 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986D6C0044D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CDEC0044D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EDF2076A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AAD2051A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:02:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ftZVjFc0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jiH9bpyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgCOCC2 (ORCPT
+        id S1727544AbgCOCCf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:02:28 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:55503 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727464AbgCOCC2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 14 Mar 2020 22:02:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584237747; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=jonzZp63L40u3yfPOPtIkP2E/IYQDyZzE0IebztJjEc=; b=ftZVjFc0v9VkiZKl/vwglVvJQ97l+UpTYVfL4Fow/wYrYeGhzL2vAKXByh/e/kNJtmHyZxU8
- YFfgSEBD2KJ/GxWcjbog46DDHpn9frhA4GJIEj56kzxhtEByoXaA9sw6MgqaFu/hBbERhowT
- 8/LThxK0Ft4s0lM6yzXbl6TVwlE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6d277b.7fbaa34f7068-smtp-out-n03;
- Sat, 14 Mar 2020 18:50:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3A63AC433D2; Sat, 14 Mar 2020 18:50:34 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5EBA0C433CB;
-        Sat, 14 Mar 2020 18:50:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5EBA0C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v6 3/3] clk: qcom: Add modem clock controller driver for SC7180
-Date:   Sun, 15 Mar 2020 00:19:58 +0530
-Message-Id: <1584211798-10332-4-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
-References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
+        Sat, 14 Mar 2020 22:02:35 -0400
+Received: from mail-ed1-f52.google.com ([209.85.208.52]:34309 "EHLO
+        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgCOCCf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Mar 2020 22:02:35 -0400
+Received: by mail-ed1-f52.google.com with SMTP id i24so13498074eds.1
+        for <devicetree@vger.kernel.org>; Sat, 14 Mar 2020 19:02:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9oaTRbmXh8YDwKHKnzGVIS7f6wuqtnZ7xd23oLTEEto=;
+        b=jiH9bpypMJvdPe8XlrGt2qIBH0ac9i0GdP9NUU8Dbj21jnOYrHb0bpgF+yR2ExaTYd
+         NAzRvP5rwXw9qS1pTlpVkDL1uK1h23pv4kRIx7rjoVJlKJ4JGKbRFRzPcCVKSHyr0Exa
+         QYfrr56GTgIxZP4PKS3KLmbx2h8wu8mhnBIfesQ90NCsMIdxbmKKElN3L5ZdH/gmbfBb
+         +mKXbkpKXgh37oIgvXP29B9BlEW9ZNN3qEa89bFCLbLLvpJ23EET2a315DQkHekpY87W
+         PJnlFxnqdeB7VyXFW1bKPwiALokrPnjTfWn9E+nLuatsB2E1UE6hGwgIdU1DjH+yWgJ5
+         EaAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=9oaTRbmXh8YDwKHKnzGVIS7f6wuqtnZ7xd23oLTEEto=;
+        b=Tr0whdFUzuwwbbHfpm5Z0PyAsGuh/ZWWQXmrS50nGHsSmukClqOtnuYKa3emYFL+5/
+         D0b93r/YJI07LAiJEoMGMLLLkicPLBRMmpUTlUFAluF1o7NEyRhiTyevlfNG7rkRdjrw
+         o16n74q8eOY2T6f0rvAGcyxFtnEzAOxprG5LkdDrhMkeCicbAYJjGwoyt/WV6vHHGBze
+         KMpkOexvqXOeAQcD1merM6gmU2vpzryR4R4Aba2e3PZ30nHH0gGZe6di/8n5/bmJ1R0q
+         VT4NtVr0sETGdeN4TwRPxZnJUShYuHY+egKefyEsxBxh62CNaOVVivYc378hJSR+o9oo
+         mjyQ==
+X-Gm-Message-State: ANhLgQ0LzXSqsYfezkDURAGUkqQmMyzsKQHnfMFF3HgcuWxCoyBM/D3e
+        S1+6PmH56qmZWgeuS1FrXQn0bBeZ
+X-Google-Smtp-Source: ADFU+vvH1iIivBsmhWr5uHtWe7gtlRpbjBV0BUayRn5Pu0EOIMWSnmqA2h3aU7ENFknpE70YCgDJCQ==
+X-Received: by 2002:a05:6512:10c4:: with SMTP id k4mr11585029lfg.98.1584199859650;
+        Sat, 14 Mar 2020 08:30:59 -0700 (PDT)
+Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
+        by smtp.gmail.com with ESMTPSA id n200sm15650418lfa.50.2020.03.14.08.30.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Mar 2020 08:30:59 -0700 (PDT)
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v1 3/3] dt-bindings: display: grammar fixes in panel/
+Date:   Sat, 14 Mar 2020 16:30:47 +0100
+Message-Id: <20200314153047.2486-4-sam@ravnborg.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200314153047.2486-1-sam@ravnborg.org>
+References: <20200314153047.2486-1-sam@ravnborg.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the modem clock controller found on SC7180
-based devices. This would allow modem drivers to probe and
-control their clocks.
+Fix a few grammar/editorial issues spotted by Laurent Pinchart.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/qcom/Kconfig      |   9 +++
- drivers/clk/qcom/Makefile     |   1 +
- drivers/clk/qcom/mss-sc7180.c | 143 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 153 insertions(+)
- create mode 100644 drivers/clk/qcom/mss-sc7180.c
+ .../bindings/display/panel/display-timings.yaml           | 8 ++++----
+ .../devicetree/bindings/display/panel/panel-common.yaml   | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 15cdcdc..4225f86 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -280,6 +280,15 @@ config SC_GPUCC_7180
- 	  Say Y if you want to support graphics controller devices and
- 	  functionality such as 3D graphics.
+diff --git a/Documentation/devicetree/bindings/display/panel/display-timings.yaml b/Documentation/devicetree/bindings/display/panel/display-timings.yaml
+index c8c0c9cb0492..56903ded005e 100644
+--- a/Documentation/devicetree/bindings/display/panel/display-timings.yaml
++++ b/Documentation/devicetree/bindings/display/panel/display-timings.yaml
+@@ -4,7 +4,7 @@
+ $id: http://devicetree.org/schemas/display/panel/display-timings.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: display timing bindings
++title: display timings bindings
+ 
+ maintainers:
+   - Thierry Reding <thierry.reding@gmail.com>
+@@ -14,7 +14,7 @@ maintainers:
+ description: |
+   A display panel may be able to handle several display timings,
+   with different resolutions.
+-  The display-timings node makes it possible to specify the timing
++  The display-timings node makes it possible to specify the timings
+   and to specify the timing that is native for the display.
+ 
+ properties:
+@@ -25,8 +25,8 @@ properties:
+     $ref: /schemas/types.yaml#/definitions/phandle
+     description: |
+       The default display timing is the one specified as native-mode.
+-      If no native-mode is specified then the first node is assumed the
+-      native mode.
++      If no native-mode is specified then the first node is assumed
++      to be the native mode.
+ 
+ patternProperties:
+   "^timing":
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+index ed051ba12084..dee4faffd204 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+@@ -63,9 +63,9 @@ properties:
+ 
+   display-timings:
+     description:
+-      Some display panels supports several resolutions with different timing.
++      Some display panels supports several resolutions with different timings.
+       The display-timings bindings supports specifying several timings and
+-      optional specify which is the native mode.
++      optionally specify which is the native mode.
+     allOf:
+       - $ref: display-timings.yaml#
+ 
+-- 
+2.20.1
 
-+config SC_MSS_7180
-+	tristate "SC7180 Modem Clock Controller"
-+	select SC_GCC_7180
-+	help
-+	  Support for the Modem Subsystem clock controller on Qualcomm
-+	  Technologies, Inc on SC7180 devices.
-+	  Say Y if you want to use the Modem branch clocks of the Modem
-+	  subsystem clock controller to reset the MSS subsystem.
-+
- config SC_VIDEOCC_7180
- 	tristate "SC7180 Video Clock Controller"
- 	select SC_GCC_7180
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 656a87e..9135592 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -50,6 +50,7 @@ obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
- obj-$(CONFIG_SC_DISPCC_7180) += dispcc-sc7180.o
- obj-$(CONFIG_SC_GCC_7180) += gcc-sc7180.o
- obj-$(CONFIG_SC_GPUCC_7180) += gpucc-sc7180.o
-+obj-$(CONFIG_SC_MSS_7180) += mss-sc7180.o
- obj-$(CONFIG_SC_VIDEOCC_7180) += videocc-sc7180.o
- obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
- obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
-diff --git a/drivers/clk/qcom/mss-sc7180.c b/drivers/clk/qcom/mss-sc7180.c
-new file mode 100644
-index 0000000..673fa1a
---- /dev/null
-+++ b/drivers/clk/qcom/mss-sc7180.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/pm_clock.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,mss-sc7180.h>
-+
-+#include "clk-regmap.h"
-+#include "clk-branch.h"
-+#include "common.h"
-+
-+static struct clk_branch mss_axi_nav_clk = {
-+	.halt_reg = 0x20bc,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x20bc,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "mss_axi_nav_clk",
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "gcc_mss_nav_axi",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch mss_axi_crypto_clk = {
-+	.halt_reg = 0x20cc,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x20cc,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "mss_axi_crypto_clk",
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "gcc_mss_mfab_axis",
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static const struct regmap_config mss_regmap_config = {
-+	.reg_bits	= 32,
-+	.reg_stride	= 4,
-+	.val_bits	= 32,
-+	.fast_io	= true,
-+	.max_register	= 0x41aa0cc,
-+};
-+
-+static struct clk_regmap *mss_sc7180_clocks[] = {
-+	[MSS_AXI_CRYPTO_CLK] = &mss_axi_crypto_clk.clkr,
-+	[MSS_AXI_NAV_CLK] = &mss_axi_nav_clk.clkr,
-+};
-+
-+static const struct qcom_cc_desc mss_sc7180_desc = {
-+	.config = &mss_regmap_config,
-+	.clks = mss_sc7180_clocks,
-+	.num_clks = ARRAY_SIZE(mss_sc7180_clocks),
-+};
-+
-+static int mss_sc7180_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	pm_runtime_enable(&pdev->dev);
-+	ret = pm_clk_create(&pdev->dev);
-+	if (ret)
-+		goto disable_pm_runtime;
-+
-+	ret = pm_clk_add(&pdev->dev, "cfg_ahb");
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to acquire iface clock\n");
-+		goto destroy_pm_clk;
-+	}
-+
-+	ret = qcom_cc_probe(pdev, &mss_sc7180_desc);
-+	if (ret < 0)
-+		goto destroy_pm_clk;
-+
-+	return 0;
-+
-+destroy_pm_clk:
-+	pm_clk_destroy(&pdev->dev);
-+
-+disable_pm_runtime:
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return ret;
-+}
-+
-+static int mss_sc7180_remove(struct platform_device *pdev)
-+{
-+	pm_clk_destroy(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mss_sc7180_pm_ops = {
-+	SET_RUNTIME_PM_OPS(pm_clk_suspend, pm_clk_resume, NULL)
-+};
-+
-+static const struct of_device_id mss_sc7180_match_table[] = {
-+	{ .compatible = "qcom,sc7180-mss" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mss_sc7180_match_table);
-+
-+static struct platform_driver mss_sc7180_driver = {
-+	.probe		= mss_sc7180_probe,
-+	.remove		= mss_sc7180_remove,
-+	.driver		= {
-+		.name		= "sc7180-mss",
-+		.of_match_table = mss_sc7180_match_table,
-+		.pm = &mss_sc7180_pm_ops,
-+	},
-+};
-+
-+static int __init mss_sc7180_init(void)
-+{
-+	return platform_driver_register(&mss_sc7180_driver);
-+}
-+subsys_initcall(mss_sc7180_init);
-+
-+static void __exit mss_sc7180_exit(void)
-+{
-+	platform_driver_unregister(&mss_sc7180_driver);
-+}
-+module_exit(mss_sc7180_exit);
-+
-+MODULE_DESCRIPTION("QTI MSS SC7180 Driver");
-+MODULE_LICENSE("GPL v2");
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
