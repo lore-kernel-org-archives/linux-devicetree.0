@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A87C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45387C4CECE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CA920575
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1436D206EB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:44:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oqq5zZmQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="peaSA7XX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgCONof (ORCPT
+        id S1728644AbgCONoh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 09:44:35 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33613 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbgCONof (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 09:44:35 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f13so15622071ljp.0;
-        Sun, 15 Mar 2020 06:44:33 -0700 (PDT)
+        Sun, 15 Mar 2020 09:44:37 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42462 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728634AbgCONoh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 09:44:37 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t21so11693959lfe.9;
+        Sun, 15 Mar 2020 06:44:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=X45tw5KJlXhhJ3R6ynp7V7JRLgh1AOjgAQ5sYiJA7gQ=;
-        b=Oqq5zZmQwYobC/AnUgTbv+2yNqZC1ysfOc2s7Dq7jJeMNanIhWjon9tWa5pfztJ6Oy
-         Pej2RybnxI+89G9uHBa5IkXk6CoAIE/puDgRbN4dc3gybEtjgASgzlhLXnxUkEg0N53g
-         jQkIaV4mdCElNhUzuuB1FR8JWCm8miXnIcYViF/mUf+gziC95xg6kXReV9Lx4NYnRMs5
-         A6OfsMYAdo36YXPL913Pb/T2v3A1vCVSEDCufLgZM8jA9Lj0wSarOW5f4eT8/GmzkkJ4
-         I81/N2rLrQxHi7Ren4MnSl5o1/9CHex0yrqCyUS74kwQsglYxMu2soNbKK/M2VHfol5A
-         P5Xg==
+        bh=2nNoHF8rJC/nOf5M8UDCn0+951QJCRTbyZ2ThPvlf0w=;
+        b=peaSA7XXfInnOlxZwHMfXxgxh99b4MF4RSH4zmci46aJTfHAih6Ks3JleLT1XNLKXG
+         tfiESYeF9CeV4mxStON58h1mDB4iz2RF84TVh+5jyM/MK1olmp3EnXLQuyzW4rOJ/PHr
+         T2RkT5PavJJhRaXkMvdxQjd8P0M3ZsZ0APYHq+DAwytpMGagy46rdlv4h/njIPy+iDuL
+         LJT6BzKaAnOr6dhcwwhBcm4V3D9Y109REnC5uSzp+hGLeCkFiHEHYH8KIKhG9E9BQcQA
+         C1n7QwXOVKK7UQDY/ZNCEnfslAIDSct4tK1Jkjxqgcqb9ngMMVpdYtv+uLbQTU6VXqJJ
+         BOPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=X45tw5KJlXhhJ3R6ynp7V7JRLgh1AOjgAQ5sYiJA7gQ=;
-        b=n21JYe9qLqKc57O0DKIWoqIbfmnD5ZVVsumZkpSuUnrMIfWll/tJ4NyhExECW3CuPJ
-         J6KhsBmgz2BnfjSxK2fAHCR4RujOwFaZkUW2kBvwZR4Q0V4YXV3Eh+fnUU/mIZeVFM+0
-         I6eJ3powKB/0xAi6iJqzUGlugmmn7VswoS+z2ZdpW/h6UVmeBxBXyd6Q1pD7rIG89Cei
-         J04wDugByqaO/PJAMwHZ/j1mb6SyDhxWj1nABInCWmYebqVqtcJP6e2J5d1jAbXC1I+m
-         FMC8oJdWB+iDpdEibzXeKiWZ6dR768PKRnsr8INuMSOXIucHpQGpiPRqkQyLffU6mGkc
-         cRbA==
-X-Gm-Message-State: ANhLgQ2jTvM16DpLkmAPnM2xDUnXw9JqBOzSwsMpAdqadvF5dsXLef+T
-        HqWvaOlN49X12Ix70wVymtk=
-X-Google-Smtp-Source: ADFU+vvKezVrr5pKhPKFDDiDBtGVr/h70AHssvhC8VNZHgZJoJYzPcWqdWCvDfcTSWr33npk2S7GtA==
-X-Received: by 2002:a2e:3002:: with SMTP id w2mr10976729ljw.82.1584279872839;
-        Sun, 15 Mar 2020 06:44:32 -0700 (PDT)
+        bh=2nNoHF8rJC/nOf5M8UDCn0+951QJCRTbyZ2ThPvlf0w=;
+        b=A7DA4pl8SPhUDSah5+v7rrY2pJM+iz4mdtjHrmHlYxBQY+EHR0QpDmNJPPOSwaQEYb
+         mDK8O301Blyo+uw/65bPpvo6JQnOH7zTP6DTmUezQT9rbCGP1pUOXTxMcQdcg2DvGWjO
+         oX5W3Mvs0mOROq0uIe+ecl6s6kdkOQdFgtOA1tt8/whethK5YqMZ3g7qn4SSCfGd+TBB
+         qyPIt5iQQVVEj/9JcDY6ms6mHz6ZTfIUQ4/B91t3kwUXaZ6sHJjBXzk2g9Mv8Fpa7amP
+         9E4HPl+ZUkldpr3jGcFJAwtNucITfxzExU26n4C/buwo/gcJ+0qqVwtmnmmRY21OpDzK
+         Wk8g==
+X-Gm-Message-State: ANhLgQ2E+9imkSt2HTL5R6/xBM3/8TuM/fApAkhWTQaPmGaA6LkQOXon
+        A7YuINOhcUH9svhsUvwnMqw=
+X-Google-Smtp-Source: ADFU+vsRGsioJ1VqqB8qQWTmMk8FSUPBYKCqg6o0VA9Tjps9bftz2BrCNELrmgSTrx0twM5iMuyksg==
+X-Received: by 2002:ac2:5e7b:: with SMTP id a27mr5597020lfr.61.1584279874961;
+        Sun, 15 Mar 2020 06:44:34 -0700 (PDT)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id a9sm23025212lfb.21.2020.03.15.06.44.31
+        by smtp.gmail.com with ESMTPSA id a9sm23025212lfb.21.2020.03.15.06.44.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 06:44:32 -0700 (PDT)
+        Sun, 15 Mar 2020 06:44:34 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -91,9 +91,9 @@ Cc:     Alexandre Courbot <acourbot@nvidia.com>,
         Tony Lindgren <tony@atomide.com>,
         Vinay Simha BN <simhavcs@gmail.com>,
         Werner Johansson <werner.johansson@sonymobile.com>
-Subject: [PATCH v1 02/36] dt-bindings: spi: support non-spi bindings as SPI slaves
-Date:   Sun, 15 Mar 2020 14:43:42 +0100
-Message-Id: <20200315134416.16527-3-sam@ravnborg.org>
+Subject: [PATCH v1 03/36] dt-bindings: display: convert samsung,s6e63m0 to DT Schema
+Date:   Sun, 15 Mar 2020 14:43:43 +0100
+Message-Id: <20200315134416.16527-4-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200315134416.16527-1-sam@ravnborg.org>
 References: <20200315134416.16527-1-sam@ravnborg.org>
@@ -104,190 +104,122 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Independent bindings can be SPI slaves which for example is
-the case for several panel bindings.
-
-Move SPI slave properties to spi-slave.yaml so the independent
-SPI slave bindings can include spi-slave.yaml rather than
-duplicating the properties.
+The binding for this panel is a SPI slave.
+Reference spi-slave.yaml
+to avoid duplicating all properties.
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org
+Cc: Jonathan Bakker <xc-racer2@live.ca>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../bindings/spi/spi-controller.yaml          | 63 +-------------
- .../devicetree/bindings/spi/spi-slave.yaml    | 83 +++++++++++++++++++
- 2 files changed, 86 insertions(+), 60 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-slave.yaml
+ .../display/panel/samsung,s6e63m0.txt         | 33 -----------
+ .../display/panel/samsung,s6e63m0.yaml        | 58 +++++++++++++++++++
+ 2 files changed, 58 insertions(+), 33 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.yaml
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-index 1e0ca6ccf64b..99531c8d10dd 100644
---- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-@@ -67,71 +67,14 @@ patternProperties:
-   "^.*@[0-9a-f]+$":
-     type: object
- 
-+    allOf:
-+      - $ref: spi-slave.yaml#
-+
-     properties:
-       compatible:
-         description:
-           Compatible of the SPI device.
- 
--      reg:
--        minimum: 0
--        maximum: 256
--        description:
--          Chip select used by the device.
+diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt b/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt
+deleted file mode 100644
+index 9fb9ebeef8e4..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.txt
++++ /dev/null
+@@ -1,33 +0,0 @@
+-Samsung s6e63m0 AMOLED LCD panel
 -
--      spi-3wire:
--        $ref: /schemas/types.yaml#/definitions/flag
--        description:
--          The device requires 3-wire mode.
+-Required properties:
+-  - compatible: "samsung,s6e63m0"
+-  - reset-gpios: GPIO spec for reset pin
+-  - vdd3-supply: VDD regulator
+-  - vci-supply: VCI regulator
 -
--      spi-cpha:
--        $ref: /schemas/types.yaml#/definitions/flag
--        description:
--          The device requires shifted clock phase (CPHA) mode.
+-The panel must obey rules for SPI slave device specified in document [1].
 -
--      spi-cpol:
--        $ref: /schemas/types.yaml#/definitions/flag
--        description:
--          The device requires inverse clock polarity (CPOL) mode.
+-The device node can contain one 'port' child node with one child
+-'endpoint' node, according to the bindings defined in [2]. This
+-node should describe panel's video bus.
 -
--      spi-cs-high:
--        $ref: /schemas/types.yaml#/definitions/flag
--        description:
--          The device requires the chip select active high.
+-[1]: Documentation/devicetree/bindings/spi/spi-bus.txt
+-[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
 -
--      spi-lsb-first:
--        $ref: /schemas/types.yaml#/definitions/flag
--        description:
--          The device requires the LSB first mode.
+-Example:
 -
--      spi-max-frequency:
--        $ref: /schemas/types.yaml#/definitions/uint32
--        description:
--          Maximum SPI clocking speed of the device in Hz.
+-		s6e63m0: display@0 {
+-			compatible = "samsung,s6e63m0";
+-			reg = <0>;
+-			reset-gpio = <&mp05 5 1>;
+-			vdd3-supply = <&ldo12_reg>;
+-			vci-supply = <&ldo11_reg>;
+-			spi-max-frequency = <1200000>;
 -
--      spi-rx-bus-width:
--        allOf:
--          - $ref: /schemas/types.yaml#/definitions/uint32
--          - enum: [ 1, 2, 4, 8 ]
--          - default: 1
--        description:
--          Bus width to the SPI bus used for MISO.
--
--      spi-rx-delay-us:
--        description:
--          Delay, in microseconds, after a read transfer.
--
--      spi-tx-bus-width:
--        allOf:
--          - $ref: /schemas/types.yaml#/definitions/uint32
--          - enum: [ 1, 2, 4, 8 ]
--          - default: 1
--        description:
--          Bus width to the SPI bus used for MOSI.
--
--      spi-tx-delay-us:
--        description:
--          Delay, in microseconds, after a write transfer.
--
-     required:
-       - compatible
-       - reg
-diff --git a/Documentation/devicetree/bindings/spi/spi-slave.yaml b/Documentation/devicetree/bindings/spi/spi-slave.yaml
+-			port {
+-				lcd_ep: endpoint {
+-					remote-endpoint = <&fimd_ep>;
+-				};
+-			};
+-		};
+diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.yaml b/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.yaml
 new file mode 100644
-index 000000000000..fa50d9dfab41
+index 000000000000..204ed76da84d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-slave.yaml
-@@ -0,0 +1,83 @@
++++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e63m0.yaml
+@@ -0,0 +1,58 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/spi/spi-slave.yaml#
++$id: http://devicetree.org/schemas/display/panel/samsung,s6e63m0.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: SPI slave generic binding
++title: Samsung s6e63m0 AMOLED LCD panel
 +
 +maintainers:
-+  - Mark Brown <broonie@kernel.org>
++  - Jonathan Bakker <xc-racer2@live.ca>
 +
-+description: |
-+  This document defines device tree properties common to SPI slaves.
-+  It doesn't constitue a device tree binding specification by
-+  itself but is meant to be referenced by device tree bindings.
-+
-+  When referenced from device tree bindings the properties defined in this
-+  document are defined as follows. The device tree bindings are responsible
-+  for defining whether each property is required or optional.
++allOf:
++  - $ref: ../../spi/spi-slave.yaml#
++  - $ref: panel-common.yaml#
 +
 +properties:
++  compatible:
++    const: samsung,s6e63m0
 +
-+  reg:
-+    minimum: 0
-+    maximum: 256
-+    description:
-+      Chip select used by the device.
++  reg: true
++  reset-gpios: true
++  port: true
 +
-+  spi-3wire:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      The device requires 3-wire mode.
++  vdd3-supply:
++    description: VDD regulator
 +
-+  spi-cpha:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      The device requires shifted clock phase (CPHA) mode.
++  vci-supply:
++    description: VCI regulator
 +
-+  spi-cpol:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      The device requires inverse clock polarity (CPOL) mode.
++required:
++  - compatible
++  - reset-gpios
++  - vdd3-supply
++  - vci-supply
 +
-+  spi-cs-high:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      The device requires the chip select active high.
++examples:
++  - |
++    spi {
++        reg = <0xf00 0x20>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++        display@0 {
++            compatible = "samsung,s6e63m0";
++            reg = <0>;
++            reset-gpios = <&mp05 5 1>;
++            vdd3-supply = <&ldo12_reg>;
++            vci-supply = <&ldo11_reg>;
++            spi-max-frequency = <1200000>;
 +
-+  spi-lsb-first:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      The device requires the LSB first mode.
-+
-+  spi-max-frequency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Maximum SPI clocking speed of the device in Hz.
-+
-+  spi-rx-bus-width:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 1, 2, 4, 8 ]
-+      - default: 1
-+    description:
-+      Bus width to the SPI bus used for MISO.
-+
-+  spi-rx-delay-us:
-+    description:
-+      Delay, in microseconds, after a read transfer.
-+
-+  spi-tx-bus-width:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [ 1, 2, 4, 8 ]
-+      - default: 1
-+    description:
-+      Bus width to the SPI bus used for MOSI.
-+
-+  spi-tx-delay-us:
-+    description:
-+      Delay, in microseconds, after a write transfer.
++            port {
++                lcd_ep: endpoint {
++                    remote-endpoint = <&fimd_ep>;
++                };
++            };
++        };
++    };
 +
 +...
 -- 
