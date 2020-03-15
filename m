@@ -2,138 +2,113 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB489C5ACBF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 09:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C04C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 09:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3BE1206B1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 09:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584264541;
-	bh=a3TDzGbEzkSLeXinw82ULYy0g3/qKx/I5ol4xjHP/jo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FLg2sWxiupOj9L9wLbW4PaSoHd6xkQI24fixSpAPzr5qmFauAxy14tY7OiyaKtqHl
-	 wzanBveEkGR6E5XZsROBCQnjfI/lcultFgwIukqtfIzaJA7PPyH9p13YFirBCo0uDM
-	 +xjr+xrwTq+7p/qxR4zK08zGEel5leflG0sQ6Tb0=
+	by mail.kernel.org (Postfix) with ESMTP id 9345B20724
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 09:39:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="deZEA2cq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgCOJ26 (ORCPT
+        id S1728128AbgCOJjI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgCOJ26 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 05:28:58 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201A6206B1;
-        Sun, 15 Mar 2020 09:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584264537;
-        bh=a3TDzGbEzkSLeXinw82ULYy0g3/qKx/I5ol4xjHP/jo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FfBA9KivPcq2i/xkl3X4fU7JAbz8h0yxx+oZqKHJQ5x7jhklsgxMuE/2WvFgDiDBF
-         o7pdSPWOsANpZFUiHJvKEQwTSbzIyjb1W1C4fGD8h5sY3pHDt+HBI+v9WXsl+WrQ9x
-         ZyIDeRFLkXWNBlDSNIV+zjywyMF69vj0Bi3mF12w=
-Date:   Sun, 15 Mar 2020 09:28:52 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Rob Herring <robh@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] dt-bindings: input: Add docs for ADC driven
- joystick.
-Message-ID: <20200315092852.2d2ecebb@archlinux>
-In-Reply-To: <bb188a58f29dfedcf56bb420f07a6813@artur-rojek.eu>
-References: <20200307211412.44148-1-contact@artur-rojek.eu>
-        <20200307211412.44148-4-contact@artur-rojek.eu>
-        <20200309203814.GA29255@bogus>
-        <bb188a58f29dfedcf56bb420f07a6813@artur-rojek.eu>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Mar 2020 05:39:08 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42325 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728116AbgCOJjH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 05:39:07 -0400
+Received: by mail-qk1-f195.google.com with SMTP id e11so20816665qkg.9;
+        Sun, 15 Mar 2020 02:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zle+AXTHHc8jvGKTvm1/uLrZYjwwT5iLZONbBDLgdjI=;
+        b=deZEA2cqlVslAyUp+XM9hrPXQGjNqXuxdRJ6RRNrUQWpLbIyqe7GDsg3lh5uhO8bZL
+         UHuM7rATjvPvJAUiTxA/2hV3MdFJoVO8HDBK5Lca3B7x2XxagObGG9agvkk3PnzUNXvF
+         2PI1wDsjxK5yIyojKkThAAoahTcEePAeabUhKkqwKzoAvSkHAu6rzWrB5TxYUEhbiYf3
+         d0BaFjmdKxV7lUvBpJyamB9vYekCd9FsJe0k0SpuyEN78rlPn3wpaFztM7+Ravt0qXst
+         JiUGVzGHlwDN1k06ekqf93AX0ku07JXppoR9XF4fbS0Um8Bc2Z0aHL+qYYGd4B0Gm738
+         oiYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zle+AXTHHc8jvGKTvm1/uLrZYjwwT5iLZONbBDLgdjI=;
+        b=K3yr9nfmhQH/pmI5dGIJHxZB+MTdv2KDjltQ5vE//3MFkzxVlhbi9FZllr/SxiF52b
+         e4OgiexoekuoVNrgDqwiaAxCn7cZNR86oLteonGKRpd6+7XG63dfyztGij21TLvkAwO5
+         dZnReXatIk1CTROXQXNBjwyVkUyXL9WImJesQFF7s9dBI9QT0eJdg9s9ndoiwGm7iWsL
+         DDpfpHi9VFgqjLRjrpZ7aO4j6NQgRlUav+ukl6QD2IqKIN95X+iB3ORikNjONAFOah/9
+         Nvw+kWYhad14EhtCgUKSlH0oEX9PkvsrwhrvKJTrmjKOZccjCO+8S0YLlEtAPd4VJuAq
+         9vBw==
+X-Gm-Message-State: ANhLgQ04unS/nlQ6XcpJv9JEpn7hgP0hiGxbmebLzGs1OxWutubYGWU4
+        hsL58aA51ZALfb/NWuTRCL6T62w0sB3+IlnpXa4=
+X-Google-Smtp-Source: ADFU+vuJPHfHU6s1UseuEr7Inqsk7XkYeVKkmL/siV5j8Bz3dKiby8xbiNRLCy60RE2b7R3GhofRw+cidTKfuDh3YHE=
+X-Received: by 2002:a05:620a:539:: with SMTP id h25mr14353887qkh.395.1584265145009;
+ Sun, 15 Mar 2020 02:39:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200313214552.845-1-robh@kernel.org>
+In-Reply-To: <20200313214552.845-1-robh@kernel.org>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Sun, 15 Mar 2020 17:38:53 +0800
+Message-ID: <CADBw62oL5hhw12bSAFv7Jnx39stXFeEuTMZ3hWvMCRKpt2vgXg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: thermal: sprd: Remove redundant 'maxItems'
+To:     Rob Herring <robh@kernel.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>, Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 09 Mar 2020 22:41:00 +0100
-Artur Rojek <contact@artur-rojek.eu> wrote:
+On Sat, Mar 14, 2020 at 5:45 AM Rob Herring <robh@kernel.org> wrote:
+>
+> There's no need to specify 'maxItems' with the same value as the number
+> of entries in 'items'. A meta-schema update will catch future cases.
+>
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Cc: Baolin Wang <baolin.wang7@gmail.com>
+> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Amit Kucheria <amit.kucheria@verdurent.com>
+> Cc: linux-pm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-> Hi Rob,
-> 
-> On 2020-03-09 21:38, Rob Herring wrote:
-> > On Sat,  7 Mar 2020 22:14:11 +0100, Artur Rojek wrote:  
-> >> Add documentation for the adc-joystick driver, used to provide support
-> >> for joysticks connected over ADC.
-> >> 
-> >> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> >> Tested-by: Paul Cercueil <paul@crapouillou.net>
-> >> ---
-> >> 
-> >>  Changes:
-> >> 
-> >>  v2: - Add `reg` property to axis subnode in order to enumerate the 
-> >> axes,
-> >>      - rename `linux,abs-code` property to `linux,code`,
-> >>      - drop `linux,` prefix from the remaining properties of axis 
-> >> subnode
-> >> 
-> >>  v3: no change
-> >> 
-> >>  v4: - remove "bindings" from the unique identifier string,
-> >>      - replace `|` with `>` for all description properties,
-> >>      - specify the number of items for `io-channels`,
-> >>      - correct the regex pattern of `axis` property,
-> >>      - specify the value range of `reg` property for each axis,
-> >>      - put `abs-range` properties under `allOf`
-> >> 
-> >>  .../bindings/input/adc-joystick.yaml          | 121 
-> >> ++++++++++++++++++
-> >>  1 file changed, 121 insertions(+)
-> >>  create mode 100644 
-> >> Documentation/devicetree/bindings/input/adc-joystick.yaml
-> >>   
-> > 
-> > My bot found errors running 'make dt_binding_check' on your patch:  
-> Like with the previous versions of this patch set, the DTS example 
-> requires that
-> patch [2/5] is applied first. When that is done, the DT check does 
-> succeed here.
+Thanks Rob.
+Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
 
-Fair enough as far as I am concerned.   There were enough comments
-from Rob in the previous version though that I'd definitely like
-him to take another look before I pick this series up.
+> ---
+>  Documentation/devicetree/bindings/thermal/sprd-thermal.yaml | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> index 3bfe05504456..058c4cc06ba6 100644
+> --- a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
+> @@ -31,7 +31,6 @@ properties:
+>        Reference to nvmem nodes for the calibration data.
+>
+>    nvmem-cell-names:
+> -    maxItems: 2
+>      items:
+>        - const: thm_sign_cal
+>        - const: thm_ratio_cal
+> --
+> 2.20.1
+>
 
-Thanks,
 
-Jonathan
-
-> 
-> Regards,
-> Artur
-> > 
-> > Error:
-> > Documentation/devicetree/bindings/input/adc-joystick.example.dts:22.31-32
-> > syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > scripts/Makefile.lib:311: recipe for target
-> > 'Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml'
-> > failed
-> > make[1]: ***
-> > [Documentation/devicetree/bindings/input/adc-joystick.example.dt.yaml]
-> > Error 1
-> > Makefile:1262: recipe for target 'dt_binding_check' failed
-> > make: *** [dt_binding_check] Error 2
-> > 
-> > See https://patchwork.ozlabs.org/patch/1250951
-> > Please check and re-submit.  
-
+-- 
+Baolin Wang
