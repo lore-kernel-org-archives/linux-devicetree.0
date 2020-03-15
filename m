@@ -3,176 +3,375 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73080C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 20:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51469C10F29
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 21:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46407205C9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 20:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E76F20722
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 21:23:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K13byjbk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dyqN8429"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgCOUOy (ORCPT
+        id S1729172AbgCOVX4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 16:14:54 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33229 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729047AbgCOUOy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 16:14:54 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r7so11852845wmg.0
-        for <devicetree@vger.kernel.org>; Sun, 15 Mar 2020 13:14:52 -0700 (PDT)
+        Sun, 15 Mar 2020 17:23:56 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46262 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729166AbgCOVXz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 17:23:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w16so2380512wrv.13;
+        Sun, 15 Mar 2020 14:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9R4j0hrqy0WaUca9QiIY5oRKknXLjWwBFUoD81tw7yA=;
-        b=K13byjbk9kwJYudvCA8XMOByBD9DbTTxe4YrGSudSs6JSVjhtderbnzbGog0bKaZyv
-         iCEvqOC+SL5FRLD+1S1P1yVgaElz594mzlZFH+1ZoJWChgLH2OWYiTur+UzNUdoPXuv1
-         nEmpljfvYMLRKUA4nl8mRYdBBunb6joCM+qmOvOwqQv+fFOxWEPHTprmz/LdWiWDdi2I
-         PAQ8lt0XlEkZno/VO7TrXVQ0MkPfX6CmvhRBedUzTJZAYKwz1vYpIc2KmwZkRJplO5rB
-         tSWEyDIh+he63zXw4D4qZmYbSOWpw0bINZPLNOlXm4q3kOHHXFYMMYa2snKFwsebD6zD
-         x7VA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=c5f8KSoSXv25XiBn6ExagRE09UnI67n27e/uQQAzS8c=;
+        b=dyqN8429t2VTwcP/UOwzn19V2k2txUdz28TM6Mgs5M91bvYfuhkbzhsg9+mZd3AFoi
+         xWil7/0JS3JNjTt1mJFPLPZ5/zpCITPC7fhZ0rnfszJxb3BAe4JTwW8MJ87/YQbfv5oL
+         YWJcJJHZKJBzno/zG7R8OJKdPB28ittr7gaCdKCDHVWyUrC/AQd/uhFP8NCHCIOl1qIB
+         ZmNtAxoPPU9x7RRWedFWtBXFr4Rt1lsLCC3V5fj+swZpAU6GZ6RmW63OXBCkVJ0ChJyD
+         xHsPzdOjp6NRKO2LXRHuj6GS/bDOCR+gqXGhCUY62aShXaI2xCT/xONkGf0GStSMee35
+         3iIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=9R4j0hrqy0WaUca9QiIY5oRKknXLjWwBFUoD81tw7yA=;
-        b=jQLuYstGFvr9UCeueCWTCpWPj9J4T70taC7CVV8Sqjh/Xhx34aIOAvh2BOGXgkc23P
-         NQrSdPlrcV0c1V2hJYoWkgw5BOjFC/t4k7aZcV9c2h9XYObkyNouRo6rXklWjdoplpLf
-         K3LS9+zZ5TFpY49WgetOLAOwF7FshAQ08dRNlY2DZDq9Q0rJzEEH2uDbfJz3i41sOLQt
-         V2uUccT0x3SwNp3PUxTtoqCfkU9x1pB+c3eKA6F34MY9dWodHPzjmBPqGkYRl2AbKZWc
-         DjblFBilW75aA4nHftjJMV6CTUSnSe9O3Rg8U7Wyf4Tj2cj1gLiBxWwfrDpmLoZR6gLj
-         dItw==
-X-Gm-Message-State: ANhLgQ1zKvkerTI4koy7+PyRJZIhey0k9l2RH246FOujlMAwIEqTxQow
-        10Y/UZEjHRYHR/2Oqii/YXMtaRAQrv4=
-X-Google-Smtp-Source: ADFU+vuwWRxm82Ikz7o218zZEOHZnuNRtC8r/zz8FBsmXEpdIcU7NKOWZmmrI8OdX7kZ9m2EcBl2mA==
-X-Received: by 2002:a7b:c354:: with SMTP id l20mr22526891wmj.40.1584303290984;
-        Sun, 15 Mar 2020 13:14:50 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:f835:499f:9553:971a? ([2a01:e34:ed2f:f020:f835:499f:9553:971a])
-        by smtp.googlemail.com with ESMTPSA id b202sm1655655wmd.15.2020.03.15.13.14.48
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=c5f8KSoSXv25XiBn6ExagRE09UnI67n27e/uQQAzS8c=;
+        b=G5B0vyQcq9WqpytCCecHXiU1198SmDWER1QnKbeUrrsa+MzIPq1aDmt9ksUTg6xqHT
+         A2TwOvDp1EwSymclxxAQqQv9RuKhnL/RRsVbz5QoNKCRbR5vDaHwXnMkwAiC5tdqeXaF
+         GdczN76lutfgtfE0NzD2UJowvvdoUblooeZhh3EbiU/dOohaKRl58ilNXwr8kbempUU4
+         22R4sdtrGKUQeRbH+6RrT3+aspeW/rk6B2DyHi0tav4eIfDmRvMXe5JNMvjLaQnU3FqD
+         ZFErojMJaWFdACVhfjJ4pZuTa69ZZSI3ykJvfp4MKld1fWeUAuGXImw37Zzjbc14/1u3
+         brAg==
+X-Gm-Message-State: ANhLgQ1tVJtxKHAhyyoUmdyK8Qdi4L4EO8J5GLKyxwv7G8T8ZtB74yVp
+        sp2Q61FeD+i+Wzi3PmEyLDYKCAwFa9c=
+X-Google-Smtp-Source: ADFU+vu2mu7hPJ88Ezq6MSqkmidOSGXN7RzzP/tYfkB1m5GcHCrFDqvVGni8C3c5DPOHYAZVww+QAg==
+X-Received: by 2002:a5d:440a:: with SMTP id z10mr16414715wrq.177.1584307429784;
+        Sun, 15 Mar 2020 14:23:49 -0700 (PDT)
+Received: from [192.168.0.104] (p5B3F62A0.dip0.t-ipconnect.de. [91.63.98.160])
+        by smtp.gmail.com with ESMTPSA id g14sm17846567wme.32.2020.03.15.14.23.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Mar 2020 13:14:50 -0700 (PDT)
-Subject: Re: [PATCH 1/2] dt-bindings: thermal: sprd: Remove redundant
- 'maxItems'
-To:     Rob Herring <robh@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-References: <20200313214552.845-1-robh@kernel.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <93928f1c-f598-aaa5-ed32-d2f56a039217@linaro.org>
-Date:   Sun, 15 Mar 2020 21:14:46 +0100
+        Sun, 15 Mar 2020 14:23:48 -0700 (PDT)
+Subject: Re: [PATCH v2 3/5] iio: adc: mp2629: Add support for mp2629 ADC
+ driver
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200315000013.4440-1-sravanhome@gmail.com>
+ <20200315000013.4440-4-sravanhome@gmail.com>
+ <20200315103706.38177792@archlinux>
+From:   saravanan sekar <sravanhome@gmail.com>
+Message-ID: <be8f706a-d734-c1a8-347f-c8861e5d02ee@gmail.com>
+Date:   Sun, 15 Mar 2020 22:23:45 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200313214552.845-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200315103706.38177792@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13/03/2020 22:45, Rob Herring wrote:
-> There's no need to specify 'maxItems' with the same value as the number
-> of entries in 'items'. A meta-schema update will catch future cases.
-> 
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Baolin Wang <baolin.wang7@gmail.com>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Amit Kucheria <amit.kucheria@verdurent.com>
-> Cc: linux-pm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Applied, thanks
+On 15/03/20 11:37 am, Jonathan Cameron wrote:
+> On Sun, 15 Mar 2020 01:00:11 +0100
+> Saravanan Sekar <sravanhome@gmail.com> wrote:
+>
+>> Add support for 8-bit resolution ADC readings for input power
+>> supply and battery charging measurement. Provides voltage, current
+>> readings to mp2629 power supply driver.
+>>
+>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> The IIO parts seems fine (minor comments inline) but I'm not keep on
+> directly accessing the internals of the mfd device info structure.
+>
+> To my mind that should be opaque to the child drivers so as to provide
+> clear structure to any such accesses.
+>
+> Jonathan
+>
+>
+>> ---
+>>   drivers/iio/adc/Kconfig      |  10 ++
+>>   drivers/iio/adc/Makefile     |   1 +
+>>   drivers/iio/adc/mp2629_adc.c | 209 +++++++++++++++++++++++++++++++++++
+>>   3 files changed, 220 insertions(+)
+>>   create mode 100644 drivers/iio/adc/mp2629_adc.c
+>>
+>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>> index 82e33082958c..ef0c0cd31855 100644
+>> --- a/drivers/iio/adc/Kconfig
+>> +++ b/drivers/iio/adc/Kconfig
+>> @@ -680,6 +680,16 @@ config MESON_SARADC
+>>   	  To compile this driver as a module, choose M here: the
+>>   	  module will be called meson_saradc.
+>>   
+>> +config MP2629_ADC
+>> +	tristate "Monolithic MP2629 ADC driver"
+>> +	depends on MFD_MP2629
+>> +	help
+>> +	  Say yes to have support for battery charger IC MP2629 ADC device
+>> +	  accessed over I2C.
+>> +
+>> +	  This driver provides ADC conversion of system, input power supply
+>> +	  and battery voltage & current information.
+>> +
+>>   config NAU7802
+>>   	tristate "Nuvoton NAU7802 ADC driver"
+>>   	depends on I2C
+>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+>> index 919228900df9..f14416c245a6 100644
+>> --- a/drivers/iio/adc/Makefile
+>> +++ b/drivers/iio/adc/Makefile
+>> @@ -64,6 +64,7 @@ obj-$(CONFIG_MCP3911) += mcp3911.o
+>>   obj-$(CONFIG_MEDIATEK_MT6577_AUXADC) += mt6577_auxadc.o
+>>   obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
+>>   obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
+>> +obj-$(CONFIG_MP2629_ADC) += mp2629_adc.o
+>>   obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
+>>   obj-$(CONFIG_NAU7802) += nau7802.o
+>>   obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
+>> diff --git a/drivers/iio/adc/mp2629_adc.c b/drivers/iio/adc/mp2629_adc.c
+>> new file mode 100644
+>> index 000000000000..1a99196624ed
+>> --- /dev/null
+>> +++ b/drivers/iio/adc/mp2629_adc.c
+>> @@ -0,0 +1,209 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * MP2629 Driver for ADC
+>> + *
+>> + * Copyright 2020 Monolithic Power Systems, Inc
+>> + *
+>> + * Author: Saravanan Sekar <sravanhome@gmail.com>
+>> + */
+>> +
+>> +#include <linux/platform_device.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/sysfs.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/iio/machine.h>
+>> +#include <linux/iio/driver.h>
+>> +#include <linux/mfd/mp2629.h>
+>> +
+>> +#define	MP2629_REG_ADC_CTRL		0x03
+>> +#define	MP2629_REG_BATT_VOLT		0x0e
+>> +#define	MP2629_REG_SYSTEM_VOLT		0x0f
+>> +#define	MP2629_REG_INPUT_VOLT		0x11
+>> +#define	MP2629_REG_BATT_CURRENT		0x12
+>> +#define	MP2629_REG_INPUT_CURRENT	0x13
+>> +
+>> +#define	MP2629_ADC_START		BIT(7)
+>> +#define MP2629_ADC_CONTINUOUS		BIT(6)
+> Odd alignment.
+>
+>> +
+>> +#define MP2629_MAP(_mp, _mpc) IIO_MAP(#_mp, "mp2629_charger", "mp2629-"_mpc)
+>> +
+>> +#define MP2629_ADC_CHAN(_ch, _type) {				\
+>> +	.type = _type,						\
+>> +	.indexed = 1,						\
+>> +	.datasheet_name = #_ch,					\
+>> +	.channel = MP2629_ ## _ch,				\
+>> +	.address = MP2629_REG_ ## _ch,				\
+>> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+>> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+>> +}
+>> +
+>> +static struct iio_chan_spec mp2629_channels[] = {
+>> +	MP2629_ADC_CHAN(BATT_VOLT, IIO_VOLTAGE),
+>> +	MP2629_ADC_CHAN(SYSTEM_VOLT, IIO_VOLTAGE),
+>> +	MP2629_ADC_CHAN(INPUT_VOLT, IIO_VOLTAGE),
+>> +	MP2629_ADC_CHAN(BATT_CURRENT, IIO_CURRENT),
+>> +	MP2629_ADC_CHAN(INPUT_CURRENT, IIO_CURRENT)
+>> +};
+>> +
+>> +struct mp2629_adc {
+>> +	struct mp2629_info *info;
+>> +	struct device *dev;
+>> +};
+>> +
+>> +static struct iio_map mp2629_adc_maps[] = {
+>> +	MP2629_MAP(BATT_VOLT, "batt-volt"),
+>> +	MP2629_MAP(SYSTEM_VOLT, "system-volt"),
+>> +	MP2629_MAP(INPUT_VOLT, "input-volt"),
+>> +	MP2629_MAP(BATT_CURRENT, "batt-current"),
+>> +	MP2629_MAP(INPUT_CURRENT, "input-current")
+>> +};
+>> +
+>> +static int mp2629_read_raw(struct iio_dev *indio_dev,
+>> +			struct iio_chan_spec const *chan,
+>> +			int *val, int *val2, long mask)
+>> +{
+>> +	struct mp2629_adc *adc_info = iio_priv(indio_dev);
+>> +	struct mp2629_info *info = adc_info->info;
+>> +	unsigned int rval;
+>> +	int ret;
+>> +
+>> +	switch (mask) {
+>> +	case IIO_CHAN_INFO_RAW:
+>> +		ret = regmap_read(info->regmap, chan->address, &rval);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +
+>> +		if (chan->address == MP2629_INPUT_VOLT)
+>> +			rval &= 0x7f;
+>> +		*val = rval;
+>> +		return IIO_VAL_INT;
+>> +
+>> +	case IIO_CHAN_INFO_SCALE:
+>> +		switch (chan->channel) {
+>> +		case MP2629_BATT_VOLT:
+>> +		case MP2629_SYSTEM_VOLT:
+>> +			*val = 20;
+>> +			return IIO_VAL_INT;
+>> +
+>> +		case MP2629_INPUT_VOLT:
+>> +			*val = 60;
+>> +			return IIO_VAL_INT;
+>> +
+>> +		case MP2629_BATT_CURRENT:
+>> +			*val = 175;
+>> +			*val2 = 10;
+>> +			return IIO_VAL_FRACTIONAL;
+>> +
+>> +		case MP2629_INPUT_CURRENT:
+>> +			*val = 133;
+>> +			*val2 = 10;
+>> +			return IIO_VAL_FRACTIONAL;
+>> +
+>> +		default:
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct iio_info mp2629_adc_info = {
+>> +	.read_raw = &mp2629_read_raw,
+>> +};
+>> +
+>> +static int mp2629_adc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct mp2629_info *info = dev_get_drvdata(dev->parent);
+>> +	struct mp2629_adc *adc_info;
+>> +	struct iio_dev *indio_dev;
+>> +	int ret;
+>> +
+>> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc_info));
+>> +	if (!indio_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	adc_info = iio_priv(indio_dev);
+>> +	platform_set_drvdata(pdev, indio_dev);
+>> +	adc_info->info = info;
+>> +	adc_info->dev = dev;
+>> +
+>> +	ret = iio_map_array_register(indio_dev, mp2629_adc_maps);
+>> +	if (ret) {
+>> +		dev_err(dev, "IIO maps register fail: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	indio_dev->name = dev_name(dev);
+>> +	indio_dev->dev.parent = dev;
+>> +	indio_dev->dev.of_node = pdev->dev.of_node;
+>> +	indio_dev->channels = mp2629_channels;
+>> +	indio_dev->num_channels = ARRAY_SIZE(mp2629_channels);
+>> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>> +	indio_dev->info = &mp2629_adc_info;
+>> +
+>> +	ret = regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
+>> +				MP2629_ADC_START | MP2629_ADC_CONTINUOUS,
+>> +				MP2629_ADC_START | MP2629_ADC_CONTINUOUS);
+>> +	if (ret) {
+>> +		dev_err(dev, "adc enable fail: %d\n", ret);
+>> +		goto fail_unmap;
+>> +	}
+>> +
+>> +	ret = devm_iio_device_register(dev, indio_dev);
+>> +	if (ret) {
+>> +		dev_err(dev, "IIO device register fail: %d\n", ret);
+>> +		goto fail_unmap;
+> Should we not be turning the device off like we do in remove?
+>
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +fail_unmap:
+>> +	iio_map_array_unregister(indio_dev);
+>> +	return ret;
+>> +}
+>> +
+>> +static int mp2629_adc_remove(struct platform_device *pdev)
+>> +{
+>> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+>> +	struct mp2629_adc *adc_info = iio_priv(indio_dev);
+>> +	struct mp2629_info *info = adc_info->info;
+> This mess in layering with the children directly using the parents
+> regmap is a little concerning.  It means that the 3 drivers
+> really aren't very well separated and can't really be reviewed
+> independently (not a good thing).
+>
+> It might just be a question of providing a wrapper in the mfd driver
+> code so we at least have some visibility that this is going on.
 
-> ---
->  Documentation/devicetree/bindings/thermal/sprd-thermal.yaml | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
-> index 3bfe05504456..058c4cc06ba6 100644
-> --- a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
-> @@ -31,7 +31,6 @@ properties:
->        Reference to nvmem nodes for the calibration data.
->  
->    nvmem-cell-names:
-> -    maxItems: 2
->      items:
->        - const: thm_sign_cal
->        - const: thm_ratio_cal
-> 
+I had expored a wrapper in mfd driver in previous revision of patch, I 
+was asked
 
+to remove it. If wrapper is agreed then I will remove mfd mp2629_info 
+struct.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+>
+>> +
+>> +	regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
+>> +					 MP2629_ADC_CONTINUOUS, 0);
+>> +	regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
+>> +					 MP2629_ADC_START, 0);
+>> +
+>> +	iio_map_array_unregister(indio_dev);
+>> +	iio_device_unregister(indio_dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id mp2629_adc_of_match[] = {
+>> +	{ .compatible = "mps,mp2629_adc"},
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, mp2629_adc_of_match);
+>> +
+>> +static struct platform_driver mp2629_adc_driver = {
+>> +	.driver = {
+>> +		.name = "mp2629_adc",
+>> +		.of_match_table = mp2629_adc_of_match,
+>> +	},
+>> +	.probe		= mp2629_adc_probe,
+>> +	.remove		= mp2629_adc_remove,
+>> +};
+>> +module_platform_driver(mp2629_adc_driver);
+>> +
+>> +MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
+>> +MODULE_DESCRIPTION("MP2629 ADC driver");
+>> +MODULE_LICENSE("GPL");
