@@ -2,157 +2,133 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8556DC5ACC0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35EFC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E0B20736
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 729D320724
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:25:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbgCOTT3 (ORCPT
+        id S1728774AbgCOTZE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 15:19:29 -0400
-Received: from mail.manjaro.org ([176.9.38.148]:51282 "EHLO mail.manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728480AbgCOTT2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 15:19:28 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 122343782846;
-        Sun, 15 Mar 2020 20:19:27 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zDufdOZbQ_We; Sun, 15 Mar 2020 20:19:24 +0100 (CET)
-From:   Tobias Schramm <t.schramm@manjaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
+        Sun, 15 Mar 2020 15:25:04 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:35604 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728608AbgCOTZD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 15:25:03 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 92E482003A;
+        Sun, 15 Mar 2020 20:24:53 +0100 (CET)
+Date:   Sun, 15 Mar 2020 20:24:52 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Chris Zhong <zyw@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
+        Nikolaus Schaller <hns@goldelico.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lin Huang <hl@rock-chips.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marco Franchi <marco.franchi@nxp.com>,
+        Marek Belisko <marek@goldelico.com>,
         Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: [PATCH v5 2/3] dt-bindings: power: supply: add cw2015_battery bindings
-Date:   Sun, 15 Mar 2020 20:19:13 +0100
-Message-Id: <20200315191914.118565-3-t.schramm@manjaro.org>
-In-Reply-To: <20200315191914.118565-1-t.schramm@manjaro.org>
-References: <20200315191914.118565-1-t.schramm@manjaro.org>
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Nickey Yang <nickey.yang@rock-chips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Peter Rosin <peda@axentia.se>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stefan Mavrodiev <stefan@olimex.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Werner Johansson <werner.johansson@sonymobile.com>
+Subject: Re: [PATCH v1 06/36] dt-bindings: display: convert ilitek,ili9322 to
+ DT Schema
+Message-ID: <20200315192452.GA29182@ravnborg.org>
+References: <20200315134416.16527-1-sam@ravnborg.org>
+ <20200315134416.16527-7-sam@ravnborg.org>
+ <CACRpkdYVrTBKxuHSGpd9=03oD4=JVxzJf8fOcQ8uu5eRt9PgAg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYVrTBKxuHSGpd9=03oD4=JVxzJf8fOcQ8uu5eRt9PgAg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8 a=WN0NcwN0bJFRE13tjSgA:9
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=cvBusfyB2V15izCimMoJ:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds the dts binding schema for the cw2015 fuel gauge.
+Hi Linus.
 
-Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
----
- .../bindings/power/supply/cw2015_battery.yaml | 83 +++++++++++++++++++
- 1 file changed, 83 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+On Sun, Mar 15, 2020 at 07:54:38PM +0100, Linus Walleij wrote:
+> On Sun, Mar 15, 2020 at 2:44 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> 
+> > The .txt binding explains:
+> >
+> > "
+> >     The following optional properties only apply to
+> >     RGB and YUV input modes and
+> >     can be omitted for BT.656 input modes:
+> > "
+> >
+> > This constraint is not implmented in the DT Schema.
+> >
+> > The original binding from the .txt file referenced
+> > properties that is included in panel-timing.yaml.
+> > These properties are kept here as we want as close to a 1:1
+> > conversion as we can. If the properties should be dropped
+> > from the binding then this is a follow-up patch.
+> >
+> > The properties in question are:
+> >   - pixelclk-active
+> >   - de-active
+> >   - hsync-active
+> >   - vsync-active
+> 
+> Sorry about that. They should be dropped, but certainly it
+> is fine to do with a follow up patch.
 
-diff --git a/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml b/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
-new file mode 100644
-index 000000000000..f789882312da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/supply/cw2015_battery.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Battery driver for CW2015 shuntless fuel gauge by CellWise.
-+
-+maintainers:
-+  - Tobias Schramm <t.schramm@manjaro.org>
-+
-+description: |
-+  The driver can utilize information from a simple-battery linked via a
-+  phandle in monitored-battery. If specified the driver uses the
-+  charge-full-design-microamp-hours property of the battery.
-+
-+properties:
-+  compatible:
-+    const: cellwise,cw2015
-+
-+  reg:
-+    items:
-+      - description: i2c address
-+
-+  cellwise,battery-profile:
-+    description: |
-+      This property specifies characteristics of the battery used. The format
-+      of this binary blob is kept secret by CellWise. The only way to obtain
-+      it is to mail two batteries to a test facility of CellWise and receive
-+      back a test report with the binary blob.
-+    allOf:
-+      - $ref: /schemas/types.yaml#definitions/uint8-array
-+    items:
-+      - minItems: 64
-+        maxItems: 64
-+
-+  cellwise,monitor-interval-ms:
-+    description:
-+      Specifies the interval in milliseconds gauge values are polled at
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  power-supplies:
-+    description:
-+      Specifies supplies used for charging the battery connected to this gauge
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle-array
-+      - minItems: 1
-+        maxItems: 8 # Should be enough
-+
-+  monitored-battery:
-+    description:
-+      Specifies the phandle of a simple-battery connected to this gauge
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        cw2015@62 {
-+            compatible = "cellwise,cw201x";
-+            reg = <0x62>;
-+            cellwise,battery-profile = /bits/ 8 <
-+                0x17 0x67 0x80 0x73 0x6E 0x6C 0x6B 0x63
-+                0x77 0x51 0x5C 0x58 0x50 0x4C 0x48 0x36
-+                0x15 0x0C 0x0C 0x19 0x5B 0x7D 0x6F 0x69
-+                0x69 0x5B 0x0C 0x29 0x20 0x40 0x52 0x59
-+                0x57 0x56 0x54 0x4F 0x3B 0x1F 0x7F 0x17
-+                0x06 0x1A 0x30 0x5A 0x85 0x93 0x96 0x2D
-+                0x48 0x77 0x9C 0xB3 0x80 0x52 0x94 0xCB
-+                0x2F 0x00 0x64 0xA5 0xB5 0x11 0xF0 0x11
-+           >;
-+           cellwise,monitor-interval-ms = <5000>;
-+           monitored-battery = <&bat>;
-+           power-supplies = <&mains_charger>, <&usb_charger>;
-+       };
-+    };
-+
--- 
-2.24.1
+I changed my mind - lets try to avoid too many patches.
+So if you do not mind I will do it in this patch - and note it in the
+changelog.
 
+	Sam
+
+> 
+> >
+> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > Cc: Sam Ravnborg <sam@ravnborg.org>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Yours,
+> Linus Walleij
