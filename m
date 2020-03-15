@@ -2,123 +2,97 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF91EC5ACC1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 22:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9D2C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 23:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C2C206BE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 22:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC1C20674
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 23:32:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SdjV7v5Z"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="oF/o7HAU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729279AbgCOWVF (ORCPT
+        id S1728825AbgCOXca (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 18:21:05 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3021 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729213AbgCOWVF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 18:21:05 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e6eaa200000>; Sun, 15 Mar 2020 15:20:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 15 Mar 2020 15:21:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 15 Mar 2020 15:21:04 -0700
-Received: from [10.2.175.141] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 15 Mar
- 2020 22:21:03 +0000
-Subject: Re: [RFC PATCH v4 8/8] arm64: tegra: Add Tegra VI CSI support in
- device tree
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1584236766-24819-1-git-send-email-skomatineni@nvidia.com>
- <1584236766-24819-9-git-send-email-skomatineni@nvidia.com>
- <b4bbcc1d-d38c-14c5-7205-2f7657ab8712@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <80805c85-a6b0-62c4-877c-6af3831bce1d@nvidia.com>
-Date:   Sun, 15 Mar 2020 15:21:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Sun, 15 Mar 2020 19:32:30 -0400
+Received: from onstation.org ([52.200.56.107]:39268 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728789AbgCOXca (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 19:32:30 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 6D9F93E9FF;
+        Sun, 15 Mar 2020 23:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1584315149;
+        bh=FbK0reOI08bhfcRjNkK310nNC4o0NSk6b1rJcRSZCi4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oF/o7HAUT4n4ymS9/DIilA7tqzIMjGM1yFQF1neXo/7t2YGxJuHVeR5u5QOL6QdSL
+         U/Dv3n9thO0yyLZQNxtac+D36SKqRrO0wINQGj+m3E93vlBmtko23Hd37MhOJ8KYK7
+         V9rzRrqwvwXC9XS1GH93hBUj/1VzXxF0rkXSoBiM=
+Date:   Sun, 15 Mar 2020 19:32:26 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Chris Zhong <zyw@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
+        Nikolaus Schaller <hns@goldelico.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
+        Marek Belisko <marek@goldelico.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Nickey Yang <nickey.yang@rock-chips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Peter Rosin <peda@axentia.se>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stefan Mavrodiev <stefan@olimex.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Werner Johansson <werner.johansson@sonymobile.com>
+Subject: Re: [PATCH v1 15/36] dt-bindings: display: convert simple lg panels
+ to DT Schema
+Message-ID: <20200315233226.GA9344@onstation.org>
+References: <20200315134416.16527-1-sam@ravnborg.org>
+ <20200315134416.16527-16-sam@ravnborg.org>
 MIME-Version: 1.0
-In-Reply-To: <b4bbcc1d-d38c-14c5-7205-2f7657ab8712@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584310816; bh=+e0QisX1Z4jXTDX4Ud8ppSbrPDDTZh9nrZyl/tz1gm0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=SdjV7v5ZXAJPdwkJv7XrI0jhiPGdHft7NiD4UZhm5/pqMPz24r8XNJp8Yihv0QJAf
-         QKU2dskuAFdRY63eiMV4yG6PWEnK5NIiKl08W1PsGE0f3LzkLtUF1VNkDGlEZpBZtM
-         Tpc70Jc58zjcsMcAIDyWMPpz1ViDNZSOP8VWfVq6xX1qGJsqykua3J7vHG4u50RLf2
-         JpQr/Sd3x3nQHuIPY2jWU90j7Y7utSNQnkEjJGXEssCUYC4OMMD9JxFdyZi7qBpCq9
-         rojX94Td42GK0Mj7vykmBBrfqP21yQ7HvEoHLmwhKYodalibnrxOHCSgyUNKo8LK8I
-         T/QlxbfzkkzSw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200315134416.16527-16-sam@ravnborg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sun, Mar 15, 2020 at 02:43:55PM +0100, Sam Ravnborg wrote:
+> Add the lg panels that matches the panel-simple binding to
+> panel-simple.yaml
+> 
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Alexandre Courbot <acourbot@nvidia.com>
+> Cc: Brian Masney <masneyb@onstation.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
 
-On 3/15/20 5:54 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 15.03.2020 04:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Tegra210 contains VI controller for video input capture from MIPI
->> CSI camera sensors and also supports built-in test pattern generator.
->>
->> CSI ports can be one-to-one mapped to VI channels for capturing from
->> an external sensor or from built-in test pattern generator.
->>
->> This patch adds support for VI and CSI and enables them in Tegra210
->> device tree.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
-> Hello Sowjanya,
->
-> ...
->> +
->> +                     pd_venc: venc {
->> +                             clocks =3D <&tegra_car TEGRA210_CLK_VI>,
->> +                                      <&tegra_car TEGRA210_CLK_CSI>;
->> +                             resets =3D <&tegra_car 20>,
-> What is the clock #20?
-
-Hi Dmitry,
-
-20 is VI_RST not defined in include/dt-bindings/reset/tegra210-car.h
-
-Will add define and will fix to use it.
-
-
-
->> +                                      <&tegra_car TEGRA210_CLK_CSI>,
->> +                                      <&mc TEGRA210_MC_RESET_VI>;
-> Does this order means that memory controller will be reset *after*
-> resetting the CSI/VI hardware? This is incorrect reset sequence.
->
-> The memory controller reset should be kept asserted during of the time
-> of the hardware resetting procedure.
->
-> The correct sequence should be as follows:
->
-> 1. Assert MC
-> 2. Reset VI
-> 3. Deassert MC
-Right, will fix order. Thanks
+Reviewed-by: Brian Masney <masneyb@onstation.org>
