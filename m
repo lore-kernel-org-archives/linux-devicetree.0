@@ -2,134 +2,150 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9752AC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A764C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7024C206B1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:04:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="XXxWrlPv"
+	by mail.kernel.org (Postfix) with ESMTP id EB041206BE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:21:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584267674;
+	bh=qSrdTdk+Bozzx6kRvjzqGnSnWYLTir83lwA0ikq8NP8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wuz/m+1VSsCPwz24/HoDwkkXQ36mcQIqtjPuwzf3JUXKoRkn+HhsHiVOaKZw0NFAN
+	 HwjHajXU7H9nYXKrfbTyQfLrpeqx4aFSvl0wXc/dSYXpOD/PXe9XVRFsohi7szpWqr
+	 BKosV/h1nIkxYK7koOSoFmdGa271EYm+jpoX9egI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbgCOKEc (ORCPT
+        id S1728216AbgCOKVN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:04:32 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:50322 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbgCOKEb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 06:04:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1584266662; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8K4at98VmVZ/sFGzndyiaIeGeVtmYp4j33U5NwycmlE=;
-        b=XXxWrlPvXOPw8dW7Zjt0Mj2VJjdLgy7L/rL79sPujQA4p3Kw5LOsk6GmefWjmi6Y/W7EaQ
-        AS4rdhpXZo6VXsaaiDQKlpFNrWS44lsEacQ6DjKK1nY6W73CA4tzAKm7iu1ckJl2MU6vNF
-        5KrkOENWf1EGUI4ieLRvp5VxTfQtlvU=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Nick Dyer <nick@shmanahar.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] input: atmel_mxt_ts: Add support for optional regulator
-Date:   Sun, 15 Mar 2020 11:04:16 +0100
-Message-Id: <20200315100416.14151-2-paul@crapouillou.net>
-In-Reply-To: <20200315100416.14151-1-paul@crapouillou.net>
-References: <20200315100416.14151-1-paul@crapouillou.net>
+        Sun, 15 Mar 2020 06:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728141AbgCOKVN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 06:21:13 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ACB720578;
+        Sun, 15 Mar 2020 10:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584267672;
+        bh=qSrdTdk+Bozzx6kRvjzqGnSnWYLTir83lwA0ikq8NP8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KKGydK0cx0rTn8tjYeYi2WvlhSlF54CgzfR17XqNMjbHbZOYRmFKMLCw6vDQzPpPB
+         ElCG+Qo7LqS7Aek/8dBcIBiAb/Mr/fjjPBkMxTUGfCvj+5PsvebTKRH5orPr4jwEu1
+         qmDZ74IV1bi+WwHdy3mJdiNNVBKdyDgiaj+2tkqg=
+Date:   Sun, 15 Mar 2020 10:21:07 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: mfd: add document bindings for
+ mp2629
+Message-ID: <20200315102107.5c174611@archlinux>
+In-Reply-To: <20200315000013.4440-2-sravanhome@gmail.com>
+References: <20200315000013.4440-1-sravanhome@gmail.com>
+        <20200315000013.4440-2-sravanhome@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for an optional "vdd" regulator, as some platforms require a
-regulator to be enabled for the touchscreen to be enabled.
+On Sun, 15 Mar 2020 01:00:09 +0100
+Saravanan Sekar <sravanhome@gmail.com> wrote:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 25 +++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+> Add device tree binding information for mp2629 mfd driver.
+> 
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+Trivial inline.
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index ae60442efda0..b3511dad475a 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -22,6 +22,7 @@
- #include <linux/interrupt.h>
- #include <linux/of.h>
- #include <linux/property.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/gpio/consumer.h>
- #include <asm/unaligned.h>
-@@ -308,6 +309,7 @@ struct mxt_data {
- 	struct t7_config t7_cfg;
- 	struct mxt_dbg dbg;
- 	struct gpio_desc *reset_gpio;
-+	struct regulator *vdd;
- 
- 	/* Cached parameters from object table */
- 	u16 T5_address;
-@@ -3103,6 +3105,22 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- 	disable_irq(client->irq);
- 
-+	data->vdd = devm_regulator_get_optional(&client->dev, "vdd");
-+	if (IS_ERR(data->vdd)) {
-+		error = PTR_ERR(data->vdd);
-+		dev_err(&client->dev, "Failed to get regulator: %d\n", error);
-+		return error;
-+	}
-+
-+	if (data->vdd) {
-+		error = regulator_enable(data->vdd);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"Failed to enable regulator: %d\n", error);
-+			return error;
-+		}
-+	}
-+
- 	if (data->reset_gpio) {
- 		msleep(MXT_RESET_GPIO_TIME);
- 		gpiod_set_value(data->reset_gpio, 1);
-@@ -3111,7 +3129,7 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- 	error = mxt_initialize(data);
- 	if (error)
--		return error;
-+		goto err_disable_regulator;
- 
- 	error = sysfs_create_group(&client->dev.kobj, &mxt_attr_group);
- 	if (error) {
-@@ -3125,6 +3143,9 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- err_free_object:
- 	mxt_free_input_device(data);
- 	mxt_free_object_table(data);
-+err_disable_regulator:
-+	if (data->vdd)
-+		regulator_disable(data->vdd);
- 	return error;
- }
- 
-@@ -3136,6 +3157,8 @@ static int mxt_remove(struct i2c_client *client)
- 	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
- 	mxt_free_input_device(data);
- 	mxt_free_object_table(data);
-+	if (data->vdd)
-+		regulator_disable(data->vdd);
- 
- 	return 0;
- }
--- 
-2.25.1
+> ---
+>  .../devicetree/bindings/mfd/mps,mp2629.yaml   | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> new file mode 100644
+> index 000000000000..f5b8c73123c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MP2629 Battery Charger PMIC from Monolithic Power System.
+> +
+> +maintainers:
+> +  - Saravanan Sekar <sravanhome@gmail.com>
+> +
+> +description: |
+> +  MP2629 is an PMIC providing battery charging and power supply for smartphones,
+> +  Wireless camera and portable devices. Chip is contrlled over I2C.
+
+wireless (odd capitalization)
+
+> +
+> +  The MFD device handles battery charger controller and ADC IIO device for
+> +  battery, system voltage
+> +
+> +properties:
+> +  compatible:
+> +    const: mps,mp2629
+> +
+> +  reg:
+> +    description:
+> +      I2C device address.
+
+Could drop the description. It's a standard element for an i2c device.
+
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +    description:
+> +      The first cell is the IRQ number, the second cell is the trigger type.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/input/linux-event-codes.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@4b {
+> +            compatible = "mps,mp2629";
+> +            reg = <0x4b>;
+> +
+> +            interrupt-controller;
+> +            interrupt-parent = <&gpio2>;
+> +            #interrupt-cells = <2>;
+> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +    };
 
