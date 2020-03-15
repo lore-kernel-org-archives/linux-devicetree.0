@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CB0C5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23146C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B585206B1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E945520674
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lWl9RmPx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ws97P9zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgCONpn (ORCPT
+        id S1728712AbgCONpl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 09:45:43 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38879 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbgCONpn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 09:45:43 -0400
-Received: by mail-lf1-f65.google.com with SMTP id n13so9906931lfh.5;
-        Sun, 15 Mar 2020 06:45:41 -0700 (PDT)
+        Sun, 15 Mar 2020 09:45:41 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36245 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbgCONpl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 09:45:41 -0400
+Received: by mail-lf1-f67.google.com with SMTP id s1so11709082lfd.3;
+        Sun, 15 Mar 2020 06:45:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0i0vgiKfLOmpvuqPVA7m37qiPqNJFhGX4H4IYa6i4ig=;
-        b=lWl9RmPxxkjrxxWHn9utIetUaSmb9LWP3dVx4LimFMdzM1pk4BlRSvi1ySK/IEufn0
-         sX03MMuFa9fOc7XV7XzjU44uaC2qHvytzCv/+Eec+pOEMjXwSldTW15Lw7xTl6U3EYvo
-         iOlegHCxdN/qHX4wOAJj25qdQSlTLnUA3Kq0WFs9COZnKCyu6bCfQ3jZ2QjOFu59reGJ
-         xm9slFbDqTG90364EIv3Blcrj1s71u4H0URzNu+uwzEBwp7oqm0ryY4zNqFXWsrZdHBA
-         mQdfbgd/THjSCD/WHIE/PmPFPFgduBAcck5FZUsO5830N8egRmhNMnThEqK2WibiCBSf
-         C8iQ==
+        bh=qBUTf9GpIdfXPTFTOtKhRJPsPUGuxMdiWCVmQGYT+2k=;
+        b=Ws97P9zpToL4JcvpOFuzbNwuodP493lrUIGqjz7Zcvs5p1A1/gKzilbW1uym66jyLE
+         ymvI8jhc9OblLE25BPqkdYMIgojPct7I1RJIH8jos/4GD8pzzT7Anik8FH2g/8Nf2jkP
+         1ZeKH2CuFjRedUyUfdqmv81EUOyhQLeChEURQvA9P4ZF5GVf8xR5XJIYupNmYYWHrtpb
+         M2WiYmSyD935LzvIqFZmiGbSjOW1WoJjabQlueBLHI0q+OO5TVYTbFuTZRJHiQXaWFht
+         MYgttYKSf3dVIGDtITV1xogzvEc2JenZJaNpYY8jQHi5NdA0qTJDgolpkkhO8xP5US/b
+         /3FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=0i0vgiKfLOmpvuqPVA7m37qiPqNJFhGX4H4IYa6i4ig=;
-        b=TNcW03yskj6IONqa1bnvGWYiEtqTBDu9XAZxBn3Duzw/mazdPwnvu8GMM3ALio7hLV
-         NaHrm9823AfJ5dpuENyLPgVckZiM63ZfDOPvW2ZcgyxmWe1xNkoMYw/TVAP7JkllOdSB
-         2j0+ZvyNTV5Zpp9oOd9oY1tsFwgKRW7yg9U424lRUvWqgl05ByYNSM2JayW9Fh00CjyI
-         etIOjB3AdJoUmS2q6Dr/c5mg67CjSKVjwpSRkB340Tqo85/eRerNLqmU+l8WlPmI+u2g
-         oZ3SowKcGB5eq+rEYqAiPuPjVNJMu0WW3wwjRRPcGe42AxlL7Md3HKYpxHBQrHwJRk1/
-         mJNA==
-X-Gm-Message-State: ANhLgQ3mOL1Ah66o806jISM+k5akmZOghjD+0hn0E8b7Wgy8NAQ9Ms1K
-        eUSTcBwKNS+zWIMrc4mxS8g=
-X-Google-Smtp-Source: ADFU+vus3KIMVrdLNQumK21IeQLFPAIhvE0B8wkk6LKoU2xSpSVPWgRyVc6zyWu+4lJgoeI03mbkew==
-X-Received: by 2002:a19:80e:: with SMTP id 14mr13715743lfi.206.1584279940829;
-        Sun, 15 Mar 2020 06:45:40 -0700 (PDT)
+        bh=qBUTf9GpIdfXPTFTOtKhRJPsPUGuxMdiWCVmQGYT+2k=;
+        b=ifM2W28a4peQfwOPD0+iQhc/Pp78cNeTML+QWKIysQkCvlh2elb3UJt5ViXb4yVgQb
+         f5z0ITc0ibx0wmcBimzxwOywLhrAKljHeBV53RgzE96s6ohvDj29k+BblJDwvfWcG3+Z
+         HyoEEE6fQQxEpTUele+HIhjIxAIuPjPVlqhnQ4ca3B1c/K86y0j63zn59WdWvXnHB01W
+         1yQpojacydv6gs1idy55fSdPFg2AMgRI3HC8tUZMjoMyiljs9NMJSzJkSLNvtkRwxzaW
+         l8JKJ20q1AsKJl5TkKacaS+hto0GRy2793dwlfpWGIdBBjUPmx83MH84lVXkpixWlpji
+         mF0w==
+X-Gm-Message-State: ANhLgQ3Nu+6j8brniZ28CaC0lv5+kKNpkN0SER1oPQY5PH0AwV2auZxv
+        1uJEDzjcXjasUp0oRduWojs=
+X-Google-Smtp-Source: ADFU+vvTQEq/cvWDAYSQIlZsIN9Cs1P+wx3lsx1bi54HOkveLS6awGenZ0u5wIN3aYPyVsmSKYSUxQ==
+X-Received: by 2002:a05:6512:31d3:: with SMTP id j19mr13911445lfe.178.1584279938846;
+        Sun, 15 Mar 2020 06:45:38 -0700 (PDT)
 Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id a9sm23025212lfb.21.2020.03.15.06.45.38
+        by smtp.gmail.com with ESMTPSA id a9sm23025212lfb.21.2020.03.15.06.45.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 06:45:40 -0700 (PDT)
+        Sun, 15 Mar 2020 06:45:38 -0700 (PDT)
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -91,9 +91,9 @@ Cc:     Alexandre Courbot <acourbot@nvidia.com>,
         Tony Lindgren <tony@atomide.com>,
         Vinay Simha BN <simhavcs@gmail.com>,
         Werner Johansson <werner.johansson@sonymobile.com>
-Subject: [PATCH v1 35/36] dt-bindings: display: convert lgphilips,lb035q02 to DT Schema
-Date:   Sun, 15 Mar 2020 14:44:15 +0100
-Message-Id: <20200315134416.16527-36-sam@ravnborg.org>
+Subject: [PATCH v1 34/36] dt-bindings: display: convert seiko,43wvf1g to DT Schema
+Date:   Sun, 15 Mar 2020 14:44:14 +0100
+Message-Id: <20200315134416.16527-35-sam@ravnborg.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200315134416.16527-1-sam@ravnborg.org>
 References: <20200315134416.16527-1-sam@ravnborg.org>
@@ -105,110 +105,95 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Marco Franchi <marco.franchi@nxp.com>
 Cc: Thierry Reding <thierry.reding@gmail.com>
 Cc: Sam Ravnborg <sam@ravnborg.org>
 ---
- .../display/panel/lgphilips,lb035q02.txt      | 33 ------------
- .../display/panel/lgphilips,lb035q02.yaml     | 54 +++++++++++++++++++
- 2 files changed, 54 insertions(+), 33 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/lgphilips,lb035q02.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/lgphilips,lb035q02.yaml
+ .../bindings/display/panel/seiko,43wvf1g.txt  | 23 ---------
+ .../bindings/display/panel/seiko,43wvf1g.yaml | 49 +++++++++++++++++++
+ 2 files changed, 49 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/seiko,43wvf1g.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/seiko,43wvf1g.yaml
 
-diff --git a/Documentation/devicetree/bindings/display/panel/lgphilips,lb035q02.txt b/Documentation/devicetree/bindings/display/panel/lgphilips,lb035q02.txt
+diff --git a/Documentation/devicetree/bindings/display/panel/seiko,43wvf1g.txt b/Documentation/devicetree/bindings/display/panel/seiko,43wvf1g.txt
 deleted file mode 100644
-index 1a1e653e5407..000000000000
---- a/Documentation/devicetree/bindings/display/panel/lgphilips,lb035q02.txt
+index aae57ef36cdd..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/seiko,43wvf1g.txt
 +++ /dev/null
-@@ -1,33 +0,0 @@
--LG.Philips LB035Q02 Panel
--=========================
+@@ -1,23 +0,0 @@
+-Seiko Instruments Inc. 4.3" WVGA (800 x RGB x 480) TFT with Touch-Panel
 -
 -Required properties:
--- compatible: "lgphilips,lb035q02"
--- enable-gpios: panel enable gpio
+-- compatible: should be "sii,43wvf1g".
+-- "dvdd-supply": 3v3 digital regulator.
+-- "avdd-supply": 5v analog regulator.
 -
 -Optional properties:
--- label: a symbolic name for the panel
+-- backlight: phandle for the backlight control.
 -
--Required nodes:
--- Video port for DPI input
+-Example:
 -
--Example
---------
--
--lcd-panel: panel@0 {
--	compatible = "lgphilips,lb035q02";
--	reg = <0>;
--	spi-max-frequency = <100000>;
--	spi-cpol;
--	spi-cpha;
--
--	label = "lcd";
--
--	enable-gpios = <&gpio7 7 0>;
--
--	port {
--		lcd_in: endpoint {
--			remote-endpoint = <&dpi_out>;
+-	panel {
+-		compatible = "sii,43wvf1g";
+-		backlight = <&backlight_display>;
+-		dvdd-supply = <&reg_lcd_3v3>;
+-		avdd-supply = <&reg_lcd_5v>;
+-		port {
+-			panel_in: endpoint {
+-				remote-endpoint = <&display_out>;
+-			};
 -		};
 -	};
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/lgphilips,lb035q02.yaml b/Documentation/devicetree/bindings/display/panel/lgphilips,lb035q02.yaml
+diff --git a/Documentation/devicetree/bindings/display/panel/seiko,43wvf1g.yaml b/Documentation/devicetree/bindings/display/panel/seiko,43wvf1g.yaml
 new file mode 100644
-index 000000000000..09eba4090736
+index 000000000000..9195de40b21b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/lgphilips,lb035q02.yaml
-@@ -0,0 +1,54 @@
++++ b/Documentation/devicetree/bindings/display/panel/seiko,43wvf1g.yaml
+@@ -0,0 +1,49 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/panel/lgphilips,lb035q02.yaml#
++$id: http://devicetree.org/schemas/display/panel/seiko,43wvf1g.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: LG.Philips LB035Q02 Panel
++title: Seiko Instruments Inc. 4.3" WVGA (800 x RGB x 480) TFT with Touch-Panel
 +
 +maintainers:
-+  - Tomi Valkeinen <tomi.valkeinen@ti.com>
++  - Marco Franchi <marco.franchi@nxp.com>
 +
 +allOf:
 +  - $ref: panel-common.yaml#
-+  - $ref: ../../spi/spi-slave.yaml#
 +
 +properties:
 +  compatible:
-+    const: lgphilips,lb035q02
++    const: sii,43wvf1g
 +
-+  label: true
-+  enable-gpios: true
++  backlight: true
 +  port: true
++
++  dvdd-supply:
++    description: 3v3 digital regulator
++
++  avdd-supply:
++    description: 5v analog regulator
 +
 +required:
 +  - compatible
-+  - enable-gpios
-+  - port
++  - dvdd-supply
++  - avdd-supply
++
++additionalProperties: false
 +
 +examples:
 +  - |
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        panel: panel@0 {
-+            compatible = "lgphilips,lb035q02";
-+            reg = <0>;
-+            spi-max-frequency = <100000>;
-+            spi-cpol;
-+            spi-cpha;
-+
-+            label = "lcd";
-+
-+            enable-gpios = <&gpio7 7 0>;
-+
-+            port {
-+                lcd_in: endpoint {
-+                    remote-endpoint = <&dpi_out>;
-+                };
++    panel {
++        compatible = "sii,43wvf1g";
++        backlight = <&backlight_display>;
++        dvdd-supply = <&reg_lcd_3v3>;
++        avdd-supply = <&reg_lcd_5v>;
++        port {
++            panel_in: endpoint {
++                remote-endpoint = <&display_out>;
 +            };
 +        };
 +    };
