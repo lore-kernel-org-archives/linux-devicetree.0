@@ -2,62 +2,63 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7FDC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 16:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F025C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 16:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E153920637
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 16:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB18420637
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 16:26:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p3BYWIc8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lwWFiOB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgCOQZG (ORCPT
+        id S1728711AbgCOQ0B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 12:25:06 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46089 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728628AbgCOQZG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 12:25:06 -0400
-Received: by mail-lj1-f195.google.com with SMTP id d23so15818585ljg.13
-        for <devicetree@vger.kernel.org>; Sun, 15 Mar 2020 09:25:04 -0700 (PDT)
+        Sun, 15 Mar 2020 12:26:01 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37225 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728911AbgCOQ0B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 12:26:01 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j11so11910770lfg.4
+        for <devicetree@vger.kernel.org>; Sun, 15 Mar 2020 09:25:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bhIY9OOZnxZOPAI5wEukr5F3CCpgPoGyTg20FwGK9Tw=;
-        b=p3BYWIc86jjcI6oonq+LpWal5UzLF4chdphbUkZtArCrHw3fHc0r6fLgOPpwW0F8hR
-         gP4Wfu+rzzPF0TiSEeQmNwk7YZek2PC/56HeWXaU9kxZFmJvQJWL48w/6bXJGpQpscx5
-         mQX9XtRjy9J6ILCe4VTqiwLdoLeZcGSF3Iysfgputl8Zcpgi6nfthRWP8WGtplaOHCLV
-         CNMRfxnmU/gE4fUM38FDIXmAIE3eXmYiOp66YfTTZUEbCG7yNMmznET0H3BKDguuKLBT
-         R/j398gdVF4udQkU44i1ljFDNFJWmHisvPXTUXOtNS5ggRoJNJLfpoNBC6m0Wd1NyfIy
-         bWvQ==
+        bh=Nro+9PxoVZONSnffKW2dU8U2CHIxPJ7gtNcInQeK1go=;
+        b=lwWFiOB6SJj8mGq6jaZpWUhLXzKgZyntVMMsXYYbG/IWeiuPJEVVNIQQUuqLV+XOag
+         jIcEsYhJ9dngBmxhiolW1wTbWrYHbxixuUyidbrDZhlOCC1jB661xijrMccbrifYTgDN
+         GOe5fpX4obl0lMchuaxiNn1khH4/6V65MUHvL/azuwnQfi3rJLToV1PEAwpTBospAiVV
+         7KeDc1cHlB8ly3k69xJkfkivVgKShZ3dNLa5P9SZa+oBg3PVmG6u+1N3uITdh03hIbM1
+         YfkHNTH+cvm0g6qP8Q38WTYZ703Z3eS4zCPklWgb3DtFzrpqmgmi0L2UpOgmz8q7Vm3+
+         gZjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bhIY9OOZnxZOPAI5wEukr5F3CCpgPoGyTg20FwGK9Tw=;
-        b=Gj+aELw98MxlcSGSDamXpNp0XWSlbMWYLRCIQBoFGKAwLNpOpaqOEtBIVVYPbQh8CW
-         SRd5C06yrtPoO1szgmhuL+enRhozOvvSqY29wEtV0oo6t7LxiCT22Kbf7R21K8w+iVQh
-         CM3DOKYyFmuZAIQLelYe0eHANIM+AhX/TKyKL6qHv06vrucf1kaTkFtRksmN7ZVb11S0
-         bDF3QZkXFRvT9NqBO0jr+7M+Dff3GrP3qBjYq4MWBArwd6AoNI9QWSkC+SKNrTMVly8R
-         TKV1D+52Bzu/2PmwlCw53s+3T2w7aCUimfgY7f5Z3QO1Tw6tSsm1pek88tWSxg70nloO
-         9xlA==
-X-Gm-Message-State: ANhLgQ3/w+/MP9seLrS9DpzRncs2sA3CGeLixiBESrJMAwgi0NlxlhKg
-        cY06vdCcg4dhSa1EFnEAFOAyof66xbYHb0BPmOqlwQ==
-X-Google-Smtp-Source: ADFU+vvfAn91cdIuck/jsg/zit0I3le1KpoewT5X+4/992npdZo2Qy9O+m/M8W1xq/3HAyQmj+l2pjjAwAxIq9vsk0M=
-X-Received: by 2002:a2e:9a96:: with SMTP id p22mr12246494lji.258.1584289503947;
- Sun, 15 Mar 2020 09:25:03 -0700 (PDT)
+        bh=Nro+9PxoVZONSnffKW2dU8U2CHIxPJ7gtNcInQeK1go=;
+        b=CmTW+GBB9KqMmownijAqykSbRXQWPWVAtWTQFfMgtOFfKj5g2cIm9EiUucwld6xgcv
+         F3XhFICCzA4TA9j1dKi8p3UllndrnLFcvM0+bozSnpp6gSwtNn0BKegfgc2reNHLhpT2
+         sYZCgsqONfFNYWF7EB1j6NGtHp1r2JmITlFAFe+2Ik8GgipjJc8rgaTdqjy26LpNlW+w
+         +NOCZu9VwV/+q72aPGJzUmggsc5hljjME9W/hO4GchJkKjwQkLabcWOegdOF11i42chn
+         LlyfrpG6Fo0xRgMdhEY8TCFvNguhqoyXSHN5EUldywSht2v2T32jBIhEOS/AUPpEIB1t
+         1mAA==
+X-Gm-Message-State: ANhLgQ2SuezAqGLHC/JuHvzUFG0mwpSQc/cJcwSyByvU8jUQEir5A56k
+        Vehg9cZqXWjTdMibOT6z3pMV3/uCpCRqsxUsLFLrwA==
+X-Google-Smtp-Source: ADFU+vtZ1Lm6HpAuq9q9b7CE2xd2dh3LAwacDeOvpC1P04gdg7RXPAQFfC8FLc6e0ZBzD7T3GR5IOsj+IUxBNg+hlnA=
+X-Received: by 2002:a19:a415:: with SMTP id q21mr14190800lfc.21.1584289558343;
+ Sun, 15 Mar 2020 09:25:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200315134416.16527-1-sam@ravnborg.org> <20200315134416.16527-3-sam@ravnborg.org>
-In-Reply-To: <20200315134416.16527-3-sam@ravnborg.org>
+References: <20200315134416.16527-1-sam@ravnborg.org> <20200315134416.16527-5-sam@ravnborg.org>
+In-Reply-To: <20200315134416.16527-5-sam@ravnborg.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 15 Mar 2020 17:24:52 +0100
-Message-ID: <CACRpkdZszEA+-KVrgALx3NdtVi86ExnEHB3p0EwxMeCCvHxD5A@mail.gmail.com>
-Subject: Re: [PATCH v1 02/36] dt-bindings: spi: support non-spi bindings as
- SPI slaves
+Date:   Sun, 15 Mar 2020 17:25:47 +0100
+Message-ID: <CACRpkda6Vve_oNZ+o0A-dUy35ktgqshTE8DyEqmBD=DWry7n_w@mail.gmail.com>
+Subject: Re: [PATCH v1 04/36] dt-bindings: display: convert
+ arm,versatile-tft-panel to DT Schema
 To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -103,23 +104,14 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Sun, Mar 15, 2020 at 2:44 PM Sam Ravnborg <sam@ravnborg.org> wrote:
 
-> Independent bindings can be SPI slaves which for example is
-> the case for several panel bindings.
->
-> Move SPI slave properties to spi-slave.yaml so the independent
-> SPI slave bindings can include spi-slave.yaml rather than
-> duplicating the properties.
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
 
-To me it seems like you are creating the common SPI slave
-bindings? Maybe the commit message should be about that.
+Thanks! :D
 
-> +  reg:
-> +    minimum: 0
-> +    maximum: 256
-
-255? Or am I wrong?
-
-Apart from that it looks good to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
