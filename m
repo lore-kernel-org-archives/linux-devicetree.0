@@ -2,113 +2,142 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C04C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 09:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961DBC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 09:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9345B20724
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 09:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E46C20739
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 09:46:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="deZEA2cq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+ZgyUWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgCOJjI (ORCPT
+        id S1728187AbgCOJqo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:39:08 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42325 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728116AbgCOJjH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 05:39:07 -0400
-Received: by mail-qk1-f195.google.com with SMTP id e11so20816665qkg.9;
-        Sun, 15 Mar 2020 02:39:05 -0700 (PDT)
+        Sun, 15 Mar 2020 05:46:44 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35112 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbgCOJqo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 05:46:44 -0400
+Received: by mail-io1-f68.google.com with SMTP id h8so14117216iob.2;
+        Sun, 15 Mar 2020 02:46:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Zle+AXTHHc8jvGKTvm1/uLrZYjwwT5iLZONbBDLgdjI=;
-        b=deZEA2cqlVslAyUp+XM9hrPXQGjNqXuxdRJ6RRNrUQWpLbIyqe7GDsg3lh5uhO8bZL
-         UHuM7rATjvPvJAUiTxA/2hV3MdFJoVO8HDBK5Lca3B7x2XxagObGG9agvkk3PnzUNXvF
-         2PI1wDsjxK5yIyojKkThAAoahTcEePAeabUhKkqwKzoAvSkHAu6rzWrB5TxYUEhbiYf3
-         d0BaFjmdKxV7lUvBpJyamB9vYekCd9FsJe0k0SpuyEN78rlPn3wpaFztM7+Ravt0qXst
-         JiUGVzGHlwDN1k06ekqf93AX0ku07JXppoR9XF4fbS0Um8Bc2Z0aHL+qYYGd4B0Gm738
-         oiYg==
+        bh=GNFfXHO2uILPgu0B1T3kwaBgaXjP+dlED6DVNl3sNIg=;
+        b=I+ZgyUWzIa8Yxi+0xMqH9yaVxAhiEOypJ/WXcO5ujz84CdXXQxL2d1ab/itSy71+MY
+         v1zS6OgxvE0Bn+Qa0JXfcz8RKJwprkoMCBipzhzZlHWCugVSwinT5j3lnrH2WDYlwZ01
+         eYOr9xN2OR+z2u3VNz+TrTa75FmvLhds4/9O2wY6HbEzs0xPbUZ28UtXN7LT2TXhup6Y
+         pkBRtDX0RpzM5wTDCNpUYBgBjIeYHAnSJprQYhPVixRf+4+i5CWwFDcVCSryxTo7o+n+
+         QvVX5JRwWD/Ek/EyR8q7MTRXZ3swX8IoaPhhLPo/I0oYQ9PA+4e/gT6RGNbVnejmq4aN
+         w9FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Zle+AXTHHc8jvGKTvm1/uLrZYjwwT5iLZONbBDLgdjI=;
-        b=K3yr9nfmhQH/pmI5dGIJHxZB+MTdv2KDjltQ5vE//3MFkzxVlhbi9FZllr/SxiF52b
-         e4OgiexoekuoVNrgDqwiaAxCn7cZNR86oLteonGKRpd6+7XG63dfyztGij21TLvkAwO5
-         dZnReXatIk1CTROXQXNBjwyVkUyXL9WImJesQFF7s9dBI9QT0eJdg9s9ndoiwGm7iWsL
-         DDpfpHi9VFgqjLRjrpZ7aO4j6NQgRlUav+ukl6QD2IqKIN95X+iB3ORikNjONAFOah/9
-         Nvw+kWYhad14EhtCgUKSlH0oEX9PkvsrwhrvKJTrmjKOZccjCO+8S0YLlEtAPd4VJuAq
-         9vBw==
-X-Gm-Message-State: ANhLgQ04unS/nlQ6XcpJv9JEpn7hgP0hiGxbmebLzGs1OxWutubYGWU4
-        hsL58aA51ZALfb/NWuTRCL6T62w0sB3+IlnpXa4=
-X-Google-Smtp-Source: ADFU+vuJPHfHU6s1UseuEr7Inqsk7XkYeVKkmL/siV5j8Bz3dKiby8xbiNRLCy60RE2b7R3GhofRw+cidTKfuDh3YHE=
-X-Received: by 2002:a05:620a:539:: with SMTP id h25mr14353887qkh.395.1584265145009;
- Sun, 15 Mar 2020 02:39:05 -0700 (PDT)
+        bh=GNFfXHO2uILPgu0B1T3kwaBgaXjP+dlED6DVNl3sNIg=;
+        b=icy7SZW6XbPVFapP/3jpqqK8cP45v9BhR5hqZv6+2LAKRg88qcGHntKcEP3RniUpm2
+         8LEX+pWrbaIZUospvcpto38IreGhQ6xer/WAe1etFMNVybjtQysb8/oteh868wW8gVD6
+         djQisSMwIE7RgIMkRyUQdUFRQxAPzMO/TGyabuDy/pH8g0mzuow9RekefDDOvIKmhFtT
+         Ql63wtn/xoKo30da9oWb1tdPIAE0IkoPw/kN0nduV4o4Uras2GMXvGGLqsh6ETjdk0or
+         wMpz1snJ3Hfx1fwq5s8YmpJtLFiLt+k82n8rmtN/grRziuuZN+E1ZkiXsZbyJxbQIgQv
+         4WmQ==
+X-Gm-Message-State: ANhLgQ2BBjXijrw6M21cpRQEQNHUxd5BN44RVqMBAnYjTMCbNGJ0a3a1
+        iYFOfYGgS3QSr5DJsQTsFZFdMMj7VjMSNlgyPPg=
+X-Google-Smtp-Source: ADFU+vsewoQ8rLqcke0ekgyn+gsES6vdYQVgDzjdOdmXOPVuxzoaksZJ3jLUICWiRwD3y5hXFyjeMrRhGfoBBlDZBWk=
+X-Received: by 2002:a6b:f311:: with SMTP id m17mr19317386ioh.128.1584265603378;
+ Sun, 15 Mar 2020 02:46:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200313214552.845-1-robh@kernel.org>
-In-Reply-To: <20200313214552.845-1-robh@kernel.org>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Sun, 15 Mar 2020 17:38:53 +0800
-Message-ID: <CADBw62oL5hhw12bSAFv7Jnx39stXFeEuTMZ3hWvMCRKpt2vgXg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: thermal: sprd: Remove redundant 'maxItems'
-To:     Rob Herring <robh@kernel.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>, Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux PM <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org
+References: <20200310194854.831-1-linux.amoon@gmail.com> <20200310194854.831-3-linux.amoon@gmail.com>
+ <CANAwSgR4fJK0uVANv-x-=iSL_hAKD8kvazACUsY9Meu5xonuqQ@mail.gmail.com> <20200314182010.GB17580@kozik-lap>
+In-Reply-To: <20200314182010.GB17580@kozik-lap>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Sun, 15 Mar 2020 15:16:33 +0530
+Message-ID: <CANAwSgS1+6Dzv2XbmMUR40AbJePxUzWkKkBC1W9hBMGzaMWP3w@mail.gmail.com>
+Subject: Re: [PATCHv3 2/5] ARM: dts: exynos: Add missing usbdrd3 suspend clk
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Mar 14, 2020 at 5:45 AM Rob Herring <robh@kernel.org> wrote:
->
-> There's no need to specify 'maxItems' with the same value as the number
-> of entries in 'items'. A meta-schema update will catch future cases.
->
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Baolin Wang <baolin.wang7@gmail.com>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Amit Kucheria <amit.kucheria@verdurent.com>
-> Cc: linux-pm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Hi Krzysztof,
 
-Thanks Rob.
-Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
-
-> ---
->  Documentation/devicetree/bindings/thermal/sprd-thermal.yaml | 1 -
->  1 file changed, 1 deletion(-)
+On Sat, 14 Mar 2020 at 23:50, Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> diff --git a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
-> index 3bfe05504456..058c4cc06ba6 100644
-> --- a/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
-> @@ -31,7 +31,6 @@ properties:
->        Reference to nvmem nodes for the calibration data.
+> On Sat, Mar 14, 2020 at 07:02:33PM +0530, Anand Moon wrote:
+> > Hi Krzysztof,
+> >
+> > On Wed, 11 Mar 2020 at 01:19, Anand Moon <linux.amoon@gmail.com> wrote:
+> > >
+> > > Add new compatible strings for USBDRD3 for adding missing
+> > > suspend clk, exynos5422 usbdrd3 support two clk USBD300 and
+> > > SCLK_USBD300, so add missing suspemd_clk for Exynos542x DWC3 nodes.
+> > >
+> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> >
+> > My assumption based on the FSYS clock source diagram below was bit wrong.
+> > [0] https://imgur.com/gallery/zAiBoyh
+> >
+> > And again re-looking into the driver source code, it turn out their
+> > are *6 clock*
+> > Here is the correct mapping as per the Exynos5420 clock driver.
+> >
+> > USB-(phy@12100000)
+> > |___________________CLK_SCLK_USBD300
+> > |___________________CLK_SCLK_USBPHY300
+> >
+> > USB-(phy@12500000)
+> > |___________________CLK_SCLK_USBD301
+> > |___________________CLK_SCLK_USBPHY301
+> >
+> > USB-(dwc3@12000000)
+> > |___________________CLK_USBD300
+> > USB-(dwc3@12400000)
+> > |___________________CLK_USBD301
+> >
+> > Note: As per Exynos 5422 user manual, There are some more USB CLK
+> > configuration missing in GATE_IP_FSYS. So we could enable another dwc3 clk,
+> > If needed I would like too add this missing clk code and enable this
+> > clk for dwc3 driver.
+> >
+> > For some reason we already use CLK_USBD300 and CLK_USBD301
+> > for PHY nodes, which lead to this confusion. So we need to update PHY clock
+> > CLK_USBD300 with CLK_SCLK_USBD300 and clock CLK_USBD301 with CLK_SCLK_USBD301.
+> >
+> > Please share your thought on linking PHY nodes above and add new DWC3 clock
+> > and enable this clock.
 >
->    nvmem-cell-names:
-> -    maxItems: 2
->      items:
->        - const: thm_sign_cal
->        - const: thm_ratio_cal
-> --
-> 2.20.1
+> The real clock topology of Exynos5422 is not properly reflected in the
+> kernel. However cleaning this up is quite big task.
+>
+>
+> Best regards,
+> Krzysztof
 >
 
+I would like to fix all my patches with new finding and submit them
+once again for review.
 
--- 
-Baolin Wang
+-Anand
