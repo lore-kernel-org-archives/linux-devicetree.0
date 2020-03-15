@@ -2,72 +2,120 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A8EC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 15:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD5C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF9E620637
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 15:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D19620578
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 15:25:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OFxgpzsL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsMP5ZfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgCOPIS (ORCPT
+        id S1728743AbgCOPZL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 11:08:18 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:62992 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728223AbgCOPIS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 11:08:18 -0400
-X-UUID: 76f36b23b4154017ba3abadc0af0d807-20200315
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=+CvUngamV2VX3eNG/af1GoftRg2IFOk1is4zBfIJFy0=;
-        b=OFxgpzsLsAqSkkntwnUnK5cn2Dm+E94AGIngfCe1rhb/jsDWDFJLJSUIuWCABYlx0Xv9w9GugAcghFBuClwhXGV1GIN4WYtPlWYKNMBx/UTTwGc2URnwGeN7uVbc4+rwzA7hreuLC2/FnnoAoWHlYwle7QuNe9T69/IKRjkS9Ck=;
-X-UUID: 76f36b23b4154017ba3abadc0af0d807-20200315
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 564303256; Sun, 15 Mar 2020 23:08:09 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 15 Mar 2020 23:07:33 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 15 Mar 2020 23:07:31 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>
-Subject: [PATCH 1/1] dt-bindings: cpu: Add a support cpu type for cortex-a75
-Date:   Sun, 15 Mar 2020 23:08:05 +0800
-Message-ID: <1584284885-20836-1-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Sun, 15 Mar 2020 11:25:11 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41555 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728794AbgCOPZL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 11:25:11 -0400
+Received: by mail-il1-f194.google.com with SMTP id l14so13945871ilj.8;
+        Sun, 15 Mar 2020 08:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8oElHQLKFLOVtRHqu7xiZ6PSJACuRnWmCrjsIOT03/4=;
+        b=RsMP5ZfF9Kle+rjBS3Bso6AHBFITrbE13HUp2ObAa4PaLpubX0IyO20urbKNQZ8QzO
+         zyawLivUZMOXmEf4KS1gockamB5ifWcK8RDanr4T91XtPkH5uqz3rQkJuTN29cfWqPbo
+         UetMtw8CUEnybaWElSX6cG1rLsDBv9M8fdTLj8NPJFE16pwbaVq9cVWA4uz7b76daa0o
+         JOFelYtJ96GsHGmlh0CnSFIMH+ubQ4nER8Nckilais8GLUoMFOPtDNa0hT5zBIWZUkDE
+         7TeitOReluipDTZmFIWdjKp9FiDr+lWqjIq0utvdsGanqMtRlVOq6xPtcmqtTp0FDcdD
+         QTvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8oElHQLKFLOVtRHqu7xiZ6PSJACuRnWmCrjsIOT03/4=;
+        b=Swtw7IwfnYlS0YRdoyUeCqZ1PTZJmek7FEIwdGAE21fviXzdZArH0txierQFwuYMRc
+         60wE6RINAZN8FtsRaDWtD6gkdBv2e03CyomAnYzguw0shbqwzmvHuGs3QMQuBtJhQCIz
+         RK1oSrvYZQaykzlY+s14ihhLppK11rSLbBUzhjEricvR27NIciv3XjORce7st9g18sp3
+         uLIXIP6FZZr3niuhVLrfIVHzqAJN1uosuk2XYT8xPxaqvvKtH2flxNvznMfPtfZrsrma
+         /ZBm5XtSA/OgxEFhg3Oxz5owAeLt1omQQCALioYSDpwxlBORGEfA97uKujTpXSeabvc5
+         ZB2w==
+X-Gm-Message-State: ANhLgQ0g5/RWH/41UwHrwom49gGvxpyv0jOkE1pGeQwR/f9/wLdggqW9
+        ir7IjnPqemwKdB6wAl5l2EEZGkNRwEfzFj4oAcA=
+X-Google-Smtp-Source: ADFU+vt9/0tLT5TMHQJuvt7jSFZQO9BbU2DRVErpzh0iupQQjp//EFou6F5rBpQO/z0gYMAYYRnt+hMR7/PR6UXiFmE=
+X-Received: by 2002:a92:8f53:: with SMTP id j80mr17379957ild.171.1584285909944;
+ Sun, 15 Mar 2020 08:25:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 860C1638F459CC376E4B34BE0F369F4CB84B24E6D4543CE68454EA5693FFD5262000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1583920112-2680-1-git-send-email-simhavcs@gmail.com> <20200312151752.GA7490@bogus>
+In-Reply-To: <20200312151752.GA7490@bogus>
+From:   Vinay Simha B N <simhavcs@gmail.com>
+Date:   Sun, 15 Mar 2020 20:54:58 +0530
+Message-ID: <CAGWqDJ7DP3DuR7EWT6Ni8YxN3Adg3RgJZut6+AtpAak_HB=QCQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-W0RldGFpbF0NCkFkZCBhcm0gY3B1IHR5cGUgY29ydGV4LWE3NS4NCg0KQ2hhbmdlLUlkOiBJMmIw
-NTk0ODkxNWFjZmE2YTA0YTBiOGZhODg2ODRhMTJiNmQ1YzJjYQ0KU2lnbmVkLW9mZi1ieTogSGFu
-a3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQotLS0NCiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMueWFtbCB8ICAgIDEgKw0KIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2FybS9jcHVzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL2NwdXMueWFtbA0KaW5kZXggYzIzYzI0Zi4uNTFiNzVmNyAxMDA2NDQNCi0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vY3B1cy55YW1sDQorKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMueWFtbA0KQEAgLTEyOCw2ICsx
-MjgsNyBAQCBwcm9wZXJ0aWVzOg0KICAgICAgIC0gYXJtLGNvcnRleC1hNTcNCiAgICAgICAtIGFy
-bSxjb3J0ZXgtYTcyDQogICAgICAgLSBhcm0sY29ydGV4LWE3Mw0KKyAgICAgIC0gYXJtLGNvcnRl
-eC1hNzUNCiAgICAgICAtIGFybSxjb3J0ZXgtbTANCiAgICAgICAtIGFybSxjb3J0ZXgtbTArDQog
-ICAgICAgLSBhcm0sY29ydGV4LW0xDQotLSANCjEuNy45LjUNCg==
+rob,
 
+i do not get the error when running 'make dt_binding_check' in my
+build environment
+Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+
+is there any tool available similar to  scripts/checkpatch.pl -f
+<file> , for yaml files?
+
+On Thu, Mar 12, 2020 at 8:47 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, 11 Mar 2020 15:18:24 +0530, Vinay Simha BN wrote:
+> > Add yaml documentation for DSI/LVDS tc358775 bridge
+> >
+> > Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> >
+> > ---
+> > v1:
+> >  Initial version
+> > ---
+> >  .../bindings/display/bridge/toshiba-tc358775.yaml  | 174 +++++++++++++++++++++
+> >  1 file changed, 174 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml:  while scanning for the next token
+> found character that cannot start any token
+>   in "<unicode string>", line 11, column 1
+> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.example.dts] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> warning: no schema found in file: Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml: ignoring, error parsing file
+> Makefile:1262: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+> See https://patchwork.ozlabs.org/patch/1252753
+> Please check and re-submit.
+
+
+
+-- 
+regards,
+vinaysimha
