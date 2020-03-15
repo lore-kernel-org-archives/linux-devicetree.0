@@ -2,243 +2,168 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5532AC5ACBF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AB9C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 251B8206B1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:45:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEX8bQmX"
+	by mail.kernel.org (Postfix) with ESMTP id F112D206BE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgCONpp (ORCPT
+        id S1727639AbgCONuq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 09:45:45 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37015 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728705AbgCONpp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 09:45:45 -0400
-Received: by mail-lj1-f193.google.com with SMTP id r24so15638780ljd.4;
-        Sun, 15 Mar 2020 06:45:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rXa6VlRbgpah7LGY3OOOT1LELVwF4SMk1lCdqSipX50=;
-        b=JEX8bQmXM2HZhTbkCQ80v+cnbaFzXX500vFGdipdZrMPTIncu7Zk9aAbtZodRA5mEU
-         xE94qnXXbDpHnmNE/X4glWhLvCT5TDmfCyMz69rYajFROeZsSDRef05yRFmjgQZL21x/
-         JdnUDqO6e+tFbnycrUsK+gNEugrhR5iuxaTUNXNbcf2znQkft20+OEUcOEZTi/1EwZBX
-         lcIogDiMypdqvxb+35hdouMy91Hf7uYs1PECsDZGFhJYtYdB7ZsnAcnKfIDl/pGuNNR8
-         jlGh9ZtdVUU2SRfukvdAsppnB6DANtBfXwH17Q+LIqeS3nZVJIUdAuI43G9ia3c1vzD9
-         dNxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=rXa6VlRbgpah7LGY3OOOT1LELVwF4SMk1lCdqSipX50=;
-        b=OLjh5ri9UTdvuzutxjMud9aPfuJITzfIvvI9bTmNNxmyeQ2Pp6Zs/+qgNaw+Ffrxrl
-         q3sQ2yZ29JQYu/f5FkQ3B0IL716RtkOUwR64YqgapwYSMtPDOg9rqcBTX9wFOBMgKL7/
-         fQDAMEVQrI/c6dd2+ZFGNlHY9jemjqJyy6/+kVms98+fTLLpx5a5YQsFNBoFK0DgXz+Q
-         pmNQkhpGfYZ+DSycMIESysJiej4oqbLhvUaobqKyQAmjaGLtJaD1wHpby4/9l1k9A09L
-         WDkkkpGiFbLlzknKhnapprWOTQq+bttE173fNa/wEveP0cSPEIgcseabqM4LMvizwZls
-         i0Mw==
-X-Gm-Message-State: ANhLgQ0VZV/28ECb60u8FulYsMo8zgqgul+cczJGaIiLm6R63B8EfJNW
-        hwqYK1rvT9/yuzfJS0BthKo=
-X-Google-Smtp-Source: ADFU+vsX8ITn47HEixar4GwQHDh7QX0PW82O0+yT17UZn/149C5hjTybfpBiqRCc67jzM5E7hgDrFw==
-X-Received: by 2002:a2e:6c03:: with SMTP id h3mr829049ljc.8.1584279943011;
-        Sun, 15 Mar 2020 06:45:43 -0700 (PDT)
-Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id a9sm23025212lfb.21.2020.03.15.06.45.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 06:45:42 -0700 (PDT)
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-Subject: [PATCH v1 36/36] dt-bindings: display: convert olimex,lcd-olinuxino to DT Schema
-Date:   Sun, 15 Mar 2020 14:44:16 +0100
-Message-Id: <20200315134416.16527-37-sam@ravnborg.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200315134416.16527-1-sam@ravnborg.org>
-References: <20200315134416.16527-1-sam@ravnborg.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 15 Mar 2020 09:50:46 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:57420 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727163AbgCONuq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 09:50:46 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 83BC8200257;
+        Sun, 15 Mar 2020 14:50:44 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F23B020059A;
+        Sun, 15 Mar 2020 14:50:38 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6EF3E402F3;
+        Sun, 15 Mar 2020 21:50:32 +0800 (SGT)
+From:   Dong Aisheng <aisheng.dong@nxp.com>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, sboyd@kernel.org,
+        mturquette@baylibre.com, shawnguo@kernel.org,
+        fabio.estevam@nxp.com, linux-imx@nxp.com, kernel@pengutronix.de,
+        Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org
+Subject: [PATCH V6 02/12] dt-bindings: clock: imx-lpcg: add support to parse clocks from device tree
+Date:   Sun, 15 Mar 2020 21:43:46 +0800
+Message-Id: <1584279836-29825-3-git-send-email-aisheng.dong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1584279836-29825-1-git-send-email-aisheng.dong@nxp.com>
+References: <1584279836-29825-1-git-send-email-aisheng.dong@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Stefan Mavrodiev <stefan@olimex.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
----
- .../display/panel/olimex,lcd-olinuxino.txt    | 42 -----------
- .../display/panel/olimex,lcd-olinuxino.yaml   | 70 +++++++++++++++++++
- 2 files changed, 70 insertions(+), 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml
+MX8QM and MX8QXP LPCG Clocks are mostly the same except they may reside
+in different subsystems across CPUs and also vary a bit on the availability.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
-deleted file mode 100644
-index a89f9c830a85..000000000000
---- a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
-+++ /dev/null
-@@ -1,42 +0,0 @@
--Binding for Olimex Ltd. LCD-OLinuXino bridge panel.
--
--This device can be used as bridge between a host controller and LCD panels.
--Currently supported LCDs are:
--  - LCD-OLinuXino-4.3TS
--  - LCD-OLinuXino-5
--  - LCD-OLinuXino-7
--  - LCD-OLinuXino-10
--
--The panel itself contains:
--  - AT24C16C EEPROM holding panel identification and timing requirements
--  - AR1021 resistive touch screen controller (optional)
--  - FT5x6 capacitive touch screnn controller (optional)
--  - GT911/GT928 capacitive touch screen controller (optional)
--
--The above chips share same I2C bus. The EEPROM is factory preprogrammed with
--device information (id, serial, etc.) and timing requirements.
--
--Touchscreen bingings can be found in these files:
--  - input/touchscreen/goodix.txt
--  - input/touchscreen/edt-ft5x06.txt
--  - input/touchscreen/ar1021.txt
--
--Required properties:
--  - compatible: should be "olimex,lcd-olinuxino"
--  - reg: address of the configuration EEPROM, should be <0x50>
--  - power-supply: phandle of the regulator that provides the supply voltage
--
--Optional properties:
--  - enable-gpios: GPIO pin to enable or disable the panel
--  - backlight: phandle of the backlight device attacked to the panel
--
--Example:
--&i2c2 {
--	panel@50 {
--		compatible = "olimex,lcd-olinuxino";
--		reg = <0x50>;
--		power-supply = <&reg_vcc5v0>;
--		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;
--		backlight = <&backlight>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml
+Same as SCU clock, we want to move the clock definition into device tree
+which can fully decouple the dependency of Clock ID definition from device
+tree and make us be able to write a fully generic lpcg clock driver.
+
+And we can also use the existence of clock nodes in device tree to address
+the device and clock availability differences across different SoCs.
+
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: devicetree@vger.kernel.org
+Acked-by: Shawn Guo <shawnguo@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ChangeLog:
+v4->v5:
+ * no changes
+v3->v4:
+ * change bit-offset property to clock-indices
+ * use constant macro to define clock indinces
+ * drop hw-autogate property which is still not used by drivers
+v2->v3:
+ * no changes
+v1->v2:
+ * Update example
+ * Add power domain property
+---
+ .../bindings/clock/imx8qxp-lpcg.txt           | 36 +++++++++++++++----
+ include/dt-bindings/clock/imx8-lpcg.h         | 14 ++++++++
+ 2 files changed, 44 insertions(+), 6 deletions(-)
+ create mode 100644 include/dt-bindings/clock/imx8-lpcg.h
+
+diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+index 965cfa42e025..cad8fc4284aa 100644
+--- a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
++++ b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+@@ -11,6 +11,21 @@ enabled by these control bits, it might still not be running based
+ on the base resource.
+ 
+ Required properties:
++- compatible:		Should be one of:
++			  "fsl,imx8qxp-lpcg"
++			  "fsl,imx8qm-lpcg" followed by "fsl,imx8qxp-lpcg".
++- reg:			Address and length of the register set.
++- #clock-cells:		Should be 1. One LPCG supports multiple clocks.
++- clocks:		Input parent clocks phandle array for each clock.
++- clock-indices:	An integer array indicating the bit offset for each clock.
++			Refer to <include/dt-bindings/clock/imx8-lpcg.h> for the
++			supported LPCG clock indices.
++- clock-output-names:	Shall be the corresponding names of the outputs.
++			NOTE this property must be specified in the same order
++			as the clock-indices property.
++- power-domains:	Should contain the power domain used by this clock.
++
++Legacy binding (DEPRECATED):
+ - compatible:	Should be one of:
+ 		  "fsl,imx8qxp-lpcg-adma",
+ 		  "fsl,imx8qxp-lpcg-conn",
+@@ -33,10 +48,19 @@ Examples:
+ 
+ #include <dt-bindings/clock/imx8qxp-clock.h>
+ 
+-conn_lpcg: clock-controller@5b200000 {
+-	compatible = "fsl,imx8qxp-lpcg-conn";
+-	reg = <0x5b200000 0xb0000>;
++sdhc0_lpcg: clock-controller@5b200000 {
++	compatible = "fsl,imx8qxp-lpcg";
++	reg = <0x5b200000 0x10000>;
+ 	#clock-cells = <1>;
++	clocks = <&sdhc0_clk IMX_SC_PM_CLK_PER>,
++		 <&conn_ipg_clk>, <&conn_axi_clk>;
++	clock-indices = <IMX_LPCG_CLK_0>,
++			<IMX_LPCG_CLK_4>,
++			<IMX_LPCG_CLK_5>;
++	clock-output-names = "sdhc0_lpcg_per_clk",
++			     "sdhc0_lpcg_ipg_clk",
++			     "sdhc0_lpcg_ahb_clk";
++	power-domains = <&pd IMX_SC_R_SDHC_0>;
+ };
+ 
+ usdhc1: mmc@5b010000 {
+@@ -44,8 +68,8 @@ usdhc1: mmc@5b010000 {
+ 	interrupt-parent = <&gic>;
+ 	interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
+ 	reg = <0x5b010000 0x10000>;
+-	clocks = <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_IPG_CLK>,
+-		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_PER_CLK>,
+-		 <&conn_lpcg IMX8QXP_CONN_LPCG_SDHC0_HCLK>;
++	clocks = <&sdhc0_lpcg IMX_LPCG_CLK_4>,
++		 <&sdhc0_lpcg IMX_LPCG_CLK_0>,
++		 <&sdhc0_lpcg IMX_LPCG_CLK_5>;
+ 	clock-names = "ipg", "per", "ahb";
+ };
+diff --git a/include/dt-bindings/clock/imx8-lpcg.h b/include/dt-bindings/clock/imx8-lpcg.h
 new file mode 100644
-index 000000000000..22d664abd552
+index 000000000000..df90aad26265
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/olimex,lcd-olinuxino.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/include/dt-bindings/clock/imx8-lpcg.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright 2019 NXP
++ *   Dong Aisheng <aisheng.dong@nxp.com>
++ */
 +
-+title: Binding for Olimex Ltd. LCD-OLinuXino bridge panel.
-+
-+maintainers:
-+  - Stefan Mavrodiev <stefan@olimex.com>
-+
-+description: |
-+  This device can be used as bridge between a host controller and LCD panels.
-+  Currently supported LCDs are:
-+    - LCD-OLinuXino-4.3TS
-+    - LCD-OLinuXino-5
-+    - LCD-OLinuXino-7
-+    - LCD-OLinuXino-10
-+
-+  The panel itself contains:
-+    - AT24C16C EEPROM holding panel identification and timing requirements
-+    - AR1021 resistive touch screen controller (optional)
-+    - FT5x6 capacitive touch screnn controller (optional)
-+    - GT911/GT928 capacitive touch screen controller (optional)
-+
-+  The above chips share same I2C bus. The EEPROM is factory preprogrammed with
-+  device information (id, serial, etc.) and timing requirements.
-+
-+  Touchscreen bingings can be found in these files:
-+    - input/touchscreen/goodix.yaml
-+    - input/touchscreen/edt-ft5x06.txt
-+    - input/touchscreen/ar1021.txt
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: olimex,lcd-olinuxino
-+
-+  backlight: true
-+  enable-gpios: true
-+  power-supply: true
-+  reg: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - power-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c2 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        panel@50 {
-+            compatible = "olimex,lcd-olinuxino";
-+            reg = <0x50>;
-+            power-supply = <&reg_vcc5v0>;
-+            enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;
-+            backlight = <&backlight>;
-+        };
-+    };
-+
-+...
++#define IMX_LPCG_CLK_0	0
++#define IMX_LPCG_CLK_1	4
++#define IMX_LPCG_CLK_2	8
++#define IMX_LPCG_CLK_3	12
++#define IMX_LPCG_CLK_4	16
++#define IMX_LPCG_CLK_5	20
++#define IMX_LPCG_CLK_6	24
++#define IMX_LPCG_CLK_7	28
 -- 
-2.20.1
+2.23.0
 
