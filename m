@@ -2,180 +2,132 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9213CC5ACBF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99F6C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C4420722
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:17:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rjbNEwM/"
+	by mail.kernel.org (Postfix) with ESMTP id AE44E206BE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgCOTQo (ORCPT
+        id S1728538AbgCOTT1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 15:16:44 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54791 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbgCOTQo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 15:16:44 -0400
-Received: by mail-pj1-f65.google.com with SMTP id np9so296223pjb.4;
-        Sun, 15 Mar 2020 12:16:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=5gxpV7JB+0bFUt/kU5rYLHIq/2ry55hJR4QU1nC9mRw=;
-        b=rjbNEwM/XgZEinoND9gGIEJmVXVX0IanV6iiJpzvEKbgkrF/FYCqlwIoWUXcBa2+c/
-         yIYS7nZrQpACubLkCOlWVSzJcvGltPWfy6osRa8MiOCJFO74iwIYa5oAq2deqKWDAgx5
-         vJIwK1bDlkX8vEKx+6vXlGCoz+VaAiKCmyBGkVphf8x4yOueYmEXIfKIxNm16CN5cwv+
-         FN8kwokDMxYMHUGamnUhx3PK1KVr2j2v89KLITk1XOPZNqYqEZhBEkX0hDlHGROA/nV+
-         lztSZKFuoprzHWSvFf7mXNvbijq/sQRLZA2zHQqdbfuCJ8Bgw5MiF1ijls/NIobvhsop
-         riIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=5gxpV7JB+0bFUt/kU5rYLHIq/2ry55hJR4QU1nC9mRw=;
-        b=W+RV7u5CisVxIIcte9P+19V2PwsddECqQ0qwHvOEDeMQsU7qP+pcI++K/fOpjUd/GJ
-         TyQ4swGtDXUcNT3ZliN1vLTxNDBgRnOoDa2+v/UjMMQQpIEV0PLj22Q8mFxvNMSPFplH
-         tMboYB4cCgtttHGdcZ2RBPTLohka4Zkgjy9yxqewzLkNBh9sq0U98HTYAPpNlL/awPzQ
-         1rU9EeOhuQmGSTPz+gPbMaQRSIc3krHxv1cOXZMLjO5sruohg3Op6rZLDq+/AtpHPej4
-         yiyqhc5MDPCkjb2FXpTRghF6aKgLeNOt+IU1semP1P+j83s1YKX3DRk1XXLSCRKcVrwv
-         RLkA==
-X-Gm-Message-State: ANhLgQ3VEM7B+NGtmR3SkeSUB0145tXUDvWeLxPgH6iaDaUc2dcyKEQK
-        KLMguxCu3Z2lnbCgXbDJVLs=
-X-Google-Smtp-Source: ADFU+vvPigWemmbDaZCwov3VlDQsV3Pr9WZu55/E9xaVXXoXBXL4qctLgdHRc/GF5GsrKHAcIT2RcA==
-X-Received: by 2002:a17:902:ee93:: with SMTP id a19mr11882497pld.258.1584299802773;
-        Sun, 15 Mar 2020 12:16:42 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-24-4-25-55.hsd1.ca.comcast.net. [24.4.25.55])
-        by smtp.gmail.com with ESMTPSA id 13sm61431882pgo.13.2020.03.15.12.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Mar 2020 12:16:42 -0700 (PDT)
-From:   rentao.bupt@gmail.com
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
+        Sun, 15 Mar 2020 15:19:27 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:51206 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728480AbgCOTT1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 15:19:27 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 4FA77378284C;
+        Sun, 15 Mar 2020 20:19:25 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id OX62Y5UzBv_L; Sun, 15 Mar 2020 20:19:22 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v2 2/6] usb: gadget: add "usb_validate_langid" function
-Date:   Sun, 15 Mar 2020 12:16:28 -0700
-Message-Id: <20200315191632.12536-3-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200315191632.12536-1-rentao.bupt@gmail.com>
-References: <20200315191632.12536-1-rentao.bupt@gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: [PATCH v5 0/3] Add support for CellWise cw2015 fuel gauge
+Date:   Sun, 15 Mar 2020 20:19:11 +0100
+Message-Id: <20200315191914.118565-1-t.schramm@manjaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
+This patchset adds support for the CellWise cw2015 fuel gauge.
 
-The USB LANGID validation code in "check_user_usb_string" function is
-moved to "usb_validate_langid" function which can be used by other usb
-gadget drivers.
+The CellWise cw2015 fuel gauge is a shuntless, single-cell Li-Ion fuel
+gauge. It is used in the pine64 Pinebook Pro laptop.
 
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
----
- No change in v2:
-   - the patch is added into the series since v2.
+This is v5 of the patchset. This version refactors device property parsing
+according to a suggestion by Andy and resolves some additional code style
+issues.
 
- drivers/usb/gadget/configfs.c  | 14 +-------------
- drivers/usb/gadget/usbstring.c | 24 ++++++++++++++++++++++++
- include/linux/usb/gadget.h     |  3 +++
- 3 files changed, 28 insertions(+), 13 deletions(-)
+I've kept the cellwise,battery-profile property in the device tree. Its
+content describes characteristics of the battery built into a device. The
+exact format is unknown and not publicly documented. It is likely
+comprised of some key parameters of the battery (chemistry, voltages,
+design capacity) and parameters for tuning the internal state of charge
+approximation function.
+Since v2 CellWise has confirmed to me that the only way to obtain the
+profile blob is to mail them batteries for testing. Thus we will need to
+keep that property.
 
-diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-index 32b637e3e1fa..822ef0470c5f 100644
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -13,8 +13,6 @@
- int check_user_usb_string(const char *name,
- 		struct usb_gadget_strings *stringtab_dev)
- {
--	unsigned primary_lang;
--	unsigned sub_lang;
- 	u16 num;
- 	int ret;
- 
-@@ -22,17 +20,7 @@ int check_user_usb_string(const char *name,
- 	if (ret)
- 		return ret;
- 
--	primary_lang = num & 0x3ff;
--	sub_lang = num >> 10;
--
--	/* simple sanity check for valid langid */
--	switch (primary_lang) {
--	case 0:
--	case 0x62 ... 0xfe:
--	case 0x100 ... 0x3ff:
--		return -EINVAL;
--	}
--	if (!sub_lang)
-+	if (!usb_validate_langid(num))
- 		return -EINVAL;
- 
- 	stringtab_dev->language = num;
-diff --git a/drivers/usb/gadget/usbstring.c b/drivers/usb/gadget/usbstring.c
-index 7c24d1ce1088..58a4d3325090 100644
---- a/drivers/usb/gadget/usbstring.c
-+++ b/drivers/usb/gadget/usbstring.c
-@@ -65,3 +65,27 @@ usb_gadget_get_string (const struct usb_gadget_strings *table, int id, u8 *buf)
- 	return buf [0];
- }
- EXPORT_SYMBOL_GPL(usb_gadget_get_string);
-+
-+/**
-+ * usb_validate_langid - validate usb language identifiers
-+ * @lang: usb language identifier
-+ *
-+ * Returns true for valid language identifier, otherwise false.
-+ */
-+bool usb_validate_langid(u16 langid)
-+{
-+	u16 primary_lang = langid & 0x3ff;	/* bit [9:0] */
-+	u16 sub_lang = langid >> 10;		/* bit [15:10] */
-+
-+	switch (primary_lang) {
-+	case 0:
-+	case 0x62 ... 0xfe:
-+	case 0x100 ... 0x3ff:
-+		return false;
-+	}
-+	if (!sub_lang)
-+		return false;
-+
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(usb_validate_langid);
-diff --git a/include/linux/usb/gadget.h b/include/linux/usb/gadget.h
-index 124462d65eac..1a05227bdfae 100644
---- a/include/linux/usb/gadget.h
-+++ b/include/linux/usb/gadget.h
-@@ -773,6 +773,9 @@ struct usb_gadget_string_container {
- /* put descriptor for string with that id into buf (buflen >= 256) */
- int usb_gadget_get_string(const struct usb_gadget_strings *table, int id, u8 *buf);
- 
-+/* check if the given language identifier is valid */
-+bool usb_validate_langid(u16 langid);
-+
- /*-------------------------------------------------------------------------*/
- 
- /* utility to simplify managing config descriptors */
+In general I'm not 100 % sure about my json-schema binding for the gauge.
+It is my first time ever writing a json-schema binding and I'm not sure
+whether properties like power-supplies or monitored-battery need to be
+added to a separate, common schema for power supplies or not.
+
+
+Best Regards,
+
+Tobias Schramm
+
+Changelog:
+ v2:
+  * Change subject to "Add support for CellWise cw2015 fuel gauge"
+  * Rewrite bindings as json-schema
+  * Use default power-supplies handling
+  * Use regmap for register access
+  * Use standard simple-battery node
+  * Replace printk/pr_* by dev_{dbg,info,warn,err}
+  * Use cancel_delayed_work_sync in remove
+  * General code cleanup
+ v3:
+  * Incorporate review by Andy
+  * Add cellwise vendor prefix
+  * Rename cellwise,bat-config-info property to cellwise,battery-profile
+  * Remove most state of charge post-processing
+  * Use fwnode interface
+  * General code cleanup
+  * Lots of code style fixes
+ v4:
+  * Implement additional changes requested by Andy
+  * Use fwnode inline wrappers
+  * Clean up waiting for gauge
+  * Minor code style fixes
+ v5:
+  * Clean up includes
+  * Handle errors during device property parsing
+  * Refactor device property parsing
+  * Replace i2c->probe by i2c->probe_new 
+  * More code style fixes
+
+Tobias Schramm (3):
+  dt-bindings: Document cellwise vendor-prefix
+  dt-bindings: power: supply: add cw2015_battery bindings
+  power: supply: add CellWise cw2015 fuel gauge driver
+
+ .../bindings/power/supply/cw2015_battery.yaml |  83 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   6 +
+ drivers/power/supply/Kconfig                  |  11 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/cw2015_battery.c         | 749 ++++++++++++++++++
+ 6 files changed, 852 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+ create mode 100644 drivers/power/supply/cw2015_battery.c
+
 -- 
-2.17.1
+2.24.1
 
