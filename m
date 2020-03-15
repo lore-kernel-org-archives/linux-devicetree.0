@@ -2,166 +2,222 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E02FC5ACC0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746BFC5ACC0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 14:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B0320674
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 13:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D471205ED
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 14:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbgCONuq (ORCPT
+        id S1728100AbgCOOKP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 09:50:46 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55284 "EHLO inva020.nxp.com"
+        Sun, 15 Mar 2020 10:10:15 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:40674 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727149AbgCONuq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 09:50:46 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 885A01A04EA;
-        Sun, 15 Mar 2020 14:50:43 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 159D41A04E7;
-        Sun, 15 Mar 2020 14:50:38 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 85A09402E4;
-        Sun, 15 Mar 2020 21:50:31 +0800 (SGT)
-From:   Dong Aisheng <aisheng.dong@nxp.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, sboyd@kernel.org,
-        mturquette@baylibre.com, shawnguo@kernel.org,
-        fabio.estevam@nxp.com, linux-imx@nxp.com, kernel@pengutronix.de,
-        Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org
-Subject: [PATCH V6 01/12] dt-bindings: firmware: imx-scu: new binding to parse clocks from device tree
-Date:   Sun, 15 Mar 2020 21:43:45 +0800
-Message-Id: <1584279836-29825-2-git-send-email-aisheng.dong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584279836-29825-1-git-send-email-aisheng.dong@nxp.com>
-References: <1584279836-29825-1-git-send-email-aisheng.dong@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727778AbgCOOKO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 10:10:14 -0400
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jDTxm-0005ZQ-HP; Sun, 15 Mar 2020 15:09:58 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] dt-bindings: iio: adc: convert rockchip saradc bindings to yaml
+Date:   Sun, 15 Mar 2020 15:09:56 +0100
+Message-ID: <1892398.6xOoJH07Ba@diego>
+In-Reply-To: <20200315112223.07dd863b@archlinux>
+References: <20200313132926.10543-1-jbx6244@gmail.com> <20200315112223.07dd863b@archlinux>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There's a few limitations on the original one cell clock binding
-(#clock-cells = <1>) that we have to define some SW clock IDs for device
-tree to reference. This may cause troubles if we want to use common
-clock IDs for multi platforms support when the clock of those platforms
-are mostly the same.
-e.g. Current clock IDs name are defined with SS prefix.
+Hi Jonathan,
 
-However the device may reside in different SS across CPUs, that means the
-SS prefix may not valid anymore for a new SoC. Furthermore, the device
-availability of those clocks may also vary a bit.
+Am Sonntag, 15. März 2020, 12:22:23 CET schrieb Jonathan Cameron:
+> On Fri, 13 Mar 2020 14:29:24 +0100
+> Johan Jonker <jbx6244@gmail.com> wrote:
+> 
+> > Current dts files with 'saradc' nodes are manually verified.
+> > In order to automate this process rockchip-saradc.txt
+> > has to be converted to yaml.
+> > 
+> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> 
+> Hi Johan,
+> 
+> A question inline which may just be my lack of yaml knowledge
+> showing itself!
+> 
+> Jonathan
+> 
+> > ---
+> >  .../bindings/iio/adc/rockchip-saradc.txt           | 37 ----------
+> >  .../bindings/iio/adc/rockchip-saradc.yaml          | 79 ++++++++++++++++++++++
+> >  2 files changed, 79 insertions(+), 37 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> > deleted file mode 100644
+> > index c2c50b598..000000000
+> > --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+> > +++ /dev/null
+> > @@ -1,37 +0,0 @@
+> > -Rockchip Successive Approximation Register (SAR) A/D Converter bindings
+> > -
+> > -Required properties:
+> > -- compatible: should be "rockchip,<name>-saradc" or "rockchip,rk3066-tsadc"
+> > -   - "rockchip,saradc": for rk3188, rk3288
+> > -   - "rockchip,rk3066-tsadc": for rk3036
+> > -   - "rockchip,rk3328-saradc", "rockchip,rk3399-saradc": for rk3328
+> > -   - "rockchip,rk3399-saradc": for rk3399
+> > -   - "rockchip,rv1108-saradc", "rockchip,rk3399-saradc": for rv1108
+> > -
+> > -- reg: physical base address of the controller and length of memory mapped
+> > -       region.
+> > -- interrupts: The interrupt number to the cpu. The interrupt specifier format
+> > -              depends on the interrupt controller.
+> > -- clocks: Must contain an entry for each entry in clock-names.
+> > -- clock-names: Shall be "saradc" for the converter-clock, and "apb_pclk" for
+> > -               the peripheral clock.
+> > -- vref-supply: The regulator supply ADC reference voltage.
+> > -- #io-channel-cells: Should be 1, see ../iio-bindings.txt
+> > -
+> > -Optional properties:
+> > -- resets: Must contain an entry for each entry in reset-names if need support
+> > -	  this option. See ../reset/reset.txt for details.
+> > -- reset-names: Must include the name "saradc-apb".
+> > -
+> > -Example:
+> > -	saradc: saradc@2006c000 {
+> > -		compatible = "rockchip,saradc";
+> > -		reg = <0x2006c000 0x100>;
+> > -		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> > -		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+> > -		clock-names = "saradc", "apb_pclk";
+> > -		resets = <&cru SRST_SARADC>;
+> > -		reset-names = "saradc-apb";
+> > -		#io-channel-cells = <1>;
+> > -		vref-supply = <&vcc18>;
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+> > new file mode 100644
+> > index 000000000..2908788b3
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+> > @@ -0,0 +1,79 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/adc/rockchip-saradc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Rockchip Successive Approximation Register (SAR) A/D Converter
+> > +
+> > +maintainers:
+> > +  - Heiko Stuebner <heiko@sntech.de>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - const: rockchip,saradc
+> > +      - const: rockchip,rk3066-tsadc
+> > +      - const: rockchip,rk3399-saradc
+> > +      - items:
+> > +          - enum:
+> > +            - rockchip,rk3328-saradc
+> > +            - rockchip,rv1108-saradc
+> > +          - const: rockchip,rk3399-saradc
+> 
+> My yaml knowledge isn't great.  Why do we have this nested
+> structure rather than a straight forward list?
 
-For such situation, we want to eliminate the using of SW Clock IDs and
-change to use a more close to HW one instead.
-For SCU clocks usage, only two params required: Resource id + Clock Type.
-Both parameters are platform independent. So we could use two cells binding
-to pass those parameters,
+That should be the
+- one of rk3328-saradc / rv1108-saradc
+- plus always rk3399-saradc
 
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: devicetree@vger.kernel.org
-Acked-by: Shawn Guo <shawnguo@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
-ChangeLog:
-v4->v5:
- * no changes
-v3->v4:
- * add some comments for various clock types
-v2->v3:
- * Changed to two cells binding and register all clocks in driver
-   instead of parse from device tree.
-v1->v2:
- * changed to one cell binding inspired by arm,scpi.txt
-   Documentation/devicetree/bindings/arm/arm,scpi.txt
-   Resource ID is encoded in 'reg' property.
-   Clock type is encoded in generic clock-indices property.
-   Then we don't have to search all the DT nodes to fetch
-   those two value to construct clocks which is relatively
-   low efficiency.
- * Add required power-domain property as well.
----
- .../bindings/arm/freescale/fsl,scu.txt        | 12 ++++++----
- include/dt-bindings/firmware/imx/rsrc.h       | 23 +++++++++++++++++++
- 2 files changed, 30 insertions(+), 5 deletions(-)
+i.e. both rk3328 and rv1108 are compatible with the rk3399-saradc variant
+(at least if no flaws get found at some point) so have the double compatible
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index e07735a8c2c7..ee061befbb8e 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -89,7 +89,10 @@ Required properties:
- 			  "fsl,imx8qm-clock"
- 			  "fsl,imx8qxp-clock"
- 			followed by "fsl,scu-clk"
--- #clock-cells:		Should be 1. Contains the Clock ID value.
-+- #clock-cells:		Should be either
-+			2: Contains the Resource and Clock ID value.
-+			or
-+			1: Contains the Clock ID value. (DEPRECATED)
- - clocks:		List of clock specifiers, must contain an entry for
- 			each required entry in clock-names
- - clock-names:		Should include entries "xtal_32KHz", "xtal_24MHz"
-@@ -195,7 +198,7 @@ firmware {
- 
- 		clk: clk {
- 			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
--			#clock-cells = <1>;
-+			#clock-cells = <2>;
- 		};
- 
- 		iomuxc {
-@@ -245,8 +248,7 @@ serial@5a060000 {
- 	...
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_lpuart0>;
--	clocks = <&clk IMX8QXP_UART0_CLK>,
--		 <&clk IMX8QXP_UART0_IPG_CLK>;
--	clock-names = "per", "ipg";
-+	clocks = <&uart0_clk IMX_SC_R_UART_0 IMX_SC_PM_CLK_PER>;
-+	clock-names = "ipg";
- 	power-domains = <&pd IMX_SC_R_UART_0>;
- };
-diff --git a/include/dt-bindings/firmware/imx/rsrc.h b/include/dt-bindings/firmware/imx/rsrc.h
-index 4e61f6485097..24c153dfaa72 100644
---- a/include/dt-bindings/firmware/imx/rsrc.h
-+++ b/include/dt-bindings/firmware/imx/rsrc.h
-@@ -547,4 +547,27 @@
- #define IMX_SC_R_ATTESTATION		545
- #define IMX_SC_R_LAST			546
- 
-+/*
-+ * Defines for SC PM CLK
-+ */
-+
-+/* Normal device resource clock */
-+#define IMX_SC_PM_CLK_SLV_BUS		0	/* Slave bus clock */
-+#define IMX_SC_PM_CLK_MST_BUS		1	/* Master bus clock */
-+#define IMX_SC_PM_CLK_PER		2	/* Peripheral clock */
-+#define IMX_SC_PM_CLK_PHY		3	/* Phy clock */
-+#define IMX_SC_PM_CLK_MISC		4	/* Misc clock */
-+
-+/* Special clock types which do not belong to above normal clock types */
-+#define IMX_SC_PM_CLK_MISC0		0	/* Misc 0 clock */
-+#define IMX_SC_PM_CLK_MISC1		1	/* Misc 1 clock */
-+#define IMX_SC_PM_CLK_MISC2		2	/* Misc 2 clock */
-+#define IMX_SC_PM_CLK_MISC3		3	/* Misc 3 clock */
-+#define IMX_SC_PM_CLK_MISC4		4	/* Misc 4 clock */
-+
-+/* Special clock types for CPU/PLL/BYPASS only */
-+#define IMX_SC_PM_CLK_CPU		2	/* CPU clock */
-+#define IMX_SC_PM_CLK_PLL		4	/* PLL */
-+#define IMX_SC_PM_CLK_BYPASS		4	/* Bypass clock */
-+
- #endif /* __DT_BINDINGS_RSCRC_IMX_H */
--- 
-2.23.0
+compatible = "rockchip,rk3328-saradc", "rockchip,rk3399-saradc"
+compatible = "rockchip,rv1108-saradc", "rockchip,rk3399-saradc"
+
+
+Heiko
+
+
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: converter clock
+> > +      - description: peripheral clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: saradc
+> > +      - const: apb_pclk
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  reset-names:
+> > +    const: saradc-apb
+> > +
+> > +  vref-supply:
+> > +    description:
+> > +      The regulator supply for the ADC reference voltage.
+> > +
+> > +  "#io-channel-cells":
+> > +    const: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - clock-names
+> > +  - vref-supply
+> > +  - "#io-channel-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/rk3288-cru.h>
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    saradc: saradc@2006c000 {
+> > +      compatible = "rockchip,saradc";
+> > +      reg = <0x2006c000 0x100>;
+> > +      interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> > +      clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+> > +      clock-names = "saradc", "apb_pclk";
+> > +      resets = <&cru SRST_SARADC>;
+> > +      reset-names = "saradc-apb";
+> > +      vref-supply = <&vcc18>;
+> > +      #io-channel-cells = <1>;
+> > +    };
+> 
+> 
+
+
+
 
