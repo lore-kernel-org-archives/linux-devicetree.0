@@ -2,351 +2,183 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85463C5ACBF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65D4C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBC5206BE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584268636;
-	bh=8ewgQI9pG9wLRFwqtLXiXuC4GTAAmEpzIuxYDhYuYSE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xpZaeNGObfp7WCbjBXkTySO+ct5ttB0lvz3Q/ChQgA9imdQT7MaO0RsSW23dFpZfu
-	 LuIpa2SoGB6jbGGrjAn9OKo/Si+5FiocyBWgt8G8AZzvzQx/n5zH5/4jKIxGpArIM+
-	 OW9wv5euop82nqOcd932fWQWMSiT945/M6QGW/LQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7291D205C9
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="Lo+MyjWZ";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="IhW9IHxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgCOKhN (ORCPT
+        id S1728268AbgCOKnG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:37:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 06:43:06 -0400
+Received: from mail.z3ntu.xyz ([128.199.32.197]:60264 "EHLO mail.z3ntu.xyz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728247AbgCOKhN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 06:37:13 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BC22205C9;
-        Sun, 15 Mar 2020 10:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584268631;
-        bh=8ewgQI9pG9wLRFwqtLXiXuC4GTAAmEpzIuxYDhYuYSE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uxnzAk91plFRI/6jhSqY9unSOt5xrHPelR2q0jTl64d8s5C/iRvBAEga1GRTIdtjx
-         gRdBMjn4vsSLrZcR8YEmMnAxOZCu5cBb6K4QUw69zHFLyi0wexMqW52U2cPVTjHQoF
-         /TnNw7bt4q/3vm9NfHEmNdPdEuKZD1pWbZXTrVWQ=
-Date:   Sun, 15 Mar 2020 10:37:06 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] iio: adc: mp2629: Add support for mp2629 ADC
- driver
-Message-ID: <20200315103706.38177792@archlinux>
-In-Reply-To: <20200315000013.4440-4-sravanhome@gmail.com>
-References: <20200315000013.4440-1-sravanhome@gmail.com>
-        <20200315000013.4440-4-sravanhome@gmail.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728234AbgCOKnG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 06:43:06 -0400
+Received: by mail.z3ntu.xyz (Postfix, from userid 182)
+        id 61B09C436C; Sun, 15 Mar 2020 10:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1584268983; bh=QoX2eClLDj6E3ejT/S4be6kJFX/4POmeEkxt248YjgE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Lo+MyjWZQUBlNbW++K0BNc9N9KPGWsulodG8MkzdScOC2d0GwReJUrAcie+16bUr8
+         PvuW7Dx7npSWmGgSUZXO/AuPSwjFEjXKvaKXVep9HOofaZKo69d2BBf/b8qvNRao1X
+         gMsNDUwghDqUdRCXtw/CDkeiXr0G4fX7KZzdmn+E=
+Received: from g550jk.localnet (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id E3FF7C3EBC;
+        Sun, 15 Mar 2020 10:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1584268978; bh=QoX2eClLDj6E3ejT/S4be6kJFX/4POmeEkxt248YjgE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=IhW9IHxdiU9QoY4zJtXMs9rpSd4+7zyFwDViz81llLtiJJIWNhKgrNdl9qiyjgTwv
+         LcCl6NHveGQU2FCxw7xp1+J4o9MLkI7WwUFOyqJsTFeetUVJ2OojoZH/PHHoOD4UhC
+         icTDGHRM5NlQukdFINHrz+0s3rj4M5lCDhELZ1bM=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Icenowy Zheng <icenowy@aosc.io>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 3/3] leds: add sgm3140 driver
+Date:   Sun, 15 Mar 2020 11:42:57 +0100
+Message-ID: <2023791.irdbgypaU6@g550jk>
+In-Reply-To: <22341236-8298-dc97-217b-46071a362207@ti.com>
+References: <20200309203558.305725-1-luca@z3ntu.xyz> <20200309203558.305725-4-luca@z3ntu.xyz> <22341236-8298-dc97-217b-46071a362207@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 15 Mar 2020 01:00:11 +0100
-Saravanan Sekar <sravanhome@gmail.com> wrote:
+Hi Dan,
 
-> Add support for 8-bit resolution ADC readings for input power
-> supply and battery charging measurement. Provides voltage, current
-> readings to mp2629 power supply driver.
-> 
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+On Mittwoch, 11. M=E4rz 2020 14:02:44 CET Dan Murphy wrote:
+> Luca
+>=20
+> On 3/9/20 3:35 PM, Luca Weiss wrote:
+> > Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+> >=20
+> > This device is controlled by two GPIO pins, one for enabling and the
+> > second one for switching between torch and flash mode.
+>=20
+> How does one enable torch and one enable flash?
+>=20
+> Is the flash-gpio control this or does the enable-gpio enable the flash?
 
-The IIO parts seems fine (minor comments inline) but I'm not keep on
-directly accessing the internals of the mfd device info structure.
+Enabling torch mode means making EN pin high and FLASH pin low.
+Enabling flash mode means making EN pin high and FLASH pin high.
 
-To my mind that should be opaque to the child drivers so as to provide
-clear structure to any such accesses.
+The users of this driver can just use standard v4l2 apis or sysfs so I=20
+wouldn't say this is relevant for the users.
 
-Jonathan
+>=20
+> The DT binding did not indicate what the GPIOs are really going to contro=
+l.
 
+I'm not sure if this is relevant in the dt bindings because how the device=
+=20
+works is described in the datasheet and not really relevant for users of th=
+e=20
+binding? I also didn't necessarily want to copy-paste the datasheet into th=
+e=20
+dt bindings because of copyright.
 
-> ---
->  drivers/iio/adc/Kconfig      |  10 ++
->  drivers/iio/adc/Makefile     |   1 +
->  drivers/iio/adc/mp2629_adc.c | 209 +++++++++++++++++++++++++++++++++++
->  3 files changed, 220 insertions(+)
->  create mode 100644 drivers/iio/adc/mp2629_adc.c
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 82e33082958c..ef0c0cd31855 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -680,6 +680,16 @@ config MESON_SARADC
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called meson_saradc.
->  
-> +config MP2629_ADC
-> +	tristate "Monolithic MP2629 ADC driver"
-> +	depends on MFD_MP2629
-> +	help
-> +	  Say yes to have support for battery charger IC MP2629 ADC device
-> +	  accessed over I2C.
-> +
-> +	  This driver provides ADC conversion of system, input power supply
-> +	  and battery voltage & current information.
-> +
->  config NAU7802
->  	tristate "Nuvoton NAU7802 ADC driver"
->  	depends on I2C
-> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-> index 919228900df9..f14416c245a6 100644
-> --- a/drivers/iio/adc/Makefile
-> +++ b/drivers/iio/adc/Makefile
-> @@ -64,6 +64,7 @@ obj-$(CONFIG_MCP3911) += mcp3911.o
->  obj-$(CONFIG_MEDIATEK_MT6577_AUXADC) += mt6577_auxadc.o
->  obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
->  obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
-> +obj-$(CONFIG_MP2629_ADC) += mp2629_adc.o
->  obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
->  obj-$(CONFIG_NAU7802) += nau7802.o
->  obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
-> diff --git a/drivers/iio/adc/mp2629_adc.c b/drivers/iio/adc/mp2629_adc.c
-> new file mode 100644
-> index 000000000000..1a99196624ed
-> --- /dev/null
-> +++ b/drivers/iio/adc/mp2629_adc.c
-> @@ -0,0 +1,209 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * MP2629 Driver for ADC
-> + *
-> + * Copyright 2020 Monolithic Power Systems, Inc
-> + *
-> + * Author: Saravanan Sekar <sravanhome@gmail.com>
-> + */
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/of_device.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/machine.h>
-> +#include <linux/iio/driver.h>
-> +#include <linux/mfd/mp2629.h>
-> +
-> +#define	MP2629_REG_ADC_CTRL		0x03
-> +#define	MP2629_REG_BATT_VOLT		0x0e
-> +#define	MP2629_REG_SYSTEM_VOLT		0x0f
-> +#define	MP2629_REG_INPUT_VOLT		0x11
-> +#define	MP2629_REG_BATT_CURRENT		0x12
-> +#define	MP2629_REG_INPUT_CURRENT	0x13
-> +
-> +#define	MP2629_ADC_START		BIT(7)
-> +#define MP2629_ADC_CONTINUOUS		BIT(6)
+>=20
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> > Changes since RFC:
+> >=20
+> > - address review comments from Jacek Anaszewski:
+> >    - implement strobe_get op
+> >    - implement timeout_set op
+> >    - init v4l2_sd_cfg variable
+> >    - remove init_data.devicename assignemnt
+> >    - use devm_ version of led_classdev_flash_register_ext
+> >    - release child_node in case of success
+> >  =20
+> >   drivers/leds/Kconfig        |   9 ++
+> >   drivers/leds/Makefile       |   1 +
+> >   drivers/leds/leds-sgm3140.c | 260 ++++++++++++++++++++++++++++++++++++
+> >   3 files changed, 270 insertions(+)
+> >   create mode 100644 drivers/leds/leds-sgm3140.c
+> >=20
 
-Odd alignment.
+> SNIP
 
-> +
-> +#define MP2629_MAP(_mp, _mpc) IIO_MAP(#_mp, "mp2629_charger", "mp2629-"_mpc)
-> +
-> +#define MP2629_ADC_CHAN(_ch, _type) {				\
-> +	.type = _type,						\
-> +	.indexed = 1,						\
-> +	.datasheet_name = #_ch,					\
-> +	.channel = MP2629_ ## _ch,				\
-> +	.address = MP2629_REG_ ## _ch,				\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-> +}
-> +
-> +static struct iio_chan_spec mp2629_channels[] = {
-> +	MP2629_ADC_CHAN(BATT_VOLT, IIO_VOLTAGE),
-> +	MP2629_ADC_CHAN(SYSTEM_VOLT, IIO_VOLTAGE),
-> +	MP2629_ADC_CHAN(INPUT_VOLT, IIO_VOLTAGE),
-> +	MP2629_ADC_CHAN(BATT_CURRENT, IIO_CURRENT),
-> +	MP2629_ADC_CHAN(INPUT_CURRENT, IIO_CURRENT)
-> +};
-> +
-> +struct mp2629_adc {
-> +	struct mp2629_info *info;
-> +	struct device *dev;
-> +};
-> +
-> +static struct iio_map mp2629_adc_maps[] = {
-> +	MP2629_MAP(BATT_VOLT, "batt-volt"),
-> +	MP2629_MAP(SYSTEM_VOLT, "system-volt"),
-> +	MP2629_MAP(INPUT_VOLT, "input-volt"),
-> +	MP2629_MAP(BATT_CURRENT, "batt-current"),
-> +	MP2629_MAP(INPUT_CURRENT, "input-current")
-> +};
-> +
-> +static int mp2629_read_raw(struct iio_dev *indio_dev,
-> +			struct iio_chan_spec const *chan,
-> +			int *val, int *val2, long mask)
-> +{
-> +	struct mp2629_adc *adc_info = iio_priv(indio_dev);
-> +	struct mp2629_info *info = adc_info->info;
-> +	unsigned int rval;
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = regmap_read(info->regmap, chan->address, &rval);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (chan->address == MP2629_INPUT_VOLT)
-> +			rval &= 0x7f;
-> +		*val = rval;
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		switch (chan->channel) {
-> +		case MP2629_BATT_VOLT:
-> +		case MP2629_SYSTEM_VOLT:
-> +			*val = 20;
-> +			return IIO_VAL_INT;
-> +
-> +		case MP2629_INPUT_VOLT:
-> +			*val = 60;
-> +			return IIO_VAL_INT;
-> +
-> +		case MP2629_BATT_CURRENT:
-> +			*val = 175;
-> +			*val2 = 10;
-> +			return IIO_VAL_FRACTIONAL;
-> +
-> +		case MP2629_INPUT_CURRENT:
-> +			*val = 133;
-> +			*val2 = 10;
-> +			return IIO_VAL_FRACTIONAL;
-> +
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct iio_info mp2629_adc_info = {
-> +	.read_raw = &mp2629_read_raw,
-> +};
-> +
-> +static int mp2629_adc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct mp2629_info *info = dev_get_drvdata(dev->parent);
-> +	struct mp2629_adc *adc_info;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc_info));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	adc_info = iio_priv(indio_dev);
-> +	platform_set_drvdata(pdev, indio_dev);
-> +	adc_info->info = info;
-> +	adc_info->dev = dev;
-> +
-> +	ret = iio_map_array_register(indio_dev, mp2629_adc_maps);
-> +	if (ret) {
-> +		dev_err(dev, "IIO maps register fail: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	indio_dev->name = dev_name(dev);
-> +	indio_dev->dev.parent = dev;
-> +	indio_dev->dev.of_node = pdev->dev.of_node;
-> +	indio_dev->channels = mp2629_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(mp2629_channels);
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->info = &mp2629_adc_info;
-> +
-> +	ret = regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
-> +				MP2629_ADC_START | MP2629_ADC_CONTINUOUS,
-> +				MP2629_ADC_START | MP2629_ADC_CONTINUOUS);
-> +	if (ret) {
-> +		dev_err(dev, "adc enable fail: %d\n", ret);
-> +		goto fail_unmap;
-> +	}
-> +
-> +	ret = devm_iio_device_register(dev, indio_dev);
-> +	if (ret) {
-> +		dev_err(dev, "IIO device register fail: %d\n", ret);
-> +		goto fail_unmap;
+> > +	if (!child_node) {
+> > +		dev_err(&pdev->dev, "No DT child node found for=20
+connected LED.\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +
+> > +	ret =3D of_property_read_u32(child_node, "flash-max-timeout-us",
+> > +				   &priv->max_timeout);
+>=20
+> Please use the device_property api's to retrieve DT settings.  Then
+> there is no need to release the "of" child node.
+>=20
 
-Should we not be turning the device off like we do in remove?
+I'm guessing you mean
 
-> +	}
-> +
-> +	return 0;
-> +
-> +fail_unmap:
-> +	iio_map_array_unregister(indio_dev);
-> +	return ret;
-> +}
-> +
-> +static int mp2629_adc_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct mp2629_adc *adc_info = iio_priv(indio_dev);
-> +	struct mp2629_info *info = adc_info->info;
+device_property_read_u32(&pdev->dev, "flash-max-timeout-us", &priv-
+>max_timeout);
 
-This mess in layering with the children directly using the parents
-regmap is a little concerning.  It means that the 3 drivers
-really aren't very well separated and can't really be reviewed
-independently (not a good thing). 
+?
 
-It might just be a question of providing a wrapper in the mfd driver
-code so we at least have some visibility that this is going on.
+I still need the child_node for "init_data.fwnode" and v4l2_flash_init so I=
+=20
+still have to call of_node_put, right?
 
-> +
-> +	regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
-> +					 MP2629_ADC_CONTINUOUS, 0);
-> +	regmap_update_bits(info->regmap, MP2629_REG_ADC_CTRL,
-> +					 MP2629_ADC_START, 0);
-> +
-> +	iio_map_array_unregister(indio_dev);
-> +	iio_device_unregister(indio_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mp2629_adc_of_match[] = {
-> +	{ .compatible = "mps,mp2629_adc"},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, mp2629_adc_of_match);
-> +
-> +static struct platform_driver mp2629_adc_driver = {
-> +	.driver = {
-> +		.name = "mp2629_adc",
-> +		.of_match_table = mp2629_adc_of_match,
-> +	},
-> +	.probe		= mp2629_adc_probe,
-> +	.remove		= mp2629_adc_remove,
-> +};
-> +module_platform_driver(mp2629_adc_driver);
-> +
-> +MODULE_AUTHOR("Saravanan Sekar <sravanhome@gmail.com>");
-> +MODULE_DESCRIPTION("MP2629 ADC driver");
-> +MODULE_LICENSE("GPL");
+> > +	if (ret < 0) {
+>=20
+> if (ret)
+
+Ack
+
+> SNIP
+
+> > +	/* Create V4L2 Flash subdev */
+> > +	priv->v4l2_flash =3D v4l2_flash_init(&pdev->dev,
+> > of_fwnode_handle(child_node), +				=09
+   fled_cdev, NULL,
+> > +					   &v4l2_sd_cfg);
+> > +	if (IS_ERR(priv->v4l2_flash)) {
+> > +		ret =3D PTR_ERR(priv->v4l2_flash);
+> > +		goto err;
+>=20
+> Do you need to jump here?  This should just fall out and go through err
+> anyway.
+
+Should I just do
+
+if (IS_ERR(priv->v4l2_flash))
+	ret =3D PTR_ERR(priv->v4l2_flash);
+
+?
+
+I thought about removing the goto but I decided to keep it in case code is=
+=20
+added below that statement so that the goto wouldn't be forgotten. But I ca=
+n=20
+change it of course if wanted.
+
+>=20
+> Dan
+
+Regards
+Luca
+
 
