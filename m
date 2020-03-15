@@ -2,133 +2,110 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35EFC18E5B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95712C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 729D320724
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AC1220724
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 19:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XwpMgfGT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgCOTZE (ORCPT
+        id S1728822AbgCOTit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 15:25:04 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:35604 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728608AbgCOTZD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 15:25:03 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 92E482003A;
-        Sun, 15 Mar 2020 20:24:53 +0100 (CET)
-Date:   Sun, 15 Mar 2020 20:24:52 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-Subject: Re: [PATCH v1 06/36] dt-bindings: display: convert ilitek,ili9322 to
- DT Schema
-Message-ID: <20200315192452.GA29182@ravnborg.org>
-References: <20200315134416.16527-1-sam@ravnborg.org>
- <20200315134416.16527-7-sam@ravnborg.org>
- <CACRpkdYVrTBKxuHSGpd9=03oD4=JVxzJf8fOcQ8uu5eRt9PgAg@mail.gmail.com>
+        Sun, 15 Mar 2020 15:38:49 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:38446 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728801AbgCOTit (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 15:38:49 -0400
+Received: by mail-vk1-f193.google.com with SMTP id w4so4251361vkd.5
+        for <devicetree@vger.kernel.org>; Sun, 15 Mar 2020 12:38:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3r4/BvkXpJFWjW4Dm8u+4gw7YjX6yojUcnevi1e7c+I=;
+        b=XwpMgfGTAdDtlhQO/YyoLhfNXwLMPvXTGSKSJ3/yqwas/b7Ta+cQ2wnTzDLHjT5AuA
+         is0tUAKR6jiW1Cp5bh7DfL57FcgLB+1uO7sUhAvKy4ebM7qf38EiZHoE25LYF+13WKXO
+         UTog8wXTqLa6AS9Bcxq9qNZwzuGSYiMRLGQ47LcjF6wwY498/AUO6+Q7BFxvs1m1/AMG
+         bRUdL4CTsbH92OFprdSeYcOMRQljBtzwNgAHkoWt5fplEmNq9lKf1gBvYX5n+9g7QUlN
+         WIcYJPwR4J1PG631fhwjnINaNXQOAXCFMpJiRrfgYBnaMeUqN3+L5RpB21LPVEEkQQ47
+         TPKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3r4/BvkXpJFWjW4Dm8u+4gw7YjX6yojUcnevi1e7c+I=;
+        b=X/rmDEZ33zuLJIDhVL37wuGPxRcIga8D90GSc6YXfkJrvbVE6hVLELLXIXmlk+vkc3
+         z3yWmNyybpFPosarg2TAfcDPnbYzbNXkxvfxmnDdz7vwMNJ8AYSsAAVaWJ534TBhYcEe
+         yTy5f8pCejrZyEjqdFi2h8M7kwzIttGC77D1JYsuNsi4cZ+tDA26zwqfnnk5hSckMz1J
+         ShPVJVInYmnLRpMF7GB2OolP3NPMr/TuylERWbRokxg/z0Ifz45zmfHC45WxGFm9vv8z
+         KBTjwKsYrDVVxZVAmehS5EHEx9WCaqbjXbK21D3p1CQ7/A2NBLpyAIWhRrbfn8n+eP2J
+         GKgw==
+X-Gm-Message-State: ANhLgQ0wXWYa6m1RMW93oxv7E9eSDtdDFJ/d8tv400mHVwapKPY8Xelm
+        gKsk1AnIi9Qqj7QFdn2aBxE/cDZwr6fpRectmITSVQ==
+X-Google-Smtp-Source: ADFU+vukkt95spIbn7oU3hsXT2PRPErWHGLPhTFw57L5X+fXp8Nt6v07e839vlcZH6eMP2Skvw+cvfE3msIzvNj+PKk=
+X-Received: by 2002:a1f:e004:: with SMTP id x4mr15188225vkg.79.1584301126800;
+ Sun, 15 Mar 2020 12:38:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYVrTBKxuHSGpd9=03oD4=JVxzJf8fOcQ8uu5eRt9PgAg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8 a=WN0NcwN0bJFRE13tjSgA:9
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=cvBusfyB2V15izCimMoJ:22
+References: <20200313214552.845-1-robh@kernel.org> <20200313214552.845-2-robh@kernel.org>
+In-Reply-To: <20200313214552.845-2-robh@kernel.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 16 Mar 2020 01:08:35 +0530
+Message-ID: <CAHLCerMDNXEr_1JHrdM_3rMFaJJK009E1v4JPJhLSu1dgVKJLA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: thermal: qcom-tsens: Remove redundant 'maxItems'
+To:     Rob Herring <robh@kernel.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Linus.
+On Sat, Mar 14, 2020 at 3:15 AM Rob Herring <robh@kernel.org> wrote:
+>
+> There's no need to specify 'maxItems' with the same value as the number
+> of entries in 'items'. A meta-schema update will catch future cases.
 
-On Sun, Mar 15, 2020 at 07:54:38PM +0100, Linus Walleij wrote:
-> On Sun, Mar 15, 2020 at 2:44 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> 
-> > The .txt binding explains:
-> >
-> > "
-> >     The following optional properties only apply to
-> >     RGB and YUV input modes and
-> >     can be omitted for BT.656 input modes:
-> > "
-> >
-> > This constraint is not implmented in the DT Schema.
-> >
-> > The original binding from the .txt file referenced
-> > properties that is included in panel-timing.yaml.
-> > These properties are kept here as we want as close to a 1:1
-> > conversion as we can. If the properties should be dropped
-> > from the binding then this is a follow-up patch.
-> >
-> > The properties in question are:
-> >   - pixelclk-active
-> >   - de-active
-> >   - hsync-active
-> >   - vsync-active
-> 
-> Sorry about that. They should be dropped, but certainly it
-> is fine to do with a follow up patch.
+Thanks Rob.
 
-I changed my mind - lets try to avoid too many patches.
-So if you do not mind I will do it in this patch - and note it in the
-changelog.
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-	Sam
-
-> 
-> >
-> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Sam Ravnborg <sam@ravnborg.org>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Yours,
-> Linus Walleij
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Amit Kucheria <amit.kucheria@linaro.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> index c0ed030d0960..62b97a6d9b65 100644
+> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> @@ -43,7 +43,6 @@ properties:
+>            - const: qcom,tsens-v2
+>
+>    reg:
+> -    maxItems: 2
+>      items:
+>        - description: TM registers
+>        - description: SROT registers
+> --
+> 2.20.1
+>
