@@ -2,123 +2,185 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D80C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0444C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68C2A206BE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="twQyM+1l"
+	by mail.kernel.org (Postfix) with ESMTP id 850C6206E9
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:58:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584269920;
+	bh=GKvZg20vaGmZ0h4NBf/C9EDtK/ii4Ksp0xz+3VPzmhM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BCXPPwgqEgPjXZ4k2VQXOc+ZGSrV5AilXDXHLqxOzwm2Qx9XbtqDbRBjrvi7cbakx
+	 7J42qSR0Y1YUdRLYnRZbPPm7050D7//PO+DmGRsYfjA1l+SCuM3k8HqnjSXV2BhJUK
+	 iuuaQxzCdnZ7L3Vbx8dtyJAw8ni/Auea4mVl4+Co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgCOKx6 (ORCPT
+        id S1728312AbgCOK6k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 06:53:58 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:45238 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728234AbgCOKx6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 06:53:58 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4D6D02D6;
-        Sun, 15 Mar 2020 11:53:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584269636;
-        bh=tHZj7k528VQp787Iu7lw15HaxCaHUWTuuW+O8lIRCV0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=twQyM+1lGITMQqyxXCOzCVjNxdRkFDEN5Q+XB7scUmWhUwBhnFmAx/7FRLsXJe09t
-         3c+eJ6c0MTWuKvkh/Wa+144xmukaiIwjDTSe1D4n6VXiu/EFm6qlCHllgISiac3x8n
-         W4aiRKx5AIlyOz82CjnfeLQxDBSudePE3vgLvhLA=
-Date:   Sun, 15 Mar 2020 12:53:45 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 2/3] dt-bindings: leds: Add binding for sgm3140
-Message-ID: <20200315105345.GB4732@pendragon.ideasonboard.com>
-References: <20200309203558.305725-1-luca@z3ntu.xyz>
- <20200309203558.305725-3-luca@z3ntu.xyz>
- <4f848ab3-0e76-ae63-0771-758b1eaa0660@ti.com>
- <3051566.44csPzL39Z@g550jk>
+        Sun, 15 Mar 2020 06:58:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728234AbgCOK6k (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 06:58:40 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E757E206BE;
+        Sun, 15 Mar 2020 10:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584269918;
+        bh=GKvZg20vaGmZ0h4NBf/C9EDtK/ii4Ksp0xz+3VPzmhM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FD3xSF49EZqCtfgRx4gsGhywyNgjqk5rW1lcjV/lJBiDw4GQIx9qrLjpPOykh2+10
+         Pyl4H6LO0Oee2K5LtcFwJGXOqr9/v5sRjLRSwbNCRyFIuXvQ0B9srUvcmyy25Rx65c
+         wmihRAgNYeB8EjLFWxBQBiY5CfC9zjr5f1myB7Ms=
+Date:   Sun, 15 Mar 2020 10:58:34 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, mark.rutland@arm.com, sre@kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: iio: tsl2563: convert bindings to YAML
+Message-ID: <20200315105834.7a5f4475@archlinux>
+In-Reply-To: <20200314134237.12187-1-nish.malpani25@gmail.com>
+References: <20200314134237.12187-1-nish.malpani25@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3051566.44csPzL39Z@g550jk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Luca,
+On Sat, 14 Mar 2020 19:12:37 +0530
+Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
-On Sun, Mar 15, 2020 at 11:47:36AM +0100, Luca Weiss wrote:
-> On Mittwoch, 11. März 2020 13:49:35 CET Dan Murphy wrote:
-> > On 3/9/20 3:35 PM, Luca Weiss wrote:
-> > > Add YAML devicetree binding for SGMICRO SGM3140 charge pump used for
-> > > camera flash LEDs.
-> > > 
-> > > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> > > ---
-> > > Changes since RFC:
-> > > - new patch
-> > > 
-> > > I'm not sure about the completeness of this binding as it doesn't
-> > > mention the led subnode at all.
-> > > The only existing led yaml binding is leds/leds-max77650.yaml which
-> > > mentions the subnode but duplicates properties from documented in
-> > > leds/common.txt.
-> > > 
-> > >   .../bindings/leds/leds-sgm3140.yaml           | 53 +++++++++++++++++++
-> > >   1 file changed, 53 insertions(+)
-> > >   create mode 100644
-> > >   Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
-> > > b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml new file mode
-> > > 100644
-> > > index 000000000000..be9384573d02
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
-> > > @@ -0,0 +1,53 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/leds/leds-sgm3140.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: SGMICRO SGM3140 500mA Buck/Boost Charge Pump LED Driver
-> > > +
-> > > +maintainers:
-> > > +  - Luca Weiss <luca@z3ntu.xyz>
-> > > +
-> > > +description: |
-> > > +  The SGM3140 is a current-regulated charge pump which can regulate two
-> > > current +  levels for Flash and Torch modes.
-> > > +
-> > > +  It is controlled with two GPIO pins.
-> > 
-> > Please define "It".  Not sure what is controlled here.
-> > 
+> Convert the TSL2563 device tree bindings to the new YAML format.
 > 
-> "It" means the SGM3140. Not sure how else to write that or what the correct 
-> term for such a component is.
+> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+> ---
+> 
+> The link for the datasheet is not attached in the binding document
+> because it was not available on the manufacturer's (AMS) website [1].
 
-Maybe "The device" ? I think Dan's concern is that he wasn't sure if
-"It" referred to "the device" or to "flash and torch modes".
+Very old part now, though plenty of them in circulation or least there
+used to be.  I have though not powered up that board for a while.
 
--- 
-Regards,
+When doing these conversions, do sanity check them against the driver
+as the old docs aren't always entirely accurate ;)
 
-Laurent Pinchart
+Jonathan
+
+> 
+> [1] https://ams.com/ambient-light-sensors
+> ---
+>  .../devicetree/bindings/iio/light/tsl2563.txt | 19 --------
+>  .../bindings/iio/light/tsl2563.yaml           | 46 +++++++++++++++++++
+>  2 files changed, 46 insertions(+), 19 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> deleted file mode 100644
+> index f91e809e736e..000000000000
+> --- a/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -* AMS TAOS TSL2563 ambient light sensor
+> -
+> -Required properties:
+> -
+> -  - compatible : should be "amstaos,tsl2563"
+> -  - reg : the I2C address of the sensor
+> -
+> -Optional properties:
+> -
+> -  - amstaos,cover-comp-gain : integer used as multiplier for gain
+> -                              compensation (default = 1)
+> -
+> -Example:
+> -
+> -tsl2563@29 {
+> -	compatible = "amstaos,tsl2563";
+> -	reg = <0x29>;
+> -	amstaos,cover-comp-gain = <16>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+> new file mode 100644
+> index 000000000000..2a70b8d62760
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+> @@ -0,0 +1,46 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/light/tsl2563.yaml#
+
+Convention is now to name files and this with the manufacturer part
+as well.
+
+light/amstaos,tsl2563.yaml
+
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: AMS TAOS TSL2563 ambient light sensor
+> +
+> +maintainers:
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +description: |
+> +  Ambient light sensor with an i2c interface.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amstaos,tsl2563
+
+The original binding was wrong on this.   Check the driver :)
+I'm a bit embarrassed I never noticed during review as I have
+a tsl2561, be it on a board that was never converted to DT.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  amstaos,cover-comp-gain:
+> +    description: Multiplier for gain compensation
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [1, 16]
+
+Not sure it's that restricted...  or to be honest what
+that is for at all.  Superficially it looks like
+a multiplier to change the 'range' of the the sysfs control.
+
+I wonder if anyone cares or if we can just start ignoring that going
+forwards?  Sebastian, anyone else?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      light-sensor@29 {
+> +        compatible = "amstaos,tsl2563";
+> +        reg = <0x29>;
+> +        amstaos,cover-comp-gain = <16>;
+> +      };
+> +    };
+> +...
+
