@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135BAC10F29
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 18:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE5EC10F29
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 18:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8324206BE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 18:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB6220575
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 18:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E+HBZbGX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cKhTiwe8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgCOSyy (ORCPT
+        id S1728633AbgCOS4c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 14:54:54 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39602 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728639AbgCOSyy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 14:54:54 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f10so16125178ljn.6
-        for <devicetree@vger.kernel.org>; Sun, 15 Mar 2020 11:54:50 -0700 (PDT)
+        Sun, 15 Mar 2020 14:56:32 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35906 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728608AbgCOS4c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 14:56:32 -0400
+Received: by mail-lj1-f194.google.com with SMTP id g12so16147975ljj.3
+        for <devicetree@vger.kernel.org>; Sun, 15 Mar 2020 11:56:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fTQd3aS5OhNIrglS2AjM4BcIR1NXf9NUl3ZVwz+9ZAQ=;
-        b=E+HBZbGXPHlxT3smlEDZETEl6jN6e08Qzg/pBZejJ2lk+Qr5UD3pZwb+9iv9Cf8cYl
-         fXToil1uzvcbDaq6EeGWKsti487QNARBigDgEjLOr8FfzApiBJDJCQKa0aSwOTnrk0Lr
-         cCwj6antxj6hfQgugrlBzoNTrLlgdjouHXipYd4K+7TCZUFlB8xk+pinI97b1iMma4Id
-         CYUEQQsiGurACKj/FVqICMUDE4mCyeU0A4YnwE9keZcDf8CYmr1Y+L7AkZ9YSSLtnxaN
-         dBhdqC8HLDGVqbbp24yE3Vcw5oYB08U/T10tkSUVjvNoW115kbaHQZQsChy6plpMI0PO
-         UXPQ==
+        bh=3S0v5oR3bTCtw3b5Uz5rVvk64YK1h/rSLcltspTzzJc=;
+        b=cKhTiwe8JLQgXFORz+fw8VRZAu9macKEjSEE1sB7WsCErjroARHh+wKst5Wo7Gwhf4
+         0p5dOI3Ky/JtcXSm+cM9StCGahFcvwO0Lo6mTjY3l0QxKNN66nG5vL9exxBmHn6LE8Pd
+         uU2G0nqvo02Lhasx0pForQUFgAvOaP5VoY5SHdTjI6dwpdSBFxgyozq4p9cg0fiwcU+F
+         W8qa4XnFe0refvD8FeqdwdjO0MSOTpFPwVLVsqCLYhHlJ9xeLihIQ1kJ45zWid3eV3Ds
+         cWiMIQ5ESqzXry3YWHmcRmXR6JtOOuKfw3HWefDaXrcVveKYLIjeczPuc7YXSfJMfzft
+         fN8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fTQd3aS5OhNIrglS2AjM4BcIR1NXf9NUl3ZVwz+9ZAQ=;
-        b=sSBump1msm6prFWxTISrO/qwGVs2X8n68DAZ8uf/2OimcMeFi0JWaLbRZkZ17iSG8n
-         4NeSBX4G9b4heSRbLPUmt4JBMXBGNH/O68R2skewsFfFxcnZ3IKduNMIoSP/bvZSl07x
-         eG49hEy/1LzRSa+LSIraW2ub3OyUJ32lc5kMJCDd2G9DRxqq1hUWAY3baRExKoD2rSwO
-         YoncZ0KJ3tqJxk07NrCfuHBdar0h24ffByfmrdCe1rCGPwo8naROCvKA2AzOl9hmhCHo
-         AlcseDPtp2nUTjA8r8XfJGnW5BnQCxj0UxpkGy/fPSuOkQa3+qhaLwLqTSC+ncPpthgm
-         Aecw==
-X-Gm-Message-State: ANhLgQ2+IAItc83mXRxUlEFu4n3kGlc7opcc5WGqlq9b95G1vOsSal2G
-        jYPoLgxy9asIUS1hR+OIyZWsCbmbaIWuWpgpa1mT9g==
-X-Google-Smtp-Source: ADFU+vssbL+S14lH6N8djcDEZl02ahI9L+idvGs1zzRXqR+eWnNl2HLjxbEiYTzRMwkdmwS16Jt4Fy4vCuUNuYgAb5g=
-X-Received: by 2002:a05:651c:1026:: with SMTP id w6mr13694210ljm.168.1584298490016;
- Sun, 15 Mar 2020 11:54:50 -0700 (PDT)
+        bh=3S0v5oR3bTCtw3b5Uz5rVvk64YK1h/rSLcltspTzzJc=;
+        b=QXqZBFwwFyMaUuf4ZTmvokrHsGlU4UbAiQHvpJqbw1qUot7Wnl1hVTw3LQaL+FBz7n
+         lrHvyQjHVoBeVhG3flndlbSUWYPffaEvbo2RnDBrZdKIs+xlyMqyFG/NN+j54WbV8PNK
+         JtgFDW4/+nvsortcuQKFEonlN2IvZIexpyVaG6SKiUfZo25WTpaxH7kwkFfxfaaTo8Tc
+         Pl7l6sFOTmyqSPtjlpiuHcXa3HSHQ2OlqWt049D9oPUkFRflItY14YwWluOy++aT+XiQ
+         5//KlKCeEO3SRb3mNhxXrKOQd3I+XXCCM5WLOXns4+Ar+/QYb06ExeFMlaIvLOwJ6Rue
+         f2lg==
+X-Gm-Message-State: ANhLgQ3nBhzUmdP9hIh8vfi0KeZrlxw3PVPfjEu3EtYaEiv1Nqg/6ErQ
+        kygyxDpG57LaPo5KukqArwHAtkLlbmUoX12sqaxVcA==
+X-Google-Smtp-Source: ADFU+vu8FHCAUtRF0Yn3tqP8EsUWnhS9Glxv1rrGugkRmD6+x0k9o222/MFlQ/3JytyCUYbtCsS2+dDrEb9WqE/9ABM=
+X-Received: by 2002:a05:651c:2c1:: with SMTP id f1mr14032427ljo.125.1584298587802;
+ Sun, 15 Mar 2020 11:56:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200315134416.16527-1-sam@ravnborg.org> <20200315134416.16527-7-sam@ravnborg.org>
-In-Reply-To: <20200315134416.16527-7-sam@ravnborg.org>
+References: <20200315134416.16527-1-sam@ravnborg.org> <20200315134416.16527-22-sam@ravnborg.org>
+In-Reply-To: <20200315134416.16527-22-sam@ravnborg.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 15 Mar 2020 19:54:38 +0100
-Message-ID: <CACRpkdYVrTBKxuHSGpd9=03oD4=JVxzJf8fOcQ8uu5eRt9PgAg@mail.gmail.com>
-Subject: Re: [PATCH v1 06/36] dt-bindings: display: convert ilitek,ili9322 to
+Date:   Sun, 15 Mar 2020 19:56:15 +0100
+Message-ID: <CACRpkdZF8fx2RtHKivAkn+aQiC8B27Lzwk69S0RS5QUcfj1uVw@mail.gmail.com>
+Subject: Re: [PATCH v1 21/36] dt-bindings: display: convert samsung,s6d16d0 to
  DT Schema
 To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
@@ -102,34 +102,8 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 2:44 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+On Sun, Mar 15, 2020 at 2:45 PM Sam Ravnborg <sam@ravnborg.org> wrote:
 
-> The .txt binding explains:
->
-> "
->     The following optional properties only apply to
->     RGB and YUV input modes and
->     can be omitted for BT.656 input modes:
-> "
->
-> This constraint is not implmented in the DT Schema.
->
-> The original binding from the .txt file referenced
-> properties that is included in panel-timing.yaml.
-> These properties are kept here as we want as close to a 1:1
-> conversion as we can. If the properties should be dropped
-> from the binding then this is a follow-up patch.
->
-> The properties in question are:
->   - pixelclk-active
->   - de-active
->   - hsync-active
->   - vsync-active
-
-Sorry about that. They should be dropped, but certainly it
-is fine to do with a follow up patch.
-
->
 > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 > Cc: Linus Walleij <linus.walleij@linaro.org>
 > Cc: Thierry Reding <thierry.reding@gmail.com>
