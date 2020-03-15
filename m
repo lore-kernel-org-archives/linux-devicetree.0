@@ -2,263 +2,72 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EA2C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 14:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A8EC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 15:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83EA420674
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 14:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584282678;
-	bh=VG1H2hK8Z+Tq6QUiuOXTEyN4DkZAx/5eFNMyDpjsQmU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wgrXLjL0vNCGWTRjKnbaSWsz+4OgxygzRFMzncqdbBDJi9OpDplAn5/9Gqe2YRAC9
-	 W8aKZEcvigtJLOvpxHbeI2rA55VabfCXUuklYfBgufeSC/l7uQ9dYMdwPRMT9IUf2u
-	 yXpW21B26RSfaD/deJA9bJdYxgdEW1iGDAAjP7CA=
+	by mail.kernel.org (Postfix) with ESMTP id DF9E620637
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 15:08:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OFxgpzsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgCOObP (ORCPT
+        id S1728643AbgCOPIS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 10:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbgCOObP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 10:31:15 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B26720637;
-        Sun, 15 Mar 2020 14:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584282673;
-        bh=VG1H2hK8Z+Tq6QUiuOXTEyN4DkZAx/5eFNMyDpjsQmU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mzbxtbpMAoJ/LQoVF7t8Tn/h/YFZG8GqCSFXewiyj3agXU0MJplie5lon9ACw5tBf
-         9+k04ZgzM2Vn+ukWvtOdVG3y8t0LRJ+SxnzW0eytW2/4ZIT+nDDh1VEIe/P4aw1cRx
-         1N+pXuLbjgaEXyzPv3PACHUPBZ9NwSW7mEm9v960=
-Date:   Sun, 15 Mar 2020 14:31:09 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-Cc:     Johan Jonker <jbx6244@gmail.com>, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] dt-bindings: iio: adc: convert rockchip saradc
- bindings to yaml
-Message-ID: <20200315143109.5474434b@archlinux>
-In-Reply-To: <1892398.6xOoJH07Ba@diego>
-References: <20200313132926.10543-1-jbx6244@gmail.com>
-        <20200315112223.07dd863b@archlinux>
-        <1892398.6xOoJH07Ba@diego>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Mar 2020 11:08:18 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:62992 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728223AbgCOPIS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 11:08:18 -0400
+X-UUID: 76f36b23b4154017ba3abadc0af0d807-20200315
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=+CvUngamV2VX3eNG/af1GoftRg2IFOk1is4zBfIJFy0=;
+        b=OFxgpzsLsAqSkkntwnUnK5cn2Dm+E94AGIngfCe1rhb/jsDWDFJLJSUIuWCABYlx0Xv9w9GugAcghFBuClwhXGV1GIN4WYtPlWYKNMBx/UTTwGc2URnwGeN7uVbc4+rwzA7hreuLC2/FnnoAoWHlYwle7QuNe9T69/IKRjkS9Ck=;
+X-UUID: 76f36b23b4154017ba3abadc0af0d807-20200315
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 564303256; Sun, 15 Mar 2020 23:08:09 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sun, 15 Mar 2020 23:07:33 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sun, 15 Mar 2020 23:07:31 +0800
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>
+Subject: [PATCH 1/1] dt-bindings: cpu: Add a support cpu type for cortex-a75
+Date:   Sun, 15 Mar 2020 23:08:05 +0800
+Message-ID: <1584284885-20836-1-git-send-email-hanks.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 860C1638F459CC376E4B34BE0F369F4CB84B24E6D4543CE68454EA5693FFD5262000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 15 Mar 2020 15:09:56 +0100
-Heiko St=C3=BCbner <heiko@sntech.de> wrote:
-
-> Hi Jonathan,
->=20
-> Am Sonntag, 15. M=C3=A4rz 2020, 12:22:23 CET schrieb Jonathan Cameron:
-> > On Fri, 13 Mar 2020 14:29:24 +0100
-> > Johan Jonker <jbx6244@gmail.com> wrote:
-> >=20
-> > > Current dts files with 'saradc' nodes are manually verified.
-> > > In order to automate this process rockchip-saradc.txt
-> > > has to be converted to yaml.
-> > >=20
-> > > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> >=20
-> > Hi Johan,
-> >=20
-> > A question inline which may just be my lack of yaml knowledge
-> > showing itself!
-> >=20
-> > Jonathan
-> >=20
-> > > ---
-> > >  .../bindings/iio/adc/rockchip-saradc.txt           | 37 ----------
-> > >  .../bindings/iio/adc/rockchip-saradc.yaml          | 79 ++++++++++++=
-++++++++++
-> > >  2 files changed, 79 insertions(+), 37 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/rockchi=
-p-saradc.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/rockchi=
-p-saradc.yaml
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-sarad=
-c.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> > > deleted file mode 100644
-> > > index c2c50b598..000000000
-> > > --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> > > +++ /dev/null
-> > > @@ -1,37 +0,0 @@
-> > > -Rockchip Successive Approximation Register (SAR) A/D Converter bindi=
-ngs
-> > > -
-> > > -Required properties:
-> > > -- compatible: should be "rockchip,<name>-saradc" or "rockchip,rk3066=
--tsadc"
-> > > -   - "rockchip,saradc": for rk3188, rk3288
-> > > -   - "rockchip,rk3066-tsadc": for rk3036
-> > > -   - "rockchip,rk3328-saradc", "rockchip,rk3399-saradc": for rk3328
-> > > -   - "rockchip,rk3399-saradc": for rk3399
-> > > -   - "rockchip,rv1108-saradc", "rockchip,rk3399-saradc": for rv1108
-> > > -
-> > > -- reg: physical base address of the controller and length of memory =
-mapped
-> > > -       region.
-> > > -- interrupts: The interrupt number to the cpu. The interrupt specifi=
-er format
-> > > -              depends on the interrupt controller.
-> > > -- clocks: Must contain an entry for each entry in clock-names.
-> > > -- clock-names: Shall be "saradc" for the converter-clock, and "apb_p=
-clk" for
-> > > -               the peripheral clock.
-> > > -- vref-supply: The regulator supply ADC reference voltage.
-> > > -- #io-channel-cells: Should be 1, see ../iio-bindings.txt
-> > > -
-> > > -Optional properties:
-> > > -- resets: Must contain an entry for each entry in reset-names if nee=
-d support
-> > > -	  this option. See ../reset/reset.txt for details.
-> > > -- reset-names: Must include the name "saradc-apb".
-> > > -
-> > > -Example:
-> > > -	saradc: saradc@2006c000 {
-> > > -		compatible =3D "rockchip,saradc";
-> > > -		reg =3D <0x2006c000 0x100>;
-> > > -		interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> > > -		clocks =3D <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
-> > > -		clock-names =3D "saradc", "apb_pclk";
-> > > -		resets =3D <&cru SRST_SARADC>;
-> > > -		reset-names =3D "saradc-apb";
-> > > -		#io-channel-cells =3D <1>;
-> > > -		vref-supply =3D <&vcc18>;
-> > > -	};
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-sarad=
-c.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-> > > new file mode 100644
-> > > index 000000000..2908788b3
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-> > > @@ -0,0 +1,79 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/iio/adc/rockchip-saradc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Rockchip Successive Approximation Register (SAR) A/D Converter
-> > > +
-> > > +maintainers:
-> > > +  - Heiko Stuebner <heiko@sntech.de>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    oneOf:
-> > > +      - const: rockchip,saradc
-> > > +      - const: rockchip,rk3066-tsadc
-> > > +      - const: rockchip,rk3399-saradc
-> > > +      - items:
-> > > +          - enum:
-> > > +            - rockchip,rk3328-saradc
-> > > +            - rockchip,rv1108-saradc
-> > > +          - const: rockchip,rk3399-saradc
-> >=20
-> > My yaml knowledge isn't great.  Why do we have this nested
-> > structure rather than a straight forward list?
->=20
-> That should be the
-> - one of rk3328-saradc / rv1108-saradc
-> - plus always rk3399-saradc
->=20
-> i.e. both rk3328 and rv1108 are compatible with the rk3399-saradc variant
-> (at least if no flaws get found at some point) so have the double compati=
-ble
->=20
-> compatible =3D "rockchip,rk3328-saradc", "rockchip,rk3399-saradc"
-> compatible =3D "rockchip,rv1108-saradc", "rockchip,rk3399-saradc"
-Ah. That makes sense.  Thanks to Johan as well for the explanation he sent
-
-Thanks,
-
-Jonathan
-
->=20
->=20
-> Heiko
->=20
->=20
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: converter clock
-> > > +      - description: peripheral clock
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: saradc
-> > > +      - const: apb_pclk
-> > > +
-> > > +  resets:
-> > > +    maxItems: 1
-> > > +
-> > > +  reset-names:
-> > > +    const: saradc-apb
-> > > +
-> > > +  vref-supply:
-> > > +    description:
-> > > +      The regulator supply for the ADC reference voltage.
-> > > +
-> > > +  "#io-channel-cells":
-> > > +    const: 1
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - interrupts
-> > > +  - clocks
-> > > +  - clock-names
-> > > +  - vref-supply
-> > > +  - "#io-channel-cells"
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/clock/rk3288-cru.h>
-> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > > +    saradc: saradc@2006c000 {
-> > > +      compatible =3D "rockchip,saradc";
-> > > +      reg =3D <0x2006c000 0x100>;
-> > > +      interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> > > +      clocks =3D <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
-> > > +      clock-names =3D "saradc", "apb_pclk";
-> > > +      resets =3D <&cru SRST_SARADC>;
-> > > +      reset-names =3D "saradc-apb";
-> > > +      vref-supply =3D <&vcc18>;
-> > > +      #io-channel-cells =3D <1>;
-> > > +    };
-> >=20
-> >=20
->=20
->=20
->=20
->=20
+W0RldGFpbF0NCkFkZCBhcm0gY3B1IHR5cGUgY29ydGV4LWE3NS4NCg0KQ2hhbmdlLUlkOiBJMmIw
+NTk0ODkxNWFjZmE2YTA0YTBiOGZhODg2ODRhMTJiNmQ1YzJjYQ0KU2lnbmVkLW9mZi1ieTogSGFu
+a3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQotLS0NCiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMueWFtbCB8ICAgIDEgKw0KIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9jcHVzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvYXJtL2NwdXMueWFtbA0KaW5kZXggYzIzYzI0Zi4uNTFiNzVmNyAxMDA2NDQNCi0tLSBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vY3B1cy55YW1sDQorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2NwdXMueWFtbA0KQEAgLTEyOCw2ICsx
+MjgsNyBAQCBwcm9wZXJ0aWVzOg0KICAgICAgIC0gYXJtLGNvcnRleC1hNTcNCiAgICAgICAtIGFy
+bSxjb3J0ZXgtYTcyDQogICAgICAgLSBhcm0sY29ydGV4LWE3Mw0KKyAgICAgIC0gYXJtLGNvcnRl
+eC1hNzUNCiAgICAgICAtIGFybSxjb3J0ZXgtbTANCiAgICAgICAtIGFybSxjb3J0ZXgtbTArDQog
+ICAgICAgLSBhcm0sY29ydGV4LW0xDQotLSANCjEuNy45LjUNCg==
 
