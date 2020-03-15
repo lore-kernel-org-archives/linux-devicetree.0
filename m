@@ -2,142 +2,184 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961DBC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 09:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476A3C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E46C20739
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 09:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1527B20575
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 10:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+ZgyUWz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="ysAKBEQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgCOJqo (ORCPT
+        id S1728208AbgCOKEY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 05:46:44 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35112 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbgCOJqo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 05:46:44 -0400
-Received: by mail-io1-f68.google.com with SMTP id h8so14117216iob.2;
-        Sun, 15 Mar 2020 02:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GNFfXHO2uILPgu0B1T3kwaBgaXjP+dlED6DVNl3sNIg=;
-        b=I+ZgyUWzIa8Yxi+0xMqH9yaVxAhiEOypJ/WXcO5ujz84CdXXQxL2d1ab/itSy71+MY
-         v1zS6OgxvE0Bn+Qa0JXfcz8RKJwprkoMCBipzhzZlHWCugVSwinT5j3lnrH2WDYlwZ01
-         eYOr9xN2OR+z2u3VNz+TrTa75FmvLhds4/9O2wY6HbEzs0xPbUZ28UtXN7LT2TXhup6Y
-         pkBRtDX0RpzM5wTDCNpUYBgBjIeYHAnSJprQYhPVixRf+4+i5CWwFDcVCSryxTo7o+n+
-         QvVX5JRwWD/Ek/EyR8q7MTRXZ3swX8IoaPhhLPo/I0oYQ9PA+4e/gT6RGNbVnejmq4aN
-         w9FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GNFfXHO2uILPgu0B1T3kwaBgaXjP+dlED6DVNl3sNIg=;
-        b=icy7SZW6XbPVFapP/3jpqqK8cP45v9BhR5hqZv6+2LAKRg88qcGHntKcEP3RniUpm2
-         8LEX+pWrbaIZUospvcpto38IreGhQ6xer/WAe1etFMNVybjtQysb8/oteh868wW8gVD6
-         djQisSMwIE7RgIMkRyUQdUFRQxAPzMO/TGyabuDy/pH8g0mzuow9RekefDDOvIKmhFtT
-         Ql63wtn/xoKo30da9oWb1tdPIAE0IkoPw/kN0nduV4o4Uras2GMXvGGLqsh6ETjdk0or
-         wMpz1snJ3Hfx1fwq5s8YmpJtLFiLt+k82n8rmtN/grRziuuZN+E1ZkiXsZbyJxbQIgQv
-         4WmQ==
-X-Gm-Message-State: ANhLgQ2BBjXijrw6M21cpRQEQNHUxd5BN44RVqMBAnYjTMCbNGJ0a3a1
-        iYFOfYGgS3QSr5DJsQTsFZFdMMj7VjMSNlgyPPg=
-X-Google-Smtp-Source: ADFU+vsewoQ8rLqcke0ekgyn+gsES6vdYQVgDzjdOdmXOPVuxzoaksZJ3jLUICWiRwD3y5hXFyjeMrRhGfoBBlDZBWk=
-X-Received: by 2002:a6b:f311:: with SMTP id m17mr19317386ioh.128.1584265603378;
- Sun, 15 Mar 2020 02:46:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200310194854.831-1-linux.amoon@gmail.com> <20200310194854.831-3-linux.amoon@gmail.com>
- <CANAwSgR4fJK0uVANv-x-=iSL_hAKD8kvazACUsY9Meu5xonuqQ@mail.gmail.com> <20200314182010.GB17580@kozik-lap>
-In-Reply-To: <20200314182010.GB17580@kozik-lap>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Sun, 15 Mar 2020 15:16:33 +0530
-Message-ID: <CANAwSgS1+6Dzv2XbmMUR40AbJePxUzWkKkBC1W9hBMGzaMWP3w@mail.gmail.com>
-Subject: Re: [PATCHv3 2/5] ARM: dts: exynos: Add missing usbdrd3 suspend clk
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        Sun, 15 Mar 2020 06:04:24 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:50276 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728197AbgCOKEY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 15 Mar 2020 06:04:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1584266661; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=OPgCFclnK+dYLWIKySdQ0LeSCQYlJQFqnweXUYr2lRo=;
+        b=ysAKBEQwfZwp6cOlmO4u+3BgcS/CCdEDygsjhdOMkCSKoxy6/WEn1P5MGahPXsWKU3c7W8
+        Rd/6leiWLqbLWtQdq/U3ztJJX7cEoDhYyqRou0GzIyYMSQmrGUwYYTR1yWU/HRiUQIQ/tC
+        /POQvZVhIAQWEplzYVD3EJg05swJNRs=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Nick Dyer <nick@shmanahar.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] dt-bindings: input: Update atmel,maxtouch.txt to YAML
+Date:   Sun, 15 Mar 2020 11:04:15 +0100
+Message-Id: <20200315100416.14151-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Update atmel,maxtouch.txt to YAML. The new 'vdd-supply' property was
+added in the process.
 
-On Sat, 14 Mar 2020 at 23:50, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Sat, Mar 14, 2020 at 07:02:33PM +0530, Anand Moon wrote:
-> > Hi Krzysztof,
-> >
-> > On Wed, 11 Mar 2020 at 01:19, Anand Moon <linux.amoon@gmail.com> wrote:
-> > >
-> > > Add new compatible strings for USBDRD3 for adding missing
-> > > suspend clk, exynos5422 usbdrd3 support two clk USBD300 and
-> > > SCLK_USBD300, so add missing suspemd_clk for Exynos542x DWC3 nodes.
-> > >
-> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> >
-> > My assumption based on the FSYS clock source diagram below was bit wrong.
-> > [0] https://imgur.com/gallery/zAiBoyh
-> >
-> > And again re-looking into the driver source code, it turn out their
-> > are *6 clock*
-> > Here is the correct mapping as per the Exynos5420 clock driver.
-> >
-> > USB-(phy@12100000)
-> > |___________________CLK_SCLK_USBD300
-> > |___________________CLK_SCLK_USBPHY300
-> >
-> > USB-(phy@12500000)
-> > |___________________CLK_SCLK_USBD301
-> > |___________________CLK_SCLK_USBPHY301
-> >
-> > USB-(dwc3@12000000)
-> > |___________________CLK_USBD300
-> > USB-(dwc3@12400000)
-> > |___________________CLK_USBD301
-> >
-> > Note: As per Exynos 5422 user manual, There are some more USB CLK
-> > configuration missing in GATE_IP_FSYS. So we could enable another dwc3 clk,
-> > If needed I would like too add this missing clk code and enable this
-> > clk for dwc3 driver.
-> >
-> > For some reason we already use CLK_USBD300 and CLK_USBD301
-> > for PHY nodes, which lead to this confusion. So we need to update PHY clock
-> > CLK_USBD300 with CLK_SCLK_USBD300 and clock CLK_USBD301 with CLK_SCLK_USBD301.
-> >
-> > Please share your thought on linking PHY nodes above and add new DWC3 clock
-> > and enable this clock.
->
-> The real clock topology of Exynos5422 is not properly reflected in the
-> kernel. However cleaning this up is quite big task.
->
->
-> Best regards,
-> Krzysztof
->
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ .../bindings/input/atmel,maxtouch.txt         | 41 -----------
+ .../bindings/input/atmel,maxtouch.yaml        | 68 +++++++++++++++++++
+ 2 files changed, 68 insertions(+), 41 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+ create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
 
-I would like to fix all my patches with new finding and submit them
-once again for review.
+diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+deleted file mode 100644
+index c88919480d37..000000000000
+--- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-Atmel maXTouch touchscreen/touchpad
+-
+-Required properties:
+-- compatible:
+-    atmel,maxtouch
+-
+-    The following compatibles have been used in various products but are
+-    deprecated:
+-	atmel,qt602240_ts
+-	atmel,atmel_mxt_ts
+-	atmel,atmel_mxt_tp
+-	atmel,mXT224
+-
+-- reg: The I2C address of the device
+-
+-- interrupts: The sink for the touchpad's IRQ output
+-    See ../interrupt-controller/interrupts.txt
+-
+-Optional properties for main touchpad device:
+-
+-- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
+-    on GPIO bit changes. An array of up to 8 entries can be provided
+-    indicating the Linux keycode mapped to each bit of the status byte,
+-    starting at the LSB. Linux keycodes are defined in
+-    <dt-bindings/input/input.h>.
+-
+-    Note: the numbering of the GPIOs and the bit they start at varies between
+-    maXTouch devices. You must either refer to the documentation, or
+-    experiment to determine which bit corresponds to which input. Use
+-    KEY_RESERVED for unused padding values.
+-
+-- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
+-
+-Example:
+-
+-	touch@4b {
+-		compatible = "atmel,maxtouch";
+-		reg = <0x4b>;
+-		interrupt-parent = <&gpio>;
+-		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
+-	};
+diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+new file mode 100644
+index 000000000000..1b138a9836bf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Atmel maXTouch touchscreen/touchpad DT bindings
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  compatible:
++    enum:
++      - atmel,maxtouch
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  vdd-supply:
++    description: Phandle to regulator providing power to the touchscreen
++
++  linux,gpio-keymap:
++    minItems: 1
++    maxItems: 8
++    description: >
++      When enabled, the SPT_GPIOPWN_T19 object sends messages
++      on GPIO bit changes. An array of up to 8 entries can be provided
++      indicating the Linux keycode mapped to each bit of the status byte,
++      starting at the LSB. Linux keycodes are defined in
++      <dt-bindings/input/input.h>.
++
++      Note: the numbering of the GPIOs and the bit they start at varies between
++      maXTouch devices. You must either refer to the documentation, or
++      experiment to determine which bit corresponds to which input. Use
++      KEY_RESERVED for unused padding values.
++
++  reset-gpios:
++    description: GPIO specifier for the touchscreen's reset pin (active low)
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      mxt224-touchscreen@4a {
++        compatible = "atmel,maxtouch";
++        reg = <0x4a>;
++
++        interrupt-parent = <&gpx0>;
++        interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
++
++        vdd-supply = <&tsp_reg>;
++      };
++    };
+-- 
+2.25.1
 
--Anand
