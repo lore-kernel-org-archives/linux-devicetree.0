@@ -2,122 +2,103 @@ Return-Path: <SRS0=kXhk=5A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D47C0044D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2991CC0044D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6392051A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035442051A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 15 Mar 2020 02:05:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mWIjeJP0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIJzVdRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbgCOCDV (ORCPT
+        id S1727548AbgCOCFU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 14 Mar 2020 22:03:21 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44475 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbgCOCDV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Mar 2020 22:03:21 -0400
-Received: by mail-ed1-f65.google.com with SMTP id g19so17300739eds.11
-        for <devicetree@vger.kernel.org>; Sat, 14 Mar 2020 19:03:19 -0700 (PDT)
+        Sat, 14 Mar 2020 22:05:20 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45900 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgCOCFU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 14 Mar 2020 22:05:20 -0400
+Received: by mail-lj1-f195.google.com with SMTP id e18so14764296ljn.12;
+        Sat, 14 Mar 2020 19:05:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z7DU2t7m+cderg8EaFPtaxoNn5hdLKVNHAy6HvbA6dc=;
-        b=mWIjeJP0nPIupxChcDDlB54fia4NXdGKZF0e4EDtiifIbpvl6Zm4hhE7J8QlRFZggE
-         69lH1XwtORjB5Oar3rJWx5oDXqn7sjtgj0mFSSfmuWAyJGs9wc8o8pFtnrFeB+47isuK
-         V65ixdoWDA7pPmR0b9UrAsdpFx4EAqSzhjQRHEviQPxZZ1ZcXy/G6p4nrYu1Kj2evFAS
-         tJOPcsHyOaKZlMv159hBMcq4fclyLtSAiGmzTYT1H8A2yKVlo4gTnur3AOUTLJoKQFbb
-         BMV3cotzSYuNtMFHyp+M/IMJYxiiD0aQvci5e8C+Vx0CNOpORejskDHs2+/QfLPwgGbq
-         6dUw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=6QvXfJZlpggMK4ANi6m9pBKzrWALkcbq78l8N8OifPg=;
+        b=OIJzVdRqmII3xpN14/wQN0Vvrs1lDoUVouTfyF1AzzfhS7PAX65NnJmEstFfAwHm0J
+         MEdvf9urGT/J4thuvj9vk11uUp5M1ygunTCQ40PysktE5qk6p49gkKWkoPYa8hbxlpZ+
+         8AHxeLhfVqkUX208e6r8trwKTkIzfc7jZVyFb0j7si5B/e5Q5XglfRDu7Lgva68dRazY
+         t3ksP3zdoG8z1pawPZeocy0I+666FiKRbaFcF5tdQuT+avWEfO4hptk359IUQ52E/0AL
+         Fyhc24SsfBPdJPaus75o3DysidczlxbECY0IAS4F8XJ5ZrpGp0mWMaE2ibqoijxKTHF0
+         TMKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=z7DU2t7m+cderg8EaFPtaxoNn5hdLKVNHAy6HvbA6dc=;
-        b=OT6FhUhzrmtQxdwNzz6u2Bf6DWAFZyDSMYLuwlWevRuHrHs0oyIzLybccxd1Y/6uUS
-         YI7DnVmPvY65fLLSSeq8K2qyTLm7yvhuYOuYab1yDZQqFLPmaU7yT9k1DCnS+Z51rCi2
-         GfXfRU6fn8sPlpLYu9MD0zM5/+oxUzUX9p/32+AauFWxdJ+11H0va+1WSCGhTA1KhA59
-         F6DRsXWpIFNIiCHQcOd/x0OD5Z/4604THZwiyQNNhgl3BxtorpNQ2itvQ90pGw1hEn2i
-         A7tKWHyVxyi6nVILPpYNIbpBTotdz66NeP2vM+QqKf5u6CxCN/oXbjxgFU3kjFSiB6GG
-         kxGw==
-X-Gm-Message-State: ANhLgQ3ER9tx8hGcFhmRfP9Vwil6D3Xc0CSJY5XdfUo26pWtkN3zej1P
-        SDNZkgXPnFDciLV4paSoizFEOUc3
-X-Google-Smtp-Source: ADFU+vvMNhFlIzGt4mHsSF+8Dtoa4Q7tmYluiY7kijokV6DgmoM/JC2yCdvw1k3HvS9iYBpzGhEUVg==
-X-Received: by 2002:a19:c7cd:: with SMTP id x196mr11508387lff.106.1584199857333;
-        Sat, 14 Mar 2020 08:30:57 -0700 (PDT)
-Received: from saturn.lan (18.158-248-194.customer.lyse.net. [158.248.194.18])
-        by smtp.gmail.com with ESMTPSA id n200sm15650418lfa.50.2020.03.14.08.30.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=6QvXfJZlpggMK4ANi6m9pBKzrWALkcbq78l8N8OifPg=;
+        b=DvpDYDkZQW5E0JKHHq0vb4oxewJIyQvPWFfQMo/8bD8oXXLgOVOSOL+PE/lTjdehQr
+         V4VC7LazQ5sJhE5W4SGYH3JG2I/FrUtNQYhUx2+C1ES/yF6QpNnwtNqwPutNBsNDn895
+         p3iLvfFNIcFZS2wiM2eXa4dBPZGCoGkQp+cai4WlQGgxp0AktTpH120ACcDuk1pA/6/P
+         x9SJl2sd/L1Yqkf5wqhujO85C9RBOQalq65EpFC5Uw0AJ5t5PcfYQj7p7JkDA4Xpdvnv
+         vpWrQ0ycD3XETabaluWtpVuCxkf4yN53TgaW51Nut+4g6T5O730dosOfPqGFOUVkJ6OJ
+         sHEg==
+X-Gm-Message-State: ANhLgQ0stTElPSOqFS/HY90FHYnOFE+8kKoFTtPcOvZ8ZJLaVg7Iprs0
+        KNhcM5G2lxsZvpyYguDvRqn/Rw7mxR4=
+X-Google-Smtp-Source: ADFU+vsLbPyHg/3H2qHGT2azKEXr7tZwXNK8qhcJh9SO/kwPkfqvtObR5asqoXdlrz1UQKhDfB3WlA==
+X-Received: by 2002:a5d:5290:: with SMTP id c16mr25043929wrv.235.1584230432390;
+        Sat, 14 Mar 2020 17:00:32 -0700 (PDT)
+Received: from localhost.localdomain (p5B3F731E.dip0.t-ipconnect.de. [91.63.115.30])
+        by smtp.gmail.com with ESMTPSA id 7sm11394469wmf.20.2020.03.14.17.00.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Mar 2020 08:30:56 -0700 (PDT)
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v1 1/3] dt-bindings: display: drop data-mapping from panel-dpi
-Date:   Sat, 14 Mar 2020 16:30:45 +0100
-Message-Id: <20200314153047.2486-2-sam@ravnborg.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200314153047.2486-1-sam@ravnborg.org>
-References: <20200314153047.2486-1-sam@ravnborg.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 14 Mar 2020 17:00:31 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v2 5/5] MAINTAINERS: Add entry for mp2629 Battery Charger driver
+Date:   Sun, 15 Mar 2020 01:00:13 +0100
+Message-Id: <20200315000013.4440-6-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200315000013.4440-1-sravanhome@gmail.com>
+References: <20200315000013.4440-1-sravanhome@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-data-mapping may not be the best way to describe the
-data format used between panels and display interface.
+Add MAINTAINERS entry for Monolithic Power Systems mp2629 Charger driver.
 
-Drop it from the panel-dpi binding so we do not start to rely on it.
-We can then work out how to best describe this mapping and when
-we know it, we can add it to this binding.
-
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 ---
- .../devicetree/bindings/display/panel/panel-dpi.yaml   | 10 ----------
- 1 file changed, 10 deletions(-)
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-index f63870384c00..0cd74c8dab42 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-dpi.yaml
-@@ -21,15 +21,6 @@ properties:
-       - {}
-       - const: panel-dpi
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 32a95d162f06..0f82d5a7a614 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11358,10 +11358,15 @@ F:	drivers/tty/mxser.*
+ MONOLITHIC POWER SYSTEM PMIC DRIVER
+ M:	Saravanan Sekar <sravanhome@gmail.com>
+ S:	Maintained
++F:	Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ F:	Documentation/devicetree/bindings/regulator/mps,mp*.yaml
++F:	drivers/iio/adc/mp2629_adc.c
++F:	drivers/mfd/mp2629.c
++F:	drivers/power/supply/mp2629_charger.c
+ F:	drivers/regulator/mp5416.c
+ F:	drivers/regulator/mpq7920.c
+ F:	drivers/regulator/mpq7920.h
++F:	include/linux/mfd/mp2629.h
  
--  data-mapping:
--    enum:
--      - rgb24
--      - rgb565
--      - bgr666
--    description: |
--      Describes the media format, how the display panel is connected
--      to the display interface.
--
-   backlight: true
-   enable-gpios: true
-   height-mm: true
-@@ -52,7 +43,6 @@ examples:
-         compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-         label = "osddisplay";
-         power-supply = <&vcc_supply>;
--        data-mapping = "rgb565";
-         backlight = <&backlight>;
- 
-         port {
+ MR800 AVERMEDIA USB FM RADIO DRIVER
+ M:	Alexey Klimov <klimov.linux@gmail.com>
 -- 
-2.20.1
+2.17.1
 
