@@ -2,63 +2,109 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454DCC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC3EC3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFAD20674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1F620663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:14:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oAFdRSRy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FuH75nUp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbgCPQJp (ORCPT
+        id S1732066AbgCPQOM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:09:45 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38484 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731867AbgCPQJp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 12:09:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=a4SkyFwUTn7jLPIQJrqhF70q9YReVX9hTIk2qJVhEFY=; b=oAFdRSRyjwGA7rmlMrui7YjmX7
-        6MUbLJdG8hTMakntHtFtg5dD83ME/J5rQCvdToEkBQCsbgUHM01oSHhvcYU0SwEr5m70zMTS/dx87
-        rM3sKo1qthSpM89vbkiTUIthGPOAnrwswfJPqn+k23PEHmeCYS1Y3tOHFFIXn3dYmqpI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jDsJ5-00085n-Kr; Mon, 16 Mar 2020 17:09:35 +0100
-Date:   Mon, 16 Mar 2020 17:09:35 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Madalin Bucur <madalin.bucur@oss.nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, shawnguo@kernel.org,
-        leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2 1/3] net: fsl/fman: treat all RGMII modes in
- memac_adjust_link()
-Message-ID: <20200316160935.GA30840@lunn.ch>
-References: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1584360358-8092-2-git-send-email-madalin.bucur@oss.nxp.com>
+        Mon, 16 Mar 2020 12:14:12 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:40443 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732044AbgCPQOM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 12:14:12 -0400
+Received: by mail-vs1-f68.google.com with SMTP id m25so2837813vsa.7
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 09:14:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bBDCtFmVlmwok8vUzi26MlGBbPcfcb7XMIsVTqNi9do=;
+        b=FuH75nUp8oKLA+mUqWbx6oFCErjjg+2KD+mAVoj6DUeH1D9WGGPmT6ionb0S+43XxJ
+         8LPzfjMNU2tfB5CGcGqQ/iIbHV2+E2dFFIMjY7vOdzX4a4jWs6XlEErT1+tFM4dndAZB
+         tPBDur11ZisT8rmfI3RWzJHnq64KiuPD24AOyKz0v+b0aQoEigUVcsdp6nQHB0AT9yf3
+         r950MhLEK/ySxhdgpuohVDmsw2+MoIn7kaQsAUTpJnXAu+nIGhPfTKFh5RxLAV7QTlmr
+         9WqNrAsGpOItTVL4PoMpuFCUUe3KBo2Yo295TFO8Vm6OsMFyHRL7YOymzG54+mcVzrpv
+         ppTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bBDCtFmVlmwok8vUzi26MlGBbPcfcb7XMIsVTqNi9do=;
+        b=kNzx0NLAHGkL1+96lB8QyEtWOj1alc7/pzLLNiVUfpnn2g/T/OAAlvVaip3ShJ0wSv
+         Z0YA96sJm04eOIlbK5A9xnwM65wfVzzEVHn1BpkkwDQ/gJAseJ9cs2H3UdaUE0tVD0jm
+         A9heMU/I8raRnJdLXxz4jj6w3qjkxqglTG8LPbDzNB4aBHxQCZJiwQTWJk6arnODU5Y3
+         XBA1R8Ccl2G2sbEl5bZgyrwUxPvezlmI2rxE9l70qz5D7ZUGIoVKWUV6/5Zg/8K8SdRL
+         jVMC4bLv6KMGeZv1yk62JEYGNooiiLemQ6bSTC4B7VYQAxY9Lo6q0Yfvvn7IKbjL2j1p
+         cmZg==
+X-Gm-Message-State: ANhLgQ1YhG0SE2RVsBkzkmXtzLVKb14Pf4kqMXqp3CP3cOJhYUOi8PTO
+        uNYmbxX1TP7xPa7+6NgP2pq8rOPwZR2O4xSm1HUmUQ==
+X-Google-Smtp-Source: ADFU+vs3pLJTKaxFy4PgAmzkqT70xCVmTVF1ScAx8CX+A67toAj+a60XNOs30Hvy0izYq7eq1MsBLm7uLvTkG1O+5jA=
+X-Received: by 2002:a05:6102:104b:: with SMTP id h11mr369017vsq.182.1584375249809;
+ Mon, 16 Mar 2020 09:14:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584360358-8092-2-git-send-email-madalin.bucur@oss.nxp.com>
+References: <20200309045411.21859-1-andy.tang@nxp.com> <18c58e1b-583c-2308-ee60-a8923c2027ee@linaro.org>
+In-Reply-To: <18c58e1b-583c-2308-ee60-a8923c2027ee@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 16 Mar 2020 21:43:58 +0530
+Message-ID: <CAHLCerPBxe=Az=EexxYQkgvhRO40JT0qEhnAwqnGbeesiU-bnQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: thermal: make cooling-maps property optional
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Yuantian Tang <andy.tang@nxp.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 02:05:56PM +0200, Madalin Bucur wrote:
-> Treat all internal delay variants the same as RGMII.
-> 
-> Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+On Mon, Mar 16, 2020 at 8:22 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 09/03/2020 05:54, andy.tang@nxp.com wrote:
+> > From: Yuantian Tang <andy.tang@nxp.com>
+> >
+> > Cooling-maps doesn't have to be a required property because there may
+> > be no cooling device on system, or there are no enough cooling devices for
+> > each thermal zone in multiple thermal zone cases since cooling devices
+> > can't be shared.
+> > So make this property optional to remove such limitations.
+> >
+> > For thermal zones with no cooling-maps, there could be critic trips
+> > that can trigger CPU reset or shutdown. So they still can take actions.
+> >
+> > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-    Andrew
+>
+> Amit, I'm about to pick this patch, it will collide with the yaml
+> conversion changes.
+
+Thanks for the headsup. I can fixup v3 when I respin.
+
+However, I've always interpreted this binding as follows:
+- cooling-maps should be mandatory for active and passive trip types
+otherwise there will be no cooling
+- cooling-maps make no sense for critical trip type since we're
+invoking system shutdown
+- cooling-maps are optional for hot trip types.
+
+Is this your understanding too?
+
+We should be able to enforce this in YAML.
+
+Regards,
+Amit
