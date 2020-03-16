@@ -2,241 +2,107 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BADDEC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937E6C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8502120658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ABA720658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:00:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uP7iM1w8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I4MVl719"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgCPJAM (ORCPT
+        id S1730204AbgCPJAc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:00:12 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:42638 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730204AbgCPJAL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 05:00:11 -0400
-Received: by mail-il1-f195.google.com with SMTP id p2so7878226ile.9;
-        Mon, 16 Mar 2020 02:00:09 -0700 (PDT)
+        Mon, 16 Mar 2020 05:00:32 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36476 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730152AbgCPJAb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 05:00:31 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g2so5198419plo.3
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 02:00:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XCC5SrkpztJ9xxqUlBBdM7gPVX58z1aXERNCgJId8GA=;
-        b=uP7iM1w89MevX+DPQWWVqTgvS7D1ueYB4YDoYVrtvHmC8BvIJIs/2giQdvJ6D9KJaN
-         yoeDPNFy7dc/1kHpTP1K7vf++4wJCJ21JSbElWL8YRL3NRfQgiTIYfm++7FTmbUeWbG7
-         TxLk1g8p5zYPBsOL6KNsKSFw5aVWPIhRVLTcUAq/XpsDS5O14xcMWdoQ0Mp9FM0sbA/8
-         RbL+PWvl4uX1WQgvvE06R3spz9gIM6A4GvFVpzYhz1xQTjpiN7jWod+O0uoSwS5fbN9N
-         IzDZvgFmyA5ZzlxDEw1OIcxhzwL1QZCRBdNOzPpWFmDwTAHJO+Wk7+wCbQP7YSZ9Fy+u
-         B5tA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QZ7hDgG7xaUMBSl15kgzbILgCIelqn1XdtcbiGvErdo=;
+        b=I4MVl719v08NW4ohcPKEQmf1U2ZUlSIR669LIJDZZCoZorRBCfHvvJvqq9SDBunBtM
+         mBOMJk9Xd1LyAK8FKko6RK80vczEHl/D7HPdrxICnnPSRa/sRUKDaENUpKD8udCHpaSn
+         +seVeRGvHcFoJS7Ad1zDsCh67l3H36sLX/oeI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XCC5SrkpztJ9xxqUlBBdM7gPVX58z1aXERNCgJId8GA=;
-        b=fnoIVkHVONwDD8VHcQdjQ0kM0NsWh6s6YPoqzwmsm2PAWO5IZWLYrDe89VLd0txmT5
-         V0gusxFu//oIh6tuuE/kTh3GRgm9GXIu1bJFl8PJmgEecKEQKczj97p9x7TeK/A9m58X
-         8tWdWBYwqT/VEz4iwpmmGzW2awXAyrax9ulE2+xoLYZQt6F8xe5S37G6TtiEmfIStivn
-         ESpNT34zJEyG+BhH1X5BvIDtMFf1nLcK8cD3YCpgvRoapk91gqoLESSzg+eqqIQNxn2R
-         npKOWFt1nPtUpqZ4/N9FkTuFS9GOyF4SihP7HA+/4QnW44NpA4dpbMvSjPOCC7rUhPnb
-         XotA==
-X-Gm-Message-State: ANhLgQ0TQDpFMk3N0+zrOReV2zO7G7M9b5ckyBQOLHzKlbkRz3FPviWk
-        Nsm7BvDLBcsCNoXizkRobY48Y5I4YkvALhFaYEg=
-X-Google-Smtp-Source: ADFU+vu2bbIrkxVS2wGViv1mLQNLclYUkubsdT4bhu+47DNQydeTTWNZy6HH28+VMNaYwU2/5I2g83PJz9yz9iTT6cc=
-X-Received: by 2002:a92:ba01:: with SMTP id o1mr17730663ili.217.1584349208510;
- Mon, 16 Mar 2020 02:00:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QZ7hDgG7xaUMBSl15kgzbILgCIelqn1XdtcbiGvErdo=;
+        b=ZcmopER/Xre5tBfQycPdQpmJXGlQtCTP//zoSv9tcfRgORH2pZt5xQhWMvJT1qZlL0
+         w6YBslAFyp7TnDC0tfHkDgSLFzVGKPgY0qMHuoTWheJeUOcagIHSYQgpNXSrxDDpBdJU
+         7aV40xHq5KpfyRspC8lYnqgYqEnUOR5B/qZJRrLZybIxLDLBf36JVMcdNspZtUcDGVH8
+         WAXFXhm1lUcu6h/X7tps3V4MaFtPA+1y8rWjJ0cy+/Rm9IQk7prT1cbl29m+FvrCp8Ao
+         x83NCjUq47AnY8CGu5WRgQtuMmaQMVi8l/sm3xYGPj9zn5yPtwOqdN+FMLOl01CVjBho
+         5WRQ==
+X-Gm-Message-State: ANhLgQ3aZgW4y07oZw9UDd1E+5dzjgC2qWyADmsocq1CJ3juVzWbYaj7
+        VOPL28nx6BbmUducXgdaUZUO5g==
+X-Google-Smtp-Source: ADFU+vuvXlvegJAMxrnQ5HpySf4UCCZnv+xOf3E95nOR9fmoH/44E05gxBq61/j9B19Jt7HmZv9BNw==
+X-Received: by 2002:a17:902:eacb:: with SMTP id p11mr26005911pld.39.1584349230937;
+        Mon, 16 Mar 2020 02:00:30 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id d3sm65040080pfn.113.2020.03.16.02.00.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 02:00:30 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v5 0/4] platform/chrome: Add Type C connector class driver
+Date:   Mon, 16 Mar 2020 02:00:13 -0700
+Message-Id: <20200316090021.52148-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-References: <20200315134416.16527-1-sam@ravnborg.org> <20200315134416.16527-13-sam@ravnborg.org>
-In-Reply-To: <20200315134416.16527-13-sam@ravnborg.org>
-From:   Vinay Simha B N <simhavcs@gmail.com>
-Date:   Mon, 16 Mar 2020 14:29:56 +0530
-Message-ID: <CAGWqDJ7jiFoSxmQtKEVcQkTeKUKChAzU71f7V0nCrJYgO2n7ew@mail.gmail.com>
-Subject: Re: [PATCH v1 12/36] dt-bindings: display: convert jdi,lt070me05000
- to DT Schema
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-sam,
+The following series introduces a Type C port driver for Chrome OS
+devices that have an EC (Embedded Controller). It derives port
+information from ACPI or DT entries. This patch series adds basic
+support, including registering ports, and setting certain basic
+attributes.
 
-Reviewed-by: Vinay Simha BN <simhavcs@gmail.com>
+v4: https://lkml.org/lkml/2020/3/12/1120
+v3: https://lkml.org/lkml/2020/2/19/1230
+v2: https://lkml.org/lkml/2020/2/7/646
+v1: https://lkml.org/lkml/2020/2/5/676
 
-Thanks.
+Changes in v5:
+- Updated DT binding license identifier.
+- Updated DT binding to have full example.
+- Added missing Reviewed-by tag to Patch 2/4.
 
-On Sun, Mar 15, 2020 at 7:14 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Vinay Simha BN <simhavcs@gmail.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  .../display/panel/jdi,lt070me05000.txt        | 31 ---------
->  .../display/panel/jdi,lt070me05000.yaml       | 69 +++++++++++++++++++
->  2 files changed, 69 insertions(+), 31 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-> deleted file mode 100644
-> index 4989c91d505f..000000000000
-> --- a/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -JDI model LT070ME05000 1200x1920 7" DSI Panel
-> -
-> -Required properties:
-> -- compatible: should be "jdi,lt070me05000"
-> -- vddp-supply: phandle of the regulator that provides the supply voltage
-> -  Power IC supply (3-5V)
-> -- iovcc-supply: phandle of the regulator that provides the supply voltage
-> -  IOVCC , power supply for LCM (1.8V)
-> -- enable-gpios: phandle of gpio for enable line
-> -  LED_EN, LED backlight enable, High active
-> -- reset-gpios: phandle of gpio for reset line
-> -  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
-> -  XRES, Reset, Low active
-> -- dcdc-en-gpios: phandle of the gpio for power ic line
-> -  Power IC supply enable, High active
-> -
-> -Example:
-> -
-> -       dsi0: qcom,mdss_dsi@4700000 {
-> -               panel@0 {
-> -                       compatible = "jdi,lt070me05000";
-> -                       reg = <0>;
-> -
-> -                       vddp-supply = <&pm8921_l17>;
-> -                       iovcc-supply = <&pm8921_lvs7>;
-> -
-> -                       enable-gpios = <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
-> -                       reset-gpios = <&tlmm_pinmux 54 GPIO_ACTIVE_LOW>;
-> -                       dcdc-en-gpios = <&pm8921_gpio 23 GPIO_ACTIVE_HIGH>;
-> -               };
-> -       };
-> diff --git a/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.yaml b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.yaml
-> new file mode 100644
-> index 000000000000..e0abf68ecb19
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/jdi,lt070me05000.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: JDI model LT070ME05000 1200x1920 7" DSI Panel
-> +
-> +maintainers:
-> +  - Vinay Simha BN <simhavcs@gmail.com>
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: jdi,lt070me05000
-> +
-> +  enable-gpios: true
-> +  reg: true
-> +  reset-gpios: true
-> +
-> +  vddp-supply:
-> +    description: |
-> +      The regulator that provides the supply voltage Power IC supply (3-5V)
-> +
-> +  iovcc-supply:
-> +    description: |
-> +      The regulator that provides the supply voltage IOVCC,
-> +      power supply for LCM (1.8V)
-> +
-> +  dcdc-en-gpios:
-> +    description: |
-> +      phandle of the gpio for power ic line
-> +      Power IC supply enable, High active
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vddp-supply
-> +  - iovcc-supply
-> +  - enable-gpios
-> +  - reset-gpios
-> +  - dcdc-en-gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    dsi: qcom,mdss_dsi@4700000 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        panel@0 {
-> +            compatible = "jdi,lt070me05000";
-> +            reg = <0>;
-> +
-> +            vddp-supply = <&pm8921_l17>;
-> +            iovcc-supply = <&pm8921_lvs7>;
-> +
-> +            enable-gpios = <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
-> +            reset-gpios = <&tlmm_pinmux 54 GPIO_ACTIVE_LOW>;
-> +            dcdc-en-gpios = <&pm8921_gpio 23 GPIO_ACTIVE_HIGH>;
-> +        };
-> +    };
-> +
-> +...
-> --
-> 2.20.1
->
+Prashant Malani (4):
+  dt-bindings: Add cros-ec Type C port driver
+  platform/chrome: Add Type C connector class driver
+  platform/chrome: typec: Get PD_CONTROL cmd version
+  platform/chrome: typec: Update port info from EC
 
+ .../bindings/chrome/google,cros-ec-typec.yaml |  54 +++
+ drivers/platform/chrome/Kconfig               |  11 +
+ drivers/platform/chrome/Makefile              |   1 +
+ drivers/platform/chrome/cros_ec_typec.c       | 357 ++++++++++++++++++
+ 4 files changed, 423 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+ create mode 100644 drivers/platform/chrome/cros_ec_typec.c
 
 -- 
-regards,
-vinaysimha
+2.25.1.481.gfbce0eb801-goog
+
