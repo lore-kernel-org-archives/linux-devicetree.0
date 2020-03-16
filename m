@@ -2,127 +2,67 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E6BC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EF3C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF13D206B1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:44:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J10R4vh7"
+	by mail.kernel.org (Postfix) with ESMTP id E8C23206B1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730103AbgCPIoP (ORCPT
+        id S1730135AbgCPIoe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:44:15 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44618 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730085AbgCPIoP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 04:44:15 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02G8hE44121930;
-        Mon, 16 Mar 2020 03:43:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584348194;
-        bh=kFdEoCHU6eRacjLcxiP9sKp6oWTiEshU4OrA1P2u8Fw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=J10R4vh7hYNZqb1zd6gZow5kPEKiVagRH1eiUJ7Ai5j4OV/CjC9OZ1ATS9CD8vZCh
-         Dmz+cWZZ1F2ctNW1ZH2546m2n95Cyhy6bpiB+OZKsbRhSop3x8ZU5oUWHsvExpq43v
-         d9LhcAc+xKrk9Z/iBMv5i33vVBCGgtWGpeMYvYig=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02G8hEn1045978;
-        Mon, 16 Mar 2020 03:43:14 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Mar 2020 03:43:13 -0500
-Received: from localhost.localdomain (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Mar 2020 03:43:14 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02G8gkl3068652;
-        Mon, 16 Mar 2020 03:42:48 -0500
-Subject: Re: [PATCH v1 35/36] dt-bindings: display: convert lgphilips,lb035q02
- to DT Schema
-To:     Sam Ravnborg <sam@ravnborg.org>
-CC:     <dri-devel@lists.freedesktop.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-spi@vger.kernel.org>, Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-References: <20200315134416.16527-1-sam@ravnborg.org>
- <20200315134416.16527-36-sam@ravnborg.org>
- <a73da9d3-43b2-3ce7-85e9-8135dbf48e98@ti.com>
- <20200316082607.GA18510@ravnborg.org>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <a634d733-4b88-9d5a-09a1-c9551d8a077a@ti.com>
-Date:   Mon, 16 Mar 2020 10:42:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200316082607.GA18510@ravnborg.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Mon, 16 Mar 2020 04:44:34 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:40994 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730069AbgCPIoe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 04:44:34 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5A37F143243A6;
+        Mon, 16 Mar 2020 01:44:33 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 01:44:32 -0700 (PDT)
+Message-Id: <20200316.014432.1845198613759724217.davem@davemloft.net>
+To:     o.rempel@pengutronix.de
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        marex@denx.de, david@protonic.nl, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] add TJA1102 support
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200313052252.25389-1-o.rempel@pengutronix.de>
+References: <20200313052252.25389-1-o.rempel@pengutronix.de>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Mar 2020 01:44:33 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 16/03/2020 10:26, Sam Ravnborg wrote:
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Date: Fri, 13 Mar 2020 06:22:48 +0100
 
->> Isn't this also compatible with panel-simple bindings? 'label' is the only
->> one not in panel-simple, but that's optional and has never been used by the
->> panel driver.
-> The panel is a SPI slave - which is not too obvious from the old
-> binding.
+> changes v4:
+> - remove unused phy_id variable
 > 
-> The new DT Schema includes spi/spi-slave.yaml to give the binding
-> proper access to the spi slave properties.
+> changes v3:
+> - export part of of_mdiobus_register_phy() and reuse it in tja11xx
+>   driver
+> - coding style fixes
 > 
-> That would not be possible with panel-simple binding as no further
-> properties are allowed with the panel-simple binding.
-> 
-> I hope this explains why there is a dedicated binding for this panel.
+> changes v2:
+> - use .match_phy_device
+> - add irq support
+> - add add delayed registration for PHY1
 
-Hmm, but how is this different than, say, DSI panels? There are DSI panels in panel-simple bindings, 
-and those might require DSI bus parameters ('reg' in the minimum).
+Florian, please properly follow up in the discussion of patch #1 so that they
+can implement support properly.
 
-  Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thank you.
