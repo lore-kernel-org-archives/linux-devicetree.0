@@ -2,86 +2,104 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92208C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 06:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D206C1975A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 07:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B2E20674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 06:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C7320719
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 07:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584343323;
+	bh=Vp+s8EEFEVlphkfiFpf3eXtdPPY0N8Kljsl+0RC6T9A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PULomxKpdeVNaFbsUYPNF0wxLNd97SzF9qMQ88RfQi9StVWCJuelDYH/YxuZizxeL
+	 laqAF7LSirC6tJ7PHC2HcL36lgcjrjF0EJf+YksLBTuhEGKs49jDIHb8NKkNWHPqCZ
+	 BRnqPhwbO6ImKVoLBqf5gNcUrsr5aOFmZbjI2P+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbgCPGwb (ORCPT
+        id S1729818AbgCPHWC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 02:52:31 -0400
-Received: from jax4mhob19.registeredsite.com ([64.69.218.107]:59098 "EHLO
-        jax4mhob19.registeredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729319AbgCPGwb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 02:52:31 -0400
-Received: from mailpod.hostingplatform.com ([10.30.71.204])
-        by jax4mhob19.registeredsite.com (8.14.4/8.14.4) with ESMTP id 02G6qR79120946
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 02:52:27 -0400
-Received: (qmail 21017 invoked by uid 0); 16 Mar 2020 06:52:27 -0000
-X-TCPREMOTEIP: 83.128.90.119
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
-  by 0 with ESMTPA; 16 Mar 2020 06:52:27 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     jic23@kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] dt-bindings: iio: accel: Add bmi088 accelerometer bindings
-Date:   Mon, 16 Mar 2020 07:52:18 +0100
-Message-Id: <20200316065218.4103-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Mon, 16 Mar 2020 03:22:02 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45119 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728120AbgCPHWC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 03:22:02 -0400
+Received: by mail-lf1-f68.google.com with SMTP id b13so13060897lfb.12;
+        Mon, 16 Mar 2020 00:22:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=I7aBKCm8kI2F7Jl47saMU25REPiGQ5/LzV7PSFh0a9E=;
+        b=KpJtAVtEBJYrb78D+ga2nTcPCCk5TP99+D/E9xzopC2WSx4Ct5Fd9iKQ4+4I7nbBOy
+         vOaFw1uA8ummW8s4gaGNaKgsltXr7lQ57c57OukkqnssfDqNjKcxKSz0NmkHUR1hTfzb
+         nlCTAnkarBvaCGEaFx4xDWzPfaP0O7vfzmhGG/2RMA6WlA3ikUCDupF5jnQajP9oufw4
+         TRItRdKvgmyeEiTmXivj2RSfWlgpL5KMhBImErzwMXP7QWQMeV1E4J/1EWzYI4ghtbzP
+         YqQMPakHZj/nDpy9X9fynFG/6sRae7iqH90u2bGXcY1uDovXZvyu0NKP5Ce7BRL1bYAR
+         WK8w==
+X-Gm-Message-State: ANhLgQ0ZaeGCO5bB/4wvTmWMQlw6TF5rDQxsc0EVMyvD1ut4XpQ7XFxB
+        x2kThUDHcLbP6m3euPB9cMzaIg3c
+X-Google-Smtp-Source: ADFU+vvfXaI0eA6zxF80cwGW+BpzLifqbMXqRzCrqipFgyDI9intGbzRrLSOburBVMZ/TzFxex69dw==
+X-Received: by 2002:a19:6f44:: with SMTP id n4mr16199861lfk.59.1584343320572;
+        Mon, 16 Mar 2020 00:22:00 -0700 (PDT)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id a10sm14618994ljb.23.2020.03.16.00.21.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 00:21:59 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1jDk4F-0002Bi-58; Mon, 16 Mar 2020 08:21:43 +0100
+Date:   Mon, 16 Mar 2020 08:21:43 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        Sanchayan Maity <maitysanchayan@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 5.5 05/41] ARM: dts: imx6dl-colibri-eval-v3: fix
+ sram compatible properties
+Message-ID: <20200316072143.GT14211@localhost>
+References: <20200316023319.749-1-sashal@kernel.org>
+ <20200316023319.749-5-sashal@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316023319.749-5-sashal@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
-the accelerometer part.
+On Sun, Mar 15, 2020 at 10:32:43PM -0400, Sasha Levin wrote:
+> From: Johan Hovold <johan@kernel.org>
+> 
+> [ Upstream commit bcbf53a0dab50980867476994f6079c1ec5bb3a3 ]
+> 
+> The sram-node compatible properties have mistakingly combined the
+> model-specific string with the generic "mtd-ram" string.
+> 
+> Note that neither "cy7c1019dv33-10zsxi, mtd-ram" or
+> "cy7c1019dv33-10zsxi" are used by any in-kernel driver and they are
+> not present in any binding.
+> 
+> The physmap driver will however bind to platform devices that specify
+> "mtd-ram".
+> 
+> Fixes: fc48e76489fd ("ARM: dts: imx6: Add support for Toradex Colibri iMX6 module")
+> Cc: Sanchayan Maity <maitysanchayan@gmail.com>
+> Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+> Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- .../devicetree/bindings/iio/accel/bmi088.txt  | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/bmi088.txt
+Greg has already dropped this one from the stable queues once on my
+request, so please do not add it back.
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/bmi088.txt b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
-new file mode 100644
-index 000000000000..691a47726dbc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
-@@ -0,0 +1,23 @@
-+* Bosch BMI088 IMU combining accelerometer and gyroscope
-+
-+https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
-+
-+Required properties:
-+
-+  - compatible : should be "bosch,bmi088_accel"
-+  - reg : the I2C address of the sensor or the SPI chip select number
-+
-+Optional properties:
-+
-+  - interrupts : interrupt mapping for GPIO IRQ, it should be configured with
-+		 IRQ_TYPE_EDGE_RISING
-+
-+Example:
-+
-+bmi088_accel@1 {
-+	compatible = "bosch,bmi088_accel";
-+	reg = <1>;
-+	spi-max-frequency = <10000000>;
-+	interrupt-parent = <&gpio>;
-+	interrupts = <90 IRQ_TYPE_EDGE_RISING>;
-+};
--- 
-2.17.1
-
+Johan
