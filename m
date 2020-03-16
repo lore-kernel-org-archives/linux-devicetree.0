@@ -2,89 +2,125 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F31C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1534BC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172EA20663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D851D20663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:07:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584360444;
+	bh=dKLStnngV26lqFF3RkpFDDio6Do+Y9GQ8/8bts/sxyQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YHUS8IAUulnzUKljPLwe5m48qjl0la2j/VYiz1QM9FugQ/fUVL1dz5rrqJxgYBNoV
+	 EPYH0HE/azbj7q+QccNe923e+pdcJ5cwZfS5Vz4169V3K80TNIAfbjFldI42772yGH
+	 6QPPesT9hzVL/RSWhwjKE/qJHkwmDlmt9mpeR/n4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbgCPMGQ (ORCPT
+        id S1730913AbgCPMHY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:06:16 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:54916 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730962AbgCPMGG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:06:06 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B55112009F9;
-        Mon, 16 Mar 2020 13:06:04 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A75BB2009CD;
-        Mon, 16 Mar 2020 13:06:04 +0100 (CET)
-Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 4762D2039B;
-        Mon, 16 Mar 2020 13:06:04 +0100 (CET)
-From:   Madalin Bucur <madalin.bucur@oss.nxp.com>
-To:     davem@davemloft.net, netdev@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, shawnguo@kernel.org,
-        leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>
-Subject: [PATCH net v2 3/3] arm64: dts: ls1046ardb: set RGMII interfaces to RGMII_ID mode
-Date:   Mon, 16 Mar 2020 14:05:58 +0200
-Message-Id: <1584360358-8092-4-git-send-email-madalin.bucur@oss.nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
-References: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
-Content-Type: text/plain; charset="us-ascii"
-Reply-to: madalin.bucur@oss.nxp.com
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 16 Mar 2020 08:07:24 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:44006 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730634AbgCPMHY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 08:07:24 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02GC7HJe022659
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 21:07:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02GC7HJe022659
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584360438;
+        bh=1WdVoD2GR3rsf9LOOCviumyPaCeZIZzcSnPah9GyQRo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AUi5omdfuSn7fW9rIh8cuNHJWA0zaQvmfoAu6FSyf+rA74wjPaBnwEwYFIyT5gKb1
+         3taHlgNI8Nk9rzPXIs81zDPWrW4v3FOWnWTiZgEQwdX7W7SEDVa2WUcGlWLfisA846
+         b8y5O10v/valqjW9DRcltYRBWCl7W46OLKc0T2CYSb3KH+ykxvTFuZ7/Ej3rtOAD2x
+         xuEg38G0GnMpLQ/AGQl84RT8CCSORedML1RmAeet7LZiOMqeOWi2SyERorPKuSMPqg
+         QqijorSqJ7CBixaPkPjtl16x5XnxB8st7OS5KkpWwtVdirMkLwqnQaysX0RiLLUPHP
+         KE94L1sXvTIuQ==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id q24so1517196ual.10
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 05:07:18 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2wvts4qSRNiCQ2RniAepsQS4VYGgJICOGHbKEV9/00WknDlnQe
+        XUhG0TSrTXl/OVCYvpwLY/djuSwtAUspXEX8i+4=
+X-Google-Smtp-Source: ADFU+vu+aiZaKzn4yQzmAfKsZEABMNGMwf1PqYMa2CZTlxIl9JDGIpCD9f5PgcYDxiJ9WvpEnqc4kwlvAq5+7XSqkjc=
+X-Received: by 2002:ab0:28d8:: with SMTP id g24mr13929982uaq.121.1584360437287;
+ Mon, 16 Mar 2020 05:07:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <1584061096-23686-2-git-send-email-hayashi.kunihiko@socionext.com>
+ <CAK7LNASCOhZ5BMWWCA1zKep-sXra1pBBTxjsDp816k8Ph1m1Pw@mail.gmail.com> <20200316194330.B482.4A936039@socionext.com>
+In-Reply-To: <20200316194330.B482.4A936039@socionext.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 16 Mar 2020 21:06:40 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATmxhLn6fg8+5RAKcw+_-75SDN0dG=E1e8H2yrYU3p5Eg@mail.gmail.com>
+Message-ID: <CAK7LNATmxhLn6fg8+5RAKcw+_-75SDN0dG=E1e8H2yrYU3p5Eg@mail.gmail.com>
+Subject: Re: [PATCH 01/10] ARM: dts: uniphier: Add XDMAC node
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The correct setting for the RGMII ports on LS1046ARDB is to
-enable delay on both Rx and Tx so the interface mode used must
-be PHY_INTERFACE_MODE_RGMII_ID.
+On Mon, Mar 16, 2020 at 7:43 PM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
+>
+> On Sat, 14 Mar 2020 11:14:09 +0900 <yamada.masahiro@socionext.com> wrote:
+>
+> > On Fri, Mar 13, 2020 at 9:58 AM Kunihiko Hayashi
+> > <hayashi.kunihiko@socionext.com> wrote:
+> > >
+> > > Add external DMA controller support implemented in UniPhier SoCs.
+> > > This supports for Pro4, Pro5 and PXs2.
+> > >
+> > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > > ---
+> > >  arch/arm/boot/dts/uniphier-pro4.dtsi | 8 ++++++++
+> > >  arch/arm/boot/dts/uniphier-pro5.dtsi | 8 ++++++++
+> > >  arch/arm/boot/dts/uniphier-pxs2.dtsi | 8 ++++++++
+> > >  3 files changed, 24 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/uniphier-pro4.dtsi b/arch/arm/boot/dts/uniphier-pro4.dtsi
+> > > index 2ec04d7..a1bfe0f 100644
+> > > --- a/arch/arm/boot/dts/uniphier-pro4.dtsi
+> > > +++ b/arch/arm/boot/dts/uniphier-pro4.dtsi
+> > > @@ -426,6 +426,14 @@
+> > >                         };
+> > >                 };
+> > >
+> > > +               xdmac: dma-controller@5fc10000 {
+> > > +                       compatible = "socionext,uniphier-xdmac";
+> > > +                       reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
+> >
+> >
+> >
+> > This is odd.
+> > <0x5fc20000 0x800> causes reg overwrap with
+> > aidet@5fc20000 below.
+>
+> Thank you for pointing out.
+>
+> Indeed, the address is wrong. I'll fix it.
+> And I'll also fix the example of dt-bindings.
+>
+> Thank you,
 
-Since commit 1b3047b5208a80 ("net: phy: realtek: add support for
-configuring the RX delay on RTL8211F") the Realtek 8211F PHY driver
-has control over the RGMII RX delay and it is disabling it for
-RGMII_TXID. The LS1046ARDB uses two such PHYs in RGMII_ID mode but
-in the device tree the mode was described as "rgmii".
 
-Changing the phy-connection-type to "rgmii-id" to address the issue.
 
-Fixes: 3fa395d2c48a ("arm64: dts: add LS1046A DPAA FMan nodes")
-Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+You did not notice the over-wrap
+because the second region is not used
+from the driver.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-index dbc23d6cd3b4..d53ccc56bb63 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-@@ -131,12 +131,12 @@
- &fman0 {
- 	ethernet@e4000 {
- 		phy-handle = <&rgmii_phy1>;
--		phy-connection-type = "rgmii";
-+		phy-connection-type = "rgmii-id";
- 	};
- 
- 	ethernet@e6000 {
- 		phy-handle = <&rgmii_phy2>;
--		phy-connection-type = "rgmii";
-+		phy-connection-type = "rgmii-id";
- 	};
- 
- 	ethernet@e8000 {
--- 
-2.1.0
+Why did you define the unused region?
 
+
+--
+Best Regards
+Masahiro Yamada
