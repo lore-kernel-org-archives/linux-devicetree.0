@@ -2,223 +2,101 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E95C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694B7C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 21:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E732073C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2DE20679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 21:16:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="LP1I9ll8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WAc3H/gW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AW2GJDjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732561AbgCPUs7 (ORCPT
+        id S1732639AbgCPVQt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:48:59 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:44883 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732537AbgCPUs7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:48:59 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6699B58089A;
-        Mon, 16 Mar 2020 16:48:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 16 Mar 2020 16:48:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=2tglQQZWc8w8BFYHHOuQ8FRIUWK
-        jMyItVwVW13flha0=; b=LP1I9ll8CV/bx8h+KXkGxkFpvuXfPfTPSCZq1455SA6
-        oW1thhFn4p2zGNFDMWx6loA246ZNaggiWkI2PMPcUKyYdptl0DIh8jL8C/kRJY44
-        tARF8LnwNGRM6Gl3v8ramNfHvpTJ+SGRAoqEtU6BYb+izeX2sTJSlbbue1XNw9bp
-        qvuyRXX1KXurx5LuxJLI+zEl9TmtS50a4RpvGn/qEP24jJm2sekECVQdrzxxFLnT
-        iPCB/Y/Rh7IErGSNZmDvJDePWHTUK2OFFMx1HvdI9IDQmVnR8XSsMYVk81T8c96R
-        Pqyb03DlVavmgxAqFnifFpV00TF6BQwDRw9cLPkCSow==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=2tglQQ
-        ZWc8w8BFYHHOuQ8FRIUWKjMyItVwVW13flha0=; b=WAc3H/gWQdr3elcEYWxvbq
-        wslSbdrMrxGnWftrdLz+1T+t/F//9bAbg65T7dsIxWHugJtMIliNktmFEjm1Bfp/
-        za2nvaGjmUE+uPZJaDQyJRWAj8eX8x+nTeIB7EPm+tFyNab6f/t+Kkjic8UGX7VA
-        CbjcelqmPy5gAjtyfJ1UbZp/g+ejTPdYvIhyrzIbvokKPdgos+7j9sgrq7Q/sVdB
-        FJHAJ37alG/F7T/2W2Crv/aePS63mAe4fFN6nX4Uf+SFXbparBLXLO1Mms/CCeBO
-        UGkWo8ZhsfGrSWc+B9iatHK2tuE+17Z1ueJx+J5tBLraJSNCmtBI41arNQVj5F6A
-        ==
-X-ME-Sender: <xms:NeZvXqEn8Yf3bXeXC3UMNn3qvRCzfhoScIVtjkKaAQU9CCJo01LcHA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeffedgudegtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
-    dtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:NeZvXp2YuEvGoIbgs0Ic0o4EgHdl36nnXGba5HsJJcytNmTq_-qchA>
-    <xmx:NeZvXq1-KzfBBuOObXdDCJjb3fRRRMLkjdk61uB3pTZ8jmVxQK0bhA>
-    <xmx:NeZvXjNIBev9Y-1WVwT_s8ght3MAxgU8dnxvXiaVq14ne5oJBvP4FQ>
-    <xmx:OeZvXuCXIHbp6weyKnjMyZRj7vq_Y4094xNFyiPTfefEWaio9uF2tQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D21533280060;
-        Mon, 16 Mar 2020 16:48:52 -0400 (EDT)
-Date:   Mon, 16 Mar 2020 21:48:50 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-Subject: Re: [PATCH v1 02/36] dt-bindings: spi: support non-spi bindings as
- SPI slaves
-Message-ID: <20200316204850.gggeyjulgiy53i7x@gilmour.lan>
-References: <20200315134416.16527-1-sam@ravnborg.org>
- <20200315134416.16527-3-sam@ravnborg.org>
+        Mon, 16 Mar 2020 17:16:49 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48872 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732634AbgCPVQt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 17:16:49 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GLGk5I053421;
+        Mon, 16 Mar 2020 16:16:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584393406;
+        bh=auIeyhTBM5VkG3uumINphWmH9dle8E51uTezycsVdfw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=AW2GJDjDqJALwoiACZrVEaZ547mHy7rGecQNGU7yiSaOnmjRGQXae6HVSf3WZLgqh
+         p/vEpeiN9SwW7v/0GRuIBepJQP0m+/OnaaaveMWGhcXE/NrEpSXaxe1622zZn2q8Jf
+         Jc3UpgovJzlR0msqclGmu5V8oOF+fWC9ITLliKe8=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02GLGkP3032895
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Mar 2020 16:16:46 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Mar 2020 16:16:45 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Mar 2020 16:16:46 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GLGgmi060747;
+        Mon, 16 Mar 2020 16:16:43 -0500
+Subject: Re: [for-next PATCH v2 1/5] phy: ti: gmii-sel: simplify config
+ dependencies between net drivers and gmii phy
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        netdev <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200303160029.345-1-grygorii.strashko@ti.com>
+ <20200303160029.345-2-grygorii.strashko@ti.com>
+ <20200316140859.GA30922@a0393678ub>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <128961a1-8437-741d-96cc-ed24b790cabf@ti.com>
+Date:   Mon, 16 Mar 2020 23:16:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200315134416.16527-3-sam@ravnborg.org>
+In-Reply-To: <20200316140859.GA30922@a0393678ub>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
 
-On Sun, Mar 15, 2020 at 02:43:42PM +0100, Sam Ravnborg wrote:
-> Independent bindings can be SPI slaves which for example is
-> the case for several panel bindings.
->
-> Move SPI slave properties to spi-slave.yaml so the independent
-> SPI slave bindings can include spi-slave.yaml rather than
-> duplicating the properties.
->
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: linux-spi@vger.kernel.org
-> ---
->  .../bindings/spi/spi-controller.yaml          | 63 +-------------
->  .../devicetree/bindings/spi/spi-slave.yaml    | 83 +++++++++++++++++++
->  2 files changed, 86 insertions(+), 60 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-slave.yaml
->
-> diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> index 1e0ca6ccf64b..99531c8d10dd 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> @@ -67,71 +67,14 @@ patternProperties:
->    "^.*@[0-9a-f]+$":
->      type: object
->
-> +    allOf:
-> +      - $ref: spi-slave.yaml#
-> +
->      properties:
->        compatible:
->          description:
->            Compatible of the SPI device.
->
-> -      reg:
-> -        minimum: 0
-> -        maximum: 256
-> -        description:
-> -          Chip select used by the device.
-> -
-> -      spi-3wire:
-> -        $ref: /schemas/types.yaml#/definitions/flag
-> -        description:
-> -          The device requires 3-wire mode.
-> -
-> -      spi-cpha:
-> -        $ref: /schemas/types.yaml#/definitions/flag
-> -        description:
-> -          The device requires shifted clock phase (CPHA) mode.
-> -
-> -      spi-cpol:
-> -        $ref: /schemas/types.yaml#/definitions/flag
-> -        description:
-> -          The device requires inverse clock polarity (CPOL) mode.
-> -
-> -      spi-cs-high:
-> -        $ref: /schemas/types.yaml#/definitions/flag
-> -        description:
-> -          The device requires the chip select active high.
-> -
-> -      spi-lsb-first:
-> -        $ref: /schemas/types.yaml#/definitions/flag
-> -        description:
-> -          The device requires the LSB first mode.
-> -
-> -      spi-max-frequency:
-> -        $ref: /schemas/types.yaml#/definitions/uint32
-> -        description:
-> -          Maximum SPI clocking speed of the device in Hz.
-> -
-> -      spi-rx-bus-width:
-> -        allOf:
-> -          - $ref: /schemas/types.yaml#/definitions/uint32
-> -          - enum: [ 1, 2, 4, 8 ]
-> -          - default: 1
-> -        description:
-> -          Bus width to the SPI bus used for MISO.
-> -
-> -      spi-rx-delay-us:
-> -        description:
-> -          Delay, in microseconds, after a read transfer.
-> -
-> -      spi-tx-bus-width:
-> -        allOf:
-> -          - $ref: /schemas/types.yaml#/definitions/uint32
-> -          - enum: [ 1, 2, 4, 8 ]
-> -          - default: 1
-> -        description:
-> -          Bus width to the SPI bus used for MOSI.
-> -
-> -      spi-tx-delay-us:
-> -        description:
-> -          Delay, in microseconds, after a write transfer.
-> -
 
-I can see what you're trying to do, but you don't really need to.
+On 16/03/2020 16:08, Kishon Vijay Abraham I wrote:
+> On Tue, Mar 03, 2020 at 06:00:25PM +0200, Grygorii Strashko wrote:
+>> The phy-gmii-sel can be only auto selected in Kconfig and now the pretty
+>> complex Kconfig dependencies are defined for phy-gmii-sel driver, which
+>> also need to be updated every time phy-gmii-sel is re-used for any new
+>> networking driver.
+>>
+>> Simplify Kconfig definition for phy-gmii-sel PHY driver - drop all
+>> dependencies and from networking drivers and rely on using 'imply
+>> PHY_TI_GMII_SEL' in Kconfig definitions for networking drivers instead.
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> 
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 
-All the SPI devices will be declared under a spi controller node that
-will validate its child nodes (and thus the devices) already.
+Thanks you, Kishon.
 
-Doing it this way would actually make all the checks happen twice,
-once as part of the SPI controller, once as part of the SPI device
-binding, without any good reason.
+I'll include this patch in next version of my series to
+add networking support for k3 am65x/j721e soc.
 
-Maxime
+-- 
+Best regards,
+grygorii
