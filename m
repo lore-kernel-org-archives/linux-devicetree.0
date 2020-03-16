@@ -2,136 +2,97 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302E3C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B009C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02866206E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:35:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qwBQX/Av"
+	by mail.kernel.org (Postfix) with ESMTP id 39C16205ED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584362989;
+	bh=bUJOXaXHzXnx1Lwff+Tn+hDd+me/q/BeYUaYY6pwvOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sNq8bdPUN2bNXJitfxHB8WlBGYO8wy3AXNkcKw649+mI/blju8IkHVC8O31dW+QQq
+	 eUSuGmOfaYXFo8NShUYeNXsZBfm61HYXI4yfbHuqBqLJ1QQ54HYqsgQTtTwm1f+7HQ
+	 8tN1eR+Nh2Qr7O7ipudlk3tv6TXIEFyNSHS21yog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730920AbgCPMfP (ORCPT
+        id S1731088AbgCPMts (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:35:15 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35695 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730878AbgCPMfP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 08:35:15 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h4so373123wru.2;
-        Mon, 16 Mar 2020 05:35:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=mli3LATmq+tFwnP+8wWyRQBvASbiDCrn7g0yvxiqGEM=;
-        b=qwBQX/AvaM4WuENy/l9OVAIvMREaTwowHyXP2qUkfKSxWkLwA7pgDo5EsqULYQ3h6P
-         zKqVvtvlJY7gBnKIZRPD4SftZxNw7fK3PW6XHOioqTEpCJLl3zC6/zULHQvfHlKuDoez
-         P0+2q7S/8Rz4gQrvOr/xc2RzVOEwmAxBbsHVmkSdDOxUDP6ip59GU84uZ4nZ2zmkzzpL
-         zl7vzuV7ig182VLbQbClF1gWDMwwIWq/hZ8JB0kdnO2PzdNkvzBbV3i4Sma+oxNvTDPi
-         0rD5ttY2ltCVNjYtcl8+FDBikVqqaGnstjAbtF7mO+We07muT1FNiQ8Obaqi9/hDdrO5
-         /ldQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=mli3LATmq+tFwnP+8wWyRQBvASbiDCrn7g0yvxiqGEM=;
-        b=Pz8prVnBBECdkFLv/LYklIaLI7OwQ7tAHaDrytu/Ln4cKhXu5xTqMGG7W3OPwCbHcy
-         TjX4vvyr02ZCB2RxxodDb7at/Pct66lMqA3viMT2TBTQujgylhgUpkMQ7trFxGTcNcm+
-         5zHMmb64GTb2qbVKJOhz/Oh8rprxiJ8QHaVt44A9q14dDyFlSe4eNz58RpCud/RbmmmV
-         alWd1Bltlq4dw9jHwyq07BxQG6F5CdwhsE5+CHcOOCGC6kxx22OPuSO8DTQQxADoVlsg
-         pkut6c+qMnp7qvCZUuF8RprR2Io2Vq6NGTqnVjn4kx1XypllXS5+EybSF8HPJoHs+InG
-         6pcw==
-X-Gm-Message-State: ANhLgQ34an4dup1z199nn6Qq9q0HTh6ta3egjHGxIOW7mTGw3SIFSMlX
-        mfqHzk6QdICT6SGsSf2W2W8gDIQZstkuig==
-X-Google-Smtp-Source: ADFU+vsHDnRP7JNKklpe0mDZqdlh4tIegobsZzOI6NOa5tscYI8VO/tOfbj17EQIQ3lOecUh05XLEQ==
-X-Received: by 2002:a5d:522f:: with SMTP id i15mr34617007wra.231.1584362112960;
-        Mon, 16 Mar 2020 05:35:12 -0700 (PDT)
-Received: from [127.0.0.1] ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id g127sm31266941wmf.10.2020.03.16.05.35.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Mar 2020 05:35:12 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 12:35:04 +0000 (UTC)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Message-ID: <0ed0f4c8-5901-4d0f-b6e0-d641b3299e64@localhost>
-In-Reply-To: <20200314224340.1544-6-olteanv@gmail.com>
-References: <20200314224340.1544-1-olteanv@gmail.com> <20200314224340.1544-6-olteanv@gmail.com>
-Subject: Re: [PATCH v3 05/12] spi: spi-fsl-dspi: Protect against races on
- dspi->words_in_flight
+        Mon, 16 Mar 2020 08:49:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:47844 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730970AbgCPMts (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:49:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C81D430E;
+        Mon, 16 Mar 2020 05:49:47 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B82E3F52E;
+        Mon, 16 Mar 2020 05:49:47 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 12:49:45 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        Michael Walle <michael@walle.cc>, peng.ma@nxp.com
+Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
+ queue with a simple completion
+Message-ID: <20200316124945.GF5010@sirena.org.uk>
+References: <20200314224340.1544-1-olteanv@gmail.com>
+ <20200314224340.1544-7-olteanv@gmail.com>
+ <20200316122613.GE5010@sirena.org.uk>
+ <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Correlation-ID: <0ed0f4c8-5901-4d0f-b6e0-d641b3299e64@localhost>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="w3uUfsyyY1Pqa/ej"
+Content-Disposition: inline
+In-Reply-To: <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
+X-Cookie: I thought YOU silenced the guard!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mar 15, 2020 12:44:02 AM Vladimir Oltean <olteanv@gmail.com>:
 
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
->
-> dspi->words_in_flight is a variable populated in the *_write functions
-> and used in the dspi_fifo_read function. It is also used in
-> dspi_fifo_write, immediately after transmission, to update the
-> message->actual_length variable used by higher layers such as spi-mem
-> for integrity checking.
->
-> But it may happen that the IRQ which calls dspi_fifo_read to be
-> triggered before the updating of message->actual_length takes place. In
-> that case, dspi_fifo_read will decrement dspi->words_in_flight to -1,
-> and that will cause an invalid modification of message->actual_length.
->
-> Make the simplest fix possible: don't decrement the actual shared
-> variable in dspi->words_in_flight from dspi_fifo_read, but actually a
-> copy of it which is on stack.
->
-> Suggested-by: Michael Walle <michael@walle.cc>
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
-> Changes in v4:
-> Patch is new.
->
-> drivers/spi/spi-fsl-dspi.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-> index 51224b772680..3ac004aa2abd 100644
-> --- a/drivers/spi/spi-fsl-dspi.c
-> +++ b/drivers/spi/spi-fsl-dspi.c
-> @@ -765,8 +765,10 @@ static u32 dspi_popr_read(struct fsl_dspi *dspi)
->
-> static void dspi_fifo_read(struct fsl_dspi *dspi)
-> {
-> + int num_fifo_entries = dspi->words_in_flight;
-> +
-> /* Read one FIFO entry and push to rx buffer */
-> - while (dspi->words_in_flight--)
-> + while (num_fifo_entries--)
-> dspi_push_rx(dspi, dspi_popr_read(dspi));
-> }
->
-> --
-> 2.17.1
->
->
+--w3uUfsyyY1Pqa/ej
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: d59c90a2400f ("spi: spi-fsl-dspi: Convert TCFQ users to XSPI FIFO mode")
+On Mon, Mar 16, 2020 at 02:29:09PM +0200, Vladimir Oltean wrote:
 
-Patchwork should know to pick up this tag.
+> Correct, the real problem is that I forgot to add a Fixes: tag for
+> patch 5. I'll do that now.
 
-Thanks,
--Vladimir
+OK.  The series otherwise looked fine but I'll wait for testing.
+Michael, if there's issues remaining it might be good to get some
+Tested-bys for the patches prior to whatever's broken so we can get
+those fixes in (but obviously verifying that is work so only if you=20
+have time).
 
+--w3uUfsyyY1Pqa/ej
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5vdekACgkQJNaLcl1U
+h9AveQf+LOqJCuZK/In2NusDJBny94rpuyf/MG3uFk4SGh94eJKbw08H9ChimU5Q
+c+Coa95XkLCJzoVX6rdw1yjTgAP0n/YfaG3R4rTr24IfwqmZ/ggVl5WVQfdGTk2+
+AZKXqBmHiNgK7zizWDT6cH+1fMWbLoJS2mAz3imnwdpiLypTai/zwvb5SH6N0oyS
+FhIshW56cRhYj8UNpxwUm7Zr5C8L41rb4Isda5R3fUzaXwT20DdJ3tpYgsaL0NtE
+FkEvdxQjg4o3ssNJ15Mdt4yRGHEXVH7cnguTLZhqOogdWLs6NXvPjwtGJt0WVH24
+vudvOfP8tvVP1BjdzkMaPg3Go3Y/Jw==
+=NXWG
+-----END PGP SIGNATURE-----
+
+--w3uUfsyyY1Pqa/ej--
