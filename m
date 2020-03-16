@@ -2,139 +2,75 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD0CC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447E1C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DB920658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:12:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d1to8fGL"
+	by mail.kernel.org (Postfix) with ESMTP id 239C920658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbgCPJMm (ORCPT
+        id S1730229AbgCPJNp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:12:42 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58130 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730298AbgCPJMm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 05:12:42 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02G9Bh1S128532;
-        Mon, 16 Mar 2020 04:11:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584349903;
-        bh=BRFzpuMCnG0xdJJBx3HV4nOkWF/JKYLqvn+omLsF8yg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=d1to8fGLuhLhKXAixyw2Z3iuYaFWUh1GPlGJyscMNEg1onSB+0DEe/F1EUaNldVb0
-         YQ9Q9dXPK8t7YxO+0zPbuJV466ixMVoNxz3XX3It44IJc7CH+qLarj6NkbYVhipELH
-         0g2Vl/5yLBpswY147CMrGOUgM4HtFkJ4iQK5OO1Y=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02G9BhVR082753
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Mar 2020 04:11:43 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Mar 2020 04:11:42 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Mar 2020 04:11:42 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02G9BGFN086028;
-        Mon, 16 Mar 2020 04:11:18 -0500
-Subject: Re: [PATCH v1 35/36] dt-bindings: display: convert lgphilips,lb035q02
- to DT Schema
-To:     Sam Ravnborg <sam@ravnborg.org>
-CC:     <dri-devel@lists.freedesktop.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-spi@vger.kernel.org>, Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-References: <20200315134416.16527-1-sam@ravnborg.org>
- <20200315134416.16527-36-sam@ravnborg.org>
- <a73da9d3-43b2-3ce7-85e9-8135dbf48e98@ti.com>
- <20200316082607.GA18510@ravnborg.org>
- <a634d733-4b88-9d5a-09a1-c9551d8a077a@ti.com>
- <20200316085311.GA19201@ravnborg.org>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <3bf96f0e-90a8-1513-800f-0168d912fd9f@ti.com>
-Date:   Mon, 16 Mar 2020 11:11:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200316085311.GA19201@ravnborg.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 16 Mar 2020 05:13:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:54785 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730076AbgCPJNp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:13:45 -0400
+IronPort-SDR: Nv8An2QXeVsAvBF47agCE2fdeJWZgTwsbSWlrrL5YnhXeVHqd9ICDfD2RAlcYOlEzw1yvn6m8Q
+ e/pTtnfP2rWA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 02:13:45 -0700
+IronPort-SDR: VNBHN3O0upaVPoVr8LlfTFK70KmvfzNXLdgpRCaMcA7j0WK9aOL0c2yE9dSWu/KcGWphrnxBJD
+ Mr2dWBe1M/Mw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,559,1574150400"; 
+   d="scan'208";a="267499671"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Mar 2020 02:13:43 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com
+Subject: [PATCH 0/2] mmc: sdhci-of-arasan: Add support for Intel Keem
+Date:   Mon, 16 Mar 2020 17:13:22 +0800
+Message-Id: <20200316091324.15968-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 16/03/2020 10:53, Sam Ravnborg wrote:
+Hi.
 
-> We have panel-simple-dsi for DSI simple based panels.
-> This binding includes the reg property.
-> 
-> If we have included DSI panels in panel-simple.yaml, and we likely have
-> by accident, then they should be moved to panel-simple-dsi.yaml.
-> 
-> If they requires anything else then they shall have their
-> own binding.
-> 
-> panel-simple.yaml and panel-simple.dsi.yaml are on purpose
-> only for the simple panels and they have:
-> "additionalProperties: false" to avoid that a lot
-> of extra sneaks in.
-> 
-> I actually considered shortly a panel-simple-spi.yaml,
-> but the few panels I looked at had different names
-> for the power-supply so that did not fly.
-> I did not check them all - we have today (with this patch-set)
-> 9 bindings that references spi-slave.yaml.
+The first part is to document the new compatible string required
+for eMMC, SD and SDIO support in Intel Keem Bay.
 
-Okay, I understand now. Makes sense.
+The second part is to add the changes required to support the Host
+Controller and its integrated eMMC PHY. The significant change is
+to disable 64-bit support.
 
-panel-simple.c has dsi_of_match, which lists DSI panels. I was looking at that when I said 
-panel-simple binding has DSI panels. At least auo,b080uan01 and osddisplays,osd101t2045-53ts are 
-there, and earlier in this series you moved osddisplays,osd101t2587-53ts to panel-simple bindings.
+The patch was tested with Keem Bay evaluation module board.
 
-  Tomi
+Thank you.
+
+Best regards,
+Zainie
+
+
+Wan Ahmad Zainie (2):
+  dt-bindings: mmc: arasan: Add compatible strings for Intel Keem Bay
+  mmc: sdhci-of-arasan: Add support for Intel Keem Bay
+
+ .../devicetree/bindings/mmc/arasan,sdhci.txt  |  39 ++++++
+ drivers/mmc/host/sdhci-of-arasan.c            | 124 ++++++++++++++++++
+ 2 files changed, 163 insertions(+)
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.17.1
+
