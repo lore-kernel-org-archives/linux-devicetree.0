@@ -2,267 +2,96 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E67C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 14:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769C9C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 14:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4239020738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 14:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE9920679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 14:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="JHt/AE69"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oV18zW7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731683AbgCPOrF (ORCPT
+        id S1731607AbgCPOsl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:47:05 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:34142 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731445AbgCPOq7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:46:59 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5D5FF400B0;
-        Mon, 16 Mar 2020 14:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1584370018; bh=LN9uKbzVNlSJ2O4zRB08l1ExGsQQvCBB7mmSYtvGZrc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHt/AE69tmQHie6O79odi3mt5wnEPoAqmp0CGrK+zwUL+u34z3hWbVYxVWlP+fZ0G
-         tiVk6+wPCTwkWxtU4abWJATQhAJhZIAvZstkVT+NVFpRXiayMhrYcg7GPDafYy2gUm
-         QscLCvxLV4N4KtEIZMpYazinlKbz6jGWW1CxXOVpYy2kuy7FL5eUEq8lSZqCaw/daY
-         2lxkBJZ7mEs0I0GGH0IazfTW8ZZa9Y0gSmNmQC7XNgKJHT9iG8kZhr8jTAvmfscn1R
-         4OOjXILGNzb1n9kxxeI8brN7hSPhAKLvWKuPE5QVCf5yRf4/xkANwRutFJPhRO4/Dv
-         /03O4DT6UoRBw==
-Received: from paltsev-e7480.internal.synopsys.com (unknown [10.121.8.79])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 6520DA005F;
-        Mon, 16 Mar 2020 14:46:56 +0000 (UTC)
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     dri-devel@lists.freedesktop.org,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 1/2] DRM: ARC: add HDMI 2.0 TX encoder support
-Date:   Mon, 16 Mar 2020 17:46:46 +0300
-Message-Id: <20200316144647.10416-2-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200316144647.10416-1-Eugeniy.Paltsev@synopsys.com>
-References: <20200316144647.10416-1-Eugeniy.Paltsev@synopsys.com>
+        Mon, 16 Mar 2020 10:48:41 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40664 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731549AbgCPOsl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 10:48:41 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02GEmaY5092372;
+        Mon, 16 Mar 2020 09:48:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584370116;
+        bh=UooX8ZNh9tr7y4gxXLpPFHF5TDh2m19GWAc6UYXvUo0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=oV18zW7FS2UjKbHiEMKyD9jTTTDsLv8Jt25tv0xLNCgqPgf8Zg0S0YJA/l9yB7Gca
+         HgsFBwXLEA6MdCrR0Nexw/eT7EkonthCWD7CubrJ1iCrxFTSFh5zS3CxopWh4b/MAe
+         11wUDTI6Rzie0jfI5j2kvXoOyTqjw8KCohun8r2k=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02GEma1A055336
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Mar 2020 09:48:36 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Mar 2020 09:48:34 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Mar 2020 09:48:34 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02GEmVxO027810;
+        Mon, 16 Mar 2020 09:48:32 -0500
+Subject: Re: [PATCH] clk: ti: am43xx: Fix clock parent for RTC clock
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Tony Lindgren <tony@atomide.com>
+CC:     <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+References: <20200221171030.39326-1-tony@atomide.com>
+ <158231096467.258574.11716255621346536160@swboyd.mtv.corp.google.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <831d632e-78da-07c4-f8c7-14d17ba1ef28@ti.com>
+Date:   Mon, 16 Mar 2020 16:48:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <158231096467.258574.11716255621346536160@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Synopsys ARC SoCs (like HSDK4xD) include on-chip DesignWare HDMI
-encoders. Support them with a platform driver to provide platform glue
-data to the dw-hdmi driver.
+On 21/02/2020 20:49, Stephen Boyd wrote:
+> Quoting Tony Lindgren (2020-02-21 09:10:30)
+>> Currently enabling clkctrl clock on am4 can fail for RTC as the clock
+>> parent is wrong for RTC.
+>>
+>> Fixes: 76a1049b84dd ("clk: ti: am43xx: add new clkctrl data for am43xx")
+>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>> ---
+>>
+>> It is unclear if we can end up with RTC hung with the current mainline
+>> kernel in some cases. Probing RTC with device tree data only seems to
+>> trigger this every time.
+> 
+> It's small enough and if it's annoying enough we can probably put it
+> into clk-fixes to get it fixed for this release instead of waiting. Can
+> Tero ack it?
+> 
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- MAINTAINERS                       |   6 ++
- drivers/gpu/drm/Makefile          |   2 +-
- drivers/gpu/drm/arc/Kconfig       |   7 ++
- drivers/gpu/drm/arc/Makefile      |   1 +
- drivers/gpu/drm/arc/arc-dw-hdmi.c | 126 ++++++++++++++++++++++++++++++
- 5 files changed, 141 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/arc/arc-dw-hdmi.c
+Sure,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a6fbdf354d34..a6dd992c5f95 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1258,6 +1258,12 @@ S:	Supported
- F:	drivers/gpu/drm/arc/
- F:	Documentation/devicetree/bindings/display/snps,arcpgu.txt
- 
-+ARC DW HDMI DRIVER
-+M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+S:	Supported
-+F:	drivers/gpu/drm/arc/arc-dw-hdmi.c
-+F:	Documentation/devicetree/bindings/display/bridge/snps,arc-dw-hdmi.txt
-+
- ARCNET NETWORK LAYER
- M:	Michael Grzeschik <m.grzeschik@pengutronix.de>
- L:	netdev@vger.kernel.org
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 6493088a0fdd..5b0bcf7f45cd 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -109,7 +109,7 @@ obj-y			+= panel/
- obj-y			+= bridge/
- obj-$(CONFIG_DRM_FSL_DCU) += fsl-dcu/
- obj-$(CONFIG_DRM_ETNAVIV) += etnaviv/
--obj-$(CONFIG_DRM_ARCPGU)+= arc/
-+obj-y			+= arc/
- obj-y			+= hisilicon/
- obj-$(CONFIG_DRM_ZTE)	+= zte/
- obj-$(CONFIG_DRM_MXSFB)	+= mxsfb/
-diff --git a/drivers/gpu/drm/arc/Kconfig b/drivers/gpu/drm/arc/Kconfig
-index e8f3d63e0b91..baec9d2a4fba 100644
---- a/drivers/gpu/drm/arc/Kconfig
-+++ b/drivers/gpu/drm/arc/Kconfig
-@@ -8,3 +8,10 @@ config DRM_ARCPGU
- 	  Choose this option if you have an ARC PGU controller.
- 
- 	  If M is selected the module will be called arcpgu.
-+
-+config DRM_ARC_DW_HDMI
-+	tristate "ARC DW HDMI"
-+	depends on DRM && OF
-+	select DRM_DW_HDMI
-+	help
-+	  Synopsys DW HDMI driver for various ARC development boards
-diff --git a/drivers/gpu/drm/arc/Makefile b/drivers/gpu/drm/arc/Makefile
-index c7028b7427b3..7a156d8c2c3c 100644
---- a/drivers/gpu/drm/arc/Makefile
-+++ b/drivers/gpu/drm/arc/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- arcpgu-y := arcpgu_crtc.o arcpgu_hdmi.o arcpgu_sim.o arcpgu_drv.o
- obj-$(CONFIG_DRM_ARCPGU) += arcpgu.o
-+obj-$(CONFIG_DRM_ARC_DW_HDMI) += arc-dw-hdmi.o
-diff --git a/drivers/gpu/drm/arc/arc-dw-hdmi.c b/drivers/gpu/drm/arc/arc-dw-hdmi.c
-new file mode 100644
-index 000000000000..4869dd668a51
---- /dev/null
-+++ b/drivers/gpu/drm/arc/arc-dw-hdmi.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Synopsys DW HDMI driver for various ARC development boards
-+//
-+// Copyright (C) 2020 Synopsys
-+// Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+
-+#include <linux/component.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <drm/bridge/dw_hdmi.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_edid.h>
-+#include <drm/drm_encoder_slave.h>
-+#include <drm/drm_of.h>
-+
-+static const struct dw_hdmi_mpll_config snps_hdmi_mpll_cfg[] = {
-+	{
-+		27000000, {
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 }
-+		},
-+	}, {
-+		74250000, {
-+			{ 0x0072, 0x0001},
-+			{ 0x0072, 0x0001},
-+			{ 0x0072, 0x0001}
-+		},
-+	}, {
-+		148500000, {
-+			{ 0x0051, 0x0002},
-+			{ 0x0051, 0x0002},
-+			{ 0x0051, 0x0002}
-+		},
-+	}, {
-+		~0UL, {
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 },
-+			{ 0x00B3, 0x0000 },
-+		},
-+	}
-+};
-+
-+static const struct dw_hdmi_curr_ctrl snps_hdmi_cur_ctr[] = {
-+	/* pixelclk    bpp8    bpp10   bpp12 */
-+	{ 27000000,  { 0x0000, 0x0000, 0x0000 }, },
-+	{ 74250000,  { 0x0008, 0x0008, 0x0008 }, },
-+	{ 148500000, { 0x001b, 0x001b, 0x001b }, },
-+	{ ~0UL,      { 0x0000, 0x0000, 0x0000 }, }
-+};
-+
-+
-+static const struct dw_hdmi_phy_config snps_hdmi_phy_config[] = {
-+	/* pixelclk   symbol  term    vlev */
-+	{ 27000000,   0x8009, 0x0004, 0x0232},
-+	{ 74250000,   0x8009, 0x0004, 0x0232},
-+	{ 148500000,  0x8009, 0x0004, 0x0232},
-+	{ ~0UL,       0x8009, 0x0004, 0x0232}
-+};
-+
-+static enum drm_mode_status snps_dw_hdmi_mode_valid(struct drm_connector *con,
-+						    const struct drm_display_mode *mode)
-+{
-+	return MODE_OK;
-+}
-+
-+static struct dw_hdmi_plat_data snps_dw_hdmi_drv_data = {
-+	.mpll_cfg   = snps_hdmi_mpll_cfg,
-+	.cur_ctr    = snps_hdmi_cur_ctr,
-+	.phy_config = snps_hdmi_phy_config,
-+	.mode_valid = snps_dw_hdmi_mode_valid,
-+};
-+
-+static const struct of_device_id snps_dw_hdmi_dt_ids[] = {
-+	{
-+		.compatible = "snps,dw-hdmi-hsdk",
-+		.data = &snps_dw_hdmi_drv_data
-+	}, { /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, snps_dw_hdmi_dt_ids);
-+
-+static int snps_dw_hdmi_probe(struct platform_device *pdev)
-+{
-+	const struct dw_hdmi_plat_data *plat_data;
-+	const struct of_device_id *match;
-+	struct dw_hdmi *hdmi;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	match = of_match_node(snps_dw_hdmi_dt_ids, pdev->dev.of_node);
-+	plat_data = match->data;
-+
-+	hdmi = dw_hdmi_probe(pdev, plat_data);
-+	if (IS_ERR(hdmi))
-+		return PTR_ERR(hdmi);
-+
-+	platform_set_drvdata(pdev, hdmi);
-+
-+	return 0;
-+}
-+
-+static int snps_dw_hdmi_remove(struct platform_device *pdev)
-+{
-+	struct dw_hdmi *hdmi = platform_get_drvdata(pdev);
-+
-+	dw_hdmi_remove(hdmi);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver snps_dw_hdmi_platform_driver = {
-+	.probe  = snps_dw_hdmi_probe,
-+	.remove = snps_dw_hdmi_remove,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = snps_dw_hdmi_dt_ids,
-+	},
-+};
-+module_platform_driver(snps_dw_hdmi_platform_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("ARC specific DW-HDMI driver extension");
-+MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
--- 
-2.21.1
-
+Acked-by: Tero Kristo <t-kristo@ti.com>
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
