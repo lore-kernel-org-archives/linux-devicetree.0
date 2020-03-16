@@ -2,130 +2,104 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE38C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D76C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1832051A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cc/KfyNx"
+	by mail.kernel.org (Postfix) with ESMTP id 3E2F020663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584380959;
+	bh=xfZTyr5ja+RYNnMtZwetmtPv+1AaqscNKven2FfkDxo=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=ksgvb9m280M4Dhcn6umz2IQZ29qMGV1wis6uKqt5qkSu1nUfpLaiTB0P99ZirbK6J
+	 aHQOEHwC6Q23+lb+vn6//huzP+rLFyLRoSPvY1XPC9CZ7PjcT9FBZJcyCgaDJDhhGP
+	 EE64EWNR0DimC7BgJTlzRPWyvdjwpbW3RLWG31dE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731778AbgCPRq4 (ORCPT
+        id S1732185AbgCPRtQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 13:46:56 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38942 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732274AbgCPRq4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 13:46:56 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h6so2029827wrs.6;
-        Mon, 16 Mar 2020 10:46:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MLNLveD6L+cH6avKSQcqN3AiAJkE99e4WdFigQsP9tE=;
-        b=cc/KfyNxH1udwLv/GxysgrFxyCGR7MoHAFg+yjnWH+XHZgkIHtu/ZXMhqn4hDjaf+Q
-         +faD+0V+taSxrcG9GhVHBbhZEck94ccZ7kbmgImtmMSA/zcD13JfSP/pzNhSZObXvrUp
-         j0KCtd1D1lbm4Qc1F6bQcNr71jxk2lXVOHhVoeunTdVOZJCWgDpR8w2UmezNdHr50tlh
-         ZAlK6+Nbblsh6s18P06WlVKkk34Y6w5tESE6W1vVJmznVMBvG2RXpTLH75AYFirMtg87
-         FH8uyM0f9/qlL14Q9L/FNa15bhFWEGrLH6L2aMbcur/nFVbqeoVRKiojLOiiDVqL/Cfu
-         vk7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MLNLveD6L+cH6avKSQcqN3AiAJkE99e4WdFigQsP9tE=;
-        b=bxKDmk44nk8HYrcjmqIH+eLa6eXcLPGUrfT2vMUtHPDsf+dinjkLUuGXt3WjnCOWc1
-         GhHK7Dsglvvqv0Z/SqGAe5GSNzg+oY1SBL7HkZAfeASARKDFE5KP9dFLXyIXGo5erACG
-         BpkOCfDeWh/pRj9f5+tobG4kGqZ5cdpElX7EIp131eUAtRu1jxT9eTtojLzU6V9Fd2vd
-         JNXvTbn4dQPGGEre/+5jF0Cc9A5cua4K/xfCipOL0nbKwXfemRIOnLz9gCrvVpZo39Ts
-         5w26tbl9pW2x7xk11rw7NcUC4RWn+hSRVqdWjib2+D9VnHm0Pbqq72bV6LgndkwSa5+6
-         9gdQ==
-X-Gm-Message-State: ANhLgQ0/jOfBrk6VgM/aE0ZiByKqisolNPxZn3DRUz8XiwMDvacJNHCL
-        jyi5rNez/zkLQhrOvwVQAgs=
-X-Google-Smtp-Source: ADFU+vs1VNAsqxRwQaM3OZDVeqqND1v9e+aTzeUXh86E6O8j108hjsIXs8dG9PQ8GnSWhYlnyBF6Zw==
-X-Received: by 2002:a5d:5342:: with SMTP id t2mr526454wrv.104.1584380814347;
-        Mon, 16 Mar 2020 10:46:54 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id b202sm587440wmd.15.2020.03.16.10.46.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Mar 2020 10:46:53 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: rockchip: fix lvds-encoder ports subnode for rk3188-bqedison2qc
-Date:   Mon, 16 Mar 2020 18:46:47 +0100
-Message-Id: <20200316174647.5598-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Mon, 16 Mar 2020 13:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730437AbgCPRtQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 13:49:16 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FEA720658;
+        Mon, 16 Mar 2020 17:49:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584380955;
+        bh=xfZTyr5ja+RYNnMtZwetmtPv+1AaqscNKven2FfkDxo=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=oSKsU9SJzm/EgdmfAJYDTOlPriLwztJA85HMjiIi2sSw8r069BfrEZgsdO3OKAAJb
+         jNf1SxhN1ajEtZvk51Mb6dT8GkeMeTQCB7vItI33yfsE+L7gCgTAkkCoo4xjNNpHYJ
+         kD56b2zhaxo0WpofpKkWwAxD4yOY8VF4YUbgcVQM=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1584356082-26769-2-git-send-email-tdas@codeaurora.org>
+References: <1584356082-26769-1-git-send-email-tdas@codeaurora.org> <1584356082-26769-2-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v1 1/3] clk: qcom: gcc: Add support for a new frequency for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Mon, 16 Mar 2020 10:49:14 -0700
+Message-ID: <158438095454.88485.11063617239206162025@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives this error:
+Quoting Taniya Das (2020-03-16 03:54:40)
+> There is a requirement to support 51.2MHz from GPLL6 for qup clocks,
+> thus update the frequency table and parent data/map to use the GPLL6
+> source PLL.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
 
-arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: lvds-encoder:
-'ports' is a required property
+Any Fixes: tag for this? I guess the beginning of this driver being
+introduced?
 
-Fix error by adding a ports wrapper for port@0 and port@1
-inside the 'lvds-encoder' node for rk3188-bqedison2qc.
+>  drivers/clk/qcom/gcc-sc7180.c | 73 ++++++++++++++++++++++---------------=
+------
+>  1 file changed, 37 insertions(+), 36 deletions(-)
+>=20
+> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+> index 7f59fb8..ad75847 100644
+> --- a/drivers/clk/qcom/gcc-sc7180.c
+> +++ b/drivers/clk/qcom/gcc-sc7180.c
+> @@ -405,8 +406,8 @@ static const struct freq_tbl ftbl_gcc_qupv3_wrap0_s0_=
+clk_src[] =3D {
+>=20
+>  static struct clk_init_data gcc_qupv3_wrap0_s0_clk_src_init =3D {
+>         .name =3D "gcc_qupv3_wrap0_s0_clk_src",
+> -       .parent_data =3D gcc_parent_data_0,
+> -       .num_parents =3D 4,
+> +       .parent_data =3D gcc_parent_data_1,
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/
-bridge/lvds-codec.yaml
+This should have been done initially. We shouldn't need to describe
+"new" parents when they have always been there. Are there other clks in
+this driver that actually have more parents than we've currently
+described? If so, please fix them.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm/boot/dts/rk3188-bqedison2qc.dts | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+> +       .num_parents =3D 5,
 
-diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-index 8afb2fd5d..66a0ff196 100644
---- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-+++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-@@ -58,20 +58,25 @@
- 
- 	lvds-encoder {
- 		compatible = "ti,sn75lvds83", "lvds-encoder";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 
--		port@0 {
--			reg = <0>;
--			lvds_in_vop0: endpoint {
--				remote-endpoint = <&vop0_out_lvds>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				lvds_in_vop0: endpoint {
-+					remote-endpoint = <&vop0_out_lvds>;
-+				};
- 			};
--		};
- 
--		port@1 {
--			reg = <1>;
--			lvds_out_panel: endpoint {
--				remote-endpoint = <&panel_in_lvds>;
-+			port@1 {
-+				reg = <1>;
-+
-+				lvds_out_panel: endpoint {
-+					remote-endpoint = <&panel_in_lvds>;
-+				};
- 			};
- 		};
- 	};
--- 
-2.11.0
+Can you use ARRAY_SIZE(gcc_parent_data_1) instead? That way this isn't a
+hard-coded value.
 
+>         .ops =3D &clk_rcg2_ops,
+>  };
+>
