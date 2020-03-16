@@ -2,127 +2,130 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1FFC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 06:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3A1C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 06:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FFFD2071C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 06:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6021B20679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 06:45:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584341104;
+	bh=45HRX2kButaKESws3Xm5vkgmtdBIZKtTd0w4e4q+taw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vxI60WAzJ3/6javytGsNtKssUGzy7lI6C+P6biujfLDIah2vpu0a9hYL+liSs3deF
+	 R+EbL8P03AC3onACSM4bksLTq2JlPQi4WNQzx9ruzH0oa+RA8AuGIVrJM6aa9+CfgG
+	 2W/JIXrLu5pKV60hPSg2Nsb2erv7Nn/6EwKBhYzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbgCPGkE (ORCPT
+        id S1729595AbgCPGpD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 02:40:04 -0400
-Received: from jax4mhfb03.myregisteredsite.com ([64.69.218.96]:56106 "EHLO
-        jax4mhfb03.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729455AbgCPGkE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 02:40:04 -0400
-X-Greylist: delayed 335 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Mar 2020 02:40:02 EDT
-Received: from jax4mhob14.registeredsite.com (jax4mhob14.registeredsite.com [64.69.218.102])
-        by jax4mhfb03.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 02G6YRV9023717
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 02:34:27 -0400
-Received: from mailpod.hostingplatform.com ([10.30.71.205])
-        by jax4mhob14.registeredsite.com (8.14.4/8.14.4) with ESMTP id 02G6YJNW144850
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 02:34:19 -0400
-Received: (qmail 16028 invoked by uid 0); 16 Mar 2020 06:34:19 -0000
-X-TCPREMOTEIP: 83.128.90.119
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
-  by 0 with ESMTPA; 16 Mar 2020 06:34:19 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     jic23@kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
-        hns@goldelico.com, rui.silva@linaro.org,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] iio/gyro/bmg160: Add support for BMI088 chip
-Date:   Mon, 16 Mar 2020 07:34:03 +0100
-Message-Id: <20200316063403.3094-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Mon, 16 Mar 2020 02:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729593AbgCPGpD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 02:45:03 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76BB120674;
+        Mon, 16 Mar 2020 06:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584341103;
+        bh=45HRX2kButaKESws3Xm5vkgmtdBIZKtTd0w4e4q+taw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ExuG8dEOm07lwytoqRDX1c7JEnS3I6oqEf+wJYTxGdKHZzwKD0HqmT+e217bhd6gQ
+         GNe5+igC2J6rv1vqtil8mcNtXCbt1g5LZ4N3BWzWsytd1ndrpRoDG7WMYHi56s89Gg
+         6OWEWg8I6OrCaVx+8+vyThhyEBeivarpqmmmaUxY=
+Date:   Mon, 16 Mar 2020 14:44:57 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V2 1/2] arm64: dts: imx8qxp-mek: Sort labels
+ alphabetically
+Message-ID: <20200316064456.GJ17221@dragon>
+References: <1584321993-8642-1-git-send-email-Anson.Huang@nxp.com>
+ <20200316060024.GG17221@dragon>
+ <DB3PR0402MB3916C7F4D25024A30FF4EABDF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB3PR0402MB3916C7F4D25024A30FF4EABDF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The BMI088 is pin-compatible with the BMI055, and provides
-both gyro and accel functions. The gyro part is similar to
-the BMI055 and this adds the chip to the list of supported
-devices for the gyro part.
+On Mon, Mar 16, 2020 at 06:31:21AM +0000, Anson Huang wrote:
+> Hi, Shawn
+> 
+> > Subject: Re: [PATCH V2 1/2] arm64: dts: imx8qxp-mek: Sort labels
+> > alphabetically
+> > 
+> > On Mon, Mar 16, 2020 at 09:26:32AM +0800, Anson Huang wrote:
+> > > Sort the labels alphabetically for consistency.
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > > Changes since V1:
+> > > 	- Rebase to latest branch, no code change.
+> > > ---
+> > >  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 50
+> > > ++++++++++++++++-----------
+> > >  1 file changed, 30 insertions(+), 20 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> > > b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> > > index d3d26cc..b1befdb 100644
+> > > --- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> > > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> > > @@ -30,18 +30,7 @@
+> > >  	};
+> > >  };
+> > >
+> > > -&adma_lpuart0 {
+> > > -	pinctrl-names = "default";
+> > > -	pinctrl-0 = <&pinctrl_lpuart0>;
+> > > -	status = "okay";
+> > > -};
+> > > -
+> > > -&fec1 {
+> > > -	pinctrl-names = "default";
+> > > -	pinctrl-0 = <&pinctrl_fec1>;
+> > > -	phy-mode = "rgmii-id";
+> > > -	phy-handle = <&ethphy0>;
+> > > -	fsl,magic-packet;
+> > > +&adma_dsp {
+> > >  	status = "okay";
+> > >
+> > >  	mdio {
+> > 
+> > Here is a rebase issue, i.e. adma_dsp shouldn't get a mdio child node.
+> > It came from the conflict with one commit on my fixes branch.  I decided to
+> > drop the series for the coming merge window.  Let's start over again after
+> > 5.7-rc1 becomes available.
+> 
+> OK, I am also confused by this conflict, I normally do the patch based on your
+> for-next branch, and I did NOT meet the conflict at all, then I redo it based on
+> your dt branch I met the conflict and fix it...
+> 
+> So, do I need to resend the patch series later when 5.7-rc1 available?
 
-The accel part of the chip is not compatible with anything
-existing already.
+You need to resend later.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
- Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt | 2 +-
- drivers/iio/gyro/Kconfig                                   | 2 +-
- drivers/iio/gyro/bmg160_i2c.c                              | 2 ++
- drivers/iio/gyro/bmg160_spi.c                              | 1 +
- 4 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt b/Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt
-index 78e18a1e9c1d..bb43d1ad9c9f 100644
---- a/Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt
-+++ b/Documentation/devicetree/bindings/iio/gyroscope/bmg160.txt
-@@ -2,7 +2,7 @@
- 
- Required properties:
- 
--  - compatible : should be "bosch,bmg160" or "bosch,bmi055_gyro"
-+  - compatible : should be "bosch,bmg160", "bosch,bmi055_gyro" or "bosch,bmi088_gyro"
-   - reg : the I2C address of the sensor (0x69)
- 
- Optional properties:
-diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
-index 7eaf77707b0b..6daeddf37f60 100644
---- a/drivers/iio/gyro/Kconfig
-+++ b/drivers/iio/gyro/Kconfig
-@@ -61,7 +61,7 @@ config BMG160
- 	help
- 	  Say yes here to build support for BOSCH BMG160 Tri-axis Gyro Sensor
- 	  driver connected via I2C or SPI. This driver also supports BMI055
--	  gyroscope.
-+	  and BMI088 gyroscope.
- 
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called bmg160_i2c or bmg160_spi.
-diff --git a/drivers/iio/gyro/bmg160_i2c.c b/drivers/iio/gyro/bmg160_i2c.c
-index 4fc9c6a3321f..de15c6fc3381 100644
---- a/drivers/iio/gyro/bmg160_i2c.c
-+++ b/drivers/iio/gyro/bmg160_i2c.c
-@@ -42,6 +42,7 @@ static int bmg160_i2c_remove(struct i2c_client *client)
- static const struct acpi_device_id bmg160_acpi_match[] = {
- 	{"BMG0160", 0},
- 	{"BMI055B", 0},
-+	{"BMI088B", 0},
- 	{},
- };
- 
-@@ -50,6 +51,7 @@ MODULE_DEVICE_TABLE(acpi, bmg160_acpi_match);
- static const struct i2c_device_id bmg160_i2c_id[] = {
- 	{"bmg160", 0},
- 	{"bmi055_gyro", 0},
-+	{"bmi088_gyro", 0},
- 	{}
- };
- 
-diff --git a/drivers/iio/gyro/bmg160_spi.c b/drivers/iio/gyro/bmg160_spi.c
-index 182a59c42507..03e80bb2601a 100644
---- a/drivers/iio/gyro/bmg160_spi.c
-+++ b/drivers/iio/gyro/bmg160_spi.c
-@@ -37,6 +37,7 @@ static int bmg160_spi_remove(struct spi_device *spi)
- static const struct spi_device_id bmg160_spi_id[] = {
- 	{"bmg160", 0},
- 	{"bmi055_gyro", 0},
-+	{"bmi088_gyro", 0},
- 	{}
- };
- 
--- 
-2.17.1
-
+Shawn
