@@ -2,67 +2,89 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA512C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 01:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F54AC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACB4620674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 01:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C633206BE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584323134;
-	bh=tzHkYQUduhfzNU7kQbblTYrs2p7fAYSfY48bdXcW9T4=;
+	s=default; t=1584325672;
+	bh=BvqinQzwER3qvGVtAY/jOGwjYFoSdJdx/JoTyCey0Fs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u+tFZO14Wdh//v/Tr4cHHZ/y9NB0Us34a2Ro6rRYdvZXqCEqyExlF3WpL2PbLW6JS
-	 CLpJwawoL6m92wV5m24bb36a/Lw1YZMzDNf4wJTWDqQJcAAhMlad+G1g21ppc34CD7
-	 Wqn1VCvhbIpdp9Z6QG/War+0yaD3AymH33n7X9LE=
+	b=0Ys8vYr87dQb+9yAfTb8SprMOP2Tm9rBlAcLmMhSyW2um/LGTNPkPTMwOjDI+N7DV
+	 LD6V0xADXv4w30gkC6bfzIRQZrtzzylsg8f5hxz+Bj/ur2NbPyhNESyvrQHSD3fyFc
+	 8LjJQaFDA9fX362gKjxaCFv3zjlsH8sVjxdartKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgCPBpe (ORCPT
+        id S1729332AbgCPC1v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 21:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60584 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:27:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729356AbgCPBpe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 21:45:34 -0400
+        id S1729329AbgCPC1v (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:27:51 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06AB42051A;
-        Mon, 16 Mar 2020 01:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3442220674;
+        Mon, 16 Mar 2020 02:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584323133;
-        bh=tzHkYQUduhfzNU7kQbblTYrs2p7fAYSfY48bdXcW9T4=;
+        s=default; t=1584325670;
+        bh=BvqinQzwER3qvGVtAY/jOGwjYFoSdJdx/JoTyCey0Fs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P/JrR3krA9rtF2c1tDFQKGX1CKpEZMHNe0CY54/MhV+rRtonplL/qaxyXZ2TKBjYi
-         SJRhGj8qtf0CuStBqwFpB1KPH3l3rfvwVCL+G1UQjTbxA/Gr7oMrbvdFwsKIPend8u
-         H1yDgtt35G52pl550vvhvSabNXNqXWkvw7cP2iU4=
-Date:   Mon, 16 Mar 2020 09:45:26 +0800
+        b=W2BCYRPv+w/w/rPSriYges5+8PdjJB45otEpMOJcasHG8D0A2z8UdeJL2EbL/Nwb7
+         MqC0eLo9/ipSMcSjKnxKIaN8TDFYSsTUSbvMaFY/9bhOwr+V6sS0nEgGgHPV8kXRBs
+         ZXI1QhCZLrNCoDtpboPTDGGbaYCDbuooHU1UN/04=
+Date:   Mon, 16 Mar 2020 10:27:44 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
-        daniel.baluta@nxp.com, horia.geanta@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mn: Add snvs clock to powerkey
-Message-ID: <20200316014526.GU17221@dragon>
-References: <1583998450-19292-1-git-send-email-Anson.Huang@nxp.com>
+To:     Igor Opaniuk <igor.opaniuk@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] ARM: dts: toradex: DTS license/copyright clean-up
+Message-ID: <20200316022739.GV17221@dragon>
+References: <20200312083830.18011-1-igor.opaniuk@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583998450-19292-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200312083830.18011-1-igor.opaniuk@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 03:34:09PM +0800, Anson Huang wrote:
-> SNVS powerkey driver needs snvs clock for proper clock management,
-> add support for it.
+On Thu, Mar 12, 2020 at 10:38:27AM +0200, Igor Opaniuk wrote:
+> 1. Replace boiler plate licenses texts with the SPDX license
+> identifiers in Toradex Vybrid-based SoM device trees.
+> 2. As X11 is identical to the MIT License, but with an extra sentence
+> that prohibits using the copyright holders' names for advertising or
+> promotional purposes without written permission, use MIT license instead
+> of X11 ('s/X11/MIT/g').
+> 3. Replace "Toradex AG" with "Toradex" in the Copyright notice.
+> 4. Use GPL2.0+ instead of GPL2.0, as it's used now by default for all
+> new DTS files.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> v2:
+> - Drop switching from GPL2.0+ to GPL2.0 [Marcel Ziswiler]
+> - Replace "Toradex AG" with "Toradex" in the Copyright notice [Marcel Ziswiler]
+> 
+> Igor Opaniuk (3):
+>   arm: dts: imx6: toradex: use SPDX-License-Identifier
+>   arm: dts: imx7: toradex: use SPDX-License-Identifier
+>   arm: dts: vf: toradex: SPDX tags and copyright cleanup
 
-Applied both, thanks.
+Change prefix to 'ARM: ...' and applied all, thanks.
