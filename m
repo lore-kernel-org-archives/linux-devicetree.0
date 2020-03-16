@@ -2,126 +2,90 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03C9C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397B8C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926D72051A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021B92051A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584361577;
+	bh=wLXZj/rQOoK1wG6OXYHycuFl5KB8T+77ikZuAOuVcxg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GZbs5SrhVGEuK4bHjGz9srCKyLCCj1COZHQkk/0Ma5IH3ee30gySStcG16qi+GPSG
+	 FD2zdeAeTGcBId6+PMw+prpKRW9b8eLY+HdUOCUDGidcBXxxxuC0Hys56JyfxTd+vy
+	 SpDR/+jftp9sV4npSiXB2hED5J3qsoOEH+2JAEHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgCPMTF (ORCPT
+        id S1730961AbgCPM0Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:19:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:47258 "EHLO foss.arm.com"
+        Mon, 16 Mar 2020 08:26:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:47378 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730902AbgCPMTF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 08:19:05 -0400
+        id S1730902AbgCPM0Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 08:26:16 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACEBA30E;
-        Mon, 16 Mar 2020 05:19:04 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EB8C83F52E;
-        Mon, 16 Mar 2020 05:19:01 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 12:18:59 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 0/7] Add support for PCIe controller to work in
- endpoint mode on R-Car SoCs
-Message-ID: <20200316121859.GB5043@e121166-lin.cambridge.arm.com>
-References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8vchrpa-1N1J+yVdo6-3zouOHX6=G4epWm68yirPirzag@mail.gmail.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F97E30E;
+        Mon, 16 Mar 2020 05:26:15 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F75B3F52E;
+        Mon, 16 Mar 2020 05:26:14 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 12:26:13 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
+ queue with a simple completion
+Message-ID: <20200316122613.GE5010@sirena.org.uk>
+References: <20200314224340.1544-1-olteanv@gmail.com>
+ <20200314224340.1544-7-olteanv@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="M/SuVGWktc5uNpra"
 Content-Disposition: inline
-In-Reply-To: <CA+V-a8vchrpa-1N1J+yVdo6-3zouOHX6=G4epWm68yirPirzag@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200314224340.1544-7-olteanv@gmail.com>
+X-Cookie: I thought YOU silenced the guard!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 03:46:42PM +0000, Lad, Prabhakar wrote:
-> Hi Bjorn/Kishon,
-> 
-> On Fri, Feb 28, 2020 at 3:41 PM Lad Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> >
-> > This patch series adds support for PCIe controller on rcar to work in
-> > endpoint mode, this also extends the epf framework to handle base region
-> > for mapping PCI address locally.
-> >
-> > Note:
-> > The cadence/rockchip/designware endpoint drivers are build tested only.
-> >
-> > Changes for v5:
-> > 1] Rebased the patches on next branch of https://git.kernel.org/pub/scm/
-> >    linux/kernel/git/helgaas/pci.git
-> > 2] Fixed review comments reported by Kishon while fetching the matching
-> >    window in function pci_epc_get_matching_window()
-> > 3] Fixed review comments reported by Bjorn
-> >    a] Split patch up first patch so that its easier to review and incremental
-> >    b] Fixed typos
-> > 4] Included Reviewed tag from Rob for the dt-binding patch
-> > 5] Fixed issue reported by Nathan for assigning variable to itself
-> >
-> > Changes for v4:
-> > 1] Fixed dtb_check error reported by Rob
-> > 2] Fixed review comments reported by Kishon
-> >    a] Dropped pci_epc_find_best_fit_window()
-> >    b] Fixed initializing mem ptr in __pci_epc_mem_init()
-> >    c] Dropped map_size from pci_epc_mem_window structure
-> >
-> > Changes for v3:
-> > 1] Fixed review comments from Bjorn and Kishon.
-> > 3] Converted to DT schema
-> >
-> > Changes for v2:
-> > 1] Fixed review comments from Biju for dt-bindings to include an example
-> >    for a tested platform.
-> > 2] Fixed review comments from Kishon to extend the features of outbound
-> >    regions in epf framework.
-> > 3] Added support to parse outbound-ranges in OF.
-> >
-> > Lad Prabhakar (7):
-> >   PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
-> >   PCI: rcar: Move shareable code to a common file
-> >   PCI: rcar: Fix calculating mask for PCIEPAMR register
-> >   PCI: endpoint: Add support to handle multiple base for mapping
-> >     outbound memory
-> >   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
-> >     controller
-> >   PCI: rcar: Add support for rcar PCIe controller in endpoint mode
-> >   misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
-> >
-> Gentle ping.
 
-You should ask the R-CAR maintainers first to have a look at your
-code and ACK accordingly.
+--M/SuVGWktc5uNpra
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Lorenzo
+On Sun, Mar 15, 2020 at 12:43:34AM +0200, Vladimir Oltean wrote:
+
+> The wait queue was actually restructured as a completion, after polling
+> other drivers for the most "popular" approach.
+
+> Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+
+Fixes should generally go at the start of the series to make sure that
+they can be applied without any dependencies on the rest of the series
+and sent to mainline before the merge window.
+
+--M/SuVGWktc5uNpra
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5vcGQACgkQJNaLcl1U
+h9BuGwf/TNkbNlpccB3oDAPTRoqpGwgXMT50uneLIqM+UWYDfTdo503/gwBuVGUZ
+Ix/lJF/B9AD4LGk+CJED3A9PB8UahrL+5hl8+bojzSHjpRLyWrGqGg0GDEuH5DFV
+fZxWjtf5laBqVYUzAvNi65PTOzLgXhO01FetyFQyToHLdFGQZs6wq0uZcJlq5A55
+22ACschvXdQ8k3aOsPXLOwTaNxEIsWex+GpybtDIZdoUMnT6Y7Gf/LaWl9noJzCC
+PTqYrePE1pwPUKo+/y2QXdUvao5UzQ/0qcBR7MHt0mjwFWlwikRRiF2dJf7s4Bqn
+M/7m7bPS6B2ieiOoQgB2bp02f5FZnQ==
+=3FFa
+-----END PGP SIGNATURE-----
+
+--M/SuVGWktc5uNpra--
