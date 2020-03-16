@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802C8C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BFAC10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DBDB2073C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D0D206BE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326062;
-	bh=sagaxxPBDu0NGQWOqfrmvT5ZLXJ0mZtSQz96D2dNjy8=;
+	s=default; t=1584326146;
+	bh=Dxdis/KJKogw06PdKI7YE6I+j6JbrgSMNU1dghE2T48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q6+Y6yD1vYNudqddWFmm49Eh+YieYCSLGOFleH2w4Ri6k1whBl5e9NQhfvH08euKK
-	 x6KIw08JJYOXWQcfdXypemQBulx2/GGDuoSaXevuJrdPfOWDyZ3xJqs69jocmaDqI9
-	 6Sxsm7NTFP0pyDvzeq8QkL0DUVfYd9mvhiE28Tcg=
+	b=ysltqbw5FlN91injjj+vnH9zdEE58XRM9oyMLZC3DX5bc2s5I8iy1DXi0TYFuvM9K
+	 HEfUUFWgA4AaotqbcPPRtFhIWO5g8Hc4c8Iy7eyufnKKOnathOBZ+tINLS50PJt4MQ
+	 xb1BwWZSnyWs/bRiH7sKfT5+HCdgU32UochtgCJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbgCPCeU (ORCPT
+        id S1730245AbgCPCfo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:34:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37680 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:35:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729434AbgCPCeU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:34:20 -0400
+        id S1730241AbgCPCfn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:35:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED29620726;
-        Mon, 16 Mar 2020 02:34:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DA5A20726;
+        Mon, 16 Mar 2020 02:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326059;
-        bh=sagaxxPBDu0NGQWOqfrmvT5ZLXJ0mZtSQz96D2dNjy8=;
+        s=default; t=1584326142;
+        bh=Dxdis/KJKogw06PdKI7YE6I+j6JbrgSMNU1dghE2T48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n3A3SGhWyq+rPKG2HdO+xy40cAEd8HpVGTjFyKAk9Fbbn668ROyK3jlnr82qvMvK3
-         UJa7pSTZX0LqqkMAyDeq+eU8MSZkH8QHE7IQk+a8mO3jAEtbDO826rFhWG2Le2yMoj
-         8rvEiZpTGAUJXVywA8F7q77EY4B/8E69bxS4kdAs=
+        b=CUhpqMXk0g2J7ZqzjxQOdNv2M1uvA1bqc16qdqVhz5g79BoYa0XKrHTV71DjkmzuP
+         vn/PiQcev/p2bV9e3m9AJk0a04ayVJymLORnzk2fvKaX5q5zFme7AHaOTnF9rwU4gN
+         8azATqxQVVfIKZEN/JPKMIrWi8YvvAKBR9F/L1G8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 07/35] ARM: dts: dra7-l4: mark timer13-16 as pwm capable
-Date:   Sun, 15 Mar 2020 22:33:43 -0400
-Message-Id: <20200316023411.1263-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 3/7] ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
+Date:   Sun, 15 Mar 2020 22:35:34 -0400
+Message-Id: <20200316023538.2232-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
-References: <20200316023411.1263-1-sashal@kernel.org>
+In-Reply-To: <20200316023538.2232-1-sashal@kernel.org>
+References: <20200316023538.2232-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,57 +60,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit 00a39c92c8ab94727f021297d1748531af113fcd ]
+[ Upstream commit 27f13774654ea6bd0b6fc9b97cce8d19e5735661 ]
 
-DMTimers 13 - 16 are PWM capable and also can be used for CPTS input
-signals generation. Hence, mark them as "ti,timer-pwm".
+'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+devices not described in the DT. Certain DRA7 platforms (e.g., DRA76)
+has RAM above 32-bit boundary (accessible with LPAE config) though the
+PCIe bridge will be able to access only 32-bits. Add 'dma-ranges'
+property in PCIe RC DT nodes to indicate the host bridge can access
+only 32 bits.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dra7-l4.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index c3954e34835b8..3ae4f6358da41 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -3413,6 +3413,7 @@
- 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER13_CLKCTRL 24>;
- 				clock-names = "fck";
- 				interrupts = <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>;
-+				ti,timer-pwm;
- 			};
- 		};
- 
-@@ -3441,6 +3442,7 @@
- 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER14_CLKCTRL 24>;
- 				clock-names = "fck";
- 				interrupts = <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>;
-+				ti,timer-pwm;
- 			};
- 		};
- 
-@@ -3469,6 +3471,7 @@
- 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER15_CLKCTRL 24>;
- 				clock-names = "fck";
- 				interrupts = <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>;
-+				ti,timer-pwm;
- 			};
- 		};
- 
-@@ -3497,6 +3500,7 @@
- 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER16_CLKCTRL 24>;
- 				clock-names = "fck";
- 				interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
-+				ti,timer-pwm;
- 			};
- 		};
- 
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index a1a928064b53d..f94064c687789 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -282,6 +282,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -319,6 +320,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
 -- 
 2.20.1
 
