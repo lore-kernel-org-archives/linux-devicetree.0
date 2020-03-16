@@ -2,250 +2,292 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AEEC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDA5C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D9A20663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD94020722
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:47:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NrhdsM1O"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="BtACbSFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730115AbgCPIp4 (ORCPT
+        id S1730124AbgCPIrf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:45:56 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41506 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730069AbgCPIpz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 04:45:55 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u26so1011375lfu.8
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 01:45:53 -0700 (PDT)
+        Mon, 16 Mar 2020 04:47:35 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:11454 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730118AbgCPIre (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 04:47:34 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02G8eSHQ026751;
+        Mon, 16 Mar 2020 04:47:30 -0400
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2176.outbound.protection.outlook.com [104.47.55.176])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2yrs47drq0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Mar 2020 04:47:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aaCWWkS9OvgjMtP8Dj5I6DftMUG91s0fqEDEc1KkWcgtKwdGmZkTMiNNSvvKSB7mR8PAVZ1O33YF+X/0+5rHzSPbRvbqZOWNQ7iW5YTBtQ5lfg+6hVR31iVpvX+z4grkm6X1Rt/+ClWWRW6jLX4rykVcU2oLWCz+9fboifYs3gg1RUcbcxNbZrQM+pS5ld1vuCUwhBPC5tZ7UQvISR3KaTvnkk+dwuaaHghUMrz2003+R5waCxoPHD40Gaxy1Ii8E4pDPUt6kEOwHSwfBiYgL7KVFiVdn3Xn9BPt2rKXn4hqHQRzzBJHYZXGt7uBlMV98c/uGKYEG/FG9CKQ2pu6fA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0JtG5jJg8zn8XJAzwalexOnDq1yG2eKVBnL7ouWEwvs=;
+ b=U1WwmQ2dOKeyPnBTi/JlfDEL064nTbeil3RA1W0HOTOmqHeyIm6J7zUCBLET3GQMh2ngyEzPL09Qk1cFb69IwLVGYO0ERKgo/c7rqQP8rIX/23AgSwZQNLyQLQYFHmH0wkwfNR/5AHbHEF1WpJZuSzkZxqUKq26iU73PbnJZ6pvIneCMMkbLZVAks0i+X7XxrIwsEHeZEc8eJttdUjfCAJTQ0YY4oJHMEtY6UaOigYWHrZRbsC1WTtFFGOvQIZWU7uEZ0liWUTTrorPf5GsZDzoCcX9lsJmmKtiwh4tKsx/wiqWNR9L4MvkNtUzWyYt1hK/yFJf1ozl0Xo3F/5+Bqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EbPOrLTDflRMIXVCgXxGt3q4D6fBoL1+kTbcT/fs+e8=;
-        b=NrhdsM1O5fuk70cIcP925XOSaLKArpCNd7ZChK0c1kQrVnfRjdFve4BkF/rxpafkvc
-         ff5Xkv+Xb5Gpwgk7ChlQvnko2S2PJ89ynzcnhg4rTvummOH2nr1fAJnoMvv3ORddLqTt
-         VCw1Xm23BWbjzVcRrPIU97wnn0JiPZxwdL/cHn0UCaYL9ODZd6QWtKBuzWETJ6VlFpyH
-         8x6VTLvKjb0eQvf+St3qY35Xp9n/EF29UBcs3REgtKASSoDuWTEU13ZjeLvf1d9WQ+3D
-         aAOvnj3vpI1JpLzH7l5q/P+CrsGmDpQBTR1VVOn3nr2rjgCwyrCXmj+JNIx7DsAqPW08
-         Iimg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EbPOrLTDflRMIXVCgXxGt3q4D6fBoL1+kTbcT/fs+e8=;
-        b=sBk4t45mOEZWsRiskicrtyyMrlMN+g1wjf28m/QMum6rg6/NbXVwMgvSktIIWtkdhH
-         f7FVyyqksPj1GbL/Tz8nRgplAbv5QQr54KEbBPNZHrINrEtVAy8nXmVW9eH8wyb6iqiH
-         qlT32ASjY67cwRvysDm3xiasU60BTp2nCq49zFEr5wQVEkVDWZ4ed7ZMTnvYSwxbNBCu
-         JEUFl5/N65YIM5pk6J5w+440AOKis8qi7EnxMY/cyS7nKrgCMPev8Ym9PlgzeOR6u1ur
-         Ovf58j/f8TX1x8TSuNwWZ6UHKAh21PrrE0diMO9ih8l+NUwnkKahXj7TNY1uiJ7a0S7v
-         MGIg==
-X-Gm-Message-State: ANhLgQ04Sd276lTtjiJY5+sgz9YBYepdb0IPZBKqeb+XokmeWTlXuOEA
-        NKzLZl3RbJiYmL0dQ6P9M+EMwrK/X5ybXRiwY4wZ+g==
-X-Google-Smtp-Source: ADFU+vvW3hiCzm1lUutqZ11zdckt3xuMIygrF8Z+L9edgJDTIy9KtXNnlIt5x8fcAg1u04wt6PZMDgbDq29UnCi4v9I=
-X-Received: by 2002:a19:6d0d:: with SMTP id i13mr16203783lfc.105.1584348352715;
- Mon, 16 Mar 2020 01:45:52 -0700 (PDT)
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0JtG5jJg8zn8XJAzwalexOnDq1yG2eKVBnL7ouWEwvs=;
+ b=BtACbSFxl5AKx1Qk2hHttVmF1dekqVh5O/kifOliENmUno8eVdAVhBKc5jcXUzgMYh4v6iu+xccvs/9VIht3z/jbQn1P50ICabvQGakRk62COu79YsCptpoOGEWH+h5ngqi32iR82zQAMRzuJnKOV0GitJk4UHzBLsRICQDqFeE=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB3721.namprd03.prod.outlook.com (2603:10b6:5:af::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.14; Mon, 16 Mar
+ 2020 08:47:27 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2814.021; Mon, 16 Mar 2020
+ 08:47:27 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "ardeleanalex@gmail.com" <ardeleanalex@gmail.com>,
+        "jic23@kernel.org" <jic23@kernel.org>
+CC:     "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
+        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>,
+        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+        "Costina, Adrian" <Adrian.Costina@analog.com>
+Subject: Re: [PATCH v9 0/8] iio: adi-axi-adc,ad9647: Add support for AD9467
+ ADC
+Thread-Topic: [PATCH v9 0/8] iio: adi-axi-adc,ad9647: Add support for AD9467
+ ADC
+Thread-Index: AQHV+EktcEyhuAEfVEOlIExR2iAuL6hJpH2AgAFJ+QA=
+Date:   Mon, 16 Mar 2020 08:47:27 +0000
+Message-ID: <227c4c793044ca9a4e50f5d68d3de204c53d26e6.camel@analog.com>
+References: <20200312083511.28832-1-alexandru.ardelean@analog.com>
+         <20200315130625.705548ce@archlinux>
+In-Reply-To: <20200315130625.705548ce@archlinux>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.26.73.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0f49ca0e-0d4d-401a-3502-08d7c986a7df
+x-ms-traffictypediagnostic: DM6PR03MB3721:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR03MB3721699D551427F867F0125DF9F90@DM6PR03MB3721.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 03449D5DD1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(136003)(366004)(396003)(199004)(107886003)(8676002)(6506007)(4326008)(2616005)(81166006)(81156014)(54906003)(8936002)(110136005)(6486002)(316002)(71200400001)(36756003)(26005)(2906002)(6512007)(66946007)(91956017)(76116006)(186003)(5660300002)(86362001)(966005)(66476007)(66556008)(66446008)(64756008)(478600001)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB3721;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1DPUmOSthJ/7/lDViBnxWkREFTDC1O1YGMgmBP7olJvW3RIxXhiKBdZYIYcz/NCO1Dnd1KY86tec9Nl1qHVs+42vvQVfE3fPFb1UVqaZ19L/QjYarWDrPghwyYz/4yr/iml4fmXy2bsA6zXckon1KtJZVhdwuoT7CshD8QWy+fJA1HzB8JqsnI8cUqrV5yl6IbrBi3ivLtn37tmp2Edwh1D4FxY73THcJOzGVWTRWgYSfDaouPBEYFOnzh4imUCqvS/yLclAbj6OyeljLZAIxJrgTj9YdOqGE6eiUKol1j2nLNVKx/a5Sfx7kDsDfJOx4F07pQGXBYkwEDdE/0IO81+Oz2kFC8UWXc+g8ILV8QUbCRaJ67CIfXHo84Z2ELI3iH5N1bKMLOL2tXaf9jULzY6mRIhVOtihG45GSRF+bG1EUndGp5mX8C9YWjNHMsJ8DI/oVv9kYeb7y1eEwWX1yXHfsSexHmXRzXj7ojOAODUaHzclrFSUb4uCu/rFOTvAK/ZvJYb50Axz+pwC/1m8KXzOZlxSCdjkXr9DaqFws5e4sSL7VNz1abQchyHZrDiy
+x-ms-exchange-antispam-messagedata: rzJF9RsaaaTP7edUI46sbPNfWbxSbuXWGuCni7lwW917o87rAqJ3Bq6q137E/8eTd+KSJpjMm7lSVAa1Dc0MdoerfZYEJ07V6YlfsDCqQohosGGp3XgjWHxfP1nl9Xjibdt9Stl5WU5LDRxFiT2inA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C41E07855793584D8A16EE11F807D15D@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1582224021-12827-1-git-send-email-frowand.list@gmail.com>
- <1582224021-12827-2-git-send-email-frowand.list@gmail.com>
- <20200226164206.GA10128@bogus> <60024e70-0abc-4a06-cd14-42c61a2d2597@gmail.com>
-In-Reply-To: <60024e70-0abc-4a06-cd14-42c61a2d2597@gmail.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Mon, 16 Mar 2020 09:45:41 +0100
-Message-ID: <CADYN=9+kVpW_n8drzbKWn1gEn270mj5dmR95+4B9GbU6n-cK3A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] of: unittest: add overlay gpio test to catch gpio
- hog problem
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     robh@kernel.org, atull@kernel.org, devicetree@vger.kernel.org,
-        geert+renesas@glider.be,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        pantelis.antoniou@konsulko.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f49ca0e-0d4d-401a-3502-08d7c986a7df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2020 08:47:27.4768
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: r947a9xFEuKsRR1KFSUpj5S5pCmDtsySD7jijidM7N/SqkT+DuLIRCQksd8RExfQvtiuznHYmbcW9RmUJI43hedOXlRjQsHT7g9Afh6wRCk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3721
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-16_02:2020-03-12,2020-03-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
+ lowpriorityscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501
+ phishscore=0 suspectscore=0 bulkscore=0 spamscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003160045
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Mar 2020 at 17:40, Frank Rowand <frowand.list@gmail.com> wrote:
->
-> Hi Anders,
->
-> On 3/13/20 4:51 AM, Anders Roxell wrote:
-> > From: Rob Herring <robh@kernel.org>
-> >
-> >> On Thu, 20 Feb 2020 12:40:20 -0600, frowand.list@gmail.com wrote:
-> >>> From: Frank Rowand <frank.rowand@sony.com>
-> >>>
-> >>> Geert reports that gpio hog nodes are not properly processed when
-> >>> the gpio hog node is added via an overlay reply and provides an
-> >>> RFC patch to fix the problem [1].
-> >>>
-> >>> Add a unittest that shows the problem.  Unittest will report "1 failed"
-> >>> test before applying Geert's RFC patch and "0 failed" after applying
-> >>> Geert's RFC patch.
-> >>>
-> >>> [1] https://lore.kernel.org/linux-devicetree/20191230133852.5890-1-geert+renesas@glider.be/
-> >>>
-> >>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> >
-> > I'm building arm64 on tag next-20200312, and booting in qemu, and I see
-> > this "Kernel panic":
->
-> Thank you for the panic report.
->
-> There has also been an x86_64 failure (with a very different stack trace).
-> I am going to investigate the x86_64 failure first.
-
-OK.
-
->
-> Can you please send the kernel .config?
-
-https://s3.amazonaws.com/builds.tuxbuild.com/43BB3Qry46bSzMK82iPbBg/kernel.config
-
-
-Cheers,
-Anders
-
->
-> Thanks,
->
-> Frank
->
->
-> >
-> > [...]
-> > [  172.779435][    T1] systemd[1]: Mounted POSIX Message Queue File System.
-> > [[0;32m  OK  [0m] Mounted POSIX Message Queue File System.
-> > [  172.844551][    T1] systemd[1]: Mounted Huge Pages File System.
-> > [[0;32m  OK  [0m] Mounted Huge Pages File System.
-> > [  172.917332][    T1] systemd[1]: Mounted Debug File System.
-> > [[0;32m  OK  [0m] Mounted Debug File System.
-> > [  173.465694][  T251] _warn_unseeded_randomness: 6 callbacks suppressed
-> > [  173.465803][  T251] random: get_random_u64 called from arch_mmap_rnd+0x94/0xb0 with crng_init=1
-> > [  173.466000][  T251] random: get_random_u64 called from randomize_stack_top+0x4c/0xb0 with crng_init=1
-> > [  173.466163][  T251] random: get_random_u32 called from arch_align_stack+0x6c/0x88 with crng_init=1
-> > [  173.544157][    T1] systemd[1]: Started Create Static Device Nodes in /dev.
-> > [[0;32m  OK  [0m] Started Create Static Device Nodes in /dev.
-> > [  174.283422][  T240] Unable to handle kernel paging request at virtual address 978061b552800000
-> > [  174.286169][  T240] Mem abort info:
-> > [  174.303268][  T240]   ESR = 0x96000004
-> > [  174.304652][  T240]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > [  174.323298][  T240]   SET = 0, FnV = 0
-> > [  174.324677][  T240]   EA = 0, S1PTW = 0
-> > [  174.325937][  T240] Data abort info:
-> > [  174.345383][  T240]   ISV = 0, ISS = 0x00000004
-> > [  174.359310][  T240]   CM = 0, WnR = 0
-> > [  174.360641][  T240] [978061b552800000] address between user and kernel address ranges
-> > [  174.378712][  T240] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> > [  174.381030][  T240] Modules linked in:
-> > [  174.382362][  T240] CPU: 0 PID: 240 Comm: systemd-journal Tainted: G    B   W         5.6.0-rc5-next-20200312-00018-g5c00c2e7cf27 #6
-> > [  174.386251][  T240] Hardware name: linux,dummy-virt (DT)
-> > [  174.388056][  T240] pstate: 40400005 (nZcv daif +PAN -UAO)
-> > [  174.389892][  T240] pc : sysfs_kf_seq_show+0x114/0x250
-> > [  174.391638][  T240] lr : sysfs_kf_seq_show+0x114/0x250
-> > [  174.393325][  T240] sp : ffff00006374faa0
-> > [  174.394697][  T240] x29: ffff00006374faa0 x28: ffff000062620040
-> > [  174.396751][  T240] x27: ffff000062b0a010 x26: 978061b552800000
-> > [  174.398779][  T240] x25: ffff000068aae020 x24: ffff000068aae010
-> > [  174.400798][  T240] x23: ffff00006311c000 x22: ffff000064f4f800
-> > [  174.402794][  T240] x21: 0000000000001000 x20: ffff000068aae008
-> > [  174.404820][  T240] x19: 0000000000001000 x18: 0000000000000000
-> > [  174.406792][  T240] x17: 0000000000000000 x16: 0000000000000000
-> > [  174.408814][  T240] x15: 0000000000000000 x14: 0000000000000000
-> > [  174.410805][  T240] x13: ffff80000c623a00 x12: 1fffe0000c623800
-> > [  174.412829][  T240] x11: 1fffe0000c6239ff x10: ffff80000c6239ff
-> > [  174.414821][  T240] x9 : 0000000000000000 x8 : ffff00006311d000
-> > [  174.416865][  T240] x7 : 0000000000000000 x6 : 000000000000003f
-> > [  174.418907][  T240] x5 : 0000000000000040 x4 : 000000000000002d
-> > [  174.420932][  T240] x3 : ffffa000109a1274 x2 : 0000000000000001
-> > [  174.422924][  T240] x1 : ffffa00016010000 x0 : 0000000000000000
-> > [  174.424954][  T240] Call trace:
-> > [  174.426097][  T240]  sysfs_kf_seq_show+0x114/0x250
-> > [  174.427769][  T240]  kernfs_seq_show+0xa4/0xb8
-> > [  174.429306][  T240]  seq_read+0x3a4/0x8e8
-> > [  174.430678][  T240]  kernfs_fop_read+0x8c/0x6e0
-> > [  174.432244][  T240]  __vfs_read+0x64/0xc0
-> > [  174.433622][  T240]  vfs_read+0x158/0x2b0
-> > [  174.435014][  T240]  ksys_read+0xfc/0x1e0
-> > [  174.436427][  T240]  __arm64_sys_read+0x50/0x60
-> > [  174.437944][  T240]  el0_svc_common.constprop.1+0x294/0x330
-> > [  174.439795][  T240]  do_el0_svc+0xe4/0x100
-> > [  174.441218][  T240]  el0_svc+0x70/0x80
-> > [  174.442550][  T240]  el0_sync_handler+0xd0/0x7b4
-> > [  174.444143][  T240]  el0_sync+0x164/0x180
-> > [  174.445578][  T240] Code: aa1703e0 97f6e03a aa1a03e0 97f6e880 (f9400355)
-> > [  174.447885][  T240] ---[ end trace 5bcb796ff4270d74 ]---
-> > [  174.449629][  T240] Kernel panic - not syncing: Fatal exception
-> > [  174.451590][  T240] Kernel Offset: disabled
-> > [  174.453005][  T240] CPU features: 0x80002,20002004
-> > [  174.454597][  T240] Memory Limit: none
-> > [  174.455955][  T240] ---[ end Kernel panic - not syncing: Fatal exception ]---
-> >
-> > When I say CONFIG_OF_UNITTEST=n it works.
-> > If I revert there it starts to work when I revert the last one,
-> > f4056e705b2e, from the list below:
-> >
-> > 485bb19d0b3e of: unittest: make gpio overlay test dependent on CONFIG_OF_GPIO
-> > 0ac174397940 of: unittest: annotate warnings triggered by unittest
-> > f4056e705b2e of: unittest: add overlay gpio test to catch gpio hog problem
-> >
-> > Cheers,
-> > Anders
-> >
-> >>> ---
-> >>>
-> >>> changes since v1:
-> >>>   - base on 5.6-rc1
-> >>>   - fixed node names in overlays
-> >>>   - removed unused fields from struct unittest_gpio_dev
-> >>>   - of_unittest_overlay_gpio() cleaned up comments
-> >>>   - of_unittest_overlay_gpio() moved saving global values into
-> >>>     probe_pass_count and chip_request_count more tightly around
-> >>>     test code expected to trigger changes in the global values
-> >>>
-> >>> v1 of this patch incorrectly reported that it had made changes
-> >>> since the RFC version, but it was mistakenly created from the
-> >>> wrong branch.
-> >>>
-> >>> There are checkpatch warnings.
-> >>>   - New files are in a directory already covered by MAINTAINERS
-> >>>   - The undocumented compatibles are restricted to use by unittest
-> >>>     and should not be documented under Documentation
-> >>>   - The printk() KERN_<LEVEL> warnings are false positives.  The level
-> >>>     is supplied by a define parameter instead of a hard coded constant
-> >>>   - The lines over 80 characters are consistent with unittest.c style
-> >>>
-> >>> This unittest was also valuable in that it allowed me to explore
-> >>> possible issues related to the proposed solution to the gpio hog
-> >>> problem.
-> >>>
-> >>>
-> >>>  drivers/of/unittest-data/Makefile             |   8 +-
-> >>>  drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +++
-> >>>  drivers/of/unittest-data/overlay_gpio_02a.dts |  16 ++
-> >>>  drivers/of/unittest-data/overlay_gpio_02b.dts |  16 ++
-> >>>  drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +++
-> >>>  drivers/of/unittest-data/overlay_gpio_04a.dts |  16 ++
-> >>>  drivers/of/unittest-data/overlay_gpio_04b.dts |  16 ++
-> >>>  drivers/of/unittest.c                         | 253 ++++++++++++++++++++++++++
-> >>>  8 files changed, 370 insertions(+), 1 deletion(-)
-> >>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
-> >>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
-> >>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
-> >>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
-> >>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
-> >>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
-> >>>
-> >>
-> >> Applied, thanks.
-> >>
-> >> Rob
-> >
-> >
->
+T24gU3VuLCAyMDIwLTAzLTE1IGF0IDEzOjA2ICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBPbiBUaHUsIDEyIE1hciAyMDIwIDEwOjM1OjAzICswMjAwDQo+IEFsZXhhbmRydSBBcmRl
+bGVhbiA8YXJkZWxlYW5hbGV4QGdtYWlsLmNvbT4gd3JvdGU6DQo+IA0KPiA+IFRoaXMgY2hhbmdl
+c2V0IGFkZHMgc3VwcG9ydCBmb3IgdGhlIEFEOTQ2NyBMVkRTIEhpZ2gtU3BlZWQgQURDLg0KPiA+
+IEluIG9yZGVyIHRvIHN1cHBvcnQgaXQsIHN1cHBvcnQgZm9yIGFuIEZQR0EgQURJIEFYSSBBREMg
+aXMgYWRkZWQgaW4gdGhpcw0KPiA+IHNldC4NCj4gPiBUaGlzIHVzZXMgdGhlIGN1cnJlbnQgc3Vw
+cG9ydCBmb3IgSUlPIGJ1ZmZlciBETUFFbmdpbmUuDQo+IA0KPiBJIHRvb2sgYSBsb29rIHRocm91
+Z2ggdGhpcyBzZXJpZXMgYW5kIEknbSB0aGluayBJJ20gbm93IGhhcHB5IHdpdGggaXQuDQo+IEhv
+d2V2ZXIsIEknZCBsaWtlIHRvIGxlYXZlIGEgYml0IG9mIHRpbWUgZm9yIFJvYiwgdGhlIERUIGJp
+bmRpbmcNCj4gTWFpbnRhaW5lciB0byB0YWtlIGEgbG9vayBhdCB0aGUgYmluZGluZ3MuDQo+IA0K
+PiBMb25nIHRlcm0gSSBzb3J0IG9mIHdvbmRlciBpZiB3ZSBtaWdodCBnZXQgc29tZSBhbHRlcm5h
+dGl2ZSBmb3IgdGhlDQo+IEFESS1BWEkgaW50ZXJmYWNlLCBlaXRoZXIgYmVjYXVzZSBBbmFsb2cg
+ZGVjaWRlIHRvIHJld3JpdGUgaXQsIG9yDQo+IGJlY2F1c2Ugc29tZW9uZSBlbHNlIHB1dHMgdG9n
+ZXRoZXIgc2ltaWxhciBJUC4gQXQgdGhhdCBwb2ludCB3ZSBtYXkNCj4gd2FudCBhIG1vcmUgc29w
+aGlzdGljYXRlZCByZWdpc3RyYXRpb24gZnJhbWV3b3JrIGV0Yy4gIEkgZ3Vlc3Mgd2UNCj4gY2Fu
+IHdhaXQgYW5kIHNlZSBpZiBhbnlvbmUgZXZlciBkb2VzIHRoYXQgdGhvdWdoLg0KDQpUaGlzIHJl
+Z2lzdHJhdGlvbiBtZWNoYW5pc20gaXMgYSBiaXQgb2YgYSByZXdyaXRlIG9mIGFuIG9sZGVyIG1l
+Y2hhbmlzbSB0aGF0J3MNCmJlZW4gaW4tdXNlIGZvciA3KyB5ZWFycy4NCmh0dHBzOi8vZ2l0aHVi
+LmNvbS9hbmFsb2dkZXZpY2VzaW5jL2xpbnV4L2Jsb2IvbWFzdGVyL2RyaXZlcnMvaWlvL2FkYy9j
+Zl9heGlfYWRjX2NvcmUuYyNMODMyDQpFc3NlbnRpYWxseSwgdGhlIG9sZCBvbmUgc2VhcmNoZXMg
+b24gdGhlIFNQSSBidXMgZm9yIGEgZGV2aWNlLCB3aGlsZSB0aGlzIG9uZQ0KbWFrZXMgdGhlIGNv
+dXBsaW5nIHRvIHRoZSBBWEktQURDIGRyaXZlciBhIGJpdCB0aWdodGVyLCBieSByZXF1aXJpbmcg
+aXQgdG8NCmV4cGxpY2l0bHkgcmVnaXN0ZXIgd2l0aCB0aGUgQVhJLUFEQyBkcml2ZXIuDQpObyBp
+ZGVhIHdoaWNoIGlzIGJldHRlcjsgc2luY2UgYm90aCBpbXBsZW1lbnRhdGlvbnMgcmVxdWlyZSBr
+bm93bGVkZ2UgYWJvdXQgdGhlDQpBWEktQURDIGRyaXZlci4NCkluIHRoZSBEVCwgdGhlIG1haW4g
+ZGlmZmVyZW5jZSBpcyBhIHJlbmFtZSBvZiB0aGUgcHJvcGVydHkgJ3NwaWJ1cy1jb25uZWN0ZWQn
+IHRvDQonYWRpLGFkYy1kZXYnLg0KDQpJIGFncmVlIHRoYXQgYSBtb3JlIHNvcGhpc3RpY2F0ZWQv
+Z2VuZXJhbGl6ZWQgaW50ZXJmYWNlIGJldHdlZW4gdGhlIDIgd291bGQgYmUgYQ0KYmV0dGVyIGlk
+ZWEsIGJ1dCBbZ2l2ZW4gaG93IGxvbmcgdGhpcyBoYXMgYmVlbiBhcy1pc10sIEkgZG9uJ3QgZmVl
+bCBpdCBoYXBwZW5pbmcNCnJlYWxseSBzb29uLg0KDQpJJ20gYWxzbyBwcmVwYXJpbmcgbm93IGFu
+IEFYSS1EQUMgZHJpdmVyLCBzaW1pbGFyIHRvIHRoaXMgb25lLg0KVGhlIGlkZWEgd291bGQgYmUg
+dG8gYWxzbyBwcmVwYXJlIHVwc3RyZWFtaW5nIHRoZSBBRDkzNjEsIHdoaWNoIGlzIGFuIFJGDQp0
+cmFuc2NlaXZlci4gSSdtIG5vdCBzdXJlIHdoZXRoZXIgdGhhdCB3b3VsZCBjbGFzc2lmeSBhcyBh
+biBNRkQgZGV2aWNlIFtBREMgJg0KREFDXSwgb3Igd2hldGhlciBhcyBhbiBJSU8gZGV2aWNlLCB3
+aXRoIGEgZHJpdmVycy9paW8vdHJhbnNjZWl2ZXIgc3ViLXR5cGUuDQoNClJlbGF0ZWQsIHdoYXQg
+d291bGQgYmUgaW50ZXJlc3RpbmcsIGlzIGEgZ2VuZXJpYyBtdWx0aS1jaGlwLXN5bmMgbWVjaGFu
+aXNtLg0KRm9yIG1hbnkgY29tcGxpY2F0ZWQgZGV2aWNlcyBbdHlwaWNhbGx5IGhpZ2gtc3BlZWQg
+QURDcy9EQUNzL3RyYW5zY2VpdmVyc10sIHRoaXMNCnNlZW1zIHRvIGJlIGEgbW9yZSBjb21tb24g
+dXNlLWNhc2UuDQpJJ3ZlIGJlZW4gd29uZGVyaW5nIGFib3V0IGEgd2F5IHRvIGRvIGl0OyBpZiB5
+b3UgaGF2ZSBhbnkgaW5wdXQsIG9yIGEgc3Vic3lzdGVtDQp0aGF0IGRvZXMgdGhhdCB3ZWxsLCBJ
+J20gb3BlbiB0byBpbnB1dHMuDQpNRkQgZG9lc24ndCBzZWVtIHRvIGJlIHF1aXRlIGJlIHRoYXQu
+IERvaW5nIGl0IHdpdGggY2xvY2tzIGhhcyBiZWVuIHRyaWVkIGFuZCBpcw0Kbm90IHZlcnkgZWFz
+eS4NCkFub3RoZXIgaWRlYSB3b3VsZCBiZSB0byB0cnkgdG8gaW1wbGVtZW50IHNvbWUgZGV2aWNl
+LWdyb3VwIG1lY2hhbmlzbS4gVGhlIGlkZWENCndvdWxkIGJlIHRvIGhhdmUgc3RhdGUtdHJhbnNp
+dGlvbiB0YWJsZXMsIGFuZCBlYWNoIGRyaXZlciBkZWZpbmVzIGl0J3Mgb3duDQpjYWxsYmFja3Mg
+Zm9yIGVhY2ggc3RhdGUvc3RhdGUtdHJhbnNpdGlvbi4gV2hlbmV2ZXIgYSBkZXZpY2UtZ3JvdXAg
+bmVlZHMgdG8ganVtcA0KYSBjZXJ0YWluIHN0YXRlLCBhbGwgY2FsbGJhY2tzIGFyZSBjYWxsZWQg
+dG8gcHV0IGVhY2ggZGV2aWNlIGluIGl0J3Mgb3duIHN1Yi0NCnN0YXRlLg0KU3RpbGwgbm90IHN1
+cmUgaG93IGdvb2QgdGhpcyBhcHByb2FjaCBpcywgYnV0IGl0IHNvdW5kcyB0aGUgY2xvc2VzdCB0
+byBzb21ldGhpbmcNCnRoYXQgd291bGQgd29yay4NCg0KVGhhbmtzDQpBbGV4DQoNCj4gDQo+IEpv
+bmF0aGFuDQo+IA0KPiA+IENoYW5nZWxvZyB2OCAtPiB2OToNCj4gPiAqIGFkZGluZyBtb3JlIEFu
+YWxvZyBwZW9wbGUgdG8gdGhlIGxpc3Q7IHByZWRvbWluYW50bHkgSERMIHBlb3BsZTsgdGhpcw0K
+PiA+ICAgc2hvdWxkIGhlbHAgbWUgc3luYyBwZW9wbGUgYWJvdXQgdGhlIGRldGFpbHMgb2YgcmVn
+cy9yZWctbmFtZXMNCj4gPiAqIGFkZGVkICdBY2tlZC1ieTogTW9yaXR6IEZpc2NoZXIgPG1kZkBr
+ZXJuZWwub3JnPicgdGFnIHRvIGZwZ2EgcGF0Y2hlcw0KPiA+ICAgLSB3ZSBjYW4gYWx3YXlzIHJl
+LXVwZGF0ZSB0aGVzZSBwYXRjaGVzIGlmIHNvbWV0aGluZyBlbHNlIGlzIGRlY2lkZWQgYWJvdXQN
+Cj4gPiAgICAgdGhlIGxvY2F0aW9uIG9mIHRoZSAnYWRpLWF4aS1jb21tb24uaCcgaGVhZGVyOyBJ
+J20gbm90IGluc2lzdGluZyBhYm91dA0KPiA+ICAgICB3aGVyZSB0byBwdXQgaXQ7IEknbSBvcGVu
+IHRvIG90aGVyIHByb3Bvc2Fscw0KPiA+ICogcGF0Y2ggJ2lpbzogYWRjOiBhZGktYXhpLWFkYzog
+YWRkIHN1cHBvcnQgZm9yIEFYSSBBREMgSVAgY29yZScNCj4gPiAgIC0gcHJlZml4ZWQgcmVncyBB
+RElfQVhJXyA7IEkgdHJpZWQgQURJX0FYSV9BRENfLCBidXQgdGhhdCBzZWVtZWQgdG8gbWFrZQ0K
+PiA+ICAgICB0aGVtIHRvbyBsb25nDQo+ID4gICAtIGRyb3BwZWQgdW51c2VkIHJlZ3M7IHdpbGwg
+YWRkIHRoZW0gYXMgc3R1ZmYgZ2V0cyBhZGRlZCBpbiB0aGUgdXBzdHJlYW0NCj4gPiAgICAgZHJp
+dmVyOyBpbiB0aGUgbWVhbnRpbWUsIHJlZy1uYW1lcyBjYW4gYmUgcmV3b3JrZWQNCj4gPiAgIC0g
+ZHJvcHBlZCBnZW5lcmljIExPV0VSWFlfU0VUL0dFVCBtYWNyb3MNCj4gPiAgIC0gdXBkYXRlIHJl
+Zy1uYW1lcyBhIGJpdDsgd2lsbCB1cGRhdGUgdGhlbSBpbiB0aGUgZG9jcyBhbmQgSERMDQo+ID4g
+ICAtIG9yZGVyIGluIGFkaV9heGlfYWRjX2NvbnZfdW5yZWdpc3RlcigpIHNob3VsZCBub3cgYmUg
+c3ltbWV0cmljYWxseQ0KPiA+ICAgICBvcHBwb3NpdGUgbm93IHRvIHRoZSByZWdpc3RlciBmdW5j
+dGlvbg0KPiA+ICAgLSBpbXBsZW1lbnRlZCAnaXNfdmlzaWJsZSgpJyBjYWxsYmFjayB0byBhZGlf
+YXhpX2FkY19hdHRyaWJ1dGVzW10gc28gdGhhdA0KPiA+ICAgICBhdHRycyBjYW4gYmUgbWFkZSBp
+bnZpc2libGUgdG8gdXNlcnNwYWNlIGlmIG5lZWRlZDsNCj4gPiAgIC0gJ2luZGlvX2Rldi0+bmFt
+ZSA9ICJhZGktYXhpLWFkYyI7Jw0KPiA+ICAgLSBhZGRlZCBrZXJuZWwgZG9jLXN0cmluZyBmb3Ig
+QHJlZ19hY2Nlc3MNCj4gPiAqIHBhdGNoICdpaW86IGFkYzogYWQ5NDY3OiBhZGQgc3VwcG9ydCBB
+RDk0NjcgQURDJw0KPiA+ICAgLSBhZDk0Njdfc3BpX3JlYWQoKSBzcGxpdCBpbiAyIGJ1ZmZlcnM7
+IHRidWYgJiByYnVmDQo+ID4gICAtIHJlbW92ZWQgJ2lmIChjaGFuLT5leHRlbmRfbmFtZSknIHRl
+c3QgOyBsZWZ0LW92ZXIgZnJvbSBpbml0aWFsIGRyaXZlcg0KPiA+ICAgLSByZW1vdmVkICdpZiAo
+IXN0LT5jbGspJyBjaGVjazsgZHJpdmVyIHdpbGwgZmFpbCBwcm9iZSB3aXRob3V0IGEgY2xvY2sN
+Cj4gPiAgIC0gcmVtb3ZlZCAnaWYgKCFzcGktPmRldi5vZl9ub2RlKScgaW4gcHJvYmU7IHNob3Vs
+ZG4ndCBiZSBuZWVkZWQNCj4gPiAgIC0gdXNpbmcgJ29mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgp
+JyBpbiBwcm9iZSB0byBnZXQgZGF0YTsgbW92ZWQgY2hpcA0KPiA+ICAgICBpbmZvIHRhYmxlIGVu
+dHJ5IGFzIGRhdGEgb24gdGhlIG9mX2RldmljZV9pZCB0YWJsZQ0KPiA+IA0KPiA+IENoYW5nZWxv
+ZyB2NyAtPiB2ODoNCj4gPiAqIGluICdpaW86IGFkYzogYWRpLWF4aS1hZGM6IGFkZCBzdXBwb3J0
+IGZvciBBWEkgQURDIElQIGNvcmUnDQo+ID4gICAtIHVwZGF0ZWQgcmVnaXN0ZXIgZGVmaW5pdGlv
+bnMgYW5kIGJpdHMgdG8gbmV3ZXIgZm9ybWF0L2RvY3M7IHRoZSByZWYNCj4gPiBkcml2ZXIgd2Fz
+bid0IHJlYWxseSB1cC10by1kYXRlDQo+ID4gICAgIC0tIHByZWZpeGVkIGJpdCBuYW1lcyB3aXRo
+IHJlZy1uYW1lIHRvIGF2b2lkIGJpdCBkZWZpbml0aW9uIGNvbGlzaW9uczsNCj4gPiB0aGF0IG1h
+a2VzIHNvbWUgbWFjcm9zIGxvbmdlciwgYnV0IGF0IGxlYXN0IHRoZSBmb3JtYXQgaXMgY29uc2lz
+dGVudA0KPiA+ICAgLSB1c2luZyBkZXZfbmFtZSgmcGRldi0+ZGV2KSBmb3IgaW5kaW9fZGV2LT5u
+YW1lDQo+ID4gICAtIG1vdmVkIHJlc2V0IHRvIG93biBheGlfYWRjX3Jlc2V0KCkgZnVuY3Rpb247
+IG1heSBiZSByZS11c2VkIGxhdGVyDQo+ID4gICAtIHNvbWUgcmUtZm9ybWF0dGluZy9hbGlnbm1l
+bnQgY2hhbmdlcw0KPiA+ICAgLSBhZGRyZXNzIEVOT1NZUyBjaGVja3BhdGNoIGNvbXBsYWludDsg
+Y2hhbmdlZCB3aXRoIEVPUE5PVFNVUFANCj4gPiANCj4gPiBDaGFuZ2Vsb2cgdjYgLT4gdjc6DQo+
+ID4gKiBGaXhlZCBkdC1zY2hlbWEgYnVpbGQgZm9yIGFkaSxheGktYWRjLnlhbWwgYmFzZWQgb24g
+Um9iJ3Mgc3VnZ2VzdGlvbg0KPiA+ICAgLSBhZGRlZCAnJHJlZjogL3NjaGVtYXMvdHlwZXMueWFt
+bCMvZGVmaW5pdGlvbnMvcGhhbmRsZScgdG8gJ2FkaSxhZGMtZGV2Jw0KPiA+ICAgLSBkcm9wcGVk
+ICdtYXhJdGVtcycgZnJvbSAnYWRpLGFkYy1kZXYnDQo+ID4gDQo+ID4gQ2hhbmdlbG9nIHY1IC0+
+IHY2DQo+ID4gKiBmaXggVVJMczsgZ290IGNoYW5nZWQgZHVyaW5nIHJlbmFtZQ0KPiA+ICAgIGh0
+dHBzOi8vd2lraS5hbmFsb2cuY29tL3Jlc291cmNlcy9mcGdhL2RvY3MvYWRpX2F4aV9hZGNfaXAg
+LT4NCj4gPiAgICBodHRwczovL3dpa2kuYW5hbG9nLmNvbS9yZXNvdXJjZXMvZnBnYS9kb2NzL2F4
+aV9hZGNfaXANCj4gPiAgIC0gbm90aWNlZCB3aGlsZSB3b3JraW5nIG9uIHRoZSBBWEkgREFDIGRy
+aXZlcg0KPiA+IA0KPiA+IENoYW5nZWxvZyB2NCAtPiB2NToNCj4gPiAqIHVwZGF0ZSBkcml2ZXJz
+L2lpby9hZGMvS2NvbmZpZyBub3RlIGFib3V0IG1vZHVsZSBuYW1lOyBvbWl0dGVkIGR1cmluZw0K
+PiA+IGZpcnN0IHJlbmFtZQ0KPiA+ICAgIC0gJ21vZHVsZSB3aWxsIGJlIGNhbGxlZCBheGktYWRj
+LicgLT4gJ21vZHVsZSB3aWxsIGJlIGNhbGxlZCBhZGktYXhpLQ0KPiA+IGFkYy4nDQo+ID4gDQo+
+ID4gQ2hhbmdlbG9nIHYzIC0+IHY0Og0KPiA+ICogYWRkcmVzc2VkIFJvYidzIGR0LXJlbWFya3MN
+Cj4gPiAgICAtIGNoYW5nZSAnYWRpLWF4aS1hZGMtY2xpZW50JyBwcm9wIHRvICdhZGksYWRjLWRl
+dicNCj4gPiANCj4gPiBDaGFuZ2Vsb2cgdjIgLT4gdjM6DQo+ID4gKiBhZGRyZXNzZWQgY29tcGls
+ZXIgd2FybmluZw0KPiA+IA0KPiA+IENoYW5nZWxvZyB2MSAtPiB2MjoNCj4gPiAqIGZpcnN0IHNl
+cmllcyB3YXMgYWRkZWQgYSBiaXQgaGFzdGlseQ0KPiA+ICogYWRkcmVzc2VkICAnbWFrZSBkdF9i
+aW5kaW5nX2NoZWNrJyBjb21wbGFpbnRzOyBzZWVtcyBJIG1pc3NlZCBhIGZldyB3aGVuDQo+ID4g
+cnVubmluZyB0aGUgY2hlY2s7IA0KPiA+ICogYWRkZWQgbWlzc2luZyBwYXRjaGVzIHRvIGluY2x1
+ZGUvbGludXgvZnBnYS9hZGktYXhpLWNvbW1vbi5oDQo+ID4gICAgLSAnaW5jbHVkZTogZnBnYTog
+YWRpLWF4aS1jb21tb24uaDogZml4dXAgd2hpdGVzcGFjZSB0YWIgLT4gc3BhY2UnDQo+ID4gICAg
+LSAnaW5jbHVkZTogZnBnYTogYWRpLWF4aS1jb21tb24uaDogYWRkIHZlcnNpb24gaGVscGVyIG1h
+Y3JvcycNCj4gPiAqIHBhdGNoICdpaW86IGJ1ZmZlci1kbWFlbmdpbmU6IGFkZCBkZXYtbWFuYWdl
+ZCBjYWxscyBmb3IgYnVmZmVyIGFsbG9jL2ZyZWUnDQo+ID4gICAgLSByZW1vdmUgY29weStwYXN0
+ZWQgY29tbWVudCBmb3IgJ2Rldm1faWlvX2RtYWVuZ2luZV9idWZmZXJfYWxsb2MoKScNCj4gPiAg
+ICAtIHJlbW92ZWQgZGV2bV9paW9fZG1hZW5naW5lX2J1ZmZlcl9mcmVlKCkgOyBob3BlZnVsbHkg
+aXQgbWlnaHQgbmV2ZXIgYmUNCj4gPiBuZWVkZWQNCj4gPiAgICAtIGZpeC11cCBhbGlnbm1lbnQg
+Zm9yIGRldm1faWlvX2RtYWVuZ2luZV9idWZmZXJfYWxsb2MoKSBpbiBoZWFkZXINCj4gPiAqIHBh
+dGNoICdpaW86IGFkYzogYWRpLWF4aS1hZGM6IGFkZCBzdXBwb3J0IGZvciBBWEkgQURDIElQIGNv
+cmUnDQo+ID4gICAgLSByZW5hbWVkIGF4aS1hZGMuYyAtPiBhZGktYXhpLWFkYy5jICYgS2NvbmZp
+ZyBzeW1ib2wNCj4gPiAgICAtIHByZWZpeCBhbGwgYXhpX2FkYyAtPiBhZGlfYXhpX2FkYw0KPiA+
+ICAgIC0gcmVtb3ZlZCBzd2l0Y2ggc3RhdGVtZW50IGluIGF4aV9hZGNfcmVhZF9yYXcoKSAmIGF4
+aV9hZGNfd3JpdGVfcmF3KCkNCj4gPiAgICAtIHJlbW92ZSBheGlfYWRjX2NoYW5fc3BlYyA7IHJl
+cGxhY2VkIHdpdGggaWlvX2NoYW5fc3BlYyBkaXJlY3RseSA7IHdpbGwNCj4gPiB0aGluayBvZiBh
+IHNpbXBsZXIgc29sdXRpb24gZm9yIGV4dHJhIGNoYW4gcGFyYW1zDQo+ID4gICAgLSByZW1vdmVk
+IGxlZnQtb3ZlciAnc3RydWN0IGF4aV9hZGNfY2xlYW51cF9kYXRhJw0KPiA+ICAgIC0gbW92ZWQg
+J2Rldm1fYWRkX2FjdGlvbl9vcl9yZXNldCgpJyBjYWxsIHJpZ2h0IGFmdGVyDQo+ID4gJ2FkaV9h
+eGlfYWRjX2F0dGFjaF9jbGllbnQoKScNCj4gPiAgICAtIHN3aXRjaGVkIHRvIHVzaW5nICdkZXZt
+X3BsYXRmb3JtX2lvcmVtYXBfcmVzb3VyY2UoKScNCj4gPiAqIHBhdGNoICdpaW86IGFkYzogYWQ5
+NDY3OiBhZGQgc3VwcG9ydCBBRDk0NjcgQURDJw0KPiA+ICAgLSByZW5hbWVkIEFESV9BREMgcmVn
+IHByZWZpeGVzIHRvIEFOODc3X0FEQw0KPiA+ICAgLSBkcm9wcGVkICdpbmZvX21hc2tfc2VwYXJh
+dGUnIGZpZWxkIGluIEFEOTQ2N19DSEFOIC0gd2lsbCBiZSByZS1hZGRlZA0KPiA+IGxhdGVyIHdo
+ZW4gZHJpdmVyIGdldHMgbW9yZSBmZWF0dXJlczsgd2FzIGxlZnQtb3ZlciBmcm9tIHRoZSBpbml0
+aWFsIHJlZg0KPiA+IGRyaXZlcg0KPiA+ICAgLSByZW1vdmUgLnNoaWZ0ID0gMCwgIGluIEFEOTQ2
+N19DSEFODQo+ID4gICAtIHJlbmFtZWQgJ3NhbXBsZS1jbG9jaycgLT4gJ2FkYy1jbG9jaycNCj4g
+PiAgIC0gZGlyZWN0IHJldHVybnMgaW4gYWQ5NDY3X3JlYWRfcmF3KCkgJiBhZDk0Njdfd3JpdGVf
+cmF3KCkgJg0KPiA+IGFkOTQ2N19zZXR1cCgpIHN3aXRjaCBzdGF0ZW1lbnRzDQo+ID4gICAtIHJl
+bW92ZWQgYmxhbmsgbGluZSBhZnRlciBkZXZtX2F4aV9hZGNfY29udl9yZWdpc3RlcigpDQo+ID4g
+ICAtIHJlbW92ZWQgYWQ5NDY3X2lkICYgcmV3b3JrZWQgdG8gdXNlIGFkOTQ2N19vZl9tYXRjaA0K
+PiA+IA0KPiA+IEFsZXhhbmRydSBBcmRlbGVhbiAoNik6DQo+ID4gICBpbmNsdWRlOiBmcGdhOiBh
+ZGktYXhpLWNvbW1vbi5oOiBmaXh1cCB3aGl0ZXNwYWNlIHRhYiAtPiBzcGFjZQ0KPiA+ICAgaW5j
+bHVkZTogZnBnYTogYWRpLWF4aS1jb21tb24uaDogYWRkIHZlcnNpb24gaGVscGVyIG1hY3Jvcw0K
+PiA+ICAgaWlvOiBidWZmZXItZG1hZW5naW5lOiB1c2UgJXp1IHNwZWNpZmllciBmb3Igc3ByaW50
+ZihhbGlnbikNCj4gPiAgIGlpbzogYnVmZmVyLWRtYWVuZ2luZTogYWRkIGRldi1tYW5hZ2VkIGNh
+bGxzIGZvciBidWZmZXIgYWxsb2MNCj4gPiAgIGR0LWJpbmRpbmdzOiBpaW86IGFkYzogYWRkIGJp
+bmRpbmdzIGRvYyBmb3IgQVhJIEFEQyBkcml2ZXINCj4gPiAgIGR0LWJpbmRpbmdzOiBpaW86IGFk
+YzogYWRkIGJpbmRpbmdzIGRvYyBmb3IgQUQ5NDY3IEFEQw0KPiA+IA0KPiA+IE1pY2hhZWwgSGVu
+bmVyaWNoICgyKToNCj4gPiAgIGlpbzogYWRjOiBhZGktYXhpLWFkYzogYWRkIHN1cHBvcnQgZm9y
+IEFYSSBBREMgSVAgY29yZQ0KPiA+ICAgaWlvOiBhZGM6IGFkOTQ2NzogYWRkIHN1cHBvcnQgQUQ5
+NDY3IEFEQw0KPiA+IA0KPiA+ICAuLi4vYmluZGluZ3MvaWlvL2FkYy9hZGksYWQ5NDY3LnlhbWwg
+ICAgICAgICAgfCAgNjUgKysrDQo+ID4gIC4uLi9iaW5kaW5ncy9paW8vYWRjL2FkaSxheGktYWRj
+LnlhbWwgICAgICAgICB8ICA2MyArKysNCj4gPiAgZHJpdmVycy9paW8vYWRjL0tjb25maWcgICAg
+ICAgICAgICAgICAgICAgICAgIHwgIDM1ICsrDQo+ID4gIGRyaXZlcnMvaWlvL2FkYy9NYWtlZmls
+ZSAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArDQo+ID4gIGRyaXZlcnMvaWlvL2FkYy9hZDk0
+NjcuYyAgICAgICAgICAgICAgICAgICAgICB8IDQyMCArKysrKysrKysrKysrKw0KPiA+ICBkcml2
+ZXJzL2lpby9hZGMvYWRpLWF4aS1hZGMuYyAgICAgICAgICAgICAgICAgfCA1MTggKysrKysrKysr
+KysrKysrKysrDQo+ID4gIC4uLi9idWZmZXIvaW5kdXN0cmlhbGlvLWJ1ZmZlci1kbWFlbmdpbmUu
+YyAgICB8ICA0MSArLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L2ZwZ2EvYWRpLWF4aS1jb21tb24uaCAg
+ICAgICAgICAgfCAgIDYgKy0NCj4gPiAgaW5jbHVkZS9saW51eC9paW8vYWRjL2FkaS1heGktYWRj
+LmggICAgICAgICAgIHwgIDY0ICsrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L2lpby9idWZmZXItZG1h
+ZW5naW5lLmggICAgICAgICAgfCAgIDMgKw0KPiA+ICAxMCBmaWxlcyBjaGFuZ2VkLCAxMjE1IGlu
+c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2FkaSxhZDk0NjcueWFt
+bA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2lpby9hZGMvYWRpLGF4aS0NCj4gPiBhZGMueWFtbA0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9paW8vYWRjL2FkOTQ2Ny5jDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2lpby9hZGMvYWRpLWF4aS1hZGMuYw0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVk
+ZS9saW51eC9paW8vYWRjL2FkaS1heGktYWRjLmgNCj4gPiANCg==
