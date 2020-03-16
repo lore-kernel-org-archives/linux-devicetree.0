@@ -2,116 +2,81 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCC9C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036F5C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6990E20748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA510206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326508;
-	bh=ClFWbM6KRvO0jA0ltmJ0uDe7H7a6wSR5QyRk4Y8M8UY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2D6OHd1EqkoLR+wr2kg9ZltZ2cVQ2KRSIjAOiyn1xlQhiCYoulfqRI5WK2gIduJr
-	 qeHcs8HXI1ikWySPvQBAHDFbfljZrizB4oHFazEE/KTzmJuCZnudWsQPaIV14D7OK4
-	 V+aZxzwQyoBo85ctTSts/bllQh0Z72c16aXjyURg=
+	s=default; t=1584326864;
+	bh=2+qcIOCOkKHZNw4l4h7nefYzKid9thmlUS+TXFtvQ5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ab97yCCd+hIcEYzvxl6M0LRZHfixs+g+no8lUF2WRSbOLTHbi7IIZtfr6JP5OO/ok
+	 jO3VnBDKS5JnIJ92h51URFeOyavPzIl/2kYpPpjCcv48Yr+QP9jmNXAYYP67uIWJhX
+	 PUGNta2BYDJLeCDCOEkTcsSpw4BbYXR648LPvTqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbgCPClk (ORCPT
+        id S1729356AbgCPCro (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36118 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:47:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbgCPCda (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:33:30 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729348AbgCPCro (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:47:44 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7F90206E9;
-        Mon, 16 Mar 2020 02:33:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95EA02051A;
+        Mon, 16 Mar 2020 02:47:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326009;
-        bh=ClFWbM6KRvO0jA0ltmJ0uDe7H7a6wSR5QyRk4Y8M8UY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LybBq0H8VByDyd+dKIhDlbk5tGG2NvY7aLudfI8iL9/Uo256lmFcZBmbRzRGXa5cO
-         SUjiV2q/YX7XrOasMnTacY4KQ0gjcUoSyXaNBGWA5h6VTGAJdZINusblnkMEjYcIKp
-         izVYHJjXta2kuK05wEllgL8YODq9MQoEgLCaIDjg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 08/41] ARM: dts: dra7-l4: mark timer13-16 as pwm capable
-Date:   Sun, 15 Mar 2020 22:32:46 -0400
-Message-Id: <20200316023319.749-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
-References: <20200316023319.749-1-sashal@kernel.org>
+        s=default; t=1584326863;
+        bh=2+qcIOCOkKHZNw4l4h7nefYzKid9thmlUS+TXFtvQ5U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uLczIeoOq59Jz02rRHZvUWao/SCC5s6iUN2NnBAjGYYCV7VwdGlLthl9Ic3mzsjQz
+         az36797F0eejGPaBJCqYq9bcpO14f+epnG48RGUYPMLFjlg4RFnjbR589tn0ftHtcV
+         4J2+YDwm1eZD+RDXWivRF0MWbgvp6U9H5N4Ns8jI=
+Date:   Mon, 16 Mar 2020 10:47:36 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v2 0/2] properly define some of PHYs
+Message-ID: <20200316024735.GB17221@dragon>
+References: <20200313102534.5438-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313102534.5438-1-o.rempel@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+On Fri, Mar 13, 2020 at 11:25:32AM +0100, Oleksij Rempel wrote:
+> changes v3:
+> - add phy-handle on the marsboard
+> 
+> changes v2:
+> - remove spaces
+> 
+> Oleksij Rempel (2):
+>   ARM: dts: imx6dl-riotboard: properly define rgmii PHY
+>   ARM: dts: imx6q-marsboard: properly define rgmii PHY
 
-[ Upstream commit 00a39c92c8ab94727f021297d1748531af113fcd ]
-
-DMTimers 13 - 16 are PWM capable and also can be used for CPTS input
-signals generation. Hence, mark them as "ti,timer-pwm".
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/dra7-l4.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 7e7aa101d8a49..912ee8778830a 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -3461,6 +3461,7 @@
- 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER13_CLKCTRL 24>;
- 				clock-names = "fck";
- 				interrupts = <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>;
-+				ti,timer-pwm;
- 			};
- 		};
- 
-@@ -3489,6 +3490,7 @@
- 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER14_CLKCTRL 24>;
- 				clock-names = "fck";
- 				interrupts = <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>;
-+				ti,timer-pwm;
- 			};
- 		};
- 
-@@ -3517,6 +3519,7 @@
- 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER15_CLKCTRL 24>;
- 				clock-names = "fck";
- 				interrupts = <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>;
-+				ti,timer-pwm;
- 			};
- 		};
- 
-@@ -3545,6 +3548,7 @@
- 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER16_CLKCTRL 24>;
- 				clock-names = "fck";
- 				interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
-+				ti,timer-pwm;
- 			};
- 		};
- 
--- 
-2.20.1
-
+Applied both, thanks.
