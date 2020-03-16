@@ -2,109 +2,120 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC3EC3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1701BC0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1F620663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE08E20658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:23:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FuH75nUp"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qG8PxbkW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732066AbgCPQOM (ORCPT
+        id S1731875AbgCPQXa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:14:12 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:40443 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732044AbgCPQOM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 12:14:12 -0400
-Received: by mail-vs1-f68.google.com with SMTP id m25so2837813vsa.7
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 09:14:10 -0700 (PDT)
+        Mon, 16 Mar 2020 12:23:30 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45125 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731864AbgCPQXa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 12:23:30 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m15so10019476pgv.12
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 09:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bBDCtFmVlmwok8vUzi26MlGBbPcfcb7XMIsVTqNi9do=;
-        b=FuH75nUp8oKLA+mUqWbx6oFCErjjg+2KD+mAVoj6DUeH1D9WGGPmT6ionb0S+43XxJ
-         8LPzfjMNU2tfB5CGcGqQ/iIbHV2+E2dFFIMjY7vOdzX4a4jWs6XlEErT1+tFM4dndAZB
-         tPBDur11ZisT8rmfI3RWzJHnq64KiuPD24AOyKz0v+b0aQoEigUVcsdp6nQHB0AT9yf3
-         r950MhLEK/ySxhdgpuohVDmsw2+MoIn7kaQsAUTpJnXAu+nIGhPfTKFh5RxLAV7QTlmr
-         9WqNrAsGpOItTVL4PoMpuFCUUe3KBo2Yo295TFO8Vm6OsMFyHRL7YOymzG54+mcVzrpv
-         ppTw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=ys4/S0tvAwTvTJf5RJkfy3c1yIHeW683iadOwgFcprg=;
+        b=qG8PxbkWIbuy+9Qc3nMWdGGFXM1kqFsA1skjDvOKTMf7Up6HmyD9CPoLqXI2V5kpGy
+         I3/5lAZuyWRnwHN+FhV5f5pIjwjRtEQu9DsII6msx1ddPDIDv9X0cKWTe9aJLO3mNoEQ
+         Lp6vlkuNNWB34rdnv0HyMxwNgoAiDQ6c8379u6fb02bIYFNIZULMiWV6XpiyHOLKYFJ9
+         vwIb4GVU28gTAhiuFIkXkFpODnnGuGFJvf9+cJ2D5Q8ZHYlpkhI7qXD8UA3N5+OZ1WME
+         akPHRRVPOdQPPuqm1eOiYZfaR/KWrASRxj6StEwYQXgUOEAAJ0olraavqiILAmFiGikz
+         iHoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bBDCtFmVlmwok8vUzi26MlGBbPcfcb7XMIsVTqNi9do=;
-        b=kNzx0NLAHGkL1+96lB8QyEtWOj1alc7/pzLLNiVUfpnn2g/T/OAAlvVaip3ShJ0wSv
-         Z0YA96sJm04eOIlbK5A9xnwM65wfVzzEVHn1BpkkwDQ/gJAseJ9cs2H3UdaUE0tVD0jm
-         A9heMU/I8raRnJdLXxz4jj6w3qjkxqglTG8LPbDzNB4aBHxQCZJiwQTWJk6arnODU5Y3
-         XBA1R8Ccl2G2sbEl5bZgyrwUxPvezlmI2rxE9l70qz5D7ZUGIoVKWUV6/5Zg/8K8SdRL
-         jVMC4bLv6KMGeZv1yk62JEYGNooiiLemQ6bSTC4B7VYQAxY9Lo6q0Yfvvn7IKbjL2j1p
-         cmZg==
-X-Gm-Message-State: ANhLgQ1YhG0SE2RVsBkzkmXtzLVKb14Pf4kqMXqp3CP3cOJhYUOi8PTO
-        uNYmbxX1TP7xPa7+6NgP2pq8rOPwZR2O4xSm1HUmUQ==
-X-Google-Smtp-Source: ADFU+vs3pLJTKaxFy4PgAmzkqT70xCVmTVF1ScAx8CX+A67toAj+a60XNOs30Hvy0izYq7eq1MsBLm7uLvTkG1O+5jA=
-X-Received: by 2002:a05:6102:104b:: with SMTP id h11mr369017vsq.182.1584375249809;
- Mon, 16 Mar 2020 09:14:09 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ys4/S0tvAwTvTJf5RJkfy3c1yIHeW683iadOwgFcprg=;
+        b=SkTFOWfdX8dTlyKS1PGBAfNT7D9JyWEpB47yB0tUaIFW+uiR5SHoGjbPkpS8eRJy0z
+         /JN2RklWBGYToengCfvf/zRhkwCvjAZ0CTd2xWVma2t1LM+Tst+pNlbh4fr86+yG/3Y2
+         mfNyb1nf+Xdihmn2A0VEGdHp2q12IPkUiF5wB2tJM7VXSgTfUnVss7J2+AglBjzZIB36
+         8F+qFC6ycRo2JhWucYVtXWmmQPeT8qj3x12tiu9OmJHlHZJYgwMLnWqdAayS9RX2TIe9
+         ZH/WmNMmxh4MZU4LRG73zY+SeQXi4AajoDNocIGB0mmxbGClQHZUaJpXAuzmNbsXKNap
+         3+vg==
+X-Gm-Message-State: ANhLgQ38tvep/+egPD50DyY4FG/4VJNsmB2h6ebYxJNpy3l+fZ5rtRAG
+        7IFVhbfeliF0zhtdQMJyxYKEfBJIVC4=
+X-Google-Smtp-Source: ADFU+vvIkI5Q4X0j5d7XavYPHjHZylGz9Mto6CG3F5sDaCzyi5q3jYipZTJ9iAg6VhbrUPWCeuQi7w==
+X-Received: by 2002:a63:67c5:: with SMTP id b188mr605662pgc.111.1584375808216;
+        Mon, 16 Mar 2020 09:23:28 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:dcc4:2a10:1b38:3edc])
+        by smtp.gmail.com with ESMTPSA id q91sm313466pjb.11.2020.03.16.09.23.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Mar 2020 09:23:27 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Hanjie Lin <hanjie.lin@amlogic.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Hanjie Lin <hanjie.lin@amlogic.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        "Victor Wan" <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: Re: [PATCH v9 3/3] arm64: dts: meson: a1: Enable USB2 PHY and DWC3 controller
+In-Reply-To: <1581990859-135234-4-git-send-email-hanjie.lin@amlogic.com>
+References: <1581990859-135234-1-git-send-email-hanjie.lin@amlogic.com> <1581990859-135234-4-git-send-email-hanjie.lin@amlogic.com>
+Date:   Mon, 16 Mar 2020 09:23:26 -0700
+Message-ID: <7hd09cw9oh.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20200309045411.21859-1-andy.tang@nxp.com> <18c58e1b-583c-2308-ee60-a8923c2027ee@linaro.org>
-In-Reply-To: <18c58e1b-583c-2308-ee60-a8923c2027ee@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 16 Mar 2020 21:43:58 +0530
-Message-ID: <CAHLCerPBxe=Az=EexxYQkgvhRO40JT0qEhnAwqnGbeesiU-bnQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: thermal: make cooling-maps property optional
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Yuantian Tang <andy.tang@nxp.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 8:22 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+Hi Hanjie,
+
+Hanjie Lin <hanjie.lin@amlogic.com> writes:
+
+> Enable USB2 PHY and DWC3 controller for Meson A1 SoC.
 >
-> On 09/03/2020 05:54, andy.tang@nxp.com wrote:
-> > From: Yuantian Tang <andy.tang@nxp.com>
-> >
-> > Cooling-maps doesn't have to be a required property because there may
-> > be no cooling device on system, or there are no enough cooling devices for
-> > each thermal zone in multiple thermal zone cases since cooling devices
-> > can't be shared.
-> > So make this property optional to remove such limitations.
-> >
-> > For thermal zones with no cooling-maps, there could be critic trips
-> > that can trigger CPU reset or shutdown. So they still can take actions.
-> >
-> > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-
+> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
+> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 43 +++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
 >
-> Amit, I'm about to pick this patch, it will collide with the yaml
-> conversion changes.
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> index 6fdc0dd..3b7ca50 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> @@ -6,6 +6,9 @@
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/power/meson-a1-power.h>
+> +#include <dt-bindings/reset/amlogic,meson-a1-reset.h>
+> +#include <dt-bindings/clock/a1-pll-clkc.h>
+> +#include <dt-bindings/clock/a1-clkc.h>
 
-Thanks for the headsup. I can fixup v3 when I respin.
+The driver is now merged, but the DT cannot be merged because it has
+dependencies on the A1 clock series which is still under review.
 
-However, I've always interpreted this binding as follows:
-- cooling-maps should be mandatory for active and passive trip types
-otherwise there will be no cooling
-- cooling-maps make no sense for critical trip type since we're
-invoking system shutdown
-- cooling-maps are optional for hot trip types.
+When that is merged, please resend this patch.
 
-Is this your understanding too?
+Thanks,
 
-We should be able to enforce this in YAML.
-
-Regards,
-Amit
+Kevin
