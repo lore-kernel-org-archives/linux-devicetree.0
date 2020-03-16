@@ -2,223 +2,70 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C7FC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 21:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6AAC0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 21:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360E4206C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 21:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1C120719
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 21:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732712AbgCPVn5 (ORCPT
+        id S1732713AbgCPV6t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:43:57 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:52332 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732652AbgCPVn5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 17:43:57 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 4283D2005A;
-        Mon, 16 Mar 2020 22:43:48 +0100 (CET)
-Date:   Mon, 16 Mar 2020 22:43:46 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-Subject: Re: [PATCH v1 02/36] dt-bindings: spi: support non-spi bindings as
- SPI slaves
-Message-ID: <20200316214346.GA23637@ravnborg.org>
-References: <20200315134416.16527-1-sam@ravnborg.org>
- <20200315134416.16527-3-sam@ravnborg.org>
- <20200316204850.gggeyjulgiy53i7x@gilmour.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316204850.gggeyjulgiy53i7x@gilmour.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=P-IC7800AAAA:8 a=VwQbUJbxAAAA:8 a=unGCcehtwgLSmkbFn9MA:9
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=d3PnA9EDa4IxuAV0gXij:22
-        a=AjGcO6oz07-iQ99wixmX:22
+        Mon, 16 Mar 2020 17:58:49 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:48446 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732652AbgCPV6t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 17:58:49 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 941D0156D1DB5;
+        Mon, 16 Mar 2020 14:58:48 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 14:58:47 -0700 (PDT)
+Message-Id: <20200316.145847.669961790477208036.davem@davemloft.net>
+To:     madalin.bucur@oss.nxp.com
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v2 0/3] QorIQ DPAA ARM RDBs need internal delay on
+ RGMII
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
+References: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Mar 2020 14:58:49 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime.
+From: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Date: Mon, 16 Mar 2020 14:05:55 +0200
 
-On Mon, Mar 16, 2020 at 09:48:50PM +0100, Maxime Ripard wrote:
-> Hi Sam,
+> v2: used phy_interface_mode_is_rgmii() to identify RGMII
 > 
-> On Sun, Mar 15, 2020 at 02:43:42PM +0100, Sam Ravnborg wrote:
-> > Independent bindings can be SPI slaves which for example is
-> > the case for several panel bindings.
-> >
-> > Move SPI slave properties to spi-slave.yaml so the independent
-> > SPI slave bindings can include spi-slave.yaml rather than
-> > duplicating the properties.
-> >
-> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Cc: Mark Brown <broonie@kernel.org>
-> > Cc: linux-spi@vger.kernel.org
-> > ---
-> >  .../bindings/spi/spi-controller.yaml          | 63 +-------------
-> >  .../devicetree/bindings/spi/spi-slave.yaml    | 83 +++++++++++++++++++
-> >  2 files changed, 86 insertions(+), 60 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/spi/spi-slave.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > index 1e0ca6ccf64b..99531c8d10dd 100644
-> > --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-> > @@ -67,71 +67,14 @@ patternProperties:
-> >    "^.*@[0-9a-f]+$":
-> >      type: object
-> >
-> > +    allOf:
-> > +      - $ref: spi-slave.yaml#
-> > +
-> >      properties:
-> >        compatible:
-> >          description:
-> >            Compatible of the SPI device.
-> >
-> > -      reg:
-> > -        minimum: 0
-> > -        maximum: 256
-> > -        description:
-> > -          Chip select used by the device.
-> > -
-> > -      spi-3wire:
-> > -        $ref: /schemas/types.yaml#/definitions/flag
-> > -        description:
-> > -          The device requires 3-wire mode.
-> > -
-> > -      spi-cpha:
-> > -        $ref: /schemas/types.yaml#/definitions/flag
-> > -        description:
-> > -          The device requires shifted clock phase (CPHA) mode.
-> > -
-> > -      spi-cpol:
-> > -        $ref: /schemas/types.yaml#/definitions/flag
-> > -        description:
-> > -          The device requires inverse clock polarity (CPOL) mode.
-> > -
-> > -      spi-cs-high:
-> > -        $ref: /schemas/types.yaml#/definitions/flag
-> > -        description:
-> > -          The device requires the chip select active high.
-> > -
-> > -      spi-lsb-first:
-> > -        $ref: /schemas/types.yaml#/definitions/flag
-> > -        description:
-> > -          The device requires the LSB first mode.
-> > -
-> > -      spi-max-frequency:
-> > -        $ref: /schemas/types.yaml#/definitions/uint32
-> > -        description:
-> > -          Maximum SPI clocking speed of the device in Hz.
-> > -
-> > -      spi-rx-bus-width:
-> > -        allOf:
-> > -          - $ref: /schemas/types.yaml#/definitions/uint32
-> > -          - enum: [ 1, 2, 4, 8 ]
-> > -          - default: 1
-> > -        description:
-> > -          Bus width to the SPI bus used for MISO.
-> > -
-> > -      spi-rx-delay-us:
-> > -        description:
-> > -          Delay, in microseconds, after a read transfer.
-> > -
-> > -      spi-tx-bus-width:
-> > -        allOf:
-> > -          - $ref: /schemas/types.yaml#/definitions/uint32
-> > -          - enum: [ 1, 2, 4, 8 ]
-> > -          - default: 1
-> > -        description:
-> > -          Bus width to the SPI bus used for MOSI.
-> > -
-> > -      spi-tx-delay-us:
-> > -        description:
-> > -          Delay, in microseconds, after a write transfer.
-> > -
+> The QorIQ DPAA 1 based RDB boards require internal delay on
+> both Tx and Rx to be set. The patch set ensures all RGMII
+> modes are treated correctly by the FMan driver and sets the
+> phy-connection-type to "rgmii-id" to restore functionality.
+> Previously Rx internal delay was set by board pull-ups and
+> was left untouched by the PHY driver. Since commit
+> 1b3047b5208a80 ("net: phy: realtek: add support for
+> configuring the RX delay on RTL8211F") the Realtek 8211F PHY
+> driver has control over the RGMII RX delay and it is
+> disabling it for other modes than RGMII_RXID and RGMII_ID.
 > 
-> I can see what you're trying to do, but you don't really need to.
-> 
-> All the SPI devices will be declared under a spi controller node that
-> will validate its child nodes (and thus the devices) already.
+> Please note that u-boot in particular performs a fix-up of
+> the PHY connection type and will overwrite the values from
+> the Linux device tree. Another patch set was sent for u-boot
+> and one needs to apply that [1] to the boot loader, to ensure
+> this fix is complete, unless a different bootloader is used.
 
-This was the missing piece - thanks.
-And as Mark put it "why is this suddenly an issue"?
-Turns out this is already properly handled and I made up an issue.
-Maybe Mark tried to explian it to me already...
-
-> 
-> Doing it this way would actually make all the checks happen twice,
-> once as part of the SPI controller, once as part of the SPI device
-> binding, without any good reason.
-
-I had focus on validating the example in the binding
-file and not the full picture.
-
-One thing I do not see properly addressed, but maybe I just miss it.
-What triggers that we catch properties that are not supposed to be
-present?
-
-If we see a unsupported property "foobar":
-
-spi {
-    ...
-    panel {
-       ....
-       foobar = <1>;
-    };
-};
-
-somewhere in a SPI slave binding we should catch this.
-If for no other reasons that it could be a simple spelling mistake
-that otherwise could go undetected for a long time.
-But maybe this is really not feasible to do?
-
-	Sam
+Series applied, thanks.
