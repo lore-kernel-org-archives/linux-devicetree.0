@@ -2,120 +2,158 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1701BC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375DDC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE08E20658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF11B20658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qG8PxbkW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTIjqCxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731875AbgCPQXa (ORCPT
+        id S1732007AbgCPQYC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:23:30 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45125 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731864AbgCPQXa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 12:23:30 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m15so10019476pgv.12
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 09:23:29 -0700 (PDT)
+        Mon, 16 Mar 2020 12:24:02 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37729 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731864AbgCPQYC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 12:24:02 -0400
+Received: by mail-ed1-f66.google.com with SMTP id b23so22743166edx.4;
+        Mon, 16 Mar 2020 09:24:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ys4/S0tvAwTvTJf5RJkfy3c1yIHeW683iadOwgFcprg=;
-        b=qG8PxbkWIbuy+9Qc3nMWdGGFXM1kqFsA1skjDvOKTMf7Up6HmyD9CPoLqXI2V5kpGy
-         I3/5lAZuyWRnwHN+FhV5f5pIjwjRtEQu9DsII6msx1ddPDIDv9X0cKWTe9aJLO3mNoEQ
-         Lp6vlkuNNWB34rdnv0HyMxwNgoAiDQ6c8379u6fb02bIYFNIZULMiWV6XpiyHOLKYFJ9
-         vwIb4GVU28gTAhiuFIkXkFpODnnGuGFJvf9+cJ2D5Q8ZHYlpkhI7qXD8UA3N5+OZ1WME
-         akPHRRVPOdQPPuqm1eOiYZfaR/KWrASRxj6StEwYQXgUOEAAJ0olraavqiILAmFiGikz
-         iHoA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZJNcfL+20pcF/nwvNIBx1sW4o3Q2BCHfxBO+o2iJP1E=;
+        b=TTIjqCxllK3X2lZBFPw7ICZwUlDRHxnHW7NjEPyP7bRYIrWRr4yeK7Ieugc+qaddT5
+         meVtk6e5fE6pXDialkcLZ+3IJSUnPo9gOI1koNCijDivBt2EhV81Kh3bMXQ4PqXNwRbF
+         8471GWlZw+jYl1IOjR0/BBScsAL6B1Gu850oaJfUv4UCh9+wnMeexpn0xaLvYVjzvc4O
+         2k6DkgQ+mH0bCuIs1N51H9UMGqet8MVK9P7Mw9ov3Cpwdxku2WYkl7Jw9m4DlHVqDKjA
+         s60LXh9QoOLGVcxPtLAR24/tMF6iXIR95Gx+5tyoUP82Oe4R/N7QHx2WIaMt3fWEaLib
+         grZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ys4/S0tvAwTvTJf5RJkfy3c1yIHeW683iadOwgFcprg=;
-        b=SkTFOWfdX8dTlyKS1PGBAfNT7D9JyWEpB47yB0tUaIFW+uiR5SHoGjbPkpS8eRJy0z
-         /JN2RklWBGYToengCfvf/zRhkwCvjAZ0CTd2xWVma2t1LM+Tst+pNlbh4fr86+yG/3Y2
-         mfNyb1nf+Xdihmn2A0VEGdHp2q12IPkUiF5wB2tJM7VXSgTfUnVss7J2+AglBjzZIB36
-         8F+qFC6ycRo2JhWucYVtXWmmQPeT8qj3x12tiu9OmJHlHZJYgwMLnWqdAayS9RX2TIe9
-         ZH/WmNMmxh4MZU4LRG73zY+SeQXi4AajoDNocIGB0mmxbGClQHZUaJpXAuzmNbsXKNap
-         3+vg==
-X-Gm-Message-State: ANhLgQ38tvep/+egPD50DyY4FG/4VJNsmB2h6ebYxJNpy3l+fZ5rtRAG
-        7IFVhbfeliF0zhtdQMJyxYKEfBJIVC4=
-X-Google-Smtp-Source: ADFU+vvIkI5Q4X0j5d7XavYPHjHZylGz9Mto6CG3F5sDaCzyi5q3jYipZTJ9iAg6VhbrUPWCeuQi7w==
-X-Received: by 2002:a63:67c5:: with SMTP id b188mr605662pgc.111.1584375808216;
-        Mon, 16 Mar 2020 09:23:28 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:dcc4:2a10:1b38:3edc])
-        by smtp.gmail.com with ESMTPSA id q91sm313466pjb.11.2020.03.16.09.23.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Mar 2020 09:23:27 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Hanjie Lin <hanjie.lin@amlogic.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Hanjie Lin <hanjie.lin@amlogic.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        "Victor Wan" <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH v9 3/3] arm64: dts: meson: a1: Enable USB2 PHY and DWC3 controller
-In-Reply-To: <1581990859-135234-4-git-send-email-hanjie.lin@amlogic.com>
-References: <1581990859-135234-1-git-send-email-hanjie.lin@amlogic.com> <1581990859-135234-4-git-send-email-hanjie.lin@amlogic.com>
-Date:   Mon, 16 Mar 2020 09:23:26 -0700
-Message-ID: <7hd09cw9oh.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZJNcfL+20pcF/nwvNIBx1sW4o3Q2BCHfxBO+o2iJP1E=;
+        b=sbdhZIe3y6vP3I63LsmRZE+6+mIwcPptpvAyek7autDaabHiXd5xQxofqzgHuUXudC
+         lNnntg6FesgbztxLV5bDAO3M0SF/vBL5SLNlC88c5aNMk0PTeeVsYYefH+ks4WSaMlQ5
+         Am65fbSopII+krUdY//nM2L3zKDPitcD+E7kcq+XOPeefGduFN+MhkHkpPDsR6vEfhRH
+         jyNR4949+O9KqqB/kHoUsJM0C64HPxIu8HRW68y7dilIl9Utas9LyUTF+6eDg19+Gj2l
+         fqNT5TEl8oFvJOSai0Dx0Ur+Yz4ymWvnLbSdVoY6UUagY6lBJpQ5sVAJj2fdZshVp63a
+         FCgQ==
+X-Gm-Message-State: ANhLgQ1VBtyoXgmEU9j1XhP84fcHyoUIr8i++ng8mNHjXVQw1saqyDxp
+        sjVm2Si8DVZ5IG7azlSbvMJaB44rHnSKHHy1Dr8=
+X-Google-Smtp-Source: ADFU+vtMS9Vu9nfFyeRmHSBt293hXzPvslNsTBpvv+xVzxztZq0wa6f/b2eJoXA5f1LV5AowpMF8HiAFnKYGgv1mpuE=
+X-Received: by 2002:a17:906:f49:: with SMTP id h9mr88017ejj.6.1584375840024;
+ Mon, 16 Mar 2020 09:24:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200314224340.1544-1-olteanv@gmail.com> <20200314224340.1544-7-olteanv@gmail.com>
+ <20200316122613.GE5010@sirena.org.uk> <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
+ <20200316124945.GF5010@sirena.org.uk> <CA+h21hpoHGuDwpOqtWJFO7+0mQVUrmcBLW7nnGq6dt3QU5axfw@mail.gmail.com>
+ <d05fda0e119405343e540b9768db534f@walle.cc>
+In-Reply-To: <d05fda0e119405343e540b9768db534f@walle.cc>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 16 Mar 2020 18:23:48 +0200
+Message-ID: <CA+h21hqt7Xe1LrSDsCVS8zqunQp2tKGhmHDraMirxL595go4nA@mail.gmail.com>
+Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
+ queue with a simple completion
+To:     Michael Walle <michael@walle.cc>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hanjie,
-
-Hanjie Lin <hanjie.lin@amlogic.com> writes:
-
-> Enable USB2 PHY and DWC3 controller for Meson A1 SoC.
+On Mon, 16 Mar 2020 at 15:25, Michael Walle <michael@walle.cc> wrote:
 >
-> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 43 +++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
+> Am 2020-03-16 14:00, schrieb Vladimir Oltean:
+> > On Mon, 16 Mar 2020 at 14:49, Mark Brown <broonie@kernel.org> wrote:
+> >>
+> >> On Mon, Mar 16, 2020 at 02:29:09PM +0200, Vladimir Oltean wrote:
+> >>
+> >> > Correct, the real problem is that I forgot to add a Fixes: tag for
+> >> > patch 5. I'll do that now.
+> >>
+> >> OK.  The series otherwise looked fine but I'll wait for testing.
+> >> Michael, if there's issues remaining it might be good to get some
+> >> Tested-bys for the patches prior to whatever's broken so we can get
+> >> those fixes in (but obviously verifying that is work so only if you
+> >> have time).
 >
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> index 6fdc0dd..3b7ca50 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> @@ -6,6 +6,9 @@
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/power/meson-a1-power.h>
-> +#include <dt-bindings/reset/amlogic,meson-a1-reset.h>
-> +#include <dt-bindings/clock/a1-pll-clkc.h>
-> +#include <dt-bindings/clock/a1-clkc.h>
+> I'm just about to test it. While my former "cat /dev/mtdN > /dev/null"
+> is working. I had the impression that it was slower, so I tried to test
+> it with dd now and a known chunk size.. only to find out that it is
+> still not working:
+>
+> # dmesg|grep spi
+> [    1.894891] spi-nor spi1.0: w25q128fw (16384 Kbytes)
+> ..
+> # time cat /dev/mtd0 > /dev/null
+> real    0m 30.73s
+> user    0m 0.00s
+> sys     0m 1.02s
+> # dd if=3D/dev/mtd0 of=3D/dev/null bs=3D64
+> 262144+0 records in
+> 262144+0 records out
+> # dd if=3D/dev/mtd0 of=3D/dev/null bs=3D64
+> 262144+0 records in
+> 262144+0 records out
+> # dd if=3D/dev/mtd0 of=3D/dev/null bs=3D64
+> dd: /dev/mtd0: Input/output error
 
-The driver is now merged, but the DT cannot be merged because it has
-dependencies on the A1 clock series which is still under review.
+I don't really have a SPI flash connected to DSPI on any LS1028A board.
+Is this DMA or XSPI mode?
 
-When that is merged, please resend this patch.
+>
+> I also wanted to test how it behaves if there are multiple processes
+> access the /dev/mtdN device. I haven't found the time to dig into
+> the call chain if see if there is any locking. Because what happens
+> if transfer_one_message() is called twice at the same time from two
+> different processes?
+>
+
+There is a mutex on the SPI bus, and therefore all variants of the
+.transfer() call are operating under this lock protection, which
+simplifies things quite a bit.
+
+> >
+> > This time I verified with a protocol analyzer all transfer lengths
+> > from 1 all the way to 256, with this script:
+> >
+> > #!/bin/bash
+> >
+> > buf=3D''
+> >
+> > for i in $(seq 0 255); do
+> > =C2=BB       buf=3D"${buf}\x$(printf '%02x' ${i})"
+> > =C2=BB       spidev_test --device /dev/spidev2.0 --bpw 8 --cpha --speed
+> > 5000000 -p "${buf}"
+> > done
+> >
+> > It looked fine as far as I could tell, and also the problems
+> > surrounding Ctrl-C are no longer present. Nonetheless it would be good
+> > if Michael could confirm, but I know that he's very busy too so it's
+> > understandable if he can no longer spend time on this.
+>
+> I'm working on it ;)
+>
+> -michael
 
 Thanks,
-
-Kevin
+-Vladimir
