@@ -2,152 +2,95 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0C4C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 18:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D72C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 19:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D48720719
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 18:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535F020663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 19:11:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tUMLz8BV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732397AbgCPS5p (ORCPT
+        id S1732375AbgCPTLY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 14:57:45 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:49872 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732353AbgCPS5o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 14:57:44 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id A800C804DA;
-        Mon, 16 Mar 2020 19:57:34 +0100 (CET)
-Date:   Mon, 16 Mar 2020 19:57:33 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Mon, 16 Mar 2020 15:11:24 -0400
+Received: from vps.xff.cz ([195.181.215.36]:42666 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732298AbgCPTLY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 15:11:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1584385882; bh=FW1eAGDaOwZotXT5BTvXsi+IhkF86WgYclyjbaMj8x0=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=tUMLz8BV7T0c827DnXQtea8vx0HkcPUk4ToUSZaHMUkDk+9csPNi+kqJ8KJVU2vjg
+         5mxCNIApW9dNDx1t6jX13OOLMFgskXtNRfdIW7qMODyiG26wqc/yvtGDBkv7AlsSQA
+         eUYRwhujgrnht7UefJkn1OgNsJQ8aJw8PnwwT1h0=
+Date:   Mon, 16 Mar 2020 20:11:22 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-Subject: Re: [PATCH v1 02/36] dt-bindings: spi: support non-spi bindings as
- SPI slaves
-Message-ID: <20200316185733.GA18307@ravnborg.org>
-References: <20200315134416.16527-1-sam@ravnborg.org>
- <20200315134416.16527-3-sam@ravnborg.org>
- <20200316120239.GC5010@sirena.org.uk>
- <20200316132844.GA22822@ravnborg.org>
- <20200316163538.GJ5010@sirena.org.uk>
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 3/5] drm: panel: add Xingbangda XBD599 panel
+Message-ID: <20200316191122.yeb5l22ldtt73vx5@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+References: <20200316133503.144650-1-icenowy@aosc.io>
+ <20200316133503.144650-4-icenowy@aosc.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316163538.GJ5010@sirena.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=lAQgYEA6ThzcfdfRarEA:9 a=CjuIK1q_8ugA:10
+In-Reply-To: <20200316133503.144650-4-icenowy@aosc.io>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark.
+Hello Icenowy,
 
-On Mon, Mar 16, 2020 at 04:35:38PM +0000, Mark Brown wrote:
-> On Mon, Mar 16, 2020 at 02:28:44PM +0100, Sam Ravnborg wrote:
-> > On Mon, Mar 16, 2020 at 12:02:41PM +0000, Mark Brown wrote:
-> > > On Sun, Mar 15, 2020 at 02:43:42PM +0100, Sam Ravnborg wrote:
-> 
-> > > > Independent bindings can be SPI slaves which for example is
-> > > > the case for several panel bindings.
-> 
-> > > What is an "independent binding"?
-> 
-> > For several panels we have device trees that looks like this:
-> 
-> So what you're trying to do is define a generic class for SPI slaves
-> which are just normal children of SPI nodes?  I really can't get to
-> there from your changelog so we need some work there - in particular
-> "non-spi bindings" is *very* confusing as as far as I can see these are
-> bindings for SPI devices.
-> 
-> > The bindings are child of the spi controller node, but not specified
-> > in the same binding file as the spi controller node.
-> 
-> Of course not, this how all buses work isn't it?
-> 
-> > So SPI slaves can now reference spi-slave.yaml to get access to
-> > the SPI slave properties - and the copies can be avoided.
-> > Likewise spi-controller.yml now references spi-slave.yaml.
-> 
-> > This was the best way I saw it could be done.
-> 
-> Rob didn't do the binding conversion but he did review it - I'm a bit
-> surprised that there's issues here?
+On Mon, Mar 16, 2020 at 09:35:01PM +0800, Icenowy Zheng wrote:
+> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI IPS LCD panel made by
+> Xingbangda, which is used on PinePhone final assembled phones.
+>
+> [snip]
+>
+> +static const struct drm_display_mode xbd599_default_mode = {
+> +	.hdisplay    = 720,
+> +	.hsync_start = 720 + 40,
+> +	.hsync_end   = 720 + 40 + 40,
+> +	.htotal	     = 720 + 40 + 40 + 40,
+> +	.vdisplay    = 1440,
+> +	.vsync_start = 1440 + 18,
+> +	.vsync_end   = 1440 + 18 + 10,
+> +	.vtotal	     = 1440 + 18 + 10 + 17,
+> +	.vrefresh    = 60,
 
-For panels we have panel-common.yaml that list all the
-typical properties used by a panel - so the individual
-panel bindings shall not repeat them.
-This is also aligned with the principle of re-using properties rather
-than inventing new properties all over.
+Does the display actually run for you at 60fps? I measured 36.63 FPS with
+a DRM app that just does DRM_IOCTL_MODE_ATOMIC update after each
+DRM_EVENT_FLIP_COMPLETE event.
 
-And with a number of bindings describing HW that is SPI slaves
-the idea is to do something like we do for panels.
+thank you and regards,
+	o.
 
-I look forward for Rob's feedback - but as he is on vacation this week
-we may have to wait a week for that.
-
-The simple way forward had been to do like we do in many other places
-and include a few SPI properties and be done with it.
-This is an attempt to do something better.
-If there is push-back or a nack, then we can always do like we do in
-other places and just duplicate the properties.
-
-> Also shouldn't there be some constraint that these devices have to be
-> the child of a SPI controller or something?  Just including a file
-> doesn't look right for something like class definition.
-
-It was the best I could come up with - and this patch was called out
-for review in the hope there is a better way than this patch.
-
-We have similar examples like:
-  - pincfg-node.yaml
-  - regulatro.yaml
-  - dma-common.yaml
-
-They are not exactly 1:1 to what we do with spi-slave.yaml, but they
-served as inspiration.
-
-	Sam
+> +	.clock	     = 69000,
+> +	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> +
+> +	.width_mm    = 68,
+> +	.height_mm   = 136,
+> +	.type        = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
+> +};
+> +
