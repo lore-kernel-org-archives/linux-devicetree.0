@@ -2,89 +2,73 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F54AC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF76EC10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C633206BE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E3E206E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584325672;
-	bh=BvqinQzwER3qvGVtAY/jOGwjYFoSdJdx/JoTyCey0Fs=;
+	s=default; t=1584325997;
+	bh=JECNvcwgpBCM8o9+C4c1LowfMDmUIeZF7Y+YMfYbyQY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Ys8vYr87dQb+9yAfTb8SprMOP2Tm9rBlAcLmMhSyW2um/LGTNPkPTMwOjDI+N7DV
-	 LD6V0xADXv4w30gkC6bfzIRQZrtzzylsg8f5hxz+Bj/ur2NbPyhNESyvrQHSD3fyFc
-	 8LjJQaFDA9fX362gKjxaCFv3zjlsH8sVjxdartKE=
+	b=wokP5RPfGh6uj/EiJmbxbdqxnTJphwVKJm1WSnQYtjYp3Jwzv1Xj6dNUXmPhcmqRI
+	 kn+43cTZs5iaDQtqcQgOk3+blfmN7FYRd/7QRl0YkO2VyW6Ip0uVJtgVTBXYaBqsJK
+	 rEgDz0t70zzQmphTH+B4ByMS0eEhEifPr3/N4OCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgCPC1v (ORCPT
+        id S1729465AbgCPCdQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:27:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35068 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:33:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729329AbgCPC1v (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:27:51 -0400
+        id S1729329AbgCPCdP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:33:15 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3442220674;
-        Mon, 16 Mar 2020 02:27:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92B57206BE;
+        Mon, 16 Mar 2020 02:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584325670;
-        bh=BvqinQzwER3qvGVtAY/jOGwjYFoSdJdx/JoTyCey0Fs=;
+        s=default; t=1584325995;
+        bh=JECNvcwgpBCM8o9+C4c1LowfMDmUIeZF7Y+YMfYbyQY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W2BCYRPv+w/w/rPSriYges5+8PdjJB45otEpMOJcasHG8D0A2z8UdeJL2EbL/Nwb7
-         MqC0eLo9/ipSMcSjKnxKIaN8TDFYSsTUSbvMaFY/9bhOwr+V6sS0nEgGgHPV8kXRBs
-         ZXI1QhCZLrNCoDtpboPTDGGbaYCDbuooHU1UN/04=
-Date:   Mon, 16 Mar 2020 10:27:44 +0800
+        b=2ff1qLXS+iJ0mRFvywRJpgkqmkJRDQUzJtasC4snv9dFEbWMnpN8z9nldKCs/nWRz
+         grOQkoeW5Tpi2uN6/U8i/WwVc2MYzBhjdLvomg0LHhOaytjUAQnmiRuVsRS/8obwW+
+         b7F/hZEG6p9C1nUQ2E6O3V6RqG8/C/jSAIg3VHy0=
+Date:   Mon, 16 Mar 2020 10:33:08 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Igor Opaniuk <igor.opaniuk@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stefan Agner <stefan@agner.ch>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] ARM: dts: toradex: DTS license/copyright clean-up
-Message-ID: <20200316022739.GV17221@dragon>
-References: <20200312083830.18011-1-igor.opaniuk@gmail.com>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>, Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH 2/2] arm64: dts: ls1028a: disable the felix switch by
+ default
+Message-ID: <20200316023308.GW17221@dragon>
+References: <20200312164320.22349-1-michael@walle.cc>
+ <20200312164320.22349-2-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200312083830.18011-1-igor.opaniuk@gmail.com>
+In-Reply-To: <20200312164320.22349-2-michael@walle.cc>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 10:38:27AM +0200, Igor Opaniuk wrote:
-> 1. Replace boiler plate licenses texts with the SPDX license
-> identifiers in Toradex Vybrid-based SoM device trees.
-> 2. As X11 is identical to the MIT License, but with an extra sentence
-> that prohibits using the copyright holders' names for advertising or
-> promotional purposes without written permission, use MIT license instead
-> of X11 ('s/X11/MIT/g').
-> 3. Replace "Toradex AG" with "Toradex" in the Copyright notice.
-> 4. Use GPL2.0+ instead of GPL2.0, as it's used now by default for all
-> new DTS files.
+On Thu, Mar 12, 2020 at 05:43:20PM +0100, Michael Walle wrote:
+> Disable the felix switch by default and enable it per board which are
+> actually using it.
 > 
-> v2:
-> - Drop switching from GPL2.0+ to GPL2.0 [Marcel Ziswiler]
-> - Replace "Toradex AG" with "Toradex" in the Copyright notice [Marcel Ziswiler]
-> 
-> Igor Opaniuk (3):
->   arm: dts: imx6: toradex: use SPDX-License-Identifier
->   arm: dts: imx7: toradex: use SPDX-License-Identifier
->   arm: dts: vf: toradex: SPDX tags and copyright cleanup
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-Change prefix to 'ARM: ...' and applied all, thanks.
+Applied, thanks.
