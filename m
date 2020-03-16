@@ -2,270 +2,141 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E2DC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D626AC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0591C20663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF134206C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1R/Tuy9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="V3fGpkqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732136AbgCPQiO (ORCPT
+        id S1732156AbgCPQoo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:38:14 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40592 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732044AbgCPQiO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 12:38:14 -0400
-Received: by mail-ed1-f67.google.com with SMTP id a24so22803296edy.7;
-        Mon, 16 Mar 2020 09:38:12 -0700 (PDT)
+        Mon, 16 Mar 2020 12:44:44 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:37498 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731717AbgCPQoo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 12:44:44 -0400
+Received: by mail-pj1-f66.google.com with SMTP id ca13so9014031pjb.2
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 09:44:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HuM304MO1/ZB/qBf9QvuGFLVkiNetb4DHuULLR29UtE=;
-        b=O1R/Tuy99Uc2SMTzuIKISJ/DTcWfVOeEI4FdK6RqhILSd5TF1DjAYyJgFm8/AhUesc
-         +I8ejSy7gf7oG7/kjM5XSFMzBCGPX8sGlqjMQSSimZvPCzGsrh826EV7pnsqovO8nJjE
-         0zolCX1BriW0+9ibBo5cxyHBD4XOGikQ1+N+FTBmzE6ULxFWxYMiC5X5jwDMbdfarO6O
-         4nrp8L6yZP8Mr9hk1Y14ItydygAWMpfi5jKq9N7EhNjDFQtrdS/tKsybGrUfZLRKDUrm
-         9j2lrjbcEoXOofU5uEm3K11cNJHAjdgs2vekaP8GXw09xV+kZW/ILzeh5WVYthIVi5s3
-         Ct4Q==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=OzTibJtwHWvgkYEqJ0BJY+oA4+jt7ssN/aIUWbaaV84=;
+        b=V3fGpkqkFtEjPimrGJV0q10vLHNWAa+tM8qZwtIwuhKOiGhd7jeXVRM0ZgDbMd3sb/
+         KIUY0yo3hhvD3juiaq7+p93GnfPlGpDHE6HLf7rOemeDRnHy1wlUaOAt0D3EkTqYBtHX
+         CshSpdAmN3y63ZHMJKAvgq+hNO0GWX4KGeKfC+fY9x1+7F0ec8LfaPK435zXsZzqm26k
+         0f4EzkvaJmMbOmtE9FmMTAfvbY3suqXSJJVgcrsWLU/BqvybOtn1gJzzUlq2F4pV70lM
+         S/qrlksKby46Vd4KIzAKht7gHoh3m/2zIkB9AkWfrZF4fqDIadKPCyHl4GdB/bJNEZPt
+         LPjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HuM304MO1/ZB/qBf9QvuGFLVkiNetb4DHuULLR29UtE=;
-        b=Gvv5gacJGllH8PX63iT2Zl0nad/VW9XlJvP0rJj2qzb9tGK75taoksAyhmj4n2hsfn
-         2T1KistWCktfhsD/DSWgLBOzyw8CX+xBbKrMQcHy5EVD4IAKF/Fj7mCJLi0Jjj9ZQ+S9
-         f6zwhKHu8ay/xzbRyGgpd2WTtrNpbnC5zUF7Z65KH3X3GA4QhKBerXI0M20yAzAP2J3u
-         0zu7ZId8bu7jrXd6I8/ycftMKEyk7AFRl/3RjSSzKCagAxMGanuMbtM2dUF0vnuEDmHb
-         Qrrq6H0jUWWObgUjFdhWX2g2WH5nq6wHhfupRuXafRuBVgfVZRrhHlPhisKNnNPeHuBW
-         KKwA==
-X-Gm-Message-State: ANhLgQ09nDq0VmnDXzKe4NCYgfZDTPvxMhk5l6gpVTFye3mNbm3IGyKR
-        TXupkAc0LbeTMRMwMcMxo6K3OZFhyiDx193oxAs=
-X-Google-Smtp-Source: ADFU+vuMUSlm+j3u+hl4D2E/jIJ+Wy5ofrMVRGh+JieievTTKXTXv7iYStChy+cpuggq64vtIfoppJmk8TZPRcQoWhU=
-X-Received: by 2002:a17:906:b888:: with SMTP id hb8mr115808ejb.166.1584376691503;
- Mon, 16 Mar 2020 09:38:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=OzTibJtwHWvgkYEqJ0BJY+oA4+jt7ssN/aIUWbaaV84=;
+        b=dC+btFOvM4wwTkF/YCUgFyiRGdraf/gqAMh1WpNz2r6jrR0jQl+J0cqzkY6JqbZZH6
+         5mwTTIE7cwk3rFpk/L2APWu55mx3ZGLYr/Pbyvn/vTBtRVwJoq78NP4FsqoGkAtcYh7S
+         Bo7r8vXRCN6Y7Nzfe85bIlBAPOPyrs6FgGhUmm9nlcPN4+4/LjoNrAf99JGBqmvqHLUB
+         o1JTwL61/sB1oJWH7zhR9pGKLu2AERUY2rav9PsfK9Fjjd/MB1azCBbMUK35OEXLxsfR
+         rL+0f8o/Ko5ozx0ZH7q6FqcEpLwSKlZs8wiJ8R4lz61r6gb4JYRPoPOw35yywiP5ujOO
+         L+uA==
+X-Gm-Message-State: ANhLgQ3Ycl3MFfj+AB8jhpHLUupymUu36CFvmkci4683xVD9tzCX4hAm
+        emp/q/SO5CNysi0CFM7wPjUjJg==
+X-Google-Smtp-Source: ADFU+vuHs/YqjTagHQi8/SIGIi44ZkuT3e9cdVdLX441TK+A0Z2om/47O08Fbn3La/oetfhgCq1UYQ==
+X-Received: by 2002:a17:902:b901:: with SMTP id bf1mr59761plb.133.1584377080944;
+        Mon, 16 Mar 2020 09:44:40 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:dcc4:2a10:1b38:3edc])
+        by smtp.gmail.com with ESMTPSA id gv7sm332411pjb.16.2020.03.16.09.44.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Mar 2020 09:44:40 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: meson-g12b-gtking: add initial device-tree
+In-Reply-To: <1582985353-83371-3-git-send-email-christianshewitt@gmail.com>
+References: <1582985353-83371-1-git-send-email-christianshewitt@gmail.com> <1582985353-83371-3-git-send-email-christianshewitt@gmail.com>
+Date:   Mon, 16 Mar 2020 09:44:39 -0700
+Message-ID: <7h36a8w8p4.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <1584356720-24411-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1584356720-24411-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 16 Mar 2020 09:38:01 -0700
-Message-ID: <CAF6AEGtKZUODb0gNdx7qdyzKMFnqvRYVbB--1owOsS=chcGgoQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        travitej@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 4:05 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->
-> "The PM core always increments the runtime usage counter
-> before calling the ->suspend() callback and decrements it
-> after calling the ->resume() callback"
->
-> DPU and DSI are managed as runtime devices. When
-> suspend is triggered, PM core adds a refcount on all the
-> devices and calls device suspend, since usage count is
-> already incremented, runtime suspend was not getting called
-> and it kept the clocks on which resulted in target not
-> entering into XO shutdown.
->
-> Add changes to manage runtime devices during pm sleep.
->
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 41 +++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/msm/dsi/dsi.c           |  7 ++++++
->  drivers/gpu/drm/msm/msm_drv.c           | 14 +++++++++++
->  drivers/gpu/drm/msm/msm_kms.h           |  2 ++
->  4 files changed, 64 insertions(+)
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> index cb08faf..6e103d5 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> @@ -26,6 +26,7 @@
->  #include "dpu_encoder.h"
->  #include "dpu_plane.h"
->  #include "dpu_crtc.h"
-> +#include "dsi.h"
->
->  #define CREATE_TRACE_POINTS
->  #include "dpu_trace.h"
-> @@ -250,6 +251,37 @@ static void dpu_kms_disable_commit(struct msm_kms *kms)
->         pm_runtime_put_sync(&dpu_kms->pdev->dev);
->  }
->
-> +static void _dpu_kms_disable_dpu(struct msm_kms *kms)
-> +{
-> +       struct drm_device *dev;
-> +       struct msm_drm_private *priv;
-> +       struct dpu_kms *dpu_kms;
-> +       int i = 0;
-> +       struct msm_dsi *dsi;
-> +
-> +       dpu_kms = to_dpu_kms(kms);
-> +       dev = dpu_kms->dev;
-> +       if (!dev) {
-> +               DPU_ERROR("invalid device\n");
-> +               return;
-> +       }
-> +
-> +       priv = dev->dev_private;
-> +       if (!priv) {
-> +               DPU_ERROR("invalid private data\n");
-> +               return;
-> +       }
+Christian Hewitt <christianshewitt@gmail.com> writes:
 
-the !dev and !priv checks can be dropped.. these aren't things a user
-should hit, and if I screw somethign up in development and hit that
-case, I'd rather see a stack trace
+> The Shenzen AZW (Beelink) GT-King is based on the Amlogic W400 reference
+> board with an S922X chip.
+>
+> - 4GB LPDDR4 RAM
+> - 64GB eMMC storage
+> - 10/100/1000 Base-T Ethernet
+> - AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.1)
+> - HDMI 2.1 video
+> - S/PDIF optical output
+> - Analogue audio output
+> - 1x USB 2.0 port
+> - 2x USB 3.0 ports
+> - IR receiver
+> - 1x micro SD card slot
+>
+> The device-tree is largely based on meson-g12b-ugoos-am6.
 
-otherwise, I think it looks reasonable
+It's more than just based on, it's identical (other than compatible
+strings and whitespace fixup[1].)
 
-BR,
--R
+Both of these are based on the W400 ref design, so please make a W400
+.dtsi that can be used by both ugoos and this.
 
-> +
-> +       dpu_kms_disable_commit(kms);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
-> +               if (!priv->dsi[i])
-> +                       continue;
-> +               dsi = priv->dsi[i];
-> +               pm_runtime_put_sync(&dsi->pdev->dev);
-> +       }
-> +}
-> +
->  static ktime_t dpu_kms_vsync_time(struct msm_kms *kms, struct drm_crtc *crtc)
->  {
->         struct drm_encoder *encoder;
-> @@ -683,6 +715,7 @@ static void dpu_irq_uninstall(struct msm_kms *kms)
->  #ifdef CONFIG_DEBUG_FS
->         .debugfs_init    = dpu_kms_debugfs_init,
->  #endif
-> +       .disable_dpu = _dpu_kms_disable_dpu,
->  };
->
->  static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms)
-> @@ -1053,7 +1086,15 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
->         return rc;
->  }
->
-> +
-> +static int __maybe_unused dpu_pm_suspend_late(struct device *dev)
-> +{
-> +       pm_runtime_get_noresume(dev);
-> +       return 0;
-> +}
-> +
->  static const struct dev_pm_ops dpu_pm_ops = {
-> +       SET_LATE_SYSTEM_SLEEP_PM_OPS(dpu_pm_suspend_late, NULL)
->         SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
->  };
->
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-> index 55ea4bc2..3d3740e 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi.c
-> @@ -154,12 +154,19 @@ static int dsi_dev_remove(struct platform_device *pdev)
->         return 0;
->  }
->
-> +static int __maybe_unused dsi_pm_suspend_late(struct device *dev)
-> +{
-> +       pm_runtime_get_noresume(dev);
-> +       return 0;
-> +}
-> +
->  static const struct of_device_id dt_match[] = {
->         { .compatible = "qcom,mdss-dsi-ctrl" },
->         {}
->  };
->
->  static const struct dev_pm_ops dsi_pm_ops = {
-> +       SET_LATE_SYSTEM_SLEEP_PM_OPS(dsi_pm_suspend_late, NULL)
->         SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
->  };
->
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index e4b750b..12ec1c6 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -1038,6 +1038,7 @@ static int msm_pm_suspend(struct device *dev)
->  {
->         struct drm_device *ddev = dev_get_drvdata(dev);
->         struct msm_drm_private *priv = ddev->dev_private;
-> +       struct msm_kms *kms = priv->kms;
->
->         if (WARN_ON(priv->pm_state))
->                 drm_atomic_state_put(priv->pm_state);
-> @@ -1049,6 +1050,11 @@ static int msm_pm_suspend(struct device *dev)
->                 return ret;
->         }
->
-> +       if (kms->funcs->disable_dpu)
-> +               kms->funcs->disable_dpu(kms);
-> +
-> +       pm_runtime_put_sync(dev);
-> +
->         return 0;
->  }
->
-> @@ -1067,6 +1073,13 @@ static int msm_pm_resume(struct device *dev)
->
->         return ret;
->  }
-> +
-> +static int msm_pm_suspend_late(struct device *dev)
-> +{
-> +       pm_runtime_get_noresume(dev);
-> +       return 0;
-> +}
-> +
->  #endif
->
->  #ifdef CONFIG_PM
-> @@ -1100,6 +1113,7 @@ static int msm_runtime_resume(struct device *dev)
->  #endif
->
->  static const struct dev_pm_ops msm_pm_ops = {
-> +       SET_LATE_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend_late, NULL)
->         SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
->         SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
->  };
-> diff --git a/drivers/gpu/drm/msm/msm_kms.h b/drivers/gpu/drm/msm/msm_kms.h
-> index 1cbef6b..c73a89b 100644
-> --- a/drivers/gpu/drm/msm/msm_kms.h
-> +++ b/drivers/gpu/drm/msm/msm_kms.h
-> @@ -126,6 +126,8 @@ struct msm_kms_funcs {
->         /* debugfs: */
->         int (*debugfs_init)(struct msm_kms *kms, struct drm_minor *minor);
->  #endif
-> +       void (*disable_dpu)(struct msm_kms *kms);
-> +
->  };
->
->  struct msm_kms;
-> --
-> 1.9.1
->
+Sorry to be a bit picky here, but there's a prolifieration of these
+boards out there based on the Amlogic designs with little/no difference,
+so I'd like our DTs to reflect that.
+
+Thanks,
+
+Kevin
+
+
+[1]
+$ diff -u arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts
+--- arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts	2020-03-04 07:06:17.089604752 -0800
++++ arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts	2020-03-16 09:38:06.983705705 -0700
+@@ -14,8 +14,8 @@
+ #include <dt-bindings/sound/meson-g12a-tohdmitx.h>
+ 
+ / {
+-	compatible = "ugoos,am6", "amlogic,g12b";
+-	model = "Ugoos AM6";
++	compatible = "azw,gtking", "amlogic,g12b";
++	model = "Beelink GT-King";
+ 
+ 	aliases {
+ 		serial0 = &uart_AO;
+@@ -200,7 +200,7 @@
+ 
+ 	sound {
+ 		compatible = "amlogic,axg-sound-card";
+-		model = "G12B-UGOOS-AM6";
++		model = "G12B-GTKING";
+ 		audio-aux-devs = <&tdmout_b>;
+ 		audio-routing = "TDMOUT_B IN 0", "FRDDR_A OUT 1",
+ 				"TDMOUT_B IN 1", "FRDDR_B OUT 1",
+@@ -532,7 +532,7 @@
+ 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
+ 		max-speed = <2000000>;
+ 		clocks = <&wifi32k>;
+-	clock-names = "lpo";
++		clock-names = "lpo";
+ 	};
+ };
+ 
