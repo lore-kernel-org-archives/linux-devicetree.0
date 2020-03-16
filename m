@@ -2,80 +2,79 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5084C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E95C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCAF20663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3E732073C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m0zS/nz+"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="LP1I9ll8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WAc3H/gW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732541AbgCPUlQ (ORCPT
+        id S1732561AbgCPUs7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:41:16 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:37372 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732537AbgCPUlP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 16:41:15 -0400
-Received: by mail-vs1-f68.google.com with SMTP id o3so2233659vsd.4
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 13:41:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pfmXc3xr7dDVUscjphZ9PfgG1CkRdszrgoIMj+cYGiM=;
-        b=m0zS/nz+dh5DzW7OJtY1OyEysBJG0asBfU/zhzlY3bVTir7wJr8IvHqzL2txO7u8OP
-         TwCkv0SgavWRtAimFcwroX34kVJs0fx7PJqKmCrABErjMKZa0rezx/rliFEMdBF3BhM0
-         LpUHV4yhDEXst5xYr3keONwo+bCtPHQ/IdU0M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pfmXc3xr7dDVUscjphZ9PfgG1CkRdszrgoIMj+cYGiM=;
-        b=IP9yGyOttr4JohcEnjtrkZ2rFL2tGjelbW8MfpIYZWxaKzFJlr24h58rDyOAKRrD+E
-         lvYSHl4ibjthOMg/zNWk5hOwDko8L3CH/zsJ7hALHGq8ESc9nMEHcFL05PdazeOkcSDt
-         X9BPD/lFzXBN4WE841+o5O8K6p/lP6tO7DUgWkapnVYIJ60eE3zcly1dWnasrdYJX8Sl
-         eKthQvdOH1DvAZFVuLzA2b0SMZ9jV1Nk8teglZ7YNepCruQyzy8K2Q88/HsNIDNrkz7m
-         zPvsjB2C7uGDdIkbn1KzY9F7/je0J9vS96n4P0hNzJsjIFEb0sHNpkAorMyA+Mt/iiGN
-         CqCQ==
-X-Gm-Message-State: ANhLgQ2BJMGEy7k99ikKcO4foYI+1z60Q7YQMl2ZYhhwwCAhkFVK6xnX
-        r0zHAtbgmqV400+bnqXN0g5DfuzLhes=
-X-Google-Smtp-Source: ADFU+vtTSdn2NwDnjck/fGrACFwbiRoOBBQDdp7PNYlsNe3jgU7sMNTeraK2ktivfjafRJMRtGXg/g==
-X-Received: by 2002:a67:fe17:: with SMTP id l23mr1284460vsr.119.1584391273508;
-        Mon, 16 Mar 2020 13:41:13 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id w143sm358234vkd.5.2020.03.16.13.41.11
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Mar 2020 13:41:13 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id 7so12272038vsr.10
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 13:41:11 -0700 (PDT)
-X-Received: by 2002:a05:6102:7c7:: with SMTP id y7mr1256780vsg.198.1584391271488;
- Mon, 16 Mar 2020 13:41:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200315134416.16527-1-sam@ravnborg.org> <20200315134416.16527-12-sam@ravnborg.org>
-In-Reply-To: <20200315134416.16527-12-sam@ravnborg.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 16 Mar 2020 13:41:00 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U--vZ7bZ-RMGVbqxwpo9C8pBDtbmU2moUcu73kBHqm-A@mail.gmail.com>
-Message-ID: <CAD=FV=U--vZ7bZ-RMGVbqxwpo9C8pBDtbmU2moUcu73kBHqm-A@mail.gmail.com>
-Subject: Re: [PATCH v1 11/36] dt-bindings: display: convert
- innolux,p120zdg-bf1 to DT Schema
+        Mon, 16 Mar 2020 16:48:59 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:44883 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732537AbgCPUs7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 16:48:59 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6699B58089A;
+        Mon, 16 Mar 2020 16:48:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 16 Mar 2020 16:48:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=2tglQQZWc8w8BFYHHOuQ8FRIUWK
+        jMyItVwVW13flha0=; b=LP1I9ll8CV/bx8h+KXkGxkFpvuXfPfTPSCZq1455SA6
+        oW1thhFn4p2zGNFDMWx6loA246ZNaggiWkI2PMPcUKyYdptl0DIh8jL8C/kRJY44
+        tARF8LnwNGRM6Gl3v8ramNfHvpTJ+SGRAoqEtU6BYb+izeX2sTJSlbbue1XNw9bp
+        qvuyRXX1KXurx5LuxJLI+zEl9TmtS50a4RpvGn/qEP24jJm2sekECVQdrzxxFLnT
+        iPCB/Y/Rh7IErGSNZmDvJDePWHTUK2OFFMx1HvdI9IDQmVnR8XSsMYVk81T8c96R
+        Pqyb03DlVavmgxAqFnifFpV00TF6BQwDRw9cLPkCSow==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=2tglQQ
+        ZWc8w8BFYHHOuQ8FRIUWKjMyItVwVW13flha0=; b=WAc3H/gWQdr3elcEYWxvbq
+        wslSbdrMrxGnWftrdLz+1T+t/F//9bAbg65T7dsIxWHugJtMIliNktmFEjm1Bfp/
+        za2nvaGjmUE+uPZJaDQyJRWAj8eX8x+nTeIB7EPm+tFyNab6f/t+Kkjic8UGX7VA
+        CbjcelqmPy5gAjtyfJ1UbZp/g+ejTPdYvIhyrzIbvokKPdgos+7j9sgrq7Q/sVdB
+        FJHAJ37alG/F7T/2W2Crv/aePS63mAe4fFN6nX4Uf+SFXbparBLXLO1Mms/CCeBO
+        UGkWo8ZhsfGrSWc+B9iatHK2tuE+17Z1ueJx+J5tBLraJSNCmtBI41arNQVj5F6A
+        ==
+X-ME-Sender: <xms:NeZvXqEn8Yf3bXeXC3UMNn3qvRCzfhoScIVtjkKaAQU9CCJo01LcHA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeffedgudegtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
+    dtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:NeZvXp2YuEvGoIbgs0Ic0o4EgHdl36nnXGba5HsJJcytNmTq_-qchA>
+    <xmx:NeZvXq1-KzfBBuOObXdDCJjb3fRRRMLkjdk61uB3pTZ8jmVxQK0bhA>
+    <xmx:NeZvXjNIBev9Y-1WVwT_s8ght3MAxgU8dnxvXiaVq14ne5oJBvP4FQ>
+    <xmx:OeZvXuCXIHbp6weyKnjMyZRj7vq_Y4094xNFyiPTfefEWaio9uF2tQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D21533280060;
+        Mon, 16 Mar 2020 16:48:52 -0400 (EDT)
+Date:   Mon, 16 Mar 2020 21:48:50 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
 To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+Cc:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
         Alexandre Courbot <acourbot@nvidia.com>,
         Andrzej Hajda <a.hajda@samsung.com>,
         Brian Masney <masneyb@onstation.org>,
         Chris Zhong <zyw@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
         Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
         Nikolaus Schaller <hns@goldelico.com>,
         Hoegeun Kwon <hoegeun.kwon@samsung.com>,
@@ -85,12 +84,10 @@ Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Lin Huang <hl@rock-chips.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Marco Franchi <marco.franchi@nxp.com>,
+        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
         Marek Belisko <marek@goldelico.com>,
         Mark Brown <broonie@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>,
         Nickey Yang <nickey.yang@rock-chips.com>,
         Paul Cercueil <paul@crapouillou.net>,
         Peter Rosin <peda@axentia.se>,
@@ -103,24 +100,125 @@ Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
         Tony Lindgren <tony@atomide.com>,
         Vinay Simha BN <simhavcs@gmail.com>,
         Werner Johansson <werner.johansson@sonymobile.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v1 02/36] dt-bindings: spi: support non-spi bindings as
+ SPI slaves
+Message-ID: <20200316204850.gggeyjulgiy53i7x@gilmour.lan>
+References: <20200315134416.16527-1-sam@ravnborg.org>
+ <20200315134416.16527-3-sam@ravnborg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200315134416.16527-3-sam@ravnborg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Sam,
 
-On Sun, Mar 15, 2020 at 6:44 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+On Sun, Mar 15, 2020 at 02:43:42PM +0100, Sam Ravnborg wrote:
+> Independent bindings can be SPI slaves which for example is
+> the case for several panel bindings.
+>
+> Move SPI slave properties to spi-slave.yaml so the independent
+> SPI slave bindings can include spi-slave.yaml rather than
+> duplicating the properties.
 >
 > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Sandeep Panda <spanda@codeaurora.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-spi@vger.kernel.org
 > ---
->  .../display/panel/innolux,p120zdg-bf1.txt     | 22 ----------
->  .../display/panel/innolux,p120zdg-bf1.yaml    | 43 +++++++++++++++++++
->  2 files changed, 43 insertions(+), 22 deletions(-)
+>  .../bindings/spi/spi-controller.yaml          | 63 +-------------
+>  .../devicetree/bindings/spi/spi-slave.yaml    | 83 +++++++++++++++++++
+>  2 files changed, 86 insertions(+), 60 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-slave.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> index 1e0ca6ccf64b..99531c8d10dd 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> +++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+> @@ -67,71 +67,14 @@ patternProperties:
+>    "^.*@[0-9a-f]+$":
+>      type: object
+>
+> +    allOf:
+> +      - $ref: spi-slave.yaml#
+> +
+>      properties:
+>        compatible:
+>          description:
+>            Compatible of the SPI device.
+>
+> -      reg:
+> -        minimum: 0
+> -        maximum: 256
+> -        description:
+> -          Chip select used by the device.
+> -
+> -      spi-3wire:
+> -        $ref: /schemas/types.yaml#/definitions/flag
+> -        description:
+> -          The device requires 3-wire mode.
+> -
+> -      spi-cpha:
+> -        $ref: /schemas/types.yaml#/definitions/flag
+> -        description:
+> -          The device requires shifted clock phase (CPHA) mode.
+> -
+> -      spi-cpol:
+> -        $ref: /schemas/types.yaml#/definitions/flag
+> -        description:
+> -          The device requires inverse clock polarity (CPOL) mode.
+> -
+> -      spi-cs-high:
+> -        $ref: /schemas/types.yaml#/definitions/flag
+> -        description:
+> -          The device requires the chip select active high.
+> -
+> -      spi-lsb-first:
+> -        $ref: /schemas/types.yaml#/definitions/flag
+> -        description:
+> -          The device requires the LSB first mode.
+> -
+> -      spi-max-frequency:
+> -        $ref: /schemas/types.yaml#/definitions/uint32
+> -        description:
+> -          Maximum SPI clocking speed of the device in Hz.
+> -
+> -      spi-rx-bus-width:
+> -        allOf:
+> -          - $ref: /schemas/types.yaml#/definitions/uint32
+> -          - enum: [ 1, 2, 4, 8 ]
+> -          - default: 1
+> -        description:
+> -          Bus width to the SPI bus used for MISO.
+> -
+> -      spi-rx-delay-us:
+> -        description:
+> -          Delay, in microseconds, after a read transfer.
+> -
+> -      spi-tx-bus-width:
+> -        allOf:
+> -          - $ref: /schemas/types.yaml#/definitions/uint32
+> -          - enum: [ 1, 2, 4, 8 ]
+> -          - default: 1
+> -        description:
+> -          Bus width to the SPI bus used for MOSI.
+> -
+> -      spi-tx-delay-us:
+> -        description:
+> -          Delay, in microseconds, after a write transfer.
+> -
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+I can see what you're trying to do, but you don't really need to.
+
+All the SPI devices will be declared under a spi controller node that
+will validate its child nodes (and thus the devices) already.
+
+Doing it this way would actually make all the checks happen twice,
+once as part of the SPI controller, once as part of the SPI device
+binding, without any good reason.
+
+Maxime
