@@ -2,265 +2,139 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C44FC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD0CC0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C270720658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2DB920658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="amITm585"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d1to8fGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbgCPJKI (ORCPT
+        id S1730314AbgCPJMm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:10:08 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:50214 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730110AbgCPJKI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 05:10:08 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02G93bt4015574;
-        Mon, 16 Mar 2020 10:09:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=iCHTmv5+KQ6tDSYoZf4uMAipyo7xfSoDIHIrOmeczBg=;
- b=amITm585YYoORfKCMeI0ovpNZ79QNp4zFMOnmwE5K1gdY/nZOWXp0dcHhVLOW8y8jAJb
- 1DQv9rrjboP8Eeurjo2Of4mYKKxMXmodhx4wUtZI8oomHzWK4Px4C0/BAe2NJBho+uSu
- y85Aeg/JkiNsPVCoJaJB3gnIkhUMLJSFyLFtXPjawB3lp/cvdg9Fg5mLwPVoiyUCeVIM
- eIt105Aip6byCu+B6z+OTIOdMlG3CHSMgNR0Z4fUyAR/otjS+HX4Lh8i12cEr/c7i0Gz
- Sn87JtRjm2yUuFpBjVkmv9I77E8lua1kVrlpBQEgPtI6y364Bhwhgr/6nwqiMVmVGPS5 7A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yrqvcxjew-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Mar 2020 10:09:45 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9456910002A;
-        Mon, 16 Mar 2020 10:09:35 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5C4A22A4D77;
-        Mon, 16 Mar 2020 10:09:35 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Mar 2020 10:09:34
- +0100
-From:   Christophe Roullier <christophe.roullier@st.com>
-To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <christophe.roullier@st.com>, <andrew@lunn.ch>
-Subject: [PATCHv2 1/1] net: ethernet: stmmac: simplify phy modes management for stm32
-Date:   Mon, 16 Mar 2020 10:09:07 +0100
-Message-ID: <20200316090907.18488-1-christophe.roullier@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 16 Mar 2020 05:12:42 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58130 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730298AbgCPJMm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 05:12:42 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02G9Bh1S128532;
+        Mon, 16 Mar 2020 04:11:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584349903;
+        bh=BRFzpuMCnG0xdJJBx3HV4nOkWF/JKYLqvn+omLsF8yg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=d1to8fGLuhLhKXAixyw2Z3iuYaFWUh1GPlGJyscMNEg1onSB+0DEe/F1EUaNldVb0
+         YQ9Q9dXPK8t7YxO+0zPbuJV466ixMVoNxz3XX3It44IJc7CH+qLarj6NkbYVhipELH
+         0g2Vl/5yLBpswY147CMrGOUgM4HtFkJ4iQK5OO1Y=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02G9BhVR082753
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Mar 2020 04:11:43 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Mar 2020 04:11:42 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Mar 2020 04:11:42 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02G9BGFN086028;
+        Mon, 16 Mar 2020 04:11:18 -0500
+Subject: Re: [PATCH v1 35/36] dt-bindings: display: convert lgphilips,lb035q02
+ to DT Schema
+To:     Sam Ravnborg <sam@ravnborg.org>
+CC:     <dri-devel@lists.freedesktop.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Chris Zhong <zyw@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
+        Nikolaus Schaller <hns@goldelico.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-spi@vger.kernel.org>, Marco Franchi <marco.franchi@nxp.com>,
+        Marek Belisko <marek@goldelico.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Nickey Yang <nickey.yang@rock-chips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Peter Rosin <peda@axentia.se>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stefan Mavrodiev <stefan@olimex.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Werner Johansson <werner.johansson@sonymobile.com>
+References: <20200315134416.16527-1-sam@ravnborg.org>
+ <20200315134416.16527-36-sam@ravnborg.org>
+ <a73da9d3-43b2-3ce7-85e9-8135dbf48e98@ti.com>
+ <20200316082607.GA18510@ravnborg.org>
+ <a634d733-4b88-9d5a-09a1-c9551d8a077a@ti.com>
+ <20200316085311.GA19201@ravnborg.org>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <3bf96f0e-90a8-1513-800f-0168d912fd9f@ti.com>
+Date:   Mon, 16 Mar 2020 11:11:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-16_02:2020-03-12,2020-03-16 signatures=0
+In-Reply-To: <20200316085311.GA19201@ravnborg.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-No new feature, just to simplify stm32 part to be easier to use.
-Add by default all Ethernet clocks in DT, and activate or not in function
-of phy mode, clock frequency, if property "st,ext-phyclk" is set or not.
-Keep backward compatibility
------------------------------------------------------------------------
-|PHY_MODE | Normal | PHY wo crystal|   PHY wo crystal   |  No 125Mhz  |
-|         |        |      25MHz    |        50MHz       |  from PHY   |
------------------------------------------------------------------------
-|  MII    |	 -    |     eth-ck    |       n/a          |	    n/a  |
-|         |        | st,ext-phyclk |                    |             |
------------------------------------------------------------------------
-|  GMII   |	 -    |     eth-ck    |       n/a          |	    n/a  |
-|         |        | st,ext-phyclk |                    |             |
------------------------------------------------------------------------
-| RGMII   |	 -    |     eth-ck    |       n/a          |      eth-ck  |
-|         |        | st,ext-phyclk |                    |st,eth-clk-sel|
-|         |        |               |                    |       or     |
-|         |        |               |                    | st,ext-phyclk|
-------------------------------------------------------------------------
-| RMII    |	 -    |     eth-ck    |      eth-ck        |	     n/a  |
-|         |        | st,ext-phyclk | st,eth-ref-clk-sel |              |
-|         |        |               | or st,ext-phyclk   |              |
-------------------------------------------------------------------------
+On 16/03/2020 10:53, Sam Ravnborg wrote:
 
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> We have panel-simple-dsi for DSI simple based panels.
+> This binding includes the reg property.
+> 
+> If we have included DSI panels in panel-simple.yaml, and we likely have
+> by accident, then they should be moved to panel-simple-dsi.yaml.
+> 
+> If they requires anything else then they shall have their
+> own binding.
+> 
+> panel-simple.yaml and panel-simple.dsi.yaml are on purpose
+> only for the simple panels and they have:
+> "additionalProperties: false" to avoid that a lot
+> of extra sneaks in.
+> 
+> I actually considered shortly a panel-simple-spi.yaml,
+> but the few panels I looked at had different names
+> for the power-supply so that did not fly.
+> I did not check them all - we have today (with this patch-set)
+> 9 bindings that references spi-slave.yaml.
 
----
- .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 74 +++++++++++--------
- 1 file changed, 44 insertions(+), 30 deletions(-)
+Okay, I understand now. Makes sense.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-index b2dc99289687..5d4df4c5254e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-@@ -29,6 +29,11 @@
- #define SYSCFG_PMCR_ETH_CLK_SEL		BIT(16)
- #define SYSCFG_PMCR_ETH_REF_CLK_SEL	BIT(17)
- 
-+/* CLOCK feed to PHY*/
-+#define ETH_CK_F_25M	25000000
-+#define ETH_CK_F_50M	50000000
-+#define ETH_CK_F_125M	125000000
-+
- /*  Ethernet PHY interface selection in register SYSCFG Configuration
-  *------------------------------------------
-  * src	 |BIT(23)| BIT(22)| BIT(21)|BIT(20)|
-@@ -58,33 +63,20 @@
-  *|         |        |      25MHz    |        50MHz       |                  |
-  * ---------------------------------------------------------------------------
-  *|  MII    |	 -   |     eth-ck    |	      n/a	  |	  n/a        |
-- *|         |        |		     |                    |		     |
-+ *|         |        | st,ext-phyclk |                    |		     |
-  * ---------------------------------------------------------------------------
-  *|  GMII   |	 -   |     eth-ck    |	      n/a	  |	  n/a        |
-- *|         |        |               |                    |		     |
-+ *|         |        | st,ext-phyclk |                    |		     |
-  * ---------------------------------------------------------------------------
-- *| RGMII   |	 -   |     eth-ck    |	      n/a	  |  eth-ck (no pin) |
-- *|         |        |               |                    |  st,eth-clk-sel  |
-+ *| RGMII   |	 -   |     eth-ck    |	      n/a	  |      eth-ck      |
-+ *|         |        | st,ext-phyclk |                    | st,eth-clk-sel or|
-+ *|         |        |               |                    | st,ext-phyclk    |
-  * ---------------------------------------------------------------------------
-  *| RMII    |	 -   |     eth-ck    |	    eth-ck        |	  n/a        |
-- *|         |        |		     | st,eth-ref-clk-sel |		     |
-+ *|         |        | st,ext-phyclk | st,eth-ref-clk-sel |		     |
-+ *|         |        |               | or st,ext-phyclk   |		     |
-  * ---------------------------------------------------------------------------
-  *
-- * BIT(17) : set this bit in RMII mode when you have PHY without crystal 50MHz
-- * BIT(16) : set this bit in GMII/RGMII PHY when you do not want use 125Mhz
-- * from PHY
-- *-----------------------------------------------------
-- * src	 |         BIT(17)       |       BIT(16)      |
-- *-----------------------------------------------------
-- * MII   |           n/a	 |         n/a        |
-- *-----------------------------------------------------
-- * GMII  |           n/a         |   st,eth-clk-sel   |
-- *-----------------------------------------------------
-- * RGMII |           n/a         |   st,eth-clk-sel   |
-- *-----------------------------------------------------
-- * RMII  |   st,eth-ref-clk-sel	 |         n/a        |
-- *-----------------------------------------------------
-- *
-  */
- 
- struct stm32_dwmac {
-@@ -93,6 +85,8 @@ struct stm32_dwmac {
- 	struct clk *clk_eth_ck;
- 	struct clk *clk_ethstp;
- 	struct clk *syscfg_clk;
-+	int ext_phyclk;
-+	int enable_eth_ck;
- 	int eth_clk_sel_reg;
- 	int eth_ref_clk_sel_reg;
- 	int irq_pwr_wakeup;
-@@ -155,14 +149,17 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
- 		ret = clk_prepare_enable(dwmac->syscfg_clk);
- 		if (ret)
- 			return ret;
--		ret = clk_prepare_enable(dwmac->clk_eth_ck);
--		if (ret) {
--			clk_disable_unprepare(dwmac->syscfg_clk);
--			return ret;
-+		if (dwmac->enable_eth_ck) {
-+			ret = clk_prepare_enable(dwmac->clk_eth_ck);
-+			if (ret) {
-+				clk_disable_unprepare(dwmac->syscfg_clk);
-+				return ret;
-+			}
- 		}
- 	} else {
- 		clk_disable_unprepare(dwmac->syscfg_clk);
--		clk_disable_unprepare(dwmac->clk_eth_ck);
-+		if (dwmac->enable_eth_ck)
-+			clk_disable_unprepare(dwmac->clk_eth_ck);
- 	}
- 	return ret;
- }
-@@ -170,24 +167,34 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
- static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
- {
- 	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
--	u32 reg = dwmac->mode_reg;
-+	u32 reg = dwmac->mode_reg, clk_rate;
- 	int val;
- 
-+	clk_rate = clk_get_rate(dwmac->clk_eth_ck);
-+	dwmac->enable_eth_ck = false;
- 	switch (plat_dat->interface) {
- 	case PHY_INTERFACE_MODE_MII:
-+		if (clk_rate == ETH_CK_F_25M && dwmac->ext_phyclk)
-+			dwmac->enable_eth_ck = true;
- 		val = SYSCFG_PMCR_ETH_SEL_MII;
- 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
- 		break;
- 	case PHY_INTERFACE_MODE_GMII:
- 		val = SYSCFG_PMCR_ETH_SEL_GMII;
--		if (dwmac->eth_clk_sel_reg)
-+		if (clk_rate == ETH_CK_F_25M &&
-+		    (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
-+			dwmac->enable_eth_ck = true;
- 			val |= SYSCFG_PMCR_ETH_CLK_SEL;
-+		}
- 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
- 		break;
- 	case PHY_INTERFACE_MODE_RMII:
- 		val = SYSCFG_PMCR_ETH_SEL_RMII;
--		if (dwmac->eth_ref_clk_sel_reg)
-+		if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_50M) &&
-+		    (dwmac->eth_ref_clk_sel_reg || dwmac->ext_phyclk)) {
-+			dwmac->enable_eth_ck = true;
- 			val |= SYSCFG_PMCR_ETH_REF_CLK_SEL;
-+		}
- 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RMII\n");
- 		break;
- 	case PHY_INTERFACE_MODE_RGMII:
-@@ -195,8 +202,11 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
- 	case PHY_INTERFACE_MODE_RGMII_RXID:
- 	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		val = SYSCFG_PMCR_ETH_SEL_RGMII;
--		if (dwmac->eth_clk_sel_reg)
-+		if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_125M) &&
-+		    (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
-+			dwmac->enable_eth_ck = true;
- 			val |= SYSCFG_PMCR_ETH_CLK_SEL;
-+		}
- 		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RGMII\n");
- 		break;
- 	default:
-@@ -294,6 +304,9 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
- 	struct device_node *np = dev->of_node;
- 	int err = 0;
- 
-+	/* Ethernet PHY have no crystal */
-+	dwmac->ext_phyclk = of_property_read_bool(np, "st,ext-phyclk");
-+
- 	/* Gigabit Ethernet 125MHz clock selection. */
- 	dwmac->eth_clk_sel_reg = of_property_read_bool(np, "st,eth-clk-sel");
- 
-@@ -431,7 +444,8 @@ static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
- 
- 	clk_disable_unprepare(dwmac->clk_tx);
- 	clk_disable_unprepare(dwmac->syscfg_clk);
--	clk_disable_unprepare(dwmac->clk_eth_ck);
-+	if (dwmac->enable_eth_ck)
-+		clk_disable_unprepare(dwmac->clk_eth_ck);
- 
- 	return ret;
- }
+panel-simple.c has dsi_of_match, which lists DSI panels. I was looking at that when I said 
+panel-simple binding has DSI panels. At least auo,b080uan01 and osddisplays,osd101t2045-53ts are 
+there, and earlier in this series you moved osddisplays,osd101t2587-53ts to panel-simple bindings.
+
+  Tomi
+
 -- 
-2.17.1
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
