@@ -2,128 +2,127 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A4CC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 19:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FFBC0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7D92073E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 19:58:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FY5vy84b"
+	by mail.kernel.org (Postfix) with ESMTP id B2DAB2073E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584389651;
+	bh=hq6b5OlO2uqZw6HZnSl4f9z+BPTCfrU8/h3WGGlDEi4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wNOJSSeuMLoZ1mI3SfSqwMwHB0KSv6SNx0SxaTK1E6x+wjJn6LojVGkMAebji/i+o
+	 oBrnY9bqvKWYRkFYXicNltDRdphvU4vDaCOIBcttHqqhXlPD7OLoEE3iDZcUpKvDxt
+	 pxUt86wUJ0fUalcjej+VIkW3RSZNjlHi7Tx9pVIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732476AbgCPT6P (ORCPT
+        id S1732490AbgCPUOL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 15:58:15 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:44925 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732366AbgCPT6O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 15:58:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584388694; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=0jutu2TrYwknNeBbhpvzrOvPcmG3lvgPL/hDLeN1Qxs=; b=FY5vy84by7bcFi8yfzglx1yjuFD8+yvY/3FUdQdqJxGcZmPlVTwJNIfgi/xE9RavmGtc5yOh
- 4E24jK1rp8c97XGTtZ6ilWdWTSs3UaeRGjcarEPV64DpjTUVHtlkgMJctsoD3v4a0u5Y063Z
- T2BM8iDgv1CwUK53oQWr0PHLLmM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6fda52.7fbaa5492d50-smtp-out-n03;
- Mon, 16 Mar 2020 19:58:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5EF4EC433BA; Mon, 16 Mar 2020 19:58:09 +0000 (UTC)
-Received: from [192.168.1.9] (cpe-75-80-185-151.san.res.rr.com [75.80.185.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53466C433CB;
-        Mon, 16 Mar 2020 19:58:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53466C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH 2/3] clk: qcom: gcc: Add USB3 PIPE clock operations
-To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, robh+dt@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <1584172319-24843-1-git-send-email-wcheng@codeaurora.org>
- <1584172319-24843-3-git-send-email-wcheng@codeaurora.org>
- <158437819409.88485.6326749791923076608@swboyd.mtv.corp.google.com>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <9707b6f5-89d4-9800-bee2-825877b535ac@codeaurora.org>
-Date:   Mon, 16 Mar 2020 12:58:07 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 16 Mar 2020 16:14:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:56604 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732486AbgCPUOL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 16:14:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67D1E1FB;
+        Mon, 16 Mar 2020 13:14:10 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7A5C3F52E;
+        Mon, 16 Mar 2020 13:14:09 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 20:14:08 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Chris Zhong <zyw@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
+        Nikolaus Schaller <hns@goldelico.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
+        Marek Belisko <marek@goldelico.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Nickey Yang <nickey.yang@rock-chips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Peter Rosin <peda@axentia.se>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stefan Mavrodiev <stefan@olimex.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Werner Johansson <werner.johansson@sonymobile.com>
+Subject: Re: [PATCH v1 02/36] dt-bindings: spi: support non-spi bindings as
+ SPI slaves
+Message-ID: <20200316201408.GK5010@sirena.org.uk>
+References: <20200315134416.16527-1-sam@ravnborg.org>
+ <20200315134416.16527-3-sam@ravnborg.org>
+ <20200316120239.GC5010@sirena.org.uk>
+ <20200316132844.GA22822@ravnborg.org>
+ <20200316163538.GJ5010@sirena.org.uk>
+ <20200316185733.GA18307@ravnborg.org>
 MIME-Version: 1.0
-In-Reply-To: <158437819409.88485.6326749791923076608@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GmiNL4+5WUWrod5m"
+Content-Disposition: inline
+In-Reply-To: <20200316185733.GA18307@ravnborg.org>
+X-Cookie: I thought YOU silenced the guard!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
 
-Thanks for the feedback.
+--GmiNL4+5WUWrod5m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 3/16/2020 10:03 AM, Stephen Boyd wrote:
-> Quoting Wesley Cheng (2020-03-14 00:51:58)
->> Add the USB3 PIPE clock structures, so that the USB driver can
->> vote for the GCC to enable/disable it when required.  This clock
->> is needed for SSUSB operation.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> ---
->>  drivers/clk/qcom/gcc-sm8150.c | 26 ++++++++++++++++++++++++++
-> 
-> Can you please combine these two patches and add sm8150 in the subject?
-> 
+On Mon, Mar 16, 2020 at 07:57:33PM +0100, Sam Ravnborg wrote:
 
-Sure, I'll combine the two patches into one and include the SM8150 tag
-in the subject on the next patch series.
+> It was the best I could come up with - and this patch was called out
+> for review in the hope there is a better way than this patch.
 
->>  1 file changed, 26 insertions(+)
->>
->> diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
->> index d0cd03d..ef98fdc 100644
->> --- a/drivers/clk/qcom/gcc-sm8150.c
->> +++ b/drivers/clk/qcom/gcc-sm8150.c
->> @@ -3172,6 +3172,18 @@ enum {
->>         },
->>  };
->>  
->> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
->> +       .halt_check = BRANCH_HALT_SKIP,
->> +       .clkr = {
->> +               .enable_reg = 0xf058,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "gcc_usb3_prim_phy_pipe_clk",
->> +                       .ops = &clk_branch2_ops,
->> +               },
->> +       },
->> +};
->> +
->>  static struct clk_branch gcc_usb3_sec_clkref_clk = {
->>         .halt_reg = 0x8c028,
->>         .halt_check = BRANCH_HALT,
->> @@ -3219,6 +3231,18 @@ enum {
->>         },
->>  };
->>  
->> +static struct clk_branch gcc_usb3_sec_phy_pipe_clk = {
->> +       .halt_check = BRANCH_HALT_SKIP,
-> 
-> Sad to see that we'll never resolve this.
-> 
+It definitely seems like a useful thing, just a bit surprised it's not
+already there and if this is the best way to do it.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> We have similar examples like:
+>   - pincfg-node.yaml
+>   - regulatro.yaml
+
+I'm curious what properties your consumers have for regulators - I'd
+expect them to just have simple pointers to the regualtors with no
+configuration.
+
+--GmiNL4+5WUWrod5m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5v3g8ACgkQJNaLcl1U
+h9CQ3gf/ckkj/FyMuU25wpmw52sUNJySLmtRn6yJPOc2AMPbRhW2r1LrNNzxczyh
+THPGUrBiVpjZ6eXQy9R+zAOFmQXHPpR2dErQ8z5M+/PH1oxwwcztLW5RXcVXbyBW
+QP2qJ+sXzqYQIp1aRXEgD5Nt/ePqsLUvgkYj7SpG5Txx5hRQiesNzVovCJeaBAU6
+CtYsvXOAfFvWhL9qNX5P9y+ULs+db7xySoOz/5wOK+e2TlWkOjTNlH5wtvY3D6oO
+zS6VHPjaCy/wCfjjXUZhXbGRb+M2ZF3bwMD5dJ6Dw2rjFUXwa33L6BhpgAcTdP/P
+QxPkPAvZsQX/9DwEs48aA5CckvRVKQ==
+=VIU6
+-----END PGP SIGNATURE-----
+
+--GmiNL4+5WUWrod5m--
