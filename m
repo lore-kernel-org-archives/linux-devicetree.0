@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697CDC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970F7C5ACBF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C5B20738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F05A20739
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 02:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584326008;
-	bh=xVkW6QXkoVncl6FlKkwsPTCwVa8yuWnT/9V+BX7zKXA=;
+	s=default; t=1584326060;
+	bh=uoYaKbewBUHUpIVfaB+MX4F9sHbyO72t5aSBYj403AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cpeyG3GQozZHxypt0c/tOrwM/wg05DsQWo1jTI5mjMweyKHYjQXVI0aeuBA4gHW1q
-	 gfSVkvhorB42Ub9C7iYTGwaNwd/K1iJaKjQ5I06HkBbJX8Rps56tSeNQ6qqhHWEFQD
-	 MDi1s6b5Y/JS5MBkkbGq3L20Vq3UPP1Rt73VafKg=
+	b=P0Vvv1bKpKqH7+n6dO0oOac5FYxtnDlo+2kWGvMl3WVit4V1aoL9kXmMaC+iMrMku
+	 05K0uYdEstvwxsoG3CGiJ3D6J24exLOnmc9XJCu1shsZOqmmEVX+GyPmUzCjx+pI2i
+	 LKlkCL+oM/7/vEz8VDG0dPxqVRdc/QuAVfnTJt8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbgCPCd1 (ORCPT
+        id S1729809AbgCPCeT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 22:33:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36038 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 22:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729508AbgCPCd1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 22:33:27 -0400
+        id S1729777AbgCPCeR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 22:34:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DA8820724;
-        Mon, 16 Mar 2020 02:33:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A36C7206E9;
+        Mon, 16 Mar 2020 02:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584326006;
-        bh=xVkW6QXkoVncl6FlKkwsPTCwVa8yuWnT/9V+BX7zKXA=;
+        s=default; t=1584326056;
+        bh=uoYaKbewBUHUpIVfaB+MX4F9sHbyO72t5aSBYj403AE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JMejwOvMRVAbazWPFSjLYQmTETgbZwVM2FiQIGdBJ0rK9IYRvm4LCAOEJMMeiqs5S
-         8xdex6WltQClTd3IYxrfdpPcYmcQrIMpR11NSzDUAqojqAr/4n8aAFmbxQGZ09GrzR
-         eEYHsx04FJ/KED7Pg6Y59VhMA6LF+8kRtIuaMg2g=
+        b=mJGUl/Zw+Zt8mRSrQZKe9J+DQ2ISeWlFpupjwOiCQLr5oA72ia+bLOtAeMHb89tEn
+         9ZLovLVPVgoQclZ4P5ecTGSquyA6ZccFSxpMXz5+a8e3SWzyY++h/ynS8zB90Mf6o/
+         l/V7QwFRezEnc5K0Cs1nia/0umuu66ZRthhTbm88=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Johan Hovold <johan@kernel.org>,
@@ -48,12 +48,12 @@ Cc:     Johan Hovold <johan@kernel.org>,
         Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 05/41] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible properties
-Date:   Sun, 15 Mar 2020 22:32:43 -0400
-Message-Id: <20200316023319.749-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 04/35] ARM: dts: imx6dl-colibri-eval-v3: fix sram compatible properties
+Date:   Sun, 15 Mar 2020 22:33:40 -0400
+Message-Id: <20200316023411.1263-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200316023319.749-1-sashal@kernel.org>
-References: <20200316023319.749-1-sashal@kernel.org>
+In-Reply-To: <20200316023411.1263-1-sashal@kernel.org>
+References: <20200316023411.1263-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -90,10 +90,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-index cd075621de52d..84fcc203a2e48 100644
+index 9a5d6c94cca4d..40d750fccf6d6 100644
 --- a/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
 +++ b/arch/arm/boot/dts/imx6dl-colibri-eval-v3.dts
-@@ -275,7 +275,7 @@
+@@ -236,7 +236,7 @@
  
  	/* SRAM on Colibri nEXT_CS0 */
  	sram@0,0 {
@@ -102,7 +102,7 @@ index cd075621de52d..84fcc203a2e48 100644
  		reg = <0 0 0x00010000>;
  		#address-cells = <1>;
  		#size-cells = <1>;
-@@ -286,7 +286,7 @@
+@@ -247,7 +247,7 @@
  
  	/* SRAM on Colibri nEXT_CS1 */
  	sram@1,0 {
