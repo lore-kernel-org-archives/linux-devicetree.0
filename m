@@ -2,68 +2,131 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7918C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 01:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AD9C10F29
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 01:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7E120674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 01:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584321660;
-	bh=zqqKWEeMI4XCGqU/56CUWSItvn0VZENyTnl2v7LzlUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=viEqUR5sWvQzyBVobsyQpHCUCByEfIZe5Swaw92gwK99qX1sASwreLUamlwIPgyUW
-	 WvlpTE2LNnQk24BqGik47yfiN5aLqX71rT+zk8RAJv4d3Yk8wxlpladQjLJ3B5hxfg
-	 V6jzX+qtLbZB0B7VXGvkHW3B7cbax/g8Regu9pwk=
+	by mail.kernel.org (Postfix) with ESMTP id 6959B20663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 01:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgCPBVA (ORCPT
+        id S1729404AbgCPBd1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 21:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 21:33:27 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:57108 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbgCPBVA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 21:21:00 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7564F20663;
-        Mon, 16 Mar 2020 01:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584321659;
-        bh=zqqKWEeMI4XCGqU/56CUWSItvn0VZENyTnl2v7LzlUQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tgTF2pK5MVVlM8d4HS3OPjQtx9LVuj3hE3e089EoOQQPewPNK9P38dSayHx/6W+jZ
-         WSqBd4gpaKYftBgzJWU5uwGfuXZtflehVWhlh9IXtA77mgvImIjm0CtFYFkDFR/znI
-         G9YJq2lLzC68rI4IQXj+AbrtHWSQU/VGDFB3DBco=
-Date:   Mon, 16 Mar 2020 09:20:53 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, michael@walle.cc, leoyang.li@nxp.com,
-        Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com
-Subject: Re: [PATCHv8] arm64: dts: ls1028a: Add PCIe controller DT nodes
-Message-ID: <20200316012052.GO17221@dragon>
-References: <20200311100339.46122-1-Zhiqiang.Hou@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311100339.46122-1-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1729334AbgCPBd1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 21:33:27 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2C8C01A079D;
+        Mon, 16 Mar 2020 02:33:26 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8212F1A07B1;
+        Mon, 16 Mar 2020 02:33:19 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 69D1B402A5;
+        Mon, 16 Mar 2020 09:33:11 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        abel.vesa@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/2] arm64: dts: imx8qxp-mek: Sort labels alphabetically
+Date:   Mon, 16 Mar 2020 09:26:32 +0800
+Message-Id: <1584321993-8642-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 06:03:39PM +0800, Zhiqiang Hou wrote:
-> From: Xiaowei Bao <xiaowei.bao@nxp.com>
-> 
-> LS1028a implements 2 PCIe 3.0 controllers.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Tested-by: Michael Walle <michael@walle.cc>
+Sort the labels alphabetically for consistency.
 
-Applied, thanks.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- Rebase to latest branch, no code change.
+---
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 50 ++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 20 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+index d3d26cc..b1befdb 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
++++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+@@ -30,18 +30,7 @@
+ 	};
+ };
+ 
+-&adma_lpuart0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_lpuart0>;
+-	status = "okay";
+-};
+-
+-&fec1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_fec1>;
+-	phy-mode = "rgmii-id";
+-	phy-handle = <&ethphy0>;
+-	fsl,magic-packet;
++&adma_dsp {
+ 	status = "okay";
+ 
+ 	mdio {
+@@ -136,6 +125,35 @@
+ 	};
+ };
+ 
++&adma_lpuart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lpuart0>;
++	status = "okay";
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	phy-mode = "rgmii-id";
++	phy-handle = <&ethphy0>;
++	fsl,magic-packet;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++		};
++	};
++};
++
++&scu_key {
++	status = "okay";
++};
++
+ &usdhc1 {
+ 	assigned-clocks = <&clk IMX_CONN_SDHC0_CLK>;
+ 	assigned-clock-rates = <200000000>;
+@@ -234,11 +252,3 @@
+ 		>;
+ 	};
+ };
+-
+-&adma_dsp {
+-	status = "okay";
+-};
+-
+-&scu_key {
+-	status = "okay";
+-};
+-- 
+2.7.4
+
