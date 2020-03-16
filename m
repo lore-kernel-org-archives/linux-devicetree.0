@@ -2,70 +2,234 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6AAC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 21:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F39C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 22:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD1C120719
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 21:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF01520674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 22:24:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XC8IduI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732713AbgCPV6t (ORCPT
+        id S1732779AbgCPWYj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 17:58:49 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:48446 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732652AbgCPV6t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 17:58:49 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 941D0156D1DB5;
-        Mon, 16 Mar 2020 14:58:48 -0700 (PDT)
-Date:   Mon, 16 Mar 2020 14:58:47 -0700 (PDT)
-Message-Id: <20200316.145847.669961790477208036.davem@davemloft.net>
-To:     madalin.bucur@oss.nxp.com
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v2 0/3] QorIQ DPAA ARM RDBs need internal delay on
- RGMII
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
-References: <1584360358-8092-1-git-send-email-madalin.bucur@oss.nxp.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Mar 2020 14:58:49 -0700 (PDT)
+        Mon, 16 Mar 2020 18:24:39 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42154 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732778AbgCPWYj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 18:24:39 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x2so10381375pfn.9
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 15:24:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=J6ndrgmuuUAK5hm/H1dB1OftgnRfJrkMSYT9SqSBgeY=;
+        b=XC8IduI7Qw2chs8n9iX1udLK76soadPPYfOj5pT6m32Lky/hcl4mXMOOjJ5ejzCj6F
+         X5W8aqnGHOH3NaMiJilSYvpbXSGc7oeMqFaJ5km7dfHfd/AgiHHqC8oy3zsRaHrz3iOq
+         lPaDfLoWJ6FCa6gKc5ZofMiLejGKUcYmSHL2rE4roXOBCwRK8F/LGhzl3qoSN+pDY4jX
+         n3RX+rkikUlto1hoDROgM+52I9vyYMJ0zALLRfs6dNzbCnQBBhCbzqjYgNJIg6DO4Jkr
+         ieesMHwQ1NCzUPqi9Mw0OLYfZjjfoqrIMaOGLtARMw6NdER7hayZyWpsZL6Vo6UeicSZ
+         2FTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J6ndrgmuuUAK5hm/H1dB1OftgnRfJrkMSYT9SqSBgeY=;
+        b=pUoPruYdKLDInrvrI11BDvz6DsBTNM9lDHksx+c+HwQLy2F8TdpS1pm5qrt+QlfqPm
+         yHYQFwRrJbxcgHndGg1gLLQzMrw6q3oYlgL8TDdON+9YcME+qmPVXHoqilgq7RKVaNg6
+         Pf5acE6yiJ23fxxGWIQJW6s6uoqwXM4dHuzbPC9189zMaD9NCzwevz+ApQ5iCSYb91TD
+         PwCbHhNmmtvgVxI8t0JB/1O9zo4DAXnWVeqUvSeW9cTyRAJ6r7umRAA3nsffeidb828R
+         9NDkOBF6JAhKnspKmji74aoe564WGI4zKiwx5RchlG+usPogsYlDeN0au+8XbSRUqyA8
+         0j7w==
+X-Gm-Message-State: ANhLgQ0l1HfYzbyk2CcICrRvmSTtg4GuTqMIQS22ApLx39vT2KyZSS+i
+        cN/uw+IlqcWnvgx73Qx6rEZHYg==
+X-Google-Smtp-Source: ADFU+vsI49Wtpc8Ne96NqWJvZPgisxl0b8Xy2y4OI14OhOSDawWlTsg2AQnxFU3ehRAdrInZ4dJJtg==
+X-Received: by 2002:aa7:824e:: with SMTP id e14mr1974560pfn.18.1584397477087;
+        Mon, 16 Mar 2020 15:24:37 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y143sm863538pfb.22.2020.03.16.15.24.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 15:24:36 -0700 (PDT)
+Date:   Mon, 16 Mar 2020 15:24:34 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jack Pham <jackp@codeaurora.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sm8150: Add USB and PHY device
+ nodes
+Message-ID: <20200316222434.GB1135@builder>
+References: <1584172319-24843-1-git-send-email-wcheng@codeaurora.org>
+ <1584172319-24843-4-git-send-email-wcheng@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584172319-24843-4-git-send-email-wcheng@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@oss.nxp.com>
-Date: Mon, 16 Mar 2020 14:05:55 +0200
+On Sat 14 Mar 00:51 PDT 2020, Wesley Cheng wrote:
 
-> v2: used phy_interface_mode_is_rgmii() to identify RGMII
+> From: Jack Pham <jackp@codeaurora.org>
 > 
-> The QorIQ DPAA 1 based RDB boards require internal delay on
-> both Tx and Rx to be set. The patch set ensures all RGMII
-> modes are treated correctly by the FMan driver and sets the
-> phy-connection-type to "rgmii-id" to restore functionality.
-> Previously Rx internal delay was set by board pull-ups and
-> was left untouched by the PHY driver. Since commit
-> 1b3047b5208a80 ("net: phy: realtek: add support for
-> configuring the RX delay on RTL8211F") the Realtek 8211F PHY
-> driver has control over the RGMII RX delay and it is
-> disabling it for other modes than RGMII_RXID and RGMII_ID.
+> Add device nodes for the USB3 controller, QMP SS PHY and
+> SNPS HS PHY.
 > 
-> Please note that u-boot in particular performs a fix-up of
-> the PHY connection type and will overwrite the values from
-> the Linux device tree. Another patch set was sent for u-boot
-> and one needs to apply that [1] to the boot loader, to ensure
-> this fix is complete, unless a different bootloader is used.
+> Signed-off-by: Jack Pham <jackp@codeaurora.org>
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 17 ++++++
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 92 +++++++++++++++++++++++++++++++++
+>  2 files changed, 109 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> index 8ab1661..edf0abc 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> @@ -408,3 +408,20 @@
+>  	vdda-pll-supply = <&vreg_l3c_1p2>;
+>  	vdda-pll-max-microamp = <19000>;
+>  };
+> +
+> +&usb_1_hsphy {
+> +	status = "okay";
+> +	vdda-pll-supply = <&vdd_usb_hs_core>;
+> +	vdda33-supply = <&vdda_usb_hs_3p1>;
+> +	vdda18-supply = <&vdda_usb_hs_1p8>;
+> +};
+> +
+> +&usb_1_qmpphy {
+> +	status = "okay";
+> +	vdda-phy-supply = <&vreg_l3c_1p2>;
+> +	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
+> +};
+> +
+> +&usb_1 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> index 141c21d..cf58fb7 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -855,6 +855,98 @@
+>  
+>  			#freq-domain-cells = <1>;
+>  		};
+> +
+> +		usb_1_hsphy: phy@88e2000 {
 
-Series applied, thanks.
+Please sort these nodes by address, i.e. this should come right after
+the cdsp remoteproc node.
+
+
+Apart from that this looks good, thank you!
+
+Regards,
+Bjorn
+
+> +			compatible = "qcom,usb-snps-hs-7nm-phy",
+> +							"qcom,sm8150-usb-hs-phy";
+> +			reg = <0 0x088e2000 0 0x400>;
+> +			status = "disabled";
+> +			#phy-cells = <0>;
+> +
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>;
+> +			clock-names = "ref";
+> +
+> +			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+> +		};
+> +
+> +		usb_1_qmpphy: phy@88e9000 {
+> +			compatible = "qcom,sm8150-qmp-usb3-phy";
+> +			reg = <0 0x088e9000 0 0x18c>,
+> +			      <0 0x088e8000 0 0x10>;
+> +			reg-names = "reg-base", "dp_com";
+> +			status = "disabled";
+> +			#clock-cells = <1>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +
+> +			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
+> +				 <&rpmhcc RPMH_CXO_CLK>,
+> +				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
+> +				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
+> +			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
+> +
+> +			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
+> +				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
+> +			reset-names = "phy", "common";
+> +
+> +			usb_1_ssphy: lanes@88e9200 {
+> +				reg = <0 0x088e9200 0 0x200>,
+> +				      <0 0x088e9400 0 0x200>,
+> +				      <0 0x088e9c00 0 0x218>,
+> +				      <0 0x088e9600 0 0x200>,
+> +				      <0 0x088e9800 0 0x200>,
+> +				      <0 0x088e9a00 0 0x100>;
+> +				#phy-cells = <0>;
+> +				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
+> +				clock-names = "pipe0";
+> +				clock-output-names = "usb3_phy_pipe_clk_src";
+> +			};
+> +		};
+> +
+> +		usb_1: usb@a6f8800 {
+> +			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
+> +			reg = <0 0x0a6f8800 0 0x400>;
+> +			status = "disabled";
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +			dma-ranges;
+> +
+> +			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
+> +				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+> +				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
+> +				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+> +				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>,
+> +				 <&gcc GCC_USB3_SEC_CLKREF_CLK>;
+> +			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
+> +				      "sleep", "xo";
+> +
+> +			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+> +					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
+> +			assigned-clock-rates = <19200000>, <150000000>;
+> +
+> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "hs_phy_irq", "ss_phy_irq",
+> +					  "dm_hs_phy_irq", "dp_hs_phy_irq";
+> +
+> +			power-domains = <&gcc USB30_PRIM_GDSC>;
+> +
+> +			resets = <&gcc GCC_USB30_PRIM_BCR>;
+> +
+> +			usb_1_dwc3: dwc3@a600000 {
+> +				compatible = "snps,dwc3";
+> +				reg = <0 0x0a600000 0 0xcd00>;
+> +				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+> +				snps,dis_u2_susphy_quirk;
+> +				snps,dis_enblslpm_quirk;
+> +				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+> +				phy-names = "usb2-phy", "usb3-phy";
+> +			};
+> +		};
+>  	};
+>  
+>  	timer {
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
