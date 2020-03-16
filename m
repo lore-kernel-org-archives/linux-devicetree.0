@@ -2,402 +2,126 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426F4C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09CFC0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C01820658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAC620658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FKLt3d2k"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NIjuoNhn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbgCPJBM (ORCPT
+        id S1730179AbgCPJCk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 05:01:12 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44120 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730369AbgCPJBM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 05:01:12 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b72so9544863pfb.11
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 02:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TOAh4ZWTzF8CnaWAnOSER/iHp8VilV6CcnJKYYWhTKY=;
-        b=FKLt3d2kad8CvEiF7oxaX/MEMU8rISoVpR9mnX6fcBE/I5viXvD33ygmQkjXjCnfO3
-         cgP3QNUyW3gE+2QgttLF5boMdGzfEHFHqaCLchxtT09tPlJHmHBjVVGwiKDDO8sY0Zy+
-         LxGJiSVA32/Q/0DRouPl2SeFFFQ0qEXNgaMS0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TOAh4ZWTzF8CnaWAnOSER/iHp8VilV6CcnJKYYWhTKY=;
-        b=AKFU0E8/LzJNnk65bN4Bva3JXJ94TQdyJ5uefIhfJfhYYpgYK0a17DwOlZIreOmfaD
-         bdaDiilwxFBS49U72SJlCa7Ik616ZLE75t1rpytM34XWbELbwQlqvZ7xdpIGl9qcI78U
-         Unjh+S+nkLfxfaIl2/vCHk/c0hNzDDvS/VFI95Q3hup+0v8FnD/mwT4lv6vq3OjYX7Ep
-         vtHJKTAkYj8SmTkZNLqpL8Il6bwlifoqr098MASiTkQ+ui99qwPgdAAGaAQc+R5etR5N
-         s7wV3cweJCt5gqT97LeNMEQxAIcH6bLuOC/M2Gqr0mb0k+NUAb6MA4RX78YLZcZoTuy3
-         JniQ==
-X-Gm-Message-State: ANhLgQ2dqqLEneNvn7B7PSSt14McwILfVt/bgXqwCUFl4TJmNy/x0mnI
-        d4AMG7a9M3C3Jz4Cb1K8rNb1AA==
-X-Google-Smtp-Source: ADFU+vvK+mSTW5kwBrRPmdxBnWa+7JodIsIqQK72v2n9BaGrLj9EgUv9qgwP6lbAwnkUm/fEs5G8Lw==
-X-Received: by 2002:a63:4707:: with SMTP id u7mr26352469pga.221.1584349271238;
-        Mon, 16 Mar 2020 02:01:11 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id d3sm65040080pfn.113.2020.03.16.02.01.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 02:01:10 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v5 2/4] platform/chrome: Add Type C connector class driver
-Date:   Mon, 16 Mar 2020 02:00:17 -0700
-Message-Id: <20200316090021.52148-3-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-In-Reply-To: <20200316090021.52148-1-pmalani@chromium.org>
-References: <20200316090021.52148-1-pmalani@chromium.org>
+        Mon, 16 Mar 2020 05:02:40 -0400
+Received: from mail-eopbgr140088.outbound.protection.outlook.com ([40.107.14.88]:23307
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730152AbgCPJCj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 05:02:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lgq/Sa2/ffztvPXhoQr+mcp2/tUTZ+GMAseQSNvjm0yLS6B8erAlsFzvb10oworc146FGmu0cAwjWdvctUqRo8U3RG9UDtFD+RsxZ6lVS6px9bTP9ifUH6pvW45KC8IBHHbKV/K73YsHo1PJzA0nM+7Sz2hREpmV1f3AMA7fP5IHpg8uIBLMr5o0Zr5HnjGSyy5x+30N23Zr+3ZsEJrsfUI1aGOkm7w2wRADojNz1ptUx8Soaq5Cv1Hs3EmiV88d5nsZFGlAVduPi8PJ8q59nFwncRs1IRFRDIX41xxnFkiCrHtjR7LYedq7l233huNCQM9ptGZ4+C9SGibrJ0EcKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qpd9L9SgSY1N3Zm6JZQ454retwPpG5K8MbfRs+j/FuY=;
+ b=R023f4xHzUbNO/0Y1VdiZSzy/cFI/qi7hDi5xCEpkkn3ikbOyAJ3ZzKtgjZrB0+oP7gkCEBMHPmeW/wteV/bksul8SwQx4R9iLQKQzynkN9n9gOFd77Hpf/m1OEA/1y9EasoR/4Ld20e+yHRsLIOfukimSR7EpshaWW2isIKU+Gy1ggRQgbQ0rulAPnbyNlG2sYLnqv49JrDzoJz12oGxyUm6+YbVdOE9WcgZ+krZuMS1mR1s7Mxgmkes0+ARCGxTkOeSyuu+K0Df0mzhTZl3+74DxHJuor9FnzAO7GqqNY/OFZNI4IEbiXpr6z674iZTgbMzM9bk8gHi8R95SwM+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qpd9L9SgSY1N3Zm6JZQ454retwPpG5K8MbfRs+j/FuY=;
+ b=NIjuoNhna9xJCfOQhDizp8hL1MYks+dQhvKD/U0apdLbYldc1Pluooq4R79o+of08L6isk9ugW9sfM3rLAjhtNmz+63TeT7/Ny0FGt+Zr3GZGyNNJiQeN7NnH41KnLi/HG4GWKgcvodJIFWR/w6eBoLyZqVrWcAqlpOZvB0RaT0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB7169.eurprd04.prod.outlook.com (10.186.130.88) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.14; Mon, 16 Mar 2020 09:02:35 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2814.019; Mon, 16 Mar 2020
+ 09:02:35 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V3 0/4] ARM: imx7ulp: support HSRUN mode
+Date:   Mon, 16 Mar 2020 16:55:40 +0800
+Message-Id: <1584348944-19633-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0126.apcprd06.prod.outlook.com
+ (2603:1096:1:1d::28) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0126.apcprd06.prod.outlook.com (2603:1096:1:1d::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2814.18 via Frontend Transport; Mon, 16 Mar 2020 09:02:31 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b632aa70-847c-4022-a731-08d7c988c48f
+X-MS-TrafficTypeDiagnostic: AM0PR04MB7169:|AM0PR04MB7169:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB716949DCF5AFE2B1BD39B9C088F90@AM0PR04MB7169.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 03449D5DD1
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(346002)(396003)(376002)(39860400002)(199004)(9686003)(6512007)(4326008)(16526019)(8936002)(81156014)(81166006)(8676002)(2906002)(86362001)(316002)(26005)(186003)(956004)(2616005)(69590400007)(6666004)(36756003)(4744005)(6506007)(66946007)(66556008)(66476007)(478600001)(966005)(5660300002)(52116002)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB7169;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5U+lBGTBdnXM/g33M1YNLpVc0O3okTjM813cg4FIqcrPcupVPbFE1FPMIhKPjyCQKIZyGeufFo+IAzHTELjvJCI+Wx0gfNxbgsTDe87IT/PhgqKJWarT15vy4C7GDqpPl10HeDiOerGe4xATOzZRPnPAYOzGj6MIux2TobKGmvPMwzHMobeeg9Rw1h7QpafgI9OZk3tchKkAns2pVX6Fr1ZUkDH+EJBEy85WQWv/fLZaS4T5reMOyJu738YlpHX/TuB/ckWbiERUfqOioYyytdLJw/hIPYqqRkQgXzwFu2WYZxhJN+EVfR5VbjflKenhwcbywWEm8iMsR7SLjgjpk39/UGc1LDcWNRUHGfCbbs/15wGvdlSnyWAQjO8ljyl/dI3mEmUTUcwAa5Qs+Kg3gLBe3gb32kHQNGxlp0HcXCcuIZH/T2VkbqqkQquhALuE1kl7w30JFXzp9tNUYAC4O51Czs3RP+sfvcAGt+FgFsgiIZ44yqUBlYb7Dziu+kvEuk5gYyJ4k+goqZ+mHSIFTJNYK3R3l+wH26AbiA3ogv73wplCrnOhSOQGkQWpwunFA8Nxg6tK1tu6Or+zhd0qRA==
+X-MS-Exchange-AntiSpam-MessageData: fUIn+BwH9ZDk0DuRYFaeGbFcLI6X+Vphwdx0wIXcaBUPm2425lkJZeYXAm608rYqCi0K0Lm5LY9hj0JeMteWV42GG4uYx00oIbRDuSTvcUr/fR0adGqLPGt3UDI7yXZbn1IdJGMm2MydFiXbO5byWA==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b632aa70-847c-4022-a731-08d7c988c48f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2020 09:02:35.0016
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EXyfJexwOW2brU/+gXztr9VtRckGFAeQstLzgxeiCyVYpaXZfvEzaK8LTnozKy9rF1ILPGI8jS04UAWiCYUEIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7169
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a driver to implement the Type C connector class for Chrome OS
-devices with ECs (Embedded Controllers).
+From: Peng Fan <peng.fan@nxp.com>
 
-The driver relies on firmware device specifications for various port
-attributes. On ACPI platforms, this is specified using the logical
-device with HID GOOG0014. On DT platforms, this is specified using the
-DT node with compatible string "google,cros-ec-typec".
+This is a splitted part from V2: 
+ARM: imx7ulp: add cpufreq using cpufreq-dt
+https://patchwork.kernel.org/cover/11390589/
+Nothing changed
 
-The driver reads the device FW node and uses the port attributes to
-register the typec ports with the Type C connector class framework, but
-doesn't do much else.
 
-Subsequent patches will add more functionality to the driver, including
-obtaining current port information (polarity, vconn role, current power
-role etc.) after querying the EC.
+The original V2 patchset is to support i.MX7ULP cpufreq,
+still waiting the virtual clk being accepted. so to decouple,
+this patchset only takes the run mode part.
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
 
-Changes in v5:
-- Added Reviewed-by tag which was missed in earlier version.
+Peng Fan (4):
+  dt-bindings: fsl: add i.MX7ULP PMC binding doc
+  ARM: dts: imx7ulp: add pmc node
+  ARM: imx: imx7ulp: support HSRUN mode
+  ARM: imx: cpuidle-imx7ulp: Stop mode disallowed when HSRUN
 
-Changes in v4:
-- Added Reviewed-by tag from previous review cycle
-- Added code to store port caps within the Cros EC type C data structure
-- Added code to use reg to get the port-number in DT platforms.
+ .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32 ++++++++++++++++++++++
+ arch/arm/boot/dts/imx7ulp.dtsi                     | 10 +++++++
+ arch/arm/mach-imx/common.h                         |  1 +
+ arch/arm/mach-imx/cpuidle-imx7ulp.c                | 14 ++++++++--
+ arch/arm/mach-imx/pm-imx7ulp.c                     | 25 +++++++++++++++++
+ 5 files changed, 79 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
 
-Changes in v3:
-- Fixed minor spacing nits, and moved a modification to probe() if check
-  from later patch to here instead.
-
-Changes in v2:
-- Updated Kconfig to default to MFD_CROS_EC_DEV.
-- Fixed code comments.
-- Moved get_num_ports() code into probe().
-- Added module author.
-
- drivers/platform/chrome/Kconfig         |  11 ++
- drivers/platform/chrome/Makefile        |   1 +
- drivers/platform/chrome/cros_ec_typec.c | 238 ++++++++++++++++++++++++
- 3 files changed, 250 insertions(+)
- create mode 100644 drivers/platform/chrome/cros_ec_typec.c
-
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 5f57282a28da0..2320a4f0d9301 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -214,6 +214,17 @@ config CROS_EC_SYSFS
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cros_ec_sysfs.
- 
-+config CROS_EC_TYPEC
-+	tristate "ChromeOS EC Type-C Connector Control"
-+	depends on MFD_CROS_EC_DEV && TYPEC
-+	default MFD_CROS_EC_DEV
-+	help
-+	  If you say Y here, you get support for accessing Type C connector
-+	  information from the Chrome OS EC.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called cros_ec_typec.
-+
- config CROS_USBPD_LOGGER
- 	tristate "Logging driver for USB PD charger"
- 	depends on CHARGER_CROS_USBPD
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index aacd5920d8a18..caf2a9cdb5e6d 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_CROS_EC_ISHTP)		+= cros_ec_ishtp.o
- obj-$(CONFIG_CROS_EC_RPMSG)		+= cros_ec_rpmsg.o
- obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
- cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_mec.o
-+obj-$(CONFIG_CROS_EC_TYPEC)		+= cros_ec_typec.o
- obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
- obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
- obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-new file mode 100644
-index 0000000000000..02e6d5cbbbf7a
---- /dev/null
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -0,0 +1,238 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2020 Google LLC
-+ *
-+ * This driver provides the ability to view and manage Type C ports through the
-+ * Chrome OS EC.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_data/cros_ec_commands.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/platform_device.h>
-+#include <linux/usb/typec.h>
-+
-+#define DRV_NAME "cros-ec-typec"
-+
-+/* Platform-specific data for the Chrome OS EC Type C controller. */
-+struct cros_typec_data {
-+	struct device *dev;
-+	struct cros_ec_device *ec;
-+	int num_ports;
-+	/* Array of ports, indexed by port number. */
-+	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
-+	/* Initial capabilities for each port. */
-+	struct typec_capability *caps[EC_USB_PD_MAX_PORTS];
-+};
-+
-+static int cros_typec_parse_port_props(struct typec_capability *cap,
-+				       struct fwnode_handle *fwnode,
-+				       struct device *dev)
-+{
-+	const char *buf;
-+	int ret;
-+
-+	memset(cap, 0, sizeof(*cap));
-+	ret = fwnode_property_read_string(fwnode, "power-role", &buf);
-+	if (ret) {
-+		dev_err(dev, "power-role not found: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = typec_find_port_power_role(buf);
-+	if (ret < 0)
-+		return ret;
-+	cap->type = ret;
-+
-+	ret = fwnode_property_read_string(fwnode, "data-role", &buf);
-+	if (ret) {
-+		dev_err(dev, "data-role not found: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = typec_find_port_data_role(buf);
-+	if (ret < 0)
-+		return ret;
-+	cap->data = ret;
-+
-+	ret = fwnode_property_read_string(fwnode, "try-power-role", &buf);
-+	if (ret) {
-+		dev_err(dev, "try-power-role not found: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = typec_find_power_role(buf);
-+	if (ret < 0)
-+		return ret;
-+	cap->prefer_role = ret;
-+
-+	cap->fwnode = fwnode;
-+
-+	return 0;
-+}
-+
-+static int cros_typec_init_ports(struct cros_typec_data *typec)
-+{
-+	struct device *dev = typec->dev;
-+	struct typec_capability *cap;
-+	struct fwnode_handle *fwnode;
-+	const char *port_prop;
-+	int ret;
-+	int i;
-+	int nports;
-+	u32 port_num = 0;
-+
-+	nports = device_get_child_node_count(dev);
-+	if (nports == 0) {
-+		dev_err(dev, "No port entries found.\n");
-+		return -ENODEV;
-+	}
-+
-+	if (nports > typec->num_ports) {
-+		dev_err(dev, "More ports listed than can be supported.\n");
-+		return -EINVAL;
-+	}
-+
-+	/* DT uses "reg" to specify port number. */
-+	port_prop = dev->of_node ? "reg" : "port-number";
-+	device_for_each_child_node(dev, fwnode) {
-+		if (fwnode_property_read_u32(fwnode, port_prop, &port_num)) {
-+			ret = -EINVAL;
-+			dev_err(dev, "No port-number for port, aborting.\n");
-+			goto unregister_ports;
-+		}
-+
-+		if (port_num >= typec->num_ports) {
-+			dev_err(dev, "Invalid port number.\n");
-+			ret = -EINVAL;
-+			goto unregister_ports;
-+		}
-+
-+		dev_dbg(dev, "Registering port %d\n", port_num);
-+
-+		cap = devm_kzalloc(dev, sizeof(*cap), GFP_KERNEL);
-+		if (!cap) {
-+			ret = -ENOMEM;
-+			goto unregister_ports;
-+		}
-+
-+		typec->caps[port_num] = cap;
-+
-+		ret = cros_typec_parse_port_props(cap, fwnode, dev);
-+		if (ret < 0)
-+			goto unregister_ports;
-+
-+		typec->ports[port_num] = typec_register_port(dev, cap);
-+		if (IS_ERR(typec->ports[port_num])) {
-+			dev_err(dev, "Failed to register port %d\n", port_num);
-+			ret = PTR_ERR(typec->ports[port_num]);
-+			goto unregister_ports;
-+		}
-+	}
-+
-+	return 0;
-+
-+unregister_ports:
-+	for (i = 0; i < typec->num_ports; i++)
-+		typec_unregister_port(typec->ports[i]);
-+	return ret;
-+}
-+
-+static int cros_typec_ec_command(struct cros_typec_data *typec,
-+				 unsigned int version,
-+				 unsigned int command,
-+				 void *outdata,
-+				 unsigned int outsize,
-+				 void *indata,
-+				 unsigned int insize)
-+{
-+	struct cros_ec_command *msg;
-+	int ret;
-+
-+	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	msg->version = version;
-+	msg->command = command;
-+	msg->outsize = outsize;
-+	msg->insize = insize;
-+
-+	if (outsize)
-+		memcpy(msg->data, outdata, outsize);
-+
-+	ret = cros_ec_cmd_xfer_status(typec->ec, msg);
-+	if (ret >= 0 && insize)
-+		memcpy(indata, msg->data, insize);
-+
-+	kfree(msg);
-+	return ret;
-+}
-+
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id cros_typec_acpi_id[] = {
-+	{ "GOOG0014", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(acpi, cros_typec_acpi_id);
-+#endif
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id cros_typec_of_match[] = {
-+	{ .compatible = "google,cros-ec-typec", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, cros_typec_of_match);
-+#endif
-+
-+static int cros_typec_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cros_typec_data *typec;
-+	struct ec_response_usb_pd_ports resp;
-+	int ret;
-+
-+	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
-+	if (!typec)
-+		return -ENOMEM;
-+
-+	typec->dev = dev;
-+	typec->ec = dev_get_drvdata(pdev->dev.parent);
-+	platform_set_drvdata(pdev, typec);
-+
-+	ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
-+				    &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
-+
-+	typec->num_ports = resp.num_ports;
-+	if (typec->num_ports > EC_USB_PD_MAX_PORTS) {
-+		dev_warn(typec->dev,
-+			 "Too many ports reported: %d, limiting to max: %d\n",
-+			 typec->num_ports, EC_USB_PD_MAX_PORTS);
-+		typec->num_ports = EC_USB_PD_MAX_PORTS;
-+	}
-+
-+	ret = cros_typec_init_ports(typec);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static struct platform_driver cros_typec_driver = {
-+	.driver	= {
-+		.name = DRV_NAME,
-+		.acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
-+		.of_match_table = of_match_ptr(cros_typec_of_match),
-+	},
-+	.probe = cros_typec_probe,
-+};
-+
-+module_platform_driver(cros_typec_driver);
-+
-+MODULE_AUTHOR("Prashant Malani <pmalani@chromium.org>");
-+MODULE_DESCRIPTION("Chrome OS EC Type C control");
-+MODULE_LICENSE("GPL");
 -- 
-2.25.1.481.gfbce0eb801-goog
+2.16.4
 
