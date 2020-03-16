@@ -6,73 +6,61 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46653C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 15:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7797DC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A7D2051A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 15:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4C42051A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 15:50:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LJScDWCj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cZVHtxGt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbgCPPrB (ORCPT
+        id S1731895AbgCPPuc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:47:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37286 "EHLO
+        Mon, 16 Mar 2020 11:50:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41330 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731555AbgCPPrB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 11:47:01 -0400
+        with ESMTP id S1731890AbgCPPuc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 11:50:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ouN0e4/1zqiBLoUJJ4QgzJ5Y6SjVqjDFHS+Tu4nAdmM=; b=LJScDWCjj3NCA4uVHCSkioMP/q
-        /Z7XCUgEjkky9gRxRqun4cAZU1jNAliOiH17ROlaWz91YJlSBnmbXIR142K9TDY8WJI+fiVPH2KQX
-        GESP7Vu07So0GETmAOlWvCQn7UXcBwg8Ya+QmAceR3w3eBV2c8pAp5CfPNfABsdRslgltWnytBCoP
-        qPoV38uCGdIE9woLQ2E8wMziYu21I2p72c0gppQ5GAdApUH55lp3uCCSy/ENm2L3bRV0sRL9YhWB3
-        CYKx0LHNkpiirDs6Thno8xvGgd+zMeIzwagUfoLnlv1S6AtPy7ECDPuX+MvSNfdzQuzP6kxCS0AbG
-        UoDB9Zig==;
+        bh=4Fcs/ravGQBzEwV+PwLN/3FuduA8sqVcdSOOMqzyw+E=; b=cZVHtxGt+DHwY530inZn5uaoAd
+        NKYBLQCYm+jTGzzEtxEZZcghNZyQz3KZrzDd7pz5fIwHj8M1443PQzUVnDLn/hazE65KuoyeFpX4q
+        SlRMMnPERZ+98066ISJv8PqhvKadqBvfmDLO8yR9v9I62OoyIKC9HSVz650f2PtsxYapCWFVbdZ5R
+        f4Zrx1W+r/vsU+FwAD8cKpo9ZL8NyEpgdqr6xqK9E2SS96UpdcX+0mbPNpmGzTlROypcTsbmMtJ+v
+        SIN/U5JGq9qiN3Kzq85xwDB29JrmkRYMtCWIIZ3wmAhwo4vIys/n0ZiMZfOMz5rdYneOW+8wr8bIu
+        p6c7BDsw==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jDrxD-00028Q-5o; Mon, 16 Mar 2020 15:46:59 +0000
-Date:   Mon, 16 Mar 2020 08:46:59 -0700
+        id 1jDs0a-0004dZ-Nu; Mon, 16 Mar 2020 15:50:28 +0000
+Date:   Mon, 16 Mar 2020 08:50:28 -0700
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        kevin.tian@intel.com, Dimitri Sivanich <sivanich@sgi.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, robin.murphy@arm.com,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        robh+dt@kernel.org, catalin.marinas@arm.com,
-        zhangfei.gao@linaro.org, Andrew Morton <akpm@linux-foundation.org>,
-        will@kernel.org, christian.koenig@amd.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 01/26] mm/mmu_notifiers: pass private data down to
- alloc_notifier()
-Message-ID: <20200316154659.GA18704@infradead.org>
-References: <20200224182401.353359-2-jean-philippe@linaro.org>
- <20200224190056.GT31668@ziepe.ca>
- <20200225092439.GB375953@myrica>
- <20200225140814.GW31668@ziepe.ca>
- <20200228143935.GA2156@myrica>
- <20200228144844.GQ31668@ziepe.ca>
- <20200228150427.GF2156@myrica>
- <20200228151339.GS31668@ziepe.ca>
- <20200306095614.GA50020@myrica>
- <20200306130919.GJ31668@ziepe.ca>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org, joro@8bytes.org,
+        ohad@wizery.com, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        agross@kernel.org
+Subject: Re: [PATCH 0/3] Request direct mapping for modem firmware subdevice
+Message-ID: <20200316155028.GB18704@infradead.org>
+References: <20200309182255.20142-1-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306130919.GJ31668@ziepe.ca>
+In-Reply-To: <20200309182255.20142-1-sibis@codeaurora.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 09:09:19AM -0400, Jason Gunthorpe wrote:
-> This is why release must do invalidate all - but it doesn't need to do
-> any more - as no SPTE can be established without a mmget() - and
-> mmget() is no longer possible past release.
+On Mon, Mar 09, 2020 at 11:52:52PM +0530, Sibi Sankar wrote:
+> The Q6 modem sub-system has direct access to DDR through memnoc and
+> an indirect access routed through a SMMU which MSS CE (crypto engine
+> sub-component of MSS) uses during out of reset sequence. Request direct
+> mapping for the modem-firmware subdevice since smmu is not expected
+> to provide access control/translation for these SIDs (sandboxing of the
+> modem is achieved through XPUs engaged using SMC calls).
 
-Maybe we should rename the release method to invalidate_all?
+Please fix your device tree so that the device isn't bound to an
+IOMMU.
