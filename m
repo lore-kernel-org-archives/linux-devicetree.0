@@ -2,88 +2,181 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B0EC3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52914C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA37420719
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:06:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584378413;
-	bh=y8YnBcrYokh9Z5evjYr1Y+QlYfGU/D0AiiVSEzV+ZBU=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=Aw8eFR+YGBb6HfWsIOaEgdGNT8ynBEao9FwM9vUxoGpElBTXlpqmvts4leDA5r4ss
-	 zf9xpMBgJjWj0FNUuDd0a7ibyIz75JEEUNB+TvGA1yOg+YG2GhHDMRReMZLP6lLlS8
-	 U2mou17gJ5DPLhp23QTW/+ML1UeCqMEFEunp+t6k=
+	by mail.kernel.org (Postfix) with ESMTP id 19F4720679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:15:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BUT2OrTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732018AbgCPRGw (ORCPT
+        id S1731703AbgCPRPv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 13:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731809AbgCPRGw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 13:06:52 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        Mon, 16 Mar 2020 13:15:51 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:45033 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731507AbgCPRPv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 13:15:51 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C3F22051A;
-        Mon, 16 Mar 2020 17:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584378411;
-        bh=y8YnBcrYokh9Z5evjYr1Y+QlYfGU/D0AiiVSEzV+ZBU=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=AO8g3I0lMQ7fkLvIyr0Dc82McstD3gf6hDrkasd2moH7Q/GQznLY6XNmSfCNQ7rOf
-         nWuQ4l6JmoTkVpxSdk1/u5LjCWUXyqabzFowgG1cc3XkWE43cHdZ+29mL/agZv6glh
-         PE8sdrCe4OkCG8thPDBZCChi9T1EL/b8bZl/rwxY=
-Content-Type: text/plain; charset="utf-8"
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 38F1323E61;
+        Mon, 16 Mar 2020 18:15:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1584378948;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FkBQjGfFX4RPCtdPTA+h09kDR0zYfg6Q74m+HlrgZjg=;
+        b=BUT2OrTNA5Xq/cAeO91FOmT4Vzjbe6rHKp1In93/VKCG4yRRkIBEMx1g8VM3ucWOhC99tQ
+        gXXjObJS/iVcITZh4uIi7mw2bxGCDz3580knWKtQ+9bQNN5z/dwyG9cvE46izCjWFCPPSu
+        lOykjNLBPPfmahq+zd4DDQykcUgwifE=
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1584356082-26769-1-git-send-email-tdas@codeaurora.org>
-References: <1584356082-26769-1-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v1 0/3] Add GCC clock driver support
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Date:   Mon, 16 Mar 2020 10:06:50 -0700
-Message-ID: <158437841065.88485.7233548150714328597@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 16 Mar 2020 18:15:48 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        peng.ma@nxp.com
+Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
+ queue with a simple completion
+In-Reply-To: <CA+h21hqt7Xe1LrSDsCVS8zqunQp2tKGhmHDraMirxL595go4nA@mail.gmail.com>
+References: <20200314224340.1544-1-olteanv@gmail.com>
+ <20200314224340.1544-7-olteanv@gmail.com>
+ <20200316122613.GE5010@sirena.org.uk>
+ <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
+ <20200316124945.GF5010@sirena.org.uk>
+ <CA+h21hpoHGuDwpOqtWJFO7+0mQVUrmcBLW7nnGq6dt3QU5axfw@mail.gmail.com>
+ <d05fda0e119405343e540b9768db534f@walle.cc>
+ <CA+h21hqt7Xe1LrSDsCVS8zqunQp2tKGhmHDraMirxL595go4nA@mail.gmail.com>
+Message-ID: <8c22cb70b7c0acb6769e0c68540ab523@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 38F1323E61
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[15];
+         NEURAL_HAM(-0.00)[-0.660];
+         FREEMAIL_TO(0.00)[gmail.com];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The subject of this cover letter is too generic. Is it more like
+Am 2020-03-16 17:23, schrieb Vladimir Oltean:
+> On Mon, 16 Mar 2020 at 15:25, Michael Walle <michael@walle.cc> wrote:
+>> 
+>> Am 2020-03-16 14:00, schrieb Vladimir Oltean:
+>> > On Mon, 16 Mar 2020 at 14:49, Mark Brown <broonie@kernel.org> wrote:
+>> >>
+>> >> On Mon, Mar 16, 2020 at 02:29:09PM +0200, Vladimir Oltean wrote:
+>> >>
+>> >> > Correct, the real problem is that I forgot to add a Fixes: tag for
+>> >> > patch 5. I'll do that now.
+>> >>
+>> >> OK.  The series otherwise looked fine but I'll wait for testing.
+>> >> Michael, if there's issues remaining it might be good to get some
+>> >> Tested-bys for the patches prior to whatever's broken so we can get
+>> >> those fixes in (but obviously verifying that is work so only if you
+>> >> have time).
+>> 
+>> I'm just about to test it. While my former "cat /dev/mtdN > /dev/null"
+>> is working. I had the impression that it was slower, so I tried to 
+>> test
+>> it with dd now and a known chunk size.. only to find out that it is
+>> still not working:
+>> 
+>> # dmesg|grep spi
+>> [    1.894891] spi-nor spi1.0: w25q128fw (16384 Kbytes)
+>> ..
+>> # time cat /dev/mtd0 > /dev/null
+>> real    0m 30.73s
+>> user    0m 0.00s
+>> sys     0m 1.02s
+>> # dd if=/dev/mtd0 of=/dev/null bs=64
+>> 262144+0 records in
+>> 262144+0 records out
+>> # dd if=/dev/mtd0 of=/dev/null bs=64
+>> 262144+0 records in
+>> 262144+0 records out
+>> # dd if=/dev/mtd0 of=/dev/null bs=64
+>> dd: /dev/mtd0: Input/output error
+> 
+> I don't really have a SPI flash connected to DSPI on any LS1028A board.
 
-	clk: qcom: sc7180: Add secure clk and more QUP frequencies
+I'm already debugging it again.
 
-or so?
+> Is this DMA or XSPI mode?
 
-Quoting Taniya Das (2020-03-16 03:54:39)
->  [v1]
->   * Add a new frequency of 51.2MHz for QUP clock.
->   * Add support for gcc_sec_ctrl_clk_src RCG for client to be able to req=
-uest
->    various frequencies.
->=20
-> Taniya Das (3):
->   clk: qcom: gcc: Add support for a new frequency for SC7180
->   dt-bindings: clock: Add gcc_sec_ctrl_clk_src clock ID
->   clk: qcom: gcc: Add support for Secure control source clock
+XSPI mode. DMA mode looked good for now.
 
-Is this for sc7180? Please indicate as such in the subject lines.
+>> 
+>> I also wanted to test how it behaves if there are multiple processes
+>> access the /dev/mtdN device. I haven't found the time to dig into
+>> the call chain if see if there is any locking. Because what happens
+>> if transfer_one_message() is called twice at the same time from two
+>> different processes?
+>> 
+> 
+> There is a mutex on the SPI bus, and therefore all variants of the
+> .transfer() call are operating under this lock protection, which
+> simplifies things quite a bit.
 
->=20
->  drivers/clk/qcom/gcc-sc7180.c               | 94 ++++++++++++++++++-----=
-------
->  include/dt-bindings/clock/qcom,gcc-sc7180.h |  1 +
->  2 files changed, 59 insertions(+), 36 deletions(-)
+Ok, thanks.
+
+-michael
+
+>> >
+>> > This time I verified with a protocol analyzer all transfer lengths
+>> > from 1 all the way to 256, with this script:
+>> >
+>> > #!/bin/bash
+>> >
+>> > buf=''
+>> >
+>> > for i in $(seq 0 255); do
+>> > »       buf="${buf}\x$(printf '%02x' ${i})"
+>> > »       spidev_test --device /dev/spidev2.0 --bpw 8 --cpha --speed
+>> > 5000000 -p "${buf}"
+>> > done
+>> >
+>> > It looked fine as far as I could tell, and also the problems
+>> > surrounding Ctrl-C are no longer present. Nonetheless it would be good
+>> > if Michael could confirm, but I know that he's very busy too so it's
+>> > understandable if he can no longer spend time on this.
+>> 
+>> I'm working on it ;)
+>> 
+>> -michael
+> 
+> Thanks,
+> -Vladimir
