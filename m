@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9398C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3136BC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB69F20719
+	by mail.kernel.org (Postfix) with ESMTP id F1A6220719
 	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 15:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2vAn/Vq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l5fv644M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732047AbgCPPvC (ORCPT
+        id S1731946AbgCPPvF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 11:51:02 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36557 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732045AbgCPPvB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 11:51:01 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s5so21918781wrg.3;
-        Mon, 16 Mar 2020 08:51:00 -0700 (PDT)
+        Mon, 16 Mar 2020 11:51:05 -0400
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:36733 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732045AbgCPPvF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 11:51:05 -0400
+Received: by mail-wr1-f47.google.com with SMTP id s5so21919019wrg.3;
+        Mon, 16 Mar 2020 08:51:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ARobwbMkxpnKD/itXwOoAdtTkWOvbLodvJtLsq09FXI=;
-        b=N2vAn/VqQjbs57AhGfDEn3ERSAFuemwBLrYdhCPOVaWBeZeAFyU5Z0ypB+H5SczB8z
-         aecqNmCW8sZI2RVYRUFm75+2/D8opwFhh0gEfmy3BtHyAijTRtFgfovO1TtUDWhTC6he
-         HZW0S15d8P+jSXz1H03Iubqd/+Anm8g2iQHo7lb9RF83dXRENzrJKBsZEVLqyQgP+kDA
-         BrwHRMhEZF2Nh0rvt8K+b3KPJYJWzhsIyG0o9Ifww9PoKoZJ3GB2dPzy3hImVFNtp2rB
-         qubiJHQW8fTcZJ9RYLVYloba0rXd3CrF/O88AAOFuDey2A6S3zCwKUW6DBP9W8eQRK3p
-         41Cg==
+        bh=CNZofgTlgtRg/4yW84auDEy6du4PpWb+UTGhqf35H2A=;
+        b=l5fv644M5KTPiLp2EhOTSeqyhaqVXnP801VGzM0E6TXHMdHQqDjZmnK8YkyrMXh3v3
+         vy+LofasGSCAlpqnMGi3sFRWgcP1VD+VCwGUFYoHyuFCwCscqEAbI9GDTC3keV1Z+B6c
+         EeBtUDb5LPxg9mjc/sLSwJmsjcgAFT4BB1hN7+qRY6OQPjokAaqwSxxSpWPgLFumHa5q
+         akQYX5/qPexVn732Qu2VHTRQMzpY9n9Fr0x+SLVPQYK91XDIfoSVONiNxm/phaNtmny2
+         pW4Y5EQcE48po92TBKZz3RNxpVKvRBae7Uc//OULQn1iFGXyDIl5D1FpPbjqb9+/tGCp
+         YK0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ARobwbMkxpnKD/itXwOoAdtTkWOvbLodvJtLsq09FXI=;
-        b=m7WDoZkPJuGwr1KUKiwH3R0hvLfF//hwaBEZCW83t62T9Q6tG2p6CZ9k/TFF/3/QBP
-         Teq4Y3XngUpT4I+6+oD1UNYk0qU0Zoi05MFtDbtAXlBnIItXY5oWmScQZL9fsGmZ+yON
-         GBL0dWrwIYCYaXmflxAO+Wx8gGUacwhq8BDeBKNkOUQjA9u9eQg82EEUZZ1hfzgUcc+/
-         MK3VxGSJnEUQ1Z3feJQBSWkr8QnqbovemKVdq/DsEJvm1kGzSii8vXJruyCtwYIcAqpP
-         xJ8RD+9UTixEs/uPsle/Jaco49cuocYueli34dJoJX1d/TkkmqB/wWLDAKDKWGQMS0XA
-         t++A==
-X-Gm-Message-State: ANhLgQ0TrmoUh4tS5Ucb3Z8rM/iPyaFPl0I7xl4OBBdOh6X5l4UqTPLP
-        J7LpJt3ms5+GfrgNXEB5VY+aObUk
-X-Google-Smtp-Source: ADFU+vsmPewO42KpiPcOa0lADe84yEUecpaV2WBwPc6111xNRqK7efvqJoGDIMXfkxx11CZOZtNJew==
-X-Received: by 2002:adf:82a6:: with SMTP id 35mr13691507wrc.307.1584373859159;
-        Mon, 16 Mar 2020 08:50:59 -0700 (PDT)
+        bh=CNZofgTlgtRg/4yW84auDEy6du4PpWb+UTGhqf35H2A=;
+        b=W1c2v0Fu22iqK9sdCVEuNcIsO1HVj+kNKy/3ZExKfgMVR/skXr4Im0DxUcdf+AEAA5
+         jIfqWYcryvNQ8GNeiJFOzmF7P+UdEyMKaOxOHXzSdbyy65jALOLjooDBpGfMGu6I99TA
+         VsdV7kFzWoucjCgJIB3O4tFJH5GPuGuKGNdvcLM1OF4rmCAEJPdXh6VVUoSvQv+suDOY
+         ayN+vuixFgrnGzgyBsQ5yo6E+Nv3BS3cyYs3gaUt5hW1mA0Mc4Mvum0q6QosA81EmnR1
+         lnPH4oJ4OP/H/tQw2NW5NfAzkxTrBuEp7YOCQlvEUQ/G/yownPgSQ6olVtXScCRHVfXn
+         Yuqw==
+X-Gm-Message-State: ANhLgQ2fKyKVSa64eJNByoqxpsrWKCpx2d1smpHBCamDdt+2hIQIFzed
+        2Ldsz+vzSwIt8f91bxi+4InmeGrD
+X-Google-Smtp-Source: ADFU+vtqe2sZDhyQzlmlhdoMo0f3Rl0a3Posy6jaxBOCQ5mVgKDRrRQkqAHvJ5okCjZF1J6f3lY7ZQ==
+X-Received: by 2002:adf:e4ca:: with SMTP id v10mr35927365wrm.305.1584373862235;
+        Mon, 16 Mar 2020 08:51:02 -0700 (PDT)
 Received: from saturn.lan ([188.26.73.247])
-        by smtp.gmail.com with ESMTPSA id n14sm153558wmi.19.2020.03.16.08.50.55
+        by smtp.gmail.com with ESMTPSA id n14sm153558wmi.19.2020.03.16.08.51.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 08:50:56 -0700 (PDT)
+        Mon, 16 Mar 2020 08:51:01 -0700 (PDT)
 From:   Alexandru Ardelean <ardeleanalex@gmail.com>
 X-Google-Original-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -65,9 +65,9 @@ Cc:     jic23@kernel.org, robh+dt@kernel.org, Laszlo.Nagy@analog.com,
         Istvan.Csomortani@analog.com, Adrian.Costina@analog.com,
         Dragos.Bogdan@analog.com,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v10 4/8] iio: buffer-dmaengine: add dev-managed calls for buffer alloc
-Date:   Mon, 16 Mar 2020 17:50:31 +0200
-Message-Id: <20200316155035.25500-5-alexandru.ardelean@analog.com>
+Subject: [PATCH v10 6/8] dt-bindings: iio: adc: add bindings doc for AXI ADC driver
+Date:   Mon, 16 Mar 2020 17:50:33 +0200
+Message-Id: <20200316155035.25500-7-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200316155035.25500-1-alexandru.ardelean@analog.com>
 References: <20200316155035.25500-1-alexandru.ardelean@analog.com>
@@ -78,81 +78,83 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently, when using a 'iio_dmaengine_buffer_alloc()', an matching call to
-'iio_dmaengine_buffer_free()' must be made.
-
-With this change, this can be avoided by using
-'devm_iio_dmaengine_buffer_alloc()'. The buffer will get free'd via the
-device's devres handling.
+This change adds the bindings documentation for the AXI ADC driver.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- .../buffer/industrialio-buffer-dmaengine.c    | 39 +++++++++++++++++++
- include/linux/iio/buffer-dmaengine.h          |  3 ++
- 2 files changed, 42 insertions(+)
+ .../bindings/iio/adc/adi,axi-adc.yaml         | 63 +++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
 
-diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-index 94da3b1ca3a2..6dedf12b69a4 100644
---- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
-@@ -229,6 +229,45 @@ void iio_dmaengine_buffer_free(struct iio_buffer *buffer)
- }
- EXPORT_SYMBOL_GPL(iio_dmaengine_buffer_free);
- 
-+static void __devm_iio_dmaengine_buffer_free(struct device *dev, void *res)
-+{
-+	iio_dmaengine_buffer_free(*(struct iio_buffer **)res);
-+}
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+new file mode 100644
+index 000000000000..6bd80e241f40
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,axi-adc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+/**
-+ * devm_iio_dmaengine_buffer_alloc() - Resource-managed iio_dmaengine_buffer_alloc()
-+ * @dev: Parent device for the buffer
-+ * @channel: DMA channel name, typically "rx".
-+ *
-+ * This allocates a new IIO buffer which internally uses the DMAengine framework
-+ * to perform its transfers. The parent device will be used to request the DMA
-+ * channel.
-+ *
-+ * The buffer will be automatically de-allocated once the device gets destroyed.
-+ */
-+struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
-+	const char *channel)
-+{
-+	struct iio_buffer **bufferp, *buffer;
++title: Analog Devices AXI ADC IP core
 +
-+	bufferp = devres_alloc(__devm_iio_dmaengine_buffer_free,
-+			       sizeof(*bufferp), GFP_KERNEL);
-+	if (!bufferp)
-+		return ERR_PTR(-ENOMEM);
++maintainers:
++  - Michael Hennerich <michael.hennerich@analog.com>
++  - Alexandru Ardelean <alexandru.ardelean@analog.com>
 +
-+	buffer = iio_dmaengine_buffer_alloc(dev, channel);
-+	if (IS_ERR(buffer)) {
-+		devres_free(bufferp);
-+		return buffer;
-+	}
++description: |
++  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
++  with a high speed serial (JESD204B/C) or source synchronous parallel
++  interface (LVDS/CMOS).
++  Usually, some other interface type (i.e SPI) is used as a control
++  interface for the actual ADC, while this IP core will interface
++  to the data-lines of the ADC and handle the streaming of data into
++  memory via DMA.
 +
-+	*bufferp = buffer;
-+	devres_add(dev, bufferp);
++  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
 +
-+	return buffer;
-+}
-+EXPORT_SYMBOL_GPL(devm_iio_dmaengine_buffer_alloc);
++properties:
++  compatible:
++    enum:
++      - adi,axi-adc-10.0.a
 +
- MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
- MODULE_DESCRIPTION("DMA buffer for the IIO framework");
- MODULE_LICENSE("GPL");
-diff --git a/include/linux/iio/buffer-dmaengine.h b/include/linux/iio/buffer-dmaengine.h
-index b3a57444a886..0e503db71289 100644
---- a/include/linux/iio/buffer-dmaengine.h
-+++ b/include/linux/iio/buffer-dmaengine.h
-@@ -14,4 +14,7 @@ struct iio_buffer *iio_dmaengine_buffer_alloc(struct device *dev,
- 	const char *channel);
- void iio_dmaengine_buffer_free(struct iio_buffer *buffer);
- 
-+struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
-+						   const char *channel);
++  reg:
++    maxItems: 1
 +
- #endif
++  dmas:
++    maxItems: 1
++
++  dma-names:
++    maxItems: 1
++    items:
++      - const: rx
++
++  adi,adc-dev:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      A reference to a the actual ADC to which this FPGA ADC interfaces to.
++
++required:
++  - compatible
++  - dmas
++  - reg
++  - adi,adc-dev
++
++additionalProperties: false
++
++examples:
++  - |
++    axi-adc@44a00000 {
++          compatible = "adi,axi-adc-10.0.a";
++          reg = <0x44a00000 0x10000>;
++          dmas = <&rx_dma 0>;
++          dma-names = "rx";
++
++          adi,adc-dev = <&spi_adc>;
++    };
++...
 -- 
 2.20.1
 
