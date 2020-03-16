@@ -2,117 +2,98 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AEEC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 10:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B28C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 11:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4862051A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 10:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AEDE20719
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 11:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Zdv3mpMF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zem311Tm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbgCPKzk (ORCPT
+        id S1730811AbgCPLCZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 06:55:40 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:59147 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730741AbgCPKzi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 06:55:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584356138; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=5xrQ7T4fhSt6GBPAdXESoichf/t20jtCxTSqGyamBWA=; b=Zdv3mpMF8LjxtaCCRk8EDrJ8NBZ3h1WSEVNMM8+X8zGzVeaAOeu9Nta4cBr/46qw3eCGwpUe
- GrY4p1rFgHTMdaatEtf1v/1f38CVr43ALMO3sarPLZJiHSXViya3SiJs9jFj2iSwHLLCsUkG
- Sgvzo4+qSb89FMVlqeZS2tz5aAw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6f5b18.7fedd0517378-smtp-out-n02;
- Mon, 16 Mar 2020 10:55:20 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E41CCC4478C; Mon, 16 Mar 2020 10:55:19 +0000 (UTC)
-Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E237C433CB;
-        Mon, 16 Mar 2020 10:55:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E237C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v1 3/3] clk: qcom: gcc: Add support for Secure control source clock
-Date:   Mon, 16 Mar 2020 16:24:42 +0530
-Message-Id: <1584356082-26769-4-git-send-email-tdas@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584356082-26769-1-git-send-email-tdas@codeaurora.org>
-References: <1584356082-26769-1-git-send-email-tdas@codeaurora.org>
+        Mon, 16 Mar 2020 07:02:25 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35105 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730819AbgCPLCZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 07:02:25 -0400
+Received: by mail-vs1-f67.google.com with SMTP id m9so10958928vso.2
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 04:02:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HYXCjPHfs8dDfhMy2nCW/5veOTWbVHj4w+BgbYglN9w=;
+        b=Zem311Tm82+PW9OL0vHqTxopdfny3jc3ZE+5GcIB/k1E6y26PuHdotm31jnVEgAu2b
+         yYWBSFnKG1yumWYVwPsTOthW1KXvZzj8qOFYZn8U/LSQPeQvBWgSEzaWyUl29RslaE22
+         OoDm8bwT1CbaIQ4FEs8oahpIjPMC5ERkBHvsM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HYXCjPHfs8dDfhMy2nCW/5veOTWbVHj4w+BgbYglN9w=;
+        b=HeeJVi+0rvBoebLW4NjF3jtesvNUG9i5wi1yIZocedgysTHfhUGfDUz6Pb78YSFZqE
+         sV4vOIkNKd9ixwnKL8mit8pk/yvpFjOMHa8ejvMnZGT/vwnzP5OxYBM+zQ8Pg+gUgsWv
+         7BJLmhAXaYinAuSHpQ4cXE8EGAcfcPMRgea62ftHThyVEv93gIKIOspQDZrTUH3r3P/R
+         VwC7+2Iw/5YHosMmSXpiCyVI3mtaj1BEFIIegq0snBxiS0IccAHwGi/d1edB9lZe5Kvg
+         5mfpowny7gweXf2cQnGeKvg26BB/8d7NN7i4fVwRCsHYCOlpBbfD+b7k/UE9T24WXb+q
+         1m2A==
+X-Gm-Message-State: ANhLgQ1ORGk4vXrNbTSplKlEozJ2kyqFLMM9IlcJeeN09nIU5ZPos4/M
+        EhKZX6RowZaGU4aQQLf74rNmkDKOe8KyfjrLzYAMrg==
+X-Google-Smtp-Source: ADFU+vslL7SUJTVlPVk2d8S7a0jEhOnlOTTT7KU8Dg+Uf7BqOBjcuL5F5OWDFxyBWnAFO5VFRqBRQWH6xWxqn5a3M3c=
+X-Received: by 2002:a05:6102:392:: with SMTP id m18mr15598517vsq.79.1584356542437;
+ Mon, 16 Mar 2020 04:02:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <1584345050-3738-1-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1584345050-3738-1-git-send-email-hanks.chen@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Mon, 16 Mar 2020 19:02:11 +0800
+Message-ID: <CANMq1KA1ngYhr7XO0k3xb0h7L-DX+TjiekvnGGOTRqz=BQPREA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] dt-bindings: cpu: Add a support cpu type for cortex-a75
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>, wsd_upstream@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The secure controller driver requires to request for various frequencies
-on the source clock, thus add support for the same.
+On Mon, Mar 16, 2020 at 3:51 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
+>
+> Add arm cpu type cortex-a75.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/gcc-sc7180.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Already in Rob's tree here:
+https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=5c2614e995de07b41eb355155eb5e0e3d593718b
 
-diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
-index ad75847..3302f19 100644
---- a/drivers/clk/qcom/gcc-sc7180.c
-+++ b/drivers/clk/qcom/gcc-sc7180.c
-@@ -817,6 +817,26 @@ static struct clk_rcg2 gcc_usb3_prim_phy_aux_clk_src = {
- 	},
- };
-
-+static const struct freq_tbl ftbl_gcc_sec_ctrl_clk_src[] = {
-+	F(4800000, P_BI_TCXO, 4, 0, 0),
-+	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 gcc_sec_ctrl_clk_src = {
-+	.cmd_rcgr = 0x3d030,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = gcc_parent_map_3,
-+	.freq_tbl = ftbl_gcc_sec_ctrl_clk_src,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "gcc_sec_ctrl_clk_src",
-+		.parent_data = gcc_parent_data_3,
-+		.num_parents = 3,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
- static struct clk_branch gcc_aggre_ufs_phy_axi_clk = {
- 	.halt_reg = 0x82024,
- 	.halt_check = BRANCH_HALT_DELAY,
-@@ -2337,6 +2357,7 @@ static struct clk_regmap *gcc_sc7180_clocks[] = {
- 	[GPLL7] = &gpll7.clkr,
- 	[GPLL4] = &gpll4.clkr,
- 	[GPLL1] = &gpll1.clkr,
-+	[GCC_SEC_CTRL_CLK_SRC] = &gcc_sec_ctrl_clk_src.clkr,
- };
-
- static const struct qcom_reset_map gcc_sc7180_resets[] = {
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.yaml |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index c23c24f..51b75f7 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -128,6 +128,7 @@ properties:
+>        - arm,cortex-a57
+>        - arm,cortex-a72
+>        - arm,cortex-a73
+> +      - arm,cortex-a75
+>        - arm,cortex-m0
+>        - arm,cortex-m0+
+>        - arm,cortex-m1
+> --
+> 1.7.9.5
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
