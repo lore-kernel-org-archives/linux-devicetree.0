@@ -2,161 +2,136 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D28C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBF2C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57E8220658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73FDB20674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 09:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O+/EkEaR"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="ZwMjfMIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbgCPJAy (ORCPT
+        id S1730281AbgCPJAz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
+        Mon, 16 Mar 2020 05:00:55 -0400
+Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:63236
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730152AbgCPJAy (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 16 Mar 2020 05:00:54 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34044 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730179AbgCPJAy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 05:00:54 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 23so9576872pfj.1
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 02:00:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IGTp0aw5UViZrykS90Wdmo0NeHyVyuCEPd0W8cnwwcM=;
-        b=O+/EkEaRDUC3lhE2OfWN6jtHMfQFiTbtgKD8XJcQSNYQze/KmfORZPLJYJBuM+0SqD
-         KmX5afZ+gt+FovYZmGAV92dQGT0hXiH6sE7AJ12wkMCrecXmqPNLGnK6sgsvzhH4JXrY
-         XuLkx3z8qobUQpxhKOJo7guJTN7Nbvn2NC31Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IGTp0aw5UViZrykS90Wdmo0NeHyVyuCEPd0W8cnwwcM=;
-        b=GAqer7yoLIuWO4XmldIseg4cVpIJ29AmJg52NZRi1rK5uZKHjOhrNvyeMurvKZiE9Z
-         evF/KOGejOzIqFOL3kYDWGw8hNjVVvZTzPdsrjofyvixoiJFhW87Idk1l3lK6O4SURyf
-         v0IX1rLd8vE9UfkltYnwZZw8ZS1ECNGgJ6tPLHHMs+L8V1jRvNJ+JRPPtdSb1il89nb0
-         lo0OtSEN4xY8Bqhm91Vznne8rPkEt3nY27GgOVsDSwTjqGNRNnLMWxCwCKmJw/V3xKax
-         zraKFmLB2UGzu38CeEwQ6B7K7Ly2kM/WAVnczCbT7Jpkq87UQ9DpltMLqIloXWWeHvCH
-         MBYg==
-X-Gm-Message-State: ANhLgQ3qKmtVJNkMbTdz34OSpzrUqKvLpU4enKCNPfQo108+hOaGrfjG
-        hlrWMMg7+FiliRzsEnEEf3REFA==
-X-Google-Smtp-Source: ADFU+vtLPRqHTpQ6B+vPCSr2M0cfUNwrR+7iWd4BM7L0ER24RaJ7zrbl7SD7IUIJmxTp2qFccPa4PA==
-X-Received: by 2002:a63:7a02:: with SMTP id v2mr25362946pgc.13.1584349253858;
-        Mon, 16 Mar 2020 02:00:53 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id d3sm65040080pfn.113.2020.03.16.02.00.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 02:00:53 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v5 1/4] dt-bindings: Add cros-ec Type C port driver
-Date:   Mon, 16 Mar 2020 02:00:15 -0700
-Message-Id: <20200316090021.52148-2-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-In-Reply-To: <20200316090021.52148-1-pmalani@chromium.org>
-References: <20200316090021.52148-1-pmalani@chromium.org>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dTpJjL2CmiAdM3mvFbMusmqJ79caoQb2mas6fRqNhscdR2oMHcqCjwqR6wrccUgv2VY5KWLogjDZByBTUakG7TuiRrByWDBMfsisk0p4SNRfgzlAAUVsHXYQX+E7y/nSoD3uEt31qFs3QoiHV54Lvac2LBBFKXjumZ6K9Bd1yPMrnygPVqsZSZ5L8hUtaDt+dXuyNhJu0DsK70TgpOEEZcJZXmdg1m95UmRIq6bFQkiqIogPIUnn4XkZc34eBwSxvBNPjNeexNeb2EyNoCX+tJRZrCS4HdPavel0JhGJVMsQL7Y77LN0SLdCnY8VRiC4Wb7kpnyl95bcJ17S/kreMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zHVsVN94SSCHIVyOQVaVytdm9yDfTmajA/AjeITELOk=;
+ b=TxJ3uMm6zbflDKottPFC5iccZFk821NQ/poTnJSB3q9Bn7yKCZyrsNKqdQ9fGBAModVFDiarkaL1fphwMhtV517fcNcd7kXhOfoJ3YppM4/ESDroI9NNH+adH3ze5AahJ3H+YggNLmmkUJz6CYaO9vlrsKZAJgHSeqp3rz/rk3zBx0O8fUqyQpnj187/s8CQ5zoAepJWMGTEUE1WnmIyJgHrINQBaTpND5ZGLw4BRSjbz8eGNcnnIH+Z0jhGcVF5wm53acqsOtHJAX9FvL/tpI8kyKhXia1jeZ0cWnPk3vZ3fMdp3ZvrdN5ft0f09XuRaqGHa5I2oQfBuNhQXarH6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zHVsVN94SSCHIVyOQVaVytdm9yDfTmajA/AjeITELOk=;
+ b=ZwMjfMIjmJ9i+pvvSw2JD1bxLs5HePVrf63Dshvnk7rxGQsF6SNY7FuB1MX1PcuNzOXMhFpKkiDVAMn+ywFnXQKqwSAY04l+loqwrxUQi0tm7bQqTw1Ec6Rcoa9xIsD3KsX2KQ2FbnugaWOQBGmY+t168jbIXaCwqGsdkR9wL3M=
+Received: from DB8PR04MB6985.eurprd04.prod.outlook.com (52.133.243.85) by
+ DB8PR04MB5851.eurprd04.prod.outlook.com (20.179.12.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.16; Mon, 16 Mar 2020 09:00:49 +0000
+Received: from DB8PR04MB6985.eurprd04.prod.outlook.com
+ ([fe80::a523:58cc:b584:2c2]) by DB8PR04MB6985.eurprd04.prod.outlook.com
+ ([fe80::a523:58cc:b584:2c2%6]) with mapi id 15.20.2814.021; Mon, 16 Mar 2020
+ 09:00:49 +0000
+From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net 1/3] net: fsl/fman: treat all RGMII modes in
+ memac_adjust_link()
+Thread-Topic: [PATCH net 1/3] net: fsl/fman: treat all RGMII modes in
+ memac_adjust_link()
+Thread-Index: AQHV+S+S+wpsiCwtU0+eT3Hbq+n4/6hImSeAgAJDFLCAAA4jgIAABdtA
+Date:   Mon, 16 Mar 2020 09:00:49 +0000
+Message-ID: <DB8PR04MB69859B6027FCF8DFAF896F49ECF90@DB8PR04MB6985.eurprd04.prod.outlook.com>
+References: <1584101065-3482-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1584101065-3482-2-git-send-email-madalin.bucur@oss.nxp.com>
+ <20200314211601.GA8622@lunn.ch>
+ <DB8PR04MB69859D7B209FEA972409FEEBECF90@DB8PR04MB6985.eurprd04.prod.outlook.com>
+ <20200316083913.GC8524@lunn.ch>
+In-Reply-To: <20200316083913.GC8524@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=madalin.bucur@oss.nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [86.120.221.86]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: aa586f9d-687c-4514-b782-08d7c9888617
+x-ms-traffictypediagnostic: DB8PR04MB5851:|DB8PR04MB5851:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB5851D372F7CC5FA6A7691961ADF90@DB8PR04MB5851.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 03449D5DD1
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(39860400002)(396003)(346002)(366004)(199004)(52536014)(5660300002)(4326008)(53546011)(6506007)(478600001)(86362001)(2906002)(81156014)(33656002)(81166006)(26005)(186003)(8936002)(8676002)(66446008)(66556008)(55016002)(66946007)(66476007)(76116006)(9686003)(64756008)(54906003)(110136005)(4744005)(7696005)(316002)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5851;H:DB8PR04MB6985.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
+received-spf: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YjRbpuU2tfWwRG8eRVdliPcsK375cDvCel4b10XIgf2v2t12iFJp++CI4fOrIdDt4SGukbvmxW+htzKoQeXfrq9bSRPYpt81RUqSdTMt77oRw9WDQqwggwXfo++nPxaV3kmR9kK4RDGWLjF2KDUFCk8reLcDYe9csYVLsTLFlRX0PhAYAh18OFvIb/mBSMHo0sT92CP3+Tz9HLbwdHllCsdvqInYuFJM94Pxpm0bpdwbFTJ1Mcp1GeP+ndX+1EkWcXwcdV4QG9+meNJb1QmnsQ4I92/CVLP2YUII921C8tkfjlag5Up3yNxdNL7JT/O874SlgM8vIRe0/5aJxftMIk7sPfTHwLuBPf235wjitLSAaMlViamUNBBZ/OJpSD4N8+aBPeryCkZMqJWLntMD6atdFTuOJ0fg4Agr7YGqPKpqLOCsfbbfoEZelxsyz4+G
+x-ms-exchange-antispam-messagedata: 3mvDcOOBmr47vocuM1gu0BIOKpDrVyNyKprlSbYfTgjbJZOKrU8cai8n2sQTh6FL8IXRsSO4wW2SzNrr2j2CVEi3jvHBX26TyH8o4UOiA5y1jrFGH5NnGFtn9hFj2Qf00UqKOCcxjhyPcuVYN3XXzg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa586f9d-687c-4514-b782-08d7c9888617
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2020 09:00:49.7127
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jqu/2xNquolmWAuVhV0il7vZo8gzMBq3mww8JuTLPDOmyaroqIHJrQuZCCjLeopslZbDMVaUFDzc9LFyfqwOtQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5851
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some Chrome OS devices with Embedded Controllers (EC) can read and
-modify Type C port state.
+> -----Original Message-----
+> From: Andrew Lunn <andrew@lunn.ch>
+> Sent: Monday, March 16, 2020 10:39 AM
+> To: Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>
+> Cc: davem@davemloft.net; netdev@vger.kernel.org;
+> devicetree@vger.kernel.org; shawnguo@kernel.org; Leo Li
+> <leoyang.li@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH net 1/3] net: fsl/fman: treat all RGMII modes in
+> memac_adjust_link()
+>=20
+> > > Hi Madalin
+> > >
+> > > You can use phy_interface_mode_is_rgmii()
+> > >
+> > >     Andrew
+> >
+> > I have that on the todo list for all the places in the code, but that's
+> > net-next material.
+>=20
+> I don't see why it cannot be used here, for this case, now.
+>=20
+>   Andrew
 
-Add an entry in the DT Bindings documentation that lists out the logical
-device and describes the relevant port information, to be used by the
-corresponding driver.
-
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
-
-Changes in v5:
-- Updated License identifier.
-- Updated DT example to be a full example.
-
-Changes in v4:
-- Rebased on top of usb-connector.yaml, so the connector property now
-  directly references the usb-connector DT binding.
-
- .../bindings/chrome/google,cros-ec-typec.yaml | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-
-diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-new file mode 100644
-index 0000000000000..6d7396ab8beec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Google Chrome OS EC(Embedded Controller) Type C port driver.
-+
-+maintainers:
-+  - Benson Leung <bleung@chromium.org>
-+  - Prashant Malani <pmalani@chromium.org>
-+
-+description:
-+  Chrome OS devices have an Embedded Controller(EC) which has access to
-+  Type C port state. This node is intended to allow the host to read and
-+  control the Type C ports. The node for this device should be under a
-+  cros-ec node like google,cros-ec-spi.
-+
-+properties:
-+  compatible:
-+    const: google,cros-ec-typec
-+
-+  connector:
-+    $ref: /schemas/connector/usb-connector.yaml#
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |+
-+    spi0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      cros_ec: ec@0 {
-+        compatible = "google,cros-ec-spi";
-+        reg = <0>;
-+
-+        typec {
-+          compatible = "google,cros-ec-typec";
-+
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          connector@0 {
-+            compatible = "usb-c-connector";
-+            reg = <0>;
-+            power-role = "dual";
-+            data-role = "dual";
-+            try-power-role = "source";
-+          };
-+        };
-+      };
-+    };
--- 
-2.25.1.481.gfbce0eb801-goog
-
+I'll send a v2 with this, I was referring to the rest of them.
