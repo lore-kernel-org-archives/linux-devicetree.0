@@ -2,85 +2,102 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE40C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4A3C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE1F206C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3226520679
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 16:55:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hJIahldB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="trk/L3v+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732162AbgCPQtD (ORCPT
+        id S1731729AbgCPQzC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 12:49:03 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34871 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731717AbgCPQtC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 12:49:02 -0400
-Received: by mail-pj1-f67.google.com with SMTP id mq3so9022830pjb.0
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 09:49:02 -0700 (PDT)
+        Mon, 16 Mar 2020 12:55:02 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37036 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731665AbgCPQzC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 12:55:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 6so22142334wre.4;
+        Mon, 16 Mar 2020 09:55:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=h0lz/JWrV5mBVYYmE31rxyRYjDlj4PusyG3VqpF4T6k=;
-        b=hJIahldB3kwBLmF6WEX4+g8T/gEoJF2F/Zu1jmwyaJFvNiPSoqrfsVl+yWNPucXmIC
-         r3NFvkbEXQl7516mNRO+UtEwwJyl5SVVupUXNEA61yHib90qcteXAJwwcWxRgyJgMVNJ
-         pKlnibyS2ab8X3VmKFnKDEvW8CYKK8R91yqmg0TPW686zsVYvtQrJc7MvH6/PDOsErBO
-         h3fiqhzxUa59KRwSz039ws3/pRdwN6iDO+xiNJffBT/cSCpP8hKzpLC2rmMDt+t7DX6C
-         hnCktZvmX02Slz537BiZqERfy8gvfVw7Sa0lNT/vWhdvZtpB2pdyvjPoLxlfp9a4zZFn
-         rXaw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=AQf2iKCEsB/GA9ZIoAYJPyIaIBV5OxWUOZmM58+bafY=;
+        b=trk/L3v++ANqrIUVITso6ThLzoP1KahOPQyG7f8RK5X5q2u/wheKNMpf80UEm7iu5p
+         YM/EYZSgLlPVf3nZ/cVs67W9ZdFUUkSMnASQkzH5pE4ED+HmN8NehI4U6sKayo9dGb7d
+         zIBRSuqUnxQJu9mC5j98ddHovxCBddjWuvkzv9LarLbnWbeMnxRFxli8WIadqM+P2Zmv
+         3HvLdKmgkN4foVGlIhjfyjledLRYqhQtOya+ywYKYBgl9hodD1aE1UQteJSqHl1YNkVm
+         qak9hC1IS0zag0Aw5T00naucmeaCjTOanLhKv/mDlE3dD8SPLYPUCXxvehtXd9EUrr7Y
+         IGxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=h0lz/JWrV5mBVYYmE31rxyRYjDlj4PusyG3VqpF4T6k=;
-        b=q1rEMCAlifTq3La/S/rCGU0M8biVMnOtdsSFO9NMlRd3mXI5t3RNzwWS/01ZzdvXJm
-         qotVlPWC3DYS7kra4KY8E+RLhTcrLFBvHwmxrS/Q6p1c87bfJU04P85T644PhA33vFW7
-         LoBTEhDQ0jQDQSE75qHthP1IlzyTieyjTuhzMfKUQbfZcljk1vPG8PfUZu7SErUOiJAU
-         cZnOLVRaq+y6Uae1RPbnLohga7/XqfYp4On5qsGMPPbgQt2cMYNXIEXbarnYVmuaMR25
-         pSecajiip357T/Mvb5ygwj1/K0AakYkMbAB2/zlYaBdr7GzRsFwcOSX2wikMEAdvCuIZ
-         qi+Q==
-X-Gm-Message-State: ANhLgQ23PFQ0XXCRldOjF6gPihL9lQeCnkWGFuqlOOwo4RFr/NM0sEwI
-        k9PbbVAwKUKq2sVimPCJd3l6PQ==
-X-Google-Smtp-Source: ADFU+vvHnb3P6+r+gPmJOlmhsfZRus2ot8Z7/8HVSaasGivs9AufsgyzegE0B/1zCvhyMqounZtaVQ==
-X-Received: by 2002:a17:90a:a890:: with SMTP id h16mr447564pjq.55.1584377341627;
-        Mon, 16 Mar 2020 09:49:01 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:dcc4:2a10:1b38:3edc])
-        by smtp.gmail.com with ESMTPSA id e24sm407119pfi.200.2020.03.16.09.49.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Mar 2020 09:49:00 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: meson-g12a-tanix-tx5max: add initial device tree
-In-Reply-To: <1582991214-85209-3-git-send-email-christianshewitt@gmail.com>
-References: <1582991214-85209-1-git-send-email-christianshewitt@gmail.com> <1582991214-85209-3-git-send-email-christianshewitt@gmail.com>
-Date:   Mon, 16 Mar 2020 09:49:00 -0700
-Message-ID: <7hzhcgutxf.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AQf2iKCEsB/GA9ZIoAYJPyIaIBV5OxWUOZmM58+bafY=;
+        b=a2XGwRKwU2cn80lxJB+xR91gc4kNhGAbhlKvWHmr9lmt8S014m9/9EX8nlUOwxF8y9
+         Ql+moKX+oCw4fnnABcX9RyvyH5xLrF/06Omme/KavQ8YRVnt0EdC+FCqUNffKbSiwr6X
+         8bgO20oOUeNx/hEPs8kCeYAMxwDZ79si5ZiYcgxc7t5ulnj/ipmnw9t7Y3HqBYb4cIQL
+         Aq2JOMMbkXAwOk6wqhXcWUbbHl9XhQm7M+G8Yce2/wpLPa+flw2oyu74PJbb2M8lthk8
+         aG8EIROFYZxn9E8+Cw9fFW2pgrFUw/qoHxBcRXPt+3PVnPvA67eKZzfjAfcIEQIwDoG3
+         LgFQ==
+X-Gm-Message-State: ANhLgQ32FxXeftGDSQfR1IkUanA6rvrAK/TxNw05wRpPD3wt+nZzt2Zd
+        aezAzT736h0X3znxNC90Xys=
+X-Google-Smtp-Source: ADFU+vvHWm61UIugggtzM8uXyDIcDZdkvbs/hkRGyfkWWy7W9YjHvfNGqeh/+hEgajI/lmViYUCLzg==
+X-Received: by 2002:adf:e68d:: with SMTP id r13mr328647wrm.170.1584377700423;
+        Mon, 16 Mar 2020 09:55:00 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id x17sm359381wmi.28.2020.03.16.09.54.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Mar 2020 09:54:59 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: rockchip: rk3xxx: fix L2 cache-controller nodename
+Date:   Mon, 16 Mar 2020 17:54:53 +0100
+Message-Id: <20200316165453.3022-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Christian Hewitt <christianshewitt@gmail.com> writes:
+A test with the command below gives for example this error:
 
-> The Oranth Tanix TX5 Max is based on the Amlogic U200 reference design
-> using the S905X2 chipset. Hardware specification:
+arch/arm/boot/dts/rk3066a-bqcurie2.dt.yaml:
+l2-cache-controller@10138000: $nodename:0:
+'l2-cache-controller@10138000'
+does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
-Similiar with the other new boards being submitted.  Can you make a
-U20[01] .dtsi to share between all these common designs?
+Fix error by changing nodename to 'cache-controller'.
 
-Thanks,
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/l2c2x0.yaml
 
-Kevin
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3xxx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 9438332b8..f9fcb7e96 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -91,7 +91,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	L2: l2-cache-controller@10138000 {
++	L2: cache-controller@10138000 {
+ 		compatible = "arm,pl310-cache";
+ 		reg = <0x10138000 0x1000>;
+ 		cache-unified;
+-- 
+2.11.0
+
