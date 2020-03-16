@@ -2,109 +2,83 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B64C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 14:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B7DC0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 14:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBDF20719
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 14:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="WOiWUtvT"
+	by mail.kernel.org (Postfix) with ESMTP id C2B052071C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 14:29:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731411AbgCPO1m (ORCPT
+        id S1731439AbgCPO35 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 10:27:42 -0400
-Received: from www381.your-server.de ([78.46.137.84]:47164 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730262AbgCPO1m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 10:27:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jGnxTV0/lTy7cBQWWgSE97gm+Q1DbNSaIg4kn/NeogA=; b=WOiWUtvTiCmPqfsfTtwnF5wEvp
-        rvDPt5RH+r7YMpdAUGwkN41uRxMSZ2i7zB/oQmPjZ34tZtXmVDfNWIuP/RizV6kdnzPYWmFVJp/Gx
-        q7mkHuawxTl+U4FkrER6rgWdLz5uEjStGewUvtd+sPwIfF7UlEF5j2Efx185MP6iDXPsfXI5zUSiq
-        LsJyA5wDdWCztHhifNdDgqa7z6pW651JZ2svAvOUrYQnMqTVM1aidzkujjHbn8TD/u5a4JYvpIp0u
-        n6H3ocF7yCMnh/xaS9Jm53uLUoaglQA10zMgDghB9zIYCL3JE633SEwJisua3Ufjl0WIn/JyE+ftb
-        Aq8tWFjQ==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jDqiS-00041A-4T; Mon, 16 Mar 2020 15:27:40 +0100
-Received: from [93.104.121.61] (helo=[192.168.178.20])
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jDqiR-000O1N-Ph; Mon, 16 Mar 2020 15:27:39 +0100
-Subject: Re: [PATCH v2 1/6] iio: imu: adis: Add Managed device functions
-To:     =?UTF-8?Q?Nuno_S=c3=a1?= <nuno.sa@analog.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mon, 16 Mar 2020 10:29:57 -0400
+Received: from smtp2.ustc.edu.cn ([202.38.64.46]:43193 "EHLO ustc.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731477AbgCPO35 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 10:29:57 -0400
+Received: from xhacker (unknown [101.86.20.80])
+        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygAnL5NgjW9e+D1PAA--.19840S2;
+        Mon, 16 Mar 2020 22:29:53 +0800 (CST)
+Date:   Mon, 16 Mar 2020 22:28:08 +0800
+From:   Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-References: <20200316125312.39178-1-nuno.sa@analog.com>
- <20200316125312.39178-2-nuno.sa@analog.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <99848a31-93db-0f09-df4e-3573500abc8c@metafoo.de>
-Date:   Mon, 16 Mar 2020 15:27:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v2 0/4] regulator: add MP8867/MP8869 support
+Message-ID: <20200316222808.6453d849@xhacker>
 MIME-Version: 1.0
-In-Reply-To: <20200316125312.39178-2-nuno.sa@analog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25753/Mon Mar 16 14:05:55 2020)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: LkAmygAnL5NgjW9e+D1PAA--.19840S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xryktw13Zw4fZFy7Jw47urg_yoW3ZwbEkw
+        1xAa4xGwsrZFs5Cay0vFsFgry5CF4jqay7XFnxKrWFvFy7Za4UG39rZr97Aw48JayUZrnr
+        Ww1xJr40vr43WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbF8YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E
+        4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+        WUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+        Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rV
+        WrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_
+        GrUvcSsGvfC2KfnxnUUI43ZEXa7IU86OJ5UUUUU==
+X-CM-SenderInfo: xmv2xttqjtqzxdloh3xvwfhvlgxou0/
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/16/20 1:53 PM, Nuno Sá wrote:
-> diff --git a/drivers/iio/imu/adis_trigger.c b/drivers/iio/imu/adis_trigger.c
-> index 8b9cd02c0f9f..9e393819d238 100644
-> --- a/drivers/iio/imu/adis_trigger.c
-> +++ b/drivers/iio/imu/adis_trigger.c
-> @@ -27,6 +27,13 @@ static const struct iio_trigger_ops adis_trigger_ops = {
->   	.set_trigger_state = &adis_data_rdy_trigger_set_state,
->   };
->   
-> +static inline void adis_trigger_setup(struct adis *adis)
-No need for inline. The compiler will figure this out on its own.
-> +{
-> +	adis->trig->dev.parent = &adis->spi->dev;
-> +	adis->trig->ops = &adis_trigger_ops;
-> +	iio_trigger_set_drvdata(adis->trig, adis);
-> +}
-> +
->   /**
->    * adis_probe_trigger() - Sets up trigger for a adis device
->    * @adis: The adis device
-> @@ -45,9 +52,7 @@ int adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev)
->   	if (adis->trig == NULL)
->   		return -ENOMEM;
->   
-> -	adis->trig->dev.parent = &adis->spi->dev;
-> -	adis->trig->ops = &adis_trigger_ops;
-> -	iio_trigger_set_drvdata(adis->trig, adis);
-> +	adis_trigger_setup(adis);
->   
->   	ret = request_irq(adis->spi->irq,
->   			  &iio_trigger_generic_data_rdy_poll,
-> @@ -73,6 +78,36 @@ int adis_probe_trigger(struct adis *adis, struct iio_dev *indio_dev)
->   }
->   EXPORT_SYMBOL_GPL(adis_probe_trigger);
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+
+The MP8867/MP8869 from Monolithic Power Systems is a single output
+DC/DC converter. The voltage can be controlled via I2C.
+
+since v1:
+  - rebase on regulator for-next branch
+
+Jisheng Zhang (4):
+  regulator: bindings: add MPS mp8869 voltage regulator
+  regulator: add support for MP8869 regulator
+  dt-bindings: mp886x: Document MP8867 support
+  regulator: mp886x: add MP8867 support
+
+ .../devicetree/bindings/regulator/mp886x.txt  |  27 ++
+ drivers/regulator/Kconfig                     |   7 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/mp886x.c                    | 290 ++++++++++++++++++
+ 4 files changed, 325 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mp886x.txt
+ create mode 100644 drivers/regulator/mp886x.c
+
+-- 
+2.24.0
+
 
