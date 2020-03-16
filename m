@@ -2,95 +2,128 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D72C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 19:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A4CC0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 19:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535F020663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 19:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7D92073E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 19:58:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tUMLz8BV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FY5vy84b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732375AbgCPTLY (ORCPT
+        id S1732476AbgCPT6P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 15:11:24 -0400
-Received: from vps.xff.cz ([195.181.215.36]:42666 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732298AbgCPTLY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 15:11:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1584385882; bh=FW1eAGDaOwZotXT5BTvXsi+IhkF86WgYclyjbaMj8x0=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=tUMLz8BV7T0c827DnXQtea8vx0HkcPUk4ToUSZaHMUkDk+9csPNi+kqJ8KJVU2vjg
-         5mxCNIApW9dNDx1t6jX13OOLMFgskXtNRfdIW7qMODyiG26wqc/yvtGDBkv7AlsSQA
-         eUYRwhujgrnht7UefJkn1OgNsJQ8aJw8PnwwT1h0=
-Date:   Mon, 16 Mar 2020 20:11:22 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 3/5] drm: panel: add Xingbangda XBD599 panel
-Message-ID: <20200316191122.yeb5l22ldtt73vx5@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com
-References: <20200316133503.144650-1-icenowy@aosc.io>
- <20200316133503.144650-4-icenowy@aosc.io>
+        Mon, 16 Mar 2020 15:58:15 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:44925 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732366AbgCPT6O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 15:58:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584388694; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=0jutu2TrYwknNeBbhpvzrOvPcmG3lvgPL/hDLeN1Qxs=; b=FY5vy84by7bcFi8yfzglx1yjuFD8+yvY/3FUdQdqJxGcZmPlVTwJNIfgi/xE9RavmGtc5yOh
+ 4E24jK1rp8c97XGTtZ6ilWdWTSs3UaeRGjcarEPV64DpjTUVHtlkgMJctsoD3v4a0u5Y063Z
+ T2BM8iDgv1CwUK53oQWr0PHLLmM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e6fda52.7fbaa5492d50-smtp-out-n03;
+ Mon, 16 Mar 2020 19:58:10 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5EF4EC433BA; Mon, 16 Mar 2020 19:58:09 +0000 (UTC)
+Received: from [192.168.1.9] (cpe-75-80-185-151.san.res.rr.com [75.80.185.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53466C433CB;
+        Mon, 16 Mar 2020 19:58:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53466C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH 2/3] clk: qcom: gcc: Add USB3 PIPE clock operations
+To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <1584172319-24843-1-git-send-email-wcheng@codeaurora.org>
+ <1584172319-24843-3-git-send-email-wcheng@codeaurora.org>
+ <158437819409.88485.6326749791923076608@swboyd.mtv.corp.google.com>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <9707b6f5-89d4-9800-bee2-825877b535ac@codeaurora.org>
+Date:   Mon, 16 Mar 2020 12:58:07 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200316133503.144650-4-icenowy@aosc.io>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <158437819409.88485.6326749791923076608@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Icenowy,
+Hi Stephen,
 
-On Mon, Mar 16, 2020 at 09:35:01PM +0800, Icenowy Zheng wrote:
-> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI IPS LCD panel made by
-> Xingbangda, which is used on PinePhone final assembled phones.
->
-> [snip]
->
-> +static const struct drm_display_mode xbd599_default_mode = {
-> +	.hdisplay    = 720,
-> +	.hsync_start = 720 + 40,
-> +	.hsync_end   = 720 + 40 + 40,
-> +	.htotal	     = 720 + 40 + 40 + 40,
-> +	.vdisplay    = 1440,
-> +	.vsync_start = 1440 + 18,
-> +	.vsync_end   = 1440 + 18 + 10,
-> +	.vtotal	     = 1440 + 18 + 10 + 17,
-> +	.vrefresh    = 60,
+Thanks for the feedback.
 
-Does the display actually run for you at 60fps? I measured 36.63 FPS with
-a DRM app that just does DRM_IOCTL_MODE_ATOMIC update after each
-DRM_EVENT_FLIP_COMPLETE event.
+On 3/16/2020 10:03 AM, Stephen Boyd wrote:
+> Quoting Wesley Cheng (2020-03-14 00:51:58)
+>> Add the USB3 PIPE clock structures, so that the USB driver can
+>> vote for the GCC to enable/disable it when required.  This clock
+>> is needed for SSUSB operation.
+>>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>> ---
+>>  drivers/clk/qcom/gcc-sm8150.c | 26 ++++++++++++++++++++++++++
+> 
+> Can you please combine these two patches and add sm8150 in the subject?
+> 
 
-thank you and regards,
-	o.
+Sure, I'll combine the two patches into one and include the SM8150 tag
+in the subject on the next patch series.
 
-> +	.clock	     = 69000,
-> +	.flags	     = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
-> +
-> +	.width_mm    = 68,
-> +	.height_mm   = 136,
-> +	.type        = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-> +};
-> +
+>>  1 file changed, 26 insertions(+)
+>>
+>> diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+>> index d0cd03d..ef98fdc 100644
+>> --- a/drivers/clk/qcom/gcc-sm8150.c
+>> +++ b/drivers/clk/qcom/gcc-sm8150.c
+>> @@ -3172,6 +3172,18 @@ enum {
+>>         },
+>>  };
+>>  
+>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
+>> +       .halt_check = BRANCH_HALT_SKIP,
+>> +       .clkr = {
+>> +               .enable_reg = 0xf058,
+>> +               .enable_mask = BIT(0),
+>> +               .hw.init = &(struct clk_init_data){
+>> +                       .name = "gcc_usb3_prim_phy_pipe_clk",
+>> +                       .ops = &clk_branch2_ops,
+>> +               },
+>> +       },
+>> +};
+>> +
+>>  static struct clk_branch gcc_usb3_sec_clkref_clk = {
+>>         .halt_reg = 0x8c028,
+>>         .halt_check = BRANCH_HALT,
+>> @@ -3219,6 +3231,18 @@ enum {
+>>         },
+>>  };
+>>  
+>> +static struct clk_branch gcc_usb3_sec_phy_pipe_clk = {
+>> +       .halt_check = BRANCH_HALT_SKIP,
+> 
+> Sad to see that we'll never resolve this.
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
