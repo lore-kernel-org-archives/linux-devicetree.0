@@ -2,73 +2,127 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ED7C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E6BC0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B2A206B1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF13D206B1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 08:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DqG8FnLt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J10R4vh7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbgCPIjU (ORCPT
+        id S1730103AbgCPIoP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 04:39:20 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:37850 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730048AbgCPIjU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 04:39:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=3DP+sd7j/ZzTQQA7FONRN+KtsAjsjix8FVp93YaNriU=; b=DqG8FnLtpeAGJ3ywim5K/6XLR8
-        KJKW2ANqD9R5c5BIyyf0I6y8xuf2QXqo76vZxNUG5if+MiPqe2YGXKltmG+qXfLJGp20v+wfzkXpi
-        9q8Xk+fLg8JWmSsRgYIjKqWUKh1LepfNq+29d65MyaFVdEZgg/TZXsG8LLXQTi4/E6bg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jDlHF-0005ox-7G; Mon, 16 Mar 2020 09:39:13 +0100
-Date:   Mon, 16 Mar 2020 09:39:13 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net 1/3] net: fsl/fman: treat all RGMII modes in
- memac_adjust_link()
-Message-ID: <20200316083913.GC8524@lunn.ch>
-References: <1584101065-3482-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1584101065-3482-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20200314211601.GA8622@lunn.ch>
- <DB8PR04MB69859D7B209FEA972409FEEBECF90@DB8PR04MB6985.eurprd04.prod.outlook.com>
+        Mon, 16 Mar 2020 04:44:15 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44618 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730085AbgCPIoP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 04:44:15 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02G8hE44121930;
+        Mon, 16 Mar 2020 03:43:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584348194;
+        bh=kFdEoCHU6eRacjLcxiP9sKp6oWTiEshU4OrA1P2u8Fw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=J10R4vh7hYNZqb1zd6gZow5kPEKiVagRH1eiUJ7Ai5j4OV/CjC9OZ1ATS9CD8vZCh
+         Dmz+cWZZ1F2ctNW1ZH2546m2n95Cyhy6bpiB+OZKsbRhSop3x8ZU5oUWHsvExpq43v
+         d9LhcAc+xKrk9Z/iBMv5i33vVBCGgtWGpeMYvYig=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02G8hEn1045978;
+        Mon, 16 Mar 2020 03:43:14 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
+ Mar 2020 03:43:13 -0500
+Received: from localhost.localdomain (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 16 Mar 2020 03:43:14 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02G8gkl3068652;
+        Mon, 16 Mar 2020 03:42:48 -0500
+Subject: Re: [PATCH v1 35/36] dt-bindings: display: convert lgphilips,lb035q02
+ to DT Schema
+To:     Sam Ravnborg <sam@ravnborg.org>
+CC:     <dri-devel@lists.freedesktop.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Chris Zhong <zyw@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
+        Nikolaus Schaller <hns@goldelico.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-spi@vger.kernel.org>, Marco Franchi <marco.franchi@nxp.com>,
+        Marek Belisko <marek@goldelico.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Nickey Yang <nickey.yang@rock-chips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Peter Rosin <peda@axentia.se>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stefan Mavrodiev <stefan@olimex.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Werner Johansson <werner.johansson@sonymobile.com>
+References: <20200315134416.16527-1-sam@ravnborg.org>
+ <20200315134416.16527-36-sam@ravnborg.org>
+ <a73da9d3-43b2-3ce7-85e9-8135dbf48e98@ti.com>
+ <20200316082607.GA18510@ravnborg.org>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <a634d733-4b88-9d5a-09a1-c9551d8a077a@ti.com>
+Date:   Mon, 16 Mar 2020 10:42:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB8PR04MB69859D7B209FEA972409FEEBECF90@DB8PR04MB6985.eurprd04.prod.outlook.com>
+In-Reply-To: <20200316082607.GA18510@ravnborg.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> > Hi Madalin
-> > 
-> > You can use phy_interface_mode_is_rgmii()
-> > 
-> >     Andrew
+On 16/03/2020 10:26, Sam Ravnborg wrote:
+
+>> Isn't this also compatible with panel-simple bindings? 'label' is the only
+>> one not in panel-simple, but that's optional and has never been used by the
+>> panel driver.
+> The panel is a SPI slave - which is not too obvious from the old
+> binding.
 > 
-> I have that on the todo list for all the places in the code, but that's
-> net-next material.
+> The new DT Schema includes spi/spi-slave.yaml to give the binding
+> proper access to the spi slave properties.
+> 
+> That would not be possible with panel-simple binding as no further
+> properties are allowed with the panel-simple binding.
+> 
+> I hope this explains why there is a dedicated binding for this panel.
 
-I don't see why it cannot be used here, for this case, now.
+Hmm, but how is this different than, say, DSI panels? There are DSI panels in panel-simple bindings, 
+and those might require DSI bus parameters ('reg' in the minimum).
 
-  Andrew
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
