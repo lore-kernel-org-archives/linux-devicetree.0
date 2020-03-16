@@ -2,91 +2,112 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F84C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0812C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 13:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B33020658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:55:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584363353;
-	bh=2HQwa7nwNFrEoeIhVSQz+z9hPaegOb5WhBxknPBYxLU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ne2eI+/FxW6fJsRXiE2bF5N/enLfN9WkRfNtA5bM2T82HM0r3u3D+C0ejNzXnUviD
-	 8uhjtDUoLCsgW5Rt+gsASQRtI3yidSdIdLt/HjlgJDkijJLwShCAOiNkGytgkbzyjy
-	 iQEMiGQtggEJYAikjDr4Ua/R79DoB7o1RDksk1EE=
+	by mail.kernel.org (Postfix) with ESMTP id B6AA92051A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 13:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O245OyKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgCPMzw (ORCPT
+        id S1731074AbgCPNAQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:55:52 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:34102 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731056AbgCPMzw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 08:55:52 -0400
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 02GCtj17010775
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 21:55:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 02GCtj17010775
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584363346;
-        bh=2HQwa7nwNFrEoeIhVSQz+z9hPaegOb5WhBxknPBYxLU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=No96Wbyqqkf3oxZoxUKEsFANRPMHct/0RSVDnoVy4Xc+6L9nPItIhOFo9xAeMD47h
-         utrxewZ6toi37TMD2rqdmzUu1QXTMWaXW2xxLGBNy3fXINYD+KAd3yAhGJsBlh6snB
-         CAhi7nQTwcdWrnHr54PgxPd149VDmOkYVQto6ruTiU9mYOVKEJBU4ws+ZWtmoflzsZ
-         kRca3oJRmcC6F6wCQ4Dvon34Su0Kv2Vm14x3lu8i1LLmTIbJTTfuVec/Q53Shj2yMO
-         4dCwtH67oGQLY4/fdztCBwBDYHTVvVWpBOP2apIqT2OQE96DVD4bi3x1F4xHpCaIKO
-         5kyCwUpSN/pGQ==
-X-Nifty-SrcIP: [209.85.222.49]
-Received: by mail-ua1-f49.google.com with SMTP id a33so6439713uad.11
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 05:55:46 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ34bv/ZcBH3qQW8ZQav/4Ii/k7UnNVaVJ1h0tXsWrtMQAEpybx6
-        zQp8AuZzqTWNQmvWvy5WA9EpfL4XKToZJ3d3RqY=
-X-Google-Smtp-Source: ADFU+vu3J2cRyDb6ek6J1P/y4nL1obn2Se7a010pRaJsc0IwGE/IEI6eKiVqsyEA+CwYoVvWuiwVJorthFmddZ79YEE=
-X-Received: by 2002:a9f:28c5:: with SMTP id d63mr8234963uad.25.1584363345215;
- Mon, 16 Mar 2020 05:55:45 -0700 (PDT)
+        Mon, 16 Mar 2020 09:00:16 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40739 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731062AbgCPNAQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 09:00:16 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a24so21912059edy.7;
+        Mon, 16 Mar 2020 06:00:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nGW/IHmamfb5AlTYhmcZTb1SURVSQakTPzqAp6hWS1s=;
+        b=O245OyKAMGDHtehBjleZdFAz910uOpYK3mJC1djuWEQjRF2YUTjWz4dQmBrCe8cgFF
+         mhmaLSeR3hPDsDkcTHaJW521Wb02Vwvtg8IGWng89BTo57wDhgBDLB3Rq0lmembp6m+I
+         mYsmk9VhsZyUQHrEizg10A+wcNEw+LAkL/4zxmOGHkrvV+dXLMm4S9ny/6UAjQ5OtXXj
+         vVKMWPYGzJeeIKS7iMPCeyg4VSUEZU4f5lAfcIGQSEY9NiAlsfP6Z0kovt0Ae5duyAvb
+         4oLd6Q6ZJ+TalM/MQLJwgDL58jASWYSuNwJTNwQuKkaqHzKZfoOMd3SMQGdIUFhqgT/8
+         VhnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nGW/IHmamfb5AlTYhmcZTb1SURVSQakTPzqAp6hWS1s=;
+        b=uddRkTgwu+J0g3R785ZupyVhApGY75rpvww34i2Y0oIpLSTmgndMQgtw55ECEtV6sw
+         eLqaBPizsjkDnGziAM3fgcWu9nf/m6/4mbeyPwVg/XYkW9nUUxCE3otUSDk3CImezFG1
+         eBF3tbpRZ2sLVnHFQG1lpCQ5xsnApI3tTzhRaMyt7FcoLCeE8ww8Qz2K7qASc2+UPgDW
+         6O5SVtkefNPt240T+v9555yvBACqksEOPkex56FzxcmU9egR94DqiqDD74qQksPg2FjA
+         KgGIPdg41WNCUCmm76v35lCIFWvowXrR3aB6n6A8XaQcH/9FCekFJC3KjTKcqNt8WH2l
+         S/ow==
+X-Gm-Message-State: ANhLgQ24otxgjt/Gm13MTCsCBgby4GIdC/q3UlrJCXM2EB7+75AFeupJ
+        Cm0X7OqMfZ1o+qbVHVCAZMJFkxzQuL54OvQ6hCg=
+X-Google-Smtp-Source: ADFU+vuFF8kxObxcwgPaNFJj+U1xonZBMwzYEbw3lKnLTglbzK4OWJWe8xUD7zVV4Dij+l6xb/rvQ5evCxoz1S/7nQU=
+X-Received: by 2002:a17:906:9451:: with SMTP id z17mr4369711ejx.176.1584363614345;
+ Mon, 16 Mar 2020 06:00:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584061096-23686-1-git-send-email-hayashi.kunihiko@socionext.com> <1584061096-23686-11-git-send-email-hayashi.kunihiko@socionext.com>
-In-Reply-To: <1584061096-23686-11-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 16 Mar 2020 21:55:09 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ98kUHQS33jQL+Kq5E48H75yvYk_qsWxT9ubrP-yRCdg@mail.gmail.com>
-Message-ID: <CAK7LNAQ98kUHQS33jQL+Kq5E48H75yvYk_qsWxT9ubrP-yRCdg@mail.gmail.com>
-Subject: Re: [PATCH 10/10] arm64: dts: uniphier: Stabilize Ethernet RGMII mode
- of LD20 global and PXs3 ref board
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
+References: <20200314224340.1544-1-olteanv@gmail.com> <20200314224340.1544-7-olteanv@gmail.com>
+ <20200316122613.GE5010@sirena.org.uk> <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
+ <20200316124945.GF5010@sirena.org.uk>
+In-Reply-To: <20200316124945.GF5010@sirena.org.uk>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Mon, 16 Mar 2020 15:00:03 +0200
+Message-ID: <CA+h21hpoHGuDwpOqtWJFO7+0mQVUrmcBLW7nnGq6dt3QU5axfw@mail.gmail.com>
+Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
+ queue with a simple completion
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
+        angelo@sysam.it, andrew.smirnov@gmail.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
+        Michael Walle <michael@walle.cc>, peng.ma@nxp.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 9:58 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
+On Mon, 16 Mar 2020 at 14:49, Mark Brown <broonie@kernel.org> wrote:
 >
-> The RGMII PHY needs to change drive-strength properties of the Ethernet
-> Tx pins to stabilize the PHY.
+> On Mon, Mar 16, 2020 at 02:29:09PM +0200, Vladimir Oltean wrote:
 >
-> The devicetree for LD20 global board specifies RMII PHY in the ethernet
-> node as default, however, there is also another board that has RGMII PHY.
-> The devicetree for the board doesn't exist, so the users should change
-> the ethernet properties by outside way.
+> > Correct, the real problem is that I forgot to add a Fixes: tag for
+> > patch 5. I'll do that now.
+>
+> OK.  The series otherwise looked fine but I'll wait for testing.
+> Michael, if there's issues remaining it might be good to get some
+> Tested-bys for the patches prior to whatever's broken so we can get
+> those fixes in (but obviously verifying that is work so only if you
+> have time).
 
-Probably, users should change pinctrl_ether_rgmii
-by the same means.
+This time I verified with a protocol analyzer all transfer lengths
+from 1 all the way to 256, with this script:
 
+#!/bin/bash
 
-The change to uniphier-pxs3-ref.dts looks OK to me.
+buf=3D''
 
---
-Best Regards
+for i in $(seq 0 255); do
+=C2=BB       buf=3D"${buf}\x$(printf '%02x' ${i})"
+=C2=BB       spidev_test --device /dev/spidev2.0 --bpw 8 --cpha --speed
+5000000 -p "${buf}"
+done
 
-Masahiro Yamada
+It looked fine as far as I could tell, and also the problems
+surrounding Ctrl-C are no longer present. Nonetheless it would be good
+if Michael could confirm, but I know that he's very busy too so it's
+understandable if he can no longer spend time on this.
+
+Thanks,
+-Vladimir
