@@ -2,84 +2,99 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE78C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 18:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885B0C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 18:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAACA206C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 18:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D386206C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 18:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584383318;
-	bh=mSIcRXbQR93F5mXG6L77T9yTvkpVt+N3gWe1Hs4i1r8=;
+	s=default; t=1584383599;
+	bh=FNFTDbC711bD4zKJDCRdzhah0Z5BX1mcqlQex3BGMnQ=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=j5bFATnsbBSOH1Ih7n9fkYo+BsjJcwqLZgd0ZaeXbXPIjDwnlE/GompULGq3ZmQvw
-	 y9aRAockxQPojsuAc0YdaLslYhAAKh17JQgQsoOVNvA2eH06kia9vNo0O2wbFcid3g
-	 kDOvYnGbBARmPuW0lemIWCBhNEUb6QKc/oaAvV1k=
+	b=mMfSddXM8Ov1x+EeL0U1vvu1lkukizBivyjYbh7+ZrOMXSTDgwQSK3jUXnE6/sQRq
+	 cmLBS433RRAcyQDG1KTCZ1PWvqaxGJIZR+gWY1tiRTbv0rG+r8fqF/STFsx1mEBMum
+	 PjvozfnsZAeZ1L7zrC77xT4i26AjGVFYGZXX1r/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732315AbgCPS2h (ORCPT
+        id S1732308AbgCPSdT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 14:28:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58030 "EHLO mail.kernel.org"
+        Mon, 16 Mar 2020 14:33:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732266AbgCPS2h (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 14:28:37 -0400
+        id S1731967AbgCPSdS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 14:33:18 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DD3620409;
-        Mon, 16 Mar 2020 18:28:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E5FB20674;
+        Mon, 16 Mar 2020 18:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584383316;
-        bh=mSIcRXbQR93F5mXG6L77T9yTvkpVt+N3gWe1Hs4i1r8=;
+        s=default; t=1584383598;
+        bh=FNFTDbC711bD4zKJDCRdzhah0Z5BX1mcqlQex3BGMnQ=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=lMnXH/3ZzggPbtxMb+l9j6nT9+iwx7dhmcjP12rFmgnDWcku1D7JVym6u/ruk6J70
-         jwq1gEGmYXFAiPz4/ULUZQ0Kzc/KWpFzQbijdEHU8XgLV/+w/p2IIkan0TPhI8/Qvd
-         tzi7CoO0JMQpkvDCy+AJUbuWnk532d8smDISP87g=
+        b=MwC1Iwj9v+6hWSPEFBT0jJ1XSZSHjALVOrY91LV7+Cujyn0l6PoCwq/NWfQQ1NHHN
+         I5Z/I+4pfDMaWfuMYHsrh+hWIiJxIL0vRtWOZQntJny3yBu2PzzuoHIwiHJ0dJhKmq
+         eOK9mPpVFDB5urtCQs3fTpz3/8SBxR8o+t9taseQ=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <831d632e-78da-07c4-f8c7-14d17ba1ef28@ti.com>
-References: <20200221171030.39326-1-tony@atomide.com> <158231096467.258574.11716255621346536160@swboyd.mtv.corp.google.com> <831d632e-78da-07c4-f8c7-14d17ba1ef28@ti.com>
-Subject: Re: [PATCH] clk: ti: am43xx: Fix clock parent for RTC clock
+In-Reply-To: <c6b19bac-b018-28a0-421f-f40f85245bee@codeaurora.org>
+References: <1581423236-21341-1-git-send-email-tdas@codeaurora.org> <1581423236-21341-2-git-send-email-tdas@codeaurora.org> <20200303201629.GP24720@google.com> <f0529793-c51d-4baf-5217-173c552f4cbe@codeaurora.org> <20200304170939.GR24720@google.com> <158412246142.149997.5548337390525905687@swboyd.mtv.corp.google.com> <c6b19bac-b018-28a0-421f-f40f85245bee@codeaurora.org>
+Subject: Re: [PATCH v1 2/2] clk: qcom: dispcc: Remove support of disp_cc_mdss_rscc_ahb_clk
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-omap@vger.kernel.org
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
-Date:   Mon, 16 Mar 2020 11:28:35 -0700
-Message-ID: <158438331569.88485.562432552826260475@swboyd.mtv.corp.google.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>, robh@kernel.org,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Doug Anderson <dianders@chromium.org>
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Mon, 16 Mar 2020 11:33:17 -0700
+Message-ID: <158438359728.88485.9249991203602274851@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Tero Kristo (2020-03-16 07:48:30)
-> On 21/02/2020 20:49, Stephen Boyd wrote:
-> > Quoting Tony Lindgren (2020-02-21 09:10:30)
-> >> Currently enabling clkctrl clock on am4 can fail for RTC as the clock
-> >> parent is wrong for RTC.
+Quoting Taniya Das (2020-03-14 04:08:47)
+> I would require you suggestion on the below.
+>=20
+> On 3/13/2020 11:31 PM, Stephen Boyd wrote:
+> > Quoting Matthias Kaehlcke (2020-03-04 09:09:39)
+> >> Hi Taniya,
 > >>
-> >> Fixes: 76a1049b84dd ("clk: ti: am43xx: add new clkctrl data for am43xx=
-")
-> >> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> >> ---
+> >> On Wed, Mar 04, 2020 at 09:05:20AM +0530, Taniya Das wrote:
+> >>>
+> >>> Hi Matthias,
+> >>>
+> >>> The display device node is not present and we encounter this crash, w=
+ould it
+> >>> be possible to add ALWAYS_ON for the MDSS GDSC and give it a try.
 > >>
-> >> It is unclear if we can end up with RTC hung with the current mainline
-> >> kernel in some cases. Probing RTC with device tree data only seems to
-> >> trigger this every time.
+> >> It still crashes when ALWAYS_ON is set for the MDSS GDSC.
 > >=20
-> > It's small enough and if it's annoying enough we can probably put it
-> > into clk-fixes to get it fixed for this release instead of waiting. Can
-> > Tero ack it?
+> > Any updates here? I'm about to send this patch off to Linus and I'm
+> > wondering if there will be a resolution besides reverting it.
 > >=20
 >=20
-> Sure,
+> Looks like the AHB clock needs to be left enabled till the last clocks=20
+> get disabled. I need to add a new dependency o n this clock.
 >=20
-> Acked-by: Tero Kristo <t-kristo@ti.com>
+> Hi Stephen,
+>=20
+>=20
+> Any way to keep this dependency using the framework  or I need to split=20
+> the probes to register them independently?
+>=20
 
-Woops, hit send too fast. Thanks! Picked it into clk-fixes.
+Sorry, I don't understand the problem fully. This AHB clk is left on in
+the bootloader? Why do we need to touch it if it's always left enabled?
+Is it actually the case that the bootloader hasn't turned this clk on
+and we're getting lucky having it marked here as CLK_IS_CRITICAL? Can we
+force it on in driver probe and then ignore it after that?
