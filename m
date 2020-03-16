@@ -2,174 +2,158 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5766CC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3063C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC82205ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:31:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584361915;
-	bh=CAzOnJeuD+ABheWsmWDmHviz5NbfolgR/TYRaTZU2dM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X+I5p4kn/kvF55pL59ciX98OVfeWcMzqSPsp4iLf2EX+/C4vlNRvvMzXiD/7OVtY+
-	 qmlqXLQ5+OrCaUvs5z/KH+DPi20ZLWzy+WW7rRTn0aap9I9TzSBu0G7x2r8CMDb/wg
-	 hESfF72sk1Fk7wcSNyJqWu9gCtUNoS6u/MlyUWzM=
+	by mail.kernel.org (Postfix) with ESMTP id A76B2205ED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 12:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ho0aqwmb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730969AbgCPMby (ORCPT
+        id S1730977AbgCPMdk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 08:31:54 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:38564 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730878AbgCPMby (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 08:31:54 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 02GCVdu9008887
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 21:31:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02GCVdu9008887
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584361900;
-        bh=zpCoHUBeDJGjHqdX9oB4j+mSj5BJoyxsC8tu6I0gEvE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Z8Uv17kehP6AU8luHPv8o4S/QQDTPgs+Qm7U7hJRTLRktKhFnQ7fWaCskGMsVp+N/
-         1RTdU5b343bYf6MeoLim1BgBiDycA1a5ztRoEDVaAfbBHGUAI6sodfVRVe2reuhAeU
-         kWrkgCTfBwC7Um1H58K+E+VBmTpQwqd1/jjELMSxD8DxCKmzuAymiFCNhbtG8UeKdc
-         b/5z4tlv4ff/3qGw/U84qQf+ktBqF5/imHWrUTFOJUjXKU4B7KTvsKcOWQ68q1kmZk
-         GGnqsjyzeqPPCGIlh1f/jcyY9qEYVtqu/BmbMq2aaqCSlmMi6R5dOsPgMxBNkmBVtD
-         wWxA8y+shvGHQ==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id m9so11129571vso.2
-        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 05:31:39 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0b6vDIqWf6TfdeeP9ZHIxXYvL+61x2yi6U0jTKsWwFDffVDvs8
-        ye6aFCo6p+vSLMsgEOXxFGUX+X5srDSHCyOsWf4=
-X-Google-Smtp-Source: ADFU+vslQ2MQUt3HOh4jbtvGO2wNFlnU2SIK9Hi7L8whmrTgbjpovnuWApmSmKtPusuvmqo3ZjAjKdr5EnwxaWLKqCg=
-X-Received: by 2002:a67:2d55:: with SMTP id t82mr8503531vst.215.1584361898827;
- Mon, 16 Mar 2020 05:31:38 -0700 (PDT)
+        Mon, 16 Mar 2020 08:33:40 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41858 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730956AbgCPMdk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 08:33:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id s15so17615216otq.8;
+        Mon, 16 Mar 2020 05:33:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iU3FB0SyhngQVmNrB57sk80xf7jnFSDISDtNBOMq4Po=;
+        b=Ho0aqwmb57ckxndR0nOlrJQQHdA2mJXB5YlwQQJnhKoJXqfcCp/6i4urvKVTyqUldz
+         YbwtSkfbmHa2xl1j+qFKiM91ZBRZFyhjhBCe6r6LOMQ8BiL6PEDO+hHk8HlOQfTPnkch
+         PfwZ4LoeKANmdvkQ87t5uFKZPMfXDxOsY8wpt2rdYr4zyt1KLSI2J3zFgWHpQaoD2gE4
+         3xoE349tRVoJbH4NH8iqDyBEWdbxpGRp5jDY7EwAqIVIG8uMmXhR3T95mbtgBsJlGaOW
+         lREaLGHlkUH+o9KybZIh3UGZw+I9Z+TFpELjB5Hc/dXxVC43ew+jXucZoJ87CxVYAgUE
+         doww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iU3FB0SyhngQVmNrB57sk80xf7jnFSDISDtNBOMq4Po=;
+        b=MVbCgZQScB8A4sPhuAFT06XLUvevSFv5KGgI8QOK7TOIwf5UwGBUcD+KPH4Sp8cZpJ
+         ubXU6B5fo/PjXjFfcpHrPrO9OSPLXl+nYiZSLUhlYp+G950EbvIU39nMXNtEdKnm6Iw+
+         6j61oSQCsUsigEN/Zli3lAIV2J5KwdI26gytqCAt7MHGxnoktbonLqDXXypb/YKZw9IB
+         uQD05RyF0e+2stGO26wq/g6hc6oteIFLO/434D2qzy+GNAej+GadLD7FJQlIeIKPA7xI
+         ocRh+mEq5AvPv1PjEJWXZkUTVHrFwcsbqwcAP0yqSaB+qoc5KoWwWMrUAE5P94/prMHg
+         eI4A==
+X-Gm-Message-State: ANhLgQ2OFpKQFL3lkVtELo99TsEGVqCeP2bSKkHlq+hfwv7GPnLuuvcV
+        vJKxcdRAQHIbtkck8ooKnjwkmQUsy1xZ/QS951c=
+X-Google-Smtp-Source: ADFU+vunioe+QWKw8j1Bl+f35z1EgNbIWiFK9X1ZpyeZAg5Og09WtiPgTXrhXd8gSYgqrBjQUh+ilgczIyEUJvIUgog=
+X-Received: by 2002:a05:6830:20c9:: with SMTP id z9mr22360874otq.44.1584362018759;
+ Mon, 16 Mar 2020 05:33:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584061096-23686-1-git-send-email-hayashi.kunihiko@socionext.com> <1584061096-23686-7-git-send-email-hayashi.kunihiko@socionext.com>
-In-Reply-To: <1584061096-23686-7-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 16 Mar 2020 21:31:02 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR+73FGUC7NAaPM_5uyjccuxDXokmKaY2KJpxqskdyuVg@mail.gmail.com>
-Message-ID: <CAK7LNAR+73FGUC7NAaPM_5uyjccuxDXokmKaY2KJpxqskdyuVg@mail.gmail.com>
-Subject: Re: [PATCH 06/10] ARM: dts: uniphier: Add ethernet aliases
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
+References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8vchrpa-1N1J+yVdo6-3zouOHX6=G4epWm68yirPirzag@mail.gmail.com> <20200316121859.GB5043@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200316121859.GB5043@e121166-lin.cambridge.arm.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 16 Mar 2020 12:33:12 +0000
+Message-ID: <CA+V-a8tEty80_XsU2qhmxLVWXnsfv3PE+ZiVfw+jrcOJXTwr6A@mail.gmail.com>
+Subject: Re: [PATCH v5 0/7] Add support for PCIe controller to work in
+ endpoint mode on R-Car SoCs
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 9:58 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
->
-> Add an aliases property for ethernet to determine device name assignments.
+Hi Lorenzo,
 
-
-There is no call-site of of_alias_get_*() for this device.
-
-Why don't you describe the reason correctly?
-
-
-
-
-
+On Mon, Mar 16, 2020 at 12:19 PM Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
 >
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  arch/arm/boot/dts/uniphier-ld6b-ref.dts    | 1 +
->  arch/arm/boot/dts/uniphier-pro4-ace.dts    | 1 +
->  arch/arm/boot/dts/uniphier-pro4-ref.dts    | 1 +
->  arch/arm/boot/dts/uniphier-pro4-sanji.dts  | 1 +
->  arch/arm/boot/dts/uniphier-pxs2-gentil.dts | 1 +
->  arch/arm/boot/dts/uniphier-pxs2-vodka.dts  | 1 +
->  6 files changed, 6 insertions(+)
+> On Fri, Mar 13, 2020 at 03:46:42PM +0000, Lad, Prabhakar wrote:
+> > Hi Bjorn/Kishon,
+> >
+> > On Fri, Feb 28, 2020 at 3:41 PM Lad Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> > >
+> > > This patch series adds support for PCIe controller on rcar to work in
+> > > endpoint mode, this also extends the epf framework to handle base region
+> > > for mapping PCI address locally.
+> > >
+> > > Note:
+> > > The cadence/rockchip/designware endpoint drivers are build tested only.
+> > >
+> > > Changes for v5:
+> > > 1] Rebased the patches on next branch of https://git.kernel.org/pub/scm/
+> > >    linux/kernel/git/helgaas/pci.git
+> > > 2] Fixed review comments reported by Kishon while fetching the matching
+> > >    window in function pci_epc_get_matching_window()
+> > > 3] Fixed review comments reported by Bjorn
+> > >    a] Split patch up first patch so that its easier to review and incremental
+> > >    b] Fixed typos
+> > > 4] Included Reviewed tag from Rob for the dt-binding patch
+> > > 5] Fixed issue reported by Nathan for assigning variable to itself
+> > >
+> > > Changes for v4:
+> > > 1] Fixed dtb_check error reported by Rob
+> > > 2] Fixed review comments reported by Kishon
+> > >    a] Dropped pci_epc_find_best_fit_window()
+> > >    b] Fixed initializing mem ptr in __pci_epc_mem_init()
+> > >    c] Dropped map_size from pci_epc_mem_window structure
+> > >
+> > > Changes for v3:
+> > > 1] Fixed review comments from Bjorn and Kishon.
+> > > 3] Converted to DT schema
+> > >
+> > > Changes for v2:
+> > > 1] Fixed review comments from Biju for dt-bindings to include an example
+> > >    for a tested platform.
+> > > 2] Fixed review comments from Kishon to extend the features of outbound
+> > >    regions in epf framework.
+> > > 3] Added support to parse outbound-ranges in OF.
+> > >
+> > > Lad Prabhakar (7):
+> > >   PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
+> > >   PCI: rcar: Move shareable code to a common file
+> > >   PCI: rcar: Fix calculating mask for PCIEPAMR register
+> > >   PCI: endpoint: Add support to handle multiple base for mapping
+> > >     outbound memory
+> > >   dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+> > >     controller
+> > >   PCI: rcar: Add support for rcar PCIe controller in endpoint mode
+> > >   misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
+> > >
+> > Gentle ping.
 >
-> diff --git a/arch/arm/boot/dts/uniphier-ld6b-ref.dts b/arch/arm/boot/dts/uniphier-ld6b-ref.dts
-> index 60994b6..079cadc 100644
-> --- a/arch/arm/boot/dts/uniphier-ld6b-ref.dts
-> +++ b/arch/arm/boot/dts/uniphier-ld6b-ref.dts
-> @@ -29,6 +29,7 @@
->                 i2c4 = &i2c4;
->                 i2c5 = &i2c5;
->                 i2c6 = &i2c6;
-> +               ethernet0 = &eth;
->         };
+> You should ask the R-CAR maintainers first to have a look at your
+> code and ACK accordingly.
 >
->         memory@80000000 {
-> diff --git a/arch/arm/boot/dts/uniphier-pro4-ace.dts b/arch/arm/boot/dts/uniphier-pro4-ace.dts
-> index 92cc48d..64246fa 100644
-> --- a/arch/arm/boot/dts/uniphier-pro4-ace.dts
-> +++ b/arch/arm/boot/dts/uniphier-pro4-ace.dts
-> @@ -26,6 +26,7 @@
->                 i2c3 = &i2c3;
->                 i2c5 = &i2c5;
->                 i2c6 = &i2c6;
-> +               ethernet0 = &eth;
->         };
->
->         memory@80000000 {
-> diff --git a/arch/arm/boot/dts/uniphier-pro4-ref.dts b/arch/arm/boot/dts/uniphier-pro4-ref.dts
-> index 854f2eb..181442c 100644
-> --- a/arch/arm/boot/dts/uniphier-pro4-ref.dts
-> +++ b/arch/arm/boot/dts/uniphier-pro4-ref.dts
-> @@ -29,6 +29,7 @@
->                 i2c3 = &i2c3;
->                 i2c5 = &i2c5;
->                 i2c6 = &i2c6;
-> +               ethernet0 = &eth;
->         };
->
->         memory@80000000 {
-> diff --git a/arch/arm/boot/dts/uniphier-pro4-sanji.dts b/arch/arm/boot/dts/uniphier-pro4-sanji.dts
-> index dda1a2f..5396556 100644
-> --- a/arch/arm/boot/dts/uniphier-pro4-sanji.dts
-> +++ b/arch/arm/boot/dts/uniphier-pro4-sanji.dts
-> @@ -25,6 +25,7 @@
->                 i2c3 = &i2c3;
->                 i2c5 = &i2c5;
->                 i2c6 = &i2c6;
-> +               ethernet0 = &eth;
->         };
->
->         memory@80000000 {
-> diff --git a/arch/arm/boot/dts/uniphier-pxs2-gentil.dts b/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
-> index e27fd4f..8e9ac57 100644
-> --- a/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
-> +++ b/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
-> @@ -26,6 +26,7 @@
->                 i2c4 = &i2c4;
->                 i2c5 = &i2c5;
->                 i2c6 = &i2c6;
-> +               ethernet0 = &eth;
->         };
->
->         memory@80000000 {
-> diff --git a/arch/arm/boot/dts/uniphier-pxs2-vodka.dts b/arch/arm/boot/dts/uniphier-pxs2-vodka.dts
-> index 23fe42b..8eacc7b 100644
-> --- a/arch/arm/boot/dts/uniphier-pxs2-vodka.dts
-> +++ b/arch/arm/boot/dts/uniphier-pxs2-vodka.dts
-> @@ -24,6 +24,7 @@
->                 i2c4 = &i2c4;
->                 i2c5 = &i2c5;
->                 i2c6 = &i2c6;
-> +               ethernet0 = &eth;
->         };
->
->         memory@80000000 {
-> --
-> 2.7.4
->
+Thanks I have pinged the R-CAR maintainers to do the needy.
 
-
---
-Best Regards
-Masahiro Yamada
+Cheers,
+--Prabhakar
