@@ -2,72 +2,160 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5204C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 00:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14C8C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 01:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C9820663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 00:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F1B20674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 01:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584320144;
-	bh=+ZZ/y8SuDPR9RUlD1SdC6DFv29xVsKJc0ztY2BqK6UM=;
+	s=default; t=1584320665;
+	bh=Hw0ZivXWa3VjmpcCVQHuCLJJ+hlMopS5Berc2mfx4uU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qtwOffgnJFPM6GNka4oHFcdPuxVyRnf4lmQAsE5iF6QbumHUqFSaPf6itNeHsgEI2
-	 Y+rc6BvPVMFIri9jwQhV9G+XUmGh5FvXOCV1zQ7lJKJJbaL2BiryygK/XrVIy8r0rN
-	 F8f6ib3UeK5XxA4asU5N3bUBLr4cp+uW9shVPxx8=
+	b=ejK3E+ICAzbuJ1TQkjMPetW8pgVywK35PXVJsjJnc7DXB65W7fwK/00dhJdGxrIcF
+	 VIzR5WgDQHXOtrSpNWuTmQK/gAWm2Qr4qPmvLJ9WG1IYndr63lulLDFBFhEf+enU6/
+	 +bP5rLpnT3dpAQv2dugrW+7687Uep7a8Q2rswcMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbgCPAzo (ORCPT
+        id S1729337AbgCPBEZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 15 Mar 2020 20:55:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
+        Sun, 15 Mar 2020 21:04:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729303AbgCPAzo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 15 Mar 2020 20:55:44 -0400
+        id S1729319AbgCPBEZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 15 Mar 2020 21:04:25 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91FE9205C9;
-        Mon, 16 Mar 2020 00:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B491205ED;
+        Mon, 16 Mar 2020 01:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584320143;
-        bh=+ZZ/y8SuDPR9RUlD1SdC6DFv29xVsKJc0ztY2BqK6UM=;
+        s=default; t=1584320664;
+        bh=Hw0ZivXWa3VjmpcCVQHuCLJJ+hlMopS5Berc2mfx4uU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KPD1rDHRbhj4YN5AwKbZ3QYJ0DhDLi6iTPkSKEGpUeCZQlX8YSUipODkzMjEn7LKx
-         7Ru1qbUy+O5wo4bNFNnt2kkkIdWfmldkBDGqRGT7PfslQikKOHz9t+o4OQ4lLFCdW0
-         KQ4cVQ+1vQYrRFJHi3tC05+KUmsC7yLndeqyxBE8=
-Date:   Mon, 16 Mar 2020 08:55:37 +0800
+        b=sgOXCiVWkTvI7m9jrLidmfr5ERKuToqTfbuzGQ2P3SWJdpeH1NkNAM05witSWzZiz
+         q+CxWlK+sxeZqzq6J3mULRs4ZbP4jYVMVXhspD4iqG3QvjgWe5LF/5ZtGi8pT6ENF6
+         cqPZG70OPM+hb9UYZRzJb/HWrWD/IxrIgfUSDvOw=
+Date:   Mon, 16 Mar 2020 09:04:17 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Paul Barker <pbarker@konsulko.com>
-Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] dts: imx6: Allow flags argument in pwms reference
-Message-ID: <20200316005536.GF17221@dragon>
-References: <20200309145558.16098-1-pbarker@konsulko.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com,
+        daniel.baluta@nxp.com, abel.vesa@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 1/2] arm64: dts: imx8qxp-mek: Sort labels alphabetically
+Message-ID: <20200316010416.GI17221@dragon>
+References: <1583830337-23889-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309145558.16098-1-pbarker@konsulko.com>
+In-Reply-To: <1583830337-23889-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 02:55:58PM +0000, Paul Barker wrote:
-> The pwm-imx27 driver supports a third argument in a pwms reference to
-> provide flags. However #pwm-cells needs to be set to <3> in the pwm node
-> so that these flags can be passed through to the driver. Once #pwm-cells
-> is <3>, all pwms references need to use the 3-cell form.
+On Tue, Mar 10, 2020 at 04:52:16PM +0800, Anson Huang wrote:
+> Sort the labels alphabetically for consistency.
 > 
-> Signed-off-by: Paul Barker <pbarker@konsulko.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-'ARM: dts: imx6: ...' to be prefix please.
+It doesn't apply to my branch.
 
 Shawn
+
+> ---
+>  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 60 +++++++++++++--------------
+>  1 file changed, 30 insertions(+), 30 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> index 13460a3..2ed7aba 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
+> @@ -30,29 +30,8 @@
+>  	};
+>  };
+>  
+> -&adma_lpuart0 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_lpuart0>;
+> -	status = "okay";
+> -};
+> -
+> -&fec1 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_fec1>;
+> -	phy-mode = "rgmii-id";
+> -	phy-handle = <&ethphy0>;
+> -	fsl,magic-packet;
+> +&adma_dsp {
+>  	status = "okay";
+> -
+> -	mdio {
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		ethphy0: ethernet-phy@0 {
+> -			compatible = "ethernet-phy-ieee802.3-c22";
+> -			reg = <0>;
+> -		};
+> -	};
+>  };
+>  
+>  &adma_i2c1 {
+> @@ -131,6 +110,35 @@
+>  	};
+>  };
+>  
+> +&adma_lpuart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lpuart0>;
+> +	status = "okay";
+> +};
+> +
+> +&fec1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_fec1>;
+> +	phy-mode = "rgmii-id";
+> +	phy-handle = <&ethphy0>;
+> +	fsl,magic-packet;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ethphy0: ethernet-phy@0 {
+> +			compatible = "ethernet-phy-ieee802.3-c22";
+> +			reg = <0>;
+> +		};
+> +	};
+> +};
+> +
+> +&scu_key {
+> +	status = "okay";
+> +};
+> +
+>  &usdhc1 {
+>  	assigned-clocks = <&clk IMX_CONN_SDHC0_CLK>;
+>  	assigned-clock-rates = <200000000>;
+> @@ -229,11 +237,3 @@
+>  		>;
+>  	};
+>  };
+> -
+> -&adma_dsp {
+> -	status = "okay";
+> -};
+> -
+> -&scu_key {
+> -	status = "okay";
+> -};
+> -- 
+> 2.7.4
+> 
