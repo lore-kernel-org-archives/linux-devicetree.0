@@ -2,90 +2,130 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6150C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE38C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A982E206C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1832051A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:46:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cc/KfyNx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732142AbgCPRq1 (ORCPT
+        id S1731778AbgCPRq4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 13:46:27 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:54068 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732140AbgCPRq1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 13:46:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id B61C4FB03;
-        Mon, 16 Mar 2020 18:46:23 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id AzjLZ3JXf229; Mon, 16 Mar 2020 18:46:21 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id B8EB640D86; Mon, 16 Mar 2020 18:46:20 +0100 (CET)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 0/4] iio: vcnl4000: Export near level property for proximity sensor
-Date:   Mon, 16 Mar 2020 18:46:16 +0100
-Message-Id: <cover.1584380360.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Mar 2020 13:46:56 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38942 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732274AbgCPRq4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 13:46:56 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h6so2029827wrs.6;
+        Mon, 16 Mar 2020 10:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MLNLveD6L+cH6avKSQcqN3AiAJkE99e4WdFigQsP9tE=;
+        b=cc/KfyNxH1udwLv/GxysgrFxyCGR7MoHAFg+yjnWH+XHZgkIHtu/ZXMhqn4hDjaf+Q
+         +faD+0V+taSxrcG9GhVHBbhZEck94ccZ7kbmgImtmMSA/zcD13JfSP/pzNhSZObXvrUp
+         j0KCtd1D1lbm4Qc1F6bQcNr71jxk2lXVOHhVoeunTdVOZJCWgDpR8w2UmezNdHr50tlh
+         ZAlK6+Nbblsh6s18P06WlVKkk34Y6w5tESE6W1vVJmznVMBvG2RXpTLH75AYFirMtg87
+         FH8uyM0f9/qlL14Q9L/FNa15bhFWEGrLH6L2aMbcur/nFVbqeoVRKiojLOiiDVqL/Cfu
+         vk7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MLNLveD6L+cH6avKSQcqN3AiAJkE99e4WdFigQsP9tE=;
+        b=bxKDmk44nk8HYrcjmqIH+eLa6eXcLPGUrfT2vMUtHPDsf+dinjkLUuGXt3WjnCOWc1
+         GhHK7Dsglvvqv0Z/SqGAe5GSNzg+oY1SBL7HkZAfeASARKDFE5KP9dFLXyIXGo5erACG
+         BpkOCfDeWh/pRj9f5+tobG4kGqZ5cdpElX7EIp131eUAtRu1jxT9eTtojLzU6V9Fd2vd
+         JNXvTbn4dQPGGEre/+5jF0Cc9A5cua4K/xfCipOL0nbKwXfemRIOnLz9gCrvVpZo39Ts
+         5w26tbl9pW2x7xk11rw7NcUC4RWn+hSRVqdWjib2+D9VnHm0Pbqq72bV6LgndkwSa5+6
+         9gdQ==
+X-Gm-Message-State: ANhLgQ0/jOfBrk6VgM/aE0ZiByKqisolNPxZn3DRUz8XiwMDvacJNHCL
+        jyi5rNez/zkLQhrOvwVQAgs=
+X-Google-Smtp-Source: ADFU+vs1VNAsqxRwQaM3OZDVeqqND1v9e+aTzeUXh86E6O8j108hjsIXs8dG9PQ8GnSWhYlnyBF6Zw==
+X-Received: by 2002:a5d:5342:: with SMTP id t2mr526454wrv.104.1584380814347;
+        Mon, 16 Mar 2020 10:46:54 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id b202sm587440wmd.15.2020.03.16.10.46.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Mar 2020 10:46:53 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: rockchip: fix lvds-encoder ports subnode for rk3188-bqedison2qc
+Date:   Mon, 16 Mar 2020 18:46:47 +0100
+Message-Id: <20200316174647.5598-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-If an object can be considered close to the device that has the proximity
-sensor built in is hardware dependent. Allowing to configure the property via
-device tree allows to export this device specific value to userspace via
-ext_info. This is useful for e.g. iio-sensor-proxy.
+A test with the command below gives this error:
 
-This came up when adding proximity support to iio-sensor-proxy [1], [2], it is
-not meant as a vcnl4000 thing but rather as something useful for other proximity
-sensors too in the future.
+arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml: lvds-encoder:
+'ports' is a required property
 
-Changes from v1:
-- as per review comments by Jonathan Cameron
-  https://lore.kernel.org/linux-iio/20200221120519.43b72007@archlinux/
-  Document new sysfs file in Documentation/ABI/testing/sysfs-bus-iio-proximity
-- convert bindings to yaml
-- bindings: fix typo in near-level property
+Fix error by adding a ports wrapper for port@0 and port@1
+inside the 'lvds-encoder' node for rk3188-bqedison2qc.
 
-[1]: https://gitlab.freedesktop.org/hadess/iio-sensor-proxy/merge_requests/298
-[2]: https://lore.kernel.org/linux-iio/20200210154153.GA26903@bogon.m.sigxcpu.org/
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/
+bridge/lvds-codec.yaml
 
-Guido Günther (4):
-  dt-bindings: iio: vcnl4000: convert bindings to YAML format
-  dt-bindings: iio: light: vcnl4000: Add near-level
-  iio: vcnl4000: Export near level property for proximity sensor
-  Documentation: ABI: document IIO in_proximity_near_level file
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3188-bqedison2qc.dts | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
- .../ABI/testing/sysfs-bus-iio-proximity       | 10 ++++
- .../bindings/iio/light/vcnl4000.txt           | 24 ---------
- .../bindings/iio/light/vcnl4000.yaml          | 53 +++++++++++++++++++
- drivers/iio/light/vcnl4000.c                  | 26 +++++++++
- 4 files changed, 89 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-proximity
- delete mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.txt
- create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
-
+diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+index 8afb2fd5d..66a0ff196 100644
+--- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
++++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
+@@ -58,20 +58,25 @@
+ 
+ 	lvds-encoder {
+ 		compatible = "ti,sn75lvds83", "lvds-encoder";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 
+-		port@0 {
+-			reg = <0>;
+-			lvds_in_vop0: endpoint {
+-				remote-endpoint = <&vop0_out_lvds>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				lvds_in_vop0: endpoint {
++					remote-endpoint = <&vop0_out_lvds>;
++				};
+ 			};
+-		};
+ 
+-		port@1 {
+-			reg = <1>;
+-			lvds_out_panel: endpoint {
+-				remote-endpoint = <&panel_in_lvds>;
++			port@1 {
++				reg = <1>;
++
++				lvds_out_panel: endpoint {
++					remote-endpoint = <&panel_in_lvds>;
++				};
+ 			};
+ 		};
+ 	};
 -- 
-2.23.0
+2.11.0
 
