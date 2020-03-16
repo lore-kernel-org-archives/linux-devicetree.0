@@ -2,181 +2,92 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52914C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E683BC0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F4720679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:15:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="BUT2OrTN"
+	by mail.kernel.org (Postfix) with ESMTP id B838520719
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 17:46:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731703AbgCPRPv (ORCPT
+        id S1732044AbgCPRq0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 13:15:51 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:45033 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731507AbgCPRPv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 13:15:51 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 38F1323E61;
-        Mon, 16 Mar 2020 18:15:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584378948;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FkBQjGfFX4RPCtdPTA+h09kDR0zYfg6Q74m+HlrgZjg=;
-        b=BUT2OrTNA5Xq/cAeO91FOmT4Vzjbe6rHKp1In93/VKCG4yRRkIBEMx1g8VM3ucWOhC99tQ
-        gXXjObJS/iVcITZh4uIi7mw2bxGCDz3580knWKtQ+9bQNN5z/dwyG9cvE46izCjWFCPPSu
-        lOykjNLBPPfmahq+zd4DDQykcUgwifE=
+        Mon, 16 Mar 2020 13:46:26 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:54054 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731715AbgCPRq0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 13:46:26 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id D83F8FB07;
+        Mon, 16 Mar 2020 18:46:22 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 46RZyJU6HEyS; Mon, 16 Mar 2020 18:46:21 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id D6CBE40D82; Mon, 16 Mar 2020 18:46:20 +0100 (CET)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Tomas Novotny <tomas@novotny.cz>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 2/4] dt-bindings: iio: light: vcnl4000: Add near-level
+Date:   Mon, 16 Mar 2020 18:46:18 +0100
+Message-Id: <65e1007c48f24c44fba0c12b1d5d31af2b5d3a1a.1584380360.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1584380360.git.agx@sigxcpu.org>
+References: <cover.1584380360.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Date:   Mon, 16 Mar 2020 18:15:48 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Esben Haabendal <eha@deif.com>,
-        angelo@sysam.it, andrew.smirnov@gmail.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Wei Chen <weic@nvidia.com>, Mohamed Hosny <mhosny@nvidia.com>,
-        peng.ma@nxp.com
-Subject: Re: [PATCH v3 06/12] spi: spi-fsl-dspi: Replace interruptible wait
- queue with a simple completion
-In-Reply-To: <CA+h21hqt7Xe1LrSDsCVS8zqunQp2tKGhmHDraMirxL595go4nA@mail.gmail.com>
-References: <20200314224340.1544-1-olteanv@gmail.com>
- <20200314224340.1544-7-olteanv@gmail.com>
- <20200316122613.GE5010@sirena.org.uk>
- <CA+h21hqRV+HmAz4QGyH9ZtcFWzeCKczitcn+mfTdwAC7ZobdDw@mail.gmail.com>
- <20200316124945.GF5010@sirena.org.uk>
- <CA+h21hpoHGuDwpOqtWJFO7+0mQVUrmcBLW7nnGq6dt3QU5axfw@mail.gmail.com>
- <d05fda0e119405343e540b9768db534f@walle.cc>
- <CA+h21hqt7Xe1LrSDsCVS8zqunQp2tKGhmHDraMirxL595go4nA@mail.gmail.com>
-Message-ID: <8c22cb70b7c0acb6769e0c68540ab523@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 38F1323E61
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.660];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-03-16 17:23, schrieb Vladimir Oltean:
-> On Mon, 16 Mar 2020 at 15:25, Michael Walle <michael@walle.cc> wrote:
->> 
->> Am 2020-03-16 14:00, schrieb Vladimir Oltean:
->> > On Mon, 16 Mar 2020 at 14:49, Mark Brown <broonie@kernel.org> wrote:
->> >>
->> >> On Mon, Mar 16, 2020 at 02:29:09PM +0200, Vladimir Oltean wrote:
->> >>
->> >> > Correct, the real problem is that I forgot to add a Fixes: tag for
->> >> > patch 5. I'll do that now.
->> >>
->> >> OK.  The series otherwise looked fine but I'll wait for testing.
->> >> Michael, if there's issues remaining it might be good to get some
->> >> Tested-bys for the patches prior to whatever's broken so we can get
->> >> those fixes in (but obviously verifying that is work so only if you
->> >> have time).
->> 
->> I'm just about to test it. While my former "cat /dev/mtdN > /dev/null"
->> is working. I had the impression that it was slower, so I tried to 
->> test
->> it with dd now and a known chunk size.. only to find out that it is
->> still not working:
->> 
->> # dmesg|grep spi
->> [    1.894891] spi-nor spi1.0: w25q128fw (16384 Kbytes)
->> ..
->> # time cat /dev/mtd0 > /dev/null
->> real    0m 30.73s
->> user    0m 0.00s
->> sys     0m 1.02s
->> # dd if=/dev/mtd0 of=/dev/null bs=64
->> 262144+0 records in
->> 262144+0 records out
->> # dd if=/dev/mtd0 of=/dev/null bs=64
->> 262144+0 records in
->> 262144+0 records out
->> # dd if=/dev/mtd0 of=/dev/null bs=64
->> dd: /dev/mtd0: Input/output error
-> 
-> I don't really have a SPI flash connected to DSPI on any LS1028A board.
+This value indicates when userspace should consider an object
+near to the sensor/device.
 
-I'm already debugging it again.
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+---
+ Documentation/devicetree/bindings/iio/light/vcnl4000.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> Is this DMA or XSPI mode?
+diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
+index 74d53cfbeb85..fc24800f530a 100644
+--- a/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
++++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
+@@ -25,6 +25,13 @@ properties:
+   reg:
+     maxItems: 1
+ 
++  near-level:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Raw proximity values equal or above this level should be
++      considered 'near' to the device (an object is near to the
++      sensor).
++
+ required:
+   - compatible
+   - reg
+@@ -40,6 +47,7 @@ examples:
+       light-sensor@51 {
+               compatible = "vishay,vcnl4200";
+               reg = <0x51>;
++              near-level = <220>;
+       };
+   };
+ ...
+-- 
+2.23.0
 
-XSPI mode. DMA mode looked good for now.
-
->> 
->> I also wanted to test how it behaves if there are multiple processes
->> access the /dev/mtdN device. I haven't found the time to dig into
->> the call chain if see if there is any locking. Because what happens
->> if transfer_one_message() is called twice at the same time from two
->> different processes?
->> 
-> 
-> There is a mutex on the SPI bus, and therefore all variants of the
-> .transfer() call are operating under this lock protection, which
-> simplifies things quite a bit.
-
-Ok, thanks.
-
--michael
-
->> >
->> > This time I verified with a protocol analyzer all transfer lengths
->> > from 1 all the way to 256, with this script:
->> >
->> > #!/bin/bash
->> >
->> > buf=''
->> >
->> > for i in $(seq 0 255); do
->> > »       buf="${buf}\x$(printf '%02x' ${i})"
->> > »       spidev_test --device /dev/spidev2.0 --bpw 8 --cpha --speed
->> > 5000000 -p "${buf}"
->> > done
->> >
->> > It looked fine as far as I could tell, and also the problems
->> > surrounding Ctrl-C are no longer present. Nonetheless it would be good
->> > if Michael could confirm, but I know that he's very busy too so it's
->> > understandable if he can no longer spend time on this.
->> 
->> I'm working on it ;)
->> 
->> -michael
-> 
-> Thanks,
-> -Vladimir
