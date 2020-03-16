@@ -2,118 +2,125 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE0BC0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5084C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E598620674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCAF20663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 20:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="NHilyZgv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m0zS/nz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732523AbgCPUZL (ORCPT
+        id S1732541AbgCPUlQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 16:25:11 -0400
-Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:31743 "EHLO
-        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732505AbgCPUZL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 16:25:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1584390309; x=1615926309;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=oEuZ697fpN3VMiiWha7d/Dl3C5sMFsmwp8ShroavJmw=;
-  b=NHilyZgvlF3Wn55rWsGajrL9Qz7VDm2J57lXvsjsO4c+JVz1cBmowP6p
-   KJi46H3kz53u1PmE/ceoU3JcDrzzoAngzK0qWJ4Z3LY1We+W7blfoP1S5
-   qREYsYfqqqK0Xo2LI9B0cWk7l4yosIwS4TbpDLa8DWzYG63WlXKj4/g6P
-   vd1f/YcOLcmJhVCCRdYc6sLu+Shna/WNzG71sj+BdAr4yuYhEFW6CeWog
-   NY4/ISzIVNI36Q7Uv0TXuZ4HpW7Pek9+HH2kPy+Tu7ltOgCLCUzXL7niP
-   mbP3zXIPlaa9jVL1MUPlLFJ9wt66xZo3oXcvdkRXl0Z+y7ApVAKPl7P7p
-   w==;
-IronPort-SDR: yBwmUqifiKg6kNQNTp+cKxWFKvqwKQHMEx/aUrgwCJ/Moc08X36jPPRJ+ai0g66+KevvbKZ6JX
- rNgpUqz0JUDA==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] leds: pwm: add support for default-state device
- property
-Thread-Topic: [PATCH v3 2/3] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHV+5H21uxgWjW9wEe6B/TzHpI386hLe6EAgAAeVQA=
-Date:   Mon, 16 Mar 2020 20:24:48 +0000
-Message-ID: <e2835f58aead3ca85ad47e9769b393addcd19f2a.camel@diehl.com>
-References: <20200316124851.6303-1-Denis.Osterland@diehl.com>
-         <20200316124851.6303-3-Denis.Osterland@diehl.com>
-         <bee4d31f-1f00-c621-f93c-f49207e406d6@gmail.com>
-In-Reply-To: <bee4d31f-1f00-c621-f93c-f49207e406d6@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <91C99D695C10214E93AE3AE8B7A09929@diehl.internal>
-Content-Transfer-Encoding: base64
+        Mon, 16 Mar 2020 16:41:16 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:37372 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732537AbgCPUlP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 16 Mar 2020 16:41:15 -0400
+Received: by mail-vs1-f68.google.com with SMTP id o3so2233659vsd.4
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 13:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pfmXc3xr7dDVUscjphZ9PfgG1CkRdszrgoIMj+cYGiM=;
+        b=m0zS/nz+dh5DzW7OJtY1OyEysBJG0asBfU/zhzlY3bVTir7wJr8IvHqzL2txO7u8OP
+         TwCkv0SgavWRtAimFcwroX34kVJs0fx7PJqKmCrABErjMKZa0rezx/rliFEMdBF3BhM0
+         LpUHV4yhDEXst5xYr3keONwo+bCtPHQ/IdU0M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pfmXc3xr7dDVUscjphZ9PfgG1CkRdszrgoIMj+cYGiM=;
+        b=IP9yGyOttr4JohcEnjtrkZ2rFL2tGjelbW8MfpIYZWxaKzFJlr24h58rDyOAKRrD+E
+         lvYSHl4ibjthOMg/zNWk5hOwDko8L3CH/zsJ7hALHGq8ESc9nMEHcFL05PdazeOkcSDt
+         X9BPD/lFzXBN4WE841+o5O8K6p/lP6tO7DUgWkapnVYIJ60eE3zcly1dWnasrdYJX8Sl
+         eKthQvdOH1DvAZFVuLzA2b0SMZ9jV1Nk8teglZ7YNepCruQyzy8K2Q88/HsNIDNrkz7m
+         zPvsjB2C7uGDdIkbn1KzY9F7/je0J9vS96n4P0hNzJsjIFEb0sHNpkAorMyA+Mt/iiGN
+         CqCQ==
+X-Gm-Message-State: ANhLgQ2BJMGEy7k99ikKcO4foYI+1z60Q7YQMl2ZYhhwwCAhkFVK6xnX
+        r0zHAtbgmqV400+bnqXN0g5DfuzLhes=
+X-Google-Smtp-Source: ADFU+vtTSdn2NwDnjck/fGrACFwbiRoOBBQDdp7PNYlsNe3jgU7sMNTeraK2ktivfjafRJMRtGXg/g==
+X-Received: by 2002:a67:fe17:: with SMTP id l23mr1284460vsr.119.1584391273508;
+        Mon, 16 Mar 2020 13:41:13 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id w143sm358234vkd.5.2020.03.16.13.41.11
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Mar 2020 13:41:13 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id 7so12272038vsr.10
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 13:41:11 -0700 (PDT)
+X-Received: by 2002:a05:6102:7c7:: with SMTP id y7mr1256780vsg.198.1584391271488;
+ Mon, 16 Mar 2020 13:41:11 -0700 (PDT)
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: byQFdw3ukCM+zy1/poiPcwvMiO0gPpQfBgEl6CP/J6HYOXhaUBXefvRQ1Zrwlkv4
+References: <20200315134416.16527-1-sam@ravnborg.org> <20200315134416.16527-12-sam@ravnborg.org>
+In-Reply-To: <20200315134416.16527-12-sam@ravnborg.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 16 Mar 2020 13:41:00 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U--vZ7bZ-RMGVbqxwpo9C8pBDtbmU2moUcu73kBHqm-A@mail.gmail.com>
+Message-ID: <CAD=FV=U--vZ7bZ-RMGVbqxwpo9C8pBDtbmU2moUcu73kBHqm-A@mail.gmail.com>
+Subject: Re: [PATCH v1 11/36] dt-bindings: display: convert
+ innolux,p120zdg-bf1 to DT Schema
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Chris Zhong <zyw@rock-chips.com>,
+        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
+        Nikolaus Schaller <hns@goldelico.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marco Franchi <marco.franchi@nxp.com>,
+        Marek Belisko <marek@goldelico.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Nickey Yang <nickey.yang@rock-chips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Peter Rosin <peda@axentia.se>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stefan Mavrodiev <stefan@olimex.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Werner Johansson <werner.johansson@sonymobile.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgSmFjZWssDQoNCkFtIE1vbnRhZywgZGVuIDE2LjAzLjIwMjAsIDE5OjM2ICswMTAwIHNj
-aHJpZWIgSmFjZWsgQW5hc3pld3NraToNCj4gSGkgRGVuaXMsDQo+IA0KPiBPbiAzLzE2LzIw
-IDE6NTMgUE0sIERlbmlzIE9zdGVybGFuZC1IZWltIHdyb3RlOg0KLi4uDQo+ID4gIA0KPiA+
-IEBAIC05MiwxMyArOTYsMjcgQEAgc3RhdGljIGludCBsZWRfcHdtX2FkZChzdHJ1Y3QgZGV2
-aWNlICpkZXYsIHN0cnVjdCBsZWRfcHdtX3ByaXYgKnByaXYsDQo+ID4gIA0KPiA+ICAJcHdt
-X2luaXRfc3RhdGUobGVkX2RhdGEtPnB3bSwgJmxlZF9kYXRhLT5wd21zdGF0ZSk7DQo+ID4g
-IA0KPiA+ICsJaWYgKGxlZC0+ZGVmYXVsdF9zdGF0ZSA9PSBMRURTX1BXTV9ERUZTVEFURV9P
-TikNCj4gPiArCQlsZWRfZGF0YS0+Y2Rldi5icmlnaHRuZXNzID0gbGVkLT5tYXhfYnJpZ2h0
-bmVzczsNCj4gPiArCWVsc2UgaWYgKGxlZC0+ZGVmYXVsdF9zdGF0ZSA9PSBMRURTX1BXTV9E
-RUZTVEFURV9LRUVQKSB7DQo+ID4gKwkJdWludDY0X3QgYnJpZ2h0bmVzczsNCj4gPiArDQo+
-ID4gKwkJcHdtX2dldF9zdGF0ZShsZWRfZGF0YS0+cHdtLCAmbGVkX2RhdGEtPnB3bXN0YXRl
-KTsNCj4gDQo+IFRoaXMgc2VlbXMgdG8gbm90IGJlIHJlYWRpbmcgdGhlIGRldmljZSBzdGF0
-ZSwgaS5lLiB3aGF0IHlvdSB0cmllZA0KPiB0byBhZGRyZXNzIGJ5IGRpcmVjdCBjYWxsIHRv
-IHB3bS0+Y2hpcC0+b3BzLT5nZXRfc3RhdGUoKSBiZWZvcmUuDQo+IA0KPiBBbSBJIG1pc3Np
-bmcgc29tZXRoaW5nPw0KPiANCg0Kd2VsbCwgbm90IHlvdSwgYnV0IEkgbWlzc2VkIGNmYzRj
-MTg5YmM3MGIxYWNjMTdlNmYxYWJmMWRjMWMwYWU4OTBiZDguDQpTaW5jZSB0aGlzIGNvbW1p
-dCBwd21fZ2V0X3N0YXRlKCkgaXMgc3VmZmljaWVudC4NCg0KUmVnYXJkcyBEZW5pcw0KDQoN
-Cg0KRGllaGwgQ29ubmVjdGl2aXR5IFNvbHV0aW9ucyBHbWJIDQpHZXNjaMOkZnRzZsO8aHJ1
-bmc6IEhvcnN0IExlb25iZXJnZXINClNpdHogZGVyIEdlc2VsbHNjaGFmdDogTsO8cm5iZXJn
-IC0gUmVnaXN0ZXJnZXJpY2h0OiBBbXRzZ2VyaWNodA0KTsO8cm5iZXJnOiBIUkIgMzIzMTUN
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQpEZXIg
-SW5oYWx0IGRlciB2b3JzdGVoZW5kZW4gRS1NYWlsIGlzdCBuaWNodCByZWNodGxpY2ggYmlu
-ZGVuZC4gRGllc2UgRS1NYWlsIGVudGhhZWx0IHZlcnRyYXVsaWNoZSB1bmQvb2RlciByZWNo
-dGxpY2ggZ2VzY2h1ZXR6dGUgSW5mb3JtYXRpb25lbi4NCkluZm9ybWllcmVuIFNpZSB1bnMg
-Yml0dGUsIHdlbm4gU2llIGRpZXNlIEUtTWFpbCBmYWVsc2NobGljaGVyd2Vpc2UgZXJoYWx0
-ZW4gaGFiZW4uIEJpdHRlIGxvZXNjaGVuIFNpZSBpbiBkaWVzZW0gRmFsbCBkaWUgTmFjaHJp
-Y2h0Lg0KSmVkZSB1bmVybGF1YnRlIEZvcm0gZGVyIFJlcHJvZHVrdGlvbiwgQmVrYW5udGdh
-YmUsIEFlbmRlcnVuZywgVmVydGVpbHVuZyB1bmQvb2RlciBQdWJsaWthdGlvbiBkaWVzZXIg
-RS1NYWlsIGlzdCBzdHJlbmdzdGVucyB1bnRlcnNhZ3QuDQotIEluZm9ybWF0aW9uZW4genVt
-IERhdGVuc2NodXR6LCBpbnNiZXNvbmRlcmUgenUgSWhyZW4gUmVjaHRlbiwgZXJoYWx0ZW4g
-U2llIHVudGVyIGh0dHBzOi8vd3d3LmRpZWhsLmNvbS9ncm91cC9kZS90cmFuc3BhcmVuei11
-bmQtaW5mb3JtYXRpb25zcGZsaWNodGVuLw0KDQpUaGUgY29udGVudHMgb2YgdGhlIGFib3Zl
-IG1lbnRpb25lZCBlLW1haWwgaXMgbm90IGxlZ2FsbHkgYmluZGluZy4gVGhpcyBlLW1haWwg
-Y29udGFpbnMgY29uZmlkZW50aWFsIGFuZC9vciBsZWdhbGx5IHByb3RlY3RlZCBpbmZvcm1h
-dGlvbi4gUGxlYXNlIGluZm9ybSB1cyBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFp
-bCBieQ0KbWlzdGFrZSBhbmQgZGVsZXRlIGl0IGluIHN1Y2ggYSBjYXNlLiBFYWNoIHVuYXV0
-aG9yaXplZCByZXByb2R1Y3Rpb24sIGRpc2Nsb3N1cmUsIGFsdGVyYXRpb24sIGRpc3RyaWJ1
-dGlvbiBhbmQvb3IgcHVibGljYXRpb24gb2YgdGhpcyBlLW1haWwgaXMgc3RyaWN0bHkgcHJv
-aGliaXRlZC4gDQotIEZvciBnZW5lcmFsIGluZm9ybWF0aW9uIG9uIGRhdGEgcHJvdGVjdGlv
-biBhbmQgeW91ciByZXNwZWN0aXZlIHJpZ2h0cyBwbGVhc2UgdmlzaXQgaHR0cHM6Ly93d3cu
-ZGllaGwuY29tL2dyb3VwL2VuL3RyYW5zcGFyZW5jeS1hbmQtaW5mb3JtYXRpb24tb2JsaWdh
-dGlvbnMvDQo=
+Hi,
+
+On Sun, Mar 15, 2020 at 6:44 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Sandeep Panda <spanda@codeaurora.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  .../display/panel/innolux,p120zdg-bf1.txt     | 22 ----------
+>  .../display/panel/innolux,p120zdg-bf1.yaml    | 43 +++++++++++++++++++
+>  2 files changed, 43 insertions(+), 22 deletions(-)
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
