@@ -2,130 +2,86 @@ Return-Path: <SRS0=Nmyu=5B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3A1C0044D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 06:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92208C0044D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 06:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6021B20679
-	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 06:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584341104;
-	bh=45HRX2kButaKESws3Xm5vkgmtdBIZKtTd0w4e4q+taw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vxI60WAzJ3/6javytGsNtKssUGzy7lI6C+P6biujfLDIah2vpu0a9hYL+liSs3deF
-	 R+EbL8P03AC3onACSM4bksLTq2JlPQi4WNQzx9ruzH0oa+RA8AuGIVrJM6aa9+CfgG
-	 2W/JIXrLu5pKV60hPSg2Nsb2erv7Nn/6EwKBhYzc=
+	by mail.kernel.org (Postfix) with ESMTP id 67B2E20674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 16 Mar 2020 06:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgCPGpD (ORCPT
+        id S1729848AbgCPGwb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 16 Mar 2020 02:45:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729593AbgCPGpD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 16 Mar 2020 02:45:03 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76BB120674;
-        Mon, 16 Mar 2020 06:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584341103;
-        bh=45HRX2kButaKESws3Xm5vkgmtdBIZKtTd0w4e4q+taw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ExuG8dEOm07lwytoqRDX1c7JEnS3I6oqEf+wJYTxGdKHZzwKD0HqmT+e217bhd6gQ
-         GNe5+igC2J6rv1vqtil8mcNtXCbt1g5LZ4N3BWzWsytd1ndrpRoDG7WMYHi56s89Gg
-         6OWEWg8I6OrCaVx+8+vyThhyEBeivarpqmmmaUxY=
-Date:   Mon, 16 Mar 2020 14:44:57 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V2 1/2] arm64: dts: imx8qxp-mek: Sort labels
- alphabetically
-Message-ID: <20200316064456.GJ17221@dragon>
-References: <1584321993-8642-1-git-send-email-Anson.Huang@nxp.com>
- <20200316060024.GG17221@dragon>
- <DB3PR0402MB3916C7F4D25024A30FF4EABDF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB3916C7F4D25024A30FF4EABDF5F90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 16 Mar 2020 02:52:31 -0400
+Received: from jax4mhob19.registeredsite.com ([64.69.218.107]:59098 "EHLO
+        jax4mhob19.registeredsite.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729319AbgCPGwb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 16 Mar 2020 02:52:31 -0400
+Received: from mailpod.hostingplatform.com ([10.30.71.204])
+        by jax4mhob19.registeredsite.com (8.14.4/8.14.4) with ESMTP id 02G6qR79120946
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <devicetree@vger.kernel.org>; Mon, 16 Mar 2020 02:52:27 -0400
+Received: (qmail 21017 invoked by uid 0); 16 Mar 2020 06:52:27 -0000
+X-TCPREMOTEIP: 83.128.90.119
+X-Authenticated-UID: mike@milosoftware.com
+Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
+  by 0 with ESMTPA; 16 Mar 2020 06:52:27 -0000
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+To:     jic23@kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH] dt-bindings: iio: accel: Add bmi088 accelerometer bindings
+Date:   Mon, 16 Mar 2020 07:52:18 +0100
+Message-Id: <20200316065218.4103-1-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 06:31:21AM +0000, Anson Huang wrote:
-> Hi, Shawn
-> 
-> > Subject: Re: [PATCH V2 1/2] arm64: dts: imx8qxp-mek: Sort labels
-> > alphabetically
-> > 
-> > On Mon, Mar 16, 2020 at 09:26:32AM +0800, Anson Huang wrote:
-> > > Sort the labels alphabetically for consistency.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > > Changes since V1:
-> > > 	- Rebase to latest branch, no code change.
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 50
-> > > ++++++++++++++++-----------
-> > >  1 file changed, 30 insertions(+), 20 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> > > b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> > > index d3d26cc..b1befdb 100644
-> > > --- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> > > +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> > > @@ -30,18 +30,7 @@
-> > >  	};
-> > >  };
-> > >
-> > > -&adma_lpuart0 {
-> > > -	pinctrl-names = "default";
-> > > -	pinctrl-0 = <&pinctrl_lpuart0>;
-> > > -	status = "okay";
-> > > -};
-> > > -
-> > > -&fec1 {
-> > > -	pinctrl-names = "default";
-> > > -	pinctrl-0 = <&pinctrl_fec1>;
-> > > -	phy-mode = "rgmii-id";
-> > > -	phy-handle = <&ethphy0>;
-> > > -	fsl,magic-packet;
-> > > +&adma_dsp {
-> > >  	status = "okay";
-> > >
-> > >  	mdio {
-> > 
-> > Here is a rebase issue, i.e. adma_dsp shouldn't get a mdio child node.
-> > It came from the conflict with one commit on my fixes branch.  I decided to
-> > drop the series for the coming merge window.  Let's start over again after
-> > 5.7-rc1 becomes available.
-> 
-> OK, I am also confused by this conflict, I normally do the patch based on your
-> for-next branch, and I did NOT meet the conflict at all, then I redo it based on
-> your dt branch I met the conflict and fix it...
-> 
-> So, do I need to resend the patch series later when 5.7-rc1 available?
+This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
+the accelerometer part.
 
-You need to resend later.
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+ .../devicetree/bindings/iio/accel/bmi088.txt  | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/bmi088.txt
 
-Shawn
+diff --git a/Documentation/devicetree/bindings/iio/accel/bmi088.txt b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
+new file mode 100644
+index 000000000000..691a47726dbc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
+@@ -0,0 +1,23 @@
++* Bosch BMI088 IMU combining accelerometer and gyroscope
++
++https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
++
++Required properties:
++
++  - compatible : should be "bosch,bmi088_accel"
++  - reg : the I2C address of the sensor or the SPI chip select number
++
++Optional properties:
++
++  - interrupts : interrupt mapping for GPIO IRQ, it should be configured with
++		 IRQ_TYPE_EDGE_RISING
++
++Example:
++
++bmi088_accel@1 {
++	compatible = "bosch,bmi088_accel";
++	reg = <1>;
++	spi-max-frequency = <10000000>;
++	interrupt-parent = <&gpio>;
++	interrupts = <90 IRQ_TYPE_EDGE_RISING>;
++};
+-- 
+2.17.1
+
