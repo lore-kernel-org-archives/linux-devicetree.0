@@ -2,92 +2,94 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D931C10F29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 15:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BF8C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 15:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4DD420714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 15:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782ED20714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 15:17:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rhpPKvLj"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yAtDccBG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgCQPJo (ORCPT
+        id S1726652AbgCQPRw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:09:44 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:36619 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727082AbgCQPJn (ORCPT
+        Tue, 17 Mar 2020 11:17:52 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:32520 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726388AbgCQPRv (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:09:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584457783; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=UrmrOXjGTq5RxGy42q7tGcOyFhDO4TM3w0P3Bv5qeeU=; b=rhpPKvLjen6NWK5BDYWolmDR8SYKOujrCIutZbxr9SewEqFbhe1tkSLFpoe2cTTkMYNRO62b
- Mpd0y4YF6WwUzzkxYJM1V28jrWZjhLZfcSFN8Le5ZYCABj05bbm9/NXbnm3NeMgXraV2ScyB
- GK7c+LL+1+vvnMa4BBB+J6veNFs=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e70e831.7fcbb8ab2b90-smtp-out-n02;
- Tue, 17 Mar 2020 15:09:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 61A8EC44791; Tue, 17 Mar 2020 15:09:37 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E053EC433CB;
-        Tue, 17 Mar 2020 15:09:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E053EC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, joro@8bytes.org,
-        robin.murphy@arm.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-remoteproc@vger.kernel.org, ohad@wizery.com,
-        agross@kernel.org, dianders@chromium.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 3/3] arm64: dts: qcom: sdm845-cheza: Add iommus property
-Date:   Tue, 17 Mar 2020 20:39:10 +0530
-Message-Id: <20200317150910.26053-4-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200317150910.26053-1-sibis@codeaurora.org>
-References: <20200317150910.26053-1-sibis@codeaurora.org>
+        Tue, 17 Mar 2020 11:17:51 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HFDLIT001980;
+        Tue, 17 Mar 2020 16:17:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=k0ZMfP7aKLkzfzu3eH2J4VQnqrCYW3x7HRTJSMhhAes=;
+ b=yAtDccBGIxfisii37vFQGuMhAub3J1lz8e6Z/NwU5mFZAyoUv8F5N3xBvi8zo6U+87pI
+ 35w8/n5f0njv83PGrDCY1bI5X4Y1G38LhievMBHKob+WoVmQFsgAFNWuTYRY7O2AcCCS
+ NZliLMW5NC8b23P6dWlTEzB7hnWhy6B11sE/eP9y5OJjHCzZgw8PAMVEKpZ/jucMs1qv
+ 2nROyZOWPL9EbqNGq+XjbiMjGxkh1Fj5YMouTZ0vy/rEsxM3iUFsOVPnnsxVGlGJ58pY
+ 78I7chAfQKIECLj3AmUITdvonMVbXSQSGE626qa5vDtygo5MLPJ/wNhnWnQCRkAHU9n/ RQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yrqa9s1vp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Mar 2020 16:17:24 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B0151100038;
+        Tue, 17 Mar 2020 16:17:14 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8A84D2BC7AF;
+        Tue, 17 Mar 2020 16:17:14 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 17 Mar 2020 16:17:13
+ +0100
+From:   Christophe Roullier <christophe.roullier@st.com>
+To:     <davem@davemloft.net>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <mripard@kernel.org>,
+        <martin.blumenstingl@googlemail.com>,
+        <alexandru.ardelean@analog.com>, <narmstrong@baylibre.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <christophe.roullier@st.com>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCHv2 0/2] Convert stm32 dwmac to DT schema
+Date:   Tue, 17 Mar 2020 16:17:04 +0100
+Message-ID: <20200317151706.25810-1-christophe.roullier@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-17_06:2020-03-17,2020-03-17 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add iommus property to remoteproc modem node.
+Convert stm32 dwmac to DT schema
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Christophe Roullier (2):
+  dt-bindings: net: dwmac: increase 'maxItems' for 'clocks',
+    'clock-names' properties
+  dt-bindings: net: dwmac: Convert stm32 dwmac to DT schema
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 8d16d016efec1..01c7d7cc95c2d 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -626,6 +626,10 @@ &mdss_mdp {
- 	status = "okay";
- };
- 
-+&mss_pil {
-+	iommus = <&apps_smmu 0x780 0x1>;
-+};
-+
- &pm8998_pwrkey {
- 	status = "disabled";
- };
+v1->v2:
+update from Rob (solve checkpatch errors with trailing WS,
+rename "Example", Wrap lines)
+
+ .../devicetree/bindings/net/snps,dwmac.yaml   |   8 +-
+ .../devicetree/bindings/net/stm32-dwmac.txt   |  44 -----
+ .../devicetree/bindings/net/stm32-dwmac.yaml  | 160 ++++++++++++++++++
+ 3 files changed, 167 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.txt
+ create mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.1
+
