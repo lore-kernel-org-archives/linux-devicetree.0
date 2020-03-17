@@ -2,95 +2,104 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF95CC10F29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B41DC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAC020757
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:00:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cGnLnBuV"
+	by mail.kernel.org (Postfix) with ESMTP id 3900320754
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584453979;
+	bh=DmaqvTgO1fmmMqgI6fMIcL8ag6suzOfDR3kPhV4+PwA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nXAbpcRdOcXkWUU2Oqjquxp07Hg7Cy3q/RfDQJCLFB8ir4K7Z9UxX6AMm8IvV4cia
+	 8FffIfhoiudocmPIC5zHl9lRikUJhQ+NkQk7RQv1UAlWCfrjivfJ3wwm0emguBKwK0
+	 +sEllzfk2f3jHtrZfC8vEWFFeYq773gPzkzmqo5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgCQOAM (ORCPT
+        id S1726248AbgCQOGS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:00:12 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40808 "EHLO vps0.lunn.ch"
+        Tue, 17 Mar 2020 10:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgCQOAL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:00:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=FrLx3+zGH3oU0Jo8/lq72eF8fifQc3xB2bQg8gY6tl8=; b=cGnLnBuVsp6fkYfQcJ+N0lP7Zi
-        1CQ0257uMP73Zssq480GqtOsiT6dtz3j4jFY4auOWYouzd6Noyy4GBuZ2grQ+9xBQnBkb7o8JyQgO
-        LYVpPM0bbhZnw1Ygcjk+w5hK1jV6VmA0mj+VI2m8UsxHjo1atAFpbrGsSPzlUpACujao=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jEClA-0006j0-3H; Tue, 17 Mar 2020 14:59:56 +0100
-Date:   Tue, 17 Mar 2020 14:59:56 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 00/28] DT: Improve validation for Marvell SoCs
-Message-ID: <20200317135956.GQ24270@lunn.ch>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317134609.GN24270@lunn.ch>
- <20200317135551.GE3448@piout.net>
+        id S1726187AbgCQOGS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:06:18 -0400
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81860205ED;
+        Tue, 17 Mar 2020 14:06:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584453977;
+        bh=DmaqvTgO1fmmMqgI6fMIcL8ag6suzOfDR3kPhV4+PwA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MCWCwGfnU+jb8ce35ywWcM47WdZTqfv4Ej/STM9Dw7MqFKaQ9sFNBXUhH0PJA7pE9
+         qTD2mYziACOoGGIwTyBYLbP0CLGQc8ez0gbcnEvy2hBD4NHBP7z+lFwIPgGDCGPJ9D
+         IettSkaEBTtKSQEL/Vf+Z+7EDfgo9+zMzzMQrC6Y=
+Date:   Tue, 17 Mar 2020 15:06:09 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 04/12] docs: dt: fix references to m_can.txt file
+Message-ID: <20200317150609.4d5c7c71@coco.lan>
+In-Reply-To: <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
+References: <cover.1584450500.git.mchehab+huawei@kernel.org>
+        <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
+        <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
+        <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317135551.GE3448@piout.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 02:55:59PM +0100, Alexandre Belloni wrote:
-> On 17/03/2020 14:46:09+0100, Andrew Lunn wrote:
-> > On Tue, Mar 17, 2020 at 10:38:54AM +0100, Lubomir Rintel wrote:
-> > > Hello World,
-> > 
-> > Yah, that is an issue here. Marvell have a few different SoC families,
-> > each with there own maintainers. Gregory and I tend to look after
-> > 'mvebu', aka orion5x, kirkwood, dove, berlin and a few others. All the
-> > others are 'Somebody elses' problem'.
-> > 
-> 
-> Hum, berlin is not mvebu, it was the same BU as the MMP and it has been
-> sold to synopsys a while ago.
+Em Tue, 17 Mar 2020 08:29:45 -0500
+Dan Murphy <dmurphy@ti.com> escreveu:
 
-Yes, the boundaries are a bit fluffy. At least the early work by
-Sebastian was merged via the mvebu maintainers, even if it is not
-technically part of mvebu.
+> Hello
+>=20
+> On 3/17/20 8:17 AM, Marc Kleine-Budde wrote:
+> > On 3/17/20 2:10 PM, Mauro Carvalho Chehab wrote: =20
+> >> This file was converted to json and renamed. Update its
+> >> references accordingly.
+> >>
+> >> Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-sch=
+ema") =20
+>=20
+> I am trying to find out where the above commit was applied
+>=20
+> I don't see it in can-next or linux-can. I need to update the tcan dt=20
+> binding file as it was missed.
+>=20
+> And I am not sure why the maintainers of these files were not CC'd on=20
+> the conversion of this binding.
 
-This is also part of the discussion about how this lot actually gets
-merged.
+=46rom Next/merge.log:
 
-	   Andrew
+Merging devicetree/for-next (d047cd8a2760 scripts/dtc: Update to upstream v=
+ersion v1.6.0-2-g87a656ae5ff9)
+$ git merge devicetree/for-next
+Removing scripts/dtc/libfdt/Makefile.libfdt
+Removing scripts/dtc/Makefile.dtc
+...
+ create mode 100644 Documentation/devicetree/bindings/net/can/bosch,m_can.y=
+aml
+ delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
+
+It sounds that those came from DT for-next branch.
+
+Thanks,
+Mauro
