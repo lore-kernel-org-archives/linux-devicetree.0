@@ -2,97 +2,93 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1241CC18E5B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F93C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA8C420754
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F25502076E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tMDFRzTM"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="se96Gfa2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgCQNfu (ORCPT
+        id S1726084AbgCQNgn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:35:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57534 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgCQNft (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:35:49 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02HDZXeK024397;
-        Tue, 17 Mar 2020 08:35:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584452133;
-        bh=EYviLt1tmLkkYRzO5gGJjof15MRwO/EmxXKZpB0sQHk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tMDFRzTMMQ1GDonZySKl3XHX+nAUbToR1HJEl8E6lVspjZJ4YWRsOW8NAbrVQ4MbF
-         +KpGYS81qKMBNN9U1mWmp0PSAgNtE+pHtRI15SeA8AUZ2t4R6r3hmDoAoHQlYaq5zV
-         k9pRbyhadAnj33LU0IIuComaQYUV4ZPFwzrp4Fvs=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02HDZXg5096136
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Mar 2020 08:35:33 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Mar 2020 08:35:33 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Mar 2020 08:35:33 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02HDZWL5047553;
-        Tue, 17 Mar 2020 08:35:32 -0500
-Subject: Re: [PATCH 04/12] docs: dt: fix references to m_can.txt file
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <cover.1584450500.git.mchehab+huawei@kernel.org>
- <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
- <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
-Date:   Tue, 17 Mar 2020 08:29:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 17 Mar 2020 09:36:43 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36629 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726474AbgCQNgm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:36:42 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s5so25759584wrg.3
+        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:36:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=C5UUMlB1vuVsFqD+amvxd3LJdmlP7Psxf6b/ICw2yeE=;
+        b=se96Gfa2PabhLjXbMk3DF/dsiXpQcRoXaNnO0MF+OIOP+6Ga54A4maQX31UU5r4vPU
+         5/hGqPTpnRLR8DecY2Pg23NZ1/yWDIJoZWfsSry8XsID7ZcqDz1R9QAiNgSTrPlRbaqx
+         Kx5W9cykjsWagYxQgEhiKtKMvH2zCyN6USHJs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=C5UUMlB1vuVsFqD+amvxd3LJdmlP7Psxf6b/ICw2yeE=;
+        b=igzwStCayCV3DOVb2OJMuKJcDV2vEwdTGVbgrL7v6Lickfm1R8j4RwAcEZThNbF4Cd
+         0uTi1bC7o2GwWLl8XG0MpfJ1G+NR0D/KtZaMcJPhOiDqmebPuNgnzIuoUOrGTDT1znZK
+         hTbV5ymRNC53HvH4sgI69KJX9212OwzhBay6E+Wczq7fHh3/9w8TEyGV8VHhlgkx29gm
+         ZNUn2xsqaMqeNPgeBdz2skKCvHBMIf0x6uAAHKGFPwe+18YyquBx8GVQ3hzjWehGQlef
+         keYAagS3+y9kcrggVwCc+Lqad62ApR+nVrf7h44qj6DhLV+9bBOoxM/fHDkwzWQqfp88
+         u0uw==
+X-Gm-Message-State: ANhLgQ1H7Fz3T3AZ7yzDVCONtklvBa0A5otnMJWgR0bi8uuz2lfBI6Mm
+        vly75W+Z0xQXVu1mXZpKkPOydg==
+X-Google-Smtp-Source: ADFU+vt2hjTZMVdUwDmhSalbO2esCViQhgfOwq7UWI9SwWOAqbVu4rfpvcU688VZVd1B1aN3n2pb0g==
+X-Received: by 2002:a5d:522c:: with SMTP id i12mr5953325wra.176.1584452200128;
+        Tue, 17 Mar 2020 06:36:40 -0700 (PDT)
+Received: from ub1910 ([213.48.11.149])
+        by smtp.gmail.com with ESMTPSA id k5sm3743373wmj.18.2020.03.17.06.36.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 06:36:39 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 13:36:38 +0000
+From:   Paul Barker <pbarker@konsulko.com>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/7] dt-bindings: pwm: add normal PWM polarity flag
+Message-ID: <20200317133638.5951a743@ub1910>
+In-Reply-To: <20200317123231.2843297-4-oleksandr.suvorov@toradex.com>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+        <20200317123231.2843297-4-oleksandr.suvorov@toradex.com>
+Organization: Konsulko Group
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello
+On Tue, 17 Mar 2020 14:32:27 +0200
+Oleksandr Suvorov <oleksandr.suvorov@toradex.com> wrote:
 
-On 3/17/20 8:17 AM, Marc Kleine-Budde wrote:
-> On 3/17/20 2:10 PM, Mauro Carvalho Chehab wrote:
->> This file was converted to json and renamed. Update its
->> references accordingly.
->>
->> Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-schema")
+> PWM can have a normal polarity and a reverted one. The reverted polarity
+> value is defined.
+> Define the PWM_POLARITY_NORMAL to be used further.
+> 
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-I am trying to find out where the above commit was applied
+s/reverted/inverted/
 
-I don't see it in can-next or linux-can. I need to update the tcan dt 
-binding file as it was missed.
-
-And I am not sure why the maintainers of these files were not CC'd on 
-the conversion of this binding.
-
-Dan
-
+-- 
+Paul Barker
+Konsulko Group
