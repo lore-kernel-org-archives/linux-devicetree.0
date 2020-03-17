@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385F6C5ACC0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF79FC3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF6320736
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8831820724
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgCQJk2 (ORCPT
+        id S1726827AbgCQJkU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:40:28 -0400
-Received: from v6.sk ([167.172.42.174]:50380 "EHLO v6.sk"
+        Tue, 17 Mar 2020 05:40:20 -0400
+Received: from v6.sk ([167.172.42.174]:50228 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbgCQJk1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:40:27 -0400
+        id S1726077AbgCQJkM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:40:12 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 00A2C6108D;
-        Tue, 17 Mar 2020 09:40:25 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 50ADC60FFA;
+        Tue, 17 Mar 2020 09:40:09 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -48,9 +48,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 13/28] dt-bindings: serial: move Marvell compatible string to 8250 binding doc
-Date:   Tue, 17 Mar 2020 10:39:07 +0100
-Message-Id: <20200317093922.20785-14-lkundrak@v3.sk>
+Subject: [PATCH 09/28] ARM: dts: mmp3: fix L2 cache controller node name
+Date:   Tue, 17 Mar 2020 10:39:03 +0100
+Message-Id: <20200317093922.20785-10-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
 References: <20200317093922.20785-1-lkundrak@v3.sk>
@@ -61,40 +61,30 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-These ports are compatible with NS8250 and handled by the same driver.
-Get rid of the extra document that fails to document the properties that
-are actually supported.
+The current one makes validation unhappy:
+
+  mmp3-dell-ariel.dt.yaml: l2-cache-controller@d0020000: $nodename:0:
+      'l2-cache-controller@d0020000' does not match
+      '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- Documentation/devicetree/bindings/serial/8250.txt        | 2 ++
- Documentation/devicetree/bindings/serial/mrvl-serial.txt | 4 ----
- 2 files changed, 2 insertions(+), 4 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/mrvl-serial.txt
+ arch/arm/boot/dts/mmp3.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-index 55700f20f6ee8..a543702859e2f 100644
---- a/Documentation/devicetree/bindings/serial/8250.txt
-+++ b/Documentation/devicetree/bindings/serial/8250.txt
-@@ -26,6 +26,8 @@ Required properties:
- 	- "aspeed,ast2400-vuart"
- 	- "aspeed,ast2500-vuart"
- 	- "nuvoton,npcm750-uart"
-+	- "mrvl,mmp-uart"
-+	- "mrvl,pxa-uart"
- 	- "serial" if the port type is unknown.
- - reg : offset and length of the register set for the device.
- - interrupts : should contain uart interrupt.
-diff --git a/Documentation/devicetree/bindings/serial/mrvl-serial.txt b/Documentation/devicetree/bindings/serial/mrvl-serial.txt
-deleted file mode 100644
-index d744340de887c..0000000000000
---- a/Documentation/devicetree/bindings/serial/mrvl-serial.txt
-+++ /dev/null
-@@ -1,4 +0,0 @@
--PXA UART controller
--
--Required properties:
--- compatible : should be "mrvl,mmp-uart" or "mrvl,pxa-uart".
+diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
+index 649aa74851257..eaff9b1bc1d9f 100644
+--- a/arch/arm/boot/dts/mmp3.dtsi
++++ b/arch/arm/boot/dts/mmp3.dtsi
+@@ -523,7 +523,7 @@ ssp4: spi@d4039000 {
+ 			};
+ 		};
+ 
+-		l2: l2-cache-controller@d0020000 {
++		l2: cache-controller@d0020000 {
+ 			compatible = "marvell,tauros3-cache", "arm,pl310-cache";
+ 			reg = <0xd0020000 0x1000>;
+ 			cache-unified;
 -- 
 2.25.1
 
