@@ -2,86 +2,137 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD1DC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED62C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F1720768
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843382075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:50:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Q5hrXgSw"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QSiI3s0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgCQNsU (ORCPT
+        id S1726121AbgCQNuq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:48:20 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:40706 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbgCQNsT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:48:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=bYlQFWOfFv95sQLXQr8vkUotMJgsK9c12/BhzhTTiG8=; b=Q5hrXgSw41E7plUSnoZHt2EQg1
-        Arv6YyudHnKqxSCDvgnG/1p+vDAyc5UWmGp5ZZSKNBNpnzeHnJXmApv2msv7x/CC6the2kvbBGgC8
-        acDMOqO+sJTRIxbjtTtowhoJ65ProLnwtJBGXoq3Ml2+ks8e7eOLbNUZyxGGVZ1qBlT8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jECZh-0006cx-6s; Tue, 17 Mar 2020 14:48:05 +0100
-Date:   Tue, 17 Mar 2020 14:48:05 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 13/28] dt-bindings: serial: move Marvell compatible
- string to 8250 binding doc
-Message-ID: <20200317134805.GO24270@lunn.ch>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
- <20200317093922.20785-14-lkundrak@v3.sk>
+        Tue, 17 Mar 2020 09:50:46 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33406 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbgCQNup (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:50:45 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r7so15710968wmg.0
+        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:50:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=weGSHusuD3aKifnaFA/EzOIoqClxmTlaJmSpzpOoxs0=;
+        b=QSiI3s0YoV7n7/tnYog9oUBP3Cc6GxHGUCwCh0UhqjNIkn6pKoWxwDwIc7ZHfuKyt1
+         kEdvFCQ6j7+Noa9+D0kVSXd1O/Rq0h4ff0AABiKfQ0W9cNhse4SjTXrrb27FQeHJRpqX
+         rIA1fPNgK6D/F/8d3tqP2UVTDNrxXWhDA5E8X6jidyynaIZ0Cy+aY7WG7NpXiQONb4V8
+         LujVukcDZrWz+C7PF5bEhVfs5Bz/2BHH9zTE0HxRpIGKa2vvxtylEPZVlwnF7tZUgTXY
+         0rCI7jvUsKgzmx+R0sfFe10N4oWZb67+facmOeYl3vGzjeHlueh6TX64XNpmNRTf9oox
+         +L4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=weGSHusuD3aKifnaFA/EzOIoqClxmTlaJmSpzpOoxs0=;
+        b=TqkvGrMgwNAt1OnuntkwbUddOfTFUJgAIbxlFs5INK2c1iD0+bc1TslyXh/r+TmWsS
+         Gn+1msyLLb9h5OHlej88Rs9B2P7vY7wla1Rta66E47mI9KvYuwSBgvHahWIC8hK26+f2
+         qo6XgoVCbzVhkbYJdf2EV0cnr4zDXQ3116fkXvsmJxp56BaoAscs/r8Bx33DBuWBXZ8m
+         Kxihoz6Pl5fc8qKt4BEU3tJWCskv3+Mt9Wkyi67uTfpAaM5ztMHJId7NiPoyWDim2i/T
+         RtMVE3u7/j7YM3wZjwOPSil4fYk4atvX9vJcr8jsNtHQrYpwR32CvwBPc2AUB19+Ezng
+         +Eng==
+X-Gm-Message-State: ANhLgQ0koAj0GTnWb+gWS5gmZPOg4JB9I1ur0lZyEnkzf3lL8h6xUAhD
+        ULY9MTjJ164EMQjOkIbh9A887SlnGmAdGy5QPxRAQw==
+X-Google-Smtp-Source: ADFU+vusa/y0ClrKHxHtyBDmZj1O+rMx8uu0qjHobSSS5JQecz+zDpUKEEddBu5XlbGpEmdbaIvM2nWs+JrNOWL77kQ=
+X-Received: by 2002:a05:600c:21d1:: with SMTP id x17mr5249108wmj.3.1584453043184;
+ Tue, 17 Mar 2020 06:50:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317093922.20785-14-lkundrak@v3.sk>
+References: <cover.1584450500.git.mchehab+huawei@kernel.org> <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
+In-Reply-To: <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 17 Mar 2020 14:50:32 +0100
+Message-ID: <CAMpxmJUPA2qDwDu-LUh-RtXt66NhQUdjnPOCSaaBZ9xEm0C5LQ@mail.gmail.com>
+Subject: Re: [PATCH 05/12] docs: dt: fix references to ap806-system-controller.txt
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Ben Peled <bpeled@marvell.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        linux-pm <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:39:07AM +0100, Lubomir Rintel wrote:
-> These ports are compatible with NS8250 and handled by the same driver.
-> Get rid of the extra document that fails to document the properties that
-> are actually supported.
+wt., 17 mar 2020 o 14:10 Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> napisa=C5=82(a):
+>
+> ap806-system-controller.txt was renamed to ap80x-system-controller.txt.
+>
+> Update its references accordingly.
+>
+> Fixes: 2537831bbc19 ("dt-bindings: ap80x: replace AP806 with AP80x")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt        | 2 +-
+>  Documentation/devicetree/bindings/thermal/armada-thermal.txt | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Docu=
+mentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> index 2e097b57f170..0fc6700ed800 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> @@ -14,7 +14,7 @@ Required properties:
+>
+>      "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K
+>      SoCs (either from AP or CP), see
+> -    Documentation/devicetree/bindings/arm/marvell/ap806-system-controlle=
+r.txt
+> +    Documentation/devicetree/bindings/arm/marvell/ap80x-system-controlle=
+r.txt
+>      for specific details about the offset property.
+>
+>  - reg: Address and length of the register set for the device. Only one
+> diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt=
+ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+> index f3b441100890..b0bee7e42038 100644
+> --- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
+> @@ -12,7 +12,7 @@ Required properties:
+>
+>  Note: these bindings are deprecated for AP806/CP110 and should instead
+>  follow the rules described in:
+> -Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.tx=
+t
+> +Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.tx=
+t
+>  Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.tx=
+t
+>
+>  - reg: Device's register space.
+> --
+> 2.24.1
+>
 
-Hi Lubmir
+For GPIO:
 
-This is needs a bit closer examination. By the PXA maintainers. It
-appears there are two serial drivers, the 8250 and a PXA specific
-driver.
-
-	Andrew
+Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
