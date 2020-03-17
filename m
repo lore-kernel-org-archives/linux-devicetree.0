@@ -2,222 +2,292 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6435C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAC0C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7502020735
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 10:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B989120735
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 11:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YTRSMtRe"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="F+PNJyzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgCQK6G (ORCPT
+        id S1728340AbgCQLE4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:58:06 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:62345 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726710AbgCQK6G (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:58:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584442685; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=cQuV8le5zJMXEg6Nx5zOixnWj9Q+mZRhKelZQ5b1wgI=; b=YTRSMtReZTeldRRQ/s+W10XDi07BysWPzT2aYGaTjvR7rO140fzBNLLKKhnYPL931DqAjY57
- weK7E2EpzlnvljP/4FyesPVBU3jJtxh3kY5nP7D6DbtSRuia90ovHiK2ZQuOHzAQd/1+t1Pp
- 4Tsi3POQGO3lYbPu7+WNUEkwhUc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e70ad36.7f29df409538-smtp-out-n03;
- Tue, 17 Mar 2020 10:57:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 99225C4478C; Tue, 17 Mar 2020 10:57:57 +0000 (UTC)
-Received: from [192.168.0.8] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1FF87C43636;
-        Tue, 17 Mar 2020 10:57:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1FF87C43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V2 3/8] soc: qcom-geni-se: Add interconnect support to fix
- earlycon crash
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-4-git-send-email-akashast@codeaurora.org>
- <20200313204441.GJ144492@google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <1f86fdf0-df7c-4e4a-d4d8-8b0162e52cb4@codeaurora.org>
-Date:   Tue, 17 Mar 2020 16:27:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 17 Mar 2020 07:04:56 -0400
+Received: from mail-eopbgr1400113.outbound.protection.outlook.com ([40.107.140.113]:3920
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726760AbgCQLEz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:04:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f8wpCC8z+NH8eAIxMw+ByNTHy3O6iP0nWaDX511Um7uYKgEoOQYLxK4EK22O3UMnl7tmYf1E/5YRaMNY67t27Pb7eigDcAI9dfQPRl502vsB0FE/JPxy0dNcGF5EmgUKbAcN2RI65bgkyI7RZe+qpdAmq0K7Utb/CIzX0XUbBSnevMCTJL0Ta7gUXCVK7Nxd6iBX7NV9jc2a1fBDV4gIuUsEntyQNOClwl8JyYWTozOholF4bnwgmUeeky/ZR8C7NugnUXwKeMRmkQa4VVTrB3vwSJgrA8LY+x083PyBifohC8X+nQfxtimJ0vMHf931nhfNvIVyj0+yAcOf0TADgA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1KZ5I9i9RFAr5cTFpdxQRY/Nifkj/dyHFtodqrT1KEI=;
+ b=kkgQ8NAi6SKjhgtx+MHe87zSlorPpCmod0JTqTQRmtHo1TsqR+idt7dYHKdemRfAqEK4IvRoKkRFEB84cMWMNUFr1DA1Xi0btvUv3uJw3B97RPc2KUVBPqWjcAbaAqSfAX0/f+EIhD0HunbmTaYc7FE9RXN8RfQItHfxnCheHwR1wGL4M9QpxEaDH6H9a54MoU4wKp2lbc8Zw9Pr8IqJxB9BPlO9ZY1Q6Mimw6v1cx4E73STUNNIRhUI/kHKXXlRJu0nyl/jDV5mGpEFNdAHvqyw3F70e2DRXBVvlMUanbVpghKGor4kn6rh7g55FTj1SvC0jgRbGGctTqAR/MTEVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1KZ5I9i9RFAr5cTFpdxQRY/Nifkj/dyHFtodqrT1KEI=;
+ b=F+PNJyzs21sabwrTlIeosq6p5h8FBuEkQ0qs3PZxsYcUTCSUvJgnrPuvnuDI8qgvrzY6UC7nVU5w9QJAKu6vAeBOjjlY3Ioz0qBBq7Jb6mVnuMHAW5AVz1sc+Wfza4+nwr30WzmEHdvUtnOAHMkEIA1Ji2R7JBX/qg495CfUo8o=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB3616.jpnprd01.prod.outlook.com (20.178.138.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.16; Tue, 17 Mar 2020 11:04:48 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 11:04:48 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+CC:     Andrew Murray <andrew.murray@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: RE: [PATCH v5 4/7] PCI: endpoint: Add support to handle multiple base
+ for mapping outbound memory
+Thread-Topic: [PATCH v5 4/7] PCI: endpoint: Add support to handle multiple
+ base for mapping outbound memory
+Thread-Index: AQHV7k2kfqtu6T0o2UCPs98u98LxN6hMgYXQgAAogACAAAq1EA==
+Date:   Tue, 17 Mar 2020 11:04:47 +0000
+Message-ID: <TYAPR01MB4544DD58C495D0ED223B1A7BD8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200228154122.14164-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TYAPR01MB4544599A72C88666B4F972B7D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <OSBPR01MB359001B994CFC0CB45170AB0AAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB359001B994CFC0CB45170AB0AAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 40cdaf7d-7c99-4e70-a0cd-08d7ca6301fc
+x-ms-traffictypediagnostic: TYAPR01MB3616:|TYAPR01MB3616:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB3616EB1081916F4653C5FDE5D8F60@TYAPR01MB3616.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0345CFD558
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(346002)(376002)(366004)(136003)(199004)(2906002)(55016002)(45080400002)(9686003)(52536014)(33656002)(5660300002)(7696005)(81156014)(86362001)(55236004)(66476007)(8936002)(66556008)(66446008)(64756008)(6506007)(8676002)(81166006)(76116006)(316002)(54906003)(66946007)(110136005)(71200400001)(186003)(26005)(7416002)(4326008)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3616;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vKg9heLUPw7IXxdJx74cdvN6lyVIzVnwAnRCr6SCjjQ4j1QXpTyGlqd2mDD6J/19k49QJszxe+nJKFGjCBjjLymA6cDMry02UNVReepIJZWJ5aGai8iJFpDIXhtAJNllyjSjUfxp+6tTlp55asN8wph9P5V+gadCkDEZjN1iy4T3C5SXsA6mOfrTnx1ydU6kKIk6yAQYhIuOOATYyzU1Q4b1SFNaAddPQGSkPckHURdoSyflOh6ubZY3+bA3wJBi/Ylgz/s8S76/TG2cWCR8K+AAhczsA1rFgwwbZB5IZKyjFZwQ3gRPkwxCS1e8URMZ6QGGv+b2LJgoVtH8cO3c/tU4zmroMakN1CDEuwYpoJTslSQ4M9MZ6JLbrwOT+HPHL2PgBAWvKHPqKpmUCq3QhAkPDjydRuctahPB6OqHKG+OarZcKhGuE3ouK7RzLVOM
+x-ms-exchange-antispam-messagedata: Ic3nNC5rtt0av+fTfzcEHAeO+iosDu6qHdqUwW1246qUKBIyVhKm6uWerY49VGGEiR+TXtgPBEWaarXYE3VYc620Oge7xiROQEIOhOqVaR3CJpbKpdJNkw52DRbrIvpBAMQZrHNc3bYfENlkNt6i1g==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20200313204441.GJ144492@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40cdaf7d-7c99-4e70-a0cd-08d7ca6301fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 11:04:47.7342
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 31GP9C05q0AwyLTkFmi5cw5uvHcx7oYOXaCLBuja4IGUxwxMbBSmCH7emkSm+HLcLBh8H52ron+RvvD5gvQ7MZygP1strqoQvsJ1CPG+i6e5G8ZN+ZwIM3ENAhiU88DA
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3616
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
+Hi Prabhakar-san,
 
-On 3/14/2020 2:14 AM, Matthias Kaehlcke wrote:
-> Hi Akash,
->
-> On Fri, Mar 13, 2020 at 06:42:09PM +0530, Akash Asthana wrote:
->> V1 patch@https://patchwork.kernel.org/patch/11386469/ caused SC7180 system
->> to reset at boot time.
-> The v1 patch isn't relevant in the commit message, please just describe the
-> problem. Also the crash only occurs when earlycon is used.
-ok
->
->> As QUP core clock is shared among all the SE drivers present on particular
->> QUP wrapper, the reset seen is due to earlycon usage after QUP core clock
->> is put to 0 from other SE drivers before real console comes up.
->>
->> As earlycon can't vote for it's QUP core need, to fix this add ICC
->> support to common/QUP wrapper driver and put vote for QUP core from
->> probe on behalf of earlycon and remove vote during sys suspend.
-> Only removing the vote on suspend isn't ideal, the system might never get
-> suspended. That said I don't have a really good alternative suggestion.
->
-> One thing you could possibly do is to launch a delayed work, check
-> console_device() every second or so and remove the vote when it returns
-> non-NULL. Not claiming this would be a great solution ...
->
-> The cleanest solution might be a notifier when the early console is
-> unregistered, it seems somewhat over-engineered though ... Then again
-> other (future) uart drivers with interconnect support might run into
-> the same problem.
+Just in my opinion though, automatically adding new line of email client
+should be disabled or setting larger characters.
+# In my side, I change the setting as 132 characters on Outlook :)
 
-We are hitting this problem because QUP core clocks are shared among all 
-the SE driver present in particular QUP wrapper, if other HW controllers 
-has similar architecture we will hit this issue.
+> From: Prabhakar Mahadev Lad, Sent: Tuesday, March 17, 2020 7:04 PM
+<snip>
+> > > -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base,
+> > size_t size,
+> > > -		       size_t page_size)
+> > > +int __pci_epc_mem_init(struct pci_epc *epc, struct
+> > pci_epc_mem_window *windows,
+> > > +		       int num_windows)
+> > >  {
+> > > -	int ret;
+> > > -	struct pci_epc_mem *mem;
+> > > -	unsigned long *bitmap;
+> > > +	struct pci_epc_mem *mem =3D NULL;
+> > > +	unsigned long *bitmap =3D NULL;
+> > >  	unsigned int page_shift;
+> > > -	int pages;
+> > > +	size_t page_size;
+> > >  	int bitmap_size;
+> > > -
+> > > -	if (page_size < PAGE_SIZE)
+> > > -		page_size =3D PAGE_SIZE;
+> > > -
+> > > -	page_shift =3D ilog2(page_size);
+> > > -	pages =3D size >> page_shift;
+> > > -	bitmap_size =3D BITS_TO_LONGS(pages) * sizeof(long);
+> > > -
+> > > -	mem =3D kzalloc(sizeof(*mem), GFP_KERNEL);
+> > > -	if (!mem) {
+> > > -		ret =3D -ENOMEM;
+> > > -		goto err;
+> > > -	}
+> > > -
+> > > -	bitmap =3D kzalloc(bitmap_size, GFP_KERNEL);
+> > > -	if (!bitmap) {
+> > > -		ret =3D -ENOMEM;
+> > > -		goto err_mem;
+> > > +	int pages;
+> > > +	int ret;
+> > > +	int i;
+> > > +
+> > > +	epc->mem_windows =3D 0;
+> > > +
+> > > +	if (!windows)
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (num_windows <=3D 0)
+> > > +		return -EINVAL;
+> > > +
+> > > +	epc->mem =3D kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
+> > > +	if (!epc->mem)
+> > > +		return -EINVAL;
+> > > +
+> > > +	for (i =3D 0; i < num_windows; i++) {
+> > > +		page_size =3D windows[i].page_size;
+> > > +		if (page_size < PAGE_SIZE)
+> > > +			page_size =3D PAGE_SIZE;
+> > > +		page_shift =3D ilog2(page_size);
+> > > +		pages =3D windows[i].size >> page_shift;
+> > > +		bitmap_size =3D BITS_TO_LONGS(pages) * sizeof(long);
+> > > +
+> > > +		mem =3D kzalloc(sizeof(*mem), GFP_KERNEL);
+> > > +		if (!mem) {
+> > > +			ret =3D -ENOMEM;
+> > > +			goto err_mem;
+> > > +		}
+> > > +
+> > > +		bitmap =3D kzalloc(bitmap_size, GFP_KERNEL);
+> > > +		if (!bitmap) {
+> > > +			ret =3D -ENOMEM;
+> > > +			goto err_mem;
+> > > +		}
+> > > +
+> > > +		mem->bitmap =3D bitmap;
+> > > +		mem->window.phys_base =3D windows[i].phys_base;
+> >
+> > I could not understand why the window member is needed.
+> > I think original members (just phys_base and size) are enough.
+> > Also, this function doesn't store the page_size to mem->window.page_siz=
+e.
 
-How about if we expose an API from common driver(geni-se) for putting 
-QUP core BW vote to 0.
+I'm sorry, but I meant the window member is in the left side (mem->window.p=
+hys_base).
+In other words, this patch changes the struct pci_epc_mem like below, but
+I'm thinking this change is not needed because struct pci_epc will have
+multiple windows as "array of address space of the endpoint controller".
+---
+struct pci_epc_mem {
+-	phys_addr_t	phys_base;
+-	size_t		size;
++	struct pci_epc_mem_window window;
+---
 
-We call this from console probe just after uart_add_one_port call 
-(console resources are enabled as part of this call) to put core quota 
-to 0 on behalf of earlyconsole?
+> Because,  for example on RZ/Gx platforms, following are the windows on en=
+dpoint device
+> where the root's address can be mapped, but where as on other platforms a=
+tm there
+> exists just single window to map. Also on RZ/Gx platforms if a window is =
+allocated say of
+> size 1K, rest of the window cannot be used for other allocations.
+>=20
+> 1: 0xfe000000 0 0x80000
+> 2: 0xfe100000 0 0x100000
+> 3: 0xfe200000 0 0x200000
+> 4: 0x30000000 0 0x8000000
+> 5: 0x38000000 0 0x8000000
+>=20
+> Struct pci_epc_mem_window, represents the above windows.
 
->
->> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
->> Reported-by: Matthias Kaehlcke <mka@chromium.org>
->> ---
->>   drivers/soc/qcom/qcom-geni-se.c | 41 +++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
->>
->> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
->> index 7d622ea..d244dfc 100644
->> --- a/drivers/soc/qcom/qcom-geni-se.c
->> +++ b/drivers/soc/qcom/qcom-geni-se.c
->> @@ -90,6 +90,7 @@ struct geni_wrapper {
->>   	struct device *dev;
->>   	void __iomem *base;
->>   	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
->> +	struct icc_path *icc_path_geni_to_core;
->>   };
->>   
->>   #define QUP_HW_VER_REG			0x4
->> @@ -747,11 +748,50 @@ static int geni_se_probe(struct platform_device *pdev)
->>   		}
->>   	}
->>   
->> +#ifdef CONFIG_SERIAL_EARLYCON
->> +	wrapper->icc_path_geni_to_core = devm_of_icc_get(dev, "qup-core");
->> +	if (IS_ERR(wrapper->icc_path_geni_to_core))
->> +		return PTR_ERR(wrapper->icc_path_geni_to_core);
->> +	/*
->> +	 * Put minmal BW request on core clocks on behalf of early console.
->> +	 * The vote will be removed in suspend call.
->> +	 */
->> +	ret = icc_set_bw(wrapper->icc_path_geni_to_core, Bps_to_icc(1000),
->> +			Bps_to_icc(1000));
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "%s: ICC BW voting failed for core\n",
->> +			__func__);
->> +		return ret;
->> +	}
-> What is ugly about this is that it's done for every QUP, not only the one
-> with the early console. Again, I don't have a good solution for it, maybe
-> it's a limitation we have to live with :(
+Yes, I understood it.
 
-There is one more limitation from QUP core side. Core clocks for both 
-the QUP wrapper runs at same speed.
+> window.page_size is set by endpoint controller drivers as done in this pa=
+tch.
 
-core2x_1 = core2x_2 = max(core2x_1, core2x_2);
+I meant the left side. No one change the mem->window.page_size so that
+the value seems to be 0. Of course, for now, this is no problem because
+no one uses this value though.
 
-So with above limitation and if we are removing early con vote from Core 
-when real console comes up. It doesn't matter whether it's done for 
-every QUP or the only with early console.
+<snip>
+> > >  /**
+> > >   * struct pci_epc_mem - address space of the endpoint controller
+> > > - * @phys_base: physical base address of the PCI address space
+> > > - * @size: the size of the PCI address space
+> > > + * @window: address window of the endpoint controller
+> > >   * @bitmap: bitmap to manage the PCI address space
+> > > - * @pages: number of bits representing the address region
+> > >   * @page_size: size of each page
+> > > + * @pages: number of bits representing the address region
+> > >   */
+> > >  struct pci_epc_mem {
+> > > -	phys_addr_t	phys_base;
+> > > -	size_t		size;
+> > > +	struct pci_epc_mem_window window;
+> > >  	unsigned long	*bitmap;
+> > >  	size_t		page_size;
+> > >  	int		pages;
+> > > @@ -85,7 +97,8 @@ struct pci_epc_mem {
+> > >   * @dev: PCI EPC device
+> > >   * @pci_epf: list of endpoint functions present in this EPC device
+> > >   * @ops: function pointers for performing endpoint operations
+> > > - * @mem: address space of the endpoint controller
+> >
+> > If my idea is acceptable, this should be "default address space ...".
+> >
+> Could you please elaborate more on how you would like the structures to b=
+e organized.
 
->
->> +#endif
->> +
->>   	dev_set_drvdata(dev, wrapper);
->>   	dev_dbg(dev, "GENI SE Driver probed\n");
->>   	return devm_of_platform_populate(dev);
->>   }
->>   
->> +static int __maybe_unused geni_se_sys_suspend(struct device *dev)
->> +{
->> +	struct geni_wrapper *wrapper = dev_get_drvdata(dev);
->> +	int ret;
->> +
->> +#ifdef CONFIG_SERIAL_EARLYCON
->> +	ret = icc_set_bw(wrapper->icc_path_geni_to_core, 0, 0);
-> I think you only want to do this on the first suspend.
-Ok, I can add that logic using global variable.
->
-> Do we need to handle the case where no 'real' console is configured?
-> In this case the early console would be active forever and setting
-> the bandwidths to 0 might cause a similar crash than the one you are
-> trying to fix. Not sure if that's a real world use case, but wanted to
-> mention it. Maybe this is an argument of the notifier approach?
-We can't support earlycon without real console.
+ * @mem: default address space of the endpoint controller.
 
-As earlyconsole doesn't do any kind of resource enablement(SE clocks, 
-pinctrl, etc) it assumes that resources are already enabled from 
-previous stages.
+And, if I assumed the "array of address space of the endpoint controller"
+is renamed as struct pci_epc_mem **windows and when __pci_epc_mem_init() is=
+ succeeded,
+the function should set the mem value right before return as the first wind=
+ow like below.
 
-So if real console doesn't come up no one will vote for that SE clock, 
-and it will be disabled from clk late_init call which will result into 
-un-clocked access.
++	epc->mem =3D epc->windows[0];
++	epc->num_windows =3D num_windows;
 
+	return 0;
 
->
->> +	if (ret) {
->> +		dev_err(dev, "%s: ICC BW remove failed for core\n",
->> +			__func__);
->> +		return ret;
-> Aborting suspend seems too harsh since the QUP should still be fully
-> functional unless there is a general problem with the interconnects.
->
-> I would suggest to change the log to dev_warn() and return 0.
+Best regards,
+Yoshihiro Shimoda
 
-Ok
-
-Thanks for reviewing the patch.
-
-regards,
-
-Akash
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
