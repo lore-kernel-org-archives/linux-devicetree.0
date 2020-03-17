@@ -2,122 +2,159 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A707C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BBDC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8FB20753
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F265420663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ae4n6jEj"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="CZnXsEPP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgCQQgI (ORCPT
+        id S1726019AbgCQQlB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:36:08 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55411 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbgCQQgF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 12:36:05 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 6so22190979wmi.5;
-        Tue, 17 Mar 2020 09:36:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pjMnwjFJerbx0N3L2Dqt4xop1wyGSpDLGCMz6+TnU/s=;
-        b=ae4n6jEjH+OoCBS3DnCEY+jJdqGdHoFGgsv2iRa/Cup2ogFIxxfK4FqkXdeKrPHJjG
-         Ik/j9T4EEt12OeXtkoJyGcezLGrulc504g7REHd58NzxHSwPYmSw9GQqbCUPGn/uQlnZ
-         AiojD5bU/QJsdFQP2QlQcdP+GZTg4N3K2ZHkqL+sPY2H/IRoE5riBfgejccuahVRH71T
-         HbrTTgF+1x8EqHv9pBZOoUpFTE17T2HiRjFN0UZKK5ASEK9nl2TOakhivBhivLlFRuqS
-         Tmi4R0dsNh3/ScEt2CBSROrbPl03upAOGp4siQdjiOsNF30lNwxBxH/ZFzrRKyglU+zP
-         hNAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pjMnwjFJerbx0N3L2Dqt4xop1wyGSpDLGCMz6+TnU/s=;
-        b=eW4cW+B3JS6ccNXwCkolys4UFQMFdXNBINxRsbTTktR/NjVKnV7Nng1oXDYk1dSDEh
-         xMtAKA8KHvD/+mhLElQa3mUIQmdV3Kgk9MIgCA+t0RQ0cXonoVTCpelyBrzjobYSJdIA
-         GEBE3dQfLdVUzYn8UkgLhO9fDSrucbsQ3LyF8hFicuFtf+0qlUgDN2lPIF82hA8Ze13X
-         hK9Fbc/X47pN9SXnLKyS2NyzOa95FTtl6a1to/y0T8nSjtszllrUaN0JJ7OOZDgEgNLM
-         ERQ7H9uJK+SOSJTVNu7aBNeyKHYRVMn3SaLtCBEUh5eA9k6wYD/piDi7MgjylUI1VYd+
-         d6mA==
-X-Gm-Message-State: ANhLgQ3wQF9H9qeOpaucb5UE0AYjmZ8iZ88nM9D3hSlkbA6OlHTstM2C
-        ArsoAzg98XoUF4Af9iQtKCI=
-X-Google-Smtp-Source: ADFU+vvBNQ5z4r9YWuB8B/zFVlS25fu6bKiScd+gMjdgNptjWWj9nway+jpZRp+sZT2jBqbDdFBFng==
-X-Received: by 2002:a7b:cb44:: with SMTP id v4mr138704wmj.29.1584462963204;
-        Tue, 17 Mar 2020 09:36:03 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id b10sm5389702wrm.30.2020.03.17.09.36.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Mar 2020 09:36:02 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 2/2] dt-bindings: sram: fix yaml warnings for rk3288-pmu-sram compatible nodes
-Date:   Tue, 17 Mar 2020 17:35:55 +0100
-Message-Id: <20200317163555.18107-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200317163555.18107-1-jbx6244@gmail.com>
-References: <20200317163555.18107-1-jbx6244@gmail.com>
+        Tue, 17 Mar 2020 12:41:01 -0400
+Received: from mail-eopbgr80092.outbound.protection.outlook.com ([40.107.8.92]:51215
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726130AbgCQQlB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 12:41:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mrvvEqP2ygVb+Sd0YTwao/vWLbzJGQWL01F0VwUM1XQdNghGuIhfKBa6eXHje/eP6z1wsAP0E+MQox2YP4a//kQcATTduGfZzMYkUIhkyi+a3AX+4wV+vAB55VzXGb07bXFRemJ3eqhZk9Oqlfp+71NqVDmopUZbIvx6LFrk/okwpQ7JcxOTvijIrubpFmAtMkXdpQj/TXb6sftsBGP238c9Fn5ufR9d2UebaQCAPvm+VGyfnJ6MNNyjciPB94/YZcfejUrEaeD2VyYSbZ5bd1CB/t8l45rNy+4bTpLIrnRZY46r8C93Nr1x8cA6H3gqQbm/aCNTIRUHxd/JtSg+Dw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gm6ch8xR8b3H1sbgs0W8m2O59cJyjN8XfUoPDBtfv7w=;
+ b=O4y0g0MRXbJl2AkAE17pnwznX25xU6lSF91G+rB4/JZmo40rDb/ObCBraJhzpCPiRPQSFVpsCjLpsCNMh6pchdePBgJtl8d8jMNTDhaL11v0jsrmST/5xjWNhm6fpNC4qa6feovaBMJvY0FQqcXoFLNIgWeJJQiCjae7gekciOO02P1ZgAP+ZF4S5biFwLzSN7XRUQK/e3blQGUuLF9qko/YQOoL+55h44enn8fG66qAa/XzuVZg+9x5Ocz94SHvHDqhzUe/0m+Zwc9FQNIpovAt6ogwJ6Cu8hw61yp33g9rPNN39PdGtTW2h5lXMY1bIodBkU9RG+eR/3oJZm2VJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gm6ch8xR8b3H1sbgs0W8m2O59cJyjN8XfUoPDBtfv7w=;
+ b=CZnXsEPPC1j7crjvgwSuh0B0u8sCzbMPoIlCRc7SuySkxI3zFW411zkDGg0kpneFRTEB9eBlzEAiD2MYVi1N3v+k9DiZX0eMDSFTWlkIN+eFLqeZ87dDjELcQC1ihdParMqlJ1frxB7h/ZBeo5FHLilUmy2nKh7fZ9gLjhQpKSI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
+ VI1PR05MB7101.eurprd05.prod.outlook.com (10.141.234.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.21; Tue, 17 Mar 2020 16:40:17 +0000
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 16:40:17 +0000
+X-Gm-Message-State: ANhLgQ2UDUmCImpKz+G1wvx2PfnsmodoXgrbSmtRzzIAUloDLXZvK/ar
+        5r8VjTqNFGhKTjojz4I9TXO6OUfATlOcsHiMwTc=
+X-Google-Smtp-Source: ADFU+vs5IiH5xOxAVk1tazaO0nIxfpUiMfX+F2pIOjfJJXHSK1Aww98AZOBwwAUZz85BhDppVfRRsQImlnrWq2Voyv0=
+X-Received: by 2002:a0c:c389:: with SMTP id o9mr5577qvi.232.1584463209922;
+ Tue, 17 Mar 2020 09:40:09 -0700 (PDT)
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com> <f281a6a0-a150-514d-ef02-4e51192031d7@microchip.com>
+In-Reply-To: <f281a6a0-a150-514d-ef02-4e51192031d7@microchip.com>
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Date:   Tue, 17 Mar 2020 18:39:58 +0200
+X-Gmail-Original-Message-ID: <CAGgjyvE9+fHDKiua=BWBaTRGaChsOvnUnG6RGA9Q4V4uPuPEhQ@mail.gmail.com>
+Message-ID: <CAGgjyvE9+fHDKiua=BWBaTRGaChsOvnUnG6RGA9Q4V4uPuPEhQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+To:     Claudiu.Beznea@microchip.com
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        alexandre.belloni@bootlin.com, wens@csie.org,
+        Fabio Estevam <festevam@gmail.com>, f.fainelli@gmail.com,
+        heiko@sntech.de, khilman@baylibre.com,
+        Ludovic.Desroches@microchip.com, mripard@kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas.Ferre@microchip.com, palmer@dabbelt.com,
+        paul@crapouillou.net, paul.walmsley@sifive.com,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        rjui@broadcom.com, Sascha Hauer <s.hauer@pengutronix.de>,
+        sbranden@broadcom.com, Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux@prisktech.co.nz, bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+X-ClientProxiedBy: MN2PR11CA0013.namprd11.prod.outlook.com
+ (2603:10b6:208:23b::18) To VI1PR05MB3279.eurprd05.prod.outlook.com
+ (2603:10a6:802:1c::24)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mail-qv1-f52.google.com (209.85.219.52) by MN2PR11CA0013.namprd11.prod.outlook.com (2603:10b6:208:23b::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Tue, 17 Mar 2020 16:40:14 +0000
+Received: by mail-qv1-f52.google.com with SMTP id a10so11202300qvq.8;        Tue, 17 Mar 2020 09:40:14 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2UDUmCImpKz+G1wvx2PfnsmodoXgrbSmtRzzIAUloDLXZvK/ar
+        5r8VjTqNFGhKTjojz4I9TXO6OUfATlOcsHiMwTc=
+X-Google-Smtp-Source: ADFU+vs5IiH5xOxAVk1tazaO0nIxfpUiMfX+F2pIOjfJJXHSK1Aww98AZOBwwAUZz85BhDppVfRRsQImlnrWq2Voyv0=
+X-Received: by 2002:a0c:c389:: with SMTP id o9mr5577qvi.232.1584463209922;
+ Tue, 17 Mar 2020 09:40:09 -0700 (PDT)
+X-Gmail-Original-Message-ID: <CAGgjyvE9+fHDKiua=BWBaTRGaChsOvnUnG6RGA9Q4V4uPuPEhQ@mail.gmail.com>
+X-Originating-IP: [209.85.219.52]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2b32262c-ff35-40e3-18d5-08d7ca91de3a
+X-MS-TrafficTypeDiagnostic: VI1PR05MB7101:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB71016734F68EB3F2E7B76F18F9F60@VI1PR05MB7101.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(39850400004)(136003)(396003)(376002)(199004)(478600001)(5660300002)(54906003)(53546011)(55236004)(2906002)(186003)(8676002)(4326008)(9686003)(450100002)(34206002)(52116002)(66476007)(42186006)(81156014)(81166006)(66556008)(55446002)(8936002)(66946007)(316002)(26005)(4744005)(86362001)(6666004)(44832011)(107886003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB7101;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zKonuMXz290BY/UAKJq1oktF/Sh42olr7dwIOB900dPUAE97wYMFkcwAE9hTksr6NQRTHE8f3Zq5pJsC7v2qu8JdSExxN0icQt3syG869ZU3WcXf7eZzZ6HIPTY057dIkrvlri4mCVbA8Rx2Rpt47O24bnkccUarL9/t1XI0ZsaWp1RecHqZcXUf5k62fKUYe+hYOmIFIGLNYIknunn/cqFEqceGoIXeQzNcJd1s+oscuOfToqYBsTpCcma4GsUJlhsezGsiHQz18jnBvDEk0+1lG0+edflK+bhtGNeUasHnhtyqcWRU9tqk8V3hrxjYfihedRaSPmTku9IkM4s3b0hHlMVM2dJI7aK7iWSvk1OBrQU+gNmbs8H4lMKql1bTFrVIF0XoGmIEJsubpt6c9nIUX4577bn+zzMZYQlS7ajsVWw1Ls4rvaCDBs1HUV8h
+X-MS-Exchange-AntiSpam-MessageData: 06hGgKckLzQdv2qssAkipI6IqTjRAqBpLIi2NrVZCwnI6XJervvvaa1QlGtaSVX5IBPxlFC0Qfuo4LpnWt9K4wprIM0K2zP4Z7ql2PBmiTZnuwb+dcZvf4x1XzTaCSv4tOuDJUwSRvWciuIcO/vfNQ==
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b32262c-ff35-40e3-18d5-08d7ca91de3a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 16:40:14.5231
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2B8kwDZoLDKWVoyukFtVS0S9wg4dewXtpJCt932lxOvp9CGsc5t5HGAqMGocBpqDv3fywqT5lf6A9yzeE7grjvzI+glpaDy+pR1fBQlyciA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB7101
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives for example these warnings:
+On Tue, Mar 17, 2020 at 6:27 PM <Claudiu.Beznea@microchip.com> wrote:
+>
+>
+>
+> On 17.03.2020 14:32, Oleksandr Suvorov wrote:
+> > @@ -187,7 +187,7 @@ static ssize_t polarity_store(struct device *child,
+> >         if (sysfs_streq(buf, "normal"))
+> >                 polarity = PWM_POLARITY_NORMAL;
+> >         else if (sysfs_streq(buf, "inversed"))
+>
+> You may also consider this string     ^
 
-arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-'#size-cells' is a required property
-arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-'ranges' is a required property
+Thanks for the feedback, Claudiu.
 
-Fix this error by making '#address-cells', '#size-cells' and
-'ranges' required for all compatible strings except for
-'rockchip,rk3288-pmu-sram'.
+I thought about it and decided not to change the ABI, as this change
+can impact lots of user-land applications.
+As a minimum, I can push this change as a separate patch to be able to
+revert the change of ABI only.
+What do you think?
 
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/sram/sram.yaml
+> > -               polarity = PWM_POLARITY_INVERSED;
+> > +               polarity = PWM_POLARITY_INVERTED;
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/sram/sram.yaml | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
-index 7b83cc6c9..f06d254ba 100644
---- a/Documentation/devicetree/bindings/sram/sram.yaml
-+++ b/Documentation/devicetree/bindings/sram/sram.yaml
-@@ -118,9 +118,18 @@ patternProperties:
- required:
-   - compatible
-   - reg
--  - "#address-cells"
--  - "#size-cells"
--  - ranges
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: rockchip,rk3288-pmu-sram
-+
-+else:
-+  required:
-+    - "#address-cells"
-+    - "#size-cells"
-+    - ranges
- 
- additionalProperties: false
- 
+
 -- 
-2.11.0
+Best regards
+Oleksandr Suvorov
 
+Toradex AG
+Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
