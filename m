@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032C5C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D5FC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80BE20757
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 704CC20724
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgCQJkx (ORCPT
+        id S1727198AbgCQJlJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:40:53 -0400
-Received: from v6.sk ([167.172.42.174]:50606 "EHLO v6.sk"
+        Tue, 17 Mar 2020 05:41:09 -0400
+Received: from v6.sk ([167.172.42.174]:50756 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726287AbgCQJkx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:40:53 -0400
+        id S1727166AbgCQJlJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:41:09 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id D040861093;
-        Tue, 17 Mar 2020 09:40:49 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id AE68D6109A;
+        Tue, 17 Mar 2020 09:41:06 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -48,9 +48,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 19/28] dt-bindings: mmc: Convert sdhci-pxa to json-schema
-Date:   Tue, 17 Mar 2020 10:39:13 +0100
-Message-Id: <20200317093922.20785-20-lkundrak@v3.sk>
+Subject: [PATCH 23/28] dt-bindings: interrupt-controller: Convert mrvl,intc to json-schema
+Date:   Tue, 17 Mar 2020 10:39:17 +0100
+Message-Id: <20200317093922.20785-24-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
 References: <20200317093922.20785-1-lkundrak@v3.sk>
@@ -61,179 +61,233 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the sdhci-pxa binding to DT schema format using json-schema.
-
-At the same time, fix a couple of issues with the examples discovered by
-the validation tool -- a semicolon instead of a comma and wrong node names.
+Convert the mrvl,intc binding to DT schema format using json-schema.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- .../devicetree/bindings/mmc/sdhci-pxa.txt     |  50 ---------
- .../devicetree/bindings/mmc/sdhci-pxa.yaml    | 101 ++++++++++++++++++
- 2 files changed, 101 insertions(+), 50 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+ .../interrupt-controller/mrvl,intc.txt        |  64 --------
+ .../interrupt-controller/mrvl,intc.yaml       | 144 ++++++++++++++++++
+ 2 files changed, 144 insertions(+), 64 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
 deleted file mode 100644
-index 3d1b449d6097d..0000000000000
---- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+index a0ed02725a9d7..0000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
 +++ /dev/null
-@@ -1,50 +0,0 @@
--* Marvell sdhci-pxa v2/v3 controller
--
--This file documents differences between the core properties in mmc.txt
--and the properties used by the sdhci-pxav2 and sdhci-pxav3 drivers.
+@@ -1,64 +0,0 @@
+-* Marvell MMP Interrupt controller
 -
 -Required properties:
--- compatible: Should be "mrvl,pxav2-mmc", "mrvl,pxav3-mmc" or
--  "marvell,armada-380-sdhci".
--- reg:
--  * for "mrvl,pxav2-mmc" and "mrvl,pxav3-mmc", one register area for
--    the SDHCI registers.
+-- compatible : Should be
+-               "mrvl,mmp-intc" on Marvel MMP,
+-               "mrvl,mmp2-intc" along with "mrvl,mmp2-mux-intc" on MMP2 or
+-               "marvell,mmp3-intc" with "mrvl,mmp2-mux-intc" on MMP3
+-- reg : Address and length of the register set of the interrupt controller.
+-  If the interrupt controller is intc, address and length means the range
+-  of the whole interrupt controller. The "marvell,mmp3-intc" controller
+-  also has a secondary range for the second CPU core.  If the interrupt
+-  controller is mux-intc, address and length means one register. Since
+-  address of mux-intc is in the range of intc. mux-intc is secondary
+-  interrupt controller.
+-- reg-names : Name of the register set of the interrupt controller. It's
+-  only required in mux-intc interrupt controller.
+-- interrupts : Should be the port interrupt shared by mux interrupts. It's
+-  only required in mux-intc interrupt controller.
+-- interrupt-controller : Identifies the node as an interrupt controller.
+-- #interrupt-cells : Specifies the number of cells needed to encode an
+-  interrupt source.
+-- mrvl,intc-nr-irqs : Specifies the number of interrupts in the interrupt
+-  controller.
+-- mrvl,clr-mfp-irq : Specifies the interrupt that needs to clear MFP edge
+-  detection first.
 -
--  * for "marvell,armada-380-sdhci", three register areas. The first
--    one for the SDHCI registers themselves, the second one for the
--    AXI/Mbus bridge registers of the SDHCI unit, the third one for the
--    SDIO3 Configuration register
--- reg names: should be "sdhci", "mbus", "conf-sdio3". only mandatory
--  for "marvell,armada-380-sdhci"
--- clocks: Array of clocks required for SDHCI; requires at least one for
--    I/O clock.
--- clock-names: Array of names corresponding to clocks property; shall be
--    "io" for I/O clock and "core" for optional core clock.
+-Example:
+-	intc: interrupt-controller@d4282000 {
+-		compatible = "mrvl,mmp2-intc";
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-		reg = <0xd4282000 0x1000>;
+-		mrvl,intc-nr-irqs = <64>;
+-	};
 -
--Optional properties:
--- mrvl,clk-delay-cycles: Specify a number of cycles to delay for tuning.
+-	intcmux4@d4282150 {
+-		compatible = "mrvl,mmp2-mux-intc";
+-		interrupts = <4>;
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-		reg = <0x150 0x4>, <0x168 0x4>;
+-		reg-names = "mux status", "mux mask";
+-		mrvl,intc-nr-irqs = <2>;
+-	};
+-
+-* Marvell Orion Interrupt controller
+-
+-Required properties
+-- compatible :  Should be "marvell,orion-intc".
+-- #interrupt-cells: Specifies the number of cells needed to encode an
+-  interrupt source. Supported value is <1>.
+-- interrupt-controller : Declare this node to be an interrupt controller.
+-- reg : Interrupt mask address. A list of 4 byte ranges, one per controller.
+-        One entry in the list represents 32 interrupts.
 -
 -Example:
 -
--sdhci@d4280800 {
--	compatible = "mrvl,pxav3-mmc";
--	reg = <0xd4280800 0x800>;
--	bus-width = <8>;
--	interrupts = <27>;
--	clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
--	clock-names = "io", "core";
--	non-removable;
--	mrvl,clk-delay-cycles = <31>;
--};
--
--sdhci@d8000 {
--	compatible = "marvell,armada-380-sdhci";
--	reg-names = "sdhci", "mbus", "conf-sdio3";
--	reg = <0xd8000 0x1000>,
--		<0xdc000 0x100>;
--		<0x18454 0x4>;
--	interrupts = <0 25 0x4>;
--	clocks = <&gateclk 17>;
--	clock-names = "io";
--	mrvl,clk-delay-cycles = <0x1F>;
--};
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+-	intc: interrupt-controller {
+-        	compatible = "marvell,orion-intc", "marvell,intc";
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-                reg = <0xfed20204 0x04>,
+-		      <0xfed20214 0x04>;
+-        };
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
 new file mode 100644
-index 0000000000000..4ae0926ac294f
+index 0000000000000..f0644f7d7e1d2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
-@@ -0,0 +1,101 @@
++++ b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
+@@ -0,0 +1,144 @@
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mmc/sdhci-pxa.yaml#
++$id: http://devicetree.org/schemas/interrupt-controller/mrvl,intc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Marvell PXA SDHCI v2/v3 bindings
++title: Marvell MMP/Orion Interrupt controller bindings
 +
 +maintainers:
 +  - devicetree@vger.kernel.org
 +
 +allOf:
-+  - $ref: mmc-controller.yaml#
++  - $ref: /schemas/interrupt-controller.yaml#
++  - if:
++      properties:
++        compatible:
++          not:
++            contains:
++              const: marvell,orion-intc
++    then:
++      required:
++        - mrvl,intc-nr-irqs
 +  - if:
 +      properties:
 +        compatible:
 +          contains:
-+            const: marvell,armada-380-sdhci
++            enum:
++              - mrvl,mmp-intc
++              - mrvl,mmp2-intc
 +    then:
 +      properties:
-+        regs:
-+          minItems: 3
-+          maxItems: 3
++        reg:
++          minItems: 1
++          maxItems: 1
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - marvell,mmp3-intc
++              - mrvl,mmp2-mux-intc
++    then:
++      properties:
++        reg:
++          minItems: 2
++          maxItems: 2
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: marvell,orion-intc
++    then:
++      properties:
++        reg:
++          minItems: 1
++          maxItems: 2
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: mrvl,mmp2-mux-intc
++    then:
++      properties:
++        interrupts:
++          minItems: 1
++          maxItems: 1
 +        reg-names:
++          minItems: 2
++          maxItems: 2
 +          items:
-+            - const: sdhci
-+            - const: mbus
-+            - const: conf-sdio3
++            - const: 'mux status'
++            - const: 'mux mask'
 +      required:
-+        - reg-names
++        - interrupts
 +    else:
 +      properties:
-+        regs:
-+          minItems: 1
-+          maxItems: 1
-+        reg-names:
-+          minItems: 1
-+          maxItems: 1
++        interrupts: false
 +
 +properties:
++  '#interrupt-cells':
++    const: 1
++
 +  compatible:
 +    enum:
-+      - mrvl,pxav2-mmc
-+      - mrvl,pxav3-mmc
-+      - marvell,armada-380-sdhci
++      - mrvl,mmp-intc
++      - mrvl,mmp2-intc
++      - marvell,mmp3-intc
++      - marvell,orion-intc
++      - mrvl,mmp2-mux-intc
 +
 +  reg: true
 +
 +  reg-names: true
 +
-+  interrupts:
-+    maxItems: 1
++  interrupts: true
 +
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
++  interrupt-controller: true
 +
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: io
-+      - const: core
++  mrvl,intc-nr-irqs:
++    description: |
++      Specifies the number of interrupts in the interrupt controller.
++    $ref: /schemas/types.yaml#/definitions/uint32
 +
-+  mrvl,clk-delay-cycles:
-+    description: Specify a number of cycles to delay for tuning.
++  mrvl,clr-mfp-irq:
++    description: |
++      Specifies the interrupt that needs to clear MFP edge detection first.
 +    $ref: /schemas/types.yaml#/definitions/uint32
 +
 +required:
++  - '#interrupt-cells'
 +  - compatible
 +  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
++  - interrupt-controller
++
++additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/clock/berlin2.h>
-+    mmc@d4280800 {
-+        compatible = "mrvl,pxav3-mmc";
-+        reg = <0xd4280800 0x800>;
-+        bus-width = <8>;
-+        interrupts = <27>;
-+        clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
-+        clock-names = "io", "core";
-+        non-removable;
-+        mrvl,clk-delay-cycles = <31>;
++    interrupt-controller@d4282000 {
++        compatible = "mrvl,mmp2-intc";
++        interrupt-controller;
++        #interrupt-cells = <1>;
++        reg = <0xd4282000 0x1000>;
++        mrvl,intc-nr-irqs = <64>;
++    };
++
++    interrupt-controller@d4282150 {
++        compatible = "mrvl,mmp2-mux-intc";
++        interrupts = <4>;
++        interrupt-controller;
++        #interrupt-cells = <1>;
++        reg = <0x150 0x4>, <0x168 0x4>;
++        reg-names = "mux status", "mux mask";
++        mrvl,intc-nr-irqs = <2>;
 +    };
 +  - |
-+    mmc@d8000 {
-+        compatible = "marvell,armada-380-sdhci";
-+        reg-names = "sdhci", "mbus", "conf-sdio3";
-+        reg = <0xd8000 0x1000>,
-+              <0xdc000 0x100>,
-+              <0x18454 0x4>;
-+        interrupts = <0 25 0x4>;
-+        clocks = <&gateclk 17>;
-+        clock-names = "io";
-+        mrvl,clk-delay-cycles = <0x1F>;
++    interrupt-controller@fed20204 {
++        compatible = "marvell,orion-intc";
++        interrupt-controller;
++        #interrupt-cells = <1>;
++        reg = <0xfed20204 0x04>,
++              <0xfed20214 0x04>;
 +    };
 +
 +...
