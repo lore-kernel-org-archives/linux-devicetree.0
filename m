@@ -4,207 +4,368 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43810C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 10:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87ADC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 10:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F127D20719
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 10:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BECA20658
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 10:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Y9Xi4xFy"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="yzFTv6PV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgCQKgT (ORCPT
+        id S1726066AbgCQKwU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:36:19 -0400
-Received: from mail-eopbgr1400125.outbound.protection.outlook.com ([40.107.140.125]:34336
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725730AbgCQKgT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:36:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oKn25MNWblYsWTtaRQ+dfyynHX3mtbSczcFN1oguAbU/QdVcOMGS3qfo7npjoZwegO3obXy8T2Cm/R9MMjg+NdDkpI3AwqkUsu0X9lHzXceufHBaW7zWJh7m+rm28RxAT+RxAC8cstdTgGFpAagVCRPL7JnBptbwIMLuGEvnM7fyLG75XWCpwRNWGexL6+ZlYpis/O+aCH/+4/imyx4H8jwtlpF++M6fehez9Y5RlHoUNiYCh16GPitoO5m6rR0qOcedeHlBoX7mnl0InAGamzvSQwp54D4s5wDFoM4YzX70jHzeDZi4O3yHIrj1m9NhM+s3sFxlG9lsg0PvS/ExMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uur5A43zlIis658Vag6mGc9U4SZ3N8hynWthYglxrpY=;
- b=J573pYRhjXxz6cr4EQ9MFkrY/piSHNlJ9LAfu9PMI3m6Jlp82f5kYPjFu13aoP+1ybEe9VBVnDBhci8WMNE+78a2OkEBHPdAclO9EkkIOszKI4swloGvfjDc6MH2OswIyC4VPoEVLMzXDleC4KaFFf5fm2v2KTVtN5hp5dp0dXmjijg1Qe86rkHJu430j0E2HeGpgNHKXRkZOgkkxXV7GLu9pdAteEbwVLKCoMUZdobI2xYmP81D2+10GYkYWEs03w9z7bi69h2PMFiYZOOeLnBALbY3uDSO3g0Kwcgi0N+POSo+9AColNCoBinzdlGlzLh+xWqpgl8zJmBNWPW2Pg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+        Tue, 17 Mar 2020 06:52:20 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:46315 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgCQKwT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 06:52:19 -0400
+Received: by mail-vs1-f66.google.com with SMTP id z125so13476683vsb.13
+        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 03:52:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uur5A43zlIis658Vag6mGc9U4SZ3N8hynWthYglxrpY=;
- b=Y9Xi4xFyf92TIwC7gimedqS6mr9PN7kjnTouYODAUTWPWp/6zJ8Gzaw8sI8JgI1bXxbVFXeDKHrWVIOvHUxqbuIonzfepb0ClSFxy684KkeDYdKlGrTpWojXeMSxYZ9qvhEQI3BfhJco79MLEGbVTii3wVKIt66FjFwmepbYWGA=
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
- OSBPR01MB2662.jpnprd01.prod.outlook.com (52.134.255.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.21; Tue, 17 Mar 2020 10:36:13 +0000
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::490:aa83:2d09:3a0b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::490:aa83:2d09:3a0b%5]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 10:36:12 +0000
-From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-CC:     Andrew Murray <andrew.murray@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: RE: [PATCH v5 7/7] misc: pci_endpoint_test: Add Device ID for RZ/G2E
- PCIe controller
-Thread-Topic: [PATCH v5 7/7] misc: pci_endpoint_test: Add Device ID for RZ/G2E
- PCIe controller
-Thread-Index: AQHV7k2qHnZcas9owkCCufgdtXIhrqhMsfcAgAAA1TA=
-Date:   Tue, 17 Mar 2020 10:36:12 +0000
-Message-ID: <OSBPR01MB3590DA5CDC8DF1B618B0AA34AAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200228154122.14164-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <TYAPR01MB45441E4766FD57506A5B9F98D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB45441E4766FD57506A5B9F98D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 417486e6-7007-4090-8ec5-08d7ca5f03b0
-x-ms-traffictypediagnostic: OSBPR01MB2662:|OSBPR01MB2662:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSBPR01MB266246D624F7611F628DC645AAF60@OSBPR01MB2662.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(396003)(376002)(346002)(136003)(199004)(316002)(26005)(110136005)(52536014)(5660300002)(66946007)(86362001)(64756008)(81166006)(66446008)(66476007)(81156014)(66556008)(186003)(2906002)(7416002)(76116006)(33656002)(53546011)(6506007)(8936002)(478600001)(7696005)(9686003)(54906003)(4326008)(55016002)(71200400001)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB2662;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XR8rIn7GMNL4pne/aHHfzP1Lw7O3F/XMP8dw1XbaLQ1JVzYqpybJvpzdKcz4+CeLgYtwTGrXd7gNWUYiC5JBHJvXRqHK+lI8VoPUpjM6oI94OpqbnYJQLmvm/dHyriIU+WNMtjeiU5ouagtfgYTuoFJv0W/Lrb2tMQLkbHBJjTtMQj9KIJy+hQtDzEEJ2bV12pnJJ1ZVtVUvZTZWH7t8goM+mYZvjov1fOrxKmueQQiqnYqFzTkJ1V9W4ALVMLy+U868Au6ui7sVMx5BF0jGDD2BijCqBC61SyObj6TplqKAU+aN+GwYUOk5cFG58Q/R/zldXFARgt/ExwZSBOWf8J6T/qLH369qdPUsY7DvGCiSRS/2SJsEkDvSsW87zKeTKPlc7TMBs9JwpvhI9UFH5IwKSn9hRUx3PaQvf5R/RSTULbnlmMAlLrvACI5iXLsU
-x-ms-exchange-antispam-messagedata: 1EsQNu/6793dt86AJ2FVXrO0TEgUs6Sxw+q7mY7dZ4v05flbrg8CnlAraN5XKPelGzHxQSVJXL+zCy8l1he5SxG8Q3IvA8VegsfPvOWmo2R5m6/wNjP/00xp7DZeG3tMN33E5PvZ8Ji5K/VKB8H1Ww==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2h930L2nUaeWpN/VPq6cjVwd1EstsXRD+uH/UzVG50M=;
+        b=yzFTv6PVIFzp+YEHgkfJktWrdnpr0NoIVVwCQtTNHKjE54+UQKGskUFPTQl0cH0/il
+         RKsQaXITWE9Aad7OxxFsDCSM/te0ws0j4wJlKrjQ11NLx1XzXqZfaWd/KIcvJ3fATEis
+         SfNhsN9gqE8M3VXyvbqgYvBO7hZgw8j3y22AVkkmU8lGijaqZmBSiAt7si9bHCZZ3wxG
+         dxx/zRACvw2LuNBzWjNeTyJGjPcUiOLcjGQHhjPRyvW8oTzq65Gzx7vzk3i/xeQLb8q5
+         ugpHD8GyX7kHvSsYaFdXcDnZ6crW1EGHwQdXEu1ZFFeJvvRNqBKrr/qZyP6udpCQAAAB
+         kbdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2h930L2nUaeWpN/VPq6cjVwd1EstsXRD+uH/UzVG50M=;
+        b=Dhjg9SkHqQBOraHfuSAyqy6MvpM7rcZYhG+imItrg6AF/haQ9nvNJuuPHkWZEvDvJC
+         9j4n/Q8jbZ2oqYVcQGhPIMYnPG5fzTuEy+aEZAeSIsvm5GdSiDlqmanC/sng9drpbPnp
+         lDqXZY1mQLT/80wjYyr3297iYKvFWCvese83lbKyQCYgEYQOml2oefLojK4Ak96trJhj
+         19GgqhjkQ40Mkk+1WOPVQ69G8rD2sUWrXpKcE0K3l0tT71dFgpHmxmltaApyFDT/HHGk
+         VEY3gbfUSokunAT4y5F4KlS4I6ambAa7jbNo3V1tzLgR63PTkfyPLgChmvX5zSXrbjVx
+         u9Ig==
+X-Gm-Message-State: ANhLgQ0TuQyq93pIV/SYAYWzVpqwJR3ymV50/Nci4lk04siscOMfcHxl
+        Dwo97cfKiRkG5naHlnEE9NEtRbD+TsjvuJvy7ebwyA==
+X-Google-Smtp-Source: ADFU+vuJwh4C02Y8CB3LnnNmExzyITUoR6WKl8q1aLb0YHzq2cRlxar6SO9ePlsiqr5C/u1I9OAB68nw+UZqVFt/2RM=
+X-Received: by 2002:a67:eb81:: with SMTP id e1mr3171827vso.27.1584442337603;
+ Tue, 17 Mar 2020 03:52:17 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 417486e6-7007-4090-8ec5-08d7ca5f03b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 10:36:12.6242
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zijk8rJbZRMsYr+paqqg4EsOB3s7zvIAuikfWRJ7OmmPhQ3z4hIuaXRpdZGtb19h6ojUpwrgddCa2K5H358O+5XZ+jlwm9mx2Bt4g9U+uOIPRp+rq3R0vx/UiljEPtIK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2662
+References: <1584430804-8343-1-git-send-email-rkambl@codeaurora.org>
+In-Reply-To: <1584430804-8343-1-git-send-email-rkambl@codeaurora.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Tue, 17 Mar 2020 16:22:00 +0530
+Message-ID: <CAHLCerOSz4aAkukPzRRwOgeiTnw1ATSp0gPd9ujqiv9uAfj2Mg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Changed polling-delay in
+ Thermal-zones node
+To:     Rajeshwari <rkambl@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        sivaa@codeaurora.org, sanm@codeaurora.org,
+        Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Yoshihiro,
-
-Thank you for the review.
-
-> -----Original Message-----
-> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Sent: 17 March 2020 10:32
-> To: Lad Prabhakar <prabhakar.csengg@gmail.com>
-> Cc: Andrew Murray <andrew.murray@arm.com>; linux-pci@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-renesas-soc@vger.kernel.org;
-> linux-rockchip@lists.infradead.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; Prabhakar Mahadev Lad <prabhakar.mahadev-
-> lad.rj@bp.renesas.com>; Bjorn Helgaas <bhelgaas@google.com>; Rob
-> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> Catalin Marinas <catalin.marinas@arm.com>; Will Deacon <will@kernel.org>;
-> Kishon Vijay Abraham I <kishon@ti.com>; Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com>; Arnd Bergmann <arnd@arndb.de>; Greg
-> Kroah-Hartman <gregkh@linuxfoundation.org>; Jingoo Han
-> <jingoohan1@gmail.com>; Gustavo Pimentel
-> <gustavo.pimentel@synopsys.com>; Marek Vasut
-> <marek.vasut+renesas@gmail.com>; Shawn Lin <shawn.lin@rock-
-> chips.com>; Heiko Stuebner <heiko@sntech.de>
-> Subject: RE: [PATCH v5 7/7] misc: pci_endpoint_test: Add Device ID for
-> RZ/G2E PCIe controller
+On Tue, Mar 17, 2020 at 1:11 PM Rajeshwari <rkambl@codeaurora.org> wrote:
 >
-> Hi Prabhakar-san,
+> Changed polling-delay and polling-delay-passive to zero as per
+> the requirement.
 >
-> Thank you for the patch!
+> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 100 +++++++++++++++++------------------
+>  1 file changed, 50 insertions(+), 50 deletions(-)
 >
-> > From: Lad Prabhakar, Sent: Saturday, February 29, 2020 12:41 AM
-> >
-> > Add RZ/G2E in pci_device_id table so that pci-epf-test can be used for
-> > testing PCIe EP in RZ/G2E.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-
-> lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/misc/pci_endpoint_test.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/misc/pci_endpoint_test.c
-> > b/drivers/misc/pci_endpoint_test.c
-> > index a5e3170..3c84e9a 100644
-> > --- a/drivers/misc/pci_endpoint_test.c
-> > +++ b/drivers/misc/pci_endpoint_test.c
-> > @@ -66,6 +66,8 @@
-> >
-> >  #define PCI_DEVICE_ID_TI_AM6540xb00c
-> >
-> > +#define PCI_DEVICE_ID_RENESAS_RZG2E0x002d
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index ca876ed..d81c4f1 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1907,8 +1907,8 @@
 >
-> This define should be in include/linux/pci_ids.h, and adding the define
-> should be separated.
-> Also, I think "R8A774C0" is better than "RZG2E".
+>         thermal-zones {
+>                 cpu0-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
 >
-Agreed will add it under PCI_VENDOR_ID_RENESAS.
-
-Cheers,
---Prabhakar
-
-> Best regards,
-> Yoshihiro Shimoda
+>                         thermal-sensors = <&tsens0 1>;
 >
-> >  #define is_am654_pci_dev(pdev)\
-> >  ((pdev)->device =3D=3D PCI_DEVICE_ID_TI_AM654)
-> >
-> > @@ -797,6 +799,7 @@ static const struct pci_device_id
-> pci_endpoint_test_tbl[] =3D {
-> >  { PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
-> >    .driver_data =3D (kernel_ulong_t)&am654_data
-> >  },
-> > +{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS,
-> PCI_DEVICE_ID_RENESAS_RZG2E) },
-> >  { }
-> >  };
-> >  MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
-> > --
-> > 2.7.4
-
-
-
-Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jauch=
-, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10, =
-40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseldor=
-f, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WE=
-EE reg. no.: DE 14978647
+> @@ -1955,8 +1955,8 @@
+>                 };
+>
+>                 cpu1-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 2>;
+>
+> @@ -2003,8 +2003,8 @@
+>                 };
+>
+>                 cpu2-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 3>;
+>
+> @@ -2051,8 +2051,8 @@
+>                 };
+>
+>                 cpu3-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 4>;
+>
+> @@ -2099,8 +2099,8 @@
+>                 };
+>
+>                 cpu4-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 5>;
+>
+> @@ -2147,8 +2147,8 @@
+>                 };
+>
+>                 cpu5-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 6>;
+>
+> @@ -2195,8 +2195,8 @@
+>                 };
+>
+>                 cpu6-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 9>;
+>
+> @@ -2235,8 +2235,8 @@
+>                 };
+>
+>                 cpu7-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 10>;
+>
+> @@ -2275,8 +2275,8 @@
+>                 };
+>
+>                 cpu8-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 11>;
+>
+> @@ -2315,8 +2315,8 @@
+>                 };
+>
+>                 cpu9-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 12>;
+>
+> @@ -2355,8 +2355,8 @@
+>                 };
+>
+>                 aoss0-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 0>;
+>
+> @@ -2376,8 +2376,8 @@
+>                 };
+>
+>                 cpuss0-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 7>;
+>
+> @@ -2396,8 +2396,8 @@
+>                 };
+>
+>                 cpuss1-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 8>;
+>
+> @@ -2416,8 +2416,8 @@
+>                 };
+>
+>                 gpuss0-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 13>;
+>
+> @@ -2437,8 +2437,8 @@
+>                 };
+>
+>                 gpuss1-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens0 14>;
+>
+> @@ -2458,8 +2458,8 @@
+>                 };
+>
+>                 aoss1-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens1 0>;
+>
+> @@ -2479,8 +2479,8 @@
+>                 };
+>
+>                 cwlan-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens1 1>;
+>
+> @@ -2500,8 +2500,8 @@
+>                 };
+>
+>                 audio-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens1 2>;
+>
+> @@ -2521,8 +2521,8 @@
+>                 };
+>
+>                 ddr-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens1 3>;
+>
+> @@ -2542,8 +2542,8 @@
+>                 };
+>
+>                 q6-hvx-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens1 4>;
+>
+> @@ -2563,8 +2563,8 @@
+>                 };
+>
+>                 camera-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens1 5>;
+>
+> @@ -2584,8 +2584,8 @@
+>                 };
+>
+>                 mdm-core-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens1 6>;
+>
+> @@ -2605,8 +2605,8 @@
+>                 };
+>
+>                 mdm-dsp-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens1 7>;
+>
+> @@ -2626,8 +2626,8 @@
+>                 };
+>
+>                 npu-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens1 8>;
+>
+> @@ -2647,8 +2647,8 @@
+>                 };
+>
+>                 video-thermal {
+> -                       polling-delay-passive = <250>;
+> -                       polling-delay = <1000>;
+> +                       polling-delay-passive = <0>;
+> +                       polling-delay = <0>;
+>
+>                         thermal-sensors = <&tsens1 9>;
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
