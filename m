@@ -2,50 +2,52 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B9FC5ACBF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922A7C10F29
 	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 07:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E8F20736
+	by mail.kernel.org (Postfix) with ESMTP id 66ECE2071C
 	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 07:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HIhK7ksT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OvQoNrsW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725536AbgCQH3O (ORCPT
+        id S1726741AbgCQH3I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 03:29:14 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55642 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgCQH3N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 03:29:13 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02H7T7ip063623;
-        Tue, 17 Mar 2020 02:29:07 -0500
+        Tue, 17 Mar 2020 03:29:08 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44852 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbgCQH3I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 03:29:08 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02H7T0ob062649;
+        Tue, 17 Mar 2020 02:29:00 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584430147;
-        bh=/Dw8KFsaIkFkfgLKZhRV5MXpefmC30Xga+RKXA8psqw=;
+        s=ti-com-17Q1; t=1584430140;
+        bh=7kAZPkW2zkK8WQa0s6tWSn3wI6eYVbYeeQFroc6aG9s=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HIhK7ksTRep1G2Xw7F45BBnD2C02mkJXp5S4CEAecZbd1sVW9RxPkz33HEYZumZPm
-         HHOsUw9pJCQzt2tA/ic4X6QXfABXhiGTGpNwTfe3HDXbBDketxiXRbBLXFz/zOwXLY
-         UDbqRgn6hoIKZQuWBeOTf1FImcqyFOCCIODhn0aA=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7T7vo071090;
-        Tue, 17 Mar 2020 02:29:07 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        b=OvQoNrsWpyVT+CbmznQAURtuuC59aG1xR6iCt9yZ2ZMUxfErMyjXwMn7XG/9M9G76
+         NODDqzuKEyOBqtpjR2L/h/a+nfvO+1ov/dDVZqmp3hejlvlRzd8bcwObV0RethZVtG
+         xYAe9kI9fJ9BjqNkgUGx3qoCK5TbFQJCO90A+1Tw=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02H7T0Fu028053
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Mar 2020 02:29:00 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Mar 2020 02:29:07 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 02:29:00 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Mar 2020 02:29:07 -0500
+ Frontend Transport; Tue, 17 Mar 2020 02:29:00 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7T6Kf094089;
-        Tue, 17 Mar 2020 02:29:06 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02H7SxqM069866;
+        Tue, 17 Mar 2020 02:28:59 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
@@ -59,9 +61,9 @@ CC:     Murali Karicheri <m-karicheri2@ti.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v4 11/11] arm64: defconfig: ti: k3: enable dma and networking
-Date:   Tue, 17 Mar 2020 09:27:39 +0200
-Message-ID: <20200317072739.23950-12-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v4 10/11] arm64: dts: ti: k3-j721e-common-proc-board: add mcu cpsw nuss pinmux and phy defs
+Date:   Tue, 17 Mar 2020 09:27:38 +0200
+Message-ID: <20200317072739.23950-11-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200317072739.23950-1-grygorii.strashko@ti.com>
 References: <20200317072739.23950-1-grygorii.strashko@ti.com>
@@ -73,34 +75,82 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable TI K3 AM654x/J721E DMA and networking options.
+The TI J721E EVM base board has TI DP83867 PHY connected to external CPSW
+NUSS Port 1 in rgmii-rxid mode.
+
+Hence, add pinmux and Ethernet PHY configuration for TI j721e SoC MCU
+Gigabit Ethernet two ports Switch subsystem (CPSW NUSS).
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ .../dts/ti/k3-j721e-common-proc-board.dts     | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4db223dbc549..13cd865d7d4b 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -283,6 +283,7 @@ CONFIG_SMSC911X=y
- CONFIG_SNI_AVE=y
- CONFIG_SNI_NETSEC=y
- CONFIG_STMMAC_ETH=m
-+CONFIG_TI_K3_AM65_CPSW_NUSS=y
- CONFIG_MDIO_BUS_MUX_MMIOREG=y
- CONFIG_MARVELL_PHY=m
- CONFIG_MARVELL_10G_PHY=m
-@@ -698,6 +699,8 @@ CONFIG_QCOM_HIDMA_MGMT=y
- CONFIG_QCOM_HIDMA=y
- CONFIG_RCAR_DMAC=y
- CONFIG_RENESAS_USB_DMAC=m
-+CONFIG_TI_K3_UDMA=y
-+CONFIG_TI_K3_UDMA_GLUE_LAYER=y
- CONFIG_VFIO=y
- CONFIG_VFIO_PCI=y
- CONFIG_VIRTIO_PCI=y
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+index 7a5c3d4adadd..98e5e17e3ff7 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+@@ -8,6 +8,7 @@
+ #include "k3-j721e-som-p0.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/net/ti-dp83867.h>
+ 
+ / {
+ 	chosen {
+@@ -128,6 +129,30 @@
+ 			J721E_WKUP_IOPAD(0x38, PIN_INPUT, 0) /* (A23) MCU_OSPI1_LBCLKO */
+ 		>;
+ 	};
++
++	mcu_cpsw_pins_default: mcu_cpsw_pins_default {
++		pinctrl-single,pins = <
++			J721E_WKUP_IOPAD(0x0058, PIN_OUTPUT, 0) /* MCU_RGMII1_TX_CTL */
++			J721E_WKUP_IOPAD(0x005c, PIN_INPUT, 0) /* MCU_RGMII1_RX_CTL */
++			J721E_WKUP_IOPAD(0x0060, PIN_OUTPUT, 0) /* MCU_RGMII1_TD3 */
++			J721E_WKUP_IOPAD(0x0064, PIN_OUTPUT, 0) /* MCU_RGMII1_TD2 */
++			J721E_WKUP_IOPAD(0x0068, PIN_OUTPUT, 0) /* MCU_RGMII1_TD1 */
++			J721E_WKUP_IOPAD(0x006c, PIN_OUTPUT, 0) /* MCU_RGMII1_TD0 */
++			J721E_WKUP_IOPAD(0x0078, PIN_INPUT, 0) /* MCU_RGMII1_RD3 */
++			J721E_WKUP_IOPAD(0x007c, PIN_INPUT, 0) /* MCU_RGMII1_RD2 */
++			J721E_WKUP_IOPAD(0x0080, PIN_INPUT, 0) /* MCU_RGMII1_RD1 */
++			J721E_WKUP_IOPAD(0x0084, PIN_INPUT, 0) /* MCU_RGMII1_RD0 */
++			J721E_WKUP_IOPAD(0x0070, PIN_INPUT, 0) /* MCU_RGMII1_TXC */
++			J721E_WKUP_IOPAD(0x0074, PIN_INPUT, 0) /* MCU_RGMII1_RXC */
++		>;
++	};
++
++	mcu_mdio_pins_default: mcu_mdio1_pins_default {
++		pinctrl-single,pins = <
++			J721E_WKUP_IOPAD(0x008c, PIN_OUTPUT, 0) /* MCU_MDIO0_MDC */
++			J721E_WKUP_IOPAD(0x0088, PIN_INPUT, 0) /* MCU_MDIO0_MDIO */
++		>;
++	};
+ };
+ 
+ &wkup_uart0 {
+@@ -429,3 +454,21 @@
+ 		#gpio-cells = <2>;
+ 	};
+ };
++
++&mcu_cpsw {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mcu_cpsw_pins_default &mcu_mdio_pins_default>;
++};
++
++&davinci_mdio {
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
++		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
++	};
++};
++
++&cpsw_port1 {
++	phy-mode = "rgmii-rxid";
++	phy-handle = <&phy0>;
++};
 -- 
 2.17.1
 
