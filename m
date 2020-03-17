@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C20FC3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D5BC5ACC1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442152073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF0120738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:50:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="LKMnOP59"
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="MQR3s3pr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgCQQuS (ORCPT
+        id S1726157AbgCQQuc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:50:18 -0400
-Received: from mail-lj1-f225.google.com ([209.85.208.225]:33768 "EHLO
-        mail-lj1-f225.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbgCQQuN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 12:50:13 -0400
-Received: by mail-lj1-f225.google.com with SMTP id f13so23736618ljp.0
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 09:50:12 -0700 (PDT)
+        Tue, 17 Mar 2020 12:50:32 -0400
+Received: from mail-wr1-f98.google.com ([209.85.221.98]:44254 "EHLO
+        mail-wr1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbgCQQuM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 12:50:12 -0400
+Received: by mail-wr1-f98.google.com with SMTP id y2so11136751wrn.11
+        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 09:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=flowbird.group; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=evj4d0V6zpXsfSXOnl0C5Tn/QOdwXKQU5BTSPlnFegk=;
-        b=LKMnOP59KoyxHHgA43wSg0vYtKMMlf+6CHG7yVovbtWy7miYzxYL1Uhgm7eYcIn7nm
-         D95mX62KcwLQg10mi9DsMSXdhLDICSZ8kXioMF49aS1UnGT9pheUV4KBEgZHt0cAXwY6
-         WC1vmMn4K+J7INIslhfFR+uxZMJKz1GGsaUY78K8FQgPj7jYoq0sLXKd6jro1oaIxuYe
-         6w20mlkNGYKDFjktFijUHswhMSgs8cpUQQRf4je9oP6+3R7jKNIEGyAN9mC/Ad++ecWj
-         NACNurJhQa3CCrCFwxVYKPvIDQZPaZkJcWLdoHRIiJLUap7itpslyz2ehw/wxUzrwpXh
-         Zkpw==
+        bh=B45/nUfOtmmwVmpZUX1HJqLwFm+AFKdfWI8i6Ywg6f8=;
+        b=MQR3s3prG83alxU3D/Cb53vMjAZpfe3c+nj12l08b+Iv4fGHT824TkeGL5LTwFw0ff
+         5VIfeHCzUni9GRAW7Kylhm52QsqygNISP19LOB7y3+TWJ3S5PGz58rqOKu4FK01DRXcM
+         25oQ1BKMyDJC349vdU/J5s2pwqGtZ0Urq9zKu+/yCqERvyStILze4KqcXMgdYd4bsBt6
+         lrLeTDmRMDKr9tdakHKvtAQU370zYrlJNmX5Bz4PZHqU/prgdL7wD1APvD8d3cgJ+jaE
+         4qjO/UYF3T9dZKFuKx1UzjVPo9cA3b6AXVw1pCvtqbU8lV7aKgq4CYOSXyI+hNB7ACWr
+         BC5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=evj4d0V6zpXsfSXOnl0C5Tn/QOdwXKQU5BTSPlnFegk=;
-        b=YDW1f45nJoKh6XqvEHcd7JoOgXNNtgzxL7x8ze9CMnCNxSCPE58iWwPpVqpUGGeQNR
-         n3UBvU7O2ZponRR7YCzPo5g7Wjy2bbIeAR6ZcZgfTgGX399/cmJXO1anBNCEaB7AjpJD
-         FsbAvD1LtvIB5ezdYNP4FQNwfgYojKZaiJh89PGMGMjsd6tk5mr+IRmDWbVbGNwWdgBZ
-         yVEek+xkoNPhRKc5vtuiXRbnUltXCiNrg0mYsBByFTM9AM7UD4P0Z+gKw8EEVCIGJTKR
-         Er80sSJVQgjyczsLwYi+2YyjAmGkveqJ0qwNoSCtkxCb8P9WcGT+COXGDItWkHqkGwpX
-         xrbQ==
-X-Gm-Message-State: ANhLgQ0Kw4R4L4WpYPe1WKwmr9/GuMXDaJ+zJlN9ZyVBr/FqYmjkFiRq
-        z3DYS6etOJyYP89Mz4i3HqaVgwIM4oOotLtP0ZJdfZabOGwG
-X-Google-Smtp-Source: ADFU+vst4+YLm4+TecIAr8Y9a4YBFV0tjg8Q0cTN8eC53ZXZGkwdowxtmQVzVsRMuQLu+vq3/hq480X3rORk
-X-Received: by 2002:a2e:89c9:: with SMTP id c9mr3483335ljk.181.1584463811099;
-        Tue, 17 Mar 2020 09:50:11 -0700 (PDT)
+        bh=B45/nUfOtmmwVmpZUX1HJqLwFm+AFKdfWI8i6Ywg6f8=;
+        b=Xg5Cc0z+ohacT8LowUflqNIDS0rb3PhAIN2eUvleKVpFI0o5F3BctsqU+Ly5Dika1c
+         BAYZJBU8mi5ZeRTHg10jgkvBXle5SHzNi8o0PBDmyL9BUH1iUMK3Qcs0xg2kP69BnZOM
+         BI6AdyaM9CZ7EU7df0KQB4Z42Oaki+TU1SiFx6TTtvFNoWOqMU+Nwf5UpjYGTlO4nnPu
+         vAz++5/IXWFdB88imvqjMsA4MAKUmw9O9z+8JVZO6uN/NSSDcwutx2CUCb9hSX7V1Kaw
+         9kKI1+aZ3e5DCNbHHN1mt2IqeOer3acNst2OMYzK2eNqs7hHMxbhcCD1VaCS825kX74X
+         Hprg==
+X-Gm-Message-State: ANhLgQ0kHGgFspIGzuzOpsUi1Q2PxfLqJk4frw6Fd5/QmpqQLxZv4cJt
+        Kn17O7IfCganbUj1O2b4Vc641nDz4+fCwO/PFTM9ljUreRLW
+X-Google-Smtp-Source: ADFU+vtKvfOkBmGNK9FyHWUoAyk6vdyfZ1ec0Ho5dvQeINcuYSl4oJMECGNCB9ibYkr3JmuiaRGCOH7ZRSyi
+X-Received: by 2002:adf:d0c2:: with SMTP id z2mr6857642wrh.223.1584463809425;
+        Tue, 17 Mar 2020 09:50:09 -0700 (PDT)
 Received: from mail.besancon.parkeon.com ([185.149.63.251])
-        by smtp-relay.gmail.com with ESMTPS id e20sm13727lfn.29.2020.03.17.09.50.10
+        by smtp-relay.gmail.com with ESMTPS id s14sm59992wru.87.2020.03.17.09.50.09
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Tue, 17 Mar 2020 09:50:11 -0700 (PDT)
+        Tue, 17 Mar 2020 09:50:09 -0700 (PDT)
 X-Relaying-Domain: flowbird.group
 Received: from [172.16.13.134] (port=56876 helo=PC12445-BES.dynamic.besancon.parkeon.com)
         by mail.besancon.parkeon.com with esmtp (Exim 4.71)
         (envelope-from <martin.fuzzey@flowbird.group>)
-        id 1jEFPu-0000dJ-BW; Tue, 17 Mar 2020 17:50:10 +0100
+        id 1jEFPt-0000dJ-1N; Tue, 17 Mar 2020 17:50:09 +0100
 From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
 To:     Fugang Duan <fugang.duan@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -69,9 +69,9 @@ Cc:     netdev@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org
-Subject: [PATCH 4/4] ARM: dts: imx6: add fsl,stop-mode property.
-Date:   Tue, 17 Mar 2020 17:50:06 +0100
-Message-Id: <1584463806-15788-5-git-send-email-martin.fuzzey@flowbird.group>
+Subject: [PATCH 2/4] ARM: dts: imx6: Use gpc for FEC interrupt controller to fix wake on LAN.
+Date:   Tue, 17 Mar 2020 17:50:04 +0100
+Message-Id: <1584463806-15788-3-git-send-email-martin.fuzzey@flowbird.group>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
 References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
@@ -80,25 +80,41 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is required for wake on lan on i.MX6
+In order to wake from suspend by ethernet magic packets the GPC must be
+used as intc does not have wakeup functionality.
+
+But the FEC DT node currently uses interrupt-extended, specificying intc,
+this breaking WoL.
+
+This problem is probably fallout from the stacked domain conversion as
+intc used to chain to GPC.
+
+So replace "interrupts-extended" by "interrupts" to use the default
+parent which is GPC.
+
+Fixes: b923ff6af0d5 ("ARM: imx6: convert GPC to stacked domains")
 
 Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/imx6qdl.dtsi | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index bc488df..49c0527 100644
+index e6b4b85..bc488df 100644
 --- a/arch/arm/boot/dts/imx6qdl.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1045,6 +1045,7 @@
+@@ -1039,9 +1039,8 @@
+ 				compatible = "fsl,imx6q-fec";
+ 				reg = <0x02188000 0x4000>;
+ 				interrupt-names = "int0", "pps";
+-				interrupts-extended =
+-					<&intc 0 118 IRQ_TYPE_LEVEL_HIGH>,
+-					<&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <0 118 IRQ_TYPE_LEVEL_HIGH>,
++					     <0 119 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6QDL_CLK_ENET>,
  					 <&clks IMX6QDL_CLK_ENET>,
  					 <&clks IMX6QDL_CLK_ENET_REF>;
- 				clock-names = "ipg", "ahb", "ptp";
-+				fsl,stop-mode = <&gpr 0x34 27>;
- 				status = "disabled";
- 			};
- 
 -- 
 1.9.1
 
