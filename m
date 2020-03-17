@@ -2,63 +2,61 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0238CC10F29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 08:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB72C10F29
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 08:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC5B220719
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 08:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B910205ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 08:32:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="c2DNi1WY"
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="B6zNlUZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgCQIaJ (ORCPT
+        id S1726130AbgCQIcf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:30:09 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39360 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbgCQIaI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 04:30:08 -0400
-Received: by mail-io1-f66.google.com with SMTP id c19so18983886ioo.6
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 01:30:08 -0700 (PDT)
+        Tue, 17 Mar 2020 04:32:35 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33222 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbgCQIce (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 04:32:34 -0400
+Received: by mail-io1-f68.google.com with SMTP id o127so7603928iof.0
+        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 01:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=antmicro.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jyDCPfs8KzQ6V9GNlBy3Iu/4R6G5EhS/k3t/Fwg1hEI=;
-        b=c2DNi1WYbLLOwQlnk496EBc46hHCbpcGgzkJhdPeh+6ID51gwq5Jj/tOQI2UYMpf/n
-         vnfERJoln5g5y2c0NWtui4fSc5SfruZjtXx0RN1rTF/T5KZCJVYq57TvhIk87PE+YaHO
-         N4tzhqg/VE4XzV57jM7rqCpA6vHTAaOhnG5ZU=
+        bh=S/xn2plA996CBuz8fNTsQFvTz+x1vxgYWj19xP/2JoI=;
+        b=B6zNlUZaje7yn8WOECf9nOmrVokHu0nwyb70nNUdoHHnvOTC3AYr84t88lHk1ZHPuD
+         L0hRZtW+1ETKe9rIRDW23bA3drVA8QfRajrwykuvuZwjq5B0ZKzY6/Qr6v1hJuCOopTM
+         2d6clWvNreERpL+caCMTigob7Lb5VGTVAI52A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jyDCPfs8KzQ6V9GNlBy3Iu/4R6G5EhS/k3t/Fwg1hEI=;
-        b=sUhbE1ZMoZ4w6zGCftZdTN54DN3D1opQS72WkUT34llacGniLuF25/IjPz7EZFv+b8
-         LOAZXswqLJK5QzsDoWirc/y0IdOQ7iq33wSouEUflugnjtiNeN64uUwRyNuv6h3TpnQH
-         RFugMkmUtBlsxgokvyoOxfyVcNmfMhZF/T48/8IzJ57jI4Sh/2w9uYv+HyN7aFZGgkCf
-         1os7K5tlqlzgrud65oUuwI5pF9uSJ2nVlzJIcGvmLF5TZtG+7xB2Lz4lx7aCbrW5wgvL
-         7Oa1Cmeekdlo/oi0M1jAV6l8p5wH93VqhCoJru2ZESMmGTLoiG3+9kYxWG0ik7wR6Auj
-         vMNg==
-X-Gm-Message-State: ANhLgQ1eieVFMu0KkOLtH2wDoOGj7E6segmxUdJU54vxWANuyL4pU/M1
-        nuBbJXtUQa6fxWha+JFQmdQpyw0M4qU2G1+Cswa57Q==
-X-Google-Smtp-Source: ADFU+vsmUU61jePkqUhV9101lLple16cpG72xhffs/pv3VGzuG9vSytaE1R6wvK2rDvh0OMxsd/cWfOD7XaF60KVv4A=
-X-Received: by 2002:a02:1d44:: with SMTP id 65mr4200166jaj.6.1584433808056;
- Tue, 17 Mar 2020 01:30:08 -0700 (PDT)
+        bh=S/xn2plA996CBuz8fNTsQFvTz+x1vxgYWj19xP/2JoI=;
+        b=HHLuykycWzZ8FOQXKtkZsUESLnWepNAjvVHkPz4HpM8H/ZTtTIcWGbawJh55roUE90
+         Mh5vFPQb7WvlcixH7rZhCfDiiXXJF1xpq+cJundq9rodMyfjx5VFWwyMOsQBYJomAEQC
+         DjjpMMK9GtZVIYQohX1RNgaGT3leHWqPsWo2EMnH9mL9lWfwgqPDk/MpZd19rhEx15x9
+         wmH+lZp5ZMhlIJcjChS2yGEjPdLgVNVxc4nUOtPBrxeBj7XrBX9FrlVVj+ExSprbJhYv
+         DneqebCLO2FcT13kJ+G8oJtMVR8yHpa8wowXVDFqGGvHWGSPlXNXeJu0OvEBgMbUAf/e
+         GZZw==
+X-Gm-Message-State: ANhLgQ2DQ8BKzjl6mkfUHoYbSLr0ecTVVW4eoR6wWhHX8nhoo2iXHQ7F
+        yTnSn8u4954BvfNgPUnD7jbbOBTf4guEmi/LKaM5xw==
+X-Google-Smtp-Source: ADFU+vuwgJ63PydvmMkvfAPukN0HBfPURkphAQ8Fr0g6T/pnVNRT0ZBZlqvaPwgDIPmP8AZ3ndzLGh+g2mcNzEiC0ZA=
+X-Received: by 2002:a05:6638:a9b:: with SMTP id 27mr4116136jas.70.1584433952862;
+ Tue, 17 Mar 2020 01:32:32 -0700 (PDT)
 MIME-Version: 1.0
 References: <20200225094437.4170502-0-mholenko@antmicro.com>
- <20200225094437.4170502-2-mholenko@antmicro.com> <20200225091055.ubm5r3p6r4ydchyh@gilmour.lan>
-In-Reply-To: <20200225091055.ubm5r3p6r4ydchyh@gilmour.lan>
+ <20200225094437.4170502-2-mholenko@antmicro.com> <20200225165750.GA15779@bogus>
+In-Reply-To: <20200225165750.GA15779@bogus>
 From:   Mateusz Holenko <mholenko@antmicro.com>
-Date:   Tue, 17 Mar 2020 09:29:56 +0100
-Message-ID: <CAPk366ReVDbWEESC0WRBs-JD0jdG3gV9st679g-cBrzxYWd1bg@mail.gmail.com>
+Date:   Tue, 17 Mar 2020 09:32:21 +0100
+Message-ID: <CAPk366Qg-U8xUsvTjeMfzYs8tg_m4wO5Ghg0FseRgbdOfV8FCA@mail.gmail.com>
 Subject: Re: [PATCH v3 2/5] dt-bindings: soc: document LiteX SoC Controller bindings
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
         "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
@@ -71,6 +69,7 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
         Joel Stanley <joel@jms.id.au>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -83,13 +82,9 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Tue, Feb 25, 2020 at 10:11 AM Maxime Ripard <maxime@cerno.tech> wrote:
+On Tue, Feb 25, 2020 at 5:57 PM Rob Herring <robh@kernel.org> wrote:
 >
-> Hi Mateusz,
->
-> On Tue, Feb 25, 2020 at 09:46:45AM +0100, Mateusz Holenko wrote:
+> On Tue, 25 Feb 2020 09:46:45 +0100, Mateusz Holenko wrote:
 > > From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
 > >
 > > Add documentation for LiteX SoC Controller bindings.
@@ -106,78 +101,54 @@ On Tue, Feb 25, 2020 at 10:11 AM Maxime Ripard <maxime@cerno.tech> wrote:
 > >  2 files changed, 52 insertions(+)
 > >  create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
 > >
-> > diff --git a/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml b/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
-> > new file mode 100644
-> > index 000000000000..039894265319
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
-> > @@ -0,0 +1,46 @@
-> > +PDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/soc/litex/litex,soc_controller.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: LiteX SoC Controller driver
-> > +
-> > +description: |
-> > +  This is the SoC Controller driver for the LiteX SoC Builder.
-> > +  It's purpose is to verify LiteX CSR (Control&Status Register) access
-> > +  operations and provide function for other drivers to read/write CSRs
-> > +  and to check if those accessors are ready to use.
-> > +
-> > +maintainers:
-> > +  - Karol Gugala <kgugala@antmicro.com>
-> > +  - Mateusz Holenko <mholenko@antmicro.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: litex,soc_controller
 >
-> Usually compatible will use dash as separators, not underscores.
+> My bot found errors running 'make dt_binding_check' on your patch:
 >
-> > +  reg:
-> > +    description: Base address and length of the register space
+> warning: no schema found in file: Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml: ignoring, error parsing file
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> Traceback (most recent call last):
+>   File "/usr/local/bin/dt-doc-validate", line 35, in check_doc
+>     testtree = dtschema.load(filename, line_number=line_number, duplicate_keys=False)
+>   File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 513, in load
+>     return yaml.load(f.read())
+>   File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/main.py", line 343, in load
+>     return constructor.get_single_data()
+>   File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 111, in get_single_data
+>     node = self.composer.get_single_node()
+>   File "_ruamel_yaml.pyx", line 718, in _ruamel_yaml.CParser.get_single_node
+> ruamel.yaml.composer.ComposerError: expected a single document in the stream
+>   in "<unicode string>", line 1, column 1
+> but found another document
+>   in "<unicode string>", line 2, column 1
 >
-> This is usually removed since it's what's expected from the property
-> anyway. However, what you should really test for in the number of
-> address/size couples being set, and you can do that using maxItems: 1
+> During handling of the above exception, another exception occurred:
 >
-> > +  status:
-> > +    description: |
-> > +      disables or enables node
-> > +
-> > +    const: "okay"
+> Traceback (most recent call last):
+>   File "/usr/local/bin/dt-doc-validate", line 74, in <module>
+>     ret = check_doc(args.yamldt)
+>   File "/usr/local/bin/dt-doc-validate", line 40, in check_doc
+>     print(filename + ":", exc.path[-1], exc.message)
+> AttributeError: 'ComposerError' object has no attribute 'path'
+> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/soc/litex/litex,soc_controller.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/soc/litex/litex,soc_controller.example.dts] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
 >
-> This is added automatically by the tooling, so you can leave it out.
->
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - status
->
-> And in general, status is not required. Leaving status out is
-> equivalent to status = "okay"
->
-> > +examples:
-> > +  - |
-> > +
-> > +  soc_ctrl0: soc_controller@f0000000 {
-> > +                     compatible = "litex,soc_controller";
-> > +                     reg = <0x0 0xf0000000 0x0 0xC>;
-> > +                     status = "okay";
-> > +  };
->
-> The indentation looks weird here?
->
-> Maxime
+> See https://patchwork.ozlabs.org/patch/1243930
+> Please check and re-submit.
 
-Thanks for all the comments!
+Thanks for spotting this.
 
-I'll fix this file and resubmit the whole patchset after addressing
+It looks like the first line of the document is broken - it should be
+a comment with a license descriptor, but the initial characters are
+missing.
+
+I'll fix this and resubmit the whole patchset after addressing all
 other remarks.
 
---
+
+-- 
 Mateusz Holenko
 Antmicro Ltd | www.antmicro.com
 Roosevelta 22, 60-829 Poznan, Poland
