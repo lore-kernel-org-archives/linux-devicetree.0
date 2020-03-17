@@ -2,285 +2,186 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB6EC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B25C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9729B20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51920206EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:52:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="iAehwnDf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgCQO1K (ORCPT
+        id S1726781AbgCQOwC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:27:10 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:44840 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgCQO1J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 10:27:09 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 2158F20031;
-        Tue, 17 Mar 2020 15:27:04 +0100 (CET)
-Date:   Tue, 17 Mar 2020 15:27:02 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Vinay Simha B N <simhavcs@gmail.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-binding: Add DSI/LVDS tc358775 bridge bindings
-Message-ID: <20200317142702.GA16338@ravnborg.org>
-References: <1583920112-2680-1-git-send-email-simhavcs@gmail.com>
- <20200312151752.GA7490@bogus>
- <CAGWqDJ7DP3DuR7EWT6Ni8YxN3Adg3RgJZut6+AtpAak_HB=QCQ@mail.gmail.com>
- <CAGWqDJ4cAU98_xMk6f-bsT5LF5cD2JJk8_JCykwM=cd6CCfWtw@mail.gmail.com>
+        Tue, 17 Mar 2020 10:52:02 -0400
+Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:55798 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726189AbgCQOwC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:52:02 -0400
+X-Greylist: delayed 3274 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Mar 2020 10:52:02 EDT
+Received: from pps.filterd (m0098780.ppops.net [127.0.0.1])
+        by mx0a-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HEp6LF007670;
+        Tue, 17 Mar 2020 09:51:39 -0500
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2043.outbound.protection.outlook.com [104.47.66.43])
+        by mx0a-00010702.pphosted.com with ESMTP id 2yrvsv1p9q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Mar 2020 09:51:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qzux5D0U9tW6s7scOnfUrCzicowYE/VSmhd+CisoTAxoGt1WWJm5p6rCnCsuC/mx6VYje5dCQTQtpjb3YpgjwPkUbdxvPp+FRPGG/smM3U8hujOeuThJDVpQ3Zs9JJ5XUrRgPJxdd/3kciIlsEJ3e+S2Mb8lsKhCAOqIN6OQHYM/ddwhEsmk+VYrJg//1VAXv6HgAvO8PsvxBbSxSYjZ3KqzXnPdcI2P+lbCX/Qn9mGyjG6jUKT1aJU4cwo4SIc64Kj3X3cQriotSyW+jYbvEYctSDsMUY7IUZaY3IQ0sW03otmZpuygwA+0SwJWJzPgMeXmzGFPKeAhclQ2JE6ebw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pTc1M08uh4ajhnLJSGyCpHmDMmV/ESEmtH376gDBt14=;
+ b=CfNsNUDQqVrV3k7AzHcsBSTon49p0Cn8P1RmwABJu5SoNE8GYVzfawpBfMgfuM9ZZKu76NAqr1pXRXPZZPDIqdyaGcwoBLj5HP5QWWnESOhtceVYewqjib/IqM9FzDJzCCh3WrwWdkrc62OoBkkg56HWlnWAKbiAX+20WrAwLClu6VNusV1+yPImSXezsV8K26m39pn/CBT010kp5RL/BjyXs2JUfgvP1GmEbfk2NHHTiecsxB79f/wUyF6Gu2nndwLrVWHV2ZaJZw4kfCEDnu5lW6ESJBvk5y4NWHie6QpIlitn2vHoPkqKWVtG5IbOJlyAj0zKYfB+OrGJpBjlcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
+ header.d=ni.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pTc1M08uh4ajhnLJSGyCpHmDMmV/ESEmtH376gDBt14=;
+ b=iAehwnDfChKECjAvlp9kCcY8s4CbPrviolwj++uiD5mWwLbcrpzVyJMdC6GOJDbZFibi+rER/Me3d2M0onJ7TdyDLpXToct7d2PA/4fquxItMP6wYrxt2f0thMtxTlKBtkS/npLY/WFFgpfyg6N6KdqSB064dcYkRdT+XJxA/jc=
+Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::29) by SN4PR0401MB3519.namprd04.prod.outlook.com
+ (2603:10b6:803:46::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15; Tue, 17 Mar
+ 2020 14:51:37 +0000
+Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
+ ([fe80::d05b:1953:4111:38e4]) by SN4PR0401MB3646.namprd04.prod.outlook.com
+ ([fe80::d05b:1953:4111:38e4%5]) with mapi id 15.20.2793.023; Tue, 17 Mar 2020
+ 14:51:37 +0000
+From:   Michael Auchter <michael.auchter@ni.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Auchter <michael.auchter@ni.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] dt-bindings: iio: adc: ad7291: add binding
+Date:   Tue, 17 Mar 2020 09:51:13 -0500
+Message-Id: <20200317145113.12413-2-michael.auchter@ni.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200317145113.12413-1-michael.auchter@ni.com>
+References: <20200317135649.8876-1-michael.auchter@ni.com>
+ <20200317145113.12413-1-michael.auchter@ni.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: DM5PR11CA0007.namprd11.prod.outlook.com
+ (2603:10b6:3:115::17) To SN4PR0401MB3646.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::29)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGWqDJ4cAU98_xMk6f-bsT5LF5cD2JJk8_JCykwM=cd6CCfWtw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=gEfo2CItAAAA:8
-        a=pGLkceISAAAA:8 a=KY18R1YYeKRrVLQ61OwA:9 a=5V_uxFQuYriqKHR4:21
-        a=H5yeRiyAWD2ozbk7:21 a=CjuIK1q_8ugA:10 a=sptkURWiP4Gy88Gu7hUp:22
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xaphan.phire.org (66.90.216.181) by DM5PR11CA0007.namprd11.prod.outlook.com (2603:10b6:3:115::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Tue, 17 Mar 2020 14:51:36 +0000
+X-Mailer: git-send-email 2.24.1
+X-Originating-IP: [66.90.216.181]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 56c933a5-d111-4c89-5405-08d7ca82b17e
+X-MS-TrafficTypeDiagnostic: SN4PR0401MB3519:|SN4PR0401MB3519:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN4PR0401MB3519219D5286CF194F4C8C5887F60@SN4PR0401MB3519.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(136003)(376002)(39860400002)(366004)(199004)(4326008)(110136005)(478600001)(81156014)(6666004)(6486002)(2906002)(16526019)(186003)(36756003)(26005)(956004)(316002)(8936002)(44832011)(66946007)(86362001)(1076003)(5660300002)(6506007)(8676002)(52116002)(6512007)(81166006)(2616005)(66556008)(66476007)(966005);DIR:OUT;SFP:1102;SCL:1;SRVR:SN4PR0401MB3519;H:SN4PR0401MB3646.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: ni.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YUcGZn6q6nvvrMwXWxaBheuXxmr/Myxd0h68OM90cRavg7D4JlIrLDsU15GVjdukDYmtIZXb0W/BLRZ7NsIqbr6MVWmhb6qQiwlZx3MoHcPm3hJPJ29mNMyjrQkg//s7EMefrYh1aE6grZFNRHJMYSk25DjOBo8qr1YpWsKErSDew5oY8xGKsI4UIkIJmitdlLZXmRNMIDGjK/Oo9MpogAp8L+wBQe/tT/AA8P6dwBOw9T6ujBL1DGmIflDXlNWIMdiencoEgeaESaHxTciiI6oVLt7WvYIjyLfdj6pZHxOqUkpqri40sAKLE6CF1O726so+ukl+WWAlLtNnp91qIJ4Yv/z7wTA/PofbcWR0S61RbNn0nhjxTWxnKr8U/PuSV2vXOehjSgk2eo88pyeX99jdgPivp9Uo5zgv8zKd+1OPf2hgnkVmHR5DIxF+6zIdx2oShk9dLJhcbRHrHvChMGN5ycTDfjvU4uDdA1e35yGwcUoMc086pF7fPJ+B53lbjETIp3ePnc/MQ62QSvzX8Q==
+X-MS-Exchange-AntiSpam-MessageData: ZQ5Z8rcfZbLCJPJvJUfM7G2PATF69rncFJxSrG9nHewsDKAY+8eDf7FcdVAX3oZpQlRnfLqzsA0mVi53bdaY5Cz/lpEoqw0pe9lq15OIGZH0oyUnuNqR2fJtFwS3S9z/aQLc5TQM/Nn1sn50mR6HbA==
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56c933a5-d111-4c89-5405-08d7ca82b17e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 14:51:37.0289
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8nde0UY+2/9EK714DT7ZruH8XFt1+oUZ64Ct0MOO3sX5rd/XeP67D/FgtziHJfdSwHeHV2r/yAc8jPE5HHQFow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3519
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-17_06:2020-03-17,2020-03-17 signatures=0
+X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30 impostorscore=0
+ lowpriorityscore=0 phishscore=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 suspectscore=0
+ clxscore=1015 adultscore=0 bulkscore=0 classifier=spam adjust=30
+ reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003170062
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vinay.
+Add device-tree binding for ADI AD7291 ADC.
 
-On Tue, Mar 17, 2020 at 12:25:42PM +0530, Vinay Simha B N wrote:
-> sam,
-> 
-> i need some inputs on the below  error. I had created this file
-> Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-> by using vim editor. Do we have any tool to create yaml file?
-
-I use vim myself, but is careful to follow the right syntax.
-
-> 
-> i do not get the error when running 'make dt_binding_check' in my
-> build environment
-> Documentation/devicetree/bindings/display/bridge/toshiba-tc358775.yaml
-> 
-> is there any tool available similar to  scripts/checkpatch.pl -f
-> <file> , for yaml files?
-
-Please read Documentation/devicetree/writing-schema.
-Here you can find general info + instruction how to install the tools
-required for "make dt_binding_check".
-
-I could reproduce the error reported by Rob.
-I gave your binding file a shot - there were a lot of smaller issues:
-
-- do not use tabs in yaml files
-- be consistent in indent
-- vendor prefixed properties needed some extra care
-- example was full of bugs
-  - "..."
-  - no need for status = "okay";
-  - properties spelled wrong
-
-For the example I adjusted it to use indent of 4 spaces, which IMO
-is more readable than the two spaces used in the other parts of the 
-file.
-
-I have attached the updated binding file - please review and fix.
-This is just a quick shot, I did not do a proper review.
-
-Please rename the file, other files in same dir are named "toshiba,xxx",
-so replace '-' with ','.
-
-And try to introduce bugs in the example - and check that the tooling
-catches the bug.
-
-hint:
-
-    make DT=.../foo.yaml dt_binding_check
-
-is a qucik way to check only your binding.
-
-And for new bindings the preferred license is: (GPL-2.0-only OR BSD-2-Clause)
-
-	Sam
-
-# SPDX-License-Identifier: GPL-2.0
-%YAML 1.2
+Signed-off-by: Michael Auchter <michael.auchter@ni.com>
 ---
-$id: http://devicetree.org/schemas/display/bridge/toshiba-tc358775.yaml#
-$schema: http://devicetree.org/meta-schemas/core.yaml#
+ .../bindings/iio/adc/adi,ad7291.yaml          | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
 
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
+new file mode 100644
+index 000000000000..93aa29413049
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7291.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AD7291 8-Channel, I2C, 12-Bit SAR ADC with Temperature Sensor
++
++maintainers:
++  - Michael Auchter <michael.auchter@ni.com>
++
++description: |
++  Analog Devices AD7291 8-Channel I2C 12-Bit SAR ADC with Temperature Sensor
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7291.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7291
++
++  reg:
++    maxItems: 1
++
++  vref-supply:
++    description: |
++      The regulator supply for ADC reference voltage.
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      ad7291: adc@0 {
++        compatible = "adi,ad7291";
++        reg = <0>;
++        vref-supply = <&adc_vref>;
++      };
++    };
++
+-- 
+2.24.1
 
-title: Toshiba TC358775 DSI to LVDS bridge bindings
-
-maintainers:
-  - Vinay Simha BN <simhavcs@gmail.com>
-
-description: |
-  This binding supports DSI to LVDS bridge TC358775
-
-properties:
-  compatible:
-    const: toshiba,tc358775
-
-  reg:
-    maxItems: 1
-    description: i2c address of the bridge, 0x0f
-
-  toshiba,dsi-lanes:
-    allOf:
-      - $ref: /schemas/types.yaml#/definitions/uint32
-      - minimum: 1
-        maximum: 4
-        default: 1
-    description: bla bla
-
-  toshiba,dual-link:
-    $ref: /schemas/types.yaml#definitions/flag
-    description: bla bla
-
-  vdd-supply:
-    maxItems: 1
-    description: 1.2V LVDS Power Supply
-
-  vddio-supply:
-    maxItems: 1
-    description: 1.8V IO Power Supply
-
-  stby-gpios:
-    maxItems: 1
-    description: Standby pin, Low active
-
-  reset-gpios:
-    maxItems: 1
-    description: Hardware reset, Low active
-
-  ports:
-    type: object
-
-    properties:
-      port@0:
-        type: object
-        description: |
-          DSI Input. The remote endpoint phandle should be a
-          reference to a valid mipi_dsi_host device node.
-      port@1:
-        type: object
-        description: |
-          Video port for LVDS output (panel or connector).
-
-    required:
-      - port@0
-      - port@1
-
-required:
- - compatible
- - reg
- - tc,dsi-lanes
- - vdd-supply
- - vddio-supply
- - stby-gpios
- - reset-gpios
- - ports
-
-examples:
-  - |+
-    #include <dt-bindings/gpio/gpio.h>
-
-    i2c@78b8000 {
-        #address-cells = <1>;
-        #size-cells = <0>;
-
-        /* On High speed expansion */
-        label = "HS-I2C2";
-        status = "okay";
-
-        tc_bridge: bridge@f {
-            compatible = "toshiba,tc358775";
-            reg = <0x0f>;
-
-            tc,dsi-lanes = <4>;
-            tc,dual-link = <0>;
-
-            vdd-supply = <&pm8916_l2>;
-            vddio-supply = <&pm8916_l6>;
-
-            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
-            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
-
-            ports {
-                #address-cells = <1>;
-                #size-cells = <0>;
-
-                port@0 {
-                    reg = <0>;
-                    d2l_in: endpoint {
-                        remote-endpoint = <&dsi0_out>;
-                    };
-                };
-
-                port@1 {
-                    reg = <1>;
-                    d2l_out: endpoint {
-                        remote-endpoint = <&panel_in>;
-                    };
-                };
-            };
-        };
-    };
-
-    panel: auo,b101xtn01 {
-        status = "okay";
-        compatible = "auo,b101xtn01", "panel-lvds";
-        power-supply = <&pm8916_l14>;
-
-        width-mm = <223>;
-        height-mm = <125>;
-
-        data-mapping = "jeida-24";
-
-        panel-timing {
-            /* 1366x768 @60Hz */
-            clock-frequency = <72000000>;
-            hactive = <1366>;
-            vactive = <768>;
-            hsync-len = <70>;
-            hfront-porch = <20>;
-            hback-porch = <0>;
-            vsync-len = <42>;
-            vfront-porch = <14>;
-            vback-porch = <0>;
-        };
-
-        port {
-            panel_in: endpoint {
-                remote-endpoint = <&d2l_out>;
-            };
-        };
-    };
-
-    mdss {
-        dsi@1a98000 {
-            ports {
-                port@1 {
-                    dsi0_out: endpoint {
-                        remote-endpoint = <&d2l_in>;
-                        data-lanes = <0 1 2 3>;
-                    };
-                };
-            };
-        };
-    };
-
-...
