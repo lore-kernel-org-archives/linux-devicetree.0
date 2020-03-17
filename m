@@ -2,137 +2,140 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED62C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4EAC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843382075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10382205ED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:54:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QSiI3s0Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oq96GvwK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgCQNuq (ORCPT
+        id S1726016AbgCQNy3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:50:46 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33406 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbgCQNup (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:50:45 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r7so15710968wmg.0
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:50:44 -0700 (PDT)
+        Tue, 17 Mar 2020 09:54:29 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33786 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgCQNy1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:54:27 -0400
+Received: by mail-ot1-f65.google.com with SMTP id x26so4651178otk.0
+        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:54:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=weGSHusuD3aKifnaFA/EzOIoqClxmTlaJmSpzpOoxs0=;
-        b=QSiI3s0YoV7n7/tnYog9oUBP3Cc6GxHGUCwCh0UhqjNIkn6pKoWxwDwIc7ZHfuKyt1
-         kEdvFCQ6j7+Noa9+D0kVSXd1O/Rq0h4ff0AABiKfQ0W9cNhse4SjTXrrb27FQeHJRpqX
-         rIA1fPNgK6D/F/8d3tqP2UVTDNrxXWhDA5E8X6jidyynaIZ0Cy+aY7WG7NpXiQONb4V8
-         LujVukcDZrWz+C7PF5bEhVfs5Bz/2BHH9zTE0HxRpIGKa2vvxtylEPZVlwnF7tZUgTXY
-         0rCI7jvUsKgzmx+R0sfFe10N4oWZb67+facmOeYl3vGzjeHlueh6TX64XNpmNRTf9oox
-         +L4Q==
+         :cc;
+        bh=ZmJ1DX6hWX/M0tJ4tb+T+vnuuVl9PBhyVPx9KWg+TfE=;
+        b=oq96GvwKE3QjPaVLIL6puTSWYMA2JZDVaTmuQkU5YS2oAf/mr3PnEKvKHJR0ZRhtIa
+         co1ejwVmMjf45HEIGsFS7ucBT3DK6y8RniLfZE9atxfSrHzRC4LR7/HbpPoNhsm9Csw9
+         4WgJovPpiFVSd6SpId/tkc9AFWMsO7+/Fgrhd5ZALH+GelrL93lZpFiNJkbpxOyGI9jj
+         cfuiFY4wiYKRNaziZ2clJGs0DujKo7wScsDUBJMincBMB9URA1hz8xIaq7/5PVaD2a+m
+         3b74LJeSYTOYbUGyuvbKRYBDDMHveVikkENWoxUtiLK++DNrQ92vG/eDVnrxruhpAR9B
+         pdMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=weGSHusuD3aKifnaFA/EzOIoqClxmTlaJmSpzpOoxs0=;
-        b=TqkvGrMgwNAt1OnuntkwbUddOfTFUJgAIbxlFs5INK2c1iD0+bc1TslyXh/r+TmWsS
-         Gn+1msyLLb9h5OHlej88Rs9B2P7vY7wla1Rta66E47mI9KvYuwSBgvHahWIC8hK26+f2
-         qo6XgoVCbzVhkbYJdf2EV0cnr4zDXQ3116fkXvsmJxp56BaoAscs/r8Bx33DBuWBXZ8m
-         Kxihoz6Pl5fc8qKt4BEU3tJWCskv3+Mt9Wkyi67uTfpAaM5ztMHJId7NiPoyWDim2i/T
-         RtMVE3u7/j7YM3wZjwOPSil4fYk4atvX9vJcr8jsNtHQrYpwR32CvwBPc2AUB19+Ezng
-         +Eng==
-X-Gm-Message-State: ANhLgQ0koAj0GTnWb+gWS5gmZPOg4JB9I1ur0lZyEnkzf3lL8h6xUAhD
-        ULY9MTjJ164EMQjOkIbh9A887SlnGmAdGy5QPxRAQw==
-X-Google-Smtp-Source: ADFU+vusa/y0ClrKHxHtyBDmZj1O+rMx8uu0qjHobSSS5JQecz+zDpUKEEddBu5XlbGpEmdbaIvM2nWs+JrNOWL77kQ=
-X-Received: by 2002:a05:600c:21d1:: with SMTP id x17mr5249108wmj.3.1584453043184;
- Tue, 17 Mar 2020 06:50:43 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=ZmJ1DX6hWX/M0tJ4tb+T+vnuuVl9PBhyVPx9KWg+TfE=;
+        b=Ux3Cw7GMwGcF7Y8Qocx/OwOnBG8yvHXz4ncgZIGdd3XC9IHuU9z+ednEE2jwLKW09/
+         8AkoRt0XA3AGbGveleYPkaoh+cLu0gZhx7rDocNd7Yuj3h7SMvV3KvvE8KudSDOc89pz
+         WS95e1Oljd9IoeeEGmDJMDdneiATU71EZalkYA1+8KP7DbtfbBDv8PdydyPgckLR19zN
+         3QqlDZH0FXUI5hvHPu8OFmUA93CFFObznrmguviIR674vUfm2/KQ59T6Upiqtm84uEUC
+         sMyc7gmwqSQo7LPfrkBzSOMj+hTYRSw8K1B87rb6SNIrpURC7SDO3UeiTLJB43/4vDtK
+         IayQ==
+X-Gm-Message-State: ANhLgQ1nrqayQ+Sme3VB11NbYZGNCnSMJ7e/G4XDK7pzbkADRmnBRG75
+        EY/SGKbZ7E9b9ZXvBb3WWlqphxweUuUShEpDFEA0MA==
+X-Google-Smtp-Source: ADFU+vthRF1CGXBIcX8eCWjLSUuv0ijsh47UzzDn/jzCwqg/7g0xalXEDtotKi4n7rENshDbZBHeysQsEaf4csLdeEE=
+X-Received: by 2002:a9d:1d43:: with SMTP id m61mr3763477otm.91.1584453264637;
+ Tue, 17 Mar 2020 06:54:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1584450500.git.mchehab+huawei@kernel.org> <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
-In-Reply-To: <cf60ef88712e4f46f4e4bf40b2c646451d921827.1584450500.git.mchehab+huawei@kernel.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 17 Mar 2020 14:50:32 +0100
-Message-ID: <CAMpxmJUPA2qDwDu-LUh-RtXt66NhQUdjnPOCSaaBZ9xEm0C5LQ@mail.gmail.com>
-Subject: Re: [PATCH 05/12] docs: dt: fix references to ap806-system-controller.txt
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Ben Peled <bpeled@marvell.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-pwm@vger.kernel.org, linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        linux-pm <linux-pm@vger.kernel.org>
+References: <20200311123501.18202-1-robert.foss@linaro.org>
+ <20200311123501.18202-7-robert.foss@linaro.org> <20200312053544.GY264362@yoga>
+In-Reply-To: <20200312053544.GY264362@yoga>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Tue, 17 Mar 2020 14:54:13 +0100
+Message-ID: <CAG3jFyuEWqkWSZzVt04y4GcO=0LUwLq4bHe_=dirWePdVW+NSA@mail.gmail.com>
+Subject: Re: [v1 6/6] arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     leonard.crestez@nxp.com, dinguyen@kernel.org,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Loic Poulain <loic.poulain@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 17 mar 2020 o 14:10 Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> napisa=C5=82(a):
+On Thu, 12 Mar 2020 at 06:35, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
-> ap806-system-controller.txt was renamed to ap80x-system-controller.txt.
+> On Wed 11 Mar 05:35 PDT 2020, Robert Foss wrote:
 >
-> Update its references accordingly.
+> > Build camera clock, isp and controller drivers as modules.
+> >
+> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
 >
-> Fixes: 2537831bbc19 ("dt-bindings: ap80x: replace AP806 with AP80x")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt        | 2 +-
->  Documentation/devicetree/bindings/thermal/armada-thermal.txt | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Docu=
-mentation/devicetree/bindings/gpio/gpio-mvebu.txt
-> index 2e097b57f170..0fc6700ed800 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-> @@ -14,7 +14,7 @@ Required properties:
 >
->      "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K
->      SoCs (either from AP or CP), see
-> -    Documentation/devicetree/bindings/arm/marvell/ap806-system-controlle=
-r.txt
-> +    Documentation/devicetree/bindings/arm/marvell/ap80x-system-controlle=
-r.txt
->      for specific details about the offset property.
->
->  - reg: Address and length of the register set for the device. Only one
-> diff --git a/Documentation/devicetree/bindings/thermal/armada-thermal.txt=
- b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-> index f3b441100890..b0bee7e42038 100644
-> --- a/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/armada-thermal.txt
-> @@ -12,7 +12,7 @@ Required properties:
->
->  Note: these bindings are deprecated for AP806/CP110 and should instead
->  follow the rules described in:
-> -Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.tx=
-t
-> +Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.tx=
-t
->  Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.tx=
-t
->
->  - reg: Device's register space.
-> --
-> 2.24.1
->
+> Thanks for the series Robert!
 
-For GPIO:
+Thanks for the quick & thorough review, I'll send out a v2 with all of
+the feedback corrected.
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Regards,
+> Bjorn
+>
+> > ---
+> >  arch/arm64/configs/defconfig | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 4db223dbc549..7cb6989249ab 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -376,6 +376,7 @@ CONFIG_I2C_MESON=y
+> >  CONFIG_I2C_MV64XXX=y
+> >  CONFIG_I2C_OWL=y
+> >  CONFIG_I2C_PXA=y
+> > +CONFIG_I2C_QCOM_CCI=m
+> >  CONFIG_I2C_QCOM_GENI=m
+> >  CONFIG_I2C_QUP=y
+> >  CONFIG_I2C_RK3X=y
+> > @@ -530,6 +531,7 @@ CONFIG_VIDEO_SAMSUNG_S5P_MFC=m
+> >  CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=m
+> >  CONFIG_VIDEO_RENESAS_FCP=m
+> >  CONFIG_VIDEO_RENESAS_VSP1=m
+> > +CONFIG_VIDEO_QCOM_CAMSS=m
+> >  CONFIG_DRM=m
+> >  CONFIG_DRM_I2C_NXP_TDA998X=m
+> >  CONFIG_DRM_NOUVEAU=m
+> > @@ -732,6 +734,7 @@ CONFIG_MSM_GCC_8994=y
+> >  CONFIG_MSM_MMCC_8996=y
+> >  CONFIG_MSM_GCC_8998=y
+> >  CONFIG_QCS_GCC_404=y
+> > +CONFIG_SDM_CAMCC_845=m
+> >  CONFIG_SDM_GCC_845=y
+> >  CONFIG_SM_GCC_8150=y
+> >  CONFIG_QCOM_HFPLL=y
+> > @@ -762,6 +765,7 @@ CONFIG_QCOM_COMMAND_DB=y
+> >  CONFIG_QCOM_GENI_SE=y
+> >  CONFIG_QCOM_GLINK_SSR=m
+> >  CONFIG_QCOM_RMTFS_MEM=m
+> > +CONFIG_SDM_CAMCC_845=m
+> >  CONFIG_QCOM_RPMH=y
+> >  CONFIG_QCOM_RPMHPD=y
+> >  CONFIG_QCOM_SMEM=y
+> > --
+> > 2.20.1
+> >
