@@ -2,104 +2,104 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B41DC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86512C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3900320754
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584453979;
-	bh=DmaqvTgO1fmmMqgI6fMIcL8ag6suzOfDR3kPhV4+PwA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nXAbpcRdOcXkWUU2Oqjquxp07Hg7Cy3q/RfDQJCLFB8ir4K7Z9UxX6AMm8IvV4cia
-	 8FffIfhoiudocmPIC5zHl9lRikUJhQ+NkQk7RQv1UAlWCfrjivfJ3wwm0emguBKwK0
-	 +sEllzfk2f3jHtrZfC8vEWFFeYq773gPzkzmqo5o=
+	by mail.kernel.org (Postfix) with ESMTP id 569AA20754
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Da5NAWj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgCQOGS (ORCPT
+        id S1726774AbgCQOG5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:06:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgCQOGS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:06:18 -0400
-Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81860205ED;
-        Tue, 17 Mar 2020 14:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584453977;
-        bh=DmaqvTgO1fmmMqgI6fMIcL8ag6suzOfDR3kPhV4+PwA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MCWCwGfnU+jb8ce35ywWcM47WdZTqfv4Ej/STM9Dw7MqFKaQ9sFNBXUhH0PJA7pE9
-         qTD2mYziACOoGGIwTyBYLbP0CLGQc8ez0gbcnEvy2hBD4NHBP7z+lFwIPgGDCGPJ9D
-         IettSkaEBTtKSQEL/Vf+Z+7EDfgo9+zMzzMQrC6Y=
-Date:   Tue, 17 Mar 2020 15:06:09 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Tue, 17 Mar 2020 10:06:57 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:37271 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726016AbgCQOG5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 10:06:57 -0400
+X-UUID: af9a83612fb74d998298334f2647494d-20200317
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=AGQJ9ca+jEWLEkXtTwRFZVcl4oKYY1P9wsWPmVMGq1o=;
+        b=Da5NAWj8M1SschSHqYpWgQ8asn9BERoG2SvUFR7F6fDspg8jfNEZzTkbcuQCATlqwhINYt1AlWz9XOHiK3ffwxdCsA5VCy+hz1Gf+Uo8920Sw1Yn0clg2lbNmkguoarXlDcf3RcofurtyF7vzmptNWUp11k31Qp6al1u8DD6P7E=;
+X-UUID: af9a83612fb74d998298334f2647494d-20200317
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 533329754; Tue, 17 Mar 2020 22:06:51 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 17 Mar 2020 22:05:49 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 17 Mar 2020 22:06:04 +0800
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 04/12] docs: dt: fix references to m_can.txt file
-Message-ID: <20200317150609.4d5c7c71@coco.lan>
-In-Reply-To: <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
-References: <cover.1584450500.git.mchehab+huawei@kernel.org>
-        <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
-        <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
-        <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>
+CC:     Andy Teng <andy.teng@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Subject: [PATCH v3 0/6] Add basic SoC Support for Mediatek MT6779 SoC
+Date:   Tue, 17 Mar 2020 22:06:41 +0800
+Message-ID: <1584454007-2115-1-git-send-email-hanks.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Em Tue, 17 Mar 2020 08:29:45 -0500
-Dan Murphy <dmurphy@ti.com> escreveu:
+VGhpcyBwYXRjaHNldCBpcyBiYXNlZCBvbiB2NS42LXJjMS4gQmFzaWMgU29DIHN1cHBvcnQgZm9y
+IHRoZSBuZXcgTWVkaWF0ZWsNClNvQywgTVQ2Nzc5LCB3aGljaCB0YXJnZXRzIGZvciBzbWFydHBo
+b25lLg0KDQpJdCBwcm92aWRlcyBjY2YsIHBpbmN0cmwsIHVhcnQsIHRpbWVyLCBnaWMuLi5ldGMu
+DQoNCkNoYW5nZSBIaXN0b3J5Og0KDQpDaGFuZ2Ugc2luY2UgdjM6DQoxLiBhZGQgYmluZGluZ3Mg
+Zm9yICJtZWRpYXRlayxtdDY3NzktcGluY3RybCINCjIuIGFkZCBzb21lIGNvbW1lbnRzIGludG8g
+dGhlIGNvZGUgKGUuZy4gdmlydHVhbCBncGlvIC4uLikNCjMuIGFkZCBBY2tlZC1ieSB0YWdzDQo0
+LiBhZGQgcG11IG5vZGUgaW50byBkdHMNCjUuIHN1cHBvcnQgcHBpIHBhcnRpdGlvbiBhbmQgZml4
+IGJhc2UgYWRkcmVzcyBpbiBnaWMgbm9kZSBvZiBkdHMNCg0KW25vdGVdDQpbMV0gbmVlZCBiaW5k
+aW5ncyBmb3IgImFybSxjb3J0ZXgtYTc1IiBpbiBwYXRjaCA2DQo+IEFscmVhZHkgaW4gUm9iJ3Mg
+dHJlZSBoZXJlOg0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVs
+L2dpdC9yb2JoL2xpbnV4LmdpdC9jb21taXQvP2g9ZHQvbmV4dCZpZD01YzI2MTRlOTk1ZGUwN2I0
+MWViMzU1MTU1ZWI1ZTBlM2Q1OTM3MThiDQoNCg0KQ2hhbmdlIHNpbmNlIHYyOg0KMS4gYWRkIFJl
+dmlld2VkLWJ5IHRhZ3MNCjIuIGZpeCBjaGVja3BhdGNoIHdhcm5pbmdzIHdpdGggc3RyaWN0IGxl
+dmVsDQoNCkNoYW5nZSBzaW5jZSB2MToNCmZpcnN0IHBhdGNoc2V0DQoNCg0KQW5keSBUZW5nICgx
+KToNCiAgZHQtYmluZGluZ3M6IHBpbmN0cmw6IGFkZCBiaW5kaW5ncyBmb3IgTWVkaWFUZWsgTVQ2
+Nzc5IFNvQw0KDQpIYW5rcyBDaGVuICg1KToNCiAgcGluY3RybDogbWVkaWF0ZWs6IHVwZGF0ZSBw
+aW5tdXggZGVmaW5pdGlvbnMgZm9yIG10Njc3OQ0KICBwaW5jdHJsOiBtZWRpYXRlazogYXZvaWQg
+dmlydHVhbCBncGlvIHRyeWluZyB0byBzZXQgcmVnDQogIHBpbmN0cmw6IG1lZGlhdGVrOiBhZGQg
+cGluY3RybCBzdXBwb3J0IGZvciBNVDY3NzkgU29DDQogIHBpbmN0cmw6IG1lZGlhdGVrOiBhZGQg
+bXQ2Nzc5IGVpbnQgc3VwcG9ydA0KICBhcm02NDogZHRzOiBhZGQgZHRzIG5vZGVzIGZvciBNVDY3
+NzkNCg0KIC4uLi9iaW5kaW5ncy9waW5jdHJsL21lZGlhdGVrLG10Njc3OS1waW5jdHJsLnlhbWwg
+IHwgIDIwOCArKw0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAg
+ICAgICAgIHwgICAgMSArDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3NzktZXZi
+LmR0cyAgICAgICAgfCAgIDMxICsNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc3
+OS5kdHNpICAgICAgICAgICB8ICAyNjUgKysrDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tj
+b25maWcgICAgICAgICAgICAgICAgICAgfCAgICA3ICsNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0
+ZWsvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgIDEgKw0KIGRyaXZlcnMvcGluY3RybC9t
+ZWRpYXRlay9waW5jdHJsLW10Njc3OS5jICAgICAgICAgIHwgIDc4MyArKysrKysrKw0KIGRyaXZl
+cnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuYyAgIHwgICAyOCArDQog
+ZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5oICAgfCAgICAx
+ICsNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstbXQ2Nzc5LmggICAgICB8
+IDIwODUgKysrKysrKysrKysrKysrKysrKysNCiBkcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGlu
+Y3RybC1wYXJpcy5jICAgICAgICAgICB8ICAgIDcgKw0KIGluY2x1ZGUvZHQtYmluZGluZ3MvcGlu
+Y3RybC9tdDY3NzktcGluZnVuYy5oICAgICAgIHwgMTI0MiArKysrKysrKysrKysNCiAxMiBmaWxl
+cyBjaGFuZ2VkLCA0NjU5IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvbWVkaWF0ZWssbXQ2Nzc5LXBpbmN0
+cmwueWFtbA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
+L210Njc3OS1ldmIuZHRzDQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMv
+bWVkaWF0ZWsvbXQ2Nzc5LmR0c2kNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waW5jdHJs
+L21lZGlhdGVrL3BpbmN0cmwtbXQ2Nzc5LmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9w
+aW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLW10Njc3OS5oDQogY3JlYXRlIG1vZGUgMTAwNjQ0
+IGluY2x1ZGUvZHQtYmluZGluZ3MvcGluY3RybC9tdDY3NzktcGluZnVuYy5o
 
-> Hello
->=20
-> On 3/17/20 8:17 AM, Marc Kleine-Budde wrote:
-> > On 3/17/20 2:10 PM, Mauro Carvalho Chehab wrote: =20
-> >> This file was converted to json and renamed. Update its
-> >> references accordingly.
-> >>
-> >> Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-sch=
-ema") =20
->=20
-> I am trying to find out where the above commit was applied
->=20
-> I don't see it in can-next or linux-can. I need to update the tcan dt=20
-> binding file as it was missed.
->=20
-> And I am not sure why the maintainers of these files were not CC'd on=20
-> the conversion of this binding.
-
-=46rom Next/merge.log:
-
-Merging devicetree/for-next (d047cd8a2760 scripts/dtc: Update to upstream v=
-ersion v1.6.0-2-g87a656ae5ff9)
-$ git merge devicetree/for-next
-Removing scripts/dtc/libfdt/Makefile.libfdt
-Removing scripts/dtc/Makefile.dtc
-...
- create mode 100644 Documentation/devicetree/bindings/net/can/bosch,m_can.y=
-aml
- delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
-
-It sounds that those came from DT for-next branch.
-
-Thanks,
-Mauro
