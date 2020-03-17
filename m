@@ -2,209 +2,133 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2870FC5ACD9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 20:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74286C1975A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 21:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BCC20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 20:53:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SBjJQtv4"
+	by mail.kernel.org (Postfix) with ESMTP id 4AF8C20738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 21:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgCQUxo (ORCPT
+        id S1726549AbgCQVBZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:53:44 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:51599 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726756AbgCQUxn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:53:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584478422; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=yua1E5KGT6kn6YzdrAffonHcll+P/j9qfrTMWODBYlY=; b=SBjJQtv4iKuX0hntVr9wOW+VpCHCHm/wzGdq3DaANZNVObvQlN2yNoHZvfOYPiFkNJjRBvLN
- 3iqHAHt0gkEJb724dHfOOwQXUzH8p9+K19MBVXIoQQqvAUGLk3KXi+17sMcp8PDCXluesVA5
- YIISjWJf0ksz3ZUXPTLZY2JV9qg=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7138d3.7f735abe01f0-smtp-out-n01;
- Tue, 17 Mar 2020 20:53:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BCFD3C433CB; Tue, 17 Mar 2020 20:53:39 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97318C432C2;
-        Tue, 17 Mar 2020 20:53:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 97318C432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jack Pham <jackp@codeaurora.org>,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v2 2/2] arm64: dts: qcom: sm8150: Add USB and PHY device nodes
-Date:   Tue, 17 Mar 2020 13:53:32 -0700
-Message-Id: <1584478412-7798-3-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1584478412-7798-1-git-send-email-wcheng@codeaurora.org>
-References: <1584478412-7798-1-git-send-email-wcheng@codeaurora.org>
+        Tue, 17 Mar 2020 17:01:25 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50931 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbgCQVBZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 17:01:25 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEJKW-00039f-Bg; Tue, 17 Mar 2020 22:00:52 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEJKM-0003eU-V8; Tue, 17 Mar 2020 22:00:42 +0100
+Date:   Tue, 17 Mar 2020 22:00:42 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+Message-ID: <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
+ <20200317174043.GA1464607@ulmo>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317174043.GA1464607@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jack Pham <jackp@codeaurora.org>
+Hello,
 
-Add device nodes for the USB3 controller, QMP SS PHY and
-SNPS HS PHY.
+On Tue, Mar 17, 2020 at 06:40:43PM +0100, Thierry Reding wrote:
+> On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
+> > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
+> > Rename it to PWM_POLARITY_INVERTED.
+> 
+> It isn't misspelled. "inversed" is a synonym for "inverted". Both
+> spellings are correct.
 
-Signed-off-by: Jack Pham <jackp@codeaurora.org>
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 17 ++++++
- arch/arm64/boot/dts/qcom/sm8150.dtsi    | 92 +++++++++++++++++++++++++++++++++
- 2 files changed, 109 insertions(+)
+Some time ago I stumbled about "inversed", too. My spell checker doesn't
+know it and I checked some dictionaries and none of them knew that word:
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-index 8ab1661..edf0abc 100644
---- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-@@ -408,3 +408,20 @@
- 	vdda-pll-supply = <&vreg_l3c_1p2>;
- 	vdda-pll-max-microamp = <19000>;
- };
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+	vdda-pll-supply = <&vdd_usb_hs_core>;
-+	vdda33-supply = <&vdda_usb_hs_3p1>;
-+	vdda18-supply = <&vdda_usb_hs_1p8>;
-+};
-+
-+&usb_1_qmpphy {
-+	status = "okay";
-+	vdda-phy-supply = <&vreg_l3c_1p2>;
-+	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
-+};
-+
-+&usb_1 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 141c21d..fd6c83a 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -621,6 +621,98 @@
- 			};
- 		};
+https://www.lexico.com/search?utf8=%E2%9C%93&filter=dictionary&dictionary=en&query=inversed
+https://de.pons.com/%C3%BCbersetzung/englisch-deutsch/inversed
+https://dictionary.cambridge.org/spellcheck/english-german/?q=inversed
+
+https://en.wiktionary.org/wiki/inverse#Verb mentions "inverse" as a verb
+having "inversed" as past participle.
+
+Having said this I think (independent of the question if "inversed"
+exists) using two similar terms for the same thing just results in
+confusion. I hit that in the past already and I like it being addressed.
+
+> And as you noted in the cover letter, there's a conflict between the
+> macro defined in dt-bindings/pwm/pwm.txt. If they end up being included
+> in the wrong order you'll get a compile error.
+
+There are also other symbols that exist twice (GPIO_ACTIVE_HIGH was the
+first to come to my mind). I'm not aware of any problems related to
+these. What am I missing?
  
-+		usb_1_hsphy: phy@88e2000 {
-+			compatible = "qcom,usb-snps-hs-7nm-phy",
-+							"qcom,sm8150-usb-hs-phy";
-+			reg = <0 0x088e2000 0 0x400>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "ref";
-+
-+			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+		};
-+
-+		usb_1_qmpphy: phy@88e9000 {
-+			compatible = "qcom,sm8150-qmp-usb3-phy";
-+			reg = <0 0x088e9000 0 0x18c>,
-+			      <0 0x088e8000 0 0x10>;
-+			reg-names = "reg-base", "dp_com";
-+			status = "disabled";
-+			#clock-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-+				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
-+			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
-+
-+			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
-+				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
-+			reset-names = "phy", "common";
-+
-+			usb_1_ssphy: lanes@88e9200 {
-+				reg = <0 0x088e9200 0 0x200>,
-+				      <0 0x088e9400 0 0x200>,
-+				      <0 0x088e9c00 0 0x218>,
-+				      <0 0x088e9600 0 0x200>,
-+				      <0 0x088e9800 0 0x200>,
-+				      <0 0x088e9a00 0 0x100>;
-+				#phy-cells = <0>;
-+				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-+				clock-names = "pipe0";
-+				clock-output-names = "usb3_phy_pipe_clk_src";
-+			};
-+		};
-+
-+		usb_1: usb@a6f8800 {
-+			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
-+			reg = <0 0x0a6f8800 0 0x400>;
-+			status = "disabled";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			dma-ranges;
-+
-+			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
-+				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>,
-+				 <&gcc GCC_USB3_SEC_CLKREF_CLK>;
-+			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
-+				      "sleep", "xo";
-+
-+			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
-+			assigned-clock-rates = <19200000>, <150000000>;
-+
-+			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hs_phy_irq", "ss_phy_irq",
-+					  "dm_hs_phy_irq", "dp_hs_phy_irq";
-+
-+			power-domains = <&gcc USB30_PRIM_GDSC>;
-+
-+			resets = <&gcc GCC_USB30_PRIM_BCR>;
-+
-+			usb_1_dwc3: dwc3@a600000 {
-+				compatible = "snps,dwc3";
-+				reg = <0 0x0a600000 0 0xcd00>;
-+				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
-+				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+			};
-+		};
-+
- 		aoss_qmp: power-controller@c300000 {
- 			compatible = "qcom,sm8150-aoss-qmp";
- 			reg = <0x0 0x0c300000 0x0 0x100000>;
+> The enum was named this way on purpose to make it separate from the
+> definition for the DT bindings.
+
+Then please let's make it different by picking a different prefix or
+something like that.
+
+> Note that DT bindings are an ABI and can
+> never change, whereas the enum pwm_polarity is part of a Linux internal
+> API and doesn't have the same restrictions as an ABI.
+
+I thought only binary device trees (dtb) are supposed to be ABI.
+
+Best regards
+Uwe
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
