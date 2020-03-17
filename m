@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9245CC5ACC0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC48CC5ACBF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AC62071C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA4E2071C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgCQJkA (ORCPT
+        id S1726541AbgCQJjn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:40:00 -0400
-Received: from v6.sk ([167.172.42.174]:50108 "EHLO v6.sk"
+        Tue, 17 Mar 2020 05:39:43 -0400
+Received: from v6.sk ([167.172.42.174]:50014 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbgCQJjz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:39:55 -0400
+        id S1725916AbgCQJjn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:39:43 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 6F8D960EF0;
-        Tue, 17 Mar 2020 09:39:53 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 5548A60EED;
+        Tue, 17 Mar 2020 09:39:40 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -48,9 +48,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 05/28] ARM: dts: pxa3xx: Fix up encoding of the /gpio interrupts property
-Date:   Tue, 17 Mar 2020 10:38:59 +0100
-Message-Id: <20200317093922.20785-6-lkundrak@v3.sk>
+Subject: [PATCH 02/28] ARM: dts: dove: Fix interrupt controller node name
+Date:   Tue, 17 Mar 2020 10:38:56 +0100
+Message-Id: <20200317093922.20785-3-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
 References: <20200317093922.20785-1-lkundrak@v3.sk>
@@ -61,30 +61,30 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This way the device tree validator learns that each cell of the property
-constitutes a separate item. Otherwise it gets unnecessairly upset:
+The current ones makes validation unhappy:
 
-  pxa300-raumfeld-speaker-s.dt.yaml: gpio@40e00000: interrupts:
-      [[8, 9, 10]] is too short
+  dove-d3plug.dt.yaml: main-interrupt-ctrl@20200: $nodename:0:
+      'main-interrupt-ctrl@20200' does not match
+      '^interrupt-controller(@[0-9a-f,]+)*$'
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/pxa3xx.dtsi | 2 +-
+ arch/arm/boot/dts/dove.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
-index c237a0e4b12ae..d19674812cd2d 100644
---- a/arch/arm/boot/dts/pxa3xx.dtsi
-+++ b/arch/arm/boot/dts/pxa3xx.dtsi
-@@ -170,7 +170,7 @@ gpio: gpio@40e00000 {
- 			clocks = <&clks CLK_GPIO>;
- 			gpio-ranges = <&pinctrl 0 0 128>;
- 			interrupt-names = "gpio0", "gpio1", "gpio_mux";
--			interrupts = <8 9 10>;
-+			interrupts = <8>, <9>, <10>;
- 			gpio-controller;
- 			#gpio-cells = <0x2>;
- 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
+index 3081b04e8c08f..ddd4653f52811 100644
+--- a/arch/arm/boot/dts/dove.dtsi
++++ b/arch/arm/boot/dts/dove.dtsi
+@@ -248,7 +248,7 @@ bridge_intc: bridge-interrupt-ctrl@20110 {
+ 				marvell,#interrupts = <5>;
+ 			};
+ 
+-			intc: main-interrupt-ctrl@20200 {
++			intc: interrupt-controller@20200 {
+ 				compatible = "marvell,orion-intc";
+ 				interrupt-controller;
+ 				#interrupt-cells = <1>;
 -- 
 2.25.1
 
