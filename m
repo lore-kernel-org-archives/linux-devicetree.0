@@ -2,84 +2,139 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190BFC18E5B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB7DC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61492076B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F1320757
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GD3yhkeD"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="igLw0Ymx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgCQOHB (ORCPT
+        id S1726895AbgCQOHE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:07:01 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:65061 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726801AbgCQOHB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 10:07:01 -0400
-X-UUID: 9de378c7284d431fa4b40d7312af7db1-20200317
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=0n+EUTSUdOSSkaTkHUmDbzhJFVoxjbBJTb+B0M4gX+k=;
-        b=GD3yhkeDghllX42ih60yP9mdIwvBOSlzuT4zvqH9MF5EjuyOFM7yZ4twACfesGW9fqOlDXr2oC0yru2DOkBxAosEDqCrfzttVBpjSA2FAzgmNlq+Dh3PDJA0ZG/WSf18G3xBtSwsPr4wUygS8wKmIm//da075bjvMoMI5NNfh9I=;
-X-UUID: 9de378c7284d431fa4b40d7312af7db1-20200317
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1978049119; Tue, 17 Mar 2020 22:06:56 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 17 Mar 2020 22:04:01 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 17 Mar 2020 22:06:09 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>
-CC:     Andy Teng <andy.teng@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH v3 5/6] pinctrl: mediatek: add mt6779 eint support
-Date:   Tue, 17 Mar 2020 22:06:46 +0800
-Message-ID: <1584454007-2115-6-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1584454007-2115-1-git-send-email-hanks.chen@mediatek.com>
-References: <1584454007-2115-1-git-send-email-hanks.chen@mediatek.com>
+        Tue, 17 Mar 2020 10:07:04 -0400
+Received: from mail-eopbgr130102.outbound.protection.outlook.com ([40.107.13.102]:3558
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726851AbgCQOHD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:07:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VE2bgz7rn8gHPPOPTVdbPFfRt4mODHsBm7EpgC75c7ZvXUgIsz9cXi8H8H5gs4sqce+7bOXoayu7YHF+UAXMlI/uXCDH2ipqxzIVYAprDJshNLnWmHF9rMsy/KN7KGDKysc5mEGg8kpABujWK0M1Iyhktgcj3W1ftz1kBGyrzjxFAsOn0qUA2rLabmV/VIzeGY9SgyG/yXntsZWONfo3c+HwWste6UbugRRxu6sy95e085zBPzy9rZtIeU3kc/MVo8ydNHGa/r5AvRCQKx5yg04zc+1NulI9/bSvAtfnQfhW+Xd5+4qKpLhxUUqdqw67xl2MZaz/va9uuxZ9pm+19w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g/xGujxTZSfW5dIi0EdPOrKPleR2KkmH3wJ9vCbaQOM=;
+ b=UWDyCoK16GLHcjpUbZahebiTReHEVAoKCPDkT4Whf4EyGq/Xk2uVYyAepgFbQ0Uwfg738FuB32EOsp8xORx6a+iS1jsZyKLq+P92bylSkRGOuh/VXg3Fc1AtsdtQEasPmKcg+i8cHCN1lAhMyMXYjRgAwNAZdjWv3fQnmKWN6KpBsZHgpgmkauHDOPLl0YOHA+JeVv3enA15G6uK5eT9oArdPQQTmXgVYuhQuZ3jjU+VTPuXwUcpBCUMK73ez3HxM761S1WDQrs+fdTtYGuQIc0UZvgVobgJV//sl61PjuBB66gi0L5vs9kiSmXGynpXVerQdv4uaMM6IdK9Ehaw7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g/xGujxTZSfW5dIi0EdPOrKPleR2KkmH3wJ9vCbaQOM=;
+ b=igLw0YmxI2z94kEKmOVQAOaPIk1tlzGr7nHGRqf5TqGCvTFeQFm08DGLNGLUx+gBK7eP9jjKlmqFOeiVmUvL4G+N/Zte/aAyvr+WVB4QI00V9CMhNfbkWta8qasmGoTTkwnc/polXi43pKCt5qgEiyufjc0I2d7ReWSNTaS6HQo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
+ VI1PR05MB5248.eurprd05.prod.outlook.com (20.178.12.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.13; Tue, 17 Mar 2020 14:06:58 +0000
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 14:06:58 +0000
+X-Gm-Message-State: ANhLgQ2Wbc7gCob7YPEWnkugt57VhzrcJlpBaYZRcZLkXg0h8AFrq4aM
+        hV4yu+SvCwjAUvX10l2XJSk7MSSiclxxhzLrXoU=
+X-Google-Smtp-Source: ADFU+vtbyeYQyb46ie2CgS0aFyVWyZTrX/BTxpkXAH+zu59c1knd9JgVb22NYfF7ZbPl/jveZxcnOUj+sUw2eoiafAk=
+X-Received: by 2002:ad4:54d4:: with SMTP id j20mr5006940qvx.75.1584454013450;
+ Tue, 17 Mar 2020 07:06:53 -0700 (PDT)
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-4-oleksandr.suvorov@toradex.com> <20200317133638.5951a743@ub1910>
+In-Reply-To: <20200317133638.5951a743@ub1910>
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Date:   Tue, 17 Mar 2020 16:06:42 +0200
+X-Gmail-Original-Message-ID: <CAGgjyvEye0nEwyUpjTxVV2ftvF+QUibLBdiT3ZSsX6M4PQSW0g@mail.gmail.com>
+Message-ID: <CAGgjyvEye0nEwyUpjTxVV2ftvF+QUibLBdiT3ZSsX6M4PQSW0g@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/7] dt-bindings: pwm: add normal PWM polarity flag
+To:     Paul Barker <pbarker@konsulko.com>
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-ClientProxiedBy: MN2PR01CA0002.prod.exchangelabs.com (2603:10b6:208:10c::15)
+ To VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 47B14C710CFFAA80ADE3503705E4D4F0968EE967D7DF180D60C4E3E5F90EC9022000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mail-qv1-f53.google.com (209.85.219.53) by MN2PR01CA0002.prod.exchangelabs.com (2603:10b6:208:10c::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Tue, 17 Mar 2020 14:06:57 +0000
+Received: by mail-qv1-f53.google.com with SMTP id c28so10869039qvb.10;        Tue, 17 Mar 2020 07:06:57 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2Wbc7gCob7YPEWnkugt57VhzrcJlpBaYZRcZLkXg0h8AFrq4aM
+        hV4yu+SvCwjAUvX10l2XJSk7MSSiclxxhzLrXoU=
+X-Google-Smtp-Source: ADFU+vtbyeYQyb46ie2CgS0aFyVWyZTrX/BTxpkXAH+zu59c1knd9JgVb22NYfF7ZbPl/jveZxcnOUj+sUw2eoiafAk=
+X-Received: by 2002:ad4:54d4:: with SMTP id j20mr5006940qvx.75.1584454013450;
+ Tue, 17 Mar 2020 07:06:53 -0700 (PDT)
+X-Gmail-Original-Message-ID: <CAGgjyvEye0nEwyUpjTxVV2ftvF+QUibLBdiT3ZSsX6M4PQSW0g@mail.gmail.com>
+X-Originating-IP: [209.85.219.53]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 80614da6-3774-4fcb-c940-08d7ca7c74a9
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5248:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB524876DDDF9792AB3CC775CCF9F60@VI1PR05MB5248.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(39850400004)(396003)(376002)(366004)(199004)(66946007)(4744005)(316002)(5660300002)(8936002)(478600001)(66556008)(66476007)(450100002)(6862004)(4326008)(2906002)(9686003)(44832011)(26005)(186003)(55236004)(55446002)(86362001)(52116002)(8676002)(53546011)(54906003)(81166006)(81156014)(42186006)(6666004)(67856001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5248;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 804oMNWv7rXbuckoLdgJ8UY0pZeshQ0BkxWqfFsvNfxa6BKm3C8QM0p8N0/h8b7NYGS97DQ49rBRQrRadlVw598fIEkenQY3DOrdidva+Ypi6jl8rcX/L12Jj/lLBThfvW1ekEH8jdzX5zA6qzQE8fm/YD7fKp58MmZuwe6OLRhfY9SakFiONO1JH2dYeHZU2aniNcgSi9gsdWuCoWdD53pleT9jL/xJLQfKXdbgQfsvTvuI6AlFwQyGKY/T5W7N/tYj/iOgkJkG6BeueDya2eep4VxW0vuWhF0zqsJt9ITPvv/oibKuzdaUTWhBlPsiVIy6eqMpEw/PCYER4BlMHQ7Sxp0ZhgGI+JdPL5PDcbsi0s7nNaycfLBorCXK2y7PsP+kiYjwrPqRKCYVNONy9TYAGtVSs2Pd8SjrHGGeeu2G/gEuGYMC01N48qprURMSQDmh9Ignoy6YW7xnb2cBqOnKu/4nfbQb66B9sT0hHF4=
+X-MS-Exchange-AntiSpam-MessageData: qtluxydKO65JRII/QPtcxCLSCo6feAkA6e1dAdsoxxg1CRzT3VBgK/4aNn9nRnaNN3Wt/Axs/lPw4Oqqq0ohru7WUJ+nmErEXNkL2PVhJYrPmfwbww7yzOvf6w+oFFqt9inS3ErNC/x8iwgfmGNT2w==
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80614da6-3774-4fcb-c940-08d7ca7c74a9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 14:06:57.9973
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4hozRJS1ZHHLFV7Wjm6UF7A6w88YPEjIWqGB+g5Clao6U7kAMh2qwXz/n+h9bed05mN2LStsOiIcsJx6Uppv/k8c/BIYVksGfWhixxHRf4A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5248
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-YWRkIGRyaXZlciBzZXR0aW5nIHRvIHN1cHBvcnQgbXQ2Nzc5IGVpbnQNCg0KQ2hhbmdlLUlkOiBJ
-N2FhMWU2NDExMmNiMmU0MzgxMzMyOGQ5OTcxZmQ2NDQ2MjllZGYwYQ0KU2lnbmVkLW9mZi1ieTog
-SGFua3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBNYXJz
-IENoZW5nIDxtYXJzLmNoZW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvcGluY3RybC9t
-ZWRpYXRlay9waW5jdHJsLW10Njc3OS5jIHwgICAgOCArKysrKysrKw0KIDEgZmlsZSBjaGFuZ2Vk
-LCA4IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRl
-ay9waW5jdHJsLW10Njc3OS5jIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2
-Nzc5LmMNCmluZGV4IDE0NWJmMjIuLjMyODIyNjAgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BpbmN0
-cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NzkuYw0KKysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlh
-dGVrL3BpbmN0cmwtbXQ2Nzc5LmMNCkBAIC03MzEsMTEgKzczMSwxOSBAQA0KIAkiaW9jZmdfcnQi
-LCAiaW9jZmdfbHQiLCAiaW9jZmdfdGwiLA0KIH07DQogDQorc3RhdGljIGNvbnN0IHN0cnVjdCBt
-dGtfZWludF9odyBtdDY3NzlfZWludF9odyA9IHsNCisJLnBvcnRfbWFzayA9IDcsDQorCS5wb3J0
-cyAgICAgPSA2LA0KKwkuYXBfbnVtICAgID0gMTk1LA0KKwkuZGJfY250ICAgID0gMTMsDQorfTsN
-CisNCiBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19waW5fc29jIG10Njc3OV9kYXRhID0gew0KIAku
-cmVnX2NhbCA9IG10Njc3OV9yZWdfY2FscywNCiAJLnBpbnMgPSBtdGtfcGluc19tdDY3NzksDQog
-CS5ucGlucyA9IEFSUkFZX1NJWkUobXRrX3BpbnNfbXQ2Nzc5KSwNCiAJLm5ncnBzID0gQVJSQVlf
-U0laRShtdGtfcGluc19tdDY3NzkpLA0KKwkuZWludF9odyA9ICZtdDY3NzlfZWludF9odywNCiAJ
-LmdwaW9fbSA9IDAsDQogCS5pZXNfcHJlc2VudCA9IHRydWUsDQogCS5iYXNlX25hbWVzID0gbXQ2
-Nzc5X3BpbmN0cmxfcmVnaXN0ZXJfYmFzZV9uYW1lcywNCi0tIA0KMS43LjkuNQ0K
+On Tue, Mar 17, 2020 at 3:37 PM Paul Barker <pbarker@konsulko.com> wrote:
+>
+> On Tue, 17 Mar 2020 14:32:27 +0200
+> Oleksandr Suvorov <oleksandr.suvorov@toradex.com> wrote:
+>
+> > PWM can have a normal polarity and a reverted one. The reverted polarity
+> > value is defined.
+> > Define the PWM_POLARITY_NORMAL to be used further.
+> >
+> > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+>
+> s/reverted/inverted/
 
+Thank you, Paul, for so fast review! I'll fix it in the next version
+of the patchset.
+
+>
+> --
+> Paul Barker
+> Konsulko Group
+
+-- 
+Best regards
+Oleksandr Suvorov
+
+Toradex AG
+Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
