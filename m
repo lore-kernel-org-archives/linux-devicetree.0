@@ -2,158 +2,143 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B10C5ACD7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 20:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46095C5ACD6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 20:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42842073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 20:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5AF20409
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 20:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=trafsysas.onmicrosoft.com header.i=@trafsysas.onmicrosoft.com header.b="QdqTuqaa"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QtbTusyh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgCQUJx (ORCPT
+        id S1726775AbgCQUnR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:09:53 -0400
-Received: from mail-eopbgr140112.outbound.protection.outlook.com ([40.107.14.112]:11254
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726564AbgCQUJw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:09:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fanKrfbOiQoC9lUg3Zk727iE0G7ZZx6GHoNO0BHxH2lvHYxM/ZM0cQbmbwh6QRd5PlTtFkBNnaYQXGdFjK3q+7UZkJM40RRcysZS0F0grsK3wCyCW7UVx/PKypBAUkKNeZDDNfEUubqq3uxyAxbLNHBPBoeIeKoACmA/DfZkVFPKsURGOgTxuMlA+Faj3+q060sRuwyqNXrABz5NrGjmMtWbXcQU4R7S0WMHp4GhuQS0fxABypLWsfTtn4CrA+XAlARdHSE1W6GrKg7GMe9eU7nB2Mk4Gf5DoOYIUNVWtMjd6osganHGNF3vXv40BwAPnDTxsXsHbBDCeyt7pxzB/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zw2/0j+TvFz+vfEGHbEesqhtikbBIOQULdQ1PUPYlEE=;
- b=CsrmsQCcE1RMDwATPy5rRrheZoTmhl9M+AAzRO7hv/sd8NvAYnX/YCdfmS7QR/Up4EJ9kZIwTWNvxqA5zikpaOD+YP2xEhhzbfrS4lDnuok/nA/KBm5ExcIc+GlM5mnH5MEzkBgEJUQSHugG7P1P9JSvLczhZbQ63S10RVIfg8e8ym7GuDGlX+/bUaF63sqS8TMs2uAs/VIjEFqT58hsjxS1df1d9o6iSY21/X/fw3LF3hEBFwkTxHRqXiwUQv3WUtWu55fmH9m3uJpPBxEHth2jxo8DDerLZKVaKGhC8Fmtt+q488KrNYY622MnodEfX2EyPs7w8t3pp4+N6DVe9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=norphonic.com; dmarc=pass action=none
- header.from=norphonic.com; dkim=pass header.d=norphonic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=trafsysas.onmicrosoft.com; s=selector2-trafsysas-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zw2/0j+TvFz+vfEGHbEesqhtikbBIOQULdQ1PUPYlEE=;
- b=QdqTuqaatc+TL6GwVce+Te6sV6sGzvV7fIREIqFwWSjuPR/a7KakTR95pmsUQLCBr4nVpBm9VQN9c3spbecfghRncbdoig88SqPuEL7C4gh55W1IBKBQS81UsHZyo6CV8OLeJUxkJpFquuvIYMdhYzm7EqtQ5wgxLLf1nMGR56g=
-Received: from DB6PR06MB3048.eurprd06.prod.outlook.com (10.170.210.140) by
- DB6PR06MB4022.eurprd06.prod.outlook.com (10.168.22.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.14; Tue, 17 Mar 2020 20:09:48 +0000
-Received: from DB6PR06MB3048.eurprd06.prod.outlook.com
- ([fe80::c9cc:78ea:1bdd:5094]) by DB6PR06MB3048.eurprd06.prod.outlook.com
- ([fe80::c9cc:78ea:1bdd:5094%5]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 20:09:48 +0000
-From:   Eugene Zalkonnikov <ez@norphonic.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "development@norphonic.com" <development@norphonic.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v6 2/2] Device tree bindings for TI HDC20x0 humidity and
- temperature sensors 
-Thread-Topic: [PATCH v6 2/2] Device tree bindings for TI HDC20x0 humidity and
- temperature sensors 
-Thread-Index: AQHV/JgCK4brNl3820yH+6y5mOL1hQ==
-Date:   Tue, 17 Mar 2020 20:09:48 +0000
-Message-ID: <1C2C8CD5-4BF0-40AE-932A-4AD506664B9D@norphonic.com>
-References: <84EE5291-D8C4-40D3-A75C-92362BF9DF8B@norphonic.com>
-In-Reply-To: <84EE5291-D8C4-40D3-A75C-92362BF9DF8B@norphonic.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ez@norphonic.com; 
-x-originating-ip: [85.166.70.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: db729323-e5e8-4674-6df0-08d7caaf24bd
-x-ms-traffictypediagnostic: DB6PR06MB4022:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR06MB4022EFEE03DB8A71B77CFC3ECAF60@DB6PR06MB4022.eurprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(199004)(91956017)(76116006)(66946007)(6506007)(71200400001)(33656002)(8676002)(81166006)(81156014)(66446008)(66476007)(66556008)(64756008)(36756003)(2616005)(54906003)(86362001)(8936002)(5660300002)(26005)(6486002)(4743002)(6916009)(6512007)(2906002)(508600001)(4326008)(966005)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:DB6PR06MB4022;H:DB6PR06MB3048.eurprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: norphonic.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gQzGVi15YgX33mojMX0BG05qPIi3De7lHFdrzntCrzrJ9bxvbxJTALtK7abhzRKA1P57HzMqUxEAbp8vkNwrc+RAYZi/kWBT1h5/agxAXwIZBmM7W8/PWCsvvBZVS/ZJO5JqX7sGCxuCNZlT4VeyCb4i9BvdI2LslvecV7VcSfbvXwUotzTAXfZrOxjxXEnEejuwrRnr5jT6UPvnF+h3sUzujoiQ+Rp7QjqzKZxFZNjwJetAocsGn3q/ABa2BjW2XyMxveosPsMatk67wiMCOmrcI9v9F5I5KC4q0bemY0oH60H/L/AKY0A4F5jKXUGQxgcswYEmxb3+LXa746qM/m1eWg5AZEBglg1I0kASCPhaBr+8ragffJWvkoB5pqvPBCBTkacf4IVIErTsLTvJmNuUv9syvWucdQAzxZUx9pXOem+/Yg8/iDzkVF5P/sqwVguoILGi0nc7hhAeH/YMDm2iDnzteZomosPD1hxbB1CfHgy31nJxjpvmangxX5fasgRTgMXznIujkFYtLM5CMQ==
-x-ms-exchange-antispam-messagedata: etovlWk8CevpUoSlYDKW2mMfsHJaatZSFtSmJZRv8gPB+2mVklhlhf7jFpJpR6KXFpMDjDXX0mUnnHRkhDgP9brQgtiB3HHDmlGlNFBQYYHJk1d/zoKMk38gTYFSpbDQy84m6/qNL35Tn8g6eQ96Pg==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3A479F18FEBC5A46BFE84B5E87D23497@eurprd06.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 17 Mar 2020 16:43:17 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46738 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726730AbgCQUnR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 16:43:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584477796; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=5Sknz7KDOw1qdge5xizFs8Eb5sj7/j6Seo1ppF3kntM=;
+ b=QtbTusyhbzFtEFXWzc5UCD9abXKh3/0KLNw8Wnp6IoBkFafCR7itMMS1HtOkdmvSwxtLW7F+
+ eKv6vDci46CPGsXPudqj3i8odP8RRO7ucElv0mOaRkDgqWIZAL2vNlWl7v5pzsq9LHItyaOl
+ D7aJOEe22xK8dkK1gyynnmWBin0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e713664.7f7a1a189ed8-smtp-out-n03;
+ Tue, 17 Mar 2020 20:43:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 278F1C43637; Tue, 17 Mar 2020 20:43:16 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E54BC433CB;
+        Tue, 17 Mar 2020 20:43:15 +0000 (UTC)
 MIME-Version: 1.0
-X-OriginatorOrg: norphonic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db729323-e5e8-4674-6df0-08d7caaf24bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 20:09:48.0256
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: cbf3f496-45ad-415e-97cb-4e62d6cd974f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HRHIQqJmvQqlRHbHU2BmEx7B5eb3FiKKkClW074PabNJs1RidI7JcsUHsqYpNCHJibrAMA8kW93u7wEiO0gVDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR06MB4022
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Mar 2020 02:13:15 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com
+Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+In-Reply-To: <20200127200350.24465-1-sibis@codeaurora.org>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+Message-ID: <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Device tree bindings for the HDC2010/2080 driver.
+On 2020-01-28 01:33, Sibi Sankar wrote:
+> This RFC series aims to extend cpu based scaling support to L3/DDR on
+> SDM845 and SC7180 SoCs.
+> 
 
-Signed-off-by: Eugene Zaikonnikov <eugene.zaikonnikov@norphonic.com>
+Hey Viresh/Saravana,
 
-diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hd=
-c2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/=
-ti,hdc2010.yaml
---- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.y=
-aml	1970-01-01 01:00:00.000000000 +0100
-+++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2=
-010.yaml	2020-02-12 14:28:42.562903814 +0100
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/humidity/hdc2010.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HDC2010/HDC2080 humidity and temperature iio sensors
-+
-+maintainers:
-+  - Eugene Zaikonnikov <eugene.zaikonnikov@norophonic.com>
-+
-+description: |
-+  Relative humidity and tempereature sensors on I2C bus
-+
-+  Datasheets are available at:
-+    http://www.ti.com/product/HDC2010/datasheet
-+    http://www.ti.com/product/HDC2080/datasheet
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,hdc2010
-+      - ti,hdc2080
-+
-+  vddd-supply:
-+    description:
-+      digital voltage regulator (see regulator/regulator.txt)
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    i2c0 {
-+      #address-cells =3D <1>;
-+      #size-cells =3D <0>;
-+
-+      hdc200x@40 {
-+          compatible =3D "ti,hdc2010";
-+          reg =3D <0x40>;
-+      };
-+    };
+Ping! Can you take a stab at reviewing
+the series, it has been on the list for
+a while now.
 
+> Patches [1-3] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
+> Patches [5-7] - Hack in a way to add/remove multiple opp tables to
+>                 a single device. I am yet to fix the debugfs to
+> 		support multiple opp_tables per device but wanted to
+> 		send what was working upstream to get an idea if multiple
+> 		opp tables per device is a feature that will be useful
+> 		upstream.
+> Patches [9-10] - Add the cpu/cpu-ddr/cpu-l3 opp tables for SDM845
+>                  and SC7180 SoCs.
+> 
+> v3:
+>  * Migrated to using Saravana's opp-kBps bindings [1]
+>  * Fixed some misc comments from Rajendra
+>  * Added support for SC7180
+> 
+> v2:
+>  * Incorporated Viresh's comments from:
+>  
+> https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+>  
+> https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+>  * Dropped cpufreq-map passive governor
+> 
+> Git-branch: https://github.com/QuinAsura/linux/tree/lnext-012420
+> 
+> Some alternate ways of hosting the opp-tables:
+> https://github.com/QuinAsura/linux/commit/50b92bfaadc8f9a0d1e12249646e018bd6d1a9d3
+> https://github.com/QuinAsura/linux/commit/3d23d1eefd16ae6d9e3ef91e93e78749d8844e98
+> Viresh didn't really like ^^ bindings and they dont really scale well. 
+> Just
+> including them here for completeness.
+> 
+> Depends on the following series:
+> [1] https://patchwork.kernel.org/cover/11277199/
+> [2] https://patchwork.kernel.org/cover/11055499/
+> [3] https://patchwork.kernel.org/cover/11326381/
+> 
+> Sibi Sankar (10):
+>   arm64: dts: qcom: sdm845: Add SoC compatible to MTP
+>   cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+>   cpufreq: blacklist SC7180 in cpufreq-dt-platdev
+>   OPP: Add and export helper to update voltage
+>   opp: of: export _opp_of_get_opp_desc_node
+>   opp: Allow multiple opp_tables to be mapped to a single device
+>   opp: Remove multiple attached opp tables from a device
+>   cpufreq: qcom: Update the bandwidth levels on frequency change
+>   arm64: dts: qcom: sdm845: Add cpu OPP tables
+>   arm64: dts: qcom: sc7180: Add cpu OPP tables
+> 
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 287 +++++++++++++++
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |   2 +-
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 453 ++++++++++++++++++++++++
+>  drivers/cpufreq/cpufreq-dt-platdev.c    |   2 +
+>  drivers/cpufreq/qcom-cpufreq-hw.c       | 246 +++++++++++--
+>  drivers/opp/core.c                      | 111 +++++-
+>  drivers/opp/of.c                        |   3 +-
+>  drivers/opp/opp.h                       |   2 +
+>  include/linux/pm_opp.h                  |  10 +
+>  9 files changed, 1083 insertions(+), 33 deletions(-)
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
