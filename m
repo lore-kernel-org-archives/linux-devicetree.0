@@ -2,116 +2,109 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AA6C2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60379C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB6A20754
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:11:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="mMby00Z4"
+	by mail.kernel.org (Postfix) with ESMTP id 438F920752
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:12:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgCQNLs (ORCPT
+        id S1727133AbgCQNMK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:11:48 -0400
-Received: from www381.your-server.de ([78.46.137.84]:47428 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgCQNLs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:11:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=DPBt6a2ecj+oPPIEOONyeXXPrj98nh9q+dqBm7gAtso=; b=mMby00Z43dqeyhZbuPee4ExS6N
-        4gkp9xdwpVvaPIV2W3AJXxcgJIBTjOnq0QVUOJN/gK8L21MwJDUbfnukN8Lxa1Km19sMoa3CAq05j
-        +nFca35tlZP+5P6eMNDc2DBLfGBhdodQ7Z5tLGsJush9KUIH20nMppWDpY0WAyqZjlZPAKA7N5cWm
-        RJ9q5CHaGJglL9+nRqHzVZedaF2bEA7JL2U6SghM6U6HjTLIRcDFj15pnuD+pTDxHEyKdufObDZ8l
-        CQZ+3BhAt+aNNZeZUOLQg75SB0u8Ql42loQPAnlApssu+nF9CUk6fGvZkQeLTO71AZq3cdVcZZtnq
-        5kE92uDA==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jEC0P-0001j3-TD; Tue, 17 Mar 2020 14:11:38 +0100
-Received: from [93.104.105.202] (helo=[192.168.178.20])
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jEC0P-000Dpk-Ij; Tue, 17 Mar 2020 14:11:37 +0100
-Subject: Re: [PATCH v2 3/4] iio: vcnl4000: Export near level property for
- proximity sensor
-To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <cover.1584380360.git.agx@sigxcpu.org>
- <5566fe01df933d3281f058666e2147cb97b38126.1584380360.git.agx@sigxcpu.org>
- <c787921f-c412-4986-14ea-e31b531d3d5b@metafoo.de>
- <20200317120535.GA16807@bogon.m.sigxcpu.org>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <ab8f970b-f95f-b34b-7e4d-c2cc64d94886@metafoo.de>
-Date:   Tue, 17 Mar 2020 14:11:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 17 Mar 2020 09:12:10 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.114]:38498 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726187AbgCQNMJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 09:12:09 -0400
+Received: from [100.113.4.131] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.eu-central-1.aws.symcld.net id B2/09-40261-5ACC07E5; Tue, 17 Mar 2020 13:12:05 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAIsWRWlGSWpSXmKPExsVy8MN7Xd0lZwr
+  iDBrmmFjMOd/CYjH/yDlWi8OLXjBaNC9ez2Zx/+tRRoubn76xWlzeNYfNon3jbFaLpdcvMlm8
+  /9TJZNG69wi7xf89O9gtfu6ax2Jxe+JkRgc+jzXz1jB6bFl5k8lj56y77B6bVnWyedy5tofNY
+  //cNewe/X8NPD5vkgvgiGLNzEvKr0hgzZh06SVTwRf2imvn1jA2ML5n7WLk4hASWMsoMWfBF6
+  YuRk4gp1JiUf8bVhCbV8BUYuaqB2BxNgEdiUcz14PZLAKqEps2LWQHsYUFrCTubd7NBDJIROA
+  ks0Tnva8sIA6zwDRGiT0fDzNDTBKUODnzCQuIzSwgIXHwxQtmiG1aEufWrGKcwMg9C0nZLCRl
+  CxiZVjFaJhVlpmeU5CZm5ugaGhjoGhoa65rqGhpb6iVW6SbppZbqJqfmlRQlAmX1EsuL9Yorc
+  5NzUvTyUks2MQIDP6WQtXsH46e17/UOMUpyMCmJ8gbPKYgT4kvKT6nMSCzOiC8qzUktPsQow8
+  GhJMGreRooJ1iUmp5akZaZA4xCmLQEB4+SCG/3KaA0b3FBYm5xZjpE6hSjLsf193uXMgux5OX
+  npUqJ8y4HKRIAKcoozYMbAUsIlxhlpYR5GRkYGIR4ClKLcjNLUOVfMYpzMCoJ87aAXMKTmVcC
+  t+kV0BFMQEdUbMgHOaIkESEl1cDEzJsSdT/tAoOMwOaAF53aD37cjz2zX/Wuaq4Y+w0jXZ1/+
+  +umMB7v+W+aG+kvovD89N9Jl5nmLWlhmi0kYnrfsTcvOPv0RWHDL44tm3iVVYRntGxcuLr44N
+  PGi/PLX5acb7g2a8q7k0GfFxRobp1WGrx0ao67+PZz93/Jbjj1vLfmdF1iYMGlprVyXk+tA6X
+  0n29YUle2aefazVX2R8+7Br8yE+4vqOoIl1BctC7nkJ5S813WSZf7Gl35H20RamXVOXyv8KB3
+  jDW/2pU9mtlPlpxYJCkkt/POg4Kmj5Pq5cOyltZcESlSi5x9rWMO95G07MJaU+Vrq3ef7OvVD
+  Y3tT1WubL4aZZsT35H4IEiJpTgj0VCLuag4EQAutONZgwMAAA==
+X-Env-Sender: roy.im.opensource@diasemi.com
+X-Msg-Ref: server-18.tower-246.messagelabs.com!1584450724!1103421!1
+X-Originating-IP: [193.240.239.45]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.50.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 9017 invoked from network); 17 Mar 2020 13:12:04 -0000
+Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
+  by server-18.tower-246.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 17 Mar 2020 13:12:04 -0000
+Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Tue, 17 Mar 2020 14:12:03 +0100
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ E050913F671; Tue, 17 Mar 2020 22:12:01 +0900 (KST)
+Message-ID: <cover.1584445730.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Tue, 17 Mar 2020 20:48:50 +0900
+Subject: [PATCH V11 0/3]  da7280: haptic driver submission
+To:     "David S. Miller" <davem@davemloft.net>,
+        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200317120535.GA16807@bogon.m.sigxcpu.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25753/Mon Mar 16 14:05:55 2020)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/17/20 1:05 PM, Guido Günther wrote:
-> Hi,
-> On Mon, Mar 16, 2020 at 07:23:01PM +0100, Lars-Peter Clausen wrote:
->> On 3/16/20 6:46 PM, Guido Günther wrote:
->>> [...]
->>> +static ssize_t vcnl4000_read_near_level(struct iio_dev *indio_dev,
->>> +					uintptr_t priv,
->>> +					const struct iio_chan_spec *chan,
->>> +					char *buf)
->>> +{
->>> +	struct vcnl4000_data *data = iio_priv(indio_dev);
->>> +
->>> +	return sprintf(buf, "%u\n", data->near_level);
->>> +}
->>> +
->>> +static const struct iio_chan_spec_ext_info vcnl4000_ext_info[] = {
->>> +	{
->>> +		.name = "near_level",
->> Generally having properties with a underscore in them breaks generic parsing
->> of the property name by userspace applications. This is because we use
->> underscores to separate different components (type, modifier, etc.) of the
->> attribute from each other.
->>
->> Do you think calling this "nearlevel" would work?
-> That works as well. I'll change that for v3.
->
-> For my education: Is the type, modifier policy written down somewhere
-> (similar to
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/leds/leds-class.rst#n44
-> )?
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-Good point, this is quite badly documented at the moment.
+In this patch set the following is provided:
 
-The only thing I could find is this presentation by Daniel 
-https://events.static.linuxfound.org/sites/events/files/slides/lceu15_baluta.pdf#page=9
+[PATCH V11 1/3] MAINTAINERS file update for DA7280
+[PATCH V11 2/3] DA7280 DT Binding
+[PATCH V11 3/3] DA7280 Driver
 
-- Lars
+This patch applies against linux-next and v5.5
+
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
+
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
+
+ .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1898 ++++++++++++++++++++
+ 5 files changed, 2023 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
+
+-- 
+end-of-patch for PATCH V11
 
