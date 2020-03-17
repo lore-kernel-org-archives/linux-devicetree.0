@@ -2,59 +2,59 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD25AC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A867C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FA720767
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4FC2076C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N7mF7Hc3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qu8Ps6Q8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgCQN6P (ORCPT
+        id S1726767AbgCQN5z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:58:15 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50392 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbgCQN55 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:57:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z13so5510286wml.0
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:57:55 -0700 (PDT)
+        Tue, 17 Mar 2020 09:57:55 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40383 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgCQN5z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:57:55 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f3so18833219wrw.7
+        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:57:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KKC3ZGRiSdLIkKwV88qQTvKvn0/RzcGotU3LdLgzl1U=;
-        b=N7mF7Hc3YT37vBthOqaQ3pRdnsShxabwSnxuPuRl4YdkOByMYhyWOOxAQuLqny4nLG
-         m9VoUnfrLQVlv0U/yAYz9MGUaIbzI+ozA5/KesXNg5ctLdCtaBqCtlfRk/agPExFstUN
-         XtUK/9SySZRxi/jmeaYecebvIOaWawFWXLz/ueivkDDXrVo+hXK9owzlqlsMVdYO2PRp
-         BGCmt7AgmZKagoaRBVUdR1wmZ8twUJ0VEqq9gMjRB6ROpM4Y1Mf9+5qiXXuu40JmrfAi
-         dPheCJiKS+xgScgz6Z3GkcaAnoh9E7VMjwn6qooE/4q6v1oY3InKmIAJ+XBq6z+pr0EY
-         sUJA==
+        bh=E7ZsSBUhejcW1WENgNkFbYtvh60PcoS0PtZmGJlxadU=;
+        b=Qu8Ps6Q87cbQkhFKxkNsAmQdAElXSe+ZGHs0h7urUZ76bgNkrTvzwwas3mBUVeKoBo
+         jsbWik9YedB5fjdzozCPLze7QaOfOxfbjFTC5P7Pme/y0ngwDSADLzeX0lj4vAE+rtDh
+         My88mJq0n/MSGE6vZ25+Ug6dpnrJGq7XtV27+2JdzxB5VCJx2fnRodufZ3P/lJq2rZ0A
+         g0yGWLZAych/XHYX/BQBnZgrXB3jhyaabqqsjTkezMquF2MfINpTDDOFW6u9/2oBcpHv
+         ImAD3QOcSFUdOzbkMyrXdxUQYpEVLWW78xctBP3Kd90tK8mhgRaYirAjFiHsRF+f8F0p
+         yGig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KKC3ZGRiSdLIkKwV88qQTvKvn0/RzcGotU3LdLgzl1U=;
-        b=SnAJGu6F8RNZkbzxV1307HRydu0DUmVdTp69BLjd6KYfChpZ9I4Lny1vJhqe5AgGOp
-         /WEyPJ5JIOvCinJbeTAPwh79pefq2S2yVXIdFNR1GE7LGX3ybFF4sqqzqOBOIBQNrILQ
-         JvuUkgTeicpkvZ7U5KInRdTab/RVBnIqIuGx54eeJFLN6vgt72mVVYKkjehs1Xxj9XYn
-         iQfzec6U8BRJlyKOSYIHT0RhWLzSXx9kGboIMxWJZlo2Z7BSqrZxzK/pKJISYu0w5qkI
-         rQuS7+yvZJhbrghSWD2UOec/4T8FMayyyAo8HEAof2TkF2Pp9lU2STLv3QtVpNyZ1vHA
-         t4QQ==
-X-Gm-Message-State: ANhLgQ1Uvv3Gg/zkARn4LVUsKz2fnTRBI9CsCxoVRVjV7nFapIzD6b77
-        XY3+p6YOVuswcygGq3BRKx3oYQ==
-X-Google-Smtp-Source: ADFU+vtzmvC3LVNiLYHnAHL2ZcThRB7+VYfJfGi1TFUAGXMsXDpg3P+/1X76mVZ64sIveKkAaijsuA==
-X-Received: by 2002:a1c:1b0e:: with SMTP id b14mr5499298wmb.8.1584453474984;
-        Tue, 17 Mar 2020 06:57:54 -0700 (PDT)
+        bh=E7ZsSBUhejcW1WENgNkFbYtvh60PcoS0PtZmGJlxadU=;
+        b=BShCv5BsX7ig+6SbPXrtDrv5smZOOZlp3qzfqp/DXAf64/jLtPl5jDQ2u0Ty3nF8Sl
+         IW4rPdp5bR1Vth8SAiZwSGZ8rKQ12bbp5+cNhq/pTywliTPm6ctvC2d0BvCudXSQkYtN
+         1ZW90JXH35jFWfgsbsdin+bdC87aS4wGhz8aOq8+K8lD4U3MRIryDkVDcPy+hjYSZLgt
+         iW0yiEEiZhgfg9YYKnn3W0AZO0Me3W+3JJQM28Pfnawymmx+GgsIke4Z3ko9QmlVeuCU
+         KPaNHP07BirYD9mOHuL8inWXfZzWmnUz/YlPFuY3G6VFZFguQ2vn0hmAviNW/bRpJgH8
+         F09A==
+X-Gm-Message-State: ANhLgQ2DsqmMXkxVL6Spojwvsvp8ymWPs5NOzLgAebvoYNJUW6YgB6EQ
+        cq8IZR19MHqe6IcA0lG3C09Aeg==
+X-Google-Smtp-Source: ADFU+vtui492H+miaWTyfRzOCSzn/SzVawYdAfgXp6SNtzgRBoH32Npb5uwL2TWiiuaM5Q+QdEJ4vw==
+X-Received: by 2002:adf:fdc6:: with SMTP id i6mr6204937wrs.414.1584453473419;
+        Tue, 17 Mar 2020 06:57:53 -0700 (PDT)
 Received: from xps7590.local ([2a02:2450:102f:13b8:84f7:5c25:a9d8:81a1])
-        by smtp.gmail.com with ESMTPSA id r3sm2976558wrn.35.2020.03.17.06.57.53
+        by smtp.gmail.com with ESMTPSA id r3sm2976558wrn.35.2020.03.17.06.57.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 06:57:54 -0700 (PDT)
+        Tue, 17 Mar 2020 06:57:52 -0700 (PDT)
 From:   Robert Foss <robert.foss@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
@@ -65,9 +65,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Loic Poulain <loic.poulain@linaro.org>
 Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [v2 3/6] arm64: dts: sdm845: Add i2c-qcom-cci node
-Date:   Tue, 17 Mar 2020 14:57:37 +0100
-Message-Id: <20200317135740.19412-4-robert.foss@linaro.org>
+Subject: [v2 2/6] arm64: dts: apq8016-sbc: Add CCI/Sensor nodes
+Date:   Tue, 17 Mar 2020 14:57:36 +0100
+Message-Id: <20200317135740.19412-3-robert.foss@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200317135740.19412-1-robert.foss@linaro.org>
 References: <20200317135740.19412-1-robert.foss@linaro.org>
@@ -78,155 +78,123 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The sdm845 SOC ships with a CCI controller, which
-has two CCI/I2C buses.
+From: Loic Poulain <loic.poulain@linaro.org>
 
+Add cci device to msm8916.dtsi.
+Add default 96boards camera node for db410c (apq8016-sbc).
+
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
 Signed-off-by: Robert Foss <robert.foss@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
- - Pad addresses to 8 bytes
- - Sort clock_camcc by address
- - Change cciX pinctrl node names
- - Remove pinmux/pinconf nodes from pinctrl nodes
- - Remove clk suffix from CCI node clock-names
- -  Give CCI i2c-bus nodes labels
+ - Reference CCI by label
+ - Don't use generic node names
+ - Move regulator nodes out of /soc
+ - Use CCI label and move node out of /soc
+ - Use reference for camss and move node out of /soc
+ - Use reference for cci-i2c0 and move out of /cci
+ - Disable camera_read by default, since no mezzanine board is guaranteed
 
 
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts |  4 +
- arch/arm64/boot/dts/qcom/sdm845.dtsi       | 92 ++++++++++++++++++++++
- 2 files changed, 96 insertions(+)
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 76 +++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index eb77aaa6a819..a6b6837c3d68 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -583,3 +583,7 @@
- 		bias-pull-up;
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 037e26b3f8d5..d98c7e9e6eb9 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -51,6 +51,30 @@
+ 		stdout-path = "serial0";
+ 	};
+ 
++	camera_vdddo_1v8: camera_vdddo_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vdddo";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	camera_vdda_2v8: camera_vdda_2v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vdda";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		regulator-always-on;
++	};
++
++	camera_vddd_1v5: camera_vddd_1v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vddd";
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <1500000>;
++		regulator-always-on;
++	};
++
+ 	reserved-memory {
+ 		ramoops@bff00000{
+ 			compatible = "ramoops";
+@@ -538,6 +562,58 @@
  	};
  };
+ 
++&camss {
++	status = "ok";
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			csiphy0_ep: endpoint {
++				clock-lanes = <1>;
++				data-lanes = <0 2>;
++				remote-endpoint = <&ov5640_ep>;
++				status = "okay";
++			};
++		};
++	};
++};
 +
 +&cci {
 +	status = "ok";
 +};
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index d42302b8889b..91a60847026f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -5,6 +5,7 @@
-  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-  */
- 
-+#include <dt-bindings/clock/qcom,camcc-sdm845.h>
- #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
- #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
-@@ -1451,6 +1452,42 @@
- 			gpio-ranges = <&tlmm 0 0 150>;
- 			wakeup-parent = <&pdc_intc>;
- 
-+			cci0_default: cci0-default {
-+				/* SDA, SCL */
-+				pins = "gpio17", "gpio18";
-+				function = "cci_i2c";
 +
-+				bias-pull-up;
-+				drive-strength = <2>; /* 2 mA */
-+			};
++&cci_i2c0 {
++	camera_rear@3b {
++		compatible = "ovti,ov5640";
++		reg = <0x3b>;
 +
-+			cci0_sleep: cci0-sleep {
-+				/* SDA, SCL */
-+				pins = "gpio17", "gpio18";
-+				function = "cci_i2c";
++		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&camera_rear_default>;
 +
-+				drive-strength = <2>; /* 2 mA */
-+				bias-pull-down;
-+			};
++		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
++		clock-names = "xclk";
++		clock-frequency = <23880000>;
 +
-+			cci1_default: cci1-default {
-+				/* SDA, SCL */
-+				pins = "gpio19", "gpio20";
-+				function = "cci_i2c";
++		vdddo-supply = <&camera_vdddo_1v8>;
++		vdda-supply = <&camera_vdda_2v8>;
++		vddd-supply = <&camera_vddd_1v5>;
 +
-+				bias-pull-up;
-+				drive-strength = <2>; /* 2 mA */
-+			};
++		/* No camera mezzanine by default */
++		status = "disabled";
 +
-+			cci1_sleep: cci1-sleep {
-+				/* SDA, SCL */
-+				pins = "gpio19", "gpio20";
-+				function = "cci_i2c";
-+
-+				drive-strength = <2>; /* 2 mA */
-+				bias-pull-down;
-+			};
-+
- 			qspi_clk: qspi-clk {
- 				pinmux {
- 					pins = "gpio95";
-@@ -2608,6 +2645,61 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		cci: cci@ac4a000 {
-+			compatible = "qcom,sdm845-cci";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			reg = <0 0x0ac4a000 0 0x4000>;
-+			interrupts = <GIC_SPI 460 IRQ_TYPE_EDGE_RISING>;
-+			power-domains = <&clock_camcc TITAN_TOP_GDSC>;
-+
-+			clocks = <&clock_camcc CAM_CC_CAMNOC_AXI_CLK>,
-+				<&clock_camcc CAM_CC_SOC_AHB_CLK>,
-+				<&clock_camcc CAM_CC_SLOW_AHB_CLK_SRC>,
-+				<&clock_camcc CAM_CC_CPAS_AHB_CLK>,
-+				<&clock_camcc CAM_CC_CCI_CLK>,
-+				<&clock_camcc CAM_CC_CCI_CLK_SRC>;
-+			clock-names = "camnoc_axi",
-+				"soc_ahb",
-+				"slow_ahb_src",
-+				"cpas_ahb",
-+				"cci",
-+				"cci_src";
-+
-+			assigned-clocks = <&clock_camcc CAM_CC_CAMNOC_AXI_CLK>,
-+				<&clock_camcc CAM_CC_CCI_CLK>;
-+			assigned-clock-rates = <80000000>, <37500000>;
-+
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&cci0_default &cci1_default>;
-+			pinctrl-1 = <&cci0_sleep &cci1_sleep>;
-+
-+			status = "disabled";
-+
-+			cci_i2c0: i2c-bus@0 {
-+				reg = <0>;
-+				clock-frequency = <1000000>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
-+			cci_i2c1: i2c-bus@1 {
-+				reg = <1>;
-+				clock-frequency = <1000000>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
++		port {
++			ov5640_ep: endpoint {
++				clock-lanes = <1>;
++				data-lanes = <0 2>;
++				remote-endpoint = <&csiphy0_ep>;
 +			};
 +		};
++	};
++};
 +
-+		clock_camcc: clock-controller@ad00000 {
-+			compatible = "qcom,sdm845-camcc";
-+			reg = <0 0x0ad00000 0 0x10000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		mdss: mdss@ae00000 {
- 			compatible = "qcom,sdm845-mdss";
- 			reg = <0 0x0ae00000 0 0x1000>;
+ &spmi_bus {
+ 	pm8916_0: pm8916@0 {
+ 		pon@800 {
 -- 
 2.20.1
 
