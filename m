@@ -2,205 +2,98 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28017C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 11:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3345C10F29
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 12:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0119D20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 11:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5D2C20663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 12:04:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KNL1OXo9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbgCQL4c (ORCPT
+        id S1726428AbgCQMEF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:56:32 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48829 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgCQL4c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 07:56:32 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jEAph-0004NO-Ff; Tue, 17 Mar 2020 12:56:29 +0100
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jEApf-0000e0-1U; Tue, 17 Mar 2020 12:56:27 +0100
-Date:   Tue, 17 Mar 2020 12:56:27 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Mark Rutland <mark.rutland@arm.com>,
-        Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
-Message-ID: <20200317115626.4ncavxdcw4wu5zgc@pengutronix.de>
-References: <20200313052252.25389-1-o.rempel@pengutronix.de>
- <20200313052252.25389-2-o.rempel@pengutronix.de>
- <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
- <20200313181056.GA29732@lunn.ch>
- <20200313181601.sbxdrqdjqfj3xn3e@pengutronix.de>
- <15dafdcd-1979-bf35-3968-c80ffc113001@gmail.com>
- <20200313185327.nawcp2imfldyhpqa@pengutronix.de>
+        Tue, 17 Mar 2020 08:04:05 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47366 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgCQMEF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 08:04:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02HC1j8I000556;
+        Tue, 17 Mar 2020 07:01:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584446505;
+        bh=wjn4Q51nWQESg+W49NEoLzwZmi+vaAV5Ld0LLIhWlMU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=KNL1OXo9R7zP4eMivWB4YnLEg888FaJWaGkzMD5YYZcsng8pfehS7k6fR7PvpulCz
+         ZjYhiCPs7bBFO6fdxT0GWADv1bDM5eKivS1hatnQNu3sosUujTF+qlvEc5qqKdv7wc
+         9SRMgnYWYt4NvxqtEC4khpx4utYWlHORTpjYAxoA=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02HC1j8g024334
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Mar 2020 07:01:45 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
+ Mar 2020 07:01:45 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 17 Mar 2020 07:01:45 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02HC1ggs013068;
+        Tue, 17 Mar 2020 07:01:43 -0500
+Subject: Re: [PATCH] arm: dts: ti: k3-am654-main: Update otap-del-sel values
+To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>
+References: <20200109085152.10573-1-faiz_abbas@ti.com>
+ <5dc0bca0-502d-01b8-554b-4c4bc06688a8@ti.com>
+ <54c5abfd-7ac5-92ba-e89b-aeae9ee4e275@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <3b721020-7ef2-410f-325c-6e17bdffc4a6@ti.com>
+Date:   Tue, 17 Mar 2020 14:01:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lfhwj2ovh2lzetah"
-Content-Disposition: inline
-In-Reply-To: <20200313185327.nawcp2imfldyhpqa@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:55:55 up 123 days,  3:14, 156 users,  load average: 0.19, 0.12,
- 0.04
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <54c5abfd-7ac5-92ba-e89b-aeae9ee4e275@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 09/03/2020 09:11, Faiz Abbas wrote:
+> Tero,
+> 
+> On 17/01/20 1:38 pm, Tero Kristo wrote:
+>> On 09/01/2020 10:51, Faiz Abbas wrote:
+>>> According to the latest AM65x Data Manual[1], a different output tap
+>>> delay value is optimum for a given speed mode. Update these values.
+>>>
+>>> [1] http://www.ti.com/lit/gpn/am6526
+>>>
+>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>
+>> I believe this patch is going to be updated, as the dt binding has
+>> received comments. As such, going to ignore this for now.
+>>
+> 
+> Those other series are merged now so you should be able to pick this up.
 
---lfhwj2ovh2lzetah
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There were no changes to the DT binding?
 
-On Fri, Mar 13, 2020 at 07:53:27PM +0100, Oleksij Rempel wrote:
-> On Fri, Mar 13, 2020 at 11:20:35AM -0700, Florian Fainelli wrote:
-> >=20
-> >=20
-> > On 3/13/2020 11:16 AM, Oleksij Rempel wrote:
-> > > On Fri, Mar 13, 2020 at 07:10:56PM +0100, Andrew Lunn wrote:
-> > >>>> diff --git a/Documentation/devicetree/bindings/net/nxp,tja11xx.yam=
-l b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> > >>>> new file mode 100644
-> > >>>> index 000000000000..42be0255512b
-> > >>>> --- /dev/null
-> > >>>> +++ b/Documentation/devicetree/bindings/net/nxp,tja11xx.yaml
-> > >>>> @@ -0,0 +1,61 @@
-> > >>>> +# SPDX-License-Identifier: GPL-2.0+
-> > >>>> +%YAML 1.2
-> > >>>> +---
-> > >>>> +$id: http://devicetree.org/schemas/net/nxp,tja11xx.yaml#
-> > >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > >>>> +
-> > >>>> +title: NXP TJA11xx PHY
-> > >>>> +
-> > >>>> +maintainers:
-> > >>>> +  - Andrew Lunn <andrew@lunn.ch>
-> > >>>> +  - Florian Fainelli <f.fainelli@gmail.com>
-> > >>>> +  - Heiner Kallweit <hkallweit1@gmail.com>
-> > >>>> +
-> > >>>> +description:
-> > >>>> +  Bindings for NXP TJA11xx automotive PHYs
-> > >>>> +
-> > >>>> +allOf:
-> > >>>> +  - $ref: ethernet-phy.yaml#
-> > >>>> +
-> > >>>> +patternProperties:
-> > >>>> +  "^ethernet-phy@[0-9a-f]+$":
-> > >>>> +    type: object
-> > >>>> +    description: |
-> > >>>> +      Some packages have multiple PHYs. Secondary PHY should be d=
-efines as
-> > >>>> +      subnode of the first (parent) PHY.
-> > >>>
-> > >>>
-> > >>> There are QSGMII PHYs which have 4 PHYs embedded and AFAICT they are
-> > >>> defined as 4 separate Ethernet PHY nodes and this would not be quit=
-e a
-> > >>> big stretch to represent them that way compared to how they are.
-> > >>>
-> > >>> I would recommend doing the same thing and not bend the MDIO framew=
-ork
-> > >>> to support the registration of "nested" Ethernet PHY nodes.
-> > >>
-> > >> Hi Florian
-> > >>
-> > >> The issue here is the missing PHY ID in the secondary PHY. Because of
-> > >> that, the secondary does not probe in the normal way. We need the
-> > >> primary to be involved to some degree. It needs to register it. What
-> > >> i'm not so clear on is if it just needs to register it, or if these
-> > >> sub nodes are actually needed, given the current code.
-> > >=20
-> > > There are a bit more dependencies:
-> > > - PHY0 is responsible for health monitoring. If some thing wrong, it =
-may
-> > >   shut down complete chip.
-> > > - We have shared reset. It make no sense to probe PHY1 before PHY0 wi=
-th
-> > >   more controlling options will be probed
-> > > - It is possible bat dangerous to use PHY1 without PHY0.
-> >=20
-> > probing is a software problem though. If we want to describe the PHY
-> > package more correctly, we should be using a container node, something
-> > like this maybe:
-> >
-> > phy-package {
-> > 	compatible =3D "nxp,tja1102";
-> >=20
-> > 	ethernet-phy@4 {
-> > 		reg =3D <4>;
-> > 	};
-> >=20
-> > 	ethernet-phy@5 {
-> > 		reg =3D <5>;
-> > 	};
-> > };
->=20
-> Yes, this is almost the same as it is currently done:
->=20
-> phy-package {
-> 	reg =3D <4>;
-> =20
->  	ethernet-phy@5 {
->  		reg =3D <5>;
->  	};
-> };
->=20
-> Because the primary PHY0 can be autodetected by the bus scan.
-> But I have nothing against your suggestions. Please, some one should say =
-the
-> last word here, how exactly it should be implemented?
+Can you resend the DTS patch, and refer to the merged dt-binding? I 
+deleted the whole series from my inbox already based on above.
 
-ping,
-
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---lfhwj2ovh2lzetah
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5wuuoACgkQ4omh9DUa
-UbNG5g/+KdSOq7b8v5yauULhvpEsrHlJGpaFL3EMI1ufAip3z/1a62usEZp1aVNd
-IInBhS+m1Vkj4IIQ7+Aw962e3637PZPMEHswkW9nWS3ozpSlDZgZgb9NDqBlIWLp
-B7uYxZlW401HdfSVl3tC8vYP9kxve/CsZAfPWfRtAk4DebWhV7d9c1Hib3YMJG7x
-P46EVCl0IiSMrqQ1bVxDn+RimsCj3REeAJlQhaWHfzMwTG8Tr001pYmahL1d9/LD
-NkaKi8CX9p1BgMkobHNP078bE7bKF2PVjHpa9fWKRkdFS6F5drXTaDiGW6eGRK37
-sRragvu3xxHvrx+D2RpbyZ+XC+ifbU5zlQNjJ8meOrPMl/wdjqLrHMpDnJWc8gI5
-fC7qwqraiEd+BEJaJM1lVHeGQ0A+19QDQ/NSTcsz70kMqg9wP7dORmraRz2BJaFp
-WyZkVkRl9du9t4doptaybDTi4e5D2CF5wTmztq+PE935bhVz7qUTCiY59b0rRSkc
-I0HPkoQUxH2uylzpv7sDuosefWIa62UvhThDQBtN8GXvdjxkvM0DHdSaaeRebZ0L
-wivnBhgtKE5T8BKYdno/Yool41CY38tJ8/KEgc75COxp51yoE8h+4Ke+WehpKpSX
-rnXW/6mn+Kk58hWf6GUPVzJYMVwT0AQ9Sd6Eh+ahIc3JPg9hnqE=
-=hDpJ
------END PGP SIGNATURE-----
-
---lfhwj2ovh2lzetah--
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
