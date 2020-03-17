@@ -4,160 +4,194 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2394BC5ACBF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB64C5ACD3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DF82071C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7131720724
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgCQJlm (ORCPT
+        id S1727149AbgCQJlG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:41:42 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57205 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727281AbgCQJlY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 05:41:24 -0400
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mtr@pengutronix.de>)
-        id 1jE8ix-0004Q9-2M; Tue, 17 Mar 2020 10:41:23 +0100
-Received: from mtr by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mtr@pengutronix.de>)
-        id 1jE8iw-00049T-FW; Tue, 17 Mar 2020 10:41:22 +0100
-From:   Michael Tretter <m.tretter@pengutronix.de>
-To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dhaval Shah <dshah@xilinx.com>, kernel@pengutronix.de,
-        Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH 4/6] dt-bindings: soc: xlnx: extract xlnx,vcu-settings to separate binding
-Date:   Tue, 17 Mar 2020 10:41:13 +0100
-Message-Id: <20200317094115.15896-5-m.tretter@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200317094115.15896-1-m.tretter@pengutronix.de>
-References: <20200317094115.15896-1-m.tretter@pengutronix.de>
+        Tue, 17 Mar 2020 05:41:06 -0400
+Received: from v6.sk ([167.172.42.174]:50718 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726559AbgCQJlE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:41:04 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 61AF661098;
+        Tue, 17 Mar 2020 09:41:02 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 22/28] dt-bindings: i2c: Convert i2c-pxa to json-schema
+Date:   Tue, 17 Mar 2020 10:39:16 +0100
+Message-Id: <20200317093922.20785-23-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mtr@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The xlnx,vcu binding comprises two adjacent register banks:
+A conversion of the i2c-pxa binding to DT schema format using json-schema.
 
-The first register bank ("vcu_slcr") contains registers for setting the
-clocks of the vcu and controlling the performance monitors. The second
-bank ("logicoreip") contains the configuration settings of the video codec
-unit, which are set before synthesizing the bitstream.
+This also cleans ups some errors in the binding: The compatible string
+description suggested that "mmp" in "mrvl,mmp-twsi" is to be substituted
+with a processor model, which wouldn't be a right thing to do and indeed
+nobody seems to have been doing that. There also was "Recommended
+properties" section that included optional as well as mandatory
+properties. Missing mandatory properties were added to the example.
 
-Drivers that drive the actual video codec unit need to to read the
-registers from the logicoreip register bank for configuring the vcu
-firmware.
-
-As logicoreip is a too generic name for this register bank, use
-"vcu-settings" as a binding name, because the register bank basically
-provides the configuration settings of the VCU.
-
-Therefore, add the vcu-settings binding to provide a syscon interface
-for other drivers to read these registers.
-
-The alternative would have been to merge the two register banks of the
-xlnx,vcu binding into one register bank and make xlnx,vcu provide a
-syscon interface, but that would lead to more incompatibility than
-making second register bank of xlnx,vcu optional.
-
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- .../soc/xilinx/xlnx,vcu-settings.yaml         | 45 +++++++++++++++++++
- .../bindings/soc/xilinx/xlnx,vcu.txt          |  9 +---
- 2 files changed, 47 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu-settings.yaml
+ .../devicetree/bindings/i2c/i2c-pxa.txt       | 31 --------
+ .../devicetree/bindings/i2c/i2c-pxa.yaml      | 71 +++++++++++++++++++
+ 2 files changed, 71 insertions(+), 31 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
 
-diff --git a/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu-settings.yaml b/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu-settings.yaml
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+deleted file mode 100644
+index c30783c0eca03..0000000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
++++ /dev/null
+@@ -1,31 +0,0 @@
+-* Marvell MMP I2C controller
+-
+-Required properties :
+-
+- - reg : Offset and length of the register set for the device
+- - compatible : should be "mrvl,mmp-twsi" where mmp is the name of a
+-   compatible processor, e.g. pxa168, pxa910, mmp2, mmp3.
+-   For the pxa2xx/pxa3xx, an additional node "mrvl,pxa-i2c" is required
+-   as shown in the example below.
+-   For the Armada 3700, the compatible should be "marvell,armada-3700-i2c".
+-
+-Recommended properties :
+-
+- - interrupts : the interrupt number
+- - mrvl,i2c-polling : Disable interrupt of i2c controller. Polling
+-   status register of i2c controller instead.
+- - mrvl,i2c-fast-mode : Enable fast mode of i2c controller.
+-
+-Examples:
+-	twsi1: i2c@d4011000 {
+-		compatible = "mrvl,mmp-twsi";
+-		reg = <0xd4011000 0x1000>;
+-		interrupts = <7>;
+-		mrvl,i2c-fast-mode;
+-	};
+-	
+-	twsi2: i2c@d4025000 {
+-		compatible = "mrvl,mmp-twsi";
+-		reg = <0xd4025000 0x1000>;
+-		interrupts = <58>;
+-	};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml b/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
 new file mode 100644
-index 000000000000..a38ab180854e
+index 0000000000000..c04fb81927208
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu-settings.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
+@@ -0,0 +1,71 @@
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/soc/xilinx/xlnx,vcu-settings.yaml#
++$id: http://devicetree.org/schemas/i2c/i2c-pxa.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Xilinx VCU Settings
++title: Marvell MMP I2C controller bindings
 +
 +maintainers:
-+  - Michael Tretter <kernel@pengutronix.de>
++  - devicetree@vger.kernel.org
 +
-+# Custom select to avoid matching all nodes with 'syscon'
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - xlnx,vcu-settings
-+  required:
-+    - compatible
-+
-+
-+description: |
-+  The Xilinx VCU Settings provides information about the configuration of the
-+  video codec unit.
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++  - if:
++      not:
++        required:
++          - mrvl,i2c-polling
++    then:
++        required:
++          - interrupts
 +
 +properties:
 +  compatible:
-+    items:
-+      - const: xlnx,vcu-settings
-+      - const: syscon
++    enum:
++      - mrvl,mmp-twsi
++      - mrvl,pxa-i2c
++      - marvell,armada-3700-i2c
 +
 +  reg:
 +    maxItems: 1
 +
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++
++  resets:
++    minItems: 1
++
++  mrvl,i2c-polling:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Disable interrupt of i2c controller. Polling status register of i2c
++      controller instead.
++
++  mrvl,i2c-fast-mode:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: Enable fast mode of i2c controller.
++
 +required:
 +  - compatible
 +  - reg
++  - interrupts
++  - clocks
++  - '#address-cells'
++  - '#size-cells'
 +
 +examples:
 +  - |
-+    xlnx_vcu: vcu@a0041000 {
-+          compatible = "xlnx,vcu-settings", "syscon";
-+          reg = <0x0 0xa0041000 0x0 0x1000>;
++    #include <dt-bindings/clock/marvell,mmp2.h>
++    i2c@d4011000 {
++        compatible = "mrvl,mmp-twsi";
++        reg = <0xd4011000 0x1000>;
++        interrupts = <7>;
++        clocks = <&soc_clocks MMP2_CLK_TWSI1>;
++        mrvl,i2c-fast-mode;
++        #address-cells = <1>;
++        #size-cells = <0>;
 +    };
-diff --git a/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt b/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt
-index 6786d6715df0..2417b13ba468 100644
---- a/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt
-+++ b/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt
-@@ -12,10 +12,7 @@ Required properties:
- - compatible: shall be one of:
- 	"xlnx,vcu"
- 	"xlnx,vcu-logicoreip-1.0"
--- reg, reg-names: There are two sets of registers need to provide.
--	1. vcu slcr
--	2. Logicore
--	reg-names should contain name for the each register sequence.
-+- reg : The base offset and size of the VCU_PL_SLCR register space.
- - clocks: phandle for aclk and pll_ref clocksource
- - clock-names: The identification string, "aclk", is always required for
-    the axi clock. "pll_ref" is required for pll.
-@@ -23,9 +20,7 @@ Example:
- 
- 	xlnx_vcu: vcu@a0040000 {
- 		compatible = "xlnx,vcu-logicoreip-1.0";
--		reg = <0x0 0xa0040000 0x0 0x1000>,
--			 <0x0 0xa0041000 0x0 0x1000>;
--		reg-names = "vcu_slcr", "logicore";
-+		reg = <0x0 0xa0040000 0x0 0x1000>;
- 		clocks = <&si570_1>, <&clkc 71>;
- 		clock-names = "pll_ref", "aclk";
- 	};
++
++...
 -- 
-2.20.1
+2.25.1
 
