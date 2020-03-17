@@ -6,291 +6,207 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D5FC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1793EC3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 704CC20724
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E651D2071C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgCQJlJ (ORCPT
+        id S1727266AbgCQJlZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:41:09 -0400
-Received: from v6.sk ([167.172.42.174]:50756 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727166AbgCQJlJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:41:09 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id AE68D6109A;
-        Tue, 17 Mar 2020 09:41:06 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 23/28] dt-bindings: interrupt-controller: Convert mrvl,intc to json-schema
-Date:   Tue, 17 Mar 2020 10:39:17 +0100
-Message-Id: <20200317093922.20785-24-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
+        Tue, 17 Mar 2020 05:41:25 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43301 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727283AbgCQJlY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 05:41:24 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jE8ix-0004Q8-2M; Tue, 17 Mar 2020 10:41:23 +0100
+Received: from mtr by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jE8iw-00049Q-F6; Tue, 17 Mar 2020 10:41:22 +0100
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dhaval Shah <dshah@xilinx.com>, kernel@pengutronix.de,
+        Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH 3/6] soc: xilinx: vcu: implement clock provider for output clocks
+Date:   Tue, 17 Mar 2020 10:41:12 +0100
+Message-Id: <20200317094115.15896-4-m.tretter@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200317094115.15896-1-m.tretter@pengutronix.de>
+References: <20200317094115.15896-1-m.tretter@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mtr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the mrvl,intc binding to DT schema format using json-schema.
+The VCU System-Level Control uses an internal PLL to drive the core and
+MCU clock for the allegro encoder and decoder based on an external PL
+clock.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+In order be able to ensure that the clocks are enabled and to get their
+rate from other drivers, the module must implement a clock provider and
+register the clocks at the common clock framework. Other drivers are
+then able to access the clock via devicetree bindings.
+
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
 ---
- .../interrupt-controller/mrvl,intc.txt        |  64 --------
- .../interrupt-controller/mrvl,intc.yaml       | 144 ++++++++++++++++++
- 2 files changed, 144 insertions(+), 64 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
+ drivers/soc/xilinx/Kconfig    |  2 +-
+ drivers/soc/xilinx/xlnx_vcu.c | 69 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 68 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-deleted file mode 100644
-index a0ed02725a9d7..0000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
-+++ /dev/null
-@@ -1,64 +0,0 @@
--* Marvell MMP Interrupt controller
--
--Required properties:
--- compatible : Should be
--               "mrvl,mmp-intc" on Marvel MMP,
--               "mrvl,mmp2-intc" along with "mrvl,mmp2-mux-intc" on MMP2 or
--               "marvell,mmp3-intc" with "mrvl,mmp2-mux-intc" on MMP3
--- reg : Address and length of the register set of the interrupt controller.
--  If the interrupt controller is intc, address and length means the range
--  of the whole interrupt controller. The "marvell,mmp3-intc" controller
--  also has a secondary range for the second CPU core.  If the interrupt
--  controller is mux-intc, address and length means one register. Since
--  address of mux-intc is in the range of intc. mux-intc is secondary
--  interrupt controller.
--- reg-names : Name of the register set of the interrupt controller. It's
--  only required in mux-intc interrupt controller.
--- interrupts : Should be the port interrupt shared by mux interrupts. It's
--  only required in mux-intc interrupt controller.
--- interrupt-controller : Identifies the node as an interrupt controller.
--- #interrupt-cells : Specifies the number of cells needed to encode an
--  interrupt source.
--- mrvl,intc-nr-irqs : Specifies the number of interrupts in the interrupt
--  controller.
--- mrvl,clr-mfp-irq : Specifies the interrupt that needs to clear MFP edge
--  detection first.
--
--Example:
--	intc: interrupt-controller@d4282000 {
--		compatible = "mrvl,mmp2-intc";
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		reg = <0xd4282000 0x1000>;
--		mrvl,intc-nr-irqs = <64>;
--	};
--
--	intcmux4@d4282150 {
--		compatible = "mrvl,mmp2-mux-intc";
--		interrupts = <4>;
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		reg = <0x150 0x4>, <0x168 0x4>;
--		reg-names = "mux status", "mux mask";
--		mrvl,intc-nr-irqs = <2>;
--	};
--
--* Marvell Orion Interrupt controller
--
--Required properties
--- compatible :  Should be "marvell,orion-intc".
--- #interrupt-cells: Specifies the number of cells needed to encode an
--  interrupt source. Supported value is <1>.
--- interrupt-controller : Declare this node to be an interrupt controller.
--- reg : Interrupt mask address. A list of 4 byte ranges, one per controller.
--        One entry in the list represents 32 interrupts.
--
--Example:
--
--	intc: interrupt-controller {
--        	compatible = "marvell,orion-intc", "marvell,intc";
--		interrupt-controller;
--		#interrupt-cells = <1>;
--                reg = <0xfed20204 0x04>,
--		      <0xfed20214 0x04>;
--        };
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
-new file mode 100644
-index 0000000000000..f0644f7d7e1d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.yaml
-@@ -0,0 +1,144 @@
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/mrvl,intc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/soc/xilinx/Kconfig b/drivers/soc/xilinx/Kconfig
+index 223f1f9d0922..331f124902e8 100644
+--- a/drivers/soc/xilinx/Kconfig
++++ b/drivers/soc/xilinx/Kconfig
+@@ -3,7 +3,7 @@ menu "Xilinx SoC drivers"
+ 
+ config XILINX_VCU
+ 	tristate "Xilinx VCU logicoreIP Init"
+-	depends on HAS_IOMEM
++	depends on HAS_IOMEM && COMMON_CLK
+ 	help
+ 	  Provides the driver to enable and disable the isolation between the
+ 	  processing system and programmable logic part by using the logicoreIP
+diff --git a/drivers/soc/xilinx/xlnx_vcu.c b/drivers/soc/xilinx/xlnx_vcu.c
+index dcd8e7824b06..d69e671efeab 100644
+--- a/drivers/soc/xilinx/xlnx_vcu.c
++++ b/drivers/soc/xilinx/xlnx_vcu.c
+@@ -7,6 +7,7 @@
+  * Contacts   Dhaval Shah <dshah@xilinx.com>
+  */
+ #include <linux/clk.h>
++#include <linux/clk-provider.h>
+ #include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/io.h>
+@@ -14,6 +15,8 @@
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ 
++#include <dt-bindings/clock/xlnx-vcu.h>
 +
-+title: Marvell MMP/Orion Interrupt controller bindings
+ /* Address map for different registers implemented in the VCU LogiCORE IP. */
+ #define VCU_ECODER_ENABLE		0x00
+ #define VCU_DECODER_ENABLE		0x04
+@@ -108,7 +111,9 @@ struct xvcu_device {
+ 	struct clk *aclk;
+ 	void __iomem *logicore_reg_ba;
+ 	void __iomem *vcu_slcr_ba;
++	struct clk_onecell_data clk_data;
+ 	u32 coreclk;
++	u32 mcuclk;
+ };
+ 
+ /**
+@@ -375,10 +380,10 @@ static int xvcu_set_vcu_pll_info(struct xvcu_device *xvcu)
+ 	}
+ 
+ 	xvcu->coreclk = pll_clk / divisor_core;
+-	mcuclk = pll_clk / divisor_mcu;
++	xvcu->mcuclk = pll_clk / divisor_mcu;
+ 	dev_dbg(xvcu->dev, "Actual Ref clock freq is %uHz\n", refclk);
+ 	dev_dbg(xvcu->dev, "Actual Core clock freq is %uHz\n", xvcu->coreclk);
+-	dev_dbg(xvcu->dev, "Actual Mcu clock freq is %uHz\n", mcuclk);
++	dev_dbg(xvcu->dev, "Actual Mcu clock freq is %uHz\n", xvcu->mcuclk);
+ 
+ 	vcu_pll_ctrl &= ~(VCU_PLL_CTRL_FBDIV_MASK << VCU_PLL_CTRL_FBDIV_SHIFT);
+ 	vcu_pll_ctrl |= (found->fbdiv & VCU_PLL_CTRL_FBDIV_MASK) <<
+@@ -485,6 +490,56 @@ static int xvcu_set_pll(struct xvcu_device *xvcu)
+ 	return -ETIMEDOUT;
+ }
+ 
++static int xvcu_register_clock_provider(struct xvcu_device *xvcu)
++{
++	struct device *dev = xvcu->dev;
++	const char *parent_name = __clk_get_name(xvcu->pll_ref);
++	struct clk_onecell_data *data = &xvcu->clk_data;
++	struct clk **clks;
++	size_t num_clks = CLK_XVCU_MAX;
 +
-+maintainers:
-+  - devicetree@vger.kernel.org
++	clks = devm_kcalloc(dev, num_clks, sizeof(*clks), GFP_KERNEL);
++	if (!clks)
++		return -ENOMEM;
 +
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          not:
-+            contains:
-+              const: marvell,orion-intc
-+    then:
-+      required:
-+        - mrvl,intc-nr-irqs
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mrvl,mmp-intc
-+              - mrvl,mmp2-intc
-+    then:
-+      properties:
-+        reg:
-+          minItems: 1
-+          maxItems: 1
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - marvell,mmp3-intc
-+              - mrvl,mmp2-mux-intc
-+    then:
-+      properties:
-+        reg:
-+          minItems: 2
-+          maxItems: 2
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: marvell,orion-intc
-+    then:
-+      properties:
-+        reg:
-+          minItems: 1
-+          maxItems: 2
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: mrvl,mmp2-mux-intc
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 1
-+          maxItems: 1
-+        reg-names:
-+          minItems: 2
-+          maxItems: 2
-+          items:
-+            - const: 'mux status'
-+            - const: 'mux mask'
-+      required:
-+        - interrupts
-+    else:
-+      properties:
-+        interrupts: false
++	data->clk_num = num_clks;
++	data->clks = clks;
 +
-+properties:
-+  '#interrupt-cells':
-+    const: 1
++	clks[CLK_XVCU_ENC_CORE] =
++		clk_register_fixed_rate(dev, "venc_core_clk",
++					parent_name, 0, xvcu->coreclk);
++	clks[CLK_XVCU_ENC_MCU] =
++		clk_register_fixed_rate(dev, "venc_mcu_clk",
++					parent_name, 0, xvcu->mcuclk);
++	clks[CLK_XVCU_DEC_CORE] =
++		clk_register_fixed_rate(dev, "vdec_core_clk",
++					parent_name, 0, xvcu->coreclk);
++	clks[CLK_XVCU_DEC_MCU] =
++		clk_register_fixed_rate(dev, "vdec_mcu_clk",
++					parent_name, 0, xvcu->mcuclk);
 +
-+  compatible:
-+    enum:
-+      - mrvl,mmp-intc
-+      - mrvl,mmp2-intc
-+      - marvell,mmp3-intc
-+      - marvell,orion-intc
-+      - mrvl,mmp2-mux-intc
++	return of_clk_add_provider(dev->of_node, of_clk_src_onecell_get, data);
++}
 +
-+  reg: true
++static void xvcu_unregister_clock_provider(struct xvcu_device *xvcu)
++{
++	struct device *dev = xvcu->dev;
 +
-+  reg-names: true
++	of_clk_del_provider(dev->of_node);
++}
 +
-+  interrupts: true
++static void xvcu_reset(struct xvcu_device *xvcu)
++{
++	if (!xvcu->reset_gpio)
++		return;
 +
-+  interrupt-controller: true
++	gpiod_set_value(xvcu->reset_gpio, 0);
++	/* min 2 clock cycle of vcu pll_ref, slowest freq is 33.33KHz */
++	usleep_range(60, 120);
++	gpiod_set_value(xvcu->reset_gpio, 1);
++	usleep_range(60, 120);
++}
 +
-+  mrvl,intc-nr-irqs:
-+    description: |
-+      Specifies the number of interrupts in the interrupt controller.
-+    $ref: /schemas/types.yaml#/definitions/uint32
+ /**
+  * xvcu_probe - Probe existence of the logicoreIP
+  *			and initialize PLL
+@@ -569,10 +624,18 @@ static int xvcu_probe(struct platform_device *pdev)
+ 		goto error_pll_ref;
+ 	}
+ 
++	ret = xvcu_register_clock_provider(xvcu);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to register clock provider\n");
++		goto error_clk_provider;
++	}
 +
-+  mrvl,clr-mfp-irq:
-+    description: |
-+      Specifies the interrupt that needs to clear MFP edge detection first.
-+    $ref: /schemas/types.yaml#/definitions/uint32
+ 	dev_set_drvdata(&pdev->dev, xvcu);
+ 
+ 	return 0;
+ 
++error_clk_provider:
++	xvcu_unregister_clock_provider(xvcu);
+ error_pll_ref:
+ 	clk_disable_unprepare(xvcu->pll_ref);
+ error_aclk:
+@@ -596,6 +659,8 @@ static int xvcu_remove(struct platform_device *pdev)
+ 	if (!xvcu)
+ 		return -ENODEV;
+ 
++	xvcu_unregister_clock_provider(xvcu);
 +
-+required:
-+  - '#interrupt-cells'
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    interrupt-controller@d4282000 {
-+        compatible = "mrvl,mmp2-intc";
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+        reg = <0xd4282000 0x1000>;
-+        mrvl,intc-nr-irqs = <64>;
-+    };
-+
-+    interrupt-controller@d4282150 {
-+        compatible = "mrvl,mmp2-mux-intc";
-+        interrupts = <4>;
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+        reg = <0x150 0x4>, <0x168 0x4>;
-+        reg-names = "mux status", "mux mask";
-+        mrvl,intc-nr-irqs = <2>;
-+    };
-+  - |
-+    interrupt-controller@fed20204 {
-+        compatible = "marvell,orion-intc";
-+        interrupt-controller;
-+        #interrupt-cells = <1>;
-+        reg = <0xfed20204 0x04>,
-+              <0xfed20214 0x04>;
-+    };
-+
-+...
+ 	/* Add the the Gasket isolation and put the VCU in reset. */
+ 	xvcu_write(xvcu->logicore_reg_ba, VCU_GASKET_INIT, 0);
+ 
 -- 
-2.25.1
+2.20.1
 
