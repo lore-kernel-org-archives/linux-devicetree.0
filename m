@@ -2,214 +2,106 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA234C5ACBF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D239EC10F29
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B1A20752
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBC520752
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgCQNMJ (ORCPT
+        id S1726112AbgCQNRu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:12:09 -0400
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.115]:42526 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726192AbgCQNMI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 09:12:08 -0400
-Received: from [100.113.4.131] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-b.eu-central-1.aws.symcld.net id BB/A8-32758-5ACC07E5; Tue, 17 Mar 2020 13:12:05 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRWlGSWpSXmKPExsVy8MN7Xd2lZwr
-  iDBY+47WYf+Qcq8XhRS8YLW5++sZqcXnXHDaLpdcvMlm07j3C7sDmsWbeGkaPnbPusntsWtXJ
-  5vF5k1wASxRrZl5SfkUCa0bviUUsBTs1K15M+8/UwLhFqYuRi0NIYC2jxJwFX5i6GDmBnEqJp
-  rONrCA2r0CExP0Xl8HinAJmEpPmP2KGqDGVmNW+hQXEZhPQkXg0cz1YDYuAqsSmTQvZQWxhAV
-  +J5hsnwWpEBMolDnycyQqyjFlgGqPEno+HmSEWCEqcnPkErIhZQELi4IsXUAu0JM6tWcU4gZF
-  3FpKyWUjKFjAyrWK0SCrKTM8oyU3MzNE1NDDQNTQ01jXVNTHQS6zSTdJLLdVNTs0rKUoESuol
-  lhfrFVfmJuek6OWllmxiBIZrSiGrxg7GE8vf6x1ilORgUhLlDZ5TECfEl5SfUpmRWJwRX1Sak
-  1p8iFGGg0NJglfzNFBOsCg1PbUiLTMHGDswaQkOHiUR3u5TQGne4oLE3OLMdIjUKUZjjt8bli
-  xi5nhw9d4qZiGWvPy8VClx3uUgpQIgpRmleXCDYDF9iVFWSpiXkYGBQYinILUoN7MEVf4Vozg
-  Ho5IwbwvIPTyZeSVw+14BncIEdErFhnyQU0oSEVJSDUw5M5KbLNfVn60Jv8t6rWWWUb3ITKlV
-  ctmuXD9zef3f/qt/8vJ9/IKcwvhf19uyGk+eWndBNKRgfyKjTeCjFI+EwLqI+GCJlc0XRPkad
-  U8kcuTbS7wRMNg3WTuyutl/rYH/mo6GU2L/jB6mzzHkee+hOX/x2Yfd9b+5NzR5yS7i2u/JqL
-  pAU2Jui0dQpk9z5eXpPb8zXzlcEppUzb0gceP65Ou3d07st/mnmGGS/1Qm7g2fmeUaaWn2qN/
-  uT9td9xQeWGXh1nl8XUjM6+2Lfk5Uue84mSOFYbHoJI+7URYOi+pO3A38e+V/QfeGw9xHp9zN
-  eP9JTdOwPeXfE+eTCyR3BH9iL3YMPJxS+XhihxJLcUaioRZzUXEiABvuf+xkAwAA
-X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-18.tower-246.messagelabs.com!1584450724!1103421!3
-X-Originating-IP: [193.240.239.45]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.50.1; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 9097 invoked from network); 17 Mar 2020 13:12:05 -0000
-Received: from unknown (HELO NB-EX-CASHUB01.diasemi.com) (193.240.239.45)
-  by server-18.tower-246.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 17 Mar 2020 13:12:05 -0000
-Received: from krsrvapps-03.diasemi.com (10.95.17.51) by
- NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Tue, 17 Mar 2020 14:12:03 +0100
-Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- E3BE613F673; Tue, 17 Mar 2020 22:12:01 +0900 (KST)
-Message-ID: <1ada04420cba631c37c3565f9068ca25e96676f7.1584445730.git.Roy.Im@diasemi.com>
-In-Reply-To: <cover.1584445730.git.Roy.Im@diasemi.com>
-References: <cover.1584445730.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Tue, 17 Mar 2020 20:48:50 +0900
-Subject: [PATCH V11 2/3] dt-bindings: input: Add document bindings for DA7280
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+        Tue, 17 Mar 2020 09:17:50 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59827 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgCQNRu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:17:50 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1jEC6I-0005di-VB; Tue, 17 Mar 2020 14:17:43 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:124:7ee3:e89c:2c00] (unknown [IPv6:2a03:f580:87bc:d400:124:7ee3:e89c:2c00])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 77CDA4CF749;
+        Tue, 17 Mar 2020 13:17:38 +0000 (UTC)
+Subject: Re: [PATCH 04/12] docs: dt: fix references to m_can.txt file
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Dan Murphy <dmurphy@ti.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <cover.1584450500.git.mchehab+huawei@kernel.org>
+ <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
+Date:   Tue, 17 Mar 2020 14:17:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree binding information for DA7280 haptic driver.
-Example bindings for DA7280 are added.
+On 3/17/20 2:10 PM, Mauro Carvalho Chehab wrote:
+> This file was converted to json and renamed. Update its
+> references accordingly.
+> 
+> Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-schema")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>.
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 
-Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+regards,
+Marc
 
----
-v11: No changes.
-v10: No changes.
-v9: No changes.
-v8: Updated descriptions for new properties.
-v7: No changes.
-v6: No changes.
-v5: Updated descriptions and fixed errors.
-v4: Fixed commit message, properties.
-v3: Fixed subject format.
-v2: No changes
-
-
- .../devicetree/bindings/input/dlg,da7280.txt       | 109 +++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
-
-diff --git a/Documentation/devicetree/bindings/input/dlg,da7280.txt b/Documentation/devicetree/bindings/input/dlg,da7280.txt
-new file mode 100644
-index 0000000..e6b719d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
-@@ -0,0 +1,109 @@
-+Dialog Semiconductor DA7280 Haptics bindings
-+
-+Required properties:
-+- compatible: Should be "dlg,da7280".
-+- reg: Specifies the I2C slave address.
-+
-+- interrupt-parent : Specifies the phandle of the interrupt controller to
-+  which the IRQs from DA7280 are delivered to.
-+
-+- dlg,actuator-type: Set Actuator type. it should be one of:
-+  "LRA" - Linear Resonance Actuator type.
-+  "ERM-bar" - Bar type Eccentric Rotating Mass.
-+  "ERM-coin" - Coin type Eccentric Rotating Mass.
-+
-+- dlg,const-op-mode: Haptic operation mode for FF_CONSTANT.
-+  Possible values:
-+	1 - Direct register override(DRO) mode triggered by i2c(default),
-+	2 - PWM data source mode controlled by PWM duty,
-+- dlg,periodic-op-mode: Haptic operation mode for FF_PERIODIC.
-+  Possible values:
-+	1 - Register triggered waveform memory(RTWM) mode, the pattern
-+	    assigned to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
-+	2 - Edge triggered waveform memory(ETWM) mode, external GPI(N)
-+	    control are required to enable/disable and it needs to keep
-+	    device enabled by sending magnitude (X > 0),
-+	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below.
-+	The default value is 1 for both of the operation modes.
-+	For more details, please see the datasheet.
-+
-+- dlg,nom-microvolt: Nominal actuator voltage rating.
-+  Valid values: 0 - 6000000.
-+- dlg,abs-max-microvolt: Absolute actuator maximum voltage rating.
-+  Valid values: 0 - 6000000.
-+- dlg,imax-microamp: Actuator max current rating.
-+  Valid values: 0 - 252000.
-+  Default: 130000.
-+- dlg,impd-micro-ohms: the impedance of the actuator in micro ohms.
-+  Valid values: 0 - 1500000000.
-+
-+Optional properties:
-+- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
-+  PWM properties should be named "pwms". And number of cell is different
-+  for each pwm device.
-+  (See Documentation/devicetree/bindings/pwm/pwm.txt
-+   for further information relating to pwm properties)
-+
-+- dlg,ps-seq-id: the PS_SEQ_ID(pattern ID in waveform memory inside chip)
-+  to play back when RTWM-MODE is enabled.
-+  Valid range: 0 - 15.
-+- dlg,ps-seq-loop: the PS_SEQ_LOOP, Number of times the pre-stored sequence
-+  pointed to by PS_SEQ_ID or GPI(N)_SEQUENCE_ID is repeated.
-+  Valid range: 0 - 15.
-+- dlg,gpiN-seq-id: the GPI(N)_SEQUENCE_ID, pattern to play
-+  when gpi0 is triggered, 'N' must be 0 - 2.
-+  Valid range: 0 - 15.
-+- dlg,gpiN-mode: the pattern mode which can select either
-+  "Single-pattern" or "Multi-pattern", 'N' must be 0 - 2.
-+- dlg,gpiN-polarity: gpiN polarity which can be chosen among
-+  "Rising-edge", "Falling-edge" and "Both-edge",
-+  'N' must be 0 - 2
-+  Haptic will work by this edge option in case of ETWM mode.
-+
-+- dlg,resonant-freq-hz: use in case of LRA.
-+  the frequency range: 50 - 300.
-+  Default: 205.
-+
-+- dlg,bemf-sens-enable: Enable for internal loop computations.
-+- dlg,freq-track-enable: Enable for resonant frequency tracking.
-+- dlg,acc-enable: Enable for active acceleration.
-+- dlg,rapid-stop-enable: Enable for rapid stop.
-+- dlg,amp-pid-enable: Enable for the amplitude PID.
-+- dlg,mem-array: Customized waveform memory(patterns) data downloaded to
-+  the device during initialization. This is an array of 100 values(u8).
-+
-+For further information, see device datasheet.
-+
-+======
-+
-+Example:
-+
-+	haptics: da7280-haptics@4a {
-+		compatible = "dlg,da7280";
-+		reg = <0x4a>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		dlg,actuator-type = "LRA";
-+		dlg,dlg,const-op-mode = <1>;
-+		dlg,dlg,periodic-op-mode = <1>;
-+		dlg,nom-microvolt = <2000000>;
-+		dlg,abs-max-microvolt = <2000000>;
-+		dlg,imax-microamp = <170000>;
-+		dlg,resonant-freq-hz = <180>;
-+		dlg,impd-micro-ohms = <10500000>;
-+		dlg,freq-track-enable;
-+		dlg,rapid-stop-enable;
-+		dlg,mem-array = <
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+		>;
-+
-+	};
 -- 
-end-of-patch for PATCH V11
-
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
