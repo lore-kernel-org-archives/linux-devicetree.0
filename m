@@ -2,115 +2,97 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645BEC3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 15:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD00C2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 356FB20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 15:52:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DJjbqK+M"
+	by mail.kernel.org (Postfix) with ESMTP id 0A21F20735
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584461429;
+	bh=TE0OALslBnAglDc0PbW0+eztUT4bhEdyvuy67q7ODsA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sB55dLJSdL+XBHyWyI8PU2XuWQO4+rrw/9F/Ku6POTpsTkeuEtzUJoRLGqwUl7/nT
+	 VLa4XVcJY+6WzasH9Vw2q5ZsgpCETfrT4AT0VLWl+IRLfv0ZpLQTJh7cA7HNkLs2Ep
+	 OR5pZZkA3av0Gl0m5XvlC/GFQsV7DEJ1XinyUl+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgCQPwp (ORCPT
+        id S1726759AbgCQQK2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:52:45 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:53036 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726498AbgCQPwm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:52:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584460362; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=F3ioMX8bj8P3wFuntkEmg3te9kA2v3f1KYJgn3TX8No=;
- b=DJjbqK+MfSvWe/G94I3T9dFIYvYYtCrYtG8QLVi3CjOnmm7WAE3L0WVeTV/zahRkZzNUX1Vh
- Oum1uZ0sQrno4vgLH9vPJDFZFDaqnnNLd4X0jvGp41MdXtdRBjp1RV9I/iBxU1rpgN5N/0IE
- vfR2/Bkiyxt0U4B4aRKk0B2gqyI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e70f236.7f14e17cc0d8-smtp-out-n03;
- Tue, 17 Mar 2020 15:52:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 69A8FC433BA; Tue, 17 Mar 2020 15:52:22 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Tue, 17 Mar 2020 12:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbgCQQK2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 12:10:28 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CBA72C433D2;
-        Tue, 17 Mar 2020 15:52:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 880D420724;
+        Tue, 17 Mar 2020 16:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584461427;
+        bh=TE0OALslBnAglDc0PbW0+eztUT4bhEdyvuy67q7ODsA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=t8O7crINsA3AtuGuMMK+pePvF5aF7Fb0BIZ1zxo4crz2S9zepUdiZ303EtOl0nAfm
+         4DZKRihRj8Xp/JbUwFFLy7LidMQ5YRnCmhfg6NdhMC2SAILL8Db8Y/bncOQIHfzaV6
+         XNTFBaPv+ie6KQcXKLng6/sY+pKK3hCkVDBZ4/10=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-clk@vger.kernel.org
+Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Subject: [PATCHv3 0/5] clk: agilex: add clock driver
+Date:   Tue, 17 Mar 2020 11:10:17 -0500
+Message-Id: <20200317161022.11181-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 17 Mar 2020 21:22:21 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, joro@8bytes.org,
-        robin.murphy@arm.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-remoteproc@vger.kernel.org, ohad@wizery.com,
-        agross@kernel.org, dianders@chromium.org,
-        saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH v2 0/3] Request direct mapping for modem device
-In-Reply-To: <20200317150910.26053-1-sibis@codeaurora.org>
-References: <20200317150910.26053-1-sibis@codeaurora.org>
-Message-ID: <fe9bb128563bea9798573ac9eec1d214@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-03-17 20:39, Sibi Sankar wrote:
-> The Q6 modem sub-system has direct access to DDR through memnoc and
-> an indirect access routed through a SMMU which MSS CE (crypto engine
-> sub-component of MSS) uses during out of reset sequence. Request direct
-> mapping for the modem device since smmu is not expected to provide 
-> access
-> control/translation for these SIDs (sandboxing of the modem is achieved
-> through XPUs engaged using SMC calls). This is done on platforms which
-> don't have TrustZone (which programs the modem SIDs) to prevent the
-> following global faults seen on Cheza/Trogdor:
-> 
-> Cheza:
-> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
-> arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
-> 			 GFSYNR1 0x00000781, GFSYNR2 0x00000000
-> 
-> Trogdor:
-> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
-> arm-smmu 15000000.iommu: GFSR 0x80000002, GFSYNR0 0x00000000,
-> 			 GFSYNR1 0x00000461, GFSYNR2 0x00000000
-> 
-> V2:
->  * Request direct mapping from SoC-specific corner of the SMMU
->    driver [Robin]
->  * Add iommu property to remoteproc modem node on Cheza
-> 
-> Depends on:
-> https://lore.kernel.org/patchwork/cover/1183528/
-> 
-> Sibi Sankar (3):
->   dt-bindings: remoteproc: qcom: Add iommus property
->   remoteproc: qcom_q6v5_mss: Request direct mapping for modem device
+Hi,
 
-iommu: arm-smmu-qcom: Request direct mapping for modem device
+This is version 3 of the patchset to add a clock driver to the Agilex
+platform.
 
-sry should have been ^^ instead
+This version adds 2 new patches that was a result from comments received
+in v2.
+
+Patch 2/5: clk: socfpga: remove clk_ops enable/disable methods
+Patch 3/5: clk: socfpga: add const to _ops data structures
+
+Thanks,
+Dinh
 
 
->   arm64: dts: qcom: sdm845-cheza: Add iommus property
-> 
->  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 3 +++
->  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi                 | 4 ++++
->  drivers/iommu/arm-smmu-qcom.c                              | 6 ++++++
->  3 files changed, 13 insertions(+)
+Dinh Nguyen (5):
+  clk: socfpga: stratix10: use new parent data scheme
+  clk: socfpga: remove clk_ops enable/disable methods
+  clk: socfpga: add const to _ops data structures
+  dt-bindings: documentation: add clock bindings information for Agilex
+  clk: socfpga: agilex: add clock driver for the Agilex platform
+
+ .../bindings/clock/intel,agilex.yaml          |  36 ++
+ drivers/clk/Makefile                          |   3 +-
+ drivers/clk/socfpga/Makefile                  |   2 +
+ drivers/clk/socfpga/clk-agilex.c              | 454 ++++++++++++++++++
+ drivers/clk/socfpga/clk-gate-s10.c            |   5 +-
+ drivers/clk/socfpga/clk-periph-s10.c          |  10 +-
+ drivers/clk/socfpga/clk-pll-a10.c             |   4 +-
+ drivers/clk/socfpga/clk-pll-s10.c             |  78 ++-
+ drivers/clk/socfpga/clk-pll.c                 |   4 +-
+ drivers/clk/socfpga/clk-s10.c                 | 160 ++++--
+ drivers/clk/socfpga/stratix10-clk.h           |  10 +-
+ include/dt-bindings/clock/agilex-clock.h      |  70 +++
+ 12 files changed, 784 insertions(+), 52 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+ create mode 100644 drivers/clk/socfpga/clk-agilex.c
+ create mode 100644 include/dt-bindings/clock/agilex-clock.h
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.25.1
+
