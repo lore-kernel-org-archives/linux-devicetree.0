@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C1BC4CECE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FAEDC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B932C20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 617C22074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgCQJkd (ORCPT
+        id S1726858AbgCQJkZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:40:33 -0400
-Received: from v6.sk ([167.172.42.174]:50412 "EHLO v6.sk"
+        Tue, 17 Mar 2020 05:40:25 -0400
+Received: from v6.sk ([167.172.42.174]:50344 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbgCQJkc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:40:32 -0400
+        id S1726852AbgCQJkX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:40:23 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id F2DE56108E;
-        Tue, 17 Mar 2020 09:40:28 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 332816108C;
+        Tue, 17 Mar 2020 09:40:21 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -48,9 +48,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 14/28] dt-bindings: arm: l2x0: Tauros 3 is PL310 compatible
-Date:   Tue, 17 Mar 2020 10:39:08 +0100
-Message-Id: <20200317093922.20785-15-lkundrak@v3.sk>
+Subject: [PATCH 12/28] spi: dt-bindings: spi-controller: Slaves have no address cells
+Date:   Tue, 17 Mar 2020 10:39:06 +0100
+Message-Id: <20200317093922.20785-13-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
 References: <20200317093922.20785-1-lkundrak@v3.sk>
@@ -61,77 +61,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The validation is unhappy about mmp3-dell-ariel declaring its
-marvell,tauros3-cache node to be compatible with arm,pl310-cache:
+SPI controllers in slave mode have a single child node that has no
+address. Enforce #address-cells of zero instead of one.
 
-  mmp3-dell-ariel.dt.yaml: cache-controller@d0020000: compatible:
-       Additional items are not allowed ('arm,pl310-cache' was unexpected)
-  mmp3-dell-ariel.dt.yaml: cache-controller@d0020000: compatible:
-       ['marvell,tauros3-cache', 'arm,pl310-cache'] is too long
-
-Let's allow this -- Tauros 3 is designed to be compatible with PL310.
-
+Fixes: 0a1b929356830 ("spi: Add YAML schemas for the generic SPI options")
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- .../devicetree/bindings/arm/l2c2x0.yaml       | 45 ++++++++++---------
- 1 file changed, 24 insertions(+), 21 deletions(-)
+ .../bindings/spi/spi-controller.yaml          | 23 ++++++++++++++-----
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.yaml b/Documentation/devicetree/bindings/arm/l2c2x0.yaml
-index 913a8cd8b2c00..7e39088a9bed2 100644
---- a/Documentation/devicetree/bindings/arm/l2c2x0.yaml
-+++ b/Documentation/devicetree/bindings/arm/l2c2x0.yaml
-@@ -29,27 +29,30 @@ allOf:
+diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+index d8e5509a70816..30d774cf6cc95 100644
+--- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
++++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
+@@ -15,16 +15,27 @@ description: |
+   controller may be described for use in SPI master mode or in SPI slave mode,
+   but not for both at the same time.
  
++allOf:
++  - if:
++      required:
++        - spi-slave
++    then:
++      properties:
++        "#address-cells":
++          const: 0
++        "#size-cells":
++          const: 0
++    else:
++      properties:
++        "#address-cells":
++          const: 1
++        "#size-cells":
++          const: 0
++
  properties:
-   compatible:
--    enum:
--      - arm,pl310-cache
--      - arm,l220-cache
--      - arm,l210-cache
--        # DEPRECATED by "brcm,bcm11351-a2-pl310-cache"
--      - bcm,bcm11351-a2-pl310-cache
--        # For Broadcom bcm11351 chipset where an
--        # offset needs to be added to the address before passing down to the L2
--        # cache controller
--      - brcm,bcm11351-a2-pl310-cache
--        # Marvell Controller designed to be
--        # compatible with the ARM one, with system cache mode (meaning
--        # maintenance operations on L1 are broadcasted to the L2 and L2
--        # performs the same operation).
--      - marvell,aurora-system-cache
--        # Marvell Controller designed to be
--        # compatible with the ARM one with outer cache mode.
--      - marvell,aurora-outer-cache
--        # Marvell Tauros3 cache controller, compatible
--        # with arm,pl310-cache controller.
--      - marvell,tauros3-cache
-+    oneOf:
-+      - enum:
-+        - arm,pl310-cache
-+        - arm,l220-cache
-+        - arm,l210-cache
-+          # DEPRECATED by "brcm,bcm11351-a2-pl310-cache"
-+        - bcm,bcm11351-a2-pl310-cache
-+          # For Broadcom bcm11351 chipset where an
-+          # offset needs to be added to the address before passing down to the L2
-+          # cache controller
-+        - brcm,bcm11351-a2-pl310-cache
-+          # Marvell Controller designed to be
-+          # compatible with the ARM one, with system cache mode (meaning
-+          # maintenance operations on L1 are broadcasted to the L2 and L2
-+          # performs the same operation).
-+        - marvell,aurora-system-cache
-+          # Marvell Controller designed to be
-+          # compatible with the ARM one with outer cache mode.
-+        - marvell,aurora-outer-cache
-+      - items:
-+         # Marvell Tauros3 cache controller, compatible
-+         # with arm,pl310-cache controller.
-+        - const: marvell,tauros3-cache
-+        - const: arm,pl310-cache
+   $nodename:
+     pattern: "^spi(@.*|-[0-9a-f])*$"
  
-   cache-level:
-     const: 2
+-  "#address-cells":
+-    const: 1
+-
+-  "#size-cells":
+-    const: 0
+-
+   cs-gpios:
+     description: |
+       GPIOs used as chip selects.
 -- 
 2.25.1
 
