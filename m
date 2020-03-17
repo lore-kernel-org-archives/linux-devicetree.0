@@ -2,295 +2,344 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80BEC5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 21:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56947C1975A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 22:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7934420738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 21:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TRwFRRir"
+	by mail.kernel.org (Postfix) with ESMTP id 11C3B20714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 22:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgCQViy (ORCPT
+        id S1726530AbgCQWNd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:38:54 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:38057 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgCQViy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 17:38:54 -0400
-Received: by mail-vs1-f65.google.com with SMTP id x206so6331457vsx.5
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 14:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ghtXsgbAT9V/qdmiRulN9WCXjI8Zsw5TK38MgGpUsw=;
-        b=TRwFRRir2Iui8UGhvcz5sbtidCFKZFAkwpKjLd4j+1W/h/SigwMmzAnpNAX9NF1bdi
-         P7qXkLqTochL01++CMdaH05+5onnBAEn4oSK5HVNQxFxJ9cSRm4YdTTDxnvPqe5p8fyO
-         H4o9NHuLWlkTrh6sLMCtYrPuUHCtmIlcOInxA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ghtXsgbAT9V/qdmiRulN9WCXjI8Zsw5TK38MgGpUsw=;
-        b=aYBB7K/LtSsRsbDiwYQNWkkClNVAbSOLHVVqDmKkbMelxlrEEWXFLOR2HuZaxK7f55
-         YDsvpo8rNQaMMBOVyz9V/XI3Bvnt37qteAYZC8kPL844semMbKBqAtojKtqa3lRfLeZb
-         jAf26G+SC5+v0ei4rU/XNu+GeZCYRwC71BvvYglAxe0k9WQs9appgIBkRuM/zDsbCNOw
-         0W0DEhE2NqDbV9OYfpOUeJMI5P08toMu8FxkaB7ppn2Ms2lx2/8LEIDXJulT6Joh9Hhx
-         2KysetQCCFPLdFhCbVVY6HSj5tsh+SOF7VlUQzfgwaL73Bbb+QLXQnEGW69pYksU++z8
-         X/LQ==
-X-Gm-Message-State: ANhLgQ0I/xXiRN5iWeSkNCdkfbyeaaxStOvitONbeFW5Rdvk7Pc8o8ae
-        4Q4b6Yx+GPdM7dkSpeozSa7J3iI9O7g=
-X-Google-Smtp-Source: ADFU+vtWVhyEhZ5NYygDSsEE5qwYIaBstYLarS+i3iqsWdJdfM+8gt6zEPJ/sb75JXORut0qaFqXIg==
-X-Received: by 2002:a67:5ec6:: with SMTP id s189mr1015096vsb.56.1584481132456;
-        Tue, 17 Mar 2020 14:38:52 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id w8sm1898345vkw.46.2020.03.17.14.38.50
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 14:38:51 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id b2so8631836uas.13
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 14:38:50 -0700 (PDT)
-X-Received: by 2002:ab0:2881:: with SMTP id s1mr880973uap.8.1584481130400;
- Tue, 17 Mar 2020 14:38:50 -0700 (PDT)
+        Tue, 17 Mar 2020 18:13:33 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:46072 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbgCQWNd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 18:13:33 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4595680307C7;
+        Tue, 17 Mar 2020 22:13:25 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id cCtnIQxpLRGM; Wed, 18 Mar 2020 01:13:23 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stephen Boyd <sboyd@kernel.org>, <devicetree@vger.kernel.org>
+Subject: [RFC] Baikal-T1 SoC System Controller DT nodes
+Date:   Wed, 18 Mar 2020 01:12:46 +0300
+Message-ID: <20200317221246.27303-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <1584356720-24411-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1584356720-24411-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 17 Mar 2020 14:38:39 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com>
-Message-ID: <CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        travitej@codeaurora.org, Stephen Boyd <swboyd@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hello folks,
 
-On Mon, Mar 16, 2020 at 4:06 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->
-> "The PM core always increments the runtime usage counter
-> before calling the ->suspend() callback and decrements it
-> after calling the ->resume() callback"
->
-> DPU and DSI are managed as runtime devices. When
-> suspend is triggered, PM core adds a refcount on all the
-> devices and calls device suspend, since usage count is
-> already incremented, runtime suspend was not getting called
-> and it kept the clocks on which resulted in target not
-> entering into XO shutdown.
->
-> Add changes to manage runtime devices during pm sleep.
->
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 41 +++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/msm/dsi/dsi.c           |  7 ++++++
->  drivers/gpu/drm/msm/msm_drv.c           | 14 +++++++++++
->  drivers/gpu/drm/msm/msm_kms.h           |  2 ++
->  4 files changed, 64 insertions(+)
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> index cb08faf..6e103d5 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> @@ -26,6 +26,7 @@
->  #include "dpu_encoder.h"
->  #include "dpu_plane.h"
->  #include "dpu_crtc.h"
-> +#include "dsi.h"
->
->  #define CREATE_TRACE_POINTS
->  #include "dpu_trace.h"
-> @@ -250,6 +251,37 @@ static void dpu_kms_disable_commit(struct msm_kms *kms)
->         pm_runtime_put_sync(&dpu_kms->pdev->dev);
->  }
->
-> +static void _dpu_kms_disable_dpu(struct msm_kms *kms)
-> +{
-> +       struct drm_device *dev;
-> +       struct msm_drm_private *priv;
-> +       struct dpu_kms *dpu_kms;
-> +       int i = 0;
-> +       struct msm_dsi *dsi;
-> +
-> +       dpu_kms = to_dpu_kms(kms);
-> +       dev = dpu_kms->dev;
-> +       if (!dev) {
-> +               DPU_ERROR("invalid device\n");
-> +               return;
-> +       }
-> +
-> +       priv = dev->dev_private;
-> +       if (!priv) {
-> +               DPU_ERROR("invalid private data\n");
-> +               return;
-> +       }
-> +
-> +       dpu_kms_disable_commit(kms);
-> +
-> +       for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
-> +               if (!priv->dsi[i])
-> +                       continue;
-> +               dsi = priv->dsi[i];
-> +               pm_runtime_put_sync(&dsi->pdev->dev);
-> +       }
-> +}
-> +
->  static ktime_t dpu_kms_vsync_time(struct msm_kms *kms, struct drm_crtc *crtc)
->  {
->         struct drm_encoder *encoder;
-> @@ -683,6 +715,7 @@ static void dpu_irq_uninstall(struct msm_kms *kms)
->  #ifdef CONFIG_DEBUG_FS
->         .debugfs_init    = dpu_kms_debugfs_init,
->  #endif
-> +       .disable_dpu = _dpu_kms_disable_dpu,
->  };
->
->  static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms)
-> @@ -1053,7 +1086,15 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
->         return rc;
->  }
->
-> +
-> +static int __maybe_unused dpu_pm_suspend_late(struct device *dev)
-> +{
-> +       pm_runtime_get_noresume(dev);
-> +       return 0;
-> +}
-> +
->  static const struct dev_pm_ops dpu_pm_ops = {
-> +       SET_LATE_SYSTEM_SLEEP_PM_OPS(dpu_pm_suspend_late, NULL)
->         SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
->  };
->
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-> index 55ea4bc2..3d3740e 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi.c
-> @@ -154,12 +154,19 @@ static int dsi_dev_remove(struct platform_device *pdev)
->         return 0;
->  }
->
-> +static int __maybe_unused dsi_pm_suspend_late(struct device *dev)
-> +{
-> +       pm_runtime_get_noresume(dev);
-> +       return 0;
-> +}
-> +
->  static const struct of_device_id dt_match[] = {
->         { .compatible = "qcom,mdss-dsi-ctrl" },
->         {}
->  };
->
->  static const struct dev_pm_ops dsi_pm_ops = {
-> +       SET_LATE_SYSTEM_SLEEP_PM_OPS(dsi_pm_suspend_late, NULL)
->         SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
->  };
->
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index e4b750b..12ec1c6 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -1038,6 +1038,7 @@ static int msm_pm_suspend(struct device *dev)
->  {
->         struct drm_device *ddev = dev_get_drvdata(dev);
->         struct msm_drm_private *priv = ddev->dev_private;
-> +       struct msm_kms *kms = priv->kms;
->
->         if (WARN_ON(priv->pm_state))
->                 drm_atomic_state_put(priv->pm_state);
-> @@ -1049,6 +1050,11 @@ static int msm_pm_suspend(struct device *dev)
->                 return ret;
->         }
->
-> +       if (kms->funcs->disable_dpu)
-> +               kms->funcs->disable_dpu(kms);
-> +
-> +       pm_runtime_put_sync(dev);
-> +
->         return 0;
->  }
->
-> @@ -1067,6 +1073,13 @@ static int msm_pm_resume(struct device *dev)
->
->         return ret;
->  }
-> +
-> +static int msm_pm_suspend_late(struct device *dev)
-> +{
-> +       pm_runtime_get_noresume(dev);
-> +       return 0;
-> +}
-> +
->  #endif
->
->  #ifdef CONFIG_PM
-> @@ -1100,6 +1113,7 @@ static int msm_runtime_resume(struct device *dev)
->  #endif
->
->  static const struct dev_pm_ops msm_pm_ops = {
-> +       SET_LATE_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend_late, NULL)
->         SET_SYSTEM_SLEEP_PM_OPS(msm_pm_suspend, msm_pm_resume)
->         SET_RUNTIME_PM_OPS(msm_runtime_suspend, msm_runtime_resume, NULL)
->  };
-> diff --git a/drivers/gpu/drm/msm/msm_kms.h b/drivers/gpu/drm/msm/msm_kms.h
-> index 1cbef6b..c73a89b 100644
-> --- a/drivers/gpu/drm/msm/msm_kms.h
-> +++ b/drivers/gpu/drm/msm/msm_kms.h
-> @@ -126,6 +126,8 @@ struct msm_kms_funcs {
->         /* debugfs: */
->         int (*debugfs_init)(struct msm_kms *kms, struct drm_minor *minor);
->  #endif
-> +       void (*disable_dpu)(struct msm_kms *kms);
-> +
+I've been addressed with a several questions from Rob, Arnd, Andy and Stephen
+in replies to he i2c, clock, ehb (errors handler block) and syscon patchsets sent
+by me in the framework of the Baikal-T1 SoC support integration into the kernel
+[1 - 4]. Seeing the questions have similar nature it would be better to settle the
+issues all at once, provide fixes for all of them and proceed with the
+rest of review.
 
-I'm by no means an expert on any of this, but it seems awfully
-asymmetric to me and that feels like you're going to end up with bugs.
+In general the questions are related with syscon, clocks, i2c0 and ehb DT nodes
+residence. Some of them concern the memory mapped registers alignment
+(clock/i2c0), some of them are of whether the corresponding device drivers
+belong to the soc-subsystem (ehb) or whether some device nodes should be
+sub-nodes of the syscon or of anything else like root node. Anyway as I see it
+the answers to all the questions are hidden in a way the Baikal-T1 System
+Controller is structured. That's why I'll start from describing it first.
+Then I'll provide the System Controller DT nodes structure currently implemented
+for Baikal-T1 SoC and explain why we chose to develop it in favor of any other.
+Finally I'll offer you an alternative structure, which we also had in mind,
+but didn't implement it for reasons also given in the text below.
 
-* Is it possible that disable_dpu() will be called more than once
-during normal operation, like if the screen goes off?  Will your
-counts be off then?
+In accordance with Baikal-T1 SoC documentations there is a System Control
+Module (we also call it System Controller), which contains two big subsystems:
+Clocks Control Unit (CCU) and Boot Controller. But the System Controller
+functionality isn't limited with just clocks control and boot procedure
+execution. There are settings, which aren't directly connected with those
+sub-blocks, but is still exposed through the System Controller registers space
+just because, well, because either the system designers wanted them to be
+exposed from there or they didn't find any better way to map them. We don't
+know for sure. We just know the mapping as it is and can't do anything to
+change it. So here is the System Controller structure implemented in the
+Baikal-T1 SoC:
 
-* What happens if suspend is aborted partway through (by getting a
-wakeup even as you're suspending, for instance)?  In such a case some
-of the normal suspend calls will be called but "suspend_late" won't be
-called.  Does that mess up your counting?
+System Control Module
+|
++--> Clock Control Unit + System-specific settings: 0x1F04D000 @ 4KB
+|    |
+|    +-> PLLs                   0x1F04D000 - 0x1F04D027
+|    |
+|    +-> System Devices Clocks: 0x1F04D028 - 0x1F04D02F (clock dividers)
+|    |   (DDR clock gate + L2 WS/Data/Tag stall cycles configs)
+|    +-> AXI-bus Clocks:        0x1F04D030 - 0x1F04D05F (clock dividers)
+|    |
+|    +-> System Devices Clocks: 0x1F04D060 - 0x1F04D09F (clock dividers)
+|    |
+|    +-> I2C0 Indirect Access:  0x1F04D100 - 0x1F04D10F (+ IRQ)
+|    |   (Just three Command/Read/Write registers to access the DW APB I2C controller registers space)
+|    +-> AXI-bus EHB Error Addr:0x1F04D110 - 0x1F04D117 (+ IRQ)
+|    |
+|    +-> CPU Debug register:    0x1F04D118 - 0x1F04D11B
+|    |   (provide the CPU reset flag for 'syscon-reboot' driver)
+|    +-> PCIe control block:    0x1F04D140 - 0x1F04D14F
+|    |   (PCIe internal Clocks, Reset, PMU, LTSSM and custom settings)
+|    +-> System Devices Clocks: 0x1F04D150 - 0x1F04D153 (clock divider)
+|    |   (Just watchdog clock divider)
+|    +-> Reset safe register:   0x1F04D154 - 0x1F04D157
+|        (register preserved during a soft/watchdog resets for
+|         'syscon-reboot-mode' driver)
+|
++--> Boot Controller: 0x1F040000 @ 4KB, 0x1BFC0000 @ 4KB, 0x1C000000 @ 16MB,
+|    |                0x1FC00000 @ 4MB
+|    |
+|    +-> Boot Controller settings:               0x1F040000 - 0x1F0400FF
+|    |
+|    +-> Synopsis DesignWare APB SSI controller: 0x1F040100 - 0x1F040FFF
+|    |   (with very limited resources though: nor IRQ, no DMA, just 8 bytes FIFO)
+|    +-> Physically mapped Internal ROM:         0x1BFC0000 - 0x1BFCFFFF
+|    |
+|    +-> Physically mapped SPI-flash ROM:        0x1C000000 - 0x1CFFFFFF
+|    |   (This region access is multiplexed with DW APB SSI controller registers)
+|    +-> Physically mapped Boot ROM:             0x1FC00000 - 0x1FFFFFFF
+|        (mirror of either Internal or SPI-flash ROMs depending on the boot
+|         mode)
+
+There is also an APB EHB (APB bus Errors Handler Block), but according to the
+Baikal-T1 documentation, it isn't part of the System Control Module (though as
+for me it was a tech-writers mistake to represent it as a separate block).
+
++--> APB bus errors handler: 0x1F059000 @ 4KB, 0x1D000000 @ 32.25MB
+     |
+     +-> APB bus EHB registers: 0x1F059000 - 0x1F059FFF (+ IRQ)
+     |   (Error address, type and timeout settings)
+     +-> Unmapped space for errors injection: 0x1D000000 - 0x1F03FFFF
 
 
-From your description, it sure seems like this part of the
-runtime_pm.rst doc is relevant to you:
+It's a mystery to me why the SoC designers couldn't create a different registers
+space for CCU (PLLs and Clock dividers) and for the custom system settings. But
+we have to deal with what we currently have, since it can't be changed. So
+as you can see the Boot Controller and Clock Control Unit (CCU) registers space
+are separated from each other, and CCU registers (PLLs, AXI-bus and System
+Devices Clock dividers) can be unpinned from the custom system settings. In
+addition the Boot Controller and CCU sub-blocks registers don't have
+intersecting parts, which makes the syscon interface using regmaps with
+spin-lock synch-primitive redundant for simultaneous accesses of the registers
+of different groups. So I've decided to just redistribute the registers
+resources between the corresponding DT nodes not necessarily being sub-nodes of
+the System Controller node (I suppose most of your questions were raised due to
+this decision). This made the nodes being unrelated to each other, but the nodes
+MMIO resources turned to be size-unaligned. Here is a DT nodes structure we've
+currently implemented in the framework of Baikal-T1 SoC support in the kernel.
 
-> Namely, if a system suspend .prepare() callback returns a positive
-> number for a device, that indicates to the PM core that the device
-> appears to be runtime-suspended and its state is fine, so it may
-> be left in runtime suspend provided that all of its descendants
-> are also left in runtime suspend.
+/* System Controller DT Nodes I */
+root {
+    reboot {
+        compatible = "syscon-reboot";
+        regmap = <&cpu_ctl>;
+    };
 
-Did I misunderstand and this isn't what you want?  Looking a bit
-further, maybe the right thing is to use the "SMART_SUSPEND" flag?
+    reboot-mode {
+        compatible = "syscon-reboot-mode";
+        regmap = <&wdt_rcr>;
+    };
 
-I'll also note that sometimes when people just want to be Runtime PM
-managed that I see this pattern:
+    apb {
+        compatible = "simple-bus";
 
-SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+        ccu_pll {
+            compatible = "be,bt1-ccu-pll"; /* PLLs */
+        };
+        ccu_axi {
+            compatible = "be,bt1-ccu-axi"; /* AXI-bus Clock */
+            clocks = <&ccu_pll X>, <&ccu_pll Y>, ...;
+        };
+        ccu_sys {
+            compatible = "be,bt1-ccu-sys"; /* System Devices Clock */
+            clocks = <&ccu_pll X>, <&ccu_pll Y>, ...;
+        };
 
+        syscon {
+            compatible = "simple-mfd";
 
--Doug
+            l2_ctl {
+                compatible = "be,bt1-l2-ctl", "syscon";
+            };
+
+            ddr_ctl {
+                compatible = "be,bt1-ddr-ctl", "syscon";
+            };
+
+            axi_ehb {
+                compatible = "be,bt1-axi-ehb";
+            };
+
+            cpu_ctl {
+                compatible = "be,bt1-cpu-ctl", "syscon";
+            };
+
+            pcie_ctl {
+                compatible = "be,bt1-pcie-ctl", "syscon";
+            };
+
+            wdt_rcr {
+                compatible = "be,bt1-wdt-rcr", "syscon";
+            };
+        };
+
+        i2c0 {
+            compatible = "be,bt1-i2c"; /* DW APB i2c with indirect registers access */
+        };
+
+        boot {
+            compatible = "be,bt1-boot-ctl";
+
+            int_rom {
+                compatible = "be,bt1-int-rom", "mtd-rom";
+            };
+
+            spi_rom {
+                compatible = "be,bt1-ssi-rom", "mtd-rom";
+            };
+
+            spi0 {
+                compatible = "be,bt1-boot-ssi";
+            };
+
+            boot_rom {
+                compatible = "be,bt1-boot-rom", "mtd-rom";
+            };
+        };
+
+        apb_ehb {
+            compatible = "be,bt1-apb-ehb";
+        };
+    };
+};
+
+The corresponding dts-file hasn't been submitted so far. So if you don't like
+the structure we've chosen to define the System Controller parts, please justify
+why it isn't right and if it's possible point me out at some place of the kernel
+documentation so to refer to in future developments. We don't refuse to change it,
+I'd just like to know what's wrong with it and how to bypass the same problem in
+future.
+
+On the other hand as an alternative, which you'd possibly like much more, if we
+got used to the fact that syscon-interface converts the registers resource to
+the spin-lock secured regmap object and in order to retain the system controller
+structure, the next System Controller DT nodes tree could be implemented:
+
+/* System Controller DT Nodes II */
+root {
+    axi {
+        compatible = "be,bt1-axi", "simple-bus";
+        syscon = <&syscon>;
+        interrupts = <...>;
+    };
+
+    apb {
+        compatible = "be,bt1-apb", "simple-bus";
+        reg = <X>, <Y>;
+        interrupts = <...>;
+
+        syscon {
+            compatible = "be,bt1-sys-con", "syscon", "simple-mfd";
+
+            ccu_pll {
+                compatible = "be,bt1-ccu-pll";
+            };
+
+            ccu_axi {
+                compatible = "be,bt1-ccu-axi";
+            };
+
+            ccu_sys {
+                compatible = "be,bt1-ccu-sys";
+            };
+
+            l2_ctl {
+                compatible = "be,bt1-l2-ctl";
+            };
+
+            i2c0 {
+                compatible = "be,bt1-sys-i2c";
+            };
+
+            reboot {
+                compatible = "syscon-reboot";
+            };
+
+            reboot-mode {
+                compatible = "syscon-reboot-mode";
+            };
+
+            boot {
+                compatible = "be,bt1-boot-ctl";
+
+                int_rom {
+                    compatible = "be,bt1-int-rom", "mtd-rom";
+                };
+
+                spi_rom {
+                    compatible = "be,bt1-ssi-rom", "mtd-rom";
+                };
+
+                spi0 {
+                    compatible = "be,bt1-boot-ssi";
+                };
+
+                boot_rom {
+                    compatible = "be,bt1-boot-rom", "mtd-rom";
+                };
+            };
+        };
+    };
+};
+
+I suppose you'd like it better than "DT Nodes I", since in accordance with
+Arnd Bergmann suggestion [1] the APB/AXI EHB would be moved to the drivers/bus
+subsystem. In the framework of the "be,bt1-sys-con" MFD driver I would have
+to implement an extra regmap to provide the indirectly accessible i2c0
+registers, which would satisfy the Andy Shevchenko comment [2] regarding our
+DW APB i2c patchset. I wouldn't need to have the "syscon-reboot-mode"
+patchset in order to be able to declare the reboot-mode node in any place of
+the DTS tree, which Rob Herring already nacked [3], but didn't explain why.
+Finally I wouldn't have the unaligned registers space defined for Clock Control
+Unit nodes, but would use the syscon-regmap to access them from the system
+clock drivers. This would fix the issue raised by Stephen Boyd [4] in the
+framework of the Baikal-T1 CCU drivers patchset.
+
+So if you like the "DT Nodes II" structure better than the version I or have
+any idea of how to improve it could you tell us in reply to this email while
+it's still possible to change the System Controller nodes structure at this
+point since we are at v1-v2 stages in each patchset and non of the drivers
+have been fully accepted so far.
+
+[1] soc: Add Baikal-T1 SoC APB/AXI EHB and L2-cache drivers
+    https://lkml.org/lkml/2020/3/6/669
+[2] i2c: designware: Add Baikal-T1 SoC DW I2C specifics support 
+    https://lkml.org/lkml/2020/3/6/542
+[3] dt-bindings: power: reset: Add regmap support to the SYSCON reboot-mode bindings
+    https://lkml.org/lkml/2020/3/12/1010
+[4] dt-bindings: clk: Add Baikal-T1 System Devices CCU bindings
+    https://lkml.org/lkml/2020/3/9/1249
+
+Regards,
+-Sergey
