@@ -2,43 +2,41 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CDDC4CECE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1327DC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A07A20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E243B2076E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgCQJlm (ORCPT
+        id S1726669AbgCQJlm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 17 Mar 2020 05:41:42 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50553 "EHLO
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48689 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbgCQJlY (ORCPT
+        with ESMTP id S1727285AbgCQJlY (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 05:41:24 -0400
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mtr@pengutronix.de>)
-        id 1jE8ix-0004Q6-2M; Tue, 17 Mar 2020 10:41:23 +0100
+        id 1jE8ix-0004Q5-2M; Tue, 17 Mar 2020 10:41:23 +0100
 Received: from mtr by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mtr@pengutronix.de>)
-        id 1jE8iw-00049K-E4; Tue, 17 Mar 2020 10:41:22 +0100
+        id 1jE8iw-00049I-DO; Tue, 17 Mar 2020 10:41:22 +0100
 From:   Michael Tretter <m.tretter@pengutronix.de>
 To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 Cc:     Michal Simek <michal.simek@xilinx.com>,
         Rob Herring <robh+dt@kernel.org>,
         Dhaval Shah <dshah@xilinx.com>, kernel@pengutronix.de,
         Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH 1/6] soc: xilinx: vcu: drop useless success message
-Date:   Tue, 17 Mar 2020 10:41:10 +0100
-Message-Id: <20200317094115.15896-2-m.tretter@pengutronix.de>
+Subject: [PATCH 0/6] soc: xilinx: vcu: provide interfaces for other drivers
+Date:   Tue, 17 Mar 2020 10:41:09 +0100
+Message-Id: <20200317094115.15896-1-m.tretter@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200317094115.15896-1-m.tretter@pengutronix.de>
-References: <20200317094115.15896-1-m.tretter@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
@@ -50,27 +48,55 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The message that the driver was successfully probed only adds useless
-noise. Drop the message.
+Hello,
 
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
----
- drivers/soc/xilinx/xlnx_vcu.c | 2 --
- 1 file changed, 2 deletions(-)
+The Xilinx VCU is glue for integrating the Allegro DVT codec into the ZynqMP
+PL infrastructure. This glue is responsible for generating the clocks for the
+actual codec and provides registers for reading the codec configuration. Other
+drivers, e.g. the allegro-dvt driver, need to interact or at least read
+information from the xlnx_vcu driver.
 
-diff --git a/drivers/soc/xilinx/xlnx_vcu.c b/drivers/soc/xilinx/xlnx_vcu.c
-index a3aa40996f13..dcd8e7824b06 100644
---- a/drivers/soc/xilinx/xlnx_vcu.c
-+++ b/drivers/soc/xilinx/xlnx_vcu.c
-@@ -571,8 +571,6 @@ static int xvcu_probe(struct platform_device *pdev)
- 
- 	dev_set_drvdata(&pdev->dev, xvcu);
- 
--	dev_info(&pdev->dev, "%s: Probed successfully\n", __func__);
--
- 	return 0;
- 
- error_pll_ref:
+Therefore, the xlnx_vcu driver should provide its clocks for other drivers and
+register the generated clocks in the clock tree. This allows other drivers to
+simply get the clock rate via the usual interface.
+
+It is not so simple for the second register bank (called "logicoreip" in the
+original binding), because there are various registers for the encoder, the
+decoder and common stuff (see PG252, H.264/H.265 Video Codec Unit v1.2, p.
+14). Therefore, I decided to extract a separate binding for this register
+bank, call it "xlnx,vcu-settings" and use a syscon interface that can be used
+by the xlnx_vcu driver and other drivers that need this information.
+
+I'm not too happy with this solution, but I couldn't come up with a better
+solution without inventing a new interface, which I really don't want to do
+for that use case.
+
+I kept the behavior of the xlnx_vcu driver backwards compatible, to avoid
+breaking systems that use device trees with the xlnx,vcu device tree node as
+generated by Vivado, but to be able to use the register bank from other
+drivers, you must use the new binding.
+
+Michael
+
+Michael Tretter (6):
+  soc: xilinx: vcu: drop useless success message
+  ARM: dts: define indexes for output clocks
+  soc: xilinx: vcu: implement clock provider for output clocks
+  dt-bindings: soc: xlnx: extract xlnx,vcu-settings to separate binding
+  soc: xilinx: vcu: use vcu-settings syscon registers
+  soc: xilinx: vcu: add missing register NUM_CORE
+
+ .../soc/xilinx/xlnx,vcu-settings.yaml         |  45 +++++
+ .../bindings/soc/xilinx/xlnx,vcu.txt          |   9 +-
+ drivers/soc/xilinx/Kconfig                    |   3 +-
+ drivers/soc/xilinx/xlnx_vcu.c                 | 163 ++++++++++++------
+ include/dt-bindings/clock/xlnx-vcu.h          |  15 ++
+ include/linux/mfd/syscon/xlnx-vcu.h           |  39 +++++
+ 6 files changed, 216 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu-settings.yaml
+ create mode 100644 include/dt-bindings/clock/xlnx-vcu.h
+ create mode 100644 include/linux/mfd/syscon/xlnx-vcu.h
+
 -- 
 2.20.1
 
