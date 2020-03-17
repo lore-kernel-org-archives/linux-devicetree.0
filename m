@@ -2,125 +2,245 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDC3C10F29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 12:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879FCC10F29
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 12:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EEF820724
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 12:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539002076B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 12:11:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="L4E9cwqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgCQMFk (ORCPT
+        id S1726575AbgCQMLW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 08:05:40 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:49552 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbgCQMFk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 08:05:40 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 17C74FB03;
-        Tue, 17 Mar 2020 13:05:38 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LQVffm-bFDdy; Tue, 17 Mar 2020 13:05:36 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 0B565412BE; Tue, 17 Mar 2020 13:05:35 +0100 (CET)
-Date:   Tue, 17 Mar 2020 13:05:35 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] iio: vcnl4000: Export near level property for
- proximity sensor
-Message-ID: <20200317120535.GA16807@bogon.m.sigxcpu.org>
-References: <cover.1584380360.git.agx@sigxcpu.org>
- <5566fe01df933d3281f058666e2147cb97b38126.1584380360.git.agx@sigxcpu.org>
- <c787921f-c412-4986-14ea-e31b531d3d5b@metafoo.de>
+        Tue, 17 Mar 2020 08:11:22 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:42480 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726272AbgCQMLW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 08:11:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584447081; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Sru+Cd4uA9JwbTwKdB95gAy2jutmuwcrBflueUnElmo=; b=L4E9cwqRWwtFR3ZRl3f3fre/Amjle4llbyLy+gcl0tWnyja7qio6SiNG3bUCjeQq0o6j8PVX
+ ANhUOMECGCYd71ZSQxYwG6VOLjTe/NJflW+9FC9Z6Sm5QJ6ZOMendt34hJJdFcyNTX+VUxjG
+ TYy7/fPzymybuuFFT85WhJhsRsc=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e70be68.7f4613935f10-smtp-out-n03;
+ Tue, 17 Mar 2020 12:11:20 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2435EC4478C; Tue, 17 Mar 2020 12:11:20 +0000 (UTC)
+Received: from [192.168.0.8] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 57ACAC433CB;
+        Tue, 17 Mar 2020 12:11:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 57ACAC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V2 6/8] spi: spi-geni-qcom: Add interconnect support
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
+ <1584105134-13583-7-git-send-email-akashast@codeaurora.org>
+ <20200314004106.GM144492@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <384d0184-e7cc-0ee9-75b3-3f1c84e6e99d@codeaurora.org>
+Date:   Tue, 17 Mar 2020 17:41:10 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c787921f-c412-4986-14ea-e31b531d3d5b@metafoo.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200314004106.GM144492@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-On Mon, Mar 16, 2020 at 07:23:01PM +0100, Lars-Peter Clausen wrote:
-> On 3/16/20 6:46 PM, Guido Günther wrote:
-> > [...]
-> > +static ssize_t vcnl4000_read_near_level(struct iio_dev *indio_dev,
-> > +					uintptr_t priv,
-> > +					const struct iio_chan_spec *chan,
-> > +					char *buf)
-> > +{
-> > +	struct vcnl4000_data *data = iio_priv(indio_dev);
-> > +
-> > +	return sprintf(buf, "%u\n", data->near_level);
-> > +}
-> > +
-> > +static const struct iio_chan_spec_ext_info vcnl4000_ext_info[] = {
-> > +	{
-> > +		.name = "near_level",
-> 
-> Generally having properties with a underscore in them breaks generic parsing
-> of the property name by userspace applications. This is because we use
-> underscores to separate different components (type, modifier, etc.) of the
-> attribute from each other.
-> 
-> Do you think calling this "nearlevel" would work?
+Hi Matthias,
 
-That works as well. I'll change that for v3.
+On 3/14/2020 6:11 AM, Matthias Kaehlcke wrote:
+> Hi Akash,
+>
+> On Fri, Mar 13, 2020 at 06:42:12PM +0530, Akash Asthana wrote:
+>> Get the interconnect paths for SPI based Serial Engine device
+>> and vote according to the current bus speed of the driver.
+>>
+>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>> ---
+>>   - As per Bjorn's comment, removed se == NULL check from geni_spi_icc_get
+>>   - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
+>>   - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>>     path handle
+>>   - As per Matthias comment, added error handling for icc_set_bw call
+>>
+>>   drivers/spi/spi-geni-qcom.c | 74 ++++++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 73 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+>> index c397242..09c4709 100644
+>> --- a/drivers/spi/spi-geni-qcom.c
+>> +++ b/drivers/spi/spi-geni-qcom.c
+>> @@ -118,6 +118,19 @@ static int get_spi_clk_cfg(unsigned int speed_hz,
+>>   	return ret;
+>>   }
+>>   
+>> +static int geni_spi_icc_get(struct geni_se *se)
+>> +{
+>> +	se->icc_path_geni_to_core = devm_of_icc_get(se->dev, "qup-core");
+>> +	if (IS_ERR(se->icc_path_geni_to_core))
+>> +		return PTR_ERR(se->icc_path_geni_to_core);
+>> +
+>> +	se->icc_path_cpu_to_geni = devm_of_icc_get(se->dev, "qup-config");
+>> +	if (IS_ERR(se->icc_path_cpu_to_geni))
+>> +		return PTR_ERR(se->icc_path_cpu_to_geni);
+>> +
+>> +	return 0;
+>> +}
+> As per my comments on (https://patchwork.kernel.org/patch/11436895/#23222713),
+> the above function could be replaced by calling a 'geni_icc_get()' (or so, to
+> be created) provided by the geni SE driver.
+ok
+>
+>> +
+>>   static void handle_fifo_timeout(struct spi_master *spi,
+>>   				struct spi_message *msg)
+>>   {
+>> @@ -234,6 +247,20 @@ static int setup_fifo_params(struct spi_device *spi_slv,
+>>   		return ret;
+>>   	}
+>>   
+>> +	/*
+>> +	 * Set BW quota for CPU as driver supports FIFO mode only.
+>> +	 * Assume peak bw as twice of avg bw.
+>> +	 */
+>> +	se->avg_bw_cpu = Bps_to_icc(mas->cur_speed_hz);
+>> +	se->peak_bw_cpu = Bps_to_icc(2 * mas->cur_speed_hz);
+>> +	ret = icc_set_bw(se->icc_path_cpu_to_geni, se->avg_bw_cpu,
+>> +			se->peak_bw_cpu);
+>> +	if (ret) {
+>> +		dev_err(mas->dev, "%s: ICC BW voting failed for cpu\n",
+>> +			__func__);
+>> +		return ret;
+>> +	}
+>> +
+>>   	clk_sel = idx & CLK_SEL_MSK;
+>>   	m_clk_cfg = (div << CLK_DIV_SHFT) | SER_CLK_EN;
+>>   	spi_setup_word_len(mas, spi_slv->mode, spi_slv->bits_per_word);
+>> @@ -578,6 +605,15 @@ static int spi_geni_probe(struct platform_device *pdev)
+>>   	spin_lock_init(&mas->lock);
+>>   	pm_runtime_enable(dev);
+>>   
+>> +	ret = geni_spi_icc_get(&mas->se);
+>> +	if (ret)
+>> +		goto spi_geni_probe_runtime_disable;
+>> +	/* Set the bus quota to a reasonable value for register access */
+>> +	mas->se.avg_bw_core = Bps_to_icc(CORE_2X_50_MHZ);
+>> +	mas->se.peak_bw_core = Bps_to_icc(CORE_2X_100_MHZ);
+>> +	mas->se.avg_bw_cpu = Bps_to_icc(1000);
+>> +	mas->se.peak_bw_cpu = Bps_to_icc(1000);
+>> +
+>>   	ret = spi_geni_init(mas);
+>>   	if (ret)
+>>   		goto spi_geni_probe_runtime_disable;
+>> @@ -616,14 +652,50 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
+>>   {
+>>   	struct spi_master *spi = dev_get_drvdata(dev);
+>>   	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+>> +	int ret;
+>> +
+>> +	ret = geni_se_resources_off(&mas->se);
+>> +	if (ret)
+>> +		return ret;
+>>   
+>> -	return geni_se_resources_off(&mas->se);
+>> +	ret = icc_set_bw(mas->se.icc_path_geni_to_core, 0, 0);
+>> +	if (ret) {
+>> +		dev_err_ratelimited(mas->dev, "%s: ICC BW remove failed for core\n",
+>> +			__func__);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = icc_set_bw(mas->se.icc_path_cpu_to_geni, 0, 0);
+>> +	if (ret) {
+>> +		dev_err_ratelimited(mas->dev, "%s: ICC BW remove failed for cpu\n",
+>> +			__func__);
+>> +		return ret;
+>> +	}
+> the ICC stuff above would become:
+>
+> 	ret = geni_icc_vote_off(&mas->se);
+> 	if (ret)
+> 		return ret;
+>
+> with the consolidated code in geni SE.
+ok
+>
+>> +
+>> +	return 0;
+>>   }
+>>   
+>>   static int __maybe_unused spi_geni_runtime_resume(struct device *dev)
+>>   {
+>>   	struct spi_master *spi = dev_get_drvdata(dev);
+>>   	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+>> +	int ret;
+>> +
+>> +	ret = icc_set_bw(mas->se.icc_path_geni_to_core, mas->se.avg_bw_core,
+>> +		mas->se.peak_bw_core);
+>> +	if (ret) {
+>> +		dev_err_ratelimited(mas->dev, "%s: ICC BW voting failed for core\n",
+>> +			__func__);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = icc_set_bw(mas->se.icc_path_cpu_to_geni, mas->se.avg_bw_cpu,
+>> +		mas->se.peak_bw_cpu);
+>> +	if (ret) {
+>> +		dev_err_ratelimited(mas->dev, "%s: ICC BW voting failed for cpu\n",
+>> +			__func__);
+>> +		return ret;
+>> +	}
+> and this:
+>
+> 	ret = geni_icc_vote_on(&mas->se);
+> 	if (ret)
+> 		return ret;
+ok
+>>   	return geni_se_resources_on(&mas->se);
+> possibly you could even do the ICC voting from geni_se_resources_on/off()
+> it seems the two are always done together for UART, I2C and SPI.
 
-For my education: Is the type, modifier policy written down somewhere
-(similar to
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/leds/leds-class.rst#n44
-)?
+I think we should expose geni_icc_vote_on/off API seperately and not 
+merge to resources_on/off.
 
-Cheers,
- -- Guido
+Because if we merge then it will appear that we are just doing 
+geni_icc_get() from individual SE driver probe not using any of ICC apis.
 
-> 
-> I know there are existing bad examples of properties that use an underscore,
-> but we should try to limit introducing new ones.
-> 
-> > +		.shared = IIO_SEPARATE,
-> > +		.read = vcnl4000_read_near_level,
-> > +	},
-> > +	{ /* sentinel */ }
-> > +};
-> > +
-> >   static const struct iio_chan_spec vcnl4000_channels[] = {
-> >   	{
-> >   		.type = IIO_LIGHT,
-> > @@ -350,6 +371,7 @@ static const struct iio_chan_spec vcnl4000_channels[] = {
-> >   	}, {
-> >   		.type = IIO_PROXIMITY,
-> >   		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> > +		.ext_info = vcnl4000_ext_info,
-> >   	}
-> >   };
-> > @@ -439,6 +461,10 @@ static int vcnl4000_probe(struct i2c_client *client,
-> >   	dev_dbg(&client->dev, "%s Ambient light/proximity sensor, Rev: %02x\n",
-> >   		data->chip_spec->prod, data->rev);
-> > +	if (device_property_read_u32(&client->dev, "near-level",
-> > +				     &data->near_level) < 0)
-> > +		data->near_level = 0;
-> > +
-> >   	indio_dev->dev.parent = &client->dev;
-> >   	indio_dev->info = &vcnl4000_info;
-> >   	indio_dev->channels = vcnl4000_channels;
-> 
-> 
+It looks somewhat asymmetry.
+
+
+Thanks for reviewing,
+
+Regards,
+
+Akash
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
