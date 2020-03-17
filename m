@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85AAC5ACBF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E27BC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E8A20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4849A20738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgCQJk6 (ORCPT
+        id S1726478AbgCQJkv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:40:58 -0400
-Received: from v6.sk ([167.172.42.174]:50636 "EHLO v6.sk"
+        Tue, 17 Mar 2020 05:40:51 -0400
+Received: from v6.sk ([167.172.42.174]:50564 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbgCQJk4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:40:56 -0400
+        id S1727061AbgCQJks (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:40:48 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 1B63C61095;
-        Tue, 17 Mar 2020 09:40:54 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 5A14961092;
+        Tue, 17 Mar 2020 09:40:45 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -48,9 +48,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 20/28] dt-bindings: phy: Convert phy-mmp3-usb to json-schema
-Date:   Tue, 17 Mar 2020 10:39:14 +0100
-Message-Id: <20200317093922.20785-21-lkundrak@v3.sk>
+Subject: [PATCH 18/28] dt-bindings: mmc: Fix node name in an example
+Date:   Tue, 17 Mar 2020 10:39:12 +0100
+Message-Id: <20200317093922.20785-19-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
 References: <20200317093922.20785-1-lkundrak@v3.sk>
@@ -61,82 +61,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A rather straightforward conversion of the phy-mmp3-usb binding to DT
-schema format using json-schema.
+The $nodename allows only "mmc@*" whereas the example node is named
+"sdhci".
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- .../bindings/phy/marvell,mmp3-usb-phy.yaml    | 40 +++++++++++++++++++
- .../devicetree/bindings/phy/phy-mmp3-usb.txt  | 13 ------
- 2 files changed, 40 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/marvell,mmp3-usb-phy.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/phy-mmp3-usb.txt
+ Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/marvell,mmp3-usb-phy.yaml b/Documentation/devicetree/bindings/phy/marvell,mmp3-usb-phy.yaml
-new file mode 100644
-index 0000000000000..1307703d9b627
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/marvell,mmp3-usb-phy.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+# Copyright 2019,2020 Lubomir Rintel <lkundrak@v3.sk>
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/marvell,mmp3-usb-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Marvell MMP3 USB PHY bindings
-+
-+maintainers:
-+  - Lubomir Rintel <lkundrak@v3.sk>
-+
-+properties:
-+  $nodename:
-+    pattern: '^usb-phy@[a-f0-9]+$'
-+
-+  compatible:
-+    const: marvell,mmp3-usb-phy
-+
-+  reg:
-+    maxItems: 1
-+    description: base address of the device
-+
-+  '#phy-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#phy-cells'
-+
-+examples:
-+  - |
-+    usb-phy@d4207000 {
-+      compatible = "marvell,mmp3-usb-phy";
-+      reg = <0xd4207000 0x40>;
-+      #phy-cells = <0>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/phy/phy-mmp3-usb.txt b/Documentation/devicetree/bindings/phy/phy-mmp3-usb.txt
-deleted file mode 100644
-index 7183b9102f917..0000000000000
---- a/Documentation/devicetree/bindings/phy/phy-mmp3-usb.txt
-+++ /dev/null
-@@ -1,13 +0,0 @@
--Marvell MMP3 USB PHY
----------------------
--
--Required properties:
--- compatible: must be "marvell,mmp3-usb-phy"
--- #phy-cells: must be 0
--
--Example:
--	usb-phy: usb-phy@d4207000 {
--		compatible = "marvell,mmp3-usb-phy";
--		reg = <0xd4207000 0x40>;
--		#phy-cells = <0>;
--	};
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+index c9384ed685b8f..c03fe268c29a0 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
++++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+@@ -351,7 +351,7 @@ dependencies:
+ 
+ examples:
+   - |
+-    sdhci@ab000000 {
++    mmc@ab000000 {
+         compatible = "sdhci";
+         reg = <0xab000000 0x200>;
+         interrupts = <23>;
 -- 
 2.25.1
 
