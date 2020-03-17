@@ -2,199 +2,95 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A867C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF95CC10F29
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4FC2076C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FAC020757
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qu8Ps6Q8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cGnLnBuV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgCQN5z (ORCPT
+        id S1726388AbgCQOAM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:57:55 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40383 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgCQN5z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:57:55 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f3so18833219wrw.7
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:57:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=E7ZsSBUhejcW1WENgNkFbYtvh60PcoS0PtZmGJlxadU=;
-        b=Qu8Ps6Q87cbQkhFKxkNsAmQdAElXSe+ZGHs0h7urUZ76bgNkrTvzwwas3mBUVeKoBo
-         jsbWik9YedB5fjdzozCPLze7QaOfOxfbjFTC5P7Pme/y0ngwDSADLzeX0lj4vAE+rtDh
-         My88mJq0n/MSGE6vZ25+Ug6dpnrJGq7XtV27+2JdzxB5VCJx2fnRodufZ3P/lJq2rZ0A
-         g0yGWLZAych/XHYX/BQBnZgrXB3jhyaabqqsjTkezMquF2MfINpTDDOFW6u9/2oBcpHv
-         ImAD3QOcSFUdOzbkMyrXdxUQYpEVLWW78xctBP3Kd90tK8mhgRaYirAjFiHsRF+f8F0p
-         yGig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=E7ZsSBUhejcW1WENgNkFbYtvh60PcoS0PtZmGJlxadU=;
-        b=BShCv5BsX7ig+6SbPXrtDrv5smZOOZlp3qzfqp/DXAf64/jLtPl5jDQ2u0Ty3nF8Sl
-         IW4rPdp5bR1Vth8SAiZwSGZ8rKQ12bbp5+cNhq/pTywliTPm6ctvC2d0BvCudXSQkYtN
-         1ZW90JXH35jFWfgsbsdin+bdC87aS4wGhz8aOq8+K8lD4U3MRIryDkVDcPy+hjYSZLgt
-         iW0yiEEiZhgfg9YYKnn3W0AZO0Me3W+3JJQM28Pfnawymmx+GgsIke4Z3ko9QmlVeuCU
-         KPaNHP07BirYD9mOHuL8inWXfZzWmnUz/YlPFuY3G6VFZFguQ2vn0hmAviNW/bRpJgH8
-         F09A==
-X-Gm-Message-State: ANhLgQ2DsqmMXkxVL6Spojwvsvp8ymWPs5NOzLgAebvoYNJUW6YgB6EQ
-        cq8IZR19MHqe6IcA0lG3C09Aeg==
-X-Google-Smtp-Source: ADFU+vtui492H+miaWTyfRzOCSzn/SzVawYdAfgXp6SNtzgRBoH32Npb5uwL2TWiiuaM5Q+QdEJ4vw==
-X-Received: by 2002:adf:fdc6:: with SMTP id i6mr6204937wrs.414.1584453473419;
-        Tue, 17 Mar 2020 06:57:53 -0700 (PDT)
-Received: from xps7590.local ([2a02:2450:102f:13b8:84f7:5c25:a9d8:81a1])
-        by smtp.gmail.com with ESMTPSA id r3sm2976558wrn.35.2020.03.17.06.57.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 06:57:52 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        shawnguo@kernel.org, olof@lixom.net, maxime@cerno.tech,
-        Anson.Huang@nxp.com, dinguyen@kernel.org, leonard.crestez@nxp.com,
-        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
+        Tue, 17 Mar 2020 10:00:12 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:40808 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgCQOAL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:00:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=FrLx3+zGH3oU0Jo8/lq72eF8fifQc3xB2bQg8gY6tl8=; b=cGnLnBuVsp6fkYfQcJ+N0lP7Zi
+        1CQ0257uMP73Zssq480GqtOsiT6dtz3j4jFY4auOWYouzd6Noyy4GBuZ2grQ+9xBQnBkb7o8JyQgO
+        LYVpPM0bbhZnw1Ygcjk+w5hK1jV6VmA0mj+VI2m8UsxHjo1atAFpbrGsSPzlUpACujao=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jEClA-0006j0-3H; Tue, 17 Mar 2020 14:59:56 +0100
+Date:   Tue, 17 Mar 2020 14:59:56 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Loic Poulain <loic.poulain@linaro.org>
-Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [v2 2/6] arm64: dts: apq8016-sbc: Add CCI/Sensor nodes
-Date:   Tue, 17 Mar 2020 14:57:36 +0100
-Message-Id: <20200317135740.19412-3-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200317135740.19412-1-robert.foss@linaro.org>
-References: <20200317135740.19412-1-robert.foss@linaro.org>
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 00/28] DT: Improve validation for Marvell SoCs
+Message-ID: <20200317135956.GQ24270@lunn.ch>
+References: <20200317093922.20785-1-lkundrak@v3.sk>
+ <20200317134609.GN24270@lunn.ch>
+ <20200317135551.GE3448@piout.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317135551.GE3448@piout.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+On Tue, Mar 17, 2020 at 02:55:59PM +0100, Alexandre Belloni wrote:
+> On 17/03/2020 14:46:09+0100, Andrew Lunn wrote:
+> > On Tue, Mar 17, 2020 at 10:38:54AM +0100, Lubomir Rintel wrote:
+> > > Hello World,
+> > 
+> > Yah, that is an issue here. Marvell have a few different SoC families,
+> > each with there own maintainers. Gregory and I tend to look after
+> > 'mvebu', aka orion5x, kirkwood, dove, berlin and a few others. All the
+> > others are 'Somebody elses' problem'.
+> > 
+> 
+> Hum, berlin is not mvebu, it was the same BU as the MMP and it has been
+> sold to synopsys a while ago.
 
-Add cci device to msm8916.dtsi.
-Add default 96boards camera node for db410c (apq8016-sbc).
+Yes, the boundaries are a bit fluffy. At least the early work by
+Sebastian was merged via the mvebu maintainers, even if it is not
+technically part of mvebu.
 
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Robert Foss <robert.foss@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+This is also part of the discussion about how this lot actually gets
+merged.
 
-Changes since v1:
- - Reference CCI by label
- - Don't use generic node names
- - Move regulator nodes out of /soc
- - Use CCI label and move node out of /soc
- - Use reference for camss and move node out of /soc
- - Use reference for cci-i2c0 and move out of /cci
- - Disable camera_read by default, since no mezzanine board is guaranteed
-
-
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 76 +++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 037e26b3f8d5..d98c7e9e6eb9 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -51,6 +51,30 @@
- 		stdout-path = "serial0";
- 	};
- 
-+	camera_vdddo_1v8: camera_vdddo_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdddo";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	camera_vdda_2v8: camera_vdda_2v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdda";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
-+
-+	camera_vddd_1v5: camera_vddd_1v5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vddd";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+	};
-+
- 	reserved-memory {
- 		ramoops@bff00000{
- 			compatible = "ramoops";
-@@ -538,6 +562,58 @@
- 	};
- };
- 
-+&camss {
-+	status = "ok";
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			csiphy0_ep: endpoint {
-+				clock-lanes = <1>;
-+				data-lanes = <0 2>;
-+				remote-endpoint = <&ov5640_ep>;
-+				status = "okay";
-+			};
-+		};
-+	};
-+};
-+
-+&cci {
-+	status = "ok";
-+};
-+
-+&cci_i2c0 {
-+	camera_rear@3b {
-+		compatible = "ovti,ov5640";
-+		reg = <0x3b>;
-+
-+		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&camera_rear_default>;
-+
-+		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-+		clock-names = "xclk";
-+		clock-frequency = <23880000>;
-+
-+		vdddo-supply = <&camera_vdddo_1v8>;
-+		vdda-supply = <&camera_vdda_2v8>;
-+		vddd-supply = <&camera_vddd_1v5>;
-+
-+		/* No camera mezzanine by default */
-+		status = "disabled";
-+
-+		port {
-+			ov5640_ep: endpoint {
-+				clock-lanes = <1>;
-+				data-lanes = <0 2>;
-+				remote-endpoint = <&csiphy0_ep>;
-+			};
-+		};
-+	};
-+};
-+
- &spmi_bus {
- 	pm8916_0: pm8916@0 {
- 		pon@800 {
--- 
-2.20.1
-
+	   Andrew
