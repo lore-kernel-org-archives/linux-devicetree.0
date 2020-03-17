@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E27BC18E5B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6103CC5ACD3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4849A20738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA4620724
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgCQJkv (ORCPT
+        id S1726729AbgCQJkg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:40:51 -0400
-Received: from v6.sk ([167.172.42.174]:50564 "EHLO v6.sk"
+        Tue, 17 Mar 2020 05:40:36 -0400
+Received: from v6.sk ([167.172.42.174]:50448 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbgCQJks (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:40:48 -0400
+        id S1726917AbgCQJkf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 05:40:35 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 5A14961092;
-        Tue, 17 Mar 2020 09:40:45 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 2B9D16108F;
+        Tue, 17 Mar 2020 09:40:33 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -48,9 +48,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
         Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 18/28] dt-bindings: mmc: Fix node name in an example
-Date:   Tue, 17 Mar 2020 10:39:12 +0100
-Message-Id: <20200317093922.20785-19-lkundrak@v3.sk>
+Subject: [PATCH 15/28] dt-bindings: arm: mrvl: Add missing compatible strings
+Date:   Tue, 17 Mar 2020 10:39:09 +0100
+Message-Id: <20200317093922.20785-16-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
 References: <20200317093922.20785-1-lkundrak@v3.sk>
@@ -61,27 +61,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The $nodename allows only "mmc@*" whereas the example node is named
-"sdhci".
+Add compatible strings for the boards we have in tree. At the same time,
+fix the MMP3 compatible string: the preferred vendor name for Marvell is
+"marvell", not "mrvl", and indeed "marvell,mmp3" has been actively used,
+not "mrvl,mmp3".
 
+Fixes: 95aecb71b84e ("dt-bindings: arm: mrvl: Document MMP3 compatible string")
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-index c9384ed685b8f..c03fe268c29a0 100644
---- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-+++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-@@ -351,7 +351,7 @@ dependencies:
- 
- examples:
-   - |
--    sdhci@ab000000 {
-+    mmc@ab000000 {
-         compatible = "sdhci";
-         reg = <0xab000000 0x200>;
-         interrupts = <23>;
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+index 818dfe6de5120..3235ec9e9bad1 100644
+--- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
++++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+@@ -28,8 +28,11 @@ properties:
+         items:
+           - enum:
+               - mrvl,mmp2-brownstone
++              - olpc,xo-1.75
+           - const: mrvl,mmp2
+       - description: MMP3 based boards
+         items:
+-          - const: mrvl,mmp3
++          - enum:
++              - dell,wyse-ariel
++          - const: marvell,mmp3
+ ...
 -- 
 2.25.1
 
