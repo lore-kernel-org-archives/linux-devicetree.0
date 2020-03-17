@@ -2,153 +2,100 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB72C10F29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 08:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB78C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 08:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B910205ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 08:32:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="B6zNlUZa"
+	by mail.kernel.org (Postfix) with ESMTP id 78DA62071C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 08:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584434566;
+	bh=IoKaoS48Cjqtz3EXvPpCxL1bx5OpzH2wv2pbrlqhO4E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=giOcUqWOM+8fYXIO3ko0sAWTvGx7XZSbN74tSbEP2CAMfq3IhvXlIICGqeRg08UIZ
+	 PHEFjRIlsAVPofKsFsoSW6yfM963ebL2k4TneNKs1l9oO8lIHFnJrThOLQuqfUfy3f
+	 OnPc7gYbF5g8T1tdsMHWMjPdnWmewj1YpmiAqAd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgCQIcf (ORCPT
+        id S1726187AbgCQImm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:32:35 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33222 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgCQIce (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 04:32:34 -0400
-Received: by mail-io1-f68.google.com with SMTP id o127so7603928iof.0
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 01:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=antmicro.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S/xn2plA996CBuz8fNTsQFvTz+x1vxgYWj19xP/2JoI=;
-        b=B6zNlUZaje7yn8WOECf9nOmrVokHu0nwyb70nNUdoHHnvOTC3AYr84t88lHk1ZHPuD
-         L0hRZtW+1ETKe9rIRDW23bA3drVA8QfRajrwykuvuZwjq5B0ZKzY6/Qr6v1hJuCOopTM
-         2d6clWvNreERpL+caCMTigob7Lb5VGTVAI52A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S/xn2plA996CBuz8fNTsQFvTz+x1vxgYWj19xP/2JoI=;
-        b=HHLuykycWzZ8FOQXKtkZsUESLnWepNAjvVHkPz4HpM8H/ZTtTIcWGbawJh55roUE90
-         Mh5vFPQb7WvlcixH7rZhCfDiiXXJF1xpq+cJundq9rodMyfjx5VFWwyMOsQBYJomAEQC
-         DjjpMMK9GtZVIYQohX1RNgaGT3leHWqPsWo2EMnH9mL9lWfwgqPDk/MpZd19rhEx15x9
-         wmH+lZp5ZMhlIJcjChS2yGEjPdLgVNVxc4nUOtPBrxeBj7XrBX9FrlVVj+ExSprbJhYv
-         DneqebCLO2FcT13kJ+G8oJtMVR8yHpa8wowXVDFqGGvHWGSPlXNXeJu0OvEBgMbUAf/e
-         GZZw==
-X-Gm-Message-State: ANhLgQ2DQ8BKzjl6mkfUHoYbSLr0ecTVVW4eoR6wWhHX8nhoo2iXHQ7F
-        yTnSn8u4954BvfNgPUnD7jbbOBTf4guEmi/LKaM5xw==
-X-Google-Smtp-Source: ADFU+vuwgJ63PydvmMkvfAPukN0HBfPURkphAQ8Fr0g6T/pnVNRT0ZBZlqvaPwgDIPmP8AZ3ndzLGh+g2mcNzEiC0ZA=
-X-Received: by 2002:a05:6638:a9b:: with SMTP id 27mr4116136jas.70.1584433952862;
- Tue, 17 Mar 2020 01:32:32 -0700 (PDT)
+        Tue, 17 Mar 2020 04:42:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgCQImm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 04:42:42 -0400
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6628D20663;
+        Tue, 17 Mar 2020 08:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584434561;
+        bh=IoKaoS48Cjqtz3EXvPpCxL1bx5OpzH2wv2pbrlqhO4E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pNhHb5ZOklzJIBs+Mk30HLDVvQoyI0ikIuQlr7KdQcqcluM8Thc1qv+SrFtFCG6sN
+         4IQh2DLpQJp/vtcOlOOASHb/3rQ60/mqNkaD/zaZh7ZJ/r8hIEN9Rhk+sXx/9KA/2B
+         tVat7vG6pnEfRdPbSM5o6jfrb0mMZsFtsX+rCvIo=
+Received: by mail-lj1-f182.google.com with SMTP id y17so573318ljk.12;
+        Tue, 17 Mar 2020 01:42:41 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3R6x589eVO9vcSRM11HwfMGfmiH1vrpujBL/VkubC/yalGWwVT
+        8K7pITN+oKqBhU1jmxIoEUYcriO7rmgFqVrHR5E=
+X-Google-Smtp-Source: ADFU+vsGw4leJ6Uf5P8becHc7znYz444/oKgydCNUix8TbemuH4A0iD/laSXCKIUp9XD4ychGSVZOvtwIIC+U/Mg5Ks=
+X-Received: by 2002:a05:651c:29c:: with SMTP id b28mr2143355ljo.201.1584434559542;
+ Tue, 17 Mar 2020 01:42:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200225094437.4170502-0-mholenko@antmicro.com>
- <20200225094437.4170502-2-mholenko@antmicro.com> <20200225165750.GA15779@bogus>
-In-Reply-To: <20200225165750.GA15779@bogus>
-From:   Mateusz Holenko <mholenko@antmicro.com>
-Date:   Tue, 17 Mar 2020 09:32:21 +0100
-Message-ID: <CAPk366Qg-U8xUsvTjeMfzYs8tg_m4wO5Ghg0FseRgbdOfV8FCA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: soc: document LiteX SoC Controller bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org
+References: <20200310194854.831-1-linux.amoon@gmail.com> <20200310194854.831-2-linux.amoon@gmail.com>
+ <87lfo2f0k9.fsf@kernel.org>
+In-Reply-To: <87lfo2f0k9.fsf@kernel.org>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 17 Mar 2020 09:42:28 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPf1GQmukWv16ydxY=78k=szTLnwM08R0wGoRNhHXgkCzA@mail.gmail.com>
+Message-ID: <CAJKOXPf1GQmukWv16ydxY=78k=szTLnwM08R0wGoRNhHXgkCzA@mail.gmail.com>
+Subject: Re: [PATCHv3 1/5] devicetree: bindings: exynos: Add new compatible
+ for Exynos5420 dwc3 clocks support
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Anand Moon <linux.amoon@gmail.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 5:57 PM Rob Herring <robh@kernel.org> wrote:
+On Sun, 15 Mar 2020 at 10:08, Felipe Balbi <balbi@kernel.org> wrote:
 >
-> On Tue, 25 Feb 2020 09:46:45 +0100, Mateusz Holenko wrote:
-> > From: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
+>
+> Hi,
+>
+> Anand Moon <linux.amoon@gmail.com> writes:
+>
+> > Add the new compatible string for Exynos5422 DWC3 to support
+> > enable/disable of core and suspend clk by DWC3 driver.
+> > Also updated the clock names for compatible samsung,exynos5420-dwusb3.
 > >
-> > Add documentation for LiteX SoC Controller bindings.
-> >
-> > Signed-off-by: Pawel Czarnecki <pczarnecki@internships.antmicro.com>
-> > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
-> > ---
-> >
-> > Notes:
-> >     This commit has been introduced in v3 of the patchset.
-> >
-> >  .../soc/litex/litex,soc_controller.yaml       | 46 +++++++++++++++++++
-> >  MAINTAINERS                                   |  6 +++
-> >  2 files changed, 52 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
-> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 >
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> warning: no schema found in file: Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/soc/litex/litex,soc_controller.yaml: ignoring, error parsing file
-> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-> Traceback (most recent call last):
->   File "/usr/local/bin/dt-doc-validate", line 35, in check_doc
->     testtree = dtschema.load(filename, line_number=line_number, duplicate_keys=False)
->   File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 513, in load
->     return yaml.load(f.read())
->   File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/main.py", line 343, in load
->     return constructor.get_single_data()
->   File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 111, in get_single_data
->     node = self.composer.get_single_node()
->   File "_ruamel_yaml.pyx", line 718, in _ruamel_yaml.CParser.get_single_node
-> ruamel.yaml.composer.ComposerError: expected a single document in the stream
->   in "<unicode string>", line 1, column 1
-> but found another document
->   in "<unicode string>", line 2, column 1
->
-> During handling of the above exception, another exception occurred:
->
-> Traceback (most recent call last):
->   File "/usr/local/bin/dt-doc-validate", line 74, in <module>
->     ret = check_doc(args.yamldt)
->   File "/usr/local/bin/dt-doc-validate", line 40, in check_doc
->     print(filename + ":", exc.path[-1], exc.message)
-> AttributeError: 'ComposerError' object has no attribute 'path'
-> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/soc/litex/litex,soc_controller.example.dts' failed
-> make[1]: *** [Documentation/devicetree/bindings/soc/litex/litex,soc_controller.example.dts] Error 1
-> Makefile:1263: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
->
-> See https://patchwork.ozlabs.org/patch/1243930
-> Please check and re-submit.
+> What is the dependency here?
 
-Thanks for spotting this.
+Felipe,
 
-It looks like the first line of the document is broken - it should be
-a comment with a license descriptor, but the initial characters are
-missing.
+This patchset should not be applied. As of now, it is not needed and
+not justified.
 
-I'll fix this and resubmit the whole patchset after addressing all
-other remarks.
-
-
--- 
-Mateusz Holenko
-Antmicro Ltd | www.antmicro.com
-Roosevelta 22, 60-829 Poznan, Poland
+Best regards,
+Krzysztof
