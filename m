@@ -2,59 +2,59 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF6CC2BB1D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8408C3F2CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1792206EC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801F42076A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n6l/WllN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g961w6HI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgCQN6C (ORCPT
+        id S1726521AbgCQN6L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:58:02 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34542 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgCQN6B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:58:01 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z15so25776892wrl.1
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:58:00 -0700 (PDT)
+        Tue, 17 Mar 2020 09:58:11 -0400
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:33762 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgCQN57 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:57:59 -0400
+Received: by mail-wr1-f41.google.com with SMTP id a25so25819728wrd.0
+        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:57:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UppQrsnlpe86U1iJ2vxLuqmcwC6nQrjDuqLHzwr9eq8=;
-        b=n6l/WllNY7yB9vdu0o78Kevuih0X0jlKF33Qac5TIulVecbJJhn04M3bXa5FVZ2Ayj
-         nMdI2M0fpHFdBWRa0BhPJzsNtf74iIzJYsfnN/E1j7ud159TZCGIsrMb4PANiVBt/4LX
-         JDIvbOBhvc0l5ps5YEzy+FSZY670na89VlTNkUBEPnAT4m+/pqKZCSCBGpNcv48E88W0
-         sG19qv8z6WQT4MsCry1difL47JM6xzqgNIUayos0WV1rsSJ3xwsFJb9ciVilyB624Sp5
-         OzHf51degqnW+xr8gcVWrV//eDELr22o9g1plb1Y699FSbPxS61/1fq8hycr0Gr9+fK0
-         cazQ==
+        bh=aJ6WBkhO3K4OzsJINoEYvBbfmbxMU3iYiQ/cJbW0xDo=;
+        b=g961w6HILHFqpDyFSns33LU0XmgMSPUSxr8P9etyj+evR/2wwGCLVQH4uB+PHcuCDK
+         PWKNLyUII/jas7FoO5LE1NTUjtXDk9k0Y6EIViorMQdTN0ZxBaoiFJPhf4v4Nf/3zy00
+         FUsYD0x7uD/JUu7epLOzCdGFP/lxPbQ9xS+PHV++AcJlwIJmZOMLGJBQOeApI5/GdreX
+         wts8dEJX0Xb9e8PHe/hVQYGyfAgnMSeoM9F5bATTBxbI/V6N+xCjRiXNfZXBYs6Os0Mc
+         IIl5YLQUegLfCoiRILfuOOi9bsro62LdEKBED9EPrpEU/oCp+UteuSqYXeEgaqKglkTG
+         O+nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UppQrsnlpe86U1iJ2vxLuqmcwC6nQrjDuqLHzwr9eq8=;
-        b=csQZK70q2H9gYuhVJ+8Kon4IBQCUqhUhaRP69rrEGEumqtaJreeEjqJVNyyEhMTtAe
-         WWnF3TNAjXlRScVC4c6CJfbVcp+/yqZq7spYS6HQWC4i48i3d0fZMGUyTuZEZI6potKK
-         5P1OvvxLr6o9HBXQZo3e2aNeOXJUVEwveY8xRRmc9udpKAq9Mi9aembi7OjrGtR1RLr2
-         O5IVNksT0521BIMV5pFB5uO71MOUQJ90Iu8OCLzgpgg7MomqlvyYmLeKETzGLhEK/bcY
-         ligQuvqhZMwTuRxyvPJ2tMA/AnYNJWK2Nz2qJ+KAIHLkA25LU8o8Xq86g/rZtv60DUy0
-         LMQg==
-X-Gm-Message-State: ANhLgQ2z5tkLMBEccPQfAHSlKmzNjwCPUEGHDUex2xZQYpLpdvfdLo7K
-        hlLnewuORGlhbHZU2lu/nS4JGw==
-X-Google-Smtp-Source: ADFU+vuB83bdRe3honSZVhDGSTt2YdioMyqclnLEVfdMeETbDf0ejd9vEKSvzBHwoB0XWvgcu6GtAg==
-X-Received: by 2002:adf:a348:: with SMTP id d8mr6276482wrb.83.1584453479320;
-        Tue, 17 Mar 2020 06:57:59 -0700 (PDT)
+        bh=aJ6WBkhO3K4OzsJINoEYvBbfmbxMU3iYiQ/cJbW0xDo=;
+        b=CcnLkF3qE3MRYPMu9Ii2HWnm9dOHTaGmh42FzamahC7oHVw699yg59LvXWD3ha4xtS
+         c4PHULjYkeVDDZ3S5J/14zOW2ed9GV+BujnSqlh5djH50glw9iLL/6nqEZEhJYcIBlvE
+         7OwrRYDeMWemuu4X5NyCBhaWzzR/BaARuZQQ03GmjbA7eFKinJfoQrp0JwSiHjVYjcHD
+         p/JVJMmAgW4zMqugzUmjgFLDSgw3I2wBNGd6R7jRJTF3jq+dTzSLWRsmsqfRZYiw4qEa
+         NJlKRBcQ7L/GWKoVXKBMI2CEwFvUXNrWSl20viqHHFVfE3denmOTxVLjx1YYthVvAsFK
+         M1Yw==
+X-Gm-Message-State: ANhLgQ0kel67/ZD+3CCHQif5HJtU+Tq3apTsj2CsX709hTQYr3heljyl
+        u/+OAeaj/qjh9cZS6rWHuWSebw==
+X-Google-Smtp-Source: ADFU+vuEQpGGjN2Y6PiGYYhYPKWhI4pKxDM+6JY/eVnr92WFJO7DQJ+ODChwu2MU9pQRB6o9WKPrXw==
+X-Received: by 2002:adf:f5c1:: with SMTP id k1mr6279100wrp.91.1584453476447;
+        Tue, 17 Mar 2020 06:57:56 -0700 (PDT)
 Received: from xps7590.local ([2a02:2450:102f:13b8:84f7:5c25:a9d8:81a1])
-        by smtp.gmail.com with ESMTPSA id r3sm2976558wrn.35.2020.03.17.06.57.58
+        by smtp.gmail.com with ESMTPSA id r3sm2976558wrn.35.2020.03.17.06.57.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 06:57:58 -0700 (PDT)
+        Tue, 17 Mar 2020 06:57:55 -0700 (PDT)
 From:   Robert Foss <robert.foss@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
@@ -65,9 +65,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Loic Poulain <loic.poulain@linaro.org>
 Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [v2 6/6] arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
-Date:   Tue, 17 Mar 2020 14:57:40 +0100
-Message-Id: <20200317135740.19412-7-robert.foss@linaro.org>
+Subject: [v2 4/6] arm64: dts: sdm845-db845c: Add pm_8998 gpio names
+Date:   Tue, 17 Mar 2020 14:57:38 +0100
+Message-Id: <20200317135740.19412-5-robert.foss@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200317135740.19412-1-robert.foss@linaro.org>
 References: <20200317135740.19412-1-robert.foss@linaro.org>
@@ -78,50 +78,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Build camera clock, isp and controller drivers as modules.
+Add pm_8998 GPIO trace names. These names are defined in
+the 96boards db845c mezzanine schematic.
 
 Signed-off-by: Robert Foss <robert.foss@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/configs/defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4db223dbc549..7cb6989249ab 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -376,6 +376,7 @@ CONFIG_I2C_MESON=y
- CONFIG_I2C_MV64XXX=y
- CONFIG_I2C_OWL=y
- CONFIG_I2C_PXA=y
-+CONFIG_I2C_QCOM_CCI=m
- CONFIG_I2C_QCOM_GENI=m
- CONFIG_I2C_QUP=y
- CONFIG_I2C_RK3X=y
-@@ -530,6 +531,7 @@ CONFIG_VIDEO_SAMSUNG_S5P_MFC=m
- CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=m
- CONFIG_VIDEO_RENESAS_FCP=m
- CONFIG_VIDEO_RENESAS_VSP1=m
-+CONFIG_VIDEO_QCOM_CAMSS=m
- CONFIG_DRM=m
- CONFIG_DRM_I2C_NXP_TDA998X=m
- CONFIG_DRM_NOUVEAU=m
-@@ -732,6 +734,7 @@ CONFIG_MSM_GCC_8994=y
- CONFIG_MSM_MMCC_8996=y
- CONFIG_MSM_GCC_8998=y
- CONFIG_QCS_GCC_404=y
-+CONFIG_SDM_CAMCC_845=m
- CONFIG_SDM_GCC_845=y
- CONFIG_SM_GCC_8150=y
- CONFIG_QCOM_HFPLL=y
-@@ -762,6 +765,7 @@ CONFIG_QCOM_COMMAND_DB=y
- CONFIG_QCOM_GENI_SE=y
- CONFIG_QCOM_GLINK_SSR=m
- CONFIG_QCOM_RMTFS_MEM=m
-+CONFIG_SDM_CAMCC_845=m
- CONFIG_QCOM_RPMH=y
- CONFIG_QCOM_RPMHPD=y
- CONFIG_QCOM_SMEM=y
+Changes since v1:
+ - Move gpio-names to previous reference to pm8998_gpio label
+
+
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index a6b6837c3d68..efb0086e2aa1 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -365,6 +365,34 @@
+ };
+ 
+ &pm8998_gpio {
++	gpio-line-names =
++		"NC",
++		"NC",
++		"WLAN_SW_CTRL",
++		"NC",
++		"PM_GPIO5_BLUE_BT_LED",
++		"VOL_UP_N",
++		"NC",
++		"ADC_IN1",
++		"PM_GPIO9_YEL_WIFI_LED",
++		"CAM0_AVDD_EN",
++		"NC",
++		"CAM0_DVDD_EN",
++		"PM_GPIO13_GREEN_U4_LED",
++		"DIV_CLK2",
++		"NC",
++		"NC",
++		"NC",
++		"SMB_STAT",
++		"NC",
++		"NC",
++		"ADC_IN2",
++		"OPTION1",
++		"WCSS_PWR_REQ",
++		"PM845_GPIO24",
++		"OPTION2",
++		"PM845_SLB";
++
+ 	vol_up_pin_a: vol-up-active {
+ 		pins = "gpio6";
+ 		function = "normal";
 -- 
 2.20.1
 
