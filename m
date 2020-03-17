@@ -2,59 +2,59 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8408C3F2CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD25AC2BB1D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801F42076A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3FA720767
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 13:58:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g961w6HI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N7mF7Hc3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgCQN6L (ORCPT
+        id S1726575AbgCQN6P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 09:58:11 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:33762 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgCQN57 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:57:59 -0400
-Received: by mail-wr1-f41.google.com with SMTP id a25so25819728wrd.0
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:57:57 -0700 (PDT)
+        Tue, 17 Mar 2020 09:58:15 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50392 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbgCQN55 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 09:57:57 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z13so5510286wml.0
+        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 06:57:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aJ6WBkhO3K4OzsJINoEYvBbfmbxMU3iYiQ/cJbW0xDo=;
-        b=g961w6HILHFqpDyFSns33LU0XmgMSPUSxr8P9etyj+evR/2wwGCLVQH4uB+PHcuCDK
-         PWKNLyUII/jas7FoO5LE1NTUjtXDk9k0Y6EIViorMQdTN0ZxBaoiFJPhf4v4Nf/3zy00
-         FUsYD0x7uD/JUu7epLOzCdGFP/lxPbQ9xS+PHV++AcJlwIJmZOMLGJBQOeApI5/GdreX
-         wts8dEJX0Xb9e8PHe/hVQYGyfAgnMSeoM9F5bATTBxbI/V6N+xCjRiXNfZXBYs6Os0Mc
-         IIl5YLQUegLfCoiRILfuOOi9bsro62LdEKBED9EPrpEU/oCp+UteuSqYXeEgaqKglkTG
-         O+nA==
+        bh=KKC3ZGRiSdLIkKwV88qQTvKvn0/RzcGotU3LdLgzl1U=;
+        b=N7mF7Hc3YT37vBthOqaQ3pRdnsShxabwSnxuPuRl4YdkOByMYhyWOOxAQuLqny4nLG
+         m9VoUnfrLQVlv0U/yAYz9MGUaIbzI+ozA5/KesXNg5ctLdCtaBqCtlfRk/agPExFstUN
+         XtUK/9SySZRxi/jmeaYecebvIOaWawFWXLz/ueivkDDXrVo+hXK9owzlqlsMVdYO2PRp
+         BGCmt7AgmZKagoaRBVUdR1wmZ8twUJ0VEqq9gMjRB6ROpM4Y1Mf9+5qiXXuu40JmrfAi
+         dPheCJiKS+xgScgz6Z3GkcaAnoh9E7VMjwn6qooE/4q6v1oY3InKmIAJ+XBq6z+pr0EY
+         sUJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aJ6WBkhO3K4OzsJINoEYvBbfmbxMU3iYiQ/cJbW0xDo=;
-        b=CcnLkF3qE3MRYPMu9Ii2HWnm9dOHTaGmh42FzamahC7oHVw699yg59LvXWD3ha4xtS
-         c4PHULjYkeVDDZ3S5J/14zOW2ed9GV+BujnSqlh5djH50glw9iLL/6nqEZEhJYcIBlvE
-         7OwrRYDeMWemuu4X5NyCBhaWzzR/BaARuZQQ03GmjbA7eFKinJfoQrp0JwSiHjVYjcHD
-         p/JVJMmAgW4zMqugzUmjgFLDSgw3I2wBNGd6R7jRJTF3jq+dTzSLWRsmsqfRZYiw4qEa
-         NJlKRBcQ7L/GWKoVXKBMI2CEwFvUXNrWSl20viqHHFVfE3denmOTxVLjx1YYthVvAsFK
-         M1Yw==
-X-Gm-Message-State: ANhLgQ0kel67/ZD+3CCHQif5HJtU+Tq3apTsj2CsX709hTQYr3heljyl
-        u/+OAeaj/qjh9cZS6rWHuWSebw==
-X-Google-Smtp-Source: ADFU+vuEQpGGjN2Y6PiGYYhYPKWhI4pKxDM+6JY/eVnr92WFJO7DQJ+ODChwu2MU9pQRB6o9WKPrXw==
-X-Received: by 2002:adf:f5c1:: with SMTP id k1mr6279100wrp.91.1584453476447;
-        Tue, 17 Mar 2020 06:57:56 -0700 (PDT)
+        bh=KKC3ZGRiSdLIkKwV88qQTvKvn0/RzcGotU3LdLgzl1U=;
+        b=SnAJGu6F8RNZkbzxV1307HRydu0DUmVdTp69BLjd6KYfChpZ9I4Lny1vJhqe5AgGOp
+         /WEyPJ5JIOvCinJbeTAPwh79pefq2S2yVXIdFNR1GE7LGX3ybFF4sqqzqOBOIBQNrILQ
+         JvuUkgTeicpkvZ7U5KInRdTab/RVBnIqIuGx54eeJFLN6vgt72mVVYKkjehs1Xxj9XYn
+         iQfzec6U8BRJlyKOSYIHT0RhWLzSXx9kGboIMxWJZlo2Z7BSqrZxzK/pKJISYu0w5qkI
+         rQuS7+yvZJhbrghSWD2UOec/4T8FMayyyAo8HEAof2TkF2Pp9lU2STLv3QtVpNyZ1vHA
+         t4QQ==
+X-Gm-Message-State: ANhLgQ1Uvv3Gg/zkARn4LVUsKz2fnTRBI9CsCxoVRVjV7nFapIzD6b77
+        XY3+p6YOVuswcygGq3BRKx3oYQ==
+X-Google-Smtp-Source: ADFU+vtzmvC3LVNiLYHnAHL2ZcThRB7+VYfJfGi1TFUAGXMsXDpg3P+/1X76mVZ64sIveKkAaijsuA==
+X-Received: by 2002:a1c:1b0e:: with SMTP id b14mr5499298wmb.8.1584453474984;
+        Tue, 17 Mar 2020 06:57:54 -0700 (PDT)
 Received: from xps7590.local ([2a02:2450:102f:13b8:84f7:5c25:a9d8:81a1])
-        by smtp.gmail.com with ESMTPSA id r3sm2976558wrn.35.2020.03.17.06.57.55
+        by smtp.gmail.com with ESMTPSA id r3sm2976558wrn.35.2020.03.17.06.57.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 06:57:55 -0700 (PDT)
+        Tue, 17 Mar 2020 06:57:54 -0700 (PDT)
 From:   Robert Foss <robert.foss@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
@@ -65,9 +65,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Loic Poulain <loic.poulain@linaro.org>
 Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [v2 4/6] arm64: dts: sdm845-db845c: Add pm_8998 gpio names
-Date:   Tue, 17 Mar 2020 14:57:38 +0100
-Message-Id: <20200317135740.19412-5-robert.foss@linaro.org>
+Subject: [v2 3/6] arm64: dts: sdm845: Add i2c-qcom-cci node
+Date:   Tue, 17 Mar 2020 14:57:37 +0100
+Message-Id: <20200317135740.19412-4-robert.foss@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200317135740.19412-1-robert.foss@linaro.org>
 References: <20200317135740.19412-1-robert.foss@linaro.org>
@@ -78,59 +78,155 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add pm_8998 GPIO trace names. These names are defined in
-the 96boards db845c mezzanine schematic.
+The sdm845 SOC ships with a CCI controller, which
+has two CCI/I2C buses.
 
 Signed-off-by: Robert Foss <robert.foss@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
- - Move gpio-names to previous reference to pm8998_gpio label
+ - Pad addresses to 8 bytes
+ - Sort clock_camcc by address
+ - Change cciX pinctrl node names
+ - Remove pinmux/pinconf nodes from pinctrl nodes
+ - Remove clk suffix from CCI node clock-names
+ -  Give CCI i2c-bus nodes labels
 
 
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts |  4 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 92 ++++++++++++++++++++++
+ 2 files changed, 96 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index a6b6837c3d68..efb0086e2aa1 100644
+index eb77aaa6a819..a6b6837c3d68 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
 +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -365,6 +365,34 @@
+@@ -583,3 +583,7 @@
+ 		bias-pull-up;
+ 	};
  };
- 
- &pm8998_gpio {
-+	gpio-line-names =
-+		"NC",
-+		"NC",
-+		"WLAN_SW_CTRL",
-+		"NC",
-+		"PM_GPIO5_BLUE_BT_LED",
-+		"VOL_UP_N",
-+		"NC",
-+		"ADC_IN1",
-+		"PM_GPIO9_YEL_WIFI_LED",
-+		"CAM0_AVDD_EN",
-+		"NC",
-+		"CAM0_DVDD_EN",
-+		"PM_GPIO13_GREEN_U4_LED",
-+		"DIV_CLK2",
-+		"NC",
-+		"NC",
-+		"NC",
-+		"SMB_STAT",
-+		"NC",
-+		"NC",
-+		"ADC_IN2",
-+		"OPTION1",
-+		"WCSS_PWR_REQ",
-+		"PM845_GPIO24",
-+		"OPTION2",
-+		"PM845_SLB";
 +
- 	vol_up_pin_a: vol-up-active {
- 		pins = "gpio6";
- 		function = "normal";
++&cci {
++	status = "ok";
++};
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index d42302b8889b..91a60847026f 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -5,6 +5,7 @@
+  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+  */
+ 
++#include <dt-bindings/clock/qcom,camcc-sdm845.h>
+ #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
+ #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+ #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
+@@ -1451,6 +1452,42 @@
+ 			gpio-ranges = <&tlmm 0 0 150>;
+ 			wakeup-parent = <&pdc_intc>;
+ 
++			cci0_default: cci0-default {
++				/* SDA, SCL */
++				pins = "gpio17", "gpio18";
++				function = "cci_i2c";
++
++				bias-pull-up;
++				drive-strength = <2>; /* 2 mA */
++			};
++
++			cci0_sleep: cci0-sleep {
++				/* SDA, SCL */
++				pins = "gpio17", "gpio18";
++				function = "cci_i2c";
++
++				drive-strength = <2>; /* 2 mA */
++				bias-pull-down;
++			};
++
++			cci1_default: cci1-default {
++				/* SDA, SCL */
++				pins = "gpio19", "gpio20";
++				function = "cci_i2c";
++
++				bias-pull-up;
++				drive-strength = <2>; /* 2 mA */
++			};
++
++			cci1_sleep: cci1-sleep {
++				/* SDA, SCL */
++				pins = "gpio19", "gpio20";
++				function = "cci_i2c";
++
++				drive-strength = <2>; /* 2 mA */
++				bias-pull-down;
++			};
++
+ 			qspi_clk: qspi-clk {
+ 				pinmux {
+ 					pins = "gpio95";
+@@ -2608,6 +2645,61 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		cci: cci@ac4a000 {
++			compatible = "qcom,sdm845-cci";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			reg = <0 0x0ac4a000 0 0x4000>;
++			interrupts = <GIC_SPI 460 IRQ_TYPE_EDGE_RISING>;
++			power-domains = <&clock_camcc TITAN_TOP_GDSC>;
++
++			clocks = <&clock_camcc CAM_CC_CAMNOC_AXI_CLK>,
++				<&clock_camcc CAM_CC_SOC_AHB_CLK>,
++				<&clock_camcc CAM_CC_SLOW_AHB_CLK_SRC>,
++				<&clock_camcc CAM_CC_CPAS_AHB_CLK>,
++				<&clock_camcc CAM_CC_CCI_CLK>,
++				<&clock_camcc CAM_CC_CCI_CLK_SRC>;
++			clock-names = "camnoc_axi",
++				"soc_ahb",
++				"slow_ahb_src",
++				"cpas_ahb",
++				"cci",
++				"cci_src";
++
++			assigned-clocks = <&clock_camcc CAM_CC_CAMNOC_AXI_CLK>,
++				<&clock_camcc CAM_CC_CCI_CLK>;
++			assigned-clock-rates = <80000000>, <37500000>;
++
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&cci0_default &cci1_default>;
++			pinctrl-1 = <&cci0_sleep &cci1_sleep>;
++
++			status = "disabled";
++
++			cci_i2c0: i2c-bus@0 {
++				reg = <0>;
++				clock-frequency = <1000000>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++
++			cci_i2c1: i2c-bus@1 {
++				reg = <1>;
++				clock-frequency = <1000000>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
++		clock_camcc: clock-controller@ad00000 {
++			compatible = "qcom,sdm845-camcc";
++			reg = <0 0x0ad00000 0 0x10000>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
+ 		mdss: mdss@ae00000 {
+ 			compatible = "qcom,sdm845-mdss";
+ 			reg = <0 0x0ae00000 0 0x1000>;
 -- 
 2.20.1
 
