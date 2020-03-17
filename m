@@ -2,325 +2,183 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12803C18E5B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCC9C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 15:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF4D20724
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 14:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D68620714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 15:05:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="R5lO9zHk"
+	dkim=pass (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="B7tejMTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgCQOxS (ORCPT
+        id S1726760AbgCQPE7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:53:18 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40964 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgCQOxS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 10:53:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
-        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
-        In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=PPvxJfz7fcMsqq7ucObIfV85gjZPQBTgrMZBZr7ovF4=; b=R5lO9zHklJzTmeXfqThKz6uqDz
-        IfCgrFTcrE36gJOK7mzJ7ZAn7cfhh5RWNePIc/xK44PmEETriROAKeUjQH+1wCwG2a5wroudwW3qo
-        0ZhiGJ/Mh48lIx4PrPX0Z+N2jaElfVRw9pLWj5JkGBEfaBBka0NVrK4cBezrxcNXJ0b99zn/6H5Lv
-        f75HnNhPbfFsHPjgLx4SndSS6XU+5F/mUQDvdBmqy78Z0Yt16OCCv18F3BRIK3vIguorECenYWoCc
-        /7aoUfGAMwJ1UVPxyVO9MoyBgKpNS3DXvh0UbNFW/xaXtJ8vYVAWfzG/suzt9TwvC4ofprth9DDPT
-        GVxr/OYg==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:44364 helo=rmk-PC.armlinux.org.uk)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1jEDaU-0007iZ-Sc; Tue, 17 Mar 2020 14:52:59 +0000
-Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1jEDaS-0008JO-Po; Tue, 17 Mar 2020 14:52:56 +0000
-In-Reply-To: <20200317144944.GP25745@shell.armlinux.org.uk>
-References: <20200317144944.GP25745@shell.armlinux.org.uk>
-From:   Russell King <rmk+kernel@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Tue, 17 Mar 2020 11:04:59 -0400
+Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:33496 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726388AbgCQPE6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 17 Mar 2020 11:04:58 -0400
+Received: from pps.filterd (m0098781.ppops.net [127.0.0.1])
+        by mx0a-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HDbxfW000726;
+        Tue, 17 Mar 2020 08:57:04 -0500
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2176.outbound.protection.outlook.com [104.47.57.176])
+        by mx0a-00010702.pphosted.com with ESMTP id 2yrua11mn8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Mar 2020 08:57:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k1pBipBnvbXZzFvibq/IrkVaxt2PFGWENETVSRxelzwulketE6ATcNrW8aT/UB06DrAvPgjpulZQHOb071g1Rea/F9E2B38lAnEjvULQmknzplNy3Vs4D0AXNPsIjvZ5Eny4pAkuLMFEcGvgyz3a+AwU3d8/6h/zc+IcOcQ4wGW9k8WQV7Xzcdrye+6yMIDhNv6HgGl6XUxcB/px4xH9OGVKkozv9lnq666WaJcFdNPSKZH1+y6v1uUi0SyVqccX4YUAx1436MUYH/nUlOaQl3BVNAJHgfOnqOkQ2Fd16C7dfmh78PCAlJ9ZWR2AFUU0DQ2xasAsLexKebcYw+xK4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pTc1M08uh4ajhnLJSGyCpHmDMmV/ESEmtH376gDBt14=;
+ b=GyYef7Sus5xe2kxqd6CJBd3coLOOTvNRtbJH34Xa5JjMGg+rT0+2OPcYJMcQh704dYBAeiPmLYDLV0IzxYmO0D/eXvTc3QZmtzYzObnwgoXAE131UWMdDoHl+oLRW0rAhmVAsw6G+7505/ApRp5jhb6Z0d5BGgx70iReMse1ArA5jO+nNyzPhPTPD0nT1OdfU6Bsfsw1U6DODU8KWoMUv9+E7Ap2HxvyG6aAhvorWN7qYR4G+5A1i+5QKLk/aKM93Q6ZoDP0FpuX0e66p3zI59Sui8Vo0GZcBYI6Qy8S47c4/2kgTHywF6PGk4NvBSdD1tb0l4dCmXhl0YMRXprdrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
+ header.d=ni.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pTc1M08uh4ajhnLJSGyCpHmDMmV/ESEmtH376gDBt14=;
+ b=B7tejMTZoe8MrP5Sj+tUxCQ8j1gqScsb8hK7Mkyzg99sbzabyKnSoBmzkMBBOMFuH2AYB4h/3CFP8v8K60pyRONAFGHXkK5U+uDdfdy6bsG87vFKCoZ8vdmh/gsz4lOpaMSLDDIiXnDRYcdGzRFDb4N0Rjze5g9dvw1RbV7mJVc=
+Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::29) by SN4PR0401MB3567.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 17 Mar
+ 2020 13:57:01 +0000
+Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
+ ([fe80::d05b:1953:4111:38e4]) by SN4PR0401MB3646.namprd04.prod.outlook.com
+ ([fe80::d05b:1953:4111:38e4%5]) with mapi id 15.20.2793.023; Tue, 17 Mar 2020
+ 13:57:01 +0000
+From:   Michael Auchter <michael.auchter@ni.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [RFC net-next 3/5] arm64: dts: lx2160a: add PCS MDIO nodes
-MIME-Version: 1.0
-Content-Disposition: inline
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Auchter <michael.auchter@ni.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] dt-bindings: iio: adc: ad7291: add binding
+Date:   Tue, 17 Mar 2020 08:56:49 -0500
+Message-Id: <20200317135649.8876-2-michael.auchter@ni.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200317135649.8876-1-michael.auchter@ni.com>
+References: <20200317135649.8876-1-michael.auchter@ni.com>
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1jEDaS-0008JO-Po@rmk-PC.armlinux.org.uk>
-Date:   Tue, 17 Mar 2020 14:52:56 +0000
+Content-Type: text/plain
+X-ClientProxiedBy: SN4PR0401CA0034.namprd04.prod.outlook.com
+ (2603:10b6:803:2a::20) To SN4PR0401MB3646.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::29)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xaphan.phire.org (66.90.216.181) by SN4PR0401CA0034.namprd04.prod.outlook.com (2603:10b6:803:2a::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Tue, 17 Mar 2020 13:57:01 +0000
+X-Mailer: git-send-email 2.24.1
+X-Originating-IP: [66.90.216.181]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 71534422-479e-48a5-f597-08d7ca7b1128
+X-MS-TrafficTypeDiagnostic: SN4PR0401MB3567:|SN4PR0401MB3567:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN4PR0401MB35672C9A560BDCDE14C5BBE587F60@SN4PR0401MB3567.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(346002)(136003)(396003)(199004)(6666004)(110136005)(966005)(2906002)(6512007)(186003)(66476007)(2616005)(956004)(44832011)(6506007)(5660300002)(478600001)(52116002)(4326008)(316002)(26005)(1076003)(16526019)(66556008)(36756003)(81156014)(81166006)(8936002)(8676002)(6486002)(66946007)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN4PR0401MB3567;H:SN4PR0401MB3646.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: ni.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aMxMguFKxcGNw4yiYPqhXXMCmY1oMZIq6hTf/ORCfV76p9SzpXT08t88GsfzVZfffyQOH7JAMb9KNFCpPqbMrC/z+Xl5kW4C1ybEAMzTjheIORuaKCk+T3+EaC4t/pUE+ToUZlu3mfLMgDS8Cqs3/UmAULpY+NjRQZuOmEu0b0B5Ho1R4sUhAlBREhb1mDVn/4MORwPwwn0JTLhL1G1NgTzB+sVZudZJpPSZRa2nh1TndexA7I5RzInTiQwdX9ChajNPt7QHiJCjpe1adeDq4PTvvJTANfEilXCMie9XN51kFJ0vuTLbr1jLqEvLS+jpKCagFpsEmtNKffORt3JxuwFLETsk2LZi87+DJBhJOpmcOZIXWY29t7EYFaA0xRRTrLdg5z9G0Zp1Tpm67V0o9BEn3V5w3OZFPxybLNZhFYQcjfiwq09kw1OSYKKDVWI5730oZH2ayLphTJBeGUR+Q3//XDuS6kW9xeN15dBIZxLVnilh/fuk4EiD76o/ic/znorg7nlJoKxGmOnl9cwO4g==
+X-MS-Exchange-AntiSpam-MessageData: DyP3RspsG2/j4W3atibpwwzRWQRS4ikfLHMqkjnfzm3p7dnk2TVSBtoKsSwLO5hJIfSxQITCIf/2za9fVS2WeBTHWP+UNvYuf+jRHbyvlhrWLvMU2NHJ0hJFdpQhytIp+gZkFyTqUTtIjbE74M3F1w==
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71534422-479e-48a5-f597-08d7ca7b1128
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 13:57:01.5668
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KRWlkJAheJfHYDs5ZY96yxK2u4Oq+dw0gCyfcpkutLtmXBggG732Qlq3tZWhmP6In5Fxf/4MEJG1xW+WOsKpaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3567
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-17_05:2020-03-17,2020-03-17 signatures=0
+X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30 impostorscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 classifier=spam adjust=30 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003170060
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-*NOT FOR MERGING*
+Add device-tree binding for ADI AD7291 ADC.
 
-Add PCS MDIO nodes for the LX2160A, which will be used when the MAC
-is in PHY mode and is using in-band negotiation.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Michael Auchter <michael.auchter@ni.com>
 ---
- .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 144 ++++++++++++++++++
- 1 file changed, 144 insertions(+)
+ .../bindings/iio/adc/adi,ad7291.yaml          | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index e5ee5591e52b..732af33eec18 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -960,6 +960,132 @@
- 			status = "disabled";
- 		};
- 
-+		pcs_mdio1: mdio@8c07000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c07000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
+new file mode 100644
+index 000000000000..93aa29413049
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7291.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+		pcs_mdio2: mdio@8c0b000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c0b000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++title: AD7291 8-Channel, I2C, 12-Bit SAR ADC with Temperature Sensor
 +
-+		pcs_mdio3: mdio@8c0f000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c0f000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++maintainers:
++  - Michael Auchter <michael.auchter@ni.com>
 +
-+		pcs_mdio4: mdio@8c13000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c13000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++description: |
++  Analog Devices AD7291 8-Channel I2C 12-Bit SAR ADC with Temperature Sensor
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7291.pdf
 +
-+		pcs_mdio5: mdio@8c17000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c17000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++properties:
++  compatible:
++    enum:
++      - adi,ad7291
 +
-+		pcs_mdio6: mdio@8c1b000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c1b000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++  reg:
++    maxItems: 1
 +
-+		pcs_mdio7: mdio@8c1f000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c1f000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++  vref-supply:
++    description: |
++      The regulator supply for ADC reference voltage.
 +
-+		pcs_mdio8: mdio@8c23000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c23000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++  '#address-cells':
++    const: 1
 +
-+		pcs_mdio9: mdio@8c27000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c27000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++  '#size-cells':
++    const: 0
 +
-+		pcs_mdio10: mdio@8c2b000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c2b000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++required:
++  - compatible
++  - reg
 +
-+		pcs_mdio11: mdio@8c2f000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c2f000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
 +
-+		pcs_mdio12: mdio@8c33000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c33000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
++      ad7291: adc@0 {
++        compatible = "adi,ad7291";
++        reg = <0>;
++        vref-supply = <&adc_vref>;
++      };
++    };
 +
-+		pcs_mdio13: mdio@8c37000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c37000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
-+
-+		pcs_mdio14: mdio@8c3b000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c3b000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
-+
-+		pcs_mdio15: mdio@8c3f000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c3f000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
-+
-+		pcs_mdio16: mdio@8c43000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c43000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
-+
-+		pcs_mdio17: mdio@8c47000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c47000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
-+
-+		pcs_mdio18: mdio@8c4b000 {
-+			compatible = "fsl,fman-memac-mdio";
-+			reg = <0x0 0x8c4b000 0x0 0x1000>;
-+			little-endian;
-+			status = "disabled";
-+		};
-+
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible = "fsl,qoriq-mc";
- 			reg = <0x00000008 0x0c000000 0 0x40>,
-@@ -988,91 +1114,109 @@
- 				dpmac1: dpmac@1 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x1>;
-+					pcs-mdio = <&pcs_mdio1>;
- 				};
- 
- 				dpmac2: dpmac@2 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x2>;
-+					pcs-mdio = <&pcs_mdio2>;
- 				};
- 
- 				dpmac3: dpmac@3 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x3>;
-+					pcs-mdio = <&pcs_mdio3>;
- 				};
- 
- 				dpmac4: dpmac@4 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x4>;
-+					pcs-mdio = <&pcs_mdio4>;
- 				};
- 
- 				dpmac5: dpmac@5 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x5>;
-+					pcs-mdio = <&pcs_mdio5>;
- 				};
- 
- 				dpmac6: dpmac@6 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x6>;
-+					pcs-mdio = <&pcs_mdio6>;
- 				};
- 
- 				dpmac7: dpmac@7 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x7>;
-+					pcs-mdio = <&pcs_mdio7>;
- 				};
- 
- 				dpmac8: dpmac@8 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x8>;
-+					pcs-mdio = <&pcs_mdio8>;
- 				};
- 
- 				dpmac9: dpmac@9 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x9>;
-+					pcs-mdio = <&pcs_mdio9>;
- 				};
- 
- 				dpmac10: dpmac@a {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0xa>;
-+					pcs-mdio = <&pcs_mdio10>;
- 				};
- 
- 				dpmac11: dpmac@b {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0xb>;
-+					pcs-mdio = <&pcs_mdio11>;
- 				};
- 
- 				dpmac12: dpmac@c {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0xc>;
-+					pcs-mdio = <&pcs_mdio12>;
- 				};
- 
- 				dpmac13: dpmac@d {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0xd>;
-+					pcs-mdio = <&pcs_mdio13>;
- 				};
- 
- 				dpmac14: dpmac@e {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0xe>;
-+					pcs-mdio = <&pcs_mdio14>;
- 				};
- 
- 				dpmac15: dpmac@f {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0xf>;
-+					pcs-mdio = <&pcs_mdio15>;
- 				};
- 
- 				dpmac16: dpmac@10 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x10>;
-+					pcs-mdio = <&pcs_mdio16>;
- 				};
- 
- 				dpmac17: dpmac@11 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x11>;
-+					pcs-mdio = <&pcs_mdio17>;
- 				};
- 
- 				dpmac18: dpmac@12 {
- 					compatible = "fsl,qoriq-mc-dpmac";
- 					reg = <0x12>;
-+					pcs-mdio = <&pcs_mdio18>;
- 				};
- 			};
- 		};
 -- 
-2.20.1
+2.24.1
 
