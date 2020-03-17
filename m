@@ -2,99 +2,139 @@ Return-Path: <SRS0=fjOU=5C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3A5C10F29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D96C18E5B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 17:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8982073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 16:51:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YkGBAuYA"
+	by mail.kernel.org (Postfix) with ESMTP id 04ECF20714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 17:01:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgCQQvP (ORCPT
+        id S1726506AbgCQRBC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:51:15 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:35237 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbgCQQvP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 12:51:15 -0400
-Received: by mail-vk1-f196.google.com with SMTP id g25so4763977vkl.2
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 09:51:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5+4aJa7IpjGZCPI3Fh6cthpiIv4IQ9AsMliiqsg2mts=;
-        b=YkGBAuYA3wpjmbt2VnCUIMI0xJVISAM2HQ+4vpw4N5qYFuYvkK/XDLG95zf96seDTj
-         JLTzADnRCAjLkajykdhv5TBY+UyCAAt4Fg0/W1SluewltWU9Q42ysjJuhoOH4sDheabF
-         gAhRDlrX3PZyU1wGBAo+zTG5FaY2a1pPsQWXA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5+4aJa7IpjGZCPI3Fh6cthpiIv4IQ9AsMliiqsg2mts=;
-        b=anUky1lOnFcXOQx1grM5fZre8JhjwRCXjh8UmVv0ujrBdaHv/x+98Tpt5vVrK+R1Gx
-         1v49yF+ovloycH0nITjy5L3d3KYnLhlkj5bxsntTxoq7f8TSUBL4TJBuR+M2QN4WclqJ
-         SRgI662cpQIn/we/vihiseJTL7i+EDmSbhtHKfqkNOAG7bpvC+EzhBxUc8qW9Z7RxdDw
-         bHqi8InEHrZv2PDOe62zxt8VM3Svf5yIAP4ddEqF7PfP2xMt/G8F3yjnBkRceXM11aJO
-         hJP0xc9amhHra9ZdtUwUdWTaqc1pzsbFio9qafeESZ72OT6aEHPS8Sifse3KOocPjKXs
-         TsFA==
-X-Gm-Message-State: ANhLgQ2esS0oAX+wVvrUYYLLYGMEMNvh0V7Q8F6KJlz8nXQDlzp3R5t1
-        k1Ipgz8Bba/Mdasmvepxr7/tcgXcaEo=
-X-Google-Smtp-Source: ADFU+vuDOFSOgbyVZF/7R+yRlrd2xYlIZkN9TeWlJfCpl9Yuh2NImLc4QGBNOB0B0l1D5TLdq65a9g==
-X-Received: by 2002:a1f:3613:: with SMTP id d19mr111207vka.71.1584463873193;
-        Tue, 17 Mar 2020 09:51:13 -0700 (PDT)
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
-        by smtp.gmail.com with ESMTPSA id y14sm1690460uac.10.2020.03.17.09.51.12
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 09:51:12 -0700 (PDT)
-Received: by mail-vk1-f179.google.com with SMTP id s194so6176205vkb.11
-        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 09:51:12 -0700 (PDT)
-X-Received: by 2002:a1f:2305:: with SMTP id j5mr155171vkj.40.1584463871622;
- Tue, 17 Mar 2020 09:51:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584430804-8343-1-git-send-email-rkambl@codeaurora.org>
-In-Reply-To: <1584430804-8343-1-git-send-email-rkambl@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 17 Mar 2020 09:50:59 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VLZ4RQQuji=1kKE5EnqrpY0M=U_G8XigAWAaZ8mxc=eg@mail.gmail.com>
-Message-ID: <CAD=FV=VLZ4RQQuji=1kKE5EnqrpY0M=U_G8XigAWAaZ8mxc=eg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Changed polling-delay in
- Thermal-zones node
-To:     Rajeshwari <rkambl@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        sivaa@codeaurora.org, Sandeep Maheswaram <sanm@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 17 Mar 2020 13:01:02 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:51761 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbgCQRBB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 13:01:01 -0400
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jEFbj-00005R-CC; Tue, 17 Mar 2020 17:02:23 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Cc:     Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v6 0/3] Add support for the Gateworks System Controller
+Date:   Tue, 17 Mar 2020 10:00:50 -0700
+Message-Id: <1584464453-28200-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+This series adds support for the Gateworks System Controller used on Gateworks
+Laguna, Ventana, and Newport product families.
 
-On Tue, Mar 17, 2020 at 12:42 AM Rajeshwari <rkambl@codeaurora.org> wrote:
->
-> Changed polling-delay and polling-delay-passive to zero as per
-> the requirement.
->
-> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 100 +++++++++++++++++------------------
->  1 file changed, 50 insertions(+), 50 deletions(-)
+The GSC is an MSP430 I2C slave controller whose firmware embeds the following
+features:
+ - I/O expander (16 GPIO's emulating a PCA955x)
+ - EEPROM (enumating AT24)
+ - RTC (enumating DS1672)
+ - HWMON
+ - Interrupt controller with tamper detect, user pushbotton
+ - Watchdog controller capable of full board power-cycle
+ - Power Control capable of full board power-cycle
 
-It probably wouldn't hurt to mention in the commit message that this
-is because the thermal sensor interrupts are all hooked up and thus
-the polling is not a useful thing to do.  ...but other than that:
+see http://trac.gateworks.com/wiki/gsc for more details
+---
+v6:
+ - hwmon: fix size of info field
+ - hwmon: improve pwm output control documentation 
+ - hwmon: include unit suffix in divider and offset
+ - hwmon: change subnode name to gsc-adc
+ - hwmon: change to fan subnode
+ - hwmon: fix voltage offset
+ - dt-bindings: fix commit message typo
+ - dt-bindings: drop invalid description from #interrupt-cells property
+ - dt-bindings: fix adc pattern property
+ - dt-bindings: add unit suffix
+ - dt-bindings: replace hwmon/adc with adc/channel
+ - dt-bindings: changed adc type to gw,mode 
+ - dt-bindings: add unit suffix and drop ref for voltage-divider
+ - dt-bindings: add unit suffix for voltage-offset
+ - dt-bindings: moved fan to its own subnode with base register
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+v5:
+ - fix checkpatch issues
+ - fix dt_binding_check issues
+ - address feedback from v4
+
+v4:
+ - hwmon: move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+ - hwmon: remove unncessary resolution/scaling properties for ADCs
+ - bindings: update to yaml Documentation
+ - removed watchdog driver
+
+v3:
+ - removed unnecessary input driver
+ - added wdt driver
+ - bindings: encorporated feedback from mailng list
+ - hwmon:
+ - encoroprated feedback from mailng list
+ - added support for raw ADC voltage input used in newer GSC firmware
+
+v2:
+ - change license comment block style
+ - remove COMPILE_TEST
+ - fixed whitespace issues
+ - replaced a printk with dev_err
+ - remove DEBUG
+ - simplify regmap_bulk_read err check
+ - remove break after returns in switch statement
+ - fix fan setpoint buffer address
+ - remove unnecessary parens
+ - consistently use struct device *dev pointer
+ - add validation for hwmon child node props
+ - move parsing of of to own function
+ - use strlcpy to ensure null termination
+ - fix static array sizes and removed unnecessary initializers
+ - dynamically allocate channels
+ - fix fan input label
+ - support platform data
+
+Tim Harvey (3):
+  dt-bindings: mfd: Add Gateworks System Controller bindings
+  mfd: add Gateworks System Controller core driver
+  hwmon: add Gateworks System Controller support
+
+ .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 172 ++++++++++
+ Documentation/hwmon/gsc-hwmon.rst                  |  53 +++
+ Documentation/hwmon/index.rst                      |   1 +
+ MAINTAINERS                                        |  11 +
+ drivers/hwmon/Kconfig                              |   9 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/gsc-hwmon.c                          | 372 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/gateworks-gsc.c                        | 292 ++++++++++++++++
+ include/linux/mfd/gsc.h                            |  72 ++++
+ include/linux/platform_data/gsc_hwmon.h            |  44 +++
+ 12 files changed, 1038 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+ create mode 100644 Documentation/hwmon/gsc-hwmon.rst
+ create mode 100644 drivers/hwmon/gsc-hwmon.c
+ create mode 100644 drivers/mfd/gateworks-gsc.c
+ create mode 100644 include/linux/mfd/gsc.h
+ create mode 100644 include/linux/platform_data/gsc_hwmon.h
+
+-- 
+2.7.4
+
