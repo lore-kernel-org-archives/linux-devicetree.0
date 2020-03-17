@@ -4,171 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B5EC5ACD9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CDDC4CECE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722A820736
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A07A20714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 09:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgCQJlX (ORCPT
+        id S1726719AbgCQJlm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 05:41:23 -0400
-Received: from v6.sk ([167.172.42.174]:50870 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727266AbgCQJlW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 17 Mar 2020 05:41:22 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 48B316109F;
-        Tue, 17 Mar 2020 09:41:19 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 26/28] dt-bindings: spi: Convert spi-pxa2xx to json-schema
-Date:   Tue, 17 Mar 2020 10:39:20 +0100
-Message-Id: <20200317093922.20785-27-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200317093922.20785-1-lkundrak@v3.sk>
-References: <20200317093922.20785-1-lkundrak@v3.sk>
+        Tue, 17 Mar 2020 05:41:42 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50553 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbgCQJlY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 05:41:24 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jE8ix-0004Q6-2M; Tue, 17 Mar 2020 10:41:23 +0100
+Received: from mtr by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mtr@pengutronix.de>)
+        id 1jE8iw-00049K-E4; Tue, 17 Mar 2020 10:41:22 +0100
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dhaval Shah <dshah@xilinx.com>, kernel@pengutronix.de,
+        Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH 1/6] soc: xilinx: vcu: drop useless success message
+Date:   Tue, 17 Mar 2020 10:41:10 +0100
+Message-Id: <20200317094115.15896-2-m.tretter@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200317094115.15896-1-m.tretter@pengutronix.de>
+References: <20200317094115.15896-1-m.tretter@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mtr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A straightforward conversion of the the spi-pxa2xx binding to DT schema
-format using json-schema.
+The message that the driver was successfully probed only adds useless
+noise. Drop the message.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
 ---
- .../bindings/spi/marvell,mmp2-ssp.yaml        | 58 +++++++++++++++++++
- .../devicetree/bindings/spi/spi-pxa2xx.txt    | 27 ---------
- 2 files changed, 58 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-pxa2xx.txt
+ drivers/soc/xilinx/xlnx_vcu.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml b/Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml
-new file mode 100644
-index 0000000000000..de6b6a53b70d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+# Copyright 2019,2020 Lubomir Rintel <lkundrak@v3.sk>
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/marvell,mmp2-ssp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PXA2xx SSP SPI Controller bindings
-+
-+maintainers:
-+  - Lubomir Rintel <lkundrak@v3.sk>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: marvell,mmp2-ssp
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  ready-gpios:
-+    description: |
-+      GPIO used to signal a SPI master that the FIFO is filled and we're
-+      ready to service a transfer. Only useful in slave mode.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+dependencies:
-+  ready-gpios: [ spi-slave ]
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/marvell,mmp2.h>
-+    spi@d4035000 {
-+        compatible = "marvell,mmp2-ssp";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        reg = <0xd4035000 0x1000>;
-+        clocks = <&soc_clocks MMP2_CLK_SSP0>;
-+        interrupts = <0>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/spi/spi-pxa2xx.txt b/Documentation/devicetree/bindings/spi/spi-pxa2xx.txt
-deleted file mode 100644
-index e30e0c2a4bce1..0000000000000
---- a/Documentation/devicetree/bindings/spi/spi-pxa2xx.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--PXA2xx SSP SPI Controller
+diff --git a/drivers/soc/xilinx/xlnx_vcu.c b/drivers/soc/xilinx/xlnx_vcu.c
+index a3aa40996f13..dcd8e7824b06 100644
+--- a/drivers/soc/xilinx/xlnx_vcu.c
++++ b/drivers/soc/xilinx/xlnx_vcu.c
+@@ -571,8 +571,6 @@ static int xvcu_probe(struct platform_device *pdev)
+ 
+ 	dev_set_drvdata(&pdev->dev, xvcu);
+ 
+-	dev_info(&pdev->dev, "%s: Probed successfully\n", __func__);
 -
--Required properties:
--- compatible: Must be "marvell,mmp2-ssp".
--- reg: Offset and length of the device's register set.
--- interrupts: Should be the interrupt number.
--- clocks: Should contain a single entry describing the clock input.
--- #address-cells:  Number of cells required to define a chip select address.
--- #size-cells: Should be zero.
--
--Optional properties:
--- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
--  Documentation/devicetree/bindings/spi/spi-bus.txt
--- spi-slave: Empty property indicating the SPI controller is used in slave mode.
--- ready-gpios: GPIO used to signal a SPI master that the FIFO is filled
--  and we're ready to service a transfer. Only useful in slave mode.
--
--Child nodes represent devices on the SPI bus
--  See ../spi/spi-bus.txt
--
--Example:
--	ssp1: spi@d4035000 {
--		compatible = "marvell,mmp2-ssp";
--		reg = <0xd4035000 0x1000>;
--		clocks = <&soc_clocks MMP2_CLK_SSP0>;
--		interrupts = <0>;
--	};
+ 	return 0;
+ 
+ error_pll_ref:
 -- 
-2.25.1
+2.20.1
 
