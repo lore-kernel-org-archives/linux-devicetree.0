@@ -8,52 +8,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B25C10F29
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D793C10F29
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A098205ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51EA020736
+	for <linux-devicetree@archiver.kernel.org>; Tue, 17 Mar 2020 10:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRsG0bSZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFZQuTgf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgCQKUJ (ORCPT
+        id S1726474AbgCQKUP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:20:09 -0400
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:47075 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgCQKUJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 06:20:09 -0400
-Received: by mail-lj1-f180.google.com with SMTP id d23so22084934ljg.13;
-        Tue, 17 Mar 2020 03:20:08 -0700 (PDT)
+        Tue, 17 Mar 2020 06:20:15 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37474 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgCQKUM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 06:20:12 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r24so22171847ljd.4;
+        Tue, 17 Mar 2020 03:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=QfN9+apjqgrpyXVBAuhOdOy73M+EI8t13wRirUC/hq4=;
-        b=CRsG0bSZgXP3imIAs+8w/8G8duiwcTZ6AFaxlOZU6lgbWcGnRCqO0xXJjgPQUdFhsi
-         JqQFK5GYwSRle9CiC66EXEIeDcNbAj63aohv1a1vALQkm7PTW+6dxUvuGMnm8xPvwgJu
-         5Va3eOWLSiNL4rO0ahN2PvGTJOEXlmYIQcIMhaS1ItThH14NcfrFgpvkainFSYKVy2Fl
-         /z+U8kk4G/hhsi4qEvHCAfMne9DGjskZm2TGkW6YJjAt2sajqXSVS3cud/xOEgVoGI1a
-         eJkhk3xy/uykwM1/NAxMzfVSZXGuxKFgRTDQJ5byoKdQEIsaF50qoAzD34XfxV6JPl+G
-         +KEA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=TGItJuz5W+h2gk6C+B6NIbPkvJZ2cZOlOG/P+lQP9D0=;
+        b=JFZQuTgf0ix5GURciyxJzWH0sf14opuwqmkI7yvs/F5Adnfkifh53/Erfv3MQTmy9/
+         9GQY7KikuoGDq/yCVcBDkdMFy3/kh7ZhPUiHw2lGonWtoSOaIFA2KhsqhfzSlN2rPWfG
+         IlXWiOriBmkqXsDsZNrFxijHgX2FRmzOEdxtc1ijrDL2F2M2s4ulfcWlt2AN0AC3diI1
+         s5rjK2JxOg8XUC9PJybzYaqxvBKFukvPzQH/pjfB1j83zku/E8mskdc33c8vCKAr4aW3
+         inpShlE9qeQPQIWCfAZmUMCh8N/1dztWnZmGKEvsohgeY2GjsUB/kdzujVEVzcqlx22+
+         fqug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QfN9+apjqgrpyXVBAuhOdOy73M+EI8t13wRirUC/hq4=;
-        b=nX7v6oM7fbTInyW7TuKK9tF571rEF0MiWcEb/Fj0hMJs2KKZdTX3+VKaHHM+uXevBG
-         Tfomd1NubSF/DHH8QPomopH7llSREriuJaM+Jb8EWz5X+8Rc9Nho7SB1cgsxjRPeDBYv
-         g9P/9vn73Uyy4c9z2wigu1ZspVTO14ZDEmlT1+11JnkA3juZARh7/mPHNrJmOPigO6T0
-         wIXuw5XrwXyn0wi5ou2O70HAPDJSKvNMQ5qXU9AT8WoaXBRHj1cfqaataagbRbtTh5nn
-         pcfz1ELnEs7cGcY0iMiPZ75ZOh842if535WZ+UFmfHJO/mlNKHo1/elew8GiSqo9n2kH
-         5l0Q==
-X-Gm-Message-State: ANhLgQ3Kp+8sfzyN/Ja+x9wKAAgGyyR0CSKRNWttUlfusr5WfUH+BTYi
-        12L+EZgxp4vbZXUV3tuWy4g=
-X-Google-Smtp-Source: ADFU+vvANbRH8hQuVM/g7obFDWw4eF8AgZ4x7wC3XCx7JToxciEnTVjLbWKiSQxm6JEPVDxIDNQZ0g==
-X-Received: by 2002:a2e:b892:: with SMTP id r18mr2404764ljp.252.1584440407694;
-        Tue, 17 Mar 2020 03:20:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=TGItJuz5W+h2gk6C+B6NIbPkvJZ2cZOlOG/P+lQP9D0=;
+        b=pRlI8iDs6zOLA37RwfCzEUFVOvcgD1In9nz7Rf3fQtQZjO4/Q5Kr8PYk8TzE6ww234
+         ZJaQA+8hSShRH4Ejb3qaGLDpaJX58OcnCeQQgMRkrL9wilG/LBMcEHkfzVt+Ck62HkcS
+         GQbnMAel5TS+9lVZ8Be/d99i7n2j+7oaUgk5P8dyVN5kkfyxLSNxyiHa3e1keka8KN28
+         xfjpC7yKhDcmnPvAPM6vcYfDkGaAivzJknt++Q8ShPjZ6l4t8QP9bAZeaUfm6nAc3t48
+         aze5etRThvTCa3MDfxkhf5aEaIIrKC6grNazHakYg8tnHekL9PvNfbAVqWwRkeYZx5Su
+         fTvg==
+X-Gm-Message-State: ANhLgQ25ArdZoLW8dgd1snQ7Gdt7PE8fOIiMoDC6ixSEdqmaDQ4HtWTF
+        G9iDw8uDT26sPSRGJhNuMYk=
+X-Google-Smtp-Source: ADFU+vslGfTWII4zYbs4+SWZVmzcm1asQXYP0xCVtUNvJ3fqgQvjprHgGlIsriWG0xbiU7Nx1gBO4A==
+X-Received: by 2002:a05:651c:1058:: with SMTP id x24mr2423894ljm.248.1584440410561;
+        Tue, 17 Mar 2020 03:20:10 -0700 (PDT)
 Received: from localhost (host-176-37-176-139.la.net.ua. [176.37.176.139])
-        by smtp.gmail.com with ESMTPSA id u10sm1974653ljj.88.2020.03.17.03.20.06
+        by smtp.gmail.com with ESMTPSA id m18sm1956945ljj.52.2020.03.17.03.20.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 03:20:07 -0700 (PDT)
+        Tue, 17 Mar 2020 03:20:10 -0700 (PDT)
 From:   Igor Opaniuk <igor.opaniuk@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
@@ -63,17 +64,15 @@ Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
         Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 1/5] ARM: dts: imx6: Dual license adding MIT
-Date:   Tue, 17 Mar 2020 12:19:43 +0200
-Message-Id: <20200317101947.27250-1-igor.opaniuk@gmail.com>
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 3/5] dt-bindings: gpio: Dual license file adding MIT
+Date:   Tue, 17 Mar 2020 12:19:45 +0200
+Message-Id: <20200317101947.27250-3-igor.opaniuk@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200317101947.27250-1-igor.opaniuk@gmail.com>
+References: <20200317101947.27250-1-igor.opaniuk@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -82,46 +81,24 @@ X-Mailing-List: devicetree@vger.kernel.org
 From: Igor Opaniuk <igor.opaniuk@toradex.com>
 
 Dual license files adding MIT license, which will permit to re-use
-device trees in other non-GPL OSS projects.
+bindings and dependent device tree sources in other non-GPL OSS projects.
 
 Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
 ---
 
- arch/arm/boot/dts/imx6dl-pinfunc.h | 2 +-
- arch/arm/boot/dts/imx6dl.dtsi      | 2 +-
- arch/arm/boot/dts/imx6qdl.dtsi     | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ include/dt-bindings/gpio/gpio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-pinfunc.h b/arch/arm/boot/dts/imx6dl-pinfunc.h
-index 9d88d09f9bf6..960d300ea9ba 100644
---- a/arch/arm/boot/dts/imx6dl-pinfunc.h
-+++ b/arch/arm/boot/dts/imx6dl-pinfunc.h
+diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio/gpio.h
+index c029467e828b..01c528708208 100644
+--- a/include/dt-bindings/gpio/gpio.h
++++ b/include/dt-bindings/gpio/gpio.h
 @@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
-+/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
+-/* SPDX-License-Identifier: GPL-2.0 */
++/* SPDX-License-Identifier: GPL-2.0 OR MIT */
  /*
-  * Copyright 2013 Freescale Semiconductor, Inc.
-  */
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index 008312ee0c31..77e946b3d012 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
- //
- // Copyright 2013 Freescale Semiconductor, Inc.
- 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index e6b4b8525f98..75d746952932 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0+
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
- //
- // Copyright 2011 Freescale Semiconductor, Inc.
- // Copyright 2011 Linaro Ltd.
+  * This header provides constants for most GPIO bindings.
+  *
 -- 
 2.17.1
 
