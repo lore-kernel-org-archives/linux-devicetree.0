@@ -2,182 +2,172 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5352C5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C88C5ACD6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43212076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99412076D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="raY6hGar"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="iBdzVVXy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbgCRLsB (ORCPT
+        id S1727003AbgCRLsv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:48:01 -0400
-Received: from mail-db8eur05on2124.outbound.protection.outlook.com ([40.107.20.124]:44416
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726616AbgCRLsB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:48:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dtzs2GW7vy0UmZRmF+m72Fpo4YleF9VH/w+g52Ued9FukFS2RmJIYi+MHnDyOFCD6ME27sKc8eaUUVLyC7IN2oGZ5qoe7h2rB7jMDulrsWTLEBmxthue2D4qazrjKxKq1zcDUVe5ETbIzhzYuiqEErj5K41VdaK2QpeV8qvCQMI9cMU7ovbPoAMHjNgsGCZ2h2gpT1da/kqWYWLCwv+MIaX7A/KKqV8yKpUqWlkBD6U7B1a8+cwk/zpxNPusCT+0D5KSumtr9IYJfFCTpUCsg4miBRyYx4vnHh+yq2n/1mxablP6G1eocVX25hLz/trvMgSQ5HTX85JS1z3/fcEzNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lP8agbcq2AYAILADyUgk5nJ/czwsxA8ATaSe+V6FyBs=;
- b=BNZiGUHM1VYccOLplqeqjFdv9LGeVzXOaJ5ZQN1tz80pYeWdJYqMP7lG0qAtXZmt6KoRcAGJQ81NNKdkQEYvnnPaOwzpQCRNz2b8pcSACK9uZZQArJQI/7XjBUr09SQrL7Wua9H676/tZTjNkj+oxqkvwhVhuJi+4tybgbITEYhCkXCCb/dX+kX2313Pkw15DD76S6E5pnDG378ETKXe6TmZGlTBrSU3/YPPHyXf4SAy55mQ/8cRWzjw/DLsDauowhOpP5FB/w5gUJrHecvclx764TRgM5oTBcOB+G4Jq4Nn8UFrBHHzAWFQFHQ6ezW5cvhSIGIxXcHQi5HchEi3kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lP8agbcq2AYAILADyUgk5nJ/czwsxA8ATaSe+V6FyBs=;
- b=raY6hGar69e12FrP/DIAVhCgnGos7uAR2lTW4uDkqcWc/mgg4e2cr3ZnjZXXAKaFGShfWzoVMH7P4dK2yxgyxSEOq9lF5sBH2+BgKOegmuEBACHawoTcAlCnIfXB/rZ2boE6fCJklSeCyPn8mOGKr1Y7N+grjcDUhLflPnZj+gM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
- VI1PR05MB7086.eurprd05.prod.outlook.com (20.181.33.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.21; Wed, 18 Mar 2020 11:47:58 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
- 11:47:57 +0000
-X-Gm-Message-State: ANhLgQ2nindBXB5yIHNfw8a4SEU2HyslFZ9xg9azQBzMnWEnTFx1qhIG
-        BojKT83PPo+dZpFKgGZh+Pf7B6/TOiulCqozTQk=
-X-Google-Smtp-Source: ADFU+vuIN9vi3EnzahwoHqBu0uZg9qdX6KincFfsWht2IbWF+j4fV2L42M4aXtG7Pv38JtpTaFmsRwkNpHNmxW/8YWA=
-X-Received: by 2002:a37:4fd4:: with SMTP id d203mr3613801qkb.249.1584532071685;
- Wed, 18 Mar 2020 04:47:51 -0700 (PDT)
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-2-oleksandr.suvorov@toradex.com> <20200317174043.GA1464607@ulmo>
-In-Reply-To: <20200317174043.GA1464607@ulmo>
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Date:   Wed, 18 Mar 2020 13:47:40 +0200
-X-Gmail-Original-Message-ID: <CAGgjyvGDTD=ZgEjU540HLApQXCoM1a8bk_-eQbS44sge+GpeAg@mail.gmail.com>
-Message-ID: <CAGgjyvGDTD=ZgEjU540HLApQXCoM1a8bk_-eQbS44sge+GpeAg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-ClientProxiedBy: MN2PR05CA0020.namprd05.prod.outlook.com
- (2603:10b6:208:c0::33) To VI1PR05MB3279.eurprd05.prod.outlook.com
- (2603:10a6:802:1c::24)
+        Wed, 18 Mar 2020 07:48:51 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:54977 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726586AbgCRLsu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:48:50 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id EXBkjlhXZfHuvEXBnjap5t; Wed, 18 Mar 2020 12:48:48 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1584532128; bh=khEp2I8LHm4HvDGtASxAHrHxJnhSF2yTyhJnoLBOGY4=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=iBdzVVXyhBP2nEUkOIPTZIiBjqoW5rADs11fygjelrCdLqvO6Cfk0nxMrfyDix/Tw
+         OHhOFr71S0sX6aE7kmemwv+pucArj/R6afCPEMybC+qMo8ucl/lxVgFRdDxMBfrPTr
+         i2FTj6qpDHdu6onnD07bEMVYyGMcYItJzNnCnoW9cY4k1bPlzzzh292J/MRV4S4jW2
+         SePonrJlg+tr6DhZZwdE/oujGLdGlxPBQQDeIYh1ypMUDObrcceGMWxmvK6QRd+FJt
+         cLyDH0Cu8eXOWhDC2Po7LYgRe/BQZ7vgApLxlXl46Dsv67NT8vuBA+VSCCgUcjXSE3
+         TzTdUIehjBNmg==
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        helen.koike@collabora.com, sboyd@kernel.org
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+ <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
+ <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
+ <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
+Date:   Wed, 18 Mar 2020 12:48:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mail-qk1-f179.google.com (209.85.222.179) by MN2PR05CA0020.namprd05.prod.outlook.com (2603:10b6:208:c0::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.12 via Frontend Transport; Wed, 18 Mar 2020 11:47:56 +0000
-Received: by mail-qk1-f179.google.com with SMTP id h14so38096020qke.5;        Wed, 18 Mar 2020 04:47:56 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2nindBXB5yIHNfw8a4SEU2HyslFZ9xg9azQBzMnWEnTFx1qhIG
-        BojKT83PPo+dZpFKgGZh+Pf7B6/TOiulCqozTQk=
-X-Google-Smtp-Source: ADFU+vuIN9vi3EnzahwoHqBu0uZg9qdX6KincFfsWht2IbWF+j4fV2L42M4aXtG7Pv38JtpTaFmsRwkNpHNmxW/8YWA=
-X-Received: by 2002:a37:4fd4:: with SMTP id
- d203mr3613801qkb.249.1584532071685; Wed, 18 Mar 2020 04:47:51 -0700 (PDT)
-X-Gmail-Original-Message-ID: <CAGgjyvGDTD=ZgEjU540HLApQXCoM1a8bk_-eQbS44sge+GpeAg@mail.gmail.com>
-X-Originating-IP: [209.85.222.179]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 44ff6e5f-e0a7-4632-8fd3-08d7cb3232fc
-X-MS-TrafficTypeDiagnostic: VI1PR05MB7086:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB708653A6D05EA6C4D333DFEEF9F70@VI1PR05MB7086.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 03468CBA43
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(39850400004)(396003)(136003)(376002)(199004)(6862004)(450100002)(42186006)(54906003)(186003)(53546011)(44832011)(4326008)(52116002)(26005)(2906002)(107886003)(66946007)(66476007)(8936002)(66556008)(478600001)(8676002)(81156014)(81166006)(6666004)(316002)(5660300002)(9686003)(55446002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB7086;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RtWCVng/DCbjFv6x8LHcC+17QRXXijEQKLf43aO8yq0pHHt/+QfaZXU/+gVGgylOdUcgRAn1vqnRjOncD2Ji4Ae18qFw8PQuGyvYayUB+FfEh0W0fy46ZwYU1Ido/iI2JpauL4j2dQtzIR4wtxO1SN3YWW2W/ELC0z6WAIMBA8zC2wRCW7rMSrIjjb/nWbYXiofHlnqr663SDmhRHd6WriZSGRcFcmAHCIA2dwJCKOTKpIIBS+md6uRnnk9sKRxkkDpgt8u4fRWD2PgjnZ4/lmkxfwBwSwxPjkDuUt/GkqyeFBtF9k6ByUz3SH9kOwHtkiY82GrbT4+wXByzsMkxPFooVQeIkBUEFcyFqtQahKFgekT8akl0MYm895lDFCcaEiLAjhnwS6IouZW7mkAfdl0UorMmIGqFSm7CRAIUUgR1RYwJ/Ef/1y3tDrsWmpq+
-X-MS-Exchange-AntiSpam-MessageData: yJyku39xAZnXhiEcq4BLI/0KPG1BsfxxQt94uADbYJ1seuNUTO/t8fkN3LY8dDaPdrzLSPjab57aiYy3hq0AgwH6yjbLAI9eSAykJtzG3+kl5hguFbmS3Tfnv96ebLLsrCUXTZsr+zXT7wmfic6TPw==
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44ff6e5f-e0a7-4632-8fd3-08d7cb3232fc
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 11:47:56.4878
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2ckb0Vx29Sh/fJO7GoM2lfyiS+DG7FhFtfv1o8gRwsdcm8AV/eTHHIpTAjmxRj3/7QjbWjKSBmxaW5kUcdKPDShtux4ufPp4+2gbrT3ejuo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB7086
+In-Reply-To: <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfNwp9oXmpvDLlU0y6yBiCGF+VBdilY6z9Cy/qdkxPcn40eWB/r6e9Te3ZFqwW+zTWphUslj27araajeEl8ItMcVphxVvmx1wOq4tJ77CiNTBKx/fCA9i
+ tSRmFih2blN9n/2QWo2mKp6V+5uPegrVxr1k4/Xk2YNsZo3j8qn2EKGuoMUQkR9n1pqkbK+/45VI0fmfqVsqV5WYX9ZGdTVsbprlUS29sQzOqbjscRnE1rxf
+ 0zTUZ556r9bxBGOEcnB//sy7dMF2Hde+ysTYNkl64I5t/S+3BmTpIPKDhTH2tWiYgx5BO6lkA3JSOOWVMu1cOtvSQo9IHEcXYFZKytgpzFxKJLoqjhu+4QNu
+ TtsbR8Fm/pJbeLaPq1d3vdYZHKoPESD4eRiG1/9Bs/7zVLo4vibLr5x60bARuEe/M+aTyk0zwKm2oOm+9JTey4lC/R36GwU6lxN6nwFmi9CiVzqekAtPdZ7z
+ H79/19gQ3cLu0Xopm3k9l187ks9LfJP006rO9SPx9WQ/J4W1D11EPk3NKB/MxL9z6S1611rFy0aiqMgJ
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 7:41 PM Thierry Reding <thierry.reding@gmail.com> wrote:
->
-> On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
-> > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
-> > Rename it to PWM_POLARITY_INVERTED.
->
-> It isn't misspelled. "inversed" is a synonym for "inverted". Both
-> spellings are correct.
+On 2/24/20 5:45 AM, Sowjanya Komatineni wrote:
+> 
+> On 2/20/20 11:11 AM, Sowjanya Komatineni wrote:
+>>
+>> On 2/20/20 5:33 AM, Hans Verkuil wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> (Replying to myself so I can explain this a bit more)
+>>>
+>>> On 2/20/20 1:44 PM, Hans Verkuil wrote:
+>>>>> +
+>>>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
+>>>>> +{
+>>>>> +    struct device_node *node = csi->dev->of_node;
+>>>>> +    unsigned int port_num;
+>>>>> +    int ret;
+>>>>> +    struct tegra_csi_channel *item;
+>>>>> +    unsigned int tpg_channels = csi->soc->csi_max_channels;
+>>>>> +
+>>>>> +    /* allocate CSI channel for each CSI x2 ports */
+>>>>> +    for (port_num = 0; port_num < tpg_channels; port_num++) {
+>>>>> +            item = devm_kzalloc(csi->dev, sizeof(*item), GFP_KERNEL);
+>>>> Using devm_*alloc can be dangerous. If someone unbinds the driver, then
+>>>> all memory allocated with devm_ is immediately freed. But if an 
+>>>> application
+>>>> still has a filehandle open, then when it closes it it might still 
+>>>> reference
+>>>> this already-freed memory.
+>>>>
+>>>> I recommend that you avoid using devm_*alloc for media drivers.
+>>> A good test is to unbind & bind the driver:
+>>>
+>>> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
+>>> echo -n 54080000.vi >unbind
+>>> echo -n 54080000.vi >bind
+>>>
+>>> First just do this without the driver being used. That already
+>>> gives me 'list_del corruption' kernel messages (list debugging
+>>> is turned on in my kernel).
+> 
+> Will fix in v4 to use kzalloc and also proper release v4l2 to make sure 
+> unbind/bind works properly.
+> 
+> BTW, tegra vi and csi are registered as clients to host1x video driver.
+> 
+> So, unbind and bind should be done with host1x video driver "tegra-video"
+> 
+> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+> echo -n tegra-video > unbind
+> echo -n tegra-video > bind
 
-> And as you noted in the cover letter, there's a conflict between the
-> macro defined in dt-bindings/pwm/pwm.txt. If they end up being included
-> in the wrong order you'll get a compile error.
+This still crashes with v4, at least if I am streaming with v4l2-ctl --stream-mmap.
+Is that known?
 
-This patch is a part of the patchset, which in result removes enum at all,
-so there will be no definition conflict.
+It's not a big deal at this moment, just want to know if this will be looked
+at later.
 
-> The enum was named this way on purpose to make it separate from the
-> definition for the DT bindings. Note that DT bindings are an ABI and can
-> never change, whereas the enum pwm_polarity is part of a Linux internal
-> API and doesn't have the same restrictions as an ABI.
+Regards,
 
-AFAIU, DTS files are not a part of ABI.
+	Hans
 
-I understand that enums are better than macros for some reasons.
-However, I think it is dangerous to use duplicate definitions in
-different places when values of these definitions use in the same
-code.
-So, given that the enum cannot be used in DT, I left only macros.
+> 
+>>>
+>>> Note that this first test is basically identical to a rmmod/modprobe
+>>> of the driver. But when I compiled the driver as a module it didn't
+>>> create any video device nodes! Nor did I see any errors in the kernel
+>>> log. I didn't pursue this, and perhaps I did something wrong, but it's
+>>> worth taking a look at.
+>>>
+>>> The next step would be to have a video node open with:
+>>>
+>>> v4l2-ctl --sleep 10
+>>>
+>>> then while it is sleeping unbind the driver and see what happens
+>>> when v4l2-ctl exits.
+>>>
+>>> Worst case is when you are streaming:
+>>>
+>>> v4l2-ctl --stream-mmap
+>>>
+>>> and then unbind.
+>>>
+>>> In general, the best way to get this to work correctly is:
+>>>
+>>> 1) don't use devm_*alloc
+>>> 2) set the release callback of struct v4l2_device and do all freeing 
+>>> there.
+>>> 3) in the platform remove() callback you call media_device_unregister()
+>>>     and video_unregister_device().
+>> Reg 3, in current patch, media_device_unregister is called in 
+>> host1x_video_remove
+>> video_unregister_device happens during host1x_video_remove -> 
+>> host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
+>>
+>>> It's worth getting this right in this early stage, rather than fixing it
+>>> in the future.
+>>>
+>>> Regards,
+>>>
+>>>          Hans
 
-You personally wrote that the enum pwm_polarity can change, so the
-desynchronization I quite possible.
-
-> As far as I'm concerned this is completely unnecessary churn that's
-> potentially going to come back and bite us, so I see no reason to accept
-> this.
-
-
->
-> Thierry
---
-Best regards
-Oleksandr Suvorov
-
-Toradex AG
-Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
