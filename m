@@ -2,175 +2,164 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03037C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 06:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44812C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 06:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE3B2076A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 06:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F47020768
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 06:22:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQEvsPU2"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="b61g8Wc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgCRGGZ (ORCPT
+        id S1726802AbgCRGWu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:06:25 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36277 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgCRGGZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 02:06:25 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i13so13328897pfe.3;
-        Tue, 17 Mar 2020 23:06:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Tz/NOLbKsDEYh8ikUHMyFXA0Fv1NQbDvbW9hYYkgk0M=;
-        b=vQEvsPU2aP0eurmQG4ZXT/gNnIictX9IFmG28pSoYtwt0KNd7ZFe6HLau3pTPrnHC8
-         L4dc+i+6X1mJDayXHnyxAQKc97VR1DUjML/0h3oNyHBZB0DzcyxiuTN12ZpQid6KfquK
-         aPqraV0XHCYhgOABPShkkMkxoSe+BSnnDm88EAV0fhgwodMY93rWs/Oa/x1353Js1ihD
-         QIGkGGjnNFj++D1PIDgLzv9jhRolZPQKCnfdgIlquH+HPaGQZindARVB9yXlsLP4SCTZ
-         RPAPF4wmtaDySVoohtUW32RYa/URmi4vCZDeTQ13Ok4Omh3pd3L9/4keibteNf7La9T7
-         vM/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Tz/NOLbKsDEYh8ikUHMyFXA0Fv1NQbDvbW9hYYkgk0M=;
-        b=KGcMajR7fb6fb3F4tyr9aSXt+nLhDk091aHWeAsmyDldm8Rt+0tQcY2ngUtMm6Fsp1
-         BJsTLardl4Dx6cQuE9YQj5mV/UTZOJqlkRcteRCzHpJeRDhuK6zW4xDp++qGnRFFgbW6
-         1qCO4EOwfzIq939GMLY90TdAW2cBWCx2UfEU42eR5/Fq+vgULaat/Ae4QnEuGWctLiOI
-         qHNWKEKG+kOvttFI5Xz76iL2tYSNLrd9YY/nDuzUkmiWlr0+8VmbFuexew/vjsr3KSu2
-         8MJkaf6N6DGE2Eu1tmh5bsM1K7IK9c5l0328aQBRFWMgQZJTpGwtZ2b3tcwNJ7/8+aLL
-         +L9A==
-X-Gm-Message-State: ANhLgQ1Zvstl5cMH2BuhQlVWHZdi/dQq1fGw06XvrEm7dlQfULelBElz
-        HRcdRHgtlchV4pQhvCKbIurgwQ6MEhg=
-X-Google-Smtp-Source: ADFU+vt6M8xp9+lcWaX7Q9pFQk9E13Qq3WjrZa0h7gbBBiCWun+sZwbj/zVcyPIKki3r3gcZ18jN/w==
-X-Received: by 2002:a62:e306:: with SMTP id g6mr2632336pfh.312.1584511583685;
-        Tue, 17 Mar 2020 23:06:23 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6086:470e:bc8d:c185:c429:a95b])
-        by smtp.gmail.com with ESMTPSA id m18sm4132518pgd.39.2020.03.17.23.06.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 23:06:23 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mark.rutland@arm.com, nish.malpani25@gmail.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: iio: tsl2563: convert bindings to YAML
-Date:   Wed, 18 Mar 2020 11:36:07 +0530
-Message-Id: <20200318060607.6061-1-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 18 Mar 2020 02:22:50 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17894 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726478AbgCRGWu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 02:22:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1584512468;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=EupObyrsJMrFKFE4UBTTla5ELWQWLAJEMj2NmmfoUfQ=;
+        b=b61g8Wc6df1RmBbj8v4HZhjd56MfVk6dWRhprbrENtYNCQqO3xou9nkYCtuo7yjx
+        knpzc6s+0pmbnPMleIIh3Hf8F0WXE39N9TrG6X3KsWJRxpki90I0yIr7o8EDWrH+iUR
+        UBF6Qk8szrahcIoWfoAv7K82z795yms6t0AEPMgc=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 158451246466776.29707283188316; Wed, 18 Mar 2020 14:21:04 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Message-ID: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
+Subject: [PATCH v5 00/11] Modernize Loongson64 Machine v5
+Date:   Wed, 18 Mar 2020 14:20:28 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+References: 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the TSL2563 device tree bindings to the new YAML format.
+Loongson have a long history of contributing their code to mainline kernel.
+However, it seems like recent years, they are focusing on maintain a kernel=
+ by themselves
+rather than contribute there code to the community.
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
----
+Kernel is progress rapidly too. Their code slept in mainline for a long per=
+oid without proper
+maintainance and became outdated.
 
-Changes in v3:
-  - Include the complete diff (changes from v1).
+This patchset brings modern DeviceTree and irqchip support to the Loongson6=
+4 machine, and leaves
+Loongson 2e/f alone since they are too legacy to touch.
 
-Changes in v2:
-  - Rename the dt-bindings to include manufacturer's name.
-  - Synchronize the bindings with the driver.
----
- .../bindings/iio/light/amstaos,tsl2563.yaml   | 49 +++++++++++++++++++
- .../devicetree/bindings/iio/light/tsl2563.txt | 19 -------
- 2 files changed, 49 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
+PCI and some legacy I/O device will be converted later, together with LS7A =
+PCH support.
 
-diff --git a/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
-new file mode 100644
-index 000000000000..141c7ae1edc8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/tsl2563.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: AMS TAOS TSL2563 ambient light sensor
-+
-+maintainers:
-+  - Sebastian Reichel <sre@kernel.org>
-+
-+description: |
-+  Ambient light sensor with an i2c interface.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amstaos,tsl2560
-+      - amstaos,tsl2561
-+      - amstaos,tsl2562
-+      - amstaos,tsl2563
-+
-+  reg:
-+    maxItems: 1
-+
-+  amstaos,cover-comp-gain:
-+    description: Multiplier for gain compensation
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [1, 16]
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      light-sensor@29 {
-+        compatible = "amstaos,tsl2563";
-+        reg = <0x29>;
-+        amstaos,cover-comp-gain = <16>;
-+      };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-deleted file mode 100644
-index f91e809e736e..000000000000
---- a/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--* AMS TAOS TSL2563 ambient light sensor
--
--Required properties:
--
--  - compatible : should be "amstaos,tsl2563"
--  - reg : the I2C address of the sensor
--
--Optional properties:
--
--  - amstaos,cover-comp-gain : integer used as multiplier for gain
--                              compensation (default = 1)
--
--Example:
--
--tsl2563@29 {
--	compatible = "amstaos,tsl2563";
--	reg = <0x29>;
--	amstaos,cover-comp-gain = <16>;
--};
--- 
-2.20.1
+v1:
+- dt-bindings fixup according to Rob's comments
+- irqchip fixup according to Marc's comments
+- ls3-iointc: Make Core&IP map per-IRQ
+- Regenerate kconfigs
+- Typo & style improvements
+
+v2:
+- dt-bindings: Fix IOINTC, collect Rob's review tag
+- dtbs: Drop CPU Node, merge different ways according to Huacai and Paul's =
+comments
+
+v3:
+- Split code have been merged
+- Fix IOINTC binding to allow map any child IRQ to and parent
+- Convert "HTINTC" into "HTPIC", which mixed HT vectors processing and i825=
+9
+- Naming style fix according to Huacai's suggestions
+
+v4:
+- More naming related fixes
+
+v5:
+- irqchip fixes thanks to maz (see per file changelog)
+- Remove unnecessary details in dt-bindings
+- Credit Huacai with Co-developed-by
+
+Jiaxun Yang (11):
+  irqchip: Add driver for Loongson I/O Local Interrupt Controller
+  irqchip: loongson-liointc: Workaround LPC IRQ Errata
+  dt-bindings: interrupt-controller: Add Loongson LIOINTC
+  irqchip: Add driver for Loongson-3 HyperTransport PIC controller
+  dt-bindings: interrupt-controller: Add Loongson-3 HTPIC
+  irqchip: mips-cpu: Convert to simple domain
+  MIPS: Loongson64: Drop legacy IRQ code
+  dt-bindings: mips: Add loongson boards
+  MIPS: Loongson64: Add generic dts
+  MIPS: Loongson64: Load built-in dtbs
+  MIPS: Loongson64: Move MIPS_CPU_IRQ_BASE
+
+ .../interrupt-controller/loongson,htpic.yaml  |  59 ++++
+ .../loongson,liointc.yaml                     |  93 ++++++
+ .../bindings/mips/loongson/devices.yaml       |  27 ++
+ arch/mips/Kconfig                             |   6 +-
+ arch/mips/boot/dts/Makefile                   |   1 +
+ arch/mips/boot/dts/loongson/Makefile          |   4 +
+ .../boot/dts/loongson/loongson3-package.dtsi  |  62 ++++
+ .../dts/loongson/loongson3_4core_rs780e.dts   |  25 ++
+ .../dts/loongson/loongson3_8core_rs780e.dts   |  25 ++
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  26 ++
+ arch/mips/include/asm/i8259.h                 |   1 +
+ .../include/asm/mach-loongson64/boot_param.h  |   2 +
+ .../asm/mach-loongson64/builtin_dtbs.h        |  13 +
+ arch/mips/include/asm/mach-loongson64/irq.h   |  31 +-
+ .../include/asm/mach-loongson64/loongson.h    |   1 +
+ arch/mips/loongson64/Makefile                 |   2 +-
+ arch/mips/loongson64/env.c                    |  23 ++
+ arch/mips/loongson64/init.c                   |   6 +
+ arch/mips/loongson64/irq.c                    | 162 -----------
+ arch/mips/loongson64/setup.c                  |  16 ++
+ arch/mips/loongson64/smp.c                    |  28 +-
+ drivers/irqchip/Kconfig                       |  19 ++
+ drivers/irqchip/Makefile                      |   2 +
+ drivers/irqchip/irq-loongson-htpic.c          | 149 ++++++++++
+ drivers/irqchip/irq-loongson-liointc.c        | 271 ++++++++++++++++++
+ drivers/irqchip/irq-mips-cpu.c                |   2 +-
+ 26 files changed, 843 insertions(+), 213 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/=
+loongson,htpic.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/=
+loongson,liointc.yaml
+ create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices=
+.yaml
+ create mode 100644 arch/mips/boot/dts/loongson/Makefile
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3-package.dtsi
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+ create mode 100644 arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+ delete mode 100644 arch/mips/loongson64/irq.c
+ create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+ create mode 100644 drivers/irqchip/irq-loongson-liointc.c
+
+--=20
+2.26.0.rc2
+
 
