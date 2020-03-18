@@ -2,112 +2,99 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ACFC43332
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 21:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B22C4332B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3882A2076C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 21:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A9320772
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584568179;
-	bh=P5WR7+CCKYuF1D3YjB6Qxj3jRbK8RLNPfWPK6xDhFJU=;
+	s=default; t=1584569036;
+	bh=0bm+0pdaJQJUVPyT/SDf163gdktmLQW+yzXeDuWfHKk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ksFmJKbKRVY8Y7G2VUEzoMJ2eJeP64IYGbrcz+SkU3yyWD1J/bwmyN8+8Q7SwFxUj
-	 fkZGUjMC/bVL/Pmk1qXdBw7oVi3RI6ot6U8kO1gEKGSVlTK18YYL9SYJEgL9oj9muc
-	 9Tj3C8CIUDlCami31C8Qw8KeKMnJk2XTvAxO4qw8=
+	b=CVTWa1XKgLuv/iW0/XoeEV1e31SFiPD82WP1fvfvEueYD9ISttw9tpWFjacycBaUL
+	 wg/dxK+XzHv7icM9IfRaCbGka3MGmyfSrZhi2DeGwwGUthzb0mHfQyu+HyKirNKC8l
+	 bmBi/xwqh1oizgrU8uuhIaFO3Ak/IOSBXUGeoUJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgCRVti (ORCPT
+        id S1726776AbgCRWDz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:49:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbgCRVti (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:49:38 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AB5F20754;
-        Wed, 18 Mar 2020 21:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584568177;
-        bh=P5WR7+CCKYuF1D3YjB6Qxj3jRbK8RLNPfWPK6xDhFJU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MYDwg6ol1Z+QGh9/zDrDHt8bnPDtWLxTMCHZXahQMrF2zKu+dxR/eo1lJ1FPMFmub
-         rYxZ8TlyKf1p57qSoAehM9cwXmkd62W+Yj/ZFIe/fzmdsKEaGLM6wI5Isl4w5zHhXz
-         i2Fyra1JtidfYnS4VkKmkpnTCTdgAjhqKz+PtDSA=
-Date:   Wed, 18 Mar 2020 21:49:30 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, joro@8bytes.org,
-        baolu.lu@linux.intel.com, sudeep.holla@arm.com,
-        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
-        lorenzo.pieralisi@arm.com, corbet@lwn.net, mark.rutland@arm.com,
-        liviu.dudau@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
-        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
-        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
-Subject: Re: [PATCH v2 07/11] iommu/arm-smmu-v3: Use pci_ats_supported()
-Message-ID: <20200318214930.GB8477@willie-the-truck>
-References: <20200311124506.208376-1-jean-philippe@linaro.org>
- <20200311124506.208376-8-jean-philippe@linaro.org>
+        Wed, 18 Mar 2020 18:03:55 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43931 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRWDz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 18:03:55 -0400
+Received: by mail-il1-f196.google.com with SMTP id d14so319531ilq.10;
+        Wed, 18 Mar 2020 15:03:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CLoQVPlkFQlDLsX88susr2K6YisyFa9CiuJkaW6E9dA=;
+        b=UMcptopukAum83IYaNJoip+VggBL1p4Ny5I574HW1bAJhAOQuEWKqLtuRSzIwyshU3
+         bDVrj14MIZcLLX7D/UBUzEGERSzn8jFnE73n7Cx1gzI1QH0zm3nlPf+cOi7isO421zSi
+         dAQJvkgEOp1v+Pl1SOFyhDAOAUwLKkfaql2PfRpxfg9KrHcBD4lijynlSd8VqnRFdbl9
+         UZP2W5EiVbRn2azsStwVAk1oEI4jXOJER4+JJF5NFIchSkcf3voVxy2paNoWmTsqOp1Z
+         iRUcKFW6kobkL5Icx7OjhbPextLI9RlWw5biPaf0+tDm51WrEaxqP8aCjReiM76Z3Tuz
+         Su9Q==
+X-Gm-Message-State: ANhLgQ0ERduPvaVSztagbjZN06S8DtppM8LINahhqPz3meoHbuyyLZXO
+        J5ySeePnB4uAcilkcLUhmA==
+X-Google-Smtp-Source: ADFU+vv4evE0zvIh+m02yfxSH4HvSOfUSbGzEPyA/4x25WbIY5vIBPXUgkquwrjgTTv7rlSougLazw==
+X-Received: by 2002:a05:6e02:c62:: with SMTP id f2mr204406ilj.167.1584569034577;
+        Wed, 18 Mar 2020 15:03:54 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id l26sm69517ioc.1.2020.03.18.15.03.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 15:03:53 -0700 (PDT)
+Received: (nullmailer pid 15282 invoked by uid 1000);
+        Wed, 18 Mar 2020 22:03:52 -0000
+Date:   Wed, 18 Mar 2020 16:03:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: Re: [PATCH 1/4] dt-bindings: phy: Add binding for qcom,usb-hs-7nm
+Message-ID: <20200318220352.GA12501@bogus>
+References: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
+ <1584147293-6763-2-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311124506.208376-8-jean-philippe@linaro.org>
+In-Reply-To: <1584147293-6763-2-git-send-email-wcheng@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 01:45:02PM +0100, Jean-Philippe Brucker wrote:
-> The new pci_ats_supported() function checks if a device supports ATS and
-> is allowed to use it.
+On Fri, 13 Mar 2020 17:54:50 -0700, Wesley Cheng wrote:
+> This binding shows the descriptions and properties for the
+> 7nm Synopsis HS USB PHY used on QCOM platforms.
 > 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
 > ---
->  drivers/iommu/arm-smmu-v3.c | 18 +++---------------
->  1 file changed, 3 insertions(+), 15 deletions(-)
+>  .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   | 74 ++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
 > 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 4f0a38dae6db..87ae31ef35a1 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2592,26 +2592,14 @@ static void arm_smmu_install_ste_for_dev(struct arm_smmu_master *master)
->  	}
->  }
->  
-> -#ifdef CONFIG_PCI_ATS
->  static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
->  {
-> -	struct pci_dev *pdev;
-> +	struct device *dev = master->dev;
->  	struct arm_smmu_device *smmu = master->smmu;
-> -	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(master->dev);
-> -
-> -	if (!(smmu->features & ARM_SMMU_FEAT_ATS) || !dev_is_pci(master->dev) ||
-> -	    !(fwspec->flags & IOMMU_FWSPEC_PCI_RC_ATS) || pci_ats_disabled())
-> -		return false;
->  
-> -	pdev = to_pci_dev(master->dev);
-> -	return !pdev->untrusted && pdev->ats_cap;
-> +	return (smmu->features & ARM_SMMU_FEAT_ATS) && dev_is_pci(dev) &&
-> +		pci_ats_supported(to_pci_dev(dev));
->  }
-> -#else
-> -static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
-> -{
-> -	return false;
-> -}
-> -#endif
 
-Acked-by: Will Deacon <will@kernel.org>
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Cheers for doing this.
+warning: no schema found in file: Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml: ignoring, error parsing file
+Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml:  while scanning a block scalar
+  in "<unicode string>", line 59, column 5
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 73, column 1
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts] Error 1
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Will
+See https://patchwork.ozlabs.org/patch/1254748
+Please check and re-submit.
