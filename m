@@ -2,435 +2,145 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739F2C43333
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 20:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BF0C4332B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55009208E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 20:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B19A2137B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584564978;
+	bh=njLmsz8iWCR+zUvOIucKwf9guv/H/Xgvt6PielDOdyU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=L/oliGHad0C7N+FrpIQYqsyp6iBv9o4VmpfpE+yzL4lxZHmkAJsy3Nged3cPq0ZSg
+	 EkiXs+WEqwtqAOkiFhYr39StEsLXa8pcA+9YroqJz7M3+N2Oh07k4fQzeNurVrb52Z
+	 tvO6Q5eMzRP9Vuqn3hOghruWEr9Bjje7Ck0WlW+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbgCRUsA (ORCPT
+        id S1728563AbgCRU4R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:48:00 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50047 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbgCRUsA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 16:48:00 -0400
-X-Originating-IP: 2.224.242.101
-Received: from localhost.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9E95E20004;
-        Wed, 18 Mar 2020 20:47:54 +0000 (UTC)
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        tfiga@google.com, pavel@ucw.cz
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
-        (V4L/DVB)), libcamera-devel@lists.libcamera.org, robh@kernel.org,
-        devicetree@vger.kernel.org,
-        Niklas Soderlund <niklas.soderlund@ragnatech.se>
-Subject: [PATCH v7 03/11] dt-bindings: video-interface: Replace 'rotation' description
-Date:   Wed, 18 Mar 2020 21:50:26 +0100
-Message-Id: <20200318205034.949531-4-jacopo@jmondi.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200318205034.949531-1-jacopo@jmondi.org>
-References: <20200318205034.949531-1-jacopo@jmondi.org>
+        Wed, 18 Mar 2020 16:56:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727930AbgCRU4Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:16 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4F120BED;
+        Wed, 18 Mar 2020 20:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584564975;
+        bh=njLmsz8iWCR+zUvOIucKwf9guv/H/Xgvt6PielDOdyU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dbfMMKAjSban3+qpPd1cENnToq0If7j1mlh/bvEo51il4EcPcs/lhTAiLGFRWBsx1
+         7aIuwRbHf4hr7CEp64ZqnJfSKUUOC2Pyph/4k6WHqSIFB2jCbFy/EAwJ3xLV6R3GfF
+         MiDZqeEJoHas2Iz95/FhWRbk4Hs8UVfjdmBYGFjc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 17/28] dt-bindings: net: FMan erratum A050385
+Date:   Wed, 18 Mar 2020 16:55:44 -0400
+Message-Id: <20200318205555.17447-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
+References: <20200318205555.17447-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Replace the 'rotation' property description by providing a definition
-relative to the camera sensor pixel array coordinate system and the
-captured scene.
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-Co-developed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Co-developed-by: Niklas Soderlund <niklas.soderlund@ragnatech.se>
+[ Upstream commit 26d5bb9e4c4b541c475751e015072eb2cbf70d15 ]
 
+FMAN DMA read or writes under heavy traffic load may cause FMAN
+internal resource leak; thus stopping further packet processing.
+
+The FMAN internal queue can overflow when FMAN splits single
+read or write transactions into multiple smaller transactions
+such that more than 17 AXI transactions are in flight from FMAN
+to interconnect. When the FMAN internal queue overflows, it can
+stall further packet processing. The issue can occur with any one
+of the following three conditions:
+
+  1. FMAN AXI transaction crosses 4K address boundary (Errata
+     A010022)
+  2. FMAN DMA address for an AXI transaction is not 16 byte
+     aligned, i.e. the last 4 bits of an address are non-zero
+  3. Scatter Gather (SG) frames have more than one SG buffer in
+     the SG list and any one of the buffers, except the last
+     buffer in the SG list has data size that is not a multiple
+     of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
+
+With any one of the above three conditions present, there is
+likelihood of stalled FMAN packet processing, especially under
+stress with multiple ports injecting line-rate traffic.
+
+To avoid situations that stall FMAN packet processing, all of the
+above three conditions must be avoided; therefore, configure the
+system with the following rules:
+
+  1. Frame buffers must not span a 4KB address boundary, unless
+     the frame start address is 256 byte aligned
+  2. All FMAN DMA start addresses (for example, BMAN buffer
+     address, FD[address] + FD[offset]) are 16B aligned
+  3. SG table and buffer addresses are 16B aligned and the size
+     of SG buffers are multiple of 16 bytes, except for the last
+     SG buffer that can be of any size.
+
+Additional workaround notes:
+- Address alignment of 64 bytes is recommended for maximally
+efficient system bus transactions (although 16 byte alignment is
+sufficient to avoid the stall condition)
+- To support frame sizes that are larger than 4K bytes, there are
+two options:
+  1. Large single buffer frames that span a 4KB page boundary can
+     be converted into SG frames to avoid transaction splits at
+     the 4KB boundary,
+  2. Align the large single buffer to 256B address boundaries,
+     ensure that the frame address plus offset is 256B aligned.
+- If software generated SG frames have buffers that are unaligned
+and with random non-multiple of 16 byte lengths, before
+transmitting such frames via FMAN, frames will need to be copied
+into a new single buffer or multiple buffer SG frame that is
+compliant with the three rules listed above.
+
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../bindings/media/video-interfaces.txt       | 359 +++++++++++++++++-
- 1 file changed, 356 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/net/fsl-fman.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index 1211bdf80722..36e61d599f34 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -85,9 +85,362 @@ Optional properties
-
- - lens-focus: A phandle to the node of the focus lens controller.
-
--- rotation: The device, typically an image sensor, is not mounted upright,
--  but a number of degrees counter clockwise. Typical values are 0 and 180
--  (upside down).
-+- rotation: The camera rotation is expressed as the angular difference in
-+  degrees between two reference systems, one relative to the camera module, and
-+  one defined on the external world scene to be captured when projected on the
-+  image sensor pixel array.
+diff --git a/Documentation/devicetree/bindings/net/fsl-fman.txt b/Documentation/devicetree/bindings/net/fsl-fman.txt
+index df873d1f3b7c5..2aaae210317bb 100644
+--- a/Documentation/devicetree/bindings/net/fsl-fman.txt
++++ b/Documentation/devicetree/bindings/net/fsl-fman.txt
+@@ -110,6 +110,13 @@ PROPERTIES
+ 		Usage: required
+ 		Definition: See soc/fsl/qman.txt and soc/fsl/bman.txt
+ 
++- fsl,erratum-a050385
++		Usage: optional
++		Value type: boolean
++		Definition: A boolean property. Indicates the presence of the
++		erratum A050385 which indicates that DMA transactions that are
++		split can result in a FMan lock.
 +
-+  A camera sensor has a 2-dimensional reference system 'Rc' defined by
-+  its pixel array read-out order. The origin is set to the first pixel
-+  being read out, the X-axis points along the column read-out direction
-+  towards the last columns, and the Y-axis along the row read-out
-+  direction towards the last row.
-+
-+  A typical example for a sensor with a 2592x1944 pixel array matrix
-+  observed from the front is
-+
-+              2591       X-axis          0
-+                <------------------------+ 0
-+                .......... ... ..........!
-+                .......... ... ..........! Y-axis
-+                           ...           !
-+                .......... ... ..........!
-+                .......... ... ..........! 1943
-+                                         V
-+
-+  The external world scene reference system 'Rs' is a 2-dimensional
-+  reference system on the focal plane of the camera module. The origin is
-+  placed on the top-left corner of the visible scene, the X-axis points
-+  towards the right, and the Y-axis points towards the bottom of the
-+  scene. The top, bottom, left and right directions are intentionally not
-+  defined and depend on the environment in which the camera is used.
-+
-+  A typical example of a (very common) picture of a shark swimming from
-+  left to right, as seen from the camera, is
-+
-+               0               X-axis
-+             0 +------------------------------------->
-+               !
-+               !
-+               !
-+               !           |\____)\___
-+               !           ) _____  __`<
-+               !           |/     )/
-+               !
-+               !
-+               !
-+               V
-+             Y-axis
-+
-+  With the reference system 'Rs' placed on the camera focal plane.
-+
-+                                  ¸.·˙!
-+                              ¸.·˙    !
-+                  _       ¸.·˙        !
-+               +-/ \-+¸.·˙            !
-+               | (o) |                ! Camera focal plane
-+               +-----+˙·.¸            !
-+                          ˙·.¸        !
-+                              ˙·.¸    !
-+                                  ˙·.¸!
-+
-+  When projected on the sensor's pixel array, the image and the associated
-+  reference system 'Rs' are typically (but not always) inverted, due to
-+  the camera module's lens optical inversion effect.
-+
-+  Assuming the above represented scene of the swimming shark, the lens
-+  inversion projects the scene and its reference system onto the sensor
-+  pixel array, seen from the front of the camera sensor, as follow
-+
-+            Y-axis
-+               ^
-+               !
-+               !
-+               !
-+               !            |\_____)\__
-+               !            ) ____  ___.<
-+               !            |/    )/
-+               !
-+               !
-+               !
-+             0 +------------------------------------->
-+               0               X-axis
-+
-+  Note the shark being upside-down.
-+
-+  The resulting projected reference system is named 'Rp'.
-+
-+  The camera rotation property is then defined as the angular difference
-+  in the counter-clockwise direction between the camera reference system
-+  'Rc' and the projected scene reference system 'Rp'. It is expressed in
-+  degrees as a number in the range [0, 360[.
-+
-+  Examples
-+
-+  0 degrees camera rotation
-+
-+
-+                    Y-Rp
-+                     ^
-+              Y-Rc   !
-+               ^     !
-+               !     !
-+               !     !
-+               !     !
-+               !     !
-+               !     !
-+               !     !
-+               !     !
-+               !   0 +------------------------------------->
-+               !     0               X-Rp
-+             0 +------------------------------------->
-+               0               X-Rc
-+
-+
-+                                X-Rc                0
-+               <------------------------------------+ 0
-+                           X-Rp                 0   !
-+           <------------------------------------+ 0 !
-+                                                !   !
-+                                                !   !
-+                                                !   !
-+                                                !   !
-+                                                !   !
-+                                                !   !
-+                                                !   !
-+                                                !   V
-+                                                !  Y-Rc
-+                                                V
-+                                               Y-Rp
-+
-+  90 degrees camera rotation
-+
-+               0        Y-Rc
-+             0 +-------------------->
-+               !   Y-Rp
-+               !    ^
-+               !    !
-+               !    !
-+               !    !
-+               !    !
-+               !    !
-+               !    !
-+               !    !
-+               !    !
-+               !    !
-+               !  0 +------------------------------------->
-+               !    0              X-Rp
-+               !
-+               !
-+               !
-+               !
-+               V
-+              X-Rc
-+
-+  180 degrees camera rotation
-+
-+                                            0
-+       <------------------------------------+ 0
-+                        X-Rc                !
-+              Y-Rp                          !
-+               ^                            !
-+               !                            !
-+               !                            !
-+               !                            !
-+               !                            !
-+               !                            !
-+               !                            !
-+               !                            V
-+               !                           Y-Rc
-+             0 +------------------------------------->
-+               0              X-Rp
-+
-+  270 degrees camera rotation
-+
-+               0        Y-Rc
-+             0 +-------------------->
-+               !                                        0
-+               !    <-----------------------------------+ 0
-+               !                    X-Rp                !
-+               !                                        !
-+               !                                        !
-+               !                                        !
-+               !                                        !
-+               !                                        !
-+               !                                        !
-+               !                                        !
-+               !                                        !
-+               !                                        V
-+               !                                       Y-Rp
-+               !
-+               !
-+               !
-+               !
-+               V
-+              X-Rc
-+
-+
-+  Example one - Webcam
-+
-+  A camera module installed on the user facing part of a laptop screen
-+  casing used for video calls. The captured images are meant to be
-+  displayed in landscape mode (width > height) on the laptop screen.
-+
-+  The camera is typically mounted upside-down to compensate the lens
-+  optical inversion effect.
-+
-+                    Y-Rp
-+              Y-Rc   ^
-+               ^     !
-+               !     !
-+               !     !       |\_____)\__
-+               !     !       ) ____  ___.<
-+               !     !       |/    )/
-+               !     !
-+               !     !
-+               !     !
-+               !   0 +------------------------------------->
-+               !     0           X-Rp
-+             0 +------------------------------------->
-+               0            X-Rc
-+
-+  The two reference systems are aligned, the resulting camera rotation is
-+  0 degrees, no rotation correction needs to be applied to the resulting
-+  image once captured to memory buffers to correctly display it to users.
-+
-+               +--------------------------------------+
-+               !                                      !
-+               !                                      !
-+               !                                      !
-+               !             |\____)\___              !
-+               !             ) _____  __`<            !
-+               !             |/     )/                !
-+               !                                      !
-+               !                                      !
-+               !                                      !
-+               +--------------------------------------+
-+
-+  If the camera sensor is not mounted upside-down to compensate for the
-+  lens optical inversion, the two reference systems will not be aligned,
-+  with 'Rp' being rotated 180 degrees relatively to 'Rc'.
-+
-+
-+                        X-Rc                0
-+       <------------------------------------+ 0
-+                                            !
-+              Y-Rp                          !
-+               ^                            !
-+               !                            !
-+               !       |\_____)\__          !
-+               !       ) ____  ___.<        !
-+               !       |/    )/             !
-+               !                            !
-+               !                            !
-+               !                            V
-+               !                           Y-Rc
-+             0 +------------------------------------->
-+               0            X-Rp
-+
-+  The image once captured to memory will then be rotated by 180 degrees
-+
-+               +--------------------------------------+
-+               !                                      !
-+               !                                      !
-+               !                                      !
-+               !              __/(_____/|             !
-+               !            >.___  ____ (             !
-+               !                 \(    \|             !
-+               !                                      !
-+               !                                      !
-+               !                                      !
-+               +--------------------------------------+
-+
-+  A software rotation correction of 180 degrees should be applied to
-+  correctly display the image.
-+
-+               +--------------------------------------+
-+               !                                      !
-+               !                                      !
-+               !                                      !
-+               !             |\____)\___              !
-+               !             ) _____  __`<            !
-+               !             |/     )/                !
-+               !                                      !
-+               !                                      !
-+               !                                      !
-+               +--------------------------------------+
-+
-+  Example two - Phone camera
-+
-+  A camera installed on the back side of a mobile device facing away from
-+  the user. The captured images are meant to be displayed in portrait mode
-+  (height > width) to match the device screen orientation and the device
-+  usage orientation used when taking the picture.
-+
-+  The camera sensor is typically mounted with its pixel array longer side
-+  aligned to the device longer side, upside-down mounted to compensate for
-+  the lens optical inversion effect.
-+
-+               0        Y-Rc
-+             0 +-------------------->
-+               !   Y-Rp
-+               !    ^
-+               !    !
-+               !    !
-+               !    !
-+               !    !            |\_____)\__
-+               !    !            ) ____  ___.<
-+               !    !            |/    )/
-+               !    !
-+               !    !
-+               !    !
-+               !  0 +------------------------------------->
-+               !    0                X-Rp
-+               !
-+               !
-+               !
-+               !
-+               V
-+              X-Rc
-+
-+  The two reference systems are not aligned and the 'Rp' reference
-+  system is rotated by 90 degrees in the counter-clockwise direction
-+  relatively to the 'Rc' reference system.
-+
-+  The image once captured to memory will be rotated.
-+
-+               +-------------------------------------+
-+               |                 _ _                 |
-+               |                \   /                |
-+               |                 | |                 |
-+               |                 | |                 |
-+               |                 |  >                |
-+               |                <  |                 |
-+               |                 | |                 |
-+               |                   .                 |
-+               |                  V                  |
-+               +-------------------------------------+
-+
-+  A correction of 90 degrees in counter-clockwise direction has to be
-+  applied to correctly display the image in portrait mode on the device
-+  screen.
-+
-+                        +--------------------+
-+                        |                    |
-+                        |                    |
-+                        |                    |
-+                        |                    |
-+                        |                    |
-+                        |                    |
-+                        |   |\____)\___      |
-+                        |   ) _____  __`<    |
-+                        |   |/     )/        |
-+                        |                    |
-+                        |                    |
-+                        |                    |
-+                        |                    |
-+                        |                    |
-+                        +--------------------+
-
- - location: The mount location of a device (typically an image sensor or a flash
-   LED) expressed as a position relative to the usage orientation of the system
---
-2.25.1
+ =============================================================================
+ FMan MURAM Node
+ 
+-- 
+2.20.1
 
