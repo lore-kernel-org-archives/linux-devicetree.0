@@ -2,189 +2,211 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C916C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 16:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D2D8C5ACD6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 16:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD6F20663
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 16:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58FE02071C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 16:24:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b82SPi58"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ox330UjF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgCRQXH (ORCPT
+        id S1726839AbgCRQYH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:23:07 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44416 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgCRQXH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 12:23:07 -0400
-Received: by mail-lj1-f193.google.com with SMTP id w4so13039425lji.11
-        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 09:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ja7Isx1qNRnszRlhqWYZPhKFCaFnUP2LrFZhTedcFrQ=;
-        b=b82SPi58sEkLQE2lbsmcxURwnmn9qYF8lDLIg6NXyBewO65Gqa3PSz3Y7uDPmz0s41
-         xblIbkLP1+55SroiFqDeKplQmH8gr40cNkMg4K7scZYRVoIOZz52x/TkxhPsh8wixtEu
-         UYEEAOrEkDWEzhSUqvIsXg4/XjxuC/8kiq1sU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ja7Isx1qNRnszRlhqWYZPhKFCaFnUP2LrFZhTedcFrQ=;
-        b=KG3SWM8asS8V6EhxN9K3qFEiba65sRC0VzM1i3d7qZfExRKjNaD8A6c2KF4bcdgQbQ
-         Zkcf6BPfMVx1z0Ag6t9Ov8t+db+AYEB6cgtwFxCxYz1g/4WFkHgsl16EymWf09K2PJtM
-         dw73TYnR7XU1Cg/OEMQW5oUCA7hcw1/Bvx17V2StBeI9Z3l7tHkKKwZ06qbVsAUq2n0z
-         X3CMy+g4PhSzE5R/187DAoMaQ9Lg1yeVyKMdQpzI6tMAKQGQ7SPr3BLDn3k9vGT1Lr1Y
-         +Qp0Cfn4OkNCx6zt49295Z58cLLngyZHSMqrnk7PlKK7pI/oUAQfhblsxar0uJJ1IMNl
-         HFnQ==
-X-Gm-Message-State: ANhLgQ1QzJYJLMqSKhLS1HgZa0PtVmaswHXrIVfBb0B8vhrhOmbHBKTh
-        WAPEWvNYlc9YyvnQovkzdXD7Sp+EaJ0=
-X-Google-Smtp-Source: ADFU+vt9BMGM8L74jpKDWSDI6I/YgL0tCJs/pnjQ0RxiauFlPBu2Rzh+PPfxTjAaIHtgOeDI+TPbFg==
-X-Received: by 2002:a05:651c:112c:: with SMTP id e12mr3101737ljo.7.1584548583412;
-        Wed, 18 Mar 2020 09:23:03 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id x6sm4570376lji.47.2020.03.18.09.23.01
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 09:23:01 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id s1so20891937lfd.3
-        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 09:23:01 -0700 (PDT)
-X-Received: by 2002:a19:3f4b:: with SMTP id m72mr3336660lfa.104.1584548580649;
- Wed, 18 Mar 2020 09:23:00 -0700 (PDT)
+        Wed, 18 Mar 2020 12:24:07 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2624 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCRQYH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 12:24:07 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e724af50000>; Wed, 18 Mar 2020 09:23:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 18 Mar 2020 09:24:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 18 Mar 2020 09:24:06 -0700
+Received: from [10.2.175.141] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar
+ 2020 16:24:05 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+ <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
+ <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
+ <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
+ <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
+ <19081d90-62cc-e6eb-0337-f108fb6ca9bc@nvidia.com>
+Message-ID: <061eabf1-4b6f-83c0-6851-df8a193a84e8@nvidia.com>
+Date:   Wed, 18 Mar 2020 09:25:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-4-git-send-email-akashast@codeaurora.org>
- <20200313204441.GJ144492@google.com> <1f86fdf0-df7c-4e4a-d4d8-8b0162e52cb4@codeaurora.org>
- <CAE=gft5GcOeQ5kh1bGen_P0J98g2XaAJ7NrDsxkirDoLtL4GWg@mail.gmail.com> <0c7c4316-e93a-537c-871a-b7207dbad5c2@codeaurora.org>
-In-Reply-To: <0c7c4316-e93a-537c-871a-b7207dbad5c2@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 18 Mar 2020 09:22:23 -0700
-X-Gmail-Original-Message-ID: <CAE=gft6=rziOr+-mwHZO+ebQBDDMXMqvCFyuHwOoWjhuK8kaUg@mail.gmail.com>
-Message-ID: <CAE=gft6=rziOr+-mwHZO+ebQBDDMXMqvCFyuHwOoWjhuK8kaUg@mail.gmail.com>
-Subject: Re: [PATCH V2 3/8] soc: qcom-geni-se: Add interconnect support to fix
- earlycon crash
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wsa@the-dreams.de, Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        Doug Anderson <dianders@chromium.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <19081d90-62cc-e6eb-0337-f108fb6ca9bc@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584548597; bh=4AkSXVqHDrCp7I1KwaJ8XUtzUo2d9f+JxqC9kjrpnek=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=ox330UjFEh91bRxhmgIQsRxrtGNZ61NEwV6wSmfZk3KiOCM+oSZMDVdAnkmab/5kH
+         jcP4ZP+T58yGHrw5nHzb3hsj8d2XTQ3CNJ08vtxdalAvlfuXqwxUXJuAwpqZEMNQxY
+         b20NyBh3ceIY5Tb7EskrUHJUXQ6no8S4A9opXOTKKAySQSL4pBGk82Vylcam3ZWj82
+         IeCTa8pmJbwQJ3QcqRVK/shyGYXIpWyYaIq8GArYfl+wPP4Uf5+5/ByEfOXd/gfpZI
+         Vkshrk9+67NTbuh1Tlw6q/12BOKt1cC+QUPqDcXuNBVPes1cMHDuw514HaskrZ7ILQ
+         6uOdqTh9pIH1g==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 3:57 AM Akash Asthana <akashast@codeaurora.org> wrote:
->
-> Hi Evan
->
-> On 3/18/2020 12:38 AM, Evan Green wrote:
-> > On Tue, Mar 17, 2020 at 3:58 AM Akash Asthana <akashast@codeaurora.org> wrote:
-> >> Hi Matthias,
-> >>
-> >> On 3/14/2020 2:14 AM, Matthias Kaehlcke wrote:
-> >>> Hi Akash,
-> >>>
-> >>> On Fri, Mar 13, 2020 at 06:42:09PM +0530, Akash Asthana wrote:
-> >>>> V1 patch@https://patchwork.kernel.org/patch/11386469/ caused SC7180 system
-> >>>> to reset at boot time.
-> >>> The v1 patch isn't relevant in the commit message, please just describe the
-> >>> problem. Also the crash only occurs when earlycon is used.
-> >> ok
-> >>>> As QUP core clock is shared among all the SE drivers present on particular
-> >>>> QUP wrapper, the reset seen is due to earlycon usage after QUP core clock
-> >>>> is put to 0 from other SE drivers before real console comes up.
-> >>>>
-> >>>> As earlycon can't vote for it's QUP core need, to fix this add ICC
-> >>>> support to common/QUP wrapper driver and put vote for QUP core from
-> >>>> probe on behalf of earlycon and remove vote during sys suspend.
-> >>> Only removing the vote on suspend isn't ideal, the system might never get
-> >>> suspended. That said I don't have a really good alternative suggestion.
-> >>>
-> >>> One thing you could possibly do is to launch a delayed work, check
-> >>> console_device() every second or so and remove the vote when it returns
-> >>> non-NULL. Not claiming this would be a great solution ...
-> >>>
-> >>> The cleanest solution might be a notifier when the early console is
-> >>> unregistered, it seems somewhat over-engineered though ... Then again
-> >>> other (future) uart drivers with interconnect support might run into
-> >>> the same problem.
-> >> We are hitting this problem because QUP core clocks are shared among all
-> >> the SE driver present in particular QUP wrapper, if other HW controllers
-> >> has similar architecture we will hit this issue.
-> >>
-> >> How about if we expose an API from common driver(geni-se) for putting
-> >> QUP core BW vote to 0.
-> >>
-> >> We call this from console probe just after uart_add_one_port call
-> >> (console resources are enabled as part of this call) to put core quota
-> >> to 0 on behalf of earlyconsole?
-> > +Georgi
-> >
-> > Hm, these boot proxy votes are annoying, since the whole house of
-> > cards comes down if you replace these votes in the wrong order.
-> >
-> > I believe consensus in the other patches was to consolidate most of
-> > the interconnect support into the common SE code, right?
->
-> I think what Matthias suggested is to maintain ICC functions defined
-> across I2C, SPI and UART as a library in common SE code.
->
-> Still every SE driver will interact with ICC framework individually
-> rather than using common SE driver as a bridge.
 
-Right, I'm sort of proposing a blend here, where the individual
-drivers pass through the SE library, which looks at some shared state,
-and may defer sending the votes during boot time. I was thinking
-consolidating this into SE engine library code may make it easier for
-you to peek at that shared state.
+On 3/18/20 9:14 AM, Sowjanya Komatineni wrote:
+>
+> On 3/18/20 4:48 AM, Hans Verkuil wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On 2/24/20 5:45 AM, Sowjanya Komatineni wrote:
+>>> On 2/20/20 11:11 AM, Sowjanya Komatineni wrote:
+>>>> On 2/20/20 5:33 AM, Hans Verkuil wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> (Replying to myself so I can explain this a bit more)
+>>>>>
+>>>>> On 2/20/20 1:44 PM, Hans Verkuil wrote:
+>>>>>>> +
+>>>>>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct device_node *node =3D csi->dev->of_node;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int port_num;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_csi_channel *item;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int tpg_channels =3D csi->soc->csi_max=
+_channels;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 /* allocate CSI channel for each CSI x2 ports *=
+/
+>>>>>>> +=C2=A0=C2=A0=C2=A0 for (port_num =3D 0; port_num < tpg_channels; p=
+ort_num++) {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ item =3D devm_kzalloc(csi->dev, sizeof(*item),=20
+>>>>>>> GFP_KERNEL);
+>>>>>> Using devm_*alloc can be dangerous. If someone unbinds the=20
+>>>>>> driver, then
+>>>>>> all memory allocated with devm_ is immediately freed. But if an
+>>>>>> application
+>>>>>> still has a filehandle open, then when it closes it it might still
+>>>>>> reference
+>>>>>> this already-freed memory.
+>>>>>>
+>>>>>> I recommend that you avoid using devm_*alloc for media drivers.
+>>>>> A good test is to unbind & bind the driver:
+>>>>>
+>>>>> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
+>>>>> echo -n 54080000.vi >unbind
+>>>>> echo -n 54080000.vi >bind
+>>>>>
+>>>>> First just do this without the driver being used. That already
+>>>>> gives me 'list_del corruption' kernel messages (list debugging
+>>>>> is turned on in my kernel).
+>>> Will fix in v4 to use kzalloc and also proper release v4l2 to make sure
+>>> unbind/bind works properly.
+>>>
+>>> BTW, tegra vi and csi are registered as clients to host1x video driver.
+>>>
+>>> So, unbind and bind should be done with host1x video driver=20
+>>> "tegra-video"
+>>>
+>>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>>> echo -n tegra-video > unbind
+>>> echo -n tegra-video > bind
+>> This still crashes with v4, at least if I am streaming with v4l2-ctl=20
+>> --stream-mmap.
+>> Is that known?
+>>
+>> It's not a big deal at this moment, just want to know if this will be=20
+>> looked
+>> at later.
+>>
+>> Regards,
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
+>
+> Weird, I tested streaming after unbind and bind as well and don't see=20
+> crash. Did below steps and tried several times unbind/bind as well.
+>
+> ./v4l2-ctl --stream-mmap --stream-count=3D1 -d /dev/video3
+> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+> echo -n tegra-video > unbind
+> sleep 1
+> echo -n tegra-video > bind
+> cd /home/ubuntu
+> ./v4l2-ctl --stream-mmap --stream-count=3D1 -d /dev/video3
+>
+> Can you post call trace when you saw crash?
+
+Tried unbind when=C2=A0 node is open with v4l2-ctl --sleep 10 as well and=20
+bind back.
+
+I don't see crash. Will confirm on doing unbind/bind with stream-mmap...
 
 >
-> >   Would that
-> > help you with these boot proxy votes? What I'm thinking is something
-> > along the lines of:
-> >   * SPI, I2C, UART all call into the new common geni_se_icc_on/off()
-> > (or whatever it's called)
-> >   * If geni_se_icc_off() sees that console UART hasn't voted yet, save
-> > the votes but don't actually call icc_set(0) now.
-> >   * Once uart votes for the first time, call icc_set() on all of SPI,
-> > I2C, UART to get things back in sync.
->
-> IIUC, you are suggesting to enhancing ICC
-> design@https://patchwork.kernel.org/patch/10774897/ [The very first ICC
-> patch posted during sdm845 timeframe].
->
-> Where common SE driver aggregate real time BW requirement from all the
-> SE driver and put net request to ICC framework.
->
-> We received comments on that version of ICC to move voting to individual
-> SE driver from common driver. Hence we updated the design accordingly.
-
-I think most of the reaction to that original series came from the
-fact that the common SE code was doing aggregation work, which is
-something the interconnect core was designed to do. In the solution
-I'm proposing, the SE library either passes through votes as-is, or
-delays them until the console UART has voted, at which time it passes
-them all down as they were.
-
-You could still make the case this is something the interconnect core
-should help us with, which is why I was brainstorming about the
-provider propping up votes until some probe-finished deadline, maybe
-just a 30 second timer :)
--Evan
+>>>>> Note that this first test is basically identical to a rmmod/modprobe
+>>>>> of the driver. But when I compiled the driver as a module it didn't
+>>>>> create any video device nodes! Nor did I see any errors in the kernel
+>>>>> log. I didn't pursue this, and perhaps I did something wrong, but=20
+>>>>> it's
+>>>>> worth taking a look at.
+>>>>>
+>>>>> The next step would be to have a video node open with:
+>>>>>
+>>>>> v4l2-ctl --sleep 10
+>>>>>
+>>>>> then while it is sleeping unbind the driver and see what happens
+>>>>> when v4l2-ctl exits.
+>>>>>
+>>>>> Worst case is when you are streaming:
+>>>>>
+>>>>> v4l2-ctl --stream-mmap
+>>>>>
+>>>>> and then unbind.
+>>>>>
+>>>>> In general, the best way to get this to work correctly is:
+>>>>>
+>>>>> 1) don't use devm_*alloc
+>>>>> 2) set the release callback of struct v4l2_device and do all freeing
+>>>>> there.
+>>>>> 3) in the platform remove() callback you call=20
+>>>>> media_device_unregister()
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 and video_unregister_device().
+>>>> Reg 3, in current patch, media_device_unregister is called in
+>>>> host1x_video_remove
+>>>> video_unregister_device happens during host1x_video_remove ->
+>>>> host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
+>>>>
+>>>>> It's worth getting this right in this early stage, rather than=20
+>>>>> fixing it
+>>>>> in the future.
+>>>>>
+>>>>> Regards,
+>>>>>
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
