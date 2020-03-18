@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039B6C5ACD7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D219C1975A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC51120752
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8AC20754
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ynp2qMHI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YYUwe03P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgCRARL (ORCPT
+        id S1727374AbgCRARZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 17 Mar 2020 20:17:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56308 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgCRARJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 20:17:09 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 6so1303211wmi.5;
-        Tue, 17 Mar 2020 17:17:08 -0700 (PDT)
+        Tue, 17 Mar 2020 20:17:25 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:32894 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbgCRARZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 17 Mar 2020 20:17:25 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r7so1068369wmg.0;
+        Tue, 17 Mar 2020 17:17:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=J+e5SK2e2LZ4MyHO9wWSsa40xkOFSDNcY+p2H5PaU+M=;
-        b=Ynp2qMHIuiwOUtZ3QM8+AfwnmcGnkCuk4FQFn8Eto1QVXv7jYR2Ss/sb/kVH738oZu
-         iVSOpVaIA3MIQ9KszW2EfUIRrEVCRZxabMXD6e0/3RWxKSJwpmkhMqahTD2z67QrqIAt
-         gmWybPGOIHi07H1rdM/5kDntw1zPNAO13wjimFtPB0vTj0zJ/NEbZzokcBs8y67xS4K/
-         E4r+cJRajOj34rWb3sTLI1MComoF6+ZidtBCfffijh2DpqsExKSQ9vxEWrZZKlJq/Ber
-         dtCbdZs6DubENgqC17ljQPdrq0b64t+d5JUIAVkP/sAVuHigFfgmgz80+HWQWMWIU+TR
-         XQTg==
+        bh=KAXWu0UANDOVatXihProEuzz/73Lcoq083Tlz6zFj1c=;
+        b=YYUwe03PUuNG50h89cb3aEGYaLRC8phyef/6VGQ9Nh1CTR05B+SJ3fswY+FiI5ccia
+         fQYToImXXpkKNToZD30gpK8F357fG9i9sF91tYjq6qeIPK8iXNbfgvfRJTSXqT29HbGo
+         oZu+VVnsOcwnK7nFxmGOhKXLTZkYXyc0wYZUKVxOBpRe72djfsvbs+5KfHWekD8EzK5K
+         b4I0Lpo3oeg9QG1LxsVRKEGLbMrIZIVaZbfL/rSKB1YkOfbpRU6Bl2tyzdQzffa3UtFQ
+         JA3zLOcGpR7T8/SUvned7VSNFtmV8sUmEkMwmu/ClI+Bd3tSPHWpI2qrrrEms5qMx7XG
+         2log==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=J+e5SK2e2LZ4MyHO9wWSsa40xkOFSDNcY+p2H5PaU+M=;
-        b=DJK1t+T0p3LcwI7wbX510gBBQMgUG6f/uTrLOCSkAxP8RZXD2ZVX44DkyTuYrOzzuf
-         DTiMyY7oyzSYJvbcluu9S8eRLxxZjE5NJNH2Xauynj58M5m1kQOxNGnJIj18Bsk8PNk7
-         CvwSP9Lg29c3og88v9C8vIjx8fixGxc4bUa0nLZu4kTSwDx+8mR/kaj+IRYKeOPeuNR+
-         +ShzdkNl4dkKCkcJ4/l1ktcNZeLymCNczLXu9tIpl3m+gxpcTVADy9YaUj4UE0DXhBlt
-         4wiMsE6M7k5yJkoosF+bDZjuUFkD2DWg7vk8EtRhno0rocbMpd9fkvxGoS8vTInZzy13
-         58Pw==
-X-Gm-Message-State: ANhLgQ1tzsIY/fFgcguJ4tugBC6goYL8oRnbyJGuMBbQTa5nxo41NAWl
-        Cv5IwkQFjBncWqeD/4W5z8k=
-X-Google-Smtp-Source: ADFU+vs7XKqVjr0PgUql0X5CC6cLuNW6Uv2W1EblIurQKjusZ+ze0jq2S+qyuUiW+Blezf+J0pNwSw==
-X-Received: by 2002:a05:600c:4145:: with SMTP id h5mr1529450wmm.3.1584490628310;
-        Tue, 17 Mar 2020 17:17:08 -0700 (PDT)
+        bh=KAXWu0UANDOVatXihProEuzz/73Lcoq083Tlz6zFj1c=;
+        b=CkYyBWiE4855o+r6yWSBQ4/WY2hzzrZYFN8aul1W2P8CtP5qoGFknbv4mhNP3KEUNO
+         rTwMop/7wZPiO6wENPRlKWB6XCnUV3y8Lx3kfGhvSP61chrRkPPk72XaHBEmEYoLn4ny
+         TbsAk/pTK0K+JkYgEy18r1EzprZcDJjm93vinIBg9OUgIE6UVvaOMwM3SPxlTrW1nlyx
+         I8NDra4KIAU6YfriTAoJn1iA1H3HsodVMqC4OdeOJjJNJvh3vljx/47ZGuYeaQqf81lx
+         ieeKY0AxXP9It3YnUx4lFw26M1Whkgda5qNJNO0XsfH++AkXSyhxoOCrLyxsfBw5QVRd
+         0IYg==
+X-Gm-Message-State: ANhLgQ2CE7eLf3yiawH231fn7ep+Sp+jIN4uCrib0XSQ1mZs98gtds98
+        oufDkhY0qWQWBNr/AJEUQsY=
+X-Google-Smtp-Source: ADFU+vsKo9J+cypNb8ARLgt7IQtM0UosmL8XHUoariuqjuXHG+bgJ7JdHUk/RH4KYx7B5E8osBOsjQ==
+X-Received: by 2002:a7b:cc06:: with SMTP id f6mr1543969wmh.65.1584490643264;
+        Tue, 17 Mar 2020 17:17:23 -0700 (PDT)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id i6sm6584600wru.40.2020.03.17.17.17.07
+        by smtp.gmail.com with ESMTPSA id i6sm6584600wru.40.2020.03.17.17.17.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 17:17:07 -0700 (PDT)
+        Tue, 17 Mar 2020 17:17:22 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -62,9 +62,9 @@ Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
         andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
         mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v5 01/12] spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
-Date:   Wed, 18 Mar 2020 02:15:52 +0200
-Message-Id: <20200318001603.9650-2-olteanv@gmail.com>
+Subject: [PATCH v5 12/12] arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
+Date:   Wed, 18 Mar 2020 02:16:03 +0200
+Message-Id: <20200318001603.9650-13-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200318001603.9650-1-olteanv@gmail.com>
 References: <20200318001603.9650-1-olteanv@gmail.com>
@@ -75,15 +75,11 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-The SPI_MCR_PCSIS macro assumes that the controller has a number of chip
-select signals equal to 6. That is not always the case, but actually is
-described through the driver-specific "spi-num-chipselects" device tree
-binding. LS1028A for example only has 4 chip selects.
+For debugging, it is useful to have access to the DSPI controller
+signals. On the reference design board, these are exported to either the
+mikroBUS1 or mikroBUS2 connector (according to the CPLD register
+BRDCFG3[SPI3]).
 
-Don't write to the upper bits of the PCSIS field, which are reserved in
-the reference manual.
-
-Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 Changes in v5:
@@ -96,36 +92,36 @@ Changes in v3:
 None.
 
 Changes in v2:
-Remove duplicate phrase in commit message.
+Change compatible string for spidev node.
 
- drivers/spi/spi-fsl-dspi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 50e3382f0c50..6ca35881881b 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -22,7 +22,7 @@
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index 6d05b76c2c7a..0d27b5667b8c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -83,6 +83,20 @@
+ 	};
+ };
  
- #define SPI_MCR				0x00
- #define SPI_MCR_MASTER			BIT(31)
--#define SPI_MCR_PCSIS			(0x3F << 16)
-+#define SPI_MCR_PCSIS(x)		((x) << 16)
- #define SPI_MCR_CLR_TXF			BIT(11)
- #define SPI_MCR_CLR_RXF			BIT(10)
- #define SPI_MCR_XSPI			BIT(3)
-@@ -1200,7 +1200,10 @@ static const struct regmap_config dspi_xspi_regmap_config[] = {
- 
- static void dspi_init(struct fsl_dspi *dspi)
- {
--	unsigned int mcr = SPI_MCR_PCSIS;
-+	unsigned int mcr;
++&dspi2 {
++	bus-num = <2>;
++	status = "okay";
 +
-+	/* Set idle states for all chip select signals to high */
-+	mcr = SPI_MCR_PCSIS(GENMASK(dspi->ctlr->num_chipselect - 1, 0));
- 
- 	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
- 		mcr |= SPI_MCR_XSPI;
++	/* mikroBUS1 */
++	spidev@0 {
++		compatible = "rohm,dh2228fv";
++		spi-max-frequency = <20000000>;
++		fsl,spi-cs-sck-delay = <100>;
++		fsl,spi-sck-cs-delay = <100>;
++		reg = <0>;
++	};
++};
++
+ &esdhc {
+ 	sd-uhs-sdr104;
+ 	sd-uhs-sdr50;
 -- 
 2.17.1
 
