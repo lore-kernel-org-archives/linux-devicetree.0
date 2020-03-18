@@ -2,141 +2,218 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D01BCC4332B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6D4C4332D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 23:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5FA2076C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:59:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584572359;
-	bh=px9yTuyutGPLxDOS4VKgrsyFcqncgHyrQwaPkk2M1kU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xKJ9lLXS+yCb4v5HPfNzfQkM/WeOia3uJvV6FoR3C9VrmwGFByQChyVDoCvgZ8Don
-	 2Ow+8CNLGds/qyJsf2+4blULrOU/a4vGzv9yr4hJn3Qiv0hMHKxHXyVxT5gs1dY5FL
-	 mmXp7AOoP6NMaqq7rmnuz/ZcLzkGxWeGOp4mQRkM=
+	by mail.kernel.org (Postfix) with ESMTP id 49DF72076E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 23:00:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RtTb+Z6Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgCRW7T (ORCPT
+        id S1726796AbgCRW76 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:59:19 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45458 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCRW7S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 18:59:18 -0400
-Received: by mail-il1-f196.google.com with SMTP id m9so423616ilq.12;
-        Wed, 18 Mar 2020 15:59:18 -0700 (PDT)
+        Wed, 18 Mar 2020 18:59:58 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37657 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRW76 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 18:59:58 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d1so51859wmb.2;
+        Wed, 18 Mar 2020 15:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FhuQwfPEL0hTgcoNyTMHnKuBvWWB7/uRwTo4pXti+54=;
+        b=RtTb+Z6QgPX6eEk3FcD1grGQYUCvruM8UTymlZC+u2AS/kHOQJyaFhItAwOgTYJ4Iq
+         2mlLnLpKFkKYxeEa6ik/FHG5WgomIPKzWJCpXWwx/WMbz3DLkEucM3dI8iUjjZ0VxU05
+         SiEE+A9lLPeHd144Ji0pRRBVEzBKNYNjbsvNsWibxVIzRwfFqOwaODGCw/eACtav54NZ
+         9UMX0klApRPIBsexNFl7f7xe+WV9lBonnFHUzPBm7JTP08qHOF/GK4CdbGsdYJhHw1zD
+         GuzJeFFGYqihD8KEpnv+SZAwgYDSNxNDFxq2citLe9Gsg4AM87C11YTFIMYYpjtY7dke
+         jltw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:content-language
-         :content-id:user-agent;
-        bh=WG++1Z0XEGF8QjOEAy+cWUTtbp6Q7m3dGXGb9K3xIFE=;
-        b=AbZ3qUI/CKmrt/ajVHPiCV45CTqy5HvXZET0G1UgCkxcDUEtLT2kR73/ptZR0g9UnK
-         RlZA5Om9Ll1F7iges0dBXqDrreqzzTsiAN4hlINViOjJSfm3uWJz6p9FmIwIPfL1lHLy
-         JEUvnOSDGMAUq5iGTsMWxENdXwCgFr7UwWZOovSFJejppiAlPp+13TLmPS+L/NFHC6Q/
-         8cflHGqmbqWQYlU+SIfg52g/6XonuG/NzOGC3GH7POUeq/8CB4llDgz8NkCm+Sx+VKei
-         yd6FqTzO03D3iWTa/9E4JNgCPkNejfgq4/a4tn4lYYYRx0hqT/J+nfAVEg1l5DnzTDIJ
-         oP8Q==
-X-Gm-Message-State: ANhLgQ23hAK9X78iRLRdJmcYIMZHiT6eDwvoizE+hBZJC1hnQqD5U3C3
-        DMqPhRDOOkPB+s4CLGUOfA==
-X-Google-Smtp-Source: ADFU+vvQu/ofiAgtyXPA30BdpK0s2M4IVdyqhYxGuUk+ta8FD03+S125+4JrMJsyywR83s2B6+q9jQ==
-X-Received: by 2002:a92:358b:: with SMTP id c11mr425751ilf.64.1584572357681;
-        Wed, 18 Mar 2020 15:59:17 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id w88sm114692ila.24.2020.03.18.15.59.15
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FhuQwfPEL0hTgcoNyTMHnKuBvWWB7/uRwTo4pXti+54=;
+        b=t+uhYYPQABI0w4F5p7u6G+NHJ5VfWGErx5lkY7r90wCyuX+TwwZwe2H9N4ZbmBlYrc
+         edjsWh7uxxCjA/UoVefmAZallgkCPvaimGqhc3uVZU05KAGGjJsBze7vIrhWqmddH5gt
+         4WSMnfr59K8NZGqWik54rGvCZCGdH+EoYxeKUCyXmMm/Z8DR9foEGREx7Frsy88bx+qq
+         +YhvEg2WEtEFQDMJOcSZYF2nYhWp3dQvaxGItG7eD5mNNpf3g89zeJ7/hWsNqqsMh92e
+         lxWx9PdeNtcOKRjzrl8WhUApNn8DoIUpZtVuJlalKXXBJ4CzF34Z1ZuXXTBahL9xXfdK
+         18mg==
+X-Gm-Message-State: ANhLgQ0waCWoYSTESAThTwq9Aq7+1kKjxg+5A719eiGu/+DBGAwTUiu5
+        pUH1UaeFD+12aRvD6ypTvipxmLlB
+X-Google-Smtp-Source: ADFU+vu7WgNjakSl0C5AyVxj/dSWix5Gir8iXHudP3rtR2SXhkPxNUW8q0N0umVfG+eC8fRj1pA40A==
+X-Received: by 2002:a1c:b60b:: with SMTP id g11mr7888357wmf.175.1584572395964;
+        Wed, 18 Mar 2020 15:59:55 -0700 (PDT)
+Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
+        by smtp.gmail.com with ESMTPSA id q72sm353382wme.31.2020.03.18.15.59.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 15:59:16 -0700 (PDT)
-Received: (nullmailer pid 27686 invoked by uid 1000);
-        Wed, 18 Mar 2020 22:59:15 -0000
-Date:   Wed, 18 Mar 2020 16:59:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Eugene Zalkonnikov <ez@norphonic.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "development@norphonic.com" <development@norphonic.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v6 2/2] Device tree bindings for TI HDC20x0 humidity and
-  temperature sensors
-Message-ID: <20200318225915.GA25864@bogus>
-References: <84EE5291-D8C4-40D3-A75C-92362BF9DF8B@norphonic.com>
- <1C2C8CD5-4BF0-40AE-932A-4AD506664B9D@norphonic.com>
+        Wed, 18 Mar 2020 15:59:54 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 23:59:53 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+Message-ID: <20200318225953.GA2874972@ulmo>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
+ <20200317174043.GA1464607@ulmo>
+ <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
 Content-Disposition: inline
-In-Reply-To: <1C2C8CD5-4BF0-40AE-932A-4AD506664B9D@norphonic.com>
-Content-Language: en-US
-Content-ID: <3A479F18FEBC5A46BFE84B5E87D23497@eurprd06.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 17 Mar 2020 20:09:48 +0000, Eugene Zalkonnikov wrote:
-> 
-> Device tree bindings for the HDC2010/2080 driver.
-> 
-> Signed-off-by: Eugene Zaikonnikov <eugene.zaikonnikov@norphonic.com>
-> 
-> diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml
-> --- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	1970-01-01 01:00:00.000000000 +0100
-> +++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	2020-02-12 14:28:42.562903814 +0100
-> @@ -0,0 +1,43 @@
-> +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/humidity/hdc2010.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HDC2010/HDC2080 humidity and temperature iio sensors
-> +
-> +maintainers:
-> +  - Eugene Zaikonnikov <eugene.zaikonnikov@norophonic.com>
-> +
-> +description: |
-> +  Relative humidity and tempereature sensors on I2C bus
-> +
-> +  Datasheets are available at:
-> +    http://www.ti.com/product/HDC2010/datasheet
-> +    http://www.ti.com/product/HDC2080/datasheet
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,hdc2010
-> +      - ti,hdc2080
-> +
-> +  vddd-supply:
-> +    description:
-> +      digital voltage regulator (see regulator/regulator.txt)
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      hdc200x@40 {
-> +          compatible = "ti,hdc2010";
-> +          reg = <0x40>;
-> +      };
-> +    };
-> 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/iio/humidity/ti,hdc2010.yaml#
+On Tue, Mar 17, 2020 at 10:00:42PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
+>=20
+> On Tue, Mar 17, 2020 at 06:40:43PM +0100, Thierry Reding wrote:
+> > On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
+> > > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
+> > > Rename it to PWM_POLARITY_INVERTED.
+> >=20
+> > It isn't misspelled. "inversed" is a synonym for "inverted". Both
+> > spellings are correct.
+>=20
+> Some time ago I stumbled about "inversed", too. My spell checker doesn't
+> know it and I checked some dictionaries and none of them knew that word:
+>=20
+> https://www.lexico.com/search?utf8=3D%E2%9C%93&filter=3Ddictionary&dictio=
+nary=3Den&query=3Dinversed
+> https://de.pons.com/%C3%BCbersetzung/englisch-deutsch/inversed
+> https://dictionary.cambridge.org/spellcheck/english-german/?q=3Dinversed
+>=20
+> https://en.wiktionary.org/wiki/inverse#Verb mentions "inverse" as a verb
+> having "inversed" as past participle.
 
-See https://patchwork.ozlabs.org/patch/1256878
-Please check and re-submit.
+Here are the first three results from a Google query:
+
+	https://www.yourdictionary.com/inversed
+	https://www.dictionary.com/browse/inversed
+	https://en.wiktionary.org/wiki/inversed
+
+> Having said this I think (independent of the question if "inversed"
+> exists) using two similar terms for the same thing just results in
+> confusion. I hit that in the past already and I like it being addressed.
+
+I don't know. It's pretty common to use different words for the same
+thing. They're called synonyms.
+
+> > And as you noted in the cover letter, there's a conflict between the
+> > macro defined in dt-bindings/pwm/pwm.txt. If they end up being included
+> > in the wrong order you'll get a compile error.
+>=20
+> There are also other symbols that exist twice (GPIO_ACTIVE_HIGH was the
+> first to come to my mind). I'm not aware of any problems related to
+> these. What am I missing?
+
+There's currently no problem, obviously. But if for some reason the
+include files end up being included in a different order (i.e. the
+dt-bindings header is included before linux/pwm.h) then the macro will
+be evaluated and result in something like:
+
+	enum pwm_polarity {
+		PWM_POLARITY_NORMAL,
+		1,
+	};
+
+and that's not valid C, so will cause a build error.
+
+> > The enum was named this way on purpose to make it separate from the
+> > definition for the DT bindings.
+>=20
+> Then please let's make it different by picking a different prefix or
+> something like that.
+
+Again, seems to me like unnecessary churn. Feel free to propose
+something, but I recall being in the same position at the time and this
+was the best I could come up with.
+
+> > Note that DT bindings are an ABI and can
+> > never change, whereas the enum pwm_polarity is part of a Linux internal
+> > API and doesn't have the same restrictions as an ABI.
+>=20
+> I thought only binary device trees (dtb) are supposed to be ABI.
+
+Yes, the DTB is the ABI. dt-bindings/pwm/pwm.h is used to generate DTBs,
+which basically makes it ABI as well. Yes, the symbol name may not be
+part of the ABI, but changing the symbol becomes very inconvenient
+because everyone that depends on it would have to change. Why bother?
+
+My point is that enum pwm_polarity is an API in the kernel and hence its
+easy to change or extend. But since that is not the same for the DTB, we
+need to be careful what from the internal kernel API leaks into the DTB.
+That's why they are different symbols, so that it is clear that what's
+in dt-bindings/pwm/pwm.h is the ABI.
+
+Thierry
+
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5yp+UACgkQ3SOs138+
+s6FO/BAApA+hyvKBdtCzUbodbVNOnFlAivhVCo+N5zGSec6fjuALlAnGB/kYeWlt
+XpSwooECx8G2j+mO9LmKjQi4ZmZxFGhO790xo3Q4CHNE+c/DNU0iP3cTXlJYhrAm
+fBpMAsDBwuyrcJCuavVIDuM0okLAQ2XlmZFFT3WNCuC7NmmwkvVr0lJeg1/9lIsp
+mivS6EuLEwXH0H03avpu3+o6+RAIKdO7jKegMHGQNWnBNg1bj+dCMvnKrxAKEjby
+27HuFhm4cMsd5DQQE2RlB7iWZD1aLpk/S7n98LvGti8PiXAtfVzPjUhIXFrvJXi/
+3A7ZwL7jHyaCmMMD3BJHa3/f3SlJMPU31ABixFS4R1t8LyLW4yw47jvZeznRqy8m
+4EkQcdl5EQ4bdDyVOgyWTJTjuPLqahDFFjZGapLbvpM6nj9FTAX+PTDhAvi+QQ4F
+XYkRpbO23Vw9bkE5hHNnD1lYMUgBE0WYTYZVgxEhVbV8Tte3qvnidjlEiNdVFznM
+uYBZv0Ks0r5LAWq2EAwy6JlfzbfdP42dlj5ZRgqNqhTbybFhtwpZ1qhE/XfG0k4L
+gfJt9ZXUHn81TWBrKoUC3YNbjJtTF2cl7l2JKft6+S3W93CV50lTzycJp/iy3srI
+qigCThG2YlpsInS8ZEfww4p47i5+Uje0uHDaoT07uEukyjNAYkQ=
+=Nsfz
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
