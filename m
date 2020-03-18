@@ -2,287 +2,123 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1780C5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 19:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41038C5ACD6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 19:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC5A42072C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 19:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A0920772
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 19:29:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e/RATo9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgCRT06 (ORCPT
+        id S1726663AbgCRT3L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:26:58 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:50770 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRT06 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 15:26:58 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 726C880607;
-        Wed, 18 Mar 2020 20:26:53 +0100 (CET)
-Date:   Wed, 18 Mar 2020 20:26:51 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
-Subject: Re: [PATCH v11 1/5] dt-bindings: display: xlnx: Add ZynqMP DP
- subsystem bindings
-Message-ID: <20200318192651.GA28612@ravnborg.org>
-References: <20200318153728.25843-1-laurent.pinchart@ideasonboard.com>
- <20200318153728.25843-2-laurent.pinchart@ideasonboard.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318153728.25843-2-laurent.pinchart@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=Am4ss40yAAAA:8
-        a=P1BnusSwAAAA:8 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8
-        a=e5mUnYsNAAAA:8 a=kTn6tiXFuQMK-JzNtnEA:9 a=CjuIK1q_8ugA:10
-        a=lf-hbUz_c89dky27wAWH:22 a=D0XLA9XvdZm18NrgonBM:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
+        Wed, 18 Mar 2020 15:29:11 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36224 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgCRT3L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 15:29:11 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s5so31983602wrg.3;
+        Wed, 18 Mar 2020 12:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=24spxwKs6/lu06D14Gb2r20D9msuLPFYXhBKgOUGLVY=;
+        b=e/RATo9W4dh73ey1VeO1DFTpBsoaeBO/sb3+wu9I5BZ4DnG6xs/Fzvnqv2+wU6o+bK
+         CB5yNr5Vt+FtbsHgYSE80t+Txf8NJPHdqDgPHfxh0bXiU+wgCkJrpmm/s87WIG0TWiK6
+         zOamz7BEEoj4xtqAFGCOFl48gQXf49BoXuyZiaP71lJH8bfxd3FfjAbInUrV4LILb23p
+         o/uv5iv2aS1FePjcgLw4sIER9Ek+zIVXvcGamxqobtmqU90tdvFFokcSBeG+3i2U1i47
+         MKPY+6bvDkp9oAvYPOo4a5NmX2JMV4Tc/oIg0R77XkWocS63V3xq8RhVEjjnYSIUtX6s
+         gB0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=24spxwKs6/lu06D14Gb2r20D9msuLPFYXhBKgOUGLVY=;
+        b=cTd+nQYOboVkImHxTv/z1rlRKrrDl1txaY27PxdLyFZj9k8LKwBm7zvgwpDQ8weO03
+         2OOCuMpye2WDeqskwkItdjXAYN+ZIGT+MPdhm3VqKsixVWiM50U6bYAQtssPwFF4Uq8A
+         XzI/ZG+trgMYYjVska39XjiUEZTMcR+djiDiT5wHoD5OSRDSxHokkBZT5otWm8ODkbQo
+         eP75wDY7T5v5mBJ3DluRs2TQpA6ebm8/3iqWJfIhe9cX0AO87+Cjs70AKcPLQwsOTaV3
+         QiwoYjgSwHDKcg2+49ZpRfZV7f9wgfNDCiJZYF0unVfoVn9Sk2dHz4jjaZK0DQJ30u3Z
+         FmAA==
+X-Gm-Message-State: ANhLgQ2greHB0cNh0ykJTX5gCXZWkB1MDVNQ0w5G19ocHP23iwwoVKov
+        eYny+U/uzugCQdwEYeavMYg=
+X-Google-Smtp-Source: ADFU+vuJAKgOP6N0WJCkC/0D+fPS5480Ytml+vLa/YcsAurBD7mGJpj/3MStcWaMC+osRkDc+h/ZnA==
+X-Received: by 2002:adf:9b96:: with SMTP id d22mr7727492wrc.249.1584559749269;
+        Wed, 18 Mar 2020 12:29:09 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id s131sm5333728wmf.35.2020.03.18.12.29.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Mar 2020 12:29:08 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     kishon@ti.com
+Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 2/2] phy: phy-rockchip-inno-usb2: remove support for rockchip,rk3366-usb2phy
+Date:   Wed, 18 Mar 2020 20:29:01 +0100
+Message-Id: <20200318192901.5023-2-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200318192901.5023-1-jbx6244@gmail.com>
+References: <20200318192901.5023-1-jbx6244@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 05:37:24PM +0200, Laurent Pinchart wrote:
-> From: Hyun Kwon <hyun.kwon@xilinx.com>
-> 
-> The bindings describe the ZynqMP DP subsystem. They don't support the
-> interface with the programmable logic (FPGA) or audio yet.
-> 
-> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+'phy-rockchip-inno-usb2.txt' is updated to yaml, whereby
+the compatible string 'rockchip,rk3366-usb2phy' was removed,
+because it's not in use by a dts file, so remove support
+in the code as well.
 
-Bikeshedding - examples with indent on 4 spaces to make them easier to
-read.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 20 --------------------
+ 1 file changed, 20 deletions(-)
 
-Would it be possible to make this binding: (GPL-2.0-only OR BSD-2-Clause)
-This is preferred for new bindings.
-In this case asking Hyun Kwon should be enough?
+diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+index 680cc0c88..dcdb5589b 100644
+--- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
++++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+@@ -1299,25 +1299,6 @@ static const struct rockchip_usb2phy_cfg rk3328_phy_cfgs[] = {
+ 	{ /* sentinel */ }
+ };
+ 
+-static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs[] = {
+-	{
+-		.reg = 0x700,
+-		.num_ports	= 2,
+-		.clkout_ctl	= { 0x0724, 15, 15, 1, 0 },
+-		.port_cfgs	= {
+-			[USB2PHY_PORT_HOST] = {
+-				.phy_sus	= { 0x0728, 15, 0, 0, 0x1d1 },
+-				.ls_det_en	= { 0x0680, 4, 4, 0, 1 },
+-				.ls_det_st	= { 0x0690, 4, 4, 0, 1 },
+-				.ls_det_clr	= { 0x06a0, 4, 4, 0, 1 },
+-				.utmi_ls	= { 0x049c, 14, 13, 0, 1 },
+-				.utmi_hstdet	= { 0x049c, 12, 12, 0, 1 }
+-			}
+-		},
+-	},
+-	{ /* sentinel */ }
+-};
+-
+ static const struct rockchip_usb2phy_cfg rk3399_phy_cfgs[] = {
+ 	{
+ 		.reg		= 0xe450,
+@@ -1426,7 +1407,6 @@ static const struct of_device_id rockchip_usb2phy_dt_match[] = {
+ 	{ .compatible = "rockchip,px30-usb2phy", .data = &rk3328_phy_cfgs },
+ 	{ .compatible = "rockchip,rk3228-usb2phy", .data = &rk3228_phy_cfgs },
+ 	{ .compatible = "rockchip,rk3328-usb2phy", .data = &rk3328_phy_cfgs },
+-	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
+ 	{ .compatible = "rockchip,rk3399-usb2phy", .data = &rk3399_phy_cfgs },
+ 	{ .compatible = "rockchip,rv1108-usb2phy", .data = &rv1108_phy_cfgs },
+ 	{}
+-- 
+2.11.0
 
-With or without the suggestions above:
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-	Sam
-
-> ---
-> Changes since v10:
-> 
-> - Update example to new PHY DT bindings without subnodes
-> - Add resets property
-> 
-> Changes since v9:
-> 
-> - Fix constraints on clock-names
-> - Document dp_apb_clk as the APB clock, not the AXI clock
-> 
-> Changes since v8:
-> 
-> - Convert to yaml
-> - Rename aclk to dp_apb_clk
-> ---
->  .../display/xlnx/xlnx,zynqmp-dpsub.yaml       | 174 ++++++++++++++++++
->  1 file changed, 174 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
-> new file mode 100644
-> index 000000000000..05e6a14de75c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
-> @@ -0,0 +1,174 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/xlnx/xlnx,zynqmp-dpsub.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Xilinx ZynqMP DisplayPort Subsystem
-> +
-> +description: |
-> +  The DisplayPort subsystem of Xilinx ZynqMP (Zynq UltraScale+ MPSoC)
-> +  implements the display and audio pipelines based on the DisplayPort v1.2
-> +  standard. The subsystem includes multiple functional blocks as below:
-> +
-> +               +------------------------------------------------------------+
-> +  +--------+   | +----------------+     +-----------+                       |
-> +  | DPDMA  | --->|                | --> |   Video   | Video +-------------+ |
-> +  | 4x vid |   | |                |     | Rendering | -+--> |             | |   +------+
-> +  | 2x aud |   | |  Audio/Video   | --> | Pipeline  |  |    | DisplayPort |---> | PHY0 |
-> +  +--------+   | | Buffer Manager |     +-----------+  |    |   Source    | |   +------+
-> +               | |    and STC     |     +-----------+  |    | Controller  | |   +------+
-> +  Live Video --->|                | --> |   Audio   | Audio |             |---> | PHY1 |
-> +               | |                |     |   Mixer   | --+-> |             | |   +------+
-> +  Live Audio --->|                | --> |           |  ||   +-------------+ |
-> +               | +----------------+     +-----------+  ||                   |
-> +               +---------------------------------------||-------------------+
-> +                                                       vv
-> +                                                 Blended Video and
-> +                                                 Mixed Audio to PL
-> +
-> +  The Buffer Manager interacts with external interface such as DMA engines or
-> +  live audio/video streams from the programmable logic. The Video Rendering
-> +  Pipeline blends the video and graphics layers and performs colorspace
-> +  conversion. The Audio Mixer mixes the incoming audio streams. The DisplayPort
-> +  Source Controller handles the DisplayPort protocol and connects to external
-> +  PHYs.
-> +
-> +  The subsystem supports 2 video and 2 audio streams, and various pixel formats
-> +  and depths up to 4K@30 resolution.
-> +
-> +  Please refer to "Zynq UltraScale+ Device Technical Reference Manual"
-> +  (https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf)
-> +  for more details.
-> +
-> +maintainers:
-> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: xlnx,zynqmp-dpsub-1.7
-> +
-> +  reg:
-> +    maxItems: 4
-> +  reg-names:
-> +    items:
-> +      - const: dp
-> +      - const: blend
-> +      - const: av_buf
-> +      - const: aud
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description:
-> +      The APB clock and at least one video clock are mandatory, the audio clock
-> +      is optional.
-> +    minItems: 2
-> +    maxItems: 4
-> +    items:
-> +      - description: dp_apb_clk is the APB clock
-> +      - description: dp_aud_clk is the Audio clock
-> +      - description:
-> +          dp_vtc_pixel_clk_in is the non-live video clock (from Processing
-> +          System)
-> +      - description:
-> +          dp_live_video_in_clk is the live video clock (from Programmable
-> +          Logic)
-> +  clock-names:
-> +    oneOf:
-> +      - minItems: 2
-> +        maxItems: 3
-> +        items:
-> +          - const: dp_apb_clk
-> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-> +      - minItems: 3
-> +        maxItems: 4
-> +        items:
-> +          - const: dp_apb_clk
-> +          - const: dp_aud_clk
-> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-> +          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    maxItems: 4
-> +    items:
-> +      - description: Video layer, plane 0 (RGB or luma)
-> +      - description: Video layer, plane 1 (U/V or U)
-> +      - description: Video layer, plane 2 (V)
-> +      - description: Graphics layer
-> +  dma-names:
-> +    items:
-> +      - const: vid0
-> +      - const: vid1
-> +      - const: vid2
-> +      - const: gfx0
-> +
-> +  phys:
-> +    description: PHYs for the DP data lanes
-> +    minItems: 1
-> +    maxItems: 2
-> +  phy-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: dp-phy0
-> +      - const: dp-phy1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - power-domains
-> +  - resets
-> +  - dmas
-> +  - dma-names
-> +  - phys
-> +  - phy-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/phy/phy.h>
-> +    #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
-> +
-> +    display@fd4a0000 {
-> +      compatible = "xlnx,zynqmp-dpsub-1.7";
-> +      reg = <0x0 0xfd4a0000 0x0 0x1000>,
-> +            <0x0 0xfd4aa000 0x0 0x1000>,
-> +            <0x0 0xfd4ab000 0x0 0x1000>,
-> +            <0x0 0xfd4ac000 0x0 0x1000>;
-> +      reg-names = "dp", "blend", "av_buf", "aud";
-> +      interrupts = <0 119 4>;
-> +      interrupt-parent = <&gic>;
-> +
-> +      clock-names = "dp_apb_clk", "dp_aud_clk", "dp_live_video_in_clk";
-> +      clocks = <&dp_aclk>, <&clkc 17>, <&si570_1>;
-> +
-> +      power-domains = <&pd_dp>;
-> +      resets = <&reset ZYNQMP_RESET_DP>;
-> +
-> +      dma-names = "vid0", "vid1", "vid2", "gfx0";
-> +      dmas = <&xlnx_dpdma 0>,
-> +             <&xlnx_dpdma 1>,
-> +             <&xlnx_dpdma 2>,
-> +             <&xlnx_dpdma 3>;
-> +
-> +      phys = <&psgtr 1 PHY_TYPE_DP 0 3 27000000>,
-> +             <&psgtr 0 PHY_TYPE_DP 1 3 27000000>;
-> +
-> +      phy-names = "dp-phy0", "dp-phy1";
-> +    };
-> +
-> +...
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
