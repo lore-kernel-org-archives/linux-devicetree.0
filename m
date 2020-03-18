@@ -2,244 +2,120 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F1CC5ACD9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA29C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC6F2076C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GaIsT7VT"
+	by mail.kernel.org (Postfix) with ESMTP id ED3EC2076D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgCRKbv (ORCPT
+        id S1727324AbgCRKhA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:31:51 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7074 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgCRKbv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 06:31:51 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e71f8880000>; Wed, 18 Mar 2020 03:31:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 18 Mar 2020 03:31:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 18 Mar 2020 03:31:50 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar
- 2020 10:31:49 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 18 Mar 2020 10:31:49 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e71f8900001>; Wed, 18 Mar 2020 03:31:48 -0700
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <kishon@ti.com>, <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <balbi@kernel.org>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <jckuo@nvidia.com>, Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [PATCH V1 3/8] phy: tegra: xusb: Add support for UTMI pad power control
-Date:   Wed, 18 Mar 2020 16:01:02 +0530
-Message-ID: <1584527467-8058-4-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
-References: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 18 Mar 2020 06:37:00 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37195 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgCRKhA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 06:37:00 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1jEW4F-0007jf-05; Wed, 18 Mar 2020 11:36:55 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:124:7ee3:e89c:2c00] (unknown [IPv6:2a03:f580:87bc:d400:124:7ee3:e89c:2c00])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id EDA824D0528;
+        Wed, 18 Mar 2020 10:36:51 +0000 (UTC)
+Subject: Re: [PATCH] docs: dt: Fix m_can.txt reference in tcan4x5x.txt
+To:     Dan Murphy <dmurphy@ti.com>, linux-doc@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-can@vger.kernel.org, robh+dt@kernel.org, davem@davemloft.net,
+        wg@grandegger.com, corbet@lwn.net, linux-kernel@vger.kernel.org
+References: <20200317161900.14380-1-dmurphy@ti.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <8a450951-a28d-dabf-6d52-2c827c5b749e@pengutronix.de>
+Date:   Wed, 18 Mar 2020 11:36:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584527497; bh=5n0CB6+N0wWq3YuDt7V474LuTLsFSCLbkbolggwEtl0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=GaIsT7VT6+W2jhKLtktGqekdUDOfSJrMqGaI+gWZlaPcqKIxoW6VmBoCEwxzi1CKf
-         QerVF3GT7VhKQ7w3uSP08X7YsmVBGhtOx7bBAWqHg8SFCgWx1zRQw2K6E3ib9fPnT9
-         XA6aD3DTLltUuPAVMv4OTXAh0zVNn4Ob62XOIhzHfgkntbvSAiYWdxRo2uishcD3DJ
-         AQ7za6149JjtTy4MaBQJ1ltvtIRB6VuYJbQPx022Rylci8VMS6fdgWrRi8YdqVV0p9
-         hPzcoaZg9SjNN86b2M/8njmYSSdXUWtjfsxW6HUGaGXUz/fTE562YWwY6eyCgeuWf1
-         /8CwKxfngHEGg==
+In-Reply-To: <20200317161900.14380-1-dmurphy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for UTMI pad power on and off API's via soc ops. These API
-can be used by operations like charger detect to power on and off UTMI
-pad if needed. Update powered_on flag in the pad power control API's.
+On 3/17/20 5:19 PM, Dan Murphy wrote:
+> Fix the m_can.txt reference to point to the bosch,m_can.yaml.
+> 
+> Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-schema")
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
- drivers/phy/tegra/xusb-tegra186.c | 51 ++++++++++++++++++---------------------
- drivers/phy/tegra/xusb.h          |  2 ++
- 2 files changed, 26 insertions(+), 27 deletions(-)
+Mauro Carvalho Chehab has already send a patch. See:
+https://lkml.org/lkml/2020/3/17/843
 
-diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-tegra186.c
-index fa700e5..18ed3d6 100644
---- a/drivers/phy/tegra/xusb-tegra186.c
-+++ b/drivers/phy/tegra/xusb-tegra186.c
-@@ -192,12 +192,8 @@ static void tegra186_utmi_bias_pad_power_on(struct tegra_xusb_padctl *padctl)
- 	u32 value;
- 	int err;
- 
--	mutex_lock(&padctl->lock);
--
--	if (priv->bias_pad_enable++ > 0) {
--		mutex_unlock(&padctl->lock);
-+	if (priv->bias_pad_enable++ > 0)
- 		return;
--	}
- 
- 	err = clk_prepare_enable(priv->usb2_trk_clk);
- 	if (err < 0)
-@@ -221,8 +217,6 @@ static void tegra186_utmi_bias_pad_power_on(struct tegra_xusb_padctl *padctl)
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
- 	value &= ~USB2_PD_TRK;
- 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
--
--	mutex_unlock(&padctl->lock);
- }
- 
- static void tegra186_utmi_bias_pad_power_off(struct tegra_xusb_padctl *padctl)
-@@ -230,44 +224,29 @@ static void tegra186_utmi_bias_pad_power_off(struct tegra_xusb_padctl *padctl)
- 	struct tegra186_xusb_padctl *priv = to_tegra186_xusb_padctl(padctl);
- 	u32 value;
- 
--	mutex_lock(&padctl->lock);
--
--	if (WARN_ON(priv->bias_pad_enable == 0)) {
--		mutex_unlock(&padctl->lock);
-+	if (WARN_ON(priv->bias_pad_enable == 0))
- 		return;
--	}
- 
--	if (--priv->bias_pad_enable > 0) {
--		mutex_unlock(&padctl->lock);
-+	if (--priv->bias_pad_enable > 0)
- 		return;
--	}
- 
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
- 	value |= USB2_PD_TRK;
- 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
- 
- 	clk_disable_unprepare(priv->usb2_trk_clk);
--
--	mutex_unlock(&padctl->lock);
- }
- 
- static void tegra_phy_xusb_utmi_pad_power_on(struct phy *phy)
- {
- 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
- 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
--	struct tegra_xusb_usb2_port *port;
--	struct device *dev = padctl->dev;
-+	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
- 	unsigned int index = lane->index;
- 	u32 value;
- 
--	if (!phy)
--		return;
--
--	port = tegra_xusb_find_usb2_port(padctl, index);
--	if (!port) {
--		dev_err(dev, "no port found for USB2 lane %u\n", index);
-+	if (!phy || usb2->powered_on)
- 		return;
--	}
- 
- 	tegra186_utmi_bias_pad_power_on(padctl);
- 
-@@ -280,16 +259,19 @@ static void tegra_phy_xusb_utmi_pad_power_on(struct phy *phy)
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
- 	value &= ~USB2_OTG_PD_DR;
- 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
-+
-+	usb2->powered_on = true;
- }
- 
- static void tegra_phy_xusb_utmi_pad_power_down(struct phy *phy)
- {
- 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
- 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
-+	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
- 	unsigned int index = lane->index;
- 	u32 value;
- 
--	if (!phy)
-+	if (!phy || !usb2->powered_on)
- 		return;
- 
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-@@ -303,6 +285,8 @@ static void tegra_phy_xusb_utmi_pad_power_down(struct phy *phy)
- 	udelay(2);
- 
- 	tegra186_utmi_bias_pad_power_off(padctl);
-+
-+	usb2->powered_on = false;
- }
- 
- static int tegra186_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
-@@ -413,6 +397,8 @@ static int tegra186_utmi_phy_power_on(struct phy *phy)
- 		return -ENODEV;
- 	}
- 
-+	mutex_lock(&padctl->lock);
-+
- 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_PAD_MUX);
- 	value &= ~(USB2_PORT_MASK << USB2_PORT_SHIFT(index));
- 	value |= (PORT_XUSB << USB2_PORT_SHIFT(index));
-@@ -464,14 +450,23 @@ static int tegra186_utmi_phy_power_on(struct phy *phy)
- 
- 	/* TODO: pad power saving */
- 	tegra_phy_xusb_utmi_pad_power_on(phy);
-+
-+	mutex_unlock(&padctl->lock);
- 	return 0;
- }
- 
- static int tegra186_utmi_phy_power_off(struct phy *phy)
- {
-+	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-+	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
-+
-+	mutex_lock(&padctl->lock);
-+
- 	/* TODO: pad power saving */
- 	tegra_phy_xusb_utmi_pad_power_down(phy);
- 
-+	mutex_unlock(&padctl->lock);
-+
- 	return 0;
- }
- 
-@@ -934,6 +929,8 @@ static const struct tegra_xusb_padctl_ops tegra186_xusb_padctl_ops = {
- 	.probe = tegra186_xusb_padctl_probe,
- 	.remove = tegra186_xusb_padctl_remove,
- 	.vbus_override = tegra186_xusb_padctl_vbus_override,
-+	.utmi_pad_power_on = tegra_phy_xusb_utmi_pad_power_on,
-+	.utmi_pad_power_down = tegra_phy_xusb_utmi_pad_power_down,
- };
- 
- #if IS_ENABLED(CONFIG_ARCH_TEGRA_186_SOC)
-diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
-index 51d7aae..ba5ee88 100644
---- a/drivers/phy/tegra/xusb.h
-+++ b/drivers/phy/tegra/xusb.h
-@@ -381,6 +381,8 @@ struct tegra_xusb_padctl_ops {
- 				    unsigned int index, bool enable);
- 	int (*vbus_override)(struct tegra_xusb_padctl *padctl, bool set);
- 	int (*utmi_port_reset)(struct phy *phy);
-+	void (*utmi_pad_power_on)(struct phy *phy);
-+	void (*utmi_pad_power_down)(struct phy *phy);
- };
- 
- struct tegra_xusb_padctl_soc {
+Feel free to ack that patch.
+
+Marc
+
+> ---
+>  Documentation/devicetree/bindings/net/can/tcan4x5x.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+> index 6bdcc3f84bd3..3613c2c8f75d 100644
+> --- a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+> +++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+> @@ -14,7 +14,7 @@ Required properties:
+>                      the interrupt.
+>  	- interrupts: interrupt specification for data-ready.
+>  
+> -See Documentation/devicetree/bindings/net/can/m_can.txt for additional
+> +See Documentation/devicetree/bindings/net/can/bosch,m_can.yaml for additional
+>  required property details.
+>  
+>  Optional properties:
+> 
+
+
 -- 
-2.7.4
-
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
