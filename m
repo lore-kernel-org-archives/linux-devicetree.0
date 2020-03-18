@@ -4,97 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B22C4332B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ED2C4332B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56A9320772
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A82B20752
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584569036;
-	bh=0bm+0pdaJQJUVPyT/SDf163gdktmLQW+yzXeDuWfHKk=;
+	s=default; t=1584569064;
+	bh=sovdIY3yDWoXi+MWvJGwX19McPWu3q+T94mir4GE0Qw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CVTWa1XKgLuv/iW0/XoeEV1e31SFiPD82WP1fvfvEueYD9ISttw9tpWFjacycBaUL
-	 wg/dxK+XzHv7icM9IfRaCbGka3MGmyfSrZhi2DeGwwGUthzb0mHfQyu+HyKirNKC8l
-	 bmBi/xwqh1oizgrU8uuhIaFO3Ak/IOSBXUGeoUJ4=
+	b=aAfWLK5yh1FYXIloJjf/kWAbwj4y3E9dlnF0kT3nmwCi6rmPE72lfgp3ledOkpEo9
+	 D/OP8ARqYHkLLDCA/Z1pqGPvomgetBzcF4I94KkwLOJdGLC0jqHMAR9Z5YVOQUQnbN
+	 jM7266DJrACWc1Z1KVqVLNhAs/WoNLLPraxUWEVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgCRWDz (ORCPT
+        id S1726975AbgCRWEX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:03:55 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43931 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRWDz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 18:03:55 -0400
-Received: by mail-il1-f196.google.com with SMTP id d14so319531ilq.10;
-        Wed, 18 Mar 2020 15:03:55 -0700 (PDT)
+        Wed, 18 Mar 2020 18:04:23 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45596 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCRWEX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 18:04:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id w7so133802ioj.12;
+        Wed, 18 Mar 2020 15:04:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CLoQVPlkFQlDLsX88susr2K6YisyFa9CiuJkaW6E9dA=;
-        b=UMcptopukAum83IYaNJoip+VggBL1p4Ny5I574HW1bAJhAOQuEWKqLtuRSzIwyshU3
-         bDVrj14MIZcLLX7D/UBUzEGERSzn8jFnE73n7Cx1gzI1QH0zm3nlPf+cOi7isO421zSi
-         dAQJvkgEOp1v+Pl1SOFyhDAOAUwLKkfaql2PfRpxfg9KrHcBD4lijynlSd8VqnRFdbl9
-         UZP2W5EiVbRn2azsStwVAk1oEI4jXOJER4+JJF5NFIchSkcf3voVxy2paNoWmTsqOp1Z
-         iRUcKFW6kobkL5Icx7OjhbPextLI9RlWw5biPaf0+tDm51WrEaxqP8aCjReiM76Z3Tuz
-         Su9Q==
-X-Gm-Message-State: ANhLgQ0ERduPvaVSztagbjZN06S8DtppM8LINahhqPz3meoHbuyyLZXO
-        J5ySeePnB4uAcilkcLUhmA==
-X-Google-Smtp-Source: ADFU+vv4evE0zvIh+m02yfxSH4HvSOfUSbGzEPyA/4x25WbIY5vIBPXUgkquwrjgTTv7rlSougLazw==
-X-Received: by 2002:a05:6e02:c62:: with SMTP id f2mr204406ilj.167.1584569034577;
-        Wed, 18 Mar 2020 15:03:54 -0700 (PDT)
+        bh=+CWVz1PqC9x1J8b2vKZBKD1+92zW9gD7VwiBSfs/WS8=;
+        b=AzQDD8itbxw/SnRsf5IhWQEIn+3o2t4xdTrBLbHr7n/bkcrtmkJEsgzXfWOQ2I1lC1
+         P42QU9c0yGCPuhlCJ8XC2lqFJ4L7qtcranI7DutZZpPBDSRsRwvj4AlebFZv9/dYpN6H
+         pc6Zhw80AZWjkUG4Ogji6xS1s9KJGJ8WSDV89jj83hpJegrgpHsxCgaJe+XqcZtLrViv
+         Jg874bRE6xRuoch8nWP7kFxonB/0f/ldEEcee5zPkU1DzOfPwsHgPHn5DGoR9gWuy2yy
+         LH+ZDjUUKyH7dtkbny/fTkXm4XgMVFF0mGFIXThXRf0Ko/HsVkVk4c+mo2A1RV/Bn6hj
+         aX3g==
+X-Gm-Message-State: ANhLgQ06h6+nUzwqTxsswiq4z2uMrTBz8em2k0xbDGWZnzY5p5y4fAKW
+        yRTsyHp14rveu4aN0+QQNw==
+X-Google-Smtp-Source: ADFU+vu7QiIr9ebVPNrrdkopR04JWjjwNDtybY8P+p/5qBaywMWYRFEIc/nLiLNzMolJnR+YK2b1jg==
+X-Received: by 2002:a6b:ed09:: with SMTP id n9mr5744705iog.86.1584569062764;
+        Wed, 18 Mar 2020 15:04:22 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id l26sm69517ioc.1.2020.03.18.15.03.53
+        by smtp.gmail.com with ESMTPSA id t7sm66059ioc.15.2020.03.18.15.04.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 15:03:53 -0700 (PDT)
-Received: (nullmailer pid 15282 invoked by uid 1000);
-        Wed, 18 Mar 2020 22:03:52 -0000
-Date:   Wed, 18 Mar 2020 16:03:52 -0600
+        Wed, 18 Mar 2020 15:04:21 -0700 (PDT)
+Received: (nullmailer pid 16018 invoked by uid 1000);
+        Wed, 18 Mar 2020 22:04:20 -0000
+Date:   Wed, 18 Mar 2020 16:04:20 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: Re: [PATCH 1/4] dt-bindings: phy: Add binding for qcom,usb-hs-7nm
-Message-ID: <20200318220352.GA12501@bogus>
-References: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
- <1584147293-6763-2-git-send-email-wcheng@codeaurora.org>
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     robh+dt@kernel.org, kishon@ti.com, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, jun.li@nxp.com, linux-imx@nxp.com,
+        Peter Chen <peter.chen@nxp.com>
+Subject: Re: [PATCH v2 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
+Message-ID: <20200318220420.GA15468@bogus>
+References: <20200314093941.2533-1-peter.chen@nxp.com>
+ <20200314093941.2533-2-peter.chen@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584147293-6763-2-git-send-email-wcheng@codeaurora.org>
+In-Reply-To: <20200314093941.2533-2-peter.chen@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Mar 2020 17:54:50 -0700, Wesley Cheng wrote:
-> This binding shows the descriptions and properties for the
-> 7nm Synopsis HS USB PHY used on QCOM platforms.
+On Sat, 14 Mar 2020 17:39:41 +0800, Peter Chen wrote:
+> Add Cadence SALVO PHY binding doc, this PHY is a legacy module,
+> and is only used for USB3 and USB2.
 > 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
 > ---
->  .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   | 74 ++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+> Changes for v2:
+> - Fix kinds of yaml style issue
+> 
+>  .../bindings/phy/cdns,salvo-phy.yaml          | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-warning: no schema found in file: Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml: ignoring, error parsing file
-Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml:  while scanning a block scalar
-  in "<unicode string>", line 59, column 5
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 73, column 1
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts] Error 1
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/cdns,salvo-phy.example.dt.yaml: usb3-phy@5B160000: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/cdns,salvo-phy.example.dt.yaml: usb3-phy@5B160000: #phy-cells:0:0: 1 was expected
 
-See https://patchwork.ozlabs.org/patch/1254748
+See https://patchwork.ozlabs.org/patch/1254920
 Please check and re-submit.
