@@ -2,91 +2,101 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52490C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BECC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1928E2076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:17:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GWbfE9TR"
+	by mail.kernel.org (Postfix) with ESMTP id BA5F62076F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgCRJRp (ORCPT
+        id S1726994AbgCRJUy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:17:45 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:42586 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgCRJRp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:17:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=KeLPJyyquVYMqBbQtbmvA4XwuIDg/90uof9w1TOJEf0=; b=GWbfE9TR8Qjf3F+si9NU9WUvdR
-        yOYUQhp4cjhe3RNjs0dkBjwl97SNYZtImawJ1P2sEZvPhRDUb5IGhlnqyz84tMkFWE/FigDp0+t+0
-        S//51x0ON8RP1nbs9Kq3Gd5bB8Dag8Iz0r9m3yQZCb+r5Y3+0avwHoOmzI6ytv3vsNJE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jEUpS-00069u-NQ; Wed, 18 Mar 2020 10:17:34 +0100
-Date:   Wed, 18 Mar 2020 10:17:34 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
-Cc:     Fugang Duan <fugang.duan@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/4] dt-bindings: fec: document the new fsl,stop-mode
- property
-Message-ID: <20200318091734.GA23244@lunn.ch>
-References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
- <1584463806-15788-4-git-send-email-martin.fuzzey@flowbird.group>
+        Wed, 18 Mar 2020 05:20:54 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53543 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgCRJUx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 05:20:53 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEUsa-0006vf-Bx; Wed, 18 Mar 2020 10:20:48 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEUsZ-0006yY-8Y; Wed, 18 Mar 2020 10:20:47 +0100
+Date:   Wed, 18 Mar 2020 10:20:47 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 3/7] dt-bindings: pwm: add normal PWM polarity flag
+Message-ID: <20200318092047.25gjkx43jwfyywsl@pengutronix.de>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-4-oleksandr.suvorov@toradex.com>
+ <20200317225656.GK2527@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1584463806-15788-4-git-send-email-martin.fuzzey@flowbird.group>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317225656.GK2527@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 05:50:05PM +0100, Martin Fuzzey wrote:
-> This property allows the appropriate GPR register bit to be set
-> for wake on lan support.
+Hello Laurent,
+
+On Wed, Mar 18, 2020 at 12:56:56AM +0200, Laurent Pinchart wrote:
+> On Tue, Mar 17, 2020 at 02:32:27PM +0200, Oleksandr Suvorov wrote:
+> > PWM can have a normal polarity and a reverted one. The reverted polarity
+> > value is defined.
 > 
-> Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-> ---
->  Documentation/devicetree/bindings/net/fsl-fec.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> index 5b88fae0..bd0ef5e 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> @@ -19,6 +19,11 @@ Optional properties:
->    number to 1.
->  - fsl,magic-packet : If present, indicates that the hardware supports waking
->    up via magic packet.
-> +- fsl,stop-mode: register bits of stop mode control, the format is
-> +		 <&gpr reg bit>.
-> +		 gpr is the phandle to general purpose register node.
-> +		 reg is the gpr register offset for the stop request.
-> +		 bit is the bit offset for the stop request.
+> I would squash this patch with 2/7, apart from that it looks fine.
+> However, I also agree with Thierry that the PWM cell that contains this
+> value is a bitmask, so once we get more flags it may get a bit awkward.
 
-Hi Martin
+For me the usefulness of PWM_POLARITY_NORMAL increases with more bits
+used. That's because if there are 5 things that can be set there and the
+patch author mentions only the two that are non-zero, I as a reviewer
+don't know if the author actually know and thought about the other
+three. If however they spell out PWM_POLARITY_NORMAL it's quite sure
+they want normal polarity.
 
-You should not be putting registers and values into device tree.
+> Will we have one macro for each flag that will evaluate to 0 to report
+> that the flag isn't set ?
 
-The regmap is fine. But could you add the register and the bit to
-fec_devtype[IMX6SX_FEC], fec_devtype[IMX6UL_FEC], etc.
+Yes. Given the above mentioned advantage this is cheap enough in my
+eyes.
 
-	Andrew
+> Or should we define a single PWM_FLAG_NONE (or
+> similarly named) macro ?
+
+I like one macro for each bit field better for the above mentioned
+reason.
+
+> In retrospect, maybe PWM_POLARITY_INVERTED
+> should have been named PWM_FLAG_POLARITY_INVERTED.
+
+Seems to be subjective. I don't see much added semantic that justifies
+the longer name.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
