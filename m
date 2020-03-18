@@ -2,208 +2,147 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1758C5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 12:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A26C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 12:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A232076E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 12:23:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UNjuiQeT"
+	by mail.kernel.org (Postfix) with ESMTP id CBD0120724
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 12:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgCRMXt (ORCPT
+        id S1726616AbgCRM2B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:23:49 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34596 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726646AbgCRMXt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:23:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584534228; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=LsVQvCj2qxlzCdfRUTglOB75ZlVXuMcibToFB27s2ik=; b=UNjuiQeTv6xkJKKsNkBNo9EauIFiAkBKUeUFWkX3Wr6e4Iqt21WSR022qE2S5v2q/eQ6JxsL
- v1umAXqHIZVtPb+91h7unq5lCQuIJZTvt++yrPPSe5J8CQgTkCe73Jf0zX4v5HhPUJTaVZoS
- 58uxfNyneQqkx0Gq8nvH56LR6Ko=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7212c6.7f25061a5998-smtp-out-n04;
- Wed, 18 Mar 2020 12:23:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 77D09C433BA; Wed, 18 Mar 2020 12:23:33 +0000 (UTC)
-Received: from [192.168.0.8] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 59EA9C433D2;
-        Wed, 18 Mar 2020 12:23:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 59EA9C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V2 4/8] tty: serial: qcom_geni_serial: Add interconnect
- support
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-5-git-send-email-akashast@codeaurora.org>
- <20200313212833.GK144492@google.com>
- <e9293de6-004f-6005-8cb6-66f28c080ebe@codeaurora.org>
- <20200317190804.GS144492@google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <e95bd6e0-d1fd-9d13-47df-f7d08b443e37@codeaurora.org>
-Date:   Wed, 18 Mar 2020 17:53:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 08:28:01 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35549 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbgCRM2B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 08:28:01 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jEXnh-0004BV-N8; Wed, 18 Mar 2020 13:27:57 +0100
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jEXng-0005YE-UQ; Wed, 18 Mar 2020 13:27:56 +0100
+Date:   Wed, 18 Mar 2020 13:27:56 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 6/6] m arch/arm/boot/dts/imx6q-prti6q.dts
+Message-ID: <20200318122756.sfoyydaggn2vcbk6@pengutronix.de>
+References: <20200318120354.4989-1-o.rempel@pengutronix.de>
+ <20200318120354.4989-6-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200317190804.GS144492@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sl7c7igma5v47h5x"
+Content-Disposition: inline
+In-Reply-To: <20200318120354.4989-6-o.rempel@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 13:26:51 up 124 days,  3:45, 155 users,  load average: 0.31, 0.10,
+ 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
 
-On 3/18/2020 12:38 AM, Matthias Kaehlcke wrote:
-> On Tue, Mar 17, 2020 at 05:18:34PM +0530, Akash Asthana wrote:
->> Hi Matthias,
->>
->> On 3/14/2020 2:58 AM, Matthias Kaehlcke wrote:
->>> Hi Akash,
->>>
->>> On Fri, Mar 13, 2020 at 06:42:10PM +0530, Akash Asthana wrote:
->>>> Get the interconnect paths for Uart based Serial Engine device
->>>> and vote according to the baud rate requirement of the driver.
->>>>
->>>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
->>>> ---
->>>> Changes in V2:
->>>>    - As per Bjorn's comment, removed se == NULL check from geni_serial_icc_get
->>>>    - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
->>>>    - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
->>>>      path handle
->>>>    - As per Matthias comment, added error handling for icc_set_bw call
->>>>
->>>>    drivers/tty/serial/qcom_geni_serial.c | 69 +++++++++++++++++++++++++++++++++--
->>>>    1 file changed, 65 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
->>>> index 272bae0..c8ad7e9 100644
->>>> --- a/drivers/tty/serial/qcom_geni_serial.c
->>>> +++ b/drivers/tty/serial/qcom_geni_serial.c
->>>>
->>>> ...
->>>>
->>>>    static int qcom_geni_serial_request_port(struct uart_port *uport)
->>>>    {
->>>>    	struct platform_device *pdev = to_platform_device(uport->dev);
->>>> @@ -962,6 +975,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->>>>    	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
->>>>    	unsigned long clk_rate;
->>>>    	u32 ver, sampling_rate;
->>>> +	int ret;
->>>>    	qcom_geni_serial_stop_rx(uport);
->>>>    	/* baud rate */
->>>> @@ -983,6 +997,18 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
->>>>    	ser_clk_cfg = SER_CLK_EN;
->>>>    	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
->>>> +	/*
->>>> +	 * Put BW vote only on CPU path as driver supports FIFO mode only.
->>>> +	 * Assume peak_bw as twice of avg_bw.
->>>> +	 */
->>>> +	port->se.avg_bw_cpu = Bps_to_icc(baud);
->>>> +	port->se.peak_bw_cpu = Bps_to_icc(2 * baud);
->>>> +	ret = icc_set_bw(port->se.icc_path_cpu_to_geni, port->se.avg_bw_cpu,
->>>> +			port->se.peak_bw_cpu);
->>>> +	if (ret)
->>>> +		dev_err(uport->dev, "%s: ICC BW voting failed for cpu\n",
->>>> +			__func__);
->>> Should this return an error? The port might not operate properly if the ICC
->>> bandwidth couldn't be configured
->> This is void function we can't return error from here. I guess it would be
->> somewhat okay if BW voting failed for CPU path but clk_set_rate failure is
->> more serious which is called from this function, I don't think it can be
->> move to somewhere else.
-> ok, I missed that _set_termios() is void.
->
->>>>    static const struct uart_ops qcom_geni_console_pops = {
->>>> @@ -1308,6 +1358,17 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
->>>>    	port->rx_fifo_depth = DEF_FIFO_DEPTH_WORDS;
->>>>    	port->tx_fifo_width = DEF_FIFO_WIDTH_BITS;
->>>> +	ret = geni_serial_icc_get(&port->se);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +	/* Set the bus quota to a reasonable value */
->>>> +	port->se.avg_bw_core = console ? Bps_to_icc(1000) :
->>>> +		Bps_to_icc(CORE_2X_50_MHZ);
->>> Why different settings for console vs. non-console?
->> QUP FW runs on core clock. To support higher throughput we want FW to run at
->> higher speed.
->>
->> Since Console operate at 115200bps and BT operate at 3.2Mbps baud. We are
->> voting higher on core for BT usecase.
->>
->> These value are recommended from HW team.
-> IIUC none of the values you mention are set in stone. 115200bps seems to be a
-> 'standard' value for the serial console, but it could be a different baudrate.
-> I guess you are referring to Qualcomm Bluetooth controllers, which are only one
-> of many things that could be connected to the port. And what happens when a
-> QCA BT controller is connected to a non-geni/QCA port, which doesn't know about
-> its 'requirements'? The answer is that both the BT controller and the serial
-> console configure the baudrate they need, hence using different values in
-> _probe() is pointless.
+--sl7c7igma5v47h5x
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Are you refering other UART drivers(not based on geni HW) as 
-non-geni/QCA port?
+oops,
+forgot to squash this one. Will be done in v2
 
-We are not scaling core BW request based on real time need like we are 
-doing for other paths(CPU/DDR) instead we are using some fail proof 
-value because, FW runs on core clock and core behaves a bit different 
-than other NOCs.
+On Wed, Mar 18, 2020 at 01:03:54PM +0100, Oleksij Rempel wrote:
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  arch/arm/boot/dts/imx6q-prti6q.dts | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/imx6q-prti6q.dts b/arch/arm/boot/dts/imx6q=
+-prti6q.dts
+> index a6fd4eb2e78b..8880d56c59ac 100644
+> --- a/arch/arm/boot/dts/imx6q-prti6q.dts
+> +++ b/arch/arm/boot/dts/imx6q-prti6q.dts
+> @@ -229,8 +229,23 @@ &sata {
+>  &fec {
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pinctrl_enet>;
+> -	phy-mode =3D "rgmii";
+> +	phy-mode =3D "rgmii-id";
+> +	phy-handle =3D <&rgmii_phy>;
+>  	status =3D "okay";
+> +
+> +	mdio {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		/* Microchip KSZ9031RNX PHY */
+> +		rgmii_phy: ethernet-phy@0 {
+> +			reg =3D <0>;
+> +			interrupts-extended =3D <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
+> +			reset-gpios =3D <&gpio1 25 GPIO_ACTIVE_LOW>;
+> +			reset-assert-us =3D <10000>;
+> +			reset-deassert-us =3D <300>;
+> +		};
+> +	};
+>  };
+> =20
+>  &ldb {
+> --=20
+> 2.25.1
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>=20
 
-We don't have any functional relation which maps actual throughput 
-requirement to core frequency need. In the past we faced few latency 
-issues because of core slowness (Although it was running much higher 
-than actual throughput requirement). To avoid such scenario we are using 
-recommend value from HW team. These fix value can support SE drivers 
-operating at their max possible speed(4Mbps in case of non-console).
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-I agree that 115200bps seems to be a 'standard' value for the serial 
-console, but it could be a different baudrate.
+--sl7c7igma5v47h5x
+Content-Type: application/pgp-signature; name="signature.asc"
 
-We are voting 1000 in case of console because it  has low power mode 
-use-case in android, where voting CORE_2X_50_MHZ can be reported as a 
-power issue.
+-----BEGIN PGP SIGNATURE-----
 
-Actually we wanted to vote 960 for console but that is not possible with 
-current ICC design where the minimum value is 1000bps.  So any way core 
-is running at 50 MHz as 1000 crosses the threshold for 19.2 MHz (960)
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl5yE8gACgkQ4omh9DUa
+UbNQiQ/9HK7bWAZI/ksEU1RVowMwf0bgmVkrH7ip/x4alfJ4447+CdHRfKp9KrLP
+Pdy/cadbJyzViEmLqwM0pKoKE14q6yD8j9OJUHWk3ZqXPzMHhfgyETCe4sVYF2dN
+v+Yf1LY3lutnRWHvyeZz9YKKkyf8HqYT783NzMJyxt1j4I74gmyBqUAFt44wFhbd
+KPZ50tL9hS9nxzkZ0dk5RBcMvuv0Y0l+vOlcnndA+Ztxf9pHqaUwoBtWZ9Y7CmI4
+SRQjZKUQUZ7oQCucHlKzScPzcZeV8oHGGGyKS9aYvhlZ2bAuXY9q4TUaz1UuXf85
+RJ1BvRuQoy5xSHPJ4XmiGts2t088C94kqisDKugDs9ae36gY7mTqlsvVfH7dBThg
+Jhz84deyp8HOCLYjQf3NyAj+vvl0QoEWZ2cv2jblGKQffUIsdIhJBDASIqsi1B0I
+qHd5t3lIfLrWhNL/ZE4AL41NmT6IYFOqp7mgdQrQkB04/ievEGgvetsdCt1Mcq0H
+DTZZGPUXMXyVuWl6YaIf+NPaT26KyNoYhLPdZBC0PRr7HHa7KrodCLzRSQ4t3CgM
+U0gTVhyPdMWug/5RjqEnHA2wt63Yc86VleAjzkUZcmPx5xtuQ77fKQfkk24bMu9D
+j4z7Iw827kZ31sk4lsyvOsDXKmgNCrlCPbHV3xGu4GEDgIK+cRY=
+=9LEv
+-----END PGP SIGNATURE-----
 
-only with console.
-
-regards,
-
-Akash
-
-> Unsurprisingly one of the first things the QCA BT driver does is to configure
-> the baudrate. It typically starts with a lower ('init') speed, and then switches
-> to the higher ('operational') baudrate:
->
-> https://elixir.bootlin.com/linux/v5.5.8/source/drivers/bluetooth/hci_qca.c#L1256
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+--sl7c7igma5v47h5x--
