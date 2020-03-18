@@ -2,133 +2,128 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567C4C5ACD8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 08:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C44C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 08:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1212076F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 08:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC4A20753
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 08:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ozRBHrD6"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YL0EzBUP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbgCRIau (ORCPT
+        id S1726994AbgCRIeV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:30:50 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36092 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgCRIau (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 04:30:50 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02I8UfAL041071;
-        Wed, 18 Mar 2020 03:30:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584520241;
-        bh=K1F4IClb6EB+DMD6RoWKBjL3ij6S1ICIWNFN/YtUkek=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ozRBHrD6pfOexXH7/0wHVWKAHSdAm19cp/rHux2EY5uid4hbN0YBjtRuvbBejbxEt
-         t8Xwn+oZWNEBJgzGCZaldlLRpUhy1PEl1R1VEs3GhM7p5+eqDUYSQjsaYy6NGpMgeL
-         qsDE9pxgRhdzwmiU+Z6WyDTmVXBpkWRVfmLC6/AQ=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02I8UfD7113190
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Mar 2020 03:30:41 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
- Mar 2020 03:30:41 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 18 Mar 2020 03:30:41 -0500
-Received: from a0393675ula.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02I8UQ8H108598;
-        Wed, 18 Mar 2020 03:30:38 -0500
-From:   Keerthy <j-keerthy@ti.com>
-To:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
-        <daniel.lezcano@linaro.org>
-CC:     <j-keerthy@ti.com>, <amit.kucheria@verdurent.com>,
-        <t-kristo@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>
-Subject: [RESEND PATCH v4 3/4] arm64: dts: ti: am654: Add thermal zones
-Date:   Wed, 18 Mar 2020 14:00:27 +0530
-Message-ID: <20200318083028.9984-4-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200318083028.9984-1-j-keerthy@ti.com>
-References: <20200318083028.9984-1-j-keerthy@ti.com>
+        Wed, 18 Mar 2020 04:34:21 -0400
+Received: from mail-eopbgr130085.outbound.protection.outlook.com ([40.107.13.85]:27511
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726550AbgCRIeU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 04:34:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kpO0vmbQbqqJkKcL1tiOwdwxLy0JKLdcstZyW1tkQ+o7Ad519B4XvIygCCDNJqrthyF+FSJEUyjpeb0WiweBKmq7l+2e1GlTHHvY0AePo90WxsWydY/4Auni/UpG6ki0SDxZcbGsHToMW6sy5auVwKynuSBdISt/2vY7HkYidnJhpQIEibj34THe98iLkZv18E6QAkep4jo3daIS9+G3f8Do0W6xkH4MqP/wXiINp9IVR+O8sAKBZ3F0RGRce8yeQU6k/8AmUvP2AzyMslQ3xSP/jSNSc6Z0VqfOPDNNSoMoQKaeilp80wLxDGYW3t1ozNu5/Dvpcj8AbrLQczYnsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1lrNo5icQrKFtI2XP+USq4GbjnDycHlt7Eke26fd0ec=;
+ b=gG35v0iYRXjZ40VTMwegTzWHnVkdrc+LWG4FO+3dUo0Er7lWF+XaDBCmq679Od0tBOQXRHbZOo3nYqprOn+RmKBgG4LBHnE2dHLexhZqnqdba09/zEztMTo5jl1y2S+UX2YSeIwfpWOVLwvrL455joy7cQ9XBttDhwiD1KToLreNHj2qZ2PKnz0drKF4pcUIwNwHujK58QxwBQMqmneVrrz6CXCIwOtlsfb3VevCfh/D7GmnukB6e6wqibs9hPOIDOyoKv50tTyGi1fl9Er9ZRyO6r6J/ORPwJ4z4yiNs4uO7VHb0LnQMCCTPFyLz1cQjn0iNEOtwX3yREDrftfdSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1lrNo5icQrKFtI2XP+USq4GbjnDycHlt7Eke26fd0ec=;
+ b=YL0EzBUPfyyiRR+9PmF+1o4+0/nW+Z6EjmPvyMJXhwIdU171mtj+urQ/mv5qLh3CYRHJ2u47Q2OZeQTXUPak1S+YREgIhFkqmMQk/Rfmhm4A3baToE5XRHSp0yiQaZkWdwhigG1LtRXoAZiv3F4IO35kouxHjxwU5AYkrb2wTXs=
+Received: from AM0PR0402MB3587.eurprd04.prod.outlook.com (52.133.51.20) by
+ AM0PR0402MB3779.eurprd04.prod.outlook.com (52.133.39.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.23; Wed, 18 Mar 2020 08:34:03 +0000
+Received: from AM0PR0402MB3587.eurprd04.prod.outlook.com
+ ([fe80::d9d3:bd30:8d1:3dc0]) by AM0PR0402MB3587.eurprd04.prod.outlook.com
+ ([fe80::d9d3:bd30:8d1:3dc0%3]) with mapi id 15.20.2835.017; Wed, 18 Mar 2020
+ 08:34:03 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
+CC:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [EXT] [PATCH 0/4] Fix Wake on lan with FEC on i.MX6
+Thread-Topic: [EXT] [PATCH 0/4] Fix Wake on lan with FEC on i.MX6
+Thread-Index: AQHV/HwfH3wTHDqsi0KQfAvD/Tjc/6hN41QggAAh8ICAAADusA==
+Date:   Wed, 18 Mar 2020 08:34:03 +0000
+Message-ID: <AM0PR0402MB3587ABEF56CD2C11EC805CBEFFF70@AM0PR0402MB3587.eurprd04.prod.outlook.com>
+References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
+ <VI1PR0402MB3600DC7BB937553785165C2AFFF70@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+ <CANh8QzwPmbfr1y9Yz7ctbannX3gOWZBQG1_xDM6xit=3ZXD+pg@mail.gmail.com>
+In-Reply-To: <CANh8QzwPmbfr1y9Yz7ctbannX3gOWZBQG1_xDM6xit=3ZXD+pg@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a7e26322-a662-4404-09b7-08d7cb171d62
+x-ms-traffictypediagnostic: AM0PR0402MB3779:|AM0PR0402MB3779:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR0402MB37796C4DF2CC02B5018BFB48FFF70@AM0PR0402MB3779.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 03468CBA43
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(376002)(136003)(396003)(199004)(33656002)(8936002)(81156014)(81166006)(8676002)(6916009)(316002)(54906003)(186003)(66446008)(478600001)(66556008)(64756008)(66476007)(66946007)(71200400001)(26005)(7696005)(55016002)(9686003)(4326008)(6506007)(5660300002)(52536014)(76116006)(86362001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3779;H:AM0PR0402MB3587.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6/GWtr/zYNt1Onw0veWdzeWapLCmu+TwvUFXGYx9SU8NvoBi8aveQ2etsaEuxdJjez6drszFXRZAS+NC7o7VMlyfWxJopV+jpus/IgiItIhA5SwloGTRrb+Zk57LhVadtz30M8dCVlPKlqN/b5A8fSs0UkW8HzCFIk3Xal9zFmwJoaO826AhEStnV0ZRIkK2l+mhEPNHIb8f3zTHTOchwyGKl89BaePDiV9lV2tzBVicn6fYvD35v08Cfgnl6pEmyy8j/kl60Th6feNhB1gy0Yosl5i7faYzfEbRClmlAFJ+WAt1mWO2AjNz0FaE2AvxtXO43Ry0A7RopoO5jL7iKzuULNsA3QUkb/Qf3vrT0pIK404sahdNParrKQFwxVmMtk6r0rdVp36y1SKuRFjMbZ7LpcJdUBwL6R/52W2DgbxinykbkZZ7JrQmHy5LO3LF
+x-ms-exchange-antispam-messagedata: DNmiIOhyKGzyBYpLY8TH9s1rICTPkbHa+KLZ0UlPaO2tifDbyOEiGqyXaYfQMAymw8Fz6GBJwM5BarYC4xpYftQJyxH2aAw1hv/VnEns+KZEShZrgvQJ0ZEDATefsg4uBsUtsabNNdgad7ttRIVSpg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7e26322-a662-4404-09b7-08d7cb171d62
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 08:34:03.2525
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TQbDRko1TyyVGQtMt0wdptREbH0NgBKD6++ovhLXtVvhLB7mZg381XLdoW5JiiystBEdjhnkzUlK7/6D5GVwjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3779
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The am654 SoC has three thermal zones namely MPU0, MPU1 and MCU
-zones
-
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- .../dts/ti/k3-am654-industrial-thermal.dtsi   | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
-new file mode 100644
-index 000000000000..cdc3d40c3f60
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <dt-bindings/thermal/thermal.h>
-+
-+mpu0_thermal: mpu0_thermal {
-+	polling-delay-passive = <250>; /* milliseconds */
-+	polling-delay = <500>; /* milliseconds */
-+	thermal-sensors = <&wkup_vtm0 0>;
-+
-+	trips {
-+		mpu0_crit: mpu0_crit {
-+			temperature = <125000>; /* milliCelsius */
-+			hysteresis = <2000>; /* milliCelsius */
-+			type = "critical";
-+		};
-+	};
-+};
-+
-+mpu1_thermal: mpu1_thermal {
-+	polling-delay-passive = <250>; /* milliseconds */
-+	polling-delay = <500>; /* milliseconds */
-+	thermal-sensors = <&wkup_vtm0 1>;
-+
-+	trips {
-+		mpu1_crit: mpu1_crit {
-+			temperature = <125000>; /* milliCelsius */
-+			hysteresis = <2000>; /* milliCelsius */
-+			type = "critical";
-+		};
-+	};
-+};
-+
-+mcu_thermal: mcu_thermal {
-+	polling-delay-passive = <250>; /* milliseconds */
-+	polling-delay = <500>; /* milliseconds */
-+	thermal-sensors = <&wkup_vtm0 2>;
-+
-+	trips {
-+		mcu_crit: mcu_crit {
-+			temperature = <125000>; /* milliCelsius */
-+			hysteresis = <2000>; /* milliCelsius */
-+			type = "critical";
-+		};
-+	};
-+};
--- 
-2.17.1
-
+RnJvbTogRnV6emV5LCBNYXJ0aW4gPG1hcnRpbi5mdXp6ZXlAZmxvd2JpcmQuZ3JvdXA+IFNlbnQ6
+IFdlZG5lc2RheSwgTWFyY2ggMTgsIDIwMjAgNDoyOCBQTQ0KPiBIaSBBbmR5LA0KPiANCj4gDQo+
+IE9uIFdlZCwgMTggTWFyIDIwMjAgYXQgMDc6MjgsIEFuZHkgRHVhbiA8ZnVnYW5nLmR1YW5Abnhw
+LmNvbT4gd3JvdGU6DQo+ID4NCj4gPg0KPiA+IFRoZSBtb3N0IG9mIGNvZGUgaXMgcmV1c2VkIGZy
+b20gbnhwIGludGVybmFsIHRyZWUsIElmIHlvdSByZWZlciB0aGUNCj4gPiBwYXRjaGVzIGZyb20g
+bnhwIGtlcm5lbCB0cmVlLCBwbGVhc2Uga2VlcCB0aGUgc2lnbmVkLW9mZiB3aXRoIG9yaWdpbmFs
+DQo+ID4gYXV0aG9yLg0KPiA+DQoNCkl0IGRvZXNuJ3QgbWF0dGVyLCBJIGFtIGhhcHB5IHlvdSB1
+cHN0cmVhbSB0aGUgcGF0Y2guDQpKdXN0IGtlZXA6IFNpZ25lZC1vZmYtYnk6IEZ1Z2FuZyBEdWFu
+IDxmdWdhbmcuZHVhbkBueHAuY29tPg0KPiANCj4gT2ssIGxvb2tzIGxpa2UgaXQgd2FzIG9yaWdp
+bmFsbHkgZnJvbSB5b3UsIHNob3VsZCBJIGFkZCB5b3VyIGN1cnJlbnQgZW1haWwNCj4gYWRkcmVz
+cyBvciB0aGUgb25lIGF0IHRoZSB0aW1lIChCMzg2MTFAZnJlZXNjYWxlLmNvbSk/DQo+IA0KPiBB
+Y3R1YWxseSBJIGRvbid0IGhhdmUgdGhlIE5YUCB0cmVlIGJ1dCBhIERpZ2kgdHJlZSwgd2hpY2gg
+aXMgcHJvYmFibHkgYmFzZWQgb24NCj4gaXQuDQo+IA0KPiBJIHRoaW5rLCBnZW5lcmFsbHksIHRo
+aXMgaXMgYSBiaXQgb2YgYSBncmV5IGFyZWEuDQo+IA0KPiBXaGlsZSBJIHdvdWxkIGFsd2F5cyBr
+ZWVwIGEgU29CIGlmIEkgYmFzZSBhIHBhdGNoIG9uIGFuIG9sZCBtYWlsaW5nIGxpc3QgcGF0Y2gN
+Cj4gc3VibWlzc2lvbiAoYW5kIGNvbnRhY3QgdGhlIHBlcnNvbiBpZiBwb3NzaWJsZSBmaXJzdCB0
+bw0KPiBhc2spIEknbSBub3Qgc3VyZSBpZiBhIFNvQiBmcm9tIGEgInJhbmRvbSBnaXQgdHJlZSIg
+aW5kaWNhdGVzIHRoZXkgd2lzaCBhDQo+IG1haW5saW5lIHN1Ym1pc3Npb24gd2l0aCB0aGVpciBu
+YW1lIChzb21lIHBlb3BsZSBtYXkgd2FudCBjcmVkaXQgYW5kDQo+IG90aGVycyBub3Qgd2FudCB0
+byBiZSBjb25zaWRlcmVkIHJlc3BvbnNpYmxlIGZvciBidWdzLi4uKS4NCj4gSSBkaWRuJ3Qgc2Vl
+IGEgc3VibWlzc2lvbiBvZiB0aGlzIHZlcnNpb24gKHdpdGggdGhlIGdwciBpbmZvcm1hdGlvbiBj
+b21pbmcgZnJvbQ0KPiB0aGUgRFQpIG9uIHRoZSBtYWlsaW5nIGxpc3RzLCBvbmx5IHRoZSBpbml0
+aWFsIHZlcnNpb24gdXNpbmcgdGhlIHBsYXRmb3JtIGNhbGxiYWNrDQo+IHRoYXQgd2FzIE5BS2Qg
+KEkgbWF5IGhhdmUgbWlzc2VkIGl0IHRob3VnaCkuDQo+IA0KPiBSZWdhcmRzLA0KPiANCj4gTWFy
+dGluDQo=
