@@ -2,138 +2,272 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD5FC5ACD8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 14:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD80C5ACD7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 14:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC31720773
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 14:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8266620752
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 14:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yflygsXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgCROdZ (ORCPT
+        id S1726643AbgCROvq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:33:25 -0400
-Received: from sauhun.de ([88.99.104.3]:48226 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbgCROdY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:33:24 -0400
-Received: from localhost (p54B333FA.dip0.t-ipconnect.de [84.179.51.250])
-        by pokefinder.org (Postfix) with ESMTPSA id 039522C097D;
-        Wed, 18 Mar 2020 15:33:21 +0100 (CET)
-Date:   Wed, 18 Mar 2020 15:33:21 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH 6/7] i2c: of: mark a whole array of regs as reserved
-Message-ID: <20200318143321.GB8300@ninjato>
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
- <20200220172403.26062-7-wsa+renesas@sang-engineering.com>
- <CAMuHMdUvADDozCX6Bd0dDVejpTY-k42naEnB7Q5Z6w7Yg94_Vw@mail.gmail.com>
+        Wed, 18 Mar 2020 10:51:46 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36916 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726638AbgCROvq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 10:51:46 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02IEcWpY031412;
+        Wed, 18 Mar 2020 15:51:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=AtAQ6Omp1kqvN3R2P3Ojq/dUkGTPHDTP71rAjUnsU+g=;
+ b=yflygsXu04iS8mLX+60UttjdYpPiJKyzWBEm3v0ejRG2+CyZykKK438rf0MPYBFVUn5S
+ xVwFRl3IiFHH4EqdKie/Zx/GEbimNiSf4jv4jZBgjWY6elmjJU3GMq4FQTlNHSKF5AyD
+ cWgZZdUtdcpUvRKPKe4v1MW3k2qLxPkKVbqediBQlB9P7yWn9b0dePUyb4mkavF69xjm
+ VxMpgDs9PZ7yEzpO2vqm7ZWdeKVcDvdKbcnCq3xD5VysVXcSSE3Yfc0qGtrNNx9YqA+6
+ e453O+qAQjlyAFfCBDGs11drAWv30u6NoRI5cbIYkETCBvlZdRfWgnigfIn0Ny0VTVqT Hg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yu95um43b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Mar 2020 15:51:21 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C62C10002A;
+        Wed, 18 Mar 2020 15:51:20 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1FDE42AE6B7;
+        Wed, 18 Mar 2020 15:51:20 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar 2020 15:51:19
+ +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <robh+dt@kernel.org>, <jic23@kernel.org>
+CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dt-bindings: iio: dac: stm32-dac: convert bindings to json-schema
+Date:   Wed, 18 Mar 2020 15:50:37 +0100
+Message-ID: <1584543037-32095-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aVD9QWMuhilNxW9f"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUvADDozCX6Bd0dDVejpTY-k42naEnB7Q5Z6w7Yg94_Vw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_06:2020-03-18,2020-03-18 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the STM32 DAC binding to DT schema format using json-schema
 
---aVD9QWMuhilNxW9f
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
+ .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
+ 2 files changed, 110 insertions(+), 63 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
 
+diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+deleted file mode 100644
+index bf2925c..00000000
+--- a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
++++ /dev/null
+@@ -1,63 +0,0 @@
+-STMicroelectronics STM32 DAC
+-
+-The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
+-may be configured in 8 or 12-bit mode. It has two output channels, each with
+-its own converter.
+-It has built-in noise and triangle waveform generator and supports external
+-triggers for conversions. The DAC's output buffer allows a high drive output
+-current.
+-
+-Contents of a stm32 dac root node:
+------------------------------------
+-Required properties:
+-- compatible: Should be one of:
+-  "st,stm32f4-dac-core"
+-  "st,stm32h7-dac-core"
+-- reg: Offset and length of the device's register set.
+-- clocks: Must contain an entry for pclk (which feeds the peripheral bus
+-  interface)
+-- clock-names: Must be "pclk".
+-- vref-supply: Phandle to the vref+ input analog reference supply.
+-- #address-cells = <1>;
+-- #size-cells = <0>;
+-
+-Optional properties:
+-- resets: Must contain the phandle to the reset controller.
+-- A pinctrl state named "default" for each DAC channel may be defined to set
+-  DAC_OUTx pin in mode of operation for analog output on external pin.
+-
+-Contents of a stm32 dac child node:
+------------------------------------
+-DAC core node should contain at least one subnode, representing a
+-DAC instance/channel available on the machine.
+-
+-Required properties:
+-- compatible: Must be "st,stm32-dac".
+-- reg: Must be either 1 or 2, to define (single) channel in use
+-- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
+-  Documentation/devicetree/bindings/iio/iio-bindings.txt
+-
+-Example:
+-	dac: dac@40007400 {
+-		compatible = "st,stm32h7-dac-core";
+-		reg = <0x40007400 0x400>;
+-		clocks = <&clk>;
+-		clock-names = "pclk";
+-		vref-supply = <&reg_vref>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&dac_out1 &dac_out2>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		dac1: dac@1 {
+-			compatible = "st,stm32-dac";
+-			#io-channels-cells = <1>;
+-			reg = <1>;
+-		};
+-
+-		dac2: dac@2 {
+-			compatible = "st,stm32-dac";
+-			#io-channels-cells = <1>;
+-			reg = <2>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+new file mode 100644
+index 00000000..2b4a955
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+@@ -0,0 +1,110 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/bindings/iio/dac/st,stm32-dac.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: STMicroelectronics STM32 DAC bindings
++
++description: |
++  The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
++  may be configured in 8 or 12-bit mode. It has two output channels, each with
++  its own converter.
++  It has built-in noise and triangle waveform generator and supports external
++  triggers for conversions. The DAC's output buffer allows a high drive output
++  current.
++
++maintainers:
++  - Fabrice Gasnier <fabrice.gasnier@st.com>
++
++properties:
++  compatible:
++    enum:
++      - st,stm32f4-dac-core
++      - st,stm32h7-dac-core
++
++  reg:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: pclk
++
++  vref-supply:
++    description: Phandle to the vref input analog reference voltage.
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - vref-supply
++  - '#address-cells'
++  - '#size-cells'
++
++patternProperties:
++  "^dac@[1-2]+$":
++    type: object
++    description:
++      A DAC block node should contain at least one subnode, representing an
++      DAC instance/channel available on the machine.
++
++    properties:
++      compatible:
++        const: st,stm32-dac
++
++      reg:
++        description: Must be either 1 or 2, to define (single) channel in use
++        enum: [1, 2]
++
++      '#io-channel-cells':
++        const: 1
++
++    additionalProperties: false
++
++    required:
++      - compatible
++      - reg
++      - '#io-channel-cells'
++
++examples:
++  - |
++    // Example on stm32mp157c
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    dac: dac@40017000 {
++      compatible = "st,stm32h7-dac-core";
++      reg = <0x40017000 0x400>;
++      clocks = <&rcc DAC12>;
++      clock-names = "pclk";
++      vref-supply = <&vref>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dac@1 {
++        compatible = "st,stm32-dac";
++        #io-channel-cells = <1>;
++        reg = <1>;
++      };
++
++      dac@2 {
++        compatible = "st,stm32-dac";
++        #io-channel-cells = <1>;
++        reg = <2>;
++      };
++    };
++
++...
+-- 
+2.7.4
 
-> > +int of_i2c_get_board_info(struct device_node *node, struct i2c_board_i=
-nfo *info)
-> > +{
-> > +       u32 addr;
-> > +       int ret;
-> > +
-> > +       ret =3D of_property_read_u32(node, "reg", &addr);
->=20
-> Perhaps the time is ripe to start considering #address-cells, instead
-> of assuming 1, here ...
-
-I think here it is okay because we really want the first entry of the
-first tuple.
-
-> > +       of_property_for_each_u32(node, "reg", prop, cur, reg) {
->=20
-> ... and especially here, if this code can ever be reused for i3c, which u=
-ses 3.
-
-But here I agree. I reimplemented the code to handle it, and it worked
-with '#address-cells =3D <2>;' as expected. Here is the diff to this
-patch:
-
-@@ -16,6 +16,7 @@
- #include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/sysfs.h>
-=20
-@@ -75,13 +76,14 @@ static struct i2c_client *of_i2c_register_device(struct=
- i2c_adapter *adap,
- 	struct i2c_client *client, *first_client =3D ERR_PTR(-ENOENT);
- 	struct i2c_board_info info;
- 	bool first_reg =3D true;
--	struct property *prop;
--	const __be32 *cur;
--	u32 reg;
-+	unsigned int i =3D 0;
-+	const __be32 *prop;
-+	u16 reg;
-=20
- 	pr_debug("register %pOF\n", node);
-=20
--	of_property_for_each_u32(node, "reg", prop, cur, reg) {
-+	while ((prop =3D of_get_address(node, i++, NULL, NULL))) {
-+		reg =3D of_read_number(prop, 1);
- 		of_i2c_decode_board_info(node, reg, first_reg, &info);
-=20
- 		client =3D i2c_new_client_device(adap, &info);
-
-Thanks, Geert! I will send out the new version in a few minutes.
-
-
---aVD9QWMuhilNxW9f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5yMS0ACgkQFA3kzBSg
-KbYtfRAAil0f+6TG3T06kRnSNoNLPpEoqabj0ip7Vz7+gSloBvl8lszjT7CP//7R
-9gnjhLFvr6hPVbC64dzimreCL1JGYUtFOhKDl/pPSA+TrEFEARbOCxIbdhgieFC0
-DrSN2Ed+jK7ZRTPdTuT2y6DNf6bbDHo3ihnzd57I2wy6cEsTMdyIJSAnsxfn5QVf
-6EKTCLAeBI9hPd3jDB38ICvQ0Vf9/F9lHRZNOQo1hQwSkUbnyyqf26k8kt/VAnm9
-Ipcvlz8krmqY2FWnC/FlzhKV5lSc9i7VSZJTQOjtO39RHxRAsOytbzc6erlTp9Pz
-V1+Uw8HGIVMbQe1+kpaaJvomxTApQ2HqjTOPTQc/2h9qXUdCdeWFi56oaJzCl7hp
-WHCgqmUCfs4a1V75vuHk2Fj3mPMQsvmjiWrvW5Sz5nvto2GTjKsg2m/v6bdabTxk
-iMFjwBfQVun1ziMQOad0zycEFF+sBtQafAg4zmS/FAyrhGAVI9YQ57Z93dlk7D1L
-YLFvxifo+L5a6/ny1uEL0xrjMoYfiUCTXlySSuywl5dD5jsqBoUWduFXeHo0DezA
-Pe/Vht7ChN7WlI3kDt3X+zCVGmf5WnObEJPrzm39gUNjod7UpW39zgoKQWuF4Rpp
-JCKxZe174onb36K3lz83DRTkg5v5NU1AdVgwqrKM6RjakOs1aXM=
-=Ku4u
------END PGP SIGNATURE-----
-
---aVD9QWMuhilNxW9f--
