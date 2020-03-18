@@ -2,84 +2,103 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D920C5ACD7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 17:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4719C5ACD6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 17:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5756C20753
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 17:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2BE920719
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 17:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nShgZuGY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l0VQr5mC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgCRRY7 (ORCPT
+        id S1726647AbgCRRmW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:24:59 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40523 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgCRRY6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 13:24:58 -0400
-Received: by mail-pl1-f194.google.com with SMTP id h11so11468071plk.7
-        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 10:24:58 -0700 (PDT)
+        Wed, 18 Mar 2020 13:42:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54439 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgCRRmV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 13:42:21 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n8so4423217wmc.4
+        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 10:42:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=rRLYiVDNdoFKaz44hzKF+TYh+5BDTb1jEIAXmQ8LTpM=;
-        b=nShgZuGYvfg/lm0eV6nf2boUKEIhzQmCDFJo5lIjTLtvcWJ43RSDwt2OkCjpmiwmg7
-         QIUuMhTV3krbGiQsBuNsy3XkcD2oh3Y5GbCkaeb9Amy2ocmr3I+788/SVSzDoiFAg65k
-         P7DpdggDgYopjZCY86UzGa6uO3Jl9VhjFvsHM=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=45CQ8c/ky8+0hWRFL237+1ux25bCOkBLBHqU2LowH0M=;
+        b=l0VQr5mC3md/yc+VTMrmxepUnhjah0lZIYK2r7WLXO7ppE+yyU89k0v0F2azUublEl
+         xOFDyh1dyxRRbp9BjxkhBD+KOPdt0F2SpZq0/LgDt0f2zwbQQBRiBhj6yZ9SgDbD2RR7
+         Fp+Nl4hRboRcU+g6Thy/1t5M83o5lVqe3axF/6i8AxrbGL1kQ1tzkUqCPIYS98/JEiXv
+         DkyagZ/Xr+uG5DT7l+Qnfgkvu0TM7onK4n/xifH33P2UUwwH9W9re2qJ3dzSJff/OAn7
+         GC3j5hz/usUgdVPW/5A1UBFGdy6Edn7/D6hyYQ7zxqVruy2Gi9JOYoEoQnCGKkx8OtRS
+         fR9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=rRLYiVDNdoFKaz44hzKF+TYh+5BDTb1jEIAXmQ8LTpM=;
-        b=RYNaml4/EvTMefSnnwxcvQZns9G/eqGdMWLoPYSdQ6aEoVEqQ+G5jl0CeTORLu+rx8
-         1TgQA5nXelAuAYp1f7Dt8/yXaftL/ceKq5ZsF8eH85YlyRHvkNib8a7dsasMCM8FhvmK
-         mWlBCS3siX1MAlYHXQsjIdxiTukTGg2BzQWdEnIWYs1Bh0g/vei4PyV4vSf7fsQdbYLd
-         5HxE4u+oYPZ1fG+jOFhfnBoBUIFXMjBlzck0tNLyJT+5Dp2Bx90rVD3Eq1jxfpFkKtOa
-         GacwvgC+TSiTDpjmmsQxFJYPHZ0ooZVhmKjEQydSFbUiMUxOpOp3YygWxiSaXVhHwSwt
-         LlmQ==
-X-Gm-Message-State: ANhLgQ3PhLhPDgtvGqH4ZAF1rDJ0UIfWPXf41afXDOO0R4BtWoiRgifV
-        qHHeG7Jt9lCr/2CoA3ThsKaMts7O/Rg=
-X-Google-Smtp-Source: ADFU+vsL6KLzScjymJt4WsBhfm+VpoTPWtgYlDZySTyomnvSnr/Veib9XWetxg0wOC/I0+mnxFfLJQ==
-X-Received: by 2002:a17:902:b582:: with SMTP id a2mr4780076pls.176.1584552297314;
-        Wed, 18 Mar 2020 10:24:57 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y125sm7486177pfy.195.2020.03.18.10.24.56
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=45CQ8c/ky8+0hWRFL237+1ux25bCOkBLBHqU2LowH0M=;
+        b=D5kqKhlMts+AxJ4ivYy2xBCZ4aUM10wiEQ8ZvIVxfW12ZaqguiXEbEc0gqOSIRUkPg
+         e6+UqBqx0Gd7+/kxbrK0/y0CwUkxOd6yX3uLjodmjq55lB/1cW9wlCMzW9Bx8RqHTU/j
+         bztFbu8ED33MZ8eMzRBshn6I/EC3YJCiQqGg6rLHZn9ii/SS6CeYRcItBCzQSYJgTNjA
+         JOwfG+LObhIeRqLQFwLy/Cw0Wk1qCnQdI5zf/rBwWiu5ecNQT+AIEoG/vem7xfRbe+Vo
+         OkRwko7GZRzNOxHjsopPpCuihLAP+F1pZJQCNUqc/fYnp7ooWL3nmP9vjdprNXOSbu6T
+         NCiQ==
+X-Gm-Message-State: ANhLgQ2GWGMeCd0EohsRCl2vMOuOICVyJV4AFQGvjEhgGIlVyTSktoMW
+        npkY3+tE2NWbkrj2aeqJWpIS3Q==
+X-Google-Smtp-Source: ADFU+vtlmsP4Fzzm2b6i3cJ54foljjmSawZHfzfOoF20h8kyAxh5UcH/0hm97qd1WX/56Rj1kxhACQ==
+X-Received: by 2002:a1c:6745:: with SMTP id b66mr6288616wmc.30.1584553340468;
+        Wed, 18 Mar 2020 10:42:20 -0700 (PDT)
+Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:5d64:ea6:49bd:69d7])
+        by smtp.gmail.com with ESMTPSA id r3sm3787212wrm.35.2020.03.18.10.42.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 10:24:56 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <2526d2b2907116d1bb6f7edd194226eb7e24c333.1584516925.git.amit.kucheria@linaro.org>
-References: <cd0f3d35ca0fc2944fd97e030a28318ff82dd5c1.1584516925.git.amit.kucheria@linaro.org> <2526d2b2907116d1bb6f7edd194226eb7e24c333.1584516925.git.amit.kucheria@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Fix cpu compatible
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
-        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sibis@codeaurora.org
-Date:   Wed, 18 Mar 2020 10:24:56 -0700
-Message-ID: <158455229603.152100.18101475238223716722@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Wed, 18 Mar 2020 10:42:19 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS)
+Subject: [PATCH 03/21] dt-bindings: fttmr010: Add ast2600 compatible
+Date:   Wed, 18 Mar 2020 18:41:13 +0100
+Message-Id: <20200318174131.20582-3-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200318174131.20582-1-daniel.lezcano@linaro.org>
+References: <e6cd8adf-60df-437a-003f-58e3403e4697@linaro.org>
+ <20200318174131.20582-1-daniel.lezcano@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Amit Kucheria (2020-03-18 02:08:17)
-> "arm,armv8" compatible should only be used for software models. Replace
-> it with the real cpu type.
->=20
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
+From: Joel Stanley <joel@jms.id.au>
 
-Maybe add a fixes tag too?
+The ast2600 contains a fttmr010 derivative.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191107094218.13210-5-joel@jms.id.au
+---
+ Documentation/devicetree/bindings/timer/faraday,fttmr010.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
+index 195792270414..3cb2f4c98d64 100644
+--- a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
++++ b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
+@@ -11,6 +11,7 @@ Required properties:
+   "moxa,moxart-timer", "faraday,fttmr010"
+   "aspeed,ast2400-timer"
+   "aspeed,ast2500-timer"
++  "aspeed,ast2600-timer"
+ 
+ - reg : Should contain registers location and length
+ - interrupts : Should contain the three timer interrupts usually with
+-- 
+2.17.1
+
