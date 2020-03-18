@@ -2,101 +2,94 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BECC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451D9C5ACD6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5F62076F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2AAB2076D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:29:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="SymM6JX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgCRJUy (ORCPT
+        id S1727540AbgCRJ3D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:20:54 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53543 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgCRJUx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 05:20:53 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEUsa-0006vf-Bx; Wed, 18 Mar 2020 10:20:48 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEUsZ-0006yY-8Y; Wed, 18 Mar 2020 10:20:47 +0100
-Date:   Wed, 18 Mar 2020 10:20:47 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/7] dt-bindings: pwm: add normal PWM polarity flag
-Message-ID: <20200318092047.25gjkx43jwfyywsl@pengutronix.de>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-4-oleksandr.suvorov@toradex.com>
- <20200317225656.GK2527@pendragon.ideasonboard.com>
+        Wed, 18 Mar 2020 05:29:03 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39123 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727442AbgCRJ3D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 05:29:03 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j15so19761378lfk.6
+        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 02:29:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flowbird.group; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xI+nNVteVjSy3ZGdtWuI/tAMjznZhMdLDuHpaHBTc6A=;
+        b=SymM6JX3M8rY9bbhScbNhia4a5WFTNME1ETRVETTwmfizUPUHXvQdjS2BcdWjuLHiT
+         et0mvFjOuJhBpDEIPymT1vewmNvt8yMS8OkejsRxMFN7Ngi4YwcIcITomJouE1LaT085
+         JeGSwQw3C25xiy8b4RgOLL3udu8m7VSExEtP0WysVtH4XNbf+9K0LOnVAmlvJ+G574ss
+         qmnYOuGlGJGHPH96D8xznl1/WCAdlXhIYvXf9ig5LWXD/pctUaWlDIJv9cMKCwFbECTY
+         JtEfwH7/fjpBTjxhkg/mKd3kfqLivbtIaZRW8PF58oTveVdb9I2WNL0KcTVdxHkTJJrM
+         +sSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xI+nNVteVjSy3ZGdtWuI/tAMjznZhMdLDuHpaHBTc6A=;
+        b=tRaQM0qaRLM4uVmD7kvbYifPKoxkuSWEa4cdHrIjbF3u8vO79jGHxbFAjEq46/cyeF
+         icY9DcoxDUVRGXCHdm0qVtot9OmMBQBU2dUcMpKfqE6XKNRvOKs6V1FlFlfVmRjr+K/y
+         T8pwTODCuS+C9hlVMaci7eQeNVerS3p16ZMqxOng4y655oE5Yi/8F2jttPx9JrltoczC
+         pLKdMLYberG2jCOJhoVnNoh53q3Ubb/J0G5l8AKU824Z3oJt37HegrEbF1JFO9araEVS
+         gqDGiA+E3XaYJmfDWVBbCFbcVwpomokkd02g4QzCVayYwb5qCXB/Og6nR3zt+3oYhfZT
+         EQxw==
+X-Gm-Message-State: ANhLgQ1W6PLD8d3duSlfE6k5X4a87OIlT7HxUmcDHbEm0Fjt3/PuRQCN
+        p75uvhl/Vfjzw1Uj/7u8n7LvZNG4goOQPNQ4Km+K2w==
+X-Google-Smtp-Source: ADFU+vt9RaqPeaQFcnibcOYchRkGU43JPFZ+ootd7u1qqbA7zone9+6G7f6jOLdG+HJihZ1J+PXHqkiyj/xrGoYNbZU=
+X-Received: by 2002:a05:6512:1054:: with SMTP id c20mr2294611lfb.69.1584523739621;
+ Wed, 18 Mar 2020 02:28:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200317225656.GK2527@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
+ <1584463806-15788-4-git-send-email-martin.fuzzey@flowbird.group> <20200318091734.GA23244@lunn.ch>
+In-Reply-To: <20200318091734.GA23244@lunn.ch>
+From:   "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
+Date:   Wed, 18 Mar 2020 10:28:48 +0100
+Message-ID: <CANh8QzzA34th-h8ULM=LNvOvRw9P9=vekOBGvdYjv6TEBNDMig@mail.gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: fec: document the new fsl,stop-mode property
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Fugang Duan <fugang.duan@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Laurent,
+Hi Andrew,
 
-On Wed, Mar 18, 2020 at 12:56:56AM +0200, Laurent Pinchart wrote:
-> On Tue, Mar 17, 2020 at 02:32:27PM +0200, Oleksandr Suvorov wrote:
-> > PWM can have a normal polarity and a reverted one. The reverted polarity
-> > value is defined.
-> 
-> I would squash this patch with 2/7, apart from that it looks fine.
-> However, I also agree with Thierry that the PWM cell that contains this
-> value is a bitmask, so once we get more flags it may get a bit awkward.
+On Wed, 18 Mar 2020 at 10:17, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> You should not be putting registers and values into device tree.
+>
+> The regmap is fine. But could you add the register and the bit to
+> fec_devtype[IMX6SX_FEC], fec_devtype[IMX6UL_FEC], etc.
+>
 
-For me the usefulness of PWM_POLARITY_NORMAL increases with more bits
-used. That's because if there are 5 things that can be set there and the
-patch author mentions only the two that are non-zero, I as a reviewer
-don't know if the author actually know and thought about the other
-three. If however they spell out PWM_POLARITY_NORMAL it's quite sure
-they want normal polarity.
+If that's the consensus I can do it that way.
 
-> Will we have one macro for each flag that will evaluate to 0 to report
-> that the flag isn't set ?
+But I should point out that there is already a precedent in mainline for this:
 
-Yes. Given the above mentioned advantage this is cheap enough in my
-eyes.
+Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
 
-> Or should we define a single PWM_FLAG_NONE (or
-> similarly named) macro ?
+Regards,
 
-I like one macro for each bit field better for the above mentioned
-reason.
-
-> In retrospect, maybe PWM_POLARITY_INVERTED
-> should have been named PWM_FLAG_POLARITY_INVERTED.
-
-Seems to be subjective. I don't see much added semantic that justifies
-the longer name.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Martin
