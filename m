@@ -3,69 +3,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5237FC5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 05:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05285C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 05:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289512076A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 05:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C181820663
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 05:46:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzJDmjwd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DyUKc0Wo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgCRFQQ (ORCPT
+        id S1726478AbgCRFqW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 01:16:16 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45863 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgCRFQQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 01:16:16 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 2so13224651pfg.12;
-        Tue, 17 Mar 2020 22:16:15 -0700 (PDT)
+        Wed, 18 Mar 2020 01:46:22 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43625 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727029AbgCRFqW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 01:46:22 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u12so13038664pgb.10
+        for <devicetree@vger.kernel.org>; Tue, 17 Mar 2020 22:46:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HlwaAt0Q9Ki0s2/sS1b607ZcJpVqAr5H+69fMO0HjgI=;
-        b=TzJDmjwdj55mwAp95w0Xzx8U18G2cfzG9JLhtMNbWyM+X6LQREWfBymZn9A1xhXgmS
-         3sTKe1Ft+t8MrIHsTwM4MgsEAhd1CzfT2M0y8TG5sUkJKkU67pWg0mKWqSPXDzpGy6g6
-         nIWXR4xRVnkvp9R3rnlSez1VwIO9RZrxEIpD3QO/8qKfPuXli/j3bWvDmeyWM+1Lueas
-         zsBJh8Iad3T2kyZrmT581Tw5yeQLaQj+nf1FnFYKMLzqMYLF1AQPkyXwNAbYLLSnErPI
-         l/mgYrXy0ZQnMeA4m+ssEbnTSVdiXKhFPqLuoFFimf86HfTuBnbnsIyD2SQmmMxuFJqh
-         T6zw==
+        bh=wP5msWs+H65dtiCoHZMzY1KxEhCfiPf43beyeK96JJo=;
+        b=DyUKc0WoN764jAONlN34IdUIF+JaIJ/8zjaKAOm62CXLomzbzdcCvDBbscthJO+/4/
+         HUQc5JeCIlCKeDJVSNGIztS+uufYFrp0cNZ9um/3WnFzpTchsPxWJ3X7Dt6YWGIPCuIh
+         lopK9XbixgTN7jbqM7R8gah+p0UmkOXGLsBlHi53U+nSXKrTf9DcyKdStD4Bk/vZR+5n
+         62E4hBBBKmbeuU+9U0SSm2hVD12MwJHDVQxwE/lj3Y+nBEQ7oZKeEwxhko2qBkX1TZVq
+         Wctb6+M6NBIsjTnYIRYV/jOIMAUXnrZGNPWNEBAyoojAA5goIXBO970mvCRMnrEDA/a5
+         DkIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=HlwaAt0Q9Ki0s2/sS1b607ZcJpVqAr5H+69fMO0HjgI=;
-        b=hHh2EHuU3jf9wYqHpbdnBWxDaSF0xOkwoFygr+VSS+lwgAqzJlDBLkrfOQXkxrmzHs
-         lQdQ0oItMOfXGSWDlByI5SFmd+hZPkRs+l3qREv6QutuYj4rZMMpmpYyBySExIA20Gpr
-         uOEmirg7mRCOdpXCFcfcSKispLHpNPpxm81GVNIMD84mXgqzh7KXA49s84yK+bohQP/u
-         AhB02Ptg6Ut5NkJ30DdCoF4xDY9lwC2TEy8LfQDtJFIhbkZ4+bjhV6v5bL8yUGOmKaHz
-         3JUKLokYFJ9yXVd+UNZOhqbXlpxyOlO0vRZXHFizcUVi3ceSvfQHaHc/XWETiWUYJnYM
-         MYSg==
-X-Gm-Message-State: ANhLgQ18+qmcOrqnCXPm2whFWosye6B07/9c6REfJndGySw9YdMjag4Q
-        rxWQ5mYnoe4uXYG6+kWaRIyWTqeNlDM=
-X-Google-Smtp-Source: ADFU+vv7rYa7a2qA5/TNJKZmXHnyu1FhULOs8SlM3+WrA1nDojWzpiNNErloEXfgq3uS4CfhC6NxzQ==
-X-Received: by 2002:aa7:9481:: with SMTP id z1mr2411232pfk.185.1584508574446;
-        Tue, 17 Mar 2020 22:16:14 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6086:470e:bc8d:c185:c429:a95b])
-        by smtp.gmail.com with ESMTPSA id k5sm919794pju.29.2020.03.17.22.16.13
+        bh=wP5msWs+H65dtiCoHZMzY1KxEhCfiPf43beyeK96JJo=;
+        b=ZXB4kieardUpPj7APGO5fV0AwQh/BeoNDhTYbqAufkxO2pH6sW+6x8DfWqWK9wjfAa
+         Qgn7bvtPexGCWOnnZ9vrJmegXPGlN0uwNE0XdMgTwx9/q71kITV6qs2wnhu4Fot+vgXf
+         TjDzWlrvBNifyZ++m8tcdNaMovCcc1Nku+W3W27/UXpUmoldHP6yW5226qItXY3fOZg+
+         D7aSXpnu85NATQcccKG1E6Vote29GhC83zTJml4mB6afZtJlT+8ANw8Qi/0+LTDl1C1q
+         fRel3u11gTXjyuiYft/H/Vqk1Ci9rnwaudGII4E4GBRdFfFXn0vg87Thz6dVAd4e6v4T
+         dnwQ==
+X-Gm-Message-State: ANhLgQ3Qif696EpgnBzyXeH9T8YdS0bt11Uq6uxO0VOi9XePjCuk5N4i
+        iJwSj5VBZGm4Cfspx4ka9aM8IPubBwM=
+X-Google-Smtp-Source: ADFU+vuDWULEK8ztlmXQd1G6mb8a4Xbgj98e4GwLuLlGS8GYoD7fM220tTPWyUhythBWGnl8atQ+9g==
+X-Received: by 2002:a62:cdcc:: with SMTP id o195mr2579575pfg.323.1584510380719;
+        Tue, 17 Mar 2020 22:46:20 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id u5sm5128686pfb.153.2020.03.17.22.46.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 22:16:13 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mark.rutland@arm.com, nish.malpani25@gmail.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: iio: tsl2563: convert bindings to YAML
-Date:   Wed, 18 Mar 2020 10:45:39 +0530
-Message-Id: <20200318051539.958-1-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 17 Mar 2020 22:46:20 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: msm8996: Reduce vdd_apc voltage
+Date:   Tue, 17 Mar 2020 22:44:42 -0700
+Message-Id: <20200318054442.3066726-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -73,36 +72,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the TSL2563 device tree bindings to the new YAML format.
+Some msm8996 based devices are unstable when run with VDD_APC of 1.23V,
+which is listed as the maximum voltage in "Turbo" mode. Given that the
+CPU cluster is not run in "Turbo" mode, reduce this to 0.98V - the
+maximum voltage for nominal operation.
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+Fixes: 7a2a2231ef22 ("arm64: dts: apq8096-db820c: Fix VDD core voltage")
+Cc: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Changes in v2:
-  - Rename the dt-bindings to include manufacturer's name.
-  - Synchronize the bindings with the driver.
----
- .../bindings/iio/light/{tsl2563.yaml => amstaos,tsl2563.yaml}  | 3 +++
- 1 file changed, 3 insertions(+)
- rename Documentation/devicetree/bindings/iio/light/{tsl2563.yaml => amstaos,tsl2563.yaml} (92%)
-
-diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
-similarity index 92%
-rename from Documentation/devicetree/bindings/iio/light/tsl2563.yaml
-rename to Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
-index 2a70b8d62760..141c7ae1edc8 100644
---- a/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
-+++ b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
-@@ -15,6 +15,9 @@ description: |
- properties:
-   compatible:
-     enum:
-+      - amstaos,tsl2560
-+      - amstaos,tsl2561
-+      - amstaos,tsl2562
-       - amstaos,tsl2563
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index af87350b5547..4692b7ad16b7 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -658,8 +658,8 @@ s10 {
+ 	s11 {
+ 		qcom,saw-leader;
+ 		regulator-always-on;
+-		regulator-min-microvolt = <1230000>;
+-		regulator-max-microvolt = <1230000>;
++		regulator-min-microvolt = <980000>;
++		regulator-max-microvolt = <980000>;
+ 	};
+ };
  
-   reg:
 -- 
-2.20.1
+2.24.0
 
