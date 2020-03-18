@@ -2,332 +2,435 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF0CC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 20:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739F2C43333
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 20:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0315B2098B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 20:35:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qag0mCWI"
+	by mail.kernel.org (Postfix) with ESMTP id 55009208E0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 20:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgCRUf5 (ORCPT
+        id S1727380AbgCRUsA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:35:57 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43684 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCRUf4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 16:35:56 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u12so14308195pgb.10;
-        Wed, 18 Mar 2020 13:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Iw9AuzL3JiFUgv3pCgPoZimqsHWInrI+wutYJ2aQyaY=;
-        b=qag0mCWIQqfaRMoBtcLT75wTit+rIMHWY1AntpYo8Pg8RIrcumtEKnEUKaL1Q1Zg/B
-         Cl2dsTNW7hIdy6FGNBQ9C5/S4kiph3Q4zjSyFHqFXUAwZyoJzaPcvYOjZSpoUUxZ4gqv
-         h/LVUotg4QTg/4JcEx31oqQE14EBsiuaDUwYKDU+SRnyXbKtK+bveEVMEBPJuVTdBCq9
-         zL8eO1ybhNleKXPusICZLyH48QXrp4sWMgGgddBgXw16FrDC9s7Coh/edUimllfEzA6A
-         G8tj30JziM3sPXQCAnG1xnFFW+c7LR3goZKk1G/lI9TjXAPyg7k/5x4ruCAshUeRjhi5
-         /kFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Iw9AuzL3JiFUgv3pCgPoZimqsHWInrI+wutYJ2aQyaY=;
-        b=UbzBAL6ZdBTn7mU/WlWZn/pmR7iihVYaNdjJ6c/WvyJFcvO6lkB3A9ngcfHkGHNU17
-         4f3oc9cDskMw0wpZn4WbZifr5O+WmbiS7G7AjABRt/CBhn3xcQgYW5lVGNf+amgrPy7Y
-         qZ9RoyrpXmowAEV10o21QKZ0RNSD/N6DH7sBWqH4UggrGAN1e+FZzmtWQcxEeQNwDrdN
-         4pdTWY2LZXzZJJo9nVIDOiIIUARwcODUbL8WI/XJdWYVLZUZRNzxxiIJMzPab+hfJKWK
-         eM9/Xi0cQJHfBKxI72NfqsR1G+RSD39I8mJwO5iK+D0HGfWM8AAtsizK07rCdu8+anw+
-         Sdtw==
-X-Gm-Message-State: ANhLgQ2ycswMdv+dZC5G8j4ri9RY7Wx+ZenPMVfAHxa2lZA0wIomtBPM
-        qXQimy01GLBJWQECvVfabSBQx7pN
-X-Google-Smtp-Source: ADFU+vv5ehuIyGfBV1LYTmRWND8Upq6vGmZisEO7B+JJAhL3mQWWcHDTXj37YoKKtHzDPHep0ZkIOA==
-X-Received: by 2002:a63:4e01:: with SMTP id c1mr6191676pgb.435.1584563754337;
-        Wed, 18 Mar 2020 13:35:54 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e189sm7432741pfa.139.2020.03.18.13.35.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 13:35:53 -0700 (PDT)
-Subject: Re: [PATCH 06/18] irqchip: add sl28cpld interrupt controller support
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Guenter Roeck <groeck7@gmail.com>
-References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-7-michael@walle.cc>
- <d204c3b0-c3d0-0422-75d9-07718ba2134e@roeck-us.net>
- <b9661afeda9fc6413b2fe392f254c685@walle.cc>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <d2ede8b3-75ab-36f3-bc7e-8f7169977fb7@roeck-us.net>
-Date:   Wed, 18 Mar 2020 13:35:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 18 Mar 2020 16:48:00 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50047 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727225AbgCRUsA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 16:48:00 -0400
+X-Originating-IP: 2.224.242.101
+Received: from localhost.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 9E95E20004;
+        Wed, 18 Mar 2020 20:47:54 +0000 (UTC)
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        tfiga@google.com, pavel@ucw.cz
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        linux-media@vger.kernel.org (open list:MEDIA INPUT INFRASTRUCTURE
+        (V4L/DVB)), libcamera-devel@lists.libcamera.org, robh@kernel.org,
+        devicetree@vger.kernel.org,
+        Niklas Soderlund <niklas.soderlund@ragnatech.se>
+Subject: [PATCH v7 03/11] dt-bindings: video-interface: Replace 'rotation' description
+Date:   Wed, 18 Mar 2020 21:50:26 +0100
+Message-Id: <20200318205034.949531-4-jacopo@jmondi.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200318205034.949531-1-jacopo@jmondi.org>
+References: <20200318205034.949531-1-jacopo@jmondi.org>
 MIME-Version: 1.0
-In-Reply-To: <b9661afeda9fc6413b2fe392f254c685@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/18/20 10:06 AM, Michael Walle wrote:
-> Am 2020-03-18 17:53, schrieb Guenter Roeck:
->> On 3/17/20 1:50 PM, Michael Walle wrote:
->>> This patch adds support for the interrupt controller inside the sl28
->>> CPLD management controller.
->>>
->>> Signed-off-by: Michael Walle <michael@walle.cc>
->>> ---
->>>  drivers/irqchip/Kconfig        |  3 ++
->>>  drivers/irqchip/Makefile       |  1 +
->>>  drivers/irqchip/irq-sl28cpld.c | 92 ++++++++++++++++++++++++++++++++++
->>>  drivers/mfd/Kconfig            |  4 +-
->>>  4 files changed, 98 insertions(+), 2 deletions(-)
->>>  create mode 100644 drivers/irqchip/irq-sl28cpld.c
->>>
->>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->>> index 24fe08702ef7..3fd7415c8b55 100644
->>> --- a/drivers/irqchip/Kconfig
->>> +++ b/drivers/irqchip/Kconfig
->>> @@ -246,6 +246,9 @@ config RENESAS_RZA1_IRQC
->>>        Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
->>>        to 8 external interrupts with configurable sense select.
->>>
->>> +config SL28CPLD_INTC
->>> +    bool
->>> +
->>>  config ST_IRQCHIP
->>>      bool
->>>      select REGMAP
->>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->>> index eae0d78cbf22..0f4a37782609 100644
->>> --- a/drivers/irqchip/Makefile
->>> +++ b/drivers/irqchip/Makefile
->>> @@ -105,3 +105,4 @@ obj-$(CONFIG_MADERA_IRQ)        += irq-madera.o
->>>  obj-$(CONFIG_LS1X_IRQ)            += irq-ls1x.o
->>>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)    += irq-ti-sci-intr.o
->>>  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)    += irq-ti-sci-inta.o
->>> +obj-$(CONFIG_SL28CPLD_INTC)        += irq-sl28cpld.o
->>> diff --git a/drivers/irqchip/irq-sl28cpld.c b/drivers/irqchip/irq-sl28cpld.c
->>> new file mode 100644
->>> index 000000000000..fa52ed79137b
->>> --- /dev/null
->>> +++ b/drivers/irqchip/irq-sl28cpld.c
->>> @@ -0,0 +1,92 @@
->>> +// SPDX-License-Identifier: GPL-2.0-only
->>> +/*
->>> + * SMARC-sAL28 Interrupt core driver.
->>> + *
->>> + * Copyright 2019 Kontron Europe GmbH
->>> + */
->>> +
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_address.h>
->>> +#include <linux/of_platform.h>
->>> +#include <linux/i2c.h>
->>> +#include <linux/regmap.h>
->>> +#include <linux/interrupt.h>
->>> +#include <linux/mfd/core.h>
->>> +
->>> +#define INTC_IE 0
->>> +#define INTC_IP 1
->>> +
->>> +static const struct regmap_irq sl28cpld_irqs[] = {
->>> +    REGMAP_IRQ_REG_LINE(0, 8),
->>> +    REGMAP_IRQ_REG_LINE(1, 8),
->>> +    REGMAP_IRQ_REG_LINE(2, 8),
->>> +    REGMAP_IRQ_REG_LINE(3, 8),
->>> +    REGMAP_IRQ_REG_LINE(4, 8),
->>> +    REGMAP_IRQ_REG_LINE(5, 8),
->>> +    REGMAP_IRQ_REG_LINE(6, 8),
->>> +    REGMAP_IRQ_REG_LINE(7, 8),
->>> +};
->>> +
->>> +struct sl28cpld_intc {
->>> +    struct regmap *regmap;
->>> +    struct regmap_irq_chip chip;
->>> +    struct regmap_irq_chip_data *irq_data;
->>> +};
->>> +
->>> +static int sl28cpld_intc_probe(struct platform_device *pdev)
->>> +{
->>> +    struct sl28cpld_intc *irqchip;
->>> +    struct resource *res;
->>> +    unsigned int irq;
->>> +    int ret;
->>> +
->>> +    irqchip = devm_kzalloc(&pdev->dev, sizeof(*irqchip), GFP_KERNEL);
->>> +    if (!irqchip)
->>> +        return -ENOMEM;
->>> +
->>> +    if (!pdev->dev.parent)
->>> +        return -ENODEV;
->>> +
->>> +    irqchip->regmap = dev_get_regmap(pdev->dev.parent, NULL);
->>> +    if (!irqchip->regmap)
->>> +        return -ENODEV;
->>> +
->>> +    irq = platform_get_irq(pdev, 0);
->>> +    if (irq < 0)
->>> +        return irq;
->>> +
->>> +    res = platform_get_resource(pdev, IORESOURCE_REG, 0);
->>> +    if (!res)
->>> +        return -EINVAL;
->>> +
->>> +    irqchip->chip.name = "sl28cpld-intc";
->>> +    irqchip->chip.irqs = sl28cpld_irqs;
->>> +    irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
->>> +    irqchip->chip.num_regs = 1;
->>> +    irqchip->chip.status_base = res->start + INTC_IP;
->>> +    irqchip->chip.mask_base = res->start + INTC_IE;
->>> +    irqchip->chip.mask_invert = true,
->>> +    irqchip->chip.ack_base = res->start + INTC_IP;
->>> +
->>> +    ret = devm_regmap_add_irq_chip(&pdev->dev, irqchip->regmap, irq,
->>> +                       IRQF_SHARED | IRQF_ONESHOT, 0,
->>> +                       &irqchip->chip, &irqchip->irq_data);
->>> +    if (ret)
->>> +        return ret;
->>> +    dev_info(&pdev->dev, "registered IRQ %d\n", irq);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static struct platform_driver sl28cpld_intc_driver = {
->>> +    .probe    = sl28cpld_intc_probe,
->>> +    .driver = {
->>> +        .name = "sl28cpld-intc",
->>> +    }
->>> +};
->>> +module_platform_driver(sl28cpld_intc_driver);
->>> +
->>> +MODULE_DESCRIPTION("sl28cpld Interrupt Controller Driver");
->>> +MODULE_LICENSE("GPL");
->>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>> index 01588c366476..4f741d640705 100644
->>> --- a/drivers/mfd/Kconfig
->>> +++ b/drivers/mfd/Kconfig
->>> @@ -2060,12 +2060,12 @@ config SGI_MFD_IOC3
->>>        then say Y. Otherwise say N.
->>>
->>>  config MFD_SL28CPLD
->>> -    tristate "Kontron sl28 core driver"
->>> +    bool "Kontron sl28 core driver"
->>
->> This is .... unusual. Why declare it tristate only to re-declare it
->> bool in the next patch ?
-> 
-> I though it was a good idea to have that gradually build up, esp. since
-> these patches might go through different reviewers/trees. That being said,
-> I'll change it though.
-> 
+Replace the 'rotation' property description by providing a definition
+relative to the camera sensor pixel array coordinate system and the
+captured scene.
 
-Gradually build up is fine, but that doesn't mean to do it one way first and
-change it later. This only results in feedback like mine - I2C=y just
-didn't make sense in the previous patch. Please keep in mind that doing
-things one way first and then changing them later only wastes people's time.
-It would be much better to mention in the previous patch that the symbol is
-declared bool because a subsequent patch introduces an interrupt controller
-driver which needs to be built-in.
+Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+Co-developed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Co-developed-by: Niklas Soderlund <niklas.soderlund@ragnatech.se>
 
-Thanks,
-Guenter
+---
+ .../bindings/media/video-interfaces.txt       | 359 +++++++++++++++++-
+ 1 file changed, 356 insertions(+), 3 deletions(-)
 
->> It does explain the I2C=y, but I really think it should be bool from
->> the start if it ends up
->> there.
-> 
-> Ok.
-> 
->>
->>>      depends on I2C=y
->>>      depends on OF
->>>      select REGMAP_I2C
->>>      select REGMAP_IRQ
->>> -    select SL28CPLD_IRQ
->>> +    select SL28CPLD_INTC
->>
->> What is the point of introducing SL28CPLD_IRQ in the first place ?
-> 
-> oh damn. this is a left-over which slipped through. There should just
-> be a SL28CPLD_INTC.
-> 
-> -michael
-> 
->>
->>>      select MFD_CORE
->>>      help
->>>        This option enables support for the board management controller
->>>
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+index 1211bdf80722..36e61d599f34 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -85,9 +85,362 @@ Optional properties
+
+ - lens-focus: A phandle to the node of the focus lens controller.
+
+-- rotation: The device, typically an image sensor, is not mounted upright,
+-  but a number of degrees counter clockwise. Typical values are 0 and 180
+-  (upside down).
++- rotation: The camera rotation is expressed as the angular difference in
++  degrees between two reference systems, one relative to the camera module, and
++  one defined on the external world scene to be captured when projected on the
++  image sensor pixel array.
++
++  A camera sensor has a 2-dimensional reference system 'Rc' defined by
++  its pixel array read-out order. The origin is set to the first pixel
++  being read out, the X-axis points along the column read-out direction
++  towards the last columns, and the Y-axis along the row read-out
++  direction towards the last row.
++
++  A typical example for a sensor with a 2592x1944 pixel array matrix
++  observed from the front is
++
++              2591       X-axis          0
++                <------------------------+ 0
++                .......... ... ..........!
++                .......... ... ..........! Y-axis
++                           ...           !
++                .......... ... ..........!
++                .......... ... ..........! 1943
++                                         V
++
++  The external world scene reference system 'Rs' is a 2-dimensional
++  reference system on the focal plane of the camera module. The origin is
++  placed on the top-left corner of the visible scene, the X-axis points
++  towards the right, and the Y-axis points towards the bottom of the
++  scene. The top, bottom, left and right directions are intentionally not
++  defined and depend on the environment in which the camera is used.
++
++  A typical example of a (very common) picture of a shark swimming from
++  left to right, as seen from the camera, is
++
++               0               X-axis
++             0 +------------------------------------->
++               !
++               !
++               !
++               !           |\____)\___
++               !           ) _____  __`<
++               !           |/     )/
++               !
++               !
++               !
++               V
++             Y-axis
++
++  With the reference system 'Rs' placed on the camera focal plane.
++
++                                  ¸.·˙!
++                              ¸.·˙    !
++                  _       ¸.·˙        !
++               +-/ \-+¸.·˙            !
++               | (o) |                ! Camera focal plane
++               +-----+˙·.¸            !
++                          ˙·.¸        !
++                              ˙·.¸    !
++                                  ˙·.¸!
++
++  When projected on the sensor's pixel array, the image and the associated
++  reference system 'Rs' are typically (but not always) inverted, due to
++  the camera module's lens optical inversion effect.
++
++  Assuming the above represented scene of the swimming shark, the lens
++  inversion projects the scene and its reference system onto the sensor
++  pixel array, seen from the front of the camera sensor, as follow
++
++            Y-axis
++               ^
++               !
++               !
++               !
++               !            |\_____)\__
++               !            ) ____  ___.<
++               !            |/    )/
++               !
++               !
++               !
++             0 +------------------------------------->
++               0               X-axis
++
++  Note the shark being upside-down.
++
++  The resulting projected reference system is named 'Rp'.
++
++  The camera rotation property is then defined as the angular difference
++  in the counter-clockwise direction between the camera reference system
++  'Rc' and the projected scene reference system 'Rp'. It is expressed in
++  degrees as a number in the range [0, 360[.
++
++  Examples
++
++  0 degrees camera rotation
++
++
++                    Y-Rp
++                     ^
++              Y-Rc   !
++               ^     !
++               !     !
++               !     !
++               !     !
++               !     !
++               !     !
++               !     !
++               !     !
++               !   0 +------------------------------------->
++               !     0               X-Rp
++             0 +------------------------------------->
++               0               X-Rc
++
++
++                                X-Rc                0
++               <------------------------------------+ 0
++                           X-Rp                 0   !
++           <------------------------------------+ 0 !
++                                                !   !
++                                                !   !
++                                                !   !
++                                                !   !
++                                                !   !
++                                                !   !
++                                                !   !
++                                                !   V
++                                                !  Y-Rc
++                                                V
++                                               Y-Rp
++
++  90 degrees camera rotation
++
++               0        Y-Rc
++             0 +-------------------->
++               !   Y-Rp
++               !    ^
++               !    !
++               !    !
++               !    !
++               !    !
++               !    !
++               !    !
++               !    !
++               !    !
++               !    !
++               !  0 +------------------------------------->
++               !    0              X-Rp
++               !
++               !
++               !
++               !
++               V
++              X-Rc
++
++  180 degrees camera rotation
++
++                                            0
++       <------------------------------------+ 0
++                        X-Rc                !
++              Y-Rp                          !
++               ^                            !
++               !                            !
++               !                            !
++               !                            !
++               !                            !
++               !                            !
++               !                            !
++               !                            V
++               !                           Y-Rc
++             0 +------------------------------------->
++               0              X-Rp
++
++  270 degrees camera rotation
++
++               0        Y-Rc
++             0 +-------------------->
++               !                                        0
++               !    <-----------------------------------+ 0
++               !                    X-Rp                !
++               !                                        !
++               !                                        !
++               !                                        !
++               !                                        !
++               !                                        !
++               !                                        !
++               !                                        !
++               !                                        !
++               !                                        V
++               !                                       Y-Rp
++               !
++               !
++               !
++               !
++               V
++              X-Rc
++
++
++  Example one - Webcam
++
++  A camera module installed on the user facing part of a laptop screen
++  casing used for video calls. The captured images are meant to be
++  displayed in landscape mode (width > height) on the laptop screen.
++
++  The camera is typically mounted upside-down to compensate the lens
++  optical inversion effect.
++
++                    Y-Rp
++              Y-Rc   ^
++               ^     !
++               !     !
++               !     !       |\_____)\__
++               !     !       ) ____  ___.<
++               !     !       |/    )/
++               !     !
++               !     !
++               !     !
++               !   0 +------------------------------------->
++               !     0           X-Rp
++             0 +------------------------------------->
++               0            X-Rc
++
++  The two reference systems are aligned, the resulting camera rotation is
++  0 degrees, no rotation correction needs to be applied to the resulting
++  image once captured to memory buffers to correctly display it to users.
++
++               +--------------------------------------+
++               !                                      !
++               !                                      !
++               !                                      !
++               !             |\____)\___              !
++               !             ) _____  __`<            !
++               !             |/     )/                !
++               !                                      !
++               !                                      !
++               !                                      !
++               +--------------------------------------+
++
++  If the camera sensor is not mounted upside-down to compensate for the
++  lens optical inversion, the two reference systems will not be aligned,
++  with 'Rp' being rotated 180 degrees relatively to 'Rc'.
++
++
++                        X-Rc                0
++       <------------------------------------+ 0
++                                            !
++              Y-Rp                          !
++               ^                            !
++               !                            !
++               !       |\_____)\__          !
++               !       ) ____  ___.<        !
++               !       |/    )/             !
++               !                            !
++               !                            !
++               !                            V
++               !                           Y-Rc
++             0 +------------------------------------->
++               0            X-Rp
++
++  The image once captured to memory will then be rotated by 180 degrees
++
++               +--------------------------------------+
++               !                                      !
++               !                                      !
++               !                                      !
++               !              __/(_____/|             !
++               !            >.___  ____ (             !
++               !                 \(    \|             !
++               !                                      !
++               !                                      !
++               !                                      !
++               +--------------------------------------+
++
++  A software rotation correction of 180 degrees should be applied to
++  correctly display the image.
++
++               +--------------------------------------+
++               !                                      !
++               !                                      !
++               !                                      !
++               !             |\____)\___              !
++               !             ) _____  __`<            !
++               !             |/     )/                !
++               !                                      !
++               !                                      !
++               !                                      !
++               +--------------------------------------+
++
++  Example two - Phone camera
++
++  A camera installed on the back side of a mobile device facing away from
++  the user. The captured images are meant to be displayed in portrait mode
++  (height > width) to match the device screen orientation and the device
++  usage orientation used when taking the picture.
++
++  The camera sensor is typically mounted with its pixel array longer side
++  aligned to the device longer side, upside-down mounted to compensate for
++  the lens optical inversion effect.
++
++               0        Y-Rc
++             0 +-------------------->
++               !   Y-Rp
++               !    ^
++               !    !
++               !    !
++               !    !
++               !    !            |\_____)\__
++               !    !            ) ____  ___.<
++               !    !            |/    )/
++               !    !
++               !    !
++               !    !
++               !  0 +------------------------------------->
++               !    0                X-Rp
++               !
++               !
++               !
++               !
++               V
++              X-Rc
++
++  The two reference systems are not aligned and the 'Rp' reference
++  system is rotated by 90 degrees in the counter-clockwise direction
++  relatively to the 'Rc' reference system.
++
++  The image once captured to memory will be rotated.
++
++               +-------------------------------------+
++               |                 _ _                 |
++               |                \   /                |
++               |                 | |                 |
++               |                 | |                 |
++               |                 |  >                |
++               |                <  |                 |
++               |                 | |                 |
++               |                   .                 |
++               |                  V                  |
++               +-------------------------------------+
++
++  A correction of 90 degrees in counter-clockwise direction has to be
++  applied to correctly display the image in portrait mode on the device
++  screen.
++
++                        +--------------------+
++                        |                    |
++                        |                    |
++                        |                    |
++                        |                    |
++                        |                    |
++                        |                    |
++                        |   |\____)\___      |
++                        |   ) _____  __`<    |
++                        |   |/     )/        |
++                        |                    |
++                        |                    |
++                        |                    |
++                        |                    |
++                        |                    |
++                        +--------------------+
+
+ - location: The mount location of a device (typically an image sensor or a flash
+   LED) expressed as a position relative to the usage orientation of the system
+--
+2.25.1
 
