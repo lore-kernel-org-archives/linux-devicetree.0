@@ -2,116 +2,105 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9E3C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A9EC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E5C2076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C3E20768
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:47:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="M7UcYpJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgCRKnY (ORCPT
+        id S1727168AbgCRKrE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:43:24 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:51497 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgCRKnY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 06:43:24 -0400
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 0zvM3WYQSKGglrOZe4qS9nW731ZR99ZYSOTnB9obzkpu7Fa7oUWoFakKB88/Mt53am09je59e6
- vLKhxRsckpIA9/gL91TlxjWTJui5T3F6cWQ03qIQye5nU1V4ylM07D14KIrY2NOzYvIXQysdlr
- 5AsMjzeWjWJBIJtlcLsgA2xso+WeEGH4qVLBVT6rJBlS94gVitMcCPaIq38odYzrzF6kim/YiG
- wVkOg2SF40rhk9hI/xHGKKBB7nZYxm/Lqz937naM/I1UBD2hS8jfznkxyPjIL9bY1jZ01F9f9y
- RLE=
-X-IronPort-AV: E=Sophos;i="5.70,566,1574146800"; 
-   d="scan'208";a="69337725"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Mar 2020 03:43:24 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 18 Mar 2020 03:43:20 -0700
-Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 18 Mar 2020 03:43:09 -0700
-From:   Eugen Hristev <eugen.hristev@microchip.com>
-To:     <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <eugen.hristev@microchip.com>, <cristian.birsan@microchip.com>
-Subject: [PATCH] ARM: dts: at91: sama5d27_wlsom1_ek: add USB device node
-Date:   Wed, 18 Mar 2020 12:42:36 +0200
-Message-ID: <20200318104236.21114-1-eugen.hristev@microchip.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 18 Mar 2020 06:47:04 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:34739 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbgCRKrD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 06:47:03 -0400
+Received: by mail-il1-f195.google.com with SMTP id c8so23215905ilm.1
+        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 03:47:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ChJRimBxnTbA03roY4ImNXu/QOZAFQmM9aZ0DvgZyss=;
+        b=M7UcYpJJ1RDQlXdGC55v616bnVhhxcSbI7p7cjF7lC73j2icPSbW9xDjUWSUgCOzsN
+         xDiQjQqDuDpy1p/aeJrhbYGtq4qTrY0iqN2YhQtPY5zcN9YxgSMXMDfIXe5e5rQE0tZC
+         V6yM7Rw4W/Z76hXRtTrZWTRyvUcViAz0uBPfs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ChJRimBxnTbA03roY4ImNXu/QOZAFQmM9aZ0DvgZyss=;
+        b=XkGMcagqugmNwugoR1s4EHGdh0D9Y2mfZJBXjh9/4ol5KjV5H7qf1PT/vJhw7OGhPp
+         N+G8+BYwHO3Un5kiDIveysybojqxa+CODCnpnQROmx7vTYXmEPnhC9bw+52SZTu2W6Q7
+         s7jF1j663nC8GAn6QcoeqpRDqEc7U4qj4tajt3iSyj/zAJRiHZLSeLONtt6voWRWzg51
+         UCwg4Y62Hvai7lFA0jLLVs7tTzNOyWoUWXt1CVX54cn8oeO/fHRDm3zQ6GtjxCpnZlrs
+         R1vqTIV6s1/xwu+gMmoaUaSokyXmgLnUpNS7mxlEbezu2DWkTMDFcqdLwzy+BJpl9L/I
+         dNFQ==
+X-Gm-Message-State: ANhLgQ1NRSrgRsLOeJTTVdW8eaQIzuqE8fOwqcM6dpI3G++myuSYLqkF
+        ppRIGlooFQnOckOaOQRyPMWfhYlm+iEFyltQCgWO0Q==
+X-Google-Smtp-Source: ADFU+vuJdvRD/Zp10f0MW07j0n+KougFGQxImVVwXDl2vuBshphJe25zJcL6+uMJZORniwHGcDAe6F57tp5u8+CVJYI=
+X-Received: by 2002:a92:9f1b:: with SMTP id u27mr3434011ili.173.1584528422401;
+ Wed, 18 Mar 2020 03:47:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+References: <20200315134416.16527-1-sam@ravnborg.org> <20200315134416.16527-9-sam@ravnborg.org>
+In-Reply-To: <20200315134416.16527-9-sam@ravnborg.org>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Wed, 18 Mar 2020 16:16:51 +0530
+Message-ID: <CAMty3ZD2kuD0nwWXDAD6R58Z2GFy1Ap7HfnEtYqwARQqs0nMfQ@mail.gmail.com>
+Subject: Re: [PATCH v1 08/36] dt-bindings: display: convert
+ feiyang,fy07024di26a30d to DT Schema
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Chris Zhong <zyw@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
+        Nikolaus Schaller <hns@goldelico.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
+        Marek Belisko <marek@goldelico.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Nickey Yang <nickey.yang@rock-chips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Peter Rosin <peda@axentia.se>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stefan Mavrodiev <stefan@olimex.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Werner Johansson <werner.johansson@sonymobile.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+Hi Sam Ravmborg,
 
-Add USB device node for WLSoM1 EK and enable it.
+I send the series for panels which I worked already [1], would like to
+send the next version for those. will that work for you?
 
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-[eugen.hristev@microchip.com: ported to 5.4]
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+[1] https://patchwork.kernel.org/cover/11315063/
 
-diff --git a/arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts
-index 0b9fa2942dff..6b8461278950 100644
---- a/arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts
-@@ -186,6 +186,11 @@
- 		pinmux = <PIN_PA10__GPIO>;
- 		bias-disable;
- 	};
-+
-+	pinctrl_usba_vbus: usba_vbus {
-+		pinmux = <PIN_PA16__GPIO>;
-+		bias-disable;
-+	};
- };
- 
- &pwm0 {
-@@ -248,6 +253,13 @@
- 	status = "okay";
- };
- 
-+&usb0 {
-+	atmel,vbus-gpio = <&pioA PIN_PA16 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usba_vbus>;
-+	status = "okay";
-+};
-+
- &usb1 {
- 	num-ports = <3>;
- 	atmel,vbus-gpio = <0
--- 
-2.20.1
-
+Jagan.
