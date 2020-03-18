@@ -2,544 +2,91 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592A0C5ACD7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52490C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E23F2076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1928E2076D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hA5ifeE6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GWbfE9TR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgCRJOa (ORCPT
+        id S1726994AbgCRJRp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:14:30 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42106 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727408AbgCRJOa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 05:14:30 -0400
-Received: by mail-qt1-f195.google.com with SMTP id g16so20000466qtp.9
-        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 02:14:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=x9Pg5b/7UCKLvbU2YR1I+lNyCYk5/XlTykfp63ga3X8=;
-        b=hA5ifeE6sl06h0efKs6Jcc5ITn27o/iVK7q8qUUS98v1gqevUhvKZt7JSTR1x5Ha3F
-         ZEEjuJA3WocrkkiysHzeR0LpabPtnQM2tJGLSEo3wyWk4/UCWI4g1BWsp6zRDb02INB9
-         RcRCzChAgA+KX7lIl5Um4Dvz92+AgN397o026JXlSCJ6uFwNVoCHDlhEwfQP3ZvFnFfT
-         bXaTdykfs/UOYKxJSBPmoGLNk8jIdE/xXpPrtCL/fDdZ2+SMhvtVF9D93eRpVeqzg1xQ
-         3kpNeLc38QIqzP0Js11iFUWnkBK/yp638I0bJ3FNfk9+l1ZpWuJKD4qxSa7+dNjYB2lR
-         fJ8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=x9Pg5b/7UCKLvbU2YR1I+lNyCYk5/XlTykfp63ga3X8=;
-        b=mCSPW8h9SAL2Sm5qeG3RQ7DQJPAbG1iIm7NHokhnvuplzvr9RtOsFbBs+i4u+r57Fb
-         I/wRgLdJrKJEESyCwpEP+nOFhl7B1CGzMVytLN1FJIeX2udHDV7xLQWVLK0P0lsvwlHs
-         OMz9Gqp+4aDFXxXEhdvcvE+Sozp325iYOC8k0JcL9b+SpK0K2u39WbKk0qdRrklWhyaO
-         5e9sKl7/fMJqMfMhNAd7lBWhffj9SuwXGrbgfePDwBmW/erQruCVRK5i7+kLTQk6yLZh
-         gEhUP404PbmpgLX3Vl8drn7sjsZS0WPkv+A7L0XJz/l08pAEoXrYuF20h7RYEBoK7bXJ
-         kehg==
-X-Gm-Message-State: ANhLgQ1ZOeO7OAacJ6lYJi8S/xwgIaA5bEC+X52WKCf+Q01PMU4hWwjh
-        LfyTU9nolcWZCrl+HIGrKLIMd9LJBJShCErTh69ICg==
-X-Google-Smtp-Source: ADFU+vt55gCji0ORLCrqulP8yZPC7MtpY2zexYQ9m2gv59PGQ4AOnqIUOPBWBnTqJgH4GDaLR5NFU18Y8CjFiYWO8zk=
-X-Received: by 2002:ac8:7257:: with SMTP id l23mr3381022qtp.197.1584522868350;
- Wed, 18 Mar 2020 02:14:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200317205017.28280-1-michael@walle.cc> <20200317205017.28280-13-michael@walle.cc>
-In-Reply-To: <20200317205017.28280-13-michael@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 18 Mar 2020 10:14:16 +0100
-Message-ID: <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
-Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Wed, 18 Mar 2020 05:17:45 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42586 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbgCRJRp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 05:17:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=KeLPJyyquVYMqBbQtbmvA4XwuIDg/90uof9w1TOJEf0=; b=GWbfE9TR8Qjf3F+si9NU9WUvdR
+        yOYUQhp4cjhe3RNjs0dkBjwl97SNYZtImawJ1P2sEZvPhRDUb5IGhlnqyz84tMkFWE/FigDp0+t+0
+        S//51x0ON8RP1nbs9Kq3Gd5bB8Dag8Iz0r9m3yQZCb+r5Y3+0avwHoOmzI6ytv3vsNJE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jEUpS-00069u-NQ; Wed, 18 Mar 2020 10:17:34 +0100
+Date:   Wed, 18 Mar 2020 10:17:34 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc:     Fugang Duan <fugang.duan@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/4] dt-bindings: fec: document the new fsl,stop-mode
+ property
+Message-ID: <20200318091734.GA23244@lunn.ch>
+References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
+ <1584463806-15788-4-git-send-email-martin.fuzzey@flowbird.group>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584463806-15788-4-git-send-email-martin.fuzzey@flowbird.group>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 17 mar 2020 o 21:50 Michael Walle <michael@walle.cc> napisa=C5=82(a):
->
-> This adds support for the GPIO controller of the sl28 board management
-> controller. This driver is part of a multi-function device.
->
-> Signed-off-by: Michael Walle <michael@walle.cc>
-
-Hi Michael,
-
-thanks for the driver. Please take a look at some comments below.
-
+On Tue, Mar 17, 2020 at 05:50:05PM +0100, Martin Fuzzey wrote:
+> This property allows the appropriate GPR register bit to be set
+> for wake on lan support.
+> 
+> Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
 > ---
->  drivers/gpio/Kconfig         |  11 ++
->  drivers/gpio/Makefile        |   1 +
->  drivers/gpio/gpio-sl28cpld.c | 332 +++++++++++++++++++++++++++++++++++
->  3 files changed, 344 insertions(+)
->  create mode 100644 drivers/gpio/gpio-sl28cpld.c
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 3cbf8882a0dd..516e47017ef5 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -1211,6 +1211,17 @@ config GPIO_RC5T583
->           This driver provides the support for driving/reading the gpio p=
-ins
->           of RC5T583 device through standard gpio library.
->
-> +config GPIO_SL28CPLD
-> +       tristate "Kontron sl28 GPIO"
-> +       depends on MFD_SL28CPLD
-> +       depends on OF_GPIO
-> +       select GPIOLIB_IRQCHIP
+>  Documentation/devicetree/bindings/net/fsl-fec.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> index 5b88fae0..bd0ef5e 100644
+> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
+> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> @@ -19,6 +19,11 @@ Optional properties:
+>    number to 1.
+>  - fsl,magic-packet : If present, indicates that the hardware supports waking
+>    up via magic packet.
+> +- fsl,stop-mode: register bits of stop mode control, the format is
+> +		 <&gpr reg bit>.
+> +		 gpr is the phandle to general purpose register node.
+> +		 reg is the gpr register offset for the stop request.
+> +		 bit is the bit offset for the stop request.
 
-Please see below - I think both are not needed.
+Hi Martin
 
-> +       help
-> +         This enables support for the GPIOs found on the Kontron sl28 CP=
-LD.
-> +
-> +         This driver can also be built as a module. If so, the module wi=
-ll be
-> +         called gpio-sl28cpld.
-> +
->  config GPIO_STMPE
->         bool "STMPE GPIOs"
->         depends on MFD_STMPE
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 0b571264ddbc..0ca2d52c78e8 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -127,6 +127,7 @@ obj-$(CONFIG_GPIO_SCH311X)          +=3D gpio-sch311x=
-.o
->  obj-$(CONFIG_GPIO_SCH)                 +=3D gpio-sch.o
->  obj-$(CONFIG_GPIO_SIFIVE)              +=3D gpio-sifive.o
->  obj-$(CONFIG_GPIO_SIOX)                        +=3D gpio-siox.o
-> +obj-$(CONFIG_GPIO_SL28CPLD)            +=3D gpio-sl28cpld.o
->  obj-$(CONFIG_GPIO_SODAVILLE)           +=3D gpio-sodaville.o
->  obj-$(CONFIG_GPIO_SPEAR_SPICS)         +=3D gpio-spear-spics.o
->  obj-$(CONFIG_GPIO_SPRD)                        +=3D gpio-sprd.o
-> diff --git a/drivers/gpio/gpio-sl28cpld.c b/drivers/gpio/gpio-sl28cpld.c
-> new file mode 100644
-> index 000000000000..94f82013882f
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-sl28cpld.c
-> @@ -0,0 +1,332 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * SMARC-sAL28 GPIO driver.
-> + *
-> + * Copyright 2019 Kontron Europe GmbH
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/regmap.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/gpio/driver.h>
-> +
-> +#define GPIO_REG_DIR   0
-> +#define GPIO_REG_OUT   1
-> +#define GPIO_REG_IN    2
-> +#define GPIO_REG_IE    3
-> +#define GPIO_REG_IP    4
+You should not be putting registers and values into device tree.
 
-These values would be more clear if they were defined as hex.
+The regmap is fine. But could you add the register and the bit to
+fec_devtype[IMX6SX_FEC], fec_devtype[IMX6UL_FEC], etc.
 
-> +
-> +#define GPI_REG_IN     0
-> +
-> +#define GPO_REG_OUT    0
-
-Please also use a common prefix even for defines.
-
-> +
-> +enum sl28cpld_gpio_type {
-> +       sl28cpld_gpio,
-> +       sl28cpld_gpi,
-> +       sl28cpld_gpo,
-> +};
-
-Enum values should be all upper-case.
-
-> +
-> +struct sl28cpld_gpio {
-> +       struct gpio_chip gpio_chip;
-> +       struct irq_chip irq_chip;
-> +       struct regmap *regmap;
-> +       u32 offset;
-> +       struct mutex lock;
-> +       u8 ie;
-> +};
-> +
-> +static void sl28cpld_gpio_set_reg(struct gpio_chip *chip, unsigned int r=
-eg,
-> +                                 unsigned int offset, int value)
-> +{
-> +       struct sl28cpld_gpio *gpio =3D gpiochip_get_data(chip);
-> +       unsigned int mask =3D 1 << offset;
-> +       unsigned int val =3D value << offset;
-> +
-> +       regmap_update_bits(gpio->regmap, gpio->offset + reg, mask, val);
-> +}
-> +
-> +static void sl28cpld_gpio_set(struct gpio_chip *chip, unsigned int offse=
-t,
-> +                             int value)
-> +{
-> +       sl28cpld_gpio_set_reg(chip, GPIO_REG_OUT, offset, value);
-> +}
-> +
-> +static void sl28cpld_gpo_set(struct gpio_chip *chip, unsigned int offset=
-,
-> +                            int value)
-> +{
-> +       sl28cpld_gpio_set_reg(chip, GPO_REG_OUT, offset, value);
-> +}
-> +
-> +static int sl28cpld_gpio_get_reg(struct gpio_chip *chip, unsigned int re=
-g,
-> +                                unsigned int offset)
-> +{
-> +       struct sl28cpld_gpio *gpio =3D gpiochip_get_data(chip);
-> +       unsigned int mask =3D 1 << offset;
-> +       unsigned int val;
-> +       int ret;
-> +
-> +       ret =3D regmap_read(gpio->regmap, gpio->offset + reg, &val);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return (val & mask) ? 1 : 0;
-> +}
-> +
-> +static int sl28cpld_gpio_get(struct gpio_chip *chip, unsigned int offset=
-)
-> +{
-> +       return sl28cpld_gpio_get_reg(chip, GPIO_REG_IN, offset);
-> +}
-> +
-> +static int sl28cpld_gpi_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       return sl28cpld_gpio_get_reg(chip, GPI_REG_IN, offset);
-> +}
-> +
-> +static int sl28cpld_gpio_get_direction(struct gpio_chip *chip,
-> +                                      unsigned int offset)
-> +{
-> +       struct sl28cpld_gpio *gpio =3D gpiochip_get_data(chip);
-> +       unsigned int reg;
-> +       int ret;
-> +
-> +       ret =3D regmap_read(gpio->regmap, gpio->offset + GPIO_REG_DIR, &r=
-eg);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (reg & (1 << offset))
-> +               return GPIO_LINE_DIRECTION_OUT;
-> +       else
-> +               return GPIO_LINE_DIRECTION_IN;
-> +}
-> +
-> +static int sl28cpld_gpio_set_direction(struct gpio_chip *chip,
-> +                                      unsigned int offset,
-> +                                      bool output)
-> +{
-> +       struct sl28cpld_gpio *gpio =3D gpiochip_get_data(chip);
-> +       unsigned int mask =3D 1 << offset;
-> +       unsigned int val =3D (output) ? mask : 0;
-> +
-> +       return regmap_update_bits(gpio->regmap, gpio->offset + GPIO_REG_D=
-IR,
-> +                                 mask, val);
-> +
-
-Stray newline.
-
-> +}
-> +
-> +static int sl28cpld_gpio_direction_input(struct gpio_chip *chip,
-> +                                        unsigned int offset)
-> +{
-> +       return sl28cpld_gpio_set_direction(chip, offset, false);
-> +}
-> +
-> +static int sl28cpld_gpio_direction_output(struct gpio_chip *chip,
-> +                                         unsigned int offset, int value)
-> +{
-> +       sl28cpld_gpio_set_reg(chip, GPIO_REG_OUT, offset, value);
-> +       return sl28cpld_gpio_set_direction(chip, offset, true);
-> +}
-> +
-> +static void sl28cpld_gpio_irq_lock(struct irq_data *data)
-> +{
-> +       struct sl28cpld_gpio *gpio =3D
-> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
-> +
-> +       mutex_lock(&gpio->lock);
-
-How does that actually lock anything? Regmap uses a different lock and
-if you want to make sure nobody modifies the GPIO registers than you'd
-need to use the same lock. Also: this looks a lot like a task for
-regmap_irqchip - maybe you could use it here or in the core mfd
-module?
-
-> +}
-> +
-> +static void sl28cpld_gpio_irq_sync_unlock(struct irq_data *data)
-> +{
-> +       struct sl28cpld_gpio *gpio =3D
-> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
-> +
-> +       regmap_write(gpio->regmap, gpio->offset + GPIO_REG_IE, gpio->ie);
-> +       mutex_unlock(&gpio->lock);
-> +}
-> +
-> +static void sl28cpld_gpio_irq_disable(struct irq_data *data)
-> +{
-> +       struct sl28cpld_gpio *gpio =3D
-> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
-> +
-> +       if (data->hwirq >=3D 8)
-> +               return;
-> +
-> +       gpio->ie &=3D ~(1 << data->hwirq);
-> +}
-> +
-> +static void sl28cpld_gpio_irq_enable(struct irq_data *data)
-> +{
-> +       struct sl28cpld_gpio *gpio =3D
-> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
-> +
-> +       if (data->hwirq >=3D 8)
-> +               return;
-> +
-> +       gpio->ie |=3D (1 << data->hwirq);
-> +}
-> +
-> +static int sl28cpld_gpio_irq_set_type(struct irq_data *data, unsigned in=
-t type)
-> +{
-> +       /* only edge triggered interrupts on both edges are supported */
-> +       return (type =3D=3D IRQ_TYPE_EDGE_BOTH) ? 0 : -EINVAL;
-> +}
-> +
-> +static irqreturn_t sl28cpld_gpio_irq_thread(int irq, void *data)
-> +{
-> +       struct sl28cpld_gpio *gpio =3D data;
-> +       unsigned int ip;
-> +       unsigned int virq;
-> +       int pin;
-> +       int ret;
-> +
-> +       ret =3D regmap_read(gpio->regmap, gpio->offset + GPIO_REG_IP, &ip=
-);
-> +       if (ret)
-> +               return IRQ_NONE;
-> +
-> +       /* mask other pending interrupts which are not enabled */
-> +       ip &=3D gpio->ie;
-> +
-> +       /* ack the interrupts */
-> +       regmap_write(gpio->regmap, gpio->offset + GPIO_REG_IP, ip);
-> +
-> +       /* and handle them */
-> +       while (ip) {
-> +               pin =3D __ffs(ip);
-> +               ip &=3D ~BIT(pin);
-> +
-> +               virq =3D irq_find_mapping(gpio->gpio_chip.irq.domain, pin=
-);
-> +               if (virq)
-> +                       handle_nested_irq(virq);
-> +       }
-> +
-> +       return IRQ_HANDLED;
-> +}
-
-This definitely looks like parts of regmap_irqchip reimplemented.
-Please check if you could reuse it - it would save a lot of code.
-
-> +
-> +static int sl28_cpld_gpio_irq_init(struct platform_device *pdev, int irq=
-)
-> +{
-> +       struct sl28cpld_gpio *gpio =3D platform_get_drvdata(pdev);
-> +       struct irq_chip *irq_chip =3D &gpio->irq_chip;
-> +       int ret;
-> +
-> +       irq_chip->name =3D "sl28cpld-gpio-irq",
-> +       irq_chip->irq_bus_lock =3D sl28cpld_gpio_irq_lock,
-> +       irq_chip->irq_bus_sync_unlock =3D sl28cpld_gpio_irq_sync_unlock,
-> +       irq_chip->irq_disable =3D sl28cpld_gpio_irq_disable,
-> +       irq_chip->irq_enable =3D sl28cpld_gpio_irq_enable,
-> +       irq_chip->irq_set_type =3D sl28cpld_gpio_irq_set_type,
-> +       irq_chip->flags =3D IRQCHIP_SKIP_SET_WAKE,
-> +
-> +       ret =3D gpiochip_irqchip_add_nested(&gpio->gpio_chip, irq_chip, 0=
-,
-> +                                         handle_simple_irq, IRQ_TYPE_NON=
-E);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret =3D devm_request_threaded_irq(&pdev->dev, irq, NULL,
-> +                                       sl28cpld_gpio_irq_thread,
-> +                                       IRQF_SHARED | IRQF_ONESHOT,
-> +                                       pdev->name, gpio);
-> +       if (ret)
-> +               return ret;
-> +
-> +       gpiochip_set_nested_irqchip(&gpio->gpio_chip, irq_chip, irq);
-> +
-> +       return 0;
-> +}
-> +
-> +static int sl28cpld_gpio_probe(struct platform_device *pdev)
-> +{
-> +       enum sl28cpld_gpio_type type =3D
-> +               platform_get_device_id(pdev)->driver_data;
-> +       struct device_node *np =3D pdev->dev.of_node;
-> +       struct sl28cpld_gpio *gpio;
-> +       struct gpio_chip *chip;
-> +       struct resource *res;
-> +       bool irq_support =3D false;
-> +       int ret;
-> +       int irq;
-> +
-> +       gpio =3D devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-> +       if (!gpio)
-> +               return -ENOMEM;
-> +
-> +       if (!pdev->dev.parent)
-> +               return -ENODEV;
-
-Why not check this before allocating any memory?
-
-> +
-> +       gpio->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
-> +       if (!gpio->regmap)
-> +               return -ENODEV;
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_REG, 0);
-> +       if (!res)
-> +               return -EINVAL;
-> +       gpio->offset =3D res->start;
-> +
-
-This isn't how IO resources are used. What are you trying to achieve here?
-
-> +       /* initialize struct gpio_chip */
-> +       mutex_init(&gpio->lock);
-> +       chip =3D &gpio->gpio_chip;
-> +       chip->parent =3D &pdev->dev;
-> +       chip->label =3D dev_name(&pdev->dev);
-> +       chip->owner =3D THIS_MODULE;
-> +       chip->can_sleep =3D true;
-> +       chip->base =3D -1;
-> +       chip->ngpio =3D 8;
-> +
-> +       switch (type) {
-> +       case sl28cpld_gpio:
-> +               chip->get_direction =3D sl28cpld_gpio_get_direction;
-> +               chip->direction_input =3D sl28cpld_gpio_direction_input;
-> +               chip->direction_output =3D sl28cpld_gpio_direction_output=
-;
-> +               chip->get =3D sl28cpld_gpio_get;
-> +               chip->set =3D sl28cpld_gpio_set;
-> +               irq_support =3D true;
-> +               break;
-> +       case sl28cpld_gpo:
-> +               chip->set =3D sl28cpld_gpo_set;
-> +               chip->get =3D sl28cpld_gpi_get;
-> +               break;
-> +       case sl28cpld_gpi:
-> +               chip->get =3D sl28cpld_gpi_get;
-> +               break;
-> +       }
-> +
-> +       ret =3D devm_gpiochip_add_data(&pdev->dev, chip, gpio);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       platform_set_drvdata(pdev, gpio);
-> +
-> +       if (irq_support && of_property_read_bool(np, "interrupt-controlle=
-r")) {
-
-You're depending on OF_GPIO for this one function. Please switch to
-device_property_read_bool() instead.
-
-> +               irq =3D platform_get_irq(pdev, 0);
-> +               if (irq < 0)
-> +                       return ret;
-> +
-> +               ret =3D sl28_cpld_gpio_irq_init(pdev, irq);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct platform_device_id sl28cpld_gpio_id_table[] =3D {
-> +       {"sl28cpld-gpio", sl28cpld_gpio},
-> +       {"sl28cpld-gpi", sl28cpld_gpi},
-> +       {"sl28cpld-gpo", sl28cpld_gpo},
-
-Could you explain this a bit more? Is this the same component with
-input/output-only lines or three different components?
-
-> +};
-> +MODULE_DEVICE_TABLE(platform, sl28cpld_gpio_id_table);
-> +
-> +static struct platform_driver sl28cpld_gpio_driver =3D {
-> +       .probe =3D sl28cpld_gpio_probe,
-> +       .id_table =3D sl28cpld_gpio_id_table,
-> +       .driver =3D {
-> +               .name =3D "sl28cpld-gpio",
-> +       },
-> +};
-> +module_platform_driver(sl28cpld_gpio_driver);
-> +
-> +MODULE_DESCRIPTION("sl28cpld GPIO Driver");
-> +MODULE_LICENSE("GPL");
-
-I think you could use a MODULE_ALIAS() here if you want this module to
-be loaded automatically by udev.
-
-> --
-> 2.20.1
->
-
-Best regards,
-Bartosz Golaszewski
+	Andrew
