@@ -2,228 +2,265 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E11CC5ACD7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 15:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18378C5ACD6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 15:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E862B20757
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 15:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584545020;
-	bh=nkPUvBSmIHHgd9m0yImG18XAlre50qo46aqiiguVCrU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GwH9tBGV239yUNERNy4q1Fjr8pNwFDidrDuXJCJUVnjnghV6u6I1RdHtWvqiukerO
-	 xJHCvHxfLXHR6egbhDvap1AmskDGnwaSg5QP6tlKnWbCGE1R6OqfBD3mULXt8Hgb/w
-	 dzxyrCfUmWguLWiShWpKlaphZNwaLptp8D5Y+O0s=
+	by mail.kernel.org (Postfix) with ESMTP id D426120774
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 15:37:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="v0Q73tLL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgCRPXj convert rfc822-to-8bit (ORCPT
+        id S1726845AbgCRPhm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:23:39 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39104 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRPXj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 11:23:39 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a43so9586124edf.6;
-        Wed, 18 Mar 2020 08:23:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=o/P0A6ezH4SEJwDeuvTx7Zm75dRTOfNAGjM7Gto+Be4=;
-        b=flTghI1W5Mmj1ocbRbrBeuM9H0tjl6rY3yO3nmRLKVgtAi+p/94fhUFJWe7UYBCWvC
-         9w+j5a90756CSW25Blc7/h1cOSXPWdMAXlAZAFjRM0kB9Xh3FshlWOB0nSkV6u4G7S5m
-         gqtUxUdBYSO9tOibrBoFAVl/pM/bUEBkAuR51QUMPHPNtmp7zTpuB4XNgT9WyUrPGKFp
-         DzCA1nS5yFeF5qI8mScoywQvtTqJRz6GHo4rWhQuXww/RnZk4bzlbOBOGpVA8I4AVxyO
-         46w/+v9TtZrAvYCbnqpcSdYy/mc8SM74BAxads83fBkR309GqLJ+KmBClPolRu4/HvV/
-         NVfA==
-X-Gm-Message-State: ANhLgQ1+BDcqHYnB5uEzCA9uDUfqJwcKpUU1e7ojxzxSuhy4hUTGyJEz
-        KSNXxsQfPg1HZSV43ihsyfNkVRpI
-X-Google-Smtp-Source: ADFU+vvlLB74JgRlXg+xDPlq4YvNZSuookChWiizS7jCejQkfzsJGQqnWGmzWtT6WtrTpus21OVJ/w==
-X-Received: by 2002:a50:950b:: with SMTP id u11mr4435941eda.233.1584545016013;
-        Wed, 18 Mar 2020 08:23:36 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id lc15sm363298ejb.58.2020.03.18.08.23.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Mar 2020 08:23:35 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 16:23:22 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
-Message-ID: <20200318152322.GA4112@kozik-lap>
-References: <20200312153411.13535-1-paul@crapouillou.net>
- <20200312153411.13535-2-paul@crapouillou.net>
- <20200313090011.GB7416@pi3>
- <20200318142543.C167520772@mail.kernel.org>
+        Wed, 18 Mar 2020 11:37:42 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47424 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgCRPhm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 11:37:42 -0400
+Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 784DEA59;
+        Wed, 18 Mar 2020 16:37:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584545858;
+        bh=K6+b+5TQnaS8BoyyTIJarQ/vibXrRXjCtXG8eIrauj4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=v0Q73tLLTUlTq8f8uIcvo7koFuX3wSaI4kLG6Ic+Jo1rxRRoC/zEJbC0h9t3Rn4g5
+         gFM/JBbT8vmxhXpMmIV7XK/wcZGgyIHdUKu1gpCE2klj4kOHcy0/K4USM5Q5NYjS2n
+         oUEmUOYjPN6JzX+26u/wCoekoHggKI4kN/dKM+vs=
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v11 1/5] dt-bindings: display: xlnx: Add ZynqMP DP subsystem bindings
+Date:   Wed, 18 Mar 2020 17:37:24 +0200
+Message-Id: <20200318153728.25843-2-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200318153728.25843-1-laurent.pinchart@ideasonboard.com>
+References: <20200318153728.25843-1-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200318142543.C167520772@mail.kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 03:25:22PM +0100, Paul Cercueil wrote:
-> Hi Krzysztof,
-> 
-> 
-> Le ven. 13 mars 2020 à 10:00, Krzysztof Kozlowski <krzk@kernel.org> a écrit
-> :
-> > On Thu, Mar 12, 2020 at 04:34:11PM +0100, Paul Cercueil wrote:
-> > >  From: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
-> > > 
-> > >  Add devicetree file for the Exynos 4210 based Galaxy S2 (i9100
-> > > version).
-> > 
-> > Thanks for the patch!
-> > 
-> > It is an GT-I9100.
-> > 
-> > +Cc Marek (I have few questions further)
-> > 
-> > 
-> > > 
-> > >  Signed-off-by: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
-> > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > >  ---
-> > >   arch/arm/boot/dts/Makefile             |   1 +
-> > >   arch/arm/boot/dts/exynos4210-i9100.dts | 816
-> > > +++++++++++++++++++++++++
-> > >   2 files changed, 817 insertions(+)
-> > >   create mode 100644 arch/arm/boot/dts/exynos4210-i9100.dts
-> > > 
-> > >  diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > >  index d6546d2676b9..522436d30690 100644
-> > >  --- a/arch/arm/boot/dts/Makefile
-> > >  +++ b/arch/arm/boot/dts/Makefile
-> > >  @@ -181,6 +181,7 @@ dtb-$(CONFIG_ARCH_EXYNOS3) += \
-> > >   	exynos3250-monk.dtb \
-> > >   	exynos3250-rinato.dtb
-> > >   dtb-$(CONFIG_ARCH_EXYNOS4) += \
-> > >  +	exynos4210-i9100.dtb \
-> > >   	exynos4210-origen.dtb \
-> > >   	exynos4210-smdkv310.dtb \
-> > >   	exynos4210-trats.dtb \
-> > >  diff --git a/arch/arm/boot/dts/exynos4210-i9100.dts
-> > > b/arch/arm/boot/dts/exynos4210-i9100.dts
-> > >  new file mode 100644
-> > >  index 000000000000..c218e34959be
-> > >  --- /dev/null
-> > >  +++ b/arch/arm/boot/dts/exynos4210-i9100.dts
-> > >  @@ -0,0 +1,816 @@
-> > >  +// SPDX-License-Identifier: GPL-2.0
-> > >  +/*
-> > >  + * Samsung's Exynos4210 based Galaxy S2 (i9100 version) device tree
-> > 
-> > Ditto
-> > 
-> > >  + *
-> > >  + * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-> > >  + *		http://www.samsung.com
-> > >  + * Copyright (c) 2020 Stenkin Evgeniy <stenkinevgeniy@gmail.com>
-> > >  + * Copyright (c) 2020 Paul Cercueil <paul@crapouillou.net>
-> > >  + *
-> > >  + * Device tree source file for Samsung's Galaxy S2 smartphone
-> > > (i9100 version),
-> > >  + * which is based on Samsung's Exynos4210 SoC.
-> > 
-> > Duplicated description, you mentioned it before.
-> > 
-> > >  + */
-> > >  +
-> > >  +/dts-v1/;
-> > >  +#include "exynos4210.dtsi"
-> > >  +#include "exynos4412-ppmu-common.dtsi"
-> > >  +
-> > >  +#include <dt-bindings/gpio/gpio.h>
-> > >  +#include <dt-bindings/input/linux-event-codes.h>
-> > >  +
-> > >  +/ {
-> > >  +	model = "Samsung Galaxy S2 (i9100)";
-> > 
-> > GT-I9100
-> > 
-> > >  +	compatible = "samsung,i9100", "samsung,exynos4210",
-> > > "samsung,exynos4";
-> > 
-> > I think it shares a lot with Trats board...
-> > 
-> > Marek, how similar these
-> > designs are? Maybe it is worth to split some parts and make common part?
-> > 
-> > >  +
-> > >  +
-> > >  +	memory@40000000 {
-> > >  +		device_type = "memory";
-> > >  +		reg = <0x40000000 0x40000000>;
-> > >  +	};
-> > >  +
-> > 
-> > You do not have a chosen node, at least for stdout serial selection.
-> > Probably you should have one... bootargs I guess could come from
-> > bootloader.
-> > 
-> > 
-> > >  +	vemmc_reg: regulator-0 {
-> > >  +		compatible = "regulator-fixed";
-> > >  +		regulator-name = "VMEM_VDD_2.8V";
-> > >  +		regulator-min-microvolt = <2800000>;
-> > >  +		regulator-max-microvolt = <2800000>;
-> > >  +		gpio = <&gpk0 2 GPIO_ACTIVE_HIGH>;
-> > >  +		enable-active-high;
-> > 
-> > This looks like a stub/fake regulator. Probably it shoould be replaced
-> > with proper regulator coming from PMIC (few seems to be missing there).
-> > 
-> > I don't have the schematics so I cannot judge... I see Trats has the
-> > same.
-> > 
-> > Marek, mayybe you know, is it really a separate regulator?
-> > 
-> > >  +	};
-> > >  +
-> > >  +	tsp_reg: regulator-1 {
-> > >  +		compatible = "regulator-fixed";
-> > >  +		regulator-name = "TSP_FIXED_VOLTAGES";
-> > >  +		regulator-min-microvolt = <3300000>;
-> > >  +		regulator-max-microvolt = <3300000>;
-> > >  +		gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
-> > >  +		startup-delay-us = <70000>;
-> > >  +		enable-active-high;
-> > >  +		regulator-boot-on;
-> > >  +		regulator-always-on;
-> > 
-> > always-on and boot-on should not be needed. You have a consumer for this
-> > regulator.
-> 
-> About this: the touchscreen driver does not use a regulator, so I believe
-> that's why these properties were here.
-> 
-> I sent patches upstream to address the issue:
-> https://lkml.org/lkml/2020/3/15/94
-> 
-> I believe this means I cannot merge the i9100 devicetree until it is acked.
+From: Hyun Kwon <hyun.kwon@xilinx.com>
 
-This can stay because it is correct with current bindings and driver.
-However you should remove avdd-supply/vdd-supply from touchscreen node
-because they are not used/supported.
+The bindings describe the ZynqMP DP subsystem. They don't support the
+interface with the programmable logic (FPGA) or audio yet.
 
-You can re-add them once bindings get accepted.
+Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes since v10:
 
-Best regards,
-Krzysztof
+- Update example to new PHY DT bindings without subnodes
+- Add resets property
+
+Changes since v9:
+
+- Fix constraints on clock-names
+- Document dp_apb_clk as the APB clock, not the AXI clock
+
+Changes since v8:
+
+- Convert to yaml
+- Rename aclk to dp_apb_clk
+---
+ .../display/xlnx/xlnx,zynqmp-dpsub.yaml       | 174 ++++++++++++++++++
+ 1 file changed, 174 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+new file mode 100644
+index 000000000000..05e6a14de75c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+@@ -0,0 +1,174 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/xlnx/xlnx,zynqmp-dpsub.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx ZynqMP DisplayPort Subsystem
++
++description: |
++  The DisplayPort subsystem of Xilinx ZynqMP (Zynq UltraScale+ MPSoC)
++  implements the display and audio pipelines based on the DisplayPort v1.2
++  standard. The subsystem includes multiple functional blocks as below:
++
++               +------------------------------------------------------------+
++  +--------+   | +----------------+     +-----------+                       |
++  | DPDMA  | --->|                | --> |   Video   | Video +-------------+ |
++  | 4x vid |   | |                |     | Rendering | -+--> |             | |   +------+
++  | 2x aud |   | |  Audio/Video   | --> | Pipeline  |  |    | DisplayPort |---> | PHY0 |
++  +--------+   | | Buffer Manager |     +-----------+  |    |   Source    | |   +------+
++               | |    and STC     |     +-----------+  |    | Controller  | |   +------+
++  Live Video --->|                | --> |   Audio   | Audio |             |---> | PHY1 |
++               | |                |     |   Mixer   | --+-> |             | |   +------+
++  Live Audio --->|                | --> |           |  ||   +-------------+ |
++               | +----------------+     +-----------+  ||                   |
++               +---------------------------------------||-------------------+
++                                                       vv
++                                                 Blended Video and
++                                                 Mixed Audio to PL
++
++  The Buffer Manager interacts with external interface such as DMA engines or
++  live audio/video streams from the programmable logic. The Video Rendering
++  Pipeline blends the video and graphics layers and performs colorspace
++  conversion. The Audio Mixer mixes the incoming audio streams. The DisplayPort
++  Source Controller handles the DisplayPort protocol and connects to external
++  PHYs.
++
++  The subsystem supports 2 video and 2 audio streams, and various pixel formats
++  and depths up to 4K@30 resolution.
++
++  Please refer to "Zynq UltraScale+ Device Technical Reference Manual"
++  (https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf)
++  for more details.
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++
++properties:
++  compatible:
++    const: xlnx,zynqmp-dpsub-1.7
++
++  reg:
++    maxItems: 4
++  reg-names:
++    items:
++      - const: dp
++      - const: blend
++      - const: av_buf
++      - const: aud
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description:
++      The APB clock and at least one video clock are mandatory, the audio clock
++      is optional.
++    minItems: 2
++    maxItems: 4
++    items:
++      - description: dp_apb_clk is the APB clock
++      - description: dp_aud_clk is the Audio clock
++      - description:
++          dp_vtc_pixel_clk_in is the non-live video clock (from Processing
++          System)
++      - description:
++          dp_live_video_in_clk is the live video clock (from Programmable
++          Logic)
++  clock-names:
++    oneOf:
++      - minItems: 2
++        maxItems: 3
++        items:
++          - const: dp_apb_clk
++          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
++          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
++      - minItems: 3
++        maxItems: 4
++        items:
++          - const: dp_apb_clk
++          - const: dp_aud_clk
++          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
++          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  dmas:
++    maxItems: 4
++    items:
++      - description: Video layer, plane 0 (RGB or luma)
++      - description: Video layer, plane 1 (U/V or U)
++      - description: Video layer, plane 2 (V)
++      - description: Graphics layer
++  dma-names:
++    items:
++      - const: vid0
++      - const: vid1
++      - const: vid2
++      - const: gfx0
++
++  phys:
++    description: PHYs for the DP data lanes
++    minItems: 1
++    maxItems: 2
++  phy-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: dp-phy0
++      - const: dp-phy1
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - clocks
++  - clock-names
++  - power-domains
++  - resets
++  - dmas
++  - dma-names
++  - phys
++  - phy-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/phy/phy.h>
++    #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
++
++    display@fd4a0000 {
++      compatible = "xlnx,zynqmp-dpsub-1.7";
++      reg = <0x0 0xfd4a0000 0x0 0x1000>,
++            <0x0 0xfd4aa000 0x0 0x1000>,
++            <0x0 0xfd4ab000 0x0 0x1000>,
++            <0x0 0xfd4ac000 0x0 0x1000>;
++      reg-names = "dp", "blend", "av_buf", "aud";
++      interrupts = <0 119 4>;
++      interrupt-parent = <&gic>;
++
++      clock-names = "dp_apb_clk", "dp_aud_clk", "dp_live_video_in_clk";
++      clocks = <&dp_aclk>, <&clkc 17>, <&si570_1>;
++
++      power-domains = <&pd_dp>;
++      resets = <&reset ZYNQMP_RESET_DP>;
++
++      dma-names = "vid0", "vid1", "vid2", "gfx0";
++      dmas = <&xlnx_dpdma 0>,
++             <&xlnx_dpdma 1>,
++             <&xlnx_dpdma 2>,
++             <&xlnx_dpdma 3>;
++
++      phys = <&psgtr 1 PHY_TYPE_DP 0 3 27000000>,
++             <&psgtr 0 PHY_TYPE_DP 1 3 27000000>;
++
++      phy-names = "dp-phy0", "dp-phy1";
++    };
++
++...
+-- 
+Regards,
+
+Laurent Pinchart
+
