@@ -2,137 +2,259 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F45C4332B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 23:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D88BC4332D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 23:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6EBA2076E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 23:22:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oE6t/vXk"
+	by mail.kernel.org (Postfix) with ESMTP id DB3A32076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 23:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584575432;
+	bh=qig1wOJ7IgBTZ7kXTk2gpe9JQRnJPM+buCwo1cSu+mA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TizLU/S46PInGHI1j57zICsF7sssI/848qXcLCCW0xH3xexGouS0tAq7XmulB2ZU0
+	 dPcjqDLbNfgQ/KG6Q3ndC7U4ZJV0KEN1SocURSLBZIpN4sMkV8fPUoCUEFY0aIBp0A
+	 TcErOudw9tS8icyQZ2XSt12/u4eER+Ua+Kd2supM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgCRXWo (ORCPT
+        id S1727231AbgCRXub (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:22:44 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42586 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRXWo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 19:22:44 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 97FC55F;
-        Thu, 19 Mar 2020 00:22:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584573761;
-        bh=1QAaixOPnCwRw0nvHVWpdyGWaxWNnlcsHJ49Rt5k58U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oE6t/vXko3yx5XAp9J589i8nmC888tp0v4tRNpiAWr96RdlwpAmyPgSnKB6ylZ3Ed
-         KCyszDJ5PVG8nNuo9n3ParRafUZPjU/cytzUaXu726C2RtCCbBFPU/TxL+ESM52ohX
-         G6UZkWgj7t41IP17PvvPQAychsPHRSDWPCPYrEyI=
-Date:   Thu, 19 Mar 2020 01:22:36 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] media: i2c: ov5645: Set maximum leverage of
- external clock frequency to 24480000
-Message-ID: <20200318232236.GJ24538@pendragon.ideasonboard.com>
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200313212345.GM4751@pendragon.ideasonboard.com>
- <OSBPR01MB359079EAA32E0DCBF63C6886AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
- <CA+V-a8t-rA-6AmZry63QeXN6pvGWVtcEEuHaDA1jsS-x+30oiQ@mail.gmail.com>
+        Wed, 18 Mar 2020 19:50:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726934AbgCRXub (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 19:50:31 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC06D2076C;
+        Wed, 18 Mar 2020 23:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584575430;
+        bh=qig1wOJ7IgBTZ7kXTk2gpe9JQRnJPM+buCwo1cSu+mA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cLazMcVbX0OWV/lh16fimWRUd6291oIO/HK2kz1wmJ4/LN6IdsggqAO+W7egB78hU
+         8Mrq85fS+WqwPTN3GH6FdGeaWIxq/B6yucDw7/gchrGZRBwlW7Ev4pTmC2qVEN9nUC
+         kqqD58YMRbY1JkKpM6h8y0iLcYzcEiSnOJ+2VY08=
+Received: by mail-qk1-f170.google.com with SMTP id c145so331486qke.12;
+        Wed, 18 Mar 2020 16:50:29 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0SpCuip+/mozR9E45uQxNTxqt+B4isGGsh9zbH1e9efXQpmIM2
+        gmpMbOQGwq/R2FIgWLeCgGsc7TFL4aVEdvUF3Q==
+X-Google-Smtp-Source: ADFU+vsGgf3CiWdZiuk9hVpaRnFNqJkCyylwUsiB5EVfVsqRfIvJJ3ipMxAlOst4B0glkuDEqDWtIgLMddwWogY9zU8=
+X-Received: by 2002:a37:4a85:: with SMTP id x127mr464472qka.152.1584575428917;
+ Wed, 18 Mar 2020 16:50:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8t-rA-6AmZry63QeXN6pvGWVtcEEuHaDA1jsS-x+30oiQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200306111353.12906-1-daniel.baluta@oss.nxp.com>
+ <20200306111353.12906-2-daniel.baluta@oss.nxp.com> <20200312202306.GA18767@bogus>
+ <CAEnQRZCLa+NAk=3M84MxjgOzYQdJXGY9S84dU6HO8GG64Lm_mQ@mail.gmail.com>
+In-Reply-To: <CAEnQRZCLa+NAk=3M84MxjgOzYQdJXGY9S84dU6HO8GG64Lm_mQ@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 18 Mar 2020 17:50:17 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLNeiPc_isukXKt9wgwNS+kPDujx-Q24V1HJrUv0Fq77w@mail.gmail.com>
+Message-ID: <CAL_JsqLNeiPc_isukXKt9wgwNS+kPDujx-Q24V1HJrUv0Fq77w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: sound: Add FSL CPU DAI bindings
+To:     Daniel Baluta <daniel.baluta@gmail.com>
+Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>, Takashi Iwai <tiwai@suse.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        sound-open-firmware@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
-
-On Wed, Mar 18, 2020 at 10:41:57PM +0000, Lad, Prabhakar wrote:
-> On Fri, Mar 13, 2020 at 9:31 PM Prabhakar Mahadev Lad wrote:
-> > On 13 March 2020 21:24, Laurent Pinchart wrote:
-> >> On Fri, Mar 13, 2020 at 09:12:33PM +0000, Lad Prabhakar wrote:
-> >>> While testing on Renesas RZ/G2E platform, noticed the clock frequency
-> >>> to be 24242424 as a result the probe failed. However increasing the
-> >>> maximum leverage of external clock frequency to 24480000 fixes this
-> >>> issue. Since this difference is small enough and is insignificant set
-> >>> the same in the driver.
-> >>>
-> >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >>> ---
-> >>>  drivers/media/i2c/ov5645.c | 6 ++++--
-> >>>  1 file changed, 4 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
-> >>> index 4fbabf3..b49359b 100644
-> >>> --- a/drivers/media/i2c/ov5645.c
-> >>> +++ b/drivers/media/i2c/ov5645.c
-> >>> @@ -1107,8 +1107,10 @@ static int ov5645_probe(struct i2c_client *client)
-> >>>  }
-> >>>
-> >>>  xclk_freq = clk_get_rate(ov5645->xclk);
-> >>> -/* external clock must be 24MHz, allow 1% tolerance */
-> >>> -if (xclk_freq < 23760000 || xclk_freq > 24240000) {
-> >>> +/* external clock must be 24MHz, allow a minimum 1% and a
-> >> maximum of 2%
-> >>> + * tolerance
-> >>
-> >> So where do these numbers come from ? I understand that 2% is what you
-> >> need to make your clock fit in the range, but why -1%/+2% instead of -
-> >> 2%/+2% ? And why not 2.5 or 3% ? The sensor datasheet documents the
-> >> range of supported xvclk frequencies to be 6MHz to 54MHz. I understand
-> >> that PLL parameters depend on the clock frequency, but could they be
-> >> calculated instead of hardcoded, to avoid requiring an exact 24MHz input
-> >> frequency ?
-> >>
-> > To be honest I don't have the datasheet for ov5645, the flyer says 6-54Mhz but the
-> > logs/comment says 24Mhz.
+On Mon, Mar 16, 2020 at 7:01 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
+>
+> Thanks Rob for review. See my comments inline:
+>
+> <snip>
+>
+> > > +# SPDX-License-Identifier: GPL-2.0
 > >
-> Comparing to ov5640 datasheet [1] (which I am assuming might be
-> similar to ov5645),
+> > Dual license new bindings please:
+> >
+> > (GPL-2.0-only OR BSD-2-Clause)
+>
+> Ok, will do.
+>
+> >
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/sound/fsl,dai.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Generic CPU FSL DAI driver for resource management
+> >
+> > Bindings are for h/w devices, not drivers.
+>
+> Indeed. I think I will change it to something like this.
+>
+> title: 'FSL CPU DAI for resource management'
+>
+> The explanation are already in patch 2/2 of this series but let e
+> explain again what I'm
+> trying to do here and let me know if this makes sense to you.
+>
+> Digital Audio Interface device (DAI) are configured by the firmware
+> running on the DSP. The only
+> trouble we have is that we cannot easily handle 'resources' like:
+> clocks, pinctrl, power domains from
+> firmware.
+>
+> This is because our architecture is like this:
+>
+> M core [running System Controller Firmware]
+>             |
+>             |
+> A core [Linux]<----> DSP core [SOF firmware]
+>
+> In theory, it is possible for DSP core to communicate with M core, but
+> this needs a huge
+> amount of work in order to make it work. We have this on our plans for
+> the future,
+> but we are now trying to do resource management from A core because
+> the infrastructure is already in place.
 
-Let's assume this to be the case, I see no reason not to :-)
+When you change things in the future, Linux gets to keep supporting
+both ways of doing things? I'd rather just support one way.
 
-> this change should affect the driver.
+> So, the curent driver introduced in this series acts like a Generic
+> resource driver for DAI device. We can
+> have multiple types of DAIs but most of them need the same types of
+> resources (clocks, pinctrl, pm) sof
+> for this reason I made it generic.
+>
+>
+> >
+> > > +
+> > > +maintainers:
+> > > +  - Daniel Baluta <daniel.baluta@nxp.com>
+> > > +
+> > > +description: |
+> > > +  On platforms with a DSP we need to split the resource handling between
+> > > +  Application Processor (AP) and DSP. On platforms where the DSP doesn't
+> > > +  have an easy access to resources, the AP will take care of
+> > > +  configuring them. Resources handled by this generic driver are: clocks,
+> > > +  power domains, pinctrl.
+> >
+> > The DT should define a DSP node with resources that are part of the
+> > DSP. What setup the AP has to do should be implied by the compatible
+> > string and possibly what resources are described.
+>
+> We already have a DSP node: Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+> but I thought that the resources attached to DAIs are separated from
+> the resources
+> attached to the DSP device.
 
-How do you mean ?
+I'd agree if the DAI was fully described in the DT.
 
-> [1] https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/OV5640_datasheet.pdf
-> 
-> >>> + */
-> >>> +if (xclk_freq < 23760000 || xclk_freq > 24480000) {
-> >>>  dev_err(dev, "external clock frequency %u is not supported\n",
-> >>>  xclk_freq);
-> >>>  return -EINVAL;
+> In the great scheme of ALSA we usually have things like this:
+>
+> FE         <----->       BE
+>
+> In the SOF world FE are defined by topology framework. Back ends are
+> defined by the machine driver:
+>
+> On the BE side we have:
+> - codec  -> this is the specific code
+> - platform -> this is the DSP
+> - cpu -> this is our Generic DAI device
+>
+> Now, I'm wondering if we can get rid of cpu here and make platform
+> node (dsp) take care of every
+> resource (this looks not natural).
 
--- 
-Regards,
+I would think about how the DT will look when the DSP manages all
+these resources itself and how the kernel drivers evolve. I think
+perhaps if you can get rid of the DT part and just define the
+resources in the driver, then the future transition would be easier.
 
-Laurent Pinchart
+> Perhaps Mark, Liam or Pierre can help me with this.
+>
+>
+> >
+> > Or maybe the audio portion of the DSP is a child node...
+> >
+> > > +
+> > > +properties:
+> > > +  '#sound-dai-cells':
+> > > +    const: 0
+> > > +
+> > > +  compatible:
+> > > +    enum:
+> > > +      - fsl,esai-dai
+> > > +      - fsl,sai-dai
+> >
+> > Not very specific. There's only 2 versions of the DSP and ways it is
+> > integrated?
+>
+> As I said above this is not about the DSP, but about the Digital Audio
+> Intraface. On i.MX
+> NXP boards we have two types of DAIs: SAI and ESAI.
+>
+> <snip>
+>
+> > > +  pinctrl-0:
+> > > +    description: Should specify pin control groups used for this controller.
+> > > +
+> > > +  pinctrl-names:
+> > > +    const: default
+> >
+> > pinctrl properties are implicitly allowed an don't have to be listed
+> > here.
+>
+> Great.
+>
+> >
+> > > +
+> > > +  power-domains:
+> > > +    $ref: '/schemas/types.yaml#/definitions/phandle-array'
+> >
+> > Don't need a type.
+> >
+> > > +    description:
+> > > +      List of phandles and PM domain specifiers, as defined by bindings of the
+> > > +      PM domain provider.
+> >
+> > Don't need to re-define common properties.
+> >
+> > You do need to say how many power domains (maxItems: 1?).
+>
+> We support multiple power domains, so technically there is no upper
+> limit. What should I put here in this case?
+
+There's an upper limit in the h/w so there should be some sort of limit.
+
+
+> > > +  fsl,dai-index:
+> > > +    $ref: '/schemas/types.yaml#/definitions/uint32'
+> > > +    description: Physical DAI index, must match the index from topology file
+> >
+> > Sorry, we don't do indexes in DT.
+> >
+> > What's a topology file?
+>
+> Topology files are binary blobs that contain the description of an
+> audio pipeline. They are built
+> are written in a specific format and compiled with alsa-tplg tools in userspace.
+>
+> Then loaded via firmware interface inside the kernel.
+
+Sounds like a kernel-userspace issue that has nothing to do with DT.
+How do other platforms deal with mulitple DAIs?
+
+Rob
