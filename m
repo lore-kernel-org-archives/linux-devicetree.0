@@ -2,222 +2,298 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CDFC5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 15:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9791BC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 15:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4C020757
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 15:05:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="agETx32Y"
+	by mail.kernel.org (Postfix) with ESMTP id 6944C20774
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 15:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbgCRPFI (ORCPT
+        id S1727357AbgCRPJV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:05:08 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46128 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgCRPFH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 11:05:07 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B831FF9;
-        Wed, 18 Mar 2020 16:05:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584543905;
-        bh=4XeE4TEsnH5MYOX96WeQj61o+elhBI7bp3OtoVjeJgo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=agETx32Y3rQ/mCj8O63i2CwrNmnxqYTx9vYR48w+UMxhVyGx9Fav95ZgeA1HYb/BA
-         84KzQ0nPck5ouJ8rh5/usYno1MaH0UAQ8yxTQbNm5XRmFyk9ivC3O6FJ8X+zMq7SCs
-         d8Mai5VkjVHsAuFAmskPkvEvEOrWwd4hdgsIMMsQ=
-Date:   Wed, 18 Mar 2020 17:05:00 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/3] dt-bindings: phy: Add DT bindings for Xilinx
- ZynqMP PSGTR PHY
-Message-ID: <20200318150500.GO4733@pendragon.ideasonboard.com>
-References: <20200311103252.17514-1-laurent.pinchart@ideasonboard.com>
- <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
- <57072adb-9967-f5d1-7a3d-af713e8c35cd@ti.com>
+        Wed, 18 Mar 2020 11:09:21 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:33822 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727331AbgCRPJU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 11:09:20 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id A863EFB02;
+        Wed, 18 Mar 2020 16:09:17 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iT_DIs7f9GCR; Wed, 18 Mar 2020 16:09:14 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id CBDCE412C1; Wed, 18 Mar 2020 16:09:08 +0100 (CET)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v9 1/2] dt-bindings: display/bridge: Add binding for NWL mipi dsi host controller
+Date:   Wed, 18 Mar 2020 16:09:07 +0100
+Message-Id: <e76a1e6cd3a18e4239915d3aee801b7a2aeac127.1584544065.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1584544065.git.agx@sigxcpu.org>
+References: <cover.1584544065.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <57072adb-9967-f5d1-7a3d-af713e8c35cd@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kishon,
+The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
 
-On Fri, Mar 13, 2020 at 04:44:04PM +0530, Kishon Vijay Abraham I wrote:
-> +Rob
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Tested-by: Robert Chiras <robert.chiras@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/display/bridge/nwl-dsi.yaml      | 216 ++++++++++++++++++
+ 1 file changed, 216 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
 
-Any comment regarding patch 2/3 ? :-) You mentioned in your review of v5
-that the exported symbols were a no-go, and that is now fixed. The
-driver uses the PHY .configure() API to configure DisplayPort
-parameters, .power_on() now waits for the PHY PLL to lock, and the
-USB-specific exported symbols were removed with reset support being
-moved to the PHY consumers (there's no reason for the PHY driver to
-reset the PHY consumers, that's a layering violation).
-
-> On 11/03/20 4:02 pm, Laurent Pinchart wrote:
-> > From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > 
-> > Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-> > Processing System Gigabit Transceiver which provides PHY capabilities to
-> > USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
-> > 
-> > Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> > Changes since v5:
-> > 
-> > - Document clocks and clock-names properties
-> > - Document resets and reset-names properties
-> > - Replace subnodes with an additional entry in the PHY cells
-> > - Drop lane frequency PHY cell, replaced by reference clock phandle
-> > - Convert bindings to YAML
-> > - Reword the subject line
-> > - Drop Rob's R-b as the bindings have significantly changed
-> > - Drop resets and reset-names properties
-> > ---
-> >  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 104 ++++++++++++++++++
-> >  include/dt-bindings/phy/phy.h                 |   1 +
-> >  2 files changed, 105 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > new file mode 100644
-> > index 000000000000..9948e4a60e45
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > @@ -0,0 +1,104 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > +
-> > +description: |
-> > +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
-> > +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
-> > +  Ethernet SGMII controllers.
-> > +
-> > +properties:
-> > +  "#phy-cells":
-> > +    const: 4
-> > +    description: |
-> > +      The cells contain the following arguments.
-> > +
-> > +      - description: The GTR lane
-> > +        minimum: 0
-> > +        maximum: 3
-> > +      - description: The PHY type
-> > +        enum:
-> > +          - PHY_TYPE_DP
-> > +          - PHY_TYPE_PCIE
-> > +          - PHY_TYPE_SATA
-> > +          - PHY_TYPE_SGMII
-> > +          - PHY_TYPE_USB
-> > +      - description: The PHY instance
-> > +        minimum: 0
-> > +        maximum: 1 # for DP, SATA or USB
-> > +        maximum: 3 # for PCIE or SGMII
-> > +      - description: The reference clock number
-> > +        minimum: 0
-> > +        maximum: 3
-> > +
-> > +  compatible:
-> > +    enum:
-> > +      - xlnx,zynqmp-psgtr-v1.1
-> > +      - xlnx,zynqmp-psgtr
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +    description: |
-> > +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
-> > +      inputs shall not have an entry.
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +    items:
-> > +      pattern: "^ref[0-3]$"
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: SERDES registers block
-> > +      - description: SIOU registers block
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: serdes
-> > +      - const: siou
-> > +
-> > +required:
-> > +  - "#phy-cells"
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> > +
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      const: xlnx,zynqmp-psgtr
-> > +
-> > +then:
-> > +  properties:
-> > +    xlnx,tx-termination-fix:
-> > +      description: |
-> > +        Include this for fixing functional issue with the TX termination
-> > +        resistance in GT, which can be out of spec for the XCZU9EG silicon
-> > +        version.
-> > +      type: boolean
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    phy: phy@fd400000 {
-> > +      compatible = "xlnx,zynqmp-psgtr-v1.1";
-> > +      reg = <0x0 0xfd400000 0x0 0x40000>,
-> > +            <0x0 0xfd3d0000 0x0 0x1000>;
-> > +      reg-names = "serdes", "siou";
-> > +      clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
-> > +      clock-names = "ref1", "ref2", "ref3";
-> > +      #phy-cells = <4>;
-> > +      status = "okay";
-> > +    };
-> > +
-> > +...
-> > diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-> > index 1f3f866fae7b..f6bc83b66ae9 100644
-> > --- a/include/dt-bindings/phy/phy.h
-> > +++ b/include/dt-bindings/phy/phy.h
-> > @@ -17,5 +17,6 @@
-> >  #define PHY_TYPE_USB3		4
-> >  #define PHY_TYPE_UFS		5
-> >  #define PHY_TYPE_DP		6
-> > +#define PHY_TYPE_SGMII		7
-> >  
-> >  #endif /* _DT_BINDINGS_PHY */
-> > 
-
+diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+new file mode 100644
+index 000000000000..ec1e7e12719d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+@@ -0,0 +1,216 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Northwest Logic MIPI-DSI controller on i.MX SoCs
++
++maintainers:
++  - Guido Gúnther <agx@sigxcpu.org>
++  - Robert Chiras <robert.chiras@nxp.com>
++
++description: |
++  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
++  the SOCs NWL MIPI-DSI host controller.
++
++properties:
++  compatible:
++    const: fsl,imx8mq-nwl-dsi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  clocks:
++    items:
++      - description: DSI core clock
++      - description: RX_ESC clock (used in escape mode)
++      - description: TX_ESC clock (used in escape mode)
++      - description: PHY_REF clock
++      - description: LCDIF clock
++
++  clock-names:
++    items:
++      - const: core
++      - const: rx_esc
++      - const: tx_esc
++      - const: phy_ref
++      - const: lcdif
++
++  mux-controls:
++    description:
++      mux controller node to use for operating the input mux
++
++  phys:
++    maxItems: 1
++    description:
++      A phandle to the phy module representing the DPHY
++
++  phy-names:
++    items:
++      - const: dphy
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    items:
++      - description: dsi byte reset line
++      - description: dsi dpi reset line
++      - description: dsi esc reset line
++      - description: dsi pclk reset line
++
++  reset-names:
++    items:
++      - const: byte
++      - const: dpi
++      - const: esc
++      - const: pclk
++
++  ports:
++    type: object
++    description:
++      A node containing DSI input & output port nodes with endpoint
++      definitions as documented in
++      Documentation/devicetree/bindings/graph.txt.
++    properties:
++      port@0:
++        type: object
++        description:
++          Input port node to receive pixel data from the
++          display controller. Exactly one endpoint must be
++          specified.
++        properties:
++          '#address-cells':
++            const: 1
++
++          '#size-cells':
++            const: 0
++
++          endpoint@0:
++            description: sub-node describing the input from LCDIF
++            type: object
++
++          endpoint@1:
++            description: sub-node describing the input from DCSS
++            type: object
++
++          reg:
++            const: 0
++
++        required:
++          - '#address-cells'
++          - '#size-cells'
++          - reg
++        additionalProperties: false
++
++      port@1:
++        type: object
++        description:
++          DSI output port node to the panel or the next bridge
++          in the chain
++
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++    required:
++      - '#address-cells'
++      - '#size-cells'
++      - port@0
++      - port@1
++
++    additionalProperties: false
++
++patternProperties:
++  "^panel@[0-9]+$":
++    type: object
++
++required:
++  - '#address-cells'
++  - '#size-cells'
++  - clock-names
++  - clocks
++  - compatible
++  - interrupts
++  - mux-controls
++  - phy-names
++  - phys
++  - ports
++  - reg
++  - reset-names
++  - resets
++
++additionalProperties: false
++
++examples:
++ - |
++
++   #include <dt-bindings/clock/imx8mq-clock.h>
++   #include <dt-bindings/interrupt-controller/arm-gic.h>
++   #include <dt-bindings/reset/imx8mq-reset.h>
++
++   mipi_dsi: mipi_dsi@30a00000 {
++              #address-cells = <1>;
++              #size-cells = <0>;
++              compatible = "fsl,imx8mq-nwl-dsi";
++              reg = <0x30A00000 0x300>;
++              clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
++                       <&clk IMX8MQ_CLK_DSI_AHB>,
++                       <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
++                       <&clk IMX8MQ_CLK_DSI_PHY_REF>,
++                       <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
++              clock-names = "core", "rx_esc", "tx_esc", "phy_ref", "lcdif";
++              interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++              mux-controls = <&mux 0>;
++              power-domains = <&pgc_mipi>;
++              resets = <&src IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N>,
++                       <&src IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N>,
++                       <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
++                       <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
++              reset-names = "byte", "dpi", "esc", "pclk";
++              phys = <&dphy>;
++              phy-names = "dphy";
++
++              panel@0 {
++                      compatible = "rocktech,jh057n00900";
++                      reg = <0>;
++                      port@0 {
++                           panel_in: endpoint {
++                                     remote-endpoint = <&mipi_dsi_out>;
++                           };
++                      };
++              };
++
++              ports {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++
++                    port@0 {
++                           #size-cells = <0>;
++                           #address-cells = <1>;
++                           reg = <0>;
++                           mipi_dsi_in: endpoint@0 {
++                                        reg = <0>;
++                                        remote-endpoint = <&lcdif_mipi_dsi>;
++                           };
++                    };
++                    port@1 {
++                           reg = <1>;
++                           mipi_dsi_out: endpoint {
++                                         remote-endpoint = <&panel_in>;
++                           };
++                    };
++              };
++      };
 -- 
-Regards,
+2.23.0
 
-Laurent Pinchart
