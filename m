@@ -2,265 +2,130 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13B1C5ACD7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 08:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0861CC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A633D20767
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 08:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C390820771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:02:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="er6QBpLi"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TG1fBoaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgCRIyu (ORCPT
+        id S1727380AbgCRJC1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:54:50 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:20417 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726733AbgCRIyt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 04:54:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584521688; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=u35tq9/PKKvruwAVkLL5R15+tewn6/fH+InwgxDRP8c=; b=er6QBpLiFqHJS+zgR3EZo+HY0UsYCKrwHYj9ewRsH5/ItFQZeYSWhgCUrZK59gCxnkMvofXn
- vGGliXec+m6UfSg/EsFugC43mAZHm0jbil5fa5XrF2Txh6qmF08yELraKEkx+uIVQL45TYGA
- 0qhfEImc7WrovLGMWp4cSI9GwwA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e71e1d8.7fe086d70110-smtp-out-n03;
- Wed, 18 Mar 2020 08:54:48 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E25DEC43636; Wed, 18 Mar 2020 08:54:46 +0000 (UTC)
-Received: from [192.168.0.8] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 66AB9C433D2;
-        Wed, 18 Mar 2020 08:54:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 66AB9C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V2 3/8] soc: qcom-geni-se: Add interconnect support to fix
- earlycon crash
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-4-git-send-email-akashast@codeaurora.org>
- <20200313204441.GJ144492@google.com>
- <1f86fdf0-df7c-4e4a-d4d8-8b0162e52cb4@codeaurora.org>
- <20200317182910.GR144492@google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <3831b33c-93ee-e5e0-fcfb-530b4738f930@codeaurora.org>
-Date:   Wed, 18 Mar 2020 14:24:35 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200317182910.GR144492@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 18 Mar 2020 05:02:27 -0400
+Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:26439
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726523AbgCRJC1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 05:02:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HfmOwDJnkXjuzQJDXeMKPPspZ50NiEEmForCtZHm/kn7UgOCfzPyZPhX0vCyyjCwZbbFGuRsOP+tShBSulB1man7MYk9qgzzi8HK7NNUc70sT6MP30jR5E8TaWdfZMRvbKTfkIZwr/HOLhDg8y2OyzbmZW2P61Sl0H1WHigo04GMxpRf+9GDsPJYNjwuYWIqbvTHZn2BLT87KXekVThOOhDkfZ16k3hTHPUQaqz1C3iiCV7t9Pi5ZhNq/xO0JOGnU1sfgSM8K/YhkkqAEFjq7Djwqr7UTJ0f89dFca3puJl8TQLe9hYJTo2aBMAhTA5Xa6NlvIjO2bk9Q15qTVZmzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JeU6SIX63l6k7b4DZXOo5AhU+rG60PfOaW5ir5GcdHg=;
+ b=MSgVuKv3ANNlKWq8JVyREW1Gxg6WQ2aESShts77kfnIMnxTOvpSPTHHueNETI8zMuCqEEsEd9kTng2APjoySVcQd4qyEwheTiwmncIkboqrlwLmZu0xo7jjT+vAPrn+UpBrWwrr54uvHzQI0WSi/ZwmaVm4gFM1kU13ZM0i5XFYDCnUlMzWr9LlWbRPgE3HN0L3AHk/u2vCGA3T2D6ZC75WnCBEBw49ZFZns9lKuW00IqgkCfziEGPP65xYUT7p6SbKdspodH0lTEEZw8puUAZhx7NaWg6zzcdjlJxsp/BkHQkOB6Rbk3e5KsCwpC3l1Bs2uQwa9YKmS7WZRoQVy6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JeU6SIX63l6k7b4DZXOo5AhU+rG60PfOaW5ir5GcdHg=;
+ b=TG1fBoaAr21MipCEtVO1lvZ/m3kPP3uUavXdj+fKiIwx72ajqh5F9dP5+Fi4cGQFMzgmgsOnOb4biaXsSVSkeuVTYU8n4kCYcCeX1gs7yJYKtqbzGe+y9MQfuk/O5Neyovb2JwyvAJ4oGy48ghZAv7F5syE/88+7rPByCTXYQMQ=
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.3.146) by
+ VI1PR0402MB3583.eurprd04.prod.outlook.com (52.134.7.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.13; Wed, 18 Mar 2020 09:02:23 +0000
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::c991:848b:cc80:2768]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::c991:848b:cc80:2768%7]) with mapi id 15.20.2814.025; Wed, 18 Mar 2020
+ 09:02:22 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
+CC:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [EXT] [PATCH 1/4] net: fec: set GPR bit on suspend by DT
+ connfiguration.
+Thread-Topic: [EXT] [PATCH 1/4] net: fec: set GPR bit on suspend by DT
+ connfiguration.
+Thread-Index: AQHV/Hwf7o5FT7bkakCxQQlLHyLZc6hN4MmAgAAmsoCAAAWh0A==
+Date:   Wed, 18 Mar 2020 09:02:22 +0000
+Message-ID: <VI1PR0402MB3600BF8115865C58A463FE37FFF70@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
+ <1584463806-15788-2-git-send-email-martin.fuzzey@flowbird.group>
+ <VI1PR0402MB3600396A11D0AB39FBF9C54AFFF70@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+ <CANh8QzxNYzLL8sAXwYEnic2-o-3xzyQaUZZ3LmaRO7fCfgoLQg@mail.gmail.com>
+In-Reply-To: <CANh8QzxNYzLL8sAXwYEnic2-o-3xzyQaUZZ3LmaRO7fCfgoLQg@mail.gmail.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3bda70bd-8665-4997-693f-08d7cb1b1260
+x-ms-traffictypediagnostic: VI1PR0402MB3583:|VI1PR0402MB3583:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3583CF207077B3D68AEEAA9BFFF70@VI1PR0402MB3583.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 03468CBA43
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(366004)(346002)(376002)(199004)(33656002)(4326008)(76116006)(71200400001)(6916009)(64756008)(2906002)(86362001)(52536014)(66946007)(66556008)(15650500001)(66446008)(81166006)(66476007)(7696005)(81156014)(186003)(478600001)(8676002)(54906003)(55016002)(9686003)(8936002)(26005)(5660300002)(316002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3583;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JlMPaNER1fCP0+ql4AQ/WzmGumj7Ec3+Y3Q9iBGhVepXQWendyJjUyJecGnOYnbT5xqsbWjWpnFs7/sg1n/GgD1B64Plu89n5g9P3wf/G4pETc+vm8E9pALPFxJhIRF18tvEdrrjxZLDCWLt3NgQKZNIJ2eOZEYwBXnBZJuu0o53qWntEE9FYzVVePhiou2DO5J5xhxvMGtS+t532dlYiQ1l+uO72La2CTk7bNzClngaxLEfvMkyTYYPoB+2sBJKH1rztqFs71Cp+MDbS/7U64dCMo7nQS8RyN6lJ9494QuIQNcKoizdPOK2Ca7qS8dQmoikjXiPxvOxmLztBdSTaSVEfYaJofYxnW7VmbwlxuJt15LRrp5sPLDukCLVMNsz66tWSbSqY1f3T17QzqSAI+oeK9wEe5TSvC+7wM70kadQstqLgFX+UHrX5c2XEpvB
+x-ms-exchange-antispam-messagedata: 9rcw4rOAUY2cv8+hQodLzaqclHRjlNhVHiQw9XMOr6H6PK2oDvS8WHA7rwMgEIG4KniR+ufSsrgs22meg5plxlOH/2i4CwDgU3KpQrmEZifu1UZ/xDZuZE95hNrZn1VSfiDijzvzAVMor+k6K7TYvw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3bda70bd-8665-4997-693f-08d7cb1b1260
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 09:02:22.7539
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KdQdRMLV1ALxzBUp3fXSOoLGb/jIcuSb4lF8xNjPLfGv1odT+Be1EeKwyyDvDMVnH+O2r00D2jQzodjXUIS/gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3583
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On 3/17/2020 11:59 PM, Matthias Kaehlcke wrote:
-> Hi Akash,
->
-> On Tue, Mar 17, 2020 at 04:27:47PM +0530, Akash Asthana wrote:
->> Hi Matthias,
->>
->> On 3/14/2020 2:14 AM, Matthias Kaehlcke wrote:
->>> Hi Akash,
->>>
->>> On Fri, Mar 13, 2020 at 06:42:09PM +0530, Akash Asthana wrote:
->>>> V1 patch@https://patchwork.kernel.org/patch/11386469/ caused SC7180 system
->>>> to reset at boot time.
->>> The v1 patch isn't relevant in the commit message, please just describe the
->>> problem. Also the crash only occurs when earlycon is used.
->> ok
->>>> As QUP core clock is shared among all the SE drivers present on particular
->>>> QUP wrapper, the reset seen is due to earlycon usage after QUP core clock
->>>> is put to 0 from other SE drivers before real console comes up.
->>>>
->>>> As earlycon can't vote for it's QUP core need, to fix this add ICC
->>>> support to common/QUP wrapper driver and put vote for QUP core from
->>>> probe on behalf of earlycon and remove vote during sys suspend.
->>> Only removing the vote on suspend isn't ideal, the system might never get
->>> suspended. That said I don't have a really good alternative suggestion.
->>>
->>> One thing you could possibly do is to launch a delayed work, check
->>> console_device() every second or so and remove the vote when it returns
->>> non-NULL. Not claiming this would be a great solution ...
->>>
->>> The cleanest solution might be a notifier when the early console is
->>> unregistered, it seems somewhat over-engineered though ... Then again
->>> other (future) uart drivers with interconnect support might run into
->>> the same problem.
->> We are hitting this problem because QUP core clocks are shared among all the
->> SE driver present in particular QUP wrapper, if other HW controllers has
->> similar architecture we will hit this issue.
->>
->> How about if we expose an API from common driver(geni-se) for putting QUP
->> core BW vote to 0.
->>
->> We call this from console probe just after uart_add_one_port call (console
->> resources are enabled as part of this call) to put core quota to 0 on behalf
->> of earlyconsole?
->  From my notes from earlier debugging I have doubts this would work:
->
->    There is a short window where the early console and the 'real' console coexist:
->
->    [    3.858122] printk: console [ttyMSM0] enabled
->    [    3.875692] printk: bootconsole [qcom_geni0] disabled
->
->    The reset probably occurs when the early console tries to write, but the ICC
->    is effectively disabled because ttyMSM0 and the other geni ports are runtime
->    suspended.
-
-Code flow from console driver probe(qcom_geni_serial.c)
-
-uart_add_one_port--->uart_configure_port--->{ 1) uart_change_pm(enable 
-console resources)  2)register_console(boot to real console switch 
-happens here)}
-
-Console resources are not disabled from anywhere before the switch 
-happens completely. I meant to say until we saw below logs.
-
-[    3.875692] printk: bootconsole [qcom_geni0] disabled
-
-I think the board reset issue cannot occur during the window where early 
-console and 'real' console coexist.
-
-I have validated proposed solution by me, it is working fine.
-
-Currently voting is done for every QUP and not only to which earlycon is 
-connect, with the above approach we can't remove vote from other QUPs.
-
-However we can limit voting only to earlycon QUP by removing 
-interconnect from DT node of other QUPs.
-
-I am not sure how clean is this solution.
-
->
->>>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
->>>> Reported-by: Matthias Kaehlcke <mka@chromium.org>
->>>> ---
->>>>    drivers/soc/qcom/qcom-geni-se.c | 41 +++++++++++++++++++++++++++++++++++++++++
->>>>    1 file changed, 41 insertions(+)
->>>>
->>>> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
->>>> index 7d622ea..d244dfc 100644
->>>> --- a/drivers/soc/qcom/qcom-geni-se.c
->>>> +++ b/drivers/soc/qcom/qcom-geni-se.c
->>>> @@ -90,6 +90,7 @@ struct geni_wrapper {
->>>>    	struct device *dev;
->>>>    	void __iomem *base;
->>>>    	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
->>>> +	struct icc_path *icc_path_geni_to_core;
->>>>    };
->>>>    #define QUP_HW_VER_REG			0x4
->>>> @@ -747,11 +748,50 @@ static int geni_se_probe(struct platform_device *pdev)
->>>>    		}
->>>>    	}
->>>> +#ifdef CONFIG_SERIAL_EARLYCON
->>>> +	wrapper->icc_path_geni_to_core = devm_of_icc_get(dev, "qup-core");
->>>> +	if (IS_ERR(wrapper->icc_path_geni_to_core))
->>>> +		return PTR_ERR(wrapper->icc_path_geni_to_core);
->>>> +	/*
->>>> +	 * Put minmal BW request on core clocks on behalf of early console.
->>>> +	 * The vote will be removed in suspend call.
->>>> +	 */
->>>> +	ret = icc_set_bw(wrapper->icc_path_geni_to_core, Bps_to_icc(1000),
->>>> +			Bps_to_icc(1000));
->>>> +	if (ret) {
->>>> +		dev_err(&pdev->dev, "%s: ICC BW voting failed for core\n",
->>>> +			__func__);
->>>> +		return ret;
->>>> +	}
->>> What is ugly about this is that it's done for every QUP, not only the one
->>> with the early console. Again, I don't have a good solution for it, maybe
->>> it's a limitation we have to live with :(
->> There is one more limitation from QUP core side. Core clocks for both the
->> QUP wrapper runs at same speed.
->>
->> core2x_1 = core2x_2 = max(core2x_1, core2x_2);
->>
->> So with above limitation and if we are removing early con vote from Core
->> when real console comes up. It doesn't matter whether it's done for every
->> QUP or the only with early console.
-> it's still sorta ugly at an abstraction level, but it seem we have to be
-> pragmatic here.
-
-How about if we limit voting only to earlycon QUP by removing 
-interconnect from DT node of other QUPs.?
-
->
->>>> +#endif
->>>> +
->>>>    	dev_set_drvdata(dev, wrapper);
->>>>    	dev_dbg(dev, "GENI SE Driver probed\n");
->>>>    	return devm_of_platform_populate(dev);
->>>>    }
->>>> +static int __maybe_unused geni_se_sys_suspend(struct device *dev)
->>>> +{
->>>> +	struct geni_wrapper *wrapper = dev_get_drvdata(dev);
->>>> +	int ret;
->>>> +
->>>> +#ifdef CONFIG_SERIAL_EARLYCON
->>>> +	ret = icc_set_bw(wrapper->icc_path_geni_to_core, 0, 0);
->>> I think you only want to do this on the first suspend.
->> Ok, I can add that logic using global variable.
->>> Do we need to handle the case where no 'real' console is configured?
->>> In this case the early console would be active forever and setting
->>> the bandwidths to 0 might cause a similar crash than the one you are
->>> trying to fix. Not sure if that's a real world use case, but wanted to
->>> mention it. Maybe this is an argument of the notifier approach?
->> We can't support earlycon without real console.
->>
->> As earlyconsole doesn't do any kind of resource enablement(SE clocks,
->> pinctrl, etc) it assumes that resources are already enabled from previous
->> stages.
->>
->> So if real console doesn't come up no one will vote for that SE clock, and
->> it will be disabled from clk late_init call which will result into
->> un-clocked access.
-> Ok, IIUC what you are saying is that earlycon can't work on its own after geni
-> initialization. Because it clearly can work before (otherwise what would be
-> its purpose?), supposedly because the bootloader configures the necessary
-> bits.
-
-If there is no real console then earlyconsole should work until clk 
-driver disables unvoted SE clocks.
-
-Yes, early console depends on bootloader to enable neccessary resources 
-for it. I guess currently Coreboot console driver is doing that.
-
->
-> In any case the bottom line is that earlycon requires a real console to be
-> configured and there is no need to handle the corner case I brought up.
-
-Yes that is correct. We can't support earlyconsole for long without 
-having a real console.
-
-
-Thanks,
-
-Akash
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+RnJvbTogRnV6emV5LCBNYXJ0aW4gPG1hcnRpbi5mdXp6ZXlAZmxvd2JpcmQuZ3JvdXA+IFNlbnQ6
+IFdlZG5lc2RheSwgTWFyY2ggMTgsIDIwMjAgNDozNiBQTQ0KPiBPbiBXZWQsIDE4IE1hciAyMDIw
+IGF0IDA3OjI2LCBBbmR5IER1YW4gPGZ1Z2FuZy5kdWFuQG54cC5jb20+IHdyb3RlOg0KPiA+DQo+
+ID4gRnJvbTogTWFydGluIEZ1enpleSA8bWFydGluLmZ1enpleUBmbG93YmlyZC5ncm91cD4gU2Vu
+dDogV2VkbmVzZGF5LA0KPiA+IE1hcmNoIDE4LCAyMDIwIDEyOjUwIEFNDQo+ID4gPiArc3RhdGlj
+IGludCBmZWNfZW5ldF9vZl9wYXJzZV9zdG9wX21vZGUoc3RydWN0IGZlY19lbmV0X3ByaXZhdGUg
+KmZlcCwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVj
+dCBkZXZpY2Vfbm9kZSAqbnApIHsNCj4gPiA+ICsgICAgICAgc3RhdGljIGNvbnN0IGNoYXIgcHJv
+cFtdID0gImZzbCxzdG9wLW1vZGUiOw0KPiA+ID4gKyAgICAgICBzdHJ1Y3Qgb2ZfcGhhbmRsZV9h
+cmdzIGFyZ3M7DQo+ID4gPiArICAgICAgIGludCByZXQ7DQo+ID4gPiArDQo+ID4gPiArICAgICAg
+IHJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9maXhlZF9hcmdzKG5wLCBwcm9wLCAyLCAwLA0K
+PiA+ID4gKyAmYXJncyk7DQo+ID4gVG8gc2F2ZSBtZW1vcnk6DQo+ID4NCj4gPiAgICAgICAgICAg
+ICAgICAgIHJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9maXhlZF9hcmdzKG5wLA0KPiA+ICJm
+c2wsc3RvcC1tb2RlIiwgMiwgMCwgJmFyZ3MpOw0KPiA+DQo+IA0KPiBXaHkgd291bGQgdGhpcyBz
+YXZlIG1lbW9yeT8NCj4gcHJvcCBpcyBkZWZpbmVkIHN0YXRpYyBjb25zdCBjaGFyW10gKGFuZCBu
+b3QgY2hhciAqKSBzbyB0aGVyZSB3aWxsIG5vIGJlIGV4dHJhDQo+IHBvaW50ZXJzLg0KPiANCj4g
+SSBoYXZlbid0IGNoZWNrZWQgdGhlIGdlbmVyYXRlZCBhc3NlbWJsZXIgYnV0IHRoaXMgc2hvdWxk
+IGdlbmVyYXRlIHRoZSBzYW1lDQo+IGNvZGUgYXMgYSBzdHJpbmcgbGl0dGVyYWwgSSB0aGluay4N
+Cj4gDQo+IEl0IGlzIGFsc28gcmV1c2VkIGxhdGVyIGluIHRoZSBmdW5jdGlvbiBpbiBhIGRlYnVn
+ICh3aGljaCBpcyB0aGUgcmVhc29uIEkgZGlkIGl0DQo+IHRoaXMgd2F5IHRvIGVuc3VyZSB0aGUg
+cHJvcGVydHkgbmFtZSBpcyB1bmlxdWUgYW5kIGNvbnNpc3RlbnQuDQoNCnN0YXRpYyB2YXJpYWJs
+ZSBjb3N0IG1lbW9yeSBhbmQgbmV2ZXIgaXMgbm90IGZyZWVkIGlmIHRoZSBtb2R1bGUgaXMgYnVp
+bHQgaW4uIA0KDQp0aGUgbGF0ZXIgZGVidWcgbWVzc2FnZSBjYW5ub3QgZGVwZW5kIG9uIHRoZSB2
+YXJpYWJsZS4NCj4gDQo+IFJlZ2FyZHMsDQo+IA0KPiBNYXJ0aW4NCj4gDQo+IC0tDQo=
