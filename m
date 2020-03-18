@@ -2,141 +2,103 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AA8C5ACD8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 13:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E267C5ACD7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 13:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95CA20724
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 13:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584536925;
-	bh=IK7Y5ZSmtcwGdd99YOsDwYG87YcJBtNmXMYebt4itiw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iiwgNf22X3ZMXObL0hdbPdR9ElZSgb/4FgBbh4kH1CQ954bGZNghskQRaZaN2dq8r
-	 vCemiCApmONPFYpv0eL7glAvPNudA+uFkWEWOAeLrwOKUB6gri/Fy31Am+pYqhe5sy
-	 wTnkVtQVpX65UYNvGn4rvaMBFZW5Yve0enIImYm4=
+	by mail.kernel.org (Postfix) with ESMTP id 2C78D20775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 13:32:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cl0pZFan"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgCRNIm (ORCPT
+        id S1726877AbgCRNcl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:08:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgCRNIl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:08:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD8B720724;
-        Wed, 18 Mar 2020 13:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584536920;
-        bh=IK7Y5ZSmtcwGdd99YOsDwYG87YcJBtNmXMYebt4itiw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ao/O4jIgBcUwSCsqm5OQ5agm3YDTJ5N6RbEIYQECoGVoyxucRrKGyKpCerM8428XJ
-         aCpTzqj+I0NJC510y9k85ukfosiquOlCq2FBoibr8MH08Gx24pBrpOzPgvjCPF6mp/
-         eCzNrbj4EaMiVzYfLuTKgiRZ5B8eYc1rCeEr4U3c=
-Date:   Wed, 18 Mar 2020 14:08:38 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Sebastian Reichel <sre@kernel.org>,
+        Wed, 18 Mar 2020 09:32:41 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42369 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbgCRNcl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 09:32:41 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b21so20569106edy.9;
+        Wed, 18 Mar 2020 06:32:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mYCC0npBMG0vbAOp6lmFNCRY0zK8adL/9dKbj+Yqe7Y=;
+        b=Cl0pZFanv4M9J1aHobxx5invUvlqLH+t7nhja3ohfPPNddUcIMPeESp2YfaJEW5na9
+         qj0OcVgtvDVktgIXXf/8hYTys/icsmDxI7utUoF8IzQd6nmcABR2KtoH/bRMICAtG0eQ
+         ae1fn1NcxytBebk4wowKsIEK+8ez8av+STpxjXa/UU0USladilHZBJw1X7PbZOvRJLt3
+         Jgb3OsaOEn7IeMGM9aThge0JODAtfRh/NmqfhOWybUpDQ+kQW2K6xypHnHDX5P8ULNm9
+         1nU/FGV06t0upZaZYEzbwCwE0cz/rCnV2jFklmyXnhTFgjR3VztjzX1MM6HHtjI/eA/3
+         sIAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mYCC0npBMG0vbAOp6lmFNCRY0zK8adL/9dKbj+Yqe7Y=;
+        b=awj1/G8D6Bqw1GpXsXczRi58TxWydXvOEfYo7b4GcDovr6OQnY6V5wzub9XQU7tY6r
+         ZjQD8bHpzOvSM8HqBCgRI8IP6BHTyn2z7PFG8a43gIzer0A5VQ9NadsJ6qGat98l9WVW
+         F89WoQ0s/5/MmPFj7IWzKcTsBT4zFFKORKE69Y9Ch3MX6SOBTQlBFFRAmyOBS1UR00s1
+         Gay6bckPleItJr9VXOsMnglBGVEK6vE09BksH7DLEZZIlRkN1zWe4gMmEpg+DXJ60Tru
+         tWjm+hJ8y8nVxP26/KeN/EaNTfReQiSA0kzUtyja/7qaLfoMT3AzP/nQa2aLSBSyzGxL
+         KD3g==
+X-Gm-Message-State: ANhLgQ3FLbfQKnopDPthy5D0jzYuGgi2XS3FY7Mk4zXlczK/i+ikXw7f
+        D1c+kMopmH2oowVLDMD/oEA=
+X-Google-Smtp-Source: ADFU+vuReANJeEqUItjIq+M9/F87Jm+fIrhJyn+pckLzJ9iiwEIXJ0vfbUxIbAg6RE2pe28SmD3Drw==
+X-Received: by 2002:a05:6402:1d95:: with SMTP id dk21mr3836875edb.93.1584538358848;
+        Wed, 18 Mar 2020 06:32:38 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
+        by smtp.googlemail.com with ESMTPSA id c21sm344479ejm.47.2020.03.18.06.32.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 06:32:38 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-Subject: Re: [PATCH v4 3/9] drivers: base: add linear ranges helpers
-Message-ID: <20200318130838.GB2769584@kroah.com>
-References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
- <01ac2439f9d33ae405999065c5d28c368bad4a28.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: qcom: add scm definition
+Date:   Wed, 18 Mar 2020 14:32:14 +0100
+Message-Id: <20200318133213.1041-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01ac2439f9d33ae405999065c5d28c368bad4a28.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 10:53:01AM +0200, Matti Vaittinen wrote:
-> Many devices have control registers which control some measurable
-> property. Often a register contains control field so that change in
-> this field causes linear change in the controlled property. It is not
-> a rare case that user wants to give 'meaningful' control values and
-> driver needs to convert them to register field values. Even more
-> often user wants to 'see' the currently set value - again in
-> meaningful units - and driver needs to convert the values it reads
-> from register to these meaningful units. Examples of this include:
-> 
-> - regulators, voltage/current configurations
-> - power, voltage/current configurations
-> - clk(?) NCOs
-> 
-> and maybe others I can't think of right now.
-> 
-> Provide a linear_range helper which can do conversion from user value
-> to register value 'selector'.
-> 
-> The idea here is stolen from regulator framework and patches refactoring
-> the regulator helpers to use this are following.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> Changes since rfc-v3:
->   - Kerneldoc fixes
->   - Corrected commit message typo meaningfull => meaningful
-> 
->  drivers/base/Kconfig         |   3 +
->  drivers/base/Makefile        |   1 +
->  drivers/base/linear_ranges.c | 246 +++++++++++++++++++++++++++++++++++
+Add missing scm definition for ipq806x soc
 
-Why in drivers/base/ ?
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ arch/arm/boot/dts/qcom-ipq8064.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Why not in lib/ ?
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+index 16c0da97932c..bb5f678c869f 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -93,6 +93,12 @@ sleep_clk: sleep_clk {
+ 		};
+ 	};
+ 
++	firmware {
++		scm {
++			compatible = "qcom,scm-ipq806x", "qcom,scm";
++		};
++	};
++
+ 	soc: soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-- 
+2.25.1
 
->  include/linux/linear_range.h |  48 +++++++
->  4 files changed, 298 insertions(+)
->  create mode 100644 drivers/base/linear_ranges.c
->  create mode 100644 include/linux/linear_range.h
-> 
-> diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-> index 5f0bc74d2409..636b6fa8e499 100644
-> --- a/drivers/base/Kconfig
-> +++ b/drivers/base/Kconfig
-> @@ -209,4 +209,7 @@ config GENERIC_ARCH_TOPOLOGY
->  	  appropriate scaling, sysfs interface for reading capacity values at
->  	  runtime.
->  
-> +config LINEAR_RANGES
-> +	tristate
-
-No help text at all???
-
-> +EXPORT_SYMBOL(linear_range_values_in_range);
-
-EXPORT_SYMBOL_GPL() for all of these?  I have to ask...
-
-> @@ -0,0 +1,48 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-
-Are you sure about the "or later"?  Again, I have to ask.
-
-> +/* Copyright (C) 2020 ROHM Semiconductors */
-> +
-> +#ifndef LINEAR_RANGE_H
-> +#define LINEAR_RANGE_H
-> +
-> +#include <linux/types.h>
-
-Why is this needed?
-
-thanks,
-
-greg k-h
