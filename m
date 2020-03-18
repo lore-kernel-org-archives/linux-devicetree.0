@@ -2,130 +2,94 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0861CC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE7DC5ACD7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C390820771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277D62076F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 09:08:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TG1fBoaA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="odpifOv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbgCRJC1 (ORCPT
+        id S1726586AbgCRJIX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:02:27 -0400
-Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:26439
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726523AbgCRJC1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:02:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HfmOwDJnkXjuzQJDXeMKPPspZ50NiEEmForCtZHm/kn7UgOCfzPyZPhX0vCyyjCwZbbFGuRsOP+tShBSulB1man7MYk9qgzzi8HK7NNUc70sT6MP30jR5E8TaWdfZMRvbKTfkIZwr/HOLhDg8y2OyzbmZW2P61Sl0H1WHigo04GMxpRf+9GDsPJYNjwuYWIqbvTHZn2BLT87KXekVThOOhDkfZ16k3hTHPUQaqz1C3iiCV7t9Pi5ZhNq/xO0JOGnU1sfgSM8K/YhkkqAEFjq7Djwqr7UTJ0f89dFca3puJl8TQLe9hYJTo2aBMAhTA5Xa6NlvIjO2bk9Q15qTVZmzQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JeU6SIX63l6k7b4DZXOo5AhU+rG60PfOaW5ir5GcdHg=;
- b=MSgVuKv3ANNlKWq8JVyREW1Gxg6WQ2aESShts77kfnIMnxTOvpSPTHHueNETI8zMuCqEEsEd9kTng2APjoySVcQd4qyEwheTiwmncIkboqrlwLmZu0xo7jjT+vAPrn+UpBrWwrr54uvHzQI0WSi/ZwmaVm4gFM1kU13ZM0i5XFYDCnUlMzWr9LlWbRPgE3HN0L3AHk/u2vCGA3T2D6ZC75WnCBEBw49ZFZns9lKuW00IqgkCfziEGPP65xYUT7p6SbKdspodH0lTEEZw8puUAZhx7NaWg6zzcdjlJxsp/BkHQkOB6Rbk3e5KsCwpC3l1Bs2uQwa9YKmS7WZRoQVy6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JeU6SIX63l6k7b4DZXOo5AhU+rG60PfOaW5ir5GcdHg=;
- b=TG1fBoaAr21MipCEtVO1lvZ/m3kPP3uUavXdj+fKiIwx72ajqh5F9dP5+Fi4cGQFMzgmgsOnOb4biaXsSVSkeuVTYU8n4kCYcCeX1gs7yJYKtqbzGe+y9MQfuk/O5Neyovb2JwyvAJ4oGy48ghZAv7F5syE/88+7rPByCTXYQMQ=
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.3.146) by
- VI1PR0402MB3583.eurprd04.prod.outlook.com (52.134.7.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.13; Wed, 18 Mar 2020 09:02:23 +0000
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::c991:848b:cc80:2768]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::c991:848b:cc80:2768%7]) with mapi id 15.20.2814.025; Wed, 18 Mar 2020
- 09:02:22 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
-CC:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [EXT] [PATCH 1/4] net: fec: set GPR bit on suspend by DT
- connfiguration.
-Thread-Topic: [EXT] [PATCH 1/4] net: fec: set GPR bit on suspend by DT
- connfiguration.
-Thread-Index: AQHV/Hwf7o5FT7bkakCxQQlLHyLZc6hN4MmAgAAmsoCAAAWh0A==
-Date:   Wed, 18 Mar 2020 09:02:22 +0000
-Message-ID: <VI1PR0402MB3600BF8115865C58A463FE37FFF70@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
- <1584463806-15788-2-git-send-email-martin.fuzzey@flowbird.group>
- <VI1PR0402MB3600396A11D0AB39FBF9C54AFFF70@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <CANh8QzxNYzLL8sAXwYEnic2-o-3xzyQaUZZ3LmaRO7fCfgoLQg@mail.gmail.com>
-In-Reply-To: <CANh8QzxNYzLL8sAXwYEnic2-o-3xzyQaUZZ3LmaRO7fCfgoLQg@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fugang.duan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3bda70bd-8665-4997-693f-08d7cb1b1260
-x-ms-traffictypediagnostic: VI1PR0402MB3583:|VI1PR0402MB3583:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3583CF207077B3D68AEEAA9BFFF70@VI1PR0402MB3583.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 03468CBA43
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(366004)(346002)(376002)(199004)(33656002)(4326008)(76116006)(71200400001)(6916009)(64756008)(2906002)(86362001)(52536014)(66946007)(66556008)(15650500001)(66446008)(81166006)(66476007)(7696005)(81156014)(186003)(478600001)(8676002)(54906003)(55016002)(9686003)(8936002)(26005)(5660300002)(316002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3583;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JlMPaNER1fCP0+ql4AQ/WzmGumj7Ec3+Y3Q9iBGhVepXQWendyJjUyJecGnOYnbT5xqsbWjWpnFs7/sg1n/GgD1B64Plu89n5g9P3wf/G4pETc+vm8E9pALPFxJhIRF18tvEdrrjxZLDCWLt3NgQKZNIJ2eOZEYwBXnBZJuu0o53qWntEE9FYzVVePhiou2DO5J5xhxvMGtS+t532dlYiQ1l+uO72La2CTk7bNzClngaxLEfvMkyTYYPoB+2sBJKH1rztqFs71Cp+MDbS/7U64dCMo7nQS8RyN6lJ9494QuIQNcKoizdPOK2Ca7qS8dQmoikjXiPxvOxmLztBdSTaSVEfYaJofYxnW7VmbwlxuJt15LRrp5sPLDukCLVMNsz66tWSbSqY1f3T17QzqSAI+oeK9wEe5TSvC+7wM70kadQstqLgFX+UHrX5c2XEpvB
-x-ms-exchange-antispam-messagedata: 9rcw4rOAUY2cv8+hQodLzaqclHRjlNhVHiQw9XMOr6H6PK2oDvS8WHA7rwMgEIG4KniR+ufSsrgs22meg5plxlOH/2i4CwDgU3KpQrmEZifu1UZ/xDZuZE95hNrZn1VSfiDijzvzAVMor+k6K7TYvw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 18 Mar 2020 05:08:23 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45936 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgCRJIX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 05:08:23 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b9so971128pls.12
+        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 02:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1f5kYBCY1uKoKqzNVNfGNS8kuHSh6LqXMA1hvR+KOa4=;
+        b=odpifOv74L/hJEF9iJGfNTia2vJHOM15ktWoY9+u6TyDAXF1sMbGixEhMpVOl4E3HZ
+         tnGueGctwD+Jx84fkUdRZVJewBTUQegE2MhMNeiXuv0Av9ZmH7PvS0JItGfFvts8Bn/t
+         KxrAuH7DMlZ5cb3vrEj/p7XbteiEsvPV2CT/Z2/EmaF6w/D2GH/kspyzb90VnJk9jyRq
+         81k+EbW992v2eehds1ValPodUaD5Ii3uek9LZBgZF8KHEke2tDuBwdD/bdrmQ2mwL08h
+         c46AVSSANfr7hXHuCqufq4d69eVXg+8aQT1b/sflb1T6mkAcstfbfOGnw7fOsrLrAh1R
+         4MIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1f5kYBCY1uKoKqzNVNfGNS8kuHSh6LqXMA1hvR+KOa4=;
+        b=BwpwMtXJk46htclTrK1swxtzOMyCIjrZmRAWcujgE5xTxhFxq+OEcQgoGF19KZQJ8v
+         76jEVQhKfuqCriMQfM7PJIF54J8GfOyuJQbABV7H9DH0zoRdUYLbxdlqDrRceUjSdvKG
+         rQcx+GquCi40dFxhBIUaBAHdSimZcrFYyZogLOF0uYUpgY4bd7MEOaIBAmrOufpK4QAJ
+         Z7g7uMKCva9vAFtczWBgJX/L7I17STJCC/uLYjRp7ZypccExfQBkNHVh+RowAQZabjZt
+         19FTkh7MMGLEMj1vrRR5X154VclwTXSvq3/dLUwAp4H3G8ByL7Xy5k1H/IiPzO3I8XFj
+         25kw==
+X-Gm-Message-State: ANhLgQ19id4IhJDhNZJLu7cRX7kioFyePBTwKojzZsLTRJ5AdyC6XjBZ
+        QFeHgt4/E4DCCLzUO3+jZUWIVQ==
+X-Google-Smtp-Source: ADFU+vvJtZn1wKJFN1I9x9yIzxQr88V3AsLSI8/vu7XSfy0TQhPJXOohHYVEd+HZeZtJcINo2nPObA==
+X-Received: by 2002:a17:902:b905:: with SMTP id bf5mr2706826plb.162.1584522502102;
+        Wed, 18 Mar 2020 02:08:22 -0700 (PDT)
+Received: from localhost ([103.195.202.108])
+        by smtp.gmail.com with ESMTPSA id c15sm1778384pja.30.2020.03.18.02.08.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 02:08:21 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, sibis@codeaurora.org,
+        swboyd@chromium.org, dianders@chromium.org
+Cc:     devicetree@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: arm: cpus: Add kryo468 compatible
+Date:   Wed, 18 Mar 2020 14:38:16 +0530
+Message-Id: <cd0f3d35ca0fc2944fd97e030a28318ff82dd5c1.1584516925.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3bda70bd-8665-4997-693f-08d7cb1b1260
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 09:02:22.7539
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KdQdRMLV1ALxzBUp3fXSOoLGb/jIcuSb4lF8xNjPLfGv1odT+Be1EeKwyyDvDMVnH+O2r00D2jQzodjXUIS/gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3583
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RnJvbTogRnV6emV5LCBNYXJ0aW4gPG1hcnRpbi5mdXp6ZXlAZmxvd2JpcmQuZ3JvdXA+IFNlbnQ6
-IFdlZG5lc2RheSwgTWFyY2ggMTgsIDIwMjAgNDozNiBQTQ0KPiBPbiBXZWQsIDE4IE1hciAyMDIw
-IGF0IDA3OjI2LCBBbmR5IER1YW4gPGZ1Z2FuZy5kdWFuQG54cC5jb20+IHdyb3RlOg0KPiA+DQo+
-ID4gRnJvbTogTWFydGluIEZ1enpleSA8bWFydGluLmZ1enpleUBmbG93YmlyZC5ncm91cD4gU2Vu
-dDogV2VkbmVzZGF5LA0KPiA+IE1hcmNoIDE4LCAyMDIwIDEyOjUwIEFNDQo+ID4gPiArc3RhdGlj
-IGludCBmZWNfZW5ldF9vZl9wYXJzZV9zdG9wX21vZGUoc3RydWN0IGZlY19lbmV0X3ByaXZhdGUg
-KmZlcCwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVj
-dCBkZXZpY2Vfbm9kZSAqbnApIHsNCj4gPiA+ICsgICAgICAgc3RhdGljIGNvbnN0IGNoYXIgcHJv
-cFtdID0gImZzbCxzdG9wLW1vZGUiOw0KPiA+ID4gKyAgICAgICBzdHJ1Y3Qgb2ZfcGhhbmRsZV9h
-cmdzIGFyZ3M7DQo+ID4gPiArICAgICAgIGludCByZXQ7DQo+ID4gPiArDQo+ID4gPiArICAgICAg
-IHJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9maXhlZF9hcmdzKG5wLCBwcm9wLCAyLCAwLA0K
-PiA+ID4gKyAmYXJncyk7DQo+ID4gVG8gc2F2ZSBtZW1vcnk6DQo+ID4NCj4gPiAgICAgICAgICAg
-ICAgICAgIHJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9maXhlZF9hcmdzKG5wLA0KPiA+ICJm
-c2wsc3RvcC1tb2RlIiwgMiwgMCwgJmFyZ3MpOw0KPiA+DQo+IA0KPiBXaHkgd291bGQgdGhpcyBz
-YXZlIG1lbW9yeT8NCj4gcHJvcCBpcyBkZWZpbmVkIHN0YXRpYyBjb25zdCBjaGFyW10gKGFuZCBu
-b3QgY2hhciAqKSBzbyB0aGVyZSB3aWxsIG5vIGJlIGV4dHJhDQo+IHBvaW50ZXJzLg0KPiANCj4g
-SSBoYXZlbid0IGNoZWNrZWQgdGhlIGdlbmVyYXRlZCBhc3NlbWJsZXIgYnV0IHRoaXMgc2hvdWxk
-IGdlbmVyYXRlIHRoZSBzYW1lDQo+IGNvZGUgYXMgYSBzdHJpbmcgbGl0dGVyYWwgSSB0aGluay4N
-Cj4gDQo+IEl0IGlzIGFsc28gcmV1c2VkIGxhdGVyIGluIHRoZSBmdW5jdGlvbiBpbiBhIGRlYnVn
-ICh3aGljaCBpcyB0aGUgcmVhc29uIEkgZGlkIGl0DQo+IHRoaXMgd2F5IHRvIGVuc3VyZSB0aGUg
-cHJvcGVydHkgbmFtZSBpcyB1bmlxdWUgYW5kIGNvbnNpc3RlbnQuDQoNCnN0YXRpYyB2YXJpYWJs
-ZSBjb3N0IG1lbW9yeSBhbmQgbmV2ZXIgaXMgbm90IGZyZWVkIGlmIHRoZSBtb2R1bGUgaXMgYnVp
-bHQgaW4uIA0KDQp0aGUgbGF0ZXIgZGVidWcgbWVzc2FnZSBjYW5ub3QgZGVwZW5kIG9uIHRoZSB2
-YXJpYWJsZS4NCj4gDQo+IFJlZ2FyZHMsDQo+IA0KPiBNYXJ0aW4NCj4gDQo+IC0tDQo=
+Kryo468 is found in sc7180, so add it to the list of cpu compatibles
+
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index 7a9c3ce2dbef..57408c773b4d 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -156,6 +156,7 @@ properties:
+       - qcom,krait
+       - qcom,kryo
+       - qcom,kryo385
++      - qcom,kryo468
+       - qcom,kryo485
+       - qcom,scorpion
+ 
+-- 
+2.20.1
+
