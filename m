@@ -6,101 +6,99 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561B7C4332D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED065C43332
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D8E20773
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCBD20754
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584571127;
-	bh=cj77KJI2g3gNsfOIkifrEx2FO9HePVuMfCHiT2A3g4U=;
+	s=default; t=1584571247;
+	bh=JYLTD5cxDvSBSg++epIJgz0861zLlU3qBpM9i4/mDa0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DQuGWL1Dg6kmJ71NYbP71Zj5i+y8ckBo5ix0ss4eSwgN86VXTZDTR4R9gTtW++MLF
-	 Kow0Heg7+vFF1Qqnt2w3rG/ygtFJHRhNPxBtlFJifQFXGXNfT430a+zznOvwPqcYyi
-	 AouVtzUIjJvJVQpk4EYqrq5PrSwBfSYtL1iiSFug=
+	b=NWD+yjMqGpznXK4FQ84DjV/dm7Yjc70cExroMQvHepkn4fvTFQAIQL+EeZKUC8UiA
+	 1jRW3aCaGEjq57ViN1Q4xwdecGv6r8lO0ayxDjze8rVH2HZUY9K0A8t5/rlTNivGGc
+	 3QWp5IUMynn+4AWe0Ks9zeXY/TfTnnE3x9NRy6qQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgCRWiq (ORCPT
+        id S1726897AbgCRWkr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:38:46 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35102 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgCRWiq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 18:38:46 -0400
-Received: by mail-io1-f66.google.com with SMTP id h8so276270iob.2;
-        Wed, 18 Mar 2020 15:38:45 -0700 (PDT)
+        Wed, 18 Mar 2020 18:40:47 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32782 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbgCRWkr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 18:40:47 -0400
+Received: by mail-io1-f65.google.com with SMTP id o127so295443iof.0;
+        Wed, 18 Mar 2020 15:40:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hjd4cWdqxb7vqLIGudSEI03tN+skbBZc4IaGVCWe4bE=;
-        b=Zz2jKlW5sJ9GuCj0KoknSaW9kXeZXmeWitNKJ51/MjyeOlt2GrZTXwHaMpcXoQuniB
-         6AhDT4GIah9N8/i9v5hALFgFBE2AiJPzTUf7UtgCTO0sA0lAj2hxF3UKk698ouYK528D
-         QvmH2EuOhNhiki2vdMuqiJV1CIqVbcog1rbOL+tKZ8QiWw1Wx7nIipbovu3bNyOEuWY1
-         VN2m0EFXLz+PTTDbyDcFZdT+d17nKdeOXE9bfOp4Th4KD9c8D+2wKnDH8bbr32jIQ66V
-         mGwgon9KIfrhxOLzREytWyooMFX9RSjrllajzTjV3h+Pa59PsZ1uhPfx0GUrcWke55/B
-         3zrA==
-X-Gm-Message-State: ANhLgQ36v8ENLxxyevqHdsqEE5m3k+DHbcH9IrYvFozwJwvMO+TDZxjj
-        UStz5B/Ic+wcrPjkY0GV9w==
-X-Google-Smtp-Source: ADFU+vuWOZ5C5oLxE9dB/U/jglteCOUaH90nZHmvZdWYJLWdri0o66f9VabHUrjNFihG7WzqU2uzrA==
-X-Received: by 2002:a5d:958f:: with SMTP id a15mr70087ioo.170.1584571125436;
-        Wed, 18 Mar 2020 15:38:45 -0700 (PDT)
+        bh=sNmWTWISSY3HxnGdq3YlFpG87OzVoepE1NIhZFHW6Vg=;
+        b=Dd5pLMyjVNfBimEg2D9VA0zt8/yznPgyK9Lo5mVftDF2IzTLB798EqYEyh0yaVPZuv
+         2eIKCNeNED5UkHLsx/Rx30uHd1m1Zgc/Qdhp8O1LvoNWb3ZF8slTmbfyvbyM8ncjtBI6
+         ylJ3jFtjQ1X3z8TZqLWVJyrJS6EX48vECwS9UHTft/wmcGyymoc9Vc5RwmgpeNje9JKg
+         A0DkFds4X874h5nWBvOLEt6G8fLusazswXCuIOCjKPpcFWiktAA+tDvzB+VJCGag2Fco
+         j7K7HXybcBGM8DLHrNqzXlEG69b+IAYWvC9W1F/uqmbzuuqXOlvRKFR/H2lDt6TU03Iw
+         HSYQ==
+X-Gm-Message-State: ANhLgQ22tp7wyVNiayUXeeNSJOzvktFn/x0bV4v4gZ569XJlac3oh+nN
+        2+Tqb65I5Aw191jV8yX7xw==
+X-Google-Smtp-Source: ADFU+vueJ8UutJsifakMHvpGq04AYZ7HzoPPa9jyc6D+mpX3xmSiVDrOgMu8lAqgI6eznnw6v065Ag==
+X-Received: by 2002:a5d:980f:: with SMTP id a15mr34849iol.203.1584571246003;
+        Wed, 18 Mar 2020 15:40:46 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id h29sm96397ili.19.2020.03.18.15.38.43
+        by smtp.gmail.com with ESMTPSA id b62sm101487ilb.1.2020.03.18.15.40.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 15:38:44 -0700 (PDT)
-Received: (nullmailer pid 31930 invoked by uid 1000);
-        Wed, 18 Mar 2020 22:38:42 -0000
-Date:   Wed, 18 Mar 2020 16:38:42 -0600
+        Wed, 18 Mar 2020 15:40:44 -0700 (PDT)
+Received: (nullmailer pid 2596 invoked by uid 1000);
+        Wed, 18 Mar 2020 22:40:42 -0000
+Date:   Wed, 18 Mar 2020 16:40:42 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH v3 1/6] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-Message-ID: <20200318223842.GA31707@bogus>
-References: <1584454007-2115-1-git-send-email-hanks.chen@mediatek.com>
- <1584454007-2115-2-git-send-email-hanks.chen@mediatek.com>
+To:     Dinh Nguyen <dinguyen@kernel.org>
+Cc:     linux-clk@vger.kernel.org, dinguyen@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCHv3 4/5] dt-bindings: documentation: add clock bindings
+ information for Agilex
+Message-ID: <20200318224042.GA32101@bogus>
+References: <20200317161022.11181-1-dinguyen@kernel.org>
+ <20200317161022.11181-5-dinguyen@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584454007-2115-2-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <20200317161022.11181-5-dinguyen@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 17 Mar 2020 22:06:42 +0800, Hanks Chen wrote:
-> From: Andy Teng <andy.teng@mediatek.com>
+On Tue, 17 Mar 2020 11:10:21 -0500, Dinh Nguyen wrote:
+> Document the Agilex clock bindings, and add the clock header file. The
+> clock header is an enumeration of all the different clocks on the Agilex
+> platform.
 > 
-> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
-> 
-> Change-Id: I92586369564948f2628f70421bcd70668f132c4f
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 > ---
->  .../bindings/pinctrl/mediatek,mt6779-pinctrl.yaml  |  208 ++++++++++++++++++++
->  1 file changed, 208 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> v3: address comments from Stephen Boyd
+>     fix build error(tab removed in line 37)
+>     renamed to intel,agilex.yaml
+> v2: convert original document to YAML
+> ---
+>  .../bindings/clock/intel,agilex.yaml          | 36 ++++++++++
+>  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
+>  2 files changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-warning: no schema found in file: Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml: ignoring, error parsing file
-Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml:  while parsing a block collection
-  in "<unicode string>", line 28, column 5
-did not find expected '-' indicator
-  in "<unicode string>", line 29, column 5
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dts] Error 1
+Error: Documentation/devicetree/bindings/clock/intel,agilex.example.dts:17.3-4 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml] Error 1
 Makefile:1262: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1256429
+See https://patchwork.ozlabs.org/patch/1256630
 Please check and re-submit.
