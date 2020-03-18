@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C51EC5ACD8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 12:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49D8C5ACD8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 12:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD0A2076D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 12:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B49220774
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 12:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCRMEV (ORCPT
+        id S1726856AbgCRMEh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:04:21 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44115 "EHLO
+        Wed, 18 Mar 2020 08:04:37 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43459 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgCRMEV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 08:04:21 -0400
+        with ESMTP id S1726740AbgCRMEg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 08:04:36 -0400
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jEXQW-00018a-2E; Wed, 18 Mar 2020 13:04:00 +0100
+        id 1jEXQW-00018f-2H; Wed, 18 Mar 2020 13:04:00 +0100
 Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <ore@pengutronix.de>)
-        id 1jEXQT-0001JU-RT; Wed, 18 Mar 2020 13:03:57 +0100
+        id 1jEXQU-0001KH-1D; Wed, 18 Mar 2020 13:03:58 +0100
 From:   Oleksij Rempel <o.rempel@pengutronix.de>
 To:     Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,10 +37,12 @@ Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         NXP Linux Team <linux-imx@nxp.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: [PATCH v1 1/6] dt-bindings: vendor-prefixes: Add an entry for Protonic Holland
-Date:   Wed, 18 Mar 2020 13:03:49 +0100
-Message-Id: <20200318120354.4989-1-o.rempel@pengutronix.de>
+Subject: [PATCH v1 6/6] m arch/arm/boot/dts/imx6q-prti6q.dts
+Date:   Wed, 18 Mar 2020 13:03:54 +0100
+Message-Id: <20200318120354.4989-6-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200318120354.4989-1-o.rempel@pengutronix.de>
+References: <20200318120354.4989-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
@@ -52,26 +54,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add "prt" entry for Protonic Holland: https://www.protonic.nl/en/
-
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/imx6q-prti6q.dts | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 9e67944bec9c..a0d3214187a5 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -775,6 +775,8 @@ patternProperties:
-     description: Primux Trading, S.L.
-   "^probox2,.*":
-     description: PROBOX2 (by W2COMP Co., Ltd.)
-+  "^prt,.*":
-+    description: Protonic Holland
-   "^pulsedlight,.*":
-     description: PulsedLight, Inc
-   "^purism,.*":
+diff --git a/arch/arm/boot/dts/imx6q-prti6q.dts b/arch/arm/boot/dts/imx6q-prti6q.dts
+index a6fd4eb2e78b..8880d56c59ac 100644
+--- a/arch/arm/boot/dts/imx6q-prti6q.dts
++++ b/arch/arm/boot/dts/imx6q-prti6q.dts
+@@ -229,8 +229,23 @@ &sata {
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
++	phy-handle = <&rgmii_phy>;
+ 	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		/* Microchip KSZ9031RNX PHY */
++		rgmii_phy: ethernet-phy@0 {
++			reg = <0>;
++			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
++			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <10000>;
++			reset-deassert-us = <300>;
++		};
++	};
+ };
+ 
+ &ldb {
 -- 
 2.25.1
 
