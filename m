@@ -2,265 +2,190 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18378C5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 15:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4181CC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 16:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D426120774
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 15:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A82A20663
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 16:13:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="v0Q73tLL"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MkFrRgcr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCRPhm (ORCPT
+        id S1726780AbgCRQNI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:37:42 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47424 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgCRPhm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 11:37:42 -0400
-Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 784DEA59;
-        Wed, 18 Mar 2020 16:37:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584545858;
-        bh=K6+b+5TQnaS8BoyyTIJarQ/vibXrRXjCtXG8eIrauj4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v0Q73tLLTUlTq8f8uIcvo7koFuX3wSaI4kLG6Ic+Jo1rxRRoC/zEJbC0h9t3Rn4g5
-         gFM/JBbT8vmxhXpMmIV7XK/wcZGgyIHdUKu1gpCE2klj4kOHcy0/K4USM5Q5NYjS2n
-         oUEmUOYjPN6JzX+26u/wCoekoHggKI4kN/dKM+vs=
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH v11 1/5] dt-bindings: display: xlnx: Add ZynqMP DP subsystem bindings
-Date:   Wed, 18 Mar 2020 17:37:24 +0200
-Message-Id: <20200318153728.25843-2-laurent.pinchart@ideasonboard.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200318153728.25843-1-laurent.pinchart@ideasonboard.com>
-References: <20200318153728.25843-1-laurent.pinchart@ideasonboard.com>
+        Wed, 18 Mar 2020 12:13:08 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17015 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbgCRQNI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 12:13:08 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7248320000>; Wed, 18 Mar 2020 09:11:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 18 Mar 2020 09:13:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 18 Mar 2020 09:13:07 -0700
+Received: from [10.2.175.141] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar
+ 2020 16:13:06 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+ <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
+ <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
+ <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
+ <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <19081d90-62cc-e6eb-0337-f108fb6ca9bc@nvidia.com>
+Date:   Wed, 18 Mar 2020 09:14:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584547890; bh=tIHZbQLtSkJ53RrtKu9vilUV11m0jEsmcYMmUk3NErg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=MkFrRgcrqQAzQJcI2+1Q40+Pr9qGESvro4Iislxt2Izw1pDw9+uxYindJKOuhauPP
+         9TnHwD3EhYiI9hppup43ZWHvkPwGzWf67CXtKZSkssNgDM3QHbkyRu4XknC4xIkJy7
+         0VRO3RaUv2p+fnA2Kajs5enDYxis8R1g8z7tPlWDF3k7kRjOE3LkpGyu+5G8+/bdcC
+         ueokh3NujrDWrfILfiHFTGU7F7JTdXIZY/aE/vkbfUQBaLofWMZ6Dbm81SZRzCUkjt
+         LbstXrBXFK4BuI8wySVdDQHWo/JL1vu0Nq7eKTKkHG4j+nzsKG8kZDPLJ05SKHrEMk
+         jVKoZVqhUP0IQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Hyun Kwon <hyun.kwon@xilinx.com>
 
-The bindings describe the ZynqMP DP subsystem. They don't support the
-interface with the programmable logic (FPGA) or audio yet.
+On 3/18/20 4:48 AM, Hans Verkuil wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On 2/24/20 5:45 AM, Sowjanya Komatineni wrote:
+>> On 2/20/20 11:11 AM, Sowjanya Komatineni wrote:
+>>> On 2/20/20 5:33 AM, Hans Verkuil wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> (Replying to myself so I can explain this a bit more)
+>>>>
+>>>> On 2/20/20 1:44 PM, Hans Verkuil wrote:
+>>>>>> +
+>>>>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
+>>>>>> +{
+>>>>>> +    struct device_node *node = csi->dev->of_node;
+>>>>>> +    unsigned int port_num;
+>>>>>> +    int ret;
+>>>>>> +    struct tegra_csi_channel *item;
+>>>>>> +    unsigned int tpg_channels = csi->soc->csi_max_channels;
+>>>>>> +
+>>>>>> +    /* allocate CSI channel for each CSI x2 ports */
+>>>>>> +    for (port_num = 0; port_num < tpg_channels; port_num++) {
+>>>>>> +            item = devm_kzalloc(csi->dev, sizeof(*item), GFP_KERNEL);
+>>>>> Using devm_*alloc can be dangerous. If someone unbinds the driver, then
+>>>>> all memory allocated with devm_ is immediately freed. But if an
+>>>>> application
+>>>>> still has a filehandle open, then when it closes it it might still
+>>>>> reference
+>>>>> this already-freed memory.
+>>>>>
+>>>>> I recommend that you avoid using devm_*alloc for media drivers.
+>>>> A good test is to unbind & bind the driver:
+>>>>
+>>>> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
+>>>> echo -n 54080000.vi >unbind
+>>>> echo -n 54080000.vi >bind
+>>>>
+>>>> First just do this without the driver being used. That already
+>>>> gives me 'list_del corruption' kernel messages (list debugging
+>>>> is turned on in my kernel).
+>> Will fix in v4 to use kzalloc and also proper release v4l2 to make sure
+>> unbind/bind works properly.
+>>
+>> BTW, tegra vi and csi are registered as clients to host1x video driver.
+>>
+>> So, unbind and bind should be done with host1x video driver "tegra-video"
+>>
+>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>> echo -n tegra-video > unbind
+>> echo -n tegra-video > bind
+> This still crashes with v4, at least if I am streaming with v4l2-ctl --stream-mmap.
+> Is that known?
+>
+> It's not a big deal at this moment, just want to know if this will be looked
+> at later.
+>
+> Regards,
+>
+>          Hans
 
-Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes since v10:
+Weird, I tested streaming after unbind and bind as well and don't see 
+crash. Did below steps and tried several times unbind/bind as well.
 
-- Update example to new PHY DT bindings without subnodes
-- Add resets property
+./v4l2-ctl --stream-mmap --stream-count=1 -d /dev/video3
+cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+echo -n tegra-video > unbind
+sleep 1
+echo -n tegra-video > bind
+cd /home/ubuntu
+./v4l2-ctl --stream-mmap --stream-count=1 -d /dev/video3
 
-Changes since v9:
+Can you post call trace when you saw crash?
 
-- Fix constraints on clock-names
-- Document dp_apb_clk as the APB clock, not the AXI clock
-
-Changes since v8:
-
-- Convert to yaml
-- Rename aclk to dp_apb_clk
----
- .../display/xlnx/xlnx,zynqmp-dpsub.yaml       | 174 ++++++++++++++++++
- 1 file changed, 174 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
-new file mode 100644
-index 000000000000..05e6a14de75c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
-@@ -0,0 +1,174 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/xlnx/xlnx,zynqmp-dpsub.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Xilinx ZynqMP DisplayPort Subsystem
-+
-+description: |
-+  The DisplayPort subsystem of Xilinx ZynqMP (Zynq UltraScale+ MPSoC)
-+  implements the display and audio pipelines based on the DisplayPort v1.2
-+  standard. The subsystem includes multiple functional blocks as below:
-+
-+               +------------------------------------------------------------+
-+  +--------+   | +----------------+     +-----------+                       |
-+  | DPDMA  | --->|                | --> |   Video   | Video +-------------+ |
-+  | 4x vid |   | |                |     | Rendering | -+--> |             | |   +------+
-+  | 2x aud |   | |  Audio/Video   | --> | Pipeline  |  |    | DisplayPort |---> | PHY0 |
-+  +--------+   | | Buffer Manager |     +-----------+  |    |   Source    | |   +------+
-+               | |    and STC     |     +-----------+  |    | Controller  | |   +------+
-+  Live Video --->|                | --> |   Audio   | Audio |             |---> | PHY1 |
-+               | |                |     |   Mixer   | --+-> |             | |   +------+
-+  Live Audio --->|                | --> |           |  ||   +-------------+ |
-+               | +----------------+     +-----------+  ||                   |
-+               +---------------------------------------||-------------------+
-+                                                       vv
-+                                                 Blended Video and
-+                                                 Mixed Audio to PL
-+
-+  The Buffer Manager interacts with external interface such as DMA engines or
-+  live audio/video streams from the programmable logic. The Video Rendering
-+  Pipeline blends the video and graphics layers and performs colorspace
-+  conversion. The Audio Mixer mixes the incoming audio streams. The DisplayPort
-+  Source Controller handles the DisplayPort protocol and connects to external
-+  PHYs.
-+
-+  The subsystem supports 2 video and 2 audio streams, and various pixel formats
-+  and depths up to 4K@30 resolution.
-+
-+  Please refer to "Zynq UltraScale+ Device Technical Reference Manual"
-+  (https://www.xilinx.com/support/documentation/user_guides/ug1085-zynq-ultrascale-trm.pdf)
-+  for more details.
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+
-+properties:
-+  compatible:
-+    const: xlnx,zynqmp-dpsub-1.7
-+
-+  reg:
-+    maxItems: 4
-+  reg-names:
-+    items:
-+      - const: dp
-+      - const: blend
-+      - const: av_buf
-+      - const: aud
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    description:
-+      The APB clock and at least one video clock are mandatory, the audio clock
-+      is optional.
-+    minItems: 2
-+    maxItems: 4
-+    items:
-+      - description: dp_apb_clk is the APB clock
-+      - description: dp_aud_clk is the Audio clock
-+      - description:
-+          dp_vtc_pixel_clk_in is the non-live video clock (from Processing
-+          System)
-+      - description:
-+          dp_live_video_in_clk is the live video clock (from Programmable
-+          Logic)
-+  clock-names:
-+    oneOf:
-+      - minItems: 2
-+        maxItems: 3
-+        items:
-+          - const: dp_apb_clk
-+          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-+          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-+      - minItems: 3
-+        maxItems: 4
-+        items:
-+          - const: dp_apb_clk
-+          - const: dp_aud_clk
-+          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-+          - enum: [ dp_vtc_pixel_clk_in, dp_live_video_in_clk ]
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 4
-+    items:
-+      - description: Video layer, plane 0 (RGB or luma)
-+      - description: Video layer, plane 1 (U/V or U)
-+      - description: Video layer, plane 2 (V)
-+      - description: Graphics layer
-+  dma-names:
-+    items:
-+      - const: vid0
-+      - const: vid1
-+      - const: vid2
-+      - const: gfx0
-+
-+  phys:
-+    description: PHYs for the DP data lanes
-+    minItems: 1
-+    maxItems: 2
-+  phy-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: dp-phy0
-+      - const: dp-phy1
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - resets
-+  - dmas
-+  - dma-names
-+  - phys
-+  - phy-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/phy/phy.h>
-+    #include <dt-bindings/reset/xlnx-zynqmp-resets.h>
-+
-+    display@fd4a0000 {
-+      compatible = "xlnx,zynqmp-dpsub-1.7";
-+      reg = <0x0 0xfd4a0000 0x0 0x1000>,
-+            <0x0 0xfd4aa000 0x0 0x1000>,
-+            <0x0 0xfd4ab000 0x0 0x1000>,
-+            <0x0 0xfd4ac000 0x0 0x1000>;
-+      reg-names = "dp", "blend", "av_buf", "aud";
-+      interrupts = <0 119 4>;
-+      interrupt-parent = <&gic>;
-+
-+      clock-names = "dp_apb_clk", "dp_aud_clk", "dp_live_video_in_clk";
-+      clocks = <&dp_aclk>, <&clkc 17>, <&si570_1>;
-+
-+      power-domains = <&pd_dp>;
-+      resets = <&reset ZYNQMP_RESET_DP>;
-+
-+      dma-names = "vid0", "vid1", "vid2", "gfx0";
-+      dmas = <&xlnx_dpdma 0>,
-+             <&xlnx_dpdma 1>,
-+             <&xlnx_dpdma 2>,
-+             <&xlnx_dpdma 3>;
-+
-+      phys = <&psgtr 1 PHY_TYPE_DP 0 3 27000000>,
-+             <&psgtr 0 PHY_TYPE_DP 1 3 27000000>;
-+
-+      phy-names = "dp-phy0", "dp-phy1";
-+    };
-+
-+...
--- 
-Regards,
-
-Laurent Pinchart
-
+>>>> Note that this first test is basically identical to a rmmod/modprobe
+>>>> of the driver. But when I compiled the driver as a module it didn't
+>>>> create any video device nodes! Nor did I see any errors in the kernel
+>>>> log. I didn't pursue this, and perhaps I did something wrong, but it's
+>>>> worth taking a look at.
+>>>>
+>>>> The next step would be to have a video node open with:
+>>>>
+>>>> v4l2-ctl --sleep 10
+>>>>
+>>>> then while it is sleeping unbind the driver and see what happens
+>>>> when v4l2-ctl exits.
+>>>>
+>>>> Worst case is when you are streaming:
+>>>>
+>>>> v4l2-ctl --stream-mmap
+>>>>
+>>>> and then unbind.
+>>>>
+>>>> In general, the best way to get this to work correctly is:
+>>>>
+>>>> 1) don't use devm_*alloc
+>>>> 2) set the release callback of struct v4l2_device and do all freeing
+>>>> there.
+>>>> 3) in the platform remove() callback you call media_device_unregister()
+>>>>      and video_unregister_device().
+>>> Reg 3, in current patch, media_device_unregister is called in
+>>> host1x_video_remove
+>>> video_unregister_device happens during host1x_video_remove ->
+>>> host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
+>>>
+>>>> It's worth getting this right in this early stage, rather than fixing it
+>>>> in the future.
+>>>>
+>>>> Regards,
+>>>>
+>>>>           Hans
