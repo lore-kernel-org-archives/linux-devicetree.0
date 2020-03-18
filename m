@@ -2,331 +2,170 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0FEC5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 19:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C4BC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 20:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C852120724
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 19:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4A92071C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 20:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sui7jwdN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdyaXSK/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgCRT3W (ORCPT
+        id S1726747AbgCRUN2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:29:22 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53257 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgCRT3W (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 15:29:22 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 25so4831661wmk.3;
-        Wed, 18 Mar 2020 12:29:20 -0700 (PDT)
+        Wed, 18 Mar 2020 16:13:28 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42414 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCRUN1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 16:13:27 -0400
+Received: by mail-oi1-f194.google.com with SMTP id 13so158390oiy.9;
+        Wed, 18 Mar 2020 13:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KdMSCAwSZJxCt921knCES5wm2vjg59UHOmJpntfpsrQ=;
-        b=sui7jwdNSHCvkLhFYYQSkI0ZjDuWgLtUu5b759IGsMx1wv9Z9N9ZzdJqIcgi4ib/6J
-         bawhTKLg1nuRNdm7jXAdEchx2sS6sjhljMNMLJLUZ6E1gmLvU5uJsBHOkt5VzJ8wLcQu
-         MRviLgH7pqcRjfo7c1AX3tyzH4xlEJNaLf/qRMknWGShNp2BE9I3G5UPF3lhSRPTkz6u
-         +XSm4UQROFEOuwXX3YeB3JZahiasVUowWRwWNa7Oy0Il+0/aY4UyRiiznby5TJGiDEsm
-         keY7btWvt8kAO+BPgKaEWLQIc6Lsfn0bU46CESNP3tQozftD1cXg+BJoypD7CmcupCQE
-         cQXQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TTrA+tMwfg5GaaL0pTTB4SX2vmA9Q9FMRW/WsoCZ0JE=;
+        b=EdyaXSK/9dSzcuY7KwTimocBCtQucM4yN4ilyd0nhsZPKf/UZPVgHsa27qIqIEWXnQ
+         cPh0Eqo1ASE1ekQGfsFtJNbZhhy1L/klvGKLYsRpvUQhWP06l5H7cwN0ynA4d7cnjgB9
+         +mSQIHNkMZW8leB3bfjIIfD9iUaGIpkiVUeiZ526JEb9RorazGGJUyLQGtYJ1Rp9Vngi
+         XiuI7qVILh/vxu/878w2zvYPf99V8I/i1Fon1swKN8rVHN1BILMMtig7NlQzyC2xR3Vl
+         90HSAqD4+MRRWe0jOLDzen4quH5t9LZP3htJmM24EpiC7E4DvRe4sti7AhcEdUghPqIK
+         ZVag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KdMSCAwSZJxCt921knCES5wm2vjg59UHOmJpntfpsrQ=;
-        b=fSsHf6XaXlhCvkMUXHcfZaJXudacjHpPFApS3CmwBXg0RiaWtuaDXYfGNBYTzxWYAx
-         l3VLi7wWDSmZydr/irnuShmO3UD3wLUIwLTgzukFjscXl6s9nZE1j6rqrdjAYqemHbjj
-         NOV+oo+x33dk8OzUVY1GbLJ8fGdPgZOmM96omMULxGB4pSV+DSPoD6sGQYeNcHqKV5nS
-         cgAsuovjFlWZtyA29vhMdYN2SizI2QGXqg4lJLBYRhnfuxEPN9uI89GlucizIjix3Lc5
-         +xmo/uLiVgxXVcfgjXb7QEMAmsC28sGK9PgO1K43RH1gwzkkJmdxcI2kpT4xYEkSCbqh
-         g5YQ==
-X-Gm-Message-State: ANhLgQ17+oCrtncFOkMUV+U/bHKVNsvwXV6SOfUg63hjcanBYY5lZneS
-        MJICJGIEGUK9/oPXa8U0W9M=
-X-Google-Smtp-Source: ADFU+vtNuNfl3UuIaIj8ul1aotqzBFUnCK8di4ve2AE4ngboh5WtUUw+uyNnpNWlHDERAppMlduMsA==
-X-Received: by 2002:a7b:cb50:: with SMTP id v16mr6784337wmj.74.1584559748306;
-        Wed, 18 Mar 2020 12:29:08 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id s131sm5333728wmf.35.2020.03.18.12.29.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Mar 2020 12:29:07 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     kishon@ti.com
-Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/2] dt-bindings: phy: convert phy-rockchip-inno-usb2 bindings to yaml
-Date:   Wed, 18 Mar 2020 20:29:00 +0100
-Message-Id: <20200318192901.5023-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TTrA+tMwfg5GaaL0pTTB4SX2vmA9Q9FMRW/WsoCZ0JE=;
+        b=ekdjUyFQv2TSMcoOYLYe9YJcq4hwSQZM4jcNX3jjjug/alRE/pMZGcnMhKi6qxWYm8
+         s19DRdCoZAjj++czh1IdTQIPfulOAFIO0pjmoUogbRutOvo3P9zmoFuhJIScr9yuIM7H
+         LiPFmlt3bLaEsfVe9Io0UP1sMtlOr297ax5ZdBhvP6JpYKexSVx8h7Z19P+hFHT0uQ5U
+         0TbLIKFECs2B99Stk787Ox7zS2QZEIuPJAwUvXrLcbNv9M3JfR9iDm643kOniuCaP3rC
+         GXvs6NE8BFXUyxA5E+JtjfsodSJnTih8OvHzSR/EAFh5iNlVJ27OsLztNL8VIsy6+Tnw
+         AC9Q==
+X-Gm-Message-State: ANhLgQ3CT6GATjWRYXWJgU3Y5G2ceYxba5LOOu3bFvru0B56hu1ruLgn
+        +4u4eD5MZpgdKJ1k4jg/+CQUuaZoPPNeiR0ls4M=
+X-Google-Smtp-Source: ADFU+vufu0AMNL2diBAQJHFss43B9g2oEZMBku7DzmuqAqCY+mQmcA2SGVTBSVyu9mf3O/z+lZkGA1kzO8O/MIO5lqs=
+X-Received: by 2002:aca:7512:: with SMTP id q18mr4630250oic.71.1584562407110;
+ Wed, 18 Mar 2020 13:13:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200313212012.GL4751@pendragon.ideasonboard.com> <OSBPR01MB35905D6D72DCBF154FCF7C88AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+ <20200313212717.GO4751@pendragon.ideasonboard.com>
+In-Reply-To: <20200313212717.GO4751@pendragon.ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 18 Mar 2020 20:13:00 +0000
+Message-ID: <CA+V-a8veXbwMrda8UEu2mN6gGgrBJA8Mp7gdN7Q3-iXNw9c4pg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to assigned-clock-rates
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Current dts files for Rockchip with 'usb2-phy' subnodes
-are manually verified. In order to automate this process
-phy-rockchip-inno-usb2.txt has to be converted to yaml.
+Hi Laurent,
 
-Changed:
-  Removed unused "rockchip,rk3366-usb2phy" support.
-  Replaced example with something that has SoC support
-  in the kernel.
+On Fri, Mar 13, 2020 at 9:27 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On Fri, Mar 13, 2020 at 09:25:01PM +0000, Prabhakar Mahadev Lad wrote:
+> > On Sent: 13 March 2020 21:20, Laurent Pinchart wrote:
+> > > On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
+> > > > Use assigned-clock-rates to specify the clock rate. Also mark
+> > > > clock-frequency property as deprecated.
+> > >
+> > > I would phrase it the other way around, this patch mainly deprecates clock-
+> > > frequency, and as a side effect recommends usage of assigned-clock-rates.
+> > >
+> > > "Deprecate usage of the clock-frequency propertly. The preferred method
+> > > to set clock rates is to use assigned-clock-rates."
+> >
+> > Agreed will do that.
+> >
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
+> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > > b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > > index 72ad992..e62fe82 100644
+> > > > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > > @@ -8,7 +8,7 @@ Required Properties:
+> > > >  - compatible: Value should be "ovti,ov5645".
+> > > >  - clocks: Reference to the xclk clock.
+> > > >  - clock-names: Should be "xclk".
+> > > > -- clock-frequency: Frequency of the xclk clock.
+> > > > +- clock-frequency (deprecated): Frequency of the xclk clock.
+> > >
+> > > I would drop this completely. Drivers need to ensure backward compatibility,
+> > > but DT bindings should only document the latest version, the history is
+> > > available in git.
+> > >
+> > Sure will drop it.
+> >
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > >
+> > > While at it, can I enlist you to convert these bindings to yaml ? :-)
+> > >
+> > Sure will do the honours , will make sure yaml patch is ontop of this patch too.
+>
+Shall I enlist you as the maintainer  in the json-schema ?
+dt_binding_check says  'maintainers' is a required property.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |  81 -----------
- .../bindings/phy/phy-rockchip-inno-usb2.yaml       | 149 +++++++++++++++++++++
- 2 files changed, 149 insertions(+), 81 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
- create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
+Cheers,
+--Prabhakar Lad
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-deleted file mode 100644
-index 541f52988..000000000
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-+++ /dev/null
-@@ -1,81 +0,0 @@
--ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
--
--Required properties (phy (parent) node):
-- - compatible : should be one of the listed compatibles:
--	* "rockchip,px30-usb2phy"
--	* "rockchip,rk3228-usb2phy"
--	* "rockchip,rk3328-usb2phy"
--	* "rockchip,rk3366-usb2phy"
--	* "rockchip,rk3399-usb2phy"
--	* "rockchip,rv1108-usb2phy"
-- - reg : the address offset of grf for usb-phy configuration.
-- - #clock-cells : should be 0.
-- - clock-output-names : specify the 480m output clock name.
--
--Optional properties:
-- - clocks : phandle + phy specifier pair, for the input clock of phy.
-- - clock-names : input clock name of phy, must be "phyclk".
-- - assigned-clocks : phandle of usb 480m clock.
-- - assigned-clock-parents : parent of usb 480m clock, select between
--		 usb-phy output 480m and xin24m.
--		 Refer to clk/clock-bindings.txt for generic clock
--		 consumer properties.
-- - rockchip,usbgrf : phandle to the syscon managing the "usb general
--		 register files". When set driver will request its
--		 phandle as one companion-grf for some special SoCs
--		 (e.g RV1108).
-- - extcon : phandle to the extcon device providing the cable state for
--		 the otg phy.
--
--Required nodes : a sub-node is required for each port the phy provides.
--		 The sub-node name is used to identify host or otg port,
--		 and shall be the following entries:
--	* "otg-port" : the name of otg port.
--	* "host-port" : the name of host port.
--
--Required properties (port (child) node):
-- - #phy-cells : must be 0. See ./phy-bindings.txt for details.
-- - interrupts : specify an interrupt for each entry in interrupt-names.
-- - interrupt-names : a list which should be one of the following cases:
--	Regular case:
--	* "otg-id" : for the otg id interrupt.
--	* "otg-bvalid" : for the otg vbus interrupt.
--	* "linestate" : for the host/otg linestate interrupt.
--	Some SoCs use one interrupt with the above muxed together, so for these
--	* "otg-mux" : otg-port interrupt, which mux otg-id/otg-bvalid/linestate
--		to one.
--
--Optional properties:
-- - phy-supply : phandle to a regulator that provides power to VBUS.
--		See ./phy-bindings.txt for details.
--
--Example:
--
--grf: syscon@ff770000 {
--	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--...
--
--	u2phy: usb2-phy@700 {
--		compatible = "rockchip,rk3366-usb2phy";
--		reg = <0x700 0x2c>;
--		#clock-cells = <0>;
--		clock-output-names = "sclk_otgphy0_480m";
--
--		u2phy_otg: otg-port {
--			#phy-cells = <0>;
--			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "otg-id", "otg-bvalid", "linestate";
--		};
--
--		u2phy_host: host-port {
--			#phy-cells = <0>;
--			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "linestate";
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
-new file mode 100644
-index 000000000..df92ac993
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
-@@ -0,0 +1,149 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/phy-rockchip-inno-usb2.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip USB2.0 phy with inno IP block
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: rockchip,px30-usb2phy
-+      - const: rockchip,rk3228-usb2phy
-+      - const: rockchip,rk3328-usb2phy
-+      - const: rockchip,rk3399-usb2phy
-+      - const: rockchip,rv1108-usb2phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    description:
-+      The usb 480m output clock name.
-+
-+  "#clock-cells":
-+    const: 0
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: phyclk
-+
-+  assigned-clocks:
-+    description:
-+      Phandle of the usb 480m clock.
-+
-+  assigned-clock-parents:
-+    description:
-+      Parent of the usb 480m clock.
-+      Select between usb-phy output 480m and xin24m.
-+      Refer to clk/clock-bindings.txt for generic clock consumer properties.
-+
-+  extcon:
-+    description:
-+      Phandle to the extcon device providing the cable state for the otg phy.
-+
-+  rockchip,usbgrf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to the syscon managing the 'usb general register files'.
-+      When set the driver will request its phandle as one companion-grf
-+      for some special SoCs (e.g rv1108).
-+
-+  host-port:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      "#phy-cells":
-+        const: 0
-+
-+      interrupts:
-+        description: host linestate interrupt
-+
-+      interrupt-names:
-+        const: linestate
-+
-+      phy-supply:
-+        description:
-+          Phandle to a regulator that provides power to VBUS.
-+          See ./phy-bindings.txt for details.
-+
-+    required:
-+      - "#phy-cells"
-+      - interrupts
-+      - interrupt-names
-+
-+  otg-port:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      "#phy-cells":
-+        const: 0
-+
-+      interrupts:
-+        minItems: 1
-+        maxItems: 3
-+
-+      interrupt-names:
-+        oneOf:
-+          - const: linestate
-+          - const: otg-mux
-+          - items:
-+            - const: otg-bvalid
-+            - const: otg-id
-+            - const: linestate
-+
-+      phy-supply:
-+        description:
-+          Phandle to a regulator that provides power to VBUS.
-+          See ./phy-bindings.txt for details.
-+
-+    required:
-+      - "#phy-cells"
-+      - interrupts
-+      - interrupt-names
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock-output-names
-+  - "#clock-cells"
-+  - host-port
-+  - otg-port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3399-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    u2phy0: usb2-phy@e450 {
-+      compatible = "rockchip,rk3399-usb2phy";
-+      reg = <0xe450 0x10>;
-+      clocks = <&cru SCLK_USB2PHY0_REF>;
-+      clock-names = "phyclk";
-+      clock-output-names = "clk_usbphy0_480m";
-+      #clock-cells = <0>;
-+
-+      u2phy0_host: host-port {
-+        #phy-cells = <0>;
-+        interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>;
-+        interrupt-names = "linestate";
-+      };
-+
-+      u2phy0_otg: otg-port {
-+        #phy-cells = <0>;
-+        interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH 0>,
-+                     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH 0>,
-+                     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH 0>;
-+        interrupt-names = "otg-bvalid", "otg-id", "linestate";
-+      };
-+    };
--- 
-2.11.0
-
+> Thank you :-)
+>
+> > > >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> > > >    to the hardware pin PWDNB which is physically active low.
+> > > >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> > > > @@ -37,7 +37,8 @@ Example:
+> > > >
+> > > >  clocks = <&clks 200>;
+> > > >  clock-names = "xclk";
+> > > > -clock-frequency = <24000000>;
+> > > > +assigned-clocks = <&clks 200>;
+> > > > +assigned-clock-rates = <24000000>;
+> > > >
+> > > >  vdddo-supply = <&camera_dovdd_1v8>;
+> > > >  vdda-supply = <&camera_avdd_2v8>;
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
