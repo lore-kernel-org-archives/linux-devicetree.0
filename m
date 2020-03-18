@@ -2,133 +2,123 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B685EC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 06:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B150C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8064620752
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 06:29:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HUOlH0Qw"
+	by mail.kernel.org (Postfix) with ESMTP id D81072076A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgCRG3A (ORCPT
+        id S1726553AbgCRHHj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:29:00 -0400
-Received: from mail-eopbgr80070.outbound.protection.outlook.com ([40.107.8.70]:43686
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726802AbgCRG27 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 02:28:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S/9dllisX9yHsVy8iKsvUH24eWkbj1qqaB9GzphMtlQxeDfWvyggkrVL8KPxVkao+zKF/bTD7DcJSmcQ0GiOh81ThMtW8n9q8zHRn23XW6MQ1WsVOLy+NNmM/CRw40w9JT5CqKvnwi+pS9seGgbMYoLSMy99U6CSfQ//HzChOpFVPTkTKnOdCnmBPVwDozUxcHbygjLUb5VJXOTWv1kzJhRSiGZoXJb/E3EzdJ1ZMDoQYlsYLNQjeqqcHDbnzKzDjPkm5XHqoJZhg6tLHmjaPSikatHh3SKAqp3lnaAaPIdegCXQUUoKa/huIlLGYwlamPodb5bJ9G6KHwRdTQNj7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xgJh1mP9b9A613RbKKjhJqPxV59CKn3x6tHTSUW9D8c=;
- b=nUhXZZGGc8m1sczBZ/fG9TuIOXN2DT81uAmZ/Ulss7sSwcpL4NigZdjKqp2RI9BLSr+oC3VvVCeHYc/yMFfg95nRFyvETXJtWNjRozakBBIzKYMIiQvOh7vNBrhBQHVycGq2sKKSqxGLbY99+pZk5eB0a4m4YNv6FIrlnYP9vD1TvS8C2CLqlrQuSVPr4HNt4TA1kfPaaoyf++3PQ5mn2qNiZcDK822J3ycIWFIbv7icSeWajw2A5uncB4TKg/mewI3kZ7ZlH0uUdsTwVXFl/GqdhrsTEIqRqcE7UKSS+qWjaO9Qd2NjpFhbzonjUtUBtZyMj3a7lt9KPhkiY4Dp6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xgJh1mP9b9A613RbKKjhJqPxV59CKn3x6tHTSUW9D8c=;
- b=HUOlH0QwRC57+MhoYOdEtXumjNwb8CStNS7KCvAL9sA+QKEMxy+fBD9Na9oxPqQRR4eyVps3FKj2YGOFDnBNnIMj/+e39GkT2BH9vY8qS1l8HyXQ+h+Th79wpyBh6irpeayLBtv54tXoH6H1gyoKzTnAl1T4OyVM6ULUuTl/vUs=
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.3.146) by
- VI1PR0402MB2925.eurprd04.prod.outlook.com (10.175.24.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.18; Wed, 18 Mar 2020 06:28:55 +0000
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::c991:848b:cc80:2768]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::c991:848b:cc80:2768%7]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
- 06:28:55 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [EXT] [PATCH 0/4] Fix Wake on lan with FEC on i.MX6
-Thread-Topic: [EXT] [PATCH 0/4] Fix Wake on lan with FEC on i.MX6
-Thread-Index: AQHV/HwfH3wTHDqsi0KQfAvD/Tjc/6hN41Qg
-Date:   Wed, 18 Mar 2020 06:28:55 +0000
-Message-ID: <VI1PR0402MB3600DC7BB937553785165C2AFFF70@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
-In-Reply-To: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fugang.duan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 81dafd63-3bd1-440b-5747-08d7cb05a243
-x-ms-traffictypediagnostic: VI1PR0402MB2925:|VI1PR0402MB2925:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB29255678F628006AF0888A93FFF70@VI1PR0402MB2925.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 03468CBA43
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(346002)(136003)(376002)(199004)(9686003)(52536014)(2906002)(55016002)(71200400001)(33656002)(5660300002)(4744005)(186003)(316002)(8676002)(81156014)(54906003)(81166006)(8936002)(4326008)(110136005)(7696005)(86362001)(76116006)(6506007)(66946007)(66476007)(66556008)(64756008)(66446008)(478600001)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2925;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Pmv7Sp8Wnfk6YAx4RwHMxvCS66I8/5QWmQ/WdmCI8HQbgAn5DBlfroGxSlqdZPdvYHCIkhDRg3jsDTia2gzH6FMaF+u6UDjxqH2vvR2YykzPPZr/YQB40GBn55xAEqB6jX5ecMBVBqdQbhJSrMGUXeSPmo0xxYes0lmKkS2mVD05aGWNfe5wmLdD2nq6flReVsHaI2HCaWSbWivZdReFI5FAF5ufU+AbaDfPobMtK+hXNyJtWwelqx/z8282eUKQkAff3Ux1+O9aMrUV7bsplsU4jwBnv0yCDB8UvqoxNiY7k3089ldDLCZxMIRfncH5kohw8QGZ2IVs41tb68TPvTTB50KoIJbfgjQfamamb3lpUlZuWgFbquLQ5ZDO/ASfdhPc3ARblgaA9028Kc1r5s907Bk4HEXY8tUKHqxDQz21/V5dRm3B19cOXwC6IZ4r
-x-ms-exchange-antispam-messagedata: wE1dv9o6UfmoXSpR9TBwrFOlqf1CELHpbeJ7pg+c5UiP3rO5OtCCvf8dwu2/XxuuaR2godToAXk40CnfHfWy26lWrKH2uhRVSc9Sc81SVk0r+SOYxIU+2jFKGFRsOjZ4Yf0PeZldqzeW9ZS9xa2SVw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Mar 2020 03:07:39 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40236 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbgCRHHj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 03:07:39 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 0C0FD292457
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>,
+        Andrzej Hajda <a.hajda@samsung.com>, icenowy@aosc.io,
+        anarsoul@gmail.com, Neil Armstrong <narmstrong@baylibre.com>,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        megous@megous.com, Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v4 1/4] dt-bindings: Add binding for the Analogix ANX7688 chip
+Date:   Wed, 18 Mar 2020 08:07:27 +0100
+Message-Id: <20200318070730.4012371-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81dafd63-3bd1-440b-5747-08d7cb05a243
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 06:28:55.3102
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qJN/U8NedvBlLVqmxw+czc57GB2GePjhnh/DyczbFy7ldc8AvVyYVn76vqwjKoRrZfuil/g028EM808r9b+lUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2925
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Martin Fuzzey <martin.fuzzey@flowbird.group> Sent: Wednesday, March 1=
-8, 2020 12:50 AM
-> This series fixes WoL support with the FEC on i.MX6 The support was alrea=
-dy
-> in mainline but seems to have bitrotted somewhat.
->=20
-> Only tested with i.MX6DL
+The ANX7688 chip is a Type-C Port Controller, HDMI to DP converter and
+USB-C mux between USB 3.0 lanes and the DP output.
 
-The most of code is reused from nxp internal tree,
-If you refer the patches from nxp kernel tree, please
-keep the signed-off with original author.
+For our use case a big part of the chip, like power supplies, control
+gpios and the usb-c part is managed by an Embedded Controller, hence,
+this is its simplest form of the binding. We'd prefer introduce these
+properties for someone with a different use case so they can test
+on their hardware.
 
->=20
->=20
-> Martin Fuzzey (4):
->   net: fec: set GPR bit on suspend by DT connfiguration.
->   ARM: dts: imx6: Use gpc for FEC interrupt controller to fix wake on
->     LAN.
->   dt-bindings: fec: document the new fsl,stop-mode property
->   ARM: dts: imx6: add fsl,stop-mode property.
->=20
->  Documentation/devicetree/bindings/net/fsl-fec.txt |  5 ++
->  arch/arm/boot/dts/imx6qdl.dtsi                    |  6 +-
->  drivers/net/ethernet/freescale/fec.h              |  7 +++
->  drivers/net/ethernet/freescale/fec_main.c         | 72
-> ++++++++++++++++++++---
->  4 files changed, 80 insertions(+), 10 deletions(-)
->=20
-> --
-> 1.9.1
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
+
+Changes in v4: None
+Changes in v3:
+- Add binding for ANX7688 multi-function device.
+
+Changes in v2: None
+
+ .../bindings/mfd/analogix,anx7688.yaml        | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+
+diff --git a/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml b/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+new file mode 100644
+index 000000000000..bb95a4e87188
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/analogix,anx7688.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analogix ANX7688 HDMI to USB Type-C Bridge (Port Controller with MUX)
++
++maintainers:
++  - Nicolas Boichat <drinkcat@chromium.org>
++  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++
++description: |
++  ANX7688 converts HDMI 2.0 to DisplayPort 1.3 Ultra-HDi (4096x2160p60)
++  including an intelligent crosspoint switch to support USB Type-C (USB-C).
++  The integrated crosspoint switch supports USB 3.1 data transfer along with
++  the DisplayPort Alternate Mode signaling over USB Type-C. Additionally,
++  an on-chip microcontroller (OCM) is available to manage the signal switching,
++  Channel Configuration (CC) detection, USB Power Delivery (USB-PD), Vendor
++  Defined Message (VDM) protocol support and other functions as defined in the
++  USB TypeC and USB Power Delivery specifications.
++
++  As a result, a multi-function device is exposed as parent of the video
++  bridge, TCPC and MUX blocks.
++
++properties:
++  compatible:
++    const: analogix,anx7688
++
++  reg:
++    maxItems: 1
++    description: I2C address of the device
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        anx7688: anx7688@2c {
++            compatible = "analogix,anx7688";
++            reg = <0x2c>;
++        };
++    };
+-- 
+2.25.1
 
