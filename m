@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DA7C5ACD8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F1CC5ACD9
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E696520770
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFC6F2076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="A9PR2Pje"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GaIsT7VT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgCRKbz (ORCPT
+        id S1726933AbgCRKbv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:31:55 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7086 "EHLO
+        Wed, 18 Mar 2020 06:31:51 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7074 "EHLO
         hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbgCRKby (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 06:31:54 -0400
+        with ESMTP id S1726550AbgCRKbv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 06:31:51 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e71f88c0001>; Wed, 18 Mar 2020 03:31:40 -0700
+        id <B5e71f8880000>; Wed, 18 Mar 2020 03:31:37 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 18 Mar 2020 03:31:53 -0700
+  Wed, 18 Mar 2020 03:31:50 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 18 Mar 2020 03:31:53 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar
- 2020 10:31:53 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 18 Mar 2020 10:31:53 +0000
+        by hqpgpgate101.nvidia.com on Wed, 18 Mar 2020 03:31:50 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar
+ 2020 10:31:49 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 18 Mar 2020 10:31:49 +0000
 Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e71f8950000>; Wed, 18 Mar 2020 03:31:52 -0700
+        id <B5e71f8900001>; Wed, 18 Mar 2020 03:31:48 -0700
 From:   Nagarjuna Kristam <nkristam@nvidia.com>
 To:     <kishon@ti.com>, <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <balbi@kernel.org>,
@@ -44,9 +44,9 @@ To:     <kishon@ti.com>, <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
 CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <jckuo@nvidia.com>, Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [PATCH V1 4/8] phy: tegra: xusb: Add USB2 pad power control support for Tegra210
-Date:   Wed, 18 Mar 2020 16:01:03 +0530
-Message-ID: <1584527467-8058-5-git-send-email-nkristam@nvidia.com>
+Subject: [PATCH V1 3/8] phy: tegra: xusb: Add support for UTMI pad power control
+Date:   Wed, 18 Mar 2020 16:01:02 +0530
+Message-ID: <1584527467-8058-4-git-send-email-nkristam@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
 References: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
@@ -54,285 +54,192 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584527500; bh=tEoOEHoqSMKBOPIlCwlXMu5sLKIef0sdU0dEXS+YRvg=;
+        t=1584527497; bh=5n0CB6+N0wWq3YuDt7V474LuTLsFSCLbkbolggwEtl0=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=A9PR2Pjeeyv/r9rWLuSqTaDvorDmCFD2jUFnDPbUSnWFd+UsoZT2Xn/TOJny7iMkz
-         wRR0o8RO+VKKWMcNyPu5imyXKs6JS48BI6YggMwhpIn4DlTZ1CAZu+uKO279Vx61SV
-         cCGKWUWAHUsGLg+tHuWmgmG5h3D+YxpOV6OLfR/nVOt9Pe3RJpQeA+AmelWhvxc1D0
-         e1zS92w0DqaDh2PG5NjdY2ZN4YPDO61VCltCjQrPzjb4JyfTlL1EDwqpr9Gt1B6Lvl
-         B5qyBJQKkpI0rBP1xU5aIwqjkvKR/GedRgDwsfeI+hYMeR5+6QvGcJ/cHOr3LAf9bA
-         xjE7NiJ2AMoKA==
+        b=GaIsT7VT6+W2jhKLtktGqekdUDOfSJrMqGaI+gWZlaPcqKIxoW6VmBoCEwxzi1CKf
+         QerVF3GT7VhKQ7w3uSP08X7YsmVBGhtOx7bBAWqHg8SFCgWx1zRQw2K6E3ib9fPnT9
+         XA6aD3DTLltUuPAVMv4OTXAh0zVNn4Ob62XOIhzHfgkntbvSAiYWdxRo2uishcD3DJ
+         AQ7za6149JjtTy4MaBQJ1ltvtIRB6VuYJbQPx022Rylci8VMS6fdgWrRi8YdqVV0p9
+         hPzcoaZg9SjNN86b2M/8njmYSSdXUWtjfsxW6HUGaGXUz/fTE562YWwY6eyCgeuWf1
+         /8CwKxfngHEGg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add USB2 pad power on and off API's for TEgra210 and provide its control
-via soc ops. It can be used by operations like charger detect to power on
-and off USB2 pad if needed.
+Add support for UTMI pad power on and off API's via soc ops. These API
+can be used by operations like charger detect to power on and off UTMI
+pad if needed. Update powered_on flag in the pad power control API's.
 
 Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 ---
- drivers/phy/tegra/xusb-tegra210.c | 190 ++++++++++++++++++++++++++------------
- 1 file changed, 133 insertions(+), 57 deletions(-)
+ drivers/phy/tegra/xusb-tegra186.c | 51 ++++++++++++++++++---------------------
+ drivers/phy/tegra/xusb.h          |  2 ++
+ 2 files changed, 26 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-index 54d6826..0841564 100644
---- a/drivers/phy/tegra/xusb-tegra210.c
-+++ b/drivers/phy/tegra/xusb-tegra210.c
-@@ -994,6 +994,128 @@ static int tegra210_xusb_padctl_id_override(struct tegra_xusb_padctl *padctl,
- 	return 0;
- }
- 
-+static void tegra210_usb2_bias_pad_power_on(struct tegra_xusb_usb2_pad *pad)
-+{
-+	struct tegra_xusb_padctl *padctl = pad->base.padctl;
-+	u32 value;
-+
-+	if (pad->enable++ > 0)
-+		return;
-+
-+	dev_dbg(padctl->dev, "power on BIAS PAD & USB2 tracking\n");
-+
-+	if (clk_prepare_enable(pad->clk))
-+		dev_warn(padctl->dev, "failed to enable BIAS PAD & USB2 tracking\n");
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
-+	value &= ~((XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_MASK <<
-+		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
-+		   (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_MASK <<
-+		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT));
-+	value |= (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_VAL <<
-+		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
-+		 (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_VAL <<
-+		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT);
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+
-+	udelay(1);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
-+	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL1_PD_TRK;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
-+
-+	udelay(50);
-+}
-+
-+static void tegra210_usb2_bias_pad_power_off(struct tegra_xusb_usb2_pad *pad)
-+{
-+	struct tegra_xusb_padctl *padctl = pad->base.padctl;
-+	u32 value;
-+
-+	if (WARN_ON(pad->enable == 0))
-+		return;
-+
-+	if (--pad->enable > 0)
-+		return;
-+
-+	dev_dbg(padctl->dev, "power off USB2 tracking\n");
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+	value |= XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+
-+	clk_disable_unprepare(pad->clk);
-+}
-+
-+/* must be called under padctl->lock */
-+void tegra210_usb2_pad_power_on(struct phy *phy)
-+{
-+	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-+	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
-+	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
-+	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
-+	unsigned int index = lane->index;
-+	u32 value;
-+
-+	if (!phy)
-+		return;
-+
-+	if (usb2->powered_on)
-+		return;
-+
-+	dev_info(padctl->dev, "power on UTMI pads %d\n", index);
-+
-+	tegra210_usb2_bias_pad_power_on(pad);
-+
-+	udelay(2);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-+	value &= ~XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
-+	value &= ~XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_DR;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
-+
-+	usb2->powered_on = true;
-+}
-+
-+/* must be called under padctl->lock */
-+void tegra210_usb2_pad_power_down(struct phy *phy)
-+{
-+	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-+	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
-+	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
-+	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
-+	unsigned int index = lane->index;
-+	u32 value;
-+
-+	if (!phy)
-+		return;
-+
-+	if (!usb2->powered_on)
-+		return;
-+
-+	dev_info(padctl->dev, "power down UTMI pad %d\n", index);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-+	value |= XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
-+	value |= XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_DR;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
-+
-+	udelay(2);
-+
-+	tegra210_usb2_bias_pad_power_off(pad);
-+	usb2->powered_on = false;
-+}
-+
- static int tegra210_usb2_phy_set_mode(struct phy *phy, enum phy_mode mode,
- 				      int submode)
- {
-@@ -1037,7 +1159,6 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- {
- 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
- 	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
--	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
- 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
- 	struct tegra210_xusb_padctl *priv;
- 	struct tegra_xusb_usb2_port *port;
-@@ -1053,6 +1174,8 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 
- 	priv = to_tegra210_xusb_padctl(padctl);
- 
-+	mutex_lock(&padctl->lock);
-+
- 	if (port->usb3_port_fake != -1) {
- 		value = padctl_readl(padctl, XUSB_PADCTL_SS_PORT_MAP);
- 		value &= ~XUSB_PADCTL_SS_PORT_MAP_PORTX_MAP_MASK(
-@@ -1148,62 +1271,21 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
- 
- 	if (port->supply && port->mode == USB_DR_MODE_HOST) {
- 		err = regulator_enable(port->supply);
--		if (err)
-+		if (err) {
-+			mutex_unlock(&padctl->lock);
- 			return err;
-+		}
- 	}
+diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-tegra186.c
+index fa700e5..18ed3d6 100644
+--- a/drivers/phy/tegra/xusb-tegra186.c
++++ b/drivers/phy/tegra/xusb-tegra186.c
+@@ -192,12 +192,8 @@ static void tegra186_utmi_bias_pad_power_on(struct tegra_xusb_padctl *padctl)
+ 	u32 value;
+ 	int err;
  
 -	mutex_lock(&padctl->lock);
 -
--	if (pad->enable > 0) {
--		pad->enable++;
+-	if (priv->bias_pad_enable++ > 0) {
 -		mutex_unlock(&padctl->lock);
--		return 0;
++	if (priv->bias_pad_enable++ > 0)
+ 		return;
 -	}
--
--	err = clk_prepare_enable(pad->clk);
--	if (err)
--		goto disable_regulator;
-+	tegra210_usb2_pad_power_on(phy);
  
--	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
--	value &= ~((XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_MASK <<
--		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
--		   (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_MASK <<
--		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT));
--	value |= (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_VAL <<
--		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
--		 (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_VAL <<
--		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT);
--	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+ 	err = clk_prepare_enable(priv->usb2_trk_clk);
+ 	if (err < 0)
+@@ -221,8 +217,6 @@ static void tegra186_utmi_bias_pad_power_on(struct tegra_xusb_padctl *padctl)
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+ 	value &= ~USB2_PD_TRK;
+ 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
 -
--	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
--	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
--	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
--
--	udelay(1);
--
--	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
--	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL1_PD_TRK;
--	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
--
--	udelay(50);
--
--	clk_disable_unprepare(pad->clk);
--
--	pad->enable++;
- 	mutex_unlock(&padctl->lock);
--
- 	return 0;
--
--disable_regulator:
--	regulator_disable(port->supply);
 -	mutex_unlock(&padctl->lock);
--	return err;
  }
  
- static int tegra210_usb2_phy_power_off(struct phy *phy)
+ static void tegra186_utmi_bias_pad_power_off(struct tegra_xusb_padctl *padctl)
+@@ -230,44 +224,29 @@ static void tegra186_utmi_bias_pad_power_off(struct tegra_xusb_padctl *padctl)
+ 	struct tegra186_xusb_padctl *priv = to_tegra186_xusb_padctl(padctl);
+ 	u32 value;
+ 
+-	mutex_lock(&padctl->lock);
+-
+-	if (WARN_ON(priv->bias_pad_enable == 0)) {
+-		mutex_unlock(&padctl->lock);
++	if (WARN_ON(priv->bias_pad_enable == 0))
+ 		return;
+-	}
+ 
+-	if (--priv->bias_pad_enable > 0) {
+-		mutex_unlock(&padctl->lock);
++	if (--priv->bias_pad_enable > 0)
+ 		return;
+-	}
+ 
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+ 	value |= USB2_PD_TRK;
+ 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+ 
+ 	clk_disable_unprepare(priv->usb2_trk_clk);
+-
+-	mutex_unlock(&padctl->lock);
+ }
+ 
+ static void tegra_phy_xusb_utmi_pad_power_on(struct phy *phy)
  {
  	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
--	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
  	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
- 	struct tegra_xusb_usb2_port *port;
+-	struct tegra_xusb_usb2_port *port;
+-	struct device *dev = padctl->dev;
++	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
+ 	unsigned int index = lane->index;
  	u32 value;
-@@ -1217,6 +1299,8 @@ static int tegra210_usb2_phy_power_off(struct phy *phy)
  
- 	mutex_lock(&padctl->lock);
+-	if (!phy)
+-		return;
+-
+-	port = tegra_xusb_find_usb2_port(padctl, index);
+-	if (!port) {
+-		dev_err(dev, "no port found for USB2 lane %u\n", index);
++	if (!phy || usb2->powered_on)
+ 		return;
+-	}
  
-+	tegra210_usb2_pad_power_down(phy);
+ 	tegra186_utmi_bias_pad_power_on(padctl);
+ 
+@@ -280,16 +259,19 @@ static void tegra_phy_xusb_utmi_pad_power_on(struct phy *phy)
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
+ 	value &= ~USB2_OTG_PD_DR;
+ 	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
 +
- 	if (port->usb3_port_fake != -1) {
- 		value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
- 		value |= XUSB_PADCTL_ELPG_PROGRAM1_SSPX_ELPG_CLAMP_EN_EARLY(
-@@ -1243,18 +1327,8 @@ static int tegra210_usb2_phy_power_off(struct phy *phy)
- 		padctl_writel(padctl, value, XUSB_PADCTL_SS_PORT_MAP);
++	usb2->powered_on = true;
+ }
+ 
+ static void tegra_phy_xusb_utmi_pad_power_down(struct phy *phy)
+ {
+ 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
+ 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
++	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
+ 	unsigned int index = lane->index;
+ 	u32 value;
+ 
+-	if (!phy)
++	if (!phy || !usb2->powered_on)
+ 		return;
+ 
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
+@@ -303,6 +285,8 @@ static void tegra_phy_xusb_utmi_pad_power_down(struct phy *phy)
+ 	udelay(2);
+ 
+ 	tegra186_utmi_bias_pad_power_off(padctl);
++
++	usb2->powered_on = false;
+ }
+ 
+ static int tegra186_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
+@@ -413,6 +397,8 @@ static int tegra186_utmi_phy_power_on(struct phy *phy)
+ 		return -ENODEV;
  	}
  
--	if (WARN_ON(pad->enable == 0))
--		goto out;
--
--	if (--pad->enable > 0)
--		goto out;
--
--	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
--	value |= XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
--	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
--
--out:
- 	regulator_disable(port->supply);
++	mutex_lock(&padctl->lock);
 +
- 	mutex_unlock(&padctl->lock);
+ 	value = padctl_readl(padctl, XUSB_PADCTL_USB2_PAD_MUX);
+ 	value &= ~(USB2_PORT_MASK << USB2_PORT_SHIFT(index));
+ 	value |= (PORT_XUSB << USB2_PORT_SHIFT(index));
+@@ -464,14 +450,23 @@ static int tegra186_utmi_phy_power_on(struct phy *phy)
+ 
+ 	/* TODO: pad power saving */
+ 	tegra_phy_xusb_utmi_pad_power_on(phy);
++
++	mutex_unlock(&padctl->lock);
  	return 0;
  }
-@@ -2210,6 +2284,8 @@ static const struct tegra_xusb_padctl_ops tegra210_xusb_padctl_ops = {
- 	.hsic_set_idle = tegra210_hsic_set_idle,
- 	.vbus_override = tegra210_xusb_padctl_vbus_override,
- 	.utmi_port_reset = tegra210_utmi_port_reset,
-+	.utmi_pad_power_on = tegra210_usb2_pad_power_on,
-+	.utmi_pad_power_down = tegra210_usb2_pad_power_down,
+ 
+ static int tegra186_utmi_phy_power_off(struct phy *phy)
+ {
++	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
++	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
++
++	mutex_lock(&padctl->lock);
++
+ 	/* TODO: pad power saving */
+ 	tegra_phy_xusb_utmi_pad_power_down(phy);
+ 
++	mutex_unlock(&padctl->lock);
++
+ 	return 0;
+ }
+ 
+@@ -934,6 +929,8 @@ static const struct tegra_xusb_padctl_ops tegra186_xusb_padctl_ops = {
+ 	.probe = tegra186_xusb_padctl_probe,
+ 	.remove = tegra186_xusb_padctl_remove,
+ 	.vbus_override = tegra186_xusb_padctl_vbus_override,
++	.utmi_pad_power_on = tegra_phy_xusb_utmi_pad_power_on,
++	.utmi_pad_power_down = tegra_phy_xusb_utmi_pad_power_down,
  };
  
- static const char * const tegra210_xusb_padctl_supply_names[] = {
+ #if IS_ENABLED(CONFIG_ARCH_TEGRA_186_SOC)
+diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+index 51d7aae..ba5ee88 100644
+--- a/drivers/phy/tegra/xusb.h
++++ b/drivers/phy/tegra/xusb.h
+@@ -381,6 +381,8 @@ struct tegra_xusb_padctl_ops {
+ 				    unsigned int index, bool enable);
+ 	int (*vbus_override)(struct tegra_xusb_padctl *padctl, bool set);
+ 	int (*utmi_port_reset)(struct phy *phy);
++	void (*utmi_pad_power_on)(struct phy *phy);
++	void (*utmi_pad_power_down)(struct phy *phy);
+ };
+ 
+ struct tegra_xusb_padctl_soc {
 -- 
 2.7.4
 
