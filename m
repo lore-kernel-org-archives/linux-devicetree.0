@@ -2,185 +2,141 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43365C4332D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01BCC4332B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D4120767
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F5FA2076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 22:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584572135;
-	bh=uTyNAhR02/lueaTrSpsEtzvYiAwF0pB5xc/FKKpl73o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Qzx0Ykt9mvWKjtdx9ziAWu8+7WjUaxMqilhVU8xJalu7wZ+uZK8BQcEfoOIxEIZcs
-	 lxqT47Ao16DVL7IPCdsYlMGbtHMnnk65q0T5Vb3NiaoSGU7kDBe9peUkvQ95wPsTl2
-	 w0XArznuRZ04gJlxaj3smCOB1wB63wlvfh/OjZms=
+	s=default; t=1584572359;
+	bh=px9yTuyutGPLxDOS4VKgrsyFcqncgHyrQwaPkk2M1kU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xKJ9lLXS+yCb4v5HPfNzfQkM/WeOia3uJvV6FoR3C9VrmwGFByQChyVDoCvgZ8Don
+	 2Ow+8CNLGds/qyJsf2+4blULrOU/a4vGzv9yr4hJn3Qiv0hMHKxHXyVxT5gs1dY5FL
+	 mmXp7AOoP6NMaqq7rmnuz/ZcLzkGxWeGOp4mQRkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgCRWze (ORCPT
+        id S1726777AbgCRW7T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbgCRWze (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:55:34 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB16620767;
-        Wed, 18 Mar 2020 22:55:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584572133;
-        bh=uTyNAhR02/lueaTrSpsEtzvYiAwF0pB5xc/FKKpl73o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ro+4MZPj8/lr9itNf5dBH8a0rGlg1/wfIPWd62qVHcJMz5O10Y3Mue4fJROANWR2M
-         d9Id+B6QYs3dyhoYst2vuOUd2TWEt+ABTNjT89wpllcLEIOsJgqknKRgSJf4HGNAhX
-         +I2/h5ahnh8tO9lM4ZKnPS35fNMJ5ZBu0SkyHzks=
-Received: by mail-qk1-f172.google.com with SMTP id z25so199267qkj.4;
-        Wed, 18 Mar 2020 15:55:32 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ36jYfueqEy5UxYViMD1YiHbousaFRN8I7EmfobmxjrBDQLcRoq
-        i/P/Y9JyL1JbOjNlXKxd+DR+D2i3Fspg7glRmQ==
-X-Google-Smtp-Source: ADFU+vvCBiYODaoYfbldWLW9rUsXW8+xYy7ob9N5BeJKkvAFoqoJHOy2oWFdT1cWnjoHpZxefKYgPbVzCXJcCqWfkKI=
-X-Received: by 2002:a37:393:: with SMTP id 141mr196155qkd.393.1584572131923;
- Wed, 18 Mar 2020 15:55:31 -0700 (PDT)
+        Wed, 18 Mar 2020 18:59:19 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45458 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCRW7S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 18:59:18 -0400
+Received: by mail-il1-f196.google.com with SMTP id m9so423616ilq.12;
+        Wed, 18 Mar 2020 15:59:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:content-language
+         :content-id:user-agent;
+        bh=WG++1Z0XEGF8QjOEAy+cWUTtbp6Q7m3dGXGb9K3xIFE=;
+        b=AbZ3qUI/CKmrt/ajVHPiCV45CTqy5HvXZET0G1UgCkxcDUEtLT2kR73/ptZR0g9UnK
+         RlZA5Om9Ll1F7iges0dBXqDrreqzzTsiAN4hlINViOjJSfm3uWJz6p9FmIwIPfL1lHLy
+         JEUvnOSDGMAUq5iGTsMWxENdXwCgFr7UwWZOovSFJejppiAlPp+13TLmPS+L/NFHC6Q/
+         8cflHGqmbqWQYlU+SIfg52g/6XonuG/NzOGC3GH7POUeq/8CB4llDgz8NkCm+Sx+VKei
+         yd6FqTzO03D3iWTa/9E4JNgCPkNejfgq4/a4tn4lYYYRx0hqT/J+nfAVEg1l5DnzTDIJ
+         oP8Q==
+X-Gm-Message-State: ANhLgQ23hAK9X78iRLRdJmcYIMZHiT6eDwvoizE+hBZJC1hnQqD5U3C3
+        DMqPhRDOOkPB+s4CLGUOfA==
+X-Google-Smtp-Source: ADFU+vvQu/ofiAgtyXPA30BdpK0s2M4IVdyqhYxGuUk+ta8FD03+S125+4JrMJsyywR83s2B6+q9jQ==
+X-Received: by 2002:a92:358b:: with SMTP id c11mr425751ilf.64.1584572357681;
+        Wed, 18 Mar 2020 15:59:17 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id w88sm114692ila.24.2020.03.18.15.59.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 15:59:16 -0700 (PDT)
+Received: (nullmailer pid 27686 invoked by uid 1000);
+        Wed, 18 Mar 2020 22:59:15 -0000
+Date:   Wed, 18 Mar 2020 16:59:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Eugene Zalkonnikov <ez@norphonic.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "development@norphonic.com" <development@norphonic.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v6 2/2] Device tree bindings for TI HDC20x0 humidity and
+  temperature sensors
+Message-ID: <20200318225915.GA25864@bogus>
+References: <84EE5291-D8C4-40D3-A75C-92362BF9DF8B@norphonic.com>
+ <1C2C8CD5-4BF0-40AE-932A-4AD506664B9D@norphonic.com>
 MIME-Version: 1.0
-References: <20200317163555.18107-1-jbx6244@gmail.com>
-In-Reply-To: <20200317163555.18107-1-jbx6244@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 18 Mar 2020 16:55:20 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+0M1n7M1EjnJhum9Sn30FEb3ux4agJSa1KhNwUxv4THg@mail.gmail.com>
-Message-ID: <CAL_Jsq+0M1n7M1EjnJhum9Sn30FEb3ux4agJSa1KhNwUxv4THg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: sram: convert rockchip-pmu-sram
- bindings to yaml
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     "heiko@sntech.de" <heiko@sntech.de>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1C2C8CD5-4BF0-40AE-932A-4AD506664B9D@norphonic.com>
+Content-Language: en-US
+Content-ID: <3A479F18FEBC5A46BFE84B5E87D23497@eurprd06.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:36 AM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Current dts files with 'rockchip-pmu-sram' compatible nodes
-> are manually verified. In order to automate this process
-> rockchip-pmu-sram.txt has to be converted to yaml.
->
-> A check with the command below gives for example this error:
->
-> arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff700000:
-> compatible:0:
-> 'rockchip,rk3288-pmu-sram' was expected
-> arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff700000:
-> compatible:
-> ['mmio-sram'] is too short
->
-> Fix this error by adding an extra 'mmio-sram' compatible and
-> 'if then' structure to filter yaml warnings.
-
-Seems to me you should fix the .dts file. If we adjust schemas to make
-dts files pass, then what is the point of the schemas?
-
-> make ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/sram/
-> rockchip-pmu-sram.yaml
-
-Until recent changes in linux-next now, this is not sufficient as all
-examples are not checked against all schemas.
-
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  .../devicetree/bindings/sram/rockchip-pmu-sram.txt | 16 --------
->  .../bindings/sram/rockchip-pmu-sram.yaml           | 46 ++++++++++++++++++++++
->  2 files changed, 46 insertions(+), 16 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
->  create mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.yaml
->
-> diff --git a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-> deleted file mode 100644
-> index 6b42fda30..000000000
-> --- a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-> +++ /dev/null
-> @@ -1,16 +0,0 @@
-> -Rockchip SRAM for pmu:
-> -------------------------------
-> -
-> -The sram of pmu is used to store the function of resume from maskrom(the 1st
-> -level loader). This is a common use of the "pmu-sram" because it keeps power
-> -even in low power states in the system.
-> -
-> -Required node properties:
-> -- compatible : should be "rockchip,rk3288-pmu-sram"
-> -- reg : physical base address and the size of the registers window
-> -
-> -Example:
-> -       sram@ff720000 {
-> -               compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
-> -               reg = <0xff720000 0x1000>;
-> -       };
-> diff --git a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.yaml b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.yaml
-> new file mode 100644
-> index 000000000..bb72e4f53
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: GPL-2.0
+On Tue, 17 Mar 2020 20:09:48 +0000, Eugene Zalkonnikov wrote:
+> 
+> Device tree bindings for the HDC2010/2080 driver.
+> 
+> Signed-off-by: Eugene Zaikonnikov <eugene.zaikonnikov@norphonic.com>
+> 
+> diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml
+> --- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	1970-01-01 01:00:00.000000000 +0100
+> +++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	2020-02-12 14:28:42.562903814 +0100
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/sram/rockchip-pmu-sram.yaml#
+> +$id: http://devicetree.org/schemas/iio/humidity/hdc2010.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Rockchip SRAM for pmu
-> +
-> +description:
-> +  The sram of pmu is used to store the function of resume from maskrom(the 1st
-> +  level loader). This is a common use of the "pmu-sram" because it keeps power
-> +  even in low power states in the system.
+> +title: HDC2010/HDC2080 humidity and temperature iio sensors
 > +
 > +maintainers:
-> +  - Heiko Stuebner <heiko@sntech.de>
+> +  - Eugene Zaikonnikov <eugene.zaikonnikov@norophonic.com>
 > +
-> +# The extra 'mmio-sram' compatible and 'if then' structure is needed
-> +# to filter yaml warnings.
+> +description: |
+> +  Relative humidity and tempereature sensors on I2C bus
+> +
+> +  Datasheets are available at:
+> +    http://www.ti.com/product/HDC2010/datasheet
+> +    http://www.ti.com/product/HDC2080/datasheet
+> +
 > +properties:
 > +  compatible:
-> +    oneOf:
-> +      - const: mmio-sram
-> +      - items:
-> +        - const: rockchip,rk3288-pmu-sram
-
-We've been just adding the compatibles to the common sram.yaml for the
-simple cases like this.
-
-
-> +        - const: mmio-sram
+> +    enum:
+> +      - ti,hdc2010
+> +      - ti,hdc2080
 > +
-> +  reg:
+> +  vddd-supply:
+> +    description:
+> +      digital voltage regulator (see regulator/regulator.txt)
 > +    maxItems: 1
 > +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: rockchip,rk3288-pmu-sram
-> +
-> +then:
-> +  required:
-> +    - compatible
-> +    - reg
+> +required:
+> +  - compatible
 > +
 > +examples:
 > +  - |
-> +    pmu_sram: sram@ff720000 {
-> +      compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
-> +      reg = <0xff720000 0x1000>;
+> +    i2c0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      hdc200x@40 {
+> +          compatible = "ti,hdc2010";
+> +          reg = <0x40>;
+> +      };
 > +    };
-> --
-> 2.11.0
->
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/iio/humidity/ti,hdc2010.yaml#
+
+See https://patchwork.ozlabs.org/patch/1256878
+Please check and re-submit.
