@@ -2,151 +2,117 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F71C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D5C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02BB920771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4832076D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ULz4sod6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f49rlbH4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgCRLIp (ORCPT
+        id S1727144AbgCRLNv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:08:45 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33347 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbgCRLIp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 07:08:45 -0400
-Received: by mail-vs1-f67.google.com with SMTP id y138so8319288vsy.0
-        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 04:08:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9frSoSYLFCu0A/Mh7LPuKatr2O8xik/d01v55VOnyP4=;
-        b=ULz4sod6I+eklVNwP7hqM50Hd4vBJUS+Bpu5i+ryBoBCsPblh/ogw7XkFNmBbag3pM
-         H9UCyEd7er7GDNZk9U2VHBwy9SBc3G3Qo09kpO4/1Qzy4FGeu7WeyJcgSVbZYe1mCliZ
-         qHCXZKSOjuaq2zWNzBvcKuDAahQPSbz+Iacq5FcZD4T9xJgukS2Kk7IZe9Qp6ABIVa2A
-         +yc+0sidH02WbhvVA/Qp0EP184GW+NhZVCbdXXtnHtbEtw0bp4MiHoL7WLU0JtiVH+YV
-         +gcPxMhrL7qpZR/Kte1KBosjvuB2bpid4B7DY2r+I0Atb8lhNn3E3VLqSo3alkh2sBDA
-         4j4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9frSoSYLFCu0A/Mh7LPuKatr2O8xik/d01v55VOnyP4=;
-        b=blKlLeOZywYp1OZluDyeihUyTdA2FvhLZmrIuiytrZS3E1FpUCr50EPMg2uwX5bY+n
-         48oefFl9YtwFJP+QhuUJw0z4wrutzHd8QpptOwcMHojdJw3iuuc4z/Ga/WBQFZTb0kkY
-         i0X5Qi+dYkoMorUyWKyhEXIbaGezCad6KKJzjq9gAfWvHdgaVnisgrLFLFoHvWxV5ekK
-         iZpONCUq0Zgndy26U9rc1GkyymN5WNbtIEUXiNud4NGnW2c+1clmZBMG5+05tFQYPYon
-         8isxuDd3WglwzNdS0wr4kR7eC/o6Yf4sGd87M0R+xoDJYB0vDoSMdAr6nN2kg6UpsEKA
-         NQuw==
-X-Gm-Message-State: ANhLgQ1PARIRVKzK/FpTDVEmMMxhJpr1J53OL5K1wxhZMpz34ROErxP9
-        TlN/tE7GTKy73higYEvz1RbYEoXQtAiH3Y8A56VvpJIc
-X-Google-Smtp-Source: ADFU+vu2FC4mlTKSIEnZM8U/cxLci0q+mKGTSglQiVCEp3b3EISiorDyV2HOqWCmtAvl8B9z9jqXDCDKTBu1B75xgwU=
-X-Received: by 2002:a67:646:: with SMTP id 67mr2511025vsg.34.1584529724216;
- Wed, 18 Mar 2020 04:08:44 -0700 (PDT)
+        Wed, 18 Mar 2020 07:13:51 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52604 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgCRLNv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 07:13:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02IBDiOS080234;
+        Wed, 18 Mar 2020 06:13:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584530024;
+        bh=Li2cQAFtBxR6JChItlEo5lYNjMUbYbRm2G+Nf69FntI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=f49rlbH4Gu+E8aJxbqF0xgdSuYfIOvV5/rvOfvhf71h4f+C/kukLs1QInnxZmsrsC
+         NIBBBUEYrMkrsAQkU2gL4r1DsvL1tTSq9Zi2U8noxNNGAZP+Uksargo6frPp+SINI1
+         kQK1POs4ZmfaUKUEb/SQdoEWROOBYXmN9HuH7yN4=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02IBDiqX127238;
+        Wed, 18 Mar 2020 06:13:44 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
+ Mar 2020 06:13:44 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 18 Mar 2020 06:13:44 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02IBDgxR125063;
+        Wed, 18 Mar 2020 06:13:42 -0500
+Subject: Re: [PATCH 1/2] usb: dwc3: support continuous runtime PM with dual
+ role
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>, <balbi@kernel.org>,
+        <robh@kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200318083508.20781-1-martin.kepplinger@puri.sm>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <a032925d-112b-204c-fbc8-b45225016654@ti.com>
+Date:   Wed, 18 Mar 2020 13:13:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200316091324.15968-1-wan.ahmad.zainie.wan.mohamad@intel.com> <20200316091324.15968-2-wan.ahmad.zainie.wan.mohamad@intel.com>
-In-Reply-To: <20200316091324.15968-2-wan.ahmad.zainie.wan.mohamad@intel.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 18 Mar 2020 12:08:08 +0100
-Message-ID: <CAPDyKFqpeCXqbMZi7cffKEQ1=2xZnUT4Jpi85Fqyfk2eaTU1gQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: mmc: arasan: Add compatible strings for
- Intel Keem Bay
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200318083508.20781-1-martin.kepplinger@puri.sm>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 16 Mar 2020 at 10:13, Wan Ahmad Zainie
-<wan.ahmad.zainie.wan.mohamad@intel.com> wrote:
->
-> Add new compatible strings in sdhci-of-arasan.c to support Intel Keem Bay
-> eMMC/SD/SDIO controller, based on Arasan SDHCI 5.1.
->
-> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Martin,
+
+On 18/03/2020 10:35, Martin Kepplinger wrote:
+> The DRD module calls dwc3_set_mode() on role switches, i.e. when a device is
+> being pugged in. In order to support continuous runtime power management when
+> plugging in / unplugging a cable, we need to call pm_runtime_get() in this path.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 > ---
->  .../devicetree/bindings/mmc/arasan,sdhci.txt  | 39 +++++++++++++++++++
-
-We are starting to reach a point were I want to see people converting
-bindings into the yaml format, rather than extending the existing text
-based ones.
-
-Can you please have a look at the sdhci common bindings and the sdhci
-arasan variant, that would be a good start.
-
-Kind regards
-Uffe
-
->  1 file changed, 39 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> index 428685eb2ded..50f9cc0eff2a 100644
-> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> @@ -24,6 +24,10 @@ Required Properties:
->        For this device it is strongly suggested to include arasan,soc-ctl-syscon.
->      - "intel,lgm-sdhci-5.1-sdxc", "arasan,sdhci-5.1": Intel LGM SDXC PHY
->        For this device it is strongly suggested to include arasan,soc-ctl-syscon.
-> +    - "intel,keembay-sdhci-5.1-emmc", "arasan,sdhci-5.1": Keem Bay eMMC PHY
-> +      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
-> +    - "intel,keembay-sdhci-5.1-sd": Keem Bay SD controller
-> +    - "intel,keembay-sdhci-5.1-sdio": Keem Bay SDIO controller
->
->    [5] Documentation/devicetree/bindings/mmc/sdhci-am654.txt
->
-> @@ -133,3 +137,38 @@ Example:
->                 phy-names = "phy_arasan";
->                 arasan,soc-ctl-syscon = <&sysconf>;
->         };
+>   drivers/usb/dwc3/core.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index edc17155cb2b..7743c4de82e9 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -196,11 +196,16 @@ void dwc3_set_mode(struct dwc3 *dwc, u32 mode)
+>   {
+>   	unsigned long flags;
+>   
+> +	pm_runtime_get(dwc->dev);
 > +
-> +       mmc: mmc@33000000 {
-> +               compatible = "intel,keembay-sdhci-5.1-emmc", "arasan,sdhci-5.1";
-> +               interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-> +               reg = <0x0 0x33000000 0x0 0x300>;
-> +               clock-names = "clk_xin", "clk_ahb";
-> +               clocks = <&scmi_clk KEEM_BAY_PSS_AUX_EMMC>,
-> +                        <&scmi_clk KEEM_BAY_PSS_EMMC>;
-> +               phys = <&emmc_phy>;
-> +               phy-names = "phy_arasan";
-> +               assigned-clocks = <&scmi_clk KEEM_BAY_PSS_AUX_EMMC>;
-> +               clock-output-names = "emmc_cardclock";
-> +               #clock-cells = <0>;
-> +               arasan,soc-ctl-syscon = <&mmc_phy_syscon>;
-> +       };
+>   	spin_lock_irqsave(&dwc->lock, flags);
+>   	dwc->desired_dr_role = mode;
+>   	spin_unlock_irqrestore(&dwc->lock, flags);
+>   
+>   	queue_work(system_freezable_wq, &dwc->drd_work);
+
+We are not touching any IP registers and just scheduling
+the drd_work in this function so it doesn't make sense to do pm_runtime_get here.
+
+How about dong pm_runtime_get/put in __dwc3_set_mode()?
+
 > +
-> +       sd0: sdhci@31000000 {
-> +               compatible = "intel,keembay-sdhci-5.1-sd";
-> +               interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-> +               reg = <0x0 0x31000000 0x0 0x300>;
-> +               clock-names = "clk_xin", "clk_ahb";
-> +               clocks = <&scmi_clk KEEM_BAY_PSS_AUX_SD0>,
-> +                        <&scmi_clk KEEM_BAY_PSS_SD0>;
-> +               arasan,soc-ctl-syscon = <&sd0_phy_syscon>;
-> +       };
-> +
-> +       sd1: sdhci@32000000 {
-> +               compatible = "intel,keembay-sdhci-5.1-sdio";
-> +               interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +               reg = <0x0 0x32000000 0x0 0x300>;
-> +               clock-names = "clk_xin", "clk_ahb";
-> +               clocks = <&scmi_clk KEEM_BAY_PSS_AUX_SD1>,
-> +                        <&scmi_clk KEEM_BAY_PSS_SD1>;
-> +               arasan,soc-ctl-syscon = <&sd1_phy_syscon>;
-> +       };
-> --
-> 2.17.1
->
+> +	pm_runtime_mark_last_busy(dwc->dev);
+> +	pm_runtime_put_autosuspend(dwc->dev);
+>   }
+>   
+>   u32 dwc3_core_fifo_space(struct dwc3_ep *dep, u8 type)
+> 
+
+-- 
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
