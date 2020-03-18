@@ -6,93 +6,95 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F5DC5ACD7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F23DBC5ACD6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF6820773
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D212076F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgCRLA0 (ORCPT
+        id S1727177AbgCRLIL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:00:26 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:55456 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgCRLA0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 07:00:26 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id C3E4A20025;
-        Wed, 18 Mar 2020 12:00:15 +0100 (CET)
-Date:   Wed, 18 Mar 2020 12:00:14 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-Subject: Re: [PATCH v1 08/36] dt-bindings: display: convert
- feiyang,fy07024di26a30d to DT Schema
-Message-ID: <20200318110014.GA14940@ravnborg.org>
-References: <20200315134416.16527-1-sam@ravnborg.org>
- <20200315134416.16527-9-sam@ravnborg.org>
- <CAMty3ZD2kuD0nwWXDAD6R58Z2GFy1Ap7HfnEtYqwARQqs0nMfQ@mail.gmail.com>
+        Wed, 18 Mar 2020 07:08:11 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:33250 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726486AbgCRLIL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:08:11 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CEA862003C6;
+        Wed, 18 Mar 2020 12:08:08 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C18FD201202;
+        Wed, 18 Mar 2020 12:08:08 +0100 (CET)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id AD12620506;
+        Wed, 18 Mar 2020 12:08:08 +0100 (CET)
+Date:   Wed, 18 Mar 2020 13:08:08 +0200
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC 10/11] reset: imx: Add audiomix reset controller support
+Message-ID: <20200318110808.hzwr7m2hc2nfftvm@fsr-ub1664-175>
+References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+ <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
+ <ac6eb54c01cce4ec52560ac622e024ab47f2136c.camel@pengutronix.de>
+ <20200313141606.euumtuizm562zghv@fsr-ub1664-175>
+ <3aedf6357f321efaf1d59a0b654300803ad51cef.camel@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZD2kuD0nwWXDAD6R58Z2GFy1Ap7HfnEtYqwARQqs0nMfQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
-        a=P2wSyMO8yX5Niq4UQHAA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+In-Reply-To: <3aedf6357f321efaf1d59a0b654300803ad51cef.camel@pengutronix.de>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jagan.
-
-On Wed, Mar 18, 2020 at 04:16:51PM +0530, Jagan Teki wrote:
-> Hi Sam Ravmborg,
+On 20-03-13 16:55:47, Philipp Zabel wrote:
+> On Fri, 2020-03-13 at 16:16 +0200, Abel Vesa wrote:
+> [...]
+> > > > +	if (assert) {
+> > > > +		pm_runtime_get_sync(rcdev->dev);
+> > > 
+> > > This seems wrong. Why is the runtime PM reference count incremented when
+> > > a reset is asserted ...
+> > 
+> > The audiomix IP has its own power domain. 
 > 
-> I send the series for panels which I worked already [1], would like to
-> send the next version for those. will that work for you?
+> The reset controller does not control the power domain for its
+> consumers. The consumer of this reset should implement runtime PM.
 > 
-> [1] https://patchwork.kernel.org/cover/11315063/
 
-That would be great. Please do.
+No, the reset controller itself is part of a more complex IP called audiomix
+that has its own power domain.
 
-	Sam
+> > The way I see it, when the last deassert is done, there is no point
+> > in keeping the audiomix on. So, unless the clock controller part of it does it,
+> > the audiomix will be powered down.
+> 
+> You mean when the last assert is done? Presumably the driver wants to
+> use the hardware after deasserting the reset and asserts the reset when
+> it is done.
 
+No, I mean deassert. If there is no reset asserted anymore, then the audiomix
+can power down, if nothing else (I'm talking about the other stuff that's
+in the audiomix, like clock controller) keeping it on.
+
+The reset controller needs to be on only when there is an assertion of at least
+one reset bit going on.
+
+> 
+> regards
+> Philipp
