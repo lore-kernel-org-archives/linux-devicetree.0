@@ -2,167 +2,165 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223C8C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 13:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335D6C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E988B20724
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 13:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FDfxBNzZ"
+	by mail.kernel.org (Postfix) with ESMTP id 069AD20773
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584539457;
+	bh=9zcXYLKK5Dhr/+f1z2OMEWB6HxFE4z3Xgg7sGJiZW8o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E52l6wWoDdXur1JqD1ZLc3oEu5JXCof3I8kZgwsusQ0Z2h5koczjHsY/ADNyNbMOn
+	 cSfs4j2+xCMIavkJT62QIaWZs55/5ZlKeraGLKWoRVi8SKI4fgMyVzhfe4BOtCxUp3
+	 3tMPtnqgNuZ2ElbU8HtYDd/3G1VEdE38r3/jL+Jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgCRNsf (ORCPT
+        id S1726897AbgCRNuz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:48:35 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:22640 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726851AbgCRNsf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:48:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584539314; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=e7D++PiZS2wNSyjtok+pyoNm2YTmDPQke/rQXBiRN5U=; b=FDfxBNzZ7o02N/2ErnDVaTWTiIp5zXg/qmIYFKUFV591aTc7Enx7S2aMnlaOatAlZB3fyaKI
- sYh3ed0x3W9V6QizwtW8XhvuGhE+P3EWltwbllBlTN2U313Y7yrTqSg2EB2szqiDq80qGQ/s
- h3clxiplzva+BXQ1v5x3+SaSsH8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7226a2.7f4612e53730-smtp-out-n03;
- Wed, 18 Mar 2020 13:48:18 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 29F15C43636; Wed, 18 Mar 2020 13:48:18 +0000 (UTC)
-Received: from [192.168.0.8] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 18 Mar 2020 09:50:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbgCRNuz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 09:50:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AB192C433CB;
-        Wed, 18 Mar 2020 13:48:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AB192C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V2 7/8] spi: spi-qcom-qspi: Add interconnect support
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wsa@the-dreams.de, Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        Doug Anderson <dianders@chromium.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-8-git-send-email-akashast@codeaurora.org>
- <20200314005817.GN144492@google.com>
- <3aeb3083-2a31-b269-510d-eb608ff14ce5@codeaurora.org>
- <CAE=gft58QsgTCUHMHKJhcM9ZxAeMiY16CrbNv2HaTCRqwtmt7A@mail.gmail.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <e2ee1a60-a379-5c78-355a-64aad451a944@codeaurora.org>
-Date:   Wed, 18 Mar 2020 19:18:07 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id C79A020767;
+        Wed, 18 Mar 2020 13:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584539454;
+        bh=9zcXYLKK5Dhr/+f1z2OMEWB6HxFE4z3Xgg7sGJiZW8o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Xzl7WDy28mpXrKG2uuW9mWQWA6nDhybZpFEgynuX461hV6NyJmhE1pNlCmk69rfaW
+         FfhPC4crTBVLVlo4RJthEex5J1bu7XOcWh43uQA8WZnkPViZpYyossDRHrbsGrjRaM
+         lej9sKAIAKQVVgnpS6YCq5WXpAKLgH2POgcb/NAg=
+Date:   Wed, 18 Mar 2020 14:50:52 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "rafael@kernel.org" <rafael@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>
+Subject: Re: [PATCH v4 3/9] drivers: base: add linear ranges helpers
+Message-ID: <20200318135052.GA2804430@kroah.com>
+References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+ <01ac2439f9d33ae405999065c5d28c368bad4a28.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200318130838.GB2769584@kroah.com>
+ <910505f6a38298707fc27b135e49a7e2a941fb88.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft58QsgTCUHMHKJhcM9ZxAeMiY16CrbNv2HaTCRqwtmt7A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <910505f6a38298707fc27b135e49a7e2a941fb88.camel@fi.rohmeurope.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Evan,
+On Wed, Mar 18, 2020 at 01:42:26PM +0000, Vaittinen, Matti wrote:
+> Hello Greg,
+> 
+> On Wed, 2020-03-18 at 14:08 +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Feb 25, 2020 at 10:53:01AM +0200, Matti Vaittinen wrote:
+> > > Many devices have control registers which control some measurable
+> > > property. Often a register contains control field so that change in
+> > > this field causes linear change in the controlled property. It is
+> > > not
+> > > a rare case that user wants to give 'meaningful' control values and
+> > > driver needs to convert them to register field values. Even more
+> > > often user wants to 'see' the currently set value - again in
+> > > meaningful units - and driver needs to convert the values it reads
+> > > from register to these meaningful units. Examples of this include:
+> > > 
+> > > - regulators, voltage/current configurations
+> > > - power, voltage/current configurations
+> > > - clk(?) NCOs
+> > > 
+> > > and maybe others I can't think of right now.
+> > > 
+> > > Provide a linear_range helper which can do conversion from user
+> > > value
+> > > to register value 'selector'.
+> > > 
+> > > The idea here is stolen from regulator framework and patches
+> > > refactoring
+> > > the regulator helpers to use this are following.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > ---
+> > > 
+> > > Changes since rfc-v3:
+> > >   - Kerneldoc fixes
+> > >   - Corrected commit message typo meaningfull => meaningful
+> > > 
+> > >  drivers/base/Kconfig         |   3 +
+> > >  drivers/base/Makefile        |   1 +
+> > >  drivers/base/linear_ranges.c | 246
+> > > +++++++++++++++++++++++++++++++++++
+> > 
+> > Why in drivers/base/ ?
+> > 
+> > Why not in lib/ ?
+> 
+> I was pondering which of these would be better. I decided to do with
+> drivers/base because - in it's current form - this is really a driver
+> related stuff. I see it somehow in same position as regmap code -
+> although this is just a tiny helper compared to regmap. But this also
+> has pretty driver specific audience :)
+> 
+> And... I must admit I like things which I know. And I have been doing
+> driver development and "know" a few of the driver related colleagues -
+> hence working with them is easier for me ;) Getting to know the
+> colleagues maintaining lib is a bit scary :] Yep, I'm Finnish if you
+> happen to wonder why getting to know people is scary xD
+> 
+> > 
+> > >  include/linux/linear_range.h |  48 +++++++
+> > >  4 files changed, 298 insertions(+)
+> > >  create mode 100644 drivers/base/linear_ranges.c
+> > >  create mode 100644 include/linux/linear_range.h
+> > > 
+> > > diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+> > > index 5f0bc74d2409..636b6fa8e499 100644
+> > > --- a/drivers/base/Kconfig
+> > > +++ b/drivers/base/Kconfig
+> > > @@ -209,4 +209,7 @@ config GENERIC_ARCH_TOPOLOGY
+> > >  	  appropriate scaling, sysfs interface for reading capacity
+> > > values at
+> > >  	  runtime.
+> > >  
+> > > +config LINEAR_RANGES
+> > > +	tristate
+> > 
+> > No help text at all???
+> 
+> Yes. The linear ranges has no meaning to be enabled alone. It only
+> plays a role if it is used by some driver/subsystem. And
+> drivers/subsystems should do
+> select LINEAR_RANGES. So showing help in any config tool is not needed.
+> This should actually not be visible in menuconfig or others. I think I
+> have seen a few examples like this.
+> 
+> Ayways, I have no obejctions to adding some text if absolutely needed.
+> Any suggestions for a text politely saying - "please, pretend I am not
+> here" - are welcome :) (Although, I think this really does not need
+> help text).
 
-On 3/18/2020 12:38 AM, Evan Green wrote:
-> On Tue, Mar 17, 2020 at 5:13 AM Akash Asthana <akashast@codeaurora.org> wrote:
->> Hi Matthias,
->>
->> On 3/14/2020 6:28 AM, Matthias Kaehlcke wrote:
->>> Hi,
->>>
->>> On Fri, Mar 13, 2020 at 06:42:13PM +0530, Akash Asthana wrote:
->>>> Get the interconnect paths for QSPI device and vote according to the
->>>> current bus speed of the driver.
->>>>
->>>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
->>>> ---
->>>>    - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
->>>>      path handle
->>>>    - As per Matthias comment, added error handling for icc_set_bw call
->>>>
->>>>    drivers/spi/spi-qcom-qspi.c | 46 ++++++++++++++++++++++++++++++++++++++++++++-
->>>>    1 file changed, 45 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
->>>> index 3c4f83b..ad48f43 100644
->>>> --- a/drivers/spi/spi-qcom-qspi.c
->>>> +++ b/drivers/spi/spi-qcom-qspi.c
->>>> @@ -2,6 +2,7 @@
->>>>    // Copyright (c) 2017-2018, The Linux foundation. All rights reserved.
->>>>
->>>>    #include <linux/clk.h>
->>>> +#include <linux/interconnect.h>
->>>>    #include <linux/interrupt.h>
->>>>    #include <linux/io.h>
->>>>    #include <linux/module.h>
->>>> @@ -139,7 +140,10 @@ struct qcom_qspi {
->>>>       struct device *dev;
->>>>       struct clk_bulk_data *clks;
->>>>       struct qspi_xfer xfer;
->>>> -    /* Lock to protect xfer and IRQ accessed registers */
->>>> +    struct icc_path *icc_path_cpu_to_qspi;
->>>> +    unsigned int avg_bw_cpu;
->>>> +    unsigned int peak_bw_cpu;
->>> This triplet is a recurring pattern, and is probably not limited to geni SE/QSPI.
->>> On https://patchwork.kernel.org/patch/11436889/#23221925 I suggested the creation
->>> of a geni SE specific struct, however adding a generic convenience struct to
->>> 'linux/interconnect.h' might be the better solution:
->>>
->>> struct icc_client {
->>>        struct icc_path *path;
->>>        unsigned int avg_bw;
->>>        unsigned int peak_bw;
->>> };
->>>
->>> I'm sure there are better names for it, but this would be the idea.
->> Yeah, I think introducing this to ICC header would be better solution.
-> +Georgi
->
-> I'm not as convinced this structure is generally useful and belongs in
-> the interconnect core. The thing that strikes me as weird with putting
-> it in the core is now we're saving these values both inside and
-> outside the interconnect core.
-IIUC, you meant to say struct icc_req(inside icc_path) will be saving 
-avg_bw and peak_bw so no need to save it outside icc_path?
->   In the GENI case here, we only really
-> need them to undo the 0 votes we cast during suspend. If "vote for 0
-> in suspend and whatever it was before at resume" is a recurring theme,
-> maybe the core should give us path_disable() and path_enable() calls
-> instead. I'm thinking out loud, maybe Georgi has some thoughts.
->
-> Akash, for now if you want to avoid wading into a larger discussion
-> maybe just refactor to a common structure local to GENI.
+This kind of implies it needs to be in lib/ that way the needed code
+links it and all should be fine.
 
-Ok
+thanks,
 
-Thanks,
-
-Akash
-
->
->
-> -Evan
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+greg k-h
