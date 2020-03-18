@@ -2,44 +2,70 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9BFC5ACDA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C42C5ACD6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 07:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C63C2076A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E77F2076D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 07:19:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="orQAqFg4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgCRHHr (ORCPT
+        id S1726586AbgCRHTw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 03:07:47 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40278 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgCRHHl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 03:07:41 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 3FA6A2928C5
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>,
-        Andrzej Hajda <a.hajda@samsung.com>, icenowy@aosc.io,
-        anarsoul@gmail.com, Neil Armstrong <narmstrong@baylibre.com>,
-        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        megous@megous.com, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v4 3/4] dt-bindings: Add ANX7688 HDMI to DP bridge binding
-Date:   Wed, 18 Mar 2020 08:07:29 +0100
-Message-Id: <20200318070730.4012371-3-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200318070730.4012371-1-enric.balletbo@collabora.com>
-References: <20200318070730.4012371-1-enric.balletbo@collabora.com>
+        Wed, 18 Mar 2020 03:19:52 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38608 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgCRHTw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 03:19:52 -0400
+Received: by mail-pf1-f195.google.com with SMTP id z5so13420119pfn.5;
+        Wed, 18 Mar 2020 00:19:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ntc/lC+0lJ6yYNxW0plx8U2OvYjUOf42pIvCB4jmx7A=;
+        b=orQAqFg4WmrI4PrZKdYeg3WvkW2Mg/qBOdGVmytn6TwK13yLp3azzmm/RhijcDv63w
+         EMZDVnjh5Vf1S/qsYIuIGxYZNvFpkAwBGlnrJ6gIr/iuX2ECbOR/ocYctyKtjszsa7qb
+         zjcPoajZQEoRLVmvRCXHSj9IRVMr5HuZffYYr2DyMPQK9hwz55RyG+yYFdsZ45Jsf0lw
+         tmS96WEzAH8OSL/hPPQ9TLLPe9Eth7MBZzAja+mGUbPB5gtvIveFbNVm5Jm6LtZzggpz
+         yDqxOLqaeU5UMXup0zw+2xkOaZ5yRKpzH6S1vWCiQFJx9pK7hqU5XAWSZL+DggxF/fhj
+         27Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ntc/lC+0lJ6yYNxW0plx8U2OvYjUOf42pIvCB4jmx7A=;
+        b=P8TNNmhbTbSQr3PCIIdR68DwB744vrCzYdx7EDzPP7AiXiu5GFTdHcPay4oYVJFeyi
+         8KAzRWkbIt8BSLc196yrl2lt+tv4cvbpSFnCvjBfrrQoxsk5DqrrXMRyFlo13zKx9xk3
+         olXKn0LcRRYp7IZahoSIws30GV3gEePBGL0f1dqRa/gkfs4L52dmLlyqJ5KnPoVMNkTt
+         sVHw3k1DME1t67wtkQLu1Mo9xJZdOHNvC4h95iTAeoogGfFJRHqleLiRwVNGp9B628/K
+         3E9otBauGxz2Z6xMD7xO5V6dGLAf2x4FCEsRn+X0uu0B9D9ocZhvWKd3q7lGeN7AukSX
+         d8TQ==
+X-Gm-Message-State: ANhLgQ0sZQkMtj5kdbsFmAq8XwCAKhkaPDaNvtKj77bJiWVoOhIngxXS
+        A5UPVoxBYBfDoiL50rHVq3Ix+UmO
+X-Google-Smtp-Source: ADFU+vvv7naQJrSr7Arvd2x0lASQjE60hLdv54iT681tXBkew6P05e66s0GirF8GoabRbZV7ApY4hg==
+X-Received: by 2002:aa7:963d:: with SMTP id r29mr2801692pfg.87.1584515990993;
+        Wed, 18 Mar 2020 00:19:50 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:6086:470e:bc8d:c185:c429:a95b])
+        by smtp.gmail.com with ESMTPSA id e187sm5202529pfe.143.2020.03.18.00.19.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 00:19:50 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org, robh+dt@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        mark.rutland@arm.com, nish.malpani25@gmail.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4] dt-bindings: iio: tsl2563: convert bindings to YAML
+Date:   Wed, 18 Mar 2020 12:49:40 +0530
+Message-Id: <20200318071940.12220-1-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -47,115 +73,107 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+Convert the TSL2563 device tree bindings to the new YAML format.
 
-Add documentation for DT properties supported by the ANX7688 HDMI-DP
-converter.
-
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
 ---
 
-Changes in v4: None
+Changes in v4:
+  - Change $id property to reflect corrected relative path.
+
 Changes in v3:
-- Adapt the bridge bindings for the multi-function device.
+  - Include the complete diff (changes from v1).
 
 Changes in v2:
-- Improve a bit the descriptions using the info from the datasheet.
-- Convert binding to yaml.
-- Use dual licensing.
+  - Rename the dt-bindings to include manufacturer's name.
+  - Synchronize the bindings with the driver.
+---
+ .../bindings/iio/light/amstaos,tsl2563.yaml   | 49 +++++++++++++++++++
+ .../devicetree/bindings/iio/light/tsl2563.txt | 19 -------
+ 2 files changed, 49 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
+ delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
 
- .../bridge/analogix,anx7688-bridge.yaml       | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/analogix,anx7688-bridge.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/analogix,anx7688-bridge.yaml b/Documentation/devicetree/bindings/display/bridge/analogix,anx7688-bridge.yaml
+diff --git a/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
 new file mode 100644
-index 000000000000..c56da3f39dd8
+index 000000000000..efd2eba5f23c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/analogix,anx7688-bridge.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/display/bridge/analogix,anx7688-bridge.yaml#
++$id: http://devicetree.org/schemas/iio/light/amstaos,tsl2563.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Analogix ANX7688 HDMI to DisplayPort Bridge
++title: AMS TAOS TSL2563 ambient light sensor
 +
 +maintainers:
-+  - Nicolas Boichat <drinkcat@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++  - Sebastian Reichel <sre@kernel.org>
 +
 +description: |
-+  The ANX7688 bridge describes the HDMI 2.0 to DisplayPort 1.3 bridge block
-+  included in the ANX7688 chip controller. These are meant to be used for
-+  controlling display-related signals.
-+
-+  The node of this device should be under an analogix,anx7866 node. Please refer
-+  to Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml for the ANX7688
-+  core bindings.
++  Ambient light sensor with an i2c interface.
 +
 +properties:
 +  compatible:
-+    const: analogix,anx7688-bridge
++    enum:
++      - amstaos,tsl2560
++      - amstaos,tsl2561
++      - amstaos,tsl2562
++      - amstaos,tsl2563
 +
-+  ports:
-+    type: object
++  reg:
++    maxItems: 1
 +
-+    properties:
-+      port@0:
-+        type: object
-+        description: |
-+          Video port for HDMI input
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Video port for DP output
-+
-+    required:
-+      - port@0
++  amstaos,cover-comp-gain:
++    description: Multiplier for gain compensation
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [1, 16]
 +
 +required:
 +  - compatible
-+  - ports
++  - reg
 +
 +examples:
 +  - |
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++    i2c {
 +
-+        anx7688: anx7688@2c {
-+            compatible = "analogix,anx7688";
-+            reg = <0x2c>;
++      #address-cells = <1>;
++      #size-cells = <0>;
 +
-+            bridge {
-+                compatible = "analogix,anx7688-bridge";
-+
-+                ports {
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    port@0 {
-+                        reg = <0>;
-+                        anx7688_in: endpoint {
-+                            remote-endpoint = <&hdmi0_out>;
-+                        };
-+                    };
-+
-+                    port@1 {
-+                        reg = <1>;
-+                        anx7688_out: endpoint {
-+                            remote-endpoint = <&typec0_connector>;
-+                       };
-+                    };
-+                };
-+            };
-+        };
++      light-sensor@29 {
++        compatible = "amstaos,tsl2563";
++        reg = <0x29>;
++        amstaos,cover-comp-gain = <16>;
++      };
 +    };
++...
+diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+deleted file mode 100644
+index f91e809e736e..000000000000
+--- a/Documentation/devicetree/bindings/iio/light/tsl2563.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-* AMS TAOS TSL2563 ambient light sensor
+-
+-Required properties:
+-
+-  - compatible : should be "amstaos,tsl2563"
+-  - reg : the I2C address of the sensor
+-
+-Optional properties:
+-
+-  - amstaos,cover-comp-gain : integer used as multiplier for gain
+-                              compensation (default = 1)
+-
+-Example:
+-
+-tsl2563@29 {
+-	compatible = "amstaos,tsl2563";
+-	reg = <0x29>;
+-	amstaos,cover-comp-gain = <16>;
+-};
 -- 
-2.25.1
+2.20.1
 
