@@ -2,99 +2,151 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23DBC5ACD6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F71C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D212076F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02BB920771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 11:08:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ULz4sod6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgCRLIL (ORCPT
+        id S1727113AbgCRLIp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:08:11 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:33250 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbgCRLIL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:08:11 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CEA862003C6;
-        Wed, 18 Mar 2020 12:08:08 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C18FD201202;
-        Wed, 18 Mar 2020 12:08:08 +0100 (CET)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id AD12620506;
-        Wed, 18 Mar 2020 12:08:08 +0100 (CET)
-Date:   Wed, 18 Mar 2020 13:08:08 +0200
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC 10/11] reset: imx: Add audiomix reset controller support
-Message-ID: <20200318110808.hzwr7m2hc2nfftvm@fsr-ub1664-175>
-References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
- <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
- <ac6eb54c01cce4ec52560ac622e024ab47f2136c.camel@pengutronix.de>
- <20200313141606.euumtuizm562zghv@fsr-ub1664-175>
- <3aedf6357f321efaf1d59a0b654300803ad51cef.camel@pengutronix.de>
+        Wed, 18 Mar 2020 07:08:45 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:33347 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbgCRLIp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 07:08:45 -0400
+Received: by mail-vs1-f67.google.com with SMTP id y138so8319288vsy.0
+        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 04:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9frSoSYLFCu0A/Mh7LPuKatr2O8xik/d01v55VOnyP4=;
+        b=ULz4sod6I+eklVNwP7hqM50Hd4vBJUS+Bpu5i+ryBoBCsPblh/ogw7XkFNmBbag3pM
+         H9UCyEd7er7GDNZk9U2VHBwy9SBc3G3Qo09kpO4/1Qzy4FGeu7WeyJcgSVbZYe1mCliZ
+         qHCXZKSOjuaq2zWNzBvcKuDAahQPSbz+Iacq5FcZD4T9xJgukS2Kk7IZe9Qp6ABIVa2A
+         +yc+0sidH02WbhvVA/Qp0EP184GW+NhZVCbdXXtnHtbEtw0bp4MiHoL7WLU0JtiVH+YV
+         +gcPxMhrL7qpZR/Kte1KBosjvuB2bpid4B7DY2r+I0Atb8lhNn3E3VLqSo3alkh2sBDA
+         4j4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9frSoSYLFCu0A/Mh7LPuKatr2O8xik/d01v55VOnyP4=;
+        b=blKlLeOZywYp1OZluDyeihUyTdA2FvhLZmrIuiytrZS3E1FpUCr50EPMg2uwX5bY+n
+         48oefFl9YtwFJP+QhuUJw0z4wrutzHd8QpptOwcMHojdJw3iuuc4z/Ga/WBQFZTb0kkY
+         i0X5Qi+dYkoMorUyWKyhEXIbaGezCad6KKJzjq9gAfWvHdgaVnisgrLFLFoHvWxV5ekK
+         iZpONCUq0Zgndy26U9rc1GkyymN5WNbtIEUXiNud4NGnW2c+1clmZBMG5+05tFQYPYon
+         8isxuDd3WglwzNdS0wr4kR7eC/o6Yf4sGd87M0R+xoDJYB0vDoSMdAr6nN2kg6UpsEKA
+         NQuw==
+X-Gm-Message-State: ANhLgQ1PARIRVKzK/FpTDVEmMMxhJpr1J53OL5K1wxhZMpz34ROErxP9
+        TlN/tE7GTKy73higYEvz1RbYEoXQtAiH3Y8A56VvpJIc
+X-Google-Smtp-Source: ADFU+vu2FC4mlTKSIEnZM8U/cxLci0q+mKGTSglQiVCEp3b3EISiorDyV2HOqWCmtAvl8B9z9jqXDCDKTBu1B75xgwU=
+X-Received: by 2002:a67:646:: with SMTP id 67mr2511025vsg.34.1584529724216;
+ Wed, 18 Mar 2020 04:08:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3aedf6357f321efaf1d59a0b654300803ad51cef.camel@pengutronix.de>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <20200316091324.15968-1-wan.ahmad.zainie.wan.mohamad@intel.com> <20200316091324.15968-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+In-Reply-To: <20200316091324.15968-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 18 Mar 2020 12:08:08 +0100
+Message-ID: <CAPDyKFqpeCXqbMZi7cffKEQ1=2xZnUT4Jpi85Fqyfk2eaTU1gQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mmc: arasan: Add compatible strings for
+ Intel Keem Bay
+To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-03-13 16:55:47, Philipp Zabel wrote:
-> On Fri, 2020-03-13 at 16:16 +0200, Abel Vesa wrote:
-> [...]
-> > > > +	if (assert) {
-> > > > +		pm_runtime_get_sync(rcdev->dev);
-> > > 
-> > > This seems wrong. Why is the runtime PM reference count incremented when
-> > > a reset is asserted ...
-> > 
-> > The audiomix IP has its own power domain. 
-> 
-> The reset controller does not control the power domain for its
-> consumers. The consumer of this reset should implement runtime PM.
-> 
+On Mon, 16 Mar 2020 at 10:13, Wan Ahmad Zainie
+<wan.ahmad.zainie.wan.mohamad@intel.com> wrote:
+>
+> Add new compatible strings in sdhci-of-arasan.c to support Intel Keem Bay
+> eMMC/SD/SDIO controller, based on Arasan SDHCI 5.1.
+>
+> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+> ---
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt  | 39 +++++++++++++++++++
 
-No, the reset controller itself is part of a more complex IP called audiomix
-that has its own power domain.
+We are starting to reach a point were I want to see people converting
+bindings into the yaml format, rather than extending the existing text
+based ones.
 
-> > The way I see it, when the last deassert is done, there is no point
-> > in keeping the audiomix on. So, unless the clock controller part of it does it,
-> > the audiomix will be powered down.
-> 
-> You mean when the last assert is done? Presumably the driver wants to
-> use the hardware after deasserting the reset and asserts the reset when
-> it is done.
+Can you please have a look at the sdhci common bindings and the sdhci
+arasan variant, that would be a good start.
 
-No, I mean deassert. If there is no reset asserted anymore, then the audiomix
-can power down, if nothing else (I'm talking about the other stuff that's
-in the audiomix, like clock controller) keeping it on.
+Kind regards
+Uffe
 
-The reset controller needs to be on only when there is an assertion of at least
-one reset bit going on.
-
-> 
-> regards
-> Philipp
+>  1 file changed, 39 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> index 428685eb2ded..50f9cc0eff2a 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -24,6 +24,10 @@ Required Properties:
+>        For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+>      - "intel,lgm-sdhci-5.1-sdxc", "arasan,sdhci-5.1": Intel LGM SDXC PHY
+>        For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+> +    - "intel,keembay-sdhci-5.1-emmc", "arasan,sdhci-5.1": Keem Bay eMMC PHY
+> +      For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+> +    - "intel,keembay-sdhci-5.1-sd": Keem Bay SD controller
+> +    - "intel,keembay-sdhci-5.1-sdio": Keem Bay SDIO controller
+>
+>    [5] Documentation/devicetree/bindings/mmc/sdhci-am654.txt
+>
+> @@ -133,3 +137,38 @@ Example:
+>                 phy-names = "phy_arasan";
+>                 arasan,soc-ctl-syscon = <&sysconf>;
+>         };
+> +
+> +       mmc: mmc@33000000 {
+> +               compatible = "intel,keembay-sdhci-5.1-emmc", "arasan,sdhci-5.1";
+> +               interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+> +               reg = <0x0 0x33000000 0x0 0x300>;
+> +               clock-names = "clk_xin", "clk_ahb";
+> +               clocks = <&scmi_clk KEEM_BAY_PSS_AUX_EMMC>,
+> +                        <&scmi_clk KEEM_BAY_PSS_EMMC>;
+> +               phys = <&emmc_phy>;
+> +               phy-names = "phy_arasan";
+> +               assigned-clocks = <&scmi_clk KEEM_BAY_PSS_AUX_EMMC>;
+> +               clock-output-names = "emmc_cardclock";
+> +               #clock-cells = <0>;
+> +               arasan,soc-ctl-syscon = <&mmc_phy_syscon>;
+> +       };
+> +
+> +       sd0: sdhci@31000000 {
+> +               compatible = "intel,keembay-sdhci-5.1-sd";
+> +               interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+> +               reg = <0x0 0x31000000 0x0 0x300>;
+> +               clock-names = "clk_xin", "clk_ahb";
+> +               clocks = <&scmi_clk KEEM_BAY_PSS_AUX_SD0>,
+> +                        <&scmi_clk KEEM_BAY_PSS_SD0>;
+> +               arasan,soc-ctl-syscon = <&sd0_phy_syscon>;
+> +       };
+> +
+> +       sd1: sdhci@32000000 {
+> +               compatible = "intel,keembay-sdhci-5.1-sdio";
+> +               interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> +               reg = <0x0 0x32000000 0x0 0x300>;
+> +               clock-names = "clk_xin", "clk_ahb";
+> +               clocks = <&scmi_clk KEEM_BAY_PSS_AUX_SD1>,
+> +                        <&scmi_clk KEEM_BAY_PSS_SD1>;
+> +               arasan,soc-ctl-syscon = <&sd1_phy_syscon>;
+> +       };
+> --
+> 2.17.1
+>
