@@ -2,165 +2,138 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335D6C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD5FC5ACD8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 14:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069AD20773
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584539457;
-	bh=9zcXYLKK5Dhr/+f1z2OMEWB6HxFE4z3Xgg7sGJiZW8o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E52l6wWoDdXur1JqD1ZLc3oEu5JXCof3I8kZgwsusQ0Z2h5koczjHsY/ADNyNbMOn
-	 cSfs4j2+xCMIavkJT62QIaWZs55/5ZlKeraGLKWoRVi8SKI4fgMyVzhfe4BOtCxUp3
-	 3tMPtnqgNuZ2ElbU8HtYDd/3G1VEdE38r3/jL+Jg=
+	by mail.kernel.org (Postfix) with ESMTP id BC31720773
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 14:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgCRNuz (ORCPT
+        id S1727069AbgCROdZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40460 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 10:33:25 -0400
+Received: from sauhun.de ([88.99.104.3]:48226 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726894AbgCRNuz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:50:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C79A020767;
-        Wed, 18 Mar 2020 13:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584539454;
-        bh=9zcXYLKK5Dhr/+f1z2OMEWB6HxFE4z3Xgg7sGJiZW8o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xzl7WDy28mpXrKG2uuW9mWQWA6nDhybZpFEgynuX461hV6NyJmhE1pNlCmk69rfaW
-         FfhPC4crTBVLVlo4RJthEex5J1bu7XOcWh43uQA8WZnkPViZpYyossDRHrbsGrjRaM
-         lej9sKAIAKQVVgnpS6YCq5WXpAKLgH2POgcb/NAg=
-Date:   Wed, 18 Mar 2020 14:50:52 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "rafael@kernel.org" <rafael@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>
-Subject: Re: [PATCH v4 3/9] drivers: base: add linear ranges helpers
-Message-ID: <20200318135052.GA2804430@kroah.com>
-References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
- <01ac2439f9d33ae405999065c5d28c368bad4a28.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
- <20200318130838.GB2769584@kroah.com>
- <910505f6a38298707fc27b135e49a7e2a941fb88.camel@fi.rohmeurope.com>
+        id S1726596AbgCROdY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 10:33:24 -0400
+Received: from localhost (p54B333FA.dip0.t-ipconnect.de [84.179.51.250])
+        by pokefinder.org (Postfix) with ESMTPSA id 039522C097D;
+        Wed, 18 Mar 2020 15:33:21 +0100 (CET)
+Date:   Wed, 18 Mar 2020 15:33:21 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-i3c@lists.infradead.org,
+        Kieran Bingham <kieran@ksquared.org.uk>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 6/7] i2c: of: mark a whole array of regs as reserved
+Message-ID: <20200318143321.GB8300@ninjato>
+References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
+ <20200220172403.26062-7-wsa+renesas@sang-engineering.com>
+ <CAMuHMdUvADDozCX6Bd0dDVejpTY-k42naEnB7Q5Z6w7Yg94_Vw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="aVD9QWMuhilNxW9f"
 Content-Disposition: inline
-In-Reply-To: <910505f6a38298707fc27b135e49a7e2a941fb88.camel@fi.rohmeurope.com>
+In-Reply-To: <CAMuHMdUvADDozCX6Bd0dDVejpTY-k42naEnB7Q5Z6w7Yg94_Vw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 01:42:26PM +0000, Vaittinen, Matti wrote:
-> Hello Greg,
-> 
-> On Wed, 2020-03-18 at 14:08 +0100, Greg Kroah-Hartman wrote:
-> > On Tue, Feb 25, 2020 at 10:53:01AM +0200, Matti Vaittinen wrote:
-> > > Many devices have control registers which control some measurable
-> > > property. Often a register contains control field so that change in
-> > > this field causes linear change in the controlled property. It is
-> > > not
-> > > a rare case that user wants to give 'meaningful' control values and
-> > > driver needs to convert them to register field values. Even more
-> > > often user wants to 'see' the currently set value - again in
-> > > meaningful units - and driver needs to convert the values it reads
-> > > from register to these meaningful units. Examples of this include:
-> > > 
-> > > - regulators, voltage/current configurations
-> > > - power, voltage/current configurations
-> > > - clk(?) NCOs
-> > > 
-> > > and maybe others I can't think of right now.
-> > > 
-> > > Provide a linear_range helper which can do conversion from user
-> > > value
-> > > to register value 'selector'.
-> > > 
-> > > The idea here is stolen from regulator framework and patches
-> > > refactoring
-> > > the regulator helpers to use this are following.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > ---
-> > > 
-> > > Changes since rfc-v3:
-> > >   - Kerneldoc fixes
-> > >   - Corrected commit message typo meaningfull => meaningful
-> > > 
-> > >  drivers/base/Kconfig         |   3 +
-> > >  drivers/base/Makefile        |   1 +
-> > >  drivers/base/linear_ranges.c | 246
-> > > +++++++++++++++++++++++++++++++++++
-> > 
-> > Why in drivers/base/ ?
-> > 
-> > Why not in lib/ ?
-> 
-> I was pondering which of these would be better. I decided to do with
-> drivers/base because - in it's current form - this is really a driver
-> related stuff. I see it somehow in same position as regmap code -
-> although this is just a tiny helper compared to regmap. But this also
-> has pretty driver specific audience :)
-> 
-> And... I must admit I like things which I know. And I have been doing
-> driver development and "know" a few of the driver related colleagues -
-> hence working with them is easier for me ;) Getting to know the
-> colleagues maintaining lib is a bit scary :] Yep, I'm Finnish if you
-> happen to wonder why getting to know people is scary xD
-> 
-> > 
-> > >  include/linux/linear_range.h |  48 +++++++
-> > >  4 files changed, 298 insertions(+)
-> > >  create mode 100644 drivers/base/linear_ranges.c
-> > >  create mode 100644 include/linux/linear_range.h
-> > > 
-> > > diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-> > > index 5f0bc74d2409..636b6fa8e499 100644
-> > > --- a/drivers/base/Kconfig
-> > > +++ b/drivers/base/Kconfig
-> > > @@ -209,4 +209,7 @@ config GENERIC_ARCH_TOPOLOGY
-> > >  	  appropriate scaling, sysfs interface for reading capacity
-> > > values at
-> > >  	  runtime.
-> > >  
-> > > +config LINEAR_RANGES
-> > > +	tristate
-> > 
-> > No help text at all???
-> 
-> Yes. The linear ranges has no meaning to be enabled alone. It only
-> plays a role if it is used by some driver/subsystem. And
-> drivers/subsystems should do
-> select LINEAR_RANGES. So showing help in any config tool is not needed.
-> This should actually not be visible in menuconfig or others. I think I
-> have seen a few examples like this.
-> 
-> Ayways, I have no obejctions to adding some text if absolutely needed.
-> Any suggestions for a text politely saying - "please, pretend I am not
-> here" - are welcome :) (Although, I think this really does not need
-> help text).
 
-This kind of implies it needs to be in lib/ that way the needed code
-links it and all should be fine.
+--aVD9QWMuhilNxW9f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks,
 
-greg k-h
+> > +int of_i2c_get_board_info(struct device_node *node, struct i2c_board_i=
+nfo *info)
+> > +{
+> > +       u32 addr;
+> > +       int ret;
+> > +
+> > +       ret =3D of_property_read_u32(node, "reg", &addr);
+>=20
+> Perhaps the time is ripe to start considering #address-cells, instead
+> of assuming 1, here ...
+
+I think here it is okay because we really want the first entry of the
+first tuple.
+
+> > +       of_property_for_each_u32(node, "reg", prop, cur, reg) {
+>=20
+> ... and especially here, if this code can ever be reused for i3c, which u=
+ses 3.
+
+But here I agree. I reimplemented the code to handle it, and it worked
+with '#address-cells =3D <2>;' as expected. Here is the diff to this
+patch:
+
+@@ -16,6 +16,7 @@
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/of_device.h>
+ #include <linux/sysfs.h>
+=20
+@@ -75,13 +76,14 @@ static struct i2c_client *of_i2c_register_device(struct=
+ i2c_adapter *adap,
+ 	struct i2c_client *client, *first_client =3D ERR_PTR(-ENOENT);
+ 	struct i2c_board_info info;
+ 	bool first_reg =3D true;
+-	struct property *prop;
+-	const __be32 *cur;
+-	u32 reg;
++	unsigned int i =3D 0;
++	const __be32 *prop;
++	u16 reg;
+=20
+ 	pr_debug("register %pOF\n", node);
+=20
+-	of_property_for_each_u32(node, "reg", prop, cur, reg) {
++	while ((prop =3D of_get_address(node, i++, NULL, NULL))) {
++		reg =3D of_read_number(prop, 1);
+ 		of_i2c_decode_board_info(node, reg, first_reg, &info);
+=20
+ 		client =3D i2c_new_client_device(adap, &info);
+
+Thanks, Geert! I will send out the new version in a few minutes.
+
+
+--aVD9QWMuhilNxW9f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5yMS0ACgkQFA3kzBSg
+KbYtfRAAil0f+6TG3T06kRnSNoNLPpEoqabj0ip7Vz7+gSloBvl8lszjT7CP//7R
+9gnjhLFvr6hPVbC64dzimreCL1JGYUtFOhKDl/pPSA+TrEFEARbOCxIbdhgieFC0
+DrSN2Ed+jK7ZRTPdTuT2y6DNf6bbDHo3ihnzd57I2wy6cEsTMdyIJSAnsxfn5QVf
+6EKTCLAeBI9hPd3jDB38ICvQ0Vf9/F9lHRZNOQo1hQwSkUbnyyqf26k8kt/VAnm9
+Ipcvlz8krmqY2FWnC/FlzhKV5lSc9i7VSZJTQOjtO39RHxRAsOytbzc6erlTp9Pz
+V1+Uw8HGIVMbQe1+kpaaJvomxTApQ2HqjTOPTQc/2h9qXUdCdeWFi56oaJzCl7hp
+WHCgqmUCfs4a1V75vuHk2Fj3mPMQsvmjiWrvW5Sz5nvto2GTjKsg2m/v6bdabTxk
+iMFjwBfQVun1ziMQOad0zycEFF+sBtQafAg4zmS/FAyrhGAVI9YQ57Z93dlk7D1L
+YLFvxifo+L5a6/ny1uEL0xrjMoYfiUCTXlySSuywl5dD5jsqBoUWduFXeHo0DezA
+Pe/Vht7ChN7WlI3kDt3X+zCVGmf5WnObEJPrzm39gUNjod7UpW39zgoKQWuF4Rpp
+JCKxZe174onb36K3lz83DRTkg5v5NU1AdVgwqrKM6RjakOs1aXM=
+=Ku4u
+-----END PGP SIGNATURE-----
+
+--aVD9QWMuhilNxW9f--
