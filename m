@@ -2,104 +2,107 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD53C5ACD9
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 04:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5237FC5ACD6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 05:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A26F42076E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 04:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 289512076A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 05:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Dl87vE/F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzJDmjwd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgCREaO (ORCPT
+        id S1726506AbgCRFQQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 00:30:14 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:23719 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727029AbgCREaL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 00:30:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584505810; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=MSw4xVYEsk71EtF3fzdgtkp0pHYtQe4rRnmOGgCIreI=; b=Dl87vE/Fghp+IaWJWuZTMV9MpHGVkVtNEKfarPwbQP3YZD5jV+Pc0Taitfhzj2BYtD5GxKcP
- F3dJfsGix0J/pizHwv+SJjbuLwks87LN7JH2tszC+Mc6+cysaSrU+v+opUnMQlMKnZV1df7W
- 7U5Bpu6ddLXbrQ2jcrAZMccPKGk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e71a3c6.7f2fc4bec6c0-smtp-out-n05;
- Wed, 18 Mar 2020 04:29:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 46446C432C2; Wed, 18 Mar 2020 04:29:57 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 95924C43637;
-        Wed, 18 Mar 2020 04:29:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 95924C43637
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
-Subject: [PATCH v5 3/4] arm64: dts: qcom: sc7180: Enable SoC sleep stats
-Date:   Wed, 18 Mar 2020 09:59:17 +0530
-Message-Id: <1584505758-21037-4-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584505758-21037-1-git-send-email-mkshah@codeaurora.org>
-References: <1584505758-21037-1-git-send-email-mkshah@codeaurora.org>
+        Wed, 18 Mar 2020 01:16:16 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45863 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbgCRFQQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 01:16:16 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 2so13224651pfg.12;
+        Tue, 17 Mar 2020 22:16:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HlwaAt0Q9Ki0s2/sS1b607ZcJpVqAr5H+69fMO0HjgI=;
+        b=TzJDmjwdj55mwAp95w0Xzx8U18G2cfzG9JLhtMNbWyM+X6LQREWfBymZn9A1xhXgmS
+         3sTKe1Ft+t8MrIHsTwM4MgsEAhd1CzfT2M0y8TG5sUkJKkU67pWg0mKWqSPXDzpGy6g6
+         nIWXR4xRVnkvp9R3rnlSez1VwIO9RZrxEIpD3QO/8qKfPuXli/j3bWvDmeyWM+1Lueas
+         zsBJh8Iad3T2kyZrmT581Tw5yeQLaQj+nf1FnFYKMLzqMYLF1AQPkyXwNAbYLLSnErPI
+         l/mgYrXy0ZQnMeA4m+ssEbnTSVdiXKhFPqLuoFFimf86HfTuBnbnsIyD2SQmmMxuFJqh
+         T6zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HlwaAt0Q9Ki0s2/sS1b607ZcJpVqAr5H+69fMO0HjgI=;
+        b=hHh2EHuU3jf9wYqHpbdnBWxDaSF0xOkwoFygr+VSS+lwgAqzJlDBLkrfOQXkxrmzHs
+         lQdQ0oItMOfXGSWDlByI5SFmd+hZPkRs+l3qREv6QutuYj4rZMMpmpYyBySExIA20Gpr
+         uOEmirg7mRCOdpXCFcfcSKispLHpNPpxm81GVNIMD84mXgqzh7KXA49s84yK+bohQP/u
+         AhB02Ptg6Ut5NkJ30DdCoF4xDY9lwC2TEy8LfQDtJFIhbkZ4+bjhV6v5bL8yUGOmKaHz
+         3JUKLokYFJ9yXVd+UNZOhqbXlpxyOlO0vRZXHFizcUVi3ceSvfQHaHc/XWETiWUYJnYM
+         MYSg==
+X-Gm-Message-State: ANhLgQ18+qmcOrqnCXPm2whFWosye6B07/9c6REfJndGySw9YdMjag4Q
+        rxWQ5mYnoe4uXYG6+kWaRIyWTqeNlDM=
+X-Google-Smtp-Source: ADFU+vv7rYa7a2qA5/TNJKZmXHnyu1FhULOs8SlM3+WrA1nDojWzpiNNErloEXfgq3uS4CfhC6NxzQ==
+X-Received: by 2002:aa7:9481:: with SMTP id z1mr2411232pfk.185.1584508574446;
+        Tue, 17 Mar 2020 22:16:14 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:6086:470e:bc8d:c185:c429:a95b])
+        by smtp.gmail.com with ESMTPSA id k5sm919794pju.29.2020.03.17.22.16.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 22:16:13 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org, robh+dt@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        mark.rutland@arm.com, nish.malpani25@gmail.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: iio: tsl2563: convert bindings to YAML
+Date:   Wed, 18 Mar 2020 10:45:39 +0530
+Message-Id: <20200318051539.958-1-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device node for SoC sleep stats driver which provides various
-low power mode stats.
+Convert the TSL2563 device tree bindings to the new YAML format.
 
-Also update the reg size of aoss_qmp device to 0x400.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 253274d..0eb6695 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1610,7 +1610,7 @@
+Changes in v2:
+  - Rename the dt-bindings to include manufacturer's name.
+  - Synchronize the bindings with the driver.
+---
+ .../bindings/iio/light/{tsl2563.yaml => amstaos,tsl2563.yaml}  | 3 +++
+ 1 file changed, 3 insertions(+)
+ rename Documentation/devicetree/bindings/iio/light/{tsl2563.yaml => amstaos,tsl2563.yaml} (92%)
+
+diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
+similarity index 92%
+rename from Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+rename to Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
+index 2a70b8d62760..141c7ae1edc8 100644
+--- a/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
++++ b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
+@@ -15,6 +15,9 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - amstaos,tsl2560
++      - amstaos,tsl2561
++      - amstaos,tsl2562
+       - amstaos,tsl2563
  
- 		aoss_qmp: qmp@c300000 {
- 			compatible = "qcom,sc7180-aoss-qmp";
--			reg = <0 0x0c300000 0 0x100000>;
-+			reg = <0 0x0c300000 0 0x400>;
- 			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
- 			mboxes = <&apss_shared 0>;
- 
-@@ -1618,6 +1618,11 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		rpmh-sleep-stats@c3f0000 {
-+			compatible = "qcom,rpmh-sleep-stats";
-+			reg = <0 0x0c3f0000 0 0x400>;
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0 0x0c440000 0 0x1100>,
+   reg:
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.20.1
+
