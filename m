@@ -2,308 +2,112 @@ Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C86C4332D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 21:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ACFC43332
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 21:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFDD020768
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 21:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3882A2076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 21:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584568179;
+	bh=P5WR7+CCKYuF1D3YjB6Qxj3jRbK8RLNPfWPK6xDhFJU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ksFmJKbKRVY8Y7G2VUEzoMJ2eJeP64IYGbrcz+SkU3yyWD1J/bwmyN8+8Q7SwFxUj
+	 fkZGUjMC/bVL/Pmk1qXdBw7oVi3RI6ot6U8kO1gEKGSVlTK18YYL9SYJEgL9oj9muc
+	 9Tj3C8CIUDlCami31C8Qw8KeKMnJk2XTvAxO4qw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgCRVri (ORCPT
+        id S1726869AbgCRVti (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:47:38 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:57728 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRVri (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 17:47:38 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Wed, 18 Mar 2020 17:49:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbgCRVti (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 17:49:38 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 3C38120023;
-        Wed, 18 Mar 2020 22:47:33 +0100 (CET)
-Date:   Wed, 18 Mar 2020 22:47:31 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 1/2] dt-bindings: display/bridge: Add binding for NWL
- mipi dsi host controller
-Message-ID: <20200318214731.GB971@ravnborg.org>
-References: <cover.1584544065.git.agx@sigxcpu.org>
- <e76a1e6cd3a18e4239915d3aee801b7a2aeac127.1584544065.git.agx@sigxcpu.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AB5F20754;
+        Wed, 18 Mar 2020 21:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584568177;
+        bh=P5WR7+CCKYuF1D3YjB6Qxj3jRbK8RLNPfWPK6xDhFJU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MYDwg6ol1Z+QGh9/zDrDHt8bnPDtWLxTMCHZXahQMrF2zKu+dxR/eo1lJ1FPMFmub
+         rYxZ8TlyKf1p57qSoAehM9cwXmkd62W+Yj/ZFIe/fzmdsKEaGLM6wI5Isl4w5zHhXz
+         i2Fyra1JtidfYnS4VkKmkpnTCTdgAjhqKz+PtDSA=
+Date:   Wed, 18 Mar 2020 21:49:30 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, joro@8bytes.org,
+        baolu.lu@linux.intel.com, sudeep.holla@arm.com,
+        linux-doc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
+        lorenzo.pieralisi@arm.com, corbet@lwn.net, mark.rutland@arm.com,
+        liviu.dudau@arm.com, guohanjun@huawei.com, rjw@rjwysocki.net,
+        lenb@kernel.org, robin.murphy@arm.com, dwmw2@infradead.org,
+        amurray@thegoodpenguin.co.uk, frowand.list@gmail.com
+Subject: Re: [PATCH v2 07/11] iommu/arm-smmu-v3: Use pci_ats_supported()
+Message-ID: <20200318214930.GB8477@willie-the-truck>
+References: <20200311124506.208376-1-jean-philippe@linaro.org>
+ <20200311124506.208376-8-jean-philippe@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e76a1e6cd3a18e4239915d3aee801b7a2aeac127.1584544065.git.agx@sigxcpu.org>
+In-Reply-To: <20200311124506.208376-8-jean-philippe@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=ze386MxoAAAA:8
-        a=8AirrxEcAAAA:8 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8
-        a=Vm19FepyDpoABvc2yYMA:9 a=cVXEkGUna-Ne1Fa8:21 a=TVmiQ_s7cYx9mS0L:21
-        a=wPNLvfGTeEIA:10 a=iBZjaW-pnkserzjvUTHh:22 a=ST-jHhOKWsTCqRlWije3:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=sptkURWiP4Gy88Gu7hUp:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 04:09:07PM +0100, Guido Günther wrote:
-> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+On Wed, Mar 11, 2020 at 01:45:02PM +0100, Jean-Philippe Brucker wrote:
+> The new pci_ats_supported() function checks if a device supports ATS and
+> is allowed to use it.
 > 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Tested-by: Robert Chiras <robert.chiras@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > ---
->  .../bindings/display/bridge/nwl-dsi.yaml      | 216 ++++++++++++++++++
->  1 file changed, 216 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+>  drivers/iommu/arm-smmu-v3.c | 18 +++---------------
+>  1 file changed, 3 insertions(+), 15 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> new file mode 100644
-> index 000000000000..ec1e7e12719d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> @@ -0,0 +1,216 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
-> +
-> +maintainers:
-> +  - Guido Gúnther <agx@sigxcpu.org>
-> +  - Robert Chiras <robert.chiras@nxp.com>
-> +
-> +description: |
-> +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
-> +  the SOCs NWL MIPI-DSI host controller.
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx8mq-nwl-dsi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  clocks:
-> +    items:
-> +      - description: DSI core clock
-> +      - description: RX_ESC clock (used in escape mode)
-> +      - description: TX_ESC clock (used in escape mode)
-> +      - description: PHY_REF clock
-> +      - description: LCDIF clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: rx_esc
-> +      - const: tx_esc
-> +      - const: phy_ref
-> +      - const: lcdif
-> +
-> +  mux-controls:
-> +    description:
-> +      mux controller node to use for operating the input mux
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description:
-> +      A phandle to the phy module representing the DPHY
-> +
-> +  phy-names:
-> +    items:
-> +      - const: dphy
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    items:
-> +      - description: dsi byte reset line
-> +      - description: dsi dpi reset line
-> +      - description: dsi esc reset line
-> +      - description: dsi pclk reset line
-> +
-> +  reset-names:
-> +    items:
-> +      - const: byte
-> +      - const: dpi
-> +      - const: esc
-> +      - const: pclk
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      A node containing DSI input & output port nodes with endpoint
-> +      definitions as documented in
-> +      Documentation/devicetree/bindings/graph.txt.
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description:
-> +          Input port node to receive pixel data from the
-> +          display controller. Exactly one endpoint must be
-> +          specified.
-> +        properties:
-> +          '#address-cells':
-> +            const: 1
-> +
-> +          '#size-cells':
-> +            const: 0
-> +
-> +          endpoint@0:
-> +            description: sub-node describing the input from LCDIF
-> +            type: object
-> +
-> +          endpoint@1:
-> +            description: sub-node describing the input from DCSS
-> +            type: object
-> +
-> +          reg:
-> +            const: 0
-> +
-> +        required:
-> +          - '#address-cells'
-> +          - '#size-cells'
-> +          - reg
-> +        additionalProperties: false
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          DSI output port node to the panel or the next bridge
-> +          in the chain
-> +
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    required:
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +      - port@0
-> +      - port@1
-> +
-> +    additionalProperties: false
-> +
-> +patternProperties:
-> +  "^panel@[0-9]+$":
-> +    type: object
-> +
-> +required:
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - clock-names
-> +  - clocks
-> +  - compatible
-> +  - interrupts
-> +  - mux-controls
-> +  - phy-names
-> +  - phys
-> +  - ports
-> +  - reg
-> +  - reset-names
-> +  - resets
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> + - |
-> +
-> +   #include <dt-bindings/clock/imx8mq-clock.h>
-> +   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +   #include <dt-bindings/reset/imx8mq-reset.h>
-> +
-> +   mipi_dsi: mipi_dsi@30a00000 {
-> +              #address-cells = <1>;
-> +              #size-cells = <0>;
-> +              compatible = "fsl,imx8mq-nwl-dsi";
-> +              reg = <0x30A00000 0x300>;
-> +              clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
-> +                       <&clk IMX8MQ_CLK_DSI_AHB>,
-> +                       <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
-> +                       <&clk IMX8MQ_CLK_DSI_PHY_REF>,
-> +                       <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
-> +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref", "lcdif";
-> +              interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +              mux-controls = <&mux 0>;
-> +              power-domains = <&pgc_mipi>;
-> +              resets = <&src IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
-> +              reset-names = "byte", "dpi", "esc", "pclk";
-> +              phys = <&dphy>;
-> +              phy-names = "dphy";
-> +
-> +              panel@0 {
-> +                      compatible = "rocktech,jh057n00900";
-> +                      reg = <0>;
-> +                      port@0 {
-> +                           panel_in: endpoint {
-> +                                     remote-endpoint = <&mipi_dsi_out>;
-> +                           };
-> +                      };
-> +              };
-> +
-> +              ports {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +
-> +                    port@0 {
-> +                           #size-cells = <0>;
-> +                           #address-cells = <1>;
-> +                           reg = <0>;
-> +                           mipi_dsi_in: endpoint@0 {
-> +                                        reg = <0>;
-> +                                        remote-endpoint = <&lcdif_mipi_dsi>;
-> +                           };
-> +                    };
-> +                    port@1 {
-> +                           reg = <1>;
-> +                           mipi_dsi_out: endpoint {
-> +                                         remote-endpoint = <&panel_in>;
-> +                           };
-> +                    };
-> +              };
-> +      };
-> -- 
-> 2.23.0
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 4f0a38dae6db..87ae31ef35a1 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2592,26 +2592,14 @@ static void arm_smmu_install_ste_for_dev(struct arm_smmu_master *master)
+>  	}
+>  }
+>  
+> -#ifdef CONFIG_PCI_ATS
+>  static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
+>  {
+> -	struct pci_dev *pdev;
+> +	struct device *dev = master->dev;
+>  	struct arm_smmu_device *smmu = master->smmu;
+> -	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(master->dev);
+> -
+> -	if (!(smmu->features & ARM_SMMU_FEAT_ATS) || !dev_is_pci(master->dev) ||
+> -	    !(fwspec->flags & IOMMU_FWSPEC_PCI_RC_ATS) || pci_ats_disabled())
+> -		return false;
+>  
+> -	pdev = to_pci_dev(master->dev);
+> -	return !pdev->untrusted && pdev->ats_cap;
+> +	return (smmu->features & ARM_SMMU_FEAT_ATS) && dev_is_pci(dev) &&
+> +		pci_ats_supported(to_pci_dev(dev));
+>  }
+> -#else
+> -static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
+> -{
+> -	return false;
+> -}
+> -#endif
+
+Acked-by: Will Deacon <will@kernel.org>
+
+Cheers for doing this.
+
+Will
