@@ -2,288 +2,330 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F5C4332E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 15:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB9FC43332
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 15:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F49220B1F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 15:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 229412072D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 15:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fhq94E+q"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="r0ZnpMk2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgCSPIU (ORCPT
+        id S1727540AbgCSPKq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:08:20 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:60634 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbgCSPIT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 11:08:19 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200319150817epoutp04a4d11bc4bc195c54b7ff23b1f654ef2a~9vQqloPEg2605126051epoutp04T
-        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 15:08:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200319150817epoutp04a4d11bc4bc195c54b7ff23b1f654ef2a~9vQqloPEg2605126051epoutp04T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584630497;
-        bh=YSu631xNjSaldYtkUAPYXwEIP9wwS2l1NIeJ7so281I=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=fhq94E+qwe80s4mU+NsqyYt+VouJmay0yZb54lwIH+NPQSKU3UQf4qPWcZbmUGpSa
-         m/khDOcX/gxdj6/DwwMDVKwhwGqN26zPBO1aM7hEe5moIY3DrhQ6n9SmJLbwbyXgAU
-         3J10aIPswzftYdU/82aMtqe4ayMkpKSVEAw51oGE=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20200319150816epcas5p23ac527cf61f392d3f1cb9fa01f7425df~9vQqP2k4m1427414274epcas5p2j;
-        Thu, 19 Mar 2020 15:08:16 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F0.39.04736.0EA837E5; Fri, 20 Mar 2020 00:08:16 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200319150815epcas5p2a38c516887869b9fac421e31893e190e~9vQpJsKds0318203182epcas5p2r;
-        Thu, 19 Mar 2020 15:08:15 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200319150815epsmtrp253e4e10c920d9a2dbc27b949b5000f98~9vQpJB9Q01615016150epsmtrp2C;
-        Thu, 19 Mar 2020 15:08:15 +0000 (GMT)
-X-AuditID: b6c32a4b-ae3ff70000001280-b5-5e738ae08200
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3B.C7.04158.FDA837E5; Fri, 20 Mar 2020 00:08:15 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.111.84.32]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200319150814epsmtip2cb3da31c4551ffe856cf0bfb93e33ab4~9vQoOQpvh0558705587epsmtip2v;
-        Thu, 19 Mar 2020 15:08:14 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     "'Julia Lawall'" <julia.lawall@inria.fr>
-Cc:     <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.2003191028360.3010@hadrien>
-Subject: RE: [PATCH v2 4/5] scsi: ufs-exynos: add UFS host support for
- Exynos SoCs
-Date:   Thu, 19 Mar 2020 20:38:13 +0530
-Message-ID: <000001d5fe00$3713fe90$a53bfbb0$@samsung.com>
+        Thu, 19 Mar 2020 11:10:46 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47948 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727346AbgCSPKo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 11:10:44 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D601EA53;
+        Thu, 19 Mar 2020 16:10:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584630641;
+        bh=ZagPwbifJqGqaIMIH8swjff4JDupju7QHr6vf9ntCho=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r0ZnpMk2fmSiofYFk5NavcnDZX9BOdmx3XLv4Hjn31UgV99YgbOuBRZwN11RofDID
+         EPWyCNSpLMNhwsrJx98dV1i2SDB1DWVzalP4JGlyTDrjBTyUnFxg/SBNX+l0wDLID2
+         NryYU+ywDYoICNX6o+7Myc1wtCGhAqm9U5Isg8aw=
+Date:   Thu, 19 Mar 2020 17:10:35 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v4 5/5] media: dt-bindings: media: i2c: convert ov5645
+ bindings to json-schema
+Message-ID: <20200319151035.GC14585@pendragon.ideasonboard.com>
+References: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584620363-2255-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQMOJRnv04d+r13ahNm/yTnqp3OKywI8yl0Zpc3PrsA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZdlhTQ/dBV3Gcwe3H5hbzj5xjtWha1c9s
-        0X19B5tF694j7A4sHpNeHGLx2LSqk83j8ya5AOYoLpuU1JzMstQifbsErowTkzazFpywrNhw
-        7zNLA+NV/S5GTg4JAROJHwfaWbsYuTiEBHYzSvy5+4UJwvnEKPF39gyozDdGiaf7FgE5HGAt
-        d6/ZQ8T3Mkrc+r2ZESQuJPCKUaJXF2Qqm4CuxI7FbWwgYREBHYlLT/lAwswCYRIdNx8xg9ic
-        ApYSN469ZQexhQVCJP6/+gRmswioSiy/eJoJxOYFqlm/ZxI7hC0ocXLmExaIOfIS29/OYYZ4
-        QEHi59NlrCC2iICVxKPVT1khasQljv7sYQY5U0LgBJvEitW72SEaXCRWX5oKZQtLvDq+BcqW
-        kvj8bi8bxIvZEj27jCHCNRJL5x1jgbDtJQ5cmcMCUsIsoCmxfpc+xCo+id7fT5ggOnklOtqE
-        IKpVJZrfXYXqlJaY2N3NCmF7SHR3TmWfwKg4C8ljs5A8NgvJA7MQli1gZFnFKJlaUJybnlps
-        WmCcl1quV5yYW1yal66XnJ+7iRGcTLS8dzBuOudziFGAg1GJh3dGW3GcEGtiWXFl7iFGCQ5m
-        JRFe3XSgEG9KYmVValF+fFFpTmrxIUZpDhYlcd5JrFdjhATSE0tSs1NTC1KLYLJMHJxSDYy9
-        dlPYl9QJOD9/MZuhYar4xq1h+pN7L1lnvNusZOgyZ9nhcqOANsG1R8RbdIzOzov707as7+vu
-        2Z4MJr5fTzBZ2cxkP7BSRiMoOIurZNcEK/WOnQvm6ztsC5/wfL2FRJlHyepsCV9dm0uG/jUd
-        r50FJnre3nLO48Uy7e9p7xb+3PHt7+a5Bp1KLMUZiYZazEXFiQCRsk8xIgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMLMWRmVeSWpSXmKPExsWy7bCSvO79ruI4g50tWhbzj5xjtWha1c9s
-        0X19B5tF694j7A4sHpNeHGLx2LSqk83j8ya5AOYoLpuU1JzMstQifbsErowTkzazFpywrNhw
-        7zNLA+NV/S5GDg4JAROJu9fsuxi5OIQEdjNKnLo3k6WLkRMoLi1xfeMEdghbWGLlv+dgtpDA
-        C0aJqf3yIDabgK7EjsVtbCBzRAR0JC495QMJMwtESMx4+IENYmYXo8TEv62MIAlOAUuJG8fe
-        gs0RFgiSmLPnPiuIzSKgKrH84mkmEJsXqGb9nknsELagxMmZT1hA5jML6Em0bWSEmC8vsf3t
-        HGaI0xQkfj5dBjZGRMBK4tHqp6wQNeISR3/2ME9gFJ6FZNIshEmzkEyahaRjASPLKkbJ1ILi
-        3PTcYsMCo7zUcr3ixNzi0rx0veT83E2M4KjQ0trBeOJE/CFGAQ5GJR5eh5biOCHWxLLiytxD
-        jBIczEoivLrpQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2CyTByc
-        Ug2ME58vtJAvObFlLddBFw6XBQFzjFMv35oaZZSxf2Pp8+tJrsueRh3/I/WmWjuw89ismcFN
-        xt9XrUg307i+SdViSV/enZbL054Lyr94riF7V0R6ofKeC1Wviy4WvZtn397Ql/ejy4HTZ9KU
-        t99v7hdk0NDd++jB7cW7eR+GKMfscu1457Kuf/KUJ0osxRmJhlrMRcWJAJLHZI2GAgAA
-X-CMS-MailID: 20200319150815epcas5p2a38c516887869b9fac421e31893e190e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200319092934epcas5p2442a8a995c1028ad7beb76bbe137aed9
-References: <CGME20200319092934epcas5p2442a8a995c1028ad7beb76bbe137aed9@epcas5p2.samsung.com>
-        <alpine.DEB.2.21.2003191028360.3010@hadrien>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1584620363-2255-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Julia
+Hi Prabhakar,
 
-> -----Original Message-----
-> From: Julia Lawall <julia.lawall@inria.fr>
-> Sent: 19 March 2020 14:59
-> To: Alim Akhtar <alim.akhtar@samsung.com>
-> Cc: robh+dt@kernel.org; devicetree@vger.kernel.org; linux-
-> scsi@vger.kernel.org
-> Subject: Re: [PATCH v2 4/5] scsi: ufs-exynos: add UFS host support for
-Exynos
-> SoCs
-> 
-> Perhaps this is intentional, but please check lines 931-935.
-> 
-> julia
-> 
-> ---------- Forwarded message ----------
-> Date: Thu, 19 Mar 2020 09:31:14 +0800
-> From: kbuild test robot <lkp@intel.com>
-> To: kbuild@lists.01.org
-> Cc: Julia Lawall <julia.lawall@lip6.fr>
-> Subject: Re: [PATCH v2 4/5] scsi: ufs-exynos: add UFS host support for
-Exynos
->     SoCs
-> 
-> CC: kbuild-all@lists.01.org
-> In-Reply-To: <20200318111144.39525-5-alim.akhtar@samsung.com>
-> References: <20200318111144.39525-5-alim.akhtar@samsung.com>
-> TO: Alim Akhtar <alim.akhtar@samsung.com>
-> CC: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-
-> scsi@vger.kernel.org
-> 
-> Hi Alim,
-> 
-> I love your patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on phy/next]
-> [also build test WARNING on scsi/for-next robh/for-next mkp-scsi/for-next
-v5.6-
-> rc6 next-20200318] [if your patch is applied to the wrong git tree, please
-drop us
-> a note to help improve the system. BTW, we also suggest to use '--base'
-option
-> to specify the base tree in git format-patch, please see
-> https://stackoverflow.com/a/37406982]
-> 
-> url:    https://protect2.fireeye.com/url?k=03b4933f-5e785abb-03b51870-
-> 0cc47aa8f5ba-1d3ee5e67b031afb&u=https://github.com/0day-
-> ci/linux/commits/Alim-Akhtar/exynos-ufs-Add-support-for-UFS-HCI/20200319-
-> 022156
-> base:
-https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git next
-> :::::: branch date: 7 hours ago
-> :::::: commit date: 7 hours ago
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-> 
-Thanks for review, I have just fixed this and posted V3, PTAL
+Thank you for the patch.
 
-> >> drivers/scsi/ufs/ufs-exynos.c:931:8-10: WARNING: possible condition
-> >> with no effect (if == else)
+On Thu, Mar 19, 2020 at 12:19:23PM +0000, Lad Prabhakar wrote:
+> Convert ov5645 bindings to json-schema.
+
+\o/
+
 > 
-> # https://protect2.fireeye.com/url?k=8ebed792-d3721e16-8ebf5cdd-
-> 0cc47aa8f5ba-3629a5edceef073b&u=https://github.com/0day-
-> ci/linux/commit/a0a2731081dba4edfad146c501203adb97d5947b
-> git remote add linux-review https://protect2.fireeye.com/url?k=c8ef01ac-
-> 9523c828-c8ee8ae3-0cc47aa8f5ba-
-> 8639b30cb2586a0f&u=https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout a0a2731081dba4edfad146c501203adb97d5947b
-> vim +931 drivers/scsi/ufs/ufs-exynos.c
-> 
-> a0a2731081dba4 Alim Akhtar 2020-03-18  898
-> a0a2731081dba4 Alim Akhtar 2020-03-18  899  static void
-> exynos_ufs_specify_pwr_mode(struct device_node *np,
-> a0a2731081dba4 Alim Akhtar 2020-03-18  900
-struct
-> exynos_ufs *ufs)
-> a0a2731081dba4 Alim Akhtar 2020-03-18  901  {
-> a0a2731081dba4 Alim Akhtar 2020-03-18  902  	struct uic_pwr_mode *pwr =
-> &ufs->pwr_req;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  903  	const char *str = NULL;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  904
-> a0a2731081dba4 Alim Akhtar 2020-03-18  905  	if
-> (!of_property_read_string(np, "ufs,pwr-attr-mode", &str)) {
-> a0a2731081dba4 Alim Akhtar 2020-03-18  906  		if (!strncmp(str,
-> "FAST", sizeof("FAST")))
-> a0a2731081dba4 Alim Akhtar 2020-03-18  907  			pwr->mode =
-> FAST_MODE;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  908  		else if
-(!strncmp(str,
-> "SLOW", sizeof("SLOW")))
-> a0a2731081dba4 Alim Akhtar 2020-03-18  909  			pwr->mode =
-> SLOW_MODE;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  910  		else if
-(!strncmp(str,
-> "FAST_auto", sizeof("FAST_auto")))
-> a0a2731081dba4 Alim Akhtar 2020-03-18  911  			pwr->mode =
-> FASTAUTO_MODE;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  912  		else if
-(!strncmp(str,
-> "SLOW_auto", sizeof("SLOW_auto")))
-> a0a2731081dba4 Alim Akhtar 2020-03-18  913  			pwr->mode =
-> SLOWAUTO_MODE;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  914  		else
-> a0a2731081dba4 Alim Akhtar 2020-03-18  915  			pwr->mode =
-> FAST_MODE;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  916  	} else {
-> a0a2731081dba4 Alim Akhtar 2020-03-18  917  		pwr->mode =
-> FAST_MODE;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  918  	}
-> a0a2731081dba4 Alim Akhtar 2020-03-18  919
-> a0a2731081dba4 Alim Akhtar 2020-03-18  920  	if (of_property_read_u32(np,
-> "ufs,pwr-attr-lane", &pwr->lane))
-> a0a2731081dba4 Alim Akhtar 2020-03-18  921  		pwr->lane = 1;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  922
-> a0a2731081dba4 Alim Akhtar 2020-03-18  923  	if (of_property_read_u32(np,
-> "ufs,pwr-attr-gear", &pwr->gear))
-> a0a2731081dba4 Alim Akhtar 2020-03-18  924  		pwr->gear = 1;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  925
-> a0a2731081dba4 Alim Akhtar 2020-03-18  926  	if
-> (IS_UFS_PWR_MODE_HS(pwr->mode)) {
-> a0a2731081dba4 Alim Akhtar 2020-03-18  927  		if
-> (!of_property_read_string(np,
-> a0a2731081dba4 Alim Akhtar 2020-03-18  928
-> 	"ufs,pwr-attr-hs-series", &str)) {
-> a0a2731081dba4 Alim Akhtar 2020-03-18  929  			if
-> (!strncmp(str, "HS_rate_b", sizeof("HS_rate_b")))
-> a0a2731081dba4 Alim Akhtar 2020-03-18  930  				pwr-
-> >hs_series = PA_HS_MODE_B;
-> a0a2731081dba4 Alim Akhtar 2020-03-18 @931  			else if
-> (!strncmp(str, "HS_rate_a",
-> a0a2731081dba4 Alim Akhtar 2020-03-18  932
-> 	sizeof("HS_rate_a")))
-> a0a2731081dba4 Alim Akhtar 2020-03-18  933  				pwr-
-> >hs_series = PA_HS_MODE_A;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  934  			else
-> a0a2731081dba4 Alim Akhtar 2020-03-18  935  				pwr-
-> >hs_series = PA_HS_MODE_A;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  936  		} else {
-> a0a2731081dba4 Alim Akhtar 2020-03-18  937  			pwr-
-> >hs_series = PA_HS_MODE_A;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  938  		}
-> a0a2731081dba4 Alim Akhtar 2020-03-18  939  	}
-> a0a2731081dba4 Alim Akhtar 2020-03-18  940
-> a0a2731081dba4 Alim Akhtar 2020-03-18  941  	if
-> (of_property_read_u32_array(
-> a0a2731081dba4 Alim Akhtar 2020-03-18  942  		np,
-"ufs,pwr-local-l2-
-> timer", pwr->l_l2_timer, 3)) {
-> a0a2731081dba4 Alim Akhtar 2020-03-18  943  		pwr->l_l2_timer[0] =
-> FC0PROTTIMEOUTVAL;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  944  		pwr->l_l2_timer[1] =
-> TC0REPLAYTIMEOUTVAL;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  945  		pwr->l_l2_timer[2] =
-> AFC0REQTIMEOUTVAL;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  946  	}
-> a0a2731081dba4 Alim Akhtar 2020-03-18  947
-> a0a2731081dba4 Alim Akhtar 2020-03-18  948  	if
-> (of_property_read_u32_array(
-> a0a2731081dba4 Alim Akhtar 2020-03-18  949  		np, "ufs,pwr-remote-
-> l2-timer", pwr->r_l2_timer, 3)) {
-> a0a2731081dba4 Alim Akhtar 2020-03-18  950  		pwr->r_l2_timer[0] =
-> FC0PROTTIMEOUTVAL;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  951  		pwr->r_l2_timer[1] =
-> TC0REPLAYTIMEOUTVAL;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  952  		pwr->r_l2_timer[2] =
-> AFC0REQTIMEOUTVAL;
-> a0a2731081dba4 Alim Akhtar 2020-03-18  953  	}
-> a0a2731081dba4 Alim Akhtar 2020-03-18  954  }
-> a0a2731081dba4 Alim Akhtar 2020-03-18  955
-> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://protect2.fireeye.com/url?k=c28ebd30-9f4274b4-c28f367f-
->
-0cc47aa8f5ba-85fd58e3389c5682&u=https://lists.01.org/hyperkitty/list/kbuild-
-> all@lists.01.org
+>  .../devicetree/bindings/media/i2c/ov5645.txt  |  54 -------
+>  .../devicetree/bindings/media/i2c/ov5645.yaml | 140 ++++++++++++++++++
+>  2 files changed, 140 insertions(+), 54 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> deleted file mode 100644
+> index 1c85c78ec58c..000000000000
+> --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> +++ /dev/null
+> @@ -1,54 +0,0 @@
+> -* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
+> -
+> -The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
+> -an active array size of 2592H x 1944V. It is programmable through a serial I2C
+> -interface.
+> -
+> -Required Properties:
+> -- compatible: Value should be "ovti,ov5645".
+> -- clocks: Reference to the xclk clock.
+> -- clock-names: Should be "xclk".
+> -- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> -  to the hardware pin PWDNB which is physically active low.
+> -- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> -  the hardware pin RESETB.
+> -- vdddo-supply: Chip digital IO regulator.
+> -- vdda-supply: Chip analog regulator.
+> -- vddd-supply: Chip digital core regulator.
+> -
+> -The device node must contain one 'port' child node for its digital output
+> -video port, in accordance with the video interface bindings defined in
+> -Documentation/devicetree/bindings/media/video-interfaces.txt.
+> -
+> -Example:
+> -
+> -	&i2c1 {
+> -		...
+> -
+> -		ov5645: ov5645@3c {
+> -			compatible = "ovti,ov5645";
+> -			reg = <0x3c>;
+> -
+> -			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+> -			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
+> -			pinctrl-names = "default";
+> -			pinctrl-0 = <&camera_rear_default>;
+> -
+> -			clocks = <&clks 200>;
+> -			clock-names = "xclk";
+> -			assigned-clocks = <&clks 200>;
+> -			assigned-clock-rates = <24000000>;
+> -
+> -			vdddo-supply = <&camera_dovdd_1v8>;
+> -			vdda-supply = <&camera_avdd_2v8>;
+> -			vddd-supply = <&camera_dvdd_1v2>;
+> -
+> -			port {
+> -				ov5645_ep: endpoint {
+> -					clock-lanes = <1>;
+> -					data-lanes = <0 2>;
+> -					remote-endpoint = <&csi0_ep>;
+> -				};
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.yaml b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+> new file mode 100644
+> index 000000000000..4bf58ad210c5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+> @@ -0,0 +1,140 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/ov5645.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
 
+s/Mp/MP/ ?
+
+> +
+> +maintainers:
+> +  - Sakari Ailus <sakari.ailus@linux.intel.com>
+> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> +
+> +description: |-
+> + The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
+> + an active array size of 2592H x 1944V. It is programmable through a serial I2C
+> + interface.
+> +
+> +properties:
+> +  compatible:
+> +    const: ovti,ov5645
+> +
+> +  reg:
+> +    description: I2C device address
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: xclk
+> +
+> +  assigned-clocks:
+> +    maxItems: 1
+> +
+> +  assigned-clock-rates:
+> +     items:
+> +     - description: Must be 24MHz (24000000).
+
+These two properties shouldn't be part of the bindings, they're generic.
+
+> +
+> +  enable-gpios:
+> +    description: |-
+> +      Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> +      to the hardware pin PWDNB which is physically active low.
+
+Specifying that the polarity is GPIO_ACTIVE_HIGH is confusing in my
+opinion. If there's an inverter on the board, you'll need
+GPIO_ACTIVE_LOW. We could possibly drop the sentence, as all GPIOs in DT
+are supposed to be active high, but the fact that the GPIO name
+corresponds to the opposite of the pin probably has to be documented. I
+have no better wording to propose now I'm afraid, but it needs to be
+addressed. Maybe Rob or Maxime could help.
+
+> +
+> +  reset-gpios:
+> +    description: |-
+> +      Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> +      the hardware pin RESETB.
+
+Here you could just drop the second sentence, or apply the same fix as
+for enable-gpios.
+
+> +
+> +  vdddo-supply:
+> +    description:
+> +      Chip digital IO regulator.
+
+You can move the description on the same line as the "description:" key.
+Same below.
+
+> +
+> +  vdda-supply:
+> +    description:
+> +      Chip analog regulator.
+> +
+> +  vddd-supply:
+> +    description:
+> +      Chip digital core regulator.
+> +
+> +  # See ../video-interfaces.txt for more details
+> +  port:
+> +    type: object
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +
+> +        properties:
+> +          data-lanes:
+> +            description: |-
+> +              The sensor supports two-lane operation.
+> +              For two-lane operation the property must be set to <1 2>.
+> +            items:
+> +              - const: 1
+> +              - const: 2
+
+
+What if only one lane is wired, does the sensor support that ?
+
+> +
+> +          clock-lanes:
+> +            description:
+> +              should be set to <0> (clock lane on hardware lane 0).
+> +            items:
+> +              - const: 0
+> +
+> +          remote-endpoint: true
+> +
+> +        required:
+> +          - data-lanes
+> +          - clock-lanes
+> +          - remote-endpoint
+> +
+> +        additionalProperties: false
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - assigned-clocks
+> +  - assigned-clock-rates
+
+Those two properties should be dropped.
+
+> +  - enable-gpios
+> +  - reset-gpios
+
+Are the GPIOs mandatory ? What if the signals are hardwired on the board
+?
+
+> +  - vdddo-supply
+> +  - vdda-supply
+> +  - vddd-supply
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c1 {
+
+s/i2c1/i2c/
+
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ov5645: sensor@3c {
+> +            compatible = "ovti,ov5645";
+> +            reg = <0x3c>;
+> +            clocks = <&ov5645_cl>;
+> +            clock-names = "xclk";
+> +            assigned-clocks = <&ov5645_cl>;
+> +            assigned-clock-rates = <24000000>;
+> +            enable-gpios = <&gpio1 6 /* GPIO_ACTIVE_HIGH */>;
+> +            reset-gpios = <&gpio5 20 /* GPIO_ACTIVE_LOW */>;
+> +            vdddo-supply = <&camera_dovdd_1v8>;
+> +            vdda-supply = <&camera_avdd_2v8>;
+> +            vddd-supply = <&camera_dvdd_1v2>;
+> +
+> +            port {
+> +                ov5645_0: endpoint {
+> +                    remote-endpoint = <&csi1_ep>;
+> +                    clock-lanes = <0>;
+> +                    data-lanes = <1 2>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+
+-- 
+Regards,
+
+Laurent Pinchart
