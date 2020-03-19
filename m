@@ -2,116 +2,106 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E42C4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE762C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913442071C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584639285;
-	bh=VXfXgaMFHwNAHnGdP2ayK9lcFqo6HP23jwlKsSeqPks=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tYG+lQ+jvIkHpMvNZ2smGKH071arlNy3GNXZ5Kn/r5m/+mksxgfGK5EQl8XffY/QL
-	 3L0IQlMq4vOqsqOPh3VrvHBCxHRIrlQr22ddS1NirRJU0jSEAbCplGX2g4siCY5l01
-	 DKsO6NLD2mIga38foY+dxIqhBgnXjmgli6zM2Ibk=
+	by mail.kernel.org (Postfix) with ESMTP id BA9D120836
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgCSRep (ORCPT
+        id S1728015AbgCSRiB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:34:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33048 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 13:38:01 -0400
+Received: from muru.com ([72.249.23.125]:60920 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbgCSRep (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:34:45 -0400
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E7DE2071C;
-        Thu, 19 Mar 2020 17:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584639284;
-        bh=VXfXgaMFHwNAHnGdP2ayK9lcFqo6HP23jwlKsSeqPks=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yADHZla9eDm6uT5/naVtKy2V7v/CxxTuk0BpddC2YxBmqic9QIobFusOdjeYAkdDd
-         yay2lu6tWwGoY1Ex+C/0N15wVo9qAVgMCNgFSa5OF4MK2L+w4XWeXm/UfhsMFmWmg+
-         ADdMbphVXQNOF0UHRPrnK27tXcKQ/p6D8f/lTcLc=
-Received: by mail-qk1-f171.google.com with SMTP id e11so3939169qkg.9;
-        Thu, 19 Mar 2020 10:34:44 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ38POrXbJTFTa/anRp/FuuDvAjg0NF8tyX3dlThJs4SJqDtHIte
-        1XakrdYogUM6yGdYXvPPZ2jwTtuGIVGkTIImlA==
-X-Google-Smtp-Source: ADFU+vvCif+AbtJFy+eeJq9FFa3yvU/q7tK8ZTPl46tG4rh1c7+IhWsiFrJ7XIwJOlAm6vTIotVo3PR3cKxoFwawl/8=
-X-Received: by 2002:a37:8502:: with SMTP id h2mr4196059qkd.223.1584639283252;
- Thu, 19 Mar 2020 10:34:43 -0700 (PDT)
+        id S1726867AbgCSRiB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:38:01 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 1278180A5;
+        Thu, 19 Mar 2020 17:38:44 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: [PATCHv5 0/4] n_gsm serdev support and protocol driver for droid4 modem
+Date:   Thu, 19 Mar 2020 10:37:51 -0700
+Message-Id: <20200319173755.65082-1-tony@atomide.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200314093941.2533-1-peter.chen@nxp.com> <20200314093941.2533-2-peter.chen@nxp.com>
- <20200318220420.GA15468@bogus> <20200319064655.GB11834@b29397-desktop>
-In-Reply-To: <20200319064655.GB11834@b29397-desktop>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 19 Mar 2020 11:34:31 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLF6cPCXqZiSOr6DPQad60w9Hd4yemEAmmCAR2TU86CqQ@mail.gmail.com>
-Message-ID: <CAL_JsqLF6cPCXqZiSOr6DPQad60w9Hd4yemEAmmCAR2TU86CqQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     "kishon@ti.com" <kishon@ti.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Jun Li <jun.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 12:46 AM Peter Chen <peter.chen@nxp.com> wrote:
->
-> On 20-03-18 16:04:20, Rob Herring wrote:
-> > On Sat, 14 Mar 2020 17:39:41 +0800, Peter Chen wrote:
-> > > Add Cadence SALVO PHY binding doc, this PHY is a legacy module,
-> > > and is only used for USB3 and USB2.
-> > >
-> > > Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> > > ---
-> > > Changes for v2:
-> > > - Fix kinds of yaml style issue
-> > >
-> > >  .../bindings/phy/cdns,salvo-phy.yaml          | 49 +++++++++++++++++++
-> > >  1 file changed, 49 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
-> > >
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/cdns,salvo-phy.example.dt.yaml: usb3-phy@5B160000: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
->
-> The 'power-domains' is described at:
-> Documentation/devicetree/bindings/power/power_domain.txt
+Hi all,
 
-.txt files don't generate warnings.
+Here's v4 set of n_gsm serdev support patches, and the related protocol
+driver for the modem found on Motorola Mapphone phones and tablets
+like droid4.
 
-And you might want to be up to date with your kernel tree.
+This series only adds basic character device support for the serdev
+driver. Other serdev consumer drivers for specific devices will be
+posted separately.
 
->
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/cdns,salvo-phy.example.dt.yaml: usb3-phy@5B160000: #phy-cells:0:0: 1 was expected
-> >
->
-> #phy-cell could be 0 if it is a dedicated PHY, eg single function PHY.
-> See below comments from drivers/phy/phy-core.c
->
-> /**
->  * of_phy_simple_xlate() - returns the phy instance from phy provider
->  * @dev: the PHY provider device
->  * @args: of_phandle_args (not used here)
->  *
->  * Intended to be used by phy provider for the common case where #phy-cells is
->  * 0. For other cases where #phy-cells is greater than '0', the phy provider
->  * should provide a custom of_xlate function that reads the *args* and returns
->  * the appropriate phy.
->  */
+The patches are against v5.6-rc series.
 
-What's your point? You have an error either in the schema or the
-example. You must fix it.
+Regards,
 
-Rob
+Tony
+
+Changes since v4:
+- Use drivers/tty/serdev/protocol directory for the driver instead of
+  drivers/mfd as discussed on the lists for v3 set of patches
+- Fix remove to call kfree only after removing device from the list
+
+Changes since v3:
+- Update list of folks in Cc, looks like I sent v3 only to Lee and lkml
+- Init privdata before motmdm_register_dlci calls gsm_serdev_register_dlci
+- Update binding based on Rob's comments for license and "allOf"
+
+Changes since v2:
+- Drop useless send_command indirection, use static motmdm_send_command
+
+Changes since v1:
+
+- Simplified usage and got rid of few pointless inline functions
+- Added consumer MFD driver, devicetree binding, and dts changes
+
+
+Tony Lindgren (4):
+  tty: n_gsm: Add support for serdev drivers
+  serdev: ngsm-motmdm: Add Motorola TS 27.010 serdev modem driver for
+    droid4
+  dt-bindings: mfd: motmdm: Add binding for motorola-mdm
+  ARM: dts: omap4-droid4: Enable basic modem support
+
+ .../serdev/motorola,mapphone-mdm6600.yaml     |   34 +
+ .../boot/dts/motorola-mapphone-common.dtsi    |    6 +
+ drivers/tty/n_gsm.c                           |  372 +++++
+ drivers/tty/serdev/Kconfig                    |    3 +
+ drivers/tty/serdev/Makefile                   |    2 +
+ drivers/tty/serdev/protocol/Kconfig           |   14 +
+ drivers/tty/serdev/protocol/Makefile          |    3 +
+ .../tty/serdev/protocol/serdev-ngsm-motmdm.c  | 1200 +++++++++++++++++
+ include/linux/serdev-gsm.h                    |  168 +++
+ 9 files changed, 1802 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serdev/motorola,mapphone-mdm6600.yaml
+ create mode 100644 drivers/tty/serdev/protocol/Kconfig
+ create mode 100644 drivers/tty/serdev/protocol/Makefile
+ create mode 100644 drivers/tty/serdev/protocol/serdev-ngsm-motmdm.c
+ create mode 100644 include/linux/serdev-gsm.h
+
+-- 
+2.25.1
