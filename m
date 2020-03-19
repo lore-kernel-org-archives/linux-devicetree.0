@@ -2,113 +2,118 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB50C4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B6FC4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752C8207FC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:21:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584638498;
-	bh=Wa5WhY7NV/amydUQxKZOOUXAC72lGMcK0NhEdS62D74=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CTeFIR60A3fmhKK1qQzeijg2vbWFoXVyyNOqECc//+1pkbtSsnCBEFEq/ne3m7dR9
-	 QuqSpnGHxR5bNoU6aJWrwZDOw90qRWKyo7tza9k/IR2YKBhjzIZJdqfO69ql/lg61r
-	 z9+in2cbCBVzUrVeAPPJ5XhnpEv4wvq3dpPkpw50=
+	by mail.kernel.org (Postfix) with ESMTP id 008322080C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:23:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Dbw47AkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbgCSRVf (ORCPT
+        id S1727556AbgCSRXO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:21:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55360 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 13:23:14 -0400
+Received: from mail.andi.de1.cc ([85.214.55.253]:54976 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727146AbgCSRVf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:21:35 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F51520836;
-        Thu, 19 Mar 2020 17:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584638494;
-        bh=Wa5WhY7NV/amydUQxKZOOUXAC72lGMcK0NhEdS62D74=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ft7/kE4yvSeKvAW7bbRrolP0UaF4xWVzoUrxHpX0nmu8GiUwsWuPjC9AXv1rRvqzH
-         sVRiUQ2587taXsEXy1sB2Zk5TBLyJLMygLxbHZVX7XO/h+r/38lcGeiLC0wZaFDnYu
-         Y4lX75HTJ+SSMrlihdhmMBdXg2cJ2f851/tEqHBo=
-Received: by mail-qk1-f174.google.com with SMTP id c145so3855298qke.12;
-        Thu, 19 Mar 2020 10:21:34 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ13TX7m3D5QlSqmEd7vWKhcYbGOigfeWKTOCs/0JJzHGkIJY/Gp
-        gOrbfhLp3rgKSUMWL67AMN7RGw+g8gqZeHXyEw==
-X-Google-Smtp-Source: ADFU+vulofMsciR5pLApGaBb0QXCqdfQARLGVOuL0yu914G08i7K943mRV5VQl5ypvWeXQ6VTH6kM8/ISVQqrL9dm34=
-X-Received: by 2002:a37:8502:: with SMTP id h2mr4136038qkd.223.1584638493344;
- Thu, 19 Mar 2020 10:21:33 -0700 (PDT)
+        id S1727235AbgCSRXO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:23:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ovRcEyST6vxl255ZVDdgE7BcGNIyoIHopOrx8AXs9gM=; b=Dbw47AkXiYvUXThvxlbZtE+DA
+        Y0GxYKJ++idEBgCvWNVod6japta8/yN72xUPkCPPP9cLPscL1qCYO1+Dyz4vX/6ojKSkPypZA9rDV
+        ozk0eFteFa9eJ6y16X1fWRjCKU2YsyOdZoPCk5n4YrU1Mr/ANH5p8ls+P6qOQsVysl1Bw=;
+Received: from p200300ccff0fcb00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff0f:cb00:e2ce:c3ff:fe93:fc31] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jEysi-0003to-BZ; Thu, 19 Mar 2020 18:22:56 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jEysh-0004Yu-8T; Thu, 19 Mar 2020 18:22:55 +0100
+Date:   Thu, 19 Mar 2020 18:22:46 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, jic23@kernel.org
+Subject: Re: [PATCH RESEND v6 2/7] mfd: rn5t618: add IRQ support
+Message-ID: <20200319182246.27d4809b@kemnade.info>
+In-Reply-To: <20200319161149.GB5477@dell>
+References: <20200313064535.31503-1-andreas@kemnade.info>
+        <20200313064535.31503-3-andreas@kemnade.info>
+        <20200319161149.GB5477@dell>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
- <1584211798-10332-2-git-send-email-tdas@codeaurora.org> <20200318220443.GA16192@bogus>
- <2ceccbac-b289-03d0-665b-6e9ca57b4333@codeaurora.org>
-In-Reply-To: <2ceccbac-b289-03d0-665b-6e9ca57b4333@codeaurora.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 19 Mar 2020 11:21:21 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKOTRzvtTjHPmOR60tpxUoPsoaB5ZbLdPG0VrN-NnFxWg@mail.gmail.com>
-Message-ID: <CAL_JsqKOTRzvtTjHPmOR60tpxUoPsoaB5ZbLdPG0VrN-NnFxWg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/siGgyZ4Qye9Mavy.deiaD6/"; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:37 PM Taniya Das <tdas@codeaurora.org> wrote:
->
->
->
-> On 3/19/2020 3:34 AM, Rob Herring wrote:
-> > On Sun, 15 Mar 2020 00:19:56 +0530, Taniya Das wrote:
-> >> The Modem Subsystem clock provider have a bunch of generic properties
-> >> that are needed in a device tree. Add a YAML schemas for those.
-> >>
-> >> Add clock ids for GCC MSS and MSS clocks which are required to bring
-> >> the modem out of reset.
-> >>
-> >> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> >> ---
-> >>   .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
-> >>   include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
-> >>   include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
-> >>   3 files changed, 80 insertions(+), 1 deletion(-)
-> >>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
-> >>   create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
-> >>
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml: $id: relative path/filename doesn't match actual path or filename
-> >       expected: http://devicetree.org/schemas/clock/qcom,sc7180-mss.yaml#
-> >
-> > See https://patchwork.ozlabs.org/patch/1254940
-> > Please check and re-submit.
-> >
-> Hi Rob,
->
-> Thanks, I have fixed it in the next patch series.
->
-> Is there a way to catch these before submitting? As I do not see these
-> errors on my machine.
+--Sig_/siGgyZ4Qye9Mavy.deiaD6/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-If you ran 'make dt_binding_check' already, then update dt-schema with pip.
+On Thu, 19 Mar 2020 16:11:49 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
 
-Rob
+> On Fri, 13 Mar 2020, Andreas Kemnade wrote:
+[...]
+I agree to the other comments.
+
+> > +	if (priv->irq > 0) { =20
+>=20
+> There are already have checks in rn5t618_irq_init().
+>=20
+> Just call it regardless.
+>=20
+> > +		if (rn5t618_irq_init(priv)) =20
+>=20
+> If this returns an error, you should return that error from .probe().
+>=20
+Hmm, that would be a regression. Current users do not specify an interrupt
+in the devicetree yet, so the MFD driver would stop working on these devices
+completely.
+Therefore I think we should keep the existing functionality if there is no
+IRQ specified in the devicetree and ignore the error. The new subdevices
+are checking the IRQ availability and give error messages and have
+reduced functionality.
+
+Regards,
+Andreas
+
+--Sig_/siGgyZ4Qye9Mavy.deiaD6/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl5zqmcACgkQl4jFM1s/
+ye9G7w//WlnawIpi36NIAadLtast9vu33weBJVgKnN3mfwzi5RbM/l5IAVJZH+uN
+gpKeObNx1hxpWNresKQfEnEapfmnINbb6l3v4JzoiGtpyWWZeb1jFrWZjzxhqtMv
+oqqfUkhETSDajTzt+siADhGd/CcldVY9oZOsGOzzAyO7hTKqP1wLaYi3ZcHTKE2q
+HgXYnqYUMANhN1M9uWgAIt4uz41uHrvoFpnL8X1nUj3cEUU3L7ik1lK4uuDFcnQQ
+Yu5EA27appMEeLf3scttVFfec9854vq7lxbLHWd1qnS/9R5QFxxguL3EOWLI5FGz
+WW5VPTY6ke+s3Srf5fj6ZZuiVzyScXWTMFnaIgo0wHieeAA8yVcd5DG7qJrB03nE
+2nRz/IdvHdMLJPAeMOYM9NMqYkbJtB6u19IFVvr9G+5tEAlhTeYqwbRp8W5CSY6N
+8oY2Dd6wDJjQWfQ6nadeQ97hKIZhKQzLV0ApFLVI+hbP3v1QwGUNu+lWxO9Hm7yl
+LuUFK4vnj/BWiCNzlZAJHq2E3N/wwVcIMtKBp5Xl4QXxNUgVD1VjDFdcYCyHfZUy
+Xb6WWsn8t+dvby2nUGJm6WyNKoUzeb+HFh2R2YoeTNFO6sz1lo2aVFFq4oxSDK/F
+yF/FaLCKTTCfbHlUN6nR9yCeXKqYzt+dUIiKYepMLuN/1Ddu3tk=
+=DMzN
+-----END PGP SIGNATURE-----
+
+--Sig_/siGgyZ4Qye9Mavy.deiaD6/--
