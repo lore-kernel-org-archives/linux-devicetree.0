@@ -2,161 +2,238 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723B0C4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1DFC4332E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48D1120787
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B8820663
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcAQ0yZC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UDPiBny1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729768AbgCSNST (ORCPT
+        id S1727303AbgCSNgS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:18:19 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34576 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729763AbgCSNSS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 09:18:18 -0400
-Received: by mail-oi1-f195.google.com with SMTP id j5so2634509oij.1;
-        Thu, 19 Mar 2020 06:18:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qDQpti7t01GpCTV3F9lVKa0JXF79TC4yEbf9DOSPn8g=;
-        b=mcAQ0yZCaJg48cbZ+UPok9xqwUcsLaZsb9fzmjLgeh8zdqkKXz81zq/ILbwNrBso2a
-         MN4btAAs+YQirt8xgKGSVUBCNTD5zHSZMVoAo15X2tUTWsKNcvIDf9ULConjYj0Aprz0
-         bpiQ94KXoh7flze0IXswZPt+qyF2ZmgAi+FL55Ar139q+XJxp4ZasBrKaZYUwGFxD95X
-         tRz65ibnOZuh9KDbSY3lfdkiqYrn9QcbjX/2NHFqETcoSloqNpfMtrf5PdxLbZOgMjA/
-         GFpujd6djm/SWaidRo4GwHfr2sGBvYlPciDOrkswyNdJYyeprCBX+oLvAN4PxdBkODDL
-         lXEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qDQpti7t01GpCTV3F9lVKa0JXF79TC4yEbf9DOSPn8g=;
-        b=NgK+Nb2BDfym+91DR2b7pBSA+2CY96Hu58aoFKaBGWv1hVxUi3LMHUIbeGKzWQfOTX
-         cRj84OuHwjf7BcBJyUZy7/ApEnKoyjIOmlMuRZqm/cZDITEn9aPAzMjmfU3ew1OElFy5
-         V7nXWvK2wOdeyJpgoKWZ39QBV/W3ZI0dmfiuFKR+NCTnxgpXOMNkrOcEmC4GvzxgQz4D
-         6Ze6H/sdKpjGrYDoMC5/BjawN21XX1iTWSsNTCYtIQcVAvWt1YJp9JQdF+XXjgH1RLvH
-         UPzUnfwG1RfHVMSnbserkpdWxnBkCOelT+igAGm8SF9nnWfc7+a+2/9ppZ1JxmmoWd6n
-         tE5A==
-X-Gm-Message-State: ANhLgQ2mBDrS3Luc0AhFr5qD3BrVu8k55A+T7Ghmgudo91RxlO2ImPKb
-        oUCJ9i4Kq1deKpE18kMynHlkL52yCsAat6jNb1A=
-X-Google-Smtp-Source: ADFU+vsS6/XH+ew6MFOJMJjm3XI7q3PIxIoAJ7KFCUkmkMgL0Zaluvh9eiLo/6KcPprvw6aGuxFV0AQaeSh8Jiiw3FI=
-X-Received: by 2002:aca:ac89:: with SMTP id v131mr2290732oie.7.1584623898057;
- Thu, 19 Mar 2020 06:18:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200319124452.3yfcvq754vi4q2rv@gilmour.lan> <20200319130348.GC4872@pendragon.ideasonboard.com>
-In-Reply-To: <20200319130348.GC4872@pendragon.ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 19 Mar 2020 13:17:51 +0000
-Message-ID: <CA+V-a8s-GZsYuBLyGnzURZfGD42f0c+QEan6FSwb2ew1=7Gj3g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to assigned-clock-rates
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Thu, 19 Mar 2020 09:36:18 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39304 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727711AbgCSNKR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 09:10:17 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JDA5DD061902;
+        Thu, 19 Mar 2020 08:10:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584623405;
+        bh=SBBrZzkb2E7HPlrCtxk5PrJICSjHhhKeRTUaGwHvp9k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UDPiBny1cnDEdprAZNdpNaemRHJTpRRzgaa5v/D0PRJBleLTQ5iCh/p2+vvN90Q12
+         EbVkbI/y2CPZFoKwNrXPSomlHorO7MDFo+dTgSxGyAyCqFEJ16e7CU7R6DN+AyPxM9
+         /Ze7wqHFuyqX51gpcUtXdweqQndXZn1ST7lvg+ug=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JDA5C6074181
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Mar 2020 08:10:05 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 08:10:05 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 08:10:05 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JDA0oK003728;
+        Thu, 19 Mar 2020 08:10:02 -0500
+Subject: Re: [PATCH net-next v4 06/11] net: ethernet: ti: introduce
+ am65x/j721e gigabit eth subsystem driver
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        linux-media <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200317072739.23950-1-grygorii.strashko@ti.com>
+ <20200317072739.23950-7-grygorii.strashko@ti.com>
+ <dcd70320-8f1e-dbb5-c275-3b203e9b5851@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <78bc1ee2-5a56-82e7-229d-52cea8002eec@ti.com>
+Date:   Thu, 19 Mar 2020 15:09:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <dcd70320-8f1e-dbb5-c275-3b203e9b5851@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
 
-On Thu, Mar 19, 2020 at 1:04 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Maxime,
->
-> On Thu, Mar 19, 2020 at 01:44:52PM +0100, Maxime Ripard wrote:
-> > On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
-> > > Use assigned-clock-rates to specify the clock rate. Also mark
-> > > clock-frequency property as deprecated.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > index 72ad992..e62fe82 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > @@ -8,7 +8,7 @@ Required Properties:
-> > >  - compatible: Value should be "ovti,ov5645".
-> > >  - clocks: Reference to the xclk clock.
-> > >  - clock-names: Should be "xclk".
-> > > -- clock-frequency: Frequency of the xclk clock.
-> > > +- clock-frequency (deprecated): Frequency of the xclk clock.
-> > >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > >    to the hardware pin PWDNB which is physically active low.
-> > >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > > @@ -37,7 +37,8 @@ Example:
-> > >
-> > >                     clocks = <&clks 200>;
-> > >                     clock-names = "xclk";
-> > > -                   clock-frequency = <24000000>;
-> > > +                   assigned-clocks = <&clks 200>;
-> > > +                   assigned-clock-rates = <24000000>;
-> > >
-> > >                     vdddo-supply = <&camera_dovdd_1v8>;
-> > >                     vdda-supply = <&camera_avdd_2v8>;
-> >
-> > clock-frequency is quite different from assigned-clock-rates though,
-> > semantically speaking. clock-frequency is only about what the clock
-> > frequency is, while assigned-clock-rates will change the rate as well,
-> > and you have no idea how long it will last.
->
-> The driver currently reads the clock-frequency property and then calls
-> clk_set_rate(). I agree tht assigned-clock-rates isn't a panacea, but I
-> think it's less of a hack than what we currently have.
->
-> As discussed on IRC, maybe the best option in this specific case is to
-> drop clock-frequency and assigned-clok-rates, and call clk_set_rate()
-> with a hardcoded frequency of 24MHz in the driver, as that's the only
-> frequency the driver supports.
->
-Does this mean any driver which has a fixed clock requirement shouldn't be a
-DT property and should be just handled by the drivers internally ?
 
-Cheers,
---Prabhakar
+On 19/03/2020 13:46, Peter Ujfalusi wrote:
+> Hi Grygorii,
+> 
+> On 17/03/2020 9.27, Grygorii Strashko wrote:
+>> The TI AM65x/J721E SoCs Gigabit Ethernet Switch subsystem (CPSW2G NUSS) has
+>> two ports - One Ethernet port (port 1) with selectable RGMII and RMII
+>> interfaces and an internal Communications Port Programming Interface (CPPI)
+>> port (Host port 0) and with ALE in between. It also contains
+>>   - Management Data Input/Output (MDIO) interface for physical layer device
+>> (PHY) management;
+>>   - Updated Address Lookup Engine (ALE) module;
+>>   - (TBD) New version of Common platform time sync (CPTS) module.
+>>
+>> On the TI am65x/J721E SoCs CPSW NUSS Ethernet subsystem into device MCU
+>> domain named MCU_CPSW0.
+>>
+>> Host Port 0 CPPI Packet Streaming Interface interface supports 8 TX
+>> channels and one RX channels operating by TI am654 NAVSS Unified DMA
+>> Peripheral Root Complex (UDMA-P) controller.
+>>
+>> Introduced driver provides standard Linux net_device to user space and supports:
+>>   - ifconfig up/down
+>>   - MAC address configuration
+>>   - ethtool operation:
+>>     --driver
+>>     --change
+>>     --register-dump
+>>     --negotiate phy
+>>     --statistics
+>>     --set-eee phy
+>>     --show-ring
+>>     --show-channels
+>>     --set-channels
+>>   - net_device ioctl mii-control
+>>   - promisc mode
+>>
+>>   - rx checksum offload for non-fragmented IPv4/IPv6 TCP/UDP packets.
+>>     The CPSW NUSS can verify IPv4/IPv6 TCP/UDP packets checksum and fills
+>>     csum information for each packet in psdata[2] word:
+>>     - BIT(16) CHECKSUM_ERROR - indicates csum error
+>>     - BIT(17) FRAGMENT -  indicates fragmented packet
+>>     - BIT(18) TCP_UDP_N -  Indicates TCP packet was detected
+>>     - BIT(19) IPV6_VALID,  BIT(20) IPV4_VALID - indicates IPv6/IPv4 packet
+>>     - BIT(15, 0) CHECKSUM_ADD - This is the value that was summed
+>>     during the checksum computation. This value is FFFFh for non fragmented
+>>     IPV4/6 UDP/TCP packets with no checksum error.
+>>
+>>     RX csum offload can be disabled:
+>> 	 ethtool -K <dev> rx-checksum on|off
+>>
+>>   - tx checksum offload support for IPv4/IPv6 TCP/UDP packets (J721E only).
+>>     TX csum HW offload  can be enabled/disabled:
+>> 	 ethtool -K <dev> tx-checksum-ip-generic on|off
+>>
+>>   - multiq and switch between round robin/prio modes for cppi tx queues by
+>>     using Netdev private flag "p0-rx-ptype-rrobin" to switch between
+>>     Round Robin and Fixed priority modes:
+>> 	 # ethtool --show-priv-flags eth0
+>> 	 Private flags for eth0:
+>> 	 p0-rx-ptype-rrobin: on
+>> 	 # ethtool --set-priv-flags eth0 p0-rx-ptype-rrobin off
+>>
+>>     Number of TX DMA channels can be changed using "ethtool -L eth0 tx <N>".
+>>
+>>   - GRO support: the napi_gro_receive() and napi_complete_done() are used.
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> ---
+>>   drivers/net/ethernet/ti/Kconfig             |   19 +-
+>>   drivers/net/ethernet/ti/Makefile            |    3 +
+>>   drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  747 +++++++
+>>   drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 1965 +++++++++++++++++++
+>>   drivers/net/ethernet/ti/am65-cpsw-nuss.h    |  143 ++
+>>   drivers/net/ethernet/ti/k3-udma-desc-pool.c |  126 ++
+>>   drivers/net/ethernet/ti/k3-udma-desc-pool.h |   30 +
+> 
+> I would rather loose the 'udma' from the name and API. It is more like
+> CPPI5 descriptor pool than UDMA. UDMA is just happen to use CPPI5.
+> Probably ti-cppi5-desc-pool?
 
-> > If you want to retrieve that through the clock framework, then just
-> > making clock-frequency optional is enough and falling back to
-> > clk_get_rate on the clocks property already provided is enough.
+ok. I'll update and re-send
+
+> 
+>>   7 files changed, 3031 insertions(+), 2 deletions(-)
+>>   create mode 100644 drivers/net/ethernet/ti/am65-cpsw-ethtool.c
+>>   create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.c
+>>   create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.h
+>>   create mode 100644 drivers/net/ethernet/ti/k3-udma-desc-pool.c
+>>   create mode 100644 drivers/net/ethernet/ti/k3-udma-desc-pool.h
+> 
+>> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+>> index 8a6ca16eee3b..89cec778cf2d 100644
+>> --- a/drivers/net/ethernet/ti/Kconfig
+>> +++ b/drivers/net/ethernet/ti/Kconfig
+>> @@ -6,7 +6,7 @@
+>>   config NET_VENDOR_TI
+>>   	bool "Texas Instruments (TI) devices"
+>>   	default y
+>> -	depends on PCI || EISA || AR7 || ARCH_DAVINCI || ARCH_OMAP2PLUS || ARCH_KEYSTONE
+>> +	depends on PCI || EISA || AR7 || ARCH_DAVINCI || ARCH_OMAP2PLUS || ARCH_KEYSTONE || ARCH_K3
+>>   	---help---
+>>   	  If you have a network (Ethernet) card belonging to this class, say Y.
+>>   
+>> @@ -31,7 +31,7 @@ config TI_DAVINCI_EMAC
+>>   
+>>   config TI_DAVINCI_MDIO
+>>   	tristate "TI DaVinci MDIO Support"
+>> -	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || ARCH_KEYSTONE || COMPILE_TEST
+>> +	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+>>   	select PHYLIB
+>>   	---help---
+>>   	  This driver supports TI's DaVinci MDIO module.
+>> @@ -95,6 +95,21 @@ config TI_CPTS_MOD
+>>   	imply PTP_1588_CLOCK
+>>   	default m
+>>   
+>> +config TI_K3_AM65_CPSW_NUSS
+>> +	tristate "TI K3 AM654x/J721E CPSW Ethernet driver"
+>> +	depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
+>> +	select TI_DAVINCI_MDIO
+>> +	imply PHY_TI_GMII_SEL
+>> +	help
+>> +	  This driver supports TI K3 AM654/J721E CPSW2G Ethernet SubSystem.
+>> +	  The two-port Gigabit Ethernet MAC (MCU_CPSW0) subsystem provides
+>> +	  Ethernet packet communication for the device: One Ethernet port
+>> +	  (port 1) with selectable RGMII and RMII interfaces and an internal
+>> +	  Communications Port Programming Interface (CPPI) port (port 0).
+>> +
+>> +	  To compile this driver as a module, choose M here: the module
+>> +	  will be called ti-am65-cpsw-nuss.
+>> +
+>>   config TI_KEYSTONE_NETCP
+>>   	tristate "TI Keystone NETCP Core Support"
+>>   	select TI_DAVINCI_MDIO
+>> diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+>> index ecf776ad8689..6362a9b0bb8a 100644
+>> --- a/drivers/net/ethernet/ti/Makefile
+>> +++ b/drivers/net/ethernet/ti/Makefile
+>> @@ -23,3 +23,6 @@ obj-$(CONFIG_TI_KEYSTONE_NETCP) += keystone_netcp.o
+>>   keystone_netcp-y := netcp_core.o cpsw_ale.o
+>>   obj-$(CONFIG_TI_KEYSTONE_NETCP_ETHSS) += keystone_netcp_ethss.o
+>>   keystone_netcp_ethss-y := netcp_ethss.o netcp_sgmii.o netcp_xgbepcsr.o cpsw_ale.o
+>> +
+>> +obj-$(CONFIG_TI_K3_AM65_CPSW_NUSS) += ti-am65-cpsw-nuss.o
+>> +ti-am65-cpsw-nuss-y := am65-cpsw-nuss.o cpsw_sl.o am65-cpsw-ethtool.o cpsw_ale.o k3-udma-desc-pool.o
+> 
+> Would not be better to have the desc-pool (silent) Kconfig selectable?
+> The not yet upstream icssg-prueth also needs the same desc-pool library
+> as cpsw.
 >
-> --
-> Regards,
->
-> Laurent Pinchart
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+I'd prefer not to add new Kconfig options unless required.
+This driver simply not work without it, so no Kconfig option for now.
+
+-- 
+Best regards,
+grygorii
