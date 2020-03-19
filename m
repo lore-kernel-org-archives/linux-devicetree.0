@@ -2,99 +2,98 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F228C4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 08:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E6BC4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 08:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2201E20714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 08:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0EF20724
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 08:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tZDNpEGq"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GErH3qee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725787AbgCSIZN (ORCPT
+        id S1726151AbgCSIdU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:25:13 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:25570 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725767AbgCSIZN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 04:25:13 -0400
-X-UUID: 70dbe579fff94d0b974d855b32ade374-20200319
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=iRLB6NyH9Dw1QuDRyGg/3cbLaE61cSAcOzKDspWyGNs=;
-        b=tZDNpEGqVCYzt4s6Ta8FMslDEjhsfLKenpIpG0WqmM+iy/ZJqOSXANY4Wax7178gpFgjOw+bBbjgFeXEXEOiG20Rdz1Fx9bEpqWxiRpEeEeLltgbTBG4gUZcfYFRR4vjAcCec0grVhnDO3DXzv3k6nDGiz71Iy9gnHxkSGf7Q24=;
-X-UUID: 70dbe579fff94d0b974d855b32ade374-20200319
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1165661813; Thu, 19 Mar 2020 16:25:03 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 19 Mar 2020 16:24:01 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 19 Mar 2020 16:25:36 +0800
-Message-ID: <1584606301.29104.2.camel@mtkswgap22>
-Subject: Re: [PATCH v3 1/6] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, Andy Teng <andy.teng@mediatek.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Date:   Thu, 19 Mar 2020 16:25:01 +0800
-In-Reply-To: <20200318223842.GA31707@bogus>
-References: <1584454007-2115-1-git-send-email-hanks.chen@mediatek.com>
-         <1584454007-2115-2-git-send-email-hanks.chen@mediatek.com>
-         <20200318223842.GA31707@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 19 Mar 2020 04:33:20 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:13871 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725768AbgCSIdS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 04:33:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584606797; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=OROpbwz6Sl2/iofvDAbw1QWoGqGQL4/CHkBzZoLHDbc=; b=GErH3qeebyxNh9rSo2pQeLdSDxQQo9DbaTc5UsD2M5u1SI9JpS5LkmaL7VWG57weY25pQ22K
+ vU4ueOxEhpzRzs95zL7gvYTreZoH0enwEPQgCDRY2LuKdnkp3aSuVJpb0UxeZcbaEVvD8FmI
+ crfouNiIvCv4xp2Ix1nvIyswtiM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e732e3b.7f285d946ab0-smtp-out-n02;
+ Thu, 19 Mar 2020 08:32:59 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CB449C43636; Thu, 19 Mar 2020 08:32:59 +0000 (UTC)
+Received: from [192.168.0.103] (unknown [106.51.30.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11CA4C433CB;
+        Thu, 19 Mar 2020 08:32:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 11CA4C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: cpus: Add kryo468 compatible
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, sibis@codeaurora.org,
+        swboyd@chromium.org, dianders@chromium.org
+Cc:     devicetree@vger.kernel.org
+References: <cd0f3d35ca0fc2944fd97e030a28318ff82dd5c1.1584516925.git.amit.kucheria@linaro.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <5bacd2ad-811f-103f-ac5c-fd91522df40d@codeaurora.org>
+Date:   Thu, 19 Mar 2020 14:02:54 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <cd0f3d35ca0fc2944fd97e030a28318ff82dd5c1.1584516925.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAzLTE4IGF0IDE2OjM4IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVHVlLCAxNyBNYXIgMjAyMCAyMjowNjo0MiArMDgwMCwgSGFua3MgQ2hlbiB3cm90ZToNCj4g
-PiBGcm9tOiBBbmR5IFRlbmcgPGFuZHkudGVuZ0BtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gQWRk
-IGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIE1UNjc3OSBwaW5jdHJsIGRyaXZlci4N
-Cj4gPiANCj4gPiBDaGFuZ2UtSWQ6IEk5MjU4NjM2OTU2NDk0OGYyNjI4ZjcwNDIxYmNkNzA2Njhm
-MTMyYzRmDQo+ID4gU2lnbmVkLW9mZi1ieTogQW5keSBUZW5nIDxhbmR5LnRlbmdAbWVkaWF0ZWsu
-Y29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvcGluY3RybC9tZWRpYXRlayxtdDY3Nzkt
-cGluY3RybC55YW1sICB8ICAyMDggKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDIwOCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9tZWRpYXRlayxtdDY3NzktcGluY3Ry
-bC55YW1sDQo+ID4gDQo+IA0KPiBNeSBib3QgZm91bmQgZXJyb3JzIHJ1bm5pbmcgJ21ha2UgZHRf
-YmluZGluZ19jaGVjaycgb24geW91ciBwYXRjaDoNCj4gDQo+IHdhcm5pbmc6IG5vIHNjaGVtYSBm
-b3VuZCBpbiBmaWxlOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9t
-ZWRpYXRlayxtdDY3NzktcGluY3RybC55YW1sDQo+IC9idWlsZHMvcm9iaGVycmluZy9saW51eC1k
-dC1yZXZpZXcvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvbWVkaWF0
-ZWssbXQ2Nzc5LXBpbmN0cmwueWFtbDogaWdub3JpbmcsIGVycm9yIHBhcnNpbmcgZmlsZQ0KPiBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9tZWRpYXRlayxtdDY3Nzkt
-cGluY3RybC55YW1sOiAgd2hpbGUgcGFyc2luZyBhIGJsb2NrIGNvbGxlY3Rpb24NCj4gICBpbiAi
-PHVuaWNvZGUgc3RyaW5nPiIsIGxpbmUgMjgsIGNvbHVtbiA1DQo+IGRpZCBub3QgZmluZCBleHBl
-Y3RlZCAnLScgaW5kaWNhdG9yDQo+ICAgaW4gIjx1bmljb2RlIHN0cmluZz4iLCBsaW5lIDI5LCBj
-b2x1bW4gNQ0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvTWFrZWZpbGU6MTI6
-IHJlY2lwZSBmb3IgdGFyZ2V0ICdEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGlu
-Y3RybC9tZWRpYXRlayxtdDY3NzktcGluY3RybC5leGFtcGxlLmR0cycgZmFpbGVkDQo+IG1ha2Vb
-MV06ICoqKiBbRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvbWVkaWF0
-ZWssbXQ2Nzc5LXBpbmN0cmwuZXhhbXBsZS5kdHNdIEVycm9yIDENCj4gTWFrZWZpbGU6MTI2Mjog
-cmVjaXBlIGZvciB0YXJnZXQgJ2R0X2JpbmRpbmdfY2hlY2snIGZhaWxlZA0KPiBtYWtlOiAqKiog
-W2R0X2JpbmRpbmdfY2hlY2tdIEVycm9yIDINCj4gDQo+IFNlZSBodHRwczovL3BhdGNod29yay5v
-emxhYnMub3JnL3BhdGNoLzEyNTY0MjkNCj4gUGxlYXNlIGNoZWNrIGFuZCByZS1zdWJtaXQuDQo+
-IA0KDQpNeSBiYWQsIHNob3VsZCB1cGRhdGUgdGhlIGZvcm1hdC4gd2lsbCBkbyBpbiB2NC4NCg0K
-VGhhbmtzIGZvciByZXZpZXdpbmcuDQoNCg0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXw0KPiBMaW51eC1tZWRpYXRlayBtYWlsaW5nIGxpc3QNCj4gTGlu
-dXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVrDQoNCg==
 
+
+On 3/18/2020 2:38 PM, Amit Kucheria wrote:
+> Kryo468 is found in sc7180, so add it to the list of cpu compatibles
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+
+>   Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+> index 7a9c3ce2dbef..57408c773b4d 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.yaml
+> +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+> @@ -156,6 +156,7 @@ properties:
+>         - qcom,krait
+>         - qcom,kryo
+>         - qcom,kryo385
+> +      - qcom,kryo468
+>         - qcom,kryo485
+>         - qcom,scorpion
+>   
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
