@@ -2,135 +2,156 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4D1C4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1665C4332E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F67F208D6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAfJ6Cb3"
+	by mail.kernel.org (Postfix) with ESMTP id 8493F2072C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:17:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584634626;
+	bh=czCpJ8y0zyIMrb16loRBDNoPc3JFCft+Emc2g/RzqIw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=UWNeU8SWdK6a2arV47C9ILHVVTVA5YgV9L1tLFxv88BRY0L6Q/gAGm/0kLqqEa7EG
+	 wPKYbWbv31l3SV4f0SYGOqQWU2JfMW9dbjbsWn8vgMOiED6RnkoKS6meSEnNgYnNNd
+	 MEy5p5oA1Mrv7idYrC0W8xH097c0r/KrmIo586Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgCSQML (ORCPT
+        id S1727753AbgCSQRA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:12:11 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38033 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgCSQMK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 12:12:10 -0400
-Received: by mail-wm1-f65.google.com with SMTP id l20so2984961wmi.3;
-        Thu, 19 Mar 2020 09:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kcI9L10AVu3IFfDLlq7fYdN8ePr2Q+2h97GxsvZx3J0=;
-        b=OAfJ6Cb3Q7fO4i8JHLbUWXZbGL9oGZ25fAszYa+CqeczsxwpIpylMDlEaAE3/6thJw
-         KDRToGk8bkf4r6chrw1GbZXwv1UPYsxCBC+WIDQhNV4VNFn6bWcI0joUFSxwznheJPCg
-         lxP0P/PWJiwSO2nMZL6FVLSU9KUopelr5zs871Yi9UHdL5tlvPnYh7KgRnh3EM+2SkVn
-         itx45pb22aoykPkRDFoX1u728LHpvSdtwnjYuY2Zf0+IEe+xE+Nym0hoy0weKmpxdtLX
-         KSooY/ODYEwZSNZQl24hdoaGVkigEYOPDppGJv2vGS3gNqp1WJ2az5SO3s7y1pUkXnVo
-         y/tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kcI9L10AVu3IFfDLlq7fYdN8ePr2Q+2h97GxsvZx3J0=;
-        b=a3S7L5jQBHtXNUnH2rE2oZ6HkxzuJG8xOv84najdp0QzM4TX59eH49mAXZ/vflvzl9
-         +ZMBrY3humE02/EsBM2yrZv+mjCZRLf5HldRACI/UoQtPTchVzcKlN34RdvdiBk2tHzq
-         9xqslHUqAFVeecJzIJkTZe7V4XOvSfls8LUM4GL6y6R5i8iLo53JfuO0aljJY+zVLgbZ
-         VRpW6xfpy5eHWi7NZzpLlHq9UMoxAxMLsXgV9esUBqM2Af4bkZlkbm5DGJrH//WvG1T+
-         g6YuJeF5ykymoB174OC0tx4yjjdUrgZpwaeLOgSQwMi6zSF46t2uHaxOaHV5Hzsjk+o8
-         WmmQ==
-X-Gm-Message-State: ANhLgQ3Bk6BPrZjX/dy0hKmjS6ghJqWtQae2pC0eMaNoFpEkWj2RFdFI
-        kwUZXcw7wnnTz9/tE/V0eWg=
-X-Google-Smtp-Source: ADFU+vv7RkcNf6iJ+zQ/ULJBSRGSg9vNsaWp0WejEfo/Y0gYZuPRr4L3BhyGJyqw2V3klwYvuQYG2g==
-X-Received: by 2002:a05:600c:210d:: with SMTP id u13mr4718627wml.92.1584634327036;
-        Thu, 19 Mar 2020 09:12:07 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id w204sm3973485wma.1.2020.03.19.09.12.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Mar 2020 09:12:06 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 1/2] dt-bindings: sram: convert rockchip-pmu-sram bindings to yaml
-Date:   Thu, 19 Mar 2020 17:11:58 +0100
-Message-Id: <20200319161159.24548-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 19 Mar 2020 12:17:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728033AbgCSQQ7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:16:59 -0400
+Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A19B2072C;
+        Thu, 19 Mar 2020 16:16:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584634618;
+        bh=czCpJ8y0zyIMrb16loRBDNoPc3JFCft+Emc2g/RzqIw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ggW2ImWE6fut/X+eJIbds8cFs5QEN295nURqqWwE0gnDEHhAHDvdeiUm9/TPSkZnz
+         rZw1syAOYzFSQH5TzOoKFxEX/UPau0CagrKTvHPJOy6ZXf83ZWKZzrSk8RIzVyDRWo
+         Zhx5pdg2W+TdLDZmTr82ex4sk2lN30/NxAD2bGhU=
+Subject: Re: [PATCHv3 4/5] dt-bindings: documentation: add clock bindings
+ information for Agilex
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+References: <20200317161022.11181-1-dinguyen@kernel.org>
+ <20200317161022.11181-5-dinguyen@kernel.org> <20200318224042.GA32101@bogus>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <30180323-3c74-d04a-b715-3b1f655d6a81@kernel.org>
+Date:   Thu, 19 Mar 2020 11:16:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200318224042.GA32101@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Current dts files with 'rockchip-pmu-sram' compatible nodes
-are now verified with sram.yaml, although the original
-text document still exists. Merge rockchip-pmu-sram.txt
-with sram.yaml by adding it as description with an example.
+Hi Rob,
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
-Not tested with hardware.
+On 3/18/20 5:40 PM, Rob Herring wrote:
+> On Tue, 17 Mar 2020 11:10:21 -0500, Dinh Nguyen wrote:
+>> Document the Agilex clock bindings, and add the clock header file. The
+>> clock header is an enumeration of all the different clocks on the Agilex
+>> platform.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+>> ---
+>> v3: address comments from Stephen Boyd
+>>     fix build error(tab removed in line 37)
+>>     renamed to intel,agilex.yaml
+>> v2: convert original document to YAML
+>> ---
+>>  .../bindings/clock/intel,agilex.yaml          | 36 ++++++++++
+>>  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
+>>  2 files changed, 106 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+>>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
+>>
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Error: Documentation/devicetree/bindings/clock/intel,agilex.example.dts:17.3-4 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml] Error 1
+> Makefile:1262: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1256630
+> Please check and re-submit.
+> 
 
-Changed v2:
-  Merge with sram.yaml
----
- .../devicetree/bindings/sram/rockchip-pmu-sram.txt       | 16 ----------------
- Documentation/devicetree/bindings/sram/sram.yaml         | 13 +++++++++++++
- 2 files changed, 13 insertions(+), 16 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+I want to be able check these errors locally before sending the next
+version. But I keep getting various errors when I try to "make
+dt_binding_check":
 
-diff --git a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-deleted file mode 100644
-index 6b42fda30..000000000
---- a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-+++ /dev/null
-@@ -1,16 +0,0 @@
--Rockchip SRAM for pmu:
--------------------------------
--
--The sram of pmu is used to store the function of resume from maskrom(the 1st
--level loader). This is a common use of the "pmu-sram" because it keeps power
--even in low power states in the system.
--
--Required node properties:
--- compatible : should be "rockchip,rk3288-pmu-sram"
--- reg : physical base address and the size of the registers window
--
--Example:
--	sram@ff720000 {
--		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
--		reg = <0xff720000 0x1000>;
--	};
-diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
-index 7b83cc6c9..a9b1c2b74 100644
---- a/Documentation/devicetree/bindings/sram/sram.yaml
-+++ b/Documentation/devicetree/bindings/sram/sram.yaml
-@@ -224,6 +224,19 @@ examples:
-     };
- 
-   - |
-+    // Rockchip's rk3288 SoC uses the sram of pmu to store the function of
-+    // resume from maskrom(the 1st level loader). This is a common use of
-+    // the "pmu-sram" because it keeps power even in low power states
-+    // in the system.
-+    sram@ff720000 {
-+      compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
-+      reg = <0xff720000 0x1000>;
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      ranges = <0 0xff720000 0x1000>;
-+    };
-+
-+  - |
-     // Allwinner's A80 SoC uses part of the secure sram for hotplugging of the
-     // primary core (cpu0). Once the core gets powered up it checks if a magic
-     // value is set at a specific location. If it is then the BROM will jump
--- 
-2.11.0
+Traceback (most recent call last):
+  File "/bin/dt-doc-validate", line 15, in <module>
+    import ruamel.yaml
+ImportError: No module named 'ruamel'
+Documentation/devicetree/bindings/Makefile:12: recipe for target
+'Documentation/devicetree/bindings/arm/l2c2x0.example.dts' failed
 
+
+Do you have a pointer on how to run the dt_binding_check?
+
+Thanks,
+Dinh
