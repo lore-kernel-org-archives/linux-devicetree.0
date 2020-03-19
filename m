@@ -2,126 +2,206 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571D0C4332E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C10CC4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E410207FC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584637014;
-	bh=qITxEULM5Ncg7snJOgrBb4YMWUJLNiO6B7ZZfpryEbQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RnqKKiiOAX/HLMvMDPJ5+/JIRZzh3KW6ndW5rUtwt0ijmbZCJixYLgufphRGRkZsD
-	 LPzz19Q1KZftS/oIVEcMiFEZt8uO+5rnmzHtIZem3c+TfO9HoK68G5xP5ZlyAi3Taw
-	 2W8fsX4xFGudUItimg0OWTL31K0yMZEQHNVn5Gos=
+	by mail.kernel.org (Postfix) with ESMTP id 2013A207FC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:05:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdyJIXvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgCSQ4t (ORCPT
+        id S1726912AbgCSRFA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:56:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgCSQ4s (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:56:48 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A22292173E;
-        Thu, 19 Mar 2020 16:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584637007;
-        bh=qITxEULM5Ncg7snJOgrBb4YMWUJLNiO6B7ZZfpryEbQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UyYhI+DOShWfNvcnPDbFix/e0gh/N8C7iwifqyq1jDDihFHxTuscSm0U4oofGLj5X
-         UVPq4WctqBAv/mUis4FoXDdz7yFea4kuyFzcdjkBorvsOtaVzxkuohLqxztP31vqVa
-         6X/6hr2UGimZf5kdwnL6xWl+kMH/gNXhMjW7bSiw=
-Received: by mail-qk1-f169.google.com with SMTP id j4so3759654qkc.11;
-        Thu, 19 Mar 2020 09:56:47 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3OB01vbwXwcIngFf6NE16U9U2HNys37m3IZ47wbxAjSFie3PaA
-        0LXTKNYq2cn9Dt5fp/e7N7PhBsO20gV3j92Ulg==
-X-Google-Smtp-Source: ADFU+vvx8Mto3b9ke4GB11bW5X8+6B732oYjPwoYLyKyoRcPOIqC6jH4W9EiQR64yH6UJnmnfxtJF04ZJlr3JwvgH1k=
-X-Received: by 2002:a37:4a85:: with SMTP id x127mr4018507qka.152.1584637006758;
- Thu, 19 Mar 2020 09:56:46 -0700 (PDT)
+        Thu, 19 Mar 2020 13:05:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37854 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728361AbgCSRFA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 13:05:00 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w10so4053638wrm.4;
+        Thu, 19 Mar 2020 10:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CVVovl0RgrHxkpFTWtAaqY67MvkCT4lFwy2Yz+E0bfI=;
+        b=AdyJIXvwcfn2Y6nC7+JBjaSg2+drRV5zXWUctcVZ5Ar/Or6pqg06xK/eZofH6UGNp2
+         VO/6R0A91Dm1Z7kccmO4tjQAhvqm9AN9EY1t2jAq/yDuZ/z7eXbq7V5i5Jf+lcetGNJd
+         VmGhm6IHlIrXFPmzrEcGhqeWvmQ04DFsV0wtMdb9jOXj+63tRCTOmIis7WKhczYXNx4B
+         UYDIotY2UJBk8frI7Q9hHJRZ8WDkKMueELoEYhlj0ZVUySbHmSaSaKatD65mQ/d5ZFDq
+         TmbNraPIVQYKpv4EUPyefE2ThwjzmpG/W+11AHxLXM79rFbTGUjptvDyQ/fYGIkMz81S
+         2XNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CVVovl0RgrHxkpFTWtAaqY67MvkCT4lFwy2Yz+E0bfI=;
+        b=MH/X5hhFw6jnUCGl0X+6YkZRJAC/lpBSwg5zzUolAupVzMfcK6titD/AdQgK3rNFNV
+         giaa0cI4NerRPQkUvylnDXrX28hGu/ohyiOJ4PmQpOqNebrkInm94Q/Pvneeon5Wy9LZ
+         QEBMFZHV7jIoa+A07lNS56lDySmtW3kKDwGVyhUjcSROGIqBwL9dyeeJ9avRT1GbykoU
+         P92v639BfxHJZxT7n6Wsq0W2byfpgicLn2lAaqH7HLRqUyNARZYukTcymMzqK6ZwIX55
+         PgoDeqnT0AI2gQWNzF8vo37UDAUZymGyo8yCcrELsvOvNtivu4kBjiBaxIQTHii4giQJ
+         lJmw==
+X-Gm-Message-State: ANhLgQ3KAIw/qdM6uFBqoUDhXX1a+W1WxIYbby+uDXOEx4m0zzsEaTSR
+        ZFNOOIcgKMYM8X/jLMacqQ8=
+X-Google-Smtp-Source: ADFU+vtDIHpcI2KPEBEA1H2X6+8WVrNoCL3Hqm+BFH2MHzew1QP19N2z4c4jc2m0gx59peBW6lHZSA==
+X-Received: by 2002:adf:f652:: with SMTP id x18mr5415216wrp.299.1584637498238;
+        Thu, 19 Mar 2020 10:04:58 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id g3sm4508175wro.93.2020.03.19.10.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 10:04:56 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 18:04:55 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/7] dt-bindings: pwm: document the PWM polarity flag
+Message-ID: <20200319170455.GC3354541@ulmo>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-3-oleksandr.suvorov@toradex.com>
+ <20200317174344.GB1464607@ulmo>
+ <20200317213056.futfiwn4qgr2njye@pengutronix.de>
+ <20200318230539.GB2874972@ulmo>
+ <20200319070510.gc6hr53gn7n2osvb@pengutronix.de>
 MIME-Version: 1.0
-References: <20200317161022.11181-1-dinguyen@kernel.org> <20200317161022.11181-5-dinguyen@kernel.org>
- <20200318224042.GA32101@bogus> <30180323-3c74-d04a-b715-3b1f655d6a81@kernel.org>
-In-Reply-To: <30180323-3c74-d04a-b715-3b1f655d6a81@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 19 Mar 2020 10:56:35 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ-c5tvWUMGKu4scy85cGdYHzPxR7NTzEd9V5RQHveW0g@mail.gmail.com>
-Message-ID: <CAL_JsqJ-c5tvWUMGKu4scy85cGdYHzPxR7NTzEd9V5RQHveW0g@mail.gmail.com>
-Subject: Re: [PATCHv3 4/5] dt-bindings: documentation: add clock bindings
- information for Agilex
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     linux-clk <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Y5rl02BVI9TCfPar"
+Content-Disposition: inline
+In-Reply-To: <20200319070510.gc6hr53gn7n2osvb@pengutronix.de>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:16 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
->
-> Hi Rob,
->
-> On 3/18/20 5:40 PM, Rob Herring wrote:
-> > On Tue, 17 Mar 2020 11:10:21 -0500, Dinh Nguyen wrote:
-> >> Document the Agilex clock bindings, and add the clock header file. The
-> >> clock header is an enumeration of all the different clocks on the Agilex
-> >> platform.
-> >>
-> >> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> >> ---
-> >> v3: address comments from Stephen Boyd
-> >>     fix build error(tab removed in line 37)
-> >>     renamed to intel,agilex.yaml
-> >> v2: convert original document to YAML
-> >> ---
-> >>  .../bindings/clock/intel,agilex.yaml          | 36 ++++++++++
-> >>  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
-> >>  2 files changed, 106 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
-> >>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
-> >>
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > Error: Documentation/devicetree/bindings/clock/intel,agilex.example.dts:17.3-4 syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml' failed
-> > make[1]: *** [Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml] Error 1
-> > Makefile:1262: recipe for target 'dt_binding_check' failed
-> > make: *** [dt_binding_check] Error 2
-> >
-> > See https://patchwork.ozlabs.org/patch/1256630
-> > Please check and re-submit.
-> >
->
-> I want to be able check these errors locally before sending the next
-> version. But I keep getting various errors when I try to "make
-> dt_binding_check":
->
-> Traceback (most recent call last):
->   File "/bin/dt-doc-validate", line 15, in <module>
->     import ruamel.yaml
-> ImportError: No module named 'ruamel'
-> Documentation/devicetree/bindings/Makefile:12: recipe for target
-> 'Documentation/devicetree/bindings/arm/l2c2x0.example.dts' failed
->
->
-> Do you have a pointer on how to run the dt_binding_check?
 
-Documentation/devicetree/writing-schema.rst
+--Y5rl02BVI9TCfPar
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ruamel should get installed automatically when you run pip3. If you
-just cloned dt-schema, then you still need to run pip on the project
-directory. That's documented in the project readme.
+On Thu, Mar 19, 2020 at 08:05:10AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> On Thu, Mar 19, 2020 at 12:05:39AM +0100, Thierry Reding wrote:
+> > On Tue, Mar 17, 2020 at 10:30:56PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > Hello Thierry,
+> > >=20
+> > > On Tue, Mar 17, 2020 at 06:43:44PM +0100, Thierry Reding wrote:
+> > > > On Tue, Mar 17, 2020 at 02:32:26PM +0200, Oleksandr Suvorov wrote:
+> > > > > Add the description of PWM_POLARITY_NORMAL flag.
+> > > > >=20
+> > > > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> > > > > ---
+> > > > >=20
+> > > > >  Documentation/devicetree/bindings/pwm/pwm.txt | 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Docu=
+mentation/devicetree/bindings/pwm/pwm.txt
+> > > > > index 084886bd721e..440c6b9a6a4e 100644
+> > > > > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> > > > > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > > > > @@ -46,6 +46,7 @@ period in nanoseconds.
+> > > > >  Optionally, the pwm-specifier can encode a number of flags (defi=
+ned in
+> > > > >  <dt-bindings/pwm/pwm.h>) in a third cell:
+> > > > >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
+> > > > > +- PWM_POLARITY_NORMAL: don't invert the PWM signal polarity
+> > > >=20
+> > > > This doesn't make sense. PWM_POLARITY_NORMAL is not part of the DT =
+ABI.
+> > >=20
+> > > "is not part of the DT ABI" is hardly a good reason. If it's sensible=
+ to
+> > > be used, it is sensible to define it.
+> >=20
+> > That's exactly it. It's not sensible at all to use it.
+>=20
+> If you think the argument is "It is not sensible to be used." then please
+> say so and don't add "PWM_POLARITY_NORMAL is not part of the DT ABI."
+> which seems to be irrelevant now.
 
-Rob
+I did say that, didn't I? I said that it doesn't make sense because it
+isn't part of the ABI. And since this is the document that defines the
+DT ABI, why should we add something that isn't part of the ABI?
+
+Now, if you want to make this part of the ABI, then that should be done
+as part of this patch so that the patch is actually consistent.
+
+> > If you define it here it means people are allowed to do stuff like
+> > this:
+> >=20
+> > 	pwms =3D <&pwm 1234 PWM_POLARITY_INVERTED | PWM_POLARITY_NORMAL>;
+> >=20
+> > which doesn't make sense.
+>=20
+> I would hope that a human reader would catch this.
+
+Maybe. At the same time we're now moving towards automatic checking of
+device trees against a binding. These tools will only ever see the
+binary representation, so won't be able to spot this nonsense. The whole
+purpose of having these tools is so that we don't have to do the tedious
+work of manually inspecting all device tree files. It's also not
+guaranteed that we'll even be seeing all of the device tree files ever
+written against these bindings.
+
+>=20
+> > What's more, it impossible for the code to even notice that you're
+> > being silly because | PWM_POLARITY_NORMAL is just | 0 and that's just
+> > a nop.
+>=20
+> I think this argument is a bad one. Whenever you introduce a
+> function or symbol you can use it in a wrong way. With this argument you
+> can also say GPIO_ACTIVE_LOW doesn't make sense because
+>=20
+> 	pwms =3D <&pwm 1234 GPIO_ACTIVE_LOW>;
+>=20
+> is silly.
+
+Yes, it's also obviously silly to try and eat a hammer. I was assuming
+people have at least /some/ sense and try not to use GPIO related flags
+with PWM specifiers. And because I think that people aren't totally
+stupid, I think they'll be capable of understanding that by default a
+PWM will be "normal" and only if they want to deviate from "normal" do
+they need to do something special, like specify PWM_POLARITY_INVERTED.
+
+I'm growing tired of this discussion, to be honest. So if you really
+absolutely must have PWM_POLARITY_NORMAL so that you can read DT files
+without having to think, then fine, I'll take a patch that adds that.
+But please let's not confuse the definitions for DT with the polarity
+enum in the API.
+
+Thierry
+
+--Y5rl02BVI9TCfPar
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5zpjQACgkQ3SOs138+
+s6HFjg//bYCq9+SPY2/y5xYub6u1UZ/gQnGt3lAjF0sQFhvO5DRux4OMJpsDWrry
+3/HGGq8lvnsjeLHK8a0h5mlTWruNfq4LzF+q5jFIYQENARZsfQSEJMw8e1XS5tnP
+CDOuTN2yHAdZMACBso687GfeQAMEVC3wAF9FVB2rOs+V06TKQvjI9F8l8/RVM/0f
+B4E+DHaIxSrzp80r0XnF2MXlVbm/gDCVDPfKrdF2mnRrp6M0Wz32yuZArCpsAWWH
+J26o7REYk9GP/oCXyx8tKzr0wmrzKKT/O4Qq20cR7Rk/IdNKonhEd4PrZJ9QCEOs
+FMbQBtoSHr9eW1O40y7z5aVCNRQv0u6507x/lkw1exstlBR/CGWe07YQGex71bvK
+3c4Z/mw7bXK+T5XhGh2qHBpRRB3kUtnZbubZHm6AMflLVejEBeEa07Git64RevSL
+L4q/9Nt7SRpmcvahvdPj11cBo2hDcYO4KOsuiPD2IVdcz0KHCmSVFLpFqYMjOhYs
+r4WXQAyB6fcDxiTsPnse+xX6rJyDgJ9qD8TsVgn3/Pj0ToMQsyosaeLoX3o3rH9u
+EpzEhLaHJCVa9wMwknSDLyaejnEw84a/l6fECe28V3KYpJ6MT+EuWqYQSjOY4seE
+lSSil7t0zWcEwwH4EVdgjFe/68jrNsBJEcwBpvwnwVmer5xzogg=
+=t8el
+-----END PGP SIGNATURE-----
+
+--Y5rl02BVI9TCfPar--
