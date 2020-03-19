@@ -2,156 +2,123 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1665C4332E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ED9C4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8493F2072C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584634626;
-	bh=czCpJ8y0zyIMrb16loRBDNoPc3JFCft+Emc2g/RzqIw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=UWNeU8SWdK6a2arV47C9ILHVVTVA5YgV9L1tLFxv88BRY0L6Q/gAGm/0kLqqEa7EG
-	 wPKYbWbv31l3SV4f0SYGOqQWU2JfMW9dbjbsWn8vgMOiED6RnkoKS6meSEnNgYnNNd
-	 MEy5p5oA1Mrv7idYrC0W8xH097c0r/KrmIo586Rs=
+	by mail.kernel.org (Postfix) with ESMTP id 14E7220775
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gIvshiTi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbgCSQRA (ORCPT
+        id S1727708AbgCSQ2S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728033AbgCSQQ7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:16:59 -0400
-Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A19B2072C;
-        Thu, 19 Mar 2020 16:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584634618;
-        bh=czCpJ8y0zyIMrb16loRBDNoPc3JFCft+Emc2g/RzqIw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ggW2ImWE6fut/X+eJIbds8cFs5QEN295nURqqWwE0gnDEHhAHDvdeiUm9/TPSkZnz
-         rZw1syAOYzFSQH5TzOoKFxEX/UPau0CagrKTvHPJOy6ZXf83ZWKZzrSk8RIzVyDRWo
-         Zhx5pdg2W+TdLDZmTr82ex4sk2lN30/NxAD2bGhU=
-Subject: Re: [PATCHv3 4/5] dt-bindings: documentation: add clock bindings
- information for Agilex
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
-References: <20200317161022.11181-1-dinguyen@kernel.org>
- <20200317161022.11181-5-dinguyen@kernel.org> <20200318224042.GA32101@bogus>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <30180323-3c74-d04a-b715-3b1f655d6a81@kernel.org>
-Date:   Thu, 19 Mar 2020 11:16:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 19 Mar 2020 12:28:18 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42578 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727592AbgCSQ2S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 12:28:18 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JGSCEg026895;
+        Thu, 19 Mar 2020 11:28:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584635292;
+        bh=YYDaI6ZUYjz6psO0DCBs/8lPMQsvbzmxovEzYI6G5/Y=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=gIvshiTiiBSpOCQOA0IEMnyQfDq9TuNXKWwizQc3vuxbsXlJ6iBx7nceXnOXXlGOp
+         7EvsyxyOdy0TKWLifQKGzS+/Wv0n2FWEJ7UKm99vmrN+7DnVvS+oiihRP2sa4ANp5B
+         pvwOGqCygUd777pznXqQDrpf2gqn2wmA3CGfYgGQ=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JGSCTx110542
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Mar 2020 11:28:12 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 11:28:12 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 11:28:12 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JGSB9r109960;
+        Thu, 19 Mar 2020 11:28:11 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v5 01/11] phy: ti: gmii-sel: simplify config dependencies between net drivers and gmii phy
+Date:   Thu, 19 Mar 2020 18:27:56 +0200
+Message-ID: <20200319162806.25705-2-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200319162806.25705-1-grygorii.strashko@ti.com>
+References: <20200319162806.25705-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318224042.GA32101@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+The phy-gmii-sel can be only auto selected in Kconfig and now the pretty
+complex Kconfig dependencies are defined for phy-gmii-sel driver, which
+also need to be updated every time phy-gmii-sel is re-used for any new
+networking driver.
 
-On 3/18/20 5:40 PM, Rob Herring wrote:
-> On Tue, 17 Mar 2020 11:10:21 -0500, Dinh Nguyen wrote:
->> Document the Agilex clock bindings, and add the clock header file. The
->> clock header is an enumeration of all the different clocks on the Agilex
->> platform.
->>
->> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
->> ---
->> v3: address comments from Stephen Boyd
->>     fix build error(tab removed in line 37)
->>     renamed to intel,agilex.yaml
->> v2: convert original document to YAML
->> ---
->>  .../bindings/clock/intel,agilex.yaml          | 36 ++++++++++
->>  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
->>  2 files changed, 106 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
->>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Error: Documentation/devicetree/bindings/clock/intel,agilex.example.dts:17.3-4 syntax error
-> FATAL ERROR: Unable to parse input tree
-> scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml' failed
-> make[1]: *** [Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml] Error 1
-> Makefile:1262: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
-> 
-> See https://patchwork.ozlabs.org/patch/1256630
-> Please check and re-submit.
-> 
+Simplify Kconfig definition for phy-gmii-sel PHY driver - drop all
+dependencies and from networking drivers and rely on using 'imply
+PHY_TI_GMII_SEL' in Kconfig definitions for networking drivers instead.
 
-I want to be able check these errors locally before sending the next
-version. But I keep getting various errors when I try to "make
-dt_binding_check":
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Tested-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ drivers/net/ethernet/ti/Kconfig | 1 +
+ drivers/phy/ti/Kconfig          | 3 ---
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-Traceback (most recent call last):
-  File "/bin/dt-doc-validate", line 15, in <module>
-    import ruamel.yaml
-ImportError: No module named 'ruamel'
-Documentation/devicetree/bindings/Makefile:12: recipe for target
-'Documentation/devicetree/bindings/arm/l2c2x0.example.dts' failed
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index bf98e0fa7d8b..8a6ca16eee3b 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -53,6 +53,7 @@ config TI_CPSW
+ 	select MFD_SYSCON
+ 	select PAGE_POOL
+ 	select REGMAP
++	imply PHY_TI_GMII_SEL
+ 	---help---
+ 	  This driver supports TI's CPSW Ethernet Switch.
+ 
+diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
+index 6dbe9d0b9ff3..15a3bcf32308 100644
+--- a/drivers/phy/ti/Kconfig
++++ b/drivers/phy/ti/Kconfig
+@@ -106,11 +106,8 @@ config TWL4030_USB
+ 
+ config PHY_TI_GMII_SEL
+ 	tristate
+-	default y if TI_CPSW=y || TI_CPSW_SWITCHDEV=y
+-	depends on TI_CPSW || TI_CPSW_SWITCHDEV || COMPILE_TEST
+ 	select GENERIC_PHY
+ 	select REGMAP
+-	default m
+ 	help
+ 	  This driver supports configuring of the TI CPSW Port mode depending on
+ 	  the Ethernet PHY connected to the CPSW Port.
+-- 
+2.17.1
 
-
-Do you have a pointer on how to run the dt_binding_check?
-
-Thanks,
-Dinh
