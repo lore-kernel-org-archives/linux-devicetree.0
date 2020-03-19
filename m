@@ -2,213 +2,65 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30F2C4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 20:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C67BC4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 20:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE76B2072C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 20:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VJ4BBYuX"
+	by mail.kernel.org (Postfix) with ESMTP id 4DF0E20774
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 20:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgCSUmw (ORCPT
+        id S1727141AbgCSUwX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:42:52 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39980 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgCSUmw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 16:42:52 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t24so1894852pgj.7
-        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 13:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=2rYJOrDZR8Jywm7fFNsGJ9/btydHQG7C0ILwAA0KqB8=;
-        b=VJ4BBYuX5BMCKQXcXrJ6pyeHp/bgdw70Yx3XMAfg10hJ6yU97CaSNR0uGd0EBN+uSV
-         dPRmfSdveA0pv3DObi//lbusifw/wndiFAWqfPNyPJXr4rA/W64zYOzT4hlGWiGrzXz5
-         /rfv0Qc7kYE+8VC2ITk00ih5yTEJ2ODDX13gs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=2rYJOrDZR8Jywm7fFNsGJ9/btydHQG7C0ILwAA0KqB8=;
-        b=jK1ROgVz/yeTSfp+ROEtKa3+dppNoaPW4Z1+p06NAs9DfzzRNqsjyLoObWi04cZ9bC
-         SfXD+lVde8wors7NhObZzg4B1Sndzmmvu3AADIH2sIDHA1ezckmbbmgHfdZQOS0IPETd
-         iIu3AEu+xMNSKu6mXhn0ajt6/J/uHL1TOJRVlJnBHxXXvf7BrSKfu/F+Ycqrvqo8rYsX
-         3mijrqYvd1du/9kfbc+EC0skzlln6Ri+GkbrneIQ3eL0why3mVq/7N3S2TdE0dsM9ce5
-         bjw3JsS1Lf4jJIY8lw6mMejNKEVIcZLLvDK4t6CaEzg1238ibrrXY+4qX/d013SvMqpF
-         Z82w==
-X-Gm-Message-State: ANhLgQ3pgbcR/HUoHXpsj2NQ7j7iHTZ0RC+n8oh65eArfiGD0jyg/srA
-        jUSepxgYOq5IUhPxDySqdqIcNg==
-X-Google-Smtp-Source: ADFU+vuyOQQ/KOlPm4VMZQMcAFnyT7DjFq9EJmVmvfrPDGwzH3OawaynbEzFR09k9HE7f+fBSc7hYQ==
-X-Received: by 2002:a62:1552:: with SMTP id 79mr5885102pfv.215.1584650570091;
-        Thu, 19 Mar 2020 13:42:50 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id q13sm3109042pgh.30.2020.03.19.13.42.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 13:42:49 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 13:42:48 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org
-Subject: Re: [PATCH V2 4/8] tty: serial: qcom_geni_serial: Add interconnect
- support
-Message-ID: <20200319204248.GA204494@google.com>
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-5-git-send-email-akashast@codeaurora.org>
- <20200313212833.GK144492@google.com>
- <e9293de6-004f-6005-8cb6-66f28c080ebe@codeaurora.org>
- <20200317190804.GS144492@google.com>
- <e95bd6e0-d1fd-9d13-47df-f7d08b443e37@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e95bd6e0-d1fd-9d13-47df-f7d08b443e37@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Thu, 19 Mar 2020 16:52:23 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:56165 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgCSUwX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 16:52:23 -0400
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jF2Al-0003Pe-6Z; Thu, 19 Mar 2020 20:53:47 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH] ARM: dst: imx: fix audio SSI on GW551x
+Date:   Thu, 19 Mar 2020 13:52:15 -0700
+Message-Id: <1584651135-29266-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 05:53:22PM +0530, Akash Asthana wrote:
-> Hi Matthias,
-> 
-> On 3/18/2020 12:38 AM, Matthias Kaehlcke wrote:
-> > On Tue, Mar 17, 2020 at 05:18:34PM +0530, Akash Asthana wrote:
-> > > Hi Matthias,
-> > > 
-> > > On 3/14/2020 2:58 AM, Matthias Kaehlcke wrote:
-> > > > Hi Akash,
-> > > > 
-> > > > On Fri, Mar 13, 2020 at 06:42:10PM +0530, Akash Asthana wrote:
-> > > > > Get the interconnect paths for Uart based Serial Engine device
-> > > > > and vote according to the baud rate requirement of the driver.
-> > > > > 
-> > > > > Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-> > > > > ---
-> > > > > Changes in V2:
-> > > > >    - As per Bjorn's comment, removed se == NULL check from geni_serial_icc_get
-> > > > >    - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
-> > > > >    - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
-> > > > >      path handle
-> > > > >    - As per Matthias comment, added error handling for icc_set_bw call
-> > > > > 
-> > > > >    drivers/tty/serial/qcom_geni_serial.c | 69 +++++++++++++++++++++++++++++++++--
-> > > > >    1 file changed, 65 insertions(+), 4 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> > > > > index 272bae0..c8ad7e9 100644
-> > > > > --- a/drivers/tty/serial/qcom_geni_serial.c
-> > > > > +++ b/drivers/tty/serial/qcom_geni_serial.c
-> > > > > 
-> > > > > ...
-> > > > > 
-> > > > >    static int qcom_geni_serial_request_port(struct uart_port *uport)
-> > > > >    {
-> > > > >    	struct platform_device *pdev = to_platform_device(uport->dev);
-> > > > > @@ -962,6 +975,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
-> > > > >    	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
-> > > > >    	unsigned long clk_rate;
-> > > > >    	u32 ver, sampling_rate;
-> > > > > +	int ret;
-> > > > >    	qcom_geni_serial_stop_rx(uport);
-> > > > >    	/* baud rate */
-> > > > > @@ -983,6 +997,18 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
-> > > > >    	ser_clk_cfg = SER_CLK_EN;
-> > > > >    	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
-> > > > > +	/*
-> > > > > +	 * Put BW vote only on CPU path as driver supports FIFO mode only.
-> > > > > +	 * Assume peak_bw as twice of avg_bw.
-> > > > > +	 */
-> > > > > +	port->se.avg_bw_cpu = Bps_to_icc(baud);
-> > > > > +	port->se.peak_bw_cpu = Bps_to_icc(2 * baud);
-> > > > > +	ret = icc_set_bw(port->se.icc_path_cpu_to_geni, port->se.avg_bw_cpu,
-> > > > > +			port->se.peak_bw_cpu);
-> > > > > +	if (ret)
-> > > > > +		dev_err(uport->dev, "%s: ICC BW voting failed for cpu\n",
-> > > > > +			__func__);
-> > > > Should this return an error? The port might not operate properly if the ICC
-> > > > bandwidth couldn't be configured
-> > > This is void function we can't return error from here. I guess it would be
-> > > somewhat okay if BW voting failed for CPU path but clk_set_rate failure is
-> > > more serious which is called from this function, I don't think it can be
-> > > move to somewhere else.
-> > ok, I missed that _set_termios() is void.
-> > 
-> > > > >    static const struct uart_ops qcom_geni_console_pops = {
-> > > > > @@ -1308,6 +1358,17 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
-> > > > >    	port->rx_fifo_depth = DEF_FIFO_DEPTH_WORDS;
-> > > > >    	port->tx_fifo_width = DEF_FIFO_WIDTH_BITS;
-> > > > > +	ret = geni_serial_icc_get(&port->se);
-> > > > > +	if (ret)
-> > > > > +		return ret;
-> > > > > +	/* Set the bus quota to a reasonable value */
-> > > > > +	port->se.avg_bw_core = console ? Bps_to_icc(1000) :
-> > > > > +		Bps_to_icc(CORE_2X_50_MHZ);
-> > > > Why different settings for console vs. non-console?
-> > > QUP FW runs on core clock. To support higher throughput we want FW to run at
-> > > higher speed.
-> > > 
-> > > Since Console operate at 115200bps and BT operate at 3.2Mbps baud. We are
-> > > voting higher on core for BT usecase.
-> > > 
-> > > These value are recommended from HW team.
-> > IIUC none of the values you mention are set in stone. 115200bps seems to be a
-> > 'standard' value for the serial console, but it could be a different baudrate.
-> > I guess you are referring to Qualcomm Bluetooth controllers, which are only one
-> > of many things that could be connected to the port. And what happens when a
-> > QCA BT controller is connected to a non-geni/QCA port, which doesn't know about
-> > its 'requirements'? The answer is that both the BT controller and the serial
-> > console configure the baudrate they need, hence using different values in
-> > _probe() is pointless.
-> 
-> Are you refering other UART drivers(not based on geni HW) as non-geni/QCA
-> port?
-> 
-> We are not scaling core BW request based on real time need like we are doing
-> for other paths(CPU/DDR) instead we are using some fail proof value because,
-> FW runs on core clock and core behaves a bit different than other NOCs.
->
-> We don't have any functional relation which maps actual throughput
-> requirement to core frequency need. In the past we faced few latency issues
-> because of core slowness (Although it was running much higher than actual
-> throughput requirement). To avoid such scenario we are using recommend value
-> from HW team. These fix value can support SE drivers operating at their max
-> possible speed(4Mbps in case of non-console).
+The audio codec on the GW551x routes to ssi1 not ssi2
 
-ok, I missed that the core clocks aren't scaled based on the configured
-baudrate. Apparently experience shows that it is not practical due to the
-latency issues you mention.
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ arch/arm/boot/dts/imx6qdl-gw551x.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> I agree that 115200bps seems to be a 'standard' value for the serial
-> console, but it could be a different baudrate.
-> 
-> We are voting 1000 in case of console because it  has low power mode
-> use-case in android, where voting CORE_2X_50_MHZ can be reported as a power
-> issue.
-> 
-> Actually we wanted to vote 960 for console but that is not possible with
-> current ICC design where the minimum value is 1000bps.  So any way core is
-> running at 50 MHz as 1000 crosses the threshold for 19.2 MHz (960)
-> 
-> only with console.
+diff --git a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
+index c38e86e..8c33510 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
+@@ -110,7 +110,7 @@
+ 		simple-audio-card,frame-master = <&sound_codec>;
+ 
+ 		sound_cpu: simple-audio-card,cpu {
+-			sound-dai = <&ssi2>;
++			sound-dai = <&ssi1>;
+ 		};
+ 
+ 		sound_codec: simple-audio-card,codec {
+-- 
+2.7.4
 
-Thanks for the clarification. So if a board wanted to use a higher baudrate
-for the console it (currently) shouldn't be a problem. While it would be nice
-to have uniform settings for all UARTs it's also not a big deal to have two
-values, just wanted to make sure it's needed
