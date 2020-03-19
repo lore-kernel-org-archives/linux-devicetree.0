@@ -2,124 +2,119 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68132C4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 07:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A089CC4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 07:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4731420714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 07:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7312620722
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 07:31:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e73vgvqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgCSHFQ (ORCPT
+        id S1727201AbgCSHbX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:05:16 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42393 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSHFQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 03:05:16 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEpEt-0006xW-F2; Thu, 19 Mar 2020 08:05:11 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEpEs-0003lY-Ej; Thu, 19 Mar 2020 08:05:10 +0100
-Date:   Thu, 19 Mar 2020 08:05:10 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/7] dt-bindings: pwm: document the PWM polarity flag
-Message-ID: <20200319070510.gc6hr53gn7n2osvb@pengutronix.de>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-3-oleksandr.suvorov@toradex.com>
- <20200317174344.GB1464607@ulmo>
- <20200317213056.futfiwn4qgr2njye@pengutronix.de>
- <20200318230539.GB2874972@ulmo>
+        Thu, 19 Mar 2020 03:31:23 -0400
+Received: from mail-io1-f53.google.com ([209.85.166.53]:44772 "EHLO
+        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgCSHbX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 03:31:23 -0400
+Received: by mail-io1-f53.google.com with SMTP id v3so1179366iot.11;
+        Thu, 19 Mar 2020 00:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=jomgdCLpahd3FAv2npbYPI8+FQ6XSFwP0NwoJcIKrDI=;
+        b=e73vgvqvEk9vZ1wrZML1M7ZRhdJPyQbn3ASJuasCtdVSk4d6DVOILSLWkLdgCvOFru
+         KpGdOKO0M9xNtv2NLG2c4t+hHkEuPMIL6Ynr1IW61Arfphb9TVvOlNXp3GVgtQjZIfNU
+         pXZr/QdwafVJDpQoEH3YZrlhbnZsamS7APlvzqH7SoF+mvRYQpzSMyGcXIho+f3bA2zx
+         R8YVhjwUboS+zCc9x8oQXTA21BQHDcpWeG8//5Nu16f6UpRY/GogKoI45vMPSYXKPoHX
+         yXkuT2yuc/mWUTGqYCHWUkCdlGVqcTxzJalSJlRNs5WCTGx9lz8KwwRHCQCOdUeyL7eI
+         2X/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=jomgdCLpahd3FAv2npbYPI8+FQ6XSFwP0NwoJcIKrDI=;
+        b=RbpLjpMv+hjG2tgRKQy+Y7aNdsYKcKL2y6KR6jL89kC8r3QgEfCp7X7zTCFT1rk1KW
+         nMLHYKu9tBDe+NTWD96i9YD/BQVWMaJ45piBKuOKpLvOFZYjvQzVSETrKh1PIOdlSFrh
+         JF1APQRTl2EUd+kBpMjtPxUEuxK8ZSTYTKn+Zu3iqfWi5NUJdT2gklD5g2V142bqgRjX
+         rQLkDMMJ2PrjNp+0+83Zact2ZVXFMQsx01oIFBlipK3ncqQVBjD90tL5sAY3g99ROmpk
+         ClSl4ImwekXChmxn0+CnnCSNUJPmnCFjfPFDcX5nuuNR2N3YXWJOgRKS7pHozN31+ov5
+         8IDQ==
+X-Gm-Message-State: ANhLgQ1vFhqRY2TfdyiPJx4mLQ34FyurMxyAsmHGmX11UUM24RQf1VjX
+        ZHI1FNx+qXEn0w7AT/qXiSXMmqci9nWPNY9TZHwtjszL
+X-Google-Smtp-Source: ADFU+vv6bG3YgVuAvhITGXQ3/8y6DKdabygw3bmdHZm6PMcbVAy6NA+GKIaxrmykbd76jG9NytI3zjUmCE1DIZxCIqE=
+X-Received: by 2002:a02:7f44:: with SMTP id r65mr1962710jac.26.1584603082412;
+ Thu, 19 Mar 2020 00:31:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200318230539.GB2874972@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+From:   Vinay Simha B N <simhavcs@gmail.com>
+Date:   Thu, 19 Mar 2020 13:01:10 +0530
+Message-ID: <CAGWqDJ7AccvoxjKfQJ3GytJ-+u56Bk3rEn0sSYv-zCuBe1brAg@mail.gmail.com>
+Subject: graph connection to node is not bidirectional kernel-5.6.0-rc6
+To:     "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 12:05:39AM +0100, Thierry Reding wrote:
-> On Tue, Mar 17, 2020 at 10:30:56PM +0100, Uwe Kleine-König wrote:
-> > Hello Thierry,
-> > 
-> > On Tue, Mar 17, 2020 at 06:43:44PM +0100, Thierry Reding wrote:
-> > > On Tue, Mar 17, 2020 at 02:32:26PM +0200, Oleksandr Suvorov wrote:
-> > > > Add the description of PWM_POLARITY_NORMAL flag.
-> > > > 
-> > > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> > > > ---
-> > > > 
-> > > >  Documentation/devicetree/bindings/pwm/pwm.txt | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
-> > > > index 084886bd721e..440c6b9a6a4e 100644
-> > > > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
-> > > > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
-> > > > @@ -46,6 +46,7 @@ period in nanoseconds.
-> > > >  Optionally, the pwm-specifier can encode a number of flags (defined in
-> > > >  <dt-bindings/pwm/pwm.h>) in a third cell:
-> > > >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
-> > > > +- PWM_POLARITY_NORMAL: don't invert the PWM signal polarity
-> > > 
-> > > This doesn't make sense. PWM_POLARITY_NORMAL is not part of the DT ABI.
-> > 
-> > "is not part of the DT ABI" is hardly a good reason. If it's sensible to
-> > be used, it is sensible to define it.
-> 
-> That's exactly it. It's not sensible at all to use it.
+hi,
 
-If you think the argument is "It is not sensible to be used." then please
-say so and don't add "PWM_POLARITY_NORMAL is not part of the DT ABI."
-which seems to be irrelevant now.
+I am getting the endpoint' is not bidirectional(d2l_in, dsi0_out)
+warning in compilation, built boot image works on qcom apq8016-ifc6309
+board with the dsi->bridge->lvds panel.
+Because of this warning i cannot create a .yaml documentation examples.
+Please suggest.
 
-> If you define it here it means people are allowed to do stuff like
-> this:
-> 
-> 	pwms = <&pwm 1234 PWM_POLARITY_INVERTED | PWM_POLARITY_NORMAL>;
-> 
-> which doesn't make sense.
+tc_bridge: bridge@f {
+status = "okay";
+    ports {
+    #address-cells = <1>;
+    #size-cells = <0>;
 
-I would hope that a human reader would catch this.
+    port@0 {
+        reg = <0>;
+        d2l_in: endpoint {
+            remote-endpoint = <&dsi0_out>;
+        };
+    };
+};
 
-> What's more, it impossible for the code to even notice that you're
-> being silly because | PWM_POLARITY_NORMAL is just | 0 and that's just
-> a nop.
+dsi@1a98000 {
+    status = "okay";
+...
+    ports {
+        port@1 {
+            dsi0_out:endpoint {
+                remote-endpoint = <&d2l_in>;
+                data-lanes = <0 1 2 3>;
+            };
+        };
+    };
+};
 
-I think this argument is a bad one. Whenever you introduce a
-function or symbol you can use it in a wrong way. With this argument you
-can also say GPIO_ACTIVE_LOW doesn't make sense because
+https://github.com/vinaysimhabn/kernel-msm/blob/1cbd104cca4ebfb111c92e939ca09f82aac00aa1/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+https://github.com/vinaysimhabn/kernel-msm/blob/08e4821646b5c128559c506a5777d8782f1ff79e/Documentation/devicetree/bindings/display/bridge/toshiba%2Ctc358775.yaml
 
-	pwms = <&pwm 1234 GPIO_ACTIVE_LOW>;
-
-is silly.
-
-Keep well and fit,
-Uwe
+arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:253.28-255.9: Warning
+(graph_endpoint): /soc/i2c@78b8000/bridge@39/ports/port@0/endpoint:
+graph connection to node
+'/soc/mdss@1a00000/dsi@1a98000/ports/port@1/endpoint' is not
+bidirectional
+arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:333.53-335.35: Warning
+(graph_endpoint): /soc/auo,b101xtn01/port/endpoint: graph connection
+to node '/soc/i2c@78b8000/bridge@f/ports/port@1/endpoint' is not
+bidirectional
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+regards,
+vinaysimha
