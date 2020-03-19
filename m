@@ -2,157 +2,127 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AB0C4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E061C4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 14:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA19B20787
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66EE208E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 14:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TVp42mYX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfrmVs7p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbgCSNGG (ORCPT
+        id S1727327AbgCSOB0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:06:06 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45521 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727563AbgCSNGE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 09:06:04 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e9so2215397otr.12;
-        Thu, 19 Mar 2020 06:06:04 -0700 (PDT)
+        Thu, 19 Mar 2020 10:01:26 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34778 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbgCSOB0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 10:01:26 -0400
+Received: by mail-wr1-f65.google.com with SMTP id z15so3162015wrl.1;
+        Thu, 19 Mar 2020 07:01:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JNrzJ43ADUGKGgcYIYmm8uAsAxVnbPxCKcqomy6wzR8=;
-        b=TVp42mYXKeI+CzEDqNdIZ8OSjOYd/x2BHF3WQsRwUplFoeXvhUkRzymLKfdlVKXVgS
-         GzwUg2Q7ho8ZvC7uyy7SUT28MucxF4UxCJ/qO2fnyTsnua7SxjrDkXe0e99BVkOpALLL
-         iX+Nfz8vqxrVET+CnfJyBGbZP9aENhotFEL8cWKt0rx0UXQxhpJcqzqqhY1hbF4XQMVh
-         hUW+v4bgFd5HlN+csF5pQThvddNw+lZumxBcb3eP9pq7feovGzeBUf7Mthvx/0+wAbcr
-         6u5pwajrtYTDgDnYY4EI1S3xWl1jc0aoSPYiQM1i+Ngl1EVzCXMzYw/esdw5gERxe7wM
-         leBw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AKfKixYunr8acU9EKxMbpxcmQFyK603ftvwA9L+/SD4=;
+        b=QfrmVs7plt//YETSc+/owSuFJ61VH3rGKKnCR+Js6F8T2DpMaVMYdMwM6n+fpXMuW1
+         WVeV783ja/9Cmh+El5E2y138kEJko3XDtQIJAl+PjP9VkePmx6y30TIjL9mveADQ2yIw
+         jmwt30GRfG78XnHXqkMj0eCzYi7wIj3LOV6/Vw1exhLRz99JCOFjweCSNKsxUe7SLhCs
+         Fdkdxv1I8DuM0WbmPWcIPC3kLp7SlQIB2Y/kjjCLXxsQ3iovIj0F7OrZaK1GvarikolY
+         U+PxylQWr9CBeA6TkQtltMnx872PB80aFDJGV/NvMZxptQW5zvnwAvTYUnR/XjTlZf9I
+         WVFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JNrzJ43ADUGKGgcYIYmm8uAsAxVnbPxCKcqomy6wzR8=;
-        b=DYznvXksrBeUHZ2YVSNV0phgaGurg+o4bMY5MKslsMP1VksI+Wiq2V4MfnzPpKkEpe
-         d+ogyHTovUwoT/jjDPXka1vYqqigt0VYFG+PNqJmfJuP84PfJZEHVqhH7/stO2r3jDw/
-         SKGVIoWW0ohF5BwP34dINXuwhRto4KxCF/dbs87kOOy8Idhp9PGP5kFUFMFBr09hb43I
-         X2Eo/rgUyrLBj87Q1cTX6ifilrFLa/8Tko4FJ1J4ZDSMLFJXr2VeF3jcv7aJdmJn7Ci1
-         jARiTLML3r1cS/KqRNruggY54qeykLpF12akiYsQh6jijR3HUgGoOCd/NGHnpnXVUYh/
-         YbaQ==
-X-Gm-Message-State: ANhLgQ1rTNoxibZJ92Shld0XqEy9egsypr7+mq53mdQ8ufbOj9Am73xV
-        4bv903AD+VLekBMqekg6XyzLw+rfzerFSVeNobo=
-X-Google-Smtp-Source: ADFU+vu6TgclLFcGUTWCKylwKuQ1xUKX/i4NckoB5Lg2bmpS65EzGwsKNTO9xiLZkksGH2ZBHR96INCeNIhBb87zs70=
-X-Received: by 2002:a9d:264a:: with SMTP id a68mr2250727otb.176.1584623163859;
- Thu, 19 Mar 2020 06:06:03 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AKfKixYunr8acU9EKxMbpxcmQFyK603ftvwA9L+/SD4=;
+        b=GdPyujf8UpKT1BLCD6UwtsUZ9OnywGfqB0eXhY/W2jgMh5VyHSGu5l4gFuf5P1LTZ5
+         nikuoJy+/p2DtibI9vDmfmNhSo41UpgEg0Z+sdVVdRmka4GDOZwXE7Z/0AjR3/UTO9Qs
+         mXxRZoel2GKKzDwSsY6RsjVYm302UNBUaj+oLHmCp5VfSV2whu6ooCIzrXxO8arNN5se
+         htW4hjZjWJ66N6RI205iXqXJHkbs56nQfiGPvmXW0AA1yQlPMXNSvPypeIg4j9rSS0Lz
+         lw96+Ghmo9URSjrgvolZy40Ej31DwYiEFBOD8ej1FvpaoY6WALd8CaKsTBymLBXyOHIS
+         DcMQ==
+X-Gm-Message-State: ANhLgQ1ZEGMHIhglXXlDFpJvfJQsO676jvV79P1iP1NhSk4Gwh3Q9LUc
+        hBzekgcbUnCXR1ZgAZrz6+U=
+X-Google-Smtp-Source: ADFU+vu1VD+Vv4fiPbuRPt6ywzDJB+mqX1BMAOsNjxLh7T4rDR50T1cBacWaKUofi38Vf5WIJYmvSQ==
+X-Received: by 2002:adf:db41:: with SMTP id f1mr4684099wrj.247.1584626484738;
+        Thu, 19 Mar 2020 07:01:24 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id b12sm3471485wro.66.2020.03.19.07.01.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 07:01:23 -0700 (PDT)
+Subject: Re: [RFC PATCH 2/2] phy: phy-rockchip-inno-usb2: remove support for
+ rockchip, rk3366-usb2phy
+To:     Robin Murphy <robin.murphy@arm.com>, kishon@ti.com
+Cc:     devicetree@vger.kernel.org, heiko@sntech.de,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200318192901.5023-1-jbx6244@gmail.com>
+ <20200318192901.5023-2-jbx6244@gmail.com>
+ <233769c3-a44a-0ebd-7a2c-6fab17fb56f2@arm.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <625d2904-458b-1edc-d91c-21614653a274@gmail.com>
+Date:   Thu, 19 Mar 2020 15:01:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200319124452.3yfcvq754vi4q2rv@gilmour.lan>
-In-Reply-To: <20200319124452.3yfcvq754vi4q2rv@gilmour.lan>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 19 Mar 2020 13:05:37 +0000
-Message-ID: <CA+V-a8vH+wJoC1SL0nuk8ypAH3Mosd+K1dLNDA5wwgP4W6A=CQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to assigned-clock-rates
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <233769c3-a44a-0ebd-7a2c-6fab17fb56f2@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime,
+Hi,
 
-Thank you for the review.
+Some questions.
+Can Rockchip or Heiko explain why we have half finished support in the
+upstream kernel for rk3366? What happened?
+Are any plans to add a rk3366.dtsi?
+How wide spread was the use of rk3366? Products?
+ie. When does support stop?
 
-On Thu, Mar 19, 2020 at 12:45 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
-> > Use assigned-clock-rates to specify the clock rate. Also mark
-> > clock-frequency property as deprecated.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > index 72ad992..e62fe82 100644
-> > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > @@ -8,7 +8,7 @@ Required Properties:
-> >  - compatible: Value should be "ovti,ov5645".
-> >  - clocks: Reference to the xclk clock.
-> >  - clock-names: Should be "xclk".
-> > -- clock-frequency: Frequency of the xclk clock.
-> > +- clock-frequency (deprecated): Frequency of the xclk clock.
-> >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> >    to the hardware pin PWDNB which is physically active low.
-> >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > @@ -37,7 +37,8 @@ Example:
-> >
-> >                       clocks = <&clks 200>;
-> >                       clock-names = "xclk";
-> > -                     clock-frequency = <24000000>;
-> > +                     assigned-clocks = <&clks 200>;
-> > +                     assigned-clock-rates = <24000000>;
-> >
-> >                       vdddo-supply = <&camera_dovdd_1v8>;
-> >                       vdda-supply = <&camera_avdd_2v8>;
->
-> clock-frequency is quite different from assigned-clock-rates though,
-> semantically speaking. clock-frequency is only about what the clock
-> frequency is, while assigned-clock-rates will change the rate as well,
-> and you have no idea how long it will last.
->
-Agreed clock-frequency tells whats the clock frequency, wrt ov5645 driver
-this property was read and and the clock rate was changed accordingly as per
-the value being passed. So switching  to assigned-clock-rates does bypass
-of clock rate being set in the ov5645 driver [1] as the framework does it.
+There's also a rk3368. Is there a need for "rockchip,rk3368-usb2phy"?
 
-> If you want to retrieve that through the clock framework, then just
-> making clock-frequency optional is enough and falling back to
-> clk_get_rate on the clocks property already provided is enough.
->
-As done in patch [1] ?
+We'll keep "rockchip,rk3366-usb2phy" aboard for v2.
 
-Fyi I have posted a v4 [2] to ML.
+Thanks
 
-[1] https://patchwork.linuxtv.org/patch/62378/
-[2] https://patchwork.linuxtv.org/project/linux-media/list/?series=1990
-
-Cheers,
---Prabhakar
-
-> Maxime
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+On 3/19/20 2:07 PM, Robin Murphy wrote:
+> Hi Johan,
+> 
+> On 2020-03-18 7:29 pm, Johan Jonker wrote:
+>> 'phy-rockchip-inno-usb2.txt' is updated to yaml, whereby
+>> the compatible string 'rockchip,rk3366-usb2phy' was removed,
+>> because it's not in use by a dts file, so remove support
+>> in the code as well.
+> 
+> Here's a DT using it:
+> 
+> https://github.com/rockchip-linux/kernel/blob/develop-4.4/arch/arm64/boot/dts/rockchip/rk3366.dtsi#L820
+> 
+> 
+> Please note that although DT bindings happen to be primarily maintained
+> in the upstream kernel tree at the moment, it is mostly as a consequence
+> of Linux being the source of most active development. Bindings should
+> not be considered to be "owned" by upstream Linux since there are many
+> other consumers, both downstream, and in completely different projects
+> like the BSDs. As far as I'm aware there is still a long-term plan to
+> eventually flip the switch and move maintenance to a standalone repo:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git
+> 
+> 
+> Things like PCI Device IDs and ACPI HIDs aren't even documented as
+> formally as DT bindings, so by the reasoning here we could arguably
+> delete the majority of drivers from the kernel...
+> 
+> Robin.
