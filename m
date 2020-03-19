@@ -2,104 +2,100 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4555C4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 10:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7043C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 10:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A826120740
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 10:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E0F20724
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 10:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PzQZfb2q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zy7A3gLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgCSKDu (ORCPT
+        id S1725768AbgCSKJb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:03:50 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:28059 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726663AbgCSKDu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 06:03:50 -0400
-X-UUID: c72239bd6bf04386b49ecb403e10a707-20200319
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=NQc97c+bFcajvwqMNAIU5Im4/Ht7RtZjA7gAha/i0is=;
-        b=PzQZfb2qdoPZppyDhZw2qodlmIbRahFn37M/cZS+fJSV1IO6WkDJ4jmxpHehxJpkTEcT6QiJD5RQkKj4eH9n0wce63YBduPXBOLmEDsjFScNVeE/Cw/CRemAUyNOQBqiVnPKDlQUB3g1+/Y2WHa4i4irDIekYFfx2ZI8EYgb8V0=;
-X-UUID: c72239bd6bf04386b49ecb403e10a707-20200319
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1258962981; Thu, 19 Mar 2020 18:03:35 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 19 Mar
- 2020 18:03:25 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 19 Mar 2020 18:03:24 +0800
-Message-ID: <1584612215.5781.62.camel@mhfsdcap03>
-Subject: Re: [V3, 2/2] media: i2c: Add DW9768 VCM driver
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <bingbu.cao@intel.com>, <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        <sj.huang@mediatek.com>,
-        "Linux Media Mailing List" <linux-media@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
-Date:   Thu, 19 Mar 2020 18:03:35 +0800
-In-Reply-To: <CAHp75Vf5km-YitoTUAFkr8LZVq2QMep1rC19ZpR-YRbeXgJOVQ@mail.gmail.com>
-References: <20200228155958.20657-1-dongchun.zhu@mediatek.com>
-         <20200228155958.20657-3-dongchun.zhu@mediatek.com>
-         <20200305120516.GQ5379@paasikivi.fi.intel.com>
-         <CAHp75Vf5km-YitoTUAFkr8LZVq2QMep1rC19ZpR-YRbeXgJOVQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 19 Mar 2020 06:09:31 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51252 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgCSKJb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 06:09:31 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c187so1403536wme.1
+        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 03:09:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=RUn9UxzNYqDlVvjBdc02JsbNjG/1HKK11KHzgN8DpHk=;
+        b=Zy7A3gLvgvG/ej7PLOBuw+h4UHQ5YbbbobNUkbeATbvkfuxaQMOb0vCCzKzXulEcjw
+         Bflohb+c02EaGzLqe2kK0BuFaN6SiD4Vh3o5Z5DsCwi/hTTnjafJiooBLOzlmiLonQfq
+         VErW8XaIC6T6pTsNu7/AX+kP031rgbcXZ6HgannJPJPKd2wqBCXPu006yPFmo21RUGiN
+         L+Uzh/7ygSs1dOedYs1gEKqoqeQMW7ydWG1eRuOmfe3pM3dwE2yYYcQzmxvI3QcPe2f3
+         XzwNrVNlGh2T8ZCEksGYeFItDSMGoRFJuF3kAKSgBT79fR1850m+Cy0qSAYAGwYgneQl
+         Pkuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=RUn9UxzNYqDlVvjBdc02JsbNjG/1HKK11KHzgN8DpHk=;
+        b=Jt4sRmBlyuvlalk33L77WXctBzy4ETyUuIdT4u9yj3vQrxFHlZAhOHEXIZV6XaQ7pi
+         Q+yoSFBskrdkFZ/b09s8Yc03j5hPkrx1S8MZ7e9dV+NisZzOoKrjooaGDfhcxfr1PyFZ
+         AA5wLCjIJU7lxjpu6EcFOWdoF2BI6eqQSbQIBekHTMnlUwp+GrG6Dr9IOtvvnM7SxwEa
+         ugnRFYq/wX/1ffAWXFTsk7O/stBwrGGCfAwgBJjpWBKa9uwAS/O7PBNSWyspwI7Yw0JT
+         orPcaE+/cL8HLG631NH/NlZdx61584u0QVmwLHoumAKSv0IJ62TYVMtQ5y3Dqadx5z/5
+         jVBw==
+X-Gm-Message-State: ANhLgQ3IVx+6+LCVEmFBJo/ZVRwRIlWGIFn5cbS9u1oVbecLlsyZbdEK
+        qPyHaPWYx8SOCF8i5+LIHFv2BA==
+X-Google-Smtp-Source: ADFU+vvPWW5ImdZ2pav4UsRH9+6PgZUguig9OJgjiIdwzr6ph+GkNIPoA4BMw5D7ED82x6qxdypSqw==
+X-Received: by 2002:a05:600c:2319:: with SMTP id 25mr2829698wmo.106.1584612568933;
+        Thu, 19 Mar 2020 03:09:28 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id h16sm2730355wrr.48.2020.03.19.03.09.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 03:09:28 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 10:10:14 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, tglx@linutronix.de,
+        fabrice.gasnier@st.com, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] mfd: stm32: Add defines to be used for clkevent
+ purpose
+Message-ID: <20200319101014.GA5477@dell>
+References: <20200217134546.14562-1-benjamin.gaignard@st.com>
+ <20200217134546.14562-3-benjamin.gaignard@st.com>
+ <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: AAF735A607185470B296EBAC9A1830596A83AB95D1C73C00CFE0BC853D96BD352000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQW5keSwNCg0KT24gVHVlLCAyMDIwLTAzLTEwIGF0IDEyOjEwICswMjAwLCBBbmR5IFNoZXZj
-aGVua28gd3JvdGU6DQo+IE9uIFRodSwgTWFyIDUsIDIwMjAgYXQgMjowNyBQTSBTYWthcmkgQWls
-dXMNCj4gPHNha2FyaS5haWx1c0BsaW51eC5pbnRlbC5jb20+IHdyb3RlOg0KPiA+IE9uIEZyaSwg
-RmViIDI4LCAyMDIwIGF0IDExOjU5OjU4UE0gKzA4MDAsIERvbmdjaHVuIFpodSB3cm90ZToNCj4g
-PiA+IFRoaXMgcGF0Y2ggYWRkcyBhIFY0TDIgc3ViLWRldmljZSBkcml2ZXIgZm9yIERXOTc2OCBs
-ZW5zIHZvaWNlIGNvaWwsDQo+ID4gPiBhbmQgcHJvdmlkZXMgY29udHJvbCB0byBzZXQgdGhlIGRl
-c2lyZWQgZm9jdXMgdmlhIEkyQyBzZXJpYWwgaW50ZXJmYWNlLg0KPiANCj4gLi4uDQo+IA0KPiA+
-ID4gLS0tIGEvTUFJTlRBSU5FUlMNCj4gPiA+ICsrKyBiL01BSU5UQUlORVJTDQo+ID4gPiBAQCAt
-NTEzOSw2ICs1MTM5LDcgQEAgTTogICAgICBEb25nY2h1biBaaHUgPGRvbmdjaHVuLnpodUBtZWRp
-YXRlay5jb20+DQo+ID4gPiAgTDogICBsaW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+
-ICBUOiAgIGdpdCBnaXQ6Ly9saW51eHR2Lm9yZy9tZWRpYV90cmVlLmdpdA0KPiA+ID4gIFM6ICAg
-TWFpbnRhaW5lZA0KPiA+ID4gK0Y6ICAgZHJpdmVycy9tZWRpYS9pMmMvZHc5NzY4LmMNCj4gPiA+
-ICBGOiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dv
-b24sZHc5NzY4LnlhbWwNCj4gDQo+IFRoaXMgaGFzIG9yZGVyaW5nIGlzc3Vlcy4NCj4gUnVuIHBh
-cnNlLW1haW50YWluZXJzLnBsIHRvIGZpeC4NCj4gDQoNClBhcmRvbiwgaG93IHRvIHJ1biBwYXJz
-ZS1tYWludGFpbmVycy5wbD8NCkxvY2FsbHkgSSByYW4gdGhpcyBzY3JpcHQsIGl0IG9jY3VycyBz
-b21lIHN5bnRheCBhcyBiZWxvdy4NCiQuL3NjcmlwdHMvcGFyc2UtbWFpbnRhaW5lcnMucGwNCnN5
-bnRheCBlcnJvciBhdCAuL3NjcmlwdHMvcGFyc2UtbWFpbnRhaW5lcnMucGwgbGluZSAxMDgsIG5l
-YXINCiIkaGFzaHJlZnsiDQpHbG9iYWwgc3ltYm9sICIkcGF0dGVybiIgcmVxdWlyZXMgZXhwbGlj
-aXQgcGFja2FnZSBuYW1lDQphdCAuL3NjcmlwdHMvcGFyc2UtbWFpbnRhaW5lcnMucGwgbGluZSAx
-MDkuDQpzeW50YXggZXJyb3IgYXQgLi9zY3JpcHRzL3BhcnNlLW1haW50YWluZXJzLnBsIGxpbmUg
-MTEyLCBuZWFyICJ9Ig0KR2xvYmFsIHN5bWJvbCAiJGZpbGUiIHJlcXVpcmVzIGV4cGxpY2l0IHBh
-Y2thZ2UgbmFtZQ0KYXQgLi9zY3JpcHRzL3BhcnNlLW1haW50YWluZXJzLnBsIGxpbmUgMTEzLg0K
-Q2FuJ3QgdXNlIGdsb2JhbCBAXyBpbiAibXkiIGF0IC4vc2NyaXB0cy9wYXJzZS1tYWludGFpbmVy
-cy5wbCBsaW5lIDExNywNCm5lYXIgIihAXyINCnN5bnRheCBlcnJvciBhdCAuL3NjcmlwdHMvcGFy
-c2UtbWFpbnRhaW5lcnMucGwgbGluZSAxNTIsIG5lYXIgIn0iDQpFeGVjdXRpb24gb2YgLi9zY3Jp
-cHRzL3BhcnNlLW1haW50YWluZXJzLnBsIGFib3J0ZWQgZHVlIHRvIGNvbXBpbGF0aW9uDQplcnJv
-cnMuDQoNCg==
+On Thu, 20 Feb 2020, Daniel Lezcano wrote:
+> On 17/02/2020 14:45, Benjamin Gaignard wrote:
+> > Add defines to be able to enable/clear irq and configure one shot mode.
+> > 
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> 
+> Are you fine if I pick this patch with the series?
 
+Nothing heard from you since I Acked this.
+
+Are you still planning on taking this patch?
+
+If so, can you also take patch 1 please?
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
