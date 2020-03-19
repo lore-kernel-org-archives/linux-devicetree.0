@@ -2,116 +2,121 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE382C4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 11:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BB6C4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 12:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A352071C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 11:55:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Pd7SSTef"
+	by mail.kernel.org (Postfix) with ESMTP id 00D4D20739
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 12:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgCSLzT (ORCPT
+        id S1726879AbgCSMK5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 07:55:19 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:10621 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726998AbgCSLzS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 07:55:18 -0400
-X-UUID: 1bff79c0f44e422180321699ee8622b8-20200319
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=FLsmkHJTejAiVrcG26B7Mjj7M9Wn+0Q8IDeLw5c59Hc=;
-        b=Pd7SSTefh0MrG4TdS7RwTPq/ifDVK3eMan7B1l1bdaBpvM5znv7Fw8YaAUXU5gI17qV2cULleGJ1yctqQed2/R0HbSv+kJcUgWSVTmyQqjY6viQ58a65S/AGXzxo1kZaDwTql5Lp0bUYiWWoU84C6fdBCiDRHNEYDAfhhDLlANE=;
-X-UUID: 1bff79c0f44e422180321699ee8622b8-20200319
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <dongchun.zhu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 472836935; Thu, 19 Mar 2020 19:54:31 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 19 Mar
- 2020 19:53:37 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 19 Mar 2020 19:54:11 +0800
-Message-ID: <1584618861.5781.69.camel@mhfsdcap03>
-Subject: Re: [V3, 2/2] media: i2c: Add DW9768 VCM driver
-From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "Tomasz Figa" <tfiga@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <bingbu.cao@intel.com>, <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
-Date:   Thu, 19 Mar 2020 19:54:21 +0800
-In-Reply-To: <20200319113611.GJ1922688@smile.fi.intel.com>
-References: <20200228155958.20657-1-dongchun.zhu@mediatek.com>
-         <20200228155958.20657-3-dongchun.zhu@mediatek.com>
-         <20200305120516.GQ5379@paasikivi.fi.intel.com>
-         <CAHp75Vf5km-YitoTUAFkr8LZVq2QMep1rC19ZpR-YRbeXgJOVQ@mail.gmail.com>
-         <1584612215.5781.62.camel@mhfsdcap03>
-         <20200319113611.GJ1922688@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 19 Mar 2020 08:10:57 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50835 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgCSMK5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 08:10:57 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEu0L-0007Yc-KU; Thu, 19 Mar 2020 13:10:29 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEu0I-0006oX-6J; Thu, 19 Mar 2020 13:10:26 +0100
+Date:   Thu, 19 Mar 2020 13:10:26 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+Message-ID: <20200319121026.3rzcxdknfyhtkryi@pengutronix.de>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
+ <20200317174043.GA1464607@ulmo>
+ <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
+ <20200318225953.GA2874972@ulmo>
+ <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: AF442A7775ED82EC5799039873DB4E926EA64828482E17C5046CDA13BAF303552000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQW5keSwNCg0KT24gVGh1LCAyMDIwLTAzLTE5IGF0IDEzOjM2ICswMjAwLCBBbmR5IFNoZXZj
-aGVua28gd3JvdGU6DQo+IE9uIFRodSwgTWFyIDE5LCAyMDIwIGF0IDA2OjAzOjM1UE0gKzA4MDAs
-IERvbmdjaHVuIFpodSB3cm90ZToNCj4gPiBPbiBUdWUsIDIwMjAtMDMtMTAgYXQgMTI6MTAgKzAy
-MDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4gPiA+IE9uIFRodSwgTWFyIDUsIDIwMjAgYXQg
-MjowNyBQTSBTYWthcmkgQWlsdXMNCj4gPiA+IDxzYWthcmkuYWlsdXNAbGludXguaW50ZWwuY29t
-PiB3cm90ZToNCj4gPiA+ID4gT24gRnJpLCBGZWIgMjgsIDIwMjAgYXQgMTE6NTk6NThQTSArMDgw
-MCwgRG9uZ2NodW4gWmh1IHdyb3RlOg0KPiA+ID4gPiA+IFRoaXMgcGF0Y2ggYWRkcyBhIFY0TDIg
-c3ViLWRldmljZSBkcml2ZXIgZm9yIERXOTc2OCBsZW5zIHZvaWNlIGNvaWwsDQo+ID4gPiA+ID4g
-YW5kIHByb3ZpZGVzIGNvbnRyb2wgdG8gc2V0IHRoZSBkZXNpcmVkIGZvY3VzIHZpYSBJMkMgc2Vy
-aWFsIGludGVyZmFjZS4NCj4gPiA+IA0KPiA+ID4gLi4uDQo+ID4gPiANCj4gPiA+ID4gPiAtLS0g
-YS9NQUlOVEFJTkVSUw0KPiA+ID4gPiA+ICsrKyBiL01BSU5UQUlORVJTDQo+ID4gPiA+ID4gQEAg
-LTUxMzksNiArNTEzOSw3IEBAIE06ICAgICAgRG9uZ2NodW4gWmh1IDxkb25nY2h1bi56aHVAbWVk
-aWF0ZWsuY29tPg0KPiA+ID4gPiA+ICBMOiAgIGxpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZw0K
-PiA+ID4gPiA+ICBUOiAgIGdpdCBnaXQ6Ly9saW51eHR2Lm9yZy9tZWRpYV90cmVlLmdpdA0KPiA+
-ID4gPiA+ICBTOiAgIE1haW50YWluZWQNCj4gPiA+ID4gPiArRjogICBkcml2ZXJzL21lZGlhL2ky
-Yy9kdzk3NjguYw0KPiA+ID4gPiA+ICBGOiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnlhbWwNCj4gPiA+IA0KPiA+ID4gVGhpcyBo
-YXMgb3JkZXJpbmcgaXNzdWVzLg0KPiA+ID4gUnVuIHBhcnNlLW1haW50YWluZXJzLnBsIHRvIGZp
-eC4NCj4gPiA+IA0KPiA+IA0KPiA+IFBhcmRvbiwgaG93IHRvIHJ1biBwYXJzZS1tYWludGFpbmVy
-cy5wbD8NCj4gPiBMb2NhbGx5IEkgcmFuIHRoaXMgc2NyaXB0LCBpdCBvY2N1cnMgc29tZSBzeW50
-YXggYXMgYmVsb3cuDQo+ID4gJC4vc2NyaXB0cy9wYXJzZS1tYWludGFpbmVycy5wbA0KPiANCj4g
-SXQncyBhIHBlcmwgc2NyaXB0IHdoaWNoIGlzIG1hZGUgbm9uLWV4ZWN1dGFibGUgYnkgc29tZSBy
-ZWFzb24uDQo+IA0KPiBTbywgcHJvcGVyIHJ1biBhcyBhIHBhcmFtZXRlciB0byB0aGUgbGFuZ3Vh
-Z2UgaW50ZXJwcmV0ZXIsIGkuZS4NCj4gCSQgcGVybCBzY3JpcHRzL3BhcnNlLW1haW50YWluZXIu
-cGwNCj4gDQoNCkkgdHJpZWQtcnVuIGFnYWluIG9uIG10ayBzZXJ2ZXIsIHdoaWNoIGhhcyBwZXJs
-NSh2ZXJzaW9uIDE4LjIpLg0KQnV0IGl0IHN0aWxsIHJlcG9ydCB0aGUgc2FtZSBlcnJvci4NCklz
-IHRoZXJlIGFueSByZXF1aXJlbWVudCBmb3IgcGVybCB2ZXJzaW9uPw0KDQokcGVybCBzY3JpcHRz
-L3BhcnNlLW1haW50YWluZXJzLnBsDQpzeW50YXggZXJyb3IgYXQgc2NyaXB0cy9wYXJzZS1tYWlu
-dGFpbmVycy5wbCBsaW5lIDEwOCwgbmVhciAiJGhhc2hyZWZ7Ig0KR2xvYmFsIHN5bWJvbCAiJHBh
-dHRlcm4iIHJlcXVpcmVzIGV4cGxpY2l0IHBhY2thZ2UgbmFtZSBhdA0Kc2NyaXB0cy9wYXJzZS1t
-YWludGFpbmVycy5wbCBsaW5lIDEwOS4NCnN5bnRheCBlcnJvciBhdCBzY3JpcHRzL3BhcnNlLW1h
-aW50YWluZXJzLnBsIGxpbmUgMTEyLCBuZWFyICJ9Ig0KR2xvYmFsIHN5bWJvbCAiJGZpbGUiIHJl
-cXVpcmVzIGV4cGxpY2l0IHBhY2thZ2UgbmFtZSBhdA0Kc2NyaXB0cy9wYXJzZS1tYWludGFpbmVy
-cy5wbCBsaW5lIDExMy4NCkNhbid0IHVzZSBnbG9iYWwgQF8gaW4gIm15IiBhdCBzY3JpcHRzL3Bh
-cnNlLW1haW50YWluZXJzLnBsIGxpbmUgMTE3LA0KbmVhciAiKEBfIg0Kc3ludGF4IGVycm9yIGF0
-IHNjcmlwdHMvcGFyc2UtbWFpbnRhaW5lcnMucGwgbGluZSAxNTIsIG5lYXIgIn0iDQpFeGVjdXRp
-b24gb2Ygc2NyaXB0cy9wYXJzZS1tYWludGFpbmVycy5wbCBhYm9ydGVkIGR1ZSB0byBjb21waWxh
-dGlvbg0KZXJyb3JzLg0KDQpMb2NhbCBwZXJsIHZlcnNpb24gaXMgYXMgYmVsb3cuDQokbHMgLWFs
-IC91c3IvYmluL3BlcmwNCnBlcmwgICAgICAgIHBlcmw1LjE4LjIgDQo=
+Hello,
 
+[dropping Tony Prisk <linux@prisktech.co.nz> from recipients]
+
+On Thu, Mar 19, 2020 at 01:40:28PM +0200, Oleksandr Suvorov wrote:
+> Thierry, I see the PWM core converts the bit field "third cell" into
+> the polarity variable.
+> Now I probably understand your sight and agree that we shouldn't give
+> the same names to bits in bitfield (dts) and values of a variable.
+> 
+> But there are lots of useless "0" values of third cell of "pwms"
+> option in dts files.
+> 
+> I see 2 ways now:
+> - just remove all "0" "third cell" from "pwms" options in dts files. I
+> see this "0" confuses some people.
+
+Then you have to overwrite pwm-cells of the provider. If there are two
+PWMs used from the same provider and only one is inverted this won't
+work. (Not entirely sure I understood your suggestion.) So I don't like
+this suggestion.
+
+And also in my eyes this isn't clearer, just more complicated to use.
+
+> - convert pwm_state.polarity into pwm_state.flags and use bitfield
+>   directly from dtb.
+>   It simplifies the parsing logic and makes adding new flags easier.
+
+*shrug*, I don't care much.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
