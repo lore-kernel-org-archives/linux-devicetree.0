@@ -2,145 +2,144 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF040C43333
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 18:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367DCC43332
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 18:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD08208C3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 18:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC7E207FC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 18:06:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zUNj5uWP"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UimCi9VH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbgCSSDm (ORCPT
+        id S1727393AbgCSSGW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:03:42 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45553 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCSSDm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 14:03:42 -0400
-Received: by mail-ed1-f66.google.com with SMTP id u59so3832569edc.12
-        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 11:03:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XfNpIrjpsRE5Z/i+mEEnL1CN6uH1onpiPIQdClkvN9k=;
-        b=zUNj5uWPN3ed1s0ovn/PizQ3gonRKIsiPyOqsCTbOf9n1TWl0o60Agb+4fTV2eoYi0
-         zv4fUftei3+7uGNBFN3oHKBi1wCkcIv24/sM5sVKPymgnZxQBtgGeUf86U/4/e8ymNNY
-         fo4BiOFuCNG+GbvYzWb8NivNs1ZfLDropeV1j2djud6WRCAQe6wpHXvGlVCSXouAhwH8
-         nHeKziNAmqcvtJhC9sQZ3rU8+4Kh1q1RcgHbddGpl6DeuuaDnRcpv5TYYJhYdYPgJqhf
-         KifXIkXGlezdB2uknSnll53X9ffy8g8Us1tJCxPRWVta7rqlc9Utvyhbv1zEDaNfodSN
-         xSXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XfNpIrjpsRE5Z/i+mEEnL1CN6uH1onpiPIQdClkvN9k=;
-        b=PuaZB8ebjjEnzobzmE7GiSkF/9y8bzgLDFW8DKR2n0uyV120mD8ii4rk4lECcg0wmN
-         ZfV4Qv8rezrC7OBzUNaNIeWmi4+fqPFm5f5393wAzOkdZCh1IPSXE8UsyMAhMFoOGEY1
-         PNhx6ZFkUYF2GbQMuxpByyvx/zoTtnOuF2c6oJuG0H47MNHC1DDFs7TSqps3hkqZ74Si
-         mpJ0jK0LVyLdlh7ygaLQdeCpj+fYodvquO2U66L44zyapf9C88pf3C+A4kP3zOE59YWW
-         eWuSsg0inKKh/SwsqQ/MGhyvZDKwijbVN/06RuB/SH/z9xni+ShTEIYQkIiPTh4FTlDl
-         XsDQ==
-X-Gm-Message-State: ANhLgQ1aQlWuS1hX6YtoVPb/O85lv3aGwso5D16PzRFXhMnaW35Gl3C0
-        dRGJ+E3UIz39pLUgK8i009yk6WuHrxU=
-X-Google-Smtp-Source: ADFU+vscWLKaOryISlWMAo7HeQrnyWVtnZCYLNMamJ7iFeEAu+BEipdUTnLwPnEstiRldF4p+RNPhA==
-X-Received: by 2002:a05:6402:2cd:: with SMTP id b13mr4017272edx.68.1584641019890;
-        Thu, 19 Mar 2020 11:03:39 -0700 (PDT)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id ny24sm184082ejb.50.2020.03.19.11.03.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 11:03:38 -0700 (PDT)
-Subject: Re: [PATCH 2/7] dt-bindings: usb: dwc3: Add a gpio-usb-connector
- example
-To:     Stephen Boyd <swboyd@chromium.org>, balbi@kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, jackp@codeaurora.org, robh@kernel.org,
+        Thu, 19 Mar 2020 14:06:22 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:50420 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgCSSGW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 14:06:22 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C2134A53;
+        Thu, 19 Mar 2020 19:06:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584641180;
+        bh=VVvaLIWzHjPnx7c9DWjDC6foO+LDj42e8xSFQBar0P4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UimCi9VH4MJ4LH+9sfUT3icjCjPFW6O/NFih77tIZyeAKixwX3eS6m7f7ZewK8Zet
+         iF6Qhg931tJqVp0tbmVvBFRy2vQJeCANnTFOfjaVdgsMuIfoynUAKBh7xSLxuw783x
+         D52R5yQdOPmXEsfCl3yBOwhdZwTXqUynZlF/+f7c=
+Date:   Thu, 19 Mar 2020 20:06:14 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Alex Riesen <alexander.riesen@cetitec.com>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20200311191501.8165-1-bryan.odonoghue@linaro.org>
- <20200311191501.8165-3-bryan.odonoghue@linaro.org>
- <158458013177.152100.17920784952083533825@swboyd.mtv.corp.google.com>
- <aa6aa234-e2d1-bdcd-0f0e-64b2a7e497d3@linaro.org>
- <158463604559.152100.9219030962819234620@swboyd.mtv.corp.google.com>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <f6e948cb-7d3f-72b6-b153-58afb1304c49@linaro.org>
-Date:   Thu, 19 Mar 2020 18:03:58 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 03/10] media: adv748x: reduce amount of code for
+ bitwise modifications of device registers
+Message-ID: <20200319180614.GL14585@pendragon.ideasonboard.com>
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+ <099ebaa317156ec8edab973d0445851337139e6b.1584639664.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-In-Reply-To: <158463604559.152100.9219030962819234620@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <099ebaa317156ec8edab973d0445851337139e6b.1584639664.git.alexander.riesen@cetitec.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19/03/2020 16:40, Stephen Boyd wrote:
-> Quoting Bryan O'Donoghue (2020-03-19 08:22:14)
->> On 19/03/2020 01:08, Stephen Boyd wrote:
->>>
->>> Maybe it should be a virtual node at the root of the DT if it's GPIO
->>> controlled? And then the phy can be connected to the usb connector
->>> through the graph binding.
->>
->> Graph binding can probably work.
->>
->> Re: the PHY.
->>
->> For myself the hardware model is
->>
->> Connector -> PHY -> Host controller -> Host controller wrapper
->>
->> Only
->>
->> Connector -> Host controller -> Host controller wrapper
->>
->> care about the USB role though.
->>
->> If your PHY did care about the role, you'd really need to write a
->> connector/phy type-c type driver, to detect the state and toggle your
->> PHY bits before doing usb_role_switch_set_role() back to DWC3.
->>
+Hi Alex,
+
+Thank you for the patch.
+
+On Thu, Mar 19, 2020 at 06:41:53PM +0100, Alex Riesen wrote:
+> The regmap provides a convenient utility for this.
 > 
-> Yes some PHYs do care about the role. Sometimes they have to toggle some
-> bit to switch between host and gadget mode for example. I haven't fully
-> read this patch series but maybe the PHY can be the one that controls
-> the gpio for the connector?
+> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+> ---
+>  drivers/media/i2c/adv748x/adv748x-core.c |  6 ++++++
+>  drivers/media/i2c/adv748x/adv748x.h      | 15 ++++++++++++---
+>  2 files changed, 18 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+> index 345f009de121..36164a254d7b 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-core.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-core.c
+> @@ -133,6 +133,12 @@ static int adv748x_write_check(struct adv748x_state *state, u8 page, u8 reg,
+>  	return *error;
+>  }
+>  
+> +int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg, u8 mask,
+> +			u8 value)
+> +{
+> +	return regmap_update_bits(state->regmap[page], reg, mask, value);
+> +}
+> +
+>  /* adv748x_write_block(): Write raw data with a maximum of I2C_SMBUS_BLOCK_MAX
+>   * size to one or more registers.
+>   *
+> diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+> index 09aab4138c3f..c5245464fffc 100644
+> --- a/drivers/media/i2c/adv748x/adv748x.h
+> +++ b/drivers/media/i2c/adv748x/adv748x.h
+> @@ -393,25 +393,34 @@ int adv748x_write(struct adv748x_state *state, u8 page, u8 reg, u8 value);
+>  int adv748x_write_block(struct adv748x_state *state, int client_page,
+>  			unsigned int init_reg, const void *val,
+>  			size_t val_len);
+> +int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg,
+> +			u8 mask, u8 value);
+>  
+>  #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
+>  #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
+> -#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~(m)) | (v))
+> +#define io_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_IO, r, m, v)
+> +#define io_update(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_IO, r, m, v)
 
-Previous version of the PHY from 2019 had extcon toggling vbus.
+Those two are identical. Do we need both ? I would standardize on either
+*_update or *_clrset for all the functions here. Apart from that,
 
-Since extcon is going away, we moved go usb-gpio
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-https://lwn.net/ml/devicetree/20190905175802.GA19599@jackp-linux.qualcomm.com/
+>  
+>  #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
+>  #define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, (r)+1)) & (m))
+>  #define hdmi_write(s, r, v) adv748x_write(s, ADV748X_PAGE_HDMI, r, v)
+> +#define hdmi_update(s, r, m, v) \
+> +	adv748x_update_bits(s, ADV748X_PAGE_HDMI, r, m, v)
+> +
+> +#define dpll_read(s, r) adv748x_read(s, ADV748X_PAGE_DPLL, r)
+> +#define dpll_update(s, r, m, v) \
+> +	adv748x_update_bits(s, ADV748X_PAGE_DPLL, r, m, v)
+>  
+>  #define repeater_read(s, r) adv748x_read(s, ADV748X_PAGE_REPEATER, r)
+>  #define repeater_write(s, r, v) adv748x_write(s, ADV748X_PAGE_REPEATER, r, v)
+>  
+>  #define sdp_read(s, r) adv748x_read(s, ADV748X_PAGE_SDP, r)
+>  #define sdp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_SDP, r, v)
+> -#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~(m)) | (v))
+> +#define sdp_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_SDP, r, m, v)
+>  
+>  #define cp_read(s, r) adv748x_read(s, ADV748X_PAGE_CP, r)
+>  #define cp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_CP, r, v)
+> -#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~(m)) | (v))
+> +#define cp_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_CP, r, m, v)
+>  
+>  #define tx_read(t, r) adv748x_read(t->state, t->page, r)
+>  #define tx_write(t, r, v) adv748x_write(t->state, t->page, r, v)
 
-https://lwn.net/ml/devicetree/5d71edf5.1c69fb81.1f307.fdd6@mx.google.com/
+-- 
+Regards,
 
-usb-gpio-conn handle VBUS and notifies via the USB role switch API.
-
-Which if the connector is a child of the controller "just works" but, 
-maybe with a little bit of work DT <port> references could do the same 
-thing and the connector wouldn't need to be declared as a child.
-
-> We (ChromeOS) need to integrate the type-c connector class, etc. on
-> sc7180 with the dwc3 driver and the current thinking has the type-c
-> connectors underneath the cros_ec node because the EC is the type-c
-> manager. The EC will have a type-c driver associated with it.
-
-right and you don't want, doesn't work or doesn't make sense, to declare 
-cros_ec as a child of DWC3, fair enough.
-
-I guess a DT remote-endpoint{} will do the job.
-
-Something like:
-arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
-
----
-bod
+Laurent Pinchart
