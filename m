@@ -2,132 +2,113 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36A0C4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB50C4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948A52070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:17:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INK5FY4J"
+	by mail.kernel.org (Postfix) with ESMTP id 752C8207FC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584638498;
+	bh=Wa5WhY7NV/amydUQxKZOOUXAC72lGMcK0NhEdS62D74=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CTeFIR60A3fmhKK1qQzeijg2vbWFoXVyyNOqECc//+1pkbtSsnCBEFEq/ne3m7dR9
+	 QuqSpnGHxR5bNoU6aJWrwZDOw90qRWKyo7tza9k/IR2YKBhjzIZJdqfO69ql/lg61r
+	 z9+in2cbCBVzUrVeAPPJ5XhnpEv4wvq3dpPkpw50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbgCSRRM (ORCPT
+        id S1727740AbgCSRVf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:17:12 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41472 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbgCSRRM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 13:17:12 -0400
-Received: by mail-il1-f194.google.com with SMTP id l14so2955559ilj.8;
-        Thu, 19 Mar 2020 10:17:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g2puVLEy6afSLzUcb87vcVA5fc3TX3nJUf9e0Okyxfw=;
-        b=INK5FY4JU9WZQN7v0WeMyVSF0VrQk4T1gnKH7Z7eZE/CF5pIMmhnuF5ojjvw0l/4DI
-         /sE+czy0eVQGHT4WtOqHFcQkqMevU0FM5PUQitLidNvtV6KAnM9NiWKLo010JYNQU5Qh
-         epaszkvezxUIi/XfSxWz0hyv40PCy/UNB4hPTLNLFVSqSLU7K65FLrU68coL0Mno9Srn
-         79hv5y77/B0YdwIuxFdTZk8/OwkjTI8EfFwPl4ErBh9rY9C34BuyXgq77K79d+Lszgtb
-         LWg0NM/Q2iz0yTSCpn7zo8VNiAJ7HNPuz/CXSzK+9b70ExbetZWf+JWrzYfJKgYjFFmq
-         Y5aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g2puVLEy6afSLzUcb87vcVA5fc3TX3nJUf9e0Okyxfw=;
-        b=mccjPG3eSncwAUaDRC/gF1A7k0QmTNRjktaP8iMIufoKHWQQo21cFPMdizlLbjy98O
-         ZhduN5/kLZvE8+AA0px4+AaF9uLZ74aSz7JxPU6dugWPC57wHka70BFWpey+sm6xXn6k
-         7yCwrxdynZ0ux8kg5lPqe8Z1kt2P8SpO+WVcqi9nnbUaTw0S1RS4MbcmC+DZQmg7rjwy
-         Pzr8lWATXMnAgQQ77US8O4No6sLf4VgCOGfmIg07nZ2VAZs/I9KtVjVVRXdz+9z6YIZn
-         t02erKqQrgp+7pF54Kxo7WfjijLIawIE/KfmCsrbnMiWYNP0rEHrYCKCOtoS2XdbY2Sb
-         yutQ==
-X-Gm-Message-State: ANhLgQ3I95a9ITGNJCq7FAvuuzYAHrDyBVpxEybMJjwj1AUK6wRESkeD
-        FNTh1i6swYV5trhX6KKW9/6bWSVJPToerWuAC1W8NU57
-X-Google-Smtp-Source: ADFU+vsFrtCl3nw/cH8PE23Zz0zaNQwxsOKGrtz5qBN+qCE1goDUCx0XmoX0cDrtI52kS3KiPy/h3nANlAzO8mJsV0s=
-X-Received: by 2002:a92:8f53:: with SMTP id j80mr4322003ild.171.1584638230705;
- Thu, 19 Mar 2020 10:17:10 -0700 (PDT)
+        Thu, 19 Mar 2020 13:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727146AbgCSRVf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:21:35 -0400
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F51520836;
+        Thu, 19 Mar 2020 17:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584638494;
+        bh=Wa5WhY7NV/amydUQxKZOOUXAC72lGMcK0NhEdS62D74=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ft7/kE4yvSeKvAW7bbRrolP0UaF4xWVzoUrxHpX0nmu8GiUwsWuPjC9AXv1rRvqzH
+         sVRiUQ2587taXsEXy1sB2Zk5TBLyJLMygLxbHZVX7XO/h+r/38lcGeiLC0wZaFDnYu
+         Y4lX75HTJ+SSMrlihdhmMBdXg2cJ2f851/tEqHBo=
+Received: by mail-qk1-f174.google.com with SMTP id c145so3855298qke.12;
+        Thu, 19 Mar 2020 10:21:34 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ13TX7m3D5QlSqmEd7vWKhcYbGOigfeWKTOCs/0JJzHGkIJY/Gp
+        gOrbfhLp3rgKSUMWL67AMN7RGw+g8gqZeHXyEw==
+X-Google-Smtp-Source: ADFU+vulofMsciR5pLApGaBb0QXCqdfQARLGVOuL0yu914G08i7K943mRV5VQl5ypvWeXQ6VTH6kM8/ISVQqrL9dm34=
+X-Received: by 2002:a37:8502:: with SMTP id h2mr4136038qkd.223.1584638493344;
+ Thu, 19 Mar 2020 10:21:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAGWqDJ7AccvoxjKfQJ3GytJ-+u56Bk3rEn0sSYv-zCuBe1brAg@mail.gmail.com>
- <CAL_JsqLz-0myc-PSSaCQWDFXQx+=X9nBSXWsJaGCVqTFn0d5kw@mail.gmail.com>
- <CAGWqDJ4yA4ikz5MwQQwW8CAvE_dt16iuvN6cKRL2DdAuw8QWww@mail.gmail.com> <CAL_JsqLU4kEmRnXhQ5+gP-ZisS2Za+s6mNFg4RnMdpDtDRQB3g@mail.gmail.com>
-In-Reply-To: <CAL_JsqLU4kEmRnXhQ5+gP-ZisS2Za+s6mNFg4RnMdpDtDRQB3g@mail.gmail.com>
-From:   Vinay Simha B N <simhavcs@gmail.com>
-Date:   Thu, 19 Mar 2020 22:46:59 +0530
-Message-ID: <CAGWqDJ5O2Lw-=5gHMja0SWVG1ttc_+7ieo-aEf7BRq+W8DGOnA@mail.gmail.com>
-Subject: Re: graph connection to node is not bidirectional kernel-5.6.0-rc6
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
+ <1584211798-10332-2-git-send-email-tdas@codeaurora.org> <20200318220443.GA16192@bogus>
+ <2ceccbac-b289-03d0-665b-6e9ca57b4333@codeaurora.org>
+In-Reply-To: <2ceccbac-b289-03d0-665b-6e9ca57b4333@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 19 Mar 2020 11:21:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKOTRzvtTjHPmOR60tpxUoPsoaB5ZbLdPG0VrN-NnFxWg@mail.gmail.com>
+Message-ID: <CAL_JsqKOTRzvtTjHPmOR60tpxUoPsoaB5ZbLdPG0VrN-NnFxWg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:36 PM Rob Herring <robh@kernel.org> wrote:
+On Wed, Mar 18, 2020 at 11:37 PM Taniya Das <tdas@codeaurora.org> wrote:
 >
-> On Thu, Mar 19, 2020 at 9:56 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
+>
+>
+> On 3/19/2020 3:34 AM, Rob Herring wrote:
+> > On Sun, 15 Mar 2020 00:19:56 +0530, Taniya Das wrote:
+> >> The Modem Subsystem clock provider have a bunch of generic properties
+> >> that are needed in a device tree. Add a YAML schemas for those.
+> >>
+> >> Add clock ids for GCC MSS and MSS clocks which are required to bring
+> >> the modem out of reset.
+> >>
+> >> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> >> ---
+> >>   .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
+> >>   include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
+> >>   include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
+> >>   3 files changed, 80 insertions(+), 1 deletion(-)
+> >>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+> >>   create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
+> >>
 > >
-> > On Thu, Mar 19, 2020 at 9:16 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Thu, Mar 19, 2020 at 1:31 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
-> > > >
-> > > > hi,
-> > > >
-> > > > I am getting the endpoint' is not bidirectional(d2l_in, dsi0_out)
-> > > > warning in compilation, built boot image works on qcom apq8016-ifc6309
-> > > > board with the dsi->bridge->lvds panel.
-> > > > Because of this warning i cannot create a .yaml documentation examples.
-> > > > Please suggest.
-> > > >
-> > > > tc_bridge: bridge@f {
-> > >
-> > >              ^^^^^^^^
-> > >
-> > > > arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:253.28-255.9: Warning
-> > > > (graph_endpoint): /soc/i2c@78b8000/bridge@39/ports/port@0/endpoint:
-> > >
-> > >                                      ^^^^^^^^^
-> > >
-> > > Looks like you have 2 different bridges.
-> > >
-> > i had two bridges, if we disable one bridge also we get the warning
+> > My bot found errors running 'make dt_binding_check' on your patch:
 > >
-> > arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:333.53-335.35: Warning
-> > (graph_endpoint): /soc/auo,b101xtn01/port/endpoint: graph connection
-> > to node '/soc/i2c@78b8000/bridge@f/ports/port@1/endpoint' is not
-> > bidirectional
+> > Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml: $id: relative path/filename doesn't match actual path or filename
+> >       expected: http://devicetree.org/schemas/clock/qcom,sc7180-mss.yaml#
+> >
+> > See https://patchwork.ozlabs.org/patch/1254940
+> > Please check and re-submit.
+> >
+> Hi Rob,
 >
-> You can't just disable nodes. To switch which bridge is enabled, you
-> already have to modify remote-endpoint at the other end. So the
-> requirement is you have to modify both 'remote-endpoint' properties
-> (or really all 3).
+> Thanks, I have fixed it in the next patch series.
 >
-> The other options is if you want both connections described, then you
-> need 2 'endpoint' nodes to connect both bridges.
-even after removing one bridge(dsi2hdmi) in the device tree, currently
-using only one bridge(dsi2lvds), i do still get the compilation warning.
+> Is there a way to catch these before submitting? As I do not see these
+> errors on my machine.
 
- graph connection
- to node '/soc/i2c@78b8000/bridge@f/ports/port@1/endpoint' is not
-bidirectional
+If you ran 'make dt_binding_check' already, then update dt-schema with pip.
 
-This compilation warning does not cause any problem with the boot image created
-dsi -> dsi2lvds bridge-> lvds panel . Able to get the display properly.
-
-https://github.com/vinaysimhabn/kernel-msm/blob/08e4821646b5c128559c506a5777d8782f1ff79e/Documentation/devicetree/bindings/display/bridge/toshiba%2Ctc358775.yaml
-
-But while creating documentation yaml, it is not allowing to add this examples.
--- 
-regards,
-vinaysimha
+Rob
