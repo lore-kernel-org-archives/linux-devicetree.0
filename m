@@ -2,56 +2,55 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DE6C4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 03:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14130C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 03:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1489820773
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 03:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D445C2071C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 03:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584587473;
-	bh=eiLH/3LVgc3XzpQHPrw68YL38C6bcgQoGQupWJ7fvrU=;
+	s=default; t=1584587976;
+	bh=a7lvMcZg+aiL/LKq/bIsJr2hJ+4LdCjfaFHwLL454Xw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vtNqCoaO/ejwDGuTwykAlJ3gR8+ak/cZfWVZahL2w94lkhqKOiRKwfmU+I/QYFvND
-	 hovTLcUHNXLiUPophycZ0QAVat+AYCYFypbUn7/C4uvLZbfsx0/H0io8cSOdEo3Q3Z
-	 0AEeAPdAJn9HPSoJcGFvdbBEdGl0jMApFSzwYr1w=
+	b=WCO5QALQZbaUghnEbhhB/BEu/5kqXexx+lNkqIUn3KT8c85FRDpThJogQrvYofRIY
+	 WjXvAOCCdgt3l74zv7CHDVwMtaM3OAXfeaMk+UoljMT9Q8yZvQMW4qkctmsA+xcoXe
+	 Wi/8gnMp/rUDS8KXd5AXuMWJiJF82WHNGj/ofmvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCSDLM (ORCPT
+        id S1726623AbgCSDTg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 23:11:12 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40774 "EHLO
+        Wed, 18 Mar 2020 23:19:36 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42755 "EHLO
         mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCSDLM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 23:11:12 -0400
-Received: by mail-il1-f196.google.com with SMTP id p12so886013ilm.7;
-        Wed, 18 Mar 2020 20:11:11 -0700 (PDT)
+        with ESMTP id S1726596AbgCSDTg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 23:19:36 -0400
+Received: by mail-il1-f196.google.com with SMTP id p2so887046ile.9;
+        Wed, 18 Mar 2020 20:19:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J+0LKz/6lSN9Mmuvfliw6x06SgGAqZYO0grtLAW3j6U=;
-        b=nXvg518YAFbV9DjTogMhcW8gM3qUbTULAg2Zhlo7maUl/mgsFPCJ6ovTDAEqRLgzl1
-         hwz1Nj5MAnPIP6vD90HeaIz07rh9xVfWq4VezoJoKxcBWP5J3SeK6TxtR5u0Pu4Gibv8
-         bblTFRy2MjYzmhXPzkW4Kcu+p2eld3atlnsjWqIP65wZU+26bkGutFJpghV/cXakcM93
-         VpwhFj1ADuVWggb/A4xi1fpAiPeWeOwQB5ZuK7btkfYu7J35B67L07jh7KE8oNWJjNRo
-         Q7OI9wUlwVbJJZDlY2xQYfCBRrhq5pXfQ5r63JeXqUy8ueatSx7LZaFl/eqmXUh2LV8B
-         xKEQ==
-X-Gm-Message-State: ANhLgQ2HW5lV4nhxeGyOvlJIfOM/wv051othX6bFl6ZJp/0rzKjDeX9S
-        vw6v4OEdfrnlXueJ7VBXiw==
-X-Google-Smtp-Source: ADFU+vszxBuKK7lsj5bUamMMz4xX5tBX0FIRFTriRVyf3HZunP/b/Jfg3ti57aekAIMoKMFMzE3f8A==
-X-Received: by 2002:a92:d70e:: with SMTP id m14mr1224873iln.30.1584587470975;
-        Wed, 18 Mar 2020 20:11:10 -0700 (PDT)
+        bh=o9b3Uen4TKgqfZYrJaC1MPXjmfmbCASsF1lbGTm/W6I=;
+        b=H/cqjNEwHRsClQF2+0ufVnUDfZEJG73s+tJRBEfp6NjJp6ZjMynyFD0vJkxBG3PINU
+         BdnK3Bst1v3ctyYXJIuSsIyuRuhax5ZWoTlocEPiw596TPkS9gjq4YBeDYwtWTISvYFE
+         OMJNGusdzqTVMPteojHENnjyrSZa8GYdzFlX1+F8k+W+flAYpjTLRIKRxP8CqQemGusK
+         udaDV9QgzSIQZX3sz3OPUFpNYGK4e5upcmv/nZ+7G4eCyaqjyHP8WpKoMDIg/9uuiw0f
+         ghh5v9VeS/1h5w9rVGpwVzxWulV1vrZE5ZdaRZQdENvlLmgMQ5e0lLIV5a8TppcttVSK
+         wEQA==
+X-Gm-Message-State: ANhLgQ2d00ZxQUdiZs4/OIVWR0pVd1QAG3AWCU+LJUif0dbQaRfGRiki
+        rozLFttJtEfq1cD6q7rteQ==
+X-Google-Smtp-Source: ADFU+vs9QKc42qrzBiOiCiUfMsqT/P6DVJLovLlzzKYtkp5n9BApkIjgYy0mbvSQRY/2NI4n72pO0w==
+X-Received: by 2002:a92:d843:: with SMTP id h3mr1205216ilq.246.1584587974813;
+        Wed, 18 Mar 2020 20:19:34 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id 10sm336743ilb.45.2020.03.18.20.11.07
+        by smtp.gmail.com with ESMTPSA id s25sm341377ilb.37.2020.03.18.20.19.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 20:11:10 -0700 (PDT)
-Received: (nullmailer pid 11458 invoked by uid 1000);
-        Thu, 19 Mar 2020 03:11:06 -0000
-Date:   Wed, 18 Mar 2020 21:11:06 -0600
+        Wed, 18 Mar 2020 20:19:33 -0700 (PDT)
+Received: (nullmailer pid 22933 invoked by uid 1000);
+        Thu, 19 Mar 2020 03:19:29 -0000
+Date:   Wed, 18 Mar 2020 21:19:29 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     dri-devel@lists.freedesktop.org,
@@ -88,160 +87,40 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tony Lindgren <tony@atomide.com>,
         Vinay Simha BN <simhavcs@gmail.com>,
         Werner Johansson <werner.johansson@sonymobile.com>
-Subject: Re: [PATCH v1 36/36] dt-bindings: display: convert
- olimex,lcd-olinuxino to DT Schema
-Message-ID: <20200319031106.GI29911@bogus>
+Subject: Re: [PATCH v1 31/36] dt-bindings: display: convert sharp,lq101r1sx01
+ to DT Schema
+Message-ID: <20200319031929.GJ29911@bogus>
 References: <20200315134416.16527-1-sam@ravnborg.org>
- <20200315134416.16527-37-sam@ravnborg.org>
+ <20200315134416.16527-32-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200315134416.16527-37-sam@ravnborg.org>
+In-Reply-To: <20200315134416.16527-32-sam@ravnborg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 02:44:16PM +0100, Sam Ravnborg wrote:
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Stefan Mavrodiev <stefan@olimex.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  .../display/panel/olimex,lcd-olinuxino.txt    | 42 -----------
->  .../display/panel/olimex,lcd-olinuxino.yaml   | 70 +++++++++++++++++++
->  2 files changed, 70 insertions(+), 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml
+On Sun, Mar 15, 2020 at 02:44:11PM +0100, Sam Ravnborg wrote:
+> This bindings describes a panel with a secondary channel.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
-> deleted file mode 100644
-> index a89f9c830a85..000000000000
-> --- a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.txt
-> +++ /dev/null
-> @@ -1,42 +0,0 @@
-> -Binding for Olimex Ltd. LCD-OLinuXino bridge panel.
-> -
-> -This device can be used as bridge between a host controller and LCD panels.
-> -Currently supported LCDs are:
-> -  - LCD-OLinuXino-4.3TS
-> -  - LCD-OLinuXino-5
-> -  - LCD-OLinuXino-7
-> -  - LCD-OLinuXino-10
-> -
-> -The panel itself contains:
-> -  - AT24C16C EEPROM holding panel identification and timing requirements
-> -  - AR1021 resistive touch screen controller (optional)
-> -  - FT5x6 capacitive touch screnn controller (optional)
-> -  - GT911/GT928 capacitive touch screen controller (optional)
-> -
-> -The above chips share same I2C bus. The EEPROM is factory preprogrammed with
-> -device information (id, serial, etc.) and timing requirements.
-> -
-> -Touchscreen bingings can be found in these files:
-> -  - input/touchscreen/goodix.txt
-> -  - input/touchscreen/edt-ft5x06.txt
-> -  - input/touchscreen/ar1021.txt
-> -
-> -Required properties:
-> -  - compatible: should be "olimex,lcd-olinuxino"
-> -  - reg: address of the configuration EEPROM, should be <0x50>
-> -  - power-supply: phandle of the regulator that provides the supply voltage
-> -
-> -Optional properties:
-> -  - enable-gpios: GPIO pin to enable or disable the panel
-> -  - backlight: phandle of the backlight device attacked to the panel
-> -
-> -Example:
-> -&i2c2 {
-> -	panel@50 {
-> -		compatible = "olimex,lcd-olinuxino";
-> -		reg = <0x50>;
-> -		power-supply = <&reg_vcc5v0>;
-> -		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;
-> -		backlight = <&backlight>;
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml
-> new file mode 100644
-> index 000000000000..22d664abd552
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino.yaml
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/olimex,lcd-olinuxino.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Binding for Olimex Ltd. LCD-OLinuXino bridge panel.
-> +
-> +maintainers:
-> +  - Stefan Mavrodiev <stefan@olimex.com>
-> +
-> +description: |
-> +  This device can be used as bridge between a host controller and LCD panels.
-> +  Currently supported LCDs are:
-> +    - LCD-OLinuXino-4.3TS
-> +    - LCD-OLinuXino-5
-> +    - LCD-OLinuXino-7
-> +    - LCD-OLinuXino-10
-> +
-> +  The panel itself contains:
-> +    - AT24C16C EEPROM holding panel identification and timing requirements
-> +    - AR1021 resistive touch screen controller (optional)
-> +    - FT5x6 capacitive touch screnn controller (optional)
-> +    - GT911/GT928 capacitive touch screen controller (optional)
-> +
-> +  The above chips share same I2C bus. The EEPROM is factory preprogrammed with
-> +  device information (id, serial, etc.) and timing requirements.
-> +
-> +  Touchscreen bingings can be found in these files:
-> +    - input/touchscreen/goodix.yaml
-> +    - input/touchscreen/edt-ft5x06.txt
-> +    - input/touchscreen/ar1021.txt
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: olimex,lcd-olinuxino
-> +
-> +  backlight: true
-> +  enable-gpios: true
-> +  power-supply: true
-> +  reg: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - power-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c2 {
-
-i2c {
-
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        panel@50 {
-> +            compatible = "olimex,lcd-olinuxino";
-> +            reg = <0x50>;
-> +            power-supply = <&reg_vcc5v0>;
-> +            enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;
-> +            backlight = <&backlight>;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.20.1
+> A few of the properties are only required for the
+> main (non-secondary) node.
+> This is properly described in the binding.
 > 
+> A few properties are only valid for the main node,
+> this is not described in the binding.
+> I failed to find a way to describe it.
+
+if:
+  required:
+    - link2
+then:
+  not:
+    required:
+      - power-supply
+
+Test that though as sometimes I still write crap for json-schema.
+
+Rob
