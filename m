@@ -2,144 +2,101 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367DCC43332
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 18:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27658C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 18:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC7E207FC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 18:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CC220724
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 18:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UimCi9VH"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ilA6UgYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgCSSGW (ORCPT
+        id S1726867AbgCSSTU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:06:22 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:50420 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgCSSGW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 14:06:22 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C2134A53;
-        Thu, 19 Mar 2020 19:06:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584641180;
-        bh=VVvaLIWzHjPnx7c9DWjDC6foO+LDj42e8xSFQBar0P4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UimCi9VH4MJ4LH+9sfUT3icjCjPFW6O/NFih77tIZyeAKixwX3eS6m7f7ZewK8Zet
-         iF6Qhg931tJqVp0tbmVvBFRy2vQJeCANnTFOfjaVdgsMuIfoynUAKBh7xSLxuw783x
-         D52R5yQdOPmXEsfCl3yBOwhdZwTXqUynZlF/+f7c=
-Date:   Thu, 19 Mar 2020 20:06:14 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Alex Riesen <alexander.riesen@cetitec.com>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 03/10] media: adv748x: reduce amount of code for
- bitwise modifications of device registers
-Message-ID: <20200319180614.GL14585@pendragon.ideasonboard.com>
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
- <099ebaa317156ec8edab973d0445851337139e6b.1584639664.git.alexander.riesen@cetitec.com>
+        Thu, 19 Mar 2020 14:19:20 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35317 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726663AbgCSSTU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:19:20 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JIEBPw006390;
+        Thu, 19 Mar 2020 19:18:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=/NryDuotj7GwNZeRIKiNEE04efcoGmBTQAarcZjEeEM=;
+ b=ilA6UgYTk/SDj4tn5Z6fnFBav5jjz1+QPUuhykOWCICXnTQbuN9lCImuGO5mfM74pK5G
+ zwHzIGNe8OZtgvP8b5h5uHX0X664bbc8r2oBXBCViIyVq6UU8eCUfmYGPO8UL857euAg
+ Gl2bMIbLLfn8BKroKXWRAudQVM0xht+L59+g07dQg8c9X9ox8mDre43QM2mDXwS8j4Ck
+ v6Pfv3qj514b276Bct9qyAKQAjVmywK3rRSN3IDEN3TU36uvbU9i3ZJugxrVWoWsB56w
+ SGT5h/Ct2mhkqEEqorqZVUL2hJ2XgJY3U4MJC3z/gG+fMxSwKZdKbI9BlZoXv0KbXF4e +w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yu8etkc0q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 19:18:54 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 733AC10002A;
+        Thu, 19 Mar 2020 19:18:49 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3AC7A2A70CB;
+        Thu, 19 Mar 2020 19:18:49 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar 2020 19:18:48
+ +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <robh+dt@kernel.org>, <jic23@kernel.org>
+CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dt-bindings: iio: adc: stm32-adc: fix id relative path
+Date:   Thu, 19 Mar 2020 19:18:27 +0100
+Message-ID: <1584641907-8228-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <099ebaa317156ec8edab973d0445851337139e6b.1584639664.git.alexander.riesen@cetitec.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_07:2020-03-19,2020-03-19 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alex,
+Fix id relative path that shouldn't contain 'bindings', as pointed out
+when submitting st,stm32-dac bindings conversion to json-schema [1].
+[1] https://patchwork.ozlabs.org/patch/1257568/
 
-Thank you for the patch.
+Fixes: a8cf1723c4b7 ("dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema")
 
-On Thu, Mar 19, 2020 at 06:41:53PM +0100, Alex Riesen wrote:
-> The regmap provides a convenient utility for this.
-> 
-> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-> ---
->  drivers/media/i2c/adv748x/adv748x-core.c |  6 ++++++
->  drivers/media/i2c/adv748x/adv748x.h      | 15 ++++++++++++---
->  2 files changed, 18 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-> index 345f009de121..36164a254d7b 100644
-> --- a/drivers/media/i2c/adv748x/adv748x-core.c
-> +++ b/drivers/media/i2c/adv748x/adv748x-core.c
-> @@ -133,6 +133,12 @@ static int adv748x_write_check(struct adv748x_state *state, u8 page, u8 reg,
->  	return *error;
->  }
->  
-> +int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg, u8 mask,
-> +			u8 value)
-> +{
-> +	return regmap_update_bits(state->regmap[page], reg, mask, value);
-> +}
-> +
->  /* adv748x_write_block(): Write raw data with a maximum of I2C_SMBUS_BLOCK_MAX
->   * size to one or more registers.
->   *
-> diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-> index 09aab4138c3f..c5245464fffc 100644
-> --- a/drivers/media/i2c/adv748x/adv748x.h
-> +++ b/drivers/media/i2c/adv748x/adv748x.h
-> @@ -393,25 +393,34 @@ int adv748x_write(struct adv748x_state *state, u8 page, u8 reg, u8 value);
->  int adv748x_write_block(struct adv748x_state *state, int client_page,
->  			unsigned int init_reg, const void *val,
->  			size_t val_len);
-> +int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg,
-> +			u8 mask, u8 value);
->  
->  #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
->  #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
-> -#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~(m)) | (v))
-> +#define io_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_IO, r, m, v)
-> +#define io_update(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_IO, r, m, v)
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Those two are identical. Do we need both ? I would standardize on either
-*_update or *_clrset for all the functions here. Apart from that,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
->  
->  #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
->  #define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, (r)+1)) & (m))
->  #define hdmi_write(s, r, v) adv748x_write(s, ADV748X_PAGE_HDMI, r, v)
-> +#define hdmi_update(s, r, m, v) \
-> +	adv748x_update_bits(s, ADV748X_PAGE_HDMI, r, m, v)
-> +
-> +#define dpll_read(s, r) adv748x_read(s, ADV748X_PAGE_DPLL, r)
-> +#define dpll_update(s, r, m, v) \
-> +	adv748x_update_bits(s, ADV748X_PAGE_DPLL, r, m, v)
->  
->  #define repeater_read(s, r) adv748x_read(s, ADV748X_PAGE_REPEATER, r)
->  #define repeater_write(s, r, v) adv748x_write(s, ADV748X_PAGE_REPEATER, r, v)
->  
->  #define sdp_read(s, r) adv748x_read(s, ADV748X_PAGE_SDP, r)
->  #define sdp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_SDP, r, v)
-> -#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~(m)) | (v))
-> +#define sdp_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_SDP, r, m, v)
->  
->  #define cp_read(s, r) adv748x_read(s, ADV748X_PAGE_CP, r)
->  #define cp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_CP, r, v)
-> -#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~(m)) | (v))
-> +#define cp_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_CP, r, m, v)
->  
->  #define tx_read(t, r) adv748x_read(t->state, t->page, r)
->  #define tx_write(t, r, v) adv748x_write(t->state, t->page, r, v)
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
+index 933ba37..dd8eb15 100644
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: "http://devicetree.org/schemas/bindings/iio/adc/st,stm32-adc.yaml#"
++$id: "http://devicetree.org/schemas/iio/adc/st,stm32-adc.yaml#"
+ $schema: "http://devicetree.org/meta-schemas/core.yaml#"
+ 
+ title: STMicroelectronics STM32 ADC bindings
 -- 
-Regards,
+2.7.4
 
-Laurent Pinchart
