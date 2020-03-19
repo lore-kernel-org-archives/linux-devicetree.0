@@ -2,119 +2,95 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A089CC4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 07:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA93EC4332E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 07:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7312620722
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 07:31:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e73vgvqv"
+	by mail.kernel.org (Postfix) with ESMTP id 8C75E20722
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 07:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgCSHbX (ORCPT
+        id S1726903AbgCSHu6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:31:23 -0400
-Received: from mail-io1-f53.google.com ([209.85.166.53]:44772 "EHLO
-        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgCSHbX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 03:31:23 -0400
-Received: by mail-io1-f53.google.com with SMTP id v3so1179366iot.11;
-        Thu, 19 Mar 2020 00:31:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=jomgdCLpahd3FAv2npbYPI8+FQ6XSFwP0NwoJcIKrDI=;
-        b=e73vgvqvEk9vZ1wrZML1M7ZRhdJPyQbn3ASJuasCtdVSk4d6DVOILSLWkLdgCvOFru
-         KpGdOKO0M9xNtv2NLG2c4t+hHkEuPMIL6Ynr1IW61Arfphb9TVvOlNXp3GVgtQjZIfNU
-         pXZr/QdwafVJDpQoEH3YZrlhbnZsamS7APlvzqH7SoF+mvRYQpzSMyGcXIho+f3bA2zx
-         R8YVhjwUboS+zCc9x8oQXTA21BQHDcpWeG8//5Nu16f6UpRY/GogKoI45vMPSYXKPoHX
-         yXkuT2yuc/mWUTGqYCHWUkCdlGVqcTxzJalSJlRNs5WCTGx9lz8KwwRHCQCOdUeyL7eI
-         2X/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=jomgdCLpahd3FAv2npbYPI8+FQ6XSFwP0NwoJcIKrDI=;
-        b=RbpLjpMv+hjG2tgRKQy+Y7aNdsYKcKL2y6KR6jL89kC8r3QgEfCp7X7zTCFT1rk1KW
-         nMLHYKu9tBDe+NTWD96i9YD/BQVWMaJ45piBKuOKpLvOFZYjvQzVSETrKh1PIOdlSFrh
-         JF1APQRTl2EUd+kBpMjtPxUEuxK8ZSTYTKn+Zu3iqfWi5NUJdT2gklD5g2V142bqgRjX
-         rQLkDMMJ2PrjNp+0+83Zact2ZVXFMQsx01oIFBlipK3ncqQVBjD90tL5sAY3g99ROmpk
-         ClSl4ImwekXChmxn0+CnnCSNUJPmnCFjfPFDcX5nuuNR2N3YXWJOgRKS7pHozN31+ov5
-         8IDQ==
-X-Gm-Message-State: ANhLgQ1vFhqRY2TfdyiPJx4mLQ34FyurMxyAsmHGmX11UUM24RQf1VjX
-        ZHI1FNx+qXEn0w7AT/qXiSXMmqci9nWPNY9TZHwtjszL
-X-Google-Smtp-Source: ADFU+vv6bG3YgVuAvhITGXQ3/8y6DKdabygw3bmdHZm6PMcbVAy6NA+GKIaxrmykbd76jG9NytI3zjUmCE1DIZxCIqE=
-X-Received: by 2002:a02:7f44:: with SMTP id r65mr1962710jac.26.1584603082412;
- Thu, 19 Mar 2020 00:31:22 -0700 (PDT)
-MIME-Version: 1.0
-From:   Vinay Simha B N <simhavcs@gmail.com>
-Date:   Thu, 19 Mar 2020 13:01:10 +0530
-Message-ID: <CAGWqDJ7AccvoxjKfQJ3GytJ-+u56Bk3rEn0sSYv-zCuBe1brAg@mail.gmail.com>
-Subject: graph connection to node is not bidirectional kernel-5.6.0-rc6
-To:     "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 19 Mar 2020 03:50:58 -0400
+Received: from mx.socionext.com ([202.248.49.38]:23092 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgCSHu5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:50:57 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 19 Mar 2020 16:50:55 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 085AA60057;
+        Thu, 19 Mar 2020 16:50:56 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 19 Mar 2020 16:50:55 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 6AE6F1A0E67;
+        Thu, 19 Mar 2020 16:50:55 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2 0/6] Add devicetree features and fixes for UniPhier SoCs
+Date:   Thu, 19 Mar 2020 16:50:46 +0900
+Message-Id: <1584604252-13172-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-hi,
+This series adds new features that includes XDMAC for each SoC, and ethernet
+aliases to inherit MAC address from u-boot and stabilization for ethernet on
+PXs3.
 
-I am getting the endpoint' is not bidirectional(d2l_in, dsi0_out)
-warning in compilation, built boot image works on qcom apq8016-ifc6309
-board with the dsi->bridge->lvds panel.
-Because of this warning i cannot create a .yaml documentation examples.
-Please suggest.
+Changes since v1:
+- dt-bindings: Remove extension register description for xdmac
+- Remove extension register area from xdmac node
+- Fix commit message for ethernet aliases
+- Remove RGMII setting for LD20 global board
 
-tc_bridge: bridge@f {
-status = "okay";
-    ports {
-    #address-cells = <1>;
-    #size-cells = <0>;
+These patches in v1 have already been applied:
+  ARM: dts: uniphier: Add USB3 controller nodes for Pro5
+  arm64: dts: uniphier: Enable spi node for PXs3 reference board
+  arm64: dts: uniphier: Add nodes of thermal monitor and thermal zone
+    for PXs3
+  ARM: dts: uniphier: Set SCSSI clock and reset IDs for each channel
+  arm64: dts: uniphier: Set SCSSI clock and reset IDs for each channel
 
-    port@0 {
-        reg = <0>;
-        d2l_in: endpoint {
-            remote-endpoint = <&dsi0_out>;
-        };
-    };
-};
+Kunihiko Hayashi (6):
+  dt-bindings: dma: uniphier-xdmac: Remove extension register region
+    description
+  ARM: dts: uniphier: Add XDMAC node
+  arm64: dts: uniphier: Add XDMAC node
+  ARM: dts: uniphier: Add ethernet aliases
+  arm64: dts: uniphier: Add ethernet aliases
+  arm64: dts: uniphier: Stabilize Ethernet RGMII mode of PXs3 ref board
 
-dsi@1a98000 {
-    status = "okay";
-...
-    ports {
-        port@1 {
-            dsi0_out:endpoint {
-                remote-endpoint = <&d2l_in>;
-                data-lanes = <0 1 2 3>;
-            };
-        };
-    };
-};
-
-https://github.com/vinaysimhabn/kernel-msm/blob/1cbd104cca4ebfb111c92e939ca09f82aac00aa1/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-https://github.com/vinaysimhabn/kernel-msm/blob/08e4821646b5c128559c506a5777d8782f1ff79e/Documentation/devicetree/bindings/display/bridge/toshiba%2Ctc358775.yaml
-
-arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:253.28-255.9: Warning
-(graph_endpoint): /soc/i2c@78b8000/bridge@39/ports/port@0/endpoint:
-graph connection to node
-'/soc/mdss@1a00000/dsi@1a98000/ports/port@1/endpoint' is not
-bidirectional
-arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:333.53-335.35: Warning
-(graph_endpoint): /soc/auo,b101xtn01/port/endpoint: graph connection
-to node '/soc/i2c@78b8000/bridge@f/ports/port@1/endpoint' is not
-bidirectional
+ .../bindings/dma/socionext,uniphier-xdmac.yaml         |  3 +--
+ arch/arm/boot/dts/uniphier-ld6b-ref.dts                |  1 +
+ arch/arm/boot/dts/uniphier-pro4-ace.dts                |  1 +
+ arch/arm/boot/dts/uniphier-pro4-ref.dts                |  1 +
+ arch/arm/boot/dts/uniphier-pro4-sanji.dts              |  1 +
+ arch/arm/boot/dts/uniphier-pro4.dtsi                   |  8 ++++++++
+ arch/arm/boot/dts/uniphier-pro5.dtsi                   |  8 ++++++++
+ arch/arm/boot/dts/uniphier-pxs2-gentil.dts             |  1 +
+ arch/arm/boot/dts/uniphier-pxs2-vodka.dts              |  1 +
+ arch/arm/boot/dts/uniphier-pxs2.dtsi                   |  8 ++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld11-ref.dts    |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi       |  8 ++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts    |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi       |  8 ++++++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts    | 18 ++++++++++++++++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi       |  8 ++++++++
+ 18 files changed, 77 insertions(+), 2 deletions(-)
 
 -- 
-regards,
-vinaysimha
+2.7.4
+
