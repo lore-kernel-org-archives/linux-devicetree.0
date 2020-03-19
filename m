@@ -2,100 +2,120 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36DBC4332E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EEFC4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9520F206D7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98ED620732
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d5VoNCh0"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pHUPtJq4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wa5MNnrX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgCSJmZ (ORCPT
+        id S1726366AbgCSJyr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:42:25 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26873 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725887AbgCSJmY (ORCPT
+        Thu, 19 Mar 2020 05:54:47 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:50971 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbgCSJyr (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:42:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584610944; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=iz2nU03/8cnH2TUu7+7ztdtrDhkWYNP0IQa4F/BXqP4=; b=d5VoNCh0q2ppD512szBole6DhqhjKB5///q0mkFKiaEYlJP3p3d0b4KvJmnpLRS3a9kM2UFq
- D6CZA0PFTB4hCSFJMMNZYOyn9DIoK5gy54qT1IZ8S/HWdQOBuy1CQOtVzrQJwZPdwCEH6Ztf
- f2YDrNRStSiYInDzBVwYMQ5C2Jw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e733e7f.7fec72c78a08-smtp-out-n01;
- Thu, 19 Mar 2020 09:42:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 55451C44792; Thu, 19 Mar 2020 09:42:23 +0000 (UTC)
-Received: from [192.168.0.103] (unknown [106.51.30.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 08BB1C433CB;
-        Thu, 19 Mar 2020 09:42:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 08BB1C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
-        nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
- <20200318034243.o2metmggzuah6cqw@vireshk-i7>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
-Date:   Thu, 19 Mar 2020 15:12:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 05:54:47 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id CC5E23BC;
+        Thu, 19 Mar 2020 05:54:44 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 19 Mar 2020 05:54:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=AEweTAoYqzmbnIPkNbbqyUDpsBm
+        QCn1jJNkZ+yktwS8=; b=pHUPtJq47kWB0/PzKUMTMDB8z2sBBBnhmNVh+Zkja7l
+        YoyY6wekqF11f8jv+oZ9rY6cY/0+BwGn7LO2dlZxi0F7N9lz9PQZXH1m42FFp4bA
+        HuEZ2WvwO4KzawnPzhH3ktHoELxkzQdopswvHlQTm2pIsNy2jCymTkuBq5FkFUVo
+        DqH8mmfQzGpg9QrKBjp1BoveMbE8czQLI+yEgZJ5qvyFQxIkmqrlfmrUUjjoASeH
+        U7AtTa//bmNddEVXUDAEhpMyEMhP+3MU0VTN0N72M8VjxP5wzTRpUqEOLDXWxDk7
+        U6BgeIW24scdtKBWkEoGAR3QhCJ3HpFA10Lo6Eq5dPA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=AEweTA
+        oYqzmbnIPkNbbqyUDpsBmQCn1jJNkZ+yktwS8=; b=Wa5MNnrXfnbc0Ga1eRa05I
+        9E+hM5kg/2N10ZhFu1qyF2q9kiPFFy3NrKBe+YLIVneH87/dU3vunv9fmeTzU30H
+        xgP2ZYpmUCQ9VGqgJehzd2+t2JAtL8ZyzUdNEhZXiKQ0CyZ0Q+h4HQx8B+ora178
+        OZ7vVvDDaf9OClMs9adfidvJNXZocwrCf0F467ObeL5sWpEfja9vYGwpvx4IeXOA
+        zrSVYiYDAf6AYbnQ73SZonwHPwBHysSkS9KT0CgPwmN0r1rn1hLoBAm3HanRFayn
+        r3raqSnPkHUFTil7FD3Jf9Tw5ZCa8H3JaSy332Ds92TsyZxv1/GBxrjgCb/sD/gg
+        ==
+X-ME-Sender: <xms:YkFzXgg5ohRlCNSyYewsJFE-Ihb1N3TQvAKCV6mtZ_tL0oU_aeOy1A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefledguddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:YkFzXtRt1KyM74jD9WTebfQ53NFpn52mMKp4Q0NEVzOqdXnteglveg>
+    <xmx:YkFzXjEoOkqBt0MeQ846QAL8ky4CFFRefhkvn-mQenTfpiU5n3h5ew>
+    <xmx:YkFzXlksCnUDCp552SGsmrBF4xXVYC7IUkXR80osywZ_LnX8zGPQIw>
+    <xmx:ZEFzXsOvBqFJtWlO-qhnAZjIomuTgyzpM5HmQo80aJ2HtFdKv5UYNaWMTwc>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 92843328005A;
+        Thu, 19 Mar 2020 05:54:42 -0400 (EDT)
+Date:   Thu, 19 Mar 2020 10:54:41 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Ondrej Jirman <megous@megous.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 4/5] drm/sun4i: sun6i_mipi_dsi: fix horizontal timing
+ calculation
+Message-ID: <20200319095441.zfaivhnh3pwuphp4@gilmour.lan>
+References: <20200316133503.144650-1-icenowy@aosc.io>
+ <20200316133503.144650-5-icenowy@aosc.io>
 MIME-Version: 1.0
-In-Reply-To: <20200318034243.o2metmggzuah6cqw@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="du2tzzvxzpnq2xcd"
+Content-Disposition: inline
+In-Reply-To: <20200316133503.144650-5-icenowy@aosc.io>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On 3/18/2020 9:12 AM, Viresh Kumar wrote:
-> On 18-03-20, 02:13, Sibi Sankar wrote:
->> On 2020-01-28 01:33, Sibi Sankar wrote:
->>> This RFC series aims to extend cpu based scaling support to L3/DDR on
->>> SDM845 and SC7180 SoCs.
->>>
->>
->> Hey Viresh/Saravana,
->>
->> Ping! Can you take a stab at reviewing
->> the series, it has been on the list for
->> a while now.
-> 
-> I believe this depends on Saravana's series on which I have raised
-> some doubts few weeks back ? I am still waiting for them to get
-> clarified by him.
+--du2tzzvxzpnq2xcd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Could you please post a link to the discussion that you are referring to here?
-I looked at a few links posted in the cover letter as dependencies and it seems
-like the discussions are pending for *months* and not weeks but I might have looked
-at the wrong ones.
+Hi,
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+On Mon, Mar 16, 2020 at 09:35:02PM +0800, Icenowy Zheng wrote:
+> The max() function call in horizontal timing calculation shouldn't pad a
+> length already subtracted with overhead to overhead, instead it should
+> only prevent the set timing to underflow.
+
+Some explanation on why it shouldn't do that would be appreciated.
+
+Also, with the changes you have below, the comments above each max
+call don't match anymore and should be updated.
+
+Maxime
+
+--du2tzzvxzpnq2xcd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXnNBYQAKCRDj7w1vZxhR
+xVK2AP9MrOr+g0Wxeod4btE4njIJOm/ARGGGAOMiH4E54MPtvAEAvxcr9/HggXHX
+CbB5ndVBG5C8Z2r5jKBQqYK0BN+Iqgo=
+=YB6s
+-----END PGP SIGNATURE-----
+
+--du2tzzvxzpnq2xcd--
