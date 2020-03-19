@@ -2,151 +2,275 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7EAC4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC938C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1EBC20754
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABA9F2072D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:47:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="joiRPfWQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgCSRnZ (ORCPT
+        id S1727769AbgCSRrQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:43:25 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:38713 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCSRnY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 13:43:24 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MK3a4-1j0Btp0v5q-00LWgz; Thu, 19 Mar 2020 18:43:11 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 9CA6865021B;
-        Thu, 19 Mar 2020 17:43:10 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id p8hR5X3iJEyc; Thu, 19 Mar 2020 18:43:10 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 4936364FD07;
-        Thu, 19 Mar 2020 18:43:10 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.52) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 19 Mar 2020 18:43:10 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id A7F9A8051E; Thu, 19 Mar 2020 18:43:09 +0100 (CET)
-Date:   Thu, 19 Mar 2020 18:43:09 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v2 10/10] media: adv748x: allow the HDMI sub-device to accept
- EDID
-Message-ID: <f7387c96eee7f434cd5b86707b386015878ba9b7.1584639664.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+        Thu, 19 Mar 2020 13:47:16 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37700 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728114AbgCSRrQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:47:16 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JHd8Pr016532;
+        Thu, 19 Mar 2020 18:46:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=oXNrCInOKbWks9uJELVsod6DJLx4EuXuc92666BUHsg=;
+ b=joiRPfWQ3YTPizPjgewsnfWMlRMJgf9xM2g+O10bOzXQkut+CiKD/ghpy0SX4W/0hFNs
+ 6SPcYpUfV6hTd1HC1Jh585SCZafcNzTqjGqgAvHy0K4ZcxWsGgwPK06ScXR0WZiLkgWh
+ P8asSmh/YZ+6RVlKkE9DSTW2XVUEw48aLNeO/Mmxtvqd3mAHaN1/ssSpjgBu/LhfbIW2
+ a+vlC5d/y9jeXCp5AuwaCIR7DTRsxbzDNz1MsDeWaiNixgkicUIssL4HcL+l6SYDW52G
+ PndouZu3/uGfmA4ROdoSrP7D23gbdWeI1VodeKkKxrkVYyzr/hXwtFMAYLiwXNnI+q6f bA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yu95uu1ay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 18:46:46 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0D2E010002A;
+        Thu, 19 Mar 2020 18:46:40 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C88F42B4D56;
+        Thu, 19 Mar 2020 18:46:40 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar 2020 18:46:40
+ +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <robh+dt@kernel.org>, <jic23@kernel.org>
+CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] dt-bindings: iio: dac: stm32-dac: convert bindings to json-schema
+Date:   Thu, 19 Mar 2020 18:46:23 +0100
+Message-ID: <1584639983-31098-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1584639664.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.52]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7762
-X-Provags-ID: V03:K1:vr4OYoDjE9YrB9RjEXN80k6NQqQMP6ayMOLmGmMd2czOi/8NORG
- QhXwNDMbeIpUTsh/cqAfcVH0MtX10uqhqfYv0usEthLSrClXXxwHR+aCYFrK7iFxY9ruW2l
- uUyeC8j99rXpyqcCQ52/fHkY2UxVaXlZQoBCEb86BkAkAjUYmFROO0mVBjHpb2ZIkAWmyc1
- hGIstBqGANg/b7AdL6aBA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:I28fkQ/FN/M=:g6yKcXLfdT0TQAiIY/F69V
- TCD6zrM0+g8dkqtcjye84MGHpt+HuF6B9iAzayBA3QUmQNXPxAhE4CdTUK3DMRiBIrXTzoyJL
- Lyt30EXhRkOn1U+VsMYj8DR+kUNxX0C3rKl0uYMMmDttuGkBoVQkgvX4KC5ax4PKhktClS7qo
- Vknpv4q7kUPOhwlvnKlHyAlLrJoFh4XRzPvsXbGt9bWCwjE5Yg4ea655A3ZyUEbd0kfvQCcNP
- vdmfrrWVZ04iEQ9Rl5Qo951OdGm5qiHufch0UYEr1MnJ+mtu+pcTLZ4bruDd14CwDauP/cPL2
- 8fsbYrCbSYsm4YDH25ZokuJA0prJ0QuDQ0v98utyDgMAmHQADkA5DYKeq68qBUJqpzvQ1YRRv
- IDU3sTlU4ltw0F+g3guBogtpYv95AbbmZO2TeehI9WPYdAIoSm30UNUQryCZHz3LieyGo9w4W
- KU80AWvHo7vwv2pCQrqitJkEPsPla2v6Y6fTRbqSu4aeFJ/FTeN/ciVvSG0pYfLFZaGnL9VvY
- YteXeZpahCIaId2bLNg4XH8DHGGlf0fXWHkpbPGjsKx6m5g/RE4d+pObXlzvpEwbcxh+Tg6PD
- tomKb6bJVZ7HeKzwkIX1Bod2/gaXLfIOHKTDxAmTK3eW9ggPb7tGa2iPwniLrYWV+zK9C47qa
- PqLGhuMFlGUloJmyUa0UgqIolAooc7CUGow75XX9uKhzi6ObeVuUjLXnuknNAcFbK73+0ubcn
- XZcxOVmttSSKnlRDnSu3uVgDo71pvASEk/BgG9Pjo5F/lnA+MHAc/69sk4lp8z4xYZ3sQ/eTj
- 9uQYAGP8AAYBWV/3BYY5o0H0Mg59XBeYAkYKsjMJG4qtPL8o0atK3wvQe7aZTGULKuKiaLy
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_06:2020-03-19,2020-03-19 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This makes it possible to load a EDID reported by the device
-with v4l2-ctl utility:
+Convert the STM32 DAC binding to DT schema format using json-schema
 
-  vdev=/dev/$(grep -l '^adv748x.*hdmi$' /sys/class/video4linux/v4l-subdev*/name |cut -d/ -f5-5)
-  v4l2-ctl -d $vdev --set-edid=pad=0,file=/etc/adv7482.edid
-
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- drivers/media/i2c/adv748x/adv748x-hdmi.c | 27 ++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Changes in v2:
+- Fix id relative path/filename as detected by Rob's bot
+---
+ .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
+ .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
+ 2 files changed, 110 insertions(+), 63 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-index 7655d817ceb6..88e309de3d56 100644
---- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
-+++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-@@ -775,7 +775,34 @@ static int adv748x_hdmi_log_status(struct v4l2_subdev *sd)
- 	return 0;
- }
- 
-+static long adv748x_hdmi_querycap(struct adv748x_hdmi *hdmi,
-+				  struct v4l2_capability *cap)
-+{
-+	struct adv748x_state *state = adv748x_hdmi_to_state(hdmi);
+diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+deleted file mode 100644
+index bf2925c..00000000
+--- a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
++++ /dev/null
+@@ -1,63 +0,0 @@
+-STMicroelectronics STM32 DAC
+-
+-The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
+-may be configured in 8 or 12-bit mode. It has two output channels, each with
+-its own converter.
+-It has built-in noise and triangle waveform generator and supports external
+-triggers for conversions. The DAC's output buffer allows a high drive output
+-current.
+-
+-Contents of a stm32 dac root node:
+------------------------------------
+-Required properties:
+-- compatible: Should be one of:
+-  "st,stm32f4-dac-core"
+-  "st,stm32h7-dac-core"
+-- reg: Offset and length of the device's register set.
+-- clocks: Must contain an entry for pclk (which feeds the peripheral bus
+-  interface)
+-- clock-names: Must be "pclk".
+-- vref-supply: Phandle to the vref+ input analog reference supply.
+-- #address-cells = <1>;
+-- #size-cells = <0>;
+-
+-Optional properties:
+-- resets: Must contain the phandle to the reset controller.
+-- A pinctrl state named "default" for each DAC channel may be defined to set
+-  DAC_OUTx pin in mode of operation for analog output on external pin.
+-
+-Contents of a stm32 dac child node:
+------------------------------------
+-DAC core node should contain at least one subnode, representing a
+-DAC instance/channel available on the machine.
+-
+-Required properties:
+-- compatible: Must be "st,stm32-dac".
+-- reg: Must be either 1 or 2, to define (single) channel in use
+-- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
+-  Documentation/devicetree/bindings/iio/iio-bindings.txt
+-
+-Example:
+-	dac: dac@40007400 {
+-		compatible = "st,stm32h7-dac-core";
+-		reg = <0x40007400 0x400>;
+-		clocks = <&clk>;
+-		clock-names = "pclk";
+-		vref-supply = <&reg_vref>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&dac_out1 &dac_out2>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		dac1: dac@1 {
+-			compatible = "st,stm32-dac";
+-			#io-channels-cells = <1>;
+-			reg = <1>;
+-		};
+-
+-		dac2: dac@2 {
+-			compatible = "st,stm32-dac";
+-			#io-channels-cells = <1>;
+-			reg = <2>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+new file mode 100644
+index 00000000..393f700
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+@@ -0,0 +1,110 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/iio/dac/st,stm32-dac.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+	cap->version = LINUX_VERSION_CODE;
-+	strlcpy(cap->driver, state->dev->driver->name, sizeof(cap->driver));
-+	strlcpy(cap->card, "hdmi", sizeof(cap->card));
-+	snprintf(cap->bus_info, sizeof(cap->bus_info), "i2c:%d-%04x",
-+		 i2c_adapter_id(state->client->adapter),
-+		 state->client->addr);
-+	cap->device_caps = V4L2_CAP_AUDIO | V4L2_CAP_VIDEO_CAPTURE;
-+	cap->capabilities = V4L2_CAP_DEVICE_CAPS;
-+	return 0;
-+}
++title: STMicroelectronics STM32 DAC bindings
 +
-+static long adv748x_hdmi_ioctl(struct v4l2_subdev *sd,
-+			       unsigned int cmd, void *arg)
-+{
-+	struct adv748x_hdmi *hdmi = adv748x_sd_to_hdmi(sd);
++description: |
++  The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
++  may be configured in 8 or 12-bit mode. It has two output channels, each with
++  its own converter.
++  It has built-in noise and triangle waveform generator and supports external
++  triggers for conversions. The DAC's output buffer allows a high drive output
++  current.
 +
-+	if (cmd == VIDIOC_QUERYCAP)
-+		return adv748x_hdmi_querycap(hdmi, arg);
-+	return -ENOTTY;
-+}
++maintainers:
++  - Fabrice Gasnier <fabrice.gasnier@st.com>
 +
- static const struct v4l2_subdev_core_ops adv748x_core_ops_hdmi = {
-+	.ioctl = adv748x_hdmi_ioctl,
- 	.log_status = adv748x_hdmi_log_status,
- };
- 
++properties:
++  compatible:
++    enum:
++      - st,stm32f4-dac-core
++      - st,stm32h7-dac-core
++
++  reg:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: pclk
++
++  vref-supply:
++    description: Phandle to the vref input analog reference voltage.
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - vref-supply
++  - '#address-cells'
++  - '#size-cells'
++
++patternProperties:
++  "^dac@[1-2]+$":
++    type: object
++    description:
++      A DAC block node should contain at least one subnode, representing an
++      DAC instance/channel available on the machine.
++
++    properties:
++      compatible:
++        const: st,stm32-dac
++
++      reg:
++        description: Must be either 1 or 2, to define (single) channel in use
++        enum: [1, 2]
++
++      '#io-channel-cells':
++        const: 1
++
++    additionalProperties: false
++
++    required:
++      - compatible
++      - reg
++      - '#io-channel-cells'
++
++examples:
++  - |
++    // Example on stm32mp157c
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    dac: dac@40017000 {
++      compatible = "st,stm32h7-dac-core";
++      reg = <0x40017000 0x400>;
++      clocks = <&rcc DAC12>;
++      clock-names = "pclk";
++      vref-supply = <&vref>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dac@1 {
++        compatible = "st,stm32-dac";
++        #io-channel-cells = <1>;
++        reg = <1>;
++      };
++
++      dac@2 {
++        compatible = "st,stm32-dac";
++        #io-channel-cells = <1>;
++        reg = <2>;
++      };
++    };
++
++...
 -- 
-2.25.1.25.g9ecbe7eb18
+2.7.4
 
