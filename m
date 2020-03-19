@@ -2,149 +2,187 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841E3C4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84ACC4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594672076C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735DD20663
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:31:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VuAyYpf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725887AbgCSJ3a (ORCPT
+        id S1726188AbgCSJbd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:29:30 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:10943
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725767AbgCSJ3a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:29:30 -0400
-X-IronPort-AV: E=Sophos;i="5.70,571,1574118000"; 
-   d="scan'208";a="342902958"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:29:26 +0100
-Date:   Thu, 19 Mar 2020 10:29:26 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] scsi: ufs-exynos: add UFS host support for Exynos
- SoCs
-Message-ID: <alpine.DEB.2.21.2003191028360.3010@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 19 Mar 2020 05:31:33 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47094 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgCSJbd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 05:31:33 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02J9UYBS011730;
+        Thu, 19 Mar 2020 04:30:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584610234;
+        bh=ptAVA86iz3NfXhHh5PQXjwSG9wm973u3msedd17ZuX8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VuAyYpf/EBe7FQ6xvzD+INTZYdQ/Mq8HR1E/4smZY/8XVDybC7+K1KXK7I3LER6Gd
+         ldEv7HsPQFy795qArDBhGezA3PoaC9xD8bLYi3rXGwCX3FARUeY9kfmOk5aDJxAsnP
+         m5pWJ5QsUxkeWvwzXX29v3pQaKl3ebngcQ+2bP/Y=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02J9UY41027080
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Mar 2020 04:30:34 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 04:30:34 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 04:30:33 -0500
+Received: from [10.250.132.123] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02J9UPQM028697;
+        Thu, 19 Mar 2020 04:30:26 -0500
+Subject: Re: [PATCH v12 2/4] mtd: spi-nor: add spi-mem support in
+ cadence-quadspi controller driver
+To:     <Tudor.Ambarus@microchip.com>, <linux-mtd@lists.infradead.org>,
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <broonie@kernel.org>, <robh+dt@kernel.org>, <marex@denx.de>,
+        <devicetree@vger.kernel.org>, <tien.fong.chee@intel.com>,
+        <tudor.ambarus@gmail.com>, <boris.brezillon@free-electrons.com>,
+        <richard@nod.at>, <qi-ming.wu@intel.com>,
+        <simon.k.r.goldschmidt@gmail.com>, <dinguyen@kernel.org>,
+        <miquel.raynal@bootlin.com>, <cheol.yong.kim@intel.com>,
+        <cyrille.pitchen@atmel.com>, <computersforpeace@gmail.com>,
+        <dwmw2@infradead.org>, <david.oberhollenzer@sigma-star.at>
+References: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200310015213.1734-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <3360641.Vn3sISamPi@192.168.0.120>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <cea89434-d2bf-72e6-0b3b-0e0efd0d149e@ti.com>
+Date:   Thu, 19 Mar 2020 15:00:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <3360641.Vn3sISamPi@192.168.0.120>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Perhaps this is intentional, but please check lines 931-935.
 
-julia
 
----------- Forwarded message ----------
-Date: Thu, 19 Mar 2020 09:31:14 +0800
-From: kbuild test robot <lkp@intel.com>
-To: kbuild@lists.01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v2 4/5] scsi: ufs-exynos: add UFS host support for Exynos
-    SoCs
+On 19/03/20 1:39 pm, Tudor.Ambarus@microchip.com wrote:
+> Hi,
+> 
+> On Tuesday, March 10, 2020 3:52:11 AM EET Ramuthevar, Vadivel MuruganX wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the
+>> content is safe
+>>
+>> From: Ramuthevar Vadivel Murugan
+>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> This patch adds a spi-mem framework adaptation over cadence-quadspi driver.
+> 
+> you need to specify on which versions of the controller you tested this.
+> 
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan
+>> <vadivel.muruganx.ramuthevar@linux.intel.com> Signed-off-by: Vignesh
+>> Raghavendra <vigneshr@ti.com>
+>> ---
+>>  drivers/mtd/spi-nor/cadence-quadspi.c | 538
+>> +++++++++++++--------------------- 1 file changed, 209 insertions(+), 329
+>> deletions(-)
+>>
+>> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c
+>> b/drivers/mtd/spi-nor/cadence-quadspi.c index 494dcab4aaaa..7b52e109036e
+>> 100644
+>> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
+>> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+>> @@ -3,6 +3,8 @@
+> 
+> cut
+> 
+>>  struct cqspi_st {
+>> @@ -70,23 +66,20 @@ struct cqspi_st {
+>>         void __iomem            *ahb_base;
+>>         resource_size_t         ahb_size;
+>>         struct completion       transfer_complete;
+>> -       struct mutex            bus_mutex;
+> 
+> are we now supporting just a single flash on the bus? Does 
+> CQSPI_MAX_CHIPSELECT make sense anymore?
+> 
 
-CC: kbuild-all@lists.01.org
-In-Reply-To: <20200318111144.39525-5-alim.akhtar@samsung.com>
-References: <20200318111144.39525-5-alim.akhtar@samsung.com>
-TO: Alim Akhtar <alim.akhtar@samsung.com>
-CC: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-scsi@vger.kernel.org
+Driver still supports multiple CS but SPI core takes care of
+serialization by holding bus_lock_mutex in spi_mem_access_start()
 
-Hi Alim,
+So, I don't see a need for this mutex
 
-I love your patch! Perhaps something to improve:
+[...]
 
-[auto build test WARNING on phy/next]
-[also build test WARNING on scsi/for-next robh/for-next mkp-scsi/for-next v5.6-rc6 next-20200318]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> cut
+> 
+>> -static int cqspi_of_get_pdata(struct platform_device *pdev)
+>> +static int cqspi_of_get_pdata(struct cqspi_st *cqspi)
+>>  {
+>> -       struct device_node *np = pdev->dev.of_node;
+>> -       struct cqspi_st *cqspi = platform_get_drvdata(pdev);
+>> -
+>> -       cqspi->is_decoded_cs = of_property_read_bool(np,
+>> "cdns,is-decoded-cs"); +       struct device *dev = &cqspi->pdev->dev;
+> 
+> you dropped the reading of this property, but you kept the is_decoded_cs 
+> member, shouldn't you drop the latter too? I guess this deserves a dedicated 
+> patch.
+> 
 
-url:    https://github.com/0day-ci/linux/commits/Alim-Akhtar/exynos-ufs-Add-support-for-UFS-HCI/20200319-022156
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git next
-:::::: branch date: 7 hours ago
-:::::: commit date: 7 hours ago
+is_decoded_cs cannot be supported with spi-mem as this requires
+knowlegde of flash geometry which is not available via spi-mem
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+I don't see any user of decoded-cs in the kernel. So, IMO its okay to
+drop entire support in a patch prior to converting driver to spi-mem.
 
->> drivers/scsi/ufs/ufs-exynos.c:931:8-10: WARNING: possible condition with no effect (if == else)
+[...]
 
-# https://github.com/0day-ci/linux/commit/a0a2731081dba4edfad146c501203adb97d5947b
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout a0a2731081dba4edfad146c501203adb97d5947b
-vim +931 drivers/scsi/ufs/ufs-exynos.c
+>> @@ -1423,16 +1295,28 @@ static int cqspi_probe(struct platform_device *pdev)
+>> cqspi->current_cs = -1;
+>>         cqspi->sclk = 0;
+>>
+>> -       ret = cqspi_setup_flash(cqspi, np);
+>> +       ret = cqspi_setup_flash(cqspi);
+>>         if (ret) {
+>> -               dev_err(dev, "Cadence QSPI NOR probe failed %d\n", ret);
+>> +               dev_err(dev, "failed to setup flash parameters %d\n", ret);
+>>                 goto probe_setup_failed;
+>>         }
+>>
+>> -       return ret;
+>> +       if (cqspi->use_dac_mode) {
+>> +               ret = cqspi_request_mmap_dma(cqspi);
+> 
+> the driver was requesting the mmap for each available flash and now you do it 
+> once, which is great, but this too has to be made in a dedicated patch.
+>
 
-a0a2731081dba4 Alim Akhtar 2020-03-18  898
-a0a2731081dba4 Alim Akhtar 2020-03-18  899  static void exynos_ufs_specify_pwr_mode(struct device_node *np,
-a0a2731081dba4 Alim Akhtar 2020-03-18  900  				struct exynos_ufs *ufs)
-a0a2731081dba4 Alim Akhtar 2020-03-18  901  {
-a0a2731081dba4 Alim Akhtar 2020-03-18  902  	struct uic_pwr_mode *pwr = &ufs->pwr_req;
-a0a2731081dba4 Alim Akhtar 2020-03-18  903  	const char *str = NULL;
-a0a2731081dba4 Alim Akhtar 2020-03-18  904
-a0a2731081dba4 Alim Akhtar 2020-03-18  905  	if (!of_property_read_string(np, "ufs,pwr-attr-mode", &str)) {
-a0a2731081dba4 Alim Akhtar 2020-03-18  906  		if (!strncmp(str, "FAST", sizeof("FAST")))
-a0a2731081dba4 Alim Akhtar 2020-03-18  907  			pwr->mode = FAST_MODE;
-a0a2731081dba4 Alim Akhtar 2020-03-18  908  		else if (!strncmp(str, "SLOW", sizeof("SLOW")))
-a0a2731081dba4 Alim Akhtar 2020-03-18  909  			pwr->mode = SLOW_MODE;
-a0a2731081dba4 Alim Akhtar 2020-03-18  910  		else if (!strncmp(str, "FAST_auto", sizeof("FAST_auto")))
-a0a2731081dba4 Alim Akhtar 2020-03-18  911  			pwr->mode = FASTAUTO_MODE;
-a0a2731081dba4 Alim Akhtar 2020-03-18  912  		else if (!strncmp(str, "SLOW_auto", sizeof("SLOW_auto")))
-a0a2731081dba4 Alim Akhtar 2020-03-18  913  			pwr->mode = SLOWAUTO_MODE;
-a0a2731081dba4 Alim Akhtar 2020-03-18  914  		else
-a0a2731081dba4 Alim Akhtar 2020-03-18  915  			pwr->mode = FAST_MODE;
-a0a2731081dba4 Alim Akhtar 2020-03-18  916  	} else {
-a0a2731081dba4 Alim Akhtar 2020-03-18  917  		pwr->mode = FAST_MODE;
-a0a2731081dba4 Alim Akhtar 2020-03-18  918  	}
-a0a2731081dba4 Alim Akhtar 2020-03-18  919
-a0a2731081dba4 Alim Akhtar 2020-03-18  920  	if (of_property_read_u32(np, "ufs,pwr-attr-lane", &pwr->lane))
-a0a2731081dba4 Alim Akhtar 2020-03-18  921  		pwr->lane = 1;
-a0a2731081dba4 Alim Akhtar 2020-03-18  922
-a0a2731081dba4 Alim Akhtar 2020-03-18  923  	if (of_property_read_u32(np, "ufs,pwr-attr-gear", &pwr->gear))
-a0a2731081dba4 Alim Akhtar 2020-03-18  924  		pwr->gear = 1;
-a0a2731081dba4 Alim Akhtar 2020-03-18  925
-a0a2731081dba4 Alim Akhtar 2020-03-18  926  	if (IS_UFS_PWR_MODE_HS(pwr->mode)) {
-a0a2731081dba4 Alim Akhtar 2020-03-18  927  		if (!of_property_read_string(np,
-a0a2731081dba4 Alim Akhtar 2020-03-18  928  					"ufs,pwr-attr-hs-series", &str)) {
-a0a2731081dba4 Alim Akhtar 2020-03-18  929  			if (!strncmp(str, "HS_rate_b", sizeof("HS_rate_b")))
-a0a2731081dba4 Alim Akhtar 2020-03-18  930  				pwr->hs_series = PA_HS_MODE_B;
-a0a2731081dba4 Alim Akhtar 2020-03-18 @931  			else if (!strncmp(str, "HS_rate_a",
-a0a2731081dba4 Alim Akhtar 2020-03-18  932  					sizeof("HS_rate_a")))
-a0a2731081dba4 Alim Akhtar 2020-03-18  933  				pwr->hs_series = PA_HS_MODE_A;
-a0a2731081dba4 Alim Akhtar 2020-03-18  934  			else
-a0a2731081dba4 Alim Akhtar 2020-03-18  935  				pwr->hs_series = PA_HS_MODE_A;
-a0a2731081dba4 Alim Akhtar 2020-03-18  936  		} else {
-a0a2731081dba4 Alim Akhtar 2020-03-18  937  			pwr->hs_series = PA_HS_MODE_A;
-a0a2731081dba4 Alim Akhtar 2020-03-18  938  		}
-a0a2731081dba4 Alim Akhtar 2020-03-18  939  	}
-a0a2731081dba4 Alim Akhtar 2020-03-18  940
-a0a2731081dba4 Alim Akhtar 2020-03-18  941  	if (of_property_read_u32_array(
-a0a2731081dba4 Alim Akhtar 2020-03-18  942  		np, "ufs,pwr-local-l2-timer", pwr->l_l2_timer, 3)) {
-a0a2731081dba4 Alim Akhtar 2020-03-18  943  		pwr->l_l2_timer[0] = FC0PROTTIMEOUTVAL;
-a0a2731081dba4 Alim Akhtar 2020-03-18  944  		pwr->l_l2_timer[1] = TC0REPLAYTIMEOUTVAL;
-a0a2731081dba4 Alim Akhtar 2020-03-18  945  		pwr->l_l2_timer[2] = AFC0REQTIMEOUTVAL;
-a0a2731081dba4 Alim Akhtar 2020-03-18  946  	}
-a0a2731081dba4 Alim Akhtar 2020-03-18  947
-a0a2731081dba4 Alim Akhtar 2020-03-18  948  	if (of_property_read_u32_array(
-a0a2731081dba4 Alim Akhtar 2020-03-18  949  		np, "ufs,pwr-remote-l2-timer", pwr->r_l2_timer, 3)) {
-a0a2731081dba4 Alim Akhtar 2020-03-18  950  		pwr->r_l2_timer[0] = FC0PROTTIMEOUTVAL;
-a0a2731081dba4 Alim Akhtar 2020-03-18  951  		pwr->r_l2_timer[1] = TC0REPLAYTIMEOUTVAL;
-a0a2731081dba4 Alim Akhtar 2020-03-18  952  		pwr->r_l2_timer[2] = AFC0REQTIMEOUTVAL;
-a0a2731081dba4 Alim Akhtar 2020-03-18  953  	}
-a0a2731081dba4 Alim Akhtar 2020-03-18  954  }
-a0a2731081dba4 Alim Akhtar 2020-03-18  955
+Not really, current driver does:
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+                        if (!cqspi->rx_chan)
+                                cqspi_request_mmap_dma(cqspi);
+
+So, cqspi_request_mmap_dma() is not called again if it succeeds for at
+least one flash.
+
+Regards
+Vignesh
