@@ -2,104 +2,131 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2490FC4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 22:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49CEC4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 23:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE0F82076C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 22:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A131D2076C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 23:11:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a3I+KiTG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="tMqhN3RA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgCSWsj (ORCPT
+        id S1727258AbgCSXLE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 18:48:39 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:41114 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbgCSWse (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 18:48:34 -0400
-Received: by mail-pg1-f202.google.com with SMTP id t3so3220218pgo.8
-        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 15:48:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=p2FECenFo/SV+lvmBUFJN/N3tCfRxwr2b4eodVl25VI=;
-        b=a3I+KiTG8nWWCWq5o/hbNf7tgyx9XDAThb0tz5gwUfh0lfIOPV14Y+uE5vbEhILmxN
-         xkAUviA4XsZ6iaKNhkGwT+Asbp+hEu/fyIVBR8Zroy967ppdGOV9aVyvD8HVoKpZRXkI
-         b7/axSYnJ87E4WNgdOeBRJS7oeBQbPBXSAijU+4JTuPtzhaKm6TifdtGeHdBKV+6nA5x
-         /kfXfwsPxHTPKl28em94wM71Ug+hSPn26/Fh163ZsHYgliNWvAxA7ZIBhtp9zwBKnSuK
-         k9x6fHhO8VJ7k9i159tiGWe/STUBqXq7Blv3A7H+ZZYf877JDX228pSNax2iTD2avlAW
-         m57A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=p2FECenFo/SV+lvmBUFJN/N3tCfRxwr2b4eodVl25VI=;
-        b=aPElTr2U60CN4L0Ql9oL+CNLBIVuT6mgCcTT7ar81vAx9dfOzQpj5OWJxYwZUqkXgc
-         i83Hku51CK7i/9XtBUzNf/QXYBA/n+lu+4oQ+5bIdpyRHzftZi7QB5m6e6V43Vlv/HvT
-         UzK0oT+3p/fz2/Ghx2LAEp2qO5e2Yh0ru9ZhPC4wcfUbbA3dbAULrlQkM/vYopW6Gtw8
-         R1/7q+oTXWZn8y/QuFhJm8XjSz4rbZNQhSFrji+t6YWP6AmPUaAihnKioDUjyuEkLYnV
-         aparkkW+djTo/GQVIQYg+ov2l9YEf8Uy7QypM9Pze4wAjlxi1m+vFFkizAU3SioSJ0S/
-         V17g==
-X-Gm-Message-State: ANhLgQ1f+Zi0qHprseyHbe6LD2MUffcykmU72v+VOBQvFm6R2bHoFMdl
-        Ar+vv6uZNg3qMShU1tjm14K2qB+FYQ==
-X-Google-Smtp-Source: ADFU+vsiwSXNqmafTIi8B+BiMHfBtFjBqB+UtENXanP1PQfB14qdA7ZVWXrhzSCXbwWiNFPLFow4n0qFDA==
-X-Received: by 2002:a63:c54b:: with SMTP id g11mr5703406pgd.164.1584658111321;
- Thu, 19 Mar 2020 15:48:31 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 15:48:12 -0700
-In-Reply-To: <20200319224812.202013-1-kunyi@google.com>
-Message-Id: <20200319224812.202013-4-kunyi@google.com>
-Mime-Version: 1.0
-References: <20200319224812.202013-1-kunyi@google.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH linux hwmon-next v1 3/3] dt-bindings: (hwmon/sbtsi_tmep) Add
- SB-TSI hwmon driver bindings
-From:   Kun Yi <kunyi@google.com>
-To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     Kun Yi <kunyi@google.com>, openbmc@lists.ozlabs.org,
-        joel@jms.id.au, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 19 Mar 2020 19:11:04 -0400
+Received: from gateway21.websitewelcome.com ([192.185.46.113]:25233 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727237AbgCSXLB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 19:11:01 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id A4CC6400CD18C
+        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 18:11:00 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id F4JYjHOINSl8qF4JYjq1mp; Thu, 19 Mar 2020 18:11:00 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Nw1HXisaj8hrwGMx9cIEuySFdpe+gJCRN7+yZDygmy4=; b=tMqhN3RA73L+F2ZRlm7NB4Fyj4
+        4itUoViCKDmT9ey287FK/CactohMeIlF64mnT9cbbBQnGxHpbK1VDoD+zHm3A4oneWutUjekYPRzT
+        t7DCwlz1tTaPGFviA/0cjC2sQV5MI699d8U37Y9C5F/e7XwGFTcY0cAZHxW4yQUweU4AH8LeT58GQ
+        yZwgoZPVs939QoQmVF6F0I/AA5m1xZhttviETUgFWHLM0F9aRSNbkuU92Gnk3fEX7upE/kMHypskO
+        fAqo0M2jaQXu+2xS6+PqeLzxrhpO4YuDPVicpOy3W2x/o6PQ/sPtqjK4igAfCxKE0S4qPd097nv0n
+        rcD/i0fg==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:54050 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jF4JX-002R3V-3N; Thu, 19 Mar 2020 18:10:59 -0500
+Date:   Thu, 19 Mar 2020 18:10:58 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] of: of_private.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200319231058.GA18540@embeddedor.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jF4JX-002R3V-3N
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:54050
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 25
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document device tree bindings for AMD SB-TSI emulated temperature
-sensor.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Signed-off-by: Kun Yi <kunyi@google.com>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
+
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- .../devicetree/bindings/hwmon/sbtsi_temp.txt       | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/sbtsi_temp.txt
+ drivers/of/of_private.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/sbtsi_temp.txt b/Documentation/devicetree/bindings/hwmon/sbtsi_temp.txt
-new file mode 100644
-index 000000000000..4020f075699e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/sbtsi_temp.txt
-@@ -0,0 +1,14 @@
-+*AMD SoC SB-TSI hwmon driver.
-+
-+Required properties:
-+- compatible: manufacturer and chip name, should be
-+	"amd,sbtsi",
-+
-+- reg: I2C bus address of the device
-+
-+Example:
-+
-+sbtsi@4c {
-+	compatible = "amd,sbtsi";
-+	reg = <0x4c>;
-+};
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 207863c151a5..edc682249c00 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -24,7 +24,7 @@ struct alias_prop {
+ 	const char *alias;
+ 	struct device_node *np;
+ 	int id;
+-	char stem[0];
++	char stem[];
+ };
+ 
+ #if defined(CONFIG_SPARC)
 -- 
-2.25.1.696.g5e7596f4ac-goog
+2.23.0
 
