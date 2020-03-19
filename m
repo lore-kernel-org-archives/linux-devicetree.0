@@ -2,103 +2,89 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B2EC43332
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 22:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB037C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 22:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9E72076C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 22:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1DEF206D7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 22:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcTDl2tD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oVefZhPG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgCSWor (ORCPT
+        id S1727257AbgCSWsT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 18:44:47 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35764 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgCSWor (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 18:44:47 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a20so4821334edj.2;
-        Thu, 19 Mar 2020 15:44:45 -0700 (PDT)
+        Thu, 19 Mar 2020 18:48:19 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:43898 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbgCSWsT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 18:48:19 -0400
+Received: by mail-pg1-f202.google.com with SMTP id v11so3214687pgs.10
+        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 15:48:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mYCC0npBMG0vbAOp6lmFNCRY0zK8adL/9dKbj+Yqe7Y=;
-        b=TcTDl2tDGNgBAaeziYf3pLljPgmzoctYZoU6s2SI0JOlRpxSIpIqVqn7MObZ8hKZMe
-         kY+4IbIhSCoWP5GfPipK8Uq7NFxCVjVuzlGDrRUc8YrWfxK2XvCrb7+UIFy8TT9HwXCq
-         aO0kWPEqEVo+YAmvmpbv5fSntkFg28PXU2iX1BFKorjeo5u1we5dGbXmZZg7bW4Zo184
-         s0KM4beRTjNDr6osxUQDjzt7HBs5sJXJUJEvelOK5qpBSaEyiCO1TUSr4rBVugrrVR++
-         E0doyBA4JPIOzff1LCFyl2rUk40aTjxWW4RnXBunuErpnLWCHhqH/FA/iKFHyIEC1wNM
-         kcMA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=5WtAORZ7SLKlJMzImdvIvZ4TLDWK4cV3hlxUTvVcgm0=;
+        b=oVefZhPGfE8C2nh3FoVLrMo+ZnJ4ufUSS+wfUmo2CPPOaVotexymf6xloK75yv6miQ
+         T4QDN5TI+S6L45Bsr3doVIDDkFHoZr1TyywiKeJhQceW2OFgaISr/5lCc1SCfl5v1qQ2
+         D4VjKzNlH5R0GZ6ze/p9xLyPfFMlw80MGZM+AJvj3LR6rymVoBCQ/hUlDN3sPlnmyTmU
+         39P3y/KWjYRGBhCbyBegy236FPg92GUMGeBJgUM+xiuOwyotD8oJpv8Hc2oqCLLuGfsi
+         vY44qdg+EtEfEWyD09+I/GrtP2eMc5xgFcObEsAG8/w/fJuePiys41jnWqOJScvaAOmy
+         r1MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mYCC0npBMG0vbAOp6lmFNCRY0zK8adL/9dKbj+Yqe7Y=;
-        b=C+fyMx4/bG4hyI4U+iIA4GlHQ6ucv67DTpXwHgBL1f2BRdoiUjRyCsM4f8JqRtGR4p
-         z3HmTM/dnVIwWUrr/LkJ7QfKQzBIO192pFuixZIoBRMwOBIJROsMXT7sVF+WA4G9zhtn
-         bsrf2nvHJ5iVyWzQePaP9TZxJkSttlG5KdYK3rifO9zaNpQzUZzsysO09tdIOULviNuq
-         /Bn86ZcRF/OYsyULjFpUmbm24mvVGyV6w80V4R5Lp9PUUWyks93LN2jqT+R5Q9RY7FXU
-         0eptnFKWvKUGZck1tqfI4qPVHnkccW/Agz1844nwwhd2HJJPnvOS7Xa3GdMmV+hJEucv
-         RvWA==
-X-Gm-Message-State: ANhLgQ04ooWyJnnspI4XWw201UFrj8pHEnGjiHTRI1nP6xorWeFGkmFR
-        YsbUehuW3deIx8q4U0RvEV4=
-X-Google-Smtp-Source: ADFU+vuBct1KRuMGJvc8LRwcNnwdnABrZPBx+DDO4CJ62i+6MJWDN4mUXNUzKi4lBLxvXrqj4/Sx5A==
-X-Received: by 2002:a17:906:4301:: with SMTP id j1mr5699201ejm.46.1584657884798;
-        Thu, 19 Mar 2020 15:44:44 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
-        by smtp.googlemail.com with ESMTPSA id a12sm244253ejy.89.2020.03.19.15.44.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 15:44:44 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] ARM: dts: qcom: add scm definition to ipq806x
-Date:   Thu, 19 Mar 2020 23:44:24 +0100
-Message-Id: <20200319224424.18473-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=5WtAORZ7SLKlJMzImdvIvZ4TLDWK4cV3hlxUTvVcgm0=;
+        b=XhWEa4BXoQ1bOVW3C9drjzevjZPZDcyV0gMqlnQu5jHRQAOquu7ofRIZ37LdOKxbby
+         QnYVaQcgq8UlB0lVC2lgs4uCSMCmlgmrxt1oepgakQEIzP4zysrhtW4tatuWrNr/8En1
+         ZWV9YXCFkiqOxjO6OH6t1vKVhY9oPeb7D9m482vzkAtdWtZG/Bp9xaDwukgiFzsH0klo
+         q31caFpe1bgwkFMaDoldYuUkCUPsGjuoCIUzxBnvkFl7ijrgsrnKowdwETs98UnS65gP
+         Ece0c/QQ1kg+bC4toBG65VrXMjo58dyp7osNhmMJkcqkJs7MlD5RjMmNCdpiKWv2S9Fo
+         GGOQ==
+X-Gm-Message-State: ANhLgQ1mHWrrWi+5irj7Pj0do+r878rObAL0NAKyqmHJ+Ve5AF5SHteG
+        qjdlS/DISQhweC4qeEkS6wk9v6fdPw==
+X-Google-Smtp-Source: ADFU+vv4ppWOXgl7BA5LMYVaLuMmRS7QvvyfGGP9o9MIRW+9mrUpZ7dEgMdw+2umUBVT1P11GBDgo7Qq/Q==
+X-Received: by 2002:a17:90b:19ca:: with SMTP id nm10mr5930332pjb.161.1584658097568;
+ Thu, 19 Mar 2020 15:48:17 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 15:48:09 -0700
+Message-Id: <20200319224812.202013-1-kunyi@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH linux hwmon-next v1 0/3] Add SB-TSI hwmon driver
+From:   Kun Yi <kunyi@google.com>
+To:     jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     Kun Yi <kunyi@google.com>, openbmc@lists.ozlabs.org,
+        joel@jms.id.au, linux-hwmon@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add missing scm definition for ipq806x soc
+*** BLURB HERE ***
+This patchset adds hwmon support for AMD SoC SB-TSI emulated temperature
+sensor and related documentation.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- arch/arm/boot/dts/qcom-ipq8064.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Kun Yi (3):
+  hwmon: (sbtsi) Add basic support for SB-TSI sensors
+  hwmon: (sbtsi) Add documentation
+  dt-bindings: (hwmon/sbtsi_tmep) Add SB-TSI hwmon driver bindings
 
-diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-index 16c0da97932c..bb5f678c869f 100644
---- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-@@ -93,6 +93,12 @@ sleep_clk: sleep_clk {
- 		};
- 	};
- 
-+	firmware {
-+		scm {
-+			compatible = "qcom,scm-ipq806x", "qcom,scm";
-+		};
-+	};
-+
- 	soc: soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+ .../devicetree/bindings/hwmon/sbtsi_temp.txt  |  14 ++
+ Documentation/hwmon/sbtsi_temp.rst            |  33 +++
+ drivers/hwmon/Kconfig                         |  10 +
+ drivers/hwmon/Makefile                        |   1 +
+ drivers/hwmon/sbtsi_temp.c                    | 218 ++++++++++++++++++
+ 5 files changed, 276 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/sbtsi_temp.txt
+ create mode 100644 Documentation/hwmon/sbtsi_temp.rst
+ create mode 100644 drivers/hwmon/sbtsi_temp.c
+
 -- 
-2.25.1
+2.25.1.696.g5e7596f4ac-goog
 
