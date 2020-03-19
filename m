@@ -2,210 +2,153 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054A3C4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 05:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160C5C4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 06:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D684E2072C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 05:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C658920714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 06:22:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Jn3GmlSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgCSF5Z (ORCPT
+        id S1725970AbgCSGWb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 01:57:25 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38251 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgCSF5Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 01:57:24 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jEoAh-0000e1-EN; Thu, 19 Mar 2020 06:56:47 +0100
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jEoAZ-0001zw-VI; Thu, 19 Mar 2020 06:56:39 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: [PATCH v2 5/5] ARM: dts: add Protonic RVT board
-Date:   Thu, 19 Mar 2020 06:56:36 +0100
-Message-Id: <20200319055636.7573-6-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200319055636.7573-1-o.rempel@pengutronix.de>
-References: <20200319055636.7573-1-o.rempel@pengutronix.de>
+        Thu, 19 Mar 2020 02:22:31 -0400
+Received: from mail-mw2nam12on2044.outbound.protection.outlook.com ([40.107.244.44]:17970
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725601AbgCSGWa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 02:22:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GgYNyfoVwEKVV7Eqen2/FTd2W8DOvjFNNMG75RwuFX56pws5I5LfXLkHCn9qH8VtMBYm36msINdul9dirs9LNJfGrne34LjKW9mK/QzptxURlLwmcATyrbn1lpNHMhDB4RzLydHu9md8olzPAcEV6FOQ7Dk9GvTuMiXRXADrwVOnJIyTq/h29zd6jonjeg++6/nFrnBDILT7n/FVha0yrbMHkOxHPTJOw1Y4M1VkVvttquSv1w14JtN1gglxIh6iyjOfMziUiad7aHaPR6KFVqVGLuNQgOvsrOZhtCA8pY4ZuvhGJXaF1x9kt1N6ppcQ7WayoipBrps8EtvI6Hippg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=36BrpSj7lwUug9xNwITkTbD7aTPzoCc9CCLE8KVbIK4=;
+ b=awQ88KRSJJYfmJtESOW0vclAXi4GNzUNeYu1KcZmHLWFWhCglwoh0iVVbQfHjI7yPKuCpMPfiVvbVVoCbfEuCxnIpAfCo4rcpUjRszD+sk3xDeGqp2UAVKJ/DEgGyGSS1z/Kn/MaJfjfv9v0dfqGMpEMDy6aroCZ6wolYkVrJbbeJFLr7Dk7l7z1fIitkovt1i1iUIDJYjbwqCfqafSUIU74NVq7cUlnoK6RmVcR0LXqKQfRigECoFrI/5Cz07Dl83/BWe0gNKIT4fIFmI2306rT8oy7L628p/WitwKJFD39qIQDzGzrJk2HW/Ggpmr+aZ6cywTdEUXXTHwB7rFj7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=36BrpSj7lwUug9xNwITkTbD7aTPzoCc9CCLE8KVbIK4=;
+ b=Jn3GmlSPMUITKMUmdEhakYhMDkRbYCIQi21CeVPbHPBTZRLLMEDds25YHrGCFAUHdK3Wk4UXdha9pNL2zPVfgt88IvKOj4wcSbnwEB3GINrXkzCQ94sGUKTyXSoTcF639BAfuxZGPLe36APpx/ZNxFlWdFWlOnmzA9vDbcQe4oY=
+Received: from MN2PR01CA0027.prod.exchangelabs.com (2603:10b6:208:10c::40) by
+ CH2PR02MB6489.namprd02.prod.outlook.com (2603:10b6:610:36::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.19; Thu, 19 Mar 2020 06:22:26 +0000
+Received: from BL2NAM02FT063.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:10c:cafe::ab) by MN2PR01CA0027.outlook.office365.com
+ (2603:10b6:208:10c::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18 via Frontend
+ Transport; Thu, 19 Mar 2020 06:22:26 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT063.mail.protection.outlook.com (10.152.77.121) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2814.13
+ via Frontend Transport; Thu, 19 Mar 2020 06:22:25 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jEoZV-0004NC-2Q; Wed, 18 Mar 2020 23:22:25 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1jEoZP-000573-VP; Wed, 18 Mar 2020 23:22:20 -0700
+Received: from [172.30.17.108]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1jEoZI-00055z-VZ; Wed, 18 Mar 2020 23:22:13 -0700
+Subject: Re: [PATCH v11 1/5] dt-bindings: display: xlnx: Add ZynqMP DP
+ subsystem bindings
+To:     Hyun Kwon <hyun.kwon@xilinx.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+References: <20200318153728.25843-1-laurent.pinchart@ideasonboard.com>
+ <20200318153728.25843-2-laurent.pinchart@ideasonboard.com>
+ <20200318192651.GA28612@ravnborg.org>
+ <20200319010857.GC27556@smtp.xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <5cc39f54-2131-afb8-eb82-eb04709dad85@xilinx.com>
+Date:   Thu, 19 Mar 2020 07:22:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200319010857.GC27556@smtp.xilinx.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(396003)(376002)(136003)(199004)(46966005)(186003)(36756003)(9786002)(107886003)(336012)(426003)(44832011)(70586007)(70206006)(4326008)(26005)(8936002)(8676002)(110136005)(81156014)(81166006)(54906003)(31686004)(356004)(478600001)(47076004)(2906002)(2616005)(316002)(5660300002)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6489;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d398c4dc-2e74-43a0-dbb1-08d7cbcde476
+X-MS-TrafficTypeDiagnostic: CH2PR02MB6489:
+X-Microsoft-Antispam-PRVS: <CH2PR02MB648965889F4A3DF62634E219C6F40@CH2PR02MB6489.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0347410860
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ca8sWnqjxxWwEJnR42+m9Ee2LRIDgg7ZcQW1WflXW3oVSV4BoXng5SBnwdd2oQi7EeLpKDbi53WM4eTQXcLeH1iwtKynbe6t446AphG9llEzWMt1ZS75HgRI7GAVdxb9pqFS/pyRuHwtmkxhG4K/WZrlQU8CGqpHt8rXuYQD7oAFs3VvduI0Dy9Pt1xKXF9Vzy47wki6VCQ9Mf6YbT3/2s8cbV/PnCvlnVtZvwgFF7lLmnLmqVBciQt6iy5HWL18kbjJLYBIEdFthZc/TCCNM52wxE6cLMw8Hv18Bv3Duc5zv0uvvWwSES1LAu8W/MYi+IOSSWMpB6r/oGhKjo2ilWKOBWQ8LpZBsE9VyNpCz5VvwZY9dHDYUVY6Wlfzl3o1h24+z4XtfErVkh4He3M6Is3vIOZwR0dAcb9ZKo4WeJLCp5pjNgXFLAZqdLm6lZg9uo4b/OkMVzPl2nlwR4UZq3CIB0xG60P6PUxG2KjX4ViEhb32UT9ug3sXa7O3vzONydTJP7cvN01lPciwPKDE4g==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2020 06:22:25.6202
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d398c4dc-2e74-43a0-dbb1-08d7cbcde476
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6489
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Protonic RVT is an internal development platform for a wireless ISObus
-Virtual Terminal based on COTS tablets, and the predecessor of the WD2
-platform.
+On 19. 03. 20 2:08, Hyun Kwon wrote:
+> Hi Sam,
+> 
+> On Wed, 2020-03-18 at 12:26:51 -0700, Sam Ravnborg wrote:
+>> On Wed, Mar 18, 2020 at 05:37:24PM +0200, Laurent Pinchart wrote:
+>>> From: Hyun Kwon <hyun.kwon@xilinx.com>
+>>>
+>>> The bindings describe the ZynqMP DP subsystem. They don't support the
+>>> interface with the programmable logic (FPGA) or audio yet.
+>>>
+>>> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+>>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>
+>> Bikeshedding - examples with indent on 4 spaces to make them easier to
+>> read.
+>>
+>> Would it be possible to make this binding: (GPL-2.0-only OR BSD-2-Clause)
+>> This is preferred for new bindings.
+>> In this case asking Hyun Kwon should be enough?
+> 
+> It should be possible. But to be safer and if needed, I need to check with
+> corperate policy before I can confirm.
+> 
+> Michal, have you already checked about adding 'OR BSD-2-Clause'? or should I
+> take it up to Xilinx legal?
 
-Signed-off-by: David Jander <david@protonic.nl>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- .../devicetree/bindings/arm/fsl.yaml          |   1 +
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/imx6dl-prtrvt.dts           | 108 ++++++++++++++++++
- 3 files changed, 110 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-prtrvt.dts
+I haven't had any discussion with Xilinx legal on this.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 424be1edf005..2e8a03ef5c95 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -168,6 +168,7 @@ properties:
-               - emtrion,emcon-mx6-avari   # emCON-MX6S or emCON-MX6DL SoM on Avari Base
-               - fsl,imx6dl-sabreauto      # i.MX6 DualLite/Solo SABRE Automotive Board
-               - fsl,imx6dl-sabresd        # i.MX6 DualLite SABRE Smart Device Board
-+              - prt,prtrvt                # Protonic RVT board
-               - prt,prtvt7                # Protonic VT7 board
-               - technologic,imx6dl-ts4900
-               - technologic,imx6dl-ts7970
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e53abe1de259..afaccc9bc645 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -446,6 +446,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-nitrogen6x.dtb \
- 	imx6dl-phytec-mira-rdk-nand.dtb \
- 	imx6dl-phytec-pbab01.dtb \
-+	imx6dl-prtrvt.dtb \
- 	imx6dl-prtvt7.dtb \
- 	imx6dl-rex-basic.dtb \
- 	imx6dl-riotboard.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-prtrvt.dts b/arch/arm/boot/dts/imx6dl-prtrvt.dts
-new file mode 100644
-index 000000000000..fddc91b5a113
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-prtrvt.dts
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright (c) 2014 Protonic Holland
-+ */
-+
-+/dts-v1/;
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-prti6q.dtsi"
-+
-+/ {
-+	model = "Protonic RVT board";
-+	compatible = "prt,prtrvt", "fsl,imx6dl";
-+
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = <0x10000000 0x10000000>;
-+	};
-+};
-+
-+&iomuxc {
-+	prti6q {
-+		pinctrl_hog: hoggrp {
-+			fsl,pins = <
-+				/* SGTL5000 sys_mclk */
-+				MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1	0x030b0
-+				/* CAN1_SR + CAN2_SR GPIO outputs */
-+				MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x13070
-+				MX6QDL_PAD_KEY_ROW3__GPIO4_IO13	0x13070
-+
-+				/* CAN1_TERM */
-+				MX6QDL_PAD_GPIO_0__GPIO1_IO00	0x1b0b0
-+				/* ITU656_nRESET */
-+				MX6QDL_PAD_GPIO_2__GPIO1_IO02	0x1b0b0
-+
-+				/* HW revision detect */
-+				/* REV_ID0 */
-+				MX6QDL_PAD_SD4_DAT0__GPIO2_IO08 0x1b0b0
-+				/* REV_ID1 */
-+				MX6QDL_PAD_SD4_DAT1__GPIO2_IO09 0x1b0b0
-+				/* REV_ID2 */
-+				MX6QDL_PAD_SD4_DAT2__GPIO2_IO10 0x1b0b0
-+				/* REV_ID3 */
-+				MX6QDL_PAD_SD4_DAT3__GPIO2_IO11 0x1b0b0
-+				/* REV_ID4 */
-+				MX6QDL_PAD_SD4_DAT4__GPIO2_IO12 0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_leds: ledsgrp {
-+			fsl,pins = <
-+				/* DEBUG0 */
-+				MX6QDL_PAD_GPIO_8__GPIO1_IO08	0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_usbotg: usbotggrp {
-+			fsl,pins = <
-+				/* Not connected */
-+				MX6QDL_PAD_EIM_D21__USB_OTG_OC	0x1b0b0
-+				/* power enable, high active */
-+				MX6QDL_PAD_EIM_D22__GPIO3_IO22  0x1b0b0
-+			>;
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	rtc: pcf8563@51 {
-+		compatible = "nxp,pcf8563";
-+		reg = <0x51>;
-+	};
-+};
-+
-+&pwm1 {
-+	status = "disabled";
-+};
-+
-+&ssi1 {
-+	status = "disabled";
-+};
-+
-+&uart2 {
-+	status = "disabled";
-+};
-+
-+&uart5 {
-+	status = "disabled";
-+};
-+
-+&usbh1 {
-+	status = "disabled";
-+};
-+
-+&can2 {
-+	status = "disabled";
-+};
-+
-+&vpu {
-+	status = "disabled";
-+};
-+
-+&audmux {
-+	status = "disabled";
-+};
-+
-+&ipu1 {
-+	status = "disabled";
-+};
--- 
-2.25.1
+Thanks,
+Michal
 
