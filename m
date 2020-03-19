@@ -2,119 +2,109 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88594C4332E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 11:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D97C4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 11:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6120420739
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 11:36:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FZDcJ94o"
+	by mail.kernel.org (Postfix) with ESMTP id 5722F2070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 11:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725601AbgCSLgD (ORCPT
+        id S1726979AbgCSLgN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 07:36:03 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:61511 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725767AbgCSLgD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 07:36:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584617763; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=uCSWClx9gSFWClnfgPeB6lqVwOSev3ID8/3KAaM1uuw=; b=FZDcJ94oR1Q1z0I2MFX910bU+shMTX2kAzA4Ez7/ngwWzIxWXtEVo31gYnFsqOTvVnht68zs
- GGl5aEYwUtu7OuaZoBJYQCboNaN2iKciHuzsLwJvf3T0ySY1FNw6vmfhF6kuV8pVZvW7acWu
- 0aaiCx+Y78hAB6y1CmBXrbyxT0Y=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e735922.7f10041c5ea0-smtp-out-n03;
- Thu, 19 Mar 2020 11:36:02 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 88B5EC433D2; Thu, 19 Mar 2020 11:36:02 +0000 (UTC)
-Received: from [192.168.1.2] (unknown [183.83.137.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64B85C433CB;
-        Thu, 19 Mar 2020 11:35:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64B85C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v5 1/4] dt-bindings: Introduce SoC sleep stats bindings
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
-        devicetree@vger.kernel.org
-References: <1584505758-21037-1-git-send-email-mkshah@codeaurora.org>
- <1584505758-21037-2-git-send-email-mkshah@codeaurora.org>
- <158456695397.152100.7669140417826227943@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <ab6d61c8-010a-dbed-a9bb-69ee7f0022ea@codeaurora.org>
-Date:   Thu, 19 Mar 2020 17:05:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 07:36:13 -0400
+Received: from mga03.intel.com ([134.134.136.65]:28282 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbgCSLgN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 07:36:13 -0400
+IronPort-SDR: e8zNjWbh0ykkkWfYJWE+GlBp9NqQPwvmsZFeZh5QG1ETpTowMxQDyWk+lj0VdDiZV5o3Sk6y3t
+ K+Bv3W88I1+A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 04:36:12 -0700
+IronPort-SDR: zLFal0iZZQ0ZeR6+e3XbpetkEaXpQZVwtGXSMeK5IxeonJZfwJg60dAil2oiypArdRd8mzsDIw
+ R6s5MCiPToyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,571,1574150400"; 
+   d="scan'208";a="444534943"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Mar 2020 04:36:09 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jEtT9-00B3pc-1y; Thu, 19 Mar 2020 13:36:11 +0200
+Date:   Thu, 19 Mar 2020 13:36:11 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        bingbu.cao@intel.com, srv_heupstream@mediatek.com,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        sj.huang@mediatek.com,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>, louis.kuo@mediatek.com,
+        shengnan.wang@mediatek.com
+Subject: Re: [V3, 2/2] media: i2c: Add DW9768 VCM driver
+Message-ID: <20200319113611.GJ1922688@smile.fi.intel.com>
+References: <20200228155958.20657-1-dongchun.zhu@mediatek.com>
+ <20200228155958.20657-3-dongchun.zhu@mediatek.com>
+ <20200305120516.GQ5379@paasikivi.fi.intel.com>
+ <CAHp75Vf5km-YitoTUAFkr8LZVq2QMep1rC19ZpR-YRbeXgJOVQ@mail.gmail.com>
+ <1584612215.5781.62.camel@mhfsdcap03>
 MIME-Version: 1.0
-In-Reply-To: <158456695397.152100.7669140417826227943@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584612215.5781.62.camel@mhfsdcap03>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Mar 19, 2020 at 06:03:35PM +0800, Dongchun Zhu wrote:
+> On Tue, 2020-03-10 at 12:10 +0200, Andy Shevchenko wrote:
+> > On Thu, Mar 5, 2020 at 2:07 PM Sakari Ailus
+> > <sakari.ailus@linux.intel.com> wrote:
+> > > On Fri, Feb 28, 2020 at 11:59:58PM +0800, Dongchun Zhu wrote:
+> > > > This patch adds a V4L2 sub-device driver for DW9768 lens voice coil,
+> > > > and provides control to set the desired focus via I2C serial interface.
+> > 
+> > ...
+> > 
+> > > > --- a/MAINTAINERS
+> > > > +++ b/MAINTAINERS
+> > > > @@ -5139,6 +5139,7 @@ M:      Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > >  L:   linux-media@vger.kernel.org
+> > > >  T:   git git://linuxtv.org/media_tree.git
+> > > >  S:   Maintained
+> > > > +F:   drivers/media/i2c/dw9768.c
+> > > >  F:   Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
+> > 
+> > This has ordering issues.
+> > Run parse-maintainers.pl to fix.
+> > 
+> 
+> Pardon, how to run parse-maintainers.pl?
+> Locally I ran this script, it occurs some syntax as below.
+> $./scripts/parse-maintainers.pl
 
-On 3/19/2020 2:59 AM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-03-17 21:29:15)
->> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
->>
->> Add device binding documentation for Qualcomm Technologies, Inc. (QTI)
->> SoC sleep stats driver. The driver is used for displaying SoC sleep
->> statistic maintained by Always On Processor or Resource Power Manager.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> ---
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Thanks Stephen.
->
-> Two nits below.
->
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
->> new file mode 100644
->> index 0000000..d0c751d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
->> @@ -0,0 +1,46 @@
-> [...]
->> +
->> +examples:
->> +  # Example of rpmh sleep stats
->> +  - |
->> +    rpmh-sleep-stats@c3f0000 {
-> I would think 'memory' would be a more appropriate node name, but OK.
->
->> +      compatible = "qcom,rpmh-sleep-stats";
->> +      reg = <0 0xc3f0000 0 0x400>;
-> Please add a leading 0 to the address to pad it out to 8 digits.
-I will address this in v6.
->
->> +    };
-Thanks,
-Maulik
+It's a perl script which is made non-executable by some reason.
+
+So, proper run as a parameter to the language interpreter, i.e.
+	$ perl scripts/parse-maintainer.pl
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+With Best Regards,
+Andy Shevchenko
+
+
