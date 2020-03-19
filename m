@@ -2,118 +2,116 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9173FC4332E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D80DC4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E332072D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC0F20754
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:54:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T5wSGnt2"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="itPC5gsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgCSRsN (ORCPT
+        id S1726934AbgCSRyF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:48:13 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45026 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgCSRsN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 13:48:13 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b72so1793121pfb.11
-        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 10:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=iWUSd6tNelA3B2gV8L14dd3S0Goj3iWlFgAqgwk5kPw=;
-        b=T5wSGnt2PrWmaej5pxTQjA5iZ75Iq5B8ryc8SsC0GZUqDnlwetsWMpCtffoLmhaty7
-         MEpRGQOi8ly0/vnWHX7gn8Je3y5VDnIUpNcgALh6uSrWPV9q0Ly1fiQ5RC4Xi02iZE6W
-         JyMt029uRbZPrTBbpHeGtn40yI63DT1zUUIhk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=iWUSd6tNelA3B2gV8L14dd3S0Goj3iWlFgAqgwk5kPw=;
-        b=EwJyC0bgllebDr3r957N8/pygxFhzGrV28dpiAw2p0tObrOvsB6CfGHTjgJdfJDG/E
-         VGs0qxliB8kz1LwDk4T81tatXqrvJ7ZSKuPRkklBDFtlZHHvFEMQMHmSMobH1tju6q9z
-         UlK4B/wuj3J07ZteT341mbMoWVNaNcPjUqx0mvGdMPDm8aNz8v8GztvrmWXChkHu2Oet
-         QfKhJ0BW1La5LLodPqdf8kCPqaJo9tDJVUo2WugsJmuIsWHrm38g61aQH9QMOgORlhXn
-         h1i8r2UQFLuaiMcALSgblJADzWTXRHvqLnlRf0Lr4srI6kcWXKItr13GfN1/gFKZjmvp
-         0S5w==
-X-Gm-Message-State: ANhLgQ1XVJmMUOfd83zjXHUXpPccjVbmrK5x5C2CHghIHmCKOY444xzB
-        fxinI5o5pVPCLdhU1AAqzBz19w==
-X-Google-Smtp-Source: ADFU+vut6Lso223EbxYK+y4BZyU7C3AfV3mD375ioWsMfGKfgEhQlPlHMn0XJNEJoyfTIpfVnP8PYA==
-X-Received: by 2002:a63:c811:: with SMTP id z17mr4386751pgg.41.1584640092091;
-        Thu, 19 Mar 2020 10:48:12 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id h11sm2990799pfq.56.2020.03.19.10.48.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 10:48:11 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 19 Mar 2020 13:54:05 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:9656 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726867AbgCSRyF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:54:05 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JHm9SF030010;
+        Thu, 19 Mar 2020 18:53:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=xhvicN/AH/49Tg2jHic/L9lkAzHjv3HYlGeap+CFKCw=;
+ b=itPC5gsA4ELXAaE5a2xDmNDrb5QWsSt9ffWnFFkd989qno6/JM/OpyoT751KRmhW/tNQ
+ 71qYW6KimHr6RiyjbBsoHXLoJDqjWKcnirjzDlAMbVwek7QEQhR+Ik69n4vnor64SVHA
+ 4hCbsJHZMCrK5CPkIrUwH6pb9kkTCOuc5qvL4zMOLcXfH6lhm0OWuEP8vuyvHdiidnt5
+ IJfMlkjybMUpN4QYPBsXJ6KsXlqPMPsN9yTboHVu94k1OUH6FGjAsoH+1B/HTR194Xzp
+ nZgRYNOWW7u+QfXgNj0UJ9jkZT+EqGp6R266rND85YqQsEPi4/k1HkncEl4vdZmJAqgL 4w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yu8etk926-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 18:53:27 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1CBB6100034;
+        Thu, 19 Mar 2020 18:53:23 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F0DC32BC7BA;
+        Thu, 19 Mar 2020 18:53:22 +0100 (CET)
+Received: from [10.211.9.6] (10.75.127.45) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar
+ 2020 18:53:21 +0100
+Subject: Re: [PATCH] dt-bindings: iio: dac: stm32-dac: convert bindings to
+ json-schema
+To:     Rob Herring <robh@kernel.org>
+CC:     <robh+dt@kernel.org>, <jic23@kernel.org>,
+        <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <olivier.moysan@st.com>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1584543037-32095-1-git-send-email-fabrice.gasnier@st.com>
+ <20200319171231.GA17071@bogus>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <3a1474bd-ae64-96f8-d094-545e0e2eff6c@st.com>
+Date:   Thu, 19 Mar 2020 18:53:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1584356562-13181-1-git-send-email-mkrishn@codeaurora.org>
-References: <1584356562-13181-1-git-send-email-mkrishn@codeaurora.org>
-Subject: Re: [v2] arm64: dts: sc7180: modify assigned clocks for sc7180 target
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-To:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
-Date:   Thu, 19 Mar 2020 10:48:10 -0700
-Message-ID: <158464009041.152100.18425074316530931981@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200319171231.GA17071@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_06:2020-03-19,2020-03-19 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Subject could be "sc7180: update DPU assigned clocks"
+On 3/19/20 6:12 PM, Rob Herring wrote:
+> On Wed, 18 Mar 2020 15:50:37 +0100, Fabrice Gasnier wrote:
+>> Convert the STM32 DAC binding to DT schema format using json-schema
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>> ---
+>>  .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
+>>  .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
+>>  2 files changed, 110 insertions(+), 63 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+>>  create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+>>
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml: $id: relative path/filename doesn't match actual path or filename
+> 	expected: http://devicetree.org/schemas/iio/dac/st,stm32-dac.yaml#
+> 
+> See https://patchwork.ozlabs.org/patch/1257568
+> Please check and re-submit.
 
-Quoting Krishna Manikandan (2020-03-16 04:02:42)
-> Add DISP_CC_MDSS_ROT_CLK and DISP_CC_MDSS_AHB_CLK
-> in the assigned clocks list for sc7180 target.
+Hi Rob,
 
-Why?
+Just sent a V2.
 
->=20
-> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+I fear it's a copy/paste from another patch:
+https://patchwork.ozlabs.org/patch/1223488/
+dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema
 
-Does this need a Fixes: tag?
+Should I send a fix for this one also ?
 
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
-com/sc7180.dtsi
-> index 998f101..e3b60f1 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1544,8 +1544,12 @@
->                                 clock-names =3D "iface", "rot", "lut", "c=
-ore",
->                                               "vsync";
->                                 assigned-clocks =3D <&dispcc DISP_CC_MDSS=
-_MDP_CLK>,
-> -                                                 <&dispcc DISP_CC_MDSS_V=
-SYNC_CLK>;
-> +                                                 <&dispcc DISP_CC_MDSS_V=
-SYNC_CLK>,
-> +                                                 <&dispcc DISP_CC_MDSS_R=
-OT_CLK>,
-> +                                                 <&dispcc DISP_CC_MDSS_A=
-HB_CLK>;
->                                 assigned-clock-rates =3D <300000000>,
-> +                                                      <19200000>,
-> +                                                      <19200000>,
->                                                        <19200000>;
-> =20
->                                 interrupt-parent =3D <&mdss>;
+Please advise,
+Fabrice
+> 
