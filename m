@@ -2,87 +2,94 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A06C4332E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EFCC4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D392207FC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HEgsRj/U"
+	by mail.kernel.org (Postfix) with ESMTP id 9D3E12080C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584637940;
+	bh=fxN4CnnOD6y03mHmAA5C+hhbqj2uKF+4bj47hgkFoVY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OsCEBdEzukjj2NGt2nidMKBp8z7iVRcULdkPastkumZ3VFf4OqyARwrbSI4Sk1O0O
+	 Dg1GlqILv7tr3TffIcdx7jGqNYzniutBSenE8n+e3ayLd7/sATDGXj2O1w2SoWSYpt
+	 HmHkgjhw52x2/nPQdh7Awwr2IAcdBXvg3qd6Vq7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbgCSRMD (ORCPT
+        id S1728438AbgCSRMR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:12:03 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:55481 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727706AbgCSRMD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 13:12:03 -0400
-Received: by mail-pj1-f67.google.com with SMTP id mj6so1289025pjb.5
-        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 10:12:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=R4q81Z5QMrL601yBvgvZ22H1vsVZ7jxrfvWspKctl9U=;
-        b=HEgsRj/Umjt3bDRKeyBagbKVsAB5hqkobxm9VhitVyUU/tOxY/yi2I9xOVa5jDM4mP
-         KQQmIGax4s9s0EA7W0QEw15/AQtqsSSJ0rBRbQj9xQhBOCLgI9mBfgT9owq+wcVo79pE
-         EF8SuLXIFxhyevmOnwReXAKSICSdLSTi4pOKY=
+        Thu, 19 Mar 2020 13:12:17 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41727 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbgCSRMR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 13:12:17 -0400
+Received: by mail-il1-f196.google.com with SMTP id l14so2938868ilj.8;
+        Thu, 19 Mar 2020 10:12:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=R4q81Z5QMrL601yBvgvZ22H1vsVZ7jxrfvWspKctl9U=;
-        b=aAoB6NGzN1JTXiNZZVI9wS/1Fa2SxpLdIpY068/AW1qK9d9tgjG45Eo5yI34eY4Z8P
-         WTodJIe/yzVOCKCQPJgArEjOOuTjORtRpMg7Jjr0FB+w8byzW1Cz2yUKosANqM2i5YML
-         cuzxoMgghbZ59ybXSalmFOdn6B8lsN1WhAxazrRl8hRgyr9LTDDmML8NnKCGQP2Jm/02
-         O516ioRtbp+IVEd4Pqsxu0lHn2qZ8l7nOyUA4cV12kBxcK2b3rQQUpME7LGvZVC917xH
-         lP8T8cOBHBxm8ib9CIiYkc2pMuLCijMP9OeqxlYxX4NE8lDjdqnOnyVf8/OW7UVjguG/
-         LTPQ==
-X-Gm-Message-State: ANhLgQ2yAsyNLSV9Nk4gyHwO6gM4KAxn/jtOZzO0xmGoeG70RCQnTfP+
-        +epCJlRciAzJpD0J/5u1TNS+gQ==
-X-Google-Smtp-Source: ADFU+vuyfRZyn7taxdoEfLj5z8q4S5lLtS97ZUBbW0A013dELnoxNGfgzDf6CXVedEadWpaeBu+AwQ==
-X-Received: by 2002:a17:902:e905:: with SMTP id k5mr4192422pld.274.1584637921149;
-        Thu, 19 Mar 2020 10:12:01 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id x16sm2938956pfn.42.2020.03.19.10.12.00
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FuFy53dKsb2fck0JMwy1FXmxdDEmegXgO4r2caNX4Qo=;
+        b=OLXIkvGw3tJqvUSlP6ONTJRWwZsrZTNqk6ywd2Tc1yN0IxBF7yPsMAPHoxyxnikmlD
+         k6HUvjjsy+ZkZLJD/b/5D/ZzNc2TvhBMIqPGkum6U+N2BpqJaYO2YWCiIXX8t2quYGOZ
+         B9l6Ooq3OXIT5mWeiBFzXRAZvXlNl4duwAsxPjXtlWE+mcTA9u9K7PHudhoHCPNWUvQk
+         Uofse2osD0WeUNHdtFcNgXl3faKzC/zItp01dVoSzU8RozIq7eZagGJxGRSYoxCIVztg
+         cqZyoJ1C9aPVJhzITLFfDlk64GzLy/eosDZ+tufTTuO0+bveW6C9TH7gDlPeFlOMdsMw
+         X/Yw==
+X-Gm-Message-State: ANhLgQ2pOWvmbDrF3UeMe3/SuzDmSDS2L73F8j6RUvKLw0eKEwhOaF96
+        aPj8YMdX62qvCUId6tzDgw==
+X-Google-Smtp-Source: ADFU+vs/qjBgZCguu4PgrA7kda0SwMTPsdT6I/2Mcj/b7bYNjpINO1LuIXtpzuRHB/7LUhmdIByVUQ==
+X-Received: by 2002:a92:35db:: with SMTP id c88mr4010676ilf.187.1584637934049;
+        Thu, 19 Mar 2020 10:12:14 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id y8sm937166iot.14.2020.03.19.10.12.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 10:12:00 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 19 Mar 2020 10:12:13 -0700 (PDT)
+Received: (nullmailer pid 16694 invoked by uid 1000);
+        Thu, 19 Mar 2020 17:12:10 -0000
+Date:   Thu, 19 Mar 2020 11:12:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org, krzk@kernel.org, avri.altman@wdc.com,
+        martin.petersen@oracle.com, kwmad.kim@samsung.com,
+        stanley.chu@mediatek.com, cang@codeaurora.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: phy: Document Samsung UFS PHY
+ bindings
+Message-ID: <20200319171210.GA14990@bogus>
+References: <20200318111144.39525-1-alim.akhtar@samsung.com>
+ <CGME20200318111805epcas5p3e68724d923a07ddd80a45e3316292940@epcas5p3.samsung.com>
+ <20200318111144.39525-2-alim.akhtar@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200319121418.5180-1-srinivas.kandagatla@linaro.org>
-References: <20200319121418.5180-1-srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2] soc: qcom: socinfo: add missing soc_id sysfs entry
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        agross@kernel.org, bjorn.andersson@linaro.org
-Date:   Thu, 19 Mar 2020 10:11:59 -0700
-Message-ID: <158463791978.152100.11401578350608469889@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318111144.39525-2-alim.akhtar@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Srinivas Kandagatla (2020-03-19 05:14:18)
-> Looks like SoC ID is not exported to sysfs for some reason.
-> This patch adds it!
->=20
-> This is mostly used by userspace libraries like Snapdragon
-> Neural Processing Engine (SNPE) SDK for checking supported SoC info.
->=20
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Wed, 18 Mar 2020 16:41:40 +0530, Alim Akhtar wrote:
+> This patch documents Samsung UFS PHY device tree bindings
+> 
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 > ---
+>  .../bindings/phy/samsung,ufs-phy.yaml         | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+> 
 
-Maybe add a Fixes tag?
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/samsung,ufs-phy.example.dt.yaml: example-0: 'ufs-phy@0x15571800' does not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
+
+See https://patchwork.ozlabs.org/patch/1257427
+Please check and re-submit.
