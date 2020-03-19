@@ -1,260 +1,112 @@
-Return-Path: <SRS0=uBtF=5D=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D88BC4332D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 23:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF258C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 00:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3A32076C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 18 Mar 2020 23:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BED20773
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 00:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584575432;
-	bh=qig1wOJ7IgBTZ7kXTk2gpe9JQRnJPM+buCwo1cSu+mA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TizLU/S46PInGHI1j57zICsF7sssI/848qXcLCCW0xH3xexGouS0tAq7XmulB2ZU0
-	 dPcjqDLbNfgQ/KG6Q3ndC7U4ZJV0KEN1SocURSLBZIpN4sMkV8fPUoCUEFY0aIBp0A
-	 TcErOudw9tS8icyQZ2XSt12/u4eER+Ua+Kd2supM=
+	s=default; t=1584577813;
+	bh=s+daCmIgkJ7+NjKAff/EpwgrnpoE3Bw4gorFJuVK7lE=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=b5yz/rodlC/t/WUJaUWL4xWbkS5bsf7wkPNNK5svNLTp9uh5UZOcA98GgSLPkRgSk
+	 5sSEp4Rtj9wbG1kxVLZ42cWBempx1JOboJkMbKyAAimjP4Y5S1fpxKRWryblNJ1i1p
+	 lKl6/9kR4IhWQxAVAEK1cZpDgBAQ93TgcJ45qF1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgCRXub (ORCPT
+        id S1726879AbgCSAaL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:50:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 20:30:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgCRXub (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:50:31 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726596AbgCSAaL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:30:11 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC06D2076C;
-        Wed, 18 Mar 2020 23:50:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614D92076C;
+        Thu, 19 Mar 2020 00:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584575430;
-        bh=qig1wOJ7IgBTZ7kXTk2gpe9JQRnJPM+buCwo1cSu+mA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cLazMcVbX0OWV/lh16fimWRUd6291oIO/HK2kz1wmJ4/LN6IdsggqAO+W7egB78hU
-         8Mrq85fS+WqwPTN3GH6FdGeaWIxq/B6yucDw7/gchrGZRBwlW7Ev4pTmC2qVEN9nUC
-         kqqD58YMRbY1JkKpM6h8y0iLcYzcEiSnOJ+2VY08=
-Received: by mail-qk1-f170.google.com with SMTP id c145so331486qke.12;
-        Wed, 18 Mar 2020 16:50:29 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0SpCuip+/mozR9E45uQxNTxqt+B4isGGsh9zbH1e9efXQpmIM2
-        gmpMbOQGwq/R2FIgWLeCgGsc7TFL4aVEdvUF3Q==
-X-Google-Smtp-Source: ADFU+vsGgf3CiWdZiuk9hVpaRnFNqJkCyylwUsiB5EVfVsqRfIvJJ3ipMxAlOst4B0glkuDEqDWtIgLMddwWogY9zU8=
-X-Received: by 2002:a37:4a85:: with SMTP id x127mr464472qka.152.1584575428917;
- Wed, 18 Mar 2020 16:50:28 -0700 (PDT)
+        s=default; t=1584577810;
+        bh=s+daCmIgkJ7+NjKAff/EpwgrnpoE3Bw4gorFJuVK7lE=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=J0RvQjwcG4ECsSP0uhPm3cSZa7LVzDMQj3cpywfskfbNYITmDrVz/CvifyrnbvZU/
+         G0C4vtFoyBuHIG2jWmnIxdMEmUIQ/Rt6AKielMZXPFocRPhkc9YaL0V86rAvIEofJ+
+         0Zb1/a9SxuLYoyXbGrfweKaXGWgVI4pLIwWz5dFM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200306111353.12906-1-daniel.baluta@oss.nxp.com>
- <20200306111353.12906-2-daniel.baluta@oss.nxp.com> <20200312202306.GA18767@bogus>
- <CAEnQRZCLa+NAk=3M84MxjgOzYQdJXGY9S84dU6HO8GG64Lm_mQ@mail.gmail.com>
-In-Reply-To: <CAEnQRZCLa+NAk=3M84MxjgOzYQdJXGY9S84dU6HO8GG64Lm_mQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 18 Mar 2020 17:50:17 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLNeiPc_isukXKt9wgwNS+kPDujx-Q24V1HJrUv0Fq77w@mail.gmail.com>
-Message-ID: <CAL_JsqLNeiPc_isukXKt9wgwNS+kPDujx-Q24V1HJrUv0Fq77w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: sound: Add FSL CPU DAI bindings
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>, Takashi Iwai <tiwai@suse.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        sound-open-firmware@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1584211798-10332-2-git-send-email-tdas@codeaurora.org>
+References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org> <1584211798-10332-2-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: clock: Add YAML schemas for the QCOM MSS clock bindings
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Date:   Wed, 18 Mar 2020 17:30:09 -0700
+Message-ID: <158457780952.152100.6665964541366590027@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 7:01 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
->
-> Thanks Rob for review. See my comments inline:
->
-> <snip>
->
-> > > +# SPDX-License-Identifier: GPL-2.0
-> >
-> > Dual license new bindings please:
-> >
-> > (GPL-2.0-only OR BSD-2-Clause)
->
-> Ok, will do.
->
-> >
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/sound/fsl,dai.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Generic CPU FSL DAI driver for resource management
-> >
-> > Bindings are for h/w devices, not drivers.
->
-> Indeed. I think I will change it to something like this.
->
-> title: 'FSL CPU DAI for resource management'
->
-> The explanation are already in patch 2/2 of this series but let e
-> explain again what I'm
-> trying to do here and let me know if this makes sense to you.
->
-> Digital Audio Interface device (DAI) are configured by the firmware
-> running on the DSP. The only
-> trouble we have is that we cannot easily handle 'resources' like:
-> clocks, pinctrl, power domains from
-> firmware.
->
-> This is because our architecture is like this:
->
-> M core [running System Controller Firmware]
->             |
->             |
-> A core [Linux]<----> DSP core [SOF firmware]
->
-> In theory, it is possible for DSP core to communicate with M core, but
-> this needs a huge
-> amount of work in order to make it work. We have this on our plans for
-> the future,
-> but we are now trying to do resource management from A core because
-> the infrastructure is already in place.
+Quoting Taniya Das (2020-03-14 11:49:56)
+> The Modem Subsystem clock provider have a bunch of generic properties
+> that are needed in a device tree. Add a YAML schemas for those.
+>=20
+> Add clock ids for GCC MSS and MSS clocks which are required to bring
+> the modem out of reset.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++=
+++++++
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
+>  include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
+>  3 files changed, 80 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-m=
+ss.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml=
+ b/Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+> new file mode 100644
+> index 0000000..72493dd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/clock/qcom,sc7180-mss.yaml#
 
-When you change things in the future, Linux gets to keep supporting
-both ways of doing things? I'd rather just support one way.
+remove 'bindings' above.
 
-> So, the curent driver introduced in this series acts like a Generic
-> resource driver for DAI device. We can
-> have multiple types of DAIs but most of them need the same types of
-> resources (clocks, pinctrl, pm) sof
-> for this reason I made it generic.
->
->
-> >
-> > > +
-> > > +maintainers:
-> > > +  - Daniel Baluta <daniel.baluta@nxp.com>
-> > > +
-> > > +description: |
-> > > +  On platforms with a DSP we need to split the resource handling between
-> > > +  Application Processor (AP) and DSP. On platforms where the DSP doesn't
-> > > +  have an easy access to resources, the AP will take care of
-> > > +  configuring them. Resources handled by this generic driver are: clocks,
-> > > +  power domains, pinctrl.
-> >
-> > The DT should define a DSP node with resources that are part of the
-> > DSP. What setup the AP has to do should be implied by the compatible
-> > string and possibly what resources are described.
->
-> We already have a DSP node: Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-> but I thought that the resources attached to DAIs are separated from
-> the resources
-> attached to the DSP device.
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Modem Clock Controller Binding
+> +
+> +maintainers:
+> +  - Taniya Das <tdas@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm modem clock control module which supports the clocks.
+> +
+> +  See also dt-bindings/clock/qcom,mss-sc7180.h.
 
-I'd agree if the DAI was fully described in the DT.
+Can you follow how for example gcc-sc7180 does this?
 
-> In the great scheme of ALSA we usually have things like this:
->
-> FE         <----->       BE
->
-> In the SOF world FE are defined by topology framework. Back ends are
-> defined by the machine driver:
->
-> On the BE side we have:
-> - codec  -> this is the specific code
-> - platform -> this is the DSP
-> - cpu -> this is our Generic DAI device
->
-> Now, I'm wondering if we can get rid of cpu here and make platform
-> node (dsp) take care of every
-> resource (this looks not natural).
-
-I would think about how the DT will look when the DSP manages all
-these resources itself and how the kernel drivers evolve. I think
-perhaps if you can get rid of the DT part and just define the
-resources in the driver, then the future transition would be easier.
-
-> Perhaps Mark, Liam or Pierre can help me with this.
->
->
-> >
-> > Or maybe the audio portion of the DSP is a child node...
-> >
-> > > +
-> > > +properties:
-> > > +  '#sound-dai-cells':
-> > > +    const: 0
-> > > +
-> > > +  compatible:
-> > > +    enum:
-> > > +      - fsl,esai-dai
-> > > +      - fsl,sai-dai
-> >
-> > Not very specific. There's only 2 versions of the DSP and ways it is
-> > integrated?
->
-> As I said above this is not about the DSP, but about the Digital Audio
-> Intraface. On i.MX
-> NXP boards we have two types of DAIs: SAI and ESAI.
->
-> <snip>
->
-> > > +  pinctrl-0:
-> > > +    description: Should specify pin control groups used for this controller.
-> > > +
-> > > +  pinctrl-names:
-> > > +    const: default
-> >
-> > pinctrl properties are implicitly allowed an don't have to be listed
-> > here.
->
-> Great.
->
-> >
-> > > +
-> > > +  power-domains:
-> > > +    $ref: '/schemas/types.yaml#/definitions/phandle-array'
-> >
-> > Don't need a type.
-> >
-> > > +    description:
-> > > +      List of phandles and PM domain specifiers, as defined by bindings of the
-> > > +      PM domain provider.
-> >
-> > Don't need to re-define common properties.
-> >
-> > You do need to say how many power domains (maxItems: 1?).
->
-> We support multiple power domains, so technically there is no upper
-> limit. What should I put here in this case?
-
-There's an upper limit in the h/w so there should be some sort of limit.
-
-
-> > > +  fsl,dai-index:
-> > > +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> > > +    description: Physical DAI index, must match the index from topology file
-> >
-> > Sorry, we don't do indexes in DT.
-> >
-> > What's a topology file?
->
-> Topology files are binary blobs that contain the description of an
-> audio pipeline. They are built
-> are written in a specific format and compiled with alsa-tplg tools in userspace.
->
-> Then loaded via firmware interface inside the kernel.
-
-Sounds like a kernel-userspace issue that has nothing to do with DT.
-How do other platforms deal with mulitple DAIs?
-
-Rob
+  See also:
+  - dt-bindings/clock/qcom,mss-sc7180.h
