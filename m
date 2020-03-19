@@ -2,190 +2,110 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D49FC4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 03:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F99C4332E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 04:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2159720776
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 03:25:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584588335;
-	bh=LuTcsZgnAadPMUIfhyA1noeeMKi3R0BIiGevcPZZBvc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zt3YCXSDIjbPD76ANsPYx3lgYh9s2fCgAuRocs2Vxh/s6am9PL/U3kPN2z84NUzSO
-	 C3MhWEzwogTqCk7dZnMdMsjhebYk2BSUzAv4q1tfXv3QZN/krR2tx5Nhc/vc3PI9/F
-	 moZITDZVpmxCLtLkGshJU5Wyo6Gd5dyy6pmqznsI=
+	by mail.kernel.org (Postfix) with ESMTP id 4A23D206D7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 04:28:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="q/oDNNkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgCSDZe (ORCPT
+        id S1725601AbgCSE2q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Mar 2020 23:25:34 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34184 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCSDZe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Mar 2020 23:25:34 -0400
-Received: by mail-io1-f67.google.com with SMTP id h131so817781iof.1;
-        Wed, 18 Mar 2020 20:25:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S5anLZMsOzXiKSI2Q9qRVRtZTctavZWErUY+Qb7ZPsA=;
-        b=WVOnNaNIU3/QVeBTogfuOfWJKN6u/lEFPtCmEJXtoLZ/ho8Rx43TivxBUBA9+GQAwb
-         Zj/dKoKJk+Q/LdZjUGpbMeFS0nhiiCdm75DdLPax3IF4gmD3hWuqHsxVPp1334GDwG7a
-         cCjRFKGb4V8ZaCsrhGleK0GFb/P9FcvThSv57yC5bZpzo8ikCYTRG03hdyYzOkwKdXZ4
-         BwREfQqdPu7GXUV+u9TdQfh3cRHg0vdtGCeyjzbzdwnHWdbYPg5grwD4cpqaWlm351co
-         P72x1InXGjErg56yy5V81pFYj/wE3dnwL4g42eyjfDOR13cFlah2LanZzFaYVoxKeMah
-         W4KA==
-X-Gm-Message-State: ANhLgQ347JTqiqgrT1I6T6b1gugqoVvdU3EkgHCXVyN+PX2iwgcGU/H5
-        bS439bLwdNhPQWbt5QtU9Q==
-X-Google-Smtp-Source: ADFU+vtb+ZlxkqiuBeBUxhCr8h7Qq0fvdiDR6y3QBh9G3qX9Tx4a1iQ8P++RaCdhLuk3JsPDPmjTEA==
-X-Received: by 2002:a02:ac90:: with SMTP id x16mr1231418jan.12.1584588333327;
-        Wed, 18 Mar 2020 20:25:33 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id t86sm335763ili.82.2020.03.18.20.25.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 20:25:32 -0700 (PDT)
-Received: (nullmailer pid 31095 invoked by uid 1000);
-        Thu, 19 Mar 2020 03:25:28 -0000
-Date:   Wed, 18 Mar 2020 21:25:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-Subject: Re: [PATCH v1 0/36] dt-bindings: display: convert remaning panel
- bindings to DT Schema
-Message-ID: <20200319032528.GL29911@bogus>
-References: <20200315134416.16527-1-sam@ravnborg.org>
+        Thu, 19 Mar 2020 00:28:46 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:22773 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726462AbgCSE2q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 00:28:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584592125; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=0mRFMEJwpdIXaB+jwVtf97Gm3MwCqBL7eIA/yGyn8AI=; b=q/oDNNkHK23aFl0Vl5lFthX1AuzvIJYDTsRPtasxgIgT8KiaIO/C0mV6g01QpXxeCGOWBbZ+
+ LHbBMY3QdIrbl1w6/Skx97BgjNloZcoEAl3Xvli0J/o2R1ZtSDuzA1iB6Yoxq2UDtumBIRe6
+ nbC1f8ZCD5UPikpn7E+VjfH0Pug=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e72f4f1.7fd13655c110-smtp-out-n04;
+ Thu, 19 Mar 2020 04:28:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CDFC3C43637; Thu, 19 Mar 2020 04:28:32 +0000 (UTC)
+Received: from [10.110.35.103] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DC6BC433CB;
+        Thu, 19 Mar 2020 04:28:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DC6BC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH 1/4] dt-bindings: phy: Add binding for qcom,usb-hs-7nm
+To:     Rob Herring <robh@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
+ <1584147293-6763-2-git-send-email-wcheng@codeaurora.org>
+ <20200318220352.GA12501@bogus>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <44d97f2d-eb09-1192-ad20-daef7542a8b0@codeaurora.org>
+Date:   Wed, 18 Mar 2020 21:28:30 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200315134416.16527-1-sam@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200318220352.GA12501@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 02:43:40PM +0100, Sam Ravnborg wrote:
-> Convert remaining(*) panel bindings to DT Schema.
-> 
-> To prepare for the migration a few preparations
-> patches was required:
-> 
-> - te-gpios is now added to panel-common - as this
->   property is used by a few bindings.
-> 
-> - The slave part of spi-controller.yaml was migrated to a
->   new file spi-slave.yaml.
->   This was done so spi slaves in panel/ could include
->   this file rather than duplicate property names.
->   => Please review this carefully!
-> 
-> 
-> The original author of the panel bindings are listed as maintainer
-> in the DT Schema. In the few cases the panel binding was also
-> listed in MAINTAINERS I checked that there was a match.
-> It was done manually so I may have missed someone.
-> 
-> All bindings pass dt_binding_check with no warnings.
-> 
-> - "dt-bindings: display: convert ilitek,ili9322 to DT"
->   The .txt file listed some constrains that I did not manage
->   to capture in the DT Schema.
->   And some properties looks like that could be dropped.
->   => Please take a closer look.
-> 
-> - "dt-bindings: display: convert sharp,lq101r1sx01 to DT Schema"  
->   The .txt file describes some constrains, as some properties
->   are mandatory for the main challen, but not allowed
->   for the secondary channel.
->   These constraints are not matched in the DT Schema.
->   => Any hints how to do this would be appreciated.
-> 
-> 
-> Patches made on top of drm-misc-next as of today with no other patches.
-> 
-> (*) Two .txt files reamins:
-> - display-timing.txt, points to display-timings.yaml
-> - panel-dsi-cm.txt, conversion is included in another patch-set
-> 
-> 	Sam
-> 
-> Sam Ravnborg (36):
->       dt-bindings: display: add te-gpios to panel-common
->       dt-bindings: spi: support non-spi bindings as SPI slaves
->       dt-bindings: display: convert samsung,s6e63m0 to DT Schema
->       dt-bindings: display: convert arm,versatile-tft-panel to DT Schema
->       dt-bindings: display: convert boe,himax8279d to DT Schema
->       dt-bindings: display: convert ilitek,ili9322 to DT Schema
->       dt-bindings: display: convert ilitek,ili9881c to DT Schema
->       dt-bindings: display: convert feiyang,fy07024di26a30d to DT Schema
->       dt-bindings: display: convert innolux,p079zca to DT Schema
->       dt-bindings: display: convert innolux,p097pfg to DT Schema
->       dt-bindings: display: convert innolux,p120zdg-bf1 to DT Schema
->       dt-bindings: display: convert jdi,lt070me05000 to DT Schema
->       dt-bindings: display: convert kingdisplay,kd035g6-54nt to DT Schema
->       dt-bindings: display: convert kingdisplay,kd097d04 to DT Schema
->       dt-bindings: display: convert simple lg panels to DT Schema
->       dt-bindings: display: convert lg,lg4573 to DT Schema
->       dt-bindings: display: convert osddisplays,osd101t2587-53ts to DT Schema
->       dt-bindings: display: convert raydium,rm67191 to DT Schema
->       dt-bindings: display: convert rocktech,jh057n00900 to DT Schema
->       dt-bindings: display: convert samsung AMOLED to DT Schema
->       dt-bindings: display: convert samsung,s6d16d0 to DT Schema
->       dt-bindings: display: convert samsung,ld9040 to DT Schema
->       dt-bindings: display: convert samsung,s6e8aa0 to DT Schema
->       dt-bindings: display: convert toppoly panels to DT Schema
->       dt-bindings: display: convert startek,startek-kd050c to DT Schema
->       dt-bindings: display: convert sony,acx565akm to DT Schema
->       dt-bindings: display: convert sitronix,st7701 to DT Schema
->       dt-bindings: display: convert sitronix,st7789v to DT Schema
->       dt-bindings: display: drop unused simple-panel.txt
->       dt-bindings: display: convert sharp,ls043t1le01 to DT Schema
->       dt-bindings: display: convert sharp,lq101r1sx01 to DT Schema
->       dt-bindings: display: convert sharp,ls037v7dw01 to DT Schema
->       dt-bindings: display: convert sharp,lq150x1lg11 to DT Schema
->       dt-bindings: display: convert seiko,43wvf1g to DT Schema
->       dt-bindings: display: convert lgphilips,lb035q02 to DT Schema
->       dt-bindings: display: convert olimex,lcd-olinuxino to DT Schema
 
-I've gone rather quickly thru the series. Other than what I commented 
-on, the rest look fine generally. There may be a couple with similar 
-comments.
 
-Rob
+On 3/18/2020 3:03 PM, Rob Herring wrote:
+> On Fri, 13 Mar 2020 17:54:50 -0700, Wesley Cheng wrote:
+>> This binding shows the descriptions and properties for the
+>> 7nm Synopsis HS USB PHY used on QCOM platforms.
+>>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   | 74 ++++++++++++++++++++++
+>>  1 file changed, 74 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+>>
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> warning: no schema found in file: Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml: ignoring, error parsing file
+> Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml:  while scanning a block scalar
+>   in "<unicode string>", line 59, column 5
+> found a tab character where an indentation space is expected
+>   in "<unicode string>", line 73, column 1
+> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts] Error 1
+> Makefile:1262: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1254748
+> Please check and re-submit.
+> 
+
+Hi Rob,
+
+Sorry for not checking this step beforehand.  I installed the tools for
+device tree validation, ran the same check, and resolved the errors.
+Will resubmit the series with the changes.
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
