@@ -2,115 +2,99 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4834C4332E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 05:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D7AC4332E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 05:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA7820732
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 05:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6253A2072C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 05:40:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JmNI0Tyn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DEClMfOt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbgCSFhk (ORCPT
+        id S1725812AbgCSFkm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 01:37:40 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:22675 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725787AbgCSFhj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 01:37:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584596259; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=CQCEPvvCGvjhPFGRaKNikUAsx4+h7xrA2QxZN1jGhEk=; b=JmNI0TynOivE0z006bgJuMma5yD0BckeG7RqJCW3HzV1Sp9dvQIXJkhPpoKuqIlGMFUNSJgG
- 5cL9n5MdRdlN5fReQsi8AYewUniYZTZMVrJcXKKRhrlBkS1SQxJ2rhFrQys7XL5sclKUPkOR
- U/pfQUA+vIbQQZyYzkFnIqOtRBE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e73051e.7fd79f2ddc00-smtp-out-n03;
- Thu, 19 Mar 2020 05:37:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3F833C433BA; Thu, 19 Mar 2020 05:37:33 +0000 (UTC)
-Received: from [192.168.0.104] (unknown [183.82.140.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7DB67C433CB;
-        Thu, 19 Mar 2020 05:37:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7DB67C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v6 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Thu, 19 Mar 2020 01:40:42 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42625 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbgCSFkm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 01:40:42 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h8so624661pgs.9
+        for <devicetree@vger.kernel.org>; Wed, 18 Mar 2020 22:40:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5dFv7/70FKhDKgZsv7z5MRkFYJ6r4vLqdadhMT5bcVs=;
+        b=DEClMfOtnRcUSt/Yj3j7ZFjx+OzidFY/dj2fl7OnWDpSQZemsOdE5BmIXK5wIIm9Cs
+         q9l76oPFb7v6POI8ur1cBXFfBWlKSVDuE7g6S5mIy/RTq1WXCnPFO3/gzp9+SgDbqUEM
+         li+MjvzVXH5Z0KYBsfycUMoTMvFvAujJLJt5/fG5vEY8HZnGjYyK8LSZHiDdoq4VE/Ov
+         rg8N3tj36/Xu3JoNHW5N+q7i+pUOnHYU0QmgXqj0t3OVuzEpiGgKZZh2Dqs2ufCnMFzG
+         ItpOTGZGzt0fMlbNjj4PL4RJw4JkJ+chhx9XzUWXCsZmkpg+Nc/Qh58yCxIl63Fmmt/B
+         pIMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5dFv7/70FKhDKgZsv7z5MRkFYJ6r4vLqdadhMT5bcVs=;
+        b=eqPWB7rsjD0mzVbWlPpO57f5zcJV1fcsK8WhagPmDlC1pLNqMJsvt4PSSt2ZjSamPA
+         kAN+c33kiTVpAQdDvPCLvfwo9igp6sNhksqxhtmGOtMWfc8snCdOwW83Qk2dDcoy/yTX
+         7bAM9lImIdIrgDJNJ9ZedNcVHtauGfjW01Xgl2oPMjI7hE3g4ILyNTupjFrWJg3TT3Rh
+         097e4acBHc8m9Ndf67oX1Krk7PGoN63g7SMvpXJMeILqDcyhqi9pjTC/Y59m/Xj1HG/d
+         aRk4gDAABzUwvoZrgWGxXv2Gyc/thrawtanQhpWyaxELplW7o0SSuCT+xGb00SD1SvPY
+         gtGQ==
+X-Gm-Message-State: ANhLgQ3beiP+e02vDpCrbuxSHGZb6euq98SwLEK3/ZNoKG2G6n8F0mzo
+        S5U0qQAO2UU16cwNqSVjnLnDvq1PAG8=
+X-Google-Smtp-Source: ADFU+vt+jLntul6FGkobwwASG/5WIX4bgXPG687fd+93UVN/ITFrGOV3ahed94A7k0lgV6aBkV+s7g==
+X-Received: by 2002:a62:30c3:: with SMTP id w186mr2111437pfw.245.1584596441255;
+        Wed, 18 Mar 2020 22:40:41 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id l125sm229126pgl.57.2020.03.18.22.40.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 22:40:40 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh+dt@kernel.org
-References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
- <1584211798-10332-2-git-send-email-tdas@codeaurora.org>
- <20200318220443.GA16192@bogus>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <2ceccbac-b289-03d0-665b-6e9ca57b4333@codeaurora.org>
-Date:   Thu, 19 Mar 2020 11:07:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Clark <robdclark@gmail.com>
+Subject: [PATCH 0/4] clk: qcom: gdsc: Handle supply regulators
+Date:   Wed, 18 Mar 2020 22:38:58 -0700
+Message-Id: <20200319053902.3415984-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200318220443.GA16192@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Handle supply regulators for GDSCs to allow probe deferral when regulators are
+not yet present/enabled and to allow the GDSC to enable/disable dependencies as
+needed.
 
+Bjorn Andersson (3):
+  clk: qcom: gdsc: Handle GDSC regulator supplies
+  clk: qcom: mmcc-msm8996: Properly describe GPU_GX gdsc
+  arm64: dts: qcom: msm8996: Make GPU node control GPU_GX GDSC
 
-On 3/19/2020 3:34 AM, Rob Herring wrote:
-> On Sun, 15 Mar 2020 00:19:56 +0530, Taniya Das wrote:
->> The Modem Subsystem clock provider have a bunch of generic properties
->> that are needed in a device tree. Add a YAML schemas for those.
->>
->> Add clock ids for GCC MSS and MSS clocks which are required to bring
->> the modem out of reset.
->>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
->>   include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
->>   include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
->>   3 files changed, 80 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
->>   create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml: $id: relative path/filename doesn't match actual path or filename
-> 	expected: http://devicetree.org/schemas/clock/qcom,sc7180-mss.yaml#
-> 
-> See https://patchwork.ozlabs.org/patch/1254940
-> Please check and re-submit.
-> 
-Hi Rob,
+Rajendra Nayak (1):
+  arm64: dts: qcom: db820c: Add s2 regulator in pmi8994
 
-Thanks, I have fixed it in the next patch series.
-
-Is there a way to catch these before submitting? As I do not see these 
-errors on my machine.
+ .../devicetree/bindings/clock/qcom,mmcc.yaml  |  4 ++++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi  | 14 +++++++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |  2 +-
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi         |  6 +++++
+ drivers/clk/qcom/gdsc.c                       | 24 +++++++++++++++++++
+ drivers/clk/qcom/gdsc.h                       |  4 ++++
+ drivers/clk/qcom/mmcc-msm8996.c               |  2 ++
+ 7 files changed, 55 insertions(+), 1 deletion(-)
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+2.24.0
 
---
