@@ -2,206 +2,100 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5107C4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36DBC4332E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93CEF2070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9520F206D7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:42:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d5VoNCh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgCSJjF (ORCPT
+        id S1726955AbgCSJmZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:39:05 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:59276 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgCSJjE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:39:04 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 5D042FB03;
-        Thu, 19 Mar 2020 10:39:01 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1Xzj51gxscCV; Thu, 19 Mar 2020 10:38:59 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 3A2A8412BE; Thu, 19 Mar 2020 10:38:59 +0100 (CET)
-Date:   Thu, 19 Mar 2020 10:38:59 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 2/2] drm/bridge: Add NWL MIPI DSI host controller
- support
-Message-ID: <20200319093859.GA50655@bogon.m.sigxcpu.org>
-References: <cover.1584544065.git.agx@sigxcpu.org>
- <6f2e65df672a0fe832af29f4ea89fbe7250c3a07.1584544065.git.agx@sigxcpu.org>
- <20200318214639.GA971@ravnborg.org>
+        Thu, 19 Mar 2020 05:42:25 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:26873 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725887AbgCSJmY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:42:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584610944; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=iz2nU03/8cnH2TUu7+7ztdtrDhkWYNP0IQa4F/BXqP4=; b=d5VoNCh0q2ppD512szBole6DhqhjKB5///q0mkFKiaEYlJP3p3d0b4KvJmnpLRS3a9kM2UFq
+ D6CZA0PFTB4hCSFJMMNZYOyn9DIoK5gy54qT1IZ8S/HWdQOBuy1CQOtVzrQJwZPdwCEH6Ztf
+ f2YDrNRStSiYInDzBVwYMQ5C2Jw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e733e7f.7fec72c78a08-smtp-out-n01;
+ Thu, 19 Mar 2020 09:42:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 55451C44792; Thu, 19 Mar 2020 09:42:23 +0000 (UTC)
+Received: from [192.168.0.103] (unknown [106.51.30.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 08BB1C433CB;
+        Thu, 19 Mar 2020 09:42:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 08BB1C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
+        nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
+ <20200318034243.o2metmggzuah6cqw@vireshk-i7>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
+Date:   Thu, 19 Mar 2020 15:12:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200318214639.GA971@ravnborg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200318034243.o2metmggzuah6cqw@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
 
-On Wed, Mar 18, 2020 at 10:46:39PM +0100, Sam Ravnborg wrote:
-> Hi Guido.
+On 3/18/2020 9:12 AM, Viresh Kumar wrote:
+> On 18-03-20, 02:13, Sibi Sankar wrote:
+>> On 2020-01-28 01:33, Sibi Sankar wrote:
+>>> This RFC series aims to extend cpu based scaling support to L3/DDR on
+>>> SDM845 and SC7180 SoCs.
+>>>
+>>
+>> Hey Viresh/Saravana,
+>>
+>> Ping! Can you take a stab at reviewing
+>> the series, it has been on the list for
+>> a while now.
 > 
-> Impressive and very detailed changelog in intro mail - nice.
-> 
-> On Wed, Mar 18, 2020 at 04:09:08PM +0100, Guido Günther wrote:
-> > This adds initial support for the NWL MIPI DSI Host controller found on
-> > i.MX8 SoCs.
-> > 
-> > It adds support for the i.MX8MQ but the same IP can be found on
-> > e.g. the i.MX8QXP.
-> > 
-> > It has been tested on the Librem 5 devkit using mxsfb.
-> > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > Co-developed-by: Robert Chiras <robert.chiras@nxp.com>
-> > Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> > Tested-by: Robert Chiras <robert.chiras@nxp.com>
-> > Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> > ---
-> >  drivers/gpu/drm/bridge/Kconfig   |   16 +
-> >  drivers/gpu/drm/bridge/Makefile  |    3 +
-> >  drivers/gpu/drm/bridge/nwl-dsi.c | 1213 ++++++++++++++++++++++++++++++
-> >  drivers/gpu/drm/bridge/nwl-dsi.h |  144 ++++
-> >  4 files changed, 1376 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.c
-> >  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.h
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> > index 8397bf72d2f3..d41d93d24f16 100644
-> > --- a/drivers/gpu/drm/bridge/Kconfig
-> > +++ b/drivers/gpu/drm/bridge/Kconfig
-> > @@ -55,6 +55,22 @@ config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
-> >  	  to DP++. This is used with the i.MX6 imx-ldb
-> >  	  driver. You are likely to say N here.
-> >  
-> > +config DRM_NWL_MIPI_DSI
-> > +	tristate "Northwest Logic MIPI DSI Host controller"
-> > +	depends on DRM
-> > +	depends on COMMON_CLK
-> > +	depends on OF && HAS_IOMEM
-> > +	select DRM_KMS_HELPER
-> > +	select DRM_MIPI_DSI
-> > +	select DRM_PANEL_BRIDGE
-> > +	select GENERIC_PHY_MIPI_DPHY
-> > +	select MFD_SYSCON
-> > +	select MULTIPLEXER
-> > +	select REGMAP_MMIO
-> > +	help
-> > +	  This enables the Northwest Logic MIPI DSI Host controller as
-> > +	  for example found on NXP's i.MX8 Processors.
-> > +
-> >  config DRM_NXP_PTN3460
-> >  	tristate "NXP PTN3460 DP/LVDS bridge"
-> >  	depends on OF
-> > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> > index 1eb5376c5d68..98581b3128a3 100644
-> > --- a/drivers/gpu/drm/bridge/Makefile
-> > +++ b/drivers/gpu/drm/bridge/Makefile
-> > @@ -15,6 +15,9 @@ obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
-> >  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
-> >  obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
-> >  obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
-> > +obj-$(CONFIG_DRM_NWL_MIPI_DSI) += nwl-dsi.o
-> >  
-> >  obj-y += analogix/
-> >  obj-y += synopsys/
-> > +
-> > +header-test-y += nwl-dsi.h
-> Sorry - but header-test-y support was ripped out of the kernel again.
-> So this line has no longer any effect.
+> I believe this depends on Saravana's series on which I have raised
+> some doubts few weeks back ? I am still waiting for them to get
+> clarified by him.
 
-Missed that removal, dropped.
+Could you please post a link to the discussion that you are referring to here?
+I looked at a few links posted in the cover letter as dependencies and it seems
+like the discussions are pending for *months* and not weeks but I might have looked
+at the wrong ones.
 
-> > +
-> > +static void nwl_dsi_bridge_enable(struct drm_bridge *bridge)
-> > +{
-> > +	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
-> > +	int ret;
-> > +
-> > +	/* Step 5 from DSI reset-out instructions */
-> > +	ret = reset_control_deassert(dsi->rst_dpi);
-> > +	if (ret < 0)
-> > +		DRM_DEV_ERROR(dsi->dev, "Failed to deassert DPI: %d\n", ret);
-> I picked this for a general comment.
-> 
->     We have drm_err(drm, "...", ...) which is preferred over DRM_XXX
->     They require a drm_device * that may not be available everywhere.
-> 
-> IMO not a showstopper, but should be trivial to fix (if adrm_device * is
-> a avaiable).
-
-We don't do a drm_dev_alloc so no drm device here afaik tell.
-
-> 
-> > +}
-> > +
-> > +static int nwl_dsi_bridge_attach(struct drm_bridge *bridge)
-> > +{
-> > +	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
-> > +	struct drm_bridge *panel_bridge;
-> > +	struct drm_panel *panel;
-> > +	int ret;
-> 
-> This function now takes a flags argument.
-> In other words - the driver will not build when applied
-> to drm-misc-next.
-
-Fixed by rebasing on next-20200317. I'll send a new version after
-letting this sit for a moment. It'd be so cool to get this queued up so
-we get a working display stack on the imx8mq.
-
-Cheers,
- -- Guido
-
-> 
-> > +
-> > +	ret = drm_of_find_panel_or_bridge(dsi->dev->of_node, 1, 0, &panel,
-> > +					  &panel_bridge);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (panel) {
-> > +		panel_bridge = drm_panel_bridge_add(panel);
-> > +		if (IS_ERR(panel_bridge))
-> > +			return PTR_ERR(panel_bridge);
-> > +	}
-> > +	dsi->panel_bridge = panel_bridge;
-> > +
-> > +	if (!dsi->panel_bridge)
-> > +		return -EPROBE_DEFER;
-> > +
-> > +	return drm_bridge_attach(bridge->encoder, dsi->panel_bridge, bridge);
-> > +}
-> 
-> 	Sam
-> 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
