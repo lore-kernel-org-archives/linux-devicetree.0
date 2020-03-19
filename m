@@ -2,342 +2,149 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646D9C41620
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841E3C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3444420753
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:28:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wSLSvALQ"
+	by mail.kernel.org (Postfix) with ESMTP id 594672076C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725767AbgCSJ2Z (ORCPT
+        id S1725887AbgCSJ3a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:28:25 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46650 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgCSJ2S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 05:28:18 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02J9SBUI010966;
-        Thu, 19 Mar 2020 04:28:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584610091;
-        bh=561JuhzD3npH3d8hwoBzy1dG5L+weQ+n9w1s31zF1oE=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=wSLSvALQMyV4NNGZ5duwY5IaiVS9GWmUgFpSVYVJCQ0fYg6YsPQuwITXl0lnZICt4
-         LIY7TQtR2oGWWSr15j75plBhKzASov6QTi/LuTOhEmIujm5jNjFSq9us7tho0G4W2m
-         s7byZnG4SPlewMj0LuVL9SL+mSkaw95pRwix/Cy4=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02J9SBMX023543
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Mar 2020 04:28:11 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Mar 2020 04:28:10 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Mar 2020 04:28:10 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02J9S4eq088372;
-        Thu, 19 Mar 2020 04:28:09 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>
-CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/3] bindings: sound: Add documentation for TI j721e EVM (CPB and IVI)
-Date:   Thu, 19 Mar 2020 11:28:14 +0200
-Message-ID: <20200319092815.3776-3-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200319092815.3776-1-peter.ujfalusi@ti.com>
-References: <20200319092815.3776-1-peter.ujfalusi@ti.com>
+        Thu, 19 Mar 2020 05:29:30 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:10943
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725767AbgCSJ3a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:29:30 -0400
+X-IronPort-AV: E=Sophos;i="5.70,571,1574118000"; 
+   d="scan'208";a="342902958"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:29:26 +0100
+Date:   Thu, 19 Mar 2020 10:29:26 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] scsi: ufs-exynos: add UFS host support for Exynos
+ SoCs
+Message-ID: <alpine.DEB.2.21.2003191028360.3010@hadrien>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The audio support on the Common Processor Board board is using
-pcm3168a codec connected to McASP10 serializers in parallel setup.
+Perhaps this is intentional, but please check lines 931-935.
 
-The Infotainment board plugs into the Common Processor Board, the support
-of the extension board is extending the CPB audio support by adding
-the two codecs on the expansion board.
+julia
 
-The audio support on the Infotainment Expansion Board consists of McASP0
-connected to two pcm3168a codecs with dedicated set of serializers to each.
-The SCKI for pcm3168a is sourced from j721e AUDIO_REFCLK0 pin.
+---------- Forwarded message ----------
+Date: Thu, 19 Mar 2020 09:31:14 +0800
+From: kbuild test robot <lkp@intel.com>
+To: kbuild@lists.01.org
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH v2 4/5] scsi: ufs-exynos: add UFS host support for Exynos
+    SoCs
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+CC: kbuild-all@lists.01.org
+In-Reply-To: <20200318111144.39525-5-alim.akhtar@samsung.com>
+References: <20200318111144.39525-5-alim.akhtar@samsung.com>
+TO: Alim Akhtar <alim.akhtar@samsung.com>
+CC: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-scsi@vger.kernel.org
+
+Hi Alim,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on phy/next]
+[also build test WARNING on scsi/for-next robh/for-next mkp-scsi/for-next v5.6-rc6 next-20200318]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Alim-Akhtar/exynos-ufs-Add-support-for-UFS-HCI/20200319-022156
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git next
+:::::: branch date: 7 hours ago
+:::::: commit date: 7 hours ago
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+
+>> drivers/scsi/ufs/ufs-exynos.c:931:8-10: WARNING: possible condition with no effect (if == else)
+
+# https://github.com/0day-ci/linux/commit/a0a2731081dba4edfad146c501203adb97d5947b
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout a0a2731081dba4edfad146c501203adb97d5947b
+vim +931 drivers/scsi/ufs/ufs-exynos.c
+
+a0a2731081dba4 Alim Akhtar 2020-03-18  898
+a0a2731081dba4 Alim Akhtar 2020-03-18  899  static void exynos_ufs_specify_pwr_mode(struct device_node *np,
+a0a2731081dba4 Alim Akhtar 2020-03-18  900  				struct exynos_ufs *ufs)
+a0a2731081dba4 Alim Akhtar 2020-03-18  901  {
+a0a2731081dba4 Alim Akhtar 2020-03-18  902  	struct uic_pwr_mode *pwr = &ufs->pwr_req;
+a0a2731081dba4 Alim Akhtar 2020-03-18  903  	const char *str = NULL;
+a0a2731081dba4 Alim Akhtar 2020-03-18  904
+a0a2731081dba4 Alim Akhtar 2020-03-18  905  	if (!of_property_read_string(np, "ufs,pwr-attr-mode", &str)) {
+a0a2731081dba4 Alim Akhtar 2020-03-18  906  		if (!strncmp(str, "FAST", sizeof("FAST")))
+a0a2731081dba4 Alim Akhtar 2020-03-18  907  			pwr->mode = FAST_MODE;
+a0a2731081dba4 Alim Akhtar 2020-03-18  908  		else if (!strncmp(str, "SLOW", sizeof("SLOW")))
+a0a2731081dba4 Alim Akhtar 2020-03-18  909  			pwr->mode = SLOW_MODE;
+a0a2731081dba4 Alim Akhtar 2020-03-18  910  		else if (!strncmp(str, "FAST_auto", sizeof("FAST_auto")))
+a0a2731081dba4 Alim Akhtar 2020-03-18  911  			pwr->mode = FASTAUTO_MODE;
+a0a2731081dba4 Alim Akhtar 2020-03-18  912  		else if (!strncmp(str, "SLOW_auto", sizeof("SLOW_auto")))
+a0a2731081dba4 Alim Akhtar 2020-03-18  913  			pwr->mode = SLOWAUTO_MODE;
+a0a2731081dba4 Alim Akhtar 2020-03-18  914  		else
+a0a2731081dba4 Alim Akhtar 2020-03-18  915  			pwr->mode = FAST_MODE;
+a0a2731081dba4 Alim Akhtar 2020-03-18  916  	} else {
+a0a2731081dba4 Alim Akhtar 2020-03-18  917  		pwr->mode = FAST_MODE;
+a0a2731081dba4 Alim Akhtar 2020-03-18  918  	}
+a0a2731081dba4 Alim Akhtar 2020-03-18  919
+a0a2731081dba4 Alim Akhtar 2020-03-18  920  	if (of_property_read_u32(np, "ufs,pwr-attr-lane", &pwr->lane))
+a0a2731081dba4 Alim Akhtar 2020-03-18  921  		pwr->lane = 1;
+a0a2731081dba4 Alim Akhtar 2020-03-18  922
+a0a2731081dba4 Alim Akhtar 2020-03-18  923  	if (of_property_read_u32(np, "ufs,pwr-attr-gear", &pwr->gear))
+a0a2731081dba4 Alim Akhtar 2020-03-18  924  		pwr->gear = 1;
+a0a2731081dba4 Alim Akhtar 2020-03-18  925
+a0a2731081dba4 Alim Akhtar 2020-03-18  926  	if (IS_UFS_PWR_MODE_HS(pwr->mode)) {
+a0a2731081dba4 Alim Akhtar 2020-03-18  927  		if (!of_property_read_string(np,
+a0a2731081dba4 Alim Akhtar 2020-03-18  928  					"ufs,pwr-attr-hs-series", &str)) {
+a0a2731081dba4 Alim Akhtar 2020-03-18  929  			if (!strncmp(str, "HS_rate_b", sizeof("HS_rate_b")))
+a0a2731081dba4 Alim Akhtar 2020-03-18  930  				pwr->hs_series = PA_HS_MODE_B;
+a0a2731081dba4 Alim Akhtar 2020-03-18 @931  			else if (!strncmp(str, "HS_rate_a",
+a0a2731081dba4 Alim Akhtar 2020-03-18  932  					sizeof("HS_rate_a")))
+a0a2731081dba4 Alim Akhtar 2020-03-18  933  				pwr->hs_series = PA_HS_MODE_A;
+a0a2731081dba4 Alim Akhtar 2020-03-18  934  			else
+a0a2731081dba4 Alim Akhtar 2020-03-18  935  				pwr->hs_series = PA_HS_MODE_A;
+a0a2731081dba4 Alim Akhtar 2020-03-18  936  		} else {
+a0a2731081dba4 Alim Akhtar 2020-03-18  937  			pwr->hs_series = PA_HS_MODE_A;
+a0a2731081dba4 Alim Akhtar 2020-03-18  938  		}
+a0a2731081dba4 Alim Akhtar 2020-03-18  939  	}
+a0a2731081dba4 Alim Akhtar 2020-03-18  940
+a0a2731081dba4 Alim Akhtar 2020-03-18  941  	if (of_property_read_u32_array(
+a0a2731081dba4 Alim Akhtar 2020-03-18  942  		np, "ufs,pwr-local-l2-timer", pwr->l_l2_timer, 3)) {
+a0a2731081dba4 Alim Akhtar 2020-03-18  943  		pwr->l_l2_timer[0] = FC0PROTTIMEOUTVAL;
+a0a2731081dba4 Alim Akhtar 2020-03-18  944  		pwr->l_l2_timer[1] = TC0REPLAYTIMEOUTVAL;
+a0a2731081dba4 Alim Akhtar 2020-03-18  945  		pwr->l_l2_timer[2] = AFC0REQTIMEOUTVAL;
+a0a2731081dba4 Alim Akhtar 2020-03-18  946  	}
+a0a2731081dba4 Alim Akhtar 2020-03-18  947
+a0a2731081dba4 Alim Akhtar 2020-03-18  948  	if (of_property_read_u32_array(
+a0a2731081dba4 Alim Akhtar 2020-03-18  949  		np, "ufs,pwr-remote-l2-timer", pwr->r_l2_timer, 3)) {
+a0a2731081dba4 Alim Akhtar 2020-03-18  950  		pwr->r_l2_timer[0] = FC0PROTTIMEOUTVAL;
+a0a2731081dba4 Alim Akhtar 2020-03-18  951  		pwr->r_l2_timer[1] = TC0REPLAYTIMEOUTVAL;
+a0a2731081dba4 Alim Akhtar 2020-03-18  952  		pwr->r_l2_timer[2] = AFC0REQTIMEOUTVAL;
+a0a2731081dba4 Alim Akhtar 2020-03-18  953  	}
+a0a2731081dba4 Alim Akhtar 2020-03-18  954  }
+a0a2731081dba4 Alim Akhtar 2020-03-18  955
+
 ---
- .../bindings/sound/ti,j721e-cpb-audio.yaml    |  93 +++++++++++
- .../sound/ti,j721e-cpb-ivi-audio.yaml         | 145 ++++++++++++++++++
- 2 files changed, 238 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
- create mode 100644 Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
-
-diff --git a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
-new file mode 100644
-index 000000000000..0355ffc2b01b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
-@@ -0,0 +1,93 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/ti,j721e-cpb-audio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments J721e Common Processor Board Audio Support
-+
-+maintainers:
-+  - Peter Ujfalusi <peter.ujfalusi@ti.com>
-+
-+description: |
-+  The audio support on the board is using pcm3168a codec connected to McASP10
-+  serializers in parallel setup.
-+  The pcm3168a SCKI clock is sourced from j721e AUDIO_REFCLK2 pin.
-+  In order to support 48KHz and 44.1KHz family of sampling rates the parent
-+  clock for AUDIO_REFCLK2 needs to be changed between PLL4 (for 48KHz) and
-+  PLL15 (for 44.1KHz). The same PLLs are used for McASP10's AUXCLK clock via
-+  different HSDIVIDER.
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: ti,j721e-cpb-audio
-+
-+  model:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: User specified audio sound card name
-+
-+  ti,cpb-mcasp:
-+    description: phandle to McASP10
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  ti,cpb-codec:
-+    description: phandle to the pcm3168a codec used on the CPB
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  clocks:
-+    items:
-+      - description: PLL4 clock
-+      - description: PLL15 clock
-+      - description: McASP10 auxclk clock
-+      - description: PLL4_HSDIV0 parent for McASP10 auxclk (for 48KHz)
-+      - description: PLL15_HSDIV0 parent for McASP10 auxclk (for 44.1KHz)
-+      - description: AUDIO_REFCLK2 clock
-+      - description: PLL4_HSDIV2 parent for AUDIO_REFCLK2 clock (for 48KHz)
-+      - description: PLL15_HSDIV2 parent for AUDIO_REFCLK2 clock (for 44.1KHz)
-+
-+  clock-names:
-+    items:
-+      - const: pll4
-+      - const: pll15
-+      - const: cpb-mcasp
-+      - const: cpb-mcasp-48000
-+      - const: cpb-mcasp-44100
-+      - const: audio-refclk2
-+      - const: audio-refclk2-48000
-+      - const: audio-refclk2-44100
-+
-+required:
-+  - compatible
-+  - model
-+  - ti,cpb-mcasp
-+  - ti,cpb-codec
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |+
-+    sound {
-+        compatible = "ti,j721e-cpb-audio";
-+        model = "j721e-cpb";
-+
-+        status = "okay";
-+
-+        ti,cpb-mcasp = <&mcasp10>;
-+        ti,cpb-codec = <&pcm3168a_1>;
-+
-+        clocks = <&pll4>, <&pll15>,
-+                 <&k3_clks 184 1>,
-+                 <&k3_clks 184 2>, <&k3_clks 184 4>,
-+                 <&k3_clks 157 371>,
-+                 <&k3_clks 157 400>, <&k3_clks 157 401>;
-+        clock-names = "pll4", "pll15",
-+                      "cpb-mcasp",
-+                      "cpb-mcasp-48000", "cpb-mcasp-44100",
-+                      "audio-refclk2",
-+                      "audio-refclk2-48000", "audio-refclk2-44100";
-+    };
-diff --git a/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
-new file mode 100644
-index 000000000000..d02c66926418
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
-@@ -0,0 +1,145 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/ti,j721e-cpb-audio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments J721e Common Processor Board Audio Support
-+
-+maintainers:
-+  - Peter Ujfalusi <peter.ujfalusi@ti.com>
-+
-+description: |
-+  The Infotainment board plugs into the Common Processor Board, the support of the
-+  extension board is extending the CPB audio support, decribed in:
-+  sound/ti,j721e-cpb-audio.txt
-+
-+  The audio support on the Infotainment Expansion Board consists of McASP0
-+  connected to two pcm3168a codecs with dedicated set of serializers to each.
-+  The SCKI for pcm3168a is sourced from j721e AUDIO_REFCLK0 pin.
-+
-+  In order to support 48KHz and 44.1KHz family of sampling rates the parent clock
-+  for AUDIO_REFCLK0 needs to be changed between PLL4 (for 48KHz) and PLL15 (for
-+  44.1KHz). The same PLLs are used for McASP0's AUXCLK clock via different
-+  HSDIVIDER.
-+
-+  Note: the same PLL4 and PLL15 is used by the audio support on the CPB!
-+
-+allOf:
-+  - $ref: "ti,j721e-cpb-audio.yaml#"
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: ti,j721e-cpb-ivi-audio
-+
-+  model:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: User specified audio sound card name
-+
-+  ti,cpb-mcasp:
-+    description: phandle to McASP10
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  ti,cpb-codec:
-+    description: phandle to the pcm3168a codec used on the CPB
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  ti,ivi-mcasp:
-+    description: phandle to McASP9
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  ti,ivi-codec-a:
-+    description: phandle to the pcm3168a-A codec on the expansion board
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  ti,ivi-codec-b:
-+    description: phandle to the pcm3168a-B codec on the expansion board
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  clocks:
-+    items:
-+      - description: PLL4 clock
-+      - description: PLL15 clock
-+      - description: McASP10 auxclk clock
-+      - description: PLL4_HSDIV0 parent for McASP10 auxclk (for 48KHz)
-+      - description: PLL15_HSDIV0 parent for McASP10 auxclk (for 44.1KHz)
-+      - description: AUDIO_REFCLK2 clock
-+      - description: PLL4_HSDIV2 parent for AUDIO_REFCLK2 clock (for 48KHz)
-+      - description: PLL15_HSDIV2 parent for AUDIO_REFCLK2 clock (for 44.1KHz)
-+      - description: McASP0 auxclk clock
-+      - description: PLL4_HSDIV0 parent for McASP0 auxclk (for 48KHz)
-+      - description: PLL15_HSDIV0 parent for McASP0 auxclk (for 44.1KHz)
-+      - description: AUDIO_REFCLK0 clock
-+      - description: PLL4_HSDIV2 parent for AUDIO_REFCLK0 clock (for 48KHz)
-+      - description: PLL15_HSDIV2 parent for AUDIO_REFCLK0 clock (for 44.1KHz)
-+
-+  clock-names:
-+    items:
-+      - const: pll4
-+      - const: pll15
-+      - const: cpb-mcasp
-+      - const: cpb-mcasp-48000
-+      - const: cpb-mcasp-44100
-+      - const: audio-refclk2
-+      - const: audio-refclk2-48000
-+      - const: audio-refclk2-44100
-+      - const: ivi-mcasp
-+      - const: ivi-mcasp-48000
-+      - const: ivi-mcasp-44100
-+      - const: audio-refclk0
-+      - const: audio-refclk0-48000
-+      - const: audio-refclk0-44100
-+
-+required:
-+  - compatible
-+  - model
-+  - ti,cpb-mcasp
-+  - ti,cpb-codec
-+  - ti,ivi-mcasp
-+  - ti,ivi-codec-a
-+  - ti,ivi-codec-b
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |+
-+    sound0: sound@0 {
-+        compatible = "ti,j721e-cpb-ivi-audio";
-+        model = "j721e-cpb-ivi
-+
-+        status = "okay";
-+
-+        ti,cpb-mcasp = <&mcasp10>;
-+        ti,cpb-codec = <&pcm3168a_1>;
-+
-+        ti,ivi-mcasp = <&mcasp0>;
-+        ti,ivi-codec-a = <&pcm3168a_a>;
-+        ti,ivi-codec-b = <&pcm3168a_b>;
-+
-+        clocks = <&pll4>, <&pll15>,
-+                 <&k3_clks 184 1>,
-+                 <&k3_clks 184 2>, <&k3_clks 184 4>,
-+                 <&k3_clks 157 371>,
-+                 <&k3_clks 157 400>, <&k3_clks 157 401>,
-+                 <&k3_clks 174 1>,
-+                 <&k3_clks 174 2>, <&k3_clks 174 4>,
-+                 <&k3_clks 157 301>,
-+                 <&k3_clks 157 330>, <&k3_clks 157 331>;
-+        clock-names = "pll4", "pll15",
-+                      "cpb-mcasp",
-+                      "cpb-mcasp-48000", "cpb-mcasp-44100",
-+                      "audio-refclk2",
-+                      "audio-refclk2-48000", "audio-refclk2-44100",
-+                      "ivi-mcasp",
-+                      "ivi-mcasp-48000", "ivi-mcasp-44100",
-+                      "audio-refclk0",
-+                      "audio-refclk0-48000", "audio-refclk0-44100";
-+    };
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
