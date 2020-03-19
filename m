@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A754C43332
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB34C4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E50D2072C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527E12072C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lQRDan5A"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wzRkehLu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgCSQ2c (ORCPT
+        id S1728354AbgCSQ2o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:28:32 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54194 "EHLO
+        Thu, 19 Mar 2020 12:28:44 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54256 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728181AbgCSQ2b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 12:28:31 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JGSLD3085347;
-        Thu, 19 Mar 2020 11:28:21 -0500
+        with ESMTP id S1728274AbgCSQ2o (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 12:28:44 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JGSV6i085374;
+        Thu, 19 Mar 2020 11:28:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584635301;
-        bh=mJfV+9tsEYG5ukC8EERFrenHi+vk4PG18uXOS8eIBcs=;
+        s=ti-com-17Q1; t=1584635311;
+        bh=9FXZPzYPifqRYzvGBy5KD5uaJYiPNXkyPdC17ysMMLo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=lQRDan5AFT2Ck1yz6GSh+DX2n4RRgv3aAQXSaq94B87oXiGEHIP5e4e4lJyNCI91T
-         yN6JrHUBNxm+nOaH24fzncFb7EUWXX46t5jJBOx+MH7y025lu9sG1Hb57Zf4UmdSrN
-         9o/YuISnsEVR5zRxa3jo+Pygx+iBlntnKKh4ZsC8=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JGSLXk110729
+        b=wzRkehLu/Wkt0I/zWWwbLvzr7pt8GZMW7zR4ZeU1qX3yp2UIp6iX6MLqIVt+H6G2L
+         5Qf7wsSDaP9SoyipDC2ly74ylBjEGs2WrRKBKzkfsPuHyK96uHkvBepVKThP7UeGXM
+         7oJybDJl7qMZ3bEVSYNlDp2aqCzOluz6K04dibSU=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JGSVR6104960
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Mar 2020 11:28:21 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 19 Mar 2020 11:28:31 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Mar 2020 11:28:21 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 11:28:30 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Mar 2020 11:28:20 -0500
+ Frontend Transport; Thu, 19 Mar 2020 11:28:30 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JGSJQX047620;
-        Thu, 19 Mar 2020 11:28:20 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JGST0m047764;
+        Thu, 19 Mar 2020 11:28:30 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -60,9 +60,9 @@ CC:     Murali Karicheri <m-karicheri2@ti.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v5 03/11] net: ethernet: ti: ale: add support for mac-only mode
-Date:   Thu, 19 Mar 2020 18:27:58 +0200
-Message-ID: <20200319162806.25705-4-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v5 07/11] arm64: dts: ti: k3-am65-mcu: add cpsw nuss node
+Date:   Thu, 19 Mar 2020 18:28:02 +0200
+Message-ID: <20200319162806.25705-8-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319162806.25705-1-grygorii.strashko@ti.com>
 References: <20200319162806.25705-1-grygorii.strashko@ti.com>
@@ -74,65 +74,86 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The new CPSW ALE version, available on TI K3 AM654/J721E SoCs family,
-allows to switch any external port to MAC only mode. When MAC only mode
-enabled this port be treated like a MAC port for the host. All traffic
-received is only sent to the host. The host must direct traffic to this
-port as the lookup engine will not send traffic to the ports with the
-p0_maconly bit set and the p0_no_learn also set. If p0_maconly bit is set
-and the p0_no_learn is not set, the host can send non-directed packets that
-can be sent to the destination of a MacOnly port. It is also possible that
-The host can broadcast to all ports including MacOnly ports in this mode.
-
-This patch add ALE supprt for MAC only mode.
+Add DT node for the TI AM65x SoC Gigabit Ethernet two ports Switch
+subsystem (CPSW NUSS).
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Tested-by: Murali Karicheri <m-karicheri2@ti.com>
 ---
- drivers/net/ethernet/ti/cpsw_ale.c | 16 ++++++++++++++++
- drivers/net/ethernet/ti/cpsw_ale.h |  2 ++
- 2 files changed, 18 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi | 49 +++++++++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am65.dtsi     |  1 +
+ 2 files changed, 50 insertions(+)
 
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 5815225c000c..719e7846127c 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -779,6 +779,22 @@ static struct ale_control_info ale_controls[ALE_NUM_CONTROLS] = {
- 		.port_shift	= 0,
- 		.bits		= 1,
- 	},
-+	[ALE_PORT_MACONLY]	= {
-+		.name		= "mac_only_port_mode",
-+		.offset		= ALE_PORTCTL,
-+		.port_offset	= 4,
-+		.shift		= 11,
-+		.port_shift	= 0,
-+		.bits		= 1,
-+	},
-+	[ALE_PORT_MACONLY_CAF]	= {
-+		.name		= "mac_only_port_caf",
-+		.offset		= ALE_PORTCTL,
-+		.port_offset	= 4,
-+		.shift		= 13,
-+		.port_shift	= 0,
-+		.bits		= 1,
-+	},
- 	[ALE_PORT_MCAST_LIMIT]	= {
- 		.name		= "mcast_limit",
- 		.offset		= ALE_PORTCTL,
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index 70d0955c2652..eaca73c17ae7 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -62,6 +62,8 @@ enum cpsw_ale_control {
- 	ALE_PORT_UNKNOWN_MCAST_FLOOD,
- 	ALE_PORT_UNKNOWN_REG_MCAST_FLOOD,
- 	ALE_PORT_UNTAGGED_EGRESS,
-+	ALE_PORT_MACONLY,
-+	ALE_PORT_MACONLY_CAF,
- 	ALE_PORT_BCAST_LIMIT,
- 	ALE_PORT_MCAST_LIMIT,
- 	ALE_NUM_CONTROLS,
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+index ad89f93f30e5..e645664f004e 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
+@@ -193,4 +193,53 @@
+ 			#size-cells = <0>;
+ 		};
+ 	};
++
++	mcu_cpsw: ethernet@46000000 {
++		compatible = "ti,am654-cpsw-nuss";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		reg = <0x0 0x46000000 0x0 0x200000>;
++		reg-names = "cpsw_nuss";
++		ranges = <0x0 0x0 0x0 0x46000000 0x0 0x200000>;
++		dma-coherent;
++		clocks = <&k3_clks 5 10>;
++		clock-names = "fck";
++		power-domains = <&k3_pds 5 TI_SCI_PD_EXCLUSIVE>;
++
++		dmas = <&mcu_udmap 0xf000>,
++		       <&mcu_udmap 0xf001>,
++		       <&mcu_udmap 0xf002>,
++		       <&mcu_udmap 0xf003>,
++		       <&mcu_udmap 0xf004>,
++		       <&mcu_udmap 0xf005>,
++		       <&mcu_udmap 0xf006>,
++		       <&mcu_udmap 0xf007>,
++		       <&mcu_udmap 0x7000>;
++		dma-names = "tx0", "tx1", "tx2", "tx3",
++			    "tx4", "tx5", "tx6", "tx7",
++			    "rx";
++
++		ethernet-ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			cpsw_port1: port@1 {
++				reg = <1>;
++				ti,mac-only;
++				label = "port1";
++				ti,syscon-efuse = <&mcu_conf 0x200>;
++				phys = <&phy_gmii_sel 1>;
++			};
++		};
++
++		davinci_mdio: mdio@f00 {
++			compatible = "ti,cpsw-mdio","ti,davinci_mdio";
++			reg = <0x0 0xf00 0x0 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&k3_clks 5 10>;
++			clock-names = "fck";
++			bus_freq = <1000000>;
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+index aea36e29dd32..5be75e430965 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
+@@ -30,6 +30,7 @@
+ 		i2c3 = &main_i2c1;
+ 		i2c4 = &main_i2c2;
+ 		i2c5 = &main_i2c3;
++		ethernet0 = &cpsw_port1;
+ 	};
+ 
+ 	chosen { };
 -- 
 2.17.1
 
