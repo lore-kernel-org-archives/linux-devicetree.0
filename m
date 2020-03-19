@@ -2,206 +2,108 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C10CC4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5DEC4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2013A207FC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdyJIXvw"
+	by mail.kernel.org (Postfix) with ESMTP id 850D1207FC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:06:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584637590;
+	bh=aP9ejx7SnCaC82qYc3Vt82pK0yL3U36c8HGf9fweu5k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BhIR2JWdSVxwG6F8Z9zR929wT+mAIYF+qtePITYH1i49WfSJkOB7o4IB6aWbA0av+
+	 fbtItxz3LdfXl/6eW7D7zPJHs2S2rAX3AyNdyU+sc1Q8mPGqkWkK7xj6v1l+m3MZs9
+	 67WLu83irzT8/RkSkaybhx4Zf5FCynrDb69mtSls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgCSRFA (ORCPT
+        id S1727700AbgCSRGa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:05:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37854 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728361AbgCSRFA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 13:05:00 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w10so4053638wrm.4;
-        Thu, 19 Mar 2020 10:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CVVovl0RgrHxkpFTWtAaqY67MvkCT4lFwy2Yz+E0bfI=;
-        b=AdyJIXvwcfn2Y6nC7+JBjaSg2+drRV5zXWUctcVZ5Ar/Or6pqg06xK/eZofH6UGNp2
-         VO/6R0A91Dm1Z7kccmO4tjQAhvqm9AN9EY1t2jAq/yDuZ/z7eXbq7V5i5Jf+lcetGNJd
-         VmGhm6IHlIrXFPmzrEcGhqeWvmQ04DFsV0wtMdb9jOXj+63tRCTOmIis7WKhczYXNx4B
-         UYDIotY2UJBk8frI7Q9hHJRZ8WDkKMueELoEYhlj0ZVUySbHmSaSaKatD65mQ/d5ZFDq
-         TmbNraPIVQYKpv4EUPyefE2ThwjzmpG/W+11AHxLXM79rFbTGUjptvDyQ/fYGIkMz81S
-         2XNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CVVovl0RgrHxkpFTWtAaqY67MvkCT4lFwy2Yz+E0bfI=;
-        b=MH/X5hhFw6jnUCGl0X+6YkZRJAC/lpBSwg5zzUolAupVzMfcK6titD/AdQgK3rNFNV
-         giaa0cI4NerRPQkUvylnDXrX28hGu/ohyiOJ4PmQpOqNebrkInm94Q/Pvneeon5Wy9LZ
-         QEBMFZHV7jIoa+A07lNS56lDySmtW3kKDwGVyhUjcSROGIqBwL9dyeeJ9avRT1GbykoU
-         P92v639BfxHJZxT7n6Wsq0W2byfpgicLn2lAaqH7HLRqUyNARZYukTcymMzqK6ZwIX55
-         PgoDeqnT0AI2gQWNzF8vo37UDAUZymGyo8yCcrELsvOvNtivu4kBjiBaxIQTHii4giQJ
-         lJmw==
-X-Gm-Message-State: ANhLgQ3KAIw/qdM6uFBqoUDhXX1a+W1WxIYbby+uDXOEx4m0zzsEaTSR
-        ZFNOOIcgKMYM8X/jLMacqQ8=
-X-Google-Smtp-Source: ADFU+vtDIHpcI2KPEBEA1H2X6+8WVrNoCL3Hqm+BFH2MHzew1QP19N2z4c4jc2m0gx59peBW6lHZSA==
-X-Received: by 2002:adf:f652:: with SMTP id x18mr5415216wrp.299.1584637498238;
-        Thu, 19 Mar 2020 10:04:58 -0700 (PDT)
-Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id g3sm4508175wro.93.2020.03.19.10.04.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 10:04:56 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 18:04:55 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/7] dt-bindings: pwm: document the PWM polarity flag
-Message-ID: <20200319170455.GC3354541@ulmo>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-3-oleksandr.suvorov@toradex.com>
- <20200317174344.GB1464607@ulmo>
- <20200317213056.futfiwn4qgr2njye@pengutronix.de>
- <20200318230539.GB2874972@ulmo>
- <20200319070510.gc6hr53gn7n2osvb@pengutronix.de>
+        Thu, 19 Mar 2020 13:06:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727252AbgCSRGa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:06:30 -0400
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A473207FC;
+        Thu, 19 Mar 2020 17:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584637589;
+        bh=aP9ejx7SnCaC82qYc3Vt82pK0yL3U36c8HGf9fweu5k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XM2Syf+m0FPM5y451GLPJloUXJW+SHrVz3gtS+F2kYAKF+JPMq3t3kxXd4T9UhQdu
+         /DH4w1/T/X5JYOS05FN7SiXn2ToTRs263m3yh9l2+FLCPiM2rAy/w8VoC0pGi89aVS
+         MA5ixdCa2OTXbTW7xAYxhbsETQydP+Xw8No5Ku/I=
+Received: by mail-qt1-f172.google.com with SMTP id t13so2422200qtn.13;
+        Thu, 19 Mar 2020 10:06:29 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2rF099seJU1ow3pV63h8W07xUaoYtWv8b1tllhmYdPwuLqWtC9
+        XtklYob0ZKTwB+fWNiMz267qk6UqeP15fucQpg==
+X-Google-Smtp-Source: ADFU+vt+yFqWedpHLHifVRY04DtI47w8tUOPVx49UqRoZIuaFPvx2qIUuM2+JMkhxWeFf5AgL90mTKdywpKvgvFxzBQ=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr4039750qtg.110.1584637586896;
+ Thu, 19 Mar 2020 10:06:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Y5rl02BVI9TCfPar"
-Content-Disposition: inline
-In-Reply-To: <20200319070510.gc6hr53gn7n2osvb@pengutronix.de>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+References: <CAGWqDJ7AccvoxjKfQJ3GytJ-+u56Bk3rEn0sSYv-zCuBe1brAg@mail.gmail.com>
+ <CAL_JsqLz-0myc-PSSaCQWDFXQx+=X9nBSXWsJaGCVqTFn0d5kw@mail.gmail.com> <CAGWqDJ4yA4ikz5MwQQwW8CAvE_dt16iuvN6cKRL2DdAuw8QWww@mail.gmail.com>
+In-Reply-To: <CAGWqDJ4yA4ikz5MwQQwW8CAvE_dt16iuvN6cKRL2DdAuw8QWww@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 19 Mar 2020 11:06:15 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLU4kEmRnXhQ5+gP-ZisS2Za+s6mNFg4RnMdpDtDRQB3g@mail.gmail.com>
+Message-ID: <CAL_JsqLU4kEmRnXhQ5+gP-ZisS2Za+s6mNFg4RnMdpDtDRQB3g@mail.gmail.com>
+Subject: Re: graph connection to node is not bidirectional kernel-5.6.0-rc6
+To:     Vinay Simha B N <simhavcs@gmail.com>
+Cc:     "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Mar 19, 2020 at 9:56 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
+>
+> On Thu, Mar 19, 2020 at 9:16 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Thu, Mar 19, 2020 at 1:31 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
+> > >
+> > > hi,
+> > >
+> > > I am getting the endpoint' is not bidirectional(d2l_in, dsi0_out)
+> > > warning in compilation, built boot image works on qcom apq8016-ifc6309
+> > > board with the dsi->bridge->lvds panel.
+> > > Because of this warning i cannot create a .yaml documentation examples.
+> > > Please suggest.
+> > >
+> > > tc_bridge: bridge@f {
+> >
+> >              ^^^^^^^^
+> >
+> > > arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:253.28-255.9: Warning
+> > > (graph_endpoint): /soc/i2c@78b8000/bridge@39/ports/port@0/endpoint:
+> >
+> >                                      ^^^^^^^^^
+> >
+> > Looks like you have 2 different bridges.
+> >
+> i had two bridges, if we disable one bridge also we get the warning
+>
+> arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:333.53-335.35: Warning
+> (graph_endpoint): /soc/auo,b101xtn01/port/endpoint: graph connection
+> to node '/soc/i2c@78b8000/bridge@f/ports/port@1/endpoint' is not
+> bidirectional
 
---Y5rl02BVI9TCfPar
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You can't just disable nodes. To switch which bridge is enabled, you
+already have to modify remote-endpoint at the other end. So the
+requirement is you have to modify both 'remote-endpoint' properties
+(or really all 3).
 
-On Thu, Mar 19, 2020 at 08:05:10AM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Thu, Mar 19, 2020 at 12:05:39AM +0100, Thierry Reding wrote:
-> > On Tue, Mar 17, 2020 at 10:30:56PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > > Hello Thierry,
-> > >=20
-> > > On Tue, Mar 17, 2020 at 06:43:44PM +0100, Thierry Reding wrote:
-> > > > On Tue, Mar 17, 2020 at 02:32:26PM +0200, Oleksandr Suvorov wrote:
-> > > > > Add the description of PWM_POLARITY_NORMAL flag.
-> > > > >=20
-> > > > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> > > > > ---
-> > > > >=20
-> > > > >  Documentation/devicetree/bindings/pwm/pwm.txt | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > >=20
-> > > > > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Docu=
-mentation/devicetree/bindings/pwm/pwm.txt
-> > > > > index 084886bd721e..440c6b9a6a4e 100644
-> > > > > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
-> > > > > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
-> > > > > @@ -46,6 +46,7 @@ period in nanoseconds.
-> > > > >  Optionally, the pwm-specifier can encode a number of flags (defi=
-ned in
-> > > > >  <dt-bindings/pwm/pwm.h>) in a third cell:
-> > > > >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
-> > > > > +- PWM_POLARITY_NORMAL: don't invert the PWM signal polarity
-> > > >=20
-> > > > This doesn't make sense. PWM_POLARITY_NORMAL is not part of the DT =
-ABI.
-> > >=20
-> > > "is not part of the DT ABI" is hardly a good reason. If it's sensible=
- to
-> > > be used, it is sensible to define it.
-> >=20
-> > That's exactly it. It's not sensible at all to use it.
->=20
-> If you think the argument is "It is not sensible to be used." then please
-> say so and don't add "PWM_POLARITY_NORMAL is not part of the DT ABI."
-> which seems to be irrelevant now.
-
-I did say that, didn't I? I said that it doesn't make sense because it
-isn't part of the ABI. And since this is the document that defines the
-DT ABI, why should we add something that isn't part of the ABI?
-
-Now, if you want to make this part of the ABI, then that should be done
-as part of this patch so that the patch is actually consistent.
-
-> > If you define it here it means people are allowed to do stuff like
-> > this:
-> >=20
-> > 	pwms =3D <&pwm 1234 PWM_POLARITY_INVERTED | PWM_POLARITY_NORMAL>;
-> >=20
-> > which doesn't make sense.
->=20
-> I would hope that a human reader would catch this.
-
-Maybe. At the same time we're now moving towards automatic checking of
-device trees against a binding. These tools will only ever see the
-binary representation, so won't be able to spot this nonsense. The whole
-purpose of having these tools is so that we don't have to do the tedious
-work of manually inspecting all device tree files. It's also not
-guaranteed that we'll even be seeing all of the device tree files ever
-written against these bindings.
-
->=20
-> > What's more, it impossible for the code to even notice that you're
-> > being silly because | PWM_POLARITY_NORMAL is just | 0 and that's just
-> > a nop.
->=20
-> I think this argument is a bad one. Whenever you introduce a
-> function or symbol you can use it in a wrong way. With this argument you
-> can also say GPIO_ACTIVE_LOW doesn't make sense because
->=20
-> 	pwms =3D <&pwm 1234 GPIO_ACTIVE_LOW>;
->=20
-> is silly.
-
-Yes, it's also obviously silly to try and eat a hammer. I was assuming
-people have at least /some/ sense and try not to use GPIO related flags
-with PWM specifiers. And because I think that people aren't totally
-stupid, I think they'll be capable of understanding that by default a
-PWM will be "normal" and only if they want to deviate from "normal" do
-they need to do something special, like specify PWM_POLARITY_INVERTED.
-
-I'm growing tired of this discussion, to be honest. So if you really
-absolutely must have PWM_POLARITY_NORMAL so that you can read DT files
-without having to think, then fine, I'll take a patch that adds that.
-But please let's not confuse the definitions for DT with the polarity
-enum in the API.
-
-Thierry
-
---Y5rl02BVI9TCfPar
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5zpjQACgkQ3SOs138+
-s6HFjg//bYCq9+SPY2/y5xYub6u1UZ/gQnGt3lAjF0sQFhvO5DRux4OMJpsDWrry
-3/HGGq8lvnsjeLHK8a0h5mlTWruNfq4LzF+q5jFIYQENARZsfQSEJMw8e1XS5tnP
-CDOuTN2yHAdZMACBso687GfeQAMEVC3wAF9FVB2rOs+V06TKQvjI9F8l8/RVM/0f
-B4E+DHaIxSrzp80r0XnF2MXlVbm/gDCVDPfKrdF2mnRrp6M0Wz32yuZArCpsAWWH
-J26o7REYk9GP/oCXyx8tKzr0wmrzKKT/O4Qq20cR7Rk/IdNKonhEd4PrZJ9QCEOs
-FMbQBtoSHr9eW1O40y7z5aVCNRQv0u6507x/lkw1exstlBR/CGWe07YQGex71bvK
-3c4Z/mw7bXK+T5XhGh2qHBpRRB3kUtnZbubZHm6AMflLVejEBeEa07Git64RevSL
-L4q/9Nt7SRpmcvahvdPj11cBo2hDcYO4KOsuiPD2IVdcz0KHCmSVFLpFqYMjOhYs
-r4WXQAyB6fcDxiTsPnse+xX6rJyDgJ9qD8TsVgn3/Pj0ToMQsyosaeLoX3o3rH9u
-EpzEhLaHJCVa9wMwknSDLyaejnEw84a/l6fECe28V3KYpJ6MT+EuWqYQSjOY4seE
-lSSil7t0zWcEwwH4EVdgjFe/68jrNsBJEcwBpvwnwVmer5xzogg=
-=t8el
------END PGP SIGNATURE-----
-
---Y5rl02BVI9TCfPar--
+The other options is if you want both connections described, then you
+need 2 'endpoint' nodes to connect both bridges.
