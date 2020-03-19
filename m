@@ -2,165 +2,107 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8020FC4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 08:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28245C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FD32072C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 08:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCC420754
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IHaCZTUc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="w11rE85b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgCSIeM (ORCPT
+        id S1726714AbgCSJ2S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:34:12 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:10252 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725787AbgCSIeL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:34:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584606850; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=WjXzvAYgeus60ZHUiMBAn5ZUUcI2n3FOiiJg0MvlMXI=; b=IHaCZTUc26ayNIQDqjg6WP8IeFCydzYecYwb4jIsJx/vF9YcbJtdE2dKv2G1FtBCIhGofXiV
- z7/TTTnER8MpbbK+PP2wEcIC5OKjWKjGoduAd9l0IzYBYlgfFjnGSerg6Lj6ZVzBzOczgyV/
- +Apk4PjEw2Xdq4KZSJnmuIy6akU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e732e77.7fdc70171848-smtp-out-n04;
- Thu, 19 Mar 2020 08:33:59 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D04D0C43637; Thu, 19 Mar 2020 08:33:58 +0000 (UTC)
-Received: from [192.168.0.103] (unknown [106.51.30.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5507DC432C2;
-        Thu, 19 Mar 2020 08:33:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5507DC432C2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc7180: Fix cpu compatible
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, sibis@codeaurora.org,
-        swboyd@chromium.org, dianders@chromium.org,
-        Andy Gross <agross@kernel.org>
-Cc:     devicetree@vger.kernel.org
-References: <cd0f3d35ca0fc2944fd97e030a28318ff82dd5c1.1584516925.git.amit.kucheria@linaro.org>
- <2526d2b2907116d1bb6f7edd194226eb7e24c333.1584516925.git.amit.kucheria@linaro.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <f78414f8-01c7-1274-14ae-a0222a8f636a@codeaurora.org>
-Date:   Thu, 19 Mar 2020 14:03:36 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 05:28:18 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37996 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgCSJ2S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 05:28:18 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02J9S981111804;
+        Thu, 19 Mar 2020 04:28:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584610089;
+        bh=1dqFYD+YvWSYD5r9z/jBYMnqGA1Pqw3GSKZBl9H07qU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=w11rE85bwPv7qqjtLCUKaHhLn13XyD7gp1+iR84fnPskQ35whhkhDu9/bQoNVrHby
+         bjzvXZS4n1p3znPEiS5CXybgoM6cA5W9TZcL7RTtNxYP1eznLt2l7ja9IBvY7o74K4
+         FuJK7RMQhjVwmhlj6OLJZ0SZds9QhgjSso1/7VA4=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02J9S92t052040
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Mar 2020 04:28:09 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 04:28:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 04:28:08 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02J9S4ep088372;
+        Thu, 19 Mar 2020 04:28:07 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/3] ASoC: ti: davinci-mcasp: Specify stream_name for playback/capture
+Date:   Thu, 19 Mar 2020 11:28:13 +0200
+Message-ID: <20200319092815.3776-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200319092815.3776-1-peter.ujfalusi@ti.com>
+References: <20200319092815.3776-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <2526d2b2907116d1bb6f7edd194226eb7e24c333.1584516925.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+In order to dai stream widgets to be created the stream_name must be set.
 
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ sound/soc/ti/davinci-mcasp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On 3/18/2020 2:38 PM, Amit Kucheria wrote:
-> "arm,armv8" compatible should only be used for software models. Replace
-> it with the real cpu type.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
-
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-
->   arch/arm64/boot/dts/qcom/sc7180.dtsi | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 8011c5fe2a31..a01dfefd90be 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -83,7 +83,7 @@
->   
->   		CPU0: cpu@0 {
->   			device_type = "cpu";
-> -			compatible = "arm,armv8";
-> +			compatible = "qcom,kryo468";
->   			reg = <0x0 0x0>;
->   			enable-method = "psci";
->   			next-level-cache = <&L2_0>;
-> @@ -100,7 +100,7 @@
->   
->   		CPU1: cpu@100 {
->   			device_type = "cpu";
-> -			compatible = "arm,armv8";
-> +			compatible = "qcom,kryo468";
->   			reg = <0x0 0x100>;
->   			enable-method = "psci";
->   			next-level-cache = <&L2_100>;
-> @@ -114,7 +114,7 @@
->   
->   		CPU2: cpu@200 {
->   			device_type = "cpu";
-> -			compatible = "arm,armv8";
-> +			compatible = "qcom,kryo468";
->   			reg = <0x0 0x200>;
->   			enable-method = "psci";
->   			next-level-cache = <&L2_200>;
-> @@ -128,7 +128,7 @@
->   
->   		CPU3: cpu@300 {
->   			device_type = "cpu";
-> -			compatible = "arm,armv8";
-> +			compatible = "qcom,kryo468";
->   			reg = <0x0 0x300>;
->   			enable-method = "psci";
->   			next-level-cache = <&L2_300>;
-> @@ -142,7 +142,7 @@
->   
->   		CPU4: cpu@400 {
->   			device_type = "cpu";
-> -			compatible = "arm,armv8";
-> +			compatible = "qcom,kryo468";
->   			reg = <0x0 0x400>;
->   			enable-method = "psci";
->   			next-level-cache = <&L2_400>;
-> @@ -156,7 +156,7 @@
->   
->   		CPU5: cpu@500 {
->   			device_type = "cpu";
-> -			compatible = "arm,armv8";
-> +			compatible = "qcom,kryo468";
->   			reg = <0x0 0x500>;
->   			enable-method = "psci";
->   			next-level-cache = <&L2_500>;
-> @@ -170,7 +170,7 @@
->   
->   		CPU6: cpu@600 {
->   			device_type = "cpu";
-> -			compatible = "arm,armv8";
-> +			compatible = "qcom,kryo468";
->   			reg = <0x0 0x600>;
->   			enable-method = "psci";
->   			next-level-cache = <&L2_600>;
-> @@ -184,7 +184,7 @@
->   
->   		CPU7: cpu@700 {
->   			device_type = "cpu";
-> -			compatible = "arm,armv8";
-> +			compatible = "qcom,kryo468";
->   			reg = <0x0 0x700>;
->   			enable-method = "psci";
->   			next-level-cache = <&L2_700>;
-> 
-
+diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+index 734ffe925c4d..9cccf6b7a8a2 100644
+--- a/sound/soc/ti/davinci-mcasp.c
++++ b/sound/soc/ti/davinci-mcasp.c
+@@ -1623,12 +1623,14 @@ static struct snd_soc_dai_driver davinci_mcasp_dai[] = {
+ 		.name		= "davinci-mcasp.0",
+ 		.probe		= davinci_mcasp_dai_probe,
+ 		.playback	= {
++			.stream_name = "IIS Playback",
+ 			.channels_min	= 1,
+ 			.channels_max	= 32 * 16,
+ 			.rates 		= DAVINCI_MCASP_RATES,
+ 			.formats	= DAVINCI_MCASP_PCM_FMTS,
+ 		},
+ 		.capture 	= {
++			.stream_name = "IIS Capture",
+ 			.channels_min 	= 1,
+ 			.channels_max	= 32 * 16,
+ 			.rates 		= DAVINCI_MCASP_RATES,
+@@ -1642,6 +1644,7 @@ static struct snd_soc_dai_driver davinci_mcasp_dai[] = {
+ 		.name		= "davinci-mcasp.1",
+ 		.probe		= davinci_mcasp_dai_probe,
+ 		.playback 	= {
++			.stream_name = "DIT Playback",
+ 			.channels_min	= 1,
+ 			.channels_max	= 384,
+ 			.rates		= DAVINCI_MCASP_RATES,
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
