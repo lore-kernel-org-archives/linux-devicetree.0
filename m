@@ -2,101 +2,126 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481CCC4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571D0C4332E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEF1207FC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E410207FC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 16:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584636714;
-	bh=2ze8n/wWhmgGRIbVHJ5udG/S1t4TMsDq+0bbeXYtPok=;
+	s=default; t=1584637014;
+	bh=qITxEULM5Ncg7snJOgrBb4YMWUJLNiO6B7ZZfpryEbQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AxvIeiTbF03Y83v98ly5hPAdhIxtvsU9cpPo7h9Gl0wferkCo1KBZErpxz7e1Gadu
-	 OKUTMjwMeOapH9aGj3KfesIt0EJt4OKpoGb1pl6JpEQ5P5YzuTYcgCYitjGu9fU+OA
-	 dnCD+bpPQaHObl0ghzOfffpRf//z5dpGWgyFMb08=
+	b=RnqKKiiOAX/HLMvMDPJ5+/JIRZzh3KW6ndW5rUtwt0ijmbZCJixYLgufphRGRkZsD
+	 LPzz19Q1KZftS/oIVEcMiFEZt8uO+5rnmzHtIZem3c+TfO9HoK68G5xP5ZlyAi3Taw
+	 2W8fsX4xFGudUItimg0OWTL31K0yMZEQHNVn5Gos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgCSQvx (ORCPT
+        id S1728192AbgCSQ4t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43790 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 12:56:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727146AbgCSQvx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:51:53 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        id S1728180AbgCSQ4s (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:56:48 -0400
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CEEA208D6;
-        Thu, 19 Mar 2020 16:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A22292173E;
+        Thu, 19 Mar 2020 16:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584636712;
-        bh=2ze8n/wWhmgGRIbVHJ5udG/S1t4TMsDq+0bbeXYtPok=;
+        s=default; t=1584637007;
+        bh=qITxEULM5Ncg7snJOgrBb4YMWUJLNiO6B7ZZfpryEbQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QyKov4bFHWG3H4hqZq/lODVKCwb4/xh/+2s+wxcX/FYj+zjf13+HhN7+F6mOULrBB
-         vmZMrFP/4fhhqc/NBLvzJF3B7n4gPr2AM+J7JrT/cEV9I4gCg0kQxBKbTnjmTJlCeg
-         FutoxiHKgH9se4LVod9K+eTPSF/xdCCBH2IwvFms=
-Received: by mail-qk1-f170.google.com with SMTP id d11so3815434qko.3;
-        Thu, 19 Mar 2020 09:51:52 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3sI98XCdliM+lwcqbN3kpkqfwrS002EuDto4BH875pyfycAn+9
-        iBAPvg/lZRa7XLf61TZRptPu3D0XOgMCq+IsUA==
-X-Google-Smtp-Source: ADFU+vsvey+cEo1Zx1LSphcQZh7dQXaoi8CO+gHGsvltymHnmg94ayjCcsPJFezmZufjX/oGzMXW4LGH8CCJv+tB70E=
-X-Received: by 2002:a37:aa92:: with SMTP id t140mr3544418qke.119.1584636711194;
- Thu, 19 Mar 2020 09:51:51 -0700 (PDT)
+        b=UyYhI+DOShWfNvcnPDbFix/e0gh/N8C7iwifqyq1jDDihFHxTuscSm0U4oofGLj5X
+         UVPq4WctqBAv/mUis4FoXDdz7yFea4kuyFzcdjkBorvsOtaVzxkuohLqxztP31vqVa
+         6X/6hr2UGimZf5kdwnL6xWl+kMH/gNXhMjW7bSiw=
+Received: by mail-qk1-f169.google.com with SMTP id j4so3759654qkc.11;
+        Thu, 19 Mar 2020 09:56:47 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3OB01vbwXwcIngFf6NE16U9U2HNys37m3IZ47wbxAjSFie3PaA
+        0LXTKNYq2cn9Dt5fp/e7N7PhBsO20gV3j92Ulg==
+X-Google-Smtp-Source: ADFU+vvx8Mto3b9ke4GB11bW5X8+6B732oYjPwoYLyKyoRcPOIqC6jH4W9EiQR64yH6UJnmnfxtJF04ZJlr3JwvgH1k=
+X-Received: by 2002:a37:4a85:: with SMTP id x127mr4018507qka.152.1584637006758;
+ Thu, 19 Mar 2020 09:56:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200317093922.20785-1-lkundrak@v3.sk> <20200317093922.20785-13-lkundrak@v3.sk>
-In-Reply-To: <20200317093922.20785-13-lkundrak@v3.sk>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 19 Mar 2020 10:51:39 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKMHyDeToZfHpkXEQySoUk=pM+B3+VrpkY4WO2hrJP6SQ@mail.gmail.com>
-Message-ID: <CAL_JsqKMHyDeToZfHpkXEQySoUk=pM+B3+VrpkY4WO2hrJP6SQ@mail.gmail.com>
-Subject: Re: [PATCH 12/28] spi: dt-bindings: spi-controller: Slaves have no
- address cells
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org,
+References: <20200317161022.11181-1-dinguyen@kernel.org> <20200317161022.11181-5-dinguyen@kernel.org>
+ <20200318224042.GA32101@bogus> <30180323-3c74-d04a-b715-3b1f655d6a81@kernel.org>
+In-Reply-To: <30180323-3c74-d04a-b715-3b1f655d6a81@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 19 Mar 2020 10:56:35 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ-c5tvWUMGKu4scy85cGdYHzPxR7NTzEd9V5RQHveW0g@mail.gmail.com>
+Message-ID: <CAL_JsqJ-c5tvWUMGKu4scy85cGdYHzPxR7NTzEd9V5RQHveW0g@mail.gmail.com>
+Subject: Re: [PATCHv3 4/5] dt-bindings: documentation: add clock bindings
+ information for Agilex
+To:     Dinh Nguyen <dinguyen@kernel.org>
+Cc:     linux-clk <linux-clk@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>
+        devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 3:40 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+On Thu, Mar 19, 2020 at 10:16 AM Dinh Nguyen <dinguyen@kernel.org> wrote:
 >
-> SPI controllers in slave mode have a single child node that has no
-> address. Enforce #address-cells of zero instead of one.
+> Hi Rob,
+>
+> On 3/18/20 5:40 PM, Rob Herring wrote:
+> > On Tue, 17 Mar 2020 11:10:21 -0500, Dinh Nguyen wrote:
+> >> Document the Agilex clock bindings, and add the clock header file. The
+> >> clock header is an enumeration of all the different clocks on the Agilex
+> >> platform.
+> >>
+> >> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> >> ---
+> >> v3: address comments from Stephen Boyd
+> >>     fix build error(tab removed in line 37)
+> >>     renamed to intel,agilex.yaml
+> >> v2: convert original document to YAML
+> >> ---
+> >>  .../bindings/clock/intel,agilex.yaml          | 36 ++++++++++
+> >>  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
+> >>  2 files changed, 106 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+> >>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
+> >>
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Error: Documentation/devicetree/bindings/clock/intel,agilex.example.dts:17.3-4 syntax error
+> > FATAL ERROR: Unable to parse input tree
+> > scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml' failed
+> > make[1]: *** [Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml] Error 1
+> > Makefile:1262: recipe for target 'dt_binding_check' failed
+> > make: *** [dt_binding_check] Error 2
+> >
+> > See https://patchwork.ozlabs.org/patch/1256630
+> > Please check and re-submit.
+> >
+>
+> I want to be able check these errors locally before sending the next
+> version. But I keep getting various errors when I try to "make
+> dt_binding_check":
+>
+> Traceback (most recent call last):
+>   File "/bin/dt-doc-validate", line 15, in <module>
+>     import ruamel.yaml
+> ImportError: No module named 'ruamel'
+> Documentation/devicetree/bindings/Makefile:12: recipe for target
+> 'Documentation/devicetree/bindings/arm/l2c2x0.example.dts' failed
+>
+>
+> Do you have a pointer on how to run the dt_binding_check?
 
-Geert has fixed this making 'spi-slave' and '#address-cells' mutually exclusive.
+Documentation/devicetree/writing-schema.rst
 
-https://lore.kernel.org/linux-devicetree/20200306085038.8111-2-geert+renesas@glider.be/
+ruamel should get installed automatically when you run pip3. If you
+just cloned dt-schema, then you still need to run pip on the project
+directory. That's documented in the project readme.
 
 Rob
