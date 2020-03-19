@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC14EC4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2993FC4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9514520870
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 087C220754
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbgCSRmV (ORCPT
+        id S1727382AbgCSRmG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:42:21 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:54921 "EHLO
+        Thu, 19 Mar 2020 13:42:06 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:59047 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgCSRmT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 13:42:19 -0400
+        with ESMTP id S1726934AbgCSRmG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 13:42:06 -0400
 Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MdNHa-1jo2sj1L96-00ZRRu; Thu, 19 Mar 2020 18:42:01 +0100
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MORN0-1ivo7k0Cbu-00Pz7Q; Thu, 19 Mar 2020 18:41:50 +0100
 Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id E9A1C65021B;
-        Thu, 19 Mar 2020 17:42:00 +0000 (UTC)
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id B7A7B65021B;
+        Thu, 19 Mar 2020 17:41:49 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at cetitec.com
 Received: from mail.cetitecgmbh.com ([127.0.0.1])
         by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8esBAehby7dE; Thu, 19 Mar 2020 18:42:00 +0100 (CET)
+        with ESMTP id zJ0c4ug5kAPk; Thu, 19 Mar 2020 18:41:49 +0100 (CET)
 Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 8689A64C8E4;
-        Thu, 19 Mar 2020 18:42:00 +0100 (CET)
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 517E264F8ED;
+        Thu, 19 Mar 2020 18:41:49 +0100 (CET)
 Received: from pflmari.corp.cetitec.com (10.8.5.52) by
  PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 19 Mar 2020 18:42:00 +0100
+ id 15.0.1497.2; Thu, 19 Mar 2020 18:41:49 +0100
 Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id E2EBF8050C; Thu, 19 Mar 2020 18:41:59 +0100 (CET)
-Date:   Thu, 19 Mar 2020 18:41:59 +0100
+        id 9E04D8050C; Thu, 19 Mar 2020 18:41:48 +0100 (CET)
+Date:   Thu, 19 Mar 2020 18:41:48 +0100
 From:   Alex Riesen <alexander.riesen@cetitec.com>
 To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
 CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -50,9 +50,9 @@ CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
         <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v2 04/10] media: adv748x: add definitions for audio output
- related registers
-Message-ID: <d4e559cfedc57c8f3364fbe9ac29e2b50e2e4095.1584639664.git.alexander.riesen@cetitec.com>
+Subject: [PATCH v2 02/10] media: adv748x: include everything adv748x.h needs
+ into the file
+Message-ID: <fe109d58eaa34d68cad0f34bb048f827b336e024.1584639664.git.alexander.riesen@cetitec.com>
 Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -75,98 +75,105 @@ X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
  PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
 X-EsetResult: clean, is OK
 X-EsetId: 37303A290D7F536A6D7762
-X-Provags-ID: V03:K1:Vo2K/VTMWkVdhVMtQeeghLxtti+GBh6O4hQNukVvpokfadoHVTp
- tuP0189+9O2UgdrJciVhWaGC+vxjxxDNytLpolbUOn2Hy0+LULvCfW6TxcRhwv2Qd3/GT+O
- uHBHNWbY0cG8Zaag4orBKqhprPq9+gGO4WzxmcEUsWIhKJXI1/rsn1u/lRiYFEgO51rRLMH
- FrEnl8xbB9k41JdgSwX/w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1vv3pqTA6GE=:VZsglhE509dfDsP0MfGu89
- zkdQf3UsyVEutDa0us3kySvAb/DEMcbWhuxdzvNuQ/qiMcPUxJ0zvG0FjcJY00fi050cum63u
- Ip8djaE28Eq6zmKYAQAorvIhy9SAaCFaFotlWHR0givUzb8ti5rKQ2CYrOP3gDKMyRtecpCw2
- nCvLHBjO8Dj/ysYHyKLYnlFXilKPY2tLkMDlynTISKndrDDslcx499f7XvWPATTWBUFUhqJK7
- NQnOfXHoQTuiolNsbQ7wEYwfy/OHcReAdzkIC1NCEy6sOEg3XquklkflFFEZfKto1dJ97q/ds
- wM4EXUTDBmdmUBv7yBFN3uR1kPHib8247OvPPlsW5WvJ87WbbokKsg70TxJdddMtGi7rWV9Kk
- RhLb1JCqK2Bs19wLMkCaM4cJ7KH+k739rgMHaTYfaNqboEc0dcE3J/vgD0tN+Rsqq6hGc65/5
- DHai2bKEnmCXzZk7OIlO5/NZWlUbVjxCC9Nf+XpgllGVim3JlusKa0rI0RGEzUb6c88CdsSDY
- fKO/ZY4zEoWPDT+Dwi2siZGOmqdCGABDYGF/TXMSZveHoD7M6AeHf5bTBkYqvlgU25zCbH3ag
- KfsGwVCb1mNFBOhe2syIf+oP0fg1YN5Zdubc7kJNHIetQHnSfGqNWJjcrdSJcQNMaknR7KRCO
- 1s5azany6QSAL0fEil6R9U/6ylOGR5HbRQJ+k2lx3kNIYY3zWmgQ4gnFg+M3Tk7n2FOFFrsGs
- KYAas9pQhR7TygyTFnAXMQk9CxoICkZl6Bxfwilr6vS4WW7f2GlPXnpZao5YHuFLReLW4/AZU
- OtYtWQ2va4Q71MRpqXUFeve1ckAXGdRXZ1Uj5hiqk9JcGnL6BAXaN9kflHOUAywqgvQE1m/
+X-Provags-ID: V03:K1:FHxeNjGlIL7NzarJSPnLpbfeHB9uBfXDTSMuryQpyLu9Ee7QL4W
+ cyHLH9BjLgtvX3Up1fHkJk1x3oQvGZZu2nsQEBQftJgEHGxFJiKo8RClAoRE3uyZ526t/wv
+ YwGDdYlSP40KxGOUYds9L9lhGtR3M1CXWPpVSd5GTIGdpojWw32pqnHGTmf/I1ONnFwipMk
+ 9NB5bfT6vPJquo5wetmtw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Uu9yQPd1gcU=:hz1qzK2t6UBTEhWh44qlRL
+ UnT0ILN1Dg+H3Q3Xuht2QR7b+NRmfiztGZCJBTtVm+MjiZDsj8r/+tEEW/Xco2BhskekfoyFS
+ q0LoQAmkJKx+aBgR7RA+rN0fcecqrhWaz6LxvMk7Sr6NF0wuPOpOShVcmgPTbzRH8bj7So+be
+ XYX/Y5DQFV6ULNpfZdCExmVn4fqs0KeQEo5RzS/5xR/BJ/A+ZfnRHCyeODvPrWsyTSS0YkacF
+ vtXuICJ0Noe9kyZsM/XyRBLACmMfUe0SIUHmWEXx+zMYlJGD9Kz/9AwHlQExCgapSgRHIterd
+ j074Jm6e+c35XR2Z2eLx/jKAqa7Y0bI8gJpKhga0cWI9Txl7KRxRHp/Br6/KwEfVr90HZr7Sl
+ 69vrscCga3pUHCUQkZ9RxQqKTkAo/gggM/6EWtWDvkVdR+QmcSLqQHWzvjuvzY4LIAzMzeaRE
+ vmbO1msBdF9NBSu/JeKs7GnC/2BHY+JhRim/SBiWEO0r8Ge+kueoy12ryd76mWAPsxfR25AaO
+ qrAJRZzcE4qPUINg1d9JZYN9cNWcYccS+Z7iiOKax6eekzfxgRhEsthJUxj/L5Zeiz15HXB/S
+ NfjtKMoP2b3qfwBOuXy07q8omWmmlk8E8raNXZEEQMU57cZohSAhB4p6yOBEkUV8vz3I50caw
+ nKjSB+qXX73TDT522MWiCm7vORds1sYYppU6gO6VxS7bOuAE9dxTomrRxiUhGlvPyyXDdtTQ2
+ XIKzPTz51S+jf4gSnjrZya1JdkDhGJjcXtf7alNB4ym7FxaCI//mTDrYC4ovUPwKrEi67YCMc
+ N4L+RoQ4mX7MtMRM/fHVer9bHB9XmuZH4X2KJajmW6Gyo9trm8oAfFwnpDuneFLyRBx+LO2
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+To follow the established practice of not depending on others to
+pull everything in.
+
 Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
 ---
- drivers/media/i2c/adv748x/adv748x.h | 32 +++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ drivers/media/i2c/adv748x/adv748x-afe.c  | 2 --
+ drivers/media/i2c/adv748x/adv748x-core.c | 2 --
+ drivers/media/i2c/adv748x/adv748x-csi2.c | 2 --
+ drivers/media/i2c/adv748x/adv748x-hdmi.c | 2 --
+ drivers/media/i2c/adv748x/adv748x.h      | 2 ++
+ 5 files changed, 2 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/media/i2c/adv748x/adv748x-afe.c b/drivers/media/i2c/adv748x/adv748x-afe.c
+index dbbb1e4d6363..ab0479641c10 100644
+--- a/drivers/media/i2c/adv748x/adv748x-afe.c
++++ b/drivers/media/i2c/adv748x/adv748x-afe.c
+@@ -11,8 +11,6 @@
+ #include <linux/mutex.h>
+ #include <linux/v4l2-dv-timings.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-dv-timings.h>
+ #include <media/v4l2-ioctl.h>
+ 
+diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+index c3fb113cef62..345f009de121 100644
+--- a/drivers/media/i2c/adv748x/adv748x-core.c
++++ b/drivers/media/i2c/adv748x/adv748x-core.c
+@@ -20,8 +20,6 @@
+ #include <linux/slab.h>
+ #include <linux/v4l2-dv-timings.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-dv-timings.h>
+ #include <media/v4l2-fwnode.h>
+ #include <media/v4l2-ioctl.h>
+diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
+index c43ce5d78723..78d391009b5a 100644
+--- a/drivers/media/i2c/adv748x/adv748x-csi2.c
++++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
+@@ -8,8 +8,6 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-ioctl.h>
+ 
+ #include "adv748x.h"
+diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+index c557f8fdf11a..0dffcdf79ff2 100644
+--- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
++++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+@@ -8,8 +8,6 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-dv-timings.h>
+ #include <media/v4l2-ioctl.h>
+ 
 diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-index c5245464fffc..7bc1bb0b3756 100644
+index fccb388ce179..09aab4138c3f 100644
 --- a/drivers/media/i2c/adv748x/adv748x.h
 +++ b/drivers/media/i2c/adv748x/adv748x.h
-@@ -226,6 +226,11 @@ struct adv748x_state {
+@@ -19,6 +19,8 @@
+  */
  
- #define ADV748X_IO_VID_STD		0x05
+ #include <linux/i2c.h>
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-device.h>
  
-+#define ADV748X_IO_PAD_CONTROLS		0x0e
-+#define ADV748X_IO_PAD_CONTROLS_TRI_AUD	BIT(5)
-+#define ADV748X_IO_PAD_CONTROLS_PDN_AUD	BIT(1)
-+#define ADV748X_IO_PAD_CONTROLS1	0x1d
-+
- #define ADV748X_IO_10			0x10	/* io_reg_10 */
- #define ADV748X_IO_10_CSI4_EN		BIT(7)
- #define ADV748X_IO_10_CSI1_EN		BIT(6)
-@@ -248,7 +253,21 @@ struct adv748x_state {
- #define ADV748X_IO_REG_FF		0xff
- #define ADV748X_IO_REG_FF_MAIN_RESET	0xff
- 
-+/* DPLL Map */
-+#define ADV748X_DPLL_MCLK_FS		0xb5
-+#define ADV748X_DPLL_MCLK_FS_N_MASK	GENMASK(2, 0)
-+
- /* HDMI RX Map */
-+#define ADV748X_HDMI_I2S		0x03	/* I2S mode and width */
-+#define ADV748X_HDMI_I2SBITWIDTH_MASK	GENMASK(4, 0)
-+#define ADV748X_HDMI_I2SOUTMODE_SHIFT	5
-+#define ADV748X_HDMI_I2SOUTMODE_MASK	\
-+	GENMASK(6, ADV748X_HDMI_I2SOUTMODE_SHIFT)
-+#define ADV748X_I2SOUTMODE_I2S 0
-+#define ADV748X_I2SOUTMODE_RIGHT_J 1
-+#define ADV748X_I2SOUTMODE_LEFT_J 2
-+#define ADV748X_I2SOUTMODE_SPDIF 3
-+
- #define ADV748X_HDMI_LW1		0x07	/* line width_1 */
- #define ADV748X_HDMI_LW1_VERT_FILTER	BIT(7)
- #define ADV748X_HDMI_LW1_DE_REGEN	BIT(5)
-@@ -260,6 +279,16 @@ struct adv748x_state {
- #define ADV748X_HDMI_F1H1		0x0b	/* field1 height_1 */
- #define ADV748X_HDMI_F1H1_INTERLACED	BIT(5)
- 
-+#define ADV748X_HDMI_MUTE_CTRL		0x1a
-+#define ADV748X_HDMI_MUTE_CTRL_MUTE_AUDIO BIT(4)
-+#define ADV748X_HDMI_MUTE_CTRL_WAIT_UNMUTE_MASK	GENMASK(3, 1)
-+#define ADV748X_HDMI_MUTE_CTRL_NOT_AUTO_UNMUTE	BIT(0)
-+
-+#define ADV748X_HDMI_AUDIO_MUTE_SPEED	0x0f
-+#define ADV748X_HDMI_AUDIO_MUTE_SPEED_MASK	GENMASK(4, 0)
-+#define ADV748X_MAN_AUDIO_DL_BYPASS BIT(7)
-+#define ADV748X_AUDIO_DELAY_LINE_BYPASS BIT(6)
-+
- #define ADV748X_HDMI_HFRONT_PORCH	0x20	/* hsync_front_porch_1 */
- #define ADV748X_HDMI_HFRONT_PORCH_MASK	0x1fff
- 
-@@ -281,6 +310,9 @@ struct adv748x_state {
- #define ADV748X_HDMI_TMDS_1		0x51	/* hdmi_reg_51 */
- #define ADV748X_HDMI_TMDS_2		0x52	/* hdmi_reg_52 */
- 
-+#define ADV748X_HDMI_REG_6D		0x6d	/* hdmi_reg_6d */
-+#define ADV748X_I2S_TDM_MODE_ENABLE BIT(7)
-+
- /* HDMI RX Repeater Map */
- #define ADV748X_REPEATER_EDID_SZ	0x70	/* primary_edid_size */
- #define ADV748X_REPEATER_EDID_SZ_SHIFT	4
+ #ifndef _ADV748X_H_
+ #define _ADV748X_H_
 -- 
 2.25.1.25.g9ecbe7eb18
 
