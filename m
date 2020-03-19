@@ -2,123 +2,87 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA86C43332
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 10:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DF8C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 10:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 041A220724
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 10:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB778206D7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 10:20:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qIFvVNVD"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Tlo9ynl0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgCSKL1 (ORCPT
+        id S1726998AbgCSKU5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:11:27 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:46840 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726767AbgCSKL1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:11:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584612686; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=M1HzhVB6T9UZUN6Oig36KI7SQdXHk/1MM2NC6JmVWog=;
- b=qIFvVNVDbuXmo+AaXPRa/3L1UVwiDCLLtBBISyXQN75sgvZhQO6vUhgOis3+4PoPCySd08oR
- 6xfDwo1vcfuqJhIN5kIV1lF1sAXNkvl2GqO6N7EkZkjtBMV81EKySOYvwA8H50D4UMCWpIYV
- bWkzqYnSwySwnUiIOjGKO7c3Mt4=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e734544.7f13f5a2f8f0-smtp-out-n05;
- Thu, 19 Mar 2020 10:11:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6BBB9C4478F; Thu, 19 Mar 2020 10:11:16 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA8B3C433D2;
-        Thu, 19 Mar 2020 10:11:15 +0000 (UTC)
+        Thu, 19 Mar 2020 06:20:57 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44227 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgCSKU5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 06:20:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id v3so1610449iot.11
+        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 03:20:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3uJMFn0u6UxefMNCwOE+EpY1xkVMEUZdfQJs905Mo2E=;
+        b=Tlo9ynl0/5JrUqt87TGFCCZ9Vf+ZY7VhurKDOOeDokSrKWXo+/6u5JNa2yUMyt8Sia
+         io4XQ4NG9D33UhB3vjwQTLRHm2Ah7RPluXewGImqqQkybMb8AWDtp/5wmG/ZVQFcoMTq
+         PnyKz6Odg2m53v/aAeWggFliHykA8ks7QBe1g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3uJMFn0u6UxefMNCwOE+EpY1xkVMEUZdfQJs905Mo2E=;
+        b=aj7mbE503crivycZT3Yx7qqjeoBf+yDSdgRRVov2YrCfBVe8eCZNw/yaw8GaeRzXVw
+         qIaCPMQeRWvk+TGAf/ozcIa9HBJloMXJt+nn+kXPCLrQvZtvG/AdMpFQa7sXnl8tdRgl
+         musUxwJFzSNV0YWDTxumYVSGd42aYy89vdGvkEyF2HDJ2ejX2w1ie3FNEfj+eblPrglq
+         lMCtnfQBdiFCXt2OxRMfotbSTkY8ugx15fuxED2i5MAhlcn2Qq8YPJu+qOUEiuOJqs94
+         93yhdeUEPirelfWO1bdI1UvdKiFDUgK67B5TxTczxiE89d//O0fXLqc9mJYsdfq27WCg
+         AT5Q==
+X-Gm-Message-State: ANhLgQ3Bts9Hh9VdIwo9xpARzylajrayNXigJyLSXtqPZLsGev1Hc493
+        X/A4UbDiDXovuo64vTv2Cko9IPIVhfEEn/so6SuH4g==
+X-Google-Smtp-Source: ADFU+vtK3d/gDrUHwaxaJnUYjeJVHLK/PG6GuACnlbXxXQUQIi/qPHvAaGxP4FQ5mOe7IXI4kbNLAEMtUXVPu4O/o3c=
+X-Received: by 2002:a02:241:: with SMTP id 62mr2290953jau.103.1584613255796;
+ Thu, 19 Mar 2020 03:20:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Mar 2020 15:41:15 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-In-Reply-To: <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
- <20200318034243.o2metmggzuah6cqw@vireshk-i7>
- <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
-Message-ID: <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200318171003.5179-1-jagan@amarulasolutions.com>
+ <20200318171003.5179-3-jagan@amarulasolutions.com> <20200318185814.GB28092@ravnborg.org>
+In-Reply-To: <20200318185814.GB28092@ravnborg.org>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 19 Mar 2020 15:50:44 +0530
+Message-ID: <CAMty3ZDhVfvYXV7OO+NT+d_2YHbsJXebzjdtYkqtdD+X=Ch0yQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: Update feiyang, st7701 panel bindings
+ converted as YAML
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-03-19 15:12, Rajendra Nayak wrote:
-> On 3/18/2020 9:12 AM, Viresh Kumar wrote:
->> On 18-03-20, 02:13, Sibi Sankar wrote:
->>> On 2020-01-28 01:33, Sibi Sankar wrote:
->>>> This RFC series aims to extend cpu based scaling support to L3/DDR 
->>>> on
->>>> SDM845 and SC7180 SoCs.
->>>> 
->>> 
->>> Hey Viresh/Saravana,
->>> 
->>> Ping! Can you take a stab at reviewing
->>> the series, it has been on the list for
->>> a while now.
->> 
->> I believe this depends on Saravana's series on which I have raised
->> some doubts few weeks back ? I am still waiting for them to get
->> clarified by him.
+On Thu, Mar 19, 2020 at 12:28 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> On Wed, Mar 18, 2020 at 10:40:03PM +0530, Jagan Teki wrote:
+> > The feiyang,fy07024di26a30d.txt and sitronix,st7701.txt has been
+> > converted to YAML schemas, update MAINTAINERS to match them again.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>
+> The patch is fine.
+> I just dislike we repeat the maintainer info in two places..
 
-Viresh,
-Saravana's example does show a device
-with multiple opp tables but doesn't
-need multiple opp table support to
-land though (since it works fine with
-the current implementation). I am more
-interested  in understanding your/
-Stephen's/Saravana's stance on adding
-multiple opp-table support. Personally
-I feel its inevitable, since multiple
-qc drivers using interconnect opp-tables,
-routinely need vote on multiple paths in
-a non-trivial manner.
+Since these are two different panels. and entry similar like other
+panels.do you look for single entry for both the panels?
 
-> 
-> Could you please post a link to the discussion that you are referring 
-> to here?
-> I looked at a few links posted in the cover letter as dependencies and 
-> it seems
-> like the discussions are pending for *months* and not weeks but I
-> might have looked
-> at the wrong ones.
-
-https://lore.kernel.org/lkml/20200114103448.odnvqawnqb3twst5@vireshk-i7/
-
-Rajendra,
-Viresh is referring to ^^ one
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Jagan.
