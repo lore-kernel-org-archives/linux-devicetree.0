@@ -2,151 +2,208 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37094C4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 06:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55660C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 06:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAA82072D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 06:46:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GB4pSwDJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2314E20722
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 06:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgCSGqk (ORCPT
+        id S1726986AbgCSGvM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 02:46:40 -0400
-Received: from mail-eopbgr130089.outbound.protection.outlook.com ([40.107.13.89]:46818
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726982AbgCSGqk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 02:46:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KJvVrSeMGaq5ifsxd0oddvjBEmq08HuM29uQS/hylt4SQKBfIlzrdBu2uGZe8/bW2bb3/aTUIbqQcLQ/uadGUJ8QBy8TTTF60lEvIecEDfxTBwVBOZocN0QofXOBnmouq9jBLmejny6c8Bob1IE6P0QMdtWekjvhvOdpuT1azes8kediXdret75uf2Dn3ZL3SKcESP6j2dWC0VmIEQ2wodMTSE6/IQRQszGipZCHdeQ+xHSvrnXpRCKZwfR/H7vN6xkmSl/r3TR7NcMAoe7xAHPOW2k+nmKGUCu04iu7JWXbVTuG1lyZHq/OudIjg9uitUJIoB9T8Cn6fFYb7ElJPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ENk8I17T8kQCjf1AOXFJ5+0wu8JhuzPV/5upaqlpclI=;
- b=TvrlZad96pQ34S+d3i946M/+SF95sX2JPQgWkoquz477hlB9GJagly/xXZohFcyKy279WfJgNo1GHQMa1IVZ+MOUNSQ8ngULb+V+DNCZAssX6iml4xMappOTNHVpdgEJMNOEyailUNeX5Mfvew1MgI1ZQk0LXn2zSOokfwkXNP5vmxq1xH4vAyYjG1urvyP8nRPooBtV20Eaq4mM6YkhGmyuNn7U5XI1UAz84gOS9kqAZ2EUBtHHnwY7vB5tsrEjRDkP+yz2j+iGEPGVGEhHs59s+8Tsf4tu4CgDIcZg4vKEAv+tcRJWcEo4FI30ZcwYhpEkZchvJewQtra8Xx8WNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ENk8I17T8kQCjf1AOXFJ5+0wu8JhuzPV/5upaqlpclI=;
- b=GB4pSwDJFh/+tEZuIGc+/ONVls+Z5YRZ0NiBiUVrFy0hIh6f/JINEYCq+T6N9A0Aq2NaZTWREqVE7WTYiOTDxtDGOC5EdNWzzCpZoxEy8ha/LGpp/+8WTfan4f/lggKXMvdnclMNtlPOvn55aYRKYSRZbaz2hNVfimJd94MHlj4=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (52.135.57.84) by
- AM7PR04MB7031.eurprd04.prod.outlook.com (52.135.56.207) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.15; Thu, 19 Mar 2020 06:46:36 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::902c:71:6377:4273]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::902c:71:6377:4273%5]) with mapi id 15.20.2835.017; Thu, 19 Mar 2020
- 06:46:36 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Jun Li <jun.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v2 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
-Thread-Topic: [PATCH v2 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
-Thread-Index: AQHV+eSIbYUUoyB07UqkpsijN1q1vahO7pAAgACSAoA=
-Date:   Thu, 19 Mar 2020 06:46:36 +0000
-Message-ID: <20200319064655.GB11834@b29397-desktop>
-References: <20200314093941.2533-1-peter.chen@nxp.com>
- <20200314093941.2533-2-peter.chen@nxp.com> <20200318220420.GA15468@bogus>
-In-Reply-To: <20200318220420.GA15468@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peter.chen@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 230d31a1-6392-4c98-c7be-08d7cbd1451e
-x-ms-traffictypediagnostic: AM7PR04MB7031:|AM7PR04MB7031:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM7PR04MB70319255396C8BD072EB5BDE8BF40@AM7PR04MB7031.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0347410860
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(396003)(346002)(39860400002)(376002)(136003)(366004)(199004)(4326008)(66946007)(8676002)(66556008)(81156014)(66446008)(8936002)(33656002)(64756008)(76116006)(91956017)(6916009)(66476007)(86362001)(81166006)(5660300002)(9686003)(1076003)(71200400001)(316002)(6506007)(54906003)(6512007)(44832011)(53546011)(2906002)(33716001)(186003)(478600001)(6486002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR04MB7031;H:AM7PR04MB7157.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: p2QUc1nIkxIksB9pqSq4EDu5bEQ9QK9uKP0nZcsRvrAfG8H9mS0VQVQ673EfWIZ6Gkcs71Nx45noaUat+4DNPxLlsMgp5tiMrVEhY7w0XtKnFbof481GR3Iyz8lZAgC8clpStvudRdQ6iHU9MaY9+hMdJ40sESaj7sRBCOLtPBPt719NwAoCkoWoc3IMg5YuCFHloyOSIcbxPkigLHq/bvfpKFDtQ5NWEcCKWbLRI19MTVSGKnek1nhvOERizyhW1hild1brEx3389j4Ih/aDsUfgAOXNzjlx3iBswbmzvNuQPu/Vma8zBxM6gAunA8IN1mpwtSppug36tUclhNgt9UgBvg1XZq3jFglj9MGbGeXi5tqwz0BxmK+W7wDU+0PzdahmYv0MDl+9YsbZo/UsYdbfR8ymuBTFcH+WFdYHI62nGtTHtfDM/ednLaGbfMe
-x-ms-exchange-antispam-messagedata: bZDy3jq/ziSArUpX4h6iuKX2rkg++MhZq3wkBKxRT0lBZ2AL4pNl0/GBbCGMtstkLxrBh5RS3C5EEuqZjwHOSUuK8XcVxMS0663hDP8N8amqQw4X8nGv1ipaLorqPq99J9AhTVaP3D9+e2wNJmE9Ng==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E578A2EC88F71140920603AA82CF9573@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 19 Mar 2020 02:51:12 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58533 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726063AbgCSGvM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 02:51:12 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEp0w-0005WC-FG; Thu, 19 Mar 2020 07:50:46 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEp0p-0002ri-RB; Thu, 19 Mar 2020 07:50:39 +0100
+Date:   Thu, 19 Mar 2020 07:50:39 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+Message-ID: <20200319065039.szhh5dm6v3ejwijd@pengutronix.de>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
+ <20200317174043.GA1464607@ulmo>
+ <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
+ <20200318225953.GA2874972@ulmo>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 230d31a1-6392-4c98-c7be-08d7cbd1451e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2020 06:46:36.3616
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tkAcmgJDU260sjBMC55snKC8keliNSUtbWeP6wJcY2kk9k/nqCfjICR7TaDlM64h4seeL1ZmOxvFn5f6/FQnxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7031
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200318225953.GA2874972@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-03-18 16:04:20, Rob Herring wrote:
-> On Sat, 14 Mar 2020 17:39:41 +0800, Peter Chen wrote:
-> > Add Cadence SALVO PHY binding doc, this PHY is a legacy module,
-> > and is only used for USB3 and USB2.
-> >=20
-> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> > ---
-> > Changes for v2:
-> > - Fix kinds of yaml style issue
-> >=20
-> >  .../bindings/phy/cdns,salvo-phy.yaml          | 49 +++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/cdns,salvo-ph=
-y.yaml
-> >=20
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/=
-cdns,salvo-phy.example.dt.yaml: usb3-phy@5B160000: 'power-domains' does not=
- match any of the regexes: 'pinctrl-[0-9]+'
 
-The 'power-domains' is described at:
-Documentation/devicetree/bindings/power/power_domain.txt
+[Dropped Tony Prisk from recipients as the address bounces]
 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/=
-cdns,salvo-phy.example.dt.yaml: usb3-phy@5B160000: #phy-cells:0:0: 1 was ex=
-pected
->=20
+Hello,
 
-#phy-cell could be 0 if it is a dedicated PHY, eg single function PHY.
-See below comments from drivers/phy/phy-core.c
+On Wed, Mar 18, 2020 at 11:59:53PM +0100, Thierry Reding wrote:
+> On Tue, Mar 17, 2020 at 10:00:42PM +0100, Uwe Kleine-König wrote:
+> > Hello,
+> > 
+> > On Tue, Mar 17, 2020 at 06:40:43PM +0100, Thierry Reding wrote:
+> > > On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
+> > > > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
+> > > > Rename it to PWM_POLARITY_INVERTED.
+> > > 
+> > > It isn't misspelled. "inversed" is a synonym for "inverted". Both
+> > > spellings are correct.
+> > 
+> > Some time ago I stumbled about "inversed", too. My spell checker doesn't
+> > know it and I checked some dictionaries and none of them knew that word:
+> > 
+> > https://www.lexico.com/search?utf8=%E2%9C%93&filter=dictionary&dictionary=en&query=inversed
+> > https://de.pons.com/%C3%BCbersetzung/englisch-deutsch/inversed
+> > https://dictionary.cambridge.org/spellcheck/english-german/?q=inversed
+> > 
+> > https://en.wiktionary.org/wiki/inverse#Verb mentions "inverse" as a verb
+> > having "inversed" as past participle.
+> 
+> Here are the first three results from a Google query:
+> 
+> 	https://www.yourdictionary.com/inversed
 
-/**
- * of_phy_simple_xlate() - returns the phy instance from phy provider
- * @dev: the PHY provider device
- * @args: of_phandle_args (not used here)
- *
- * Intended to be used by phy provider for the common case where #phy-cells=
- is
- * 0. For other cases where #phy-cells is greater than '0', the phy provide=
-r
- * should provide a custom of_xlate function that reads the *args* and retu=
-rns
- * the appropriate phy.
- */
+There is something fishy. In the Verb section it says indeed, that it is
+the past participle and simple past of inverse. The entry for inverse
+however only has sections that identify this word as adjective or noun;
+not a verb.
 
---=20
+> 	https://www.dictionary.com/browse/inversed
 
-Thanks,
-Peter Chen=
+Not sure I'd count this as hint that inversed exists. The entry shown to
+me under this URL is about "inverse" and it has
+
+	verb (used with object), in·versed, in·vers·ing.
+		? to invert.
+
+Does this mean: "Did you mean invert instead?"
+
+> 	https://en.wiktionary.org/wiki/inversed
+
+Yeah, that's the one I found, too.
+
+I still have the impression that "inversed" is in use because people
+don't know better and understand the intended meaning. And this results
+in leaking of this word into the references.
+
+> > Having said this I think (independent of the question if "inversed"
+> > exists) using two similar terms for the same thing just results in
+> > confusion. I hit that in the past already and I like it being addressed.
+> 
+> I don't know. It's pretty common to use different words for the same
+> thing. They're called synonyms.
+
+In literature yes, I agree. In a novel it is annoying to repeat the same
+words over and over again and some variation is good. In programming
+however the goal is a different one. There the goal should be to be
+precise and consistent.
+
+> > > And as you noted in the cover letter, there's a conflict between the
+> > > macro defined in dt-bindings/pwm/pwm.txt. If they end up being included
+> > > in the wrong order you'll get a compile error.
+> > 
+> > There are also other symbols that exist twice (GPIO_ACTIVE_HIGH was the
+> > first to come to my mind). I'm not aware of any problems related to
+> > these. What am I missing?
+> 
+> There's currently no problem, obviously. But if for some reason the
+> include files end up being included in a different order (i.e. the
+> dt-bindings header is included before linux/pwm.h) then the macro will
+> be evaluated and result in something like:
+> 
+> 	enum pwm_polarity {
+> 		PWM_POLARITY_NORMAL,
+> 		1,
+> 	};
+> 
+> and that's not valid C, so will cause a build error.
+
+I admit I didn't look closely here and I assume you are right. If I
+understand Oleksandr right this is only an intermediate step and when
+the series is applied completely this issue is gone. Still it might be
+worth to improve the series here.
+
+My original question was about similar problems with GPIO_ACTIVE_HIGH.
+Are you aware of problems there?
+
+> > > Note that DT bindings are an ABI and can
+> > > never change, whereas the enum pwm_polarity is part of a Linux internal
+> > > API and doesn't have the same restrictions as an ABI.
+> > 
+> > I thought only binary device trees (dtb) are supposed to be ABI.
+> 
+> Yes, the DTB is the ABI. dt-bindings/pwm/pwm.h is used to generate DTBs,
+> which basically makes it ABI as well.
+
+We disagree here. With this argument you could fix quite some things as
+ABI.
+
+> Yes, the symbol name may not be part of the ABI, but changing the
+> symbol becomes very inconvenient because everyone that depends on it
+> would have to change.
+
+Oleksandr adapted all in-tree users, so it only affects out-of-tree
+users. In my book this is fine.
+
+> Why bother?
+
+To make the API more precise and consistent. That's a good goal in my
+eyes.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
