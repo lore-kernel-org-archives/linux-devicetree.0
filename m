@@ -2,238 +2,227 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1DFC4332E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9758C4332B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B8820663
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EF420787
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UDPiBny1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VxtC05fW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbgCSNgS (ORCPT
+        id S1727635AbgCSNgx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:36:18 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39304 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727711AbgCSNKR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 09:10:17 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JDA5DD061902;
-        Thu, 19 Mar 2020 08:10:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584623405;
-        bh=SBBrZzkb2E7HPlrCtxk5PrJICSjHhhKeRTUaGwHvp9k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=UDPiBny1cnDEdprAZNdpNaemRHJTpRRzgaa5v/D0PRJBleLTQ5iCh/p2+vvN90Q12
-         EbVkbI/y2CPZFoKwNrXPSomlHorO7MDFo+dTgSxGyAyCqFEJ16e7CU7R6DN+AyPxM9
-         /Ze7wqHFuyqX51gpcUtXdweqQndXZn1ST7lvg+ug=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JDA5C6074181
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Mar 2020 08:10:05 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Mar 2020 08:10:05 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Mar 2020 08:10:05 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JDA0oK003728;
-        Thu, 19 Mar 2020 08:10:02 -0500
-Subject: Re: [PATCH net-next v4 06/11] net: ethernet: ti: introduce
- am65x/j721e gigabit eth subsystem driver
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
-CC:     Murali Karicheri <m-karicheri2@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200317072739.23950-1-grygorii.strashko@ti.com>
- <20200317072739.23950-7-grygorii.strashko@ti.com>
- <dcd70320-8f1e-dbb5-c275-3b203e9b5851@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <78bc1ee2-5a56-82e7-229d-52cea8002eec@ti.com>
-Date:   Thu, 19 Mar 2020 15:09:59 +0200
+        Thu, 19 Mar 2020 09:36:53 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:40007 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbgCSNgw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 09:36:52 -0400
+Received: by mail-wm1-f46.google.com with SMTP id z12so2300706wmf.5
+        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 06:36:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uEd9IVodt6fa58bsyLHIrVxIAopcFc2wB37Cyaqmow4=;
+        b=VxtC05fWVlvcHihiVKFYmJhn/wlPWp3Xybqk6gt7lcl6FeX+sfeDhn1sGbpcgJbu3d
+         kExv/0oyrfd8F/S+V2EZPxliE1pxk090HamF6dAh3KVNCalRwqa6Aqa2m751TYYj62yS
+         DQ6VeD+GFIzm2Da8/hcBN829yACx/Jai0btH7LCpiVPXyA+x1l4lG0Xpqj0Xs4VDv0Nd
+         Vs3iWw+tvI62xadbMi8flMMy/sWOI9CLG8Xj02ndVoQ6L9G/PsUOZ6SG+hk4/wApbc+l
+         1r8+19uE/cSGlIiMLGl9mZfFbB9kcO0yADLZ2Ofc08ul8zZzIgMSRohrPPy4bvaZ4XJm
+         vHQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=uEd9IVodt6fa58bsyLHIrVxIAopcFc2wB37Cyaqmow4=;
+        b=tpLFCdL2rWQC6IESs8k2d08lfETyoESeYehqD0ThN53wmdVqIUlXrdUbb/lBqDG/G5
+         MxvqN7l3nbv1rnqrDVrW2JmnWhZ11PYJmPCIGKE/xnO0Debs20xJIh2TM+EK/YSr1KNZ
+         v1IBAq/QY3WSMOH2x+uReOHbaBymSjFTBXMjKSfg4pfGkQOAilWzEHFqCV2G7wZ46JdI
+         IxpCqsYVQJW8vtAti/DCA0jfSbyIvcesS9p4AR5JV+mw/tbNp0S6pA8ZOUVIJAVYxmjI
+         nxq1f4jwXiP0ITORN4eukW2S9ha8uMHDkJjyrlojpulaHvWaYcYF4UL3Z2vO3ucTV8Zl
+         e9PA==
+X-Gm-Message-State: ANhLgQ3ihMERNd2vVPBismgzwpepKi9O/IDQ9kk2o07Fx8jVaYflVeKB
+        iPi0v/ylYdZOpoKlN87Tpgj5xA==
+X-Google-Smtp-Source: ADFU+vu1dFag4U4oZYG0BReV/F50kZwKNoJprOTG8xcl9vorDq/ViGEh+iUQkaBJbZrxgjhqXjyXWA==
+X-Received: by 2002:a1c:9d41:: with SMTP id g62mr3937974wme.131.1584625010128;
+        Thu, 19 Mar 2020 06:36:50 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:5d64:ea6:49bd:69d7? ([2a01:e34:ed2f:f020:5d64:ea6:49bd:69d7])
+        by smtp.googlemail.com with ESMTPSA id e5sm3553535wru.92.2020.03.19.06.36.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 06:36:49 -0700 (PDT)
+Subject: Re: [RESEND PATCH v4 2/4] thermal: k3: Add support for bandgap
+ sensors
+To:     Keerthy <j-keerthy@ti.com>, rui.zhang@intel.com, robh+dt@kernel.org
+Cc:     amit.kucheria@verdurent.com, t-kristo@ti.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        mark.rutland@arm.com
+References: <20200318083028.9984-1-j-keerthy@ti.com>
+ <20200318083028.9984-3-j-keerthy@ti.com>
+ <ea3b34dc-42e3-0b10-4b89-faf2621a4ee2@linaro.org>
+ <03b837de-ff25-2308-8a56-15bc3377cd5f@ti.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <d8bff098-f852-4c55-0afc-d7fd043dd10a@linaro.org>
+Date:   Thu, 19 Mar 2020 14:36:48 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <dcd70320-8f1e-dbb5-c275-3b203e9b5851@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <03b837de-ff25-2308-8a56-15bc3377cd5f@ti.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 19/03/2020 13:46, Peter Ujfalusi wrote:
-> Hi Grygorii,
+On 19/03/2020 13:52, Keerthy wrote:
 > 
-> On 17/03/2020 9.27, Grygorii Strashko wrote:
->> The TI AM65x/J721E SoCs Gigabit Ethernet Switch subsystem (CPSW2G NUSS) has
->> two ports - One Ethernet port (port 1) with selectable RGMII and RMII
->> interfaces and an internal Communications Port Programming Interface (CPPI)
->> port (Host port 0) and with ALE in between. It also contains
->>   - Management Data Input/Output (MDIO) interface for physical layer device
->> (PHY) management;
->>   - Updated Address Lookup Engine (ALE) module;
->>   - (TBD) New version of Common platform time sync (CPTS) module.
->>
->> On the TI am65x/J721E SoCs CPSW NUSS Ethernet subsystem into device MCU
->> domain named MCU_CPSW0.
->>
->> Host Port 0 CPPI Packet Streaming Interface interface supports 8 TX
->> channels and one RX channels operating by TI am654 NAVSS Unified DMA
->> Peripheral Root Complex (UDMA-P) controller.
->>
->> Introduced driver provides standard Linux net_device to user space and supports:
->>   - ifconfig up/down
->>   - MAC address configuration
->>   - ethtool operation:
->>     --driver
->>     --change
->>     --register-dump
->>     --negotiate phy
->>     --statistics
->>     --set-eee phy
->>     --show-ring
->>     --show-channels
->>     --set-channels
->>   - net_device ioctl mii-control
->>   - promisc mode
->>
->>   - rx checksum offload for non-fragmented IPv4/IPv6 TCP/UDP packets.
->>     The CPSW NUSS can verify IPv4/IPv6 TCP/UDP packets checksum and fills
->>     csum information for each packet in psdata[2] word:
->>     - BIT(16) CHECKSUM_ERROR - indicates csum error
->>     - BIT(17) FRAGMENT -  indicates fragmented packet
->>     - BIT(18) TCP_UDP_N -  Indicates TCP packet was detected
->>     - BIT(19) IPV6_VALID,  BIT(20) IPV4_VALID - indicates IPv6/IPv4 packet
->>     - BIT(15, 0) CHECKSUM_ADD - This is the value that was summed
->>     during the checksum computation. This value is FFFFh for non fragmented
->>     IPV4/6 UDP/TCP packets with no checksum error.
->>
->>     RX csum offload can be disabled:
->> 	 ethtool -K <dev> rx-checksum on|off
->>
->>   - tx checksum offload support for IPv4/IPv6 TCP/UDP packets (J721E only).
->>     TX csum HW offload  can be enabled/disabled:
->> 	 ethtool -K <dev> tx-checksum-ip-generic on|off
->>
->>   - multiq and switch between round robin/prio modes for cppi tx queues by
->>     using Netdev private flag "p0-rx-ptype-rrobin" to switch between
->>     Round Robin and Fixed priority modes:
->> 	 # ethtool --show-priv-flags eth0
->> 	 Private flags for eth0:
->> 	 p0-rx-ptype-rrobin: on
->> 	 # ethtool --set-priv-flags eth0 p0-rx-ptype-rrobin off
->>
->>     Number of TX DMA channels can be changed using "ethtool -L eth0 tx <N>".
->>
->>   - GRO support: the napi_gro_receive() and napi_complete_done() are used.
->>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>   drivers/net/ethernet/ti/Kconfig             |   19 +-
->>   drivers/net/ethernet/ti/Makefile            |    3 +
->>   drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  747 +++++++
->>   drivers/net/ethernet/ti/am65-cpsw-nuss.c    | 1965 +++++++++++++++++++
->>   drivers/net/ethernet/ti/am65-cpsw-nuss.h    |  143 ++
->>   drivers/net/ethernet/ti/k3-udma-desc-pool.c |  126 ++
->>   drivers/net/ethernet/ti/k3-udma-desc-pool.h |   30 +
 > 
-> I would rather loose the 'udma' from the name and API. It is more like
-> CPPI5 descriptor pool than UDMA. UDMA is just happen to use CPPI5.
-> Probably ti-cppi5-desc-pool?
+> On 19/03/20 6:08 pm, Daniel Lezcano wrote:
+>> On 18/03/2020 09:30, Keerthy wrote:
+>>> The bandgap provides current and voltage reference for its internal
+>>> circuits and other analog IP blocks. The analog-to-digital
+>>> converter (ADC) produces an output value that is proportional
+>>> to the silicon temperature.
+>>>
+>>> Currently reading temperatures and creating work to periodically
+>>> read temperatures from the zones are supported.
+>>> There are no active/passive cooling agent supported.
+>>>
+>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>>> ---
 
-ok. I'll update and re-send
+[ ... ]
 
-> 
->>   7 files changed, 3031 insertions(+), 2 deletions(-)
->>   create mode 100644 drivers/net/ethernet/ti/am65-cpsw-ethtool.c
->>   create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.c
->>   create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.h
->>   create mode 100644 drivers/net/ethernet/ti/k3-udma-desc-pool.c
->>   create mode 100644 drivers/net/ethernet/ti/k3-udma-desc-pool.h
-> 
->> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
->> index 8a6ca16eee3b..89cec778cf2d 100644
->> --- a/drivers/net/ethernet/ti/Kconfig
->> +++ b/drivers/net/ethernet/ti/Kconfig
->> @@ -6,7 +6,7 @@
->>   config NET_VENDOR_TI
->>   	bool "Texas Instruments (TI) devices"
->>   	default y
->> -	depends on PCI || EISA || AR7 || ARCH_DAVINCI || ARCH_OMAP2PLUS || ARCH_KEYSTONE
->> +	depends on PCI || EISA || AR7 || ARCH_DAVINCI || ARCH_OMAP2PLUS || ARCH_KEYSTONE || ARCH_K3
->>   	---help---
->>   	  If you have a network (Ethernet) card belonging to this class, say Y.
->>   
->> @@ -31,7 +31,7 @@ config TI_DAVINCI_EMAC
->>   
->>   config TI_DAVINCI_MDIO
->>   	tristate "TI DaVinci MDIO Support"
->> -	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || ARCH_KEYSTONE || COMPILE_TEST
->> +	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
->>   	select PHYLIB
->>   	---help---
->>   	  This driver supports TI's DaVinci MDIO module.
->> @@ -95,6 +95,21 @@ config TI_CPTS_MOD
->>   	imply PTP_1588_CLOCK
->>   	default m
->>   
->> +config TI_K3_AM65_CPSW_NUSS
->> +	tristate "TI K3 AM654x/J721E CPSW Ethernet driver"
->> +	depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
->> +	select TI_DAVINCI_MDIO
->> +	imply PHY_TI_GMII_SEL
->> +	help
->> +	  This driver supports TI K3 AM654/J721E CPSW2G Ethernet SubSystem.
->> +	  The two-port Gigabit Ethernet MAC (MCU_CPSW0) subsystem provides
->> +	  Ethernet packet communication for the device: One Ethernet port
->> +	  (port 1) with selectable RGMII and RMII interfaces and an internal
->> +	  Communications Port Programming Interface (CPPI) port (port 0).
->> +
->> +	  To compile this driver as a module, choose M here: the module
->> +	  will be called ti-am65-cpsw-nuss.
->> +
->>   config TI_KEYSTONE_NETCP
->>   	tristate "TI Keystone NETCP Core Support"
->>   	select TI_DAVINCI_MDIO
->> diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
->> index ecf776ad8689..6362a9b0bb8a 100644
->> --- a/drivers/net/ethernet/ti/Makefile
->> +++ b/drivers/net/ethernet/ti/Makefile
->> @@ -23,3 +23,6 @@ obj-$(CONFIG_TI_KEYSTONE_NETCP) += keystone_netcp.o
->>   keystone_netcp-y := netcp_core.o cpsw_ale.o
->>   obj-$(CONFIG_TI_KEYSTONE_NETCP_ETHSS) += keystone_netcp_ethss.o
->>   keystone_netcp_ethss-y := netcp_ethss.o netcp_sgmii.o netcp_xgbepcsr.o cpsw_ale.o
->> +
->> +obj-$(CONFIG_TI_K3_AM65_CPSW_NUSS) += ti-am65-cpsw-nuss.o
->> +ti-am65-cpsw-nuss-y := am65-cpsw-nuss.o cpsw_sl.o am65-cpsw-ethtool.o cpsw_ale.o k3-udma-desc-pool.o
-> 
-> Would not be better to have the desc-pool (silent) Kconfig selectable?
-> The not yet upstream icssg-prueth also needs the same desc-pool library
-> as cpsw.
->
+>>> +static const int k3_adc_to_temp[] = {
+>>> +    -40000, -40000, -40000, -40000, -39800, -39400, -39000, -38600,
 
-I'd prefer not to add new Kconfig options unless required.
-This driver simply not work without it, so no Kconfig option for now.
+[ ... ]
+
+>>> 123000,
+>>> +    123400, 123800, 124200, 124600, 124900, 125000,
+>>> +};
+>>
+>> Can be this array replaced by an initialization array with a formula?
+>>
+>> Why do we have most of the time a step of 400 then suddenly 500 and 400
+>> again? eg. 30600, 31000, 31400, 31900, 32500, 33000, 33400
+> 
+> This has come from a polynomial equation which i do not want to
+> calculate every time we read the temperature. Hence prefer Look up table.
+
+Agree, it makes sense to not calculate every time the temperature is read.
+
+I was suggesting to fill the array at init time with this polynomial
+formula instead of hardcoding it.
+
+[ ... ]
+
+>>> +
+>>> +    /* Get the sensor count in the VTM */
+>>> +    val = readl(bgp->base + K3_VTM_DEVINFO_PWR0_OFFSET);
+>>> +    cnt = val & K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK;
+>>> +    cnt >>= __ffs(K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK);
+>>> +
+>>> +    data = devm_kcalloc(dev, cnt, sizeof(*data), GFP_KERNEL);
+>>> +    if (!data) {
+>>> +        ret = -ENOMEM;
+>>> +        goto err_alloc;
+>>> +    }
+>>> +
+>>> +    /* Register the thermal sensors */
+>>> +    for (id = 0; id < cnt; id++) {
+>>> +        data[id].sensor_id = id;
+>>> +        data[id].bgp = bgp;
+>>> +        data[id].ctrl_offset = K3_VTM_TMPSENS0_CTRL_OFFSET +
+>>> +                    id * K3_VTM_REGS_PER_TS;
+>>> +        data[id].stat_offset = data[id].ctrl_offset + 0x8;
+>>> +        INIT_WORK(&data[id].thermal_wq, k3_thermal_work);
+>>
+>>         What is supposed to do ?
+> 
+> Periodically poll temperature. I know there is no passive cooling agent
+> like cpufreq at the moment but i do have a critical trip do you
+> recommend to remove that?
+
+Actually I was referring to the workq which is initialized, the callback
+set but it is never called. It can be removed.
+
+Please take also the opportunity to wrap the calls to the register with
+an explicit helper function name.
+
+And remove reg_cnt which is unused.
+
+Thanks
+
+  -- Daniel
 
 -- 
-Best regards,
-grygorii
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
