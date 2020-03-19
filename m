@@ -2,187 +2,206 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A84ACC4332B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5107C4332D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 735DD20663
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VuAyYpf/"
+	by mail.kernel.org (Postfix) with ESMTP id 93CEF2070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 09:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbgCSJbd (ORCPT
+        id S1726864AbgCSJjF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:31:33 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47094 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgCSJbd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 05:31:33 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02J9UYBS011730;
-        Thu, 19 Mar 2020 04:30:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584610234;
-        bh=ptAVA86iz3NfXhHh5PQXjwSG9wm973u3msedd17ZuX8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VuAyYpf/EBe7FQ6xvzD+INTZYdQ/Mq8HR1E/4smZY/8XVDybC7+K1KXK7I3LER6Gd
-         ldEv7HsPQFy795qArDBhGezA3PoaC9xD8bLYi3rXGwCX3FARUeY9kfmOk5aDJxAsnP
-         m5pWJ5QsUxkeWvwzXX29v3pQaKl3ebngcQ+2bP/Y=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02J9UY41027080
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Mar 2020 04:30:34 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Mar 2020 04:30:34 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Mar 2020 04:30:33 -0500
-Received: from [10.250.132.123] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02J9UPQM028697;
-        Thu, 19 Mar 2020 04:30:26 -0500
-Subject: Re: [PATCH v12 2/4] mtd: spi-nor: add spi-mem support in
- cadence-quadspi controller driver
-To:     <Tudor.Ambarus@microchip.com>, <linux-mtd@lists.infradead.org>,
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <broonie@kernel.org>, <robh+dt@kernel.org>, <marex@denx.de>,
-        <devicetree@vger.kernel.org>, <tien.fong.chee@intel.com>,
-        <tudor.ambarus@gmail.com>, <boris.brezillon@free-electrons.com>,
-        <richard@nod.at>, <qi-ming.wu@intel.com>,
-        <simon.k.r.goldschmidt@gmail.com>, <dinguyen@kernel.org>,
-        <miquel.raynal@bootlin.com>, <cheol.yong.kim@intel.com>,
-        <cyrille.pitchen@atmel.com>, <computersforpeace@gmail.com>,
-        <dwmw2@infradead.org>, <david.oberhollenzer@sigma-star.at>
-References: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200310015213.1734-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <3360641.Vn3sISamPi@192.168.0.120>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <cea89434-d2bf-72e6-0b3b-0e0efd0d149e@ti.com>
-Date:   Thu, 19 Mar 2020 15:00:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 19 Mar 2020 05:39:05 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:59276 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725887AbgCSJjE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:39:04 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 5D042FB03;
+        Thu, 19 Mar 2020 10:39:01 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1Xzj51gxscCV; Thu, 19 Mar 2020 10:38:59 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 3A2A8412BE; Thu, 19 Mar 2020 10:38:59 +0100 (CET)
+Date:   Thu, 19 Mar 2020 10:38:59 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 2/2] drm/bridge: Add NWL MIPI DSI host controller
+ support
+Message-ID: <20200319093859.GA50655@bogon.m.sigxcpu.org>
+References: <cover.1584544065.git.agx@sigxcpu.org>
+ <6f2e65df672a0fe832af29f4ea89fbe7250c3a07.1584544065.git.agx@sigxcpu.org>
+ <20200318214639.GA971@ravnborg.org>
 MIME-Version: 1.0
-In-Reply-To: <3360641.Vn3sISamPi@192.168.0.120>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200318214639.GA971@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Sam,
 
-
-On 19/03/20 1:39 pm, Tudor.Ambarus@microchip.com wrote:
-> Hi,
+On Wed, Mar 18, 2020 at 10:46:39PM +0100, Sam Ravnborg wrote:
+> Hi Guido.
 > 
-> On Tuesday, March 10, 2020 3:52:11 AM EET Ramuthevar, Vadivel MuruganX wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the
->> content is safe
->>
->> From: Ramuthevar Vadivel Murugan
->> <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> This patch adds a spi-mem framework adaptation over cadence-quadspi driver.
+> Impressive and very detailed changelog in intro mail - nice.
 > 
-> you need to specify on which versions of the controller you tested this.
+> On Wed, Mar 18, 2020 at 04:09:08PM +0100, Guido Günther wrote:
+> > This adds initial support for the NWL MIPI DSI Host controller found on
+> > i.MX8 SoCs.
+> > 
+> > It adds support for the i.MX8MQ but the same IP can be found on
+> > e.g. the i.MX8QXP.
+> > 
+> > It has been tested on the Librem 5 devkit using mxsfb.
+> > 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > Co-developed-by: Robert Chiras <robert.chiras@nxp.com>
+> > Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> > Tested-by: Robert Chiras <robert.chiras@nxp.com>
+> > Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> > ---
+> >  drivers/gpu/drm/bridge/Kconfig   |   16 +
+> >  drivers/gpu/drm/bridge/Makefile  |    3 +
+> >  drivers/gpu/drm/bridge/nwl-dsi.c | 1213 ++++++++++++++++++++++++++++++
+> >  drivers/gpu/drm/bridge/nwl-dsi.h |  144 ++++
+> >  4 files changed, 1376 insertions(+)
+> >  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.c
+> >  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.h
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> > index 8397bf72d2f3..d41d93d24f16 100644
+> > --- a/drivers/gpu/drm/bridge/Kconfig
+> > +++ b/drivers/gpu/drm/bridge/Kconfig
+> > @@ -55,6 +55,22 @@ config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
+> >  	  to DP++. This is used with the i.MX6 imx-ldb
+> >  	  driver. You are likely to say N here.
+> >  
+> > +config DRM_NWL_MIPI_DSI
+> > +	tristate "Northwest Logic MIPI DSI Host controller"
+> > +	depends on DRM
+> > +	depends on COMMON_CLK
+> > +	depends on OF && HAS_IOMEM
+> > +	select DRM_KMS_HELPER
+> > +	select DRM_MIPI_DSI
+> > +	select DRM_PANEL_BRIDGE
+> > +	select GENERIC_PHY_MIPI_DPHY
+> > +	select MFD_SYSCON
+> > +	select MULTIPLEXER
+> > +	select REGMAP_MMIO
+> > +	help
+> > +	  This enables the Northwest Logic MIPI DSI Host controller as
+> > +	  for example found on NXP's i.MX8 Processors.
+> > +
+> >  config DRM_NXP_PTN3460
+> >  	tristate "NXP PTN3460 DP/LVDS bridge"
+> >  	depends on OF
+> > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> > index 1eb5376c5d68..98581b3128a3 100644
+> > --- a/drivers/gpu/drm/bridge/Makefile
+> > +++ b/drivers/gpu/drm/bridge/Makefile
+> > @@ -15,6 +15,9 @@ obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
+> >  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
+> >  obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
+> >  obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
+> > +obj-$(CONFIG_DRM_NWL_MIPI_DSI) += nwl-dsi.o
+> >  
+> >  obj-y += analogix/
+> >  obj-y += synopsys/
+> > +
+> > +header-test-y += nwl-dsi.h
+> Sorry - but header-test-y support was ripped out of the kernel again.
+> So this line has no longer any effect.
+
+Missed that removal, dropped.
+
+> > +
+> > +static void nwl_dsi_bridge_enable(struct drm_bridge *bridge)
+> > +{
+> > +	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
+> > +	int ret;
+> > +
+> > +	/* Step 5 from DSI reset-out instructions */
+> > +	ret = reset_control_deassert(dsi->rst_dpi);
+> > +	if (ret < 0)
+> > +		DRM_DEV_ERROR(dsi->dev, "Failed to deassert DPI: %d\n", ret);
+> I picked this for a general comment.
 > 
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan
->> <vadivel.muruganx.ramuthevar@linux.intel.com> Signed-off-by: Vignesh
->> Raghavendra <vigneshr@ti.com>
->> ---
->>  drivers/mtd/spi-nor/cadence-quadspi.c | 538
->> +++++++++++++--------------------- 1 file changed, 209 insertions(+), 329
->> deletions(-)
->>
->> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c
->> b/drivers/mtd/spi-nor/cadence-quadspi.c index 494dcab4aaaa..7b52e109036e
->> 100644
->> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
->> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
->> @@ -3,6 +3,8 @@
+>     We have drm_err(drm, "...", ...) which is preferred over DRM_XXX
+>     They require a drm_device * that may not be available everywhere.
 > 
-> cut
-> 
->>  struct cqspi_st {
->> @@ -70,23 +66,20 @@ struct cqspi_st {
->>         void __iomem            *ahb_base;
->>         resource_size_t         ahb_size;
->>         struct completion       transfer_complete;
->> -       struct mutex            bus_mutex;
-> 
-> are we now supporting just a single flash on the bus? Does 
-> CQSPI_MAX_CHIPSELECT make sense anymore?
-> 
+> IMO not a showstopper, but should be trivial to fix (if adrm_device * is
+> a avaiable).
 
-Driver still supports multiple CS but SPI core takes care of
-serialization by holding bus_lock_mutex in spi_mem_access_start()
-
-So, I don't see a need for this mutex
-
-[...]
+We don't do a drm_dev_alloc so no drm device here afaik tell.
 
 > 
-> cut
+> > +}
+> > +
+> > +static int nwl_dsi_bridge_attach(struct drm_bridge *bridge)
+> > +{
+> > +	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
+> > +	struct drm_bridge *panel_bridge;
+> > +	struct drm_panel *panel;
+> > +	int ret;
 > 
->> -static int cqspi_of_get_pdata(struct platform_device *pdev)
->> +static int cqspi_of_get_pdata(struct cqspi_st *cqspi)
->>  {
->> -       struct device_node *np = pdev->dev.of_node;
->> -       struct cqspi_st *cqspi = platform_get_drvdata(pdev);
->> -
->> -       cqspi->is_decoded_cs = of_property_read_bool(np,
->> "cdns,is-decoded-cs"); +       struct device *dev = &cqspi->pdev->dev;
+> This function now takes a flags argument.
+> In other words - the driver will not build when applied
+> to drm-misc-next.
+
+Fixed by rebasing on next-20200317. I'll send a new version after
+letting this sit for a moment. It'd be so cool to get this queued up so
+we get a working display stack on the imx8mq.
+
+Cheers,
+ -- Guido
+
 > 
-> you dropped the reading of this property, but you kept the is_decoded_cs 
-> member, shouldn't you drop the latter too? I guess this deserves a dedicated 
-> patch.
+> > +
+> > +	ret = drm_of_find_panel_or_bridge(dsi->dev->of_node, 1, 0, &panel,
+> > +					  &panel_bridge);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (panel) {
+> > +		panel_bridge = drm_panel_bridge_add(panel);
+> > +		if (IS_ERR(panel_bridge))
+> > +			return PTR_ERR(panel_bridge);
+> > +	}
+> > +	dsi->panel_bridge = panel_bridge;
+> > +
+> > +	if (!dsi->panel_bridge)
+> > +		return -EPROBE_DEFER;
+> > +
+> > +	return drm_bridge_attach(bridge->encoder, dsi->panel_bridge, bridge);
+> > +}
 > 
-
-is_decoded_cs cannot be supported with spi-mem as this requires
-knowlegde of flash geometry which is not available via spi-mem
-
-I don't see any user of decoded-cs in the kernel. So, IMO its okay to
-drop entire support in a patch prior to converting driver to spi-mem.
-
-[...]
-
->> @@ -1423,16 +1295,28 @@ static int cqspi_probe(struct platform_device *pdev)
->> cqspi->current_cs = -1;
->>         cqspi->sclk = 0;
->>
->> -       ret = cqspi_setup_flash(cqspi, np);
->> +       ret = cqspi_setup_flash(cqspi);
->>         if (ret) {
->> -               dev_err(dev, "Cadence QSPI NOR probe failed %d\n", ret);
->> +               dev_err(dev, "failed to setup flash parameters %d\n", ret);
->>                 goto probe_setup_failed;
->>         }
->>
->> -       return ret;
->> +       if (cqspi->use_dac_mode) {
->> +               ret = cqspi_request_mmap_dma(cqspi);
+> 	Sam
 > 
-> the driver was requesting the mmap for each available flash and now you do it 
-> once, which is great, but this too has to be made in a dedicated patch.
->
-
-Not really, current driver does:
-
-                        if (!cqspi->rx_chan)
-                                cqspi_request_mmap_dma(cqspi);
-
-So, cqspi_request_mmap_dma() is not called again if it succeeds for at
-least one flash.
-
-Regards
-Vignesh
