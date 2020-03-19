@@ -2,116 +2,144 @@ Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D80DC4332D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C25FC43333
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 18:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC0F20754
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 17:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148FF20870
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 18:01:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="itPC5gsA"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="l0WeQLfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgCSRyF (ORCPT
+        id S1727009AbgCSSBe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:54:05 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:9656 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726867AbgCSRyF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:54:05 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JHm9SF030010;
-        Thu, 19 Mar 2020 18:53:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=xhvicN/AH/49Tg2jHic/L9lkAzHjv3HYlGeap+CFKCw=;
- b=itPC5gsA4ELXAaE5a2xDmNDrb5QWsSt9ffWnFFkd989qno6/JM/OpyoT751KRmhW/tNQ
- 71qYW6KimHr6RiyjbBsoHXLoJDqjWKcnirjzDlAMbVwek7QEQhR+Ik69n4vnor64SVHA
- 4hCbsJHZMCrK5CPkIrUwH6pb9kkTCOuc5qvL4zMOLcXfH6lhm0OWuEP8vuyvHdiidnt5
- IJfMlkjybMUpN4QYPBsXJ6KsXlqPMPsN9yTboHVu94k1OUH6FGjAsoH+1B/HTR194Xzp
- nZgRYNOWW7u+QfXgNj0UJ9jkZT+EqGp6R266rND85YqQsEPi4/k1HkncEl4vdZmJAqgL 4w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yu8etk926-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Mar 2020 18:53:27 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1CBB6100034;
-        Thu, 19 Mar 2020 18:53:23 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F0DC32BC7BA;
-        Thu, 19 Mar 2020 18:53:22 +0100 (CET)
-Received: from [10.211.9.6] (10.75.127.45) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar
- 2020 18:53:21 +0100
-Subject: Re: [PATCH] dt-bindings: iio: dac: stm32-dac: convert bindings to
- json-schema
-To:     Rob Herring <robh@kernel.org>
-CC:     <robh+dt@kernel.org>, <jic23@kernel.org>,
-        <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
-        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <olivier.moysan@st.com>,
-        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1584543037-32095-1-git-send-email-fabrice.gasnier@st.com>
- <20200319171231.GA17071@bogus>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <3a1474bd-ae64-96f8-d094-545e0e2eff6c@st.com>
-Date:   Thu, 19 Mar 2020 18:53:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Mar 2020 14:01:34 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:50338 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgCSSBd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 14:01:33 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C8FDFA53;
+        Thu, 19 Mar 2020 19:01:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584640891;
+        bh=J0G9o/JIk2L9YAMrgEYnSflrJ+3mDjoCeRH1I4lPqik=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l0WeQLfY4oPvGyf+T8Bwr1JXg9rF3wSCsAL/YwHYR/F4V+bPvcMIBVex2/JmFRkPq
+         wH0uwGnyJ0/qvbpO0VFVj+sYnrBU90JDCIx7sBKD7tzafPZrokKyt3pDfmx4om2Nkv
+         yNo/D2bEwfHVQcIjR59Xc9qhUHFpFJvvzC1CHe/o=
+Date:   Thu, 19 Mar 2020 20:01:25 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Alex Riesen <alexander.riesen@cetitec.com>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 07/10] dt-bindings: adv748x: add information about
+ serial audio interface (I2S/TDM)
+Message-ID: <20200319180125.GJ14585@pendragon.ideasonboard.com>
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+ <c9ff553f804f178a247dca356306948e971432fb.1584639664.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-In-Reply-To: <20200319171231.GA17071@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-19_06:2020-03-19,2020-03-19 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c9ff553f804f178a247dca356306948e971432fb.1584639664.git.alexander.riesen@cetitec.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/19/20 6:12 PM, Rob Herring wrote:
-> On Wed, 18 Mar 2020 15:50:37 +0100, Fabrice Gasnier wrote:
->> Convert the STM32 DAC binding to DT schema format using json-schema
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->>  .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
->>  .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
->>  2 files changed, 110 insertions(+), 63 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
->>  create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
->>
+Hi Alex,
+
+Thank you for the patch.
+
+On Thu, Mar 19, 2020 at 06:42:36PM +0100, Alex Riesen wrote:
+> As the driver has some support for the audio interface of the device,
+> the bindings file should mention it.
+
+While at it, how about converting the bindings to YAML ? :-) It can of
+course be done on top.
+
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+> ---
+>  .../devicetree/bindings/media/i2c/adv748x.txt    | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
 > 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml: $id: relative path/filename doesn't match actual path or filename
-> 	expected: http://devicetree.org/schemas/iio/dac/st,stm32-dac.yaml#
-> 
-> See https://patchwork.ozlabs.org/patch/1257568
-> Please check and re-submit.
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> index 4f91686e54a6..7d6db052c294 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> @@ -2,7 +2,9 @@
+>  
+>  The ADV7481 and ADV7482 are multi format video decoders with an integrated
+>  HDMI receiver. They can output CSI-2 on two independent outputs TXA and TXB
+> -from three input sources HDMI, analog and TTL.
+> +from three input sources HDMI, analog and TTL. There is also support for an
+> +I2S compatible interface connected to the audio processor of the HDMI decoder.
 
-Hi Rob,
+s/I2S compatible/I2S-compatible/ ?
 
-Just sent a V2.
+> +The interface has TDM capability (8 slots, 32 bits, left or right justified).
+>  
+>  Required Properties:
+>  
+> @@ -16,6 +18,8 @@ Required Properties:
+>      slave device on the I2C bus. The main address is mandatory, others are
+>      optional and remain at default values if not specified.
+>  
+> +  - #clock-cells: must be <0> if the I2S port is used
 
-I fear it's a copy/paste from another patch:
-https://patchwork.ozlabs.org/patch/1223488/
-dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema
+Wouldn't it be simpler to set it to 0 unconditionally ?
 
-Should I send a fix for this one also ?
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Please advise,
-Fabrice
-> 
+> +
+>  Optional Properties:
+>  
+>    - interrupt-names: Should specify the interrupts as "intrq1", "intrq2" and/or
+> @@ -47,6 +51,7 @@ are numbered as follows.
+>  	  TTL		sink		9
+>  	  TXA		source		10
+>  	  TXB		source		11
+> +	  I2S		source		12
+>  
+>  The digital output port nodes, when present, shall contain at least one
+>  endpoint. Each of those endpoints shall contain the data-lanes property as
+> @@ -72,6 +77,7 @@ Example:
+>  
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> +		#clock-cells = <0>;
+>  
+>  		interrupt-parent = <&gpio6>;
+>  		interrupt-names = "intrq1", "intrq2";
+> @@ -113,4 +119,12 @@ Example:
+>  				remote-endpoint = <&csi20_in>;
+>  			};
+>  		};
+> +
+> +		port@c {
+> +			reg = <12>;
+> +
+> +			adv7482_i2s: endpoint {
+> +				remote-endpoint = <&i2s_in>;
+> +			};
+> +		};
+>  	};
+
+-- 
+Regards,
+
+Laurent Pinchart
