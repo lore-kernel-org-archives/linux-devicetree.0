@@ -2,26 +2,26 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5CEC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AED8C43332
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8ABC20777
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8112A20767
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:41:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbgCTRlP (ORCPT
+        id S1727196AbgCTRlX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:41:15 -0400
-Received: from v6.sk ([167.172.42.174]:51674 "EHLO v6.sk"
+        Fri, 20 Mar 2020 13:41:23 -0400
+Received: from v6.sk ([167.172.42.174]:51752 "EHLO v6.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726801AbgCTRlP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:41:15 -0400
+        id S1727190AbgCTRlW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:41:22 -0400
 Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 09AE760EC2;
-        Fri, 20 Mar 2020 17:41:13 +0000 (UTC)
+        by v6.sk (Postfix) with ESMTP id 512EC60EEF;
+        Fri, 20 Mar 2020 17:41:20 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -35,11 +35,14 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 0/10] NS 8250 UART Device Tree improvements
-Date:   Fri, 20 Mar 2020 18:40:57 +0100
-Message-Id: <20200320174107.29406-1-lkundrak@v3.sk>
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 02/10] ARM: dts: pxa*: Fix serial port names
+Date:   Fri, 20 Mar 2020 18:40:59 +0100
+Message-Id: <20200320174107.29406-3-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200320174107.29406-1-lkundrak@v3.sk>
+References: <20200320174107.29406-1-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -47,43 +50,80 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+There's a preferred node name for serial ports, and it's not "uart":
 
-this series aims to make it possible to validate NS 8250 compatible serial port 
-nodes in Device Tree. It ultimately ends up converting the 8250.txt binding
-specification to YAML for json-schema.
+  pxa910-dkb.dt.yaml: uart@d4017000: $nodename:0: 'uart@d4017000'
+      does not match '^serial(@[0-9a-f,]+)*$'
+  ...
 
-It starts by fixing up a couple of issues that would fail validation of
-device trees for various boards. Note there might be validation issues in other
-boards -- I don't have computing power to run "make dtbs_check" with
-CONFIG_OF_ALL_DTBS=y at the moment. I'm happy to fix up issues if somebody
-runs the test output to me.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ arch/arm/boot/dts/pxa168.dtsi | 6 +++---
+ arch/arm/boot/dts/pxa910.dtsi | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-Unless someone has a different idea, I'd like to submit this to arm-soc once
-I get the Acks from PXA and Tango maintainers as well as DT reviewers:
-
-  [PATCH 01/10] ARM: dts: pxa*: Don't redeclare phandle references
-  [PATCH 02/10] ARM: dts: pxa*: Fix serial port names
-  [PATCH 03/10] ARM: dts: pxa*: Make the serial ports compatible with
-  [PATCH 04/10] ARM: dts: mmp2-brownstone: Don't redeclare phandle
-  [PATCH 05/10] ARM: dts: mmp*: Fix serial port names
-  [PATCH 06/10] ARM: dts: mmp*: Make the serial ports compatible with
-  [PATCH 07/10] ARM: dts: tango4: Make /serial compatible with ns16550a
-
-What follows is a large yet straightforward fixup of similar nature for PowerPC.
-I'd be thankful if PowerPC maintainers could pick this patch up.
-
-  [PATCH 08/10] powerpc/fsl: Make serial ports compatible with ns16550a
-
-Then follows folding of mrvl-serial.txt into 8250.txt (the Marvell serial
-port is in fact an XScale UART, a variation of 8250) and the actual
-conversion. Perhaps the best route these patches could take via the tty
-tree.
-
-  [PATCH 09/10] dt-bindings: serial: Move Marvell compatible string to
-  [PATCH 10/10] dt-bindings: serial: Convert 8250 to json-schema
-
-Thanks,
-Lubo
-
+diff --git a/arch/arm/boot/dts/pxa168.dtsi b/arch/arm/boot/dts/pxa168.dtsi
+index 72f8cb60cb531..41dc79c9f6320 100644
+--- a/arch/arm/boot/dts/pxa168.dtsi
++++ b/arch/arm/boot/dts/pxa168.dtsi
+@@ -55,7 +55,7 @@ timer0: timer@d4014000 {
+ 				interrupts = <13>;
+ 			};
+ 
+-			uart1: uart@d4017000 {
++			uart1: serial@d4017000 {
+ 				compatible = "mrvl,mmp-uart";
+ 				reg = <0xd4017000 0x1000>;
+ 				interrupts = <27>;
+@@ -64,7 +64,7 @@ uart1: uart@d4017000 {
+ 				status = "disabled";
+ 			};
+ 
+-			uart2: uart@d4018000 {
++			uart2: serial@d4018000 {
+ 				compatible = "mrvl,mmp-uart";
+ 				reg = <0xd4018000 0x1000>;
+ 				interrupts = <28>;
+@@ -73,7 +73,7 @@ uart2: uart@d4018000 {
+ 				status = "disabled";
+ 			};
+ 
+-			uart3: uart@d4026000 {
++			uart3: serial@d4026000 {
+ 				compatible = "mrvl,mmp-uart";
+ 				reg = <0xd4026000 0x1000>;
+ 				interrupts = <29>;
+diff --git a/arch/arm/boot/dts/pxa910.dtsi b/arch/arm/boot/dts/pxa910.dtsi
+index b3d6182d4de4a..209b1f0ea67b2 100644
+--- a/arch/arm/boot/dts/pxa910.dtsi
++++ b/arch/arm/boot/dts/pxa910.dtsi
+@@ -67,7 +67,7 @@ timer1: timer@d4016000 {
+ 				status = "disabled";
+ 			};
+ 
+-			uart1: uart@d4017000 {
++			uart1: serial@d4017000 {
+ 				compatible = "mrvl,mmp-uart";
+ 				reg = <0xd4017000 0x1000>;
+ 				interrupts = <27>;
+@@ -76,7 +76,7 @@ uart1: uart@d4017000 {
+ 				status = "disabled";
+ 			};
+ 
+-			uart2: uart@d4018000 {
++			uart2: serial@d4018000 {
+ 				compatible = "mrvl,mmp-uart";
+ 				reg = <0xd4018000 0x1000>;
+ 				interrupts = <28>;
+@@ -85,7 +85,7 @@ uart2: uart@d4018000 {
+ 				status = "disabled";
+ 			};
+ 
+-			uart3: uart@d4036000 {
++			uart3: serial@d4036000 {
+ 				compatible = "mrvl,mmp-uart";
+ 				reg = <0xd4036000 0x1000>;
+ 				interrupts = <59>;
+-- 
+2.25.1
 
