@@ -2,78 +2,91 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3881EC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 13:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A580C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 13:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174C920722
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 13:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E271920754
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 13:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCTNMU (ORCPT
+        id S1727027AbgCTNNG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:12:20 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:28294 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726902AbgCTNMU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 09:12:20 -0400
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Mar 2020 18:41:25 +0530
-Received: from mkrishn-linux.qualcomm.com ([10.204.66.35])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 20 Mar 2020 18:41:07 +0530
-Received: by mkrishn-linux.qualcomm.com (Postfix, from userid 438394)
-        id C1C1A4509; Fri, 20 Mar 2020 18:41:06 +0530 (IST)
-From:   Krishna Manikandan <mkrishn@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: [v3] arm64: dts: sc7180: modify assigned clocks for sc7180 target
-Date:   Fri, 20 Mar 2020 18:41:04 +0530
-Message-Id: <1584709864-5587-1-git-send-email-mkrishn@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 20 Mar 2020 09:13:06 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58313 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727195AbgCTNNF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 09:13:05 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.pengutronix.de.)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1jFHSO-0001XK-3z; Fri, 20 Mar 2020 14:13:00 +0100
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     linux-media@vger.kernel.org
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de,
+        devicetree@vger.kernel.org
+Subject: [PATCH v6 0/4] Add initial i.MX8MQ support
+Date:   Fri, 20 Mar 2020 14:12:52 +0100
+Message-Id: <20200320131256.23294-1-p.zabel@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add DISP_CC_MDSS_ROT_CLK and DISP_CC_MDSS_AHB_CLK
-in the assigned clocks list as these are display
-specific clocks and needs to be initialized from
-the client side. Adding the default rate of
-19.2 mhz for these clocks for sc7180 target.
+With the i.MX8MQ decoders in active use and the i.MX8MM power domain
+support still up in the air, I think it makes sense to merge i.MX8MQ
+Hantro support now and accept that i.MX8MM may or may not require
+different bindings.
 
-Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+Patch 4 depends on [2] for the MAINTAINERS change.
 
-Changes in v3:
-	- Change in commit message
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Changes since v5 [1]:
+ - Drop merged patches
+ - Drop i.MX8MM bindings
+ - Change example node name to video-codec
+ - Convert i.MX8MQ bindings to YAML
+ - Drop i.MX8MM support
+ - Rebase onto media/master
+ - Enable h.264 and VP8 decoding
+ - Enable post-processing
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 998f101..e3b60f1 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1544,8 +1544,12 @@
- 				clock-names = "iface", "rot", "lut", "core",
- 					      "vsync";
- 				assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
--						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-+						  <&dispcc DISP_CC_MDSS_VSYNC_CLK>,
-+						  <&dispcc DISP_CC_MDSS_ROT_CLK>,
-+						  <&dispcc DISP_CC_MDSS_AHB_CLK>;
- 				assigned-clock-rates = <300000000>,
-+						       <19200000>,
-+						       <19200000>,
- 						       <19200000>;
- 
- 				interrupt-parent = <&mdss>;
+[1] https://lore.kernel.org/linux-media/20190612093915.18973-1-p.zabel@pengutronix.de
+[2] https://lore.kernel.org/linux-media/20200318132108.21873-9-ezequiel@collabora.com
+
+regards
+Philipp
+
+Philipp Zabel (4):
+  media: dt-bindings: Document i.MX8MQ VPU bindings
+  media: hantro: add initial i.MX8MQ support
+  arm64: dts: imx8mq: enable Hantro G1/G2 VPU
+  media: MAINTAINERS: add myself to co-maintain Hantro G1/G2 for i.MX8MQ
+
+ .../bindings/media/nxp,imx8mq-vpu.yaml        |  77 ++++++
+ MAINTAINERS                                   |   2 +
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  27 +++
+ drivers/staging/media/hantro/Kconfig          |  16 +-
+ drivers/staging/media/hantro/Makefile         |   3 +
+ drivers/staging/media/hantro/hantro_drv.c     |   3 +
+ drivers/staging/media/hantro/hantro_hw.h      |   1 +
+ drivers/staging/media/hantro/imx8m_vpu_hw.c   | 220 ++++++++++++++++++
+ 8 files changed, 345 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+ create mode 100644 drivers/staging/media/hantro/imx8m_vpu_hw.c
+
 -- 
-1.9.1
+2.20.1
 
