@@ -2,122 +2,150 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02786C4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 19:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F023C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 20:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC97720739
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 19:52:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="aV5+AQ5H";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="D3dkUm3e"
+	by mail.kernel.org (Postfix) with ESMTP id 4866D20739
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 20:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgCTTw3 (ORCPT
+        id S1726951AbgCTUf6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 15:52:29 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:52360 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTTw3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 15:52:29 -0400
-Received: by mail.z3ntu.xyz (Postfix, from userid 182)
-        id E1E16C43CD; Fri, 20 Mar 2020 19:52:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1584733946; bh=MDnzSJT+llofSXN9pFcQrkcAec3ckxZl7QrMwV659OU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=aV5+AQ5HFMQtjamOGfq2RPgVngbnXZM/kr1CKeliXJGmCvn29OoiLOtA6k1WRlax7
-         ppDPVYf6XCWEK9PcBUBVZ1Xni7o+4PhcPo24OtDDVKzAeMh6FFkVJUUdehwdS4CHkD
-         yWwVP/6VCUwDibK8MTf/YgWud5NfbK1AkV6/wBT0=
-Received: from g550jk.localnet (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 7BB74C43BA;
-        Fri, 20 Mar 2020 19:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1584733942; bh=MDnzSJT+llofSXN9pFcQrkcAec3ckxZl7QrMwV659OU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=D3dkUm3eV3UFiDyYuYr9T3nrTLJiA18jxrZ26rNJ/7pLpyiLXTm1wf6cEuMUKeMhc
-         PDTdZxAD0QrTDo0qFjaXiqDhT3hLDf4SME6700HUqDMR8nbCvYuR4j7xFjEiURtWh1
-         TORTze3yF0dIb1duzBBDNGWr81ua4lgRGNUpmH7E=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        shawnguo@kernel.org, olof@lixom.net, maxime@cerno.tech,
-        Anson.Huang@nxp.com, dinguyen@kernel.org, leonard.crestez@nxp.com,
-        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
+        Fri, 20 Mar 2020 16:35:58 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:58105 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbgCTUf6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 16:35:58 -0400
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1jFOOS-0004rF-93; Fri, 20 Mar 2020 20:37:24 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Robert Foss <robert.foss@linaro.org>
-Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: Re: [v2 6/6] arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
-Date:   Fri, 20 Mar 2020 20:52:20 +0100
-Message-ID: <2523204.mvXUDI8C0e@g550jk>
-In-Reply-To: <20200317135740.19412-7-robert.foss@linaro.org>
-References: <20200317135740.19412-1-robert.foss@linaro.org> <20200317135740.19412-7-robert.foss@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+        Robert Jones <rjones@gateworks.com>
+Cc:     Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v7 0/3] Add support for the Gateworks System Controller
+Date:   Fri, 20 Mar 2020 13:35:47 -0700
+Message-Id: <1584736550-7520-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robert,
+This series adds support for the Gateworks System Controller used on Gateworks
+Laguna, Ventana, and Newport product families.
 
-On Dienstag, 17. M=E4rz 2020 14:57:40 CET Robert Foss wrote:
-> Build camera clock, isp and controller drivers as modules.
->=20
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/configs/defconfig | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 4db223dbc549..7cb6989249ab 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -376,6 +376,7 @@ CONFIG_I2C_MESON=3Dy
->  CONFIG_I2C_MV64XXX=3Dy
->  CONFIG_I2C_OWL=3Dy
->  CONFIG_I2C_PXA=3Dy
-> +CONFIG_I2C_QCOM_CCI=3Dm
->  CONFIG_I2C_QCOM_GENI=3Dm
->  CONFIG_I2C_QUP=3Dy
->  CONFIG_I2C_RK3X=3Dy
-> @@ -530,6 +531,7 @@ CONFIG_VIDEO_SAMSUNG_S5P_MFC=3Dm
->  CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=3Dm
->  CONFIG_VIDEO_RENESAS_FCP=3Dm
->  CONFIG_VIDEO_RENESAS_VSP1=3Dm
-> +CONFIG_VIDEO_QCOM_CAMSS=3Dm
->  CONFIG_DRM=3Dm
->  CONFIG_DRM_I2C_NXP_TDA998X=3Dm
->  CONFIG_DRM_NOUVEAU=3Dm
-> @@ -732,6 +734,7 @@ CONFIG_MSM_GCC_8994=3Dy
->  CONFIG_MSM_MMCC_8996=3Dy
->  CONFIG_MSM_GCC_8998=3Dy
->  CONFIG_QCS_GCC_404=3Dy
-> +CONFIG_SDM_CAMCC_845=3Dm
+The GSC is an MSP430 I2C slave controller whose firmware embeds the following
+features:
+ - I/O expander (16 GPIO's emulating a PCA955x)
+ - EEPROM (enumating AT24)
+ - RTC (enumating DS1672)
+ - HWMON
+ - Interrupt controller with tamper detect, user pushbotton
+ - Watchdog controller capable of full board power-cycle
+ - Power Control capable of full board power-cycle
 
-You seem to have this option twice in this patch.
+see http://trac.gateworks.com/wiki/gsc for more details
+---
+v7:
+ - dt-bindings: change divider from mili-ohms to ohms
+ - dt-bindings: add constraints for voltage divider and offset
+ - dt-bindings: remove unnecessary ref for offset
+ - dt-bindings: renamed fan to fan-controller and changed base prop to reg
+ - mfd:  remove irq from private data struct
+ - hwmon: fix whitespace in Kconfig
+ - hwmon: remove unnecessary device pointer in private data
+ - hwmon: change divider from mili-ohms to ohms
+ - hwmon: move fan base property to reg
 
->  CONFIG_SDM_GCC_845=3Dy
->  CONFIG_SM_GCC_8150=3Dy
->  CONFIG_QCOM_HFPLL=3Dy
-> @@ -762,6 +765,7 @@ CONFIG_QCOM_COMMAND_DB=3Dy
->  CONFIG_QCOM_GENI_SE=3Dy
->  CONFIG_QCOM_GLINK_SSR=3Dm
->  CONFIG_QCOM_RMTFS_MEM=3Dm
-> +CONFIG_SDM_CAMCC_845=3Dm
+v6:
+ - hwmon: fix size of info field
+ - hwmon: improve pwm output control documentation
+ - hwmon: include unit suffix in divider and offset
+ - hwmon: change subnode name to gsc-adc
+ - hwmon: change to fan subnode
+ - hwmon: fix voltage offset
+ - dt-bindings: fix commit message typo
+ - dt-bindings: drop invalid description from #interrupt-cells property
+ - dt-bindings: fix adc pattern property
+ - dt-bindings: add unit suffix
+ - dt-bindings: replace hwmon/adc with adc/channel
+ - dt-bindings: changed adc type to gw,mode
+ - dt-bindings: add unit suffix and drop ref for voltage-divider
+ - dt-bindings: add unit suffix for voltage-offset
+ - dt-bindings: moved fan to its own subnode with base register
 
-^
+v5:
+ - fix checkpatch issues
+ - fix dt_binding_check issues
+ - address feedback from v4
 
->  CONFIG_QCOM_RPMH=3Dy
->  CONFIG_QCOM_RPMHPD=3Dy
->  CONFIG_QCOM_SMEM=3Dy
+v4:
+ - hwmon: move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+ - hwmon: remove unncessary resolution/scaling properties for ADCs
+ - bindings: update to yaml Documentation
+ - removed watchdog driver
 
-Regards
-Luca
+v3:
+ - removed unnecessary input driver
+ - added wdt driver
+ - bindings: encorporated feedback from mailng list
+ - hwmon:
+ - encoroprated feedback from mailng list
+ - added support for raw ADC voltage input used in newer GSC firmware
 
+v2:
+ - change license comment block style
+ - remove COMPILE_TEST
+ - fixed whitespace issues
+ - replaced a printk with dev_err
+ - remove DEBUG
+ - simplify regmap_bulk_read err check
+ - remove break after returns in switch statement
+ - fix fan setpoint buffer address
+ - remove unnecessary parens
+ - consistently use struct device *dev pointer
+ - add validation for hwmon child node props
+ - move parsing of of to own function
+ - use strlcpy to ensure null termination
+ - fix static array sizes and removed unnecessary initializers
+ - dynamically allocate channels
+ - fix fan input label
+ - support platform data
+
+Tim Harvey (3):
+  dt-bindings: mfd: Add Gateworks System Controller bindings
+  mfd: add Gateworks System Controller core driver
+  hwmon: add Gateworks System Controller support
+
+ .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 173 ++++++++++
+ Documentation/hwmon/gsc-hwmon.rst                  |  53 +++
+ Documentation/hwmon/index.rst                      |   1 +
+ MAINTAINERS                                        |  11 +
+ drivers/hwmon/Kconfig                              |   9 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/gsc-hwmon.c                          | 372 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/gateworks-gsc.c                        | 291 ++++++++++++++++
+ include/linux/mfd/gsc.h                            |  71 ++++
+ include/linux/platform_data/gsc_hwmon.h            |  44 +++
+ 12 files changed, 1037 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+ create mode 100644 Documentation/hwmon/gsc-hwmon.rst
+ create mode 100644 drivers/hwmon/gsc-hwmon.c
+ create mode 100644 drivers/mfd/gateworks-gsc.c
+ create mode 100644 include/linux/mfd/gsc.h
+ create mode 100644 include/linux/platform_data/gsc_hwmon.h
+
+-- 
+2.7.4
 
