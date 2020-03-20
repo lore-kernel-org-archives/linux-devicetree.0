@@ -2,263 +2,314 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63D4C4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 02:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFEBC4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 03:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90A022051A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 02:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF52206D7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 03:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584671724;
-	bh=ilmHEwPWRPj4TcOpnxaJISvvNhZupHK136FrxxNG0T0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bpCNjP/ehc29LDZfUngKazEqdbgRrfG1FYRKBwR9IK+zBY/pcPXUH0OZnUrdfC5Wx
-	 MHPkDknLOpqMI+OAa+aGmtRRBNACw54TNr8B+JkIgZeYMJQ2oef+Vntg42u7WWac/D
-	 jPhK7FBxG1PbsaoxU9lSrJnP6ibSZdjZuiLo4ziY=
+	s=default; t=1584674120;
+	bh=Qy4Drd2ux8KYY4KgJCZdJOObAhqMSo77y6zNWn+q4MM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pO0sYTImrCln8VIzxbbFocddjutjU3NwXPztJJJj3o9Euxgn3jBt9JCbDtLF4sYQ3
+	 bgP3lOYv4D2IpKvodISxkAZkiLfj0JT7o8TtFkyEp1Ys8VJgseq604NthXA6RnmBdD
+	 HbFXDcZmZ69hc9/ecPhoVoHAq0570yUB6q5i/ZPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgCTCfY (ORCPT
+        id S1726603AbgCTDPS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 22:35:24 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41678 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbgCTCfY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 22:35:24 -0400
-Received: by mail-il1-f196.google.com with SMTP id l14so4252366ilj.8;
-        Thu, 19 Mar 2020 19:35:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2Sq6oKLWDfJ+N+DDKC8RQHWKWhsyZ667cL6sIzF8qaQ=;
-        b=IawZQNN/uUQdqmFGqDjmWrYOSTAEejBpK4S5CsCvNgf0vZscPI1b7KqROlFsDBBFa9
-         /HQmLq/IQrNIDBJOYRWTD3hN0s6NumpzHV4B0RFfuPN30iEjSSErZbQOCQ2rgtcec2mR
-         dzYdYhtWJIPPRv6XEaQG5kQkInDp5wXgEAQnL1Ve+I4xOZAV//UbD6bQiUu0brE9pdo/
-         PVvET+Ogp206fl3Xva71lRWMU+11ivL9N8IvofU2erf6UWu9QtMLZMxSILC1R3btgvV2
-         GoRdnqM3rT4TBEkQb+bVn1Ys1FCaxo3SqrULaK1wOpzQdGI4CFoQJ/uVSm3XLxhYGb/L
-         UDZQ==
-X-Gm-Message-State: ANhLgQ076TRYQdeBaQGtRVZiPGYBxQDVjS6kbzPM0dgZgW4FRy53JfQk
-        jHCk7kUMjkvIrA4liKsv8A==
-X-Google-Smtp-Source: ADFU+vsVm+nifF98caUWQnSmDG2GKEgK2WvKO90v12PmyqZXcnTLBJgtj6xphBjSTbngRtG43Fwzbw==
-X-Received: by 2002:a92:dc06:: with SMTP id t6mr6053887iln.89.1584671722918;
-        Thu, 19 Mar 2020 19:35:22 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id j23sm1339289ioa.10.2020.03.19.19.35.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 19:35:22 -0700 (PDT)
-Received: (nullmailer pid 10779 invoked by uid 1000);
-        Fri, 20 Mar 2020 02:35:20 -0000
-Date:   Thu, 19 Mar 2020 20:35:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/3] dt-bindings: phy: Add DT bindings for Xilinx
- ZynqMP PSGTR PHY
-Message-ID: <20200320023520.GA18490@bogus>
-References: <20200311103252.17514-1-laurent.pinchart@ideasonboard.com>
- <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
+        Thu, 19 Mar 2020 23:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726103AbgCTDPS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 23:15:18 -0400
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E68AD20732;
+        Fri, 20 Mar 2020 03:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584674117;
+        bh=Qy4Drd2ux8KYY4KgJCZdJOObAhqMSo77y6zNWn+q4MM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=w3GKc92cnRRSzt66icI55KS0YEpfwJqCiylsk1UA/e0G2dtEuTFM3ktG48tXpJvQH
+         RUqJDJyM6DfJjtqBLJ5d/7Iv/23jWn4gz1/qanH0EYx3PWYHQZ5NnQOzLXVoT7V7yP
+         pa/AWhK78n39Pbt4bzMzZAspmVtoVHhhot1C7FLo=
+Received: by mail-qt1-f180.google.com with SMTP id d22so3881277qtn.0;
+        Thu, 19 Mar 2020 20:15:16 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2RuSClpIGjk4Ol/gbJ7iJHsGYum2kCfd2o9VuF3OvTt+9X2Zws
+        x+3Vhu6Q89az0ImCEVdkqVNYO7MufTDXJVc4GA==
+X-Google-Smtp-Source: ADFU+vvbZ0m/eqkTFt+PYD8TMf6wIaTyZ1u2Jmh0zj6G5M05l2SrNwBvEVQ1sjhQ0kcRpDTwXiW7ElZTToN7kZFliKg=
+X-Received: by 2002:ac8:1b33:: with SMTP id y48mr6410475qtj.136.1584674115935;
+ Thu, 19 Mar 2020 20:15:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1584464453-28200-1-git-send-email-tharvey@gateworks.com> <1584464453-28200-2-git-send-email-tharvey@gateworks.com>
+In-Reply-To: <1584464453-28200-2-git-send-email-tharvey@gateworks.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 19 Mar 2020 21:15:04 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK8isY1ymi6Kk=uDC-uLR5QZUYUUQJ3z=SJ6ToC5aTbjg@mail.gmail.com>
+Message-ID: <CAL_JsqK8isY1ymi6Kk=uDC-uLR5QZUYUUQJ3z=SJ6ToC5aTbjg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: mfd: Add Gateworks System Controller bindings
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Robert Jones <rjones@gateworks.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:32:50PM +0200, Laurent Pinchart wrote:
-> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> 
-> Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-> Processing System Gigabit Transceiver which provides PHY capabilities to
-> USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
-> 
-> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+On Tue, Mar 17, 2020 at 11:01 AM Tim Harvey <tharvey@gateworks.com> wrote:
+>
+> This patch adds documentation of device-tree bindings for the
+> Gateworks System Controller (GSC).
+>
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 > ---
-> Changes since v5:
-> 
-> - Document clocks and clock-names properties
-> - Document resets and reset-names properties
-> - Replace subnodes with an additional entry in the PHY cells
-> - Drop lane frequency PHY cell, replaced by reference clock phandle
-> - Convert bindings to YAML
-> - Reword the subject line
-> - Drop Rob's R-b as the bindings have significantly changed
-> - Drop resets and reset-names properties
+> v6:
+>  - fix commit message typo
+>  - drop invalid description from #interrupt-cells property
+>  - fix adc pattern property
+>  - add unit suffix
+>  - replace hwmon/adc with adc/channel
+>  - changed adc type to gw,mode
+>  - add unit suffix and drop ref for voltage-divider
+>  - add unit suffix for voltage-offset
+>  - moved fan to its own subnode with base register
+>
+> v5:
+>  - resolve dt_binding_check issues
+>
+> v4:
+>  - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+>  - remove unncessary resolution/scaling properties for ADCs
+>  - update to yaml
+>  - remove watchdog
+>
+> v3:
+>  - replaced _ with -
+>  - remove input bindings
+>  - added full description of hwmon
+>  - fix unit address of hwmon child nodes
 > ---
->  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 104 ++++++++++++++++++
->  include/dt-bindings/phy/phy.h                 |   1 +
->  2 files changed, 105 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+>  .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 172 +++++++++++++++++++++
+>  1 file changed, 172 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
 > new file mode 100644
-> index 000000000000..9948e4a60e45
+> index 00000000..e921e67
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> @@ -0,0 +1,104 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-For new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-Though I guess Anurag needs to agree.
-
+> +++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> @@ -0,0 +1,172 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
+> +$id: http://devicetree.org/schemas/mfd/gateworks-gsc.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
-> +
-> +maintainers:
-> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +title: Gateworks System Controller multi-function device
 > +
 > +description: |
-> +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
-> +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
-> +  Ethernet SGMII controllers.
+> +  The GSC is a Multifunction I2C slave device with the following submodules:
+> +   - Watchdog Timer
+> +   - GPIO
+> +   - Pushbutton controller
+> +   - Hardware Monitor with ADC's for temperature and voltage rails and
+> +     fan controller
+> +
+> +maintainers:
+> +  - Tim Harvey <tharvey@gateworks.com>
+> +  - Robert Jones <rjones@gateworks.com>
 > +
 > +properties:
-> +  "#phy-cells":
-> +    const: 4
-> +    description: |
-> +      The cells contain the following arguments.
-> +
-> +      - description: The GTR lane
-> +        minimum: 0
-> +        maximum: 3
-> +      - description: The PHY type
-> +        enum:
-> +          - PHY_TYPE_DP
-> +          - PHY_TYPE_PCIE
-> +          - PHY_TYPE_SATA
-> +          - PHY_TYPE_SGMII
-> +          - PHY_TYPE_USB
-> +      - description: The PHY instance
-> +        minimum: 0
-> +        maximum: 1 # for DP, SATA or USB
-> +        maximum: 3 # for PCIE or SGMII
-> +      - description: The reference clock number
-> +        minimum: 0
-> +        maximum: 3
-
-Humm, interesting almost json-schema. I guess it's fine as-is.
-
-I would like to figure out how to apply a schema like this to the 
-consumer nodes. We'd have to look up the phandle, get that node's 
-compatible, find the provider's schema, find #.*-cells property, and 
-extract a schema from it. Actually, doesn't sound too hard.
-
-> +
+> +  $nodename:
+> +    pattern: "gsc@[0-9a-f]{1,2}"
 > +  compatible:
-> +    enum:
-> +      - xlnx,zynqmp-psgtr-v1.1
-> +      - xlnx,zynqmp-psgtr
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 4
-> +    description: |
-> +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
-> +      inputs shall not have an entry.
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 4
-> +    items:
-> +      pattern: "^ref[0-3]$"
+> +    const: gw,gsc
 > +
 > +  reg:
-> +    items:
-> +      - description: SERDES registers block
-> +      - description: SIOU registers block
+> +    description: I2C device address
+> +    maxItems: 1
 > +
-> +  reg-names:
-> +    items:
-> +      - const: serdes
-> +      - const: siou
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  adc:
+> +    type: object
+> +    description: Optional Hardware Monitoring module
+> +
+> +    properties:
+> +      compatible:
+> +        const: gw,gsc-adc
+> +
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +    patternProperties:
+> +      "^channel@[0-9]+$":
+> +        type: object
+> +        description: |
+> +          Properties for a single ADC which can report cooked values
+> +          (ie temperature sensor based on thermister), raw values
+> +          (ie voltage rail with a pre-scaling resistor divider).
+> +
+> +        properties:
+> +          reg:
+> +            description: Register of the ADC
+> +            maxItems: 1
+> +
+> +          label:
+> +            description: Name of the ADC input
+> +
+> +          gw,mode:
+> +            description: |
+> +              conversion mode:
+> +                0 - temperature, in C*10
+> +                1 - pre-scaled voltage value
+> +                2 - scaled voltage based on an optional resistor divider
+> +                    and optional offset
+> +            allOf:
+> +              - $ref: /schemas/types.yaml#/definitions/uint32
+> +            enum: [0, 1, 2]
+> +
+> +          gw,voltage-divider-milli-ohms:
+> +            description: values of resistors for divider on raw ADC input
+> +            items:
+> +              - description: R1
+> +              - description: R2
+
+Aren't there some constraints on the values? You could do something like this:
+
+            maxItems: 2
+            items:
+              minimum: 1
+              maximum: 2000
+
+I know I said the way you have it is fine, but the example fails with
+it like this. It's related to how we encode the DT data for validation
+and some schema fixups we do to cut down on some boilerplate. We could
+just fix the example (with <> around each value), but having
+constraints is better.
+
+> +
+> +          gw,voltage-offset-microvolt:
+> +            $ref: /schemas/types.yaml#/definitions/uint32
+
+Can drop this as .*-microvolt has a defined type.
+
+Are there some constraints?
+
+> +            description: |
+> +              A positive voltage offset to apply to a raw ADC
+> +              (ie to compensate for a diode drop).
+> +
+> +        required:
+> +          - gw,mode
+> +          - reg
+> +          - label
+> +
+> +    required:
+> +      - compatible
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +
+> +  fan:
+
+fan-controller
+
+Save 'fan' for if/when we have a node representing the fan itself.
+
+> +    type: object
+> +    description: Optional FAN controller
+> +
+> +    properties:
+> +      compatible:
+> +        const: gw,gsc-fan
+> +
+> +      base:
+
+What happened to 'reg'? While inconsistent that adc doesn't have an
+address, better that than inventing your own address property.
+
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: The fan controller base address
+> +        maxItems: 1
+> +
+> +    required:
+> +      - compatible
+> +      - base
 > +
 > +required:
-> +  - "#phy-cells"
 > +  - compatible
 > +  - reg
-> +  - reg-names
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      const: xlnx,zynqmp-psgtr
-> +
-> +then:
-> +  properties:
-> +    xlnx,tx-termination-fix:
-> +      description: |
-> +        Include this for fixing functional issue with the TX termination
-> +        resistance in GT, which can be out of spec for the XCZU9EG silicon
-> +        version.
-> +      type: boolean
-> +
-> +additionalProperties: false
-
-This won't work with 'xlnx,tx-termination-fix'. You need to move it to 
-the main properties section and then do:
-
-if:
-  properties:
-    compatible:
-      const: xlnx,zynqmp-psgtr-v1.1
-
-then:
-  properties:
-    xlnx,tx-termination-fix: false
-
-I think this would also work:
-
-  not:
-    required:
-      - xlnx,tx-termination-fix
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
 > +
 > +examples:
 > +  - |
-> +    phy: phy@fd400000 {
-> +      compatible = "xlnx,zynqmp-psgtr-v1.1";
-> +      reg = <0x0 0xfd400000 0x0 0x40000>,
-> +            <0x0 0xfd3d0000 0x0 0x1000>;
-> +      reg-names = "serdes", "siou";
-> +      clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
-> +      clock-names = "ref1", "ref2", "ref3";
-> +      #phy-cells = <4>;
-> +      status = "okay";
-
-Drop status in examples.
-
-> +    };
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
 > +
-> +...
-> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-> index 1f3f866fae7b..f6bc83b66ae9 100644
-> --- a/include/dt-bindings/phy/phy.h
-> +++ b/include/dt-bindings/phy/phy.h
-> @@ -17,5 +17,6 @@
->  #define PHY_TYPE_USB3		4
->  #define PHY_TYPE_UFS		5
->  #define PHY_TYPE_DP		6
-> +#define PHY_TYPE_SGMII		7
->  
->  #endif /* _DT_BINDINGS_PHY */
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
+> +        gsc@20 {
+> +            compatible = "gw,gsc";
+> +            reg = <0x20>;
+> +            interrupt-parent = <&gpio1>;
+> +            interrupts = <4 GPIO_ACTIVE_LOW>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <1>;
+> +
+> +            adc {
+> +                compatible = "gw,gsc-adc";
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                channel@0 { /* A0: Board Temperature */
+> +                    gw,mode = <0>;
+> +                    reg = <0x00>;
+> +                    label = "temp";
+> +                };
+> +
+> +                channel@2 { /* A1: Input Voltage (raw ADC) */
+> +                    gw,mode = <1>;
+> +                    reg = <0x02>;
+> +                    label = "vdd_vin";
+> +                    gw,voltage-divider-milli-ohms = <22100 1000>;
+> +                    gw,voltage-offset-microvolt = <800000>;
+> +                };
+> +
+> +                channel@b { /* A2: Battery voltage */
+> +                    gw,mode = <1>;
+> +                    reg = <0x0b>;
+> +                    label = "vdd_bat";
+> +                };
+> +            };
+> +
+> +            fan {
+> +                compatible = "gw,gsc-fan";
+> +                base = <0x2c>;
+> +            };
+> +        };
+> +    };
+> --
+> 2.7.4
+>
