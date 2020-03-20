@@ -2,101 +2,360 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECAEC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 22:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EACC4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 22:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4482072C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 22:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1558C20409
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 22:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584743906;
-	bh=nZ+PMUgb3HVA8rcBAZm6Djd6N5+bgJDS4jqRa126iAk=;
+	s=default; t=1584744523;
+	bh=sSQ7zAZi/YRMURlexeZ3HDVuMKzmj7MyXCjUb9J5OLM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZsBTNPXkXNStg8bNTNuGvwqfQe7yPJjtp+xjkMGzRaOx8myAnt1Z9hytDRhtxuttP
-	 N5U1vE49Ulw+vQH0WxpHR0+KMYaXQSX5+YYDh9bVFQZUDf2qLguZeCivhE9CUklm4e
-	 Bt1ufGACzPao7K8g3uWaM1qPE0JRF/UByIvre07Y=
+	b=rtx6Dn8s6MOvfQU4lIY+A8p8in3w3ay7oTG6L3vPVZ56h7JfR5lJxXQFBGjwgGxBE
+	 7bCvUqmEWb7YEPgP3CDPpMPqWWGCt/u0hFU6MaBk1ahghF73x+SX3OjKO/Y1mLgCQa
+	 db7PJf+pQQfZpHP1Xiwaqi7ZvApV3UcebRODlzU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbgCTWiW (ORCPT
+        id S1726997AbgCTWsm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:38:22 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43941 "EHLO
+        Fri, 20 Mar 2020 18:48:42 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44466 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgCTWiW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 18:38:22 -0400
-Received: by mail-io1-f66.google.com with SMTP id n21so7639493ioo.10;
-        Fri, 20 Mar 2020 15:38:21 -0700 (PDT)
+        with ESMTP id S1726880AbgCTWsm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 18:48:42 -0400
+Received: by mail-io1-f66.google.com with SMTP id v3so7669053iot.11;
+        Fri, 20 Mar 2020 15:48:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qSFUyWECzAXW0HX43CgH2zDgAz8AxAWVffEW3w/kp5o=;
-        b=oPRpCt+c35KS/HB2OnqzfwEBwfyAfZmsFwPRVh4v+jzWw/+7/K1VWXQdcsEcWLi0vl
-         C5OEd/4f2TTyeBDGR1/iDp5p89j/7r0AiOfnJof8AzVP78fhgL2InJ765EQfwXy5BWRN
-         Ny9h1mul29iNSQdzkj2/JabhHSrhCbmje46E9ON9MgWJoUTBy6zL4p8SsF4G+OwTRgWy
-         h5sPp+OxE6ZeH+2T2zCpD4LkzoP5g/ALphIjgkEgzQo+ssqRLI4I1ZDjQCg7VQkVWpex
-         MWjrbkyDr+aZP1ZJiOIMbfSE2ZQ04RSNcRzKvjZFMZqxcFJK2kUVUm6i6NrKN1W2a0jL
-         wQAw==
-X-Gm-Message-State: ANhLgQ2wWkurAKT6sayLxoxlP/7EDSktQE4jXQbhzrmomGHIGeUnp48+
-        lO/2zdvNjQWxG6jK5EpD4Q==
-X-Google-Smtp-Source: ADFU+vtdBLoVFwGWQgsKmCoa9A7999apEHu+ZaZVMplwZDVgvWAW6SOKN3FTPrzrV0mrY+rEp0Ct5g==
-X-Received: by 2002:a6b:7504:: with SMTP id l4mr9722601ioh.184.1584743901517;
-        Fri, 20 Mar 2020 15:38:21 -0700 (PDT)
+        bh=A1uslfEoH7vNHdUhQmPCdcU9qvlFI6adpXPxHF0FMnE=;
+        b=dJAuwJpcq7ItCiFo+a+MddeXvQwQAI8LTIo28qFcEWOuRivKSHukqyGzg3kTuI87vo
+         Nr5G7Tl3AhcaCsYltVIxiv36/PDjCe8hVNElwHzmNy1oegqVt9XZAcz/gXRI08t7hPzz
+         ONoyjQ2D1oEUFZH+HjxNM95KrTqsLCCeyaKGXwmLZ4jth/dw/Vki65fdOqywnFcgjJRU
+         f6pGo8+ms8xlxQIUGvw4fUTBRcgISnUulIo96we0NNzTMyuU0wjOo2nCDo188T3d19C4
+         Ni6NVUhRO34Iu30BTIVLu30e1PehX57KSZYNJCUGY/kNrJtrQdl7wqnNTMVj1HUhgHPG
+         Zv6w==
+X-Gm-Message-State: ANhLgQ1yY4o5DW1Z9Hk4iUF8TmDdN69d3mP/daKluKi0HO/JnEnAdLlf
+        0sXtE6mmzCr0lvcQgAjR4A==
+X-Google-Smtp-Source: ADFU+vtwXWnuppwnc14jRb856bQUQFUaxaVhGlFZFR9oFbLMkd2qPfBTmiy1HVaQaH4yTdHNcia0iA==
+X-Received: by 2002:a6b:8b07:: with SMTP id n7mr9777692iod.55.1584744520519;
+        Fri, 20 Mar 2020 15:48:40 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id n29sm2386822ila.86.2020.03.20.15.38.19
+        by smtp.gmail.com with ESMTPSA id f2sm2115369ioj.34.2020.03.20.15.48.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 15:38:20 -0700 (PDT)
-Received: (nullmailer pid 26889 invoked by uid 1000);
-        Fri, 20 Mar 2020 22:38:18 -0000
-Date:   Fri, 20 Mar 2020 16:38:18 -0600
+        Fri, 20 Mar 2020 15:48:39 -0700 (PDT)
+Received: (nullmailer pid 11861 invoked by uid 1000);
+        Fri, 20 Mar 2020 22:48:36 -0000
+Date:   Fri, 20 Mar 2020 16:48:36 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
-        Sebastian Reichel <sre@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-Subject: Re: [PATCH v5 2/9] dt_bindings: ROHM BD99954 Charger
-Message-ID: <20200320223818.GA26851@bogus>
-References: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
- <a697e85a2c21758e00a28ca64b6e55ff7fb2f7d0.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v4 5/5] media: dt-bindings: media: i2c: convert ov5645
+ bindings to json-schema
+Message-ID: <20200320224836.GA27024@bogus>
+References: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584620363-2255-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200319151035.GC14585@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a697e85a2c21758e00a28ca64b6e55ff7fb2f7d0.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20200319151035.GC14585@pendragon.ideasonboard.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 18 Mar 2020 13:49:47 +0200, Matti Vaittinen wrote:
-> The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
-> secondary battery. Intended to be used in space-constraint equipment such
-> as Low profile Notebook PC, Tablets and other applications. BD99954
-> provides a Dual-source Battery Charger, two port BC1.2 detection and a
-> Battery Monitor.
+On Thu, Mar 19, 2020 at 05:10:35PM +0200, Laurent Pinchart wrote:
+> Hi Prabhakar,
 > 
-> Document the DT bindings for BD99954
+> Thank you for the patch.
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
+> On Thu, Mar 19, 2020 at 12:19:23PM +0000, Lad Prabhakar wrote:
+> > Convert ov5645 bindings to json-schema.
 > 
+> \o/
 > 
-> Changes since v4:
->  - change compatible name and file name accordingly
->  - Fix the title
+> > 
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  .../devicetree/bindings/media/i2c/ov5645.txt  |  54 -------
+> >  .../devicetree/bindings/media/i2c/ov5645.yaml | 140 ++++++++++++++++++
+> >  2 files changed, 140 insertions(+), 54 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > deleted file mode 100644
+> > index 1c85c78ec58c..000000000000
+> > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > +++ /dev/null
+> > @@ -1,54 +0,0 @@
+> > -* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
+> > -
+> > -The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
+> > -an active array size of 2592H x 1944V. It is programmable through a serial I2C
+> > -interface.
+> > -
+> > -Required Properties:
+> > -- compatible: Value should be "ovti,ov5645".
+> > -- clocks: Reference to the xclk clock.
+> > -- clock-names: Should be "xclk".
+> > -- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> > -  to the hardware pin PWDNB which is physically active low.
+> > -- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> > -  the hardware pin RESETB.
+> > -- vdddo-supply: Chip digital IO regulator.
+> > -- vdda-supply: Chip analog regulator.
+> > -- vddd-supply: Chip digital core regulator.
+> > -
+> > -The device node must contain one 'port' child node for its digital output
+> > -video port, in accordance with the video interface bindings defined in
+> > -Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > -
+> > -Example:
+> > -
+> > -	&i2c1 {
+> > -		...
+> > -
+> > -		ov5645: ov5645@3c {
+> > -			compatible = "ovti,ov5645";
+> > -			reg = <0x3c>;
+> > -
+> > -			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+> > -			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
+> > -			pinctrl-names = "default";
+> > -			pinctrl-0 = <&camera_rear_default>;
+> > -
+> > -			clocks = <&clks 200>;
+> > -			clock-names = "xclk";
+> > -			assigned-clocks = <&clks 200>;
+> > -			assigned-clock-rates = <24000000>;
+> > -
+> > -			vdddo-supply = <&camera_dovdd_1v8>;
+> > -			vdda-supply = <&camera_avdd_2v8>;
+> > -			vddd-supply = <&camera_dvdd_1v2>;
+> > -
+> > -			port {
+> > -				ov5645_ep: endpoint {
+> > -					clock-lanes = <1>;
+> > -					data-lanes = <0 2>;
+> > -					remote-endpoint = <&csi0_ep>;
+> > -				};
+> > -			};
+> > -		};
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.yaml b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+> > new file mode 100644
+> > index 000000000000..4bf58ad210c5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+> > @@ -0,0 +1,140 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/i2c/ov5645.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
 > 
+> s/Mp/MP/ ?
 > 
+> > +
+> > +maintainers:
+> > +  - Sakari Ailus <sakari.ailus@linux.intel.com>
+> > +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > +
+> > +description: |-
+> > + The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
+> > + an active array size of 2592H x 1944V. It is programmable through a serial I2C
+> > + interface.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: ovti,ov5645
+> > +
+> > +  reg:
+> > +    description: I2C device address
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: xclk
+> > +
+> > +  assigned-clocks:
+> > +    maxItems: 1
+> > +
+> > +  assigned-clock-rates:
+> > +     items:
+> > +     - description: Must be 24MHz (24000000).
 > 
->  .../bindings/power/supply/rohm,bd99954.yaml   | 155 ++++++++++++++++++
->  1 file changed, 155 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
-> 
+> These two properties shouldn't be part of the bindings, they're generic.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The fact that they have 1 entry is part of this binding.
+
+
+> > +  enable-gpios:
+> > +    description: |-
+> > +      Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> > +      to the hardware pin PWDNB which is physically active low.
+> 
+> Specifying that the polarity is GPIO_ACTIVE_HIGH is confusing in my
+> opinion. If there's an inverter on the board, you'll need
+> GPIO_ACTIVE_LOW. We could possibly drop the sentence, as all GPIOs in DT
+> are supposed to be active high, but the fact that the GPIO name
+> corresponds to the opposite of the pin probably has to be documented. I
+> have no better wording to propose now I'm afraid, but it needs to be
+> addressed. Maybe Rob or Maxime could help.
+
+All GPIOs in DT are active high? What? 
+
+Using 'powerdown-gpios' would have made more sense here, but we're stuck 
+with it now. In any case, the description was good enough before and I 
+don't care to re-review it as part of the conversion.
+
+> > +  reset-gpios:
+> > +    description: |-
+> > +      Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> > +      the hardware pin RESETB.
+> 
+> Here you could just drop the second sentence, or apply the same fix as
+> for enable-gpios.
+
+A description that's specific to this chip seems good to me.
+ 
+> > +
+> > +  vdddo-supply:
+> > +    description:
+> > +      Chip digital IO regulator.
+> 
+> You can move the description on the same line as the "description:" key.
+> Same below.
+> 
+> > +
+> > +  vdda-supply:
+> > +    description:
+> > +      Chip analog regulator.
+> > +
+> > +  vddd-supply:
+> > +    description:
+> > +      Chip digital core regulator.
+> > +
+> > +  # See ../video-interfaces.txt for more details
+> > +  port:
+> > +    type: object
+> > +    properties:
+> > +      endpoint:
+> > +        type: object
+> > +
+> > +        properties:
+> > +          data-lanes:
+> > +            description: |-
+> > +              The sensor supports two-lane operation.
+> > +              For two-lane operation the property must be set to <1 2>.
+> > +            items:
+> > +              - const: 1
+> > +              - const: 2
+> 
+> 
+> What if only one lane is wired, does the sensor support that ?
+> 
+> > +
+> > +          clock-lanes:
+> > +            description:
+> > +              should be set to <0> (clock lane on hardware lane 0).
+> > +            items:
+> > +              - const: 0
+> > +
+> > +          remote-endpoint: true
+> > +
+> > +        required:
+> > +          - data-lanes
+> > +          - clock-lanes
+> > +          - remote-endpoint
+> > +
+> > +        additionalProperties: false
+> > +
+> > +    additionalProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - assigned-clocks
+> > +  - assigned-clock-rates
+> 
+> Those two properties should be dropped.
+> 
+> > +  - enable-gpios
+> > +  - reset-gpios
+> 
+> Are the GPIOs mandatory ? What if the signals are hardwired on the board
+> ?
+> 
+> > +  - vdddo-supply
+> > +  - vdda-supply
+> > +  - vddd-supply
+> > +  - port
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c1 {
+> 
+> s/i2c1/i2c/
+> 
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        ov5645: sensor@3c {
+> > +            compatible = "ovti,ov5645";
+> > +            reg = <0x3c>;
+> > +            clocks = <&ov5645_cl>;
+> > +            clock-names = "xclk";
+> > +            assigned-clocks = <&ov5645_cl>;
+> > +            assigned-clock-rates = <24000000>;
+> > +            enable-gpios = <&gpio1 6 /* GPIO_ACTIVE_HIGH */>;
+> > +            reset-gpios = <&gpio5 20 /* GPIO_ACTIVE_LOW */>;
+> > +            vdddo-supply = <&camera_dovdd_1v8>;
+> > +            vdda-supply = <&camera_avdd_2v8>;
+> > +            vddd-supply = <&camera_dvdd_1v2>;
+> > +
+> > +            port {
+> > +                ov5645_0: endpoint {
+> > +                    remote-endpoint = <&csi1_ep>;
+> > +                    clock-lanes = <0>;
+> > +                    data-lanes = <1 2>;
+> > +                };
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +...
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
