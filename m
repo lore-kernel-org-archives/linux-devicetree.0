@@ -2,76 +2,68 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C65EC43333
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 23:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A93C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 23:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4A220753
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 23:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F259B20757
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 23:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584747282;
-	bh=KlD7C3t6BH2O4UP6R7njnCijifLTsjKPiRnTBJC0TUU=;
+	s=default; t=1584748796;
+	bh=9ypyxU5qWZfYyckFKazKeUGCpDXZ35O6N4eoCQ7bCRQ=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=uh3aeHIw8CmbyDZ1CeM/MDOilWS01RjU7mwP4wJ9WOmtnj2P1XHyMs6//NJ+RytxS
-	 H+k2qKbWu4rQtq3KH+kUIUY5HsMKZdg15qy4OIOZKTbq67DsGNQ/U8J7cNl3seZx0j
-	 OU84WhvNjuUehojgNanM9E59cWEpANhx9QAR/1Z0=
+	b=v3ey2asomcwB0xVtC9DFx//vHqUoPQO+PcrdJHTsdn4zKyXI8s9f8rm3lAVuBHkz7
+	 Nh1q2djyMRP6/suWI7Cvv95l+sDYf3RkyjjCFynAaizbpLivpU/f4MOrXK7qA1fNE5
+	 P0bydNm8d68FYLys6EZ9wgbag4kuITtkly1GdH9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgCTXem (ORCPT
+        id S1726773AbgCTX7z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:34:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 19:59:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTXem (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:34:42 -0400
+        id S1726738AbgCTX7z (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Mar 2020 19:59:55 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99E0220714;
-        Fri, 20 Mar 2020 23:34:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A509F2072D;
+        Fri, 20 Mar 2020 23:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584747281;
-        bh=KlD7C3t6BH2O4UP6R7njnCijifLTsjKPiRnTBJC0TUU=;
+        s=default; t=1584748794;
+        bh=9ypyxU5qWZfYyckFKazKeUGCpDXZ35O6N4eoCQ7bCRQ=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=MMMQSZ5DQwc/CSJKvWD0WRLuljCe26Uu3SstV6VvWn1SCRmvrB585TSDTCrF10Die
-         a9AvfjMhSR9mAxhfQ5S7TT6FpOk5gjZPifXyzMY+rrYoJIJ6YfTSGCvp/jBORQ92Dq
-         6huMW/cEIDLEgsaG96mQe/0o/ApsRQ/Rf0RA/zwU=
+        b=JquCWGuPGqkjoY1/TnuI+qNaSwzYt/5nG/cGiy+uLnK9A0ilk4P3JMClzQyorD0iy
+         aGsK/iUing3IoirY9PB1llxSaKyqJAwjDT+MNWnrw0AZSY2saDkvtBj2UgeXzZoo9J
+         bvWGeR44NcY22huO0bXs/Dsv9IdEQxJhck4NuF6k=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1584478412-7798-2-git-send-email-wcheng@codeaurora.org>
-References: <1584478412-7798-1-git-send-email-wcheng@codeaurora.org> <1584478412-7798-2-git-send-email-wcheng@codeaurora.org>
-Subject: Re: [PATCH v2 1/2] clk: qcom: gcc: Add USB3 PIPE clock and GDSC for SM8150
+In-Reply-To: <1582100974-129559-4-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com> <1582100974-129559-4-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: Re: [PATCH 2/4] clk: Ingenic: Add support for TCU of X1000.
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Wesley Cheng <wcheng@codeaurora.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mark.rutland@arm.com,
-        mturquette@baylibre.com, robh+dt@kernel.org
-Date:   Fri, 20 Mar 2020 16:34:40 -0700
-Message-ID: <158474728076.125146.11401827374115414324@swboyd.mtv.corp.google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, tglx@linutronix.de, maz@kernel.org,
+        jason@lakedaemon.net, mturquette@baylibre.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        daniel.lezcano@linaro.org, paul@crapouillou.net,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        dongsheng.qiu@ingenic.com
+To:     linux-mips@vger.kernel.org, zhouyanjie@wanyeetech.com
+Date:   Fri, 20 Mar 2020 16:59:53 -0700
+Message-ID: <158474879381.125146.13343412789779262447@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Wesley Cheng (2020-03-17 13:53:31)
-> diff --git a/include/dt-bindings/clock/qcom,gcc-sm8150.h b/include/dt-bin=
-dings/clock/qcom,gcc-sm8150.h
-> index 90d60ef..3e1a918 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-sm8150.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-sm8150.h
-> @@ -240,4 +240,8 @@
->  #define GCC_USB30_SEC_BCR                                      27
->  #define GCC_USB_PHY_CFG_AHB2PHY_BCR                            28
-> =20
-> +/* GCC GDSCRs */
-> +#define USB30_PRIM_GDSC                     4
-> +#define USB30_SEC_GDSC                                         5
+Quoting Zhou Yanjie (2020-02-19 00:29:32)
+> X1000 has a different TCU containing OST, since X1000, OST has been
+> independent of TCU. This patch is prepare for later OST driver.
+>=20
 
-BTW, should we expect more GDSCs at 0,1,2,3 here? Why wasn't that done
-initially?
+Acked-by: Stephen Boyd <sboyd@kernel.org>
