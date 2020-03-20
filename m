@@ -5,116 +5,332 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB336C4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 18:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A84C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D3120784
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 18:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8559020739
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 18:38:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apXJslcS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IldYeDCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbgCTSfL (ORCPT
+        id S1726783AbgCTSiF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:35:11 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37553 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgCTSfJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 14:35:09 -0400
-Received: by mail-ed1-f67.google.com with SMTP id b23so8333990edx.4;
-        Fri, 20 Mar 2020 11:35:08 -0700 (PDT)
+        Fri, 20 Mar 2020 14:38:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34944 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgCTSiF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 14:38:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h4so8800547wru.2;
+        Fri, 20 Mar 2020 11:38:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uQ0Q+G5JHB2wM7K4BTcO70sOln2WeIX1gFNwP6RhpGg=;
-        b=apXJslcSv6DC7tOJCgLYYYrV7Uplua56Od4xMZ0ChU3xw5lwqCUcaRvDeMQVJ718nC
-         lIN/rx3MUNJ4VpgfEJlHp8ehGN1L8yIdGbVA57igSjDUsRsevHYfRk4NcwhEpC/qDq7C
-         mUPGo9j8A5mlZaevqvNT3+34ex12nlDlL89Wg/Y8KUb27OwNxAP/VWpk5+i/vhrpx0EP
-         ydt3z/yAqFx96y/MFkcHqQHwoTVTtcxfTNWETO/WAXC4rZX6yMqat78iXAbvheQkgNWh
-         IL1Cgr0omLPpNQSd7K1H9n9n2xc3sJY5d+8Y/0ez0sU6j+smuEfkjYBAQUNuWlp/RJ1z
-         hQ3g==
+        h=from:to:cc:subject:date:message-id;
+        bh=siFgfPc9fCk7rO2ToRt/6ZaDQr0C4GZ8VcJXz8SSGHc=;
+        b=IldYeDCY8daeqfeBjol42hmI6cyt4+dLrhYEqMKT5oUdS/myhTbW0l8E6hXea93U03
+         80ucEBiWNPW4+4MTUXbMuB1hYaoUPWzKCYMgdvB7eq5fD4zBnD3nI3kXdAUQnKSWVmR/
+         hCkXWyfcdIPyX0t/tCq5rJloBdjqcf+cCaRHRGC5X1540wzEv+R80N+B4E02ZPdSRy4v
+         Q8G1+MA25A8gxywlWSWLNJFcyXpDZ1824jiEyDFpQePxDm57U1gBFqAydtMtYDNaIpDE
+         rSzmD+7pWSrQBfvHykP3uMs2lNGkYEKS1B5xeENNO+w1FVwq3IntvmA6vw9QrGb5YzDx
+         9y4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uQ0Q+G5JHB2wM7K4BTcO70sOln2WeIX1gFNwP6RhpGg=;
-        b=tpkfcge3waxKDXg+PsEEnEKe4ktNUK3WPKKm3zUIuOSlG5ZpiL1R6f9/t+r9WLAahU
-         sbxuupMr8AHJWQDKIN7P82/hoEh89ZMS4/HMxAkmG3Z+SCsnOK5TIrBEoSrTASKe4aam
-         O0vhLVmvSb1FTq5PJtl8RVLn2PuU6qbMfjzOvenPkt1/qelurQEqZ6A+oc+CIrbiO2f0
-         yhljLWso5QOV7V2IvJj9aHFeaOtDpFO4wDJgWPAfr6hNqKMxch967jadKBq4VQkXPQNJ
-         gGQatWpHokO+ICHEzrAsAYLrh97BiXNuqVZ5UQCRLb+XHm07HLdP9kGEss7xOaKFSlZk
-         pi2A==
-X-Gm-Message-State: ANhLgQ2m5XTPhZcgoE78y1GZvLVHnid6dfJ3+Uupq6AqWOdVCUFLgSMh
-        isoDMkZJZHYu87j+vAGrtFA=
-X-Google-Smtp-Source: ADFU+vsaA6XpAhj1+J65GLanwleRzVBh4W3oXm2qIL37/3iCYgGQ2Uue7Q0ibo2tLweZ+0IKexqPKA==
-X-Received: by 2002:a05:6402:2071:: with SMTP id bd17mr9532397edb.160.1584729307682;
-        Fri, 20 Mar 2020 11:35:07 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
-        by smtp.googlemail.com with ESMTPSA id y13sm172916eje.3.2020.03.20.11.35.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 11:35:06 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/12] devicetree: bindings: pci: add missing clks to qcom,pcie
-Date:   Fri, 20 Mar 2020 19:34:44 +0100
-Message-Id: <20200320183455.21311-2-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200320183455.21311-1-ansuelsmth@gmail.com>
-References: <20200320183455.21311-1-ansuelsmth@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=siFgfPc9fCk7rO2ToRt/6ZaDQr0C4GZ8VcJXz8SSGHc=;
+        b=NWQeNXGOWBR320g8B8naOqMVgV6bkuD49H5Mr5ev7LhP59s+ekBW5fj4U+NoDixcDk
+         ffV74JgyjdpnDHGNjHkqu3JrIcAPmtF6AoRbueL9jCxoSsZzb/+gcQTCqWxuoKjhzxuE
+         mdGzSrB3KWD7vltZ4u+LR8wa/vkLibk8YleBQdj/bPICEgrvoV0hPCAwtf5aqyZehS7P
+         zUj0bdrASqXTUYPpk9Ol90u06zJjrzPpSGshnqq43Q7tGTn/BMKZyLKymFOqjevekouB
+         x7VrmPYbXBXRPKjuZKr5iTpxrEptmLISjY27sdWyRc+sAus2VzEq43w5Blflto3uBeIN
+         XlPQ==
+X-Gm-Message-State: ANhLgQ3tc+6O2dnOJ0xgESwFK+twcwnjFUF4cqTCGdljv023mbf5NPyZ
+        sEH1LQrLBR0RhWgrGwacucU=
+X-Google-Smtp-Source: ADFU+vul19kpBOB4tyokVlx/29LbgL6eR3J+IwoDPNe9xy1ogqqHdJ4jW2N6bJPQ+F0w5m6Xl+LA6w==
+X-Received: by 2002:adf:ec4f:: with SMTP id w15mr12993218wrn.106.1584729483010;
+        Fri, 20 Mar 2020 11:38:03 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id p10sm5083790wrm.6.2020.03.20.11.38.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Mar 2020 11:38:01 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     kishon@ti.com
+Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v2] dt-bindings: phy: convert phy-rockchip-inno-usb2 bindings to yaml
+Date:   Fri, 20 Mar 2020 19:37:55 +0100
+Message-Id: <20200320183755.17150-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document missing clks used in ipq806x soc
+Current dts files for Rockchip with 'usb2-phy' subnodes
+are manually verified. In order to automate this process
+phy-rockchip-inno-usb2.txt has to be converted to yaml.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.txt | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Changed v2:
+  Keep unused "rockchip,rk3366-usb2phy" support.
+  Add "#phy-cells" to example.
+  Add allOf phy-provider.yaml
+---
+ .../bindings/phy/phy-rockchip-inno-usb2.txt        |  81 -----------
+ .../bindings/phy/phy-rockchip-inno-usb2.yaml       | 153 +++++++++++++++++++++
+ 2 files changed, 153 insertions(+), 81 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index 981b4de12807..becdbdc0fffa 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -90,6 +90,8 @@
- 	Definition: Should contain the following entries
- 			- "core"	Clocks the pcie hw block
- 			- "phy"		Clocks the pcie PHY block
-+			- "aux" 	Clocks the pcie AUX block
-+			- "ref" 	Clocks the pcie ref block
- - clock-names:
- 	Usage: required for apq8084/ipq4019
- 	Value type: <stringlist>
-@@ -277,8 +279,10 @@
- 				<0 0 0 4 &intc 0 39 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
- 		clocks = <&gcc PCIE_A_CLK>,
- 			 <&gcc PCIE_H_CLK>,
--			 <&gcc PCIE_PHY_CLK>;
--		clock-names = "core", "iface", "phy";
-+			 <&gcc PCIE_PHY_CLK>,
-+			 <&gcc PCIE_AUX_CLK>,
-+			 <&gcc PCIE_ALT_REF_CLK>;
-+		clock-names = "core", "iface", "phy", "aux", "ref";
- 		resets = <&gcc PCIE_ACLK_RESET>,
- 			 <&gcc PCIE_HCLK_RESET>,
- 			 <&gcc PCIE_POR_RESET>,
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+deleted file mode 100644
+index 541f52988..000000000
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
++++ /dev/null
+@@ -1,81 +0,0 @@
+-ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
+-
+-Required properties (phy (parent) node):
+- - compatible : should be one of the listed compatibles:
+-	* "rockchip,px30-usb2phy"
+-	* "rockchip,rk3228-usb2phy"
+-	* "rockchip,rk3328-usb2phy"
+-	* "rockchip,rk3366-usb2phy"
+-	* "rockchip,rk3399-usb2phy"
+-	* "rockchip,rv1108-usb2phy"
+- - reg : the address offset of grf for usb-phy configuration.
+- - #clock-cells : should be 0.
+- - clock-output-names : specify the 480m output clock name.
+-
+-Optional properties:
+- - clocks : phandle + phy specifier pair, for the input clock of phy.
+- - clock-names : input clock name of phy, must be "phyclk".
+- - assigned-clocks : phandle of usb 480m clock.
+- - assigned-clock-parents : parent of usb 480m clock, select between
+-		 usb-phy output 480m and xin24m.
+-		 Refer to clk/clock-bindings.txt for generic clock
+-		 consumer properties.
+- - rockchip,usbgrf : phandle to the syscon managing the "usb general
+-		 register files". When set driver will request its
+-		 phandle as one companion-grf for some special SoCs
+-		 (e.g RV1108).
+- - extcon : phandle to the extcon device providing the cable state for
+-		 the otg phy.
+-
+-Required nodes : a sub-node is required for each port the phy provides.
+-		 The sub-node name is used to identify host or otg port,
+-		 and shall be the following entries:
+-	* "otg-port" : the name of otg port.
+-	* "host-port" : the name of host port.
+-
+-Required properties (port (child) node):
+- - #phy-cells : must be 0. See ./phy-bindings.txt for details.
+- - interrupts : specify an interrupt for each entry in interrupt-names.
+- - interrupt-names : a list which should be one of the following cases:
+-	Regular case:
+-	* "otg-id" : for the otg id interrupt.
+-	* "otg-bvalid" : for the otg vbus interrupt.
+-	* "linestate" : for the host/otg linestate interrupt.
+-	Some SoCs use one interrupt with the above muxed together, so for these
+-	* "otg-mux" : otg-port interrupt, which mux otg-id/otg-bvalid/linestate
+-		to one.
+-
+-Optional properties:
+- - phy-supply : phandle to a regulator that provides power to VBUS.
+-		See ./phy-bindings.txt for details.
+-
+-Example:
+-
+-grf: syscon@ff770000 {
+-	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
+-	#address-cells = <1>;
+-	#size-cells = <1>;
+-
+-...
+-
+-	u2phy: usb2-phy@700 {
+-		compatible = "rockchip,rk3366-usb2phy";
+-		reg = <0x700 0x2c>;
+-		#clock-cells = <0>;
+-		clock-output-names = "sclk_otgphy0_480m";
+-
+-		u2phy_otg: otg-port {
+-			#phy-cells = <0>;
+-			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "otg-id", "otg-bvalid", "linestate";
+-		};
+-
+-		u2phy_host: host-port {
+-			#phy-cells = <0>;
+-			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "linestate";
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
+new file mode 100644
+index 000000000..8fd1e6f3a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
+@@ -0,0 +1,153 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/phy-rockchip-inno-usb2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip USB2.0 phy with inno IP block
++
++allOf:
++  - $ref: /schemas/phy/phy-provider.yaml#
++
++maintainers:
++  - Heiko Stuebner <heiko@sntech.de>
++
++# Everything else is described in the common file
++properties:
++  compatible:
++    oneOf:
++      - const: rockchip,px30-usb2phy
++      - const: rockchip,rk3228-usb2phy
++      - const: rockchip,rk3328-usb2phy
++      - const: rockchip,rk3366-usb2phy
++      - const: rockchip,rk3399-usb2phy
++      - const: rockchip,rv1108-usb2phy
++
++  reg:
++    maxItems: 1
++
++  clock-output-names:
++    description:
++      The usb 480m output clock name.
++
++  "#clock-cells":
++    const: 0
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: phyclk
++
++  assigned-clocks:
++    description:
++      Phandle of the usb 480m clock.
++
++  assigned-clock-parents:
++    description:
++      Parent of the usb 480m clock.
++      Select between usb-phy output 480m and xin24m.
++      Refer to clk/clock-bindings.txt for generic clock consumer properties.
++
++  extcon:
++    description:
++      Phandle to the extcon device providing the cable state for the otg phy.
++
++  rockchip,usbgrf:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Phandle to the syscon managing the 'usb general register files'.
++      When set the driver will request its phandle as one companion-grf
++      for some special SoCs (e.g rv1108).
++
++  host-port:
++    type: object
++    additionalProperties: false
++
++    properties:
++      "#phy-cells":
++        const: 0
++
++      interrupts:
++        description: host linestate interrupt
++
++      interrupt-names:
++        const: linestate
++
++      phy-supply:
++        description:
++          Phandle to a regulator that provides power to VBUS.
++          See ./phy-bindings.txt for details.
++
++    required:
++      - "#phy-cells"
++      - interrupts
++      - interrupt-names
++
++  otg-port:
++    type: object
++    additionalProperties: false
++
++    properties:
++      "#phy-cells":
++        const: 0
++
++      interrupts:
++        minItems: 1
++        maxItems: 3
++
++      interrupt-names:
++        oneOf:
++          - const: linestate
++          - const: otg-mux
++          - items:
++            - const: otg-bvalid
++            - const: otg-id
++            - const: linestate
++
++      phy-supply:
++        description:
++          Phandle to a regulator that provides power to VBUS.
++          See ./phy-bindings.txt for details.
++
++    required:
++      - "#phy-cells"
++      - interrupts
++      - interrupt-names
++
++required:
++  - compatible
++  - reg
++  - clock-output-names
++  - "#clock-cells"
++  - host-port
++  - otg-port
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3399-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    u2phy0: usb2-phy@e450 {
++      compatible = "rockchip,rk3399-usb2phy";
++      reg = <0xe450 0x10>;
++      clocks = <&cru SCLK_USB2PHY0_REF>;
++      clock-names = "phyclk";
++      clock-output-names = "clk_usbphy0_480m";
++      #clock-cells = <0>;
++      #phy-cells = <0>;
++
++      u2phy0_host: host-port {
++        #phy-cells = <0>;
++        interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>;
++        interrupt-names = "linestate";
++      };
++
++      u2phy0_otg: otg-port {
++        #phy-cells = <0>;
++        interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH 0>,
++                     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH 0>,
++                     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH 0>;
++        interrupt-names = "otg-bvalid", "otg-id", "linestate";
++      };
++    };
 -- 
-2.25.1
+2.11.0
 
