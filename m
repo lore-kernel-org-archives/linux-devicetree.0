@@ -2,202 +2,151 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2394C4332D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D536C4332D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00DF20709
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:31:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FhYh2/TX"
+	by mail.kernel.org (Postfix) with ESMTP id 6514B20753
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgCTQbF (ORCPT
+        id S1727163AbgCTQcn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:31:05 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34176 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbgCTQbE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 12:31:04 -0400
-Received: by mail-lj1-f195.google.com with SMTP id s13so7111993ljm.1
-        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 09:31:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qWa0IWkYd6tdWbqMa29lygSoK/RlkQZ5CmiZBdveSls=;
-        b=FhYh2/TXtz7rtHB2/sgGBWoGU1DMlUy49ZjxAZUAtHGGaPfpIzwGoPOkWPk1jW8vGQ
-         jawEHWpkM54XOu4a2QFgn66KU6hYd7Ex8uSdTNm7ZvYxd4vjdywS3TGM21jCtTAyFMkb
-         7klwMPsfqIdIcAknorjDXjW9m8eXggf0ojSRI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qWa0IWkYd6tdWbqMa29lygSoK/RlkQZ5CmiZBdveSls=;
-        b=Ruw3Ml/pjZb0D/PqZECDa7pmxCD+wTmLo6OeGO6724AQHSUrbU7CeQSz2USn6UcgSd
-         D58HRcOBUc+eKile9sxJJB67+PW6W8VmnCsy3sW9k+GQcRmrXh6r+YxnYoQDIZq8q0/b
-         Bq+xqWAKGA3wMHZD853MURrnlhncWN2nLiDCPJIy+cDCtxFTQU6vQ2tvUnoEhOo/LS0n
-         xx+GfJB5z01ELgZMawlV2nIR0ZsuHp7pyQ+ce8HpN8HD/4je756c9ovUIuCkMGXOD7Cw
-         vIV/G+dBytiA8kD7Ip/Kmb8Ph1RIrcHcfsIvzeJ7IKCRp3+0KteohnJHarV6CM6STn6W
-         Pz6Q==
-X-Gm-Message-State: ANhLgQ2RgrIcBA91T9IatDqkIsQvqjysggszJMLTrXRmVExShjdF+joo
-        ofOz+o9uRFo7GDXgtGlvfip8JAEExQc=
-X-Google-Smtp-Source: ADFU+vs9LU7Ht/lW/jMhu7avw8UFmKYML1ldjgKrYqwt/XOuSmt9M116QoeQUwTZbwguMRJQuNOnbQ==
-X-Received: by 2002:a2e:b1c2:: with SMTP id e2mr6157441lja.288.1584721862054;
-        Fri, 20 Mar 2020 09:31:02 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id c22sm3730385lfi.41.2020.03.20.09.31.00
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 09:31:01 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id o10so7069029ljc.8
-        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 09:31:00 -0700 (PDT)
-X-Received: by 2002:a2e:8991:: with SMTP id c17mr6037445lji.278.1584721860043;
- Fri, 20 Mar 2020 09:31:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-4-git-send-email-akashast@codeaurora.org>
- <20200313204441.GJ144492@google.com> <1f86fdf0-df7c-4e4a-d4d8-8b0162e52cb4@codeaurora.org>
- <20200317182910.GR144492@google.com> <3831b33c-93ee-e5e0-fcfb-530b4738f930@codeaurora.org>
- <20200319194332.GA60149@google.com> <a7227a1f-00a1-0818-80f3-904fe264f864@codeaurora.org>
-In-Reply-To: <a7227a1f-00a1-0818-80f3-904fe264f864@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 20 Mar 2020 09:30:23 -0700
-X-Gmail-Original-Message-ID: <CAE=gft6AGkcdUAkoyevZgmtBgaiEkoQzzJcg7sYjbpy5Kh2fyA@mail.gmail.com>
-Message-ID: <CAE=gft6AGkcdUAkoyevZgmtBgaiEkoQzzJcg7sYjbpy5Kh2fyA@mail.gmail.com>
-Subject: Re: [PATCH V2 3/8] soc: qcom-geni-se: Add interconnect support to fix
- earlycon crash
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wsa@the-dreams.de, Mark Brown <broonie@kernel.org>,
+        Fri, 20 Mar 2020 12:32:43 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:49575 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgCTQcm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 12:32:42 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MBltK-1j7brZ2XmO-00CBqH for <devicetree@vger.kernel.org>; Fri, 20 Mar
+ 2020 17:32:41 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 6398B65007A
+        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 16:32:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id YAUaIx70n7yM for <devicetree@vger.kernel.org>;
+        Fri, 20 Mar 2020 17:32:41 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 1F6F864EFE3
+        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 17:32:41 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.41) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 20 Mar 2020 17:32:41 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 2CE8680503; Fri, 20 Mar 2020 17:12:02 +0100 (CET)
+Date:   Fri, 20 Mar 2020 17:12:02 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, Doug Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v3 06/11] media: adv748x: prepare/enable mclk when the audio
+ is used
+Message-ID: <7ed1287d00da70de13627480b1601bfd2c6e570a.1584720678.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1584720678.git.alexander.riesen@cetitec.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1584720678.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.41]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7660
+X-Provags-ID: V03:K1:eC2STgDsAzkhPBfLXG+Hxi8gv+6lf9+IQEDdr/c4aKkn5s456fR
+ /U9NjBoq2BPFo1JFSJkL6Vlw2hEDTW7tWSDLgOQ/93vMCCFSeiU3fP/Knbg976yhHL/u4dd
+ +VjqnlSdkYX/LoieARnfOLz4kBA79OP42pEhTuC/pA3qkeSgrsyf4jGvwnXZUrbQBIjHj1U
+ seNojtU5+idqXpA4lDH2A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Y/lakGYveKg=:DgziO3dwYdtyqcksaU3+SV
+ x9DOj3JH4imXS3M3dR4pifpGp2XyHBlKgymvBAs9PVk3qnnWEHNgvTHzGpqq3WlwnudtTgbK0
+ L/BN+JZ7wqobpj+jd2QvOfAG5zvW9u8WvRa05yWPFLaHhDi1PF9WyImqsZcQ3W/6BE5UR88rL
+ sPFs+Yy/k03Z+K4+b73WRqL9y5e9rmLt5auBP3oKayguAyfgOtaIwX+vudd9qp2NiAAUTuDOq
+ qUq5Ew43PAc3MAhi67d4F13Ecx0kObN1AzAM62TqJwc8NwEQE3JdwBcTfrmN3w3bMzbyC1BrZ
+ WHee0flg3xrr5JWlNB9eZSEz68jqVy737z0g/+yj1StbBqrVG0CwJPzz4n4cQqb5ut7I4fwzk
+ jn+zp6L+3zAT4lp93nSqnqd+q9TLKyEKPBXILkKJtos9cKsxahH3GuDuJFDc9zAqgXkIA3gX2
+ f8yxjiHYObeIYNPyBRz3APanb2TkWWPsTl3H5VSsH98qDPBVHAOJSpv90NxA+dMO8ovBzD28U
+ tmUp7Va1skBbdqqd1Nsrd5Rx7YH627do9dTeY76VT2MxUx0psZFFetiGijIl+lFPWodvDMgzx
+ +e0jNOfCtFOWBDRe6IwVrKhvElNifcDqgTm/bUvgf3mupEhvCtI3fGqHT331hWJgJpbko+QHf
+ ITig37bR5vTS4AfppcP6CgLSiNVwKaxvyEpo0FHhacAvquidMqJptR3H4dSgDSJhwgTs4wLwt
+ qczsf4vx6QsVXG9HQy13wuYyHY61YAe1XdpLmfj9Z6DFXwtSUEkqUsKwl1rn5NkenD6dDYeTu
+ 3ZcM0cxFYXWNXXJFse7W+nmzlRzUCqYBZRDeLBlz87F9dGw77lL08P5j9msyqec4vuAB9FD
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 3:22 AM Akash Asthana <akashast@codeaurora.org> wrote:
->
-> Hi Evan, Matthias,
->
-> On 3/20/2020 1:13 AM, Matthias Kaehlcke wrote:
-> > On Wed, Mar 18, 2020 at 02:24:35PM +0530, Akash Asthana wrote:
-> >> Hi Matthias,
-> >>
-> >> On 3/17/2020 11:59 PM, Matthias Kaehlcke wrote:
-> >>> Hi Akash,
-> >>>
-> >>> On Tue, Mar 17, 2020 at 04:27:47PM +0530, Akash Asthana wrote:
-> >>>> Hi Matthias,
-> >>>>
-> >>>> On 3/14/2020 2:14 AM, Matthias Kaehlcke wrote:
-> >>>>> Hi Akash,
-> >>>>>
-> >>>>> On Fri, Mar 13, 2020 at 06:42:09PM +0530, Akash Asthana wrote:
-> >>>>>> V1 patch@https://patchwork.kernel.org/patch/11386469/ caused SC7180 system
-> >>>>>> to reset at boot time.
-> >>>>> The v1 patch isn't relevant in the commit message, please just describe the
-> >>>>> problem. Also the crash only occurs when earlycon is used.
-> >>>> ok
-> >>>>>> As QUP core clock is shared among all the SE drivers present on particular
-> >>>>>> QUP wrapper, the reset seen is due to earlycon usage after QUP core clock
-> >>>>>> is put to 0 from other SE drivers before real console comes up.
-> >>>>>>
-> >>>>>> As earlycon can't vote for it's QUP core need, to fix this add ICC
-> >>>>>> support to common/QUP wrapper driver and put vote for QUP core from
-> >>>>>> probe on behalf of earlycon and remove vote during sys suspend.
-> >>>>> Only removing the vote on suspend isn't ideal, the system might never get
-> >>>>> suspended. That said I don't have a really good alternative suggestion.
-> >>>>>
-> >>>>> One thing you could possibly do is to launch a delayed work, check
-> >>>>> console_device() every second or so and remove the vote when it returns
-> >>>>> non-NULL. Not claiming this would be a great solution ...
-> >>>>>
-> >>>>> The cleanest solution might be a notifier when the early console is
-> >>>>> unregistered, it seems somewhat over-engineered though ... Then again
-> >>>>> other (future) uart drivers with interconnect support might run into
-> >>>>> the same problem.
-> >>>> We are hitting this problem because QUP core clocks are shared among all the
-> >>>> SE driver present in particular QUP wrapper, if other HW controllers has
-> >>>> similar architecture we will hit this issue.
-> >>>>
-> >>>> How about if we expose an API from common driver(geni-se) for putting QUP
-> >>>> core BW vote to 0.
-> >>>>
-> >>>> We call this from console probe just after uart_add_one_port call (console
-> >>>> resources are enabled as part of this call) to put core quota to 0 on behalf
-> >>>> of earlyconsole?
-> >>>   From my notes from earlier debugging I have doubts this would work:
-> >>>
-> >>>     There is a short window where the early console and the 'real' console coexist:
-> >>>
-> >>>     [    3.858122] printk: console [ttyMSM0] enabled
-> >>>     [    3.875692] printk: bootconsole [qcom_geni0] disabled
-> >>>
-> >>>     The reset probably occurs when the early console tries to write, but the ICC
-> >>>     is effectively disabled because ttyMSM0 and the other geni ports are runtime
-> >>>     suspended.
-> >> Code flow from console driver probe(qcom_geni_serial.c)
-> >>
-> >> uart_add_one_port--->uart_configure_port--->{ 1) uart_change_pm(enable
-> >> console resources)  2)register_console(boot to real console switch happens
-> >> here)}
-> >>
-> >> Console resources are not disabled from anywhere before the switch happens
-> >> completely. I meant to say until we saw below logs.
-> >>
-> >> [    3.875692] printk: bootconsole [qcom_geni0] disabled
-> >>
-> >> I think the board reset issue cannot occur during the window where early
-> >> console and 'real' console coexist.
-> > Thanks for the clarification! Indeed my notes were only a hypothesis, I
-> > don't see evidence that there is an actual downvote shortly after console
-> > registration.
-> >
-> >> I have validated proposed solution by me, it is working fine.
-> >>
-> >> Currently voting is done for every QUP and not only to which earlycon is
-> >> connect, with the above approach we can't remove vote from other QUPs.
-> >>
-> >> However we can limit voting only to earlycon QUP by removing interconnect
-> >> from DT node of other QUPs.
-> >>
-> >> I am not sure how clean is this solution.
-> > I'm more inclined towards a solution along the lines of what Evan
-> > proposed, i.e. delaying the votes (either in geni or ICC) until we
-> > are ready.
->
-> Based on discussion I think the delayed solution is most suited if
-> implemented in ICC core because other ICC client might face the similar
-> problem.
->
-> However for geni case I am more inclined towards below proposed solution.
->
-> -----------------------------------------------------------------------------------------------------
->
-> How about if we expose an API from common driver(geni-se) for putting QUP
-> core BW vote to 0.
->
-> We call this from console probe just after uart_add_one_port call (console
-> resources are enabled as part of this call) to put core quota to 0 on behalf
-> of earlyconsole?
+As there is nothing else (the consumers are supposed to do that) which
+enables the clock, do it in the driver.
 
-This seems ok to me. Earlycon sets up a vote, and then real probe
-tears it down. As long as in the shuffle of all of these things into
-SE library helpers you still have a way of differentiating the
-earlycon vote from the real vote. In other words, don't reuse this
-early icc_path for the real UART vote. You should probably also
-destroy the path once you've voted zero on it.
--Evan
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+--
+
+v3: added
+---
+ drivers/media/i2c/adv748x/adv748x-dai.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/i2c/adv748x/adv748x-dai.c b/drivers/media/i2c/adv748x/adv748x-dai.c
+index 6fce7d000423..1c673efd4745 100644
+--- a/drivers/media/i2c/adv748x/adv748x-dai.c
++++ b/drivers/media/i2c/adv748x/adv748x-dai.c
+@@ -117,11 +117,22 @@ static int adv748x_dai_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 
+ static int adv748x_dai_startup(struct snd_pcm_substream *sub, struct snd_soc_dai *dai)
+ {
++	int ret;
+ 	struct adv748x_state *state = state_of(dai);
+ 
+ 	if (sub->stream != SNDRV_PCM_STREAM_CAPTURE)
+ 		return -EINVAL;
+-	return set_audio_pads_state(state, 1);
++	ret = set_audio_pads_state(state, 1);
++	if (ret)
++		goto fail;
++	ret = clk_prepare_enable(state->dai.mclk);
++	if (ret)
++		goto fail_pwdn;
++	return 0;
++fail_pwdn:
++	set_audio_pads_state(state, 0);
++fail:
++	return ret;
+ }
+ 
+ static int adv748x_dai_hw_params(struct snd_pcm_substream *sub,
+@@ -174,6 +185,7 @@ static void adv748x_dai_shutdown(struct snd_pcm_substream *sub, struct snd_soc_d
+ {
+ 	struct adv748x_state *state = state_of(dai);
+ 
++	clk_disable_unprepare(state->dai.mclk);
+ 	set_audio_pads_state(state, 0);
+ }
+ 
+-- 
+2.25.1.25.g9ecbe7eb18
+
+
