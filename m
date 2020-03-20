@@ -1,114 +1,155 @@
-Return-Path: <SRS0=Rh3i=5E=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 677A3C4332E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 23:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AEFC4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 00:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA472070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Mar 2020 23:39:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="j8G9K+B+"
+	by mail.kernel.org (Postfix) with ESMTP id 57B8520772
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 00:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584663343;
+	bh=OSlquqcH1F8KsOyuUEWI4dxT8R0DknRunxtYQ4e6SkU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A9EHyAw2Kuk2+/7zxBguu7UXGcjLqE/gwG8ytUVzIRrt2ucRujkOXAse3CwU5h2qc
+	 ofurPdymJ8yLi8l+fei36GNHvivJ+/yOfhXbi00TjhNFPx2sswEt8d9KqPNUt+ZjC5
+	 4MwRaxsjAcgtsE2rpuOG9PEDuhd354BKwScsRqrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgCSXjb (ORCPT
+        id S1726867AbgCTAPm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:39:31 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37063 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgCSXjb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 19:39:31 -0400
-Received: by mail-ed1-f65.google.com with SMTP id b23so4967395edx.4;
-        Thu, 19 Mar 2020 16:39:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T/mfJWmxNQuzD0dp6KizZYLJ7CLCpefixytllKpkTzc=;
-        b=j8G9K+B+n/Ojbh81OEur+lMEXOYshUECgbkp9tY2M6biLvzxuXxFN6lSXsbzkFslae
-         jc9HBRJfL/ELl9ivB2zl+RB7BwJBWe6Fe3cJUqDS3BvY8Ew3qTlSEHLOlAxL28+8zSzI
-         K5mjzp5BIPEOKCjcxnOZcDUWvMDfzyFwri/UuDoqUNbN7Qbjb/4+tlqa9mer6w8iaXHu
-         eWkmtlPpdTgLysTFsSzvDEb9VUTf7QQ61jEIzK6nEAYhOoZRP38YT3+XgmgwbWUc83Mm
-         gE+Xe2D0Vbn9fvK4gxEZ/0IYCMKCgwcybXlA0udklqhacor6tDl6DYRYOk6EVgM544Zt
-         dSDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T/mfJWmxNQuzD0dp6KizZYLJ7CLCpefixytllKpkTzc=;
-        b=GncQZth+nlvs++c2VJZ0NAM/l5AFnCyjqtO7c8jn+Mnzbc0RDxuST/b8VbhMglk9Hm
-         ynA4ns4GrepRKaloPNuCtMwwq9Cfhqs4lOnCZYcWPAHrjAZzvY2WQ8zFmxF+HkzhpGcT
-         M1cuPDGV9CUJk/qNO1OM/DpwuZoWAxC+NWUfN+LdoB413aS6K60Ibiheb+bT5Zrso2I4
-         XR5enLnfg91Cs2dcwlVmJgYzCGNeUaxM/EUmXpTuzw9oWdYSBPCj32GIsPIhtKam7d67
-         xQP735ypVFpYGzbS+Yd5ZWhtAT2TDUVQpVVY++BQEt55TRYQ3odEz04Jc9iCf+WUV6Cz
-         j53w==
-X-Gm-Message-State: ANhLgQ3l9e/ap/emrSOEN7ctCRlr8ECFgOR5NaNa5Gvm4zsuNd+Jjfp/
-        USS+zrG2U/JAUe/LEDvrSpVirm2Af3dE95+Q5vI=
-X-Google-Smtp-Source: ADFU+vsBYF3lmb/S9MivVj1ar9fEgyHh9mNe7PH/to4h3/J9OWLSH5rf3wC8erfomQYZyINKFfGztDXrzBfrtovFz/I=
-X-Received: by 2002:a17:906:6d0:: with SMTP id v16mr5698516ejb.90.1584661168372;
- Thu, 19 Mar 2020 16:39:28 -0700 (PDT)
+        Thu, 19 Mar 2020 20:15:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgCTAPm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Mar 2020 20:15:42 -0400
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB7F120775;
+        Fri, 20 Mar 2020 00:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584663341;
+        bh=OSlquqcH1F8KsOyuUEWI4dxT8R0DknRunxtYQ4e6SkU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pDRtiBhvsn2C3cD7sTKzyxKg3MRHANHuxnnJtZNqYg8bjnRnnyY9Obtwj37LbmS4M
+         OjZ9WA2yF186vM0J23vV7BxzaFiktb+WfBqKe0x0tPvDS747DEJ0dUICSGuAYiPuwl
+         fF5e8BciNSgxqYIf6qbEeeQEUulSsSzS7QjclNOE=
+Received: by mail-qv1-f54.google.com with SMTP id n1so2108278qvz.4;
+        Thu, 19 Mar 2020 17:15:40 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1aH6gGCNxMPLrpuBg1CCJKiUJREuWLuTI+3p118Oz+ocakE+dH
+        nN/KqlLXcuB5O9WYCN6Z+XiQsq3pIo4+Y8/KUg==
+X-Google-Smtp-Source: ADFU+vtDeHt6XN4u8uvVz1l8xo+9/2SGnnkDtYwkNgIcwRW4yk4GSbVrdqQP/nQ7RorZzhOFOnNPoI46lwJxuSM9uDU=
+X-Received: by 2002:ad4:4502:: with SMTP id k2mr5779706qvu.85.1584663339950;
+ Thu, 19 Mar 2020 17:15:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200302125310.742-1-linux.amoon@gmail.com> <20200302125310.742-3-linux.amoon@gmail.com>
- <7hlfoir8rj.fsf@baylibre.com>
-In-Reply-To: <7hlfoir8rj.fsf@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 20 Mar 2020 00:39:17 +0100
-Message-ID: <CAFBinCB2WXZNRg4wdFD0RJ5k4hHqcfAOCHemvHzZE42-Mo5vzA@mail.gmail.com>
-Subject: Re: [PATCHv2 2/2] clk: meson: g12a: set cpub_clk flags to CLK_IS_CRITICAL
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Anand Moon <linux.amoon@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20200307211412.44148-1-contact@artur-rojek.eu> <20200307211412.44148-4-contact@artur-rojek.eu>
+In-Reply-To: <20200307211412.44148-4-contact@artur-rojek.eu>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 19 Mar 2020 18:15:28 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+oTCQKUNdfapFjf7p0YnKQSyd6USvaOQQA6FqgwNg0fA@mail.gmail.com>
+Message-ID: <CAL_Jsq+oTCQKUNdfapFjf7p0YnKQSyd6USvaOQQA6FqgwNg0fA@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] dt-bindings: input: Add docs for ADC driven joystick.
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
+        Jonathan Cameron <jic23@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Linux Input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kevin,
-
-On Mon, Mar 2, 2020 at 6:01 PM Kevin Hilman <khilman@baylibre.com> wrote:
-[...]
-> > updating flags to CLK_IS_CRITICAL which help enable all the parent for
-> > cpub_clk.
+On Sat, Mar 7, 2020 at 2:06 PM Artur Rojek <contact@artur-rojek.eu> wrote:
 >
-> With current mainline, I've tested DVFS using CPUfreq on both clusters
-> on odroid-n2, and both clusters are booting, so I don't understand the
-> need for this patch.
-I *think* there is a race condition at kernel boot between cpufreq and
-disabling orphaned clocks
-I'm not sure I fully understand it though and I don't have any G12B
-board to verify it
+> Add documentation for the adc-joystick driver, used to provide support
+> for joysticks connected over ADC.
+>
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>
+>  Changes:
+>
+>  v2: - Add `reg` property to axis subnode in order to enumerate the axes,
+>      - rename `linux,abs-code` property to `linux,code`,
+>      - drop `linux,` prefix from the remaining properties of axis subnode
+>
+>  v3: no change
+>
+>  v4: - remove "bindings" from the unique identifier string,
+>      - replace `|` with `>` for all description properties,
+>      - specify the number of items for `io-channels`,
+>      - correct the regex pattern of `axis` property,
+>      - specify the value range of `reg` property for each axis,
+>      - put `abs-range` properties under `allOf`
+>
+>  .../bindings/input/adc-joystick.yaml          | 121 ++++++++++++++++++
+>  1 file changed, 121 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/input/adc-joystick.yaml b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+> new file mode 100644
+> index 000000000000..b0d2aa28d8c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+> @@ -0,0 +1,121 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019-2020 Artur Rojek
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/input/adc-joystick.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: ADC attached joystick
+> +
+> +maintainers:
+> +  - Artur Rojek <contact@artur-rojek.eu>
+> +
+> +description: >
+> +  Bindings for joystick devices connected to ADC controllers supporting
+> +  the Industrial I/O subsystem.
+> +
+> +properties:
+> +  compatible:
+> +    const: adc-joystick
+> +
+> +  io-channels:
+> +    minItems: 1
+> +    maxItems: 1024
+> +    description: >
+> +      List of phandle and IIO specifier pairs.
+> +      Each pair defines one ADC channel to which a joystick axis is connected.
+> +      See Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - io-channels
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +
+> +additionalProperties: false
+> +
+> +patternProperties:
+> +  "^axis@[0-9]+$":
 
-my understanding is that u-boot runs Linux off CPU0 which is clocked by cpub_clk
-this means we need to keep cpub_clk enabled as long as Linux wants the
-CPU0 processor to be enabled (on 32-bit ARM platforms that would be
-smp_operations.cpu_{kill,die})
-cpufreq does not call clk_prepare_enable on the CPU clocks so this
-means that the orphaned clock cleanup mechanism can disable it "at any
-time", killing everything running on CPU0 and CPU1 (which are both
-clocked by cpub_clk)
+unit-addresses are hex, so add 'a-f' in there.
 
-I have no explanation why this depends on booting from SD or eMMC.
+With that,
 
-for the 32-bit SoCs we have CLK_IS_CRITICAL on the CPU clock as well
-since commit 0dad1ec65bc30a
-on G12A we have CLK_IS_CRITICAL on the sys_pll clocks, however my
-understanding is that cpub_clk could also be fed by one of the
-fixed_pll derived clocks (which have a gate as well, which may or may
-not be turned off by the orphaned clock cleanup - that is pure
-speculation from my side though).
-
-
-Martin
+Reviewed-by: Rob Herring <robh@kernel.org>
