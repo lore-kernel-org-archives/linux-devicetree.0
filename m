@@ -7,202 +7,203 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC47C4332D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 00:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED7CC4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 01:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6045620739
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 00:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D9020740
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 01:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584665727;
-	bh=uhyOu1JeH5EJCRr0OxBe+uXGzIhZTNmys/6HAOcvk+o=;
+	s=default; t=1584666093;
+	bh=o0VFTujZMLncAeLGmepbNCZ7f0oxj0XpRGz9xU/4kSg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UoG3ChXDbaTVI6VvhTddtBrWRNK+pXWX9dfEgE8aiYQvl3NkHM0JuE2rN/JfxKb/W
-	 41NJhGaVlfMvyyp54tsNe3uFllIhLKCeo1UHnW5rczL36LFmCcsnBpPpEsVL7Cm8kG
-	 /TfRqVc/hLFmPafc2JlBFCZdHWpEXX1fEtQvjS5Y=
+	b=Np3KHt62dqQhGW1oQ2YV0VtA4w3RyoX9tRhE0YA4oN8ZvTbeTTyjsCKOF4QuhZynk
+	 gYoMGknSeErRf9Lgjy/03vI1qjXFt0h5UG7dBeQY9mpQg+mydjgDkFRycK8JIoXcv2
+	 FkapOLLycXO6TVgF8TWus51LNcv+Wv03J6WXq804=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgCTAz1 (ORCPT
+        id S1727286AbgCTBBc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 20:55:27 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45714 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgCTAz0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 20:55:26 -0400
-Received: by mail-il1-f193.google.com with SMTP id m9so4075989ilq.12;
-        Thu, 19 Mar 2020 17:55:26 -0700 (PDT)
+        Thu, 19 Mar 2020 21:01:32 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40061 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbgCTBBc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 21:01:32 -0400
+Received: by mail-io1-f65.google.com with SMTP id h18so4341921ioh.7;
+        Thu, 19 Mar 2020 18:01:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hTX9N2of5jhjNnF3uYbcSwV8OolqfVP3rpImPzcroQ8=;
-        b=t5rxHvgGpyHHoDAxZHK3lumLNYDat/W5zDZJ6NsMHDZQlD8cj0c0t6yVG5jRZ+pmYS
-         RzrUfWZjltl9VH+tASz1iO1U4arVgz3qbXmnMvndvujKhJYtsdQEnraDSerBRYCC/5yd
-         yj7Je+ApAR99UoFjN/sPLeG14yh71ztPCtQ6AE4Oj5mu+8CSxpJtrJTXVtiGxk9G+zwl
-         DKa46t/SbSGumzyzaXvcZT4L21/HPLzgRFvreGvq6gyLIp6Szvh0Yl2zNFdsNDL4bNGO
-         qg0tCwqxQBJWFv3aIGfUQQw1iCZ/Q6kULLmQsL4q49dj7yNDuXcSgIKi4rHsWpEYDthI
-         sX2g==
-X-Gm-Message-State: ANhLgQ3N8fwmc2YHbDhAQQqtnmYb9kPfssBFTaO545UmNSMBbWqHEFGr
-        eutD5dY8uY2aWR46XSfGAA==
-X-Google-Smtp-Source: ADFU+vvqztuZ1j2SOs3GaEwUpbB7sr5FIKsud65mVDnuJzJr2tFN1mpQMD0yWc3GzSp4Oy4AZSyONw==
-X-Received: by 2002:a92:d0c1:: with SMTP id y1mr5794271ila.125.1584665725641;
-        Thu, 19 Mar 2020 17:55:25 -0700 (PDT)
+        bh=Ot6m4hY0BwqCmo0YvvIottBecwmdUoxIdqh0iIdJLaE=;
+        b=e0vc4wcMKbYfbI6kyipBnoZ1jmoO413EpOBpUIq2a2ONQx4SMkadKAsSv/al4OvhS6
+         dG7+iC9ejaWy2n9m67iLR0LfuJJRrO16XToJBG6D4gMWktjXSIXXtqIXGsQ8PnbCMMzG
+         9lLuVaC6YZ4S3JVRhPb+MOk8omHlUR97IDjmNEcaiZq6Xfw8YELFte7Jt984jB3i89u1
+         LWHsNliibdWRyBFuXfmvcQc8iS6WGC35TsBCfsUVOcCrcDEwfp8qd2crOiobfTfo5ASH
+         fZFfZTfpHIhTtwr3BWH3T4yBBy8udnF6xjuYGP39Il1mZwA8G2Clm8bl4zldq2t0YQul
+         zrQw==
+X-Gm-Message-State: ANhLgQ30r6Rr3/d1b7Q4/X+9aJ1ZLJDR4TAt+nZyIGHZjiCRjbDgmK/2
+        VIafk6fZhJ/UdZujRyk0EQ==
+X-Google-Smtp-Source: ADFU+vveriY9yvP9Jzlx6UROYD7yZzJxkqX2tb0ZEVFvDtSMM5LsoOiJpdoQMBneWm4Sh8Le1oz4Cg==
+X-Received: by 2002:a5e:9b09:: with SMTP id j9mr5198775iok.114.1584666091207;
+        Thu, 19 Mar 2020 18:01:31 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id w5sm1456074ilm.69.2020.03.19.17.55.24
+        by smtp.gmail.com with ESMTPSA id s18sm1290993ioc.0.2020.03.19.18.01.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 17:55:24 -0700 (PDT)
-Received: (nullmailer pid 8024 invoked by uid 1000);
-        Fri, 20 Mar 2020 00:55:22 -0000
-Date:   Thu, 19 Mar 2020 18:55:22 -0600
+        Thu, 19 Mar 2020 18:01:30 -0700 (PDT)
+Received: (nullmailer pid 17809 invoked by uid 1000);
+        Fri, 20 Mar 2020 01:01:27 -0000
+Date:   Thu, 19 Mar 2020 19:01:27 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 2/3] dt-bindings: Add binding for IT6505.
-Message-ID: <20200320005522.GA31982@bogus>
-References: <1583735298-19266-1-git-send-email-allen.chen@ite.com.tw>
- <1583735298-19266-3-git-send-email-allen.chen@ite.com.tw>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        robdclark@gmail.com, seanpaul@chromium.org, sean@poorly.run
+Subject: Re: [PATCH v7 1/2] dt-bindings: display: add visionox rm69299 panel
+ variant
+Message-ID: <20200320010127.GA8379@bogus>
+References: <20200316041647.27953-1-harigovi@codeaurora.org>
+ <20200316041647.27953-2-harigovi@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583735298-19266-3-git-send-email-allen.chen@ite.com.tw>
+In-Reply-To: <20200316041647.27953-2-harigovi@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 02:26:48PM +0800, allen wrote:
-> Add a DT binding documentation for IT6505.
+On Mon, Mar 16, 2020 at 09:46:46AM +0530, Harigovindan P wrote:
+> Add bindings for visionox rm69299 panel.
 > 
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 > ---
->  .../bindings/display/bridge/ite,it6505.yaml        | 96 ++++++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> Changes in v2:
+> 	- Removed unwanted properties from description.
+> 	- Creating source files without execute permissions(Rob Herring).
+> Changes in v3:
+> 	- Changing txt file into yaml
+> Changes in v4:
+> 	- Updating license identifier.
+> 	- Moving yaml file inside panel directory.
+> 	- Removing pinctrl entries.
+> 	- Adding documentation for reset-gpios.
+> Changes in v5:
+> 	- No changes. Updated 2/2 Patch.
+> Changes in v6:
+> 	- Removing patternProperties.
+> 	- Added " |" after description.
+> 	- Setting port and reset-gpios to true.
+> 	- Removing @ae94000 for dsi node.
+> Changes in v7:
+> 	- Added reg property.
+> 
+>  .../display/panel/visionox,rm69299.yaml       | 81 +++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
 > new file mode 100644
-> index 00000000..e9f6b58
+> index 000000000000..6ea1a7be3787
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> @@ -0,0 +1,96 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings please:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
+> +++ b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
+> @@ -0,0 +1,81 @@
+> +# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/display/bridge/ite,it6505.yaml#
+> +$id: http://devicetree.org/schemas/display/panel/visionox,rm69299.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: ITE it6505 Device Tree Bindings
+> +title: Visionox model RM69299 Panels Device Tree Bindings.
 > +
 > +maintainers:
-> +  - Allen Chen <allen.chen@ite.com.tw>
+> + - Harigovindan P <harigovi@codeaurora.org>
 > +
 > +description: |
-> +  The IT6505 is a high-performance DisplayPort 1.1a transmitter,
-> +  fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications.
-> +  The IT6505 supports color depth of up to 36 bits (12 bits/color)
-> +  and ensures robust transmission of high-quality uncompressed video
-> +  content, along with uncompressed and compressed digital audio content.
+> + This binding is for display panels using a Visionox RM692999 panel.
 > +
-> +  Aside from the various video output formats supported, the IT6505
-> +  also encodes and transmits up to 8 channels of I2S digital audio,
-> +  with sampling rate up to 192kHz and sample size up to 24 bits.
-> +  In addition, an S/PDIF input port takes in compressed audio of up to
-> +  192kHz frame rate.
-> +
-> +  Each IT6505 chip comes preprogrammed with an unique HDCP key,
-> +  in compliance with the HDCP 1.3 standard so as to provide secure
-> +  transmission of high-definition content. Users of the IT6505 need not
-> +  purchase any HDCP keys or ROMs.
+> +allOf:
+> + - $ref: panel-common.yaml#
 > +
 > +properties:
 > +  compatible:
-> +    const: ite,it6505
+> +    const: visionox,rm69299-1080p-display
 > +
 > +  reg:
 > +    maxItems: 1
-> +    description: i2c address of the bridge
-
-Can drop the description as there's nothing specific to this device.
-
 > +
-> +  ovdd-supply:
-> +    maxItems: 1
-> +    description: I/O voltage
+> +  vdda-supply:
+> +    description: |
+> +      Phandle of the regulator that provides the vdda supply voltage.
 > +
-> +  pwr18-supply:
-> +    maxItems: 1
-> +    description: core voltage
+> +  vdd3p3-supply:
+> +    description: |
+> +      Phandle of the regulator that provides the vdd3p3 supply voltage.
 > +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: interrupt specifier of INT pin
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: gpio specifier of RESET pin
-> +
-> +  extcon:
-> +    maxItems: 1
-> +    description: extcon specifier for the Power Delivery
-
-Drop this. You should be using the usb-connector binding instead which 
-means you should have a OF graph port to the connector. For TypeC, 
-there's a defined port for DP.
-
-> +
-> +  port:
+> +  ports:
 > +    type: object
-> +    description: A port node pointing to DPI host port node
+> +    description: |
+> +      A node containing DSI input & output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +      Documentation/devicetree/bindings/graph.txt
+> +      properties:
+> +        port: true
+
+Need:
+
+       additionalProperties: false
+
+
+> +
+> +  reset-gpios: true
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - ovdd-supply
-> +  - pwr18-supply
-> +  - interrupts
+> +  - vdda-supply
+> +  - vdd3p3-supply
 > +  - reset-gpios
-> +  - extcon
+> +
+> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c3 {
+> +    dsi {
+> +        reg = <0x0ae94000 0x400>;
+
+Either drop 'reg' or add a unit-address.
+
 > +        #address-cells = <1>;
 > +        #size-cells = <0>;
+> +        panel@0 {
+> +            compatible = "visionox,rm69299-1080p-display";
+> +            reg = <0x0ae94000 0x400>;
+
+Wrong address.
+
 > +
-> +        dp-bridge@5c {
-> +            compatible = "ite,it6505";
-> +            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
-> +            reg = <0x5c>;
-> +            pinctrl-names = "default";
-> +            pinctrl-0 = <&it6505_pins>;
-> +            ovdd-supply = <&mt6358_vsim1_reg>;
-> +            pwr18-supply = <&it6505_pp18_reg>;
-> +            reset-gpios = <&pio 179 1>;
-> +            extcon = <&usbc_extcon>;
+> +            vdda-supply = <&src_pp1800_l8c>;
+> +            vdd3p3-supply = <&src_pp2800_l18a>;
 > +
-> +            port {
-> +                it6505_in: endpoint {
-> +                    remote-endpoint = <&dpi_out>;
-> +                };
+> +            reset-gpios = <&pm6150l_gpio 3 0>;
+> +            ports {
+> +                    #address-cells = <1>;
+> +                    #size-cells = <0>;
+> +                    port@0 {
+
+This will fail with the above change.
+
+> +                            reg = <0>;
+> +                            panel0_in: endpoint {
+> +                                remote-endpoint = <&dsi0_out>;
+> +                            };
+> +                    };
 > +            };
 > +        };
 > +    };
+> +
+> +...
 > -- 
-> 1.9.1
+> 2.25.1
 > 
