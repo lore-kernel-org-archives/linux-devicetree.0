@@ -4,91 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379CCC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 01:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242A4C4332D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 01:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7BB20752
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 01:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E5B20752
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 01:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584666238;
-	bh=Cx/82aE4Qr82CmmFKCQ8D8o4FK/bSRMandYY1EewjCo=;
+	s=default; t=1584666279;
+	bh=WBVJxUkyMG39O9bERsyKy1MDzmUe4i57hlRhXu1Pqqs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rnb12nuu4PQNYdnM2G1SkHXLlnFY1okuSH6RExUC4ZsiNbxt8UccY8easVhQK28nW
-	 4VIB241uBq22YkfnE2svkpOyhFkFU+/Bvhcqjz+37n8BsMzcvcbBgh/M1w92Rw8o2P
-	 z3HvGViEvEstm/KQnzHtbHauxQv3M4MuFkTXPkLE=
+	b=U+Yb9vsaVO3yTF+YhG2RHIi74Jv2SDK1cy7b9wx/wZbToZVNdW/ALPbtEYEkfilcy
+	 Gv9wZSFl231C64OF0kvlxpsAYrl61WLW3Lv9a4CY2raOP1uiup+whBLNe9krlnBoSq
+	 jf2ZdM9TKe4WOBJqLInMW/aYAdvqz5CHI2OLaJW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbgCTBD5 (ORCPT
+        id S1727312AbgCTBEi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 21:03:57 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34892 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCTBD5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 21:03:57 -0400
-Received: by mail-io1-f67.google.com with SMTP id h8so4395274iob.2;
-        Thu, 19 Mar 2020 18:03:56 -0700 (PDT)
+        Thu, 19 Mar 2020 21:04:38 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35752 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCTBEi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 21:04:38 -0400
+Received: by mail-il1-f196.google.com with SMTP id o16so1522008ilm.2;
+        Thu, 19 Mar 2020 18:04:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E7UOdCgi//17WBwa+bRiBT2apc8kL8w/dAZ2MLHQRPo=;
-        b=Tw8bbH0KIMpONH9qLQEpESd5Y8b+rzTuINu7n1/yW3O/7mmgreRLO+3MnIMLa0Ez3v
-         c91+qPw5lgS4efXkLmufk2v+2bmQ927xL2fOqx+NFOSpV9ctoj43DsLZAaQ/FmbnYTUk
-         YQR8u9J2va1eOUUcxJOlhbcatmfW4WGTorfVYkFClFt143OXUuXrQXR5Z3riH6crAnzD
-         mclkR7rcG+D5+t6UWkPHeSDu+sievsSe2Pk3SX/nr+As83xGNOMWqNGX/fh6ih5inyf2
-         p6sYVWfZPODw0ss7cDS3o2n85fjBKfxWkrdqQ5BN/EKY5+fIbtpYqY+f1kqpy0XwESHv
-         W+VQ==
-X-Gm-Message-State: ANhLgQ3NiXFGR6wONJZUOw1tGk3AUnyUEyhCLlqRBphVqm3cNEvCq6qg
-        sitqBCELImv5GoRiYGPCIg==
-X-Google-Smtp-Source: ADFU+vumZwagvJmUaA3ur0o9qsDUACrx7gz4DIqXjdXxxX3qvg0Sx0/QtMY13Vwe/rFQbUzLAseXPw==
-X-Received: by 2002:a02:1d44:: with SMTP id 65mr6028441jaj.6.1584666236192;
-        Thu, 19 Mar 2020 18:03:56 -0700 (PDT)
+        bh=UGCAb9wVeglaPfbrAhPUQDDVEQ1klnV38624n1QkmF0=;
+        b=aMLW+xSh5GQWE77JUbvhLyi4VGwx03gpx1tk2OnjrFoXyuTh48RZa544oIZAdTd8Yb
+         vNDYEN9lseERtpJpYpZDxrNy7MfBwJel4QCtYeupXxxnb8zQ1kh3FP4nMpL0Y9zbiiCR
+         FY2kSIkzBjc64lUjvofEOdrVBPes0W7p89tvfyAKRkD2s3fyxORxBmdWi6khPRoNP3M7
+         uPQnRuFCy9n646t3iIEm5TGzY9BIwZNzlf+V8RkSQgcjyFXhmVeYWld2fPieAOtuHkQo
+         4bbPAsfvKaRYAh/cTIM0Oh6LnJFdBf+WyuDCpzQPKDo8fH9NpwAkeFbV88HDZIpAr48o
+         wD8w==
+X-Gm-Message-State: ANhLgQ18i4FNm6Lfm60qNar3iN8TEUrkVqBSkQfWX5caYc38dqqeL4hw
+        TQ2LF0kp7YDyYf3Q11NK/Q==
+X-Google-Smtp-Source: ADFU+vvlv+TFuLos9es6ZMHJJts1Of92KuSp8Lj8FMdYp0zS7O9szteFdC1O/KDhibPp0NlG1HYhAQ==
+X-Received: by 2002:a92:a192:: with SMTP id b18mr5903577ill.199.1584666277084;
+        Thu, 19 Mar 2020 18:04:37 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id h29sm1480814ili.19.2020.03.19.18.03.53
+        by smtp.gmail.com with ESMTPSA id j18sm1497075ila.56.2020.03.19.18.04.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 18:03:55 -0700 (PDT)
-Received: (nullmailer pid 21911 invoked by uid 1000);
-        Fri, 20 Mar 2020 01:03:52 -0000
-Date:   Thu, 19 Mar 2020 19:03:52 -0600
+        Thu, 19 Mar 2020 18:04:36 -0700 (PDT)
+Received: (nullmailer pid 23247 invoked by uid 1000);
+        Fri, 20 Mar 2020 01:04:34 -0000
+Date:   Thu, 19 Mar 2020 19:04:34 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        tfiga@google.com, pavel@ucw.cz, Jacopo Mondi <jacopo@jmondi.org>,
-        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
-        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
-        robh@kernel.org, devicetree@vger.kernel.org,
-        Niklas Soderlund <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v7 03/11] dt-bindings: video-interface: Replace
- 'rotation' description
-Message-ID: <20200320010352.GA21844@bogus>
-References: <20200318205034.949531-1-jacopo@jmondi.org>
- <20200318205034.949531-4-jacopo@jmondi.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+Message-ID: <20200320010434.GA23155@bogus>
+References: <1584596131-22741-1-git-send-email-tdas@codeaurora.org>
+ <1584596131-22741-2-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200318205034.949531-4-jacopo@jmondi.org>
+In-Reply-To: <1584596131-22741-2-git-send-email-tdas@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 18 Mar 2020 21:50:26 +0100, Jacopo Mondi wrote:
-> Replace the 'rotation' property description by providing a definition
-> relative to the camera sensor pixel array coordinate system and the
-> captured scene.
+On Thu, 19 Mar 2020 11:05:29 +0530, Taniya Das wrote:
+> The Modem Subsystem clock provider have a bunch of generic properties
+> that are needed in a device tree. Add a YAML schemas for those.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> Co-developed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Co-developed-by: Niklas Soderlund <niklas.soderlund@ragnatech.se>
+> Add clock ids for GCC MSS and MSS clocks which are required to bring
+> the modem out of reset.
 > 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
 > ---
->  .../bindings/media/video-interfaces.txt       | 359 +++++++++++++++++-
->  1 file changed, 356 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
+>  include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
+>  3 files changed, 80 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
