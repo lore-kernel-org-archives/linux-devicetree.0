@@ -6,85 +6,81 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77337C4332D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 18:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83325C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 18:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 475A520773
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 18:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 586F220775
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 18:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584727569;
-	bh=yp6Fom7/yku8A2ZiuJodg4eNORs8y5P9+1DLpLiuzU8=;
+	s=default; t=1584727670;
+	bh=U8oXIP5oXGvZd/1FPI5kRuFkzQslAnVxi3jbhT86N8g=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=InOzmc6cTDWSSx4ZsgK8azHXS8v6nreZxdJDi88eWb3+VyBC8NhnGf0m3v/schjVM
-	 igE01uODkHe3BAZ21/CoRTuRlfVbCy2mVgYUFqfBbJUoRJfULtbM71+yZc24NpPoSA
-	 G7NccaCVoAGwWITi29S9ia+QqvQJYdytr8bBeqlQ=
+	b=PF2iGqbwO2EbxXo3wxSaEY5m+bnpJnpZo0+R2Obns/75g/CvBthYZqRc2zslP7cQQ
+	 BoxVhAyozYhiRBY3P8WRn2iXlfHuP0FjBvTS58Q1aeE08DGgr3Cu0RDo2pjeApCqbl
+	 aaxrR4dybwV66FEi8kxACnmPmvpoet+yo7T2qbkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgCTSGI (ORCPT
+        id S1726801AbgCTSHt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 14:06:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58632 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 14:07:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgCTSGI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 14:06:08 -0400
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        id S1725446AbgCTSHt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:07:49 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D983E20739;
-        Fri, 20 Mar 2020 18:06:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9FED20739;
+        Fri, 20 Mar 2020 18:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584727568;
-        bh=yp6Fom7/yku8A2ZiuJodg4eNORs8y5P9+1DLpLiuzU8=;
+        s=default; t=1584727668;
+        bh=U8oXIP5oXGvZd/1FPI5kRuFkzQslAnVxi3jbhT86N8g=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0t+YdURE3JanVJ6MrOTl2uJULL3rYmZJFZXo6r3CxueI9GjL9PUT3EkqqU8ut8Ri0
-         3Vdyvk5NYZFw64VfzX6XcP4lzURWmrPoD76h7yB++qk5TGdK2bjuOgU/gAr6guOYN4
-         W0CdiYp7c8ZIWpA071YXlbI/nsTvx5CSM2Uaey+8=
-Received: by mail-qv1-f54.google.com with SMTP id o18so3464812qvf.1;
-        Fri, 20 Mar 2020 11:06:07 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0ud2VlrQrOmmULMXUWYAW8pisBx/e3MtCkm7KcFAXTDWCokWPC
-        wHB7TKMdtIY027JQYQxmb00EzofNFG/fRwaTtg==
-X-Google-Smtp-Source: ADFU+vvYx1xhQtLz6A1KIug0vLHM4f1NO+sqNMOQFA87tKUVNVLKmGv10+EhK/AOJ+8fVdPqLc+hLhLeF/am0yONDGM=
-X-Received: by 2002:a05:6214:a6f:: with SMTP id ef15mr9213953qvb.79.1584727567033;
- Fri, 20 Mar 2020 11:06:07 -0700 (PDT)
+        b=Zl8vTyVaCE7XSqVRaFQHGYQ1hpT6gdLgT/OoUVQkp8avDWWFAKgBIZ23zn4RsyXhZ
+         VguFbxdJpa/PGLXWCV9PaVDpQjjZHtZSseureYdhCvaemCgfMmOM3Bv3sFN2Lsmaew
+         mrsprz7Pwc35y2W87l/SHVNcMFgNDyeyT4nWo3Uk=
+Received: by mail-qk1-f173.google.com with SMTP id l25so2944357qki.7;
+        Fri, 20 Mar 2020 11:07:48 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1SQ2xxjsfeClJc2ACehrcRA1ASOgmw5nO7QbHIEsOlEAMNugo8
+        uOobKars663p97UVtEYV1LjJB9aoYG6Hvtbqvw==
+X-Google-Smtp-Source: ADFU+vuxhlkoXyT1YY53b7HKSyPc40/5axtT/yKvtUn1tYpPSEZWkUnm5O/F/s11tGwXXgPTo5JaJMBZdIsGq9/lTho=
+X-Received: by 2002:a37:634d:: with SMTP id x74mr9645562qkb.254.1584727667842;
+ Fri, 20 Mar 2020 11:07:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200229160507.31309-1-devik@eaxlabs.cz> <20200229160507.31309-2-devik@eaxlabs.cz>
- <20200310190054.GA2826@bogus>
-In-Reply-To: <20200310190054.GA2826@bogus>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 20 Mar 2020 12:05:53 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK8+M=Vg0PiDXP2f1LrEp4hSVea6piAASMGu1H=pxme6Q@mail.gmail.com>
-Message-ID: <CAL_JsqK8+M=Vg0PiDXP2f1LrEp4hSVea6piAASMGu1H=pxme6Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: serial: Add st,swap to stm32-usart
-To:     Martin Devera <devik@eaxlabs.cz>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+References: <1584095350-841-1-git-send-email-akashast@codeaurora.org> <1584095350-841-4-git-send-email-akashast@codeaurora.org>
+In-Reply-To: <1584095350-841-4-git-send-email-akashast@codeaurora.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 20 Mar 2020 12:07:36 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
+Message-ID: <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
+Subject: Re: [PATCH V5 3/3] dt-bindings: geni-se: Add binding for UART pin swap
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/STM32 ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Manu Gautam <mgautam@codeaurora.org>, rojay@codeaurora.org,
+        c_skakit@codeaurora.org, Matthias Kaehlcke <mka@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 1:00 PM Rob Herring <robh@kernel.org> wrote:
+On Fri, Mar 13, 2020 at 4:29 AM Akash Asthana <akashast@codeaurora.org> wrote:
 >
-> On Sat, 29 Feb 2020 17:05:07 +0100, Martin Devera wrote:
-> > Add new st,swap property to allow for RX & TX pin swapping.
-> >
-> > Signed-off-by: Martin Devera <devik@eaxlabs.cz>
-> > ---
-> >  Documentation/devicetree/bindings/serial/st,stm32-usart.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
+> Add documentation to support RX/TX/CTS/RTS pin swap in HW.
 >
-> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V5:
+>  -  As per Matthias's comment, remove rx-tx-cts-rts-swap property from UART
+>     child node.
+>
+>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-I take this back as there's a 2nd binding (Qcom GENI) doing swapping.
-So can you use 'rx-tx-swap' instead.
+STM32 folks need something similar. Can you move this to a common
+location. That's serial.txt, but that is being converted to DT schema.
 
 Rob
