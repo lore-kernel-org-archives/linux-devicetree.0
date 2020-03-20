@@ -2,117 +2,100 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172CDC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09EAC43333
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F5820752
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uO54Iy8H"
+	by mail.kernel.org (Postfix) with ESMTP id CE94320777
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCTJIs (ORCPT
+        id S1726805AbgCTJKq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:08:48 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40752 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726979AbgCTJIr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 05:08:47 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02K98jPA059657;
-        Fri, 20 Mar 2020 04:08:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584695325;
-        bh=iIVhyBp9gLMYDLuXFGRZPRptJw/NYgWDMuFepFE+92o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uO54Iy8H4yh7Jo14cgDxb5ffUAn6A68+cu62YzeV+xWp9R1aKyYS/Gnu0VNWjiHJ0
-         XhWg0Ble3ZcH8CmLH8r3UwF3FXDFC1dODLqLv4JmKUGi2znaeRkSLtKBbFCCy5pkOa
-         D6eYkQIpe/01BpDxpfgg1pm7nR9v8W88DqqfajGc=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02K98jUH095614
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Mar 2020 04:08:45 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 04:08:44 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 04:08:44 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02K98fUm108760;
-        Fri, 20 Mar 2020 04:08:42 -0500
-Subject: Re: [for-next PATCH v2 0/5] phy: ti: gmii-sel: add support for
- am654x/j721e soc
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        David Miller <davem@davemloft.net>
-CC:     <m-karicheri2@ti.com>, <nsekhar@ti.com>, <robh+dt@kernel.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200303160029.345-1-grygorii.strashko@ti.com>
- <20200304.143951.1102411401290807167.davem@davemloft.net>
- <71a6fea9-65c1-3a3c-a35b-9432208b3ee5@ti.com>
- <7c5395a6-56cb-1d2a-0243-99a6b0fed2a7@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <a6fad5b9-fb90-2db7-9876-d875a91b0633@ti.com>
-Date:   Fri, 20 Mar 2020 11:08:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 20 Mar 2020 05:10:46 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42033 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbgCTJKq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 05:10:46 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a2so5258855otq.9;
+        Fri, 20 Mar 2020 02:10:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=Tg5BjS+sqoKmcQ+42q9TxLcAJmVp9TX8V+2Cw9tSbTc=;
+        b=aTcVktbEX8rrXl/LM4BLIEi3AcDdULW8imP+UQd+83ol927lkqqyFhnxPmFXYO7PxW
+         FEy2nLzIk4gIaGzlxosaQ5JYaG+DJAczIxAHBhe9hmUtYP/7wQTo7AQACPMdQvPrffQo
+         s1IovBhLxhO3/IyvayndMiWkXq72qjebMieBhaRUP+1fiMHfals4sZCZLLzOJ13YuCLX
+         Am/S83dgH8ovyRAKTBqjLS05LhxCsYd92+0XQs0ytYmsK/oiAA8aax1PgRXkw4yc+TML
+         IwOw0P6gDPp8kGFdOjEVtrq91Q+z06VMxEDRE/jcog/fxAHjajc3HiqDvq1B9CX2i9rT
+         Ealg==
+X-Gm-Message-State: ANhLgQ0Zc2jfbB5Sn1Rn/8vFxmFYqrDEpDrj19Afnqq5gyMAxtdzm6nu
+        vrodkNfTcy1W4oDkPDF5iXpQlGhT2Htk/V7bQhBzNQ==
+X-Google-Smtp-Source: ADFU+vsUtq7aKxlPk7a6wmuKLwOjxCxHK6YYdo8yUXNmA1Av41cm11S+ggWl9zkA56I5lN+TzJt+7vYyBdanbV3/AIo=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr5844474otk.145.1584695445126;
+ Fri, 20 Mar 2020 02:10:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <7c5395a6-56cb-1d2a-0243-99a6b0fed2a7@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+ <252bb433f47b0ccb61bb077abdbd892091abc550.1584639664.git.alexander.riesen@cetitec.com>
+ <CAMuHMdXOAQtuxCAfb=sZKodyJWwSrf-GO-pdV3HYkOytQW4ENg@mail.gmail.com> <20200320085748.GC4344@pflmari>
+In-Reply-To: <20200320085748.GC4344@pflmari>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Mar 2020 10:10:24 +0100
+Message-ID: <CAMuHMdUvLGx41631HD-jOrpiw7Nyode-iXk0hxDhBHZ9JEqy7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 05/10] media: adv748x: add support for HDMI audio
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 05/03/2020 12:55, Grygorii Strashko wrote:
-> 
-> 
-> On 05/03/2020 07:17, Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On 05/03/20 4:09 am, David Miller wrote:
->>> From: Grygorii Strashko <grygorii.strashko@ti.com>
->>> Date: Tue, 3 Mar 2020 18:00:24 +0200
->>>
->>>> Hi Kishon,
->>>>
->>>> This series adds support for TI K3 AM654x/J721E SoCs in TI 
->>>> phy-gmii-sel PHY
->>>> driver, which is required for future adding networking support.
->>>>
->>>> depends on:
->>>>   [PATCH 0/2] phy: ti: gmii-sel: two fixes
->>>>   https://lkml.org/lkml/2020/2/14/2510
->>>>
->>>> Changes in v2:
->>>>   - fixed comments
->>>>
->>>> v1: https://lkml.org/lkml/2020/2/22/100
->>>
->>> This is mostly DT updates and not much networking code changes, will 
->>> some other
->>> tree take this?
->>
->> I can take the phy related changes. Grygorii, can you split the dt
->> patches into a separate series?
-> 
-> sure. Could pls, pick up 1-3 and I'll resend 4-5.
-> Or you want me re-send once again?
-> 
+Hi Alex,
 
-Queued up patches #4 and #5 towards 5.7, thanks.
+On Fri, Mar 20, 2020 at 9:58 AM Alex Riesen
+<alexander.riesen@cetitec.com> wrote:
+> Geert Uytterhoeven, Fri, Mar 20, 2020 09:43:29 +0100:
+> > > +int adv748x_dai_init(struct adv748x_dai *dai)
+> > > +{
+> > > +       int ret;
+> > > +       struct adv748x_state *state = adv748x_dai_to_state(dai);
+> > > +
+> > > +       dai->mclk = clk_register_fixed_rate(state->dev,
+> > > +                                           "adv748x-hdmi-i2s-mclk",
+> >
+> > I assume there can be multiple adv748x instances in the system?
+> > Hence the clock name should be unique for each instance.
+>
+> I think that can happen.
+>
+> Is it alright to derive the clock name from the device name? E.g.:
+> adv748x.4-0070-mclk? Where "adv748x.4-0070" is a struct device->name.
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Yes, that's the idea.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
