@@ -2,115 +2,189 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8397CC4332D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326B1C4332E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C90120757
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584697428;
-	bh=XgJ6mYaAppCgRYjA/6tqfDP4UMl9ct8CnZlN4qm/aa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0jkBwKUjqzMuyKio+P5/owpGQB6sAZg+YGkk1TIYYkIq6P7my3asA4XDnNVRxkp0k
-	 xJ1HmOfSeJkAP7PnngKxSD1BWqpnKasnXp29Sqc1Kw54xO5D005sVlUSlJOWZVFLJK
-	 l8hq+tvR8nqpk7mFDp+EyrHlQHN5N0EllvYxcmFU=
+	by mail.kernel.org (Postfix) with ESMTP id 11A1E20722
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgCTJnp (ORCPT
+        id S1726690AbgCTJpp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:43:45 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46308 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726602AbgCTJno (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 05:43:44 -0400
-Received: by mail-ed1-f65.google.com with SMTP id ca19so6332829edb.13;
-        Fri, 20 Mar 2020 02:43:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mk3s5g9LU/2LF49QpiOVlm1YQB1p4hRZiB2SBGyS1Rg=;
-        b=Pbgfx54PPi9NoEhsX4ycbEiDT1W+9FwFAFEZdXPWVtB0Z6RH1uO2sK29izWPzzQHS5
-         AnZ93H6Yn9Hc4pv/8qrlKDEEgGRdOZyzzdrSSnT8oZy1pErYJPsUNdGQIfclD1uMaDtm
-         DGcAZXkUo+J1TqsZfMlYYtvULRvyu1/f8TFFYWc1r6stt4qRDA6GHHhiZE0cxL8WP9vu
-         /BEgEkwYUB7yv1hos18g9LD1ruATAYBOXIbBJiMoSLQptg+YTiKE9oPmf7Me4rSdX/of
-         uc5FigKlJqxkx5ehHhOF5EndLO4hkzqE51nuUhKf/O/6O7URSoxSxC6cecOmf80P9OEI
-         7aIg==
-X-Gm-Message-State: ANhLgQ0KbgVbFbpEzCQXo0g+gUE4SJ1nSk9pSLCifu3RT5dQ2pqwX/An
-        iRQ8L8EP89xImKHtGNxtTzU=
-X-Google-Smtp-Source: ADFU+vvfbrYk4IAPU07kklFqUnr/Dobh6VAeD25kkWfv6Ll1pmLkppDs5xtDBx4Uf6lrXVFxzavLJg==
-X-Received: by 2002:a50:f743:: with SMTP id j3mr6992962edn.22.1584697422721;
-        Fri, 20 Mar 2020 02:43:42 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id b26sm316874eje.18.2020.03.20.02.43.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 20 Mar 2020 02:43:42 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 10:43:39 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
-        Jonas Heinrich <onny@project-insanity.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
-Message-ID: <20200320094339.GB12976@kozik-lap>
-References: <20200319173411.20607-1-paul@crapouillou.net>
- <20200319173411.20607-2-paul@crapouillou.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200319173411.20607-2-paul@crapouillou.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 20 Mar 2020 05:45:45 -0400
+Received: from lucky1.263xmail.com ([211.157.147.135]:37492 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgCTJpp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 05:45:45 -0400
+Received: from localhost (unknown [192.168.167.32])
+        by lucky1.263xmail.com (Postfix) with ESMTP id B1A4E6A714;
+        Fri, 20 Mar 2020 17:34:02 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from ubuntu18.lan (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P19134T140660085376768S1584696835111908_;
+        Fri, 20 Mar 2020 17:34:03 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <4a96f71f51da89c82dca12d4b69f0e0f>
+X-RL-SENDER: yifeng.zhao@rock-chips.com
+X-SENDER: zyf@rock-chips.com
+X-LOGIN-NAME: yifeng.zhao@rock-chips.com
+X-FST-TO: miquel.raynal@bootlin.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   Yifeng Zhao <yifeng.zhao@rock-chips.com>
+To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-mtd@lists.infradead.org,
+        heiko@sntech.de, linux-rockchip@lists.infradead.org,
+        Yifeng Zhao <yifeng.zhao@rock-chips.com>
+Subject: [PATCH v4 2/3] dt-bindings: mtd: Describe Rockchip RK3xxx NAND flash controller
+Date:   Fri, 20 Mar 2020 17:33:41 +0800
+Message-Id: <20200320093342.15470-3-yifeng.zhao@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200320093342.15470-1-yifeng.zhao@rock-chips.com>
+References: <20200320093342.15470-1-yifeng.zhao@rock-chips.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 06:34:11PM +0100, Paul Cercueil wrote:
-> From: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
-> 
-> Add devicetree file for the Exynos 4210 based Galaxy S2 (i9100 version).
-> 
-> Signed-off-by: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: - Change i9100 to GT-I9100
->         - Remove redundant description in header
->     	- Add chosen node with stdout-path
->     	- Rename regulator nodes since there was no regulator-2
->     	- Rename i2c-gpio-3 to i2c-gpio
->     	- Use IRQ_TYPE_EDGE_FALLING instead of hardcoded '2'
->         - Remove spi-cpol, spi-cpha as they glitch the LCD panel
->     	- Make CS gpio active-low
->     	- Update ehci node to add 'phys' instead of ports
->     	- Remove duplicated ehci node
->     	- Reorder nodes to appear in alphabetical order
->     	- Remove useless newlines
->     	- Remove regulator provided to touchscreen node since it does not expect any
->     
->     v3: - Change CPU regulator name to VARM_1.2V_C210 as in the datasheet
->         - Remove unused gpios for the max8997 pmic
->         - Remove redundant interrupts/interrupt-parent for max8997 pmic
-> 
->  arch/arm/boot/dts/Makefile             |   1 +
->  arch/arm/boot/dts/exynos4210-i9100.dts | 768 +++++++++++++++++++++++++
->  2 files changed, 769 insertions(+)
+Documentation support for Rockchip RK3xxx NAND flash controllers
 
-Thanks, applied to dt-late. I already sent a pull request so this might
-need to wait till next cycle. In such case I will carry this over merge
-window.
+Signed-off-by: Yifeng Zhao <yifeng.zhao@rock-chips.com>
+---
 
-Best regards,
-Krzysztof
+Changes in v4:
+- The compatible define with rkxx_nfc
+- Add assigned-clocks
+- Fix some wrong define
+
+Changes in v3:
+- Change the title for the dt-bindings
+
+Changes in v2: None
+
+ .../bindings/mtd/rockchip,nand.yaml           | 101 ++++++++++++++++++
+ 1 file changed, 101 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
+
+diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
+new file mode 100644
+index 000000000000..907af0d52b6b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/rockchip,nand.yaml
+@@ -0,0 +1,101 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mtd/rockchip,nand.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip SoCs NAND FLASH Controller (NFC) Device Tree Bindings
++
++allOf:
++  - $ref: "nand-controller.yaml"
++
++maintainers:
++  - Yifeng Zhao <yifeng.zhao@rock-chips.com>
++
++properties:
++  "#address-cells": true
++  "#size-cells": true
++
++  compatible:
++    enum:
++      - rockchip,px30_nfc
++      - rockchip,rk3308_nfc
++      - rockchip,rv1108_nfc
++      - rockchip,rk3066_nfc
++      - rockchip,rk3188_nfc
++      - rockchip,rk3288_nfc
++      - rockchip,rk3368_nfc
++      - rockchip,rk2928_nfc
++      - rockchip,rk3036_nfc
++      - rockchip,rk3128_nfc
++      - rockchip,rk3228_nfc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Module Clock
++      - description: Bus Clock
++
++  clock-names:
++    items:
++      - const: nfc
++      - const: ahb
++
++patternProperties:
++  "^nand@[0-3]$":
++    type: object
++    properties:
++      reg:
++        minimum: 0
++        maximum: 3
++
++      nand-ecc-step-size:
++        const: 1024
++
++      nand-ecc-strength:
++        enum: [16, 24 , 40, 60, 70]
++
++      nand-bus-width:
++        const: 8
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/rk3308-cru.h>
++    nfc: nand-controller@ff4b0000 {
++      compatible = "rockchip,nfc";
++      reg = <0x0 0xff4b0000 0x0 0x4000>;
++      interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru SCLK_NANDC>, <&cru HCLK_NANDC>;
++      clock-names = "nfc", "ahb";
++      assigned-clocks = <&clks SCLK_NANDC>;
++      assigned-clock-rates = <150000000>;
++
++      pinctrl-names = "default";
++      pinctrl-0 = <&flash_csn0 &flash_rdy &flash_ale &flash_cle
++                  &flash_wrn &flash_rdn &flash_bus8>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++      nand@0 {
++        reg = <0>;
++        nand-ecc-mode = "hw";
++        nand-ecc-strength = <16>;
++        nand-ecc-step-size = <1024>;
++        nand-bus-width = <8>;
++      };
++    };
++
++...
+-- 
+2.17.1
+
+
 
