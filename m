@@ -3,79 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E14C43333
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 23:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4213FC4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 23:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7261820752
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 23:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1763020714
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 23:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584747110;
-	bh=TQcSy/pByrbT1hzG2L6cVJWyJ6MAQEHKZ/tQ1mwysZI=;
+	s=default; t=1584747202;
+	bh=UZUODod2zdZN+ajGZsRuYeTFkVM+vzLpWqGAFoy3BCA=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=VN5N1NezaM0AFI7NTE6KLDsl+LovLva6IwyBHX4o9cbF211PzBsuVOMIey/9MvugM
-	 WXYAyzNGSpMYhkmNHGPzMSi3HHm2aNiZuPKk6JD+0xY5V74Xo9qmAzBFgK0gfM/z2A
-	 KRq+4tSxBOWwonrDbjiZMDzf88Gb+EnvFeeEZWKM=
+	b=wBSLDjkqFqk/tjDGynx7PKMQ8SRJDRNLhlPqm1cv3IE6Cd4nJxRYoCFiWofDxspnn
+	 /koqFzr/hsJbHfwXHmwhEPYWsu3aI+tBNtzp63YsOIUCcp2IeUmNDV7GSBiU2EfGn6
+	 iNTr//OE3/WJsaMeMqJP0olhfsCYrMJImPXW0+8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgCTXbt (ORCPT
+        id S1726935AbgCTXdS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 19:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 19:33:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgCTXbt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:31:49 -0400
+        id S1726738AbgCTXdS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Mar 2020 19:33:18 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3605420714;
-        Fri, 20 Mar 2020 23:31:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13D0220714;
+        Fri, 20 Mar 2020 23:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584747109;
-        bh=TQcSy/pByrbT1hzG2L6cVJWyJ6MAQEHKZ/tQ1mwysZI=;
+        s=default; t=1584747198;
+        bh=UZUODod2zdZN+ajGZsRuYeTFkVM+vzLpWqGAFoy3BCA=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=DUY/692/CW8W4G1zBFfaY7jOUPWM9Dx88cigBgqmqlp/DMWC9hrxr7lTp7Dh3eNik
-         tB3ChVnyYEMoK30Nrwd6W7qKzZeEqaWKJcr51xU0x/2oaSv3GNw2PwfPCjDiC3EeY6
-         mL+jTjymT+OfT4c5soxDOwC61ZKHn2jGnKHeetmo=
+        b=pGEivEqC0IyfRoeenPvzZIb44PCOsYBxUzaUHMe2h2QDUsX/eWnI2N6UrHy/nlNPT
+         ddnFa7RgedxYdsylxvn7n6rjRYj0poWv7hGEFxJvMtFr4R9Zj81M+6pspWyLXw+cT2
+         Yo4vV33peQUE2XrP1Na1GOKc0rQYT6+7yBi1BwnM=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200319053902.3415984-3-bjorn.andersson@linaro.org>
-References: <20200319053902.3415984-1-bjorn.andersson@linaro.org> <20200319053902.3415984-3-bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/4] clk: qcom: mmcc-msm8996: Properly describe GPU_GX gdsc
+In-Reply-To: <20200319053902.3415984-4-bjorn.andersson@linaro.org>
+References: <20200319053902.3415984-1-bjorn.andersson@linaro.org> <20200319053902.3415984-4-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 3/4] arm64: dts: qcom: db820c: Add s2 regulator in pmi8994
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Clark <robdclark@gmail.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 20 Mar 2020 16:31:48 -0700
-Message-ID: <158474710844.125146.15515925711513283888@swboyd.mtv.corp.google.com>
+Date:   Fri, 20 Mar 2020 16:33:17 -0700
+Message-ID: <158474719731.125146.2453513105696205383@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-03-18 22:39:00)
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b/Doc=
-umentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> index 85518494ce43..65d9aa790581 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> @@ -67,6 +67,10 @@ properties:
->      description:
->         Protected clock specifier list as per common clock binding
-> =20
-> +  vdd_gfx-supply:
+Quoting Bjorn Andersson (2020-03-18 22:39:01)
+> From: Rajendra Nayak <rnayak@codeaurora.org>
+>=20
+> Add the SPMI regulator node in the PMI8994, use it to give us VDD_GX
+> at a fixed max nominal voltage for the db820c and specify this as supply
+> for the MMSS GPU_GX GDSC.
+>=20
+> With the introduction of CPR support the range for VDD_GX should be
+> expanded.
+>=20
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> [bjorn: Split between pmi8994 and db820c, changed voltage, rewrote commit=
+ message]
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-Why not vdd-gfx-supply? What's with the underscore?
-
-> +    description:
-> +      Regulator supply for the GPU_GX GDSC
-> +
->  required:
->    - compatible
->    - reg
+These two dts patches don't need to go through clk tree right? And the
+first patch can be applied and regulator core will just return us a
+dummy supply so it's safe to apply now?
