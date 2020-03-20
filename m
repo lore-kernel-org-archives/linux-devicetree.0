@@ -2,177 +2,89 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF24EC4332D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77337C4332D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 18:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA22520739
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 475A520773
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 18:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584727164;
-	bh=cnq4nWVTKlpiioi5LAnpkK4k7dRFVQqLsLMbJGMBCpQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YlNQ4mkiuc1HNHa9Vo6lX4SWHHNemieGHbN2FnMLf29EfO6ZUmwv6oMM0GEt0evEB
-	 cUOroKqlt/WgEke6YXh48l4wdtWoqUnzy4jG4owlI0pvIgbUKrKTO3pawDjXlN8BSk
-	 4CJp2h9h8QZxzLVB3oOuWf+JLtEI4mCXFcqQsQaE=
+	s=default; t=1584727569;
+	bh=yp6Fom7/yku8A2ZiuJodg4eNORs8y5P9+1DLpLiuzU8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=InOzmc6cTDWSSx4ZsgK8azHXS8v6nreZxdJDi88eWb3+VyBC8NhnGf0m3v/schjVM
+	 igE01uODkHe3BAZ21/CoRTuRlfVbCy2mVgYUFqfBbJUoRJfULtbM71+yZc24NpPoSA
+	 G7NccaCVoAGwWITi29S9ia+QqvQJYdytr8bBeqlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbgCTR7Y (ORCPT
+        id S1726738AbgCTSGI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:59:24 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45939 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgCTR7X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 13:59:23 -0400
-Received: by mail-il1-f195.google.com with SMTP id m9so6401806ilq.12;
-        Fri, 20 Mar 2020 10:59:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=95Suyv4ag/UW0GMJDUqwKID1E5LJYUXds0iFnK4QjiI=;
-        b=Dpx0kyIKugARf40N5g3nCYvNuF+BhUMTYqCCk+DN2R3cu+E5r02V1R2KpeEDPTXt2n
-         bZcfDBbjfdpHIMUewmFqXlsGrZcH1yn8XF5umT6JkYo1uBCejYbOsFVvYsnjHgeGLMrD
-         jqiC1MziBsHEmXGFZ2k7YPo9bac9w2rK8DzNQb+rLkGjt6Cpbheuq6IVEohdL0kBxpS2
-         +zNDvueoY51uT2GVvJiRasumPZkLqXBN+QplTo26LY7KOfyUwkv6mMU8d3ghQ6IB1AUs
-         vrOzpmYApGJxZPbc4PhK6VCmY2fLJbGWey7ihYRgHTa59Skgs7+uuLT+Lr6lsqvwGbRA
-         Q5rA==
-X-Gm-Message-State: ANhLgQ3N8GpAY2Ol+/6pyQtGKyvmkDBxuJhfZbp9j6kbZ7fg9NebS0U5
-        B0oFpCDK6youLFYVHe2rKE+f8Ow=
-X-Google-Smtp-Source: ADFU+vt7qmPnUmzTMPbajCklZuNV66re7YCKjK/pSmVBOIAgFLPoaGoK9cfTLRSFh8EnaJJFE/KSYg==
-X-Received: by 2002:a92:b61d:: with SMTP id s29mr9370804ili.66.1584727163066;
-        Fri, 20 Mar 2020 10:59:23 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id u77sm2236931ili.35.2020.03.20.10.59.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 10:59:21 -0700 (PDT)
-Received: (nullmailer pid 5880 invoked by uid 1000);
-        Fri, 20 Mar 2020 17:59:20 -0000
-Date:   Fri, 20 Mar 2020 11:59:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ajay.Kathat@microchip.com
-Cc:     linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        johannes@sipsolutions.net, Adham.Abozaeid@microchip.com,
-        Nicolas.Ferre@microchip.com, Claudiu.Beznea@microchip.com,
-        Venkateswara.Kaja@microchip.com
-Subject: Re: [PATCH v5 16/17] dt: bindings: net: add microchip,wilc1000.yaml
-Message-ID: <20200320175920.GA31641@bogus>
-References: <20200311121809.5610-1-ajay.kathat@microchip.com>
- <20200311121809.5610-17-ajay.kathat@microchip.com>
+        Fri, 20 Mar 2020 14:06:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgCTSGI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Mar 2020 14:06:08 -0400
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D983E20739;
+        Fri, 20 Mar 2020 18:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584727568;
+        bh=yp6Fom7/yku8A2ZiuJodg4eNORs8y5P9+1DLpLiuzU8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0t+YdURE3JanVJ6MrOTl2uJULL3rYmZJFZXo6r3CxueI9GjL9PUT3EkqqU8ut8Ri0
+         3Vdyvk5NYZFw64VfzX6XcP4lzURWmrPoD76h7yB++qk5TGdK2bjuOgU/gAr6guOYN4
+         W0CdiYp7c8ZIWpA071YXlbI/nsTvx5CSM2Uaey+8=
+Received: by mail-qv1-f54.google.com with SMTP id o18so3464812qvf.1;
+        Fri, 20 Mar 2020 11:06:07 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0ud2VlrQrOmmULMXUWYAW8pisBx/e3MtCkm7KcFAXTDWCokWPC
+        wHB7TKMdtIY027JQYQxmb00EzofNFG/fRwaTtg==
+X-Google-Smtp-Source: ADFU+vvYx1xhQtLz6A1KIug0vLHM4f1NO+sqNMOQFA87tKUVNVLKmGv10+EhK/AOJ+8fVdPqLc+hLhLeF/am0yONDGM=
+X-Received: by 2002:a05:6214:a6f:: with SMTP id ef15mr9213953qvb.79.1584727567033;
+ Fri, 20 Mar 2020 11:06:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311121809.5610-17-ajay.kathat@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200229160507.31309-1-devik@eaxlabs.cz> <20200229160507.31309-2-devik@eaxlabs.cz>
+ <20200310190054.GA2826@bogus>
+In-Reply-To: <20200310190054.GA2826@bogus>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 20 Mar 2020 12:05:53 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK8+M=Vg0PiDXP2f1LrEp4hSVea6piAASMGu1H=pxme6Q@mail.gmail.com>
+Message-ID: <CAL_JsqK8+M=Vg0PiDXP2f1LrEp4hSVea6piAASMGu1H=pxme6Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: serial: Add st,swap to stm32-usart
+To:     Martin Devera <devik@eaxlabs.cz>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/STM32 ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:18:50PM +0000, Ajay.Kathat@microchip.com wrote:
-> From: Ajay Singh <ajay.kathat@microchip.com>
-> 
-> This file describes the binding details to connect wilc1000 device. It's
-> moved from staging to 'Documentation/devicetree/bindings/net/wireless'
-> path.
-> 
-> Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
-> ---
->  .../net/wireless/microchip,wilc1000.yaml      | 72 +++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml b/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
-> new file mode 100644
-> index 000000000000..bc6cc5d3f347
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/wireless/microchip,wilc1000.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip WILC wireless devicetree bindings
-> +
-> +maintainers:
-> +  - Adham Abozaeid <adham.abozaeid@microchip.com>
-> +  - Ajay Singh <ajay.kathat@microchip.com>
-> +
-> +description:
-> +  The wilc1000 chips can be connected via SPI or SDIO. This document
-> +  describes the binding to connect wilc devices.
-> +
-> +properties:
-> +  compatible:
-> +    const: microchip,wilc1000
-> +
-> +  spi-max-frequency: true
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: phandle to the clock connected on rtc clock line.
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: rtc
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    spi1: spi@fc018000 {
+On Tue, Mar 10, 2020 at 1:00 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, 29 Feb 2020 17:05:07 +0100, Martin Devera wrote:
+> > Add new st,swap property to allow for RX & TX pin swapping.
+> >
+> > Signed-off-by: Martin Devera <devik@eaxlabs.cz>
+> > ---
+> >  Documentation/devicetree/bindings/serial/st,stm32-usart.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-spi {
+I take this back as there's a 2nd binding (Qcom GENI) doing swapping.
+So can you use 'rx-tx-swap' instead.
 
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      cs-gpios = <&pioB 21 0>;
-
-Drop this. Not relevant to the example.
-
-> +      wifi@0 {
-> +        compatible = "microchip,wilc1000";
-> +        spi-max-frequency = <48000000>;
-> +        reg = <0>;
-> +        interrupt-parent = <&pioC>;
-> +        interrupts = <27 0>;
-> +        clocks = <&pck1>;
-> +        clock-names = "rtc";
-> +      };
-> +    };
-> +
-> +  - |
-> +    mmc1: mmc@fc000000 {
-
-Drop the label. Either drop the unit address or add a 'reg' property to 
-match.
-
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      pinctrl-names = "default";
-> +      pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3>;
-> +      non-removable;
-> +      vmmc-supply = <&vcc_mmc1_reg>;
-> +      vqmmc-supply = <&vcc_3v3_reg>;
-> +      bus-width = <4>;
-> +      wifi@0 {
-> +        compatible = "microchip,wilc1000";
-> +        reg = <0>;
-> +        interrupt-parent = <&pioC>;
-> +        interrupts = <27 0>;
-> +        clocks = <&pck1>;
-> +        clock-names = "rtc";
-> +      };
-> +    };
-> -- 
-> 2.24.0
+Rob
