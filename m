@@ -2,106 +2,216 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4946C43332
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97F2C43332
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 15:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FC52072C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ppCJxqLJ"
+	by mail.kernel.org (Postfix) with ESMTP id 9FA8B2072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 15:21:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgCTPLJ (ORCPT
+        id S1727303AbgCTPVy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:11:09 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40217 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727406AbgCTPLJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 11:11:09 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 19so6764827ljj.7;
-        Fri, 20 Mar 2020 08:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uhFGy5vD5fOErExrsoJO9yiwiyB9HUKnXCIyG1RqDs8=;
-        b=ppCJxqLJhb5yLDjQraYLfoDnvFU2b6tFbN0snn7kAH4s9Ux8hMBjRimDit8ij4a0+J
-         XjXO4l3b32XlKel6ZNVZuDrUoAJxnXq98YS8P+eNKRhbq8LKmL+LztOJNUK4QQ+zAwpZ
-         OzOiRNJrpiib29FEuhjwH4VeXkr5btAEiqzOv8lWcAT/ej7IRWffUOYWCY8HxRMfnUco
-         u01h9+0E7NDI4RY4U82An2ENbe1fhjnmbir/oK2iuPP4mlPEgozxVyrEpgSCB68x8Pjv
-         9Uowktf/Vqe1yHD4t5Md/PFTmFYieuQdMDoE3EIBpPkUM8A7i+kg680pzRnpuJfTmrRM
-         wk3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uhFGy5vD5fOErExrsoJO9yiwiyB9HUKnXCIyG1RqDs8=;
-        b=R/0fGTozfVFVma0kQKcUdkW6nT+4/AWHfXuup/u4H2yHIYLIKBgQZcrNcCCDLM/AfG
-         sIzLSwmgLxVRFXWEFVxeqH7FwHJUkxG1RlwLeHbmyys4XeRwqTtCC79KDwRyl+I0xFyh
-         sf2jA7yc1dreHyUcEDddgm3tRySKy/G1ODEWJ1VDqqKU8JMkF9Wre6M/3UfJmiBsLd4M
-         74A/XwIdoZwMrIa4Fjk/rUpVuomfE5Z/FMUr2CFAZeOgmRsHPKZrxagWf5i1sQccRqzJ
-         JU6wcpexrRP0uC4JAPC0FhU3tCEvVJ9ycpxaar/l6A9JOaHOMOpyOAtrrlVbVhEw7TJd
-         S3jg==
-X-Gm-Message-State: ANhLgQ3YMwenVaQbohY3PzHB0D232db/ciH1nV9e0NBdTB29ni5A6zMS
-        ZBFkUcqLLRgjO6H6wdGls+qYIkTi
-X-Google-Smtp-Source: ADFU+vvt/lfrBid0UlknHY23uJupdxcC74xtAPrDSi/+bdM3/BI8wjyaitPi4Hc6B9Eq9jYfAZo6vg==
-X-Received: by 2002:a2e:9a52:: with SMTP id k18mr5211493ljj.242.1584717066306;
-        Fri, 20 Mar 2020 08:11:06 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id 64sm3470082ljj.41.2020.03.20.08.11.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 08:11:05 -0700 (PDT)
-Subject: Re: [PATCH 2/7] clocksource: Add Tegra186 timers support
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200320133452.3705040-1-thierry.reding@gmail.com>
- <20200320133452.3705040-3-thierry.reding@gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <48b2099c-dd83-d4dc-aab4-8c6f68a215cf@gmail.com>
-Date:   Fri, 20 Mar 2020 18:11:04 +0300
+        Fri, 20 Mar 2020 11:21:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39970 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbgCTPVy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 11:21:54 -0400
+Received: from [IPv6:2a02:810a:113f:ad1c:d59e:75b0:dca:337a] (unknown [IPv6:2a02:810a:113f:ad1c:d59e:75b0:dca:337a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: dafna)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9A4662975DA;
+        Fri, 20 Mar 2020 15:21:51 +0000 (GMT)
+Subject: Re: [PATCH] dt-bindings: input: atmel_mxt_ts: convert
+ atmel,maxtouch.txt to yaml
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, Nick Dyer <nick@shmanahar.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linux Input <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
+References: <20200303172533.30602-1-dafna.hirschfeld@collabora.com>
+ <20200310211437.GA18992@bogus>
+ <f612396e-e5e2-db76-6297-a108b53e4000@collabora.com>
+ <CAL_JsqLTMdG-=_pTPsazspEO3LtDth=xm9s8sqzW+AswWttKJA@mail.gmail.com>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <496a1e2d-a595-f6a6-0ce5-559453b15702@collabora.com>
+Date:   Fri, 20 Mar 2020 16:21:48 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200320133452.3705040-3-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAL_JsqLTMdG-=_pTPsazspEO3LtDth=xm9s8sqzW+AswWttKJA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-20.03.2020 16:34, Thierry Reding пишет:
-> From: Thierry Reding <treding@nvidia.com>
+
+
+On 11.03.20 16:48, Rob Herring wrote:
+> On Wed, Mar 11, 2020 at 10:23 AM Dafna Hirschfeld
+> <dafna.hirschfeld@collabora.com> wrote:
+>>
+>> Hi,
+>> Thanks for the review
+>>
+>> On 10.03.20 22:14, Rob Herring wrote:
+>>> On Tue, Mar 03, 2020 at 07:25:33PM +0200, Dafna Hirschfeld wrote:
+>>>> Convert the binding file atmel,maxtouch.txt to yaml format.
+>>>> Also change the file name in the MAINTAINERS file.
+>>>>
+>>>> This was tested and verified on ARM and ARM64 with:
+>>>>
+>>>> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>>>> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>>>>
+>>>> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+>>>> ---
+>>>>    .../bindings/input/atmel,maxtouch.txt         | 41 ------------
+>>>>    .../bindings/input/atmel,maxtouch.yaml        | 64 +++++++++++++++++++
+>>>>    MAINTAINERS                                   |  2 +-
+>>>>    3 files changed, 65 insertions(+), 42 deletions(-)
+>>>>    delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>>>>    create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>>>> deleted file mode 100644
+>>>> index c88919480d37..000000000000
+>>>> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>>>> +++ /dev/null
+>>>> @@ -1,41 +0,0 @@
+>>>> -Atmel maXTouch touchscreen/touchpad
+>>>> -
+>>>> -Required properties:
+>>>> -- compatible:
+>>>> -    atmel,maxtouch
+>>>> -
+>>>> -    The following compatibles have been used in various products but are
+>>>> -    deprecated:
+>>>> -    atmel,qt602240_ts
+>>>> -    atmel,atmel_mxt_ts
+>>>> -    atmel,atmel_mxt_tp
+>>>> -    atmel,mXT224
+>>>> -
+>>>> -- reg: The I2C address of the device
+>>>> -
+>>>> -- interrupts: The sink for the touchpad's IRQ output
+>>>> -    See ../interrupt-controller/interrupts.txt
+>>>> -
+>>>> -Optional properties for main touchpad device:
+>>>> -
+>>>> -- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
+>>>> -    on GPIO bit changes. An array of up to 8 entries can be provided
+>>>> -    indicating the Linux keycode mapped to each bit of the status byte,
+>>>> -    starting at the LSB. Linux keycodes are defined in
+>>>> -    <dt-bindings/input/input.h>.
+>>>> -
+>>>> -    Note: the numbering of the GPIOs and the bit they start at varies between
+>>>> -    maXTouch devices. You must either refer to the documentation, or
+>>>> -    experiment to determine which bit corresponds to which input. Use
+>>>> -    KEY_RESERVED for unused padding values.
+>>>> -
+>>>> -- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
+>>>> -
+>>>> -Example:
+>>>> -
+>>>> -    touch@4b {
+>>>> -            compatible = "atmel,maxtouch";
+>>>> -            reg = <0x4b>;
+>>>> -            interrupt-parent = <&gpio>;
+>>>> -            interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
+>>>> -    };
+>>>> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..024dc4ded4f3
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>>>> @@ -0,0 +1,64 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Atmel maXTouch touchscreen/touchpad
+>>>> +
+>>>> +maintainers:
+>>>> +  - Nick Dyer <nick@shmanahar.org>
+>>>> +
+>>>> +description: |
+>>>> +  Atmel maXTouch touchscreen/touchpad
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: atmel,maxtouch
+>>>> +
+>>>> +  reg:
+>>>> +    description: The I2C address of the device
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  interrupts:
+>>>> +    description: The sink for the touchpad's IRQ output
+>>>
+>>> How many? Needs 'maxItems: 1'>
+>>> You can drop the description.
+>>>
+>>>> +
+>>>> +  linux,gpio-keymap:
+>>>> +    description:
+>>>> +      When enabled, the SPT_GPIOPWN_T19 object sends messages
+>>>> +      on GPIO bit changes. An array of up to 8 entries can be provided
+>>>> +      indicating the Linux keycode mapped to each bit of the status byte,
+>>>> +      starting at the LSB. Linux keycodes are defined in
+>>>> +      <dt-bindings/input/input.h>.
+>>>> +      Note, the numbering of the GPIOs and the bit they start at varies between
+>>>> +      maXTouch devices. You must either refer to the documentation, or
+>>>> +      experiment to determine which bit corresponds to which input. Use
+>>>> +      KEY_RESERVED for unused padding values.
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>> +    maxItems: 8
+>>>> +
+>>>> +  reset-gpios:
+>>>> +    description: GPIO specifier for the touchscreen's reset pin (active low)
+>>>> +    maxItems: 1
+>>>> +
+>>>> +required:
+>>>> +  - compatible
+>>>> +  - reg
+>>>> +  - interrupts
+>>>> +
+>>>> +additionalProperties: true
+>>>
+>>> That's the default and we generally want this to be 'false'.
+>> but many nodes has more properties not described here so I could not
+>> set it to false.
 > 
-> Currently this only supports a single watchdog, which uses a timer in
-> the background for countdown. Eventually the timers could be used for
-> various time-keeping tasks, but by default the architected timer will
-> already provide that functionality.
+> Like touchscreen-* properties? Then you should reference
+> touchscreen.yaml. And add 'unevaluatedProperties: false' here. That
+> doesn't yet do anything, but will when the tools support the lastest
+> json-schema release.
+
+Hi, no it is other properties, these are the warnings:
+arch/arm/boot/dts/s5pv210-goni.dt.yaml: tsp@4a: 'atmel,burst-length', 'atmel,orientation', 'atmel,threshold', 'atmel,x-line', 'atmel,x-size', 'atmel,y-line', 'atmel,y-size', 'vdd-supply' do not match any of the regexes: 'pinctrl-[0-9]+'
+
+arch/arm/boot/dts/omap4-droid4-xt894.dt.yaml: touchscreen@4a: 'interrupt-names', 'wakeup-source' do not match any of the regexes: 'pinctrl-[0-9]+'
+
+arch/arm/boot/dts/exynos5800-peach-pi.dt.yaml: trackpad@4b: 'wakeup-source' does not match any of the regexes: 'pinctrl-[0-9]+'
+
+Dafna
+
 > 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
-
-...
-> +config TEGRA186_TIMER
-> +	bool "NVIDIA Tegra186 timer driver"
-
-tristate?
-
-> +	depends on ARCH_TEGRA || COMPILE_TEST
-
-depends on WATCHDOG && WATCHDOG_CORE?
-
-> +	select TIMER_OF
-> +	help
-> +	  Enables support for the timers and watchdogs found on NVIDIA
-> +	  Tegra186 and later SoCs.
+> Rob
+> 
