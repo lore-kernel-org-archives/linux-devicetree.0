@@ -2,115 +2,96 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D51DC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 04:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFC8C4332E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 04:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6F320724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 04:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F95207FC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 04:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="Po72Irn5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VoT6snoG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725996AbgCTEQt (ORCPT
+        id S1726969AbgCTEa3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 00:16:49 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.196]:45687 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725883AbgCTEQs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 00:16:48 -0400
-X-Greylist: delayed 1468 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Mar 2020 00:16:48 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 246A41B288
-        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 22:52:20 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id F8hojLTT8Sl8qF8hoju4Le; Thu, 19 Mar 2020 22:52:20 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=a0fH3cAF828a4S/+b1Nbsier8zx9VXfLEXnuCfekO00=; b=Po72Irn540/8nOfbunsjhcghLX
-        qamTeeg7yEnE3hSOjs2Mucwq2pgIvEV0g2hpjj6xiFqpKm5C15u7VGvD3m/hEsWxlSFeJmD+t763s
-        7ALKnTeg+dxxwxvxHiAGP4tObbJwG5rJQyI7btZPLu3eHReEGjCs29fqfwMkdnNTWnfvh2BRiYrAL
-        RqKVdTwlfMkmDuEVa1i9h915/7QxS5FKvdWoPBNtkuvBOcMHoZp/fT/Gu88iCATtvj7P2ozo/Uc91
-        p6xtlrLu26tskHteVNC/BeUy6XG6d8Q2ndEcSKWqNzBSKgH07xFDNQR7hDpVrNSp3OXLuHLozJYyH
-        ewjMVM4A==;
-Received: from [191.31.203.148] (port=48890 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1jF8hn-000OUT-LB; Fri, 20 Mar 2020 00:52:19 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Cc:     edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v3 2/3] dt-bindings: arm: actions: Document Caninos Loucos Labrador
-Date:   Fri, 20 Mar 2020 00:51:03 -0300
-Message-Id: <20200320035104.26139-3-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200320035104.26139-1-matheus@castello.eng.br>
-References: <20200229104358.GB19610@mani>
- <20200320035104.26139-1-matheus@castello.eng.br>
+        Fri, 20 Mar 2020 00:30:29 -0400
+Received: from mail-pj1-f47.google.com ([209.85.216.47]:38335 "EHLO
+        mail-pj1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbgCTEa3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 00:30:29 -0400
+Received: by mail-pj1-f47.google.com with SMTP id m15so1932214pje.3
+        for <devicetree@vger.kernel.org>; Thu, 19 Mar 2020 21:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FK0Qs/wfLDgNg2rYS3eqjZVtMnHsMPlZqWjF8TdcBYo=;
+        b=VoT6snoGQ3wP3BQLrQfRUAilBySe7ZAr60T3PsA8dy1TlDvW6MazZXNga49xu1Vpb4
+         NzZfimCvgPSZnwr7F8bCpxyVOikoJcCQvfUEhngwAx10xqHPrnSeEl5GSZkrinpd2RNJ
+         rjtZtxQrdljLaCfjtJigd93CkgG2usYULjRs8GPATMF/HiC/uxcWfuym56k4DFSp3+HM
+         0L8EgjULc8IC8vIleoP0/dbYGdDv3F8tA921LoLjyhvwg7oLbaUHE0jggB8v6oDL+Q2c
+         eQb0pFNuwsHinMK+LAWuoyGIb3jY0T2B6Z+ADTfifLfuQFmGu4uJQI8QamvzM7vDACNT
+         cVNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FK0Qs/wfLDgNg2rYS3eqjZVtMnHsMPlZqWjF8TdcBYo=;
+        b=WxywUkaRK/aKUT66FB1zX1+vS1Vm8cFtMnYDfz/XmrtPD7FFeNPsMXF0vQjSALbxQH
+         iCkafvcwpXLfy6TjMlkOVXtEmhwhaj9aMEG9BoQYXl22QzPK8cWnEdD3T9jAOR6ThGIB
+         /jRRAUXpCjXS8dM2/jvydkQP8REtsORM7Eudk0kv+LCX7Q/Kvqx5KUwry4TbIbLOwVIW
+         QVm8sJkJnaPq9CZF1c9DaDhVgxgn5P3dZnilh1BofQWgXkx8KCYTNjZLBXHwE2R8Sk9u
+         wioRvZl8C2jkCTkZudF3IvC9aG8kneU2jJKF4/ApjqCNGFufIsJVYhXnaUQNR9QPUwqM
+         Q7JA==
+X-Gm-Message-State: ANhLgQ0CaT9AbRwMKTkLB2a0oCckYKB7RKfTzt6BV/UZl0TS/ff69WbG
+        /p6TYB5www4XRDppx9pVlh3C1Q==
+X-Google-Smtp-Source: ADFU+vvmD0faz/IDlUA+ugLFOG/vv1GJgyi24Xl5N3XX049X07fwpOu7GCTbxqvBdgenTWZz5ADTuA==
+X-Received: by 2002:a17:902:8f94:: with SMTP id z20mr6977222plo.62.1584678627808;
+        Thu, 19 Mar 2020 21:30:27 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id h11sm3792633pfq.56.2020.03.19.21.30.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Mar 2020 21:30:27 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 10:00:25 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ilia Lin <ilia.lin@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Ilia Lin <ilia.lin@kernel.org>,
+        Sricharan R <sricharan@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
+        "open list:QUALCOMM CPUFREQ DRIVER MSM8996/APQ8096" 
+        <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] cpufreq: qcom: Add support for krait based socs
+Message-ID: <20200320043025.xju43zbzmqda5wes@vireshk-i7>
+References: <ilia.lin@kernel.org>
+ <20200313175213.8654-1-ansuelsmth@gmail.com>
+ <CA+5LGR3WJkwFGPWNM2XAqdhaNZ2yXreB8Ni36BKswx0G=i_5fg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.203.148
-X-Source-L: No
-X-Exim-ID: 1jF8hn-000OUT-LB
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.203.148]:48890
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 23
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+5LGR3WJkwFGPWNM2XAqdhaNZ2yXreB8Ni36BKswx0G=i_5fg@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update the documentation to add the Caninos Loucos Labrador. Labrador
-project consists of a computer on module based on the Actions Semi S500
-processor and the Labrador base board.
+On 13-03-20, 21:34, Ilia Lin wrote:
+> Reviewed-by: Ilia Lin <ilia.lin@kernel.org>
 
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- Documentation/devicetree/bindings/arm/actions.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+Applied. Thanks.
 
-diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
-index ace3fdaa8396..1b131ceb884a 100644
---- a/Documentation/devicetree/bindings/arm/actions.yaml
-+++ b/Documentation/devicetree/bindings/arm/actions.yaml
-@@ -24,6 +24,11 @@ properties:
-               - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
-           - const: lemaker,guitar
-           - const: actions,s500
-+      - items:
-+          - enum:
-+              - caninos,labrador-bb # Caninos Loucos Labrador Base Board
-+          - const: caninos,labrador
-+          - const: actions,s500
-
-       # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
-       - items:
---
-2.25.0
-
+-- 
+viresh
