@@ -2,234 +2,167 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CE3C4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 10:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF19C4332E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 10:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBF420722
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 10:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0FCC2072D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 10:34:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="I12gcdXe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4uXw8Pf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgCTKWv (ORCPT
+        id S1726767AbgCTKez (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:22:51 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:31942 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726704AbgCTKWu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 06:22:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584699769; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=60JbKnWdQrMgDSn6i45yRk/lB+J1ZqLUwhRcp62dqQc=; b=I12gcdXe8gM6otnwynUeDEWoExLcoU94jE7gaSf2mIou222HsfISIjYG++sTKM81YiZzcQ3i
- zTcleIAzzSGZSIEJtkJV3E3My5YhYWX/+CCPdscPTdv5XRdU+K55XwCzjb3BqaM9BFnJec2K
- E0P8wF5Jm4SLQ1Sv9Cxt8VX7E1w=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e74996d.7f9ac9a792d0-smtp-out-n02;
- Fri, 20 Mar 2020 10:22:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8FEA0C43637; Fri, 20 Mar 2020 10:22:36 +0000 (UTC)
-Received: from [192.168.0.13] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C9238C433CB;
-        Fri, 20 Mar 2020 10:22:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C9238C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V2 3/8] soc: qcom-geni-se: Add interconnect support to fix
- earlycon crash
-To:     "Matthias Kaehlcke <mka@chromium.org> Evan Green" 
-        <evgreen@chromium.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, dianders@chromium.org,
-        evgreen@chromium.org
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-4-git-send-email-akashast@codeaurora.org>
- <20200313204441.GJ144492@google.com>
- <1f86fdf0-df7c-4e4a-d4d8-8b0162e52cb4@codeaurora.org>
- <20200317182910.GR144492@google.com>
- <3831b33c-93ee-e5e0-fcfb-530b4738f930@codeaurora.org>
- <20200319194332.GA60149@google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <a7227a1f-00a1-0818-80f3-904fe264f864@codeaurora.org>
-Date:   Fri, 20 Mar 2020 15:52:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 20 Mar 2020 06:34:55 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38290 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgCTKez (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 06:34:55 -0400
+Received: by mail-wm1-f65.google.com with SMTP id l20so5708337wmi.3;
+        Fri, 20 Mar 2020 03:34:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A9LMr0UXcZSEqVnqNAwLyFiSr+kmUdRM1J1fT1cXn5U=;
+        b=Z4uXw8PfRFLJlofHFGW41vrqoGwlAIqRACj+uRDYvGpB8tWq7q1Li9OwTmu9kmT7sS
+         VJ3g8sAmUG2NSBqkCPDsohe7yIgPn3QYHTtZLkdZRYvvKEXiboau8buIhpjAzyNF7evV
+         x8vRSxGYM0NmnHdGYBjFzdCkQW3RfOZeutJgCiimnqdA8Gdqu2ANQvtjli+HGCLBzz+Q
+         v0Iyv/TwBHXbwA0m9jSHsI9Ks5ouiTq8po/U26UqHCZnOeITzTRNSvu2ha6JxopKmf12
+         RFvRFeqsQMqfbXmM1nUgVOsBp1+1zkx3fMIeAvg8fRKJqvRrmtmPrKcw2aY5p9exuglM
+         TKWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A9LMr0UXcZSEqVnqNAwLyFiSr+kmUdRM1J1fT1cXn5U=;
+        b=DEqEfb6zAW0+TDZe3TilMZPW6snb29jO5GeFIPWRU1lsD9zx5eISvt1RWt7raR7wVh
+         4KrIsUumEtGiZY2ROifrW83enC1QT2IrXkGQkPDPecCct8kSsie0s2Jxt7rAwlASqQaG
+         zumWjoQi1KVh1OJZuFtHbZoTrLFt3mW5X+zcOJXps7MZJJuErl/vguONiHM7JcVJ7lMg
+         SAcFOvzQTwkT6XJmYMcOH4HLYcTc6GqYk8daIPXvg6XS+hmogTJt3UXeJKd7a+UGHQ3h
+         h0F1qXr7kIGzS0am8sNHCpnXBHvaylHdq626cSIC2ocDbE1wg+BbYvFcApxFCiYUozH5
+         SBEw==
+X-Gm-Message-State: ANhLgQ0QO8eVj8ICyHdT6Jhao+nhywn1tyRzzi5+pOwEITvgg8d35zbI
+        3V4NK+IBnW22iDqMN7PZhRJytHpTX/1nKiFGMTZWJQ7M
+X-Google-Smtp-Source: ADFU+vvRrvOiPU9AK3wSD6H8a7LzgOUg2SrSTLcnrfXfsiTSvivvRS4XrMnjiu3ESR+V0DJhpgTVgiItLeoY1EdIvVU=
+X-Received: by 2002:a7b:c92a:: with SMTP id h10mr9145899wml.26.1584700492517;
+ Fri, 20 Mar 2020 03:34:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200319194332.GA60149@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200304072730.9193-1-zhang.lyra@gmail.com>
+In-Reply-To: <20200304072730.9193-1-zhang.lyra@gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Fri, 20 Mar 2020 18:34:16 +0800
+Message-ID: <CAAfSe-sWv1mrx1GPgO8ZRhSs9vbAy_PY_BA4BkHrE5FghsX7nA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/7] Add clocks for Unisoc's SC9863A
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Evan, Matthias,
+Hi Stephen,
 
-On 3/20/2020 1:13 AM, Matthias Kaehlcke wrote:
-> On Wed, Mar 18, 2020 at 02:24:35PM +0530, Akash Asthana wrote:
->> Hi Matthias,
->>
->> On 3/17/2020 11:59 PM, Matthias Kaehlcke wrote:
->>> Hi Akash,
->>>
->>> On Tue, Mar 17, 2020 at 04:27:47PM +0530, Akash Asthana wrote:
->>>> Hi Matthias,
->>>>
->>>> On 3/14/2020 2:14 AM, Matthias Kaehlcke wrote:
->>>>> Hi Akash,
->>>>>
->>>>> On Fri, Mar 13, 2020 at 06:42:09PM +0530, Akash Asthana wrote:
->>>>>> V1 patch@https://patchwork.kernel.org/patch/11386469/ caused SC7180 system
->>>>>> to reset at boot time.
->>>>> The v1 patch isn't relevant in the commit message, please just describe the
->>>>> problem. Also the crash only occurs when earlycon is used.
->>>> ok
->>>>>> As QUP core clock is shared among all the SE drivers present on particular
->>>>>> QUP wrapper, the reset seen is due to earlycon usage after QUP core clock
->>>>>> is put to 0 from other SE drivers before real console comes up.
->>>>>>
->>>>>> As earlycon can't vote for it's QUP core need, to fix this add ICC
->>>>>> support to common/QUP wrapper driver and put vote for QUP core from
->>>>>> probe on behalf of earlycon and remove vote during sys suspend.
->>>>> Only removing the vote on suspend isn't ideal, the system might never get
->>>>> suspended. That said I don't have a really good alternative suggestion.
->>>>>
->>>>> One thing you could possibly do is to launch a delayed work, check
->>>>> console_device() every second or so and remove the vote when it returns
->>>>> non-NULL. Not claiming this would be a great solution ...
->>>>>
->>>>> The cleanest solution might be a notifier when the early console is
->>>>> unregistered, it seems somewhat over-engineered though ... Then again
->>>>> other (future) uart drivers with interconnect support might run into
->>>>> the same problem.
->>>> We are hitting this problem because QUP core clocks are shared among all the
->>>> SE driver present in particular QUP wrapper, if other HW controllers has
->>>> similar architecture we will hit this issue.
->>>>
->>>> How about if we expose an API from common driver(geni-se) for putting QUP
->>>> core BW vote to 0.
->>>>
->>>> We call this from console probe just after uart_add_one_port call (console
->>>> resources are enabled as part of this call) to put core quota to 0 on behalf
->>>> of earlyconsole?
->>>   From my notes from earlier debugging I have doubts this would work:
->>>
->>>     There is a short window where the early console and the 'real' console coexist:
->>>
->>>     [    3.858122] printk: console [ttyMSM0] enabled
->>>     [    3.875692] printk: bootconsole [qcom_geni0] disabled
->>>
->>>     The reset probably occurs when the early console tries to write, but the ICC
->>>     is effectively disabled because ttyMSM0 and the other geni ports are runtime
->>>     suspended.
->> Code flow from console driver probe(qcom_geni_serial.c)
->>
->> uart_add_one_port--->uart_configure_port--->{ 1) uart_change_pm(enable
->> console resources)  2)register_console(boot to real console switch happens
->> here)}
->>
->> Console resources are not disabled from anywhere before the switch happens
->> completely. I meant to say until we saw below logs.
->>
->> [    3.875692] printk: bootconsole [qcom_geni0] disabled
->>
->> I think the board reset issue cannot occur during the window where early
->> console and 'real' console coexist.
-> Thanks for the clarification! Indeed my notes were only a hypothesis, I
-> don't see evidence that there is an actual downvote shortly after console
-> registration.
->
->> I have validated proposed solution by me, it is working fine.
->>
->> Currently voting is done for every QUP and not only to which earlycon is
->> connect, with the above approach we can't remove vote from other QUPs.
->>
->> However we can limit voting only to earlycon QUP by removing interconnect
->> from DT node of other QUPs.
->>
->> I am not sure how clean is this solution.
-> I'm more inclined towards a solution along the lines of what Evan
-> proposed, i.e. delaying the votes (either in geni or ICC) until we
-> are ready.
-
-Based on discussion I think the delayed solution is most suited if 
-implemented in ICC core because other ICC client might face the similar 
-problem.
-
-However for geni case I am more inclined towards below proposed solution.
-
------------------------------------------------------------------------------------------------------
-
-How about if we expose an API from common driver(geni-se) for putting QUP
-core BW vote to 0.
-
-We call this from console probe just after uart_add_one_port call (console
-resources are enabled as part of this call) to put core quota to 0 on behalf
-of earlyconsole?
----------------------------------------------------------------------------
-
-I think below are the pros and cons for above solution.
-
-Pros:
-
-1) Not only it'll solve the current issue also it'll lay foundation to 
-support earlyconsole without having a real console. In future if needed 
-we can enable rest of the earlyconsole resources(SE clocks) from common 
-driver to make it independent of real console.
-
-2) Inorder to solve bug:120934049(Add runtime PM support to common 
-driver and move enablement/disablement of AHB clocks there) reported by 
-Stephen Boyd, we'll end up adding ICC support to this driver because as 
-per HPG the order of enabling the QUP clocks should be 
-(Core-->AHB-->SE(per engine)). So we need to have the minimal possible 
-vote on QUP core before enabling AHB clocks.
-
-I agree still we have keep earlycon fix as it is(vote from common driver 
-probe and remove once real console is up) .
-
-I mentioned above bug in case it seems silly to add ICC support to 
-common driver just for earlyconsole fix.
-
-Cons:
-
-1) As Evan mentioned and I agree that the whole house of cards comes 
-down if we replace these votes in the wrong order. But I think this is 
-very unlikely to happen once fixed.
-
-2) As Matthias mentioned we are voting for all the QUPs regardless 
-earlycon is present or not, I think this is HW limitation and we have to 
-live with it.
-
-Even if I try something like below the QUP1 can come up before 
-QUP2(console) and child of QUP1 can remove vote from share QUP clocks.
-
-if (of_get_compatible_child(pdev->dev.of_node, "qcom,geni-debug-uart")) {
-
-     ret = icc_set_bw(wrapper->icc_path_geni_to_core, Bps_to_icc(1000),
-
-         Bps_to_icc(1000));
-
-}
-
+Could you please take this patch-set to your tree if there are no
+further comments.
 
 Thanks,
+Chunyan
 
-Akash
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+On Wed, 4 Mar 2020 at 15:28, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> Add SC9863A specific clock driver and devicetree bindings for it,
+> this patch add to support the new way of specifying parents
+> without name strings of clocks.
+>
+> Also this patchset added support gate clock for pll which need to
+> wait a certain time for stable after being switched on.
+>
+> Changes from v5:
+> * Addressed comments from Rob:
+> - Removed description from "clock-names" and "reg" properties;
+> - Added maxItem to "reg" property.
+> * Modified the descriptions for those clocks which are a child node of
+>   a syscon.
+>
+> Changes from v4:
+> * Fixed dt_binding_check warnings.
+>
+> Changes from v3:
+> * Rebased onto v5.6-rc1.
+>
+> Changes from v2:
+> * Addressed comments from Stephen:
+> - Remove ununsed header file from sc9863a-clk.c;
+> - Added comments for clocks which were marked with CLK_IGNORE_UNUSED,
+>   and removed some unnecessary CLK_IGNORE_UNUSED;
+> - Added error checking for sprd_clk_regmap_init().
+>
+> * Addressed comments from Rob:
+> - Put some clocks under syscon nodes, since these clocks have the same
+>   physical address base with the syscon;
+> - Added clocks maxItems and listed out clock-names.
+>
+> * Added Rob's reviewed-by on patch 4.
+>
+> Changes from v1:
+> * Addressed comments:
+> - Removed redefine things;
+> - Switched DT bindings to yaml schema;
+> - Added macros for the new way of specifying clk parents;
+> - Switched to use the new way of specifying clk parents;
+> - Clean CLK_IGNORE_UNUSED flags for some SC9863A clocks;
+> - Dropped the module alias;
+> - Use device_get_match_data() instead of of_match_node();
+>
+> * Added Rob's Acked-by on patch 2.
+>
+> Chunyan Zhang (6):
+>   dt-bindings: clk: sprd: rename the common file name sprd.txt to SoC
+>     specific
+>   dt-bindings: clk: sprd: add bindings for sc9863a clock controller
+>   clk: sprd: Add dt-bindings include file for SC9863A
+>   clk: sprd: Add macros for referencing parents without strings
+>   clk: sprd: support to get regmap from parent node
+>   clk: sprd: add clocks support for SC9863A
+>
+> Xiaolong Zhang (1):
+>   clk: sprd: add gate for pll clocks
+>
+>  .../clock/{sprd.txt => sprd,sc9860-clk.txt}   |    2 +-
+>  .../bindings/clock/sprd,sc9863a-clk.yaml      |  105 +
+>  drivers/clk/sprd/Kconfig                      |    8 +
+>  drivers/clk/sprd/Makefile                     |    1 +
+>  drivers/clk/sprd/common.c                     |   10 +-
+>  drivers/clk/sprd/composite.h                  |   39 +-
+>  drivers/clk/sprd/div.h                        |   20 +-
+>  drivers/clk/sprd/gate.c                       |   17 +
+>  drivers/clk/sprd/gate.h                       |  120 +-
+>  drivers/clk/sprd/mux.h                        |   28 +-
+>  drivers/clk/sprd/pll.h                        |   55 +-
+>  drivers/clk/sprd/sc9863a-clk.c                | 1772 +++++++++++++++++
+>  include/dt-bindings/clock/sprd,sc9863a-clk.h  |  334 ++++
+>  13 files changed, 2457 insertions(+), 54 deletions(-)
+>  rename Documentation/devicetree/bindings/clock/{sprd.txt => sprd,sc9860-clk.txt} (98%)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+>  create mode 100644 drivers/clk/sprd/sc9863a-clk.c
+>  create mode 100644 include/dt-bindings/clock/sprd,sc9863a-clk.h
+>
+> --
+> 2.20.1
+>
