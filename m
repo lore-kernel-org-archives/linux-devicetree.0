@@ -7,203 +7,162 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3378EC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767A0C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B74E2072C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BACF20663
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584726497;
-	bh=kH6r0irKxa0rb6nxt3outSD00HOBaM/SfWO6IW1kjO8=;
+	s=default; t=1584726825;
+	bh=nLU7I+khHU23Hk7rDSRLXrFUGdrxJwXe3bmc7di73/g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WaLhNNBulSR0DbiATCkDClNUtY0fy9rxCgfxPyZnIIlVMlm28THMTZhwyVqdNviVS
-	 axOA8QwSlPt1W0y/eCr3VESQXT2JlyFDQQt7wlIis0J8JBXDI+U/cZunBY7gdmhQid
-	 Cf30st5y40CkjetWvZa6AS7jWTmAyTG8TPlSAFB0=
+	b=tYkEfQnEof8PceGWnH6OItSxKyuxo3nIXJWFHqK2tuEVfrP+dwjTouWaub/IyC1vf
+	 lc3lqEFcruPmMJZNTK9YrRYrwbEKWCZZn9OfIn6fXTOyNnBofuD0Epo7q/a3WGjWpy
+	 dYAvvP0PRsvMpAee3A/PeOqprUva99Hy3GuFHKss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgCTRsQ (ORCPT
+        id S1726829AbgCTRxp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:48:16 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38966 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgCTRsQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 13:48:16 -0400
-Received: by mail-io1-f65.google.com with SMTP id c19so6836811ioo.6;
-        Fri, 20 Mar 2020 10:48:15 -0700 (PDT)
+        Fri, 20 Mar 2020 13:53:45 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35077 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbgCTRxo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 13:53:44 -0400
+Received: by mail-il1-f193.google.com with SMTP id o16so3808125ilm.2;
+        Fri, 20 Mar 2020 10:53:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sdZ8Fz0NTe2Z8mbny4b+ZzHCT+owc9QawbF3H7/fFjQ=;
-        b=Bej2tm2sn5GSpjPSq2sLEm/Jvnu8sMUmYPFgAcBmhnqFIlYYvEcka8MGL6ykUX2AAY
-         Rvy6q4OQXd7rQWhUFnDMLWI+Z0HcI6mdHryD5kggV31xTIC1lI0EffF5Qacur/GHrxLz
-         eAfU3NE6W9oaZD/tH4FIyV9P3PZ/inOPKSeGJ1T/6ayet0f290yA4h7xl94nS/FOYnOv
-         LJYUujblWRDUO5AUiqgg0O9tzf3tlb7qYlqjZpjY7XrHQczjChHii7vcysp1hEyFQIk1
-         XWGBGRFJDIcesxiR2JCop5Ai8ByRU2NIIooI3vJjp/Ts8YorZhwe7kuULYzBzKO+1Rjb
-         jy6A==
-X-Gm-Message-State: ANhLgQ3WAKR6pgFMFnL1vgrDwSGtogbr9OQIil36idXHIS0ifWN/Aj3r
-        ju3Odb8Kt6+xsVYr18LtHw==
-X-Google-Smtp-Source: ADFU+vvwo0sFRpgMy8S/+VmmSzmDzKFlPryLvd9OSadfOfVEWtEg1diSdrBlcDY6qZflMYnDgSLyOw==
-X-Received: by 2002:a6b:7a07:: with SMTP id h7mr8385084iom.47.1584726495070;
-        Fri, 20 Mar 2020 10:48:15 -0700 (PDT)
+        bh=LhB293HQjykdpFMkVYZkXztlpDsUi5BcHgzQ1QDOWa8=;
+        b=IsFU5JWIfqe3otbAsRF8oj6oQb4fk/FXGxHM60fa/iJpVQ6LbhXKAu+40fptJa4T4B
+         1dCX63DGed7QW1ewT2K8yDCbJzR1qdbckTnuUiGrchTl4tVnjXZXpDPCSbsqZkUidCTY
+         18/AhLK533mQE9QXDTjptM7qTyD2UzgU140pYW0Di3XZseiSuNmGNWMEGM8sbxnqlHtD
+         rO9OdAVB5CiQVgh/ZNkOx9kpoeEBm3KXs/1EMpCtAqEk/fciUV2Vp9G+6SjifBoKClIz
+         GQd/6t/VaoCj4Snsmc5GuOec7bOgt/pTFtfAvS3qJtcPQoZbfNpVDGe9/ifgd0kWUpXZ
+         zzsg==
+X-Gm-Message-State: ANhLgQ2Ud/KXy/sJb2BSmOxlMYkut52f2ydch/g7xqZgDNslMEuH5p84
+        K7bOn9KMNM1Z7IAKWp0Wrg==
+X-Google-Smtp-Source: ADFU+vsUCM8kq3aVkV1fztHvKh0xPIyxaYIKw+n73UMjSIdvQY91wgcqhbhDJ42CO+ued3HzkO9sPQ==
+X-Received: by 2002:a92:6c0e:: with SMTP id h14mr9996526ilc.81.1584726823697;
+        Fri, 20 Mar 2020 10:53:43 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id t86sm2201336ili.82.2020.03.20.10.48.12
+        by smtp.gmail.com with ESMTPSA id 10sm2259019ilb.45.2020.03.20.10.53.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 10:48:14 -0700 (PDT)
-Received: (nullmailer pid 10514 invoked by uid 1000);
-        Fri, 20 Mar 2020 17:48:12 -0000
-Date:   Fri, 20 Mar 2020 11:48:12 -0600
+        Fri, 20 Mar 2020 10:53:42 -0700 (PDT)
+Received: (nullmailer pid 28110 invoked by uid 1000);
+        Fri, 20 Mar 2020 17:53:39 -0000
+Date:   Fri, 20 Mar 2020 11:53:39 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 6/7] ASoC: dt-bindings: fsl_easrc: Add document for
- EASRC
-Message-ID: <20200320174812.GA27070@bogus>
-References: <cover.1583725533.git.shengjiu.wang@nxp.com>
- <71b6ad3d0ea79076fded2373490ec1eb8c418d21.1583725533.git.shengjiu.wang@nxp.com>
+To:     Alexandru Ardelean <ardeleanalex@gmail.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, jic23@kernel.org,
+        Laszlo.Nagy@analog.com, Andrei.Grozav@analog.com,
+        Michael.Hennerich@analog.com, Istvan.Csomortani@analog.com,
+        Adrian.Costina@analog.com, Dragos.Bogdan@analog.com,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH v10 6/8] dt-bindings: iio: adc: add bindings doc for AXI
+ ADC driver
+Message-ID: <20200320175339.GA24239@bogus>
+References: <20200316155035.25500-1-alexandru.ardelean@analog.com>
+ <20200316155035.25500-7-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <71b6ad3d0ea79076fded2373490ec1eb8c418d21.1583725533.git.shengjiu.wang@nxp.com>
+In-Reply-To: <20200316155035.25500-7-alexandru.ardelean@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 11:58:33AM +0800, Shengjiu Wang wrote:
-> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new
-> IP module found on i.MX8MN.
+On Mon, Mar 16, 2020 at 05:50:33PM +0200, Alexandru Ardelean wrote:
+> This change adds the bindings documentation for the AXI ADC driver.
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+Your author and S-o-b emails don't match.
+
 > ---
->  .../devicetree/bindings/sound/fsl,easrc.yaml  | 101 ++++++++++++++++++
->  1 file changed, 101 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+>  .../bindings/iio/adc/adi,axi-adc.yaml         | 63 +++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl,easrc.yaml b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
 > new file mode 100644
-> index 000000000000..ff22f8056a63
+> index 000000000000..6bd80e241f40
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/fsl,easrc.yaml
-> @@ -0,0 +1,101 @@
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+> @@ -0,0 +1,63 @@
 > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/sound/fsl,easrc.yaml#
+> +$id: http://devicetree.org/schemas/iio/adc/adi,axi-adc.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: NXP Asynchronous Sample Rate Converter (ASRC) Controller
+> +title: Analog Devices AXI ADC IP core
 > +
 > +maintainers:
-> +  - Shengjiu Wang <shengjiu.wang@nxp.com>
+> +  - Michael Hennerich <michael.hennerich@analog.com>
+> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
+> +
+> +description: |
+> +  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
+> +  with a high speed serial (JESD204B/C) or source synchronous parallel
+> +  interface (LVDS/CMOS).
+> +  Usually, some other interface type (i.e SPI) is used as a control
+> +  interface for the actual ADC, while this IP core will interface
+> +  to the data-lines of the ADC and handle the streaming of data into
+> +  memory via DMA.
+> +
+> +  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
 > +
 > +properties:
-> +  $nodename:
-> +    pattern: "^easrc@.*"
-> +
 > +  compatible:
-> +    const: fsl,imx8mn-easrc
+> +    enum:
+> +      - adi,axi-adc-10.0.a
 > +
 > +  reg:
 > +    maxItems: 1
 > +
-> +  interrupts:
+> +  dmas:
 > +    maxItems: 1
 > +
-> +  clocks:
-> +    items:
-> +      - description: Peripheral clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: mem
-> +
-> +  dmas:
-> +    maxItems: 8
-> +
 > +  dma-names:
+> +    maxItems: 1
+
+Drop this. Implied by 'items' length.
+
+With those 2 things fixed,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
 > +    items:
-> +      - const: ctx0_rx
-> +      - const: ctx0_tx
-> +      - const: ctx1_rx
-> +      - const: ctx1_tx
-> +      - const: ctx2_rx
-> +      - const: ctx2_tx
-> +      - const: ctx3_rx
-> +      - const: ctx3_tx
+> +      - const: rx
 > +
-> +  fsl,easrc-ram-script-name:
-
-'firmware-name' is the established property name for this.
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/string
-> +      - const: imx/easrc/easrc-imx8mn.bin
-
-Though if there's only 1 possible value, why does this need to be in DT?
-
-> +    description: The coefficient table for the filters
-
-If the firmware is only 1 thing, then perhaps this should just be a DT 
-property rather than a separate file. It depends on who owns/creates 
-this file. If fixed for the platform, then DT is a good fit. If updated 
-separately from DT and boot firmware, then keeping it separate makes 
-sense.
-
-> +
-> +  fsl,asrc-rate:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 8000
-> +      - maximum: 192000
-> +    description: Defines a mutual sample rate used by DPCM Back Ends
-> +
-> +  fsl,asrc-format:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [2, 6, 10, 32, 36]
-> +        default: 2
+> +  adi,adc-dev:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
 > +    description:
-> +      Defines a mutual sample format used by DPCM Back Ends
+> +      A reference to a the actual ADC to which this FPGA ADC interfaces to.
 > +
 > +required:
 > +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
 > +  - dmas
-> +  - dma-names
-> +  - fsl,easrc-ram-script-name
-> +  - fsl,asrc-rate
-> +  - fsl,asrc-format
+> +  - reg
+> +  - adi,adc-dev
+> +
+> +additionalProperties: false
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/clock/imx8mn-clock.h>
+> +    axi-adc@44a00000 {
+> +          compatible = "adi,axi-adc-10.0.a";
+> +          reg = <0x44a00000 0x10000>;
+> +          dmas = <&rx_dma 0>;
+> +          dma-names = "rx";
 > +
-> +    easrc: easrc@300C0000 {
-> +           compatible = "fsl,imx8mn-easrc";
-> +           reg = <0x0 0x300C0000 0x0 0x10000>;
-> +           interrupts = <0x0 122 0x4>;
-> +           clocks = <&clk IMX8MN_CLK_ASRC_ROOT>;
-> +           clock-names = "mem";
-> +           dmas = <&sdma2 16 23 0> , <&sdma2 17 23 0>,
-> +                  <&sdma2 18 23 0> , <&sdma2 19 23 0>,
-> +                  <&sdma2 20 23 0> , <&sdma2 21 23 0>,
-> +                  <&sdma2 22 23 0> , <&sdma2 23 23 0>;
-> +           dma-names = "ctx0_rx", "ctx0_tx",
-> +                       "ctx1_rx", "ctx1_tx",
-> +                       "ctx2_rx", "ctx2_tx",
-> +                       "ctx3_rx", "ctx3_tx";
-> +           fsl,easrc-ram-script-name = "imx/easrc/easrc-imx8mn.bin";
-> +           fsl,asrc-rate  = <8000>;
-> +           fsl,asrc-format = <2>;
+> +          adi,adc-dev = <&spi_adc>;
 > +    };
+> +...
 > -- 
-> 2.21.0
+> 2.20.1
 > 
