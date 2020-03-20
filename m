@@ -2,660 +2,89 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C269FC4332D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C76C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F85020709
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:18:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R3CgiM9+"
+	by mail.kernel.org (Postfix) with ESMTP id 1599620767
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584725121;
+	bh=Er5NiXwXCdg+sJt6+vUhDrFGAGFfEXKhv1Q3VJa5bLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=izkaoVsFcHADE5baGsKFoj4gL6hy+6kIQnvhyPEp81ouUoNsb1FPoD5McefaUkpm1
+	 e9IM67i6BTrfTjplCRG2j6kL3qj3PmP81wMKSXfrI75SRMibeAgjlsrqjpuPKBCGa1
+	 UHMshBPgevq8YcTjEEE2BEF3BgEWM8d1bbVMfqGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgCTRSq (ORCPT
+        id S1726773AbgCTRZU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:18:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43582 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgCTRSp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 13:18:45 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f206so3598971pfa.10
-        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 10:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j+3NiBvl2a3wWDm0zyp2jY9H8e489TocevGvrI9+UkA=;
-        b=R3CgiM9+cjth7NV8DlMsD4eWaO9HxY2zUQetBq6kbBlTfiKf2XRvDeZrabGxIK7XhK
-         DpFXwUvVoMDD1SIQLAxMDDJ2ahjIE0ayQNqOhJKNcCsinws8/pmX+Ik+bDj4bWZDvx02
-         zONz6ea23pZAC5yagYaUCajnT6X9vQoCDU8LU=
+        Fri, 20 Mar 2020 13:25:20 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36137 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgCTRZU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 13:25:20 -0400
+Received: by mail-io1-f68.google.com with SMTP id d15so6778171iog.3;
+        Fri, 20 Mar 2020 10:25:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j+3NiBvl2a3wWDm0zyp2jY9H8e489TocevGvrI9+UkA=;
-        b=pYR3kWV51CI/VEr2tEzHd21piqTvVgG6suUMpkcvWfJgGg1Cbd/ihghQ5Ff3UMOIkP
-         oXXfTQu4zJ3+aOMEwVovKYZ+5YjcamH6JoDlsn7LTGVLUknGms2vPYduzcLYmUnMjQd2
-         lZ5U0KRN13WdTWO4veou/xy/kaTGd8nfPcKEOGB4U78SRXsX+EUArn8ZqbHeq+KMdt3u
-         J2yuEwGVRusJj0EMdHfEnPZP4MZrFB/0ggIBMrYMu42os1lFiwhb1omMhb/FaPZHuJlQ
-         D3+tTp5UUhDjhHEFsex/nLXNphYrXqUcCq7DO/7GioCSNrZ/Ybnxzdi6OTtzqmrsSP3n
-         i9Kg==
-X-Gm-Message-State: ANhLgQ3p6BPXim2YzJjpzT9m+5QnCwtZ1jOLmxX7cnECZHYsBrmzCqbU
-        Ys6CIz8nJpIAVNAhQ/KXhHTjuQ==
-X-Google-Smtp-Source: ADFU+vsCE7N/v3n8ragv/ocLtaLBtRuSCa+VrD2EOvAy1i5UWITw7NQLdcRgvJ0Obz7o6qVuJ/OKEg==
-X-Received: by 2002:a62:18cf:: with SMTP id 198mr10983261pfy.277.1584724723952;
-        Fri, 20 Mar 2020 10:18:43 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id gv7sm5380940pjb.16.2020.03.20.10.18.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 10:18:42 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 10:18:41 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: phy: qcom,qmp: Convert QMP PHY
- bindings to yaml
-Message-ID: <20200320171841.GB204494@google.com>
-References: <1583928252-21246-1-git-send-email-sanm@codeaurora.org>
- <1583928252-21246-2-git-send-email-sanm@codeaurora.org>
+        bh=P1wKaMI8O9dDCT1oPP4iY9qYkhhrObrooyIKo3KFxxE=;
+        b=D3ajN2gfDFASFTgDwuevFZZt8QBdlhGEFsz/8rn1Y8mVNQ5IsgWTxRd/ETdryXZPst
+         2uivolM8QnO12cdjG+aoCGbme7yI7k0wcGNIgz2JG2RZNEvEzOtkrKPnWw8Ru+So003g
+         AlkWRsyqUqKbegE1zzr5PkOZSFNyAxw7dvxAus71599YjQrvEeuNdkYyUFjTvx7/abeb
+         CUVrGN3eXeVvEMTL8FXWDrlc8hn4xgtkFW3BuVQN/1maSFjMetO1jmfxetBIB8+KJp80
+         2omC8Dr0Jav/+TpzEQ613rqdA+TrzY5NpfHAUh4wCwHdBZQdUsgxdq6NkkyKTyCBwfe/
+         qiWw==
+X-Gm-Message-State: ANhLgQ0kPEmkJkpI1jd5xtwk0I+IN70A7AcAuXrAzfAAFW+tWbQqvyfx
+        xMgukGTHsb2cbrfmFR/DXQ==
+X-Google-Smtp-Source: ADFU+vvk9WTP7Yclc/W4SLnBNr6eIfVp1DIP7mrsVLzXUlDaIbJf0MUwb+PbOIfIF+pkls/8QSKuJQ==
+X-Received: by 2002:a05:6638:3dd:: with SMTP id r29mr8697341jaq.94.1584725119010;
+        Fri, 20 Mar 2020 10:25:19 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id v21sm1908809ios.39.2020.03.20.10.25.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 10:25:18 -0700 (PDT)
+Received: (nullmailer pid 5126 invoked by uid 1000);
+        Fri, 20 Mar 2020 17:25:16 -0000
+Date:   Fri, 20 Mar 2020 11:25:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-media@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, kernel@pengutronix.de,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 1/4] media: dt-bindings: Document i.MX8MQ VPU bindings
+Message-ID: <20200320172516.GA5033@bogus>
+References: <20200320131256.23294-1-p.zabel@pengutronix.de>
+ <20200320131256.23294-2-p.zabel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583928252-21246-2-git-send-email-sanm@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200320131256.23294-2-p.zabel@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sandeep,
-
-I fear this needs yet another re-spin since the PHY tree now has commit
-0347f0dcbd2f0e ("phy: qcom-qmp: Add MSM8996 UFS QMP support").
-
-On Wed, Mar 11, 2020 at 05:34:09PM +0530, Sandeep Maheswaram wrote:
-> Convert QMP PHY bindings to DT schema format using json-schema.
+On Fri, 20 Mar 2020 14:12:53 +0100, Philipp Zabel wrote:
+> Add devicetree binding documentation for the Hantro G1/G2 VPU on i.MX8MQ.
 > 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 > ---
->  .../devicetree/bindings/phy/qcom,qmp-phy.yaml      | 311 +++++++++++++++++++++
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 237 ----------------
->  2 files changed, 311 insertions(+), 237 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
->  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> Changes since v5:
+>  - Drop i.MX8MM bindings
+>  - Change example node name to video-codec
+>  - Convert to YAML
+> ---
+>  .../bindings/media/nxp,imx8mq-vpu.yaml        | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> new file mode 100644
-> index 0000000..39ec3f24
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> @@ -0,0 +1,311 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/qcom,qmp-phy.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm QMP PHY controller
-> +
-> +maintainers:
-> +  - Manu Gautam <mgautam@codeaurora.org>
-> +
-> +description:
-> +  QMP phy controller supports physical layer functionality for a number of
-> +  controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,ipq8074-qmp-pcie-phy
-> +      - qcom,msm8996-qmp-pcie-phy
-> +      - qcom,msm8996-qmp-usb3-phy
-> +      - qcom,msm8998-qmp-pcie-phy
-> +      - qcom,msm8998-qmp-ufs-phy
-> +      - qcom,msm8998-qmp-usb3-phy
-> +      - qcom,sdm845-qhp-pcie-phy
-> +      - qcom,sdm845-qmp-pcie-phy
-> +      - qcom,sdm845-qmp-ufs-phy
-> +      - qcom,sdm845-qmp-usb3-phy
-> +      - qcom,sdm845-qmp-usb3-uni-phy
-> +      - qcom,sm8150-qmp-ufs-phy
-> +
-> +  reg:
-> +    minItems: 1
-> +    items:
-> +      - description: Address and length of PHY's common serdes block.
-> +      - description: Address and length of the DP_COM control block.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: reg-base
-> +      - const: dp_com
-> +
-> +  "#clock-cells":
-> +     enum: [ 1, 2 ]
-> +
-> +  "#address-cells":
-> +    enum: [ 1, 2 ]
-> +
-> +  "#size-cells":
-> +    enum: [ 1, 2 ]
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 4
-> +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  reset-names:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  vdda-phy-supply:
-> +    description:
-> +        Phandle to a regulator supply to PHY core block.
-> +
-> +  vdda-pll-supply:
-> +    description:
-> +        Phandle to 1.8V regulator supply to PHY refclk pll block.
-> +
-> +  vddp-ref-clk-supply:
-> +    description:
-> +        Phandle to a regulator supply to any specific refclk
-> +        pll block.
-> +
-> +#Required nodes:
-> +patternProperties:
-> +  "^phy@[0-9a-f]+$":
-> +    type: object
-> +    description:
-> +      Each device node of QMP phy is required to have as many child nodes as
-> +      the number of lanes the PHY has.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#clock-cells"
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +  - vdda-phy-supply
-> +  - vdda-pll-supply
-> +
-> +additionalProperties: false
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,sdm845-qmp-usb3-phy
-> +              - qcom,sdm845-qmp-usb3-uni-phy
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: Phy aux clock.
-> +            - description: Phy config clock.
-> +            - description: 19.2 MHz ref clk.
-> +            - description: Phy common block aux clock.
-> +        clock-names:
-> +          items:
-> +            - const: aux
-> +            - const: cfg_ahb
-> +            - const: ref
-> +            - const: com_aux
-> +        resets:
-> +          items:
-> +            - description: reset of phy block.
-> +            - description: phy common block reset.
-> +        reset-names:
-> +          items:
-> +            - const: phy
-> +            - const: common
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,msm8996-qmp-pcie-phy
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: Phy aux clock.
-> +            - description: Phy config clock.
-> +            - description: 19.2 MHz ref clk.
-> +        clock-names:
-> +          items:
-> +            - const: aux
-> +            - const: cfg_ahb
-> +            - const: ref
-> +        resets:
-> +          items:
-> +            - description: reset of phy block.
-> +            - description: phy common block reset.
-> +            - description: phy's ahb cfg block reset.
-> +        reset-names:
-> +          items:
-> +            - const: phy
-> +            - const: common
-> +            - const: cfg
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,msm8996-qmp-usb3-phy
-> +              - qcom,msm8998-qmp-pcie-phy
-> +              - qcom,msm8998-qmp-usb3-phy
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: Phy aux clock.
-> +            - description: Phy config clock.
-> +            - description: 19.2 MHz ref clk.
-> +        clock-names:
-> +          items:
-> +            - const: aux
-> +            - const: cfg_ahb
-> +            - const: ref
-> +        resets:
-> +          items:
-> +            - description: reset of phy block.
-> +            - description: phy common block reset.
-> +        reset-names:
-> +          items:
-> +             - const: phy
-> +             - const: common
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,msm8998-qmp-ufs-phy
-> +              - qcom,sdm845-qmp-ufs-phy
-> +              - qcom,sm8150-qmp-ufs-phy
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: 19.2 MHz ref clk.
-> +            - description: Phy reference aux clock.
-> +        clock-names:
-> +          items:
-> +            - const: ref
-> +            - const: ref_aux
-> +        resets:
-> +          items:
-> +            - description: PHY reset in the UFS controller.
-> +        reset-names:
-> +          items:
-> +            - const: ufsphy
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,ipq8074-qmp-pcie-phy
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: pipe clk.
-> +        clock-names:
-> +          items:
-> +            - const: pipe_clk
-> +        resets:
-> +          items:
-> +            - description: reset of phy block.
-> +            - description: phy common block reset.
-> +        reset-names:
-> +          items:
-> +            - const: phy
-> +            - const: common
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,sdm845-qhp-pcie-phy
-> +              - qcom,sdm845-qmp-pcie-phy
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: Phy aux clock.
-> +            - description: Phy config clock.
-> +            - description: 19.2 MHz ref clk.
-> +            - description: Phy refgen clk.
-> +        clock-names:
-> +          items:
-> +            - const: aux
-> +            - const: cfg_ahb
-> +            - const: ref
-> +            - const: refgen
-> +        resets:
-> +          items:
-> +            - description: reset of phy block.
-> +        reset-names:
-> +          items:
-> +            - const: phy
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: qcom,sdm845-qmp-usb3-phy
-> +    then:
-> +      required:
-> +        - reg-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> +    usb_1_qmpphy: phy-wrapper@88e9000 {
-> +        compatible = "qcom,sdm845-qmp-usb3-phy";
-> +        reg = <0 0x088e9000 0 0x18c>,
-> +              <0 0x088e8000 0 0x10>;
-> +        reg-names = "reg-base", "dp_com";
-> +        #clock-cells = <1>;
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
-> +                 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-> +                 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-> +                 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
-> +        clock-names = "aux", "cfg_ahb", "ref", "com_aux";
-> +
-> +        resets = <&gcc GCC_USB3_PHY_PRIM_BCR>,
-> +                 <&gcc GCC_USB3_DP_PHY_PRIM_BCR>;
-> +        reset-names = "phy", "common";
-> +
-> +        vdda-phy-supply = <&vdda_usb2_ss_1p2>;
-> +        vdda-pll-supply = <&vdda_usb2_ss_core>;
-> +
-> +        usb_1_ssphy: phy@88e9200 {
-> +                reg = <0 0x088e9200 0 0x128>,
-> +                      <0 0x088e9400 0 0x200>,
-> +                      <0 0x088e9c00 0 0x218>,
-> +                      <0 0x088e9600 0 0x128>,
-> +                      <0 0x088e9800 0 0x200>,
-> +                      <0 0x088e9a00 0 0x100>;
-> +                #clock-cells = <0>;
-> +                #phy-cells = <0>;
-> +                clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-> +                clock-names = "pipe0";
-> +                clock-output-names = "usb3_phy_pipe_clk_src";
-> +            };
-> +        };
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> deleted file mode 100644
-> index a214ce6..0000000
-> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> +++ /dev/null
-> @@ -1,237 +0,0 @@
-> -Qualcomm QMP PHY controller
-> -===========================
-> -
-> -QMP phy controller supports physical layer functionality for a number of
-> -controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
-> -
-> -Required properties:
-> - - compatible: compatible list, contains:
-> -	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
-> -	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
-> -	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
-> -	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
-> -	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
-> -	       "qcom,msm8998-qmp-pcie-phy" for PCIe QMP phy on msm8998,
-> -	       "qcom,sdm845-qhp-pcie-phy" for QHP PCIe phy on sdm845,
-> -	       "qcom,sdm845-qmp-pcie-phy" for QMP PCIe phy on sdm845,
-> -	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
-> -	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
-> -	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845,
-> -	       "qcom,sm8150-qmp-ufs-phy" for UFS QMP phy on sm8150.
-> -
-> -- reg:
-> -  - index 0: address and length of register set for PHY's common
-> -             serdes block.
-> -  - index 1: address and length of the DP_COM control block (for
-> -             "qcom,sdm845-qmp-usb3-phy" only).
-> -
-> -- reg-names:
-> -  - For "qcom,sdm845-qmp-usb3-phy":
-> -    - Should be: "reg-base", "dp_com"
-> -  - For all others:
-> -    - The reg-names property shouldn't be defined.
-> -
-> - - #address-cells: must be 1
-> - - #size-cells: must be 1
-> - - ranges: must be present
-> -
-> - - clocks: a list of phandles and clock-specifier pairs,
-> -	   one for each entry in clock-names.
-> - - clock-names: "cfg_ahb" for phy config clock,
-> -		"aux" for phy aux clock,
-> -		"ref" for 19.2 MHz ref clk,
-> -		"com_aux" for phy common block aux clock,
-> -		"ref_aux" for phy reference aux clock,
-> -
-> -		For "qcom,ipq8074-qmp-pcie-phy": no clocks are listed.
-> -		For "qcom,msm8996-qmp-pcie-phy" must contain:
-> -			"aux", "cfg_ahb", "ref".
-> -		For "qcom,msm8996-qmp-usb3-phy" must contain:
-> -			"aux", "cfg_ahb", "ref".
-> -		For "qcom,msm8998-qmp-usb3-phy" must contain:
-> -			"aux", "cfg_ahb", "ref".
-> -		For "qcom,msm8998-qmp-ufs-phy" must contain:
-> -			"ref", "ref_aux".
-> -		For "qcom,msm8998-qmp-pcie-phy" must contain:
-> -			"aux", "cfg_ahb", "ref".
-> -		For "qcom,sdm845-qhp-pcie-phy" must contain:
-> -			"aux", "cfg_ahb", "ref", "refgen".
-> -		For "qcom,sdm845-qmp-pcie-phy" must contain:
-> -			"aux", "cfg_ahb", "ref", "refgen".
-> -		For "qcom,sdm845-qmp-usb3-phy" must contain:
-> -			"aux", "cfg_ahb", "ref", "com_aux".
-> -		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
-> -			"aux", "cfg_ahb", "ref", "com_aux".
-> -		For "qcom,sdm845-qmp-ufs-phy" must contain:
-> -			"ref", "ref_aux".
-> -		For "qcom,sm8150-qmp-ufs-phy" must contain:
-> -			"ref", "ref_aux".
-> -
-> - - resets: a list of phandles and reset controller specifier pairs,
-> -	   one for each entry in reset-names.
-> - - reset-names: "phy" for reset of phy block,
-> -		"common" for phy common block reset,
-> -		"cfg" for phy's ahb cfg block reset,
-> -		"ufsphy" for the PHY reset in the UFS controller.
-> -
-> -		For "qcom,ipq8074-qmp-pcie-phy" must contain:
-> -			"phy", "common".
-> -		For "qcom,msm8996-qmp-pcie-phy" must contain:
-> -			"phy", "common", "cfg".
-> -		For "qcom,msm8996-qmp-usb3-phy" must contain
-> -			"phy", "common".
-> -		For "qcom,msm8998-qmp-usb3-phy" must contain
-> -			"phy", "common".
-> -		For "qcom,msm8998-qmp-ufs-phy": must contain:
-> -			"ufsphy".
-> -		For "qcom,msm8998-qmp-pcie-phy" must contain:
-> -			"phy", "common".
-> -		For "qcom,sdm845-qhp-pcie-phy" must contain:
-> -			"phy".
-> -		For "qcom,sdm845-qmp-pcie-phy" must contain:
-> -			"phy".
-> -		For "qcom,sdm845-qmp-usb3-phy" must contain:
-> -			"phy", "common".
-> -		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
-> -			"phy", "common".
-> -		For "qcom,sdm845-qmp-ufs-phy": must contain:
-> -			"ufsphy".
-> -		For "qcom,sm8150-qmp-ufs-phy": must contain:
-> -			"ufsphy".
-> -
-> - - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
-> - - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-> -
-> -Optional properties:
-> - - vddp-ref-clk-supply: Phandle to a regulator supply to any specific refclk
-> -			pll block.
-> -
-> -Required nodes:
-> - - Each device node of QMP phy is required to have as many child nodes as
-> -   the number of lanes the PHY has.
-> -
-> -Required properties for child nodes of PCIe PHYs (one child per lane):
-> - - reg: list of offset and length pairs of register sets for PHY blocks -
-> -	tx, rx, pcs, and pcs_misc (optional).
-> - - #phy-cells: must be 0
-> -
-> -Required properties for a single "lanes" child node of non-PCIe PHYs:
-> - - reg: list of offset and length pairs of register sets for PHY blocks
-> -	For 1-lane devices:
-> -		tx, rx, pcs, and (optionally) pcs_misc
-> -	For 2-lane devices:
-> -		tx0, rx0, pcs, tx1, rx1, and (optionally) pcs_misc
-> - - #phy-cells: must be 0
-> -
-> -Required properties for child node of PCIe and USB3 qmp phys:
-> - - clocks: a list of phandles and clock-specifier pairs,
-> -	   one for each entry in clock-names.
-> - - clock-names: Must contain following:
-> -		 "pipe<lane-number>" for pipe clock specific to each lane.
-> - - clock-output-names: Name of the PHY clock that will be the parent for
-> -		       the above pipe clock.
-> -	For "qcom,ipq8074-qmp-pcie-phy":
-> -		- "pcie20_phy0_pipe_clk"	Pipe Clock parent
-> -			(or)
-> -		  "pcie20_phy1_pipe_clk"
-> - - #clock-cells: must be 0
-> -    - Phy pll outputs pipe clocks for pipe based PHYs. These clocks are then
-> -      gate-controlled by the gcc.
-> -
-> -Required properties for child node of PHYs with lane reset, AKA:
-> -	"qcom,msm8996-qmp-pcie-phy"
-> - - resets: a list of phandles and reset controller specifier pairs,
-> -	   one for each entry in reset-names.
-> - - reset-names: Must contain following:
-> -		 "lane<lane-number>" for reset specific to each lane.
-> -
-> -Example:
-> -	phy@34000 {
-> -		compatible = "qcom,msm8996-qmp-pcie-phy";
-> -		reg = <0x34000 0x488>;
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		ranges;
-> -
-> -		clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
-> -			<&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
-> -			<&gcc GCC_PCIE_CLKREF_CLK>;
-> -		clock-names = "aux", "cfg_ahb", "ref";
-> -
-> -		vdda-phy-supply = <&pm8994_l28>;
-> -		vdda-pll-supply = <&pm8994_l12>;
-> -
-> -		resets = <&gcc GCC_PCIE_PHY_BCR>,
-> -			<&gcc GCC_PCIE_PHY_COM_BCR>,
-> -			<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
-> -		reset-names = "phy", "common", "cfg";
-> -
-> -		pciephy_0: lane@35000 {
-> -			reg = <0x35000 0x130>,
-> -				<0x35200 0x200>,
-> -				<0x35400 0x1dc>;
-> -			#clock-cells = <0>;
-> -			#phy-cells = <0>;
-> -
-> -			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-> -			clock-names = "pipe0";
-> -			clock-output-names = "pcie_0_pipe_clk_src";
-> -			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
-> -			reset-names = "lane0";
-> -		};
-> -
-> -		pciephy_1: lane@36000 {
-> -		...
-> -		...
-> -	};
-> -
-> -	phy@88eb000 {
-> -		compatible = "qcom,sdm845-qmp-usb3-uni-phy";
-> -		reg = <0x88eb000 0x18c>;
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		ranges;
-> -
-> -		clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK>,
-> -			 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-> -			 <&gcc GCC_USB3_SEC_CLKREF_CLK>,
-> -			 <&gcc GCC_USB3_SEC_PHY_COM_AUX_CLK>;
-> -		clock-names = "aux", "cfg_ahb", "ref", "com_aux";
-> -
-> -		resets = <&gcc GCC_USB3PHY_PHY_SEC_BCR>,
-> -			 <&gcc GCC_USB3_PHY_SEC_BCR>;
-> -		reset-names = "phy", "common";
-> -
-> -		lane@88eb200 {
-> -			reg = <0x88eb200 0x128>,
-> -			      <0x88eb400 0x1fc>,
-> -			      <0x88eb800 0x218>,
-> -			      <0x88eb600 0x70>;
-> -			#clock-cells = <0>;
-> -			#phy-cells = <0>;
-> -			clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
-> -			clock-names = "pipe0";
-> -			clock-output-names = "usb3_uni_phy_pipe_clk_src";
-> -		};
-> -	};
-> -
-> -	phy@1d87000 {
-> -		compatible = "qcom,sdm845-qmp-ufs-phy";
-> -		reg = <0x1d87000 0x18c>;
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		ranges;
-> -		clock-names = "ref",
-> -			      "ref_aux";
-> -		clocks = <&gcc GCC_UFS_MEM_CLKREF_CLK>,
-> -			 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
-> -
-> -		lanes@1d87400 {
-> -			reg = <0x1d87400 0x108>,
-> -			      <0x1d87600 0x1e0>,
-> -			      <0x1d87c00 0x1dc>,
-> -			      <0x1d87800 0x108>,
-> -			      <0x1d87a00 0x1e0>;
-> -			#phy-cells = <0>;
-> -		};
-> -	};
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
