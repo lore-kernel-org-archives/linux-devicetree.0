@@ -2,116 +2,201 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9B9C4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1237C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E39A820777
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA47720709
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584723802;
-	bh=nGNWNe4gb5SNLtQ25FhIgpIFgzRIf+L0AGCdRSLeuP4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gQPTQjK7Bkr+4YE+a0UIM7mqtU1ttHvWLnoaXgwQX2lT+3//emhLLlW43LAV8cB61
-	 0Zq4npdvUltR566Lfo37YspkMM0rLSyvW5dW1hpDH94iL1vHrRV3P3n77pcp/qhB59
-	 FODpXdSAgAOPiJeMPCEhD50Go8U+oDOXyL7laCeo=
+	s=default; t=1584724630;
+	bh=DcLhXXJ/RGTxS1IEYjiEdRy1fkfDnpogOEqpZRUNPK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XEYOHRfsCFdmB0KWtPAGfUXSEqz/egcfhOf8okj94FRthWMDos1K+AFzGjYRhjGXj
+	 RkHOExLqgRSdVR/IOsA51GKNuOpfAcZZ/1jxZl1+p8O4k6SpT68IkoNPvPXEyBAsBN
+	 vNe39f/BlkzoOlfG4T7n1goP+QXXKO2ITBfuDNKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbgCTRDR (ORCPT
+        id S1726983AbgCTRRK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:03:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727550AbgCTRDA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:03:00 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BA3C2076F;
-        Fri, 20 Mar 2020 17:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584723779;
-        bh=nGNWNe4gb5SNLtQ25FhIgpIFgzRIf+L0AGCdRSLeuP4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3ZmPKVIQtj8lobfxYDECKYDuHJ4J7xjtiXmwVCtZa6w86HHju4vFQGQN0OzrQpFd
-         Iv5Nl67LumeKcNUjLL5Tk53XyzTPesPxRc94TlfSlfQ8aYqu3BwmvJx++wTh9IIiX0
-         QgzrNSyJBcy2aTCZeTzcQL3nwygAowu50uOrAhDs=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-clk@vger.kernel.org
-Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        Dinh Nguyen <dinh.nguyen@intel.com>
-Subject: [PATCH 2/5] clk: socfpga: remove clk_ops enable/disable methods
-Date:   Fri, 20 Mar 2020 12:02:08 -0500
-Message-Id: <20200320170212.21523-3-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200320170212.21523-1-dinguyen@kernel.org>
-References: <20200320170212.21523-1-dinguyen@kernel.org>
+        Fri, 20 Mar 2020 13:17:10 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40485 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgCTRRK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 13:17:10 -0400
+Received: by mail-il1-f195.google.com with SMTP id p12so6296857ilm.7;
+        Fri, 20 Mar 2020 10:17:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9OK3///UPiMOnkmWOFd8fgSlK68ma0DB6jw3LiUD5r8=;
+        b=dJyi6EdUqBluxU6RqaTnmlv4VVmD9TQfEznijETGv4rG8uBscdBW9Q+H5lgnCzMLb0
+         dUkAKUrD2KwjaUMBUqhIlcHlbpFODB55GXHs3tL2Ml+cQ2uen7Y7P4DPyYkoXF/OBI1A
+         1ualSssjlMatx+hD8l1LPAEnmidjTaVFTylepdxeLCdvKzo46cj3Ie2CoeuUI5L2Q1Bx
+         4tqD+svFy86sYhe/PABOBXH5Bj7uvhEBbbRXZs6+0DKAvf7IsG63CzLNDuxe9VjV6iSI
+         gPYSZBUdDiLW4W6TJE2dhnnH6JjaVkjC/OmGNB5dgzLHnFWqBYVEUWHK4N79/cWcbw6f
+         0suQ==
+X-Gm-Message-State: ANhLgQ2BeZcT++7ZyXc7tpq19atNlC1sqDVTxu8WXGkfC3eb0cwZWrxp
+        mdYn86pnPlx+Utxzeu7ZpQH6Fi8=
+X-Google-Smtp-Source: ADFU+vvZUodp/Fin0OQjreZzAxRNuiORq055kbbShVYM1dF8DDhPkidm1KJGDzgmqULC2WS38SU3/A==
+X-Received: by 2002:a92:608:: with SMTP id x8mr8994332ilg.120.1584724628885;
+        Fri, 20 Mar 2020 10:17:08 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id r9sm1933289ioa.44.2020.03.20.10.17.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 10:17:08 -0700 (PDT)
+Received: (nullmailer pid 15045 invoked by uid 1000);
+        Fri, 20 Mar 2020 17:17:06 -0000
+Date:   Fri, 20 Mar 2020 11:17:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        robdclark@gmail.com, seanpaul@chromium.org, sean@poorly.run
+Subject: Re: [PATCH v8 1/2] dt-bindings: display: add visionox rm69299 panel
+ variant
+Message-ID: <20200320171706.GA15934@bogus>
+References: <20200320054409.32509-1-harigovi@codeaurora.org>
+ <20200320054409.32509-2-harigovi@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320054409.32509-2-harigovi@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinh.nguyen@intel.com>
+On Fri, Mar 20, 2020 at 11:14:08AM +0530, Harigovindan P wrote:
+> Add bindings for visionox rm69299 panel.
+> 
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+> 
+> Changes in v2:
+>     - Removed unwanted properties from description.
+>     - Creating source files without execute permissions(Rob Herring).
+> Changes in v3:
+>     - Changing txt file into yaml
+> Changes in v4:
+>     - Updating license identifier.
+>     - Moving yaml file inside panel directory.
+>     - Removing pinctrl entries.
+>     - Adding documentation for reset-gpios.
+> Changes in v5:
+>     - No changes. Updated 2/2 Patch.
+> Changes in v6:
+>     - Removing patternProperties.
+>     - Added " |" after description.
+>     - Setting port and reset-gpios to true.
+>     - Removing @ae94000 for dsi node.
+> Changes in v7:
+>     - Added reg property.
+> Changes in v8:
+>     - Rearranged additionalProperties.
 
-The enable/disable clock ops are already defined in the standard clock
-ops, so we don't need to assign them.
+Still not right...
 
-Signed-off-by: Dinh Nguyen <dinh.nguyen@intel.com>
----
-v4: no change
-v3: introduced
----
- drivers/clk/socfpga/clk-pll-a10.c | 2 --
- drivers/clk/socfpga/clk-pll-s10.c | 2 --
- drivers/clk/socfpga/clk-pll.c     | 2 --
- 3 files changed, 6 deletions(-)
+>     - Dropping improper reg property.
+> 
+>  .../display/panel/visionox,rm69299.yaml       | 73 +++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
+> new file mode 100644
+> index 000000000000..5fd277602a66
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/visionox,rm69299.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Visionox model RM69299 Panels Device Tree Bindings.
+> +
+> +maintainers:
+> + - Harigovindan P <harigovi@codeaurora.org>
+> +
+> +description: |
+> + This binding is for display panels using a Visionox RM692999 panel.
+> +
+> +allOf:
+> + - $ref: panel-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: visionox,rm69299-1080p-display
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vdda-supply:
+> +    description: |
+> +      Phandle of the regulator that provides the vdda supply voltage.
+> +
+> +  vdd3p3-supply:
+> +    description: |
+> +      Phandle of the regulator that provides the vdd3p3 supply voltage.
+> +
+> +  ports:
+> +    type: object
+> +    description: |
+> +      A node containing DSI input & output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +      Documentation/devicetree/bindings/graph.txt
+> +      properties:
+> +        port: true
 
-diff --git a/drivers/clk/socfpga/clk-pll-a10.c b/drivers/clk/socfpga/clk-pll-a10.c
-index 3816fc04b274..6d9395106c0c 100644
---- a/drivers/clk/socfpga/clk-pll-a10.c
-+++ b/drivers/clk/socfpga/clk-pll-a10.c
-@@ -102,8 +102,6 @@ static struct clk * __init __socfpga_pll_init(struct device_node *node,
- 	pll_clk->hw.hw.init = &init;
- 
- 	pll_clk->hw.bit_idx = SOCFPGA_PLL_EXT_ENA;
--	clk_pll_ops.enable = clk_gate_ops.enable;
--	clk_pll_ops.disable = clk_gate_ops.disable;
- 
- 	clk = clk_register(NULL, &pll_clk->hw.hw);
- 	if (WARN_ON(IS_ERR(clk))) {
-diff --git a/drivers/clk/socfpga/clk-pll-s10.c b/drivers/clk/socfpga/clk-pll-s10.c
-index bcd3f14e9145..9faa80ff3b53 100644
---- a/drivers/clk/socfpga/clk-pll-s10.c
-+++ b/drivers/clk/socfpga/clk-pll-s10.c
-@@ -138,8 +138,6 @@ struct clk *s10_register_pll(const struct stratix10_pll_clock *clks,
- 	pll_clk->hw.hw.init = &init;
- 
- 	pll_clk->hw.bit_idx = SOCFPGA_PLL_POWER;
--	clk_pll_ops.enable = clk_gate_ops.enable;
--	clk_pll_ops.disable = clk_gate_ops.disable;
- 
- 	clk = clk_register(NULL, &pll_clk->hw.hw);
- 	if (WARN_ON(IS_ERR(clk))) {
-diff --git a/drivers/clk/socfpga/clk-pll.c b/drivers/clk/socfpga/clk-pll.c
-index dc65cc0fd3bd..a001641b2f42 100644
---- a/drivers/clk/socfpga/clk-pll.c
-+++ b/drivers/clk/socfpga/clk-pll.c
-@@ -105,8 +105,6 @@ static __init struct clk *__socfpga_pll_init(struct device_node *node,
- 	pll_clk->hw.hw.init = &init;
- 
- 	pll_clk->hw.bit_idx = SOCFPGA_PLL_EXT_ENA;
--	clk_pll_ops.enable = clk_gate_ops.enable;
--	clk_pll_ops.disable = clk_gate_ops.disable;
- 
- 	clk = clk_register(NULL, &pll_clk->hw.hw);
- 	if (WARN_ON(IS_ERR(clk))) {
--- 
-2.25.1
+This is not taking effect because it's just description. You need to 
+indent 2 fewer spaces.
 
+'port' is not equal to 'port@0' which the example has. So fix the 
+example.
+
+And you need to add 'additionalProperties: false' here at the same level 
+as 'properties'.
+
+> +
+> +  reset-gpios: true
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - vdda-supply
+> +  - vdd3p3-supply
+> +  - reset-gpios
+> +
+> +examples:
+> +  - |
+> +    panel {
+> +        compatible = "visionox,rm69299-1080p-display";
+> +
+> +        vdda-supply = <&src_pp1800_l8c>;
+> +        vdd3p3-supply = <&src_pp2800_l18a>;
+> +
+> +        reset-gpios = <&pm6150l_gpio 3 0>;
+> +        ports {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            port@0 {
+> +                reg = <0>;
+> +                panel0_in: endpoint {
+> +                    remote-endpoint = <&dsi0_out>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +...
+> -- 
+> 2.25.1
+> 
