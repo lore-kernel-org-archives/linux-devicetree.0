@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C53EC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8F7C4332D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9C920663
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE6A20753
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgCTQj0 (ORCPT
+        id S1726935AbgCTQms (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:39:26 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:45819 "EHLO
+        Fri, 20 Mar 2020 12:42:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:40913 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgCTQj0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 12:39:26 -0400
+        with ESMTP id S1727278AbgCTQmr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 12:42:47 -0400
 Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1N1u2b-1jQNCn1Vxh-012KNh for <devicetree@vger.kernel.org>; Fri, 20 Mar
- 2020 17:39:24 +0100
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MG9c4-1j3CCA0kMm-00GWYR for <devicetree@vger.kernel.org>; Fri, 20 Mar
+ 2020 17:42:46 +0100
 Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 34106650123
-        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 16:39:24 +0000 (UTC)
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id F0C1764F8B2
+        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 16:42:45 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at cetitec.com
 Received: from mail.cetitecgmbh.com ([127.0.0.1])
         by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 1PsRH_UJxv4e for <devicetree@vger.kernel.org>;
-        Fri, 20 Mar 2020 17:39:23 +0100 (CET)
+        with ESMTP id 3DahT27Stjyq for <devicetree@vger.kernel.org>;
+        Fri, 20 Mar 2020 17:42:45 +0100 (CET)
 Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id CE94764C337
-        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 17:39:23 +0100 (CET)
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 780F864CB99
+        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 17:42:45 +0100 (CET)
 Received: from pflmari.corp.cetitec.com (10.8.5.41) by
  PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 20 Mar 2020 17:39:23 +0100
+ id 15.0.1497.2; Fri, 20 Mar 2020 17:42:45 +0100
 Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 33D6A80505; Fri, 20 Mar 2020 17:12:04 +0100 (CET)
+        id D8C8280506; Fri, 20 Mar 2020 17:12:04 +0100 (CET)
 Date:   Fri, 20 Mar 2020 17:12:04 +0100
 From:   Alex Riesen <alexander.riesen@cetitec.com>
 To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
@@ -52,9 +52,9 @@ CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
         <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v3 08/11] dt-bindings: adv748x: add information about serial
- audio interface (I2S/TDM)
-Message-ID: <5e7da04cd003778cf525eac96d8bacdf4a245a13.1584720678.git.alexander.riesen@cetitec.com>
+Subject: [PATCH v3 09/11] arm64: dts: renesas: salvator: add a connection
+ from adv748x codec (HDMI input) to the R-Car SoC
+Message-ID: <077a97942890b79fef2b271e889055fc07c74939.1584720678.git.alexander.riesen@cetitec.com>
 Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -77,85 +77,122 @@ X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
  PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
 X-EsetResult: clean, is OK
 X-EsetId: 37303A290D7F536A6D7660
-X-Provags-ID: V03:K1:sc9y98i62d5iyM2zmlEbyFVa7pJl1ZW5vDoAOLJ6oJRVBC0PBdu
- C7gJxq8cfjbiD7KLleHPsYTG0fimZVmzVi5KL4OkXMYwieNbxZEKtQhVuO7uT9h18XsV6h/
- cZHdIpzPMqGk3LaF2ALHIeCOGKtNZkAJMdDRn3XrEKW46Z49sZTy0dhcUAjKZLMomIZMREh
- RegicryI3CXxdibVB4e5A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IZkxpIjPa08=:kTJ6CcaIOFf5y//Qt2EF7E
- cohn33rVWYYjVq4GZVTV+V6x2SYdtCjATup6e7Cit9Uur0w2CV6CdPPI9hyxkV89CZlQ2PJhU
- fztXersm0SWvw8GyVYiZDxE2yIT33GhrCkRR/XTClERFXySSSPKmfK0Bgjac8KytkcFLPkSIH
- VN4BjnzR16UKgSo02RTvDfi1QJHmSaqHU/tPCI+ISqFwaXv0Ou8B+MXf1RYEt+2px7sWNRYQ4
- Y39UREStsTy/3BbyvTAfjHstlDwjbfdMn0u/jBhnCunknouv15kAcyikHl0OOEClTWunHiC8y
- e+sCKJs8D/L0auLT3oRXpWAWmhjlLNBggekGLd1gg3El7CF1Wp/Lz2rx0mVIjXJaOnXKY+JDs
- aQyExewAucVn+5HQswpMo3NMDwgqc5SQevLpfzVUgiWM7ZWXrehrk5m4K6CaS8YBAnlxZ3MmU
- Yu/DuM7XNpzBePaMMNnwRmn3HgBNKvCFRyf3mF+dFExWNs6DKNW7bsT+sBjuU5kbzli2q0hpa
- ThOGdL8pYm/Dr26UQ2bSY+lt4w4WHpLWoC1FqsmNhmLyybs2edRdnkybDrfBmRMlopSo5hq5q
- Ohq2MfSyuWsm7xGDlrzR2GQ15GyqjlnEpm1VYDa8p1Y56eos8UM+S1A8HH/08io6AFDnrIKVf
- HtxP48OvLtcQXsT43hhXFspfAekVSLCfy9oWOwIFg63aJ/Uwq2P3bqVVIfSGYnneNztsRC0SX
- 7c6e6XJ+kpoJSiZvkXkXHVG+YdySnBDwlt4LIcnL3YTXUPEY3rLRdCgEjDCZo2FoktKUbb8uH
- 2iWPVofwsvR2Gz2Ngv0XreoLUJCZmPqEFk3GSFzDt7SDyA9iO9pWRlX5bVpyYSi/RmnsYdV
+X-Provags-ID: V03:K1:FnUr8u34lQ2PcyY/8bOb8go9rjlz8bPo5rEYOvxbU0nkLQF4lM8
+ YuTq0xYV41Bnezf8WOmj59Nbqj3XSMZWLqZnHIPI9byFAGiGCBHLThJ95qpdWx+7PCEVuSE
+ j3tk0Jgy+TXuxN0Os9fU4ebUlg16dm18uQP1tyhqlJ/DGscLdZko6c2QO+n8q31Q4Zln51v
+ Da1uFZXaYlTYq5a5OBsmg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bYNrG6GIVOc=:Fp2mEATxB1EZ5zcbb0tAlN
+ P16fIPNu6mXx3A8xblA6VkP9pR0sdTE87RosrYqjdWtL5wVoqNOcmR6GrcdOSB9eDG0egg9p2
+ TmhzWodaA4HqRjKUjKVMd8czwovJ2gRyvxiyFpODht6OvqWWUTEL3n3WiNlq0kghbWuxv1T+8
+ 3C198gQGuGLZaDPPDjuVVfyxv0AIYbTyy0Jj3MqnJ//rznshZZosuyHYdyFwAlw5mO6fHdbBC
+ FYha1SzHqdNhgJRJFFc9s8T2ainXc1C+5eE1kzBZjJeArAdrv/6m+5L4IMvHG6oXDqPXyBF1f
+ Hp6EO+YPsjoTXWmtasIWj63Ba3w5SRk0elQfwgazkaxpVEXl2BL0Nl0knxQZwV8c3ZJUUuuZq
+ VhRD7lOTFDfz1BWmtFVFHxyDPDdxPF9MU+XUtqvRPsjX/OVi4oZnaDdmYH5Ymfb4wEWusjzNs
+ WqmIQUHM9JN4nUdrV8k6qaZ0Bwo6U8J3zT8g7qXkQArrmheWv8Gub0jMImVsQ4TheZFA4jRGZ
+ E5UO7ATRBegy8Jn0A2uw9/Jx617vtKrMjzXZIm045gqXsTch2TczS4At8xOKBdd675Em90NME
+ mq4HsJ3NIhCLkpzOTtDkZE+CYodH26KuyBdj6S4vATcJK0DnuxDFwtgG2BbMxskS2GsPL5JTQ
+ v7SzW8P3e4bcpNQnfagk63R2VeVpVGUfbqSjgl2ioZVKunogI1ya5kZARnR6dsQdIoQIFJqFG
+ J3Rzu7coZH14Mnb7WPq36CgoTpnFiCPhMfpy+fFhxZLllcq5uh0X12ST5vEM0QgQSQzwxCHio
+ JLYD1yXX4IFRmIm2EIsEXe4SE0PSMZQvD9/za/JXCwpSe8WtrkpXXonXbFGIZJAIieDE+SK/A
+ KmQgIKYkVbE4ktqwHbGjTwmqUxVQCQIfHeVFONsVC0+KgYLOBI/bISP3+tPIaTYn8qhJ9Ih+O
+ FSn7BcodnP6KlpxHxr3/YMX30z/kvQQs=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As the driver has some support for the audio interface of the device,
-the bindings file should mention it.
+As all known variants of the Salvator board have the HDMI decoder
+chip (the ADV7482) connected to the SSI4 on R-Car SoC, the ADV7482
+endpoint and the connection definitions are placed in the common board
+file.
+For the same reason, the CLK_C clock line and I2C configuration (similar
+to the ak4613, on the same interface) are added into the common file.
 
 Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 --
 
-v3: remove optionality off MCLK clock cell to ensure the description
-    matches the hardware no matter if the line is connected.
-    Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- .../devicetree/bindings/media/i2c/adv748x.txt    | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+v2:
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-index 4f91686e54a6..50a753189b81 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -2,7 +2,9 @@
+Also add ssi4_ctrl pin group in the sound pins. The pins are
+responsible for SCK4 (sample clock) WS4 and (word boundary input),
+and are required for SSI audio input over I2S.
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+The adv748x shall provide its own implementation of the output clock
+(MCLK), connected to the audio_clk_c line of the R-Car SoC.
+
+If the frequency of the ADV748x MCLK were fixed, the clock
+implementation were not necessary, but it does not seem so: the MCLK
+depends on the value in a speed multiplier register and the input sample
+rate (48kHz).
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Remove audio clock C from the clocks of adv7482.
+
+The clocks property of the video-receiver node lists the input
+clocks of the device, which is quite the opposite from the
+original intention: the adv7482 on Salvator X boards is a
+provide of the MCLK clock for I2S audio output.
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Remove old definition of &sound_card.dais and reduce size of changes
+in the Salvator-X specific device tree source.
+
+Declare video-receiver a clock producer, as the adv748x driver
+implements the master clock used I2S audio output.
+
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+The driver provides only MCLK clock, not the SCLK and LRCLK,
+which are part of the I2S protocol.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ .../boot/dts/renesas/r8a77950-salvator-x.dts  |  3 +-
+ .../boot/dts/renesas/salvator-common.dtsi     | 47 +++++++++++++++++--
+ 2 files changed, 44 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
+index 2438825c9b22..e16c146808b6 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
+@@ -146,7 +146,8 @@ &sata {
+ &sound_card {
+ 	dais = <&rsnd_port0	/* ak4613 */
+ 		&rsnd_port1	/* HDMI0  */
+-		&rsnd_port2>;	/* HDMI1  */
++		&rsnd_port2	/* HDMI1  */
++		&rsnd_port3>;	/* adv7482 hdmi-in  */
+ };
  
- The ADV7481 and ADV7482 are multi format video decoders with an integrated
- HDMI receiver. They can output CSI-2 on two independent outputs TXA and TXB
--from three input sources HDMI, analog and TTL.
-+from three input sources HDMI, analog and TTL. There is also support for an
-+I2S-compatible interface connected to the audio processor of the HDMI decoder.
-+The interface has TDM capability (8 slots, 32 bits, left or right justified).
+ &usb2_phy2 {
+diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+index 98bbcafc8c0d..ead7f8d7a929 100644
+--- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+@@ -460,7 +460,7 @@ pca9654: gpio@20 {
+ 		#gpio-cells = <2>;
+ 	};
  
- Required Properties:
- 
-@@ -16,6 +18,8 @@ Required Properties:
-     slave device on the I2C bus. The main address is mandatory, others are
-     optional and remain at default values if not specified.
- 
-+  - #clock-cells: must be <0>
-+
- Optional Properties:
- 
-   - interrupt-names: Should specify the interrupts as "intrq1", "intrq2" and/or
-@@ -47,6 +51,7 @@ are numbered as follows.
- 	  TTL		sink		9
- 	  TXA		source		10
- 	  TXB		source		11
-+	  I2S		source		12
- 
- The digital output port nodes, when present, shall contain at least one
- endpoint. Each of those endpoints shall contain the data-lanes property as
-@@ -72,6 +77,7 @@ Example:
+-	video-receiver@70 {
++	adv7482_hdmi_in: video-receiver@70 {
+ 		compatible = "adi,adv7482";
+ 		reg = <0x70 0x71 0x72 0x73 0x74 0x75
+ 		       0x60 0x61 0x62 0x63 0x64 0x65>;
+@@ -469,6 +469,7 @@ video-receiver@70 {
  
  		#address-cells = <1>;
  		#size-cells = <0>;
-+		#clock-cells = <0>;
++		#clock-cells = <0>; /* the MCLK for I2S output */
  
  		interrupt-parent = <&gpio6>;
  		interrupt-names = "intrq1", "intrq2";
-@@ -113,4 +119,12 @@ Example:
+@@ -510,6 +511,15 @@ adv7482_txb: endpoint {
  				remote-endpoint = <&csi20_in>;
  			};
  		};
@@ -164,10 +201,77 @@ index 4f91686e54a6..50a753189b81 100644
 +			reg = <12>;
 +
 +			adv7482_i2s: endpoint {
-+				remote-endpoint = <&i2s_in>;
++				remote-endpoint = <&rsnd_endpoint3>;
++				system-clock-direction-out;
 +			};
 +		};
  	};
+ 
+ 	csa_vdd: adc@7c {
+@@ -684,7 +694,8 @@ sdhi3_pins_uhs: sd3_uhs {
+ 	};
+ 
+ 	sound_pins: sound {
+-		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
++		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
++			 "ssi4_data", "ssi4_ctrl";
+ 		function = "ssi";
+ 	};
+ 
+@@ -733,8 +744,8 @@ &rcar_sound {
+ 	pinctrl-0 = <&sound_pins &sound_clk_pins>;
+ 	pinctrl-names = "default";
+ 
+-	/* Single DAI */
+-	#sound-dai-cells = <0>;
++	/* multi DAI */
++	#sound-dai-cells = <1>;
+ 
+ 	/* audio_clkout0/1/2/3 */
+ 	#clock-cells = <1>;
+@@ -758,8 +769,19 @@ &rcar_sound {
+ 		 <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
+ 		 <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
+ 		 <&audio_clk_a>, <&cs2000>,
+-		 <&audio_clk_c>,
++		 <&adv7482_hdmi_in>,
+ 		 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
++	clock-names = "ssi-all",
++		      "ssi.9", "ssi.8", "ssi.7", "ssi.6",
++		      "ssi.5", "ssi.4", "ssi.3", "ssi.2",
++		      "ssi.1", "ssi.0",
++		      "src.9", "src.8", "src.7", "src.6",
++		      "src.5", "src.4", "src.3", "src.2",
++		      "src.1", "src.0",
++		      "mix.1", "mix.0",
++		      "ctu.1", "ctu.0",
++		      "dvc.0", "dvc.1",
++		      "clk_a", "clk_b", "clk_c", "clk_i";
+ 
+ 	ports {
+ 		#address-cells = <1>;
+@@ -777,6 +799,21 @@ rsnd_endpoint0: endpoint {
+ 				capture  = <&ssi1 &src1 &dvc1>;
+ 			};
+ 		};
++		rsnd_port3: port@3 {
++			reg = <3>;
++			rsnd_endpoint3: endpoint {
++				remote-endpoint = <&adv7482_i2s>;
++
++				dai-tdm-slot-num = <8>;
++				dai-tdm-slot-width = <32>;
++				dai-format = "left_j";
++				mclk-fs = <256>;
++				bitclock-master = <&adv7482_i2s>;
++				frame-master = <&adv7482_i2s>;
++
++				capture = <&ssi4>;
++			};
++		};
+ 	};
+ };
+ 
 -- 
 2.25.1.25.g9ecbe7eb18
 
