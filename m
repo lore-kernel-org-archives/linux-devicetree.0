@@ -2,311 +2,106 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACB1C4332E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 15:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4946C43332
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE16D2072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 15:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4FC52072C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 15:11:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="mIUChkg5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ppCJxqLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgCTPGx (ORCPT
+        id S1726840AbgCTPLJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 11:06:53 -0400
-Received: from mx-out2.startmail.com ([145.131.90.155]:60444 "EHLO
-        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgCTPGx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 11:06:53 -0400
-From:   Alexandru Lazar <alazar@startmail.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
-        s=2017-11; t=1584716217;
-        bh=TohvxPuGqjsstmuQ+7t3eL0bOPlpmyKiZY/GjqRHJP4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mIUChkg5S/8cMpwIYqrCcEJDC7mUIn07g4MpH0oyjDafpTBNe3TGPaexoMETc3xQt
-         IehPTLp+pAYmBBL6iPUPqx6/pBona93Q5ZJ1/2RdPPRf23DQ3atNOwjXRI0/L+bsJX
-         OcecvisPuUSRpNiSdkhjoEdgblyJesS66gWnFkvGydaiZ1P0FKWSkTTQCaR4aJU6Ra
-         MzNwiB29yz2T5ItChFutcgxDtWvMYWJHDheVxGTCr/LeCQ/tAQZabj+Mmjpn1GdHi9
-         C4rcIkTg4d1eTBXlKhdxoMsgAcavTRo7OS4aWCUMODDO/SEYqC9T8tYOLwQPpCSQXp
-         d07rzOg9k5Wig==
-To:     linux-iio@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, Alexandru Lazar <alazar@startmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 2/2] iio: adc: Add MAX1241 driver
-Date:   Fri, 20 Mar 2020 17:01:15 +0200
-Message-Id: <20200320150114.9297-3-alazar@startmail.com>
-In-Reply-To: <20200320150114.9297-1-alazar@startmail.com>
-References: <20200320150114.9297-1-alazar@startmail.com>
+        Fri, 20 Mar 2020 11:11:09 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40217 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727406AbgCTPLJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 11:11:09 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 19so6764827ljj.7;
+        Fri, 20 Mar 2020 08:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uhFGy5vD5fOErExrsoJO9yiwiyB9HUKnXCIyG1RqDs8=;
+        b=ppCJxqLJhb5yLDjQraYLfoDnvFU2b6tFbN0snn7kAH4s9Ux8hMBjRimDit8ij4a0+J
+         XjXO4l3b32XlKel6ZNVZuDrUoAJxnXq98YS8P+eNKRhbq8LKmL+LztOJNUK4QQ+zAwpZ
+         OzOiRNJrpiib29FEuhjwH4VeXkr5btAEiqzOv8lWcAT/ej7IRWffUOYWCY8HxRMfnUco
+         u01h9+0E7NDI4RY4U82An2ENbe1fhjnmbir/oK2iuPP4mlPEgozxVyrEpgSCB68x8Pjv
+         9Uowktf/Vqe1yHD4t5Md/PFTmFYieuQdMDoE3EIBpPkUM8A7i+kg680pzRnpuJfTmrRM
+         wk3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uhFGy5vD5fOErExrsoJO9yiwiyB9HUKnXCIyG1RqDs8=;
+        b=R/0fGTozfVFVma0kQKcUdkW6nT+4/AWHfXuup/u4H2yHIYLIKBgQZcrNcCCDLM/AfG
+         sIzLSwmgLxVRFXWEFVxeqH7FwHJUkxG1RlwLeHbmyys4XeRwqTtCC79KDwRyl+I0xFyh
+         sf2jA7yc1dreHyUcEDddgm3tRySKy/G1ODEWJ1VDqqKU8JMkF9Wre6M/3UfJmiBsLd4M
+         74A/XwIdoZwMrIa4Fjk/rUpVuomfE5Z/FMUr2CFAZeOgmRsHPKZrxagWf5i1sQccRqzJ
+         JU6wcpexrRP0uC4JAPC0FhU3tCEvVJ9ycpxaar/l6A9JOaHOMOpyOAtrrlVbVhEw7TJd
+         S3jg==
+X-Gm-Message-State: ANhLgQ3YMwenVaQbohY3PzHB0D232db/ciH1nV9e0NBdTB29ni5A6zMS
+        ZBFkUcqLLRgjO6H6wdGls+qYIkTi
+X-Google-Smtp-Source: ADFU+vvt/lfrBid0UlknHY23uJupdxcC74xtAPrDSi/+bdM3/BI8wjyaitPi4Hc6B9Eq9jYfAZo6vg==
+X-Received: by 2002:a2e:9a52:: with SMTP id k18mr5211493ljj.242.1584717066306;
+        Fri, 20 Mar 2020 08:11:06 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id 64sm3470082ljj.41.2020.03.20.08.11.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Mar 2020 08:11:05 -0700 (PDT)
+Subject: Re: [PATCH 2/7] clocksource: Add Tegra186 timers support
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200320133452.3705040-1-thierry.reding@gmail.com>
+ <20200320133452.3705040-3-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <48b2099c-dd83-d4dc-aab4-8c6f68a215cf@gmail.com>
+Date:   Fri, 20 Mar 2020 18:11:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200320133452.3705040-3-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add driver for the Maxim MAX1241 12-bit, single-channel ADC. The driver
-includes support for this device's low-power operation mode.
+20.03.2020 16:34, Thierry Reding пишет:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Currently this only supports a single watchdog, which uses a timer in
+> the background for countdown. Eventually the timers could be used for
+> various time-keeping tasks, but by default the architected timer will
+> already provide that functionality.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
 
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Alexandru Lazar <alazar@startmail.com>
----
- drivers/iio/adc/Kconfig   |  10 ++
- drivers/iio/adc/Makefile  |   1 +
- drivers/iio/adc/max1241.c | 206 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 217 insertions(+)
- create mode 100644 drivers/iio/adc/max1241.c
+...
+> +config TEGRA186_TIMER
+> +	bool "NVIDIA Tegra186 timer driver"
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 5d8540b7b427..55f6462cd93f 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -566,6 +566,16 @@ config MAX1118
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called max1118.
- 
-+config MAX1241
-+	tristate "Maxim max1241 ADC driver"
-+	depends on SPI_MASTER
-+	help
-+	  Say yes here to build support for Maxim max1241 12-bit, single-channel
-+	  ADC.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called max1241.
-+
- config MAX1363
- 	tristate "Maxim max1363 ADC driver"
- 	depends on I2C
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index a1f1fbec0f87..37d6f17559dc 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -54,6 +54,7 @@ obj-$(CONFIG_LTC2497) += ltc2497.o
- obj-$(CONFIG_MAX1027) += max1027.o
- obj-$(CONFIG_MAX11100) += max11100.o
- obj-$(CONFIG_MAX1118) += max1118.o
-+obj-$(CONFIG_MAX1241) += max1241.o
- obj-$(CONFIG_MAX1363) += max1363.o
- obj-$(CONFIG_MAX9611) += max9611.o
- obj-$(CONFIG_MCP320X) += mcp320x.o
-diff --git a/drivers/iio/adc/max1241.c b/drivers/iio/adc/max1241.c
-new file mode 100644
-index 000000000000..0278510ec346
---- /dev/null
-+++ b/drivers/iio/adc/max1241.c
-@@ -0,0 +1,206 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * MAX1241 low-power, 12-bit serial ADC
-+ *
-+ * Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
-+ */
-+
-+#include <linux/regulator/consumer.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/module.h>
-+#include <linux/spi/spi.h>
-+
-+#define MAX1241_VAL_MASK 0xFFF
-+#define MAX1241_SHDN_DELAY_USEC 4
-+
-+enum max1241_id {
-+	max1241,
-+};
-+
-+struct max1241 {
-+	struct spi_device *spi;
-+	struct mutex lock;
-+	struct regulator *reg;
-+	struct gpio_desc *shdn;
-+
-+	__be16 data ____cacheline_aligned;
-+};
-+
-+static const struct iio_chan_spec max1241_channels[] = {
-+	{
-+		.type = IIO_VOLTAGE,
-+		.indexed = 1,
-+		.channel = 0,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				BIT(IIO_CHAN_INFO_SCALE),
-+		.scan_index = 0,
-+		.scan_type = {
-+			.sign = 'u',
-+			.realbits = 12,
-+			.storagebits = 16,
-+		},
-+	},
-+};
-+
-+static int max1241_read(struct max1241 *adc)
-+{
-+	struct spi_transfer xfers[] = {
-+		/*
-+		 * Begin conversion by bringing /CS low for at least
-+		 * tconv us.
-+		 */
-+		{
-+			.len = 0,
-+			.delay.value = 8,
-+			.delay.unit = SPI_DELAY_UNIT_USECS,
-+		},
-+		/*
-+		 * Then read two bytes of data in our RX buffer.
-+		 */
-+		{
-+			.rx_buf = &adc->data,
-+			.len = 2,
-+		},
-+	};
-+
-+	return spi_sync_transfer(adc->spi, xfers, ARRAY_SIZE(xfers));
-+}
-+
-+static int max1241_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
-+{
-+	int ret, vref_uV;
-+	struct max1241 *adc = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&adc->lock);
-+
-+		if (adc->shdn) {
-+			gpiod_set_value(adc->shdn, 0);
-+			udelay(MAX1241_SHDN_DELAY_USEC);
-+		}
-+
-+		ret = max1241_read(adc);
-+
-+		if (adc->shdn)
-+			gpiod_set_value(adc->shdn, 1);
-+
-+		if (ret) {
-+			mutex_unlock(&adc->lock);
-+			return ret;
-+		}
-+
-+		*val = (be16_to_cpu(adc->data) >> 3) & MAX1241_VAL_MASK;
-+
-+		mutex_unlock(&adc->lock);
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		vref_uV = regulator_get_voltage(adc->reg);
-+
-+		if (vref_uV < 0)
-+			return vref_uV;
-+
-+		*val = vref_uV / 1000;
-+		*val2 = 12;
-+
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info max1241_info = {
-+	.read_raw = max1241_read_raw,
-+};
-+
-+static void max1241_disable_reg_action(void *data)
-+{
-+	struct max1241 *adc = data;
-+	int err;
-+
-+	err = regulator_disable(adc->reg);
-+	if (err)
-+		dev_err(&adc->spi->dev, "could not disable reference regulator.\n");
-+}
-+
-+static int max1241_probe(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev;
-+	struct max1241 *adc;
-+	int ret = 0;
-+
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	adc = iio_priv(indio_dev);
-+	adc->spi = spi;
-+	mutex_init(&adc->lock);
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	adc->reg = devm_regulator_get(&spi->dev, "vref");
-+	if (IS_ERR(adc->reg)) {
-+		dev_err(&spi->dev, "failed to get vref regulator\n");
-+		return PTR_ERR(adc->reg);
-+	}
-+
-+	ret = regulator_enable(adc->reg);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(&spi->dev, max1241_disable_reg_action,
-+					adc);
-+	if (ret) {
-+		dev_err(&spi->dev, "could not set up regulator cleanup action!\n");
-+		return ret;
-+	}
-+
-+	adc->shdn = devm_gpiod_get_optional(&spi->dev, "shdn", GPIOD_OUT_HIGH);
-+
-+	if (IS_ERR(adc->shdn))
-+		return PTR_ERR(adc->shdn);
-+
-+	if (!adc->shdn)
-+		dev_dbg(&spi->dev, "no shdn pin passed, low-power mode disabled");
-+	else
-+		dev_dbg(&spi->dev, "shdn pin passed, low-power mode enabled");
-+
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->info = &max1241_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = max1241_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(max1241_channels);
-+
-+	return devm_iio_device_register(&spi->dev, indio_dev);
-+}
-+
-+static const struct spi_device_id max1241_id[] = {
-+	{ "max1241", max1241 },
-+	{},
-+};
-+
-+static const struct of_device_id max1241_dt_ids[] = {
-+	{ .compatible = "maxim,max1241" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, max1241_dt_ids);
-+
-+static struct spi_driver max1241_spi_driver = {
-+	.driver = {
-+		.name = "max1241",
-+		.of_match_table = max1241_dt_ids,
-+	},
-+	.probe = max1241_probe,
-+	.id_table = max1241_id,
-+};
-+module_spi_driver(max1241_spi_driver);
-+
-+MODULE_AUTHOR("Alexandru Lazar <alazar@startmail.com>");
-+MODULE_DESCRIPTION("MAX1241 ADC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.25.2
+tristate?
 
+> +	depends on ARCH_TEGRA || COMPILE_TEST
+
+depends on WATCHDOG && WATCHDOG_CORE?
+
+> +	select TIMER_OF
+> +	help
+> +	  Enables support for the timers and watchdogs found on NVIDIA
+> +	  Tegra186 and later SoCs.
