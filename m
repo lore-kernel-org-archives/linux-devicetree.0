@@ -2,344 +2,215 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C53FC4332D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 11:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05856C43332
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 11:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47A3C20784
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 11:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63E520722
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 11:37:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="hLaCnl1W"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nSyzmw4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgCTL1K (ORCPT
+        id S1727015AbgCTLhP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 07:27:10 -0400
-Received: from web0081.zxcs.nl ([185.104.29.10]:34380 "EHLO web0081.zxcs.nl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbgCTL1K (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 07:27:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:MIME-Version:References
-        :In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=46bymtTeZdIRfz8ns1mclDd2aTpPZb8MaF2yz0v69wI=; b=hLaCnl1WS/ptAg34FJWrRB19vY
-        zi2p3dNV+kgs+8f54SROCdvfTlJWqpog8YgVURNvjj3U/7Pw4NufZlDuAcjpE+d7Up8CLxxNmiY+x
-        d5mu2uIExmv9JIE9NjkPMU+vpaWw8J+2acxCWv0qh9sjs1gWpGGX0oLqQwnK8VdGLGk5v5Z9ASGrZ
-        6RFJ8DWbAv0D2v43kIpkiMwjsXesJ0W7CZI6dEJGeZUYrnjwZzfRgPMABhgE0kDjtMVOQJrtE/3Fm
-        bN5td0rcZPiZfsNVO3qfatn+OGCQtJ+YprIFjBqShKDvnzeQ4rLlzMy1mwT3TplIHC9a3TZt3q86Q
-        FTcBOZvw==;
-Received: from ip565b1bc7.direct-adsl.nl ([86.91.27.199]:57936 helo=localhost.localdomain)
-        by web0081.zxcs.nl with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92.3)
-        (envelope-from <dev@pascalroeleven.nl>)
-        id 1jFFnt-0011ci-Ml; Fri, 20 Mar 2020 12:27:05 +0100
-From:   Pascal Roeleven <dev@pascalroeleven.nl>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Cc:     linux-sunxi@googlegroups.com,
-        Pascal Roeleven <dev@pascalroeleven.nl>
-Subject: [PATCH v2 5/5] ARM: dts: sun4i: Add support for Topwise A721 tablet
-Date:   Fri, 20 Mar 2020 12:21:36 +0100
-Message-Id: <20200320112205.7100-6-dev@pascalroeleven.nl>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200320112205.7100-1-dev@pascalroeleven.nl>
-References: <20200320112205.7100-1-dev@pascalroeleven.nl>
+        Fri, 20 Mar 2020 07:37:15 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41274 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbgCTLhO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 07:37:14 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02KBb5Xh099445;
+        Fri, 20 Mar 2020 06:37:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584704225;
+        bh=joxAB+O4SqQZwX3n4Af5CO92e1MegnF30hqTdkdbGSg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nSyzmw4RlT/aBrT+NFcgF7HfFhJgenxhVnBG9RvS6CPQtZxQobcpEhWdJSXuI0dVz
+         6zsc5ufVb1CAlIQkFNtr5buQv2uWoaCaIXX1h0XBRIu0ftrAIc6NDXl7vFWa8z3OBx
+         aq5CHeyXHc2FcqnhjxntX3DVdQFRCwcLwaMBV3+A=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02KBb5q5060695
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Mar 2020 06:37:05 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Mar 2020 06:37:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Mar 2020 06:37:05 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02KBb2NS099381;
+        Fri, 20 Mar 2020 06:37:03 -0500
+Subject: Re: [PATCH net-next v5 00/11] net: ethernet: ti: add networking
+ support for k3 am65x/j721e soc
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200319162806.25705-1-grygorii.strashko@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <4146920e-5ca7-161c-badc-711683aa5a9b@ti.com>
+Date:   Fri, 20 Mar 2020 13:37:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200319162806.25705-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: dev@pascalroeleven.nl
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Topwise A721/LY-F1 tablet is a tablet sold around 2012 under
-different brands. The mainboard mentions A721 clearly, so this tablet
-is best known under this name.
+Hi Grygorii,
 
-Signed-off-by: Pascal Roeleven <dev@pascalroeleven.nl>
----
- arch/arm/boot/dts/Makefile                   |   3 +-
- arch/arm/boot/dts/sun4i-a10-topwise-a721.dts | 242 +++++++++++++++++++
- 2 files changed, 244 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/sun4i-a10-topwise-a721.dts
+On 19/03/2020 18.27, Grygorii Strashko wrote:
+> Hi
+> 
+> This v5 series adds basic networking support support TI K3 AM654x/J721E SoC which
+> have integrated Gigabit Ethernet MAC (Media Access Controller) into device MCU
+> domain and named MCU_CPSW0 (CPSW2G NUSS).
+> 
+> Formally TRMs refer CPSW2G NUSS as two-port Gigabit Ethernet Switch subsystem
+> with port 0 being the CPPI DMA host port and port 1 being the external Ethernet
+> port, but for 1 external port device it's just Port 0 <-> ALE <-> Port 1 and it's
+> rather device with HW filtering capabilities then actually switching device.
+> It's expected to have similar devices, but with more external ports.
+> 
+> The new Host port 0 Communications Port Programming Interface (CPPI5) is
+> operating by TI AM654x/J721E NAVSS Unified DMA Peripheral Root Complex (UDMA-P)
+> controller [1].
+> 
+> The CPSW2G contains below modules for which existing code is re-used:
+>  - MAC SL: cpsw_sl.c
+>  - Address Lookup Engine (ALE): cpsw_ale.c, basically compatible with K2 66AK2E/G
+>  - Management Data Input/Output interface (MDIO): davinci_mdio.c, fully 
+>    compatible with TI AM3/4/5 devices
+> 
+> Basic features supported by CPSW2G NUSS driver:
+>  - VLAN support, 802.1Q compliant, Auto add port VLAN for untagged frames on
+>    ingress, Auto VLAN removal on egress and auto pad to minimum frame size.
+>  - multicast filtering
+>  - promisc mode
+>  - TX multiq support in Round Robin or Fixed priority modes
+>  - RX checksum offload for non-fragmented IPv4/IPv6 TCP/UDP packets
+>  - TX checksum offload support for IPv4/IPv6 TCP/UDP packets (J721E only).
+> 
+> Features under development:
+>  - Support for IEEE 1588 Clock Synchronization. The CPSW2G NUSS includes new
+>    version of Common Platform Time Sync (CPTS)
+>  - tc-mqprio: priority level Quality Of Service (QOS) support (802.1p)
+>  - tc-cbs: Support for Audio/Video Bridging (P802.1Qav/D6.0) HW shapers
+>  - tc-taprio: IEEE 802.1Qbv/D2.2 Enhancements for Scheduled Traffic
+>  - frame preemption: IEEE P902.3br/D2.0 Interspersing Express Traffic, 802.1Qbu
+>  - extended ALE features: classifier/policers, auto-aging
+> 
+> Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3 Platform
+> tree and provided here for testing purposes.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 78f144e33..6e6141e00 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1040,7 +1040,8 @@ dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-olinuxino-lime.dtb \
- 	sun4i-a10-pcduino.dtb \
- 	sun4i-a10-pcduino2.dtb \
--	sun4i-a10-pov-protab2-ips9.dtb
-+	sun4i-a10-pov-protab2-ips9.dtb \
-+	sun4i-a10-topwise-a721.dtb
- dtb-$(CONFIG_MACH_SUN5I) += \
- 	sun5i-a10s-auxtek-t003.dtb \
- 	sun5i-a10s-auxtek-t004.dtb \
-diff --git a/arch/arm/boot/dts/sun4i-a10-topwise-a721.dts b/arch/arm/boot/dts/sun4i-a10-topwise-a721.dts
-new file mode 100644
-index 000000000..936171d30
---- /dev/null
-+++ b/arch/arm/boot/dts/sun4i-a10-topwise-a721.dts
-@@ -0,0 +1,242 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2020 Pascal Roeleven <dev@pascalroeleven.nl>
-+ */
-+
-+/dts-v1/;
-+#include "sun4i-a10.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pwm/pwm.h>
-+
-+/ {
-+	model = "Topwise A721";
-+	compatible = "topwise,a721", "allwinner,sun4i-a10";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 100000 PWM_POLARITY_INVERTED>;
-+		power-supply = <&reg_vbat>;
-+		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
-+		brightness-levels = <0 30 40 50 60 70 80 90 100>;
-+		default-brightness-level = <8>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	panel: panel {
-+		compatible = "starry,kr070pe2t";
-+		backlight = <&backlight>;
-+		power-supply = <&reg_lcd_power>;
-+
-+		port {
-+			panel_input: endpoint {
-+				remote-endpoint = <&tcon0_out_panel>;
-+			};
-+		};
-+	};
-+
-+	reg_lcd_power: reg-lcd-power {
-+		compatible = "regulator-fixed";
-+		regulator-name = "reg-lcd-power";
-+		gpio = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-+		enable-active-high;
-+	};
-+
-+	reg_vbat: reg-vbat {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbat";
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
-+	};
-+
-+};
-+
-+&codec {
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&de {
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupts = <0>;
-+	};
-+};
-+
-+#include "axp209.dtsi"
-+
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&battery_power_supply {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	mma7660: accelerometer@4c {
-+		compatible = "fsl,mma7660";
-+		reg = <0x4c>;
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+
-+	ft5406ee8: touchscreen@38 {
-+		compatible = "edt,edt-ft5406";
-+		reg = <0x38>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 21 IRQ_TYPE_EDGE_FALLING>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+		vcc-supply = <&reg_vcc3v3>;
-+	};
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_ldo2>;
-+	status = "okay";
-+
-+	button-vol-down {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <761904>;
-+	};
-+
-+	button-vol-up {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <571428>;
-+	};
-+};
-+
-+&mmc0 {
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 1 GPIO_ACTIVE_LOW>; /* PH01 */
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&otg_sram {
-+	status = "okay";
-+};
-+
-+&pio {
-+	vcc-pb-supply = <&reg_vcc3v3>;
-+	vcc-pf-supply = <&reg_vcc3v3>;
-+	vcc-ph-supply = <&reg_vcc3v3>;
-+};
-+
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pin>;
-+	status = "okay";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1250000>;
-+	regulator-max-microvolt = <1250000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_panel: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&panel_input>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+	usb0_vbus_det-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
--- 
-2.20.1
+Needed to pick two patches:
+arm64: dts: ti: k3-j721e-mcu: add scm node and phy-gmii-sel nodes
+arm64: dts: ti: k3-am65-mcu: add phy-gmii-sel node
 
+With those applied, NFS rootfs is working on top of linux-next, pretty cool!
+
+Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+> Changes in v5:
+>  - renamed files k3-udma-desc-pool.*  k3-udma-desc-pool to k3-cppi-desc-pool.*,
+>    and API to k3_cppi_desc_pool_* as requested by Peter Ujfalusi <peter.ujfalusi@ti.com>
+>  - fixed copy-paste err in am65_cpsw_nuss_ndo_slave_set_rx_mode() which blocked
+>    recieving of mcast frames.
+>  - added Tested-by: Murali Karicheri <m-karicheri2@ti.com> 
+> 
+> Changes in v4:
+>  - fixed minor comments from Jakub Kicinski <kuba@kernel.org>
+>  - dependencies resolved: required phy-rmii-sel changes [2] queued for merge
+>    except one [3] which is included in this series with Kishon's ask.
+> 
+> Changes in v3:
+>  - add ARM64 defconfig changes for testing purposes
+>  - fixed DT yaml definition
+>  - fixed comments from Jakub Kicinski <kuba@kernel.org>
+> 
+> Changes in v2:
+>  - fixed DT yaml definition
+>  - fixed comments from David Miller
+> 
+> v4: https://patchwork.ozlabs.org/cover/1256092/
+> v3: https://patchwork.ozlabs.org/cover/1254568/
+> v2: https://patchwork.ozlabs.org/cover/1250674/
+> v1: https://lwn.net/Articles/813087/
+> 
+> TRMs:
+>  AM654: http://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
+>  J721E: http://www.ti.com/lit/ug/spruil1a/spruil1a.pdf
+> 
+> Preliminary documentation can be found at:
+>  http://software-dl.ti.com/processor-sdk-linux/esd/docs/latest/linux/Foundational_Components/Kernel/Kernel_Drivers/Network/K3_CPSW2g.html
+> 
+> [1] https://lwn.net/Articles/808030/
+> [2] https://lkml.org/lkml/2020/2/22/100
+> [3] https://lkml.org/lkml/2020/3/3/724
+> Grygorii Strashko (11):
+>   phy: ti: gmii-sel: simplify config dependencies between net drivers
+>     and gmii phy
+>   net: ethernet: ti: ale: fix seeing unreg mcast packets with promisc
+>     and allmulti disabled
+>   net: ethernet: ti: ale: add support for mac-only mode
+>   net: ethernet: ti: ale: am65: add support for default thread cfg
+>   dt-binding: ti: am65x: document mcu cpsw nuss
+>   net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver
+>   arm64: dts: ti: k3-am65-mcu: add cpsw nuss node
+>   arm64: dts: k3-am654-base-board: add mcu cpsw nuss pinmux and phy defs
+>   arm64: dts: ti: k3-j721e-mcu: add mcu cpsw nuss node
+>   arm64: dts: ti: k3-j721e-common-proc-board: add mcu cpsw nuss pinmux
+>     and phy defs
+>   arm64: defconfig: ti: k3: enable dma and networking
+> 
+>  .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |  226 ++
+>  arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |   49 +
+>  arch/arm64/boot/dts/ti/k3-am65.dtsi           |    1 +
+>  .../arm64/boot/dts/ti/k3-am654-base-board.dts |   42 +
+>  .../dts/ti/k3-j721e-common-proc-board.dts     |   43 +
+>  .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |   49 +
+>  arch/arm64/boot/dts/ti/k3-j721e.dtsi          |    1 +
+>  arch/arm64/configs/defconfig                  |    3 +
+>  drivers/net/ethernet/ti/Kconfig               |   20 +-
+>  drivers/net/ethernet/ti/Makefile              |    3 +
+>  drivers/net/ethernet/ti/am65-cpsw-ethtool.c   |  747 +++++++
+>  drivers/net/ethernet/ti/am65-cpsw-nuss.c      | 1965 +++++++++++++++++
+>  drivers/net/ethernet/ti/am65-cpsw-nuss.h      |  142 ++
+>  drivers/net/ethernet/ti/cpsw_ale.c            |   38 +
+>  drivers/net/ethernet/ti/cpsw_ale.h            |    4 +
+>  drivers/net/ethernet/ti/k3-cppi-desc-pool.c   |  126 ++
+>  drivers/net/ethernet/ti/k3-cppi-desc-pool.h   |   30 +
+>  drivers/phy/ti/Kconfig                        |    3 -
+>  18 files changed, 3487 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+>  create mode 100644 drivers/net/ethernet/ti/am65-cpsw-ethtool.c
+>  create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.c
+>  create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.h
+>  create mode 100644 drivers/net/ethernet/ti/k3-cppi-desc-pool.c
+>  create mode 100644 drivers/net/ethernet/ti/k3-cppi-desc-pool.h
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
