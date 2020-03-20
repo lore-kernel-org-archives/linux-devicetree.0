@@ -2,129 +2,158 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A120C4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644A3C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF28E20739
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:46:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZGRQRHVY"
+	by mail.kernel.org (Postfix) with ESMTP id 36B8620739
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 16:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbgCTQqP (ORCPT
+        id S1727232AbgCTQtb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 12:46:15 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46315 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727400AbgCTQqP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 12:46:15 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v16so95881ljk.13
-        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 09:46:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yVeMWWgOR9TOsajWbE931ud3emvQ0ziFK5hlBW9OADE=;
-        b=ZGRQRHVYCzH20glp+CuGONYp6DfLbf36SiaLFRCofD+cDdIUlqDIJFyII0gsPvuBtO
-         hCqPw+nLaQvXF1wEZLoYIPhwNfGVkUUZtXGg05RoKCrMYcQutWHg+7zLOZ3+BSB+QIvY
-         EV93/VSdJajMFJqONuXGVgXN27wm7h3uUh4yI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yVeMWWgOR9TOsajWbE931ud3emvQ0ziFK5hlBW9OADE=;
-        b=Je/QmU3bLHy3XLGdqQNt7l3I4fsd0WdeE+iEGXly7McP3wT/ZN6+moMjlm15+1oUKT
-         2NNdwAMo9xtZIpNQqL7Qg8AkX2hFkscRPbyVc+DVt6ivBOWIf+6SbYHY8b+pu2LNpoTa
-         pJ4ZfCs8RtJrw5lszO09xmOD70/gmxmb47sa7A2+k+V0pMDF83BQog0VReG0CygJKRBq
-         65ZPN+qwOG23H2Xm4zKsTuwaiQqgoHBFLMGF14lay2ExdLQxLejw8phoP+xVO1HK2fZ5
-         HuO5TpiSumbovopnJ6gSilTDgzqbImxpkewL0RIwobhuFauE9tIL5W0VOrPS+aBO0QFd
-         RKMQ==
-X-Gm-Message-State: ANhLgQ2meRNaUfUXyQ6PwbqEdO/S6SzUxXpMLbrTUcLbrmNqvm+Az2Dt
-        MC6a79oS2K3geF7+mBOgWdnYAzEQ47U=
-X-Google-Smtp-Source: ADFU+vuFWcO8B5LgoqLYxctU9fZorsLvCW1WQyEOk3VrBu6AynHhMTFfRrRqW580FFrrzIFmgE4u5A==
-X-Received: by 2002:a2e:8350:: with SMTP id l16mr5764786ljh.202.1584722772406;
-        Fri, 20 Mar 2020 09:46:12 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id h25sm3667264ljg.31.2020.03.20.09.46.10
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 09:46:11 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id 19so7128353ljj.7
-        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 09:46:10 -0700 (PDT)
-X-Received: by 2002:a2e:2206:: with SMTP id i6mr5969667lji.208.1584722770463;
- Fri, 20 Mar 2020 09:46:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-3-git-send-email-akashast@codeaurora.org>
- <CAE=gft4_Su4+SXWAW_HWy5BF1mH7QaDHCiwAAhrNaekTeU57rA@mail.gmail.com> <74851dda-296d-cdc5-2449-b9ec59bbc057@codeaurora.org>
-In-Reply-To: <74851dda-296d-cdc5-2449-b9ec59bbc057@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Fri, 20 Mar 2020 09:45:34 -0700
-X-Gmail-Original-Message-ID: <CAE=gft5Uucr83DoQqaE7_8_H=ExnkPBQvRiUK_+LxOMeadam_g@mail.gmail.com>
-Message-ID: <CAE=gft5Uucr83DoQqaE7_8_H=ExnkPBQvRiUK_+LxOMeadam_g@mail.gmail.com>
-Subject: Re: [PATCH V2 2/8] soc: qcom: geni: Support for ICC voting
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wsa@the-dreams.de, Mark Brown <broonie@kernel.org>,
+        Fri, 20 Mar 2020 12:49:31 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:34505 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbgCTQtb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 12:49:31 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MHWzP-1j2MPY2kZF-00DZL2 for <devicetree@vger.kernel.org>; Fri, 20 Mar
+ 2020 17:49:29 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 57CE864CB8C
+        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 16:49:29 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id XBOAgOSNzifs for <devicetree@vger.kernel.org>;
+        Fri, 20 Mar 2020 17:49:29 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 0FE6864E621
+        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 17:49:29 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.41) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 20 Mar 2020 17:49:28 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 86EAC80509; Fri, 20 Mar 2020 17:12:06 +0100 (CET)
+Date:   Fri, 20 Mar 2020 17:12:06 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v3 11/11] media: adv748x: allow the HDMI sub-device to accept
+ EDID
+Message-ID: <4fce566b68bbe4f85cf92cd80a455b575a5d95d1.1584720678.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1584720678.git.alexander.riesen@cetitec.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1584720678.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.41]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7660
+X-Provags-ID: V03:K1:9QhVnscYZc3O2XeqJMPDRRbWO4aQYyebSUL5iJqeUeTV3zf8jLh
+ ECM8CW7PMcSDgtbybX22AZj3Udvaep+16ccp1tDyHVUFWoi3OXtaGItCXsSfe1YrxRJnLpd
+ MszAXrRxXAKIbU4jCwDULMm5pmRimRCqVAvKI61Gsu+46iG47Tg859kKpu6uQDS8YO1SpUC
+ krKPgvw66wtnQNCEcmA/g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rtqGN5H+7iQ=:Gci4EYQfNirdjwPufR+TqY
+ D8GlDJBM5X7fuFAuadU6KaiE2CSjItgDZUvz6BOW5KeQV4kp2R7b8wCBepzPe4+p+wRYqOalv
+ l9wvUs1hGh43oIIRVtOt8nOhS+jbrqbjtGoSCZIHdWinxML1sKSDR8JuRrrnB+85YvdxiQ1Mj
+ BV+nj1l8mpqlN9FdxMlaqjk/AooLl/niyDlJKhU/lhFEIZdfqID1JSy4N8lEQAidr2NS8jOr8
+ KWbSXcONgIamwu5HNvravH37ZtA/6YTXuZrBLn7F0fOkGvst/mIkp/nx60XzZgCUmNnvPfxNw
+ Vzd35nXXdbARnMkzhb846u3hsQuHO/9zKZf1Zyuc+gqGHVnEduCq09CriTLE6Lev0r/BnLFma
+ DYOiGDXY7kWTWxnO/FmVDewPWKb+aHWBEpBIsu96dbAne4y1nRqef+yCgisj4uo3v8QoYcDQi
+ 0KWnckOL8WKIPA316a8I2GS7u/VSkike9PPRz2uTlvFA9znwExWeYWdfirn14JZL9PrwQF/lG
+ b6ANIy/b73/KTBiYd6CxrfNC7mBVbJCYhmPOXMIjdM1v9BYdRXUmTdhcCIYs2gIckSxXe8zBX
+ M7cw0J+zpi5uT7o90AZ5nFY7zqRwIxUe54gMd3VGC2SjUfDwEebYegZoPJvJ0BoOM8+h3cHck
+ 34iATpuQMntaKLOVtqkb4EElS5uwZIL5qQeWQJbVb59iMSLslxmrKb9BX1O+54+FHk5yCG2WP
+ OBU8BiQ7G5Yp+uABQf3yKdAKa7qtbybrCCTWvi7JACAxteFk3X/H1hGWOvEHUNFsdP3xBWB0u
+ Zw8c9pvTe/vYxZ/WcVof9nIW7XX+tzN6DXJRUzIMBxd3AJtRPAyZ0z3UcbyzW1PG60MUOxm
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 4:03 AM Akash Asthana <akashast@codeaurora.org> wrote:
->
-> Hi Evan,
->
-> +/* Core 2X clock frequency to BCM threshold mapping */
-> +#define CORE_2X_19_2_MHZ               960
-> +#define CORE_2X_50_MHZ                 2500
-> +#define CORE_2X_100_MHZ                        5000
-> +#define CORE_2X_150_MHZ                        7500
-> +#define CORE_2X_200_MHZ                        10000
-> +#define CORE_2X_236_MHZ                        16383
->
-> These are all just 50 * clock_rate. Can you instead specify that one
-> define of CLK_TO_BW_RATIO 50, and then use clk_get_rate() to get the
-> input clock frequency. That way, if these end up getting clocked at a
-> different rate, the bandwidth also scales appropriately. Also, can you
-> enumerate why 50 is an appropriate ratio?
-> -Evan
->
-> -Evan
->
-> Clock rate for Core 2X is controlled by BW voting only, we don't set clock rate for core 2X clock either by DFS or calling clk_set_rate API like we do for SE clocks from individual driver.
->
-> In DT node it's not mentioned as clock.
->
-> As discussed in patch@ https://patchwork.kernel.org/patch/11436897/  We are not scaling Core 2X clock based on dynamic need of driver instead we are putting recommended value from HW team for each driver.
+This makes it possible to load a EDID reported by the device
+with v4l2-ctl utility:
 
-Oh I get it. This is pretty opaque, since this table is saying "here
-are the bandwidth values that happen to work out to a Core2X clock
-rate of N". But it's not obvious why setting the Core2X clock rate to
-N is desirable or appropriate. The answer seems to be hardware guys
-told us these thresholds work well in practice. And if I'm reading
-into it more, probably they're saying these bandwidths are too low to
-be worth dynamically managing beyond on/off.
+  vdev=/dev/$(grep -l '^adv748x.*hdmi$' /sys/class/video4linux/v4l-subdev*/name |cut -d/ -f5-5)
+  v4l2-ctl -d $vdev --set-edid=pad=0,file=/etc/adv7482.edid
 
-At the very least we should explain some of this in the comment above
-these defines. Something like:
-/* Define bandwidth thresholds that cause the underlying Core 2X
-interconnect clock to run at the named frequency. These baseline
-values are recommended by the hardware team, and are not dynamically
-scaled with GENI bandwidth beyond basic on/off. */
--Evan
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+
+--
+
+I would like to avoid doing that, but found no other way yet.
+Suggestions very welcome.
+---
+ drivers/media/i2c/adv748x/adv748x-hdmi.c | 27 ++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+index 664930e55baf..fea133472911 100644
+--- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
++++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+@@ -775,7 +775,34 @@ static int adv748x_hdmi_log_status(struct v4l2_subdev *sd)
+ 	return 0;
+ }
+ 
++static long adv748x_hdmi_querycap(struct adv748x_hdmi *hdmi,
++				  struct v4l2_capability *cap)
++{
++	struct adv748x_state *state = adv748x_hdmi_to_state(hdmi);
++
++	cap->version = LINUX_VERSION_CODE;
++	strlcpy(cap->driver, state->dev->driver->name, sizeof(cap->driver));
++	strlcpy(cap->card, "hdmi", sizeof(cap->card));
++	snprintf(cap->bus_info, sizeof(cap->bus_info), "i2c:%d-%04x",
++		 i2c_adapter_id(state->client->adapter),
++		 state->client->addr);
++	cap->device_caps = V4L2_CAP_AUDIO | V4L2_CAP_VIDEO_CAPTURE;
++	cap->capabilities = V4L2_CAP_DEVICE_CAPS;
++	return 0;
++}
++
++static long adv748x_hdmi_ioctl(struct v4l2_subdev *sd,
++			       unsigned int cmd, void *arg)
++{
++	struct adv748x_hdmi *hdmi = adv748x_sd_to_hdmi(sd);
++
++	if (cmd == VIDIOC_QUERYCAP)
++		return adv748x_hdmi_querycap(hdmi, arg);
++	return -ENOTTY;
++}
++
+ static const struct v4l2_subdev_core_ops adv748x_core_ops_hdmi = {
++	.ioctl = adv748x_hdmi_ioctl,
+ 	.log_status = adv748x_hdmi_log_status,
+ };
+ 
+-- 
+2.25.1.25.g9ecbe7eb18
+
