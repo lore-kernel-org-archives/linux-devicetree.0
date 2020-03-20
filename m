@@ -2,139 +2,120 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F33C4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B09DC4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC8C20752
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:11:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mllYl6GF"
+	by mail.kernel.org (Postfix) with ESMTP id 6869220739
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgCTJLi (ORCPT
+        id S1726958AbgCTJPb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:11:38 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39854 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgCTJLh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 05:11:37 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j15so3908619lfk.6
-        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 02:11:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OU/CpAGIqH8KmfsyruwEDtwqFN1iNUUKyUH7R3UxLkw=;
-        b=mllYl6GF2syYSUniY8DE9rxhVQ9ZjeJtdUw2jL/qdetWaKL4P4TFCzv5AjONaNrDzs
-         BGM8hqFjQpEIYY1BWfAadf0qCywfRXMAfeboea/zxJo57UoIVHfgZWrG/zwY9BwTuVgb
-         DRXULnIB8wnRcpx/yKPfjz+J/PSnVSxl+Bt7vPIcZyJtyReDP/OxZHesXHBx+tinokkR
-         IKKc188enCZ7EwyPkgD6Y9blmbi+56B1MJKDi1Fk8OvlUKZw3GAPgVVhAJvfZibhUl5t
-         ekKWzyO+eyqmq12qo3Pns7t3wOzedDpKks/K9dXWARk5rtaiwF/SWq6Rqe5cYFNsYqlU
-         rw+A==
+        Fri, 20 Mar 2020 05:15:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46765 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgCTJPa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 05:15:30 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 111so5243678oth.13;
+        Fri, 20 Mar 2020 02:15:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OU/CpAGIqH8KmfsyruwEDtwqFN1iNUUKyUH7R3UxLkw=;
-        b=lj9xv7J0OwqHnsgD3YVTFOKCAxKb/6dYev/nHFNzo3phZdI3QpcDX2+nesBj5o66qB
-         WNd+JhI8NEmzB7oZ0m9NyfjAwbWPMKWQWPLKLITBjlb9lSudAWcgQwcPhJZ/TSJtvy4A
-         u+z39VuHw9ZKfOdZrD7nFYgW2gsyhHt9kh1My8DAJNh0tDY1T2IOH96/dAZhIZiWkb/x
-         p3YTdfVc9vAHmKKj91Ig2a4fv9nFOKvug0VFxBgT/zqfJ8C4aiXQJFnEbMCNeXH96Efb
-         J3RvWj+tncGXU3Ug5SFOrMo8cyO/kxOvfuD+5PngfD7U0S8xVfqEu+zY5eYCNl0S7Ux0
-         psqg==
-X-Gm-Message-State: ANhLgQ2M2diepgAjXOn1Zp+An0A88JAmliz5VLExj8LqRQj09wUHR2Ly
-        70FXcX7kp/UYLn0O6f8wlI/aLrPzlx6F/eiL8fpjqA==
-X-Google-Smtp-Source: ADFU+vtJYWG8EQJP/hgD78QKWv99yAbCP307TFvbYqg8VWMrgeCGnVYbnG2Hccuki3Zkny8VqCdXwG3hw10skhhk4Rw=
-X-Received: by 2002:a05:6512:247:: with SMTP id b7mr4683821lfo.21.1584695495451;
- Fri, 20 Mar 2020 02:11:35 -0700 (PDT)
+         :message-id:subject:to;
+        bh=8x4focGPb4ERLGjucd62jlveYIVPZ0IBCjA7nXBe5yM=;
+        b=sME/KImcjBxE/37hOQylbQP4HypdVVyIc3va3OtlqWKytWb1lJRvFntHZHme8p6h/R
+         6B3FF5CP0y9lCMox2fxr7Dmi57sspcvJv1B1zJUaliqEXvc3TR+Fe2e8b81piwYinsj2
+         cwd/IKP8goTMZaNU0gToUnbFBFl3KFgIyZuiVi0qJz2tmsWG0aI0x402XCpHPkdU0SeO
+         Q92cSm6viNVU9kGW/n1VcAcWpNgEyQfubPJET3E2n7V1OD03QuzodcJqZGRc/hGVs0GL
+         PfKXljaE0xDNqC1UoPPGkfn/JM3rtPazyp9lTO9jmSrPt+rqmIFLK2qu7UPIRSXSNPks
+         jPmA==
+X-Gm-Message-State: ANhLgQ3OHt6fVwgDspHxVJNZ4972UanHIR9RYw2ppSK2V+fjHB/a/kqD
+        v4VufE3IR7ArcMs8P0taNfddU0XvevI/himV5rp+wQ==
+X-Google-Smtp-Source: ADFU+vsYLnunQuvHtatOG7BsZ09H8JNgkdZkzpSDXVv4nRP0XZF8aXP6gXAbKfpS7Iv8xwSoBWNPpDjt9weJDu9tK5g=
+X-Received: by 2002:a9d:6a47:: with SMTP id h7mr6013558otn.297.1584695728515;
+ Fri, 20 Mar 2020 02:15:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200316133503.144650-1-icenowy@aosc.io> <20200316133503.144650-3-icenowy@aosc.io>
- <CACRpkdaVrfd1p+WyACy-gq-3BPsXJ_CZwi2OZe+=csseBcvcaA@mail.gmail.com> <491ADD02-5511-404B-88A8-5725EF061EAC@aosc.io>
-In-Reply-To: <491ADD02-5511-404B-88A8-5725EF061EAC@aosc.io>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 20 Mar 2020 10:11:22 +0100
-Message-ID: <CACRpkdbeLAyhhkx115zAV0tdC7KJ4T0UoQ2QeDwTVN+btxp=Jw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] dt-bindings: panel: add binding for Xingbangda
- XBD599 panel
-To:     Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Ondrej Jirman <megous@megous.com>,
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+ <c9ff553f804f178a247dca356306948e971432fb.1584639664.git.alexander.riesen@cetitec.com>
+ <20200319180125.GJ14585@pendragon.ideasonboard.com> <20200320084406.GB4344@pflmari>
+ <CAMuHMdUdVb0LwZDx-MH2FLYYPvgq=uj_3Nrzo9obWAi-Q-2ZnA@mail.gmail.com> <20200320090339.GD4344@pflmari>
+In-Reply-To: <20200320090339.GD4344@pflmari>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Mar 2020 10:15:17 +0100
+Message-ID: <CAMuHMdVtsdNg0s5fio8GAhHGV9H+1J=xvuCXj5VdZ6gwqxGrZw@mail.gmail.com>
+Subject: Re: [PATCH v2 07/10] dt-bindings: adv748x: add information about
+ serial audio interface (I2S/TDM)
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Sam Ravnborg <sam@ravnborg.org>
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 9:07 AM Icenowy Zheng <icenowy@aosc.io> wrote:
-> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8819=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-10:14:27, Linus Walleij <linus.walleij@linaro.org> =E5=86=99=E5=88=B0:
-> >On Mon, Mar 16, 2020 at 2:37 PM Icenowy Zheng <icenowy@aosc.io> wrote:
+Hi Alex,
 
-> >As noticed in the review of the driver, this display is very close to
-> >himax,hx8363.
+On Fri, Mar 20, 2020 at 10:03 AM Alex Riesen
+<alexander.riesen@cetitec.com> wrote:
+> Geert Uytterhoeven, Fri, Mar 20, 2020 09:48:14 +0100:
+> > On Fri, Mar 20, 2020 at 9:44 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
+> > > Laurent Pinchart, Thu, Mar 19, 2020 19:01:25 +0100:
+> > > > On Thu, Mar 19, 2020 at 06:42:36PM +0100, Alex Riesen wrote:
+> > > > > As the driver has some support for the audio interface of the device,
+> > > > > the bindings file should mention it.
 > >
-> >I think the best is to determin what actual display controller it is,
-> >I think it is some kind of Ilitek controller since Ilitek ili9342 is
-> >clearly very similar.
+> > > > > @@ -16,6 +18,8 @@ Required Properties:
+> > > > >      slave device on the I2C bus. The main address is mandatory, others are
+> > > > >      optional and remain at default values if not specified.
+> > > > >
+> > > > > +  - #clock-cells: must be <0> if the I2S port is used
+> > > >
+> > > > Wouldn't it be simpler to set it to 0 unconditionally ?
+> > >
+> > > Would it? If the port itself is optional, shouldn't the clock be an option
+> > > too?
+> >
+> > You'd be surprised how many board designers would consider this a cheap
+> > 12.288 MHz clock source, without using the I2S port ;-)
 >
-> It's Sitronix ST7703, same as the Librem 5 panel.
+> Well, I am :-)
+>
+> Especially considering that the driver will not switch the MCLK pin aktive
+> (all I2S-related pins are tristate by default).
 
-Heh, I wonder how it comes that it is so similar to Ilitek.
-I guess I will never understand how the silicon ecosystem works
-in asia (I did read a lot of Bunnie Huang's articles and hardware
-hacking book to try to understand...)
+OK, didn't consider that.  But that still won't stop the hardware designer.
+E.g. on Lager, the clock input of the PMIC is tied to the clock line of an SPI
+bus, so to use that feature, the SPI clock must be kept running all the time,
+not just when doing a transfer.
 
-This file should be named sitronix,st7703.yaml then.
+> And how do I require it to be set unconditionally? By just removing the
+> "if ..." part of the statement?
 
-According to the code in the Librem 5:
-https://source.puri.sm/Librem5/linux-next/blob/imx8-current-librem5/drivers=
-/gpu/drm/panel/panel-sitronix-st7701.c
-The actual name of the display is Techstar ts8550b.
-And the display controller is st7701, so maybe we should
-actually name it sitronix,st770x.yaml if there are some
-sub-variants of st770x?
+Indeed.  This is still the plain text binding, not yaml.
 
-> >properties:
-> >  compatible:
-> >    items:
-> >      - const: xingbangda,xbd599
-> >      - const: ilitek,ili9342
-> >
-> >Possibly use oneOf and add support for the himax,hx8363
-> >already while you're at it.
+Gr{oetje,eeting}s,
 
-This should at least be:
+                        Geert
 
-compatible:
-   items:
-     - enum:
-       - xingbangda,xbd599
-       - himax,hx8363
-       - techstar,ts8550b
-     - enum:
-       - sitronix,st7701
-       - sitronix,st7703
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-So panel nodes using this panel become
-compatible =3D "xingbangda,sbd599", "sitronix,st7703"
-etc.
-
-This way it is straight-forward for drivers to identify the panel
-vendor and display controller.
-
-Yours,
-Linus Walleij
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
