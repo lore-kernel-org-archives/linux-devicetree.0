@@ -2,116 +2,102 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42703C4332D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 14:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0092DC4332E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 15:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B8020709
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 14:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABC920786
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 15:01:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bYCVe4KY"
+	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="QQ7sDGO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgCTOjG (ORCPT
+        id S1725446AbgCTPBt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 10:39:06 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46716 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgCTOjG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 10:39:06 -0400
-Received: by mail-lj1-f196.google.com with SMTP id d23so6600303ljg.13;
-        Fri, 20 Mar 2020 07:39:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0dEl+SmShjn8JFGibaEdqUe08SQ/fop8w6Anh4mWd4o=;
-        b=bYCVe4KYulbtR1U9kqgxr9bUo+bUJf4Sk+tqIkstrlvbcvthXvNS4T3b3Vtp/OLHNM
-         M0vcmMkhfBtUyiMouLbxxtiYdFpfXN62SRwSOI7isdHEnZmEojDK9K02i1oCmIQo1le0
-         1yyZr0uW9JQbTmaZAqdTAoKbDfXngue53pMyYhaxXLYBSZMCommcA47UO5yChDYW0nCc
-         MKXBpo03tztUkbe/S3nqNAArkZkS8pott/txqNy2tlnokwVH4+mua0LB8EZZMMPJq7B6
-         GF2010y+6FCShcA8Yx/a3+RJVufGEsoFZ7k1GUr2MdH+bZ0hDrB/pPZOTf8yEPrrwaNX
-         a9Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0dEl+SmShjn8JFGibaEdqUe08SQ/fop8w6Anh4mWd4o=;
-        b=ARXSAjWL1xfMtARTlhX0gwApMVidhYnGUiZWj9da4PAscSfJISdyxtjQipvk3VyFjc
-         +X2spl3aBcUGOar5ZIGHAC32yuG7F15DMUszjnpWwjP+N5tkBCVgg8p0MnzN/ZZoU+zR
-         52QfWZbidXt3bJapnl9WDIetC70jNSBUUGRu9dz9dFDH3zyXDq3CoJZ4khaVs7nsEu62
-         1GLogd/cf1fa8suNHg6hDwfOKMbJieXwqebg0eGRjW/mR+LlE3uECM/Cgfm8JlXbMCTm
-         4LALXdGOs2P6OMWdxP6iLP8/roiaN2byffJQx92cIj9iGfOll/C4jpG25oJbl7Fkpxon
-         xJfg==
-X-Gm-Message-State: ANhLgQ0/VAO62UNUFRF18IkKS1s/b4SvaNmRVfsZPemMLznIeJW2y+w7
-        BYr31l5606gmC72FG8dGGhRNTDXr
-X-Google-Smtp-Source: ADFU+vuppL2bu/7VNKqrTF0sxxbNBdd3Ln/+ORUh/2BGMHpKxMUg6rGLanCO+zBsFcM+lV96bMfGrw==
-X-Received: by 2002:a2e:8ecf:: with SMTP id e15mr5797347ljl.223.1584715143094;
-        Fri, 20 Mar 2020 07:39:03 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id l22sm3462776ljc.32.2020.03.20.07.39.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Mar 2020 07:39:02 -0700 (PDT)
-Subject: Re: [PATCH 2/7] clocksource: Add Tegra186 timers support
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200320133452.3705040-1-thierry.reding@gmail.com>
- <20200320133452.3705040-3-thierry.reding@gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <df532fef-1533-9da7-d676-f4671746fde3@gmail.com>
-Date:   Fri, 20 Mar 2020 17:39:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 20 Mar 2020 11:01:49 -0400
+Received: from mx-out1.startmail.com ([145.131.90.139]:43102 "EHLO
+        mx-out1.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgCTPBs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 11:01:48 -0400
+X-Greylist: delayed 520 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Mar 2020 11:01:47 EDT
+From:   Alexandru Lazar <alazar@startmail.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
+        s=2017-11; t=1584715986;
+        bh=nGR6FoC3zIPpZzmPkRZ9wSj5EwBjWj7KQoDXqXEv5xQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QQ7sDGO4ReAidEkVRw6RxDk7q3Yml34QyaAUkrINtF6zSQFdlWBBMC2aBrJjrimaS
+         AlBpjAtt7N67IQNZPkkTWsO9CxZIROXJhkA3ML/A6exr1HTQ5WRPCLanTMFJJ+CI4X
+         kqIZtaALPub3oxErn1hpOJrBDO+WOYDRQ9RPQs/oUiw03jd4tPlToN82nO15SkFRx7
+         xqCGiO6INIQZl27YsPM+x7xGcSu+YNoaNH99epk/1YbsHPVeW2HKKetG8ejYlUfXKg
+         HS4yYFOsp2dfNk9zksvUTUbhmiLvCjIFkelDL4tkKolsADHgMgfdWYUH+G/vXJiZuJ
+         VDuXPeylfauMQ==
+To:     linux-iio@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, Alexandru Lazar <alazar@startmail.com>
+Subject: [PATCH v4 0/2] Maxim MAX1241 driver
+Date:   Fri, 20 Mar 2020 16:57:32 +0200
+Message-Id: <20200320145734.8262-1-alazar@startmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200320133452.3705040-3-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-20.03.2020 16:34, Thierry Reding пишет:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Currently this only supports a single watchdog, which uses a timer in
-> the background for countdown. Eventually the timers could be used for
-> various time-keeping tasks, but by default the architected timer will
-> already provide that functionality.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/clocksource/Kconfig          |   8 +
->  drivers/clocksource/Makefile         |   1 +
->  drivers/clocksource/timer-tegra186.c | 377 +++++++++++++++++++++++++++
->  3 files changed, 386 insertions(+)
->  create mode 100644 drivers/clocksource/timer-tegra186.c
-Hello Thierry,
+Hello again,
 
-Shouldn't this driver reside in drivers/watchdog/? Like it's done in a
-case of the T30+ driver.
+Here's version 4 of a patch series which adds support for the Maxim
+MAX1241, a 12-bit, single-channel, SPI-connected ADC.
 
-...
+Changelog so far:
 
-> +static int __maybe_unused tegra186_timer_suspend(struct device *dev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused tegra186_timer_resume(struct device *dev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(tegra186_timer_pm_ops, tegra186_timer_suspend,
-> +			 tegra186_timer_resume);
+v4:
 
-Perhaps will be better to remove these OPS for now?
+* Dropped explicit documentation of SPI reg property
+* Reordered patch series so that dt bindings come first
+
+v3:
+
+* Fixed silly copy-paste error in Kconfig description
+
+v2:
+
+* Removed useeless header includes
+* Dropped needlessly verbose stuff in _read and _probe functions
+* Dropped useless GPL notice
+* Lowered log level of shdn pin status in probe function, now it's
+  dev_dbg
+* Added proper error checking for the GPIO shutdown pin
+* remove now always returns zero (man, I've been wrong about this for
+  *years* now...)
+* Added regulator disable action, cleanup is now handled via devm
+* Drop delay_usecs, use delay.value, delay.unit
+* Drop config_of, of_match_ptr call
+* Dropped IIO_BUFFER, IIO_TRIGGERED_BUFFER dependencies, set SPI_MASTER
+  as dependency, fix indenting.
+* DT binding: use correct id, add reg description (looks pretty
+  standard), dropped spi-max-frequency, fixed dt_binding_check
+  complaints (oops!)
+
+All the best,
+Alex
+
+Alexandru Lazar (2):
+  dt-bindings: iio: adc: Add MAX1241 device tree bindings in
+    documentation
+  iio: adc: Add MAX1241 driver
+
+ .../bindings/iio/adc/maxim,max1241.yaml       |  61 ++++++
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/max1241.c                     | 206 ++++++++++++++++++
+ 4 files changed, 278 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
+ create mode 100644 drivers/iio/adc/max1241.c
+
+-- 
+2.25.2
+
