@@ -2,51 +2,55 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1DEC43332
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9B9C4332B
 	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190A020786
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E39A820777
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1584723802;
-	bh=WTT25i45HTyzP5L/oP+xV6T/9doLnhTh1Zo72y+d5Bc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Hx5N7QsXlDB7BGMZwcywsfXKZIPAERa9Ev+9WOPfdhryYr+bW1k4iq9W6X4Dzmhhl
-	 vwtqYWAY0azlmKTLwGLDhhI6QfA/sXW3kGzy2NjgPd27CXl5N8lMUKm7BNpNPQC0JK
-	 G2WNNKJOKUTuddDk9HgRgKLBShpv2/usTBm6frCw=
+	bh=nGNWNe4gb5SNLtQ25FhIgpIFgzRIf+L0AGCdRSLeuP4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gQPTQjK7Bkr+4YE+a0UIM7mqtU1ttHvWLnoaXgwQX2lT+3//emhLLlW43LAV8cB61
+	 0Zq4npdvUltR566Lfo37YspkMM0rLSyvW5dW1hpDH94iL1vHrRV3P3n77pcp/qhB59
+	 FODpXdSAgAOPiJeMPCEhD50Go8U+oDOXyL7laCeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgCTRC5 (ORCPT
+        id S1727628AbgCTRDR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:02:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40510 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 13:03:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbgCTRC5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 13:02:57 -0400
+        id S1727550AbgCTRDA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Mar 2020 13:03:00 -0400
 Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5599220782;
-        Fri, 20 Mar 2020 17:02:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BA3C2076F;
+        Fri, 20 Mar 2020 17:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584723777;
-        bh=WTT25i45HTyzP5L/oP+xV6T/9doLnhTh1Zo72y+d5Bc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=t/e/9+WjbjI/MvJWjwlaAA2vMxIYhq8oB2TWAodc21n8A9FIZQTT6DO/zbXXMVnBF
-         HaRuGPxjjqWl0INZRKtP4zOO2BtsT7Kq9jtZ58l8h207DrQ/rFPNrqvJ63M9UYlgdY
-         EfeNKwI4xu/ATjCus26559ysXTy9pKptauhKeRWQ=
+        s=default; t=1584723779;
+        bh=nGNWNe4gb5SNLtQ25FhIgpIFgzRIf+L0AGCdRSLeuP4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=A3ZmPKVIQtj8lobfxYDECKYDuHJ4J7xjtiXmwVCtZa6w86HHju4vFQGQN0OzrQpFd
+         Iv5Nl67LumeKcNUjLL5Tk53XyzTPesPxRc94TlfSlfQ8aYqu3BwmvJx++wTh9IIiX0
+         QgzrNSyJBcy2aTCZeTzcQL3nwygAowu50uOrAhDs=
 From:   Dinh Nguyen <dinguyen@kernel.org>
 To:     linux-clk@vger.kernel.org
 Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: [PATCHv4 0/5] clk: agilex: add clock driver
-Date:   Fri, 20 Mar 2020 12:02:06 -0500
-Message-Id: <20200320170212.21523-1-dinguyen@kernel.org>
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        Dinh Nguyen <dinh.nguyen@intel.com>
+Subject: [PATCH 2/5] clk: socfpga: remove clk_ops enable/disable methods
+Date:   Fri, 20 Mar 2020 12:02:08 -0500
+Message-Id: <20200320170212.21523-3-dinguyen@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200320170212.21523-1-dinguyen@kernel.org>
+References: <20200320170212.21523-1-dinguyen@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -54,40 +58,60 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+From: Dinh Nguyen <dinh.nguyen@intel.com>
 
-This is version 4 of the patchset to add a clock driver to the Agilex
-platform.
+The enable/disable clock ops are already defined in the standard clock
+ops, so we don't need to assign them.
 
-The change from v3 is fixing the build of the dt-bindings file.
+Signed-off-by: Dinh Nguyen <dinh.nguyen@intel.com>
+---
+v4: no change
+v3: introduced
+---
+ drivers/clk/socfpga/clk-pll-a10.c | 2 --
+ drivers/clk/socfpga/clk-pll-s10.c | 2 --
+ drivers/clk/socfpga/clk-pll.c     | 2 --
+ 3 files changed, 6 deletions(-)
 
-Thanks,
-
-
-Dinh Nguyen (5):
-  clk: socfpga: stratix10: use new parent data scheme
-  clk: socfpga: remove clk_ops enable/disable methods
-  clk: socfpga: add const to _ops data structures
-  dt-bindings: documentation: add clock bindings information for Agilex
-  clk: socfpga: agilex: add clock driver for the Agilex platform
-
- .../bindings/clock/intel,agilex.yaml          |  36 ++
- drivers/clk/Makefile                          |   3 +-
- drivers/clk/socfpga/Makefile                  |   2 +
- drivers/clk/socfpga/clk-agilex.c              | 454 ++++++++++++++++++
- drivers/clk/socfpga/clk-gate-s10.c            |   5 +-
- drivers/clk/socfpga/clk-periph-s10.c          |  10 +-
- drivers/clk/socfpga/clk-pll-a10.c             |   4 +-
- drivers/clk/socfpga/clk-pll-s10.c             |  78 ++-
- drivers/clk/socfpga/clk-pll.c                 |   4 +-
- drivers/clk/socfpga/clk-s10.c                 | 160 ++++--
- drivers/clk/socfpga/stratix10-clk.h           |  10 +-
- include/dt-bindings/clock/agilex-clock.h      |  70 +++
- 12 files changed, 784 insertions(+), 52 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
- create mode 100644 drivers/clk/socfpga/clk-agilex.c
- create mode 100644 include/dt-bindings/clock/agilex-clock.h
-
+diff --git a/drivers/clk/socfpga/clk-pll-a10.c b/drivers/clk/socfpga/clk-pll-a10.c
+index 3816fc04b274..6d9395106c0c 100644
+--- a/drivers/clk/socfpga/clk-pll-a10.c
++++ b/drivers/clk/socfpga/clk-pll-a10.c
+@@ -102,8 +102,6 @@ static struct clk * __init __socfpga_pll_init(struct device_node *node,
+ 	pll_clk->hw.hw.init = &init;
+ 
+ 	pll_clk->hw.bit_idx = SOCFPGA_PLL_EXT_ENA;
+-	clk_pll_ops.enable = clk_gate_ops.enable;
+-	clk_pll_ops.disable = clk_gate_ops.disable;
+ 
+ 	clk = clk_register(NULL, &pll_clk->hw.hw);
+ 	if (WARN_ON(IS_ERR(clk))) {
+diff --git a/drivers/clk/socfpga/clk-pll-s10.c b/drivers/clk/socfpga/clk-pll-s10.c
+index bcd3f14e9145..9faa80ff3b53 100644
+--- a/drivers/clk/socfpga/clk-pll-s10.c
++++ b/drivers/clk/socfpga/clk-pll-s10.c
+@@ -138,8 +138,6 @@ struct clk *s10_register_pll(const struct stratix10_pll_clock *clks,
+ 	pll_clk->hw.hw.init = &init;
+ 
+ 	pll_clk->hw.bit_idx = SOCFPGA_PLL_POWER;
+-	clk_pll_ops.enable = clk_gate_ops.enable;
+-	clk_pll_ops.disable = clk_gate_ops.disable;
+ 
+ 	clk = clk_register(NULL, &pll_clk->hw.hw);
+ 	if (WARN_ON(IS_ERR(clk))) {
+diff --git a/drivers/clk/socfpga/clk-pll.c b/drivers/clk/socfpga/clk-pll.c
+index dc65cc0fd3bd..a001641b2f42 100644
+--- a/drivers/clk/socfpga/clk-pll.c
++++ b/drivers/clk/socfpga/clk-pll.c
+@@ -105,8 +105,6 @@ static __init struct clk *__socfpga_pll_init(struct device_node *node,
+ 	pll_clk->hw.hw.init = &init;
+ 
+ 	pll_clk->hw.bit_idx = SOCFPGA_PLL_EXT_ENA;
+-	clk_pll_ops.enable = clk_gate_ops.enable;
+-	clk_pll_ops.disable = clk_gate_ops.disable;
+ 
+ 	clk = clk_register(NULL, &pll_clk->hw.hw);
+ 	if (WARN_ON(IS_ERR(clk))) {
 -- 
 2.25.1
 
