@@ -2,262 +2,113 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751E2C43332
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 08:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408A7C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 08:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4838020739
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 08:12:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="YzsIlOb0"
+	by mail.kernel.org (Postfix) with ESMTP id 1B6FC20767
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 08:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgCTIMI (ORCPT
+        id S1726704AbgCTIXw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 04:12:08 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:51326 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbgCTILb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 04:11:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=V7ao2BxZREvse3XwoWf/L44QfzmREzjIcPwYKWepRPE=; b=YzsIlOb0QNyiwbeGx9tQAb1TBr
-        Wc6NNJ7LNAMHfASNsbsSsHHf88CCmqLE47HdufFMjjQBM60lDRs+kwTjCRu86z8W2iWPYJ2qofHo0
-        Zi932bL/DlSHYGdfp5n/1rj7KeDS866+1yQE71wwCfy0NRiKG/Ayt5xhbTPG2CpYzCTs=;
-Received: from p200300ccff093a00e2cec3fffe93fc31.dip0.t-ipconnect.de ([2003:cc:ff09:3a00:e2ce:c3ff:fe93:fc31] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jFCkP-00058W-5O; Fri, 20 Mar 2020 09:11:18 +0100
-Received: from andi by eeepc with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jFCkH-00039K-9N; Fri, 20 Mar 2020 09:11:09 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me, letux-kernel@openphoenux.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        jic23@kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v7 2/7] mfd: rn5t618: add IRQ support
-Date:   Fri, 20 Mar 2020 09:11:00 +0100
-Message-Id: <20200320081105.12026-3-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200320081105.12026-1-andreas@kemnade.info>
-References: <20200320081105.12026-1-andreas@kemnade.info>
+        Fri, 20 Mar 2020 04:23:52 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:44171 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgCTIXw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 04:23:52 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1N3bCH-1jOrq90Hlz-010fJp; Fri, 20 Mar 2020 09:23:34 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id ADF0C64F8DA;
+        Fri, 20 Mar 2020 08:23:32 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id dUkY0kNg4MH8; Fri, 20 Mar 2020 09:23:32 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 62EDA64E0DE;
+        Fri, 20 Mar 2020 09:23:32 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.41) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 20 Mar 2020 09:23:32 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id BC6AC80524; Fri, 20 Mar 2020 09:23:31 +0100 (CET)
+Date:   Fri, 20 Mar 2020 09:23:31 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v2 02/10] media: adv748x: include everything adv748x.h
+ needs into the file
+Message-ID: <20200320082331.GA4344@pflmari>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+ <fe109d58eaa34d68cad0f34bb048f827b336e024.1584639664.git.alexander.riesen@cetitec.com>
+ <20200319174802.GH14585@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200319174802.GH14585@pendragon.ideasonboard.com>
+X-Originating-IP: [10.8.5.41]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7764
+X-Provags-ID: V03:K1:33L9iXlJrVAggt8Qr9tzFofSe8801Fe853bNzSP0wXiHIM5BDd+
+ ycYFhci0saF/hRiVg9z3D6spodni5WsR06QZvTtkt3mUd6/7A22KIDkjkY4RqWKSzR/1byL
+ YvrPoyjlKlvOgFppmYEqZ6xwFexNcSXyQxrO8D1x2CL2ftDnRx1WUPVNWydn0+5WLFftewx
+ ZYgEWKIXTHmnguyZx3cJg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nc81whusC54=:fwlSM1iQLjay0uUJ5eWU3Q
+ b+jrVseEx9QTc34P/74chQufQiB8rgPH8uUYdUqWOpnYsuChGEdeiqr9iQ8xqt2rAvboTE1r7
+ c5UX8BivJbScplA88regWkoGtzK5DqhRLne43IJopTRMKluhf7hPQ5Ft7D8fxIT+0aDcbX+Rv
+ Hff9H4R3u5J5/euBGShbUdKYQ0U7yuV7KXFg1QrJ7EDaoiVBIkwIdyTNSwaXatbcWqlTwKUNd
+ O1nqE76x/SaxlUwC0aKdT8Icm3muNWQBAesNIOFeOyKUDOkvoogz8Kn+SJgi3PtZNaN1+D9mV
+ TBTbAzbzWaLVqcDPOAAhnJpUgoYWFP0C3TtO0p6NnwgVwe2tOLFyoBIc5S0dK/EbQqdKdPFir
+ 6Qc5AWEQXwlkYWdhsZWn8orpSWd7DFliVWn8Iv3lqXtoNq+Ai3H7+gkwYQf40Do6u9LFfXfBz
+ zS4pIuDkzqWdh2gxFrsYJiEyThu2nv6HyhKgXr+lnmUnVeSMJyo2TJJInxgMRWhGRsyf7lTnk
+ GXPvV2xVo2+DALI5Qq9We6cu7qjTmzcxW4wRZ14LBvvmr9uF5tHETCxYHrI+EGPGoS1xTxaMf
+ T+edlaDLFeDP1qmYjtbBXfy7V5yzMKiZJM7i0x1SYlvtXI8aXq/Hl+5U/yjeqRJNGW9hmSSBz
+ aGEZiAXtTgaCJTKEEIPoIVJTV/2lq1/jMMPPPeNC2V+lfH39MXzdDut74rh0i++vov5wuJNQo
+ 9RCqp7qmGjymWOrqFgAk4/k9mP5iovsRLYDxnxlop6m363qljYutiOLQe0YrC5ap3dfA1Ogju
+ bOBQtvFMymsbxR4W5SgSI0+0svPWYjggEP50RU69bro1EgPYqAEGSvwc9DDMSVCmAKYS2cX
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds support for IRQ handling in the RC5T619 which is required
-for properly implementing subdevices like RTC.
-For now only definitions for the variant RC5T619 are included.
+Hi Laurent,
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-Changes in v7:
-more cleanups in IRQ init
+Laurent Pinchart, Thu, Mar 19, 2020 18:48:02 +0100:
+> On Thu, Mar 19, 2020 at 06:41:48PM +0100, Alex Riesen wrote:
+> > To follow the established practice of not depending on others to
+> > pull everything in.
+> 
+> Good idea. While at it, could you include "adv748x.h" as the very first
+> header in at least one of the C files ? That will help ensuring the
+> header stays self-contained in the future.
 
-Changes in v5:
-rn5t618_irq_init static
-
-Changes in v4:
-merge rn5t618-irq.c into rn5t618.c
-use macros for IRQ table
-
-Changes in v3:
-alignment cleanup
-
-Changes in v2:
-- no dead code, did some more testing and thinking for that
-- remove extra empty lines
- drivers/mfd/Kconfig         |  1 +
- drivers/mfd/rn5t618.c       | 78 ++++++++++++++++++++++++++++++++++++-
- include/linux/mfd/rn5t618.h | 15 +++++++
- 3 files changed, 93 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 2b203290e7b9..a7067888a41e 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1058,6 +1058,7 @@ config MFD_RN5T618
- 	depends on OF
- 	select MFD_CORE
- 	select REGMAP_I2C
-+	select REGMAP_IRQ
- 	help
- 	  Say yes here to add support for the Ricoh RN5T567,
- 	  RN5T618, RC5T619 PMIC.
-diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index ead2e79036a9..b66dc4605d56 100644
---- a/drivers/mfd/rn5t618.c
-+++ b/drivers/mfd/rn5t618.c
-@@ -8,6 +8,8 @@
- 
- #include <linux/delay.h>
- #include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/rn5t618.h>
- #include <linux/module.h>
-@@ -46,9 +48,56 @@ static const struct regmap_config rn5t618_regmap_config = {
- 	.cache_type	= REGCACHE_RBTREE,
- };
- 
-+static const struct regmap_irq rc5t619_irqs[] = {
-+	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_RTC, 0, BIT(2)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
-+};
-+
-+static const struct regmap_irq_chip rc5t619_irq_chip = {
-+	.name = "rc5t619",
-+	.irqs = rc5t619_irqs,
-+	.num_irqs = ARRAY_SIZE(rc5t619_irqs),
-+	.num_regs = 1,
-+	.status_base = RN5T618_INTMON,
-+	.mask_base = RN5T618_INTEN,
-+	.mask_invert = true,
-+};
-+
- static struct rn5t618 *rn5t618_pm_power_off;
- static struct notifier_block rn5t618_restart_handler;
- 
-+static int rn5t618_irq_init(struct rn5t618 *rn5t618)
-+{
-+	const struct regmap_irq_chip *irq_chip = NULL;
-+	int ret;
-+
-+	if (!rn5t618->irq)
-+		return 0;
-+
-+	switch (rn5t618->variant) {
-+	case RC5T619:
-+		irq_chip = &rc5t619_irq_chip;
-+		break;
-+	default:
-+		dev_err(rn5t618->dev, "Currently no IRQ support for variant %d\n",
-+			(int)rn5t618->variant);
-+		return -ENOENT;
-+	}
-+
-+	ret = devm_regmap_add_irq_chip(rn5t618->dev, rn5t618->regmap,
-+				       rn5t618->irq,
-+				       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+				       0, irq_chip, &rn5t618->irq_data);
-+	if (ret)
-+		dev_err(rn5t618->dev, "Failed to register IRQ chip\n");
-+
-+	return ret;
-+}
-+
- static void rn5t618_trigger_poweroff_sequence(bool repower)
- {
- 	/* disable automatic repower-on */
-@@ -106,6 +155,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 
- 	i2c_set_clientdata(i2c, priv);
- 	priv->variant = (long)of_id->data;
-+	priv->irq = i2c->irq;
-+	priv->dev = &i2c->dev;
- 
- 	priv->regmap = devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
- 	if (IS_ERR(priv->regmap)) {
-@@ -138,7 +189,7 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
--	return 0;
-+	return rn5t618_irq_init(priv);
- }
- 
- static int rn5t618_i2c_remove(struct i2c_client *i2c)
-@@ -155,15 +206,40 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
- 	return 0;
- }
- 
-+static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
-+{
-+	struct rn5t618 *priv = dev_get_drvdata(dev);
-+
-+	if (priv->irq)
-+		disable_irq(priv->irq);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
-+{
-+	struct rn5t618 *priv = dev_get_drvdata(dev);
-+
-+	if (priv->irq)
-+		enable_irq(priv->irq);
-+
-+	return 0;
-+}
-+
- static const struct i2c_device_id rn5t618_i2c_id[] = {
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
- 
-+static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
-+			rn5t618_i2c_suspend,
-+			rn5t618_i2c_resume);
-+
- static struct i2c_driver rn5t618_i2c_driver = {
- 	.driver = {
- 		.name = "rn5t618",
- 		.of_match_table = of_match_ptr(rn5t618_of_match),
-+		.pm = &rn5t618_i2c_dev_pm_ops,
- 	},
- 	.probe = rn5t618_i2c_probe,
- 	.remove = rn5t618_i2c_remove,
-diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
-index d62ef48060b5..739571656f2b 100644
---- a/include/linux/mfd/rn5t618.h
-+++ b/include/linux/mfd/rn5t618.h
-@@ -242,9 +242,24 @@ enum {
- 	RC5T619,
- };
- 
-+/* RN5T618 IRQ definitions */
-+enum {
-+	RN5T618_IRQ_SYS = 0,
-+	RN5T618_IRQ_DCDC,
-+	RN5T618_IRQ_RTC,
-+	RN5T618_IRQ_ADC,
-+	RN5T618_IRQ_GPIO,
-+	RN5T618_IRQ_CHG,
-+	RN5T618_NR_IRQS,
-+};
-+
- struct rn5t618 {
- 	struct regmap *regmap;
-+	struct device *dev;
- 	long variant;
-+
-+	int irq;
-+	struct regmap_irq_chip_data *irq_data;
- };
- 
- #endif /* __LINUX_MFD_RN5T618_H */
--- 
-2.20.1
+Done.
 
