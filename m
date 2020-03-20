@@ -2,65 +2,70 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DCFC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 05:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9491C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 06:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263562072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 05:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA7220709
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 06:05:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cOy6vGiJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cIwMG4nA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbgCTF6n (ORCPT
+        id S1726448AbgCTGF4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 01:58:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47572 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgCTF6n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 01:58:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02K5wanm012081;
-        Fri, 20 Mar 2020 00:58:36 -0500
+        Fri, 20 Mar 2020 02:05:56 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49218 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgCTGF4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 02:05:56 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02K65liF087197;
+        Fri, 20 Mar 2020 01:05:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584683916;
-        bh=GviAYJ/cIsQXwZWzxrbuwydm5DG3/0LKWJF5jH3tp7c=;
+        s=ti-com-17Q1; t=1584684347;
+        bh=92aYmx2LDHn+oan17yeViCMmubMagIT6Mha4LGq7Gkc=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cOy6vGiJ64ESd8D8igN1+9cjN1llolyMo3JnX0ogHecAn/GAhaWJI6pC2yOSzKpIe
-         2SZYMZWWW3BJ/9YoyxXNMF88vvHyaBkRIT1G6Ni3Sdg46bhFNg90BelISlyf9zl7tO
-         jvYUiKtL5aU/GJpYfmTT1d8qzPrIPbY1pcQXs+to=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02K5wa1D077568
+        b=cIwMG4nAK+q7Y/r2s2YXS7oQzrP/xC9HdV8YC9KgMIUWwC3qs6KzLrfnsWr6ov7LT
+         mOywKLzOLZQfz1XDCf0FWr6vx+siRGKTnDR8BTSTz1ZzvKHu9/y4dYkxxnuUDQQQas
+         /L1XS64STiict+RZCGjs2XdYXa6/nKM6CMRyueK4=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02K65lK7003285
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Mar 2020 00:58:36 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 20 Mar 2020 01:05:47 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Mar 2020 00:58:36 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 01:05:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Mar 2020 00:58:36 -0500
+ Frontend Transport; Fri, 20 Mar 2020 01:05:47 -0500
 Received: from [10.250.133.193] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02K5wXfQ016043;
-        Fri, 20 Mar 2020 00:58:34 -0500
-Subject: Re: [PATCH 1/2] dt-bindings: phy: intel: Add documentation for Keem
- Bay eMMC PHY
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200316103726.16339-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200316103726.16339-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02K65gR0046350;
+        Fri, 20 Mar 2020 01:05:43 -0500
+Subject: Re: [PATCH v5 0/9] Add QUSB2 PHY support for SC7180
+To:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Manu Gautam <mgautam@codeaurora.org>
+References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
 From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <3de03bba-9e18-d388-7d56-634f74234bac@ti.com>
-Date:   Fri, 20 Mar 2020 11:28:33 +0530
+Message-ID: <a1fe769a-a19f-c753-70f1-ad1a8a87d914@ti.com>
+Date:   Fri, 20 Mar 2020 11:35:41 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200316103726.16339-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+In-Reply-To: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -72,81 +77,61 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi,
 
-On 3/16/2020 4:07 PM, Wan Ahmad Zainie wrote:
-> Document Intel Keem Bay eMMC PHY DT bindings.
+On 3/9/2020 3:23 PM, Sandeep Maheswaram wrote:
+> Converting dt binding to yaml.
+> Adding compatible for SC7180 in dt bindings.
+> Added generic QUSB2 V2 PHY support and using the same SC7180 and SDM845.
 > 
-> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+> Changes in v5:
+> *Added the dt bindings which are applicable only to QUSB2 V2 PHY in 
+>  separate block as per comments from Matthias in patch 1/9 and patch 4/9
+>  and addressed Rob's comment in patch 1/9.
+> *Separated the patch for new override params and added a local variable
+>  to access overrides as per comments from Matthias patch 5/9 and 6/9.
+> 
+> Changes in v4:
+> *Addressed Rob Herrings comments in dt bindings.
+> *Added new structure for all the overriding tuning params.
+> *Removed the sc7180 and sdm845 compatible from driver and added qusb2 v2 phy. 
+> *Added the qusb2 v2 phy compatible in device tree for sc7180 and sdm845. 
+> 
+> Changes in v3:
+> *Using the generic phy cfg table for QUSB2 V2 phy.
+> *Added support for overriding tuning parameters in QUSB2 V2 PHY
+> from device tree.
+> 
+> Changes in v2:
+> Sorted the compatible in driver.
+> Converted dt binding to yaml.
+> Added compatible in yaml.
+> 
+> Sandeep Maheswaram (9):
+>   dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml
+>   dt-bindings: phy: qcom,qusb2: Add compatibles for QUSB2 V2 phy and
+>     SC7180
+>   phy: qcom-qusb2: Add generic QUSB2 V2 PHY support
+>   dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning
+>     parameters
+>   phy: qcom-qusb2: Add support for overriding tuning parameters in QUSB2
+>     V2 PHY
+>   phy: qcom-qusb2: Add new overriding tuning parameters in QUSB2 V2 PHY
 
-Need Rob's Ack on this patch.
+merged the above patches to phy -next.
 
 Thanks
 Kishon
-> ---
->  .../bindings/phy/intel,keembay-emmc-phy.yaml  | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+>   arm64: dts: qcom: sc7180: Add generic QUSB2 V2 Phy compatible
+>   arm64: dts: qcom: sdm845: Add generic QUSB2 V2 Phy compatible
+>   arm64: dts: qcom: sc7180: Update QUSB2 V2 Phy params for SC7180 IDP
+>     device
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
-> new file mode 100644
-> index 000000000000..af1d62fc8323
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +# Copyright 2020 Intel Corporation
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/intel,keembay-emmc-phy.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Intel Keem Bay eMMC PHY
-> +
-> +maintainers:
-> +  - Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - intel,keembay-emmc-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: emmcclk
-> +
-> +  intel,syscon:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    description:
-> +      A phandle to a syscon device used to access core/phy configuration
-> +      registers.
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - intel,syscon
-> +  - "#phy-cells"
-> +
-> +examples:
-> +  - |
-> +    mmc_phy_syscon: syscon@20290000 {
-> +          compatible = "simple-mfd", "syscon";
-> +          reg = <0x0 0x20290000 0x0 0x54>;
-> +    };
-> +
-> +    emmc_phy: mmc_phy@20290000 {
-> +          compatible = "intel,keembay-emmc-phy";
-> +          reg = <0x0 0x20290000 0x0 0x54>;
-> +          clocks = <&mmc>;
-> +          clock-names = "emmcclk";
-> +          intel,syscon = <&mmc_phy_syscon>;
-> +          #phy-cells = <0>;
-> +    };
+>  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 187 +++++++++++++++++++++
+>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 --------
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   6 +-
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   2 +-
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               |   4 +-
+>  drivers/phy/qualcomm/phy-qcom-qusb2.c              | 144 +++++++++++-----
+>  6 files changed, 297 insertions(+), 114 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
 > 
