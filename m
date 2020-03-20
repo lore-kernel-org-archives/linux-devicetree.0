@@ -2,167 +2,216 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF19C4332E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 10:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB0BC4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 10:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0FCC2072D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 10:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004042076C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 10:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4uXw8Pf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qW/1HcLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgCTKez (ORCPT
+        id S1726976AbgCTKf0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 06:34:55 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38290 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgCTKez (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 06:34:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id l20so5708337wmi.3;
-        Fri, 20 Mar 2020 03:34:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A9LMr0UXcZSEqVnqNAwLyFiSr+kmUdRM1J1fT1cXn5U=;
-        b=Z4uXw8PfRFLJlofHFGW41vrqoGwlAIqRACj+uRDYvGpB8tWq7q1Li9OwTmu9kmT7sS
-         VJ3g8sAmUG2NSBqkCPDsohe7yIgPn3QYHTtZLkdZRYvvKEXiboau8buIhpjAzyNF7evV
-         x8vRSxGYM0NmnHdGYBjFzdCkQW3RfOZeutJgCiimnqdA8Gdqu2ANQvtjli+HGCLBzz+Q
-         v0Iyv/TwBHXbwA0m9jSHsI9Ks5ouiTq8po/U26UqHCZnOeITzTRNSvu2ha6JxopKmf12
-         RFvRFeqsQMqfbXmM1nUgVOsBp1+1zkx3fMIeAvg8fRKJqvRrmtmPrKcw2aY5p9exuglM
-         TKWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A9LMr0UXcZSEqVnqNAwLyFiSr+kmUdRM1J1fT1cXn5U=;
-        b=DEqEfb6zAW0+TDZe3TilMZPW6snb29jO5GeFIPWRU1lsD9zx5eISvt1RWt7raR7wVh
-         4KrIsUumEtGiZY2ROifrW83enC1QT2IrXkGQkPDPecCct8kSsie0s2Jxt7rAwlASqQaG
-         zumWjoQi1KVh1OJZuFtHbZoTrLFt3mW5X+zcOJXps7MZJJuErl/vguONiHM7JcVJ7lMg
-         SAcFOvzQTwkT6XJmYMcOH4HLYcTc6GqYk8daIPXvg6XS+hmogTJt3UXeJKd7a+UGHQ3h
-         h0F1qXr7kIGzS0am8sNHCpnXBHvaylHdq626cSIC2ocDbE1wg+BbYvFcApxFCiYUozH5
-         SBEw==
-X-Gm-Message-State: ANhLgQ0QO8eVj8ICyHdT6Jhao+nhywn1tyRzzi5+pOwEITvgg8d35zbI
-        3V4NK+IBnW22iDqMN7PZhRJytHpTX/1nKiFGMTZWJQ7M
-X-Google-Smtp-Source: ADFU+vvRrvOiPU9AK3wSD6H8a7LzgOUg2SrSTLcnrfXfsiTSvivvRS4XrMnjiu3ESR+V0DJhpgTVgiItLeoY1EdIvVU=
-X-Received: by 2002:a7b:c92a:: with SMTP id h10mr9145899wml.26.1584700492517;
- Fri, 20 Mar 2020 03:34:52 -0700 (PDT)
+        Fri, 20 Mar 2020 06:35:26 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:27170 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726690AbgCTKf0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Mar 2020 06:35:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584700525; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=MCAHrRWNbzSLU10BfuTuGxSIA19JrHAmyPBXV01gh0I=; b=qW/1HcLsSLnJ9pRxQsGbXvUdoj7jR9yVRu55W8l/tbqqvBBLdTY1Im6uq8t94G9IDU7KrEh7
+ Wh4Y9c/5yzJfN9s5ZjlABvG/+AazcYQtPgpg2ejL0u3VLGqMibjaxbTMhAIYbQbyVTWlogMa
+ xuZrsRYoitpuVSv5CAg7PBp36WQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e749c65.7fd88d397378-smtp-out-n04;
+ Fri, 20 Mar 2020 10:35:17 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A5057C432C2; Fri, 20 Mar 2020 10:35:15 +0000 (UTC)
+Received: from [192.168.0.13] (unknown [183.83.138.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B5CCAC433D2;
+        Fri, 20 Mar 2020 10:35:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B5CCAC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V2 4/8] tty: serial: qcom_geni_serial: Add interconnect
+ support
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
+ <1584105134-13583-5-git-send-email-akashast@codeaurora.org>
+ <20200313212833.GK144492@google.com>
+ <e9293de6-004f-6005-8cb6-66f28c080ebe@codeaurora.org>
+ <20200317190804.GS144492@google.com>
+ <e95bd6e0-d1fd-9d13-47df-f7d08b443e37@codeaurora.org>
+ <20200319204248.GA204494@google.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <a886cbae-310c-a7d7-7cfc-a693422ce570@codeaurora.org>
+Date:   Fri, 20 Mar 2020 16:05:06 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200304072730.9193-1-zhang.lyra@gmail.com>
-In-Reply-To: <20200304072730.9193-1-zhang.lyra@gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Fri, 20 Mar 2020 18:34:16 +0800
-Message-ID: <CAAfSe-sWv1mrx1GPgO8ZRhSs9vbAy_PY_BA4BkHrE5FghsX7nA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/7] Add clocks for Unisoc's SC9863A
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200319204248.GA204494@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
+Hi Matthias,
 
-Could you please take this patch-set to your tree if there are no
-further comments.
+On 3/20/2020 2:12 AM, Matthias Kaehlcke wrote:
+> On Wed, Mar 18, 2020 at 05:53:22PM +0530, Akash Asthana wrote:
+>> Hi Matthias,
+>>
+>> On 3/18/2020 12:38 AM, Matthias Kaehlcke wrote:
+>>> On Tue, Mar 17, 2020 at 05:18:34PM +0530, Akash Asthana wrote:
+>>>> Hi Matthias,
+>>>>
+>>>> On 3/14/2020 2:58 AM, Matthias Kaehlcke wrote:
+>>>>> Hi Akash,
+>>>>>
+>>>>> On Fri, Mar 13, 2020 at 06:42:10PM +0530, Akash Asthana wrote:
+>>>>>> Get the interconnect paths for Uart based Serial Engine device
+>>>>>> and vote according to the baud rate requirement of the driver.
+>>>>>>
+>>>>>> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+>>>>>> ---
+>>>>>> Changes in V2:
+>>>>>>     - As per Bjorn's comment, removed se == NULL check from geni_serial_icc_get
+>>>>>>     - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
+>>>>>>     - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>>>>>>       path handle
+>>>>>>     - As per Matthias comment, added error handling for icc_set_bw call
+>>>>>>
+>>>>>>     drivers/tty/serial/qcom_geni_serial.c | 69 +++++++++++++++++++++++++++++++++--
+>>>>>>     1 file changed, 65 insertions(+), 4 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+>>>>>> index 272bae0..c8ad7e9 100644
+>>>>>> --- a/drivers/tty/serial/qcom_geni_serial.c
+>>>>>> +++ b/drivers/tty/serial/qcom_geni_serial.c
+>>>>>>
+>>>>>> ...
+>>>>>>
+>>>>>>     static int qcom_geni_serial_request_port(struct uart_port *uport)
+>>>>>>     {
+>>>>>>     	struct platform_device *pdev = to_platform_device(uport->dev);
+>>>>>> @@ -962,6 +975,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>>>>>>     	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+>>>>>>     	unsigned long clk_rate;
+>>>>>>     	u32 ver, sampling_rate;
+>>>>>> +	int ret;
+>>>>>>     	qcom_geni_serial_stop_rx(uport);
+>>>>>>     	/* baud rate */
+>>>>>> @@ -983,6 +997,18 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>>>>>>     	ser_clk_cfg = SER_CLK_EN;
+>>>>>>     	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>>>>>> +	/*
+>>>>>> +	 * Put BW vote only on CPU path as driver supports FIFO mode only.
+>>>>>> +	 * Assume peak_bw as twice of avg_bw.
+>>>>>> +	 */
+>>>>>> +	port->se.avg_bw_cpu = Bps_to_icc(baud);
+>>>>>> +	port->se.peak_bw_cpu = Bps_to_icc(2 * baud);
+>>>>>> +	ret = icc_set_bw(port->se.icc_path_cpu_to_geni, port->se.avg_bw_cpu,
+>>>>>> +			port->se.peak_bw_cpu);
+>>>>>> +	if (ret)
+>>>>>> +		dev_err(uport->dev, "%s: ICC BW voting failed for cpu\n",
+>>>>>> +			__func__);
+>>>>> Should this return an error? The port might not operate properly if the ICC
+>>>>> bandwidth couldn't be configured
+>>>> This is void function we can't return error from here. I guess it would be
+>>>> somewhat okay if BW voting failed for CPU path but clk_set_rate failure is
+>>>> more serious which is called from this function, I don't think it can be
+>>>> move to somewhere else.
+>>> ok, I missed that _set_termios() is void.
+>>>
+>>>>>>     static const struct uart_ops qcom_geni_console_pops = {
+>>>>>> @@ -1308,6 +1358,17 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+>>>>>>     	port->rx_fifo_depth = DEF_FIFO_DEPTH_WORDS;
+>>>>>>     	port->tx_fifo_width = DEF_FIFO_WIDTH_BITS;
+>>>>>> +	ret = geni_serial_icc_get(&port->se);
+>>>>>> +	if (ret)
+>>>>>> +		return ret;
+>>>>>> +	/* Set the bus quota to a reasonable value */
+>>>>>> +	port->se.avg_bw_core = console ? Bps_to_icc(1000) :
+>>>>>> +		Bps_to_icc(CORE_2X_50_MHZ);
+>>>>> Why different settings for console vs. non-console?
+>>>> QUP FW runs on core clock. To support higher throughput we want FW to run at
+>>>> higher speed.
+>>>>
+>>>> Since Console operate at 115200bps and BT operate at 3.2Mbps baud. We are
+>>>> voting higher on core for BT usecase.
+>>>>
+>>>> These value are recommended from HW team.
+>>> IIUC none of the values you mention are set in stone. 115200bps seems to be a
+>>> 'standard' value for the serial console, but it could be a different baudrate.
+>>> I guess you are referring to Qualcomm Bluetooth controllers, which are only one
+>>> of many things that could be connected to the port. And what happens when a
+>>> QCA BT controller is connected to a non-geni/QCA port, which doesn't know about
+>>> its 'requirements'? The answer is that both the BT controller and the serial
+>>> console configure the baudrate they need, hence using different values in
+>>> _probe() is pointless.
+>> Are you refering other UART drivers(not based on geni HW) as non-geni/QCA
+>> port?
+>>
+>> We are not scaling core BW request based on real time need like we are doing
+>> for other paths(CPU/DDR) instead we are using some fail proof value because,
+>> FW runs on core clock and core behaves a bit different than other NOCs.
+>>
+>> We don't have any functional relation which maps actual throughput
+>> requirement to core frequency need. In the past we faced few latency issues
+>> because of core slowness (Although it was running much higher than actual
+>> throughput requirement). To avoid such scenario we are using recommend value
+>> from HW team. These fix value can support SE drivers operating at their max
+>> possible speed(4Mbps in case of non-console).
+> ok, I missed that the core clocks aren't scaled based on the configured
+> baudrate. Apparently experience shows that it is not practical due to the
+> latency issues you mention.
+Yeah That is correct.
+>> I agree that 115200bps seems to be a 'standard' value for the serial
+>> console, but it could be a different baudrate.
+>>
+>> We are voting 1000 in case of console because it  has low power mode
+>> use-case in android, where voting CORE_2X_50_MHZ can be reported as a power
+>> issue.
+>>
+>> Actually we wanted to vote 960 for console but that is not possible with
+>> current ICC design where the minimum value is 1000bps.  So any way core is
+>> running at 50 MHz as 1000 crosses the threshold for 19.2 MHz (960)
+>>
+>> only with console.
+> Thanks for the clarification. So if a board wanted to use a higher baudrate
+> for the console it (currently) shouldn't be a problem. While it would be nice
+> to have uniform settings for all UARTs it's also not a big deal to have two
+> values, just wanted to make sure it's needed
+
+Okay, but I would like to keep as it is with above mentioned reason.
+
 
 Thanks,
-Chunyan
 
-On Wed, 4 Mar 2020 at 15:28, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
->
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
->
-> Add SC9863A specific clock driver and devicetree bindings for it,
-> this patch add to support the new way of specifying parents
-> without name strings of clocks.
->
-> Also this patchset added support gate clock for pll which need to
-> wait a certain time for stable after being switched on.
->
-> Changes from v5:
-> * Addressed comments from Rob:
-> - Removed description from "clock-names" and "reg" properties;
-> - Added maxItem to "reg" property.
-> * Modified the descriptions for those clocks which are a child node of
->   a syscon.
->
-> Changes from v4:
-> * Fixed dt_binding_check warnings.
->
-> Changes from v3:
-> * Rebased onto v5.6-rc1.
->
-> Changes from v2:
-> * Addressed comments from Stephen:
-> - Remove ununsed header file from sc9863a-clk.c;
-> - Added comments for clocks which were marked with CLK_IGNORE_UNUSED,
->   and removed some unnecessary CLK_IGNORE_UNUSED;
-> - Added error checking for sprd_clk_regmap_init().
->
-> * Addressed comments from Rob:
-> - Put some clocks under syscon nodes, since these clocks have the same
->   physical address base with the syscon;
-> - Added clocks maxItems and listed out clock-names.
->
-> * Added Rob's reviewed-by on patch 4.
->
-> Changes from v1:
-> * Addressed comments:
-> - Removed redefine things;
-> - Switched DT bindings to yaml schema;
-> - Added macros for the new way of specifying clk parents;
-> - Switched to use the new way of specifying clk parents;
-> - Clean CLK_IGNORE_UNUSED flags for some SC9863A clocks;
-> - Dropped the module alias;
-> - Use device_get_match_data() instead of of_match_node();
->
-> * Added Rob's Acked-by on patch 2.
->
-> Chunyan Zhang (6):
->   dt-bindings: clk: sprd: rename the common file name sprd.txt to SoC
->     specific
->   dt-bindings: clk: sprd: add bindings for sc9863a clock controller
->   clk: sprd: Add dt-bindings include file for SC9863A
->   clk: sprd: Add macros for referencing parents without strings
->   clk: sprd: support to get regmap from parent node
->   clk: sprd: add clocks support for SC9863A
->
-> Xiaolong Zhang (1):
->   clk: sprd: add gate for pll clocks
->
->  .../clock/{sprd.txt => sprd,sc9860-clk.txt}   |    2 +-
->  .../bindings/clock/sprd,sc9863a-clk.yaml      |  105 +
->  drivers/clk/sprd/Kconfig                      |    8 +
->  drivers/clk/sprd/Makefile                     |    1 +
->  drivers/clk/sprd/common.c                     |   10 +-
->  drivers/clk/sprd/composite.h                  |   39 +-
->  drivers/clk/sprd/div.h                        |   20 +-
->  drivers/clk/sprd/gate.c                       |   17 +
->  drivers/clk/sprd/gate.h                       |  120 +-
->  drivers/clk/sprd/mux.h                        |   28 +-
->  drivers/clk/sprd/pll.h                        |   55 +-
->  drivers/clk/sprd/sc9863a-clk.c                | 1772 +++++++++++++++++
->  include/dt-bindings/clock/sprd,sc9863a-clk.h  |  334 ++++
->  13 files changed, 2457 insertions(+), 54 deletions(-)
->  rename Documentation/devicetree/bindings/clock/{sprd.txt => sprd,sc9860-clk.txt} (98%)
->  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
->  create mode 100644 drivers/clk/sprd/sc9863a-clk.c
->  create mode 100644 include/dt-bindings/clock/sprd,sc9863a-clk.h
->
-> --
-> 2.20.1
->
+Akash
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
