@@ -2,208 +2,93 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED7CC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 01:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379CCC4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 01:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D9020740
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 01:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C7BB20752
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 01:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584666093;
-	bh=o0VFTujZMLncAeLGmepbNCZ7f0oxj0XpRGz9xU/4kSg=;
+	s=default; t=1584666238;
+	bh=Cx/82aE4Qr82CmmFKCQ8D8o4FK/bSRMandYY1EewjCo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Np3KHt62dqQhGW1oQ2YV0VtA4w3RyoX9tRhE0YA4oN8ZvTbeTTyjsCKOF4QuhZynk
-	 gYoMGknSeErRf9Lgjy/03vI1qjXFt0h5UG7dBeQY9mpQg+mydjgDkFRycK8JIoXcv2
-	 FkapOLLycXO6TVgF8TWus51LNcv+Wv03J6WXq804=
+	b=Rnb12nuu4PQNYdnM2G1SkHXLlnFY1okuSH6RExUC4ZsiNbxt8UccY8easVhQK28nW
+	 4VIB241uBq22YkfnE2svkpOyhFkFU+/Bvhcqjz+37n8BsMzcvcbBgh/M1w92Rw8o2P
+	 z3HvGViEvEstm/KQnzHtbHauxQv3M4MuFkTXPkLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbgCTBBc (ORCPT
+        id S1727257AbgCTBD5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 21:01:32 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40061 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbgCTBBc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 21:01:32 -0400
-Received: by mail-io1-f65.google.com with SMTP id h18so4341921ioh.7;
-        Thu, 19 Mar 2020 18:01:32 -0700 (PDT)
+        Thu, 19 Mar 2020 21:03:57 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34892 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCTBD5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 21:03:57 -0400
+Received: by mail-io1-f67.google.com with SMTP id h8so4395274iob.2;
+        Thu, 19 Mar 2020 18:03:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ot6m4hY0BwqCmo0YvvIottBecwmdUoxIdqh0iIdJLaE=;
-        b=e0vc4wcMKbYfbI6kyipBnoZ1jmoO413EpOBpUIq2a2ONQx4SMkadKAsSv/al4OvhS6
-         dG7+iC9ejaWy2n9m67iLR0LfuJJRrO16XToJBG6D4gMWktjXSIXXtqIXGsQ8PnbCMMzG
-         9lLuVaC6YZ4S3JVRhPb+MOk8omHlUR97IDjmNEcaiZq6Xfw8YELFte7Jt984jB3i89u1
-         LWHsNliibdWRyBFuXfmvcQc8iS6WGC35TsBCfsUVOcCrcDEwfp8qd2crOiobfTfo5ASH
-         fZFfZTfpHIhTtwr3BWH3T4yBBy8udnF6xjuYGP39Il1mZwA8G2Clm8bl4zldq2t0YQul
-         zrQw==
-X-Gm-Message-State: ANhLgQ30r6Rr3/d1b7Q4/X+9aJ1ZLJDR4TAt+nZyIGHZjiCRjbDgmK/2
-        VIafk6fZhJ/UdZujRyk0EQ==
-X-Google-Smtp-Source: ADFU+vveriY9yvP9Jzlx6UROYD7yZzJxkqX2tb0ZEVFvDtSMM5LsoOiJpdoQMBneWm4Sh8Le1oz4Cg==
-X-Received: by 2002:a5e:9b09:: with SMTP id j9mr5198775iok.114.1584666091207;
-        Thu, 19 Mar 2020 18:01:31 -0700 (PDT)
+        bh=E7UOdCgi//17WBwa+bRiBT2apc8kL8w/dAZ2MLHQRPo=;
+        b=Tw8bbH0KIMpONH9qLQEpESd5Y8b+rzTuINu7n1/yW3O/7mmgreRLO+3MnIMLa0Ez3v
+         c91+qPw5lgS4efXkLmufk2v+2bmQ927xL2fOqx+NFOSpV9ctoj43DsLZAaQ/FmbnYTUk
+         YQR8u9J2va1eOUUcxJOlhbcatmfW4WGTorfVYkFClFt143OXUuXrQXR5Z3riH6crAnzD
+         mclkR7rcG+D5+t6UWkPHeSDu+sievsSe2Pk3SX/nr+As83xGNOMWqNGX/fh6ih5inyf2
+         p6sYVWfZPODw0ss7cDS3o2n85fjBKfxWkrdqQ5BN/EKY5+fIbtpYqY+f1kqpy0XwESHv
+         W+VQ==
+X-Gm-Message-State: ANhLgQ3NiXFGR6wONJZUOw1tGk3AUnyUEyhCLlqRBphVqm3cNEvCq6qg
+        sitqBCELImv5GoRiYGPCIg==
+X-Google-Smtp-Source: ADFU+vumZwagvJmUaA3ur0o9qsDUACrx7gz4DIqXjdXxxX3qvg0Sx0/QtMY13Vwe/rFQbUzLAseXPw==
+X-Received: by 2002:a02:1d44:: with SMTP id 65mr6028441jaj.6.1584666236192;
+        Thu, 19 Mar 2020 18:03:56 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id s18sm1290993ioc.0.2020.03.19.18.01.29
+        by smtp.gmail.com with ESMTPSA id h29sm1480814ili.19.2020.03.19.18.03.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 18:01:30 -0700 (PDT)
-Received: (nullmailer pid 17809 invoked by uid 1000);
-        Fri, 20 Mar 2020 01:01:27 -0000
-Date:   Thu, 19 Mar 2020 19:01:27 -0600
+        Thu, 19 Mar 2020 18:03:55 -0700 (PDT)
+Received: (nullmailer pid 21911 invoked by uid 1000);
+        Fri, 20 Mar 2020 01:03:52 -0000
+Date:   Thu, 19 Mar 2020 19:03:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        robdclark@gmail.com, seanpaul@chromium.org, sean@poorly.run
-Subject: Re: [PATCH v7 1/2] dt-bindings: display: add visionox rm69299 panel
- variant
-Message-ID: <20200320010127.GA8379@bogus>
-References: <20200316041647.27953-1-harigovi@codeaurora.org>
- <20200316041647.27953-2-harigovi@codeaurora.org>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        tfiga@google.com, pavel@ucw.cz, Jacopo Mondi <jacopo@jmondi.org>,
+        "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" 
+        <linux-media@vger.kernel.org>, libcamera-devel@lists.libcamera.org,
+        robh@kernel.org, devicetree@vger.kernel.org,
+        Niklas Soderlund <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH v7 03/11] dt-bindings: video-interface: Replace
+ 'rotation' description
+Message-ID: <20200320010352.GA21844@bogus>
+References: <20200318205034.949531-1-jacopo@jmondi.org>
+ <20200318205034.949531-4-jacopo@jmondi.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316041647.27953-2-harigovi@codeaurora.org>
+In-Reply-To: <20200318205034.949531-4-jacopo@jmondi.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 09:46:46AM +0530, Harigovindan P wrote:
-> Add bindings for visionox rm69299 panel.
+On Wed, 18 Mar 2020 21:50:26 +0100, Jacopo Mondi wrote:
+> Replace the 'rotation' property description by providing a definition
+> relative to the camera sensor pixel array coordinate system and the
+> captured scene.
 > 
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> Co-developed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Co-developed-by: Niklas Soderlund <niklas.soderlund@ragnatech.se>
+> 
 > ---
+>  .../bindings/media/video-interfaces.txt       | 359 +++++++++++++++++-
+>  1 file changed, 356 insertions(+), 3 deletions(-)
 > 
-> Changes in v2:
-> 	- Removed unwanted properties from description.
-> 	- Creating source files without execute permissions(Rob Herring).
-> Changes in v3:
-> 	- Changing txt file into yaml
-> Changes in v4:
-> 	- Updating license identifier.
-> 	- Moving yaml file inside panel directory.
-> 	- Removing pinctrl entries.
-> 	- Adding documentation for reset-gpios.
-> Changes in v5:
-> 	- No changes. Updated 2/2 Patch.
-> Changes in v6:
-> 	- Removing patternProperties.
-> 	- Added " |" after description.
-> 	- Setting port and reset-gpios to true.
-> 	- Removing @ae94000 for dsi node.
-> Changes in v7:
-> 	- Added reg property.
-> 
->  .../display/panel/visionox,rm69299.yaml       | 81 +++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
-> new file mode 100644
-> index 000000000000..6ea1a7be3787
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
-> @@ -0,0 +1,81 @@
-> +# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/visionox,rm69299.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Visionox model RM69299 Panels Device Tree Bindings.
-> +
-> +maintainers:
-> + - Harigovindan P <harigovi@codeaurora.org>
-> +
-> +description: |
-> + This binding is for display panels using a Visionox RM692999 panel.
-> +
-> +allOf:
-> + - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: visionox,rm69299-1080p-display
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vdda-supply:
-> +    description: |
-> +      Phandle of the regulator that provides the vdda supply voltage.
-> +
-> +  vdd3p3-supply:
-> +    description: |
-> +      Phandle of the regulator that provides the vdd3p3 supply voltage.
-> +
-> +  ports:
-> +    type: object
-> +    description: |
-> +      A node containing DSI input & output port nodes with endpoint
-> +      definitions as documented in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt
-> +      Documentation/devicetree/bindings/graph.txt
-> +      properties:
-> +        port: true
 
-Need:
-
-       additionalProperties: false
-
-
-> +
-> +  reset-gpios: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vdda-supply
-> +  - vdd3p3-supply
-> +  - reset-gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    dsi {
-> +        reg = <0x0ae94000 0x400>;
-
-Either drop 'reg' or add a unit-address.
-
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        panel@0 {
-> +            compatible = "visionox,rm69299-1080p-display";
-> +            reg = <0x0ae94000 0x400>;
-
-Wrong address.
-
-> +
-> +            vdda-supply = <&src_pp1800_l8c>;
-> +            vdd3p3-supply = <&src_pp2800_l18a>;
-> +
-> +            reset-gpios = <&pm6150l_gpio 3 0>;
-> +            ports {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +                    port@0 {
-
-This will fail with the above change.
-
-> +                            reg = <0>;
-> +                            panel0_in: endpoint {
-> +                                remote-endpoint = <&dsi0_out>;
-> +                            };
-> +                    };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.25.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
