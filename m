@@ -2,87 +2,207 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2ACC4332D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 00:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC47C4332D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 00:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34CEC2076C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 00:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6045620739
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 00:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584665438;
-	bh=uhGTVoUId3ySJcXCikdpsmZkObDCnV9nAPKiISEPSgo=;
+	s=default; t=1584665727;
+	bh=uhyOu1JeH5EJCRr0OxBe+uXGzIhZTNmys/6HAOcvk+o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F9S+cTJsQfhmZYy7sQu1bDn9cpb8B3etUOhaKDt+2hSALGhYW2dPDPf9JJsh7RerY
-	 97wUyjEv2mmzu6dlr4/wRhuysg//Y+xGy3oqfyNlOpnTCfxkKOzHD8FpLpGpLghOkD
-	 MgHTK4aPn9vqffUU46FgJz/8m+KWE+oF5+zjHo+4=
+	b=UoG3ChXDbaTVI6VvhTddtBrWRNK+pXWX9dfEgE8aiYQvl3NkHM0JuE2rN/JfxKb/W
+	 41NJhGaVlfMvyyp54tsNe3uFllIhLKCeo1UHnW5rczL36LFmCcsnBpPpEsVL7Cm8kG
+	 /TfRqVc/hLFmPafc2JlBFCZdHWpEXX1fEtQvjS5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgCTAuf (ORCPT
+        id S1726950AbgCTAz1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Mar 2020 20:50:35 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46819 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCTAue (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 20:50:34 -0400
-Received: by mail-il1-f194.google.com with SMTP id e8so4051983ilc.13;
-        Thu, 19 Mar 2020 17:50:34 -0700 (PDT)
+        Thu, 19 Mar 2020 20:55:27 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45714 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCTAz0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Mar 2020 20:55:26 -0400
+Received: by mail-il1-f193.google.com with SMTP id m9so4075989ilq.12;
+        Thu, 19 Mar 2020 17:55:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tIgBKo47qYh1ltKrOIVcfZGETZW4lrwbdraIDGu2L+o=;
-        b=lcIPMMxnvIrjPjFadLl0jlC14s/o+O4wxtimErLvfzuJGxmD7KgxOJFp1AhJz8/wyx
-         jjGxNUAU4SFVCZgIAYtRbpxogXWX2Aoe1K98YExmNHEtglFHmWGvHcnuuA7kMAyNiOFg
-         VdLLtiPuWyPfUaF3VOjiRxCb4tDwLhBJKxKox5kjqgJ8PHm7GrlEzgZl/gaAnFn2Slul
-         DY5Sx6E4J/BvbmGgdywm4bUdJ2PVCVJF6/RtrtzyFZ6A6SL2J8Ph88+wAs38708nfzsj
-         CLoyWqXtSiGnvUtxYZKyaM761uoyVL6IJXo5beSsNxwc6LsOBHVnW03A2sK2cFkHv4hM
-         lxRw==
-X-Gm-Message-State: ANhLgQ1AvAX+0zbtnLy06tl60sIM6Nz8eLelfP8R5bTpRC+9HI9njLbr
-        y7m+KxSFJ7DFY7RfcMisVg==
-X-Google-Smtp-Source: ADFU+vtc12zSQEr8dU7QzVWAXBveDLrgBvT/blJ+xBw3+740Pr8yQxQiJWGjcRejm+oijNCZjWV3qA==
-X-Received: by 2002:a92:3a0b:: with SMTP id h11mr6016731ila.4.1584665433815;
-        Thu, 19 Mar 2020 17:50:33 -0700 (PDT)
+        bh=hTX9N2of5jhjNnF3uYbcSwV8OolqfVP3rpImPzcroQ8=;
+        b=t5rxHvgGpyHHoDAxZHK3lumLNYDat/W5zDZJ6NsMHDZQlD8cj0c0t6yVG5jRZ+pmYS
+         RzrUfWZjltl9VH+tASz1iO1U4arVgz3qbXmnMvndvujKhJYtsdQEnraDSerBRYCC/5yd
+         yj7Je+ApAR99UoFjN/sPLeG14yh71ztPCtQ6AE4Oj5mu+8CSxpJtrJTXVtiGxk9G+zwl
+         DKa46t/SbSGumzyzaXvcZT4L21/HPLzgRFvreGvq6gyLIp6Szvh0Yl2zNFdsNDL4bNGO
+         qg0tCwqxQBJWFv3aIGfUQQw1iCZ/Q6kULLmQsL4q49dj7yNDuXcSgIKi4rHsWpEYDthI
+         sX2g==
+X-Gm-Message-State: ANhLgQ3N8fwmc2YHbDhAQQqtnmYb9kPfssBFTaO545UmNSMBbWqHEFGr
+        eutD5dY8uY2aWR46XSfGAA==
+X-Google-Smtp-Source: ADFU+vvqztuZ1j2SOs3GaEwUpbB7sr5FIKsud65mVDnuJzJr2tFN1mpQMD0yWc3GzSp4Oy4AZSyONw==
+X-Received: by 2002:a92:d0c1:: with SMTP id y1mr5794271ila.125.1584665725641;
+        Thu, 19 Mar 2020 17:55:25 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id n29sm1425773ila.86.2020.03.19.17.50.32
+        by smtp.gmail.com with ESMTPSA id w5sm1456074ilm.69.2020.03.19.17.55.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 17:50:33 -0700 (PDT)
-Received: (nullmailer pid 31867 invoked by uid 1000);
-        Fri, 20 Mar 2020 00:50:31 -0000
-Date:   Thu, 19 Mar 2020 18:50:31 -0600
+        Thu, 19 Mar 2020 17:55:24 -0700 (PDT)
+Received: (nullmailer pid 8024 invoked by uid 1000);
+        Fri, 20 Mar 2020 00:55:22 -0000
+Date:   Thu, 19 Mar 2020 18:55:22 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alexandru Ardelean <ardeleanalex@gmail.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jic23@kernel.org, robh+dt@kernel.org,
-        Laszlo.Nagy@analog.com, Andrei.Grozav@analog.com,
-        Michael.Hennerich@analog.com, Istvan.Csomortani@analog.com,
-        Adrian.Costina@analog.com, Dragos.Bogdan@analog.com,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [PATCH v10 8/8] dt-bindings: iio: adc: add bindings doc for
- AD9467 ADC
-Message-ID: <20200320005031.GA31806@bogus>
-References: <20200316155035.25500-1-alexandru.ardelean@analog.com>
- <20200316155035.25500-9-alexandru.ardelean@analog.com>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 2/3] dt-bindings: Add binding for IT6505.
+Message-ID: <20200320005522.GA31982@bogus>
+References: <1583735298-19266-1-git-send-email-allen.chen@ite.com.tw>
+ <1583735298-19266-3-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316155035.25500-9-alexandru.ardelean@analog.com>
+In-Reply-To: <1583735298-19266-3-git-send-email-allen.chen@ite.com.tw>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 16 Mar 2020 17:50:35 +0200, Alexandru Ardelean wrote:
-> This change adds the binding doc for the AD9467 ADC.
+On Mon, Mar 09, 2020 at 02:26:48PM +0800, allen wrote:
+> Add a DT binding documentation for IT6505.
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
 > ---
->  .../bindings/iio/adc/adi,ad9467.yaml          | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+>  .../bindings/display/bridge/ite,it6505.yaml        | 96 ++++++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> new file mode 100644
+> index 00000000..e9f6b58
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> @@ -0,0 +1,96 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Dual license new bindings please:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/bridge/ite,it6505.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ITE it6505 Device Tree Bindings
+> +
+> +maintainers:
+> +  - Allen Chen <allen.chen@ite.com.tw>
+> +
+> +description: |
+> +  The IT6505 is a high-performance DisplayPort 1.1a transmitter,
+> +  fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications.
+> +  The IT6505 supports color depth of up to 36 bits (12 bits/color)
+> +  and ensures robust transmission of high-quality uncompressed video
+> +  content, along with uncompressed and compressed digital audio content.
+> +
+> +  Aside from the various video output formats supported, the IT6505
+> +  also encodes and transmits up to 8 channels of I2S digital audio,
+> +  with sampling rate up to 192kHz and sample size up to 24 bits.
+> +  In addition, an S/PDIF input port takes in compressed audio of up to
+> +  192kHz frame rate.
+> +
+> +  Each IT6505 chip comes preprogrammed with an unique HDCP key,
+> +  in compliance with the HDCP 1.3 standard so as to provide secure
+> +  transmission of high-definition content. Users of the IT6505 need not
+> +  purchase any HDCP keys or ROMs.
+> +
+> +properties:
+> +  compatible:
+> +    const: ite,it6505
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: i2c address of the bridge
+
+Can drop the description as there's nothing specific to this device.
+
+> +
+> +  ovdd-supply:
+> +    maxItems: 1
+> +    description: I/O voltage
+> +
+> +  pwr18-supply:
+> +    maxItems: 1
+> +    description: core voltage
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: interrupt specifier of INT pin
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: gpio specifier of RESET pin
+> +
+> +  extcon:
+> +    maxItems: 1
+> +    description: extcon specifier for the Power Delivery
+
+Drop this. You should be using the usb-connector binding instead which 
+means you should have a OF graph port to the connector. For TypeC, 
+there's a defined port for DP.
+
+> +
+> +  port:
+> +    type: object
+> +    description: A port node pointing to DPI host port node
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - ovdd-supply
+> +  - pwr18-supply
+> +  - interrupts
+> +  - reset-gpios
+> +  - extcon
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c3 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        dp-bridge@5c {
+> +            compatible = "ite,it6505";
+> +            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
+> +            reg = <0x5c>;
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&it6505_pins>;
+> +            ovdd-supply = <&mt6358_vsim1_reg>;
+> +            pwr18-supply = <&it6505_pp18_reg>;
+> +            reset-gpios = <&pio 179 1>;
+> +            extcon = <&usbc_extcon>;
+> +
+> +            port {
+> +                it6505_in: endpoint {
+> +                    remote-endpoint = <&dpi_out>;
+> +                };
+> +            };
+> +        };
+> +    };
+> -- 
+> 1.9.1
+> 
