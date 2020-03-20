@@ -2,155 +2,142 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7949EC4332D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F239C4332D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5079220739
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5EAB20739
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="cbDXi+Ep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgCTJS7 (ORCPT
+        id S1726654AbgCTJVw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:18:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:58961 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgCTJS7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 05:18:59 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1N8oKc-1jJ3Yc3k5W-015r6q; Fri, 20 Mar 2020 10:18:40 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id EBBAB650318;
-        Fri, 20 Mar 2020 09:18:39 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id voGX_lM8VBY2; Fri, 20 Mar 2020 10:18:39 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 844C76502D9;
-        Fri, 20 Mar 2020 10:18:39 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.41) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 20 Mar 2020 10:18:39 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id DDDCC8051E; Fri, 20 Mar 2020 10:18:38 +0100 (CET)
-Date:   Fri, 20 Mar 2020 10:18:38 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Fri, 20 Mar 2020 05:21:52 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:50625 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726602AbgCTJVw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Mar 2020 05:21:52 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id A343A4D036;
+        Fri, 20 Mar 2020 09:21:48 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 17:21:43 +0800
+In-Reply-To: <CACRpkdbeLAyhhkx115zAV0tdC7KJ4T0UoQ2QeDwTVN+btxp=Jw@mail.gmail.com>
+References: <20200316133503.144650-1-icenowy@aosc.io> <20200316133503.144650-3-icenowy@aosc.io> <CACRpkdaVrfd1p+WyACy-gq-3BPsXJ_CZwi2OZe+=csseBcvcaA@mail.gmail.com> <491ADD02-5511-404B-88A8-5725EF061EAC@aosc.io> <CACRpkdbeLAyhhkx115zAV0tdC7KJ4T0UoQ2QeDwTVN+btxp=Jw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/5] dt-bindings: panel: add binding for Xingbangda XBD599 panel
+To:     linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jagan Teki <jagan@amarulasolutions.com>
+CC:     Ondrej Jirman <megous@megous.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v2 07/10] dt-bindings: adv748x: add information about
- serial audio interface (I2S/TDM)
-Message-ID: <20200320091838.GF4344@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
- <c9ff553f804f178a247dca356306948e971432fb.1584639664.git.alexander.riesen@cetitec.com>
- <20200319180125.GJ14585@pendragon.ideasonboard.com>
- <20200320084406.GB4344@pflmari>
- <CAMuHMdUdVb0LwZDx-MH2FLYYPvgq=uj_3Nrzo9obWAi-Q-2ZnA@mail.gmail.com>
- <20200320090339.GD4344@pflmari>
- <CAMuHMdVtsdNg0s5fio8GAhHGV9H+1J=xvuCXj5VdZ6gwqxGrZw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVtsdNg0s5fio8GAhHGV9H+1J=xvuCXj5VdZ6gwqxGrZw@mail.gmail.com>
-X-Originating-IP: [10.8.5.41]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7764
-X-Provags-ID: V03:K1:UD3H9nm06ueJnhtVW/e4IKecjYz2lfcqKCtaVs10dQfYkXHJSLr
- 5UwckNcdYRuRsnKEuzMB8p2oZ+VGmR5pd2RwlGVmFpoPKFKQWT9jpYhxJFQH8aD8xcuZKXN
- hA0V47rVH07yGnxO8ROIV12I6kGmwA9xCdzBNvPbpGJFs6dJKLZCSwtmuusZ/B7U4HkeBBP
- obBxzY0cVduplHZGRD0Eg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Cknyt3KqoPU=:iP7ZfHpr90I7ffEQ3Mu/uA
- jMG/+K0gBry/+zAn5gUV94JWhIa7dIV7JWBVOQYTxcO+b1A/SiJG9xZsgZR+yM9wnqhGMJ3RU
- 52rnFoxOmvJS8EBAIUEY+MnIenA7N2QHE5VeNLsQbOxZke/KHagSU9Rdki6AGr8WK8kfM1tOV
- qNuLOdfaqsX/RXvNRngKMq75qmMRfyVu79M2qDg+EkHEdOPU6DI7NQCRwXQSwaY7AzQysdasO
- Uyhehd7+vzmngiSpDAriar0cwQzPSfbSaYL82jIwWTcDelN4XQMB8jzrnYVfEkr6DmYZO7RsX
- uWU2QbVlNiRM10AIu9VD6Budqs/C9fi6jN7rf72aSN0pBS1mFoZUmjHiXFTsWGqC/nMe3RVRt
- i9SIbnA970iP4AboFmzIEvzM6dMq8h7U3TVp/U2Z+vjXs07WyPGhAbSM36bKcuOTYVwonChk/
- H4mIxjrj85kDD8qDShP7ty6FaFdzzqUzaHKrotg+1Sc4ozu9LQ0JFHGb82r93KOI5IIN2Xl2R
- Dv2rqI/SjQ13ZMIQVZCS1b9S0+SUNgSDNZe4eSbei0MMnH3HOFMiVk23jBqF7++Tcuxp8tYb9
- Zbtr8mfbT4y3W3BjLAPzSTXWlQMfkfXsqHboG2epGRQpFFTKD/sBUytUI5eqcc3+RRJZol9dl
- 9iHbpt7q+nGuDlYYKWuBtsXkUTmUYddgGBZU1/wjabelBwFIWZ4NYWGJ10zL/UvgsXHVf2xbg
- FKUDVeYcpPcAVVUJcA7LswA/udS3CqPPLpBV7S8TOuVUWUx6xg+O4g6z42PJ8jNT6VHE+hKg2
- /GLgOsIU4PHvYwLaWKQqfImedjY3JTPENwNA3l/GYUsd9Du+GsUoiKC7BtmCbkOIYgNzpjy
+        Thierry Reding <thierry.reding@gmail.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Chen-Yu Tsai <wens@csie.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+From:   Icenowy Zheng <icenowy@aosc.io>
+Message-ID: <7BA1F742-0403-47E3-8E91-738947EB4809@aosc.io>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
+        t=1584696109;
+        h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
+        bh=lyI5nTAxlpI3YgUaSp33pj/yy+1x1RPrFPLEcSJxVcM=;
+        b=cbDXi+EpOG5NSTFJo99k2SiBcR6aPtIoHvmuqhtKqGPOJLBqN+Xcb6lh+lQlNaRxsW1w40
+        kMAphAv/W6+0Y8pPo53QMQ//grkWEtYOWMa/kPOnFNJ8Qdqbs7onGp5omHzkXWqVFt0m54
+        WgnGaY86aOx+VuMBKQJQupX7ZcPuVck=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Geert Uytterhoeven, Fri, Mar 20, 2020 10:15:17 +0100:
-> On Fri, Mar 20, 2020 at 10:03 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > Geert Uytterhoeven, Fri, Mar 20, 2020 09:48:14 +0100:
-> > > On Fri, Mar 20, 2020 at 9:44 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > > > Laurent Pinchart, Thu, Mar 19, 2020 19:01:25 +0100:
-> > > > > On Thu, Mar 19, 2020 at 06:42:36PM +0100, Alex Riesen wrote:
-> > > > > > As the driver has some support for the audio interface of the device,
-> > > > > > the bindings file should mention it.
-> > >
-> > > > > > @@ -16,6 +18,8 @@ Required Properties:
-> > > > > >      slave device on the I2C bus. The main address is mandatory, others are
-> > > > > >      optional and remain at default values if not specified.
-> > > > > >
-> > > > > > +  - #clock-cells: must be <0> if the I2S port is used
-> > > > >
-> > > > > Wouldn't it be simpler to set it to 0 unconditionally ?
-> > > >
-> > > > Would it? If the port itself is optional, shouldn't the clock be an option
-> > > > too?
-> > >
-> > > You'd be surprised how many board designers would consider this a cheap
-> > > 12.288 MHz clock source, without using the I2S port ;-)
-> >
-> > Well, I am :-)
-> >
-> > Especially considering that the driver will not switch the MCLK pin aktive
-> > (all I2S-related pins are tristate by default).
-> 
-> OK, didn't consider that.  But that still won't stop the hardware designer.
-> E.g. on Lager, the clock input of the PMIC is tied to the clock line of an SPI
-> bus, so to use that feature, the SPI clock must be kept running all the time,
-> not just when doing a transfer.
 
-Well... Maybe there is a convention to spell out the default state of the
-clock lines?
 
-> > And how do I require it to be set unconditionally? By just removing the
-> > "if ..." part of the statement?
-> 
-> Indeed.  This is still the plain text binding, not yaml.
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885=
+:11:22, Linus Walleij <linus=2Ewalleij@linaro=2Eorg> =E5=86=99=E5=88=B0:
+>On Fri, Mar 20, 2020 at 9:07 AM Icenowy Zheng <icenowy@aosc=2Eio> wrote:
+>> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8819=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=8810:14:27, Linus Walleij
+><linus=2Ewalleij@linaro=2Eorg> =E5=86=99=E5=88=B0:
+>> >On Mon, Mar 16, 2020 at 2:37 PM Icenowy Zheng <icenowy@aosc=2Eio>
+>wrote:
+>
+>> >As noticed in the review of the driver, this display is very close
+>to
+>> >himax,hx8363=2E
+>> >
+>> >I think the best is to determin what actual display controller it
+>is,
+>> >I think it is some kind of Ilitek controller since Ilitek ili9342 is
+>> >clearly very similar=2E
+>>
+>> It's Sitronix ST7703, same as the Librem 5 panel=2E
+>
+>Heh, I wonder how it comes that it is so similar to Ilitek=2E
+>I guess I will never understand how the silicon ecosystem works
+>in asia (I did read a lot of Bunnie Huang's articles and hardware
+>hacking book to try to understand=2E=2E=2E)
+>
+>This file should be named sitronix,st7703=2Eyaml then=2E
+>
+>According to the code in the Librem 5:
+>https://source=2Epuri=2Esm/Librem5/linux-next/blob/imx8-current-librem5/d=
+rivers/gpu/drm/panel/panel-sitronix-st7701=2Ec
+>The actual name of the display is Techstar ts8550b=2E
 
-Conversion to YAML is on the list :)
+Sorry, for Librem 5 panel, I mean Rocktech JH057N00900 here=2E
 
-Regards,
-Alex
+This is also the code that my patchset based on=2E
 
+>And the display controller is st7701, so maybe we should
+>actually name it sitronix,st770x=2Eyaml if there are some
+>sub-variants of st770x?
+>
+>> >properties:
+>> >  compatible:
+>> >    items:
+>> >      - const: xingbangda,xbd599
+>> >      - const: ilitek,ili9342
+>> >
+>> >Possibly use oneOf and add support for the himax,hx8363
+>> >already while you're at it=2E
+>
+>This should at least be:
+>
+>compatible:
+>   items:
+>     - enum:
+>       - xingbangda,xbd599
+>       - himax,hx8363
+>       - techstar,ts8550b
+>     - enum:
+>       - sitronix,st7701
+>       - sitronix,st7703
+>
+>So panel nodes using this panel become
+>compatible =3D "xingbangda,sbd599", "sitronix,st7703"
+>etc=2E
+>
+>This way it is straight-forward for drivers to identify the panel
+>vendor and display controller=2E
+>
+>Yours,
+>Linus Walleij
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel@lists=2Einfradead=2Eorg
+>http://lists=2Einfradead=2Eorg/mailman/listinfo/linux-arm-kernel
+
+--=20
+=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84A=
+ndroid=E8=AE=BE=E5=A4=87=E3=80=82
