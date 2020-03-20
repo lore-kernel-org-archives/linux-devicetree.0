@@ -2,92 +2,177 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D04C4332E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF24EC4332D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B51F20663
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA22520739
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 17:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584726907;
-	bh=OxR18V3t5m/wCaxN1bGGSKFzCm9QOdFy5PULrMJR0F4=;
+	s=default; t=1584727164;
+	bh=cnq4nWVTKlpiioi5LAnpkK4k7dRFVQqLsLMbJGMBCpQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x40g5XrSZW6nxN4nJklPZkjOcG8e9mLlCN39a2/SjjIMNC37c4iMuvR7J/GjdV9Nj
-	 8aIcZDa1ohVh/yZXNjLD9uQg5rgYpXrpJms5l6rNp/9oU/bk/JOq9Uz/XD1Zw+WsFK
-	 jkhaBels5/gtdD8Z2b049FX7If92RaE+x9YzjfEU=
+	b=YlNQ4mkiuc1HNHa9Vo6lX4SWHHNemieGHbN2FnMLf29EfO6ZUmwv6oMM0GEt0evEB
+	 cUOroKqlt/WgEke6YXh48l4wdtWoqUnzy4jG4owlI0pvIgbUKrKTO3pawDjXlN8BSk
+	 4CJp2h9h8QZxzLVB3oOuWf+JLtEI4mCXFcqQsQaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgCTRzH (ORCPT
+        id S1727268AbgCTR7Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 13:55:07 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35127 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgCTRzG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 13:55:06 -0400
-Received: by mail-io1-f66.google.com with SMTP id h8so6889664iob.2;
-        Fri, 20 Mar 2020 10:55:06 -0700 (PDT)
+        Fri, 20 Mar 2020 13:59:24 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45939 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgCTR7X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 13:59:23 -0400
+Received: by mail-il1-f195.google.com with SMTP id m9so6401806ilq.12;
+        Fri, 20 Mar 2020 10:59:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xEFFch4ode9uAdt5LKTVjGKh0d9AyJMR356v0HY7PA0=;
-        b=jCP2icBdLTH3Me57hTF69RqzQAwvgggs7PKb2g+5dTFR3IDPQietGreQ6kRTMgx+15
-         Wzs74x6TrqwfjrxzhwvKn/tl25CTcoYh2FkwORzBQFWVoKoW+QQwqWD3OaNPYMYPqKx7
-         HtGzG4UTGqnIVj6tk11p3h21OL1P06P86fvTDw1Y4s1MtbJ+iFwOcR5+in+83omoyqoF
-         q/wPRRcrBO5Pr4Npn1YyNCGISEh0RfS9alsD7AZghEee4VdOsyanz9B7TUIsC55o98ZI
-         X4uRhg7vopXSK7c5NyfMETlp+YC1GJgTbH/ptjG15ttiF9syyaZojaFg/IH7TU8EhWsB
-         0M+w==
-X-Gm-Message-State: ANhLgQ232VKJBT44XJJe3dNRGbbKJljHTZXUyCDxZznxkoT2HGe8Frhi
-        fRhEQc3l7Db4CM2srJgNtA==
-X-Google-Smtp-Source: ADFU+vt+SEWH2J2f6vDId7XVkseA5PcLUfTD98uIFaOMgOqhsiMul3OH4W1i7vh0gcMGuNy6AqJdZA==
-X-Received: by 2002:a5d:9708:: with SMTP id h8mr8522503iol.141.1584726905725;
-        Fri, 20 Mar 2020 10:55:05 -0700 (PDT)
+        bh=95Suyv4ag/UW0GMJDUqwKID1E5LJYUXds0iFnK4QjiI=;
+        b=Dpx0kyIKugARf40N5g3nCYvNuF+BhUMTYqCCk+DN2R3cu+E5r02V1R2KpeEDPTXt2n
+         bZcfDBbjfdpHIMUewmFqXlsGrZcH1yn8XF5umT6JkYo1uBCejYbOsFVvYsnjHgeGLMrD
+         jqiC1MziBsHEmXGFZ2k7YPo9bac9w2rK8DzNQb+rLkGjt6Cpbheuq6IVEohdL0kBxpS2
+         +zNDvueoY51uT2GVvJiRasumPZkLqXBN+QplTo26LY7KOfyUwkv6mMU8d3ghQ6IB1AUs
+         vrOzpmYApGJxZPbc4PhK6VCmY2fLJbGWey7ihYRgHTa59Skgs7+uuLT+Lr6lsqvwGbRA
+         Q5rA==
+X-Gm-Message-State: ANhLgQ3N8GpAY2Ol+/6pyQtGKyvmkDBxuJhfZbp9j6kbZ7fg9NebS0U5
+        B0oFpCDK6youLFYVHe2rKE+f8Ow=
+X-Google-Smtp-Source: ADFU+vt7qmPnUmzTMPbajCklZuNV66re7YCKjK/pSmVBOIAgFLPoaGoK9cfTLRSFh8EnaJJFE/KSYg==
+X-Received: by 2002:a92:b61d:: with SMTP id s29mr9370804ili.66.1584727163066;
+        Fri, 20 Mar 2020 10:59:23 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id c87sm2258351ilg.2.2020.03.20.10.55.04
+        by smtp.gmail.com with ESMTPSA id u77sm2236931ili.35.2020.03.20.10.59.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 10:55:05 -0700 (PDT)
-Received: (nullmailer pid 30722 invoked by uid 1000);
-        Fri, 20 Mar 2020 17:55:03 -0000
-Date:   Fri, 20 Mar 2020 11:55:03 -0600
+        Fri, 20 Mar 2020 10:59:21 -0700 (PDT)
+Received: (nullmailer pid 5880 invoked by uid 1000);
+        Fri, 20 Mar 2020 17:59:20 -0000
+Date:   Fri, 20 Mar 2020 11:59:20 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v5 2/9] dt-bindings: phy: qcom,qusb2: Add compatibles for
- QUSB2 V2 phy and SC7180
-Message-ID: <20200320175503.GA30684@bogus>
-References: <1583747589-17267-1-git-send-email-sanm@codeaurora.org>
- <1583747589-17267-3-git-send-email-sanm@codeaurora.org>
+To:     Ajay.Kathat@microchip.com
+Cc:     linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
+        devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+        johannes@sipsolutions.net, Adham.Abozaeid@microchip.com,
+        Nicolas.Ferre@microchip.com, Claudiu.Beznea@microchip.com,
+        Venkateswara.Kaja@microchip.com
+Subject: Re: [PATCH v5 16/17] dt: bindings: net: add microchip,wilc1000.yaml
+Message-ID: <20200320175920.GA31641@bogus>
+References: <20200311121809.5610-1-ajay.kathat@microchip.com>
+ <20200311121809.5610-17-ajay.kathat@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583747589-17267-3-git-send-email-sanm@codeaurora.org>
+In-Reply-To: <20200311121809.5610-17-ajay.kathat@microchip.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  9 Mar 2020 15:23:02 +0530, Sandeep Maheswaram wrote:
-> Add compatibles for generic QUSB2 V2 phy which can be used for
-> sdm845 and sc7180.
+On Wed, Mar 11, 2020 at 12:18:50PM +0000, Ajay.Kathat@microchip.com wrote:
+> From: Ajay Singh <ajay.kathat@microchip.com>
 > 
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> This file describes the binding details to connect wilc1000 device. It's
+> moved from staging to 'Documentation/devicetree/bindings/net/wireless'
+> path.
+> 
+> Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
 > ---
->  Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+>  .../net/wireless/microchip,wilc1000.yaml      | 72 +++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml b/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
+> new file mode 100644
+> index 000000000000..bc6cc5d3f347
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/microchip,wilc1000.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/wireless/microchip,wilc1000.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip WILC wireless devicetree bindings
+> +
+> +maintainers:
+> +  - Adham Abozaeid <adham.abozaeid@microchip.com>
+> +  - Ajay Singh <ajay.kathat@microchip.com>
+> +
+> +description:
+> +  The wilc1000 chips can be connected via SPI or SDIO. This document
+> +  describes the binding to connect wilc devices.
+> +
+> +properties:
+> +  compatible:
+> +    const: microchip,wilc1000
+> +
+> +  spi-max-frequency: true
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: phandle to the clock connected on rtc clock line.
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: rtc
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    spi1: spi@fc018000 {
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+spi {
+
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      cs-gpios = <&pioB 21 0>;
+
+Drop this. Not relevant to the example.
+
+> +      wifi@0 {
+> +        compatible = "microchip,wilc1000";
+> +        spi-max-frequency = <48000000>;
+> +        reg = <0>;
+> +        interrupt-parent = <&pioC>;
+> +        interrupts = <27 0>;
+> +        clocks = <&pck1>;
+> +        clock-names = "rtc";
+> +      };
+> +    };
+> +
+> +  - |
+> +    mmc1: mmc@fc000000 {
+
+Drop the label. Either drop the unit address or add a 'reg' property to 
+match.
+
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      pinctrl-names = "default";
+> +      pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3>;
+> +      non-removable;
+> +      vmmc-supply = <&vcc_mmc1_reg>;
+> +      vqmmc-supply = <&vcc_3v3_reg>;
+> +      bus-width = <4>;
+> +      wifi@0 {
+> +        compatible = "microchip,wilc1000";
+> +        reg = <0>;
+> +        interrupt-parent = <&pioC>;
+> +        interrupts = <27 0>;
+> +        clocks = <&pck1>;
+> +        clock-names = "rtc";
+> +      };
+> +    };
+> -- 
+> 2.24.0
