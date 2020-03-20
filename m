@@ -2,125 +2,112 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FE0C4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 13:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9512C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 13:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723092076E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 13:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9407320739
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 13:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nnqJ9jmy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tWGeFwmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727133AbgCTN2O (ORCPT
+        id S1727278AbgCTNfF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 09:28:14 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52262 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgCTN2O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 09:28:14 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 11so6506503wmo.2
-        for <devicetree@vger.kernel.org>; Fri, 20 Mar 2020 06:28:13 -0700 (PDT)
+        Fri, 20 Mar 2020 09:35:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39238 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgCTNfE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 09:35:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a9so3294480wmj.4;
+        Fri, 20 Mar 2020 06:35:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=bbJaYLpxU8XXdc8d+5VShL8Kd/qrqFMok7iO4nMhIUA=;
-        b=nnqJ9jmylnpMOjV2SiijEZbC7o669iynhXBc/AO4L1OCw1VTZErJ3AD0WHerUrBi+Z
-         /s4C1ufnrubyuLM1GvaB22RhN0L0my0D4WFzrm6r2xndM5bpX6mSE5dn4AePQTn6hfmB
-         svBJ8fPsL3ZenAbCcQpkTRL1kpKgAWuKsJ1gx+I2vxkzTohXkij5dZQnJb1F2BKpRixx
-         6Ux11ExlA4cnx+f2WZD0TPt4RcRpua+6kicAD06u3j9LFYoIYnN+i56JNUzt6miJ/Y8C
-         9I+KMUIHZuNLug63/94HmbDEXIgWrJhtlEuxAXU0NFOrgCFZqUnx+ZuvGJGHwGZLnOnd
-         vWIA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8JpJJSqOukJOsKyLepaL4D5XEBOAfU/5gRiIWf5kS00=;
+        b=tWGeFwmmIfUGURV+x3JrUHC86CPH3NKeEMGtTBdc1A+DfSPGGiNReYcmajZYH2+ich
+         +5FN4V1HavYjJe7g70Mo0/wQdMFRnYyUqHY3vK4eBDouL6MaUSQ8ILr9kYng6csNvrz/
+         eXoI7v0tVchMsHGPIEYKBYGSHXwi/Q0IcCWts2Cbop+HNb3dqDoFMEXV/onSubem831w
+         60n35DBHpHZ4UCuLnMw5uqJwVHEk3wrZtg/cU3L6DVeBUbYkUOXVzJXCWFWZM2/HPIj7
+         J/v8p+2RsKLur432nfDKmFskUJ669cNO0D4rZNP88PwAknyTXSE87Y109Ba6Weqonkex
+         UHaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bbJaYLpxU8XXdc8d+5VShL8Kd/qrqFMok7iO4nMhIUA=;
-        b=Fu6PGRuBjEZaVhWFTV6eoqB0QmBDq/9d3Bl092ANJaP8OUgi47dmUz0nKj5hwc0nKP
-         9uRizV09j9PmLU/e4A9/h0RksYdmY2nw8FU3DcOLcYQkG21qZizTuAMQmC7P1Mfq/xUk
-         dMzuAc57Xe4AS2DSzaDH9biCtNsSjMvImVM0+zvtiH9dcl+Wdi2lT5h9GaZqWUkg6D0r
-         rRRpBKlCx6N4oWtJvpXEM6VBf7XS3Wadfk6eOJYprN+ebqc9xcAIHXI23d0E/8Qq2/pk
-         LCg19u1/woA2Rb/EVuPFk0KyfsdwdaSNpKSUTrV7oKzW0fyf2gCD3podO65lUtnPm8bL
-         E4bw==
-X-Gm-Message-State: ANhLgQ3k7Y3S196ZTpVCTajiqcdp+8KbMb2aLe409A5zlNTiMLH1I9EQ
-        rpt9GYT5rZ3RXRd0VgRdsf4fQg==
-X-Google-Smtp-Source: ADFU+vvMwyOeJ1bw+b6fHEvAIEyef46hTkIwvJkawUe8Y1M+n9FzyKHV88aLPaSsWHc1yabEAZvqYA==
-X-Received: by 2002:a7b:c458:: with SMTP id l24mr10063577wmi.120.1584710892462;
-        Fri, 20 Mar 2020 06:28:12 -0700 (PDT)
-Received: from dell ([2.27.35.213])
-        by smtp.gmail.com with ESMTPSA id x24sm7637493wmc.36.2020.03.20.06.28.11
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8JpJJSqOukJOsKyLepaL4D5XEBOAfU/5gRiIWf5kS00=;
+        b=Yu7vOhCc1aX0GwrexinJUCU8jS+5Nu8n1RhZ+klgdQIiMzzaGRPjh89tvHzK+Drbf1
+         cj5YrDzVJ7yAwEDClTtAsGBjtyr9WB8lhiaNxYzlvd9UyjDeppN1YnGw+KjgZKM540c0
+         +dnYs6BQ5LqMsZMvDhLCDqvfAl8R6yhRr/gkd9FkMn9VrQlBbRwW2oma8lkccwKcs61E
+         ktY4v1s9ZEsN65/HmMeeRVO+Fdd+UFsncGA7rXjNy9of7zajpMQ6mb1grSipSG2AJKNT
+         aDcqeS8yfhz7NuGBnFJ9TgU9A3XVha34ETXY4IqN5Pi2xN6nmGz9/uTWQdTnHGd6ig3X
+         PKYw==
+X-Gm-Message-State: ANhLgQ05Rm+ou6GlzoFo27JTOBPn0IgPO27M+EhEXx0qcIAx1INueu4b
+        tFL7WjP2WGKi3B2qiLRXLuA=
+X-Google-Smtp-Source: ADFU+vvxQI36QYAS6CSxU3UCX1Mn7P2lPSkCX4OJhmBOZ6ftFFU+w5JwEkI1uI+eqtNjWnQmquQ91w==
+X-Received: by 2002:a1c:8193:: with SMTP id c141mr10045018wmd.14.1584711302435;
+        Fri, 20 Mar 2020 06:35:02 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id w11sm8617964wrv.86.2020.03.20.06.35.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 06:28:11 -0700 (PDT)
-Date:   Fri, 20 Mar 2020 13:28:57 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
-Message-ID: <20200320132857.GC5477@dell>
-References: <20200320094233.GA30959@localhost.localdomain>
+        Fri, 20 Mar 2020 06:35:01 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] clocksource: Add NVIDIA Tegra186 timers support
+Date:   Fri, 20 Mar 2020 14:34:45 +0100
+Message-Id: <20200320133452.3705040-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200320094233.GA30959@localhost.localdomain>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 20 Mar 2020, Matti Vaittinen wrote:
+From: Thierry Reding <treding@nvidia.com>
 
-> Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
-> the binding document to two separate documents (own documents for BD71837
-> and BD71847) as they have different amount of regulators. This way we can
-> better enforce the node name check for regulators. ROHM is also providing
-> BD71850 - which is almost identical to BD71847 - main difference is some
-> initial regulator states. The BD71850 can be driven by same driver and it
-> has same buck/LDO setup as BD71847 - add it to BD71847 binding document and
-> introduce compatible for it.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> ---
-> 
-> Hello Lee, Do you think you could take this in MFD? Rob and Mark have
-> acked/reviewed this.
-> 
-> This is a resend of a resend of a resend of v2 - no changes other than rebasing.
-> 
-> changes since v1:
-> - constrains to short and long presses.
-> - reworded commit message to shorten a line exceeding 75 chars
-> - added 'additionalProperties: false'
-> - removed 'clock-names' from example node
-> 
->  .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
->  .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236 ++++++++++++++++++
->  .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222 ++++++++++++++++
->  .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
->  .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
->  .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
->  6 files changed, 658 insertions(+), 252 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
->  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
->  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+This set of patches adds the device tree bindings and a simplified
+driver for the timers found on Tegra186 and later SoCs. The driver
+itself currently only implements a single watchdog, which in turn
+relies on the counter provided by one of the timers. The timers
+themselves are not used at the moment because the SoC also has an
+architected timer and there's currently no use for the additional
+timers provided by this hardware block.
 
-Applied, thanks.
+I suggest that patches 1 & 2 go through the clocksource tree, while
+I can carry the DTS changes in the Tegra tree for v5.8.
+
+Thierry
+
+Thierry Reding (7):
+  dt-bindings: timer: Add bindings for NVIDIA Tegra186 timers
+  clocksource: Add Tegra186 timers support
+  arm64: tegra: Order nodes by unit-address on Tegra194
+  arm64: tegra: Add native timer support on Tegra186
+  arm64: tegra: Enable native timers on Jetson TX2
+  arm64: tegra: Add native timer support on Tegra194
+  arm64: tegra: Enable native timers on Jetson AGX Xavier
+
+ .../bindings/timer/nvidia,tegra186-timer.yaml |  55 +++
+ .../arm64/boot/dts/nvidia/tegra186-p3310.dtsi |   4 +
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi      |  16 +
+ .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |   4 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  81 ++--
+ drivers/clocksource/Kconfig                   |   8 +
+ drivers/clocksource/Makefile                  |   1 +
+ drivers/clocksource/timer-tegra186.c          | 377 ++++++++++++++++++
+ 8 files changed, 514 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra186-timer.yaml
+ create mode 100644 drivers/clocksource/timer-tegra186.c
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.24.1
+
