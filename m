@@ -2,98 +2,60 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F5EC4332B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 22:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB87C4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 22:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A44CB20714
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 22:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584744996;
-	bh=awEcbKYmvPzNxTxAlafO0Op9+2umsplNCmP+aT/50iQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mkDBV+qaIYvM488Gz38A3nAFQEC3ZY1j/klSTubYoUU8jVzTF7b1W7ohgHkgjYhkj
-	 z/r/u6W7AklkIqhOHvFIUyHu3KeepGntc6DrPS5NMB9C3nf1qpmBmaMGfOQtIRZGmH
-	 kpDMRU1ucU9gVbHOfZ6hbi2htDhk1wIxqWOikK0k=
+	by mail.kernel.org (Postfix) with ESMTP id 37F7A20637
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 22:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbgCTW4g (ORCPT
+        id S1726997AbgCTW7O (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 18:56:36 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42346 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbgCTW4f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 18:56:35 -0400
-Received: by mail-io1-f65.google.com with SMTP id q128so7696820iof.9;
-        Fri, 20 Mar 2020 15:56:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Lwcjdkfu56Ps5KeJNV/bbYNr993lvtt9wQjpi7hvu/o=;
-        b=MbL6rTcfJYFgXWUUwSGXKvYZGJ+gde7PlIRt5STeXNJtcLe8DCD2ZaHkMWF53fSqOo
-         +Mx1x9QS1CllYG9yNoPMKlgHgzpxqC0480b6PUiZ23hcR0rERgZq2G9nIiZU4p5Q1QSY
-         OnmpCgTptQeamMWgCti8a9za3/7KzhmrA1s0nuzvFAXH05llb9+A31D5LKTOj8fN875a
-         uwglv5QrCn0wqJRQJBPegYikvrgvGI7K6JiLQUPHMQ3BGwW++t4PfAWdH1BRZ4uyFDDy
-         OrbTm/aNjPwwfcrBnOMmTpvZrylCCDp4YUrShZuLUxMwAm3Mx/uLxFqvv+mFmMjsKrcJ
-         T9jQ==
-X-Gm-Message-State: ANhLgQ3pp50ZiOAD9Uwf3jfH9aCwpssupBe7E3iUrR1EOcpoahZy5ogP
-        sqznea2BTH7xJNnqXPVmtlB3WTA=
-X-Google-Smtp-Source: ADFU+vst4fYbKhEbWEQ6y4E2xPnfEbBGpi6R4S8PRy3f65rUNbMunmOd7RJQhP/rbMVxptFzDw6Hng==
-X-Received: by 2002:a02:b897:: with SMTP id p23mr10655513jam.120.1584744994695;
-        Fri, 20 Mar 2020 15:56:34 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id u188sm2433372ilc.59.2020.03.20.15.56.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Mar 2020 15:56:33 -0700 (PDT)
-Received: (nullmailer pid 24999 invoked by uid 1000);
-        Fri, 20 Mar 2020 22:56:32 -0000
-Date:   Fri, 20 Mar 2020 16:56:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, robh@kernel.org, amit.kucheria@verdurent.com,
-        mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v5 5/6] dt-bindings: power: Extend RPMh power controller
- binding to describe thermal warming device
-Message-ID: <20200320225632.GA24944@bogus>
-References: <20200320014107.26087-1-thara.gopinath@linaro.org>
- <20200320014107.26087-6-thara.gopinath@linaro.org>
+        Fri, 20 Mar 2020 18:59:14 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:35475 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbgCTW7O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 18:59:14 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 5F7B724000B;
+        Fri, 20 Mar 2020 22:59:12 +0000 (UTC)
+Date:   Fri, 20 Mar 2020 23:59:11 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Eugen Hristev <eugen.hristev@microchip.com>
+Cc:     ludovic.desroches@microchip.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cristian.birsan@microchip.com
+Subject: Re: [PATCH] ARM: dts: at91: sama5d27_wlsom1_ek: add USB device node
+Message-ID: <20200320225911.GU5504@piout.net>
+References: <20200318104236.21114-1-eugen.hristev@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320014107.26087-6-thara.gopinath@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200318104236.21114-1-eugen.hristev@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 19 Mar 2020 21:41:06 -0400, Thara Gopinath wrote:
-> RPMh power controller hosts mx domain that can be used as thermal warming
-> device. Add #cooling-cells property to the power domain provider node to
-> indicate this.
+On 18/03/2020 12:42:36+0200, Eugen Hristev wrote:
+> From: Cristian Birsan <cristian.birsan@microchip.com>
 > 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> Add USB device node for WLSoM1 EK and enable it.
+> 
+> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+> [eugen.hristev@microchip.com: ported to 5.4]
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 > ---
+>  arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> v3->v4:
-> 	- Removed subnode to indicate that mx power domain is a warming
-> 	  device. Instead #cooling-cells is used as a power domain
-> 	  provider property to indicate if the provider hosts a power
-> 	  domain that can be used as a warming device.
-> 
-> v4->v5:
-> 	Moved the property from .txt format to .yaml format.
-> 
->  Documentation/devicetree/bindings/power/qcom,rpmpd.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+Applied, thanks.
 
-Acked-by: Rob Herring <robh@kernel.org>
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
