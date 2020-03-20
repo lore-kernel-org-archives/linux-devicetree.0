@@ -2,110 +2,176 @@ Return-Path: <SRS0=WWXW=5F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2782BC43333
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E3DC4332B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 10:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3AD720724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 09:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ohp5TXh1"
+	by mail.kernel.org (Postfix) with ESMTP id AD2C020776
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Mar 2020 10:02:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584698575;
+	bh=tAagerYt8beIuUrN7d/g4MUF0Cj/cXQBUpXKUuT2zho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NFyXt4RTNGtm9LyjVbW2mgOblVvLO/PF4dpNaKMVoLAh1J69S1p/KhlFfd1qzd0EL
+	 rlb23AoKOExMKmL0Edch6T7hzAblXQprOrzhPTL/0v5w2xrDl6iSlZl7qkrxLUu+ou
+	 RBQxloNmulXZ4I97MBGEY5jcuOg+Qn397/d8GBBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgCTJ7P (ORCPT
+        id S1726976AbgCTKCz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 05:59:15 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58876 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgCTJ7P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 05:59:15 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CA6A1504;
-        Fri, 20 Mar 2020 10:59:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584698353;
-        bh=ZzexViwT1sNWNVrixfFMMsQEew/KhYKWu3YzN5cmzCI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ohp5TXh1V32/7TUc41A62vGmBmoziycU4oAdYUdLefFdH37z8W96SsCvO+jDYOPci
-         yl56teBS9RGHB2sEtwfPKoIF4R0VFKV7zfs7bEv6wK6b+oVhRBgi9uw+HZ903G71qx
-         CnOC7JOVk/Z9/c2QQky3jfKcRhZ0B5Dqi7Y4FRrw=
-Date:   Fri, 20 Mar 2020 11:59:07 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Alex Riesen <alexander.riesen@cetitec.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Fri, 20 Mar 2020 06:02:55 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38406 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgCTKCy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Mar 2020 06:02:54 -0400
+Received: by mail-ed1-f66.google.com with SMTP id h5so6445707edn.5;
+        Fri, 20 Mar 2020 03:02:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yKhEFD0HDc489I3cxzxcRx7nCJ4icJCiGjR0lWOPd2k=;
+        b=m0yWlKwpPPS1pBzUL5NnkA5mvuLbPIDdPqWMwWiDARWIoLNWkrc7SIYeRA+xASdqMC
+         KxCWT1RUD9yR+r5rzYrf4ZaxO1JMtYsYT2rrAohor/ptAzgmtvW4+8WlngVxGhhN+MdT
+         Fh+llBMH0889nhVKUbx+xTZiK2/I2BZ2EqnLSvBT5XliZVDAzKQxl1jZp6keYHBnV3XE
+         DvuVC/c9xRZTb2HKs5JJLZc7wY8vrP3F+S6rtRuJCZ1BZAJFUEmrcF8dJRJiHkSpvFFp
+         NHFLabftPUjMyH54qtF7YYAUnqgE11mPpCFrJMMXISZedAK42TcEPotSCk+UjnQZJt9O
+         +IBw==
+X-Gm-Message-State: ANhLgQ1IZts2jDJQKOKJ2qcCw7VAIZzOMMMJyg2Zb6FfZlVF+ZVvFFF/
+        Z1UJm4df8341Wdyvbjs+2qk=
+X-Google-Smtp-Source: ADFU+vtTJo8GuuHT33eJ8VISdzNZK+dw+AG9XHRSiOF+v3/TwxvILo+kc3y2aVtBOdqG/TC06c4U9g==
+X-Received: by 2002:a17:906:80d5:: with SMTP id a21mr7612042ejx.240.1584698571643;
+        Fri, 20 Mar 2020 03:02:51 -0700 (PDT)
+Received: from pi3 ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id e16sm319824ejx.53.2020.03.20.03.02.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Mar 2020 03:02:50 -0700 (PDT)
+Date:   Fri, 20 Mar 2020 11:02:43 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        David Lechner <david@lechnology.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Peter Rosin <peda@axentia.se>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v2 07/10] dt-bindings: adv748x: add information about
- serial audio interface (I2S/TDM)
-Message-ID: <20200320095907.GB5193@pendragon.ideasonboard.com>
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
- <c9ff553f804f178a247dca356306948e971432fb.1584639664.git.alexander.riesen@cetitec.com>
- <20200319180125.GJ14585@pendragon.ideasonboard.com>
- <20200320084406.GB4344@pflmari>
- <CAMuHMdUdVb0LwZDx-MH2FLYYPvgq=uj_3Nrzo9obWAi-Q-2ZnA@mail.gmail.com>
- <20200320090339.GD4344@pflmari>
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Tony Lindgren <tony@atomide.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [RFC PATCH 7/7] arm: dts: pwm: replace polarity constant with
+ macro
+Message-ID: <20200320100243.GA16931@pi3>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-8-oleksandr.suvorov@toradex.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200320090339.GD4344@pflmari>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200317123231.2843297-8-oleksandr.suvorov@toradex.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alex,
-
-On Fri, Mar 20, 2020 at 10:03:39AM +0100, Alex Riesen wrote:
-> Geert Uytterhoeven, Fri, Mar 20, 2020 09:48:14 +0100:
-> > On Fri, Mar 20, 2020 at 9:44 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > > Laurent Pinchart, Thu, Mar 19, 2020 19:01:25 +0100:
-> > > > On Thu, Mar 19, 2020 at 06:42:36PM +0100, Alex Riesen wrote:
-> > > > > As the driver has some support for the audio interface of the device,
-> > > > > the bindings file should mention it.
-> > > > >
-> > > > > @@ -16,6 +18,8 @@ Required Properties:
-> > > > >      slave device on the I2C bus. The main address is mandatory, others are
-> > > > >      optional and remain at default values if not specified.
-> > > > >
-> > > > > +  - #clock-cells: must be <0> if the I2S port is used
-> > > >
-> > > > Wouldn't it be simpler to set it to 0 unconditionally ?
-> > >
-> > > Would it? If the port itself is optional, shouldn't the clock be an option
-> > > too?
-> > 
-> > You'd be surprised how many board designers would consider this a cheap
-> > 12.288 MHz clock source, without using the I2S port ;-)
+On Tue, Mar 17, 2020 at 02:32:31PM +0200, Oleksandr Suvorov wrote:
+> There is the PWM_POLARITY_NORMAL defined and describled in
+> <dt-bindings/pwm/pwm.h> and used by pwm drivers.
 > 
-> Well, I am :-)
+> This patch converts all '0' constant in pwms parameters into
+> PWM_POLARITY_NORMAL.
 > 
-> Especially considering that the driver will not switch the MCLK pin aktive
-> (all I2S-related pins are tristate by default).
+> Replace with sed regexp:
+> 's/(pwms = <&[a-zA-Z_0-9]+ [0-9]+ [0-9]+) 0>/\1 PWM_POLARITY_NORMAL>/'
+> 
+> Then:
+> - included pwm.h in some dts/dtsi to fix building errors about undefined
+>   symbols.
+> - fixed the patman warnings about the code format;
+> 
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> ---
+> 
+>  arch/arm/boot/dts/am335x-cm-t335.dts               | 2 +-
+>  arch/arm/boot/dts/am335x-evm.dts                   | 2 +-
+>  arch/arm/boot/dts/am3517-evm.dts                   | 2 +-
+>  arch/arm/boot/dts/at91-dvk_su60_somc_lcm.dtsi      | 2 +-
+>  arch/arm/boot/dts/at91-kizbox2-common.dtsi         | 6 +++---
+>  arch/arm/boot/dts/at91-kizbox3_common.dtsi         | 8 ++++----
+>  arch/arm/boot/dts/at91-kizboxmini-common.dtsi      | 6 +++---
+>  arch/arm/boot/dts/at91-nattis-2-natte-2.dts        | 2 +-
+>  arch/arm/boot/dts/at91-sama5d4_ma5d4evk.dts        | 2 +-
+>  arch/arm/boot/dts/at91sam9n12ek.dts                | 2 +-
+>  arch/arm/boot/dts/at91sam9x5dm.dtsi                | 2 +-
+>  arch/arm/boot/dts/berlin2cd-google-chromecast.dts  | 4 ++--
+>  arch/arm/boot/dts/da850-evm.dts                    | 2 +-
+>  arch/arm/boot/dts/da850-lego-ev3.dts               | 4 ++--
+>  arch/arm/boot/dts/exynos4412-midas.dtsi            | 2 +-
+>  arch/arm/boot/dts/exynos4412-odroidu3.dts          | 2 +-
+>  arch/arm/boot/dts/exynos5250-snow-common.dtsi      | 2 +-
+>  arch/arm/boot/dts/exynos5410-odroidxu.dts          | 2 +-
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts         | 2 +-
+>  arch/arm/boot/dts/exynos5422-odroidhc1.dts         | 2 +-
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 2 +-
+>  arch/arm/boot/dts/exynos5422-odroidxu4.dts         | 2 +-
+>  arch/arm/boot/dts/exynos54xx-odroidxu-leds.dtsi    | 4 ++--
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts          | 2 +-
+>  arch/arm/boot/dts/imx53-tx53-x13x.dts              | 5 +++--
+>  arch/arm/boot/dts/imx6dl-tx6dl-comtft.dts          | 2 +-
+>  arch/arm/boot/dts/imx6q-display5.dtsi              | 2 +-
+>  arch/arm/boot/dts/imx6q-tx6q-1010-comtft.dts       | 2 +-
+>  arch/arm/boot/dts/imx6q-tx6q-1020-comtft.dts       | 2 +-
+>  arch/arm/boot/dts/imx6qdl-tx6-lvds.dtsi            | 4 ++--
+>  arch/arm/boot/dts/imx7-colibri.dtsi                | 4 +++-
+>  arch/arm/boot/dts/imx7d-nitrogen7.dts              | 3 ++-
+>  arch/arm/boot/dts/imx7d-pico.dtsi                  | 3 ++-
+>  arch/arm/boot/dts/imx7d-sdb.dts                    | 3 ++-
+>  arch/arm/boot/dts/imx7ulp-evk.dts                  | 3 ++-
+>  arch/arm/boot/dts/iwg20d-q7-common.dtsi            | 2 +-
+>  arch/arm/boot/dts/logicpd-torpedo-baseboard.dtsi   | 2 +-
+>  arch/arm/boot/dts/meson8b-ec100.dts                | 4 ++--
+>  arch/arm/boot/dts/meson8b-mxq.dts                  | 4 ++--
+>  arch/arm/boot/dts/meson8b-odroidc1.dts             | 4 ++--
+>  arch/arm/boot/dts/motorola-mapphone-common.dtsi    | 3 ++-
+>  arch/arm/boot/dts/omap3-gta04.dtsi                 | 2 +-
+>  arch/arm/boot/dts/omap3-n900.dts                   | 2 +-
+>  arch/arm/boot/dts/rk3288-veyron-edp.dtsi           | 2 +-
+>  arch/arm/boot/dts/rk3288-veyron.dtsi               | 2 +-
+>  arch/arm/boot/dts/rv1108-evb.dts                   | 2 +-
+>  arch/arm/boot/dts/s3c6410-mini6410.dts             | 2 +-
+>  arch/arm/boot/dts/s5pv210-aries.dtsi               | 2 +-
+>  arch/arm/boot/dts/s5pv210-smdkv210.dts             | 2 +-
 
-If the MCLK can't be output without enabling the I2S then I don't mind
-if we make the #clock-cells optional, although, as Geert mentioned,
-someone may still want to use it.
+For Exynos/S3C/S5P:
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> And how do I require it to be set unconditionally? By just removing the
-> "if ..." part of the statement?
-
-Yes. For YAML it's easy too, the hard part is making properties
-conditional :-)
-
--- 
-Regards,
-
-Laurent Pinchart
+Best regards,
+Krzysztof
