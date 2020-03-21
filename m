@@ -2,153 +2,122 @@ Return-Path: <SRS0=1bdf=5G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966B8C43332
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 19:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3327C4332D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F09320777
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 19:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4CA120780
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="t0Flj+1Q"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kx5ovgqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgCUTbF (ORCPT
+        id S1728257AbgCUVDZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Mar 2020 15:31:05 -0400
-Received: from mx-out2.startmail.com ([145.131.90.155]:56841 "EHLO
-        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727296AbgCUTbF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 15:31:05 -0400
-Date:   Sat, 21 Mar 2020 21:35:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
-        s=2017-11; t=1584819063;
-        bh=MvmU5kwlpWyx5E7JUzXu7SxsG7U8nfCpmoM8LcX9xoU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t0Flj+1QhVQMEFdpJ7SCNjCLElcpftQ0lCjV0EecP2Gb20Rw5HtkywpaNZaNqbq0M
-         Sxwv5k3bD5SlD8tuEZM+nDhzkKfYxeE1559b2FjyiBBGSGdQCUULVUcXXs25OyjmIQ
-         vEqNWEBW9GXKq/IlwGqDZ4BlApxX4glj/jpBvz38k/rVjH2iUzoNDNgKYjOskmhq76
-         fI9HlKBORmKzArJ/WNuAd/UX3QRMMeXkkANQ87b0mM/vwy8R+joouYf2bnDFlobsRQ
-         h6kyIwasJg4Td/aX3qUNl01sszpIasREOV8fCBWAqK7KCkKzED2Pey66DqT8UBoIs1
-         TQrPiklu4LAfA==
-From:   Alexandru Lazar <alazar@startmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add MAX1241 device tree
- bindings in documentation
-Message-ID: <20200321193541.GA16892@leena.republic>
-References: <20200320150114.9297-1-alazar@startmail.com>
- <20200320150114.9297-2-alazar@startmail.com>
- <20200321173412.52548ef1@archlinux>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200321173412.52548ef1@archlinux>
+        Sat, 21 Mar 2020 17:03:25 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:39475 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbgCUVDP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 17:03:15 -0400
+Received: by mail-pg1-f201.google.com with SMTP id g8so7425900pgr.6
+        for <devicetree@vger.kernel.org>; Sat, 21 Mar 2020 14:03:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=xNvYA6UhdIzCQNZy2uMLhsHjhbyUSQ3qyllU0rHtcf0=;
+        b=kx5ovgqmJRy9LGIuPT4ywXhCTs3ARAfhGOZul8HGd64ytF9046OToOx7+bYcct4wDp
+         smEgd1KPD9EJyBA3JJKmZUw1zNINb4lXDpEQtVmU+msGcV0voGhBB/nUyXC8pDL9B6n8
+         4zoZ2K8dHdjHrDgy1oo/AVQMIlkmsceqLBO6pGFZQrzBZdReFjmbbQa7Etko8q7JbqcS
+         R/dqzWdI6BOBvTV7EGEGcji3MwKGwVdUKcbs5Vo//vxMaBfqQJQwV8bEkk2hG4Qh2XSn
+         eQFDa/tXb6HV2gjAxH8/yvbUpSEXrKzzNm/7QzCQtjYZy9cAOIelVI2GjzmDxvMwDZ19
+         gD0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=xNvYA6UhdIzCQNZy2uMLhsHjhbyUSQ3qyllU0rHtcf0=;
+        b=SeZR5srdyuR4eoS8kgyW9nm8wsGXUe6Q3xuyXI3hC9uaaQf6mX4OZH0eQGV1K2zaiE
+         LOshtBzZnW7IeL8mGd1q/g7oUn0D9W+gRPFlM6y+IlsM1HOzRfUuBS7igTYJtblQoli1
+         IRQ8AiRiHFvS1TvgLrFJAtSyFpRFT3KfFwAk1jR3pz4GQ30bArYD67eXDLS/w1CAvzTG
+         7oWjhJOMCZS4mXzxjPN8mkoz+yUk3zFt6HqHBRMCMFQLygeAABZLToDATLcLq4LWle8a
+         j9QmnWCny4w+BeAeyk2OsbrMpDf6UyfDby0k0/7AY5Dkh+BG6r21/Xs0W7NdQ5yVQpcF
+         3liw==
+X-Gm-Message-State: ANhLgQ34knMh5IwGO4Z3s+YnXMccBLHip9dqncu2Zxe1eoDQfBlTbVna
+        U3qbcxHlzUh6hSjsiYhUMhdJ62dNrStEQb0=
+X-Google-Smtp-Source: ADFU+vtYlRCFa88mZmOzBJd3AZ3LAwx5smuo4Pvk3DO0lBLd90kUDcML0zo0KVJTHHQNheV1kmuzhjMEjWY6Ufo=
+X-Received: by 2002:a17:90a:930e:: with SMTP id p14mr16445333pjo.159.1584824594216;
+ Sat, 21 Mar 2020 14:03:14 -0700 (PDT)
+Date:   Sat, 21 Mar 2020 14:03:05 -0700
+Message-Id: <20200321210305.28937-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [RFC PATCH v1] driver core: Set fw_devlink to "permissive" behavior
+ by default
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jonathan,
+Set fw_devlink to "permissive" behavior by default so that device links
+are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
+firmware.
 
-> Please consider also adding the vdd-supply.
-> It's not really required, but if you don't add it from the start
-> chances are high that at some point someone else will need to
-> add it.
+This ensures suppliers get their sync_state() calls only after all their
+consumers have probed successfully. Without this, suppliers will get
+their sync_state() calls at late_initcall_sync() even if their consuer
 
-Sorry if I'm missing something obvious here -- what vdd-supply is
-that? Are you thinking of the regulator used for the ADC's reference
-voltage? That's already there (vref-supply).
+Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
+that needs more testing as it's known to break some corner case
+drivers/platforms.
 
-Or did you mean I should add a definition for the regulator output used
-for the device's Vdd input (i.e. the positive supply voltage)? Needless
-to say, I'm happy to add it if you think it's a good idea. It's just I
-don't think I've seen it in other drivers (except maybe ad7192?) -- so I
-figured I'd ask before sending a botched v5.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
 
-Best regards,
-Alex
+I think it's time to soak test this and see if anything fails or if
+anyone complains. Definitely not ready for 5.6. But pulling it in for
+5.7 and having it go through all the rc testing would be helpful.
 
-> 
-> One trivial thing inline.  Otherwise looks good to me.
-> 
-> > ---
-> >  .../bindings/iio/adc/maxim,max1241.yaml       | 61 +++++++++++++++++++
-> >  1 file changed, 61 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
-> > new file mode 100644
-> > index 000000000000..de41d422ce3b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
-> > @@ -0,0 +1,61 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Copyright 2020 Ioan-Alexandru Lazar
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/adc/maxim,max1241.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Maxim MAX1241 12-bit, single-channel analog to digital converter
-> > +
-> > +maintainers:
-> > +  - Ioan-Alexandru Lazar <alazar@startmail.com>
-> > +
-> > +description: |
-> > +  Bindings for the max1241 12-bit, single-channel ADC device. This
-> > +  driver supports voltage reading and can optionally be configured for
-> 
-> Driver shouldn't be mentioned in the binding. It's a description of the
-> hardware only.
-> 
-> > +  power-down mode operation. The datasheet can be found at:
-> > +    https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - maxim,max1241
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  vref-supply:
-> > +    description:
-> > +      Device tree identifier of the regulator that provides the external
-> > +      reference voltage.
-> > +    maxItems: 1
-> > +
-> > +  shdn-gpios:
-> > +    description:
-> > +      GPIO spec for the GPIO pin connected to the ADC's /SHDN pin. If
-> > +      specified, the /SHDN pin will be asserted between conversions,
-> > +      thus enabling power-down mode.
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - vref-supply
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    spi0 {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +        adc@0 {
-> > +            compatible = "maxim,max1241";
-> > +            reg = <0>;
-> > +            vref-supply = <&vdd_3v3_reg>;
-> > +            spi-max-frequency = <1000000>;
-> > +            shdn-gpios = <&gpio 26 1>;
-> > +        };
-> > +    };
-> > +
-> > +
-> 
+I'm sure there'll be reports where some DT properties are ambiguously
+names and is breaking downstream or even some upstream platform. For
+example, a DT property like "nr-gpios" would have a dmesg log about
+parsing error because it looks like a valid "-gpios" DT binding. It'll
+be good to catch those case and fix them.
+
+Also, is there no way to look up current value of early_params? It'd be
+nice if there was a way to do that.
+
+-Saravana
+
+ drivers/base/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 5e3cc1651c78..9fabf9749a06 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2345,7 +2345,7 @@ static int device_private_init(struct device *dev)
+ 	return 0;
+ }
+ 
+-static u32 fw_devlink_flags;
++static u32 fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
+ static int __init fw_devlink_setup(char *arg)
+ {
+ 	if (!arg)
+-- 
+2.25.1.696.g5e7596f4ac-goog
+
