@@ -2,86 +2,122 @@ Return-Path: <SRS0=1bdf=5G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64FBC4332E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 11:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A23C4332B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 12:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9A92077D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 11:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 656FB2072C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 12:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgCULVg convert rfc822-to-8bit (ORCPT
+        id S1726933AbgCUMx3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Mar 2020 07:21:36 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:42252 "EHLO unicorn.mansr.com"
+        Sat, 21 Mar 2020 08:53:29 -0400
+Received: from mail.manjaro.org ([176.9.38.148]:37078 "EHLO mail.manjaro.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgCULVf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 21 Mar 2020 07:21:35 -0400
-X-Greylist: delayed 592 seconds by postgrey-1.27 at vger.kernel.org; Sat, 21 Mar 2020 07:21:35 EDT
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 9E2B015605; Sat, 21 Mar 2020 11:11:41 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 07/10] ARM: dts: tango4: Make /serial compatible with ns16550a
-References: <20200320174107.29406-1-lkundrak@v3.sk>
-        <20200320174107.29406-8-lkundrak@v3.sk>
-Date:   Sat, 21 Mar 2020 11:11:41 +0000
-In-Reply-To: <20200320174107.29406-8-lkundrak@v3.sk> (Lubomir Rintel's message
-        of "Fri, 20 Mar 2020 18:41:04 +0100")
-Message-ID: <yw1xd096hsia.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S1726192AbgCUMx3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 21 Mar 2020 08:53:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id BA73237E5074;
+        Sat, 21 Mar 2020 13:53:27 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tcVmSE4T3BKl; Sat, 21 Mar 2020 13:53:25 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tobias Schramm <t.schramm@manjaro.org>
+Subject: [PATCH v6 0/3] Add support for CellWise cw2015 fuel gauge
+Date:   Sat, 21 Mar 2020 13:52:38 +0100
+Message-Id: <20200321125241.3072123-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Lubomir Rintel <lkundrak@v3.sk> writes:
+This patchset adds support for the CellWise cw2015 fuel gauge.
 
-> ralink,rt2880-uart is compatible with ns16550a and all other
-> instances of RT2880 UART nodes include it in the compatible property.
-> Add it also here, to make the binding schema simpler.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+The CellWise cw2015 fuel gauge is a shuntless, single-cell Li-Ion fuel
+gauge. It is used in the pine64 Pinebook Pro laptop.
 
-Acked-by: Mans Rullgard <mans@mansr.com>
+This is v6 of the patchset. This version fixes binding issues found
+by Rob.
 
-> ---
->  arch/arm/boot/dts/tango4-common.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/tango4-common.dtsi b/arch/arm/boot/dts/tango4-common.dtsi
-> index ff72a8efb73d0..54fd522badfc9 100644
-> --- a/arch/arm/boot/dts/tango4-common.dtsi
-> +++ b/arch/arm/boot/dts/tango4-common.dtsi
-> @@ -85,7 +85,7 @@ tick-counter@10048 {
->  		};
->
->  		uart: serial@10700 {
-> -			compatible = "ralink,rt2880-uart";
-> +			compatible = "ralink,rt2880-uart", "ns16550a";
->  			reg = <0x10700 0x30>;
->  			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
->  			clock-frequency = <7372800>;
-> -- 
-> 2.25.1
->
+I've kept the cellwise,battery-profile property in the device tree. Its
+content describes characteristics of the battery built into a device. The
+exact format is unknown and not publicly documented. It is likely
+comprised of some key parameters of the battery (chemistry, voltages,
+design capacity) and parameters for tuning the internal state of charge
+approximation function.
+Since v2 CellWise has confirmed to me that the only way to obtain the
+profile blob is to mail them batteries for testing. Thus we will need to
+keep that property.
+
+In general I'm not 100 % sure about my json-schema binding for the gauge.
+It is my first time ever writing a json-schema binding and I'm not sure
+whether properties like power-supplies or monitored-battery need to be
+added to a separate, common schema for power supplies or not.
+
+
+Best Regards,
+
+Tobias Schramm
+
+Changelog:
+ v2:
+  * Change subject to "Add support for CellWise cw2015 fuel gauge"
+  * Rewrite bindings as json-schema
+  * Use default power-supplies handling
+  * Use regmap for register access
+  * Use standard simple-battery node
+  * Replace printk/pr_* by dev_{dbg,info,warn,err}
+  * Use cancel_delayed_work_sync in remove
+  * General code cleanup
+ v3:
+  * Incorporate review by Andy
+  * Add cellwise vendor prefix
+  * Rename cellwise,bat-config-info property to cellwise,battery-profile
+  * Remove most state of charge post-processing
+  * Use fwnode interface
+  * General code cleanup
+  * Lots of code style fixes
+ v4:
+  * Implement additional changes requested by Andy
+  * Use fwnode inline wrappers
+  * Clean up waiting for gauge
+  * Minor code style fixes
+ v5:
+  * Clean up includes
+  * Handle errors during device property parsing
+  * Refactor device property parsing
+  * Replace i2c->probe by i2c->probe_new 
+  * More code style fixes
+ v6:
+  * Fix bindings according to review by Rob
+
+
+Tobias Schramm (3):
+  dt-bindings: Document cellwise vendor-prefix
+  dt-bindings: power: supply: add cw2015_battery bindings
+  power: supply: add CellWise cw2015 fuel gauge driver
+
+ .../bindings/power/supply/cw2015_battery.yaml |  82 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   6 +
+ drivers/power/supply/Kconfig                  |  11 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/cw2015_battery.c         | 749 ++++++++++++++++++
+ 6 files changed, 851 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.yaml
+ create mode 100644 drivers/power/supply/cw2015_battery.c
 
 -- 
-Måns Rullgård
+2.24.1
+
