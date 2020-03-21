@@ -2,107 +2,175 @@ Return-Path: <SRS0=1bdf=5G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314E8C4332D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 21:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F304C4332B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 21:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F2220754
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 21:54:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mE6DwdoC"
+	by mail.kernel.org (Postfix) with ESMTP id E03A32077D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 21:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgCUVyd (ORCPT
+        id S1726846AbgCUV4a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Mar 2020 17:54:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35990 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbgCUVyd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 17:54:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 31so5875125wrs.3;
-        Sat, 21 Mar 2020 14:54:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/QGnM5aF633O9T+Q9bE7j7rBcANzw8cmYuGuF3OhlUI=;
-        b=mE6DwdoCdvIrq6k6mckByOPROcnYRtJTsjJ01FfrQUXQfQpHOjpQ9NzteV55TDBsso
-         J4bH/fAaVcbTldZtFetSL8nR6F07U7J/hNn29UDMnXCRcZVPHkFxw5gpn4B2J0hLfHip
-         MxxqYLK9vMc2y7FCJaDgCV4Gt4j83HJ+X2p/NJPveRRn+SekYle/XHJEhGTkx8xJHXuw
-         e7GarbzUhAR4IbNeUUfbrUIlS1iqmTJP9Wq5EgEFaFBR9JgwqPdwXbNF0htckv6c5rbQ
-         O0D974ktV7tGRy4zpHbfnd6kPNXPMWZmPAIQWPfLkHeLmFO0hYFU1yK/ngn5Z2i42fby
-         llyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/QGnM5aF633O9T+Q9bE7j7rBcANzw8cmYuGuF3OhlUI=;
-        b=bW0bclh1xKTuopiVhzkxUzROi9hns1y17bhwx2T9sguqFR91UpIiyeMSeLiVq1bvs3
-         6l/XZdQ1qQ8fwMN1RMZBw8gwE3hpDP8VkkQTskjo4hjnmBaGMKLsQEIAbyu7GTBckajP
-         jRUcrkMBwI/FzUDRGyKhfOjoPz8Amxs80M16KJPGMD2zmL0Eo06pjV44zz17FVk93MkJ
-         5++VjrUJR3Ic1/XvseDxC2Tl71SnSgGXiGIqnkt2FiQRNLa2Q4OyyBaaJWLP8rZN2/pC
-         o2Pwv+sjH9EEQ+Q2Fe65bOwmyBxxn9T5FfgSPDrb+6UqO9Hlger7RbA8sRJmOUMTR9BT
-         /4vw==
-X-Gm-Message-State: ANhLgQ2+jl/25Q52JLVo4dQAG7wBYXejmIuQXby4lWeqfJ76yKQyVtYH
-        97rMi2TQE0NswldV1qR6rRqeH6Ho
-X-Google-Smtp-Source: ADFU+vuhRHlUNjw0nRmyX68DRkdDY/81x1nxjG77MQWmrMGsuHpBMKBLmYWp0wdtVlI085MN09BICg==
-X-Received: by 2002:a5d:5386:: with SMTP id d6mr12268879wrv.92.1584827672086;
-        Sat, 21 Mar 2020 14:54:32 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id l83sm14113796wmf.43.2020.03.21.14.54.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 21 Mar 2020 14:54:31 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robin.murphy@arm.com, aballier@gentoo.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] arm64: dts: rockchip: fix rtl8211f nodename for rk3328 Beelink A1
-Date:   Sat, 21 Mar 2020 22:54:19 +0100
-Message-Id: <20200321215423.12176-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200321215423.12176-1-jbx6244@gmail.com>
-References: <20200321215423.12176-1-jbx6244@gmail.com>
+        Sat, 21 Mar 2020 17:56:30 -0400
+Received: from mga07.intel.com ([134.134.136.100]:52636 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726813AbgCUV4a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 21 Mar 2020 17:56:30 -0400
+IronPort-SDR: TpR6iY2wseZt+2/PQmzTfMLcfIkHGREpXlMpmotomSRAltSbaoRQlZN4hIpw2s9wG81HJ0yvFr
+ 833tH8gWYhwg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2020 14:56:29 -0700
+IronPort-SDR: cgTcSgZrPiurxit+x25KUlqG1UBg26PwgbfjGoi45zQyUDXcXkcb/Ekr58mapPHUsd54tmBDgc
+ XgGkMadd7jrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,290,1580803200"; 
+   d="scan'208";a="325206721"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 21 Mar 2020 14:56:26 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jFm6W-00BpXb-S8; Sat, 21 Mar 2020 23:56:28 +0200
+Date:   Sat, 21 Mar 2020 23:56:28 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Alexandru Lazar <alazar@startmail.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH v4 2/2] iio: adc: Add MAX1241 driver
+Message-ID: <20200321215628.GA2819421@smile.fi.intel.com>
+References: <20200320150114.9297-1-alazar@startmail.com>
+ <20200320150114.9297-3-alazar@startmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320150114.9297-3-alazar@startmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives this error:
+On Fri, Mar 20, 2020 at 05:01:15PM +0200, Alexandru Lazar wrote:
+> Add driver for the Maxim MAX1241 12-bit, single-channel ADC. The driver
+> includes support for this device's low-power operation mode.
 
-arch/arm64/boot/dts/rockchip/rk3328-a1.dt.yaml: phy@0:
-'#phy-cells' is a required property
+...
 
-The rtl8211f node is used by a phy-handle.
-The parent node is compatible with "snps,dwmac-mdio",
-so change nodename to 'ethernet-phy', for which '#phy-cells'
-is not a required property.
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/module.h>
+> +#include <linux/spi/spi.h>
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/schemas/
-phy/phy-provider.yaml
+I think you can keep them sorted.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3328-a1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+...
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-a1.dts b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
-index 16f1656d5..fbd06a351 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-a1.dts
-@@ -114,7 +114,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		rtl8211f: phy@0 {
-+		rtl8211f: ethernet-phy@0 {
- 			reg = <0>;
- 			reset-assert-us = <10000>;
- 			reset-deassert-us = <30000>;
+> +#define MAX1241_VAL_MASK 0xFFF
+
+GENMASK() ?
+
+...
+
+> +		if (adc->shdn) {
+> +			gpiod_set_value(adc->shdn, 0);
+> +			udelay(MAX1241_SHDN_DELAY_USEC);
+> +		}
+> +
+> +		ret = max1241_read(adc);
+> +
+> +		if (adc->shdn)
+> +			gpiod_set_value(adc->shdn, 1);
+
+I guess easier to read in a way
+
+		if () {
+			gpio...
+			read();
+			gpio...
+		} else {
+			read();
+		}
+
+Or actually introduce runtime PM and move these gpio calls there.
+
+
+...
+
+> +static int max1241_probe(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct max1241 *adc;
+
+> +	int ret = 0;
+
+Redundant assignment.
+
+> +	ret = regulator_enable(adc->reg);
+> +	if (ret)
+> +		return ret;
+> +
+
+> +	ret = devm_add_action_or_reset(&spi->dev, max1241_disable_reg_action,
+> +					adc);
+
+Introducing
+	struct device *dev = &spi->dev;
+will simplifies such lines like above by making them on one line.
+
+> +	if (ret) {
+> +		dev_err(&spi->dev, "could not set up regulator cleanup action!\n");
+> +		return ret;
+> +	}
+
+> +	adc->shdn = devm_gpiod_get_optional(&spi->dev, "shdn", GPIOD_OUT_HIGH);
+
+> +
+
+Redundant blank line.
+
+> +	if (IS_ERR(adc->shdn))
+> +		return PTR_ERR(adc->shdn);
+
+> +	if (!adc->shdn)
+
+Why not to use positive conditional?
+
+> +		dev_dbg(&spi->dev, "no shdn pin passed, low-power mode disabled");
+> +	else
+> +		dev_dbg(&spi->dev, "shdn pin passed, low-power mode enabled");
+
+> +}
+
+...
+
+> +static const struct spi_device_id max1241_id[] = {
+> +	{ "max1241", max1241 },
+
+> +	{},
+
+Terminators better w/o comma.
+
+> +};
+> +
+> +static const struct of_device_id max1241_dt_ids[] = {
+> +	{ .compatible = "maxim,max1241" },
+
+> +	{},
+
+Ditto.
+
+> +};
+
 -- 
-2.11.0
+With Best Regards,
+Andy Shevchenko
+
 
