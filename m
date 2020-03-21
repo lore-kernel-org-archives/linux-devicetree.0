@@ -2,122 +2,131 @@ Return-Path: <SRS0=1bdf=5G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3327C4332D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCC7C43332
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 21:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CA120780
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 21:03:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kx5ovgqm"
+	by mail.kernel.org (Postfix) with ESMTP id CAFDB20753
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 21:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgCUVDZ (ORCPT
+        id S1727184AbgCUVES (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Mar 2020 17:03:25 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:39475 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbgCUVDP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 17:03:15 -0400
-Received: by mail-pg1-f201.google.com with SMTP id g8so7425900pgr.6
-        for <devicetree@vger.kernel.org>; Sat, 21 Mar 2020 14:03:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=xNvYA6UhdIzCQNZy2uMLhsHjhbyUSQ3qyllU0rHtcf0=;
-        b=kx5ovgqmJRy9LGIuPT4ywXhCTs3ARAfhGOZul8HGd64ytF9046OToOx7+bYcct4wDp
-         smEgd1KPD9EJyBA3JJKmZUw1zNINb4lXDpEQtVmU+msGcV0voGhBB/nUyXC8pDL9B6n8
-         4zoZ2K8dHdjHrDgy1oo/AVQMIlkmsceqLBO6pGFZQrzBZdReFjmbbQa7Etko8q7JbqcS
-         R/dqzWdI6BOBvTV7EGEGcji3MwKGwVdUKcbs5Vo//vxMaBfqQJQwV8bEkk2hG4Qh2XSn
-         eQFDa/tXb6HV2gjAxH8/yvbUpSEXrKzzNm/7QzCQtjYZy9cAOIelVI2GjzmDxvMwDZ19
-         gD0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=xNvYA6UhdIzCQNZy2uMLhsHjhbyUSQ3qyllU0rHtcf0=;
-        b=SeZR5srdyuR4eoS8kgyW9nm8wsGXUe6Q3xuyXI3hC9uaaQf6mX4OZH0eQGV1K2zaiE
-         LOshtBzZnW7IeL8mGd1q/g7oUn0D9W+gRPFlM6y+IlsM1HOzRfUuBS7igTYJtblQoli1
-         IRQ8AiRiHFvS1TvgLrFJAtSyFpRFT3KfFwAk1jR3pz4GQ30bArYD67eXDLS/w1CAvzTG
-         7oWjhJOMCZS4mXzxjPN8mkoz+yUk3zFt6HqHBRMCMFQLygeAABZLToDATLcLq4LWle8a
-         j9QmnWCny4w+BeAeyk2OsbrMpDf6UyfDby0k0/7AY5Dkh+BG6r21/Xs0W7NdQ5yVQpcF
-         3liw==
-X-Gm-Message-State: ANhLgQ34knMh5IwGO4Z3s+YnXMccBLHip9dqncu2Zxe1eoDQfBlTbVna
-        U3qbcxHlzUh6hSjsiYhUMhdJ62dNrStEQb0=
-X-Google-Smtp-Source: ADFU+vtYlRCFa88mZmOzBJd3AZ3LAwx5smuo4Pvk3DO0lBLd90kUDcML0zo0KVJTHHQNheV1kmuzhjMEjWY6Ufo=
-X-Received: by 2002:a17:90a:930e:: with SMTP id p14mr16445333pjo.159.1584824594216;
- Sat, 21 Mar 2020 14:03:14 -0700 (PDT)
-Date:   Sat, 21 Mar 2020 14:03:05 -0700
-Message-Id: <20200321210305.28937-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [RFC PATCH v1] driver core: Set fw_devlink to "permissive" behavior
- by default
-From:   Saravana Kannan <saravanak@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 21 Mar 2020 17:04:18 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:60744 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgCUVES (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 17:04:18 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id D5B2E8050E;
+        Sat, 21 Mar 2020 22:04:12 +0100 (CET)
+Date:   Sat, 21 Mar 2020 22:04:11 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Rob Herring <robh@kernel.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v1 3/3] dt-bindings: display: grammar fixes in panel/
+Message-ID: <20200321210411.GA17581@ravnborg.org>
+References: <20200314153047.2486-1-sam@ravnborg.org>
+ <20200314153047.2486-4-sam@ravnborg.org>
+ <20200317192522.GD2527@pendragon.ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317192522.GD2527@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=P1BnusSwAAAA:8 a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8 a=pGLkceISAAAA:8
+        a=D-DU-lTQCvLRNRuGbxsA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=D0XLA9XvdZm18NrgonBM:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=sptkURWiP4Gy88Gu7hUp:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Set fw_devlink to "permissive" behavior by default so that device links
-are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
-firmware.
+Hi Laurent.
 
-This ensures suppliers get their sync_state() calls only after all their
-consumers have probed successfully. Without this, suppliers will get
-their sync_state() calls at late_initcall_sync() even if their consuer
+On Tue, Mar 17, 2020 at 09:25:22PM +0200, Laurent Pinchart wrote:
+> Hi Sam,
+> 
+> Thank you for the patch.
+> 
+> On Sat, Mar 14, 2020 at 04:30:47PM +0100, Sam Ravnborg wrote:
+> > Fix a few grammar/editorial issues spotted by Laurent Pinchart.
+> > 
+> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Cc: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../bindings/display/panel/display-timings.yaml           | 8 ++++----
+> >  .../devicetree/bindings/display/panel/panel-common.yaml   | 4 ++--
+> >  2 files changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/panel/display-timings.yaml b/Documentation/devicetree/bindings/display/panel/display-timings.yaml
+> > index c8c0c9cb0492..56903ded005e 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/display-timings.yaml
+> > +++ b/Documentation/devicetree/bindings/display/panel/display-timings.yaml
+> > @@ -4,7 +4,7 @@
+> >  $id: http://devicetree.org/schemas/display/panel/display-timings.yaml#
+> >  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> >  
+> > -title: display timing bindings
+> > +title: display timings bindings
+> >  
+> >  maintainers:
+> >    - Thierry Reding <thierry.reding@gmail.com>
+> > @@ -14,7 +14,7 @@ maintainers:
+> >  description: |
+> >    A display panel may be able to handle several display timings,
+> >    with different resolutions.
+> > -  The display-timings node makes it possible to specify the timing
+> > +  The display-timings node makes it possible to specify the timings
+> >    and to specify the timing that is native for the display.
+> >  
+> >  properties:
+> > @@ -25,8 +25,8 @@ properties:
+> >      $ref: /schemas/types.yaml#/definitions/phandle
+> >      description: |
+> >        The default display timing is the one specified as native-mode.
+> > -      If no native-mode is specified then the first node is assumed the
+> > -      native mode.
+> > +      If no native-mode is specified then the first node is assumed
+> > +      to be the native mode.
+> >  
+> >  patternProperties:
+> >    "^timing":
+> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-common.yaml b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> > index ed051ba12084..dee4faffd204 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.yaml
+> > @@ -63,9 +63,9 @@ properties:
+> >  
+> >    display-timings:
+> >      description:
+> > -      Some display panels supports several resolutions with different timing.
+> > +      Some display panels supports several resolutions with different timings.
+> 
+> s/supports/support/
+> 
+> >        The display-timings bindings supports specifying several timings and
+> > -      optional specify which is the native mode.
+> > +      optionally specify which is the native mode.
+> 
+> s/specify/specifying/ ?
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
-that needs more testing as it's known to break some corner case
-drivers/platforms.
+Fixed the above and applied this patch to drm-misc-next.
+The other patches awaits that drm-misc-next-fixes is ready
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
-
-I think it's time to soak test this and see if anything fails or if
-anyone complains. Definitely not ready for 5.6. But pulling it in for
-5.7 and having it go through all the rc testing would be helpful.
-
-I'm sure there'll be reports where some DT properties are ambiguously
-names and is breaking downstream or even some upstream platform. For
-example, a DT property like "nr-gpios" would have a dmesg log about
-parsing error because it looks like a valid "-gpios" DT binding. It'll
-be good to catch those case and fix them.
-
-Also, is there no way to look up current value of early_params? It'd be
-nice if there was a way to do that.
-
--Saravana
-
- drivers/base/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 5e3cc1651c78..9fabf9749a06 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2345,7 +2345,7 @@ static int device_private_init(struct device *dev)
- 	return 0;
- }
- 
--static u32 fw_devlink_flags;
-+static u32 fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
- static int __init fw_devlink_setup(char *arg)
- {
- 	if (!arg)
--- 
-2.25.1.696.g5e7596f4ac-goog
-
+	Sam
