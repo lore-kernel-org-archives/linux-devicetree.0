@@ -2,75 +2,85 @@ Return-Path: <SRS0=1bdf=5G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E41C4332B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F75C4332D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C377E20757
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D5020752
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 01:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584753883;
-	bh=z0jLXD1iBTi81A3uUJ2QBtjEgegduO/JoJbFVFkXCEw=;
+	s=default; t=1584753885;
+	bh=a7oq14gh90f9G9cupQDvc9EWm1m9yJ4iZFLErXizOcA=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=TzEFhOMa4PFRw4/Zti7im89ELa/TviWg/vgFJxXb9SWIMuhTuzzabt8bB8+midddX
-	 UwWdpGUxeWR8AQLsyaS9Wk4ufoKx890ZgRA9ayNuB3js5FaOIfN8/Ml98rdU47Cosn
-	 SHk1a0ftq8HwjNWZdUmzG7Xwf9W2oQ9RrBV11gfA=
+	b=OIfnZv6CJm4zFntRHk+1ApmL/Q3WuJtJ2LVuKPZtFZbgjhVFVca1zyoG05zvPp7cQ
+	 T0sU7wG7LwcIXM47xyl/4V/WakNnAbrvV3mm5M3gM3/77JcUVS72BEmMNXm8ZDqf2z
+	 3mIKhqmiq17JQPTJ6tat8z9oyrJ9+7H5XroSMZFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgCUBYk (ORCPT
+        id S1727911AbgCUBYo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Mar 2020 21:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45502 "EHLO mail.kernel.org"
+        Fri, 20 Mar 2020 21:24:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgCUBYk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Mar 2020 21:24:40 -0400
+        id S1726773AbgCUBYn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Mar 2020 21:24:43 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57FDC20732;
-        Sat, 21 Mar 2020 01:24:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 615C820732;
+        Sat, 21 Mar 2020 01:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584753879;
-        bh=z0jLXD1iBTi81A3uUJ2QBtjEgegduO/JoJbFVFkXCEw=;
+        s=default; t=1584753883;
+        bh=a7oq14gh90f9G9cupQDvc9EWm1m9yJ4iZFLErXizOcA=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=K22lfkY02/TyeYZt0xwEfhf2zlGj2a9F5/C+UhQAjpt2SfxyxuoL2fSrVCp6VK87H
-         fx8P8ImgO+FHrG8f5EmHPBSwoSqXtYo9km0AzMlCGSN8u2geuM2v0qKBEgWFceq6v/
-         c3PoqI1PoajhOVKJvLHxvmRchFTyN0DOGlbKKUZU=
+        b=TGEI4V2Sr9IwJ2vBZpVZGIAwljW2QxC17vCA1WzaVme3mY5AjgPfyfixpvTQgspyz
+         omNWEhBVFBT8YfXNrFYmYw5dg8JcsPjOXCDyoOJWEa4mvy8dpxHs3kTTWYfruumyqT
+         J7JYlBIh/rvdFNpNScrVbkMGiM0orrW9U07q7WGI=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200309194254.29009-4-lkundrak@v3.sk>
-References: <20200309194254.29009-1-lkundrak@v3.sk> <20200309194254.29009-4-lkundrak@v3.sk>
-Subject: Re: [PATCH v2 03/17] dt-bindings: clock: Convert marvell,mmp2-clock to json-schema
+In-Reply-To: <20200309194254.29009-5-lkundrak@v3.sk>
+References: <20200309194254.29009-1-lkundrak@v3.sk> <20200309194254.29009-5-lkundrak@v3.sk>
+Subject: Re: [PATCH v2 04/17] clk: mmp2: Add support for PLL clock sources
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     Michael Turquette <mturquette@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh@kernel.org>
+        Lubomir Rintel <lkundrak@v3.sk>
 To:     Lubomir Rintel <lkundrak@v3.sk>
-Date:   Fri, 20 Mar 2020 18:24:38 -0700
-Message-ID: <158475387862.125146.16639727598493957737@swboyd.mtv.corp.google.com>
+Date:   Fri, 20 Mar 2020 18:24:42 -0700
+Message-ID: <158475388263.125146.11372517982520346232@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Lubomir Rintel (2020-03-09 12:42:40)
-> Convert the fixed-factor-clock binding to DT schema format using
-> json-schema.
+Quoting Lubomir Rintel (2020-03-09 12:42:41)
+> The clk-of-mmp2 driver pretends that the clock outputs from the PLLs are
+> constant, but in fact they are configurable.
 >=20
-> While at that, fix a couple of small errors: make the file base name
-> match the compatible string, add an example and document the reg-names
-> property.
+> Add logic for obtaining the actual clock rates on MMP2 as well as MMP3.
+> There is no documentation for either SoC, but the "systemsetting" drivers
+> from Marvell GPL code dump provide some clue as far as MPMU registers on
+> MMP2 [1] and MMP3 [2] go.
+>=20
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp3-d=
+ell-ariel.git/tree/drivers/char/mmp2_systemsetting.c
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp3-d=
+ell-ariel.git/tree/drivers/char/mmp3_systemsetting.c
+>=20
+> A separate commit will adjust the clk-of-mmp2 driver.
+>=20
+> Tested on a MMP3-based Dell Wyse 3020 as well as MMP2-based OLPC
+> XO-1.75 laptop.
 >=20
 > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Reviewed-by: Rob Herring <robh@kernel.org>
->=20
 > ---
 
 Applied to clk-next
