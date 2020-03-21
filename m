@@ -2,217 +2,104 @@ Return-Path: <SRS0=1bdf=5G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFCBC54EEB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 08:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F51C54FCA
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 08:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F6B20753
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 08:16:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="OsLdVg/A"
+	by mail.kernel.org (Postfix) with ESMTP id 99FFA20739
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 08:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgCUIQF (ORCPT
+        id S1728256AbgCUIxx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Mar 2020 04:16:05 -0400
-Received: from enterprise01.smtp.diehl.com ([193.201.238.219]:12449 "EHLO
-        enterprise01.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727961AbgCUIQB (ORCPT
+        Sat, 21 Mar 2020 04:53:53 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:16516 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728012AbgCUIxx (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sat, 21 Mar 2020 04:16:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1584778560; x=1616314560;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Z2uB7z28QOCO6ZHYTC0YmbiAxXblaUq/Ne32486EdG0=;
-  b=OsLdVg/AKLVzAZTKxy9FChMNhTCd6BW4ie0+RQM2n2uZcvuoZcGyp7sX
-   6rGA1xwpse4kH+FaJVNph0VX/UdzxpuBhij+4H33lu3Isb6yfGrbNepj7
-   iDT8PfUBtrWzYRlT1N9Zx+9lrTSyfGf0NfVg7MP1u9Yf78gX8RVJ0juxw
-   RENDQenZr06Z/W2f7AZF9HEhPjr+aGdGM6VKwrHUdonetvoV/IBbE58FX
-   IprxzC/hDXJRQACj30lzlkE0ktjBuzfoexIF8QksaJojI9xiai0uILCTv
-   /9srQyBSOE3v3jYOUq2SFeBkUwq0C4uGCpyq52jOVvTcGHcjz54t1HfQA
-   g==;
-IronPort-SDR: JGlCynbsOKWT0iqKYADU4jDJnWhu18yo24qSseS7HqPzLPQTZZLjAibyoBXUf5MD+vAe4wIU5X
- AwX/fhac/Wkw==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Denis Osterland-Heim" <denis.osterland@diehl.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: [PATCH v4 4/5] leds: pwm: add support for default-state device
- property
-Thread-Topic: [PATCH v4 4/5] leds: pwm: add support for default-state device
- property
-Thread-Index: AQHV/1jxcfu5++mTukas+V/Yy7sQpw==
-Date:   Sat, 21 Mar 2020 08:15:55 +0000
-Message-ID: <20200321081321.15614-5-Denis.Osterland@diehl.com>
-References: <20200321081321.15614-1-Denis.Osterland@diehl.com>
-In-Reply-To: <20200321081321.15614-1-Denis.Osterland@diehl.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 21 Mar 2020 04:53:53 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02L8rqJN009371;
+        Sat, 21 Mar 2020 04:53:52 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2yw4ec1st4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 21 Mar 2020 04:53:51 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02L8rotP007344
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Sat, 21 Mar 2020 04:53:50 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sat, 21 Mar 2020 01:53:49 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sat, 21 Mar 2020 01:53:48 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Sat, 21 Mar 2020 01:53:48 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02L8rdel008553;
+        Sat, 21 Mar 2020 04:53:46 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <Laszlo.Nagy@analog.com>,
+        <Andrei.Grozav@analog.com>, <Michael.Hennerich@analog.com>,
+        <Istvan.Csomortani@analog.com>, <Adrian.Costina@analog.com>,
+        <Dragos.Bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v11 3/8] iio: buffer-dmaengine: use %zu specifier for sprintf(align)
+Date:   Sat, 21 Mar 2020 10:53:10 +0200
+Message-ID: <20200321085315.11030-4-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200321085315.11030-1-alexandru.ardelean@analog.com>
+References: <20200321085315.11030-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: 415AWy8o668fDtCxszluz3Qkyqh7rcy46kDTEvbxZbU7iORrjmTYQnM0XIpmHs+x
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-21_02:2020-03-20,2020-03-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=883 malwarescore=0 suspectscore=0 impostorscore=0 spamscore=0
+ mlxscore=0 bulkscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003210051
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support for =22default-state=22 devicetree property, whic=
-h
-allows to defer pwm init to first use of led.
+The 'size_t' type behaves differently on 64-bit architectures, and causes
+compiler a warning of the sort "format '%u' expects argument of type
+'unsigned int', but argument 3 has type 'size_t {aka long unsigned int}'".
 
-This allows to configure the PWM early in bootloader to let the LED
-blink until an application in Linux userspace sets something different.
+This change adds the correct specifier for the 'align' field.
 
-Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+Fixes: 4538c18568099 ("iio: buffer-dmaengine: Report buffer length requirements")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/leds/leds-pwm.c | 54 ++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 48 insertions(+), 6 deletions(-)
+ drivers/iio/buffer/industrialio-buffer-dmaengine.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 07eab2d8b7c7..73d36d5fb427 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -18,10 +18,15 @@
- #include <linux/pwm.h>
- #include <linux/slab.h>
-=20
-+#define LEDS_PWM_DEFSTATE_OFF	0
-+#define LEDS_PWM_DEFSTATE_ON	1
-+#define LEDS_PWM_DEFSTATE_KEEP	2
-+
- struct led_pwm {
- 	const char	*name;
- 	const char	*default_trigger;
- 	u8		active_low;
-+	u8		default_state;
- 	unsigned int	max_brightness;
- };
-=20
-@@ -88,7 +93,30 @@ static int led_pwm_add(struct device *dev, struct led_=
-pwm_priv *priv,
-=20
- 	led_data->cdev.brightness_set_blocking =3D led_pwm_set;
-=20
--	pwm_init_state(led_data->pwm, &led_data->pwmstate);
-+	/* init PWM state */
-+	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
-+		pwm_get_state(led_data->pwm, &led_data->pwmstate);
-+		if (!led_data->pwmstate.period) {
-+			led->default_state =3D LEDS_PWM_DEFSTATE_OFF;
-+			dev_warn(dev,
-+				=22failed to read period for %s, default to off=22,
-+				led->name);
-+		}
-+	}
-+	if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP)
-+		pwm_init_state(led_data->pwm, &led_data->pwmstate);
-+
-+	/* set brightness */
-+	if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_ON)
-+		led_data->cdev.brightness =3D led->max_brightness;
-+	else if (led->default_state =3D=3D LEDS_PWM_DEFSTATE_KEEP) {
-+		uint64_t brightness;
-+
-+		brightness =3D led->max_brightness;
-+		brightness *=3D led_data->pwmstate.duty_cycle;
-+		do_div(brightness, led_data->pwmstate.period);
-+		led_data->cdev.brightness =3D brightness;
-+	}
-=20
- 	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
- 	if (ret) {
-@@ -97,11 +125,13 @@ static int led_pwm_add(struct device *dev, struct le=
-d_pwm_priv *priv,
- 		return ret;
- 	}
-=20
--	ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
--	if (ret) {
--		dev_err(dev, =22failed to set led PWM value for %s: %d=22,
--			led->name, ret);
--		return ret;
-+	if (led->default_state !=3D LEDS_PWM_DEFSTATE_KEEP) {
-+		ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
-+		if (ret) {
-+			dev_err(dev, =22failed to set led PWM value for %s: %d=22,
-+				led->name, ret);
-+			return ret;
-+		}
- 	}
-=20
- 	priv->num_leds++;
-@@ -117,6 +147,8 @@ static int led_pwm_create_fwnode(struct device *dev, =
-struct led_pwm_priv *priv)
- 	memset(&led, 0, sizeof(led));
-=20
- 	device_for_each_child_node(dev, fwnode) {
-+		const char *state =3D NULL;
-+
- 		ret =3D fwnode_property_read_string(fwnode, =22label=22, &led.name);
- 		if (ret && is_of_node(fwnode))
- 			led.name =3D to_of_node(fwnode)->name;
-@@ -134,6 +166,16 @@ static int led_pwm_create_fwnode(struct device *dev,=
- struct led_pwm_priv *priv)
- 		fwnode_property_read_u32(fwnode, =22max-brightness=22,
- 					 &led.max_brightness);
-=20
-+		if (!fwnode_property_read_string(fwnode, =22default-state=22,
-+						 &state)) {
-+			if (!strcmp(state, =22keep=22))
-+				led.default_state =3D LEDS_PWM_DEFSTATE_KEEP;
-+			else if (!strcmp(state, =22on=22))
-+				led.default_state =3D LEDS_PWM_DEFSTATE_ON;
-+			else
-+				led.default_state =3D LEDS_PWM_DEFSTATE_OFF;
-+		}
-+
- 		ret =3D led_pwm_add(dev, priv, &led, fwnode);
- 		if (ret) {
- 			fwnode_handle_put(fwnode);
---=20
-2.25.1
+diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+index b129693af0fd..94da3b1ca3a2 100644
+--- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
++++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+@@ -134,7 +134,7 @@ static ssize_t iio_dmaengine_buffer_get_length_align(struct device *dev,
+ 	struct dmaengine_buffer *dmaengine_buffer =
+ 		iio_buffer_to_dmaengine_buffer(indio_dev->buffer);
+ 
+-	return sprintf(buf, "%u\n", dmaengine_buffer->align);
++	return sprintf(buf, "%zu\n", dmaengine_buffer->align);
+ }
+ 
+ static IIO_DEVICE_ATTR(length_align_bytes, 0444,
+-- 
+2.17.1
 
-
-
-Diehl Connectivity Solutions GmbH
-Gesch=E4ftsf=FChrung: Horst Leonberger
-Sitz der Gesellschaft: N=FCrnberg - Registergericht: Amtsgericht
-N=FCrnberg: HRB 32315
-_________________________________________________________________________=
-__________________________
-
-Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-M=
-ail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
-Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhal=
-ten haben. Bitte loeschen Sie in diesem Fall die Nachricht.
-Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung=
- und/oder Publikation dieser E-Mail ist strengstens untersagt.
-- Informationen zum Datenschutz, insbesondere zu Ihren Rechten, erhalten =
-Sie unter https://www.diehl.com/group/de/transparenz-und-informationspfli=
-chten/
-
-The contents of the above mentioned e-mail is not legally binding. This e=
--mail contains confidential and/or legally protected information. Please =
-inform us if you have received this e-mail by
-mistake and delete it in such a case. Each unauthorized reproduction, dis=
-closure, alteration, distribution and/or publication of this e-mail is st=
-rictly prohibited.=20
-- For general information on data protection and your respective rights p=
-lease visit https://www.diehl.com/group/en/transparency-and-information-o=
-bligations/
