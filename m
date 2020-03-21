@@ -2,84 +2,153 @@ Return-Path: <SRS0=1bdf=5G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5B0C4332D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 18:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966B8C43332
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 19:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E376D2076E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 18:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584816195;
-	bh=TuwfuUTLsIiC41Ku4BtjHbWONlHCrlEleOBEtJOmKuU=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=pXMDa5tBojrDt7a/cWPofwS8/02xKgFxZ8D8+n5AvJWpBsj7atKFFcjw5k87rnR5E
-	 xrOiy04zwSCopT7G4/QF92E6evHD28PBZtl08lKBxuYfQAOOKL+Ow6/BqIcy84g/T7
-	 4raB5NAWujYfkzJfEaaR4urQ/hBSB1M6ngegf4uI=
+	by mail.kernel.org (Postfix) with ESMTP id 6F09320777
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 19:31:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="t0Flj+1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgCUSnO (ORCPT
+        id S1727637AbgCUTbF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Mar 2020 14:43:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgCUSnO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 21 Mar 2020 14:43:14 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C31520724;
-        Sat, 21 Mar 2020 18:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584816193;
-        bh=TuwfuUTLsIiC41Ku4BtjHbWONlHCrlEleOBEtJOmKuU=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=DXUcGFj5ncUXdFUsONtObkvRjSvHMeV+B0kN2e9sFsLqlmgf0Qq9UB5fVpjQ40ieE
-         A3edJHNJn1KYYmMhlwjIlnsp9dyYxI5ZVk/KjhHevHOBgtQ2VMoTxVtz+YP/PtxvlL
-         ID10Q7e/QraS6gnKNB8rRS5J6ugAITv8wjPimPz8=
-Content-Type: text/plain; charset="utf-8"
+        Sat, 21 Mar 2020 15:31:05 -0400
+Received: from mx-out2.startmail.com ([145.131.90.155]:56841 "EHLO
+        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbgCUTbF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 15:31:05 -0400
+Date:   Sat, 21 Mar 2020 21:35:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
+        s=2017-11; t=1584819063;
+        bh=MvmU5kwlpWyx5E7JUzXu7SxsG7U8nfCpmoM8LcX9xoU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t0Flj+1QhVQMEFdpJ7SCNjCLElcpftQ0lCjV0EecP2Gb20Rw5HtkywpaNZaNqbq0M
+         Sxwv5k3bD5SlD8tuEZM+nDhzkKfYxeE1559b2FjyiBBGSGdQCUULVUcXXs25OyjmIQ
+         vEqNWEBW9GXKq/IlwGqDZ4BlApxX4glj/jpBvz38k/rVjH2iUzoNDNgKYjOskmhq76
+         fI9HlKBORmKzArJ/WNuAd/UX3QRMMeXkkANQ87b0mM/vwy8R+joouYf2bnDFlobsRQ
+         h6kyIwasJg4Td/aX3qUNl01sszpIasREOV8fCBWAqK7KCkKzED2Pey66DqT8UBoIs1
+         TQrPiklu4LAfA==
+From:   Alexandru Lazar <alazar@startmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add MAX1241 device tree
+ bindings in documentation
+Message-ID: <20200321193541.GA16892@leena.republic>
+References: <20200320150114.9297-1-alazar@startmail.com>
+ <20200320150114.9297-2-alazar@startmail.com>
+ <20200321173412.52548ef1@archlinux>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200321051612.GA5063@builder>
-References: <20200319053902.3415984-1-bjorn.andersson@linaro.org> <20200319053902.3415984-3-bjorn.andersson@linaro.org> <158474710844.125146.15515925711513283888@swboyd.mtv.corp.google.com> <20200321051612.GA5063@builder>
-Subject: Re: [PATCH 2/4] clk: qcom: mmcc-msm8996: Properly describe GPU_GX gdsc
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Date:   Sat, 21 Mar 2020 11:43:12 -0700
-Message-ID: <158481619279.125146.6917548675896981321@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200321173412.52548ef1@archlinux>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-03-20 22:16:12)
-> On Fri 20 Mar 16:31 PDT 2020, Stephen Boyd wrote:
->=20
-> > Quoting Bjorn Andersson (2020-03-18 22:39:00)
-> > > diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b=
-/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> > > index 85518494ce43..65d9aa790581 100644
-> > > --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> > > +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> > > @@ -67,6 +67,10 @@ properties:
-> > >      description:
-> > >         Protected clock specifier list as per common clock binding
-> > > =20
-> > > +  vdd_gfx-supply:
-> >=20
-> > Why not vdd-gfx-supply? What's with the underscore?
-> >=20
->=20
-> The pad is named "VDD_GFX" in the datasheet and the schematics. I see
-> that we've started y/_/-/ in some of the newly added bindings, would you
-> prefer I follow this?
+Hi Jonathan,
 
-If the datasheet has this then I guess it's fine. I'll wait for Rob to
-ack.
+> Please consider also adding the vdd-supply.
+> It's not really required, but if you don't add it from the start
+> chances are high that at some point someone else will need to
+> add it.
+
+Sorry if I'm missing something obvious here -- what vdd-supply is
+that? Are you thinking of the regulator used for the ADC's reference
+voltage? That's already there (vref-supply).
+
+Or did you mean I should add a definition for the regulator output used
+for the device's Vdd input (i.e. the positive supply voltage)? Needless
+to say, I'm happy to add it if you think it's a good idea. It's just I
+don't think I've seen it in other drivers (except maybe ad7192?) -- so I
+figured I'd ask before sending a botched v5.
+
+Best regards,
+Alex
+
+> 
+> One trivial thing inline.  Otherwise looks good to me.
+> 
+> > ---
+> >  .../bindings/iio/adc/maxim,max1241.yaml       | 61 +++++++++++++++++++
+> >  1 file changed, 61 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
+> > new file mode 100644
+> > index 000000000000..de41d422ce3b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
+> > @@ -0,0 +1,61 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# Copyright 2020 Ioan-Alexandru Lazar
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/adc/maxim,max1241.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Maxim MAX1241 12-bit, single-channel analog to digital converter
+> > +
+> > +maintainers:
+> > +  - Ioan-Alexandru Lazar <alazar@startmail.com>
+> > +
+> > +description: |
+> > +  Bindings for the max1241 12-bit, single-channel ADC device. This
+> > +  driver supports voltage reading and can optionally be configured for
+> 
+> Driver shouldn't be mentioned in the binding. It's a description of the
+> hardware only.
+> 
+> > +  power-down mode operation. The datasheet can be found at:
+> > +    https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - maxim,max1241
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  vref-supply:
+> > +    description:
+> > +      Device tree identifier of the regulator that provides the external
+> > +      reference voltage.
+> > +    maxItems: 1
+> > +
+> > +  shdn-gpios:
+> > +    description:
+> > +      GPIO spec for the GPIO pin connected to the ADC's /SHDN pin. If
+> > +      specified, the /SHDN pin will be asserted between conversions,
+> > +      thus enabling power-down mode.
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - vref-supply
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    spi0 {
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +
+> > +        adc@0 {
+> > +            compatible = "maxim,max1241";
+> > +            reg = <0>;
+> > +            vref-supply = <&vdd_3v3_reg>;
+> > +            spi-max-frequency = <1000000>;
+> > +            shdn-gpios = <&gpio 26 1>;
+> > +        };
+> > +    };
+> > +
+> > +
+> 
