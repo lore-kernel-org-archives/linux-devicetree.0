@@ -4,44 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C92C4332B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 15:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C95FC4332E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 15:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2CE020781
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 15:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4E620776
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 15:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgCUPUp (ORCPT
+        id S1727518AbgCUPqv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Mar 2020 11:20:45 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52352 "EHLO
+        Sat, 21 Mar 2020 11:46:51 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:56376 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbgCUPUp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 11:20:45 -0400
+        with ESMTP id S1726652AbgCUPqv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 11:46:51 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id CF6FD1C032C; Sat, 21 Mar 2020 16:20:42 +0100 (CET)
-Date:   Sat, 21 Mar 2020 16:20:37 +0100
+        id F2D0B1C032C; Sat, 21 Mar 2020 16:46:49 +0100 (CET)
+Date:   Sat, 21 Mar 2020 16:46:49 +0100
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Denis Osterland-Heim <denis.osterland@diehl.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>
-Subject: Re: [PATCH v4 3/5] leds: pwm: check result of led_pwm_set() in
- led_pwm_add()
-Message-ID: <20200321152037.GB8386@duo.ucw.cz>
-References: <20200321081321.15614-1-Denis.Osterland@diehl.com>
- <20200321081321.15614-4-Denis.Osterland@diehl.com>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     jacek.anaszewski@gmail.com, dmurphy@ti.com, robh+dt@kernel.org,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: leds: common: fix example for gpio-leds
+Message-ID: <20200321154649.GH8386@duo.ucw.cz>
+References: <20200313165700.15569-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
+        protocol="application/pgp-signature"; boundary="ISKrrfpKsPiF35CV"
 Content-Disposition: inline
-In-Reply-To: <20200321081321.15614-4-Denis.Osterland@diehl.com>
+In-Reply-To: <20200313165700.15569-1-jbx6244@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -49,75 +42,33 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---8GpibOaaTibBMecb
-Content-Type: text/plain; charset=iso-8859-1
+--ISKrrfpKsPiF35CV
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
-
-> led_pwm_set() now returns an error when setting the PWM fails.
+On Fri 2020-03-13 17:57:00, Johan Jonker wrote:
+> The preferred form for gpio-leds compatible subnodes is:
+> ^led-[0-9a-f]$
+> Fix example by changing led0 and led1 to led-0 and led-1.
 >=20
-> Cc: Uwe Kleine-K=F6nig <uwe@kleine-koenig.org>
-> Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-I applied 1 and 2, but 3 failed for me. I'll push updated -next, can
-you see what is going on there?
+Acked-by: Pavel Machek <pavel@ucw.cz>
 
-Best regards,
-								Pavel
-
-> +++ b/drivers/leds/leds-pwm.c
-> @@ -91,15 +91,21 @@ static int led_pwm_add(struct device *dev, struct led=
-_pwm_priv *priv,
->  	pwm_init_state(led_data->pwm, &led_data->pwmstate);
-> =20
->  	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
-> -	if (ret =3D=3D 0) {
-> -		priv->num_leds++;
-> -		led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
-> -	} else {
-> +	if (ret) {
->  		dev_err(dev, "failed to register PWM led for %s: %d\n",
->  			led->name, ret);
-> +		return ret;
->  	}
-> =20
-> -	return ret;
-> +	ret =3D led_pwm_set(&led_data->cdev, led_data->cdev.brightness);
-> +	if (ret) {
-> +		dev_err(dev, "failed to set led PWM value for %s: %d",
-> +			led->name, ret);
-> +		return ret;
-> +	}
-> +
-> +	priv->num_leds++;
-> +	return 0;
->  }
-> =20
->  static int led_pwm_create_fwnode(struct device *dev, struct
-> led_pwm_priv *priv)
-
->=20
-> The contents of the above mentioned e-mail is not legally
-> binding. This e-mail contains confidential and/or legally protected
-> information. Please inform us if you have received this e-mail by
-
-This is lie. Please don't do this.
-								Pavel
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---8GpibOaaTibBMecb
+--ISKrrfpKsPiF35CV
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnYwxQAKCRAw5/Bqldv6
-8kXiAJ4npfPQ8vzqkySsj2s8Qpj/BC45GwCgwKItekyjd/+ilSTTBVyp1/byw3A=
-=rXOy
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnY26QAKCRAw5/Bqldv6
+8oaTAJ45ChWWxAnpkZnlebtt8+PuNDzWDgCgocAj6aGt8TUO6Ll+Iisfx8tx+ak=
+=TS8d
 -----END PGP SIGNATURE-----
 
---8GpibOaaTibBMecb--
+--ISKrrfpKsPiF35CV--
