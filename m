@@ -2,105 +2,77 @@ Return-Path: <SRS0=1bdf=5G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5934C4332B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 14:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A26A0C4332B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 15:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D6120781
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 14:49:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="sAR5y0fA"
+	by mail.kernel.org (Postfix) with ESMTP id 844B220776
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 15:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgCUOtq (ORCPT
+        id S1727385AbgCUPP1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:49:46 -0400
-Received: from mout-u-204.mailbox.org ([91.198.250.253]:44634 "EHLO
-        mout-u-204.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgCUOtq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 10:49:46 -0400
-X-Greylist: delayed 599 seconds by postgrey-1.27 at vger.kernel.org; Sat, 21 Mar 2020 10:49:45 EDT
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 48l3FY4BMnzQkJl;
-        Sat, 21 Mar 2020 15:39:45 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1584801583;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Tkpjw41OSQS6g4mnJ1HdI3U2kVush6jX6zP98pED8vo=;
-        b=sAR5y0fAccgXVWrnYlH9HkSy0j/qIMg3EXITWYl9lGkPa/KR5mp/m083mpcbKwXhx/vgch
-        dS+1bufCW+lKOHUIZJ3hV65QTD1avsJWu0gExWdtuCBfjE3lPVwSwYC+iXhUFITurtJy7h
-        +kx1fhSA9yS9T7EsV5pCv9lEIayFNiwDXWJNiGDTmKI7x2Hcia1O5woQovtAscEk0oT84L
-        w9JrJTwDre073BVtsIF+EiOqmhm3R+Rc9spSXNRpFkVrFuEIBXTjn5YMIJZwSF1IdmVkzh
-        FXxuQh9dhs1Df5CLq21/vxXa3PHki1sA3VdvSLF+dwGlKpk+XAaodJh3JFk9Cw==
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id exzjPqbLDL-R; Sat, 21 Mar 2020 15:39:42 +0100 (CET)
-From:   Sungbo Eo <mans0n@gorani.run>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>
-Subject: [PATCH] ARM: dts: oxnas: Fix clear-mask property
-Date:   Sat, 21 Mar 2020 23:36:53 +0900
-Message-Id: <20200321143653.2412823-1-mans0n@gorani.run>
+        Sat, 21 Mar 2020 11:15:27 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51508 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgCUPP1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 11:15:27 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 1A9451C031D; Sat, 21 Mar 2020 16:15:25 +0100 (CET)
+Date:   Sat, 21 Mar 2020 16:15:09 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Denis Osterland-Heim <denis.osterland@diehl.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v4 5/5] leds: pwm: add reference to common leds for
+ default-state
+Message-ID: <20200321151509.GA8386@duo.ucw.cz>
+References: <20200321081321.15614-1-Denis.Osterland@diehl.com>
+ <20200321081321.15614-6-Denis.Osterland@diehl.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Content-Disposition: inline
+In-Reply-To: <20200321081321.15614-6-Denis.Osterland@diehl.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Disable all rps-irq interrupts during driver initialization to prevent
-an accidental interrupt on GIC.
 
-Fixes: 84316f4ef141 ("ARM: boot: dts: Add Oxford Semiconductor OX810SE dtsi")
-Fixes: 38d4a53733f5 ("ARM: dts: Add support for OX820 and Pogoplug V3")
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
----
- arch/arm/boot/dts/ox810se.dtsi | 4 ++--
- arch/arm/boot/dts/ox820.dtsi   | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
-index 9f6c2b660ed3..0755e5864c4a 100644
---- a/arch/arm/boot/dts/ox810se.dtsi
-+++ b/arch/arm/boot/dts/ox810se.dtsi
-@@ -323,8 +323,8 @@ intc: interrupt-controller@0 {
- 					interrupt-controller;
- 					reg = <0 0x200>;
- 					#interrupt-cells = <1>;
--					valid-mask = <0xFFFFFFFF>;
--					clear-mask = <0>;
-+					valid-mask = <0xffffffff>;
-+					clear-mask = <0xffffffff>;
- 				};
- 
- 				timer0: timer@200 {
-diff --git a/arch/arm/boot/dts/ox820.dtsi b/arch/arm/boot/dts/ox820.dtsi
-index c9b327732063..90846a7655b4 100644
---- a/arch/arm/boot/dts/ox820.dtsi
-+++ b/arch/arm/boot/dts/ox820.dtsi
-@@ -240,8 +240,8 @@ intc: interrupt-controller@0 {
- 					reg = <0 0x200>;
- 					interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
- 					#interrupt-cells = <1>;
--					valid-mask = <0xFFFFFFFF>;
--					clear-mask = <0>;
-+					valid-mask = <0xffffffff>;
-+					clear-mask = <0xffffffff>;
- 				};
- 
- 				timer0: timer@200 {
--- 
-2.25.2
+On Sat 2020-03-21 08:15:51, Denis Osterland-Heim wrote:
+> The default-state is now supported for PWM leds.
+>=20
+> Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
 
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnYvfQAKCRAw5/Bqldv6
+8vruAJ9JigSRV352Q9mnIWerJuIlHO7fMwCghlhj8whKe4nARjXc3LwaszgwvbQ=
+=rxOr
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
