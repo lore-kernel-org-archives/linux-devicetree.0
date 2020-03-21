@@ -2,152 +2,105 @@ Return-Path: <SRS0=1bdf=5G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDCDC4332E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 14:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5934C4332B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 14:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8784720757
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 14:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584800085;
-	bh=BkafZo5ywLgZLTC3Js/WXCIoJuWRu5WaImZuPyUfdoE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZdaL2oHP92NvrtcoUnPSEjo+4mjIXkE9vEyC04yeGww7OeKvePoQzeget9Id1kIK/
-	 sjAs2n4Y7e5UDskfIJlWgEAiHAf/gghiuJz4ahOc7aNTILaqjI86Tiq8YLVKZIw3vM
-	 Wc/vnz/BvKSxr0fMdge4bvmk7hqCUNFTapMjxZ1U=
+	by mail.kernel.org (Postfix) with ESMTP id B9D6120781
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Mar 2020 14:49:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="sAR5y0fA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgCUOOm (ORCPT
+        id S1726192AbgCUOtq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Mar 2020 10:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgCUOOm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 21 Mar 2020 10:14:42 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 21 Mar 2020 10:49:46 -0400
+Received: from mout-u-204.mailbox.org ([91.198.250.253]:44634 "EHLO
+        mout-u-204.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgCUOtq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 10:49:46 -0400
+X-Greylist: delayed 599 seconds by postgrey-1.27 at vger.kernel.org; Sat, 21 Mar 2020 10:49:45 EDT
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77C5E20658;
-        Sat, 21 Mar 2020 14:14:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584800081;
-        bh=BkafZo5ywLgZLTC3Js/WXCIoJuWRu5WaImZuPyUfdoE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Cz1IsoUnhrqVIT/1pySZTxYw0qA3gXQQrCtot7/Pyy8OENEBLxg+RmrD54NQuPM09
-         5t1M7MDdNPhUiiLmXbxJxvAxAtxrXU5i+FIobbWx4j6EsDTmxYrG5O+CV8flUdoYZl
-         2UhQlh8R2x4iRVWOKfxfkhCZXRXNzE62EA7qPR5o=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jFetb-00EVd4-NJ; Sat, 21 Mar 2020 14:14:39 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 21 Mar 2020 14:14:39 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 48l3FY4BMnzQkJl;
+        Sat, 21 Mar 2020 15:39:45 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1584801583;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Tkpjw41OSQS6g4mnJ1HdI3U2kVush6jX6zP98pED8vo=;
+        b=sAR5y0fAccgXVWrnYlH9HkSy0j/qIMg3EXITWYl9lGkPa/KR5mp/m083mpcbKwXhx/vgch
+        dS+1bufCW+lKOHUIZJ3hV65QTD1avsJWu0gExWdtuCBfjE3lPVwSwYC+iXhUFITurtJy7h
+        +kx1fhSA9yS9T7EsV5pCv9lEIayFNiwDXWJNiGDTmKI7x2Hcia1O5woQovtAscEk0oT84L
+        w9JrJTwDre073BVtsIF+EiOqmhm3R+Rc9spSXNRpFkVrFuEIBXTjn5YMIJZwSF1IdmVkzh
+        FXxuQh9dhs1Df5CLq21/vxXa3PHki1sA3VdvSLF+dwGlKpk+XAaodJh3JFk9Cw==
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id exzjPqbLDL-R; Sat, 21 Mar 2020 15:39:42 +0100 (CET)
+From:   Sungbo Eo <mans0n@gorani.run>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 04/11] irqchip: Add driver for Loongson-3
- HyperTransport PIC controller
-In-Reply-To: <20200318062102.8145-5-jiaxun.yang@flygoat.com>
-References: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
- <20200318062102.8145-5-jiaxun.yang@flygoat.com>
-Message-ID: <f4c009a117a3978e9e98195abcc98c07@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, chenhc@lemote.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org, allison@lohutok.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Sungbo Eo <mans0n@gorani.run>
+Subject: [PATCH] ARM: dts: oxnas: Fix clear-mask property
+Date:   Sat, 21 Mar 2020 23:36:53 +0900
+Message-Id: <20200321143653.2412823-1-mans0n@gorani.run>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-03-18 06:20, Jiaxun Yang wrote:
-> This controller appeared on Loongson-3 family of chips to receive 
-> interrupts
-> from PCH PIC.
-> It is a I8259 with optimized interrupt polling flow. We can poll
-> interrupt number
-> from HT vector directly but still have to follow standard I8259
-> routines to mask,
-> unmask and EOI.
-> 
-> Co-developed-by: Huacai Chen <chenhc@lemote.com>
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> 
-> ---
-> v4-v5:
-> 	Enhancements according to maz's suggestions:
-> 		- Add static for private struct
-> 		- Drop pointless rename
-> 		- Fix DT parse bug
-> 		- Clarifications in comments and commit message
-> ---
->  arch/mips/include/asm/i8259.h        |   1 +
->  drivers/irqchip/Kconfig              |  10 ++
->  drivers/irqchip/Makefile             |   1 +
->  drivers/irqchip/irq-loongson-htpic.c | 149 +++++++++++++++++++++++++++
->  4 files changed, 161 insertions(+)
->  create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+Disable all rps-irq interrupts during driver initialization to prevent
+an accidental interrupt on GIC.
 
-[...]
+Fixes: 84316f4ef141 ("ARM: boot: dts: Add Oxford Semiconductor OX810SE dtsi")
+Fixes: 38d4a53733f5 ("ARM: dts: Add support for OX820 and Pogoplug V3")
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+---
+ arch/arm/boot/dts/ox810se.dtsi | 4 ++--
+ arch/arm/boot/dts/ox820.dtsi   | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> +int __init htpic_of_init(struct device_node *node, struct device_node 
-> *parent)
-> +{
-> +	unsigned int parent_irq[4];
-> +	int i, err;
-> +	int num_parents = 0;
-> +
-> +	if (htpic) {
-> +		pr_err("loongson-htpic: Only one HTPIC is allowed in the system\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
-> +	if (!htpic) {
-> +		err = -ENOMEM;
-> +		goto out_free;
-> +	}
-> +
-> +	htpic->base = of_iomap(node, 0);
-> +	if (!htpic->base) {
-> +		err = -ENODEV;
-> +		goto out_free;
-> +	}
-> +
-> +	htpic->domain = __init_i8259_irqs(node);
-> +	if (!htpic->domain) {
-> +		pr_err("loongson-htpic: Failed to initialize i8259 IRQs\n");
-> +		err = -ENOMEM;
-> +		goto out_iounmap;
-> +	}
-> +
-> +	/* Interrupt may come from any of the 4 interrupt line */
-> +	for (i = 0; i < HTPIC_MAX_PARENT_IRQ; i++) {
-> +		parent_irq[i] = irq_of_parse_and_map(node, i);
-> +		if (parent_irq[i] < 0)
-
-irq_of_parse_and_map() returns 0 when there is no interrupt to be
-mapped. You should probably test for that too.
-
-Thanks,
-
-         M.
+diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
+index 9f6c2b660ed3..0755e5864c4a 100644
+--- a/arch/arm/boot/dts/ox810se.dtsi
++++ b/arch/arm/boot/dts/ox810se.dtsi
+@@ -323,8 +323,8 @@ intc: interrupt-controller@0 {
+ 					interrupt-controller;
+ 					reg = <0 0x200>;
+ 					#interrupt-cells = <1>;
+-					valid-mask = <0xFFFFFFFF>;
+-					clear-mask = <0>;
++					valid-mask = <0xffffffff>;
++					clear-mask = <0xffffffff>;
+ 				};
+ 
+ 				timer0: timer@200 {
+diff --git a/arch/arm/boot/dts/ox820.dtsi b/arch/arm/boot/dts/ox820.dtsi
+index c9b327732063..90846a7655b4 100644
+--- a/arch/arm/boot/dts/ox820.dtsi
++++ b/arch/arm/boot/dts/ox820.dtsi
+@@ -240,8 +240,8 @@ intc: interrupt-controller@0 {
+ 					reg = <0 0x200>;
+ 					interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+ 					#interrupt-cells = <1>;
+-					valid-mask = <0xFFFFFFFF>;
+-					clear-mask = <0>;
++					valid-mask = <0xffffffff>;
++					clear-mask = <0xffffffff>;
+ 				};
+ 
+ 				timer0: timer@200 {
 -- 
-Jazz is not dead. It just smells funny...
+2.25.2
+
