@@ -2,81 +2,84 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327B2C1975A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 21:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E5CC1975A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 21:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E337920658
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 21:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DD02072D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 21:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsluBTBS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1PZ8Cqg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgCVVJ0 (ORCPT
+        id S1726781AbgCVVfZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 17:09:26 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40660 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgCVVJ0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 17:09:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id l184so6438513pfl.7;
-        Sun, 22 Mar 2020 14:09:25 -0700 (PDT)
+        Sun, 22 Mar 2020 17:35:25 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43938 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbgCVVfZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 17:35:25 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b2so14510749wrj.10;
+        Sun, 22 Mar 2020 14:35:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0P8QHQbC0rhjV1z46PRgz8q5ueHCOriClVGFUtGEVkA=;
-        b=DsluBTBSCZ4qUsRcfiCYlM7zsVCVK7m2DHng0uHJMqveNrfFmKRGZSABk0HyEhx342
-         bNNaduBAHDO1OjlAXxSMpD7SX71zE+lLGWNMAjimD+o5Cgdj5rriXWmo6fIhiGh4D1WV
-         iJ4HB0+D1NE+OxZ6aCjFyf0OpSTG7unKpfD4Y/kIm9/j8w7Uq8Xdt1UYb2Lf05wImyZ1
-         dkPiBAr6cu/3MuCkyazR9IxKsb9nAEB0YI+b/hrkvQ/mAla99yE5o+7o5f/140h6koIJ
-         h7NLWpx7pGAEUEZysMFWbfRmXTmVwOv5o8WSeu7hznsecdSjoiweuV8fGnf0FNMrFZ9A
-         dqlA==
+        bh=jUvRLsjgwJ+TBSJqaMXvpvNSsdA9yXVRnh9TT4FaGvM=;
+        b=A1PZ8CqgivPjuO/QZ6+euBAJfgsC/ssOHGCCoModfOHrSZztWqUAxe7vhdNiMlAOZn
+         vAiXtWb1mzZlFNPrd6Algd++ZmZiP0dQ3ZWd5cl4uEko851Y3CS6zOriKPsPNDYYrxY7
+         fXWSbPHjHPfPjltA+xNW/321IcFF/st6Rr2O1gGKCjX2u239aEv0e318IuOmPfXGIc4J
+         WFXjO6sLVPq2iYpntKqQuNY0OOpeKzwl+MW9hLv+YrMEMVXi38SqNP6R3pYBNni1OPv9
+         xNbHFfCl9MDg3fsDJMzuapg2wVaD0jM/AS1wzpf9zfj7wyhxFo9tkJiykL+jfGhG48rM
+         7jGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=0P8QHQbC0rhjV1z46PRgz8q5ueHCOriClVGFUtGEVkA=;
-        b=fHOEIBChRUh2TZWqj+tZir74FV0dac+hU3lNnXCPchzGNkHsJCAgLiBP1NCk5KdP9i
-         +AKGYkzpSTOqCb99YLe2a0bcWs6RjNVLrR93FXmVJ/4nEfdQcY8DThA8winQCRXr4TXq
-         bopSmS1bvEUmuMZEkIpjSIjeff3aw4YqdJHOY3d4e5FWXsx4w2Vq0jt8w1gb+N/Mf8zC
-         cxXELuh2p06/R7FTFm9i5siZ+guXlkKoRzW/k1i51b+6j+ZLTSEQhPtfpTKVdj2L/Yl8
-         YPjfP09fzS9bszHVL9rUbwubU3dIG+EGc8hjd5Wtpl2wWO5BotHCAyDVDsFd1dhjUv7a
-         En+Q==
-X-Gm-Message-State: ANhLgQ1CgL7mGssYu4dqR66sZzblSvLdi6YjCh0pE2CsEn3OMZSzlt+k
-        PW64PmNRxxmgKD/xqtR8PSRwUFnO
-X-Google-Smtp-Source: ADFU+vuEWfgkDTcnzZq/rg3553krzbk8m1PJgjOk3Zs35eTM8Q59YGFvE93+XdKDWI4QPP1wPs98lA==
-X-Received: by 2002:aa7:8149:: with SMTP id d9mr20665809pfn.170.1584911364185;
-        Sun, 22 Mar 2020 14:09:24 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id b19sm10180312pju.12.2020.03.22.14.09.22
+        bh=jUvRLsjgwJ+TBSJqaMXvpvNSsdA9yXVRnh9TT4FaGvM=;
+        b=BnGwglZ2LI0a5j69ygC3Aod94awB6kw4CeVzl/7tDoBO5cGbcXd/W2H01Y/Wi8YZKc
+         NNlfPf7Dyx4xWlx0rjXCa9QfWcM7ugMnX1vAk7EVB6kaEILw055H5mFhDKom39TQOPps
+         rbYeZXbeDgaYLpLh0u0p91qfTlkasDmsaxAi5IVzc5pFrv/uinSBpY4zSV86Y+YW6WPi
+         d7x54wpdLLbjXUgxEVOTR3dUISCAmbehVz5eS/D0lnVqmLT0FtQ/hfaeeHydQhJIYS95
+         rJL9KUWel19VT7bpTqJq9D1WTOcKAAEslDpLTIz3TaHCAJZvCZgm1VwryYwE2oWx+KoL
+         KIFg==
+X-Gm-Message-State: ANhLgQ2d476rk8+U4nBVuPqqZI6cLawLOhMQmc2ynCZlKw+Py6T3Wqy+
+        9GPMYVJy687Ac8w6kU/3dXRFjCwG
+X-Google-Smtp-Source: ADFU+vs/UqRKUb6mnTli6Cz/Ljj+yBgtW2UDmVvs9r6D1dAKnUwIHF+S6SYh907fpFX4LRzPt5C16Q==
+X-Received: by 2002:a5d:60cc:: with SMTP id x12mr1902468wrt.149.1584912922434;
+        Sun, 22 Mar 2020 14:35:22 -0700 (PDT)
+Received: from [10.230.186.223] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 138sm19234524wmb.21.2020.03.22.14.35.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Mar 2020 14:09:23 -0700 (PDT)
-Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
+        Sun, 22 Mar 2020 14:35:21 -0700 (PDT)
+Subject: Re: [PATCH v2 12/12] dt-bindings: arm: bcm: Convert BCM2835 firmware
+ binding to YAML
 To:     Rob Herring <robh@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+Cc:     linux-arm-kernel@lists.infradead.org,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Marek Vasut <marex@denx.de>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-References: <20200313052252.25389-1-o.rempel@pengutronix.de>
- <20200313052252.25389-2-o.rempel@pengutronix.de>
- <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
- <20200313181056.GA29732@lunn.ch>
- <20200313181601.sbxdrqdjqfj3xn3e@pengutronix.de>
- <15dafdcd-1979-bf35-3968-c80ffc113001@gmail.com>
- <20200313185327.nawcp2imfldyhpqa@pengutronix.de>
- <20200317115626.4ncavxdcw4wu5zgc@pengutronix.de>
- <137a6dd3-c5ba-25b1-67ff-f0112afd7f34@gmail.com>
- <20200320230504.GA30209@bogus>
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM IPROC ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Sugaya Taichi <sugaya.taichi@socionext.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, Joel Stanley <joel@jms.id.au>,
+        Maxime Ripard <mripard@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "james.tai" <james.tai@realtek.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+References: <20200204235552.7466-1-f.fainelli@gmail.com>
+ <20200204235552.7466-13-f.fainelli@gmail.com> <20200206192333.GA30325@bogus>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; keydata=
  mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -132,12 +135,12 @@ Autocrypt: addr=f.fainelli@gmail.com; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <a1968447-5dd9-e309-6a3e-48ed05c2ab93@gmail.com>
-Date:   Sun, 22 Mar 2020 14:09:22 -0700
+Message-ID: <47e12841-d9bb-3204-76c0-5bc0ef74b094@gmail.com>
+Date:   Sun, 22 Mar 2020 14:35:17 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Firefox/68.0 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200320230504.GA30209@bogus>
+In-Reply-To: <20200206192333.GA30325@bogus>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -148,24 +151,79 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 3/20/2020 4:05 PM, Rob Herring wrote:
->>>> Because the primary PHY0 can be autodetected by the bus scan.
->>>> But I have nothing against your suggestions. Please, some one should say the
->>>> last word here, how exactly it should be implemented?
+On 2/6/2020 11:23 AM, Rob Herring wrote:
+> On Tue, Feb 04, 2020 at 03:55:52PM -0800, Florian Fainelli wrote:
+>> Convert the Raspberry Pi BCM2835 firmware binding document to YAML.
+>> Verified with dt_binding_check and dtbs_check.
 >>
->> It's not for me to decide, I was hoping the Device Tree maintainers
->> could chime in, your current approach would certainly work although it
->> feels visually awkward.
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>  .../arm/bcm/raspberrypi,bcm2835-firmware.txt  | 14 --------
+>>  .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 33 +++++++++++++++++++
+>>  2 files changed, 33 insertions(+), 14 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+>>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+>> deleted file mode 100644
+>> index 6824b3180ffb..000000000000
+>> --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+>> +++ /dev/null
+>> @@ -1,14 +0,0 @@
+>> -Raspberry Pi VideoCore firmware driver
+>> -
+>> -Required properties:
+>> -
+>> -- compatible:		Should be "raspberrypi,bcm2835-firmware"
+>> -- mboxes:		Phandle to the firmware device's Mailbox.
+>> -			  (See: ../mailbox/mailbox.txt for more information)
+>> -
+>> -Example:
+>> -
+>> -firmware {
+>> -	compatible = "raspberrypi,bcm2835-firmware";
+>> -	mboxes = <&mailbox>;
+>> -};
+>> diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+>> new file mode 100644
+>> index 000000000000..db355d970f2b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+>> @@ -0,0 +1,33 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/arm/bcm/raspberrypi,bcm2835-firmware.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Raspberry Pi VideoCore firmware driver
+>> +
+>> +maintainers:
+>> +  - Eric Anholt <eric@anholt.net>
+>> +  - Stefan Wahren <wahrenst@gmx.net>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: raspberrypi,bcm2835-firmware simple-bus
+>                                           ^
 > 
-> Something like this is what I'd do:
-> 
-> ethernet-phy@4 {
->   compatible = "nxp,tja1102";
->   reg = <4 5>;
-> };
+> I need to check for spaces with the meta-schema...
 
-But the parent (MDIO bus controller) has #address-cells = 1 and
-#size-cells = 0, so how can this be made to work without creating two
-nodes or a first node encapsulating another one?
+I believe I had tried to use:
+
+const: raspberrypi,bcm2835-firmware
+const: simple-bus
+
+but this did not work, and I had to resort to doing this.
+
+> 
+>> +
+>> +  mboxes:
+>> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> 
+> Already has a type, just need to define how many items and what they are 
+> if more than one.
+
+OK, thanks!
 -- 
 Florian
