@@ -2,317 +2,112 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83F0C4332B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 13:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B093C4332B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 14:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE01620724
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 13:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685D120637
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 14:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="sclBVK4U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oi5rzEX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgCVN6L (ORCPT
+        id S1725881AbgCVOA4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 09:58:11 -0400
-Received: from mx-out2.startmail.com ([145.131.90.155]:42187 "EHLO
-        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgCVN6K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 09:58:10 -0400
-From:   Alexandru Lazar <alazar@startmail.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
-        s=2017-11; t=1584885488;
-        bh=s6/JIYjlw+M77ficUn2kA3SRaXEiZU6iIu7cenxHZdQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sclBVK4UGC43Xzq34y2OQJcHkjirqgbn3xAbQrJvpeQ5uuWcdwmhGhYeop/vTx/XZ
-         /dmiCmG42GmQ6EXVxOTzLcZo7EgqH/RCokhTcSXMWl3dAT8luPI9iAc9VqBsDW2vzr
-         KJJp+kSezcUzZ42SagVtFSLWM5yO7JdkMwTHrhHO8/v0YyCeSdN1QZ/2fy2UYmdNGt
-         VVxaRUweBjDzOAKDM7RLh/umT7wM+puuVPsuFZSeXc6T9qyDUFnJ+0jAnPAmtLsuIs
-         76l0CzmrLmBpnZF2hVOB1pvZPO0OdSJ0gxxm09SSyYpAtYfzRHY8wru9xDHrXc98r6
-         QaYF4+bRiDtWw==
-To:     linux-iio@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, Alexandru Lazar <alazar@startmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v5 2/2] iio: adc: Add MAX1241 driver
-Date:   Sun, 22 Mar 2020 16:02:37 +0200
-Message-Id: <20200322140237.211347-3-alazar@startmail.com>
-In-Reply-To: <20200322140237.211347-1-alazar@startmail.com>
-References: <20200322140237.211347-1-alazar@startmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 22 Mar 2020 10:00:56 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41420 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbgCVOAz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 10:00:55 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h9so13284549wrc.8;
+        Sun, 22 Mar 2020 07:00:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+Pk1Qm0yKFU4UFpPiRDPyywzNL1S0kp3oY+pR0dHLbM=;
+        b=oi5rzEX0X8RLP2HKiTVVqVs7HpQ7aPojsZDgCYmMnYOtWabV8UXffBg4gms1wqcqft
+         +/58QOvDf6bioXi8SnjrvUM7F6HcQ70/1Kpghz3s2qRBBNtUZxZnrX4Yh6Ho/3kN3BEZ
+         2fwN1nJFoFiZLWIdXHivtU9nzJ/K74nWzVxFipAPBoTgjuB/lHjvOcolL4ISXWR2XX/5
+         2SZu3Kx1bDbRDkXb8q/hn6hJR7uYBQmORF1lUEz1xfVgDOYNuaJYiHKGGcPQ7yUmPxN8
+         +cEeu8HCCo+YMhwe0vXdnx9jtXryqqQwOsPdky5SVb8bgshlml7FsP7PDftZnOxPPhM3
+         y/Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+Pk1Qm0yKFU4UFpPiRDPyywzNL1S0kp3oY+pR0dHLbM=;
+        b=E53DnOZkQUqExn1C8btdvjW4RDmSt9DxsA3n7O8zN2cgMPwTQ5Rb8/xuEgs9KN/pF5
+         zH5nAhRDa/S8ztVxOmV/ILgWRdqePfmrv7kF7db5NJ6jUCU/Fvi4CcZFreqrYBZUBUjn
+         Amiie6j94+DkzgcbQ+eLdVJCUFKycokHpYctKQwv8O6EVROPU22eib6yHNsjewMDe61W
+         yGoMd13sF71ZQa9B3G0X+wMDADMkq1gQP9fTp5i8joqPWEjgleknkCONxO9EDbauWotg
+         nKud877yTB3vSNZgAuEP8BXGqIOzFO37ex1rp6NEe0JLokaEAtcPCOaa72blXKkNIhV0
+         dbGQ==
+X-Gm-Message-State: ANhLgQ35FFALuTKufwVaXvvHOc0+LodbWmCgBfgs1S39LN8eWul4yo2I
+        AIFzSEgmwP19eVx0FvvQpBE=
+X-Google-Smtp-Source: ADFU+vv9LrpAvriFkI/duBNcEmS2l2/uhLRxDqAJ4ObMkC37RlGZ/y1+sMgI5XKHs3Xia3KUeu4Mjw==
+X-Received: by 2002:adf:a4d2:: with SMTP id h18mr24215660wrb.90.1584885653724;
+        Sun, 22 Mar 2020 07:00:53 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id 1sm11355129wmz.32.2020.03.22.07.00.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 22 Mar 2020 07:00:53 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: fix defines in pd_vio node for rk3399
+Date:   Sun, 22 Mar 2020 15:00:46 +0100
+Message-Id: <20200322140046.5824-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add driver for the Maxim MAX1241 12-bit, single-channel ADC.
+A test with the command below gives for example this error:
 
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Alexandru Lazar <alazar@startmail.com>
+arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: pd_vio@15:
+'pd_tcpc0@RK3399_PD_TCPC0', 'pd_tcpc1@RK3399_PD_TCPC1'
+do not match any of the regexes:
+'.*-names$', '.*-supply$', '^#.*-cells$',
+'^#[a-zA-Z0-9,+\\-._]{0,63}$',
+'^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$',
+'^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$',
+'^__.*__$', 'pinctrl-[0-9]+'
+
+Fix error by replacing the wrong defines by the ones
+mentioned in 'rk3399-power.h'.
+
+make -k ARCH=arm64 dtbs_check
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- drivers/iio/adc/Kconfig   |  10 ++
- drivers/iio/adc/Makefile  |   1 +
- drivers/iio/adc/max1241.c | 213 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 224 insertions(+)
- create mode 100644 drivers/iio/adc/max1241.c
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 5d8540b7b427..55f6462cd93f 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -566,6 +566,16 @@ config MAX1118
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called max1118.
- 
-+config MAX1241
-+	tristate "Maxim max1241 ADC driver"
-+	depends on SPI_MASTER
-+	help
-+	  Say yes here to build support for Maxim max1241 12-bit, single-channel
-+	  ADC.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called max1241.
-+
- config MAX1363
- 	tristate "Maxim max1363 ADC driver"
- 	depends on I2C
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index a1f1fbec0f87..37d6f17559dc 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -54,6 +54,7 @@ obj-$(CONFIG_LTC2497) += ltc2497.o
- obj-$(CONFIG_MAX1027) += max1027.o
- obj-$(CONFIG_MAX11100) += max11100.o
- obj-$(CONFIG_MAX1118) += max1118.o
-+obj-$(CONFIG_MAX1241) += max1241.o
- obj-$(CONFIG_MAX1363) += max1363.o
- obj-$(CONFIG_MAX9611) += max9611.o
- obj-$(CONFIG_MCP320X) += mcp320x.o
-diff --git a/drivers/iio/adc/max1241.c b/drivers/iio/adc/max1241.c
-new file mode 100644
-index 000000000000..33ea61305f27
---- /dev/null
-+++ b/drivers/iio/adc/max1241.c
-@@ -0,0 +1,213 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * MAX1241 low-power, 12-bit serial ADC
-+ *
-+ * Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/module.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/spi/spi.h>
-+
-+#define MAX1241_VAL_MASK GENMASK(11, 0)
-+#define MAX1241_SHDN_DELAY_USEC 4
-+
-+enum max1241_id {
-+	max1241,
-+};
-+
-+struct max1241 {
-+	struct spi_device *spi;
-+	struct mutex lock;
-+	struct regulator *vdd;
-+	struct regulator *vref;
-+	struct gpio_desc *shdn;
-+
-+	__be16 data ____cacheline_aligned;
-+};
-+
-+static const struct iio_chan_spec max1241_channels[] = {
-+	{
-+		.type = IIO_VOLTAGE,
-+		.indexed = 1,
-+		.channel = 0,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				BIT(IIO_CHAN_INFO_SCALE),
-+	},
-+};
-+
-+static int max1241_read(struct max1241 *adc)
-+{
-+	struct spi_transfer xfers[] = {
-+		/*
-+		 * Begin conversion by bringing /CS low for at least
-+		 * tconv us.
-+		 */
-+		{
-+			.len = 0,
-+			.delay.value = 8,
-+			.delay.unit = SPI_DELAY_UNIT_USECS,
-+		},
-+		/*
-+		 * Then read two bytes of data in our RX buffer.
-+		 */
-+		{
-+			.rx_buf = &adc->data,
-+			.len = 2,
-+		},
-+	};
-+
-+	return spi_sync_transfer(adc->spi, xfers, ARRAY_SIZE(xfers));
-+}
-+
-+static int max1241_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
-+{
-+	int ret, vref_uV;
-+	struct max1241 *adc = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&adc->lock);
-+
-+		if (adc->shdn) {
-+			gpiod_set_value(adc->shdn, 0);
-+			udelay(MAX1241_SHDN_DELAY_USEC);
-+			ret = max1241_read(adc);
-+			gpiod_set_value(adc->shdn, 1);
-+		} else
-+			ret = max1241_read(adc);
-+
-+		if (ret) {
-+			mutex_unlock(&adc->lock);
-+			return ret;
-+		}
-+
-+		*val = (be16_to_cpu(adc->data) >> 3) & MAX1241_VAL_MASK;
-+
-+		mutex_unlock(&adc->lock);
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		vref_uV = regulator_get_voltage(adc->vref);
-+
-+		if (vref_uV < 0)
-+			return vref_uV;
-+
-+		*val = vref_uV / 1000;
-+		*val2 = 12;
-+
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info max1241_info = {
-+	.read_raw = max1241_read_raw,
-+};
-+
-+static void max1241_disable_reg_action(void *data)
-+{
-+	struct max1241 *adc = data;
-+	struct device *dev = &adc->spi->dev;
-+	int err;
-+
-+	err = regulator_disable(adc->vref);
-+	if (err)
-+		dev_err(dev, "could not disable vref regulator.\n");
-+
-+	err = regulator_disable(adc->vdd);
-+	if (err)
-+		dev_err(dev, "could not disable vdd regulator.\n");
-+}
-+
-+static int max1241_probe(struct spi_device *spi)
-+{
-+	struct device *dev = &spi->dev;
-+	struct iio_dev *indio_dev;
-+	struct max1241 *adc;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	adc = iio_priv(indio_dev);
-+	adc->spi = spi;
-+	mutex_init(&adc->lock);
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	adc->vdd = devm_regulator_get(dev, "vdd");
-+	if (IS_ERR(adc->vdd)) {
-+		dev_err(dev, "failed to get vdd regulator\n");
-+		return PTR_ERR(adc->vdd);
-+	}
-+
-+	ret = regulator_enable(adc->vdd);
-+	if (ret)
-+		return ret;
-+
-+	adc->vref = devm_regulator_get(dev, "vref");
-+	if (IS_ERR(adc->vref)) {
-+		dev_err(dev, "failed to get vref regulator\n");
-+		return PTR_ERR(adc->vref);
-+	}
-+
-+	ret = regulator_enable(adc->vref);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, max1241_disable_reg_action, adc);
-+	if (ret) {
-+		dev_err(dev, "could not set up regulator cleanup action!\n");
-+		return ret;
-+	}
-+
-+	adc->shdn = devm_gpiod_get_optional(dev, "shdn", GPIOD_OUT_HIGH);
-+	if (IS_ERR(adc->shdn))
-+		return PTR_ERR(adc->shdn);
-+
-+	if (adc->shdn)
-+		dev_dbg(dev, "shdn pin passed, low-power mode enabled");
-+	else
-+		dev_dbg(dev, "no shdn pin passed, low-power mode disabled");
-+
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->dev.parent = dev;
-+	indio_dev->info = &max1241_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = max1241_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(max1241_channels);
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static const struct spi_device_id max1241_id[] = {
-+	{ "max1241", max1241 },
-+	{}
-+};
-+
-+static const struct of_device_id max1241_dt_ids[] = {
-+	{ .compatible = "maxim,max1241" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, max1241_dt_ids);
-+
-+static struct spi_driver max1241_spi_driver = {
-+	.driver = {
-+		.name = "max1241",
-+		.of_match_table = max1241_dt_ids,
-+	},
-+	.probe = max1241_probe,
-+	.id_table = max1241_id,
-+};
-+module_spi_driver(max1241_spi_driver);
-+
-+MODULE_AUTHOR("Alexandru Lazar <alazar@startmail.com>");
-+MODULE_DESCRIPTION("MAX1241 ADC driver");
-+MODULE_LICENSE("GPL v2");
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 8aac201f0..3dc8fe620 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1087,12 +1087,12 @@
+ 					pm_qos = <&qos_isp1_m0>,
+ 						 <&qos_isp1_m1>;
+ 				};
+-				pd_tcpc0@RK3399_PD_TCPC0 {
++				pd_tcpc0@RK3399_PD_TCPD0 {
+ 					reg = <RK3399_PD_TCPD0>;
+ 					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+ 						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
+ 				};
+-				pd_tcpc1@RK3399_PD_TCPC1 {
++				pd_tcpc1@RK3399_PD_TCPD1 {
+ 					reg = <RK3399_PD_TCPD1>;
+ 					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
+ 						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
 -- 
-2.25.2
+2.11.0
 
