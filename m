@@ -2,101 +2,104 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2949CC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2F2C4332B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 18:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E36320836
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B8EE2072E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 18:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgCVRyA (ORCPT
+        id S1725985AbgCVSDq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:54:00 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:23446 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726785AbgCVRyA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Mar 2020 13:54:00 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02MHrwrU007719;
-        Sun, 22 Mar 2020 13:53:58 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywfu53pqy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 22 Mar 2020 13:53:58 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 02MHrvAf005310
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Sun, 22 Mar 2020 13:53:57 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 22 Mar 2020 13:53:56 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Sun, 22 Mar 2020 13:53:56 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sun, 22 Mar 2020 13:53:56 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02MHro3g027953;
-        Sun, 22 Mar 2020 13:53:53 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <Laszlo.Nagy@analog.com>,
-        <Andrei.Grozav@analog.com>, <Michael.Hennerich@analog.com>,
-        <Istvan.Csomortani@analog.com>, <Adrian.Costina@analog.com>,
-        <Dragos.Bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v12 1/8] include: fpga: adi-axi-common.h: fixup whitespace tab -> space
-Date:   Sun, 22 Mar 2020 19:53:18 +0200
-Message-ID: <20200322175325.42469-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200322175325.42469-1-alexandru.ardelean@analog.com>
-References: <20200322175325.42469-1-alexandru.ardelean@analog.com>
+        Sun, 22 Mar 2020 14:03:46 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:43536 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbgCVSDq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Mar 2020 14:03:46 -0400
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jG4wk-0007rU-0k; Sun, 22 Mar 2020 19:03:38 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>, Caesar Wang <wxt@rock-chips.com>,
+        kever.yang@rock-chips.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        robh+dt@kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: fix defines in pd_vio node for rk3399
+Date:   Sun, 22 Mar 2020 19:03:35 +0100
+Message-ID: <48029127.kezn7BFppT@diego>
+In-Reply-To: <1a6f0ba0-c49c-c547-1252-eed404655f43@gmail.com>
+References: <20200322140046.5824-1-jbx6244@gmail.com> <48a91cc1-7751-4df0-a2cd-940eb829fa16@gmail.com> <1a6f0ba0-c49c-c547-1252-eed404655f43@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-22_06:2020-03-21,2020-03-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 impostorscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0
- lowpriorityscore=0 mlxlogscore=984 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003220108
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The initial version use a tab between '#define' & 'ADI_AXI_REG_VERSION'.
-This changes it to space. The change is purely cosmetic.
+Am Sonntag, 22. März 2020, 17:14:54 CET schrieb Johan Jonker:
+> Hi,
+> 
+> Why is 'pd_tcpc0, pd_tcpc1' grouped under 'pd_vio' instead of VD_LOGIC?
 
-Acked-by: Moritz Fischer <mdf@kernel.org>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- include/linux/fpga/adi-axi-common.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+^^
+You'll need to add Rockchip-people for that - I've done that now ;-)
 
-diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
-index 7fc95d5c95bb..ebd4e07ae3d8 100644
---- a/include/linux/fpga/adi-axi-common.h
-+++ b/include/linux/fpga/adi-axi-common.h
-@@ -11,7 +11,7 @@
- #ifndef ADI_AXI_COMMON_H_
- #define ADI_AXI_COMMON_H_
- 
--#define	ADI_AXI_REG_VERSION			0x0000
-+#define ADI_AXI_REG_VERSION			0x0000
- 
- #define ADI_AXI_PCORE_VER(major, minor, patch)	\
- 	(((major) << 16) | ((minor) << 8) | (patch))
--- 
-2.17.1
+
+
+> On 3/22/20 4:45 PM, Johan Jonker wrote:
+> > Hi,
+> > 
+> > The RK3399 TRM uses both
+> > 
+> > 'pd_tcpc0, pd_tcpc1'
+> > 
+> > as
+> > 
+> > 'pd_tcpd0, pd_tcpd1'.
+> > 
+> > What should we use here?
+
+We should probably just fix the nodename as you did.
+- For one tcpD seems to be appearing way more often than tcpC
+- and of course the header is part of the binding itself, so that shouldn't
+  change without a really good reason
+
+
+Heiko
+
+> > 
+> > Thanks.
+> > 
+> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> >> index 8aac201f0..3dc8fe620 100644
+> >> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> >> @@ -1087,12 +1087,12 @@
+> >>  					pm_qos = <&qos_isp1_m0>,
+> >>  						 <&qos_isp1_m1>;
+> >>  				};
+> >> -				pd_tcpc0@RK3399_PD_TCPC0 {
+> >> +				pd_tcpc0@RK3399_PD_TCPD0 {
+> >>  					reg = <RK3399_PD_TCPD0>;
+> >>  					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+> >>  						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
+> >>  				};
+> >> -				pd_tcpc1@RK3399_PD_TCPC1 {
+> >> +				pd_tcpc1@RK3399_PD_TCPD1 {
+> >>  					reg = <RK3399_PD_TCPD1>;
+> >>  					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
+> >>  						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
+> > 
+> 
+> 
+
+
+
 
