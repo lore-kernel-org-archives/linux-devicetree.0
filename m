@@ -2,327 +2,142 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527CAC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3BEC4332E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A942072E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:02:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WeeviBYE"
+	by mail.kernel.org (Postfix) with ESMTP id 95BDE20732
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584892995;
+	bh=zXKtvWmOJZYh/9N09ZMXjZg48/WZSaCWDDWdoRddous=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Izh70+naYJ2wB0Vxn4mBUn1/DRPVTRPiypao8wjGgawyNx5MrWmYwtLTOdFjOmWlH
+	 M4vqrjAbFAG47vcC8dxbZeS7l4v3yn4ZFN0bg9Vi/kMa08upQeFvsQa6vzjot3c4N/
+	 edK6Ros3/gFme4rlNPBnDUa1e80TUrbldS491Cgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbgCVQCD (ORCPT
+        id S1725970AbgCVQDP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:02:03 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:36466 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725785AbgCVQCC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:02:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584892922; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=KbW1c1jJh3fjm7VZhx+zDnxPu5lMEAB+5FN/4TFQHC0=;
- b=WeeviBYEcS7MSm6xAHc40r0wuqHbyAH5TwlF5b+Sv9xnq+NvuOs8c/Cs7pD3QQBSFrKSbCGJ
- cMIF5WvTsc+ya4A/SGU9tzG1PTHmRdM0d5m6El5ae6oDy4phcGl77IEjsMBRxtnJ4U86I5XJ
- aKhayQsgwxGFMyYSxPHzTRgF1jc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e778bf7.7feaa835a420-smtp-out-n01;
- Sun, 22 Mar 2020 16:01:59 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E19ECC43637; Sun, 22 Mar 2020 16:01:58 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Sun, 22 Mar 2020 12:03:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725785AbgCVQDO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:03:14 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: ppvk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4AA8C433CB;
-        Sun, 22 Mar 2020 16:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D41C20724;
+        Sun, 22 Mar 2020 16:03:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584892994;
+        bh=zXKtvWmOJZYh/9N09ZMXjZg48/WZSaCWDDWdoRddous=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=T4WEWq3BiPOuIWj+WyDBysIh74u8ToS7YKTHCRhb7dWRQL1NF4DPhjt5ASy9DjMlg
+         LIWf1c05pLqpu47rWmp7NGnKIwFzJdiC3SlZCu5MrACHZZoEuuUkbYnEQEogMT+EMn
+         oJUaz8jHoB07xaBShIQ5UN7ySxpq4PMagywpL/Iw=
+Date:   Sun, 22 Mar 2020 16:03:10 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Eugene Zalkonnikov <ez@norphonic.com>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "development@norphonic.com" <development@norphonic.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v6 2/2] Device tree bindings for TI HDC20x0 humidity and
+ temperature sensors
+Message-ID: <20200322160310.67365997@archlinux>
+In-Reply-To: <1C2C8CD5-4BF0-40AE-932A-4AD506664B9D@norphonic.com>
+References: <84EE5291-D8C4-40D3-A75C-92362BF9DF8B@norphonic.com>
+        <1C2C8CD5-4BF0-40AE-932A-4AD506664B9D@norphonic.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Sun, 22 Mar 2020 21:31:57 +0530
-From:   ppvk@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        linux-mmc-owner@vger.kernel.org,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Subject: Re: [RFC v5 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth
- scaling support
-In-Reply-To: <20200312204935.GF144492@google.com>
-References: <1583992911-12001-1-git-send-email-ppvk@codeaurora.org>
- <1583992911-12001-2-git-send-email-ppvk@codeaurora.org>
- <20200312204935.GF144492@google.com>
-Message-ID: <11a193adc32906f28358556dfc11858c@codeaurora.org>
-X-Sender: ppvk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-03-13 02:19, Matthias Kaehlcke wrote:
-Hi Matthias,
+On Tue, 17 Mar 2020 20:09:48 +0000
+Eugene Zalkonnikov <ez@norphonic.com> wrote:
 
-Thanks for reviewing.
+> Device tree bindings for the HDC2010/2080 driver.
+> 
+> Signed-off-by: Eugene Zaikonnikov <eugene.zaikonnikov@norphonic.com>
+Hi Eugene
 
-> Hi Pradeep,
-> 
-> On Thu, Mar 12, 2020 at 11:31:50AM +0530, Pradeep P V K wrote:
->> Add interconnect bandwidths for SDHC driver using OPP framework that
->> is required by SDHC driver based on the clock frequency and bus width
->> of the card. Otherwise, the system clocks may run at minimum clock
->> speed and thus affecting the performance.
->> 
->> This change is based on
->> [RFC] mmc: host: sdhci-msm: Use the interconnect API
->> (https://lkml.org/lkml/2018/10/11/499) and
->> 
->> [PATCH v6] Introduce Bandwidth OPPs for interconnects
->> (https://lkml.org/lkml/2019/12/6/740)
->> 
->> Co-developed-by: Sahitya Tummala <stummala@codeaurora.org>
->> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
->> Co-developed-by: Subhash Jadavani <subhashj@codeaurora.org>
->> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
->> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->> Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
->> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
->> ---
->> 
->> RFC v4 -> v5:
->> - Rewrote the icc interconnect get handlers and its error handling
->>   and allocated vote data after handling all icc get handler errors.
->> - Removed explicit error check on ICC handlers.
->> - Addressed minor code style comments.
->> 
->>  drivers/mmc/host/sdhci-msm.c | 231 
->> ++++++++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 227 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/mmc/host/sdhci-msm.c 
->> b/drivers/mmc/host/sdhci-msm.c
->> index 09ff731..5fe8fad 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> 
->> ...
->> 
->> +/*
->> + * This function sets the interconnect bus bandwidth
->> + * vote based on bw (bandwidth) argument.
->> + */
->> +#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
->> +static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
->> +						unsigned int bw)
->> +{
->> +	int i, err;
->> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
->> +	struct device *dev = &msm_host->pdev->dev;
->> +	struct dev_pm_opp *opp;
->> +	unsigned long freq = bw;
->> +	unsigned long peak_bw[BUS_INTERCONNECT_PATHS] = {0};
->> +	unsigned long avg_bw[BUS_INTERCONNECT_PATHS] = {0};
->> +
->> +	if (bw == vote_data->curr_freq)
->> +		return;
->> +
->> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
->> +		opp = sdhci_msm_find_opp_for_freq(msm_host, freq);
->> +		if (opp) {
->> +			avg_bw[i] = dev_pm_opp_get_bw(opp, &peak_bw[i]);
->> +			freq += 1; /* Next bandwidth vote */
->> +			dev_pm_opp_put(opp);
->> +		}
->> +	}
->> +	pr_debug("%s: freq:%d sdhc_to_ddr avg_bw:%lu peak_bw:%lu cpu_to_sdhc 
->> avg_bw:%lu peak_bw:%lu\n",
->> +			mmc_hostname(host->mmc), bw, avg_bw[0], peak_bw[0],
->> +				avg_bw[1], peak_bw[1]);
->> +	err = icc_set_bw(vote_data->sdhc_to_ddr, 0, peak_bw[0]);
->> +	if (err) {
->> +		dev_err(dev, "icc_set() failed for 'sdhc-ddr' path err:%d\n",
->> +							err);
-> 
-> nit: the alignment is odd, either align with 'dev' or a tab after 
-> 'dev_err'
-> 
-sure, will do this in my next patch set.
->> +		return;
->> +	}
->> +	err = icc_set_bw(vote_data->cpu_to_sdhc, 0, peak_bw[1]);
->> +	if (err) {
->> +		dev_err(dev, "icc_set() failed for 'cpu-sdhc' path err:%d\n",
->> +							err);
-> 
-> ditto
-> 
-ok.
+A few minor things inline
 
->> +		return;
->> +	}
->> +	vote_data->curr_freq = bw;
->> +}
->> +
->> +/*
->> + * Helper function to register for OPP and interconnect
->> + * frameworks.
->> + */
->> +static struct sdhci_msm_bus_vote_data
->> +		*sdhci_msm_bus_register(struct sdhci_msm_host *host,
->> +				struct platform_device *pdev)
->> +{
->> +	struct sdhci_msm_bus_vote_data *vote_data;
->> +	struct device *dev = &pdev->dev;
->> +	int ret, i, err;
-> 
-> nit: you can get rid of 'ret' and use 'err' instead.
-> 
-ok. i will do this in my next patchset.
+Jonathan
 
->> +	struct icc_path *icc_paths[BUS_INTERCONNECT_PATHS];
->> +	const char *path_names[] = {
->> +		"sdhc-ddr",
->> +		"cpu-sdhc",
->> +	};
->> +
->> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++)
->> +		icc_paths[i] = of_icc_get(&pdev->dev, path_names[i]);
->> +
->> +	if (!icc_paths[0] && !icc_paths[1]) {
->> +		dev_info(&pdev->dev, "ICC DT property is missing.Skip vote!!\n");
->> +		return NULL;
->> +	}
->> +
->> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
->> +		if (!icc_paths[i]) {
->> +			dev_err(&pdev->dev, "interconnect path '%s' is not configured\n",
->> +					path_names[i]);
->> +			err = -EINVAL;
->> +			goto handle_err;
->> +		}
->> +		if (IS_ERR(icc_paths[i])) {
->> +			err = PTR_ERR(icc_paths[i]);
->> +
->> +			if (err != -EPROBE_DEFER)
->> +				dev_err(&pdev->dev, "interconnect path '%s' is invalid:%d\n",
->> +					path_names[i], err);
->> +			goto handle_err;
->> +		}
->> +	}
->> +
->> +	ret = dev_pm_opp_of_add_table(dev);
->> +	if (ret) {
->> +		if (ret == -ENODEV || ret == -ENODATA)
->> +			dev_err(dev, "OPP dt properties missing:%d\n", ret);
->> +		else
->> +			dev_err(dev, "OPP registration failed:%d\n", ret);
 > 
-> need to call icc_put() for the two paths?
-> 
-hmm yes. coming here means, we got both icc paths without error.
-So, should put both icc paths. I will handle this by adding a new goto 
-jump tag.
+> diff -uprN linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml
+> --- linux-5.3.8/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	1970-01-01 01:00:00.000000000 +0100
+> +++ linux-5.3.8_docs/Documentation/devicetree/bindings/iio/humidity/ti,hdc2010.yaml	2020-02-12 14:28:42.562903814 +0100
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/humidity/hdc2010.yaml#
 
->> +		return ERR_PTR(ret);
->> +	}
->> +
->> +	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
->> +	if (!vote_data)
-> 
-> ditto
-> 
-> probably you want to do this with a jump to an error handler below.
-> 
-ok. i will handle this by adding a new goto jump tag.
+As Rob's bot pointed out... ti,hdc2010.yaml preferred.
 
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	vote_data->sdhc_to_ddr = icc_paths[0];
->> +	vote_data->cpu_to_sdhc = icc_paths[1];
->> +	return vote_data;
-> 
-> nit: add empty line
-> 
-ok.
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HDC2010/HDC2080 humidity and temperature iio sensors
+> +
+> +maintainers:
+> +  - Eugene Zaikonnikov <eugene.zaikonnikov@norophonic.com>
+> +
+> +description: |
+> +  Relative humidity and tempereature sensors on I2C bus
+> +
+> +  Datasheets are available at:
+> +    http://www.ti.com/product/HDC2010/datasheet
+> +    http://www.ti.com/product/HDC2080/datasheet
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,hdc2010
+> +      - ti,hdc2080
+> +
+> +  vddd-supply:
 
->> +handle_err:
->> +	if (err) {
->> +		int other = (i == 0) ? 1 : 0;
->> +
->> +		if (!IS_ERR_OR_NULL(icc_paths[other]))
->> +			icc_put(icc_paths[other]);
->> +	}
-> 
-> doing this at the end (as opposed to my suggestion from
-> https://patchwork.kernel.org/patch/11388409/#23165321) has the 
-> advantage of
-> keeping the above loop cleaner from error handling cruft, on the 
-> downside it
-> is probably easier to understand right away in the context of the loop. 
-> I
-> guess you can do it either way.
-> 
-True. i will leave this error handling at bottom as the code looks more 
-cleaner.
+ddd rather than dd?
 
-> It might get a bit more messy if you also handle the case where both 
-> paths are
-> valid. If that gets too involved I'd suggest to hnadle the above case 
-> inside
-> the loop.
-> 
-hmm true, handling the above error in loop making the code more messy 
-so,
-i'm using a new tag (put_icc) to put both the icc paths.
+> +    description:
+> +      digital voltage regulator (see regulator/regulator.txt)
 
->> +	return ERR_PTR(err);
->> +}
->> +
->> +static void sdhci_msm_bus_unregister(struct device *dev,
->> +				struct sdhci_msm_host *host)
->> +{
->> +	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
->> +
->> +	if (IS_ERR_OR_NULL(vote_data))
-> 
-> I think 'if (!vote_data)' would be sufficient, since _probe() aborts in
-> case of an error.
-> 
-ok. i will handle this in my next patch set.
+For main supply probably don't need to bother with description.
 
->> +		return;
->> +
->> +	icc_put(vote_data->sdhc_to_ddr);
->> +	icc_put(vote_data->cpu_to_sdhc);
->> +}
->> +
->> +static void sdhci_msm_bus_voting(struct sdhci_host *host, bool 
->> enable)
->> +{
->> +	struct mmc_ios *ios = &host->mmc->ios;
->> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +	unsigned int bw;
->> +
->> +	if (IS_ERR_OR_NULL(msm_host->bus_vote_data))
->> +		return;
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      hdc200x@40 {
+
+Naming should be 'generic'. 
+humidity@40 {
+
+Is probably appropriate though not on the explicit list in the devicetree
+spec yet.
+
+> +          compatible = "ti,hdc2010";
+> +          reg = <0x40>;
+> +      };
+> +    };
 > 
-> ditto
-ok.
+
