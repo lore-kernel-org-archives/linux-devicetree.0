@@ -2,104 +2,207 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2F2C4332B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 18:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48461C54FCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 18:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8EE2072E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 18:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21CE52076F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 18:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584900953;
+	bh=FRoKX4v7uPKKbY2jZ/bk15LpoXBLxOf+xA67aV49E9E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iFK2x4UfFEQVrqfzzG6KgfH3FQw5mqyjdSO8shbPbRAE16sKJ/oENGFdl5W94oAax
+	 LppOSGoYtZIQrd8BuDCh3VRIzjlRKmJcfP0Q8V62GzxvjIysBBnfASFFlaF7ywkxrD
+	 fEOIbcGTLGkMUBR4ZUmngSO8UDKcgAM1Whbw5NAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgCVSDq convert rfc822-to-8bit (ORCPT
+        id S1725972AbgCVSPw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 14:03:46 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:43536 "EHLO gloria.sntech.de"
+        Sun, 22 Mar 2020 14:15:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbgCVSDq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Mar 2020 14:03:46 -0400
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jG4wk-0007rU-0k; Sun, 22 Mar 2020 19:03:38 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>, Caesar Wang <wxt@rock-chips.com>,
-        kever.yang@rock-chips.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        robh+dt@kernel.org
-Subject: Re: [PATCH] arm64: dts: rockchip: fix defines in pd_vio node for rk3399
-Date:   Sun, 22 Mar 2020 19:03:35 +0100
-Message-ID: <48029127.kezn7BFppT@diego>
-In-Reply-To: <1a6f0ba0-c49c-c547-1252-eed404655f43@gmail.com>
-References: <20200322140046.5824-1-jbx6244@gmail.com> <48a91cc1-7751-4df0-a2cd-940eb829fa16@gmail.com> <1a6f0ba0-c49c-c547-1252-eed404655f43@gmail.com>
+        id S1725785AbgCVSPw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Mar 2020 14:15:52 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D72520719;
+        Sun, 22 Mar 2020 18:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584900951;
+        bh=FRoKX4v7uPKKbY2jZ/bk15LpoXBLxOf+xA67aV49E9E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pxtqTQ/D0mx9+5/AJiz05LGw+YFBzdygikAq2OIiFIG4S/fOEHpeAlCrku+bAGzIr
+         p5hWe6ftVZV6DAdJqzLhC08P7dzIeBm/hW7hqcgx16u96cfQD+woA420usBZrq5w+7
+         v8mNjxkqJnYkJ0CDqsrdav3Y5ET30InUq68hezrA=
+Date:   Sun, 22 Mar 2020 18:15:47 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH v2 3/6] iio: adis: Add adis_update_bits() APIs
+Message-ID: <20200322181547.29691951@archlinux>
+In-Reply-To: <20200316125312.39178-4-nuno.sa@analog.com>
+References: <20200316125312.39178-1-nuno.sa@analog.com>
+        <20200316125312.39178-4-nuno.sa@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Sonntag, 22. März 2020, 17:14:54 CET schrieb Johan Jonker:
-> Hi,
-> 
-> Why is 'pd_tcpc0, pd_tcpc1' grouped under 'pd_vio' instead of VD_LOGIC?
+On Mon, 16 Mar 2020 13:53:09 +0100
+Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
 
-^^
-You'll need to add Rockchip-people for that - I've done that now ;-)
+> This patch adds a `regmap_update_bits()` like API to the ADIS library.
+> It provides locked and unlocked variant.
+>=20
+> Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
+hmm. This feels a bit 'too clever' but hopefully we won't get any subtle
+bugs due to wrong local variable types etc.
 
+I'll pick this up when the rest of the series is ready.
 
-> On 3/22/20 4:45 PM, Johan Jonker wrote:
-> > Hi,
-> > 
-> > The RK3399 TRM uses both
-> > 
-> > 'pd_tcpc0, pd_tcpc1'
-> > 
-> > as
-> > 
-> > 'pd_tcpd0, pd_tcpd1'.
-> > 
-> > What should we use here?
+Jonathan
 
-We should probably just fix the nodename as you did.
-- For one tcpD seems to be appearing way more often than tcpC
-- and of course the header is part of the binding itself, so that shouldn't
-  change without a really good reason
-
-
-Heiko
-
-> > 
-> > Thanks.
-> > 
-> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >> index 8aac201f0..3dc8fe620 100644
-> >> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >> @@ -1087,12 +1087,12 @@
-> >>  					pm_qos = <&qos_isp1_m0>,
-> >>  						 <&qos_isp1_m1>;
-> >>  				};
-> >> -				pd_tcpc0@RK3399_PD_TCPC0 {
-> >> +				pd_tcpc0@RK3399_PD_TCPD0 {
-> >>  					reg = <RK3399_PD_TCPD0>;
-> >>  					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
-> >>  						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
-> >>  				};
-> >> -				pd_tcpc1@RK3399_PD_TCPC1 {
-> >> +				pd_tcpc1@RK3399_PD_TCPD1 {
-> >>  					reg = <RK3399_PD_TCPD1>;
-> >>  					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
-> >>  						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
-> > 
-> 
-> 
-
-
-
+> ---
+> Changes in v2:
+>  * Add BUILD_BUG_ON() to avoid invalid types.
+>=20
+>  drivers/iio/imu/adis.c       | 26 ++++++++++++++++
+>  include/linux/iio/imu/adis.h | 59 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 85 insertions(+)
+>=20
+> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
+> index a8afd01de4f3..fa0ee35d96f0 100644
+> --- a/drivers/iio/imu/adis.c
+> +++ b/drivers/iio/imu/adis.c
+> @@ -223,6 +223,32 @@ int __adis_read_reg(struct adis *adis, unsigned int =
+reg,
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(__adis_read_reg);
+> +/**
+> + * __adis_update_bits_base() - ADIS Update bits function - Unlocked vers=
+ion
+> + * @adis: The adis device
+> + * @reg: The address of the lower of the two registers
+> + * @mask: Bitmask to change
+> + * @val: Value to be written
+> + * @size: Size of the register to update
+> + *
+> + * Updates the desired bits of @reg in accordance with @mask and @val.
+> + */
+> +int __adis_update_bits_base(struct adis *adis, unsigned int reg, const u=
+32 mask,
+> +			    const u32 val, u8 size)
+> +{
+> +	int ret;
+> +	u32 __val;
+> +
+> +	ret =3D __adis_read_reg(adis, reg, &__val, size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	__val &=3D ~mask;
+> +	__val |=3D val & mask;
+> +
+> +	return __adis_write_reg(adis, reg, __val, size);
+> +}
+> +EXPORT_SYMBOL_GPL(__adis_update_bits_base);
+> =20
+>  #ifdef CONFIG_DEBUG_FS
+> =20
+> diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
+> index ed41c6b96d14..94031b3fc9d5 100644
+> --- a/include/linux/iio/imu/adis.h
+> +++ b/include/linux/iio/imu/adis.h
+> @@ -333,6 +333,65 @@ static inline int adis_read_reg_32(struct adis *adis=
+, unsigned int reg,
+>  	return ret;
+>  }
+> =20
+> +int __adis_update_bits_base(struct adis *adis, unsigned int reg, const u=
+32 mask,
+> +			    const u32 val, u8 size);
+> +/**
+> + * adis_update_bits_base() - ADIS Update bits function - Locked version
+> + * @adis: The adis device
+> + * @reg: The address of the lower of the two registers
+> + * @mask: Bitmask to change
+> + * @val: Value to be written
+> + * @size: Size of the register to update
+> + *
+> + * Updates the desired bits of @reg in accordance with @mask and @val.
+> + */
+> +static inline int adis_update_bits_base(struct adis *adis, unsigned int =
+reg,
+> +					const u32 mask, const u32 val, u8 size)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&adis->state_lock);
+> +	ret =3D __adis_update_bits_base(adis, reg, mask, val, size);
+> +	mutex_unlock(&adis->state_lock);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * adis_update_bits() - Wrapper macro for adis_update_bits_base - Locked=
+ version
+> + * @adis: The adis device
+> + * @reg: The address of the lower of the two registers
+> + * @mask: Bitmask to change
+> + * @val: Value to be written
+> + *
+> + * This macro evaluates the sizeof of @val at compile time and calls
+> + * adis_update_bits_base() accordingly. Be aware that using MACROS/DEFIN=
+ES for
+> + * @val can lead to undesired behavior if the register to update is 16bi=
+t.
+> + */
+> +#define adis_update_bits(adis, reg, mask, val) ({			\
+> +	BUILD_BUG_ON(sizeof(val) =3D=3D 1 || sizeof(val) =3D=3D 8);		\
+> +	__builtin_choose_expr(sizeof(val) =3D=3D 4,				\
+> +		adis_update_bits_base(adis, reg, mask, val, 4),         \
+> +		adis_update_bits_base(adis, reg, mask, val, 2));	\
+> +})
+> +
+> +/**
+> + * adis_update_bits() - Wrapper macro for adis_update_bits_base
+> + * @adis: The adis device
+> + * @reg: The address of the lower of the two registers
+> + * @mask: Bitmask to change
+> + * @val: Value to be written
+> + *
+> + * This macro evaluates the sizeof of @val at compile time and calls
+> + * adis_update_bits_base() accordingly. Be aware that using MACROS/DEFIN=
+ES for
+> + * @val can lead to undesired behavior if the register to update is 16bi=
+t.
+> + */
+> +#define __adis_update_bits(adis, reg, mask, val) ({			\
+> +	BUILD_BUG_ON(sizeof(val) =3D=3D 1 || sizeof(val) =3D=3D 8);		\
+> +	__builtin_choose_expr(sizeof(val) =3D=3D 4,				\
+> +		__adis_update_bits_base(adis, reg, mask, val, 4),	\
+> +		__adis_update_bits_base(adis, reg, mask, val, 2));	\
+> +})
+> +
+>  int adis_enable_irq(struct adis *adis, bool enable);
+>  int __adis_check_status(struct adis *adis);
+>  int __adis_initial_startup(struct adis *adis);
 
