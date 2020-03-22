@@ -2,101 +2,103 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9B8C54EEB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 22:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1701CC54FD1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 22:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF862072E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 22:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1EB2208E4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 22:46:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIr4scsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCVWmd (ORCPT
+        id S1727011AbgCVWqn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 18:42:33 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:58798 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgCVWmd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 18:42:33 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 3991D1C033E; Sun, 22 Mar 2020 23:42:31 +0100 (CET)
-Date:   Sun, 22 Mar 2020 23:42:30 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Tony Lindgren <tony@atomide.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz
-Cc:     Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Droid 4 in -next -- still no backlight was Re: [PATCH 1/4] tty:
- n_gsm: Add support for serdev drivers
-Message-ID: <20200322224230.GB28082@amd>
-References: <20200319173755.65082-1-tony@atomide.com>
- <20200319173755.65082-2-tony@atomide.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="R3G7APHDIzY6R/pk"
-Content-Disposition: inline
-In-Reply-To: <20200319173755.65082-2-tony@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sun, 22 Mar 2020 18:46:43 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38644 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726822AbgCVWqm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 18:46:42 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s1so14702951wrv.5;
+        Sun, 22 Mar 2020 15:46:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=6QvXfJZlpggMK4ANi6m9pBKzrWALkcbq78l8N8OifPg=;
+        b=HIr4scsd5CyEHBoqj1U5s520InaNnU6ukkhaIeFvp/H4MXzlrxKHL7C+z676GpP4+k
+         zQ7HMfbZW1cjxYHAs2V/WWYabNTwpjYRCzkfnWtN6C8AHyKxQjozli8Q20eN4lPQyrLR
+         XcmRb5Dcixl5lgVQ7ayeCPrL83hBIZAjEzNLF8LcHiwigfpXpfUqtPUzMt8qzBmov50K
+         NLBmmvPN6M5v5m74HdpSdVeSCW6w+rvLu7RaWAN9kvVRoEAD4rcB36jVJUfraGS71ciX
+         0EInl/B9hHDS77jnW3kTA2W2xsaZIhuu1pBRJlpvpJ3qinvRsPeCyGq9sGpzpe9DGceR
+         LOPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=6QvXfJZlpggMK4ANi6m9pBKzrWALkcbq78l8N8OifPg=;
+        b=F+p2m2kJeZwW59fcdaopwqx5/7ru58vzBoB+j8qjB716EFJ1SviFg/rlD1Nm4IwnDG
+         fxxVQOXAy6K6fYp06nd/hZElIS7RgzicwCgmJZK1KmBvnsf8ZIQ9LfBqJnGjQW+WnkHb
+         TERTBRfxg4pc7Uz05aAtJ6In39m6WahcH4u5rWtD17nHY/RTQBFhxQ7K7ohtAR+hpt5U
+         8ysM7n1zh6Vez3F+Yl6gfaOMrW+aGJmWdcXQsKyOfJH/wdzojmrK/OgvfGFN5diF31Lu
+         PZXftuLcM1wNUTPZuplQSPhvfT0VCJN9yVF+4MIztrh9nFmVCFijXrx9F3bCuwaCOwNZ
+         uWVQ==
+X-Gm-Message-State: ANhLgQ30L9x5Z+ZC/E/SD40fa6a2Bzpi597ayadNo/HSH1YovftSQE2b
+        thPKdHkYs8twc28p8kCZPHE=
+X-Google-Smtp-Source: ADFU+vtC61VOoEmFTPzpk2jh6z2sJXWYoQ7hNyHjcRLmkgxTZQ/sfrLGUtTaPogC6cRtvvBCIdQmpg==
+X-Received: by 2002:adf:b31d:: with SMTP id j29mr11690199wrd.218.1584917200180;
+        Sun, 22 Mar 2020 15:46:40 -0700 (PDT)
+Received: from localhost.localdomain (p5DCFFFE5.dip0.t-ipconnect.de. [93.207.255.229])
+        by smtp.gmail.com with ESMTPSA id r9sm19158549wma.47.2020.03.22.15.46.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Mar 2020 15:46:39 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v4 5/5] MAINTAINERS: Add entry for mp2629 Battery Charger driver
+Date:   Sun, 22 Mar 2020 23:46:26 +0100
+Message-Id: <20200322224626.13160-6-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200322224626.13160-1-sravanhome@gmail.com>
+References: <20200322224626.13160-1-sravanhome@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add MAINTAINERS entry for Monolithic Power Systems mp2629 Charger driver.
 
---R3G7APHDIzY6R/pk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+---
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Hi!
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 32a95d162f06..0f82d5a7a614 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11358,10 +11358,15 @@ F:	drivers/tty/mxser.*
+ MONOLITHIC POWER SYSTEM PMIC DRIVER
+ M:	Saravanan Sekar <sravanhome@gmail.com>
+ S:	Maintained
++F:	Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ F:	Documentation/devicetree/bindings/regulator/mps,mp*.yaml
++F:	drivers/iio/adc/mp2629_adc.c
++F:	drivers/mfd/mp2629.c
++F:	drivers/power/supply/mp2629_charger.c
+ F:	drivers/regulator/mp5416.c
+ F:	drivers/regulator/mpq7920.c
+ F:	drivers/regulator/mpq7920.h
++F:	include/linux/mfd/mp2629.h
+ 
+ MR800 AVERMEDIA USB FM RADIO DRIVER
+ M:	Alexey Klimov <klimov.linux@gmail.com>
+-- 
+2.17.1
 
-> We can make use of serdev drivers to do simple device drivers for
-> TS 27.010 chanels, and we can handle vendor specific protocols on top
-> of TS 27.010 with serdev drivers.
-
-I took all three series (
-
-[PATCHv3 0/3] Lost key-up interrupt handling for omap4-keypa
-[PATCH 1/3] Input: atmel_mxt_ts - use runtime PM instead of
-[PATCHv5 0/4] n_gsm serdev support and protocol driver for d
-
-) and applied them on top of next-20200320.
-
-Good news is that result boots. (So I did partial testing of the patches).
-
-Bad news is that I still don't have working backlight. I do have LED
-and there's backlight device connected to the LED, so I can't control
-the LED directly, but the screen is black (and I don't see boot
-messages either).
-
-Before I start debugging, does screen work for you in -next, or do you
-have some fixes I could try?
-
-Thanks and best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---R3G7APHDIzY6R/pk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl536dYACgkQMOfwapXb+vKBJQCeIUN5N8vMzmkvY9E6nubpW6wN
-P7IAoKaO0YTconM1rcr4rigfmHCyJeJk
-=q+Wl
------END PGP SIGNATURE-----
-
---R3G7APHDIzY6R/pk--
