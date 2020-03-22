@@ -2,106 +2,172 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2EFC4332E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7271CC54FCF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CE920724
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gFETB48t"
+	by mail.kernel.org (Postfix) with ESMTP id 331A0206F8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584898158;
+	bh=zfhz4frlqYfSulkRHPiW5gaTisQkKjgaXVLTMLiAmZM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JmTnfaGWCCq9J9fSzwgabClg1aDxGe7cEi7SehV+rwVgvt90Mmg6bO1Vwewdu+w3O
+	 JPMrsGPdPVHc/xngugj9d7sLVABtN6bwIoJM57n3ac/9udeFBjsAL6509HJaoAUUQP
+	 n9amQIioTJ+/ZgV6hRsQUdVznmBgAuz93FpNZYIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbgCVRQA (ORCPT
+        id S1725985AbgCVR3R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:16:00 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4620 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgCVRP7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 13:15:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e779d410000>; Sun, 22 Mar 2020 10:15:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 22 Mar 2020 10:15:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 22 Mar 2020 10:15:59 -0700
-Received: from [10.25.74.3] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 22 Mar
- 2020 17:15:53 +0000
-Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
- Tegra194
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <andrew.murray@arm.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200303181052.16134-1-vidyas@nvidia.com>
- <20200303181052.16134-6-vidyas@nvidia.com>
- <20200322145020.GA2040@roeck-us.net>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <7e6a9643-fcdb-fd80-8e84-2983975889a9@nvidia.com>
-Date:   Sun, 22 Mar 2020 22:45:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 22 Mar 2020 13:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgCVR3R (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Mar 2020 13:29:17 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB28020714;
+        Sun, 22 Mar 2020 17:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584898155;
+        bh=zfhz4frlqYfSulkRHPiW5gaTisQkKjgaXVLTMLiAmZM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=B/jhkHvTVC87MZEV+fRZcPXI4jp7/Ix+aDQgab8+XAgmFNGP7r1JuvSjmpC0vP8W3
+         c1Up7/3DNCQSk1/qzA/pt4Pv9S5nICrFa/dmRMgRAjKlHW5uix+x2JAEU+srUqryKU
+         XLU7xOxLaVbnBN9oN86WSoGcmIJo+IEbaJIYvUQc=
+Date:   Sun, 22 Mar 2020 17:29:10 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
+Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: iio: vcnl4000: convert bindings to
+ YAML format
+Message-ID: <20200322172910.51456fe4@archlinux>
+In-Reply-To: <6182053bb8c442e0b4d72b34c83c7f1565f4a258.1584380360.git.agx@sigxcpu.org>
+References: <cover.1584380360.git.agx@sigxcpu.org>
+        <6182053bb8c442e0b4d72b34c83c7f1565f4a258.1584380360.git.agx@sigxcpu.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200322145020.GA2040@roeck-us.net>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584897345; bh=81yKHmaHyYQhIkyTLm3XouWH6+1+9Fc4JlQx9GW85L4=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gFETB48tFJt3O4znt+n+8BergJZyU/hJhpkPWPbWEwB7677kL5v+g4hCX6S+pKQgV
-         XmHKtxcoChOqmxXenlsxoShjUOrRnchD2riZJT3MlWURxtx+cUEet9WRbL2ocDweXQ
-         8LrAplGao1MB3D8NDqDMkS5c+/hegqiJ6w/qIVczuJ484lwQq0tDK1cnGLDdPMGOa3
-         X6zmpemmwLFb3trGY/Y6sGkuINsuHjIu9PJD1X5E7izg0i63z3hAjrRZlG3xXmGxjj
-         xOZurhnggZUOXDlYNUwa/tlOCjAKUC1qk1jVEj4rziEWtQx5UrrhEPXBA+eVL2Z71Q
-         8GlTBqlqVo46A==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, 16 Mar 2020 18:46:17 +0100
+Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
+> Convert the vcnl4000 device tree bindings to the new YAML format.
+>=20
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+Looks good to me. However, I've made far too many mistakes in
+DT binding review recently, so will definitely be waiting for Rob to
+get a chance to look at it!
 
-On 3/22/2020 8:20 PM, Guenter Roeck wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
->> Add support for the endpoint mode of Synopsys DesignWare core based
->> dual mode PCIe controllers present in Tegra194 SoC.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> Acked-by: Thierry Reding <treding@nvidia.com>
-> 
-> ERROR: modpost: "dw_pcie_ep_init" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-> ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-> ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-> ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-> 
-> Either the symbols must be exported, or the driver's Kconfig entry must be
-> bool, not tristate.
-Qiujun has already posted a patch to fix it @ 
-http://patchwork.ozlabs.org/patch/1258659/
+Jonathan
 
-Thanks,
-Vidya Sagar
-> 
-> Guenter
-> 
+> ---
+>  .../bindings/iio/light/vcnl4000.txt           | 24 ----------
+>  .../bindings/iio/light/vcnl4000.yaml          | 45 +++++++++++++++++++
+>  2 files changed, 45 insertions(+), 24 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.=
+txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt b/D=
+ocumentation/devicetree/bindings/iio/light/vcnl4000.txt
+> deleted file mode 100644
+> index 955af4555c90..000000000000
+> --- a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -VISHAY VCNL4000 -  Ambient Light and proximity sensor
+> -
+> -This driver supports the VCNL4000/10/20/40 and VCNL4200 chips
+> -
+> -Required properties:
+> -
+> -	-compatible: must be one of :
+> -        vishay,vcnl4000
+> -        vishay,vcnl4010
+> -        vishay,vcnl4020
+> -        vishay,vcnl4040
+> -        vishay,vcnl4200
+> -
+> -	-reg: I2C address of the sensor, should be one from below based on the =
+model:
+> -        0x13
+> -        0x51
+> -        0x60
+> -
+> -Example:
+> -
+> -light-sensor@51 {
+> -	compatible =3D "vishay,vcnl4200";
+> -	reg =3D <0x51>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml b/=
+Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
+> new file mode 100644
+> index 000000000000..74d53cfbeb85
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
+> @@ -0,0 +1,45 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/light/vcnl4000.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: VISHAY VCNL4000 ambient light and proximity sensor
+> +
+> +maintainers:
+> +  - Peter Meerwald <pmeerw@pmeerw.net>
+> +
+> +description: |
+> +  Ambient light sensing with proximity detection over an i2c
+> +  interface.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - vishay,vcnl4000
+> +      - vishay,vcnl4010
+> +      - vishay,vcnl4020
+> +      - vishay,vcnl4040
+> +      - vishay,vcnl4200
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +- |
+> +  i2c {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      light-sensor@51 {
+> +              compatible =3D "vishay,vcnl4200";
+> +              reg =3D <0x51>;
+> +      };
+> +  };
+> +...
+
