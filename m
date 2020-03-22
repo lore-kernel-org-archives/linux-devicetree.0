@@ -2,116 +2,78 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63974C4332E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 15:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A713FC54FCF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2502072E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 15:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7447E2072E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZAlZvIA"
+	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="U6XcNeoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgCVPpo (ORCPT
+        id S1725997AbgCVQBZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:45:44 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40733 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgCVPpo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 11:45:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id f3so13528679wrw.7;
-        Sun, 22 Mar 2020 08:45:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:references:subject:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oW0vYewmMm0M3PXQVGqM0DMXOo8Xcl8P8bGj8WAcz1s=;
-        b=UZAlZvIAW51LULMnDZHiLUIyOPiuB672JgdsY9xSfZmPxy9rSKsc2mRMp26i4Uv2Nm
-         ByT7sJUTHNxolCeVb7eNDxWXO1BvR6+ZwFHcZxr9gHN8Vkac3Zd3B7DKjYykBp+GOABq
-         T74BZntD5uAnvoQ3JlOfihftY9JeoXu0n8g6YdqPErGdkWIDmsNJGUTZ/a3m5CxP8t2f
-         Wm2stFjip8ht8zH3nq0kba+vMB8i4avKJsePBOY2kIopk/amvbvEc0TAZ5aYMYUUOGy5
-         4i9GaJXboD41m6m6h13rDonxBTFGTwN3i/luyjrBH1qfV3/xg4s6v2qj0j3nvvecqnqc
-         H30w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oW0vYewmMm0M3PXQVGqM0DMXOo8Xcl8P8bGj8WAcz1s=;
-        b=CL3sedT7VEknCpNeMvkdx1/+DCGsFYOpByiT7OdWRWAWOi6kC//616DKbFQ8pXrmf0
-         A+aY50IAB8TaMNV/cPIC9uQJ5kozk/rTdIyvrVKl/VGBxhwKBgwKKwY1fbfEyoYrD1bo
-         D9Rva1qIV18oDzeq5fmT+gyniWhtCnkJLFlAk6v84TvWrGns7dsiKgyZpVkQz+GA1nD0
-         wRdh8vUnb9FiDEhTkDt+/3lpTxEthMSVLXN64ClvRZuBZVo3mBxM5Ax2FIzc1NogcMKq
-         u2rCzKn2V4AzFjLEzxgcAKP2/yYQ9uHighLRSKfTAOST5xu8GsQYEsDGdCDRcbYxEIuO
-         VL0w==
-X-Gm-Message-State: ANhLgQ2mH4miXCQa/BObQPXSB1kRry/XdGv4i7zBK42OHC2/U4pAMINY
-        btNQwGzVuRGI+JV1gPXiP6Y=
-X-Google-Smtp-Source: ADFU+vuLfqJLTVWgtE2gxmF3zyW7/5g33LYY933B6JEG7gw8iL8V704y0dGVTMbKy7oXYEW3aN89ag==
-X-Received: by 2002:adf:e60b:: with SMTP id p11mr23245914wrm.140.1584891942005;
-        Sun, 22 Mar 2020 08:45:42 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id x17sm17685351wmi.28.2020.03.22.08.45.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Mar 2020 08:45:41 -0700 (PDT)
-To:     jbx6244@gmail.com
-Cc:     devicetree@vger.kernel.org, heiko@sntech.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, robh+dt@kernel.org
-References: <20200322140046.5824-1-jbx6244@gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: fix defines in pd_vio node for
- rk3399
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <48a91cc1-7751-4df0-a2cd-940eb829fa16@gmail.com>
-Date:   Sun, 22 Mar 2020 16:45:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 22 Mar 2020 12:01:25 -0400
+Received: from mx-out2.startmail.com ([145.131.90.155]:57586 "EHLO
+        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgCVQBZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 12:01:25 -0400
+Date:   Sun, 22 Mar 2020 18:06:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
+        s=2017-11; t=1584892883;
+        bh=tw0ThCWI6Kf/ThW1nb3APK71N9og+oAkYn4EacBWeMY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U6XcNeoSW3y31P1NSwUv664upochH/VhOGSeIZvsaGD/43e5v285IK1r0wstqbLWM
+         GNFGh5XA0EQLDNRBvy0JVJc4y2koeCCYKOkQDPJJ/SqO/0euqpQHETeIwwMm9YovX3
+         u0IGDw7Ea2nWOtvnwhMg28YMnaqKirLIn1M8aHsBtWHeXkGvNV4TfiKuMwlZ6cAlej
+         lW+2DVzCwqyvIBMj9Nrbdo/8TQSx+pIWmkcjb8+UFic7ybqLDJb7qAjoOt+D6vtRMD
+         OsaTx3qfRRZj7Tuwf45P7MnaupD2PjQXvdXnQnhXXPsUHaooV1RRe0ntzDQSGLTNTb
+         Wb9FS/eVlIz5g==
+From:   Alexandru Lazar <alazar@startmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add MAX1241 device tree
+ bindings in documentation
+Message-ID: <20200322160604.GA222611@leena.republic>
+References: <20200320150114.9297-1-alazar@startmail.com>
+ <20200320150114.9297-2-alazar@startmail.com>
+ <20200321173412.52548ef1@archlinux>
+ <20200321193541.GA16892@leena.republic>
+ <1e51c4079222858410e9fe94c9d7f21d99abfe15.camel@analog.com>
+ <20200322095317.GA3099@leena.republic>
+ <20200322152735.36cb3493@archlinux>
 MIME-Version: 1.0
-In-Reply-To: <20200322140046.5824-1-jbx6244@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200322152735.36cb3493@archlinux>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+> You'd be surprised how often this gets added to drivers precisely because
+> people will put it on a controllable supply.  It may well not have it's own
+> supply but it may share one with a bunch of other external chips and
+> all of them need to use the regulator framework controls to make sure it's
+> only disabled when they are all suspended etc.
 
-The RK3399 TRM uses both
+I figured it might be something like this :-). I've added the vdd-supply
+binding in v5.
 
-'pd_tcpc0, pd_tcpc1'
+If this isn't something that can be easily handled in the core, do you
+think we can document it somewhere as a convention/common idiom?
+(Assuming it's not already documented, of course). It seems like it's
+something that all IIO devices would need. I can do the writing part.
 
-as
-
-'pd_tcpd0, pd_tcpd1'.
-
-What should we use here?
-
-Thanks.
-
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 8aac201f0..3dc8fe620 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1087,12 +1087,12 @@
->  					pm_qos = <&qos_isp1_m0>,
->  						 <&qos_isp1_m1>;
->  				};
-> -				pd_tcpc0@RK3399_PD_TCPC0 {
-> +				pd_tcpc0@RK3399_PD_TCPD0 {
->  					reg = <RK3399_PD_TCPD0>;
->  					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
->  						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
->  				};
-> -				pd_tcpc1@RK3399_PD_TCPC1 {
-> +				pd_tcpc1@RK3399_PD_TCPD1 {
->  					reg = <RK3399_PD_TCPD1>;
->  					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
->  						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
-> -- 
-> 2.11.0
-
+Thanks,
+Alex
