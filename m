@@ -2,89 +2,116 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1062DC4332E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 15:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63974C4332E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 15:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F6F20732
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 15:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2502072E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 15:45:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZAlZvIA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgCVPnZ (ORCPT
+        id S1726903AbgCVPpo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:43:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:41132 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgCVPnY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Mar 2020 11:43:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 617CAFEC;
-        Sun, 22 Mar 2020 08:43:24 -0700 (PDT)
-Received: from ssg-dev-vb.arm.com (unknown [10.57.20.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06F3E3F52E;
-        Sun, 22 Mar 2020 08:43:18 -0700 (PDT)
-From:   Hadar Gat <hadar.gat@arm.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
-Subject: [PATCH v5 3/3] MAINTAINERS: add HG as cctrng maintainer
-Date:   Sun, 22 Mar 2020 17:31:25 +0200
-Message-Id: <1584891085-8963-4-git-send-email-hadar.gat@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584891085-8963-1-git-send-email-hadar.gat@arm.com>
-References: <1584891085-8963-1-git-send-email-hadar.gat@arm.com>
+        Sun, 22 Mar 2020 11:45:44 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40733 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgCVPpo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 11:45:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f3so13528679wrw.7;
+        Sun, 22 Mar 2020 08:45:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oW0vYewmMm0M3PXQVGqM0DMXOo8Xcl8P8bGj8WAcz1s=;
+        b=UZAlZvIAW51LULMnDZHiLUIyOPiuB672JgdsY9xSfZmPxy9rSKsc2mRMp26i4Uv2Nm
+         ByT7sJUTHNxolCeVb7eNDxWXO1BvR6+ZwFHcZxr9gHN8Vkac3Zd3B7DKjYykBp+GOABq
+         T74BZntD5uAnvoQ3JlOfihftY9JeoXu0n8g6YdqPErGdkWIDmsNJGUTZ/a3m5CxP8t2f
+         Wm2stFjip8ht8zH3nq0kba+vMB8i4avKJsePBOY2kIopk/amvbvEc0TAZ5aYMYUUOGy5
+         4i9GaJXboD41m6m6h13rDonxBTFGTwN3i/luyjrBH1qfV3/xg4s6v2qj0j3nvvecqnqc
+         H30w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oW0vYewmMm0M3PXQVGqM0DMXOo8Xcl8P8bGj8WAcz1s=;
+        b=CL3sedT7VEknCpNeMvkdx1/+DCGsFYOpByiT7OdWRWAWOi6kC//616DKbFQ8pXrmf0
+         A+aY50IAB8TaMNV/cPIC9uQJ5kozk/rTdIyvrVKl/VGBxhwKBgwKKwY1fbfEyoYrD1bo
+         D9Rva1qIV18oDzeq5fmT+gyniWhtCnkJLFlAk6v84TvWrGns7dsiKgyZpVkQz+GA1nD0
+         wRdh8vUnb9FiDEhTkDt+/3lpTxEthMSVLXN64ClvRZuBZVo3mBxM5Ax2FIzc1NogcMKq
+         u2rCzKn2V4AzFjLEzxgcAKP2/yYQ9uHighLRSKfTAOST5xu8GsQYEsDGdCDRcbYxEIuO
+         VL0w==
+X-Gm-Message-State: ANhLgQ2mH4miXCQa/BObQPXSB1kRry/XdGv4i7zBK42OHC2/U4pAMINY
+        btNQwGzVuRGI+JV1gPXiP6Y=
+X-Google-Smtp-Source: ADFU+vuLfqJLTVWgtE2gxmF3zyW7/5g33LYY933B6JEG7gw8iL8V704y0dGVTMbKy7oXYEW3aN89ag==
+X-Received: by 2002:adf:e60b:: with SMTP id p11mr23245914wrm.140.1584891942005;
+        Sun, 22 Mar 2020 08:45:42 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id x17sm17685351wmi.28.2020.03.22.08.45.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 22 Mar 2020 08:45:41 -0700 (PDT)
+To:     jbx6244@gmail.com
+Cc:     devicetree@vger.kernel.org, heiko@sntech.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, robh+dt@kernel.org
+References: <20200322140046.5824-1-jbx6244@gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: fix defines in pd_vio node for
+ rk3399
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <48a91cc1-7751-4df0-a2cd-940eb829fa16@gmail.com>
+Date:   Sun, 22 Mar 2020 16:45:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200322140046.5824-1-jbx6244@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-I work for Arm on maintaining the TrustZone CryptoCell TRNG driver.
+Hi,
 
-Signed-off-by: Hadar Gat <hadar.gat@arm.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+The RK3399 TRM uses both
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c312b65..3f27716 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3847,6 +3847,15 @@ S:	Supported
- F:	drivers/crypto/ccree/
- W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
- 
-+CCTRNG ARM TRUSTZONE CRYPTOCELL TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
-+M:	Hadar Gat <hadar.gat@arm.com>
-+L:	linux-crypto@vger.kernel.org
-+S:	Supported
-+F:	drivers/char/hw_random/cctrng.c
-+F:	drivers/char/hw_random/cctrng.h
-+F:	Documentation/devicetree/bindings/rng/arm-cctrng.txt
-+W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
-+
- CEC FRAMEWORK
- M:	Hans Verkuil <hverkuil-cisco@xs4all.nl>
- L:	linux-media@vger.kernel.org
--- 
-2.7.4
+'pd_tcpc0, pd_tcpc1'
+
+as
+
+'pd_tcpd0, pd_tcpd1'.
+
+What should we use here?
+
+Thanks.
+
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 8aac201f0..3dc8fe620 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -1087,12 +1087,12 @@
+>  					pm_qos = <&qos_isp1_m0>,
+>  						 <&qos_isp1_m1>;
+>  				};
+> -				pd_tcpc0@RK3399_PD_TCPC0 {
+> +				pd_tcpc0@RK3399_PD_TCPD0 {
+>  					reg = <RK3399_PD_TCPD0>;
+>  					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+>  						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
+>  				};
+> -				pd_tcpc1@RK3399_PD_TCPC1 {
+> +				pd_tcpc1@RK3399_PD_TCPD1 {
+>  					reg = <RK3399_PD_TCPD1>;
+>  					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
+>  						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
+> -- 
+> 2.11.0
 
