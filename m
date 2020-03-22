@@ -2,105 +2,90 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23122C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 15:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A29DC4332B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 15:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05F020732
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 15:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584890863;
-	bh=3CssCZF64v9fgPWSZK1WSg+HeERYSeMfmZIBUZnvokE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qt3sa9o4uT0m9tEUO+qdfWZVwzcMX1d1A9yD5VMDSRw7FoqVQanTkm84MJ3krWkaG
-	 FQMsrALNzm2Y2ds4+u0Rd7K4CJG66F4vTnIBFEWptxFhqD6PsEwDYT6wNGN8E+ahT8
-	 mCBqCXPG54FOLXhfCPFrwHQyl3/WKIQZel2Flivc=
+	by mail.kernel.org (Postfix) with ESMTP id 46EE320714
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 15:43:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgCVP1m (ORCPT
+        id S1726832AbgCVPnH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 11:27:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55230 "EHLO mail.kernel.org"
+        Sun, 22 Mar 2020 11:43:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:41036 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgCVP1l (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Mar 2020 11:27:41 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8736D20724;
-        Sun, 22 Mar 2020 15:27:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584890861;
-        bh=3CssCZF64v9fgPWSZK1WSg+HeERYSeMfmZIBUZnvokE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dAfTaQoQjFygU8FJt+8XuGHWfl/RXqWvDFJ9omvJpVpyT93XDCG2tMUASLvWQvpNl
-         tX+3xbf+6rT3DXpIdkeo+mUFxGzBsMnT5CjxObFQC942M5GDuEjDkgXRN8+mtcKDyG
-         IRWjP7kg38M+i/A91J/sBjwP2qe+7lBnbYT77lWQ=
-Date:   Sun, 22 Mar 2020 15:27:35 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Lazar <alazar@startmail.com>
-Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add MAX1241 device tree
- bindings in documentation
-Message-ID: <20200322152735.36cb3493@archlinux>
-In-Reply-To: <20200322095317.GA3099@leena.republic>
-References: <20200320150114.9297-1-alazar@startmail.com>
-        <20200320150114.9297-2-alazar@startmail.com>
-        <20200321173412.52548ef1@archlinux>
-        <20200321193541.GA16892@leena.republic>
-        <1e51c4079222858410e9fe94c9d7f21d99abfe15.camel@analog.com>
-        <20200322095317.GA3099@leena.republic>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1725970AbgCVPnH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Mar 2020 11:43:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90EE531B;
+        Sun, 22 Mar 2020 08:43:06 -0700 (PDT)
+Received: from ssg-dev-vb.arm.com (unknown [10.57.20.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EF233F52E;
+        Sun, 22 Mar 2020 08:43:01 -0700 (PDT)
+From:   Hadar Gat <hadar.gat@arm.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
+Subject: [PATCH v5 0/3] hw_random: introduce Arm CryptoCell TRNG driver
+Date:   Sun, 22 Mar 2020 17:31:22 +0200
+Message-Id: <1584891085-8963-1-git-send-email-hadar.gat@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 22 Mar 2020 11:53:17 +0200
-Alexandru Lazar <alazar@startmail.com> wrote:
+The Arm CryptoCell is a hardware security engine.
+This patch introduces driver for its TRNG (True Random Number Generator)
+engine.
 
-> > Yep.
-> > Jonathan refers to Vdd input/pin [on the chip] which is different from Vref [REF
-> > pin].
-> > Not all drivers define Vdd.
-> > Some call it AVdd.
-> > 
-> > [...]
-> > 
-> > It's an idea to add it, and that can give control to the driver to power-up the
-> > ADC, by defining a regulator [vdd-supply] in the device-tree.  
-> 
-> Hmm... I don't know how useful this would be for the 124x family (I
-> doubt anyone who needs one of these will power it from its own,
-> independent supply), 
+v5 changes:
+	1. in arm-cctrng.yaml, fixed error in 'make dt_binding_check'
+	2. in cctrng.c, clean up cctrng clock handling
 
-You'd be surprised how often this gets added to drivers precisely because
-people will put it on a controllable supply.  It may well not have it's own
-supply but it may share one with a bunch of other external chips and
-all of them need to use the regulator framework controls to make sure it's
-only disabled when they are all suspended etc.
+v4 changes: update arm-cctrng.yaml to conform with json-schema standard.
 
-See the number of times Linus Walleij has added this for various sensors
-and ADCs because he has boards where the control is needed.
+v3 change: removed few unneeded "#ifdef CONFIG_PM" from the code.
 
-Jonathan
+v2 changes: fixed 'make dt_bnding_check' errors.
 
+Hadar Gat (3):
+  dt-bindings: add device tree binding for Arm CryptoCell trng engine
+  hw_random: cctrng: introduce Arm CryptoCell driver
+  MAINTAINERS: add HG as cctrng maintainer
 
-> but it's a pretty harmless change. I can't think of
-> any reason to say no :-).
-> 
-> Thanks,
-> Alex
+ .../devicetree/bindings/rng/arm-cctrng.yaml        |  55 ++
+ MAINTAINERS                                        |   9 +
+ drivers/char/hw_random/Kconfig                     |  12 +
+ drivers/char/hw_random/Makefile                    |   1 +
+ drivers/char/hw_random/cctrng.c                    | 735 +++++++++++++++++++++
+ drivers/char/hw_random/cctrng.h                    |  69 ++
+ 6 files changed, 881 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+ create mode 100644 drivers/char/hw_random/cctrng.c
+ create mode 100644 drivers/char/hw_random/cctrng.h
+
+-- 
+2.7.4
 
