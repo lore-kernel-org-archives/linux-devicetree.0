@@ -2,78 +2,327 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A713FC54FCF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527CAC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7447E2072E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A942072E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:02:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="U6XcNeoS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WeeviBYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgCVQBZ (ORCPT
+        id S1726137AbgCVQCD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:01:25 -0400
-Received: from mx-out2.startmail.com ([145.131.90.155]:57586 "EHLO
-        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgCVQBZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 12:01:25 -0400
-Date:   Sun, 22 Mar 2020 18:06:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
-        s=2017-11; t=1584892883;
-        bh=tw0ThCWI6Kf/ThW1nb3APK71N9og+oAkYn4EacBWeMY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U6XcNeoSW3y31P1NSwUv664upochH/VhOGSeIZvsaGD/43e5v285IK1r0wstqbLWM
-         GNFGh5XA0EQLDNRBvy0JVJc4y2koeCCYKOkQDPJJ/SqO/0euqpQHETeIwwMm9YovX3
-         u0IGDw7Ea2nWOtvnwhMg28YMnaqKirLIn1M8aHsBtWHeXkGvNV4TfiKuMwlZ6cAlej
-         lW+2DVzCwqyvIBMj9Nrbdo/8TQSx+pIWmkcjb8+UFic7ybqLDJb7qAjoOt+D6vtRMD
-         OsaTx3qfRRZj7Tuwf45P7MnaupD2PjQXvdXnQnhXXPsUHaooV1RRe0ntzDQSGLTNTb
-         Wb9FS/eVlIz5g==
-From:   Alexandru Lazar <alazar@startmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add MAX1241 device tree
- bindings in documentation
-Message-ID: <20200322160604.GA222611@leena.republic>
-References: <20200320150114.9297-1-alazar@startmail.com>
- <20200320150114.9297-2-alazar@startmail.com>
- <20200321173412.52548ef1@archlinux>
- <20200321193541.GA16892@leena.republic>
- <1e51c4079222858410e9fe94c9d7f21d99abfe15.camel@analog.com>
- <20200322095317.GA3099@leena.republic>
- <20200322152735.36cb3493@archlinux>
+        Sun, 22 Mar 2020 12:02:03 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:36466 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725785AbgCVQCC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Mar 2020 12:02:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584892922; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=KbW1c1jJh3fjm7VZhx+zDnxPu5lMEAB+5FN/4TFQHC0=;
+ b=WeeviBYEcS7MSm6xAHc40r0wuqHbyAH5TwlF5b+Sv9xnq+NvuOs8c/Cs7pD3QQBSFrKSbCGJ
+ cMIF5WvTsc+ya4A/SGU9tzG1PTHmRdM0d5m6El5ae6oDy4phcGl77IEjsMBRxtnJ4U86I5XJ
+ aKhayQsgwxGFMyYSxPHzTRgF1jc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e778bf7.7feaa835a420-smtp-out-n01;
+ Sun, 22 Mar 2020 16:01:59 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E19ECC43637; Sun, 22 Mar 2020 16:01:58 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ppvk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4AA8C433CB;
+        Sun, 22 Mar 2020 16:01:57 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200322152735.36cb3493@archlinux>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 22 Mar 2020 21:31:57 +0530
+From:   ppvk@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
+        robh+dt@kernel.org, ulf.hansson@linaro.org,
+        asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, rampraka@codeaurora.org,
+        vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        linux-mmc-owner@vger.kernel.org,
+        Subhash Jadavani <subhashj@codeaurora.org>
+Subject: Re: [RFC v5 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth
+ scaling support
+In-Reply-To: <20200312204935.GF144492@google.com>
+References: <1583992911-12001-1-git-send-email-ppvk@codeaurora.org>
+ <1583992911-12001-2-git-send-email-ppvk@codeaurora.org>
+ <20200312204935.GF144492@google.com>
+Message-ID: <11a193adc32906f28358556dfc11858c@codeaurora.org>
+X-Sender: ppvk@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> You'd be surprised how often this gets added to drivers precisely because
-> people will put it on a controllable supply.  It may well not have it's own
-> supply but it may share one with a bunch of other external chips and
-> all of them need to use the regulator framework controls to make sure it's
-> only disabled when they are all suspended etc.
+On 2020-03-13 02:19, Matthias Kaehlcke wrote:
+Hi Matthias,
 
-I figured it might be something like this :-). I've added the vdd-supply
-binding in v5.
+Thanks for reviewing.
 
-If this isn't something that can be easily handled in the core, do you
-think we can document it somewhere as a convention/common idiom?
-(Assuming it's not already documented, of course). It seems like it's
-something that all IIO devices would need. I can do the writing part.
+> Hi Pradeep,
+> 
+> On Thu, Mar 12, 2020 at 11:31:50AM +0530, Pradeep P V K wrote:
+>> Add interconnect bandwidths for SDHC driver using OPP framework that
+>> is required by SDHC driver based on the clock frequency and bus width
+>> of the card. Otherwise, the system clocks may run at minimum clock
+>> speed and thus affecting the performance.
+>> 
+>> This change is based on
+>> [RFC] mmc: host: sdhci-msm: Use the interconnect API
+>> (https://lkml.org/lkml/2018/10/11/499) and
+>> 
+>> [PATCH v6] Introduce Bandwidth OPPs for interconnects
+>> (https://lkml.org/lkml/2019/12/6/740)
+>> 
+>> Co-developed-by: Sahitya Tummala <stummala@codeaurora.org>
+>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>> Co-developed-by: Subhash Jadavani <subhashj@codeaurora.org>
+>> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+>> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
+>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>> ---
+>> 
+>> RFC v4 -> v5:
+>> - Rewrote the icc interconnect get handlers and its error handling
+>>   and allocated vote data after handling all icc get handler errors.
+>> - Removed explicit error check on ICC handlers.
+>> - Addressed minor code style comments.
+>> 
+>>  drivers/mmc/host/sdhci-msm.c | 231 
+>> ++++++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 227 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/drivers/mmc/host/sdhci-msm.c 
+>> b/drivers/mmc/host/sdhci-msm.c
+>> index 09ff731..5fe8fad 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> 
+>> ...
+>> 
+>> +/*
+>> + * This function sets the interconnect bus bandwidth
+>> + * vote based on bw (bandwidth) argument.
+>> + */
+>> +#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
+>> +static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
+>> +						unsigned int bw)
+>> +{
+>> +	int i, err;
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
+>> +	struct device *dev = &msm_host->pdev->dev;
+>> +	struct dev_pm_opp *opp;
+>> +	unsigned long freq = bw;
+>> +	unsigned long peak_bw[BUS_INTERCONNECT_PATHS] = {0};
+>> +	unsigned long avg_bw[BUS_INTERCONNECT_PATHS] = {0};
+>> +
+>> +	if (bw == vote_data->curr_freq)
+>> +		return;
+>> +
+>> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
+>> +		opp = sdhci_msm_find_opp_for_freq(msm_host, freq);
+>> +		if (opp) {
+>> +			avg_bw[i] = dev_pm_opp_get_bw(opp, &peak_bw[i]);
+>> +			freq += 1; /* Next bandwidth vote */
+>> +			dev_pm_opp_put(opp);
+>> +		}
+>> +	}
+>> +	pr_debug("%s: freq:%d sdhc_to_ddr avg_bw:%lu peak_bw:%lu cpu_to_sdhc 
+>> avg_bw:%lu peak_bw:%lu\n",
+>> +			mmc_hostname(host->mmc), bw, avg_bw[0], peak_bw[0],
+>> +				avg_bw[1], peak_bw[1]);
+>> +	err = icc_set_bw(vote_data->sdhc_to_ddr, 0, peak_bw[0]);
+>> +	if (err) {
+>> +		dev_err(dev, "icc_set() failed for 'sdhc-ddr' path err:%d\n",
+>> +							err);
+> 
+> nit: the alignment is odd, either align with 'dev' or a tab after 
+> 'dev_err'
+> 
+sure, will do this in my next patch set.
+>> +		return;
+>> +	}
+>> +	err = icc_set_bw(vote_data->cpu_to_sdhc, 0, peak_bw[1]);
+>> +	if (err) {
+>> +		dev_err(dev, "icc_set() failed for 'cpu-sdhc' path err:%d\n",
+>> +							err);
+> 
+> ditto
+> 
+ok.
 
-Thanks,
-Alex
+>> +		return;
+>> +	}
+>> +	vote_data->curr_freq = bw;
+>> +}
+>> +
+>> +/*
+>> + * Helper function to register for OPP and interconnect
+>> + * frameworks.
+>> + */
+>> +static struct sdhci_msm_bus_vote_data
+>> +		*sdhci_msm_bus_register(struct sdhci_msm_host *host,
+>> +				struct platform_device *pdev)
+>> +{
+>> +	struct sdhci_msm_bus_vote_data *vote_data;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret, i, err;
+> 
+> nit: you can get rid of 'ret' and use 'err' instead.
+> 
+ok. i will do this in my next patchset.
+
+>> +	struct icc_path *icc_paths[BUS_INTERCONNECT_PATHS];
+>> +	const char *path_names[] = {
+>> +		"sdhc-ddr",
+>> +		"cpu-sdhc",
+>> +	};
+>> +
+>> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++)
+>> +		icc_paths[i] = of_icc_get(&pdev->dev, path_names[i]);
+>> +
+>> +	if (!icc_paths[0] && !icc_paths[1]) {
+>> +		dev_info(&pdev->dev, "ICC DT property is missing.Skip vote!!\n");
+>> +		return NULL;
+>> +	}
+>> +
+>> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
+>> +		if (!icc_paths[i]) {
+>> +			dev_err(&pdev->dev, "interconnect path '%s' is not configured\n",
+>> +					path_names[i]);
+>> +			err = -EINVAL;
+>> +			goto handle_err;
+>> +		}
+>> +		if (IS_ERR(icc_paths[i])) {
+>> +			err = PTR_ERR(icc_paths[i]);
+>> +
+>> +			if (err != -EPROBE_DEFER)
+>> +				dev_err(&pdev->dev, "interconnect path '%s' is invalid:%d\n",
+>> +					path_names[i], err);
+>> +			goto handle_err;
+>> +		}
+>> +	}
+>> +
+>> +	ret = dev_pm_opp_of_add_table(dev);
+>> +	if (ret) {
+>> +		if (ret == -ENODEV || ret == -ENODATA)
+>> +			dev_err(dev, "OPP dt properties missing:%d\n", ret);
+>> +		else
+>> +			dev_err(dev, "OPP registration failed:%d\n", ret);
+> 
+> need to call icc_put() for the two paths?
+> 
+hmm yes. coming here means, we got both icc paths without error.
+So, should put both icc paths. I will handle this by adding a new goto 
+jump tag.
+
+>> +		return ERR_PTR(ret);
+>> +	}
+>> +
+>> +	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
+>> +	if (!vote_data)
+> 
+> ditto
+> 
+> probably you want to do this with a jump to an error handler below.
+> 
+ok. i will handle this by adding a new goto jump tag.
+
+>> +		return ERR_PTR(-ENOMEM);
+>> +
+>> +	vote_data->sdhc_to_ddr = icc_paths[0];
+>> +	vote_data->cpu_to_sdhc = icc_paths[1];
+>> +	return vote_data;
+> 
+> nit: add empty line
+> 
+ok.
+
+>> +handle_err:
+>> +	if (err) {
+>> +		int other = (i == 0) ? 1 : 0;
+>> +
+>> +		if (!IS_ERR_OR_NULL(icc_paths[other]))
+>> +			icc_put(icc_paths[other]);
+>> +	}
+> 
+> doing this at the end (as opposed to my suggestion from
+> https://patchwork.kernel.org/patch/11388409/#23165321) has the 
+> advantage of
+> keeping the above loop cleaner from error handling cruft, on the 
+> downside it
+> is probably easier to understand right away in the context of the loop. 
+> I
+> guess you can do it either way.
+> 
+True. i will leave this error handling at bottom as the code looks more 
+cleaner.
+
+> It might get a bit more messy if you also handle the case where both 
+> paths are
+> valid. If that gets too involved I'd suggest to hnadle the above case 
+> inside
+> the loop.
+> 
+hmm true, handling the above error in loop making the code more messy 
+so,
+i'm using a new tag (put_icc) to put both the icc paths.
+
+>> +	return ERR_PTR(err);
+>> +}
+>> +
+>> +static void sdhci_msm_bus_unregister(struct device *dev,
+>> +				struct sdhci_msm_host *host)
+>> +{
+>> +	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
+>> +
+>> +	if (IS_ERR_OR_NULL(vote_data))
+> 
+> I think 'if (!vote_data)' would be sufficient, since _probe() aborts in
+> case of an error.
+> 
+ok. i will handle this in my next patch set.
+
+>> +		return;
+>> +
+>> +	icc_put(vote_data->sdhc_to_ddr);
+>> +	icc_put(vote_data->cpu_to_sdhc);
+>> +}
+>> +
+>> +static void sdhci_msm_bus_voting(struct sdhci_host *host, bool 
+>> enable)
+>> +{
+>> +	struct mmc_ios *ios = &host->mmc->ios;
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +	unsigned int bw;
+>> +
+>> +	if (IS_ERR_OR_NULL(msm_host->bus_vote_data))
+>> +		return;
+> 
+> ditto
+ok.
