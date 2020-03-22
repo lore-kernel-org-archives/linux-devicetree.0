@@ -2,92 +2,113 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1284C54EEB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 22:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5078C1975A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 22:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B122072E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 22:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9283B2070A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 22:30:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qKvlR8UZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgCVWJG (ORCPT
+        id S1726809AbgCVWa2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 18:09:06 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52806 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgCVWJF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 18:09:05 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id B5CD11C0325; Sun, 22 Mar 2020 23:09:03 +0100 (CET)
-Date:   Sun, 22 Mar 2020 23:09:03 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 2/4] serdev: ngsm-motmdm: Add Motorola TS 27.010 serdev
- modem driver for droid4
-Message-ID: <20200322220903.GA28082@amd>
-References: <20200319173755.65082-1-tony@atomide.com>
- <20200319173755.65082-3-tony@atomide.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
-Content-Disposition: inline
-In-Reply-To: <20200319173755.65082-3-tony@atomide.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sun, 22 Mar 2020 18:30:28 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38486 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgCVWa2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 18:30:28 -0400
+Received: by mail-wm1-f65.google.com with SMTP id l20so12691147wmi.3;
+        Sun, 22 Mar 2020 15:30:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KmhmWvbFQMFZ6mT9PflSCZYk2Q9MLpXo0b38vOV/huo=;
+        b=qKvlR8UZo869TWuxLhPj8rpzsiltXBzAlT8WI42WTOceU8atrga9CuPmv4Bnw3fn8F
+         bSsTGM7U+3owTwyqllmdY6qxE6nEnCqks8a5gYvS7+8mHpMZ9CliLDApm4zZ2omZAREh
+         ZTG2alF7LpL0izJGtBQzlEpPZaPvZgklu+gSMJN6Fzcsu/pGiQ2QOi/tHHYqUCZQZi0V
+         2l8+W/dEOJSWdzlIqJHFFW0odLvsqWLOd5y0rxEE7u9+nN8HVfDg4C9/li9kGKj0apAI
+         7Vy8fB2EdH3kMIgAy+79T+OWAaFW8rqptClSP7dBQpid9x3ghcjnwHwxx3Q+3iwIfYLK
+         hgxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KmhmWvbFQMFZ6mT9PflSCZYk2Q9MLpXo0b38vOV/huo=;
+        b=rgA9tv7uhWwGqA7H7HyYEuBnhnF7znuWIVW1x4Uz2i3N0dVSo+V8kfZ6ub5UM/jZe0
+         ds0B/Dl0JVSLY5p8b+Ta3DFxXKQqYrt3IN1WXxsWBwj4M/gZZVWmtTAHwDpme5RI7yHM
+         MCQr1KhBAvHe/nwynbcb5sD32UY+qVDIkuXYYZcTljN06WeHYdkQn+1dYBTx4ichnjdw
+         peh2UJ+LwSTWJuCo9ReSjeoEIVGMZwWx+tAU+mw4pEjxChsy79laY5/GGbX4qExpwZ2+
+         5Skff1bwLTfywklCylzGlGh62Tc8SyX02bptJfx9waBkigosee1nI4vyx6A43zxlXk5x
+         ZDDw==
+X-Gm-Message-State: ANhLgQ0U5km8VJfNxHKNZLr6eavigzpb+JFpOXEFp5hGuWTHnl9T9bMR
+        jgsHpIc3npw2WOxKTv9KJfD2pAa8OQ4=
+X-Google-Smtp-Source: ADFU+vuTT5bbQSh/KefTnt7J+1b6IkHfRE4nG4EyJnPppSag2VG4qFm60LoTifwIDV0fS0MH0Z8Fiw==
+X-Received: by 2002:a1c:a908:: with SMTP id s8mr24539211wme.133.1584916223913;
+        Sun, 22 Mar 2020 15:30:23 -0700 (PDT)
+Received: from localhost.localdomain (p5DCFFFE5.dip0.t-ipconnect.de. [93.207.255.229])
+        by smtp.gmail.com with ESMTPSA id p13sm8060517wru.3.2020.03.22.15.30.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Mar 2020 15:30:22 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v3 0/5] Add battery charger driver support for MP2629
+Date:   Sun, 22 Mar 2020 23:30:11 +0100
+Message-Id: <20200322223016.11509-1-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+changes in v3:
+ - regmap for children passed using platform data and remove mfd driver info
+   access directly from children
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+changes in v2:
+ - removed EXPORT_SYMBOL of register set/get helper
+ - regmap bit filed used, fixed other review comments
 
-Hi!
+This patch series add support for Battery charger control driver for Monolithic
+Power System's MP2629 chipset, includes MFD driver for ADC battery & input
+power supply measurement and battery charger control driver.
 
-> Many Motorola phones are controlling the modem using a custom variant
-> of TS 27.010 serial line discipline. Devices on these modems have a
-> dedicated TS 27.010 channel for features like audio mixer, GNSS, voice
-> modem, SIM card reader and so on.
+Thanks,
+Saravanan
 
-I get warning here while applying:
+Saravanan Sekar (5):
+  dt-bindings: mfd: add document bindings for mp2629
+  mfd: mp2629: Add support for mps battery charger
+  iio: adc: mp2629: Add support for mp2629 ADC driver
+  power: supply: Add support for mps mp2629 battery charger
+  MAINTAINERS: Add entry for mp2629 Battery Charger driver
 
-Applying: serdev: ngsm-motmdm: Add Motorola TS 27.010 serdev modem
-driver for droid4
-=2Egit/rebase-apply/patch:22: new blank line at EOF.
-+
+ .../devicetree/bindings/mfd/mps,mp2629.yaml   |  62 ++
+ MAINTAINERS                                   |   5 +
+ drivers/iio/adc/Kconfig                       |  10 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/mp2629_adc.c                  | 214 ++++++
+ drivers/mfd/Kconfig                           |   9 +
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/mp2629.c                          | 116 +++
+ drivers/power/supply/Kconfig                  |  10 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/mp2629_charger.c         | 697 ++++++++++++++++++
+ include/linux/mfd/mp2629.h                    |  31 +
+ 12 files changed, 1158 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ create mode 100644 drivers/iio/adc/mp2629_adc.c
+ create mode 100644 drivers/mfd/mp2629.c
+ create mode 100644 drivers/power/supply/mp2629_charger.c
+ create mode 100644 include/linux/mfd/mp2629.h
 
-Best regards,
-								Pavel
+-- 
+2.17.1
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl534f8ACgkQMOfwapXb+vLvXwCgid42BgC8fqXl5YAhK+fnnoyX
-HpUAnj0u/6f88ygI64AyaymJ5MNfUIYC
-=k89O
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
