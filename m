@@ -2,131 +2,156 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EC3C54EEB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 11:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125CEC54FCE
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 11:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A182072E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 11:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6BD20714
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 11:26:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ri+n76E+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tP5OkVBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCVLBS (ORCPT
+        id S1727030AbgCVL0t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 07:01:18 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37580 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgCVLBS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 07:01:18 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w10so12932550wrm.4;
-        Sun, 22 Mar 2020 04:01:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sSNfn1lOuwrdFcFfi180EAlddz36torDoaIxoG4z+2U=;
-        b=ri+n76E+3tHH8Z3EWDRFGOg52UBOIuh1YosaBsija/90WTG2WKxKUOKBNnnIgYpa8S
-         nF74tppOl3nSTC3mw4dszoys9PPkIVRdh0Q+VdMkWH4m6paGT6MXie2jmJdN/lV6csja
-         M+azlwzV3XG6UXsH9A2zeIhdLKLwTzuNWJUSIicFwQkaujfbYmbYTQVC2EDx0rL7e25G
-         jdZotnUuiVBz5dYL9dPzD7i4Eb3RwTRILrRr1aGOUlBc5SLWJXy0zhibuRPYoKC+x6NS
-         PXU6j4zMCJuIAJfVZVlF1NNxta4AbY6x7iEEa5PWsZ92iDwjT18ANYK/HD5EnapZ4YkI
-         lVyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sSNfn1lOuwrdFcFfi180EAlddz36torDoaIxoG4z+2U=;
-        b=IfMoWI7I43U6K8xuMdIPJAlVtRKC+lIWVKdnV+Ffy6b4CFZa6hVwUP+bP6VcqDO6H+
-         Im4B5ssBN6MM1W6bPyHIZNoGwpnQpOtMH7XRJRtbdcEde58IePBfqrNNATSXFwkqGFhi
-         UB6yblt9O8VoxPBdunHtmFAkcWNLeuRYf4eBcKKxSgJNxmz4WG98MUBUzzlyVUqr6Oe9
-         BEALv6ntRmjX+eHJLad/YlCVtcd2iRflqBsJKQX4YjhTeK5xxMSq9X8/A4YY2lrr1KkY
-         XUj9s1j9+ppec3DCZWV+dVcD2+R5sMTZhjf/9sIKzFYm57dmNZY22s3FGEWJ3sbLT1rt
-         XDmw==
-X-Gm-Message-State: ANhLgQ0HNU4pjZ3ngL5U3uJl63P2GDxEcLVrJ91GiVvohNXFXz6KQkec
-        h4B1KN+nh0ww4ZCDSO1Phyo/fr561wcOknIB85k=
-X-Google-Smtp-Source: ADFU+vsSBXMut+ZcU1fczh3pG4r8yPPPXaEt73HpCzUdEb+UaS8v/m5UKZuNuctmlE8iRS0oXgF7Gx/RJiLBK6bCOdc=
-X-Received: by 2002:a5d:674f:: with SMTP id l15mr4404734wrw.196.1584874876241;
- Sun, 22 Mar 2020 04:01:16 -0700 (PDT)
+        Sun, 22 Mar 2020 07:26:49 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56756 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726896AbgCVL0t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 07:26:49 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02MBQYtm124964;
+        Sun, 22 Mar 2020 06:26:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584876394;
+        bh=rV6bGvKdd7JY4+Ufo6jMxHjB1DmFUcKzhVpTmeJSLAw=;
+        h=From:To:CC:Subject:Date;
+        b=tP5OkVBeQuE7+WpLRLZDUel/rOm/9pMNqeasGR3reqRjDBP9t9+XWKbZAQ8wRviRi
+         jv0m7DZ/P9jf9+vJdoZ+taSZdgIxFqp9ELK4OAPXniVaxqnNXOTAj8O5lUr25Bw8MB
+         jU3fWDDrM5pm6/4uBTmuTivzKME7takpiwt5HpaI=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02MBQYCP081146
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 22 Mar 2020 06:26:34 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 22
+ Mar 2020 06:26:34 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 22 Mar 2020 06:26:34 -0500
+Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02MBQV5b089468;
+        Sun, 22 Mar 2020 06:26:32 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH] arm64: dts: ti: k3-am65-main: Add ehrpwm nodes
+Date:   Sun, 22 Mar 2020 16:56:30 +0530
+Message-ID: <20200322112630.25541-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-References: <20200304072730.9193-1-zhang.lyra@gmail.com> <20200304072730.9193-4-zhang.lyra@gmail.com>
- <158475317083.125146.1467485980949213245@swboyd.mtv.corp.google.com>
-In-Reply-To: <158475317083.125146.1467485980949213245@swboyd.mtv.corp.google.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Sun, 22 Mar 2020 19:00:39 +0800
-Message-ID: <CAAfSe-sQnZLn8J7Ct5OES=2PmT-nGT-_0zXxRaO=mcHVtgTcnQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/7] dt-bindings: clk: sprd: add bindings for sc9863a
- clock controller
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
+Add DT nodes for all ehrpwm instances present on AM654 EVM.
 
-On Sat, 21 Mar 2020 at 09:12, Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Chunyan Zhang (2020-03-03 23:27:26)
-> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> >
-> > add a new bindings to describe sc9863a clock compatible string.
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> [...]
-> > +examples:
-> > +  - |
-> > +    ap_clk: clock-controller@21500000 {
-> > +      compatible = "sprd,sc9863a-ap-clk";
-> > +      reg = <0 0x21500000 0 0x1000>;
-> > +      clocks = <&ext_26m>, <&ext_32k>;
-> > +      clock-names = "ext-26m", "ext-32k";
-> > +      #clock-cells = <1>;
-> > +    };
-> > +
-> > +  - |
-> > +    soc {
-> > +      #address-cells = <2>;
-> > +      #size-cells = <2>;
-> > +
-> > +      ap_ahb_regs: syscon@20e00000 {
-> > +        compatible = "sprd,sc9863a-glbregs", "syscon", "simple-mfd";
-> > +        reg = <0 0x20e00000 0 0x4000>;
-> > +        #address-cells = <1>;
-> > +        #size-cells = <1>;
-> > +        ranges = <0 0 0x20e00000 0x4000>;
-> > +
-> > +        apahb_gate: apahb-gate@0 {
->
-> Why do we need a node per "clk type" in the simple-mfd syscon? Can't we
-> register clks from the driver that matches the parent node and have that
-> driver know what sorts of clks are where? Sorry I haven't read the rest
-> of the patch series and I'm not aware if this came up before. If so,
-> please put details about this in the commit text.
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+---
 
-Please see the change logs after v2 in cover-letter.
+clk driver and bindings has been merged to clk-next tree.
 
-Rob suggested us to put some clocks under syscon nodes, since these
-clocks have the same
-physical address base with the syscon;
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 60 ++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-Thanks,
-Chunyan
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index e5df20a2d2f9..da6427bed801 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -285,6 +285,12 @@ serdes_mux: mux-controller {
+ 			mux-reg-masks = <0x4080 0x3>, /* SERDES0 lane select */
+ 					<0x4090 0x3>; /* SERDES1 lane select */
+ 		};
++
++		ehrpwm_tbclk: syscon@4140 {
++			compatible = "ti,am654-ehrpwm-tbclk", "syscon";
++			reg = <0x4140 0x18>;
++			#clock-cells = <1>;
++		};
+ 	};
+ 
+ 	dwc3_0: dwc3@4000000 {
+@@ -742,4 +748,58 @@ csi2_0: port@0 {
+ 			};
+ 		};
+ 	};
++
++	ehrpwm0: pwm@3000000 {
++		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
++		#pwm-cells = <3>;
++		reg = <0x0 0x3000000 0x0 0x100>;
++		power-domains = <&k3_pds 40 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&ehrpwm_tbclk 0>, <&k3_clks 40 0>;
++		clock-names = "tbclk", "fck";
++	};
++
++	ehrpwm1: pwm@3010000 {
++		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
++		#pwm-cells = <3>;
++		reg = <0x0 0x3010000 0x0 0x100>;
++		power-domains = <&k3_pds 41 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&ehrpwm_tbclk 1>, <&k3_clks 41 0>;
++		clock-names = "tbclk", "fck";
++	};
++
++	ehrpwm2: pwm@3020000 {
++		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
++		#pwm-cells = <3>;
++		reg = <0x0 0x3020000 0x0 0x100>;
++		power-domains = <&k3_pds 42 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&ehrpwm_tbclk 2>, <&k3_clks 42 0>;
++		clock-names = "tbclk", "fck";
++	};
++
++	ehrpwm3: pwm@3030000 {
++		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
++		#pwm-cells = <3>;
++		reg = <0x0 0x3030000 0x0 0x100>;
++		power-domains = <&k3_pds 43 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&ehrpwm_tbclk 3>, <&k3_clks 43 0>;
++		clock-names = "tbclk", "fck";
++	};
++
++	ehrpwm4: pwm@3040000 {
++		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
++		#pwm-cells = <3>;
++		reg = <0x0 0x3040000 0x0 0x100>;
++		power-domains = <&k3_pds 44 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&ehrpwm_tbclk 4>, <&k3_clks 44 0>;
++		clock-names = "tbclk", "fck";
++	};
++
++	ehrpwm5: pwm@3050000 {
++		compatible = "ti,am654-ehrpwm", "ti,am3352-ehrpwm";
++		#pwm-cells = <3>;
++		reg = <0x0 0x3050000 0x0 0x100>;
++		power-domains = <&k3_pds 45 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&ehrpwm_tbclk 5>, <&k3_clks 45 0>;
++		clock-names = "tbclk", "fck";
++	};
+ };
+-- 
+2.25.2
 
->
-> > +          compatible = "sprd,sc9863a-apahb-gate";
-> > +          reg = <0x0 0x1020>;
-> > +          #clock-cells = <1>;
