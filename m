@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4544C4332B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B5EC54FCF
 	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 19:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8872B208DB
+	by mail.kernel.org (Postfix) with ESMTP id 6907C2076E
 	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 19:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgCVTIq (ORCPT
+        id S1727028AbgCVTIr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 15:08:46 -0400
-Received: from out28-97.mail.aliyun.com ([115.124.28.97]:59556 "EHLO
-        out28-97.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbgCVTIT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 15:08:19 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07496299|-1;CH=green;DM=||false|;DS=CONTINUE|ham_system_inform|0.345318-0.00103386-0.653648;FP=12402199364501017658|1|1|8|0|-1|-1|-1;HT=e02c03312;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.H3Z9uBl_1584904084;
+        Sun, 22 Mar 2020 15:08:47 -0400
+Received: from out28-122.mail.aliyun.com ([115.124.28.122]:51736 "EHLO
+        out28-122.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgCVTIY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 15:08:24 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1724075|-1;CH=green;DM=||false|;DS=CONTINUE|ham_regular_dialog|0.0154397-0.00035353-0.984207;FP=3947737658672842609|1|1|8|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.H3Z9uBl_1584904084;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.H3Z9uBl_1584904084)
           by smtp.aliyun-inc.com(10.147.41.199);
-          Mon, 23 Mar 2020 03:08:15 +0800
+          Mon, 23 Mar 2020 03:08:19 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-clk@vger.kernel.org
@@ -32,9 +32,9 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         mark.rutland@arm.com, paul@crapouillou.net,
         dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v7 1/6] clk: Ingenic: Remove unnecessary spinlock when reading registers.
-Date:   Mon, 23 Mar 2020 03:07:33 +0800
-Message-Id: <1584904058-53155-3-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v7 5/6] dt-bindings: clock: Add and reorder ABI for X1000.
+Date:   Mon, 23 Mar 2020 03:07:37 +0800
+Message-Id: <1584904058-53155-7-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1584904058-53155-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1584904058-53155-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -46,89 +46,105 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It is not necessary to use spinlock when reading registers,
-so remove it from cgu.c.
+1.The SSI clock of X1000 not like JZ4770 and JZ4780, they are not
+  directly derived from the output of SSIPLL, but from the clock
+  obtained by dividing the frequency by 2. "X1000_CLK_SSIPLL_DIV2"
+  is added for this purpose, it must between "X1000_CLK_SSIPLL"
+  and "X1000_CLK_SSIMUX", otherwise an error will occurs when
+  initializing the clock. These ABIs are only used for X1000, and
+  I'm sure that no other devicetree out there is using these ABIs,
+  so we should be able to reorder them.
+2.Clocks of LCD, OTG, EMC, EFUSE, OST are also added.
 
-Suggested-by: Paul Cercueil <paul@crapouillou.net>
-Suggested-by: Paul Burton <paulburton@kernel.org>
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
 
 Notes:
-    v2:
+    v5:
     New patch.
     
-    v2->v3:
-    Adjust order from [5/5] in v2 to [1/5] in v3.
-    
-    v3->v4:
-    Remove the spinlock around ingenic_cgu_gate_get().
-    
-    v4->v5:
-    Rebase on top of kernel 5.6-rc1.
-    
     v5->v6:
-    No change.
+    Add missing part of X1000's CGU.
     
     v6->v7:
     No change.
 
- drivers/clk/ingenic/cgu.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ include/dt-bindings/clock/x1000-cgu.h | 62 +++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-index 6e96303..ab1302a 100644
---- a/drivers/clk/ingenic/cgu.c
-+++ b/drivers/clk/ingenic/cgu.c
-@@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- 	const struct ingenic_cgu_pll_info *pll_info;
- 	unsigned m, n, od_enc, od;
- 	bool bypass;
--	unsigned long flags;
- 	u32 ctl;
+diff --git a/include/dt-bindings/clock/x1000-cgu.h b/include/dt-bindings/clock/x1000-cgu.h
+index bbaebaf..ef6ff63 100644
+--- a/include/dt-bindings/clock/x1000-cgu.h
++++ b/include/dt-bindings/clock/x1000-cgu.h
+@@ -12,33 +12,39 @@
+ #ifndef __DT_BINDINGS_CLOCK_X1000_CGU_H__
+ #define __DT_BINDINGS_CLOCK_X1000_CGU_H__
  
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 	BUG_ON(clk_info->type != CGU_CLK_PLL);
- 	pll_info = &clk_info->pll;
+-#define X1000_CLK_EXCLK		0
+-#define X1000_CLK_RTCLK		1
+-#define X1000_CLK_APLL		2
+-#define X1000_CLK_MPLL		3
+-#define X1000_CLK_SCLKA		4
+-#define X1000_CLK_CPUMUX	5
+-#define X1000_CLK_CPU		6
+-#define X1000_CLK_L2CACHE	7
+-#define X1000_CLK_AHB0		8
+-#define X1000_CLK_AHB2PMUX	9
+-#define X1000_CLK_AHB2		10
+-#define X1000_CLK_PCLK		11
+-#define X1000_CLK_DDR		12
+-#define X1000_CLK_MAC		13
+-#define X1000_CLK_MSCMUX	14
+-#define X1000_CLK_MSC0		15
+-#define X1000_CLK_MSC1		16
+-#define X1000_CLK_SSIPLL	17
+-#define X1000_CLK_SSIMUX	18
+-#define X1000_CLK_SFC		19
+-#define X1000_CLK_I2C0		20
+-#define X1000_CLK_I2C1		21
+-#define X1000_CLK_I2C2		22
+-#define X1000_CLK_UART0		23
+-#define X1000_CLK_UART1		24
+-#define X1000_CLK_UART2		25
+-#define X1000_CLK_SSI		26
+-#define X1000_CLK_PDMA		27
++#define X1000_CLK_EXCLK			0
++#define X1000_CLK_RTCLK			1
++#define X1000_CLK_APLL			2
++#define X1000_CLK_MPLL			3
++#define X1000_CLK_SCLKA			4
++#define X1000_CLK_CPUMUX		5
++#define X1000_CLK_CPU			6
++#define X1000_CLK_L2CACHE		7
++#define X1000_CLK_AHB0			8
++#define X1000_CLK_AHB2PMUX		9
++#define X1000_CLK_AHB2			10
++#define X1000_CLK_PCLK			11
++#define X1000_CLK_DDR			12
++#define X1000_CLK_MAC			13
++#define X1000_CLK_LCD			14
++#define X1000_CLK_MSCMUX		15
++#define X1000_CLK_MSC0			16
++#define X1000_CLK_MSC1			17
++#define X1000_CLK_OTG			18
++#define X1000_CLK_SSIPLL		19
++#define X1000_CLK_SSIPLL_DIV2	20
++#define X1000_CLK_SSIMUX		21
++#define X1000_CLK_EMC			22
++#define X1000_CLK_EFUSE			23
++#define X1000_CLK_SFC			24
++#define X1000_CLK_I2C0			25
++#define X1000_CLK_I2C1			26
++#define X1000_CLK_I2C2			27
++#define X1000_CLK_UART0			28
++#define X1000_CLK_UART1			29
++#define X1000_CLK_UART2			30
++#define X1000_CLK_SSI			31
++#define X1000_CLK_OST			32
++#define X1000_CLK_PDMA			33
  
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
- 	m += pll_info->m_offset;
-@@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
--	unsigned long flags;
- 	u32 ctl;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	return !!(ctl & BIT(pll_info->enable_bit));
- }
-@@ -562,16 +556,12 @@ static int ingenic_clk_is_enabled(struct clk_hw *hw)
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info;
--	unsigned long flags;
- 	int enabled = 1;
- 
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 
--	if (clk_info->type & CGU_CLK_GATE) {
--		spin_lock_irqsave(&cgu->lock, flags);
-+	if (clk_info->type & CGU_CLK_GATE)
- 		enabled = !ingenic_cgu_gate_get(cgu, &clk_info->gate);
--		spin_unlock_irqrestore(&cgu->lock, flags);
--	}
- 
- 	return enabled;
- }
+ #endif /* __DT_BINDINGS_CLOCK_X1000_CGU_H__ */
 -- 
 2.7.4
 
