@@ -2,217 +2,50 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8E9C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 18:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFADC4332B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 19:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788C32076F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 18:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584901607;
-	bh=JNL/JoCsYbg+cQsO68XaEG0HOUodGMAq71VOxp587uI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eKeXzLXUw+JD1tYmkSYRmUlQ9XYwzbY5gby6ZHjzF59R2YtiDFlpywXY0Asrrb3GX
-	 lwJFwlYmaE8gGDksaSoRS86hZW1TM8Vdn0AZGxwknJTRZ/yusaptUmdoLvv6OF0DcQ
-	 VKh25a1NnQWB2vlOxaRNf46qvIsANI86sAphtJc0=
+	by mail.kernel.org (Postfix) with ESMTP id D677420753
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 19:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbgCVS0q (ORCPT
+        id S1726538AbgCVTIR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 14:26:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgCVS0q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Mar 2020 14:26:46 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3EC320719;
-        Sun, 22 Mar 2020 18:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584901606;
-        bh=JNL/JoCsYbg+cQsO68XaEG0HOUodGMAq71VOxp587uI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jfzoqi5jPVKbH9aUMQP6pANm54u6xELSZBReLqSNiaiRXP/bj7AnxRIiPQotPjprM
-         jScVSCRFJW0/jng8wCQ65+HqBNdhb7EF3vQAKVg5wtGI44+2PFR33JFlDQ8HzWKIxv
-         rYWN1HPhr0OWTB6BDZvakTefVbeHyDaQ8UcFiHb4=
-Date:   Sun, 22 Mar 2020 18:26:40 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "keescook@chromium.org" <keescook@chromium.org>,
-        "Costina, Adrian" <Adrian.Costina@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>
-Subject: Re: [PATCH v11 5/8] iio: adc: adi-axi-adc: add support for AXI ADC
- IP core
-Message-ID: <20200322182640.20b83ce0@archlinux>
-In-Reply-To: <319e36a6e4553a54812c63d89df181aee165bd4b.camel@analog.com>
-References: <20200321085315.11030-1-alexandru.ardelean@analog.com>
-        <20200321085315.11030-6-alexandru.ardelean@analog.com>
-        <CAHp75VecnornqckmG_WgN-V9A1VSQfRT85TxFzwHgaLw9dAHeA@mail.gmail.com>
-        <979ef870a4f0935e41e95e7759847eba8bd0407c.camel@analog.com>
-        <CAHp75Vdna2+txY=w87n+SWE3x3FYJLeMjYbYa6V-co3z0mYx_g@mail.gmail.com>
-        <202003220901.880A6DF@keescook>
-        <20200322165317.0b1f0674@archlinux>
-        <319e36a6e4553a54812c63d89df181aee165bd4b.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 22 Mar 2020 15:08:17 -0400
+Received: from out28-122.mail.aliyun.com ([115.124.28.122]:45680 "EHLO
+        out28-122.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbgCVTIR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 15:08:17 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2745475|-1;CH=green;DM=||false|;DS=CONTINUE|ham_news_journal|0.0226627-0.000317842-0.977019;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07447;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.H3Z9uBl_1584904084;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.H3Z9uBl_1584904084)
+          by smtp.aliyun-inc.com(10.147.41.199);
+          Mon, 23 Mar 2020 03:08:13 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, paul@crapouillou.net,
+        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Subject: Add support for the X1830 and fix bugs for X1000 v7.
+Date:   Mon, 23 Mar 2020 03:07:31 +0800
+Message-Id: <1584904058-53155-1-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 22 Mar 2020 17:40:30 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
-
-> On Sun, 2020-03-22 at 16:53 +0000, Jonathan Cameron wrote:
-> > On Sun, 22 Mar 2020 09:16:36 -0700
-> > Kees Cook <keescook@chromium.org> wrote:
-> >   
-> > > On Sun, Mar 22, 2020 at 12:45:39PM +0200, Andy Shevchenko wrote:  
-> > > > +Cc Kees (see below about allocation size checks)
-> > > > 
-> > > > On Sun, Mar 22, 2020 at 11:36 AM Ardelean, Alexandru
-> > > > <alexandru.Ardelean@analog.com> wrote:    
-> > > > > On Sat, 2020-03-21 at 23:38 +0200, Andy Shevchenko wrote:    
-> > > > > > On Sat, Mar 21, 2020 at 10:55 AM Alexandru Ardelean
-> > > > > > <alexandru.ardelean@analog.com> wrote:    
-> > > > 
-> > > > ...
-> > > >     
-> > > > > > > +static struct adi_axi_adc_conv *adi_axi_adc_conv_register(struct
-> > > > > > > device
-> > > > > > > *dev,
-> > > > > > > +                                                         int
-> > > > > > > sizeof_priv)
-> > > > > > > +{
-> > > > > > > +       struct adi_axi_adc_client *cl;
-> > > > > > > +       size_t alloc_size;
-> > > > > > > +
-> > > > > > > +       alloc_size = sizeof(struct adi_axi_adc_client);
-> > > > > > > +       if (sizeof_priv) {
-> > > > > > > +               alloc_size = ALIGN(alloc_size, IIO_ALIGN);
-> > > > > > > +               alloc_size += sizeof_priv;
-> > > > > > > +       }
-> > > > > > > +       alloc_size += IIO_ALIGN - 1;    
-> > > > > > 
-> > > > > > Have you looked at linux/overflow.h?    
-> > > > > 
-> > > > > i did now;
-> > > > > any hints where i should look closer?    
-> > > > 
-> > > > It seems it lacks of this kind of allocation size checks... Perhaps add
-> > > > one?
-> > > > Kees, what do you think?
-> > > >     
-> > > > > > > +       cl = kzalloc(alloc_size, GFP_KERNEL);
-> > > > > > > +       if (!cl)
-> > > > > > > +               return ERR_PTR(-ENOMEM);    
-> > > 
-> > > My head hurts trying to read this! ;) Okay, so the base size is
-> > > sizeof(struct adi_axi_adc_client). But if sizeof_priv is non-zero
-> > > (this arg should be size_t not int), then we need to make the struct
-> > > size ALIGNed? And then what is the "+= IIO_ALIGN - 1" for?  
-> > 
-> > I'm a bit embarrassed.  I can't remember what the += IIO_ALIGN - 1
-> > was for in the first place and I can't work it out now.
-> > 
-> > The purpose of the fun here was to end up with a structure that
-> > was either
-> > a) sizeof(struct iio_dev) long,
-> > b) sizeof(struct iio_dev) + padding + sizeof_priv 
-> > where the padding ensured that any __cacheline_aligned elements
-> > in the private structure were cacheline aligned within resulting
-> > allocation.
-> > 
-> > So why the extra IIO_ALIGN - 1....
-> > 
-> > The original patch doesn't help much either given it's got a question
-> > in there for why this bit is needed.
-> > 
-> > https://lore.kernel.org/linux-iio/1302890160-8823-5-git-send-email-jic23@cam.ac.uk/
-> > 
-> > However, it rang a slight bell.  Seems I lifted the code from netdev.
-> > https://elixir.bootlin.com/linux/latest/source/net/core/dev.c#L9718
-> > 
-> > I'm fairly sure we don't need that padding here..  What can I say,
-> > I was young and stupid :)
-> > 
-> > I did add a question mark so clearly meant to come back and
-> > take another look ;)
-> > 
-> > One vague thought is that it's about ensuring we are big enough to
-> > ensure we are cacheline aligned.  That's obviously not a problem with
-> > current struct iio_dev which is far from small,
-> > but in theory it could have been.  Also, thinking about it we only
-> > need the struct iio_dev to be cacheline aligned if we have
-> > an iio_priv structure.  If we have one of those it will definitely
-> > be big enough anyway.
-> > 
-> > At somepoint I'd like to look at cleaning it up for iio_device_alloc
-> > but with a lot of testing as who knows what is relying on this behaviour
-> > or if I've missed something.  Crashes around this alignment are
-> > infrequent and nasty to trace at the best of times.  
-> 
-> In the meantime, are there any objections if I leave the allocation as-is for
-> this driver as well?
-> I've tested the driver a bit more with this form.
-
-Hmm. I'd rather we didn't introduce this with the extra padding unless we
-can figure out why it would need it.  It would be a bit horrible to
-patch this in a few weeks time for this reason.
-
-If you absolutely can't retest for remote reasons then I suppose we could
-merge it and tidy up later.
-
-Jonathan
-
-> 
-> > 
-> > Jonathan
-> >   
-> > > It's not clear to me what the expect alignment/padding is here.
-> > > 
-> > > I would probably construct this as:
-> > > 
-> > > 	sizeof_self = sizeof(struct adi_axi_adc_client);
-> > > 	if (sizeof_priv)
-> > > 		sizeof_self = ALIGN(sizeof_self, IIO_ALIGN);
-> > > 	if (check_add_overflow(sizeof_self, sizeof_priv, &sizeof_alloc))
-> > > 		return ERR_PTR(-ENOMEM);
-> > > 	if (check_add_overflow(sizeof_alloc, IIO_ALIGN - 1, &sizeof_alloc))
-> > > 		return ERR_PTR(-ENOMEM);
-> > > 
-> > > But I don't understand the "IIO_ALIGN - 1" part, so I assume this could
-> > > be shortened with better use of ALIGN()?
-> > > 
-> > > Also, this feels like a weird driver allocation overall:
-> > > 
-> > > +	struct adi_axi_adc_conv **ptr, *conv;
-> > > +
-> > > +	ptr = devres_alloc(devm_adi_axi_adc_conv_release, sizeof(*ptr),
-> > > +			   GFP_KERNEL);
-> > > +	if (!ptr)
-> > > +		return ERR_PTR(-ENOMEM);
-> > > +
-> > > +	conv = adi_axi_adc_conv_register(dev, sizeof_priv);
-> > > 
-> > > devres_alloc() allocates storage for a _single pointer_. :P That's not
-> > > useful for resource tracking. Why is devres_alloc() being called here
-> > > and not down in adi_axi_adc_conv_register() and just passing the pointer
-> > > back up?
-> > >   
+v6->v7:
+1.Update commit message of [2/6].
+2.Adjust includes in [4/6], add blank line as Paul Cercueil's suggest,
+  and Move "*cgu" into x1830_cgu_init() as a local variable.
+3.Update commit message of [6/6].
 
