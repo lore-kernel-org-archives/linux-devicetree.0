@@ -2,112 +2,264 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B093C4332B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 14:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED07C54FCF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 14:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685D120637
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 14:00:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oi5rzEX0"
+	by mail.kernel.org (Postfix) with ESMTP id 2F425206F8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 14:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725881AbgCVOA4 (ORCPT
+        id S1725892AbgCVONJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 10:00:56 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41420 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbgCVOAz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 10:00:55 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h9so13284549wrc.8;
-        Sun, 22 Mar 2020 07:00:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=+Pk1Qm0yKFU4UFpPiRDPyywzNL1S0kp3oY+pR0dHLbM=;
-        b=oi5rzEX0X8RLP2HKiTVVqVs7HpQ7aPojsZDgCYmMnYOtWabV8UXffBg4gms1wqcqft
-         +/58QOvDf6bioXi8SnjrvUM7F6HcQ70/1Kpghz3s2qRBBNtUZxZnrX4Yh6Ho/3kN3BEZ
-         2fwN1nJFoFiZLWIdXHivtU9nzJ/K74nWzVxFipAPBoTgjuB/lHjvOcolL4ISXWR2XX/5
-         2SZu3Kx1bDbRDkXb8q/hn6hJR7uYBQmORF1lUEz1xfVgDOYNuaJYiHKGGcPQ7yUmPxN8
-         +cEeu8HCCo+YMhwe0vXdnx9jtXryqqQwOsPdky5SVb8bgshlml7FsP7PDftZnOxPPhM3
-         y/Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+Pk1Qm0yKFU4UFpPiRDPyywzNL1S0kp3oY+pR0dHLbM=;
-        b=E53DnOZkQUqExn1C8btdvjW4RDmSt9DxsA3n7O8zN2cgMPwTQ5Rb8/xuEgs9KN/pF5
-         zH5nAhRDa/S8ztVxOmV/ILgWRdqePfmrv7kF7db5NJ6jUCU/Fvi4CcZFreqrYBZUBUjn
-         Amiie6j94+DkzgcbQ+eLdVJCUFKycokHpYctKQwv8O6EVROPU22eib6yHNsjewMDe61W
-         yGoMd13sF71ZQa9B3G0X+wMDADMkq1gQP9fTp5i8joqPWEjgleknkCONxO9EDbauWotg
-         nKud877yTB3vSNZgAuEP8BXGqIOzFO37ex1rp6NEe0JLokaEAtcPCOaa72blXKkNIhV0
-         dbGQ==
-X-Gm-Message-State: ANhLgQ35FFALuTKufwVaXvvHOc0+LodbWmCgBfgs1S39LN8eWul4yo2I
-        AIFzSEgmwP19eVx0FvvQpBE=
-X-Google-Smtp-Source: ADFU+vv9LrpAvriFkI/duBNcEmS2l2/uhLRxDqAJ4ObMkC37RlGZ/y1+sMgI5XKHs3Xia3KUeu4Mjw==
-X-Received: by 2002:adf:a4d2:: with SMTP id h18mr24215660wrb.90.1584885653724;
-        Sun, 22 Mar 2020 07:00:53 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 1sm11355129wmz.32.2020.03.22.07.00.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 22 Mar 2020 07:00:53 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: fix defines in pd_vio node for rk3399
-Date:   Sun, 22 Mar 2020 15:00:46 +0100
-Message-Id: <20200322140046.5824-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Sun, 22 Mar 2020 10:13:09 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:44787 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725785AbgCVONJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Mar 2020 10:13:09 -0400
+X-IronPort-AV: E=Sophos;i="5.72,292,1580742000"; 
+   d="scan'208";a="42507573"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 22 Mar 2020 23:13:06 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 22EBF420C93D;
+        Sun, 22 Mar 2020 23:13:04 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2] arm64: dts: renesas: r8a774c0-cat874: Add support for AISTARVISION MIPI Adapter V2.1
+Date:   Sun, 22 Mar 2020 14:12:32 +0000
+Message-Id: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below gives for example this error:
+This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
+to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
+which have the camera endpoint nodes for imx219 and ov5645 so that this can
+be re-used with other G2x platforms.
 
-arch/arm64/boot/dts/rockchip/rk3399-evb.dt.yaml: pd_vio@15:
-'pd_tcpc0@RK3399_PD_TCPC0', 'pd_tcpc1@RK3399_PD_TCPC1'
-do not match any of the regexes:
-'.*-names$', '.*-supply$', '^#.*-cells$',
-'^#[a-zA-Z0-9,+\\-._]{0,63}$',
-'^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$',
-'^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$',
-'^__.*__$', 'pinctrl-[0-9]+'
+r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
+default ties ov5645 camera endpoint to CSI2.
 
-Fix error by replacing the wrong defines by the ones
-mentioned in 'rk3399-power.h'.
-
-make -k ARCH=arm64 dtbs_check
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Changes for v2:
+ * Dropped #{address,size}-cells
+ * Dropped unit address and reg for port
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 8aac201f0..3dc8fe620 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1087,12 +1087,12 @@
- 					pm_qos = <&qos_isp1_m0>,
- 						 <&qos_isp1_m1>;
- 				};
--				pd_tcpc0@RK3399_PD_TCPC0 {
-+				pd_tcpc0@RK3399_PD_TCPD0 {
- 					reg = <RK3399_PD_TCPD0>;
- 					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
- 						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
- 				};
--				pd_tcpc1@RK3399_PD_TCPC1 {
-+				pd_tcpc1@RK3399_PD_TCPD1 {
- 					reg = <RK3399_PD_TCPD1>;
- 					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
- 						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
+ arch/arm64/boot/dts/renesas/Makefile          |  3 +-
+ .../aistarvision-mipi-adapter-2.1.dtsi        | 95 +++++++++++++++++++
+ .../dts/renesas/r8a774c0-ek874-mipi-2.1.dts   | 75 +++++++++++++++
+ 3 files changed, 172 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 2153842321ce..9f5c53d62f5e 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -4,7 +4,8 @@ dtb-$(CONFIG_ARCH_R8A774A1) += r8a774a1-hihope-rzg2m-ex.dtb
+ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n.dtb
+ dtb-$(CONFIG_ARCH_R8A774B1) += r8a774b1-hihope-rzg2n-ex.dtb
+ dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-cat874.dtb r8a774c0-ek874.dtb \
+-			       r8a774c0-ek874-idk-2121wr.dtb
++			       r8a774c0-ek874-idk-2121wr.dtb \
++			       r8a774c0-ek874-mipi-2.1.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a77950-salvator-x.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a77950-ulcb.dtb r8a77950-ulcb-kf.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a77951-salvator-x.dtb r8a77951-salvator-xs.dtb
+diff --git a/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
+new file mode 100644
+index 000000000000..d2b656579b54
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/aistarvision-mipi-adapter-2.1.dtsi
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the AISTARVISION MIPI Adapter V2.1
++ *
++ * Copyright (C) 2020 Renesas Electronics Corp.
++ */
++
++/ {
++	ov5645_vdddo_1v8: 1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vdddo";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	ov5645_vdda_2v8: 2p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vdda";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		regulator-always-on;
++	};
++
++	ov5645_vddd_1v5: 1p5v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vddd";
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <1500000>;
++		regulator-always-on;
++	};
++
++	imx219_vana_2v8: 2p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vana";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		regulator-always-on;
++	};
++
++	imx219_vdig_1v8: 1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vdig";
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <1500000>;
++		regulator-always-on;
++	};
++
++	imx219_vddl_1v2: 1p2v {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vddl";
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++		regulator-always-on;
++	};
++
++	imx219_clk: imx219_clk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24000000>;
++	};
++};
++
++&MIPI_PARENT_I2C {
++	ov5645: ov5645@3c {
++		compatible = "ovti,ov5645";
++		reg = <0x3c>;
++
++		clock-names = "xclk";
++
++		vdddo-supply = <&ov5645_vdddo_1v8>;
++		vdda-supply = <&ov5645_vdda_2v8>;
++		vddd-supply = <&ov5645_vddd_1v5>;
++
++		port {
++			ov5645_ep: endpoint {
++			};
++		};
++	};
++
++	imx219: imx219@10 {
++		compatible = "sony,imx219";
++		reg = <0x10>;
++
++		VANA-supply = <&imx219_vana_2v8>;
++		VDIG-supply = <&imx219_vdig_1v8>;
++		VDDL-supply = <&imx219_vddl_1v2>;
++		clocks = <&imx219_clk>;
++
++		port {
++			imx219_ep: endpoint {
++			};
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+new file mode 100644
+index 000000000000..62000cc933bf
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+@@ -0,0 +1,75 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
++ * connected with aistarvision-mipi-v2-adapter board
++ *
++ * Copyright (C) 2020 Renesas Electronics Corp.
++ */
++
++/dts-v1/;
++#include "r8a774c0-ek874.dts"
++#define MIPI_PARENT_I2C i2c3
++#include "aistarvision-mipi-adapter-2.1.dtsi"
++
++/ {
++	model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
++	compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
++};
++
++&i2c3 {
++	status = "okay";
++};
++
++&vin4 {
++	status = "okay";
++};
++
++&vin5 {
++	status = "okay";
++};
++
++&csi40 {
++	status = "okay";
++
++	ports {
++		port {
++			csi40_in: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++				remote-endpoint = <&ov5645_ep>;
++			};
++		};
++	};
++};
++
++&ov5645 {
++	enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
++	reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
++
++	clocks = <&cpg CPG_MOD 716>;
++	clock-frequency = <24000000>;
++
++	port {
++		ov5645_ep: endpoint {
++			clock-lanes = <0>;
++			data-lanes = <1 2>;
++			remote-endpoint = <&csi40_in>;
++		};
++	};
++};
++
++&imx219 {
++	port {
++		imx219_ep: endpoint {
++			clock-lanes = <0>;
++			data-lanes = <1 2>;
++			link-frequencies = /bits/ 64 <456000000>;
++			/* uncomment remote-endpoint property to tie imx219 to
++			 * CSI2 also make sure remote-endpoint for ov5645 camera
++			 * is commented and remote endpoint phandle in csi40_in
++			 * is imx219_ep
++			 */
++			/* remote-endpoint = <&csi40_in>; */
++		};
++	};
++};
 -- 
-2.11.0
+2.20.1
 
