@@ -2,118 +2,107 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A02C4332D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 00:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F394CC4332E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 05:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A9120767
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 00:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUlsm6g9"
+	by mail.kernel.org (Postfix) with ESMTP id C60C820663
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 05:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgCVAVQ (ORCPT
+        id S1725892AbgCVFeR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Mar 2020 20:21:16 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44274 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727296AbgCVAVP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Mar 2020 20:21:15 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 37so5130160pgm.11;
-        Sat, 21 Mar 2020 17:21:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oo1KhDpsYm4r+ZCFpfpS62+p3Q8htiktdPZfhYhrkqM=;
-        b=PUlsm6g9R40oqeZpDaQXuGcpnmirz9Da9vYRs56HYevTggKswALehHL5ie5FIi5P5s
-         XBBMIUzBtqTcG8u4A0p5/p/7eXiZtP+ikmxAC1gLeqWibgabGzKsfueK+TORmT8EKkGG
-         JEsKy6cMrvPs6oAp8tvxX+RUiuAfwkXFCpLHedzf6SanwuBcg6jcg5OhrJbc4HxIIgDL
-         QoLS2aulPY9IKthojust6jmNvf2oAVctlnOZI/TCXixUSQeH5Tz8mryJvU9LTPXGVqD5
-         CaT21P6vM5dvdhk7S3Fdqx1oGK69Kh8GNjcGb4UtksXS40+j2RyzgN2eBJ8+h0Z3N1qU
-         YBXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oo1KhDpsYm4r+ZCFpfpS62+p3Q8htiktdPZfhYhrkqM=;
-        b=osHXChdmbB+YrH7kHq5OPxZ/C4RfvrLnvzz7yWcSeB8D8WNG9DJP63vc3y7Qwhy0Fg
-         TDRnGLhvzU1um79OFi2lD8asdWhQY0T9qDnz0sOX5e3bTzw1tZRCJ3o1Gapx1KXhgYRi
-         T/EFwYmJFZ9NcGm4F/imszC3oNUn1IV4BS8mjQCvkl2aaG/Rr53A5zKO0+g5sQs47KY7
-         am52SjanRB4hGRvPxvf++gM1vQBOkwHEoD9Kt2Yw8JjwqwcrQaXWDB+3rGNxwTMD8tmb
-         GnPO2p7hyFgMhsKIDxD3G2G0DPvxiZcXM+pmMDj9rNboYY+agKB3bco4tQXQsGj8cXj0
-         bCog==
-X-Gm-Message-State: ANhLgQ1rBebVZRtMdV3320/cZOEF6rudp19cOvo8eCS7vkb3XAlOdnU8
-        QHSSc/bmfS7bafpAJk4QwsQIddUbT341S2PLCgJpZyfqDHO7lg==
-X-Google-Smtp-Source: ADFU+vsa0ivPADE4hSeky25Q7EI3YbLdtV5qmX0dYZSfF4r4NYyeZaiojOWGaifckbRlK6AEm76cUtG00EWEIaTXBJo=
-X-Received: by 2002:a63:1c4d:: with SMTP id c13mr15056673pgm.4.1584836474171;
- Sat, 21 Mar 2020 17:21:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1584380360.git.agx@sigxcpu.org> <5566fe01df933d3281f058666e2147cb97b38126.1584380360.git.agx@sigxcpu.org>
-In-Reply-To: <5566fe01df933d3281f058666e2147cb97b38126.1584380360.git.agx@sigxcpu.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 22 Mar 2020 02:21:02 +0200
-Message-ID: <CAHp75VcHuAUDB59ZDJQAQgugQOwASM6K+sQ9uPAR7jMyOcdZCQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] iio: vcnl4000: Export near level property for
- proximity sensor
-To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
+        Sun, 22 Mar 2020 01:34:17 -0400
+Received: from out28-195.mail.aliyun.com ([115.124.28.195]:52287 "EHLO
+        out28-195.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgCVFeR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 01:34:17 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1313025|-1;CH=green;DM=||false|;DS=CONTINUE|ham_system_inform|0.010799-0.000360341-0.988841;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03302;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.H3Ip5oC_1584855242;
+Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.H3Ip5oC_1584855242)
+          by smtp.aliyun-inc.com(10.147.41.120);
+          Sun, 22 Mar 2020 13:34:03 +0800
+Subject: Re: [PATCH v5 08/11] dt-bindings: mips: Add loongson boards
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org
+References: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
+ <20200318062102.8145-9-jiaxun.yang@flygoat.com>
+Cc:     Huacai Chen <chenhc@lemote.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5E76F8C7.5010500@wanyeetech.com>
+Date:   Sun, 22 Mar 2020 13:33:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200318062102.8145-9-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 7:47 PM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
->
-> When an object can be considered close to the sensor is hardware
-> dependent. Allowing to configure the property via device tree
-> allows to configure this device specific value.
->
-> This is useful for e.g. iio-sensor-proxy to indicate to userspace
-> if an object is close to the sensor.
+Hi Jiaxun,
 
-...
-
-> @@ -342,6 +343,26 @@ static const struct vcnl4000_chip_spec vcnl4000_chip=
-_spec_cfg[] =3D {
->         },
->  };
+On 2020年03月18日 14:20, Jiaxun Yang wrote:
+> Prepare for later dts.
 >
-
+> Co-developed-by: Huacai Chen <chenhc@lemote.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>
+> --
+> v4-v5:
+> 	Remove unnecessary kernel details.
+> ---
+>   .../bindings/mips/loongson/devices.yaml       | 27 +++++++++++++++++++
+>   1 file changed, 27 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> new file mode 100644
+> index 000000000000..b1f811e251f1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> @@ -0,0 +1,27 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
+> +title: Loongson based Platforms Device Tree Bindings
+> +
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +description: |
+> +  Devices with a Loongson CPU shall have the following properties.
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +
+> +      - description: Generic Loongson3 4Core + RS780E
 
-No need for this blank line.
+Maybe "Quad Core" and "Octal Core" are better.
 
-> +static ssize_t vcnl4000_read_near_level(struct iio_dev *indio_dev,
-> +                                       uintptr_t priv,
-> +                                       const struct iio_chan_spec *chan,
-> +                                       char *buf)
+> +        items:
+> +          - const: loongson,loongson3-4core-rs780e
+> +
+> +      - description: Generic Loongson3 8Core + RS780E
+> +        items:
+> +          - const: loongson,loongson3-8core-rs780e
+> +...
 
-...
-
-> +       if (device_property_read_u32(&client->dev, "near-level",
-> +                                    &data->near_level) < 0)
-
-It doesn't return > 0. So, you may drop that and put everything to one
-line I think.
-
-> +               data->near_level =3D 0;
-
---=20
-With Best Regards,
-Andy Shevchenko
