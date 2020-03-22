@@ -2,104 +2,106 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7819EC54FCF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2EFC4332E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE5F2074D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 16:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584896256;
-	bh=Fdqxq266lPbGuDaZ/yl7AHdNhTLSHTmg63L7vb+eiTg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cjDkbqoQHUDi3JBx48TSEitgJA78lze2TC+zuL9iQAmeQfxL3fLDI9RWDV+bKntzv
-	 OqZoNtv/8lK50aCxEfggIObfV5rvwRj2a+YyyXhSiEK7k2nQFABnV3DK+HiHp8zeb1
-	 qErKX+geyzqEVpQ9abHkNI7L8WH15fPXTemQ/WgY=
+	by mail.kernel.org (Postfix) with ESMTP id 70CE920724
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gFETB48t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726137AbgCVQ5f (ORCPT
+        id S1726137AbgCVRQA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 12:57:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgCVQ5f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Mar 2020 12:57:35 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7018C206F8;
-        Sun, 22 Mar 2020 16:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584896255;
-        bh=Fdqxq266lPbGuDaZ/yl7AHdNhTLSHTmg63L7vb+eiTg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xcTrgHu932AP0DbnZ1vvDF6/PoTrapK+LGnaRqhJ2hoWJ+P6ZAm8OkYTHpEsu7fcu
-         S/KAOii/yQW2EJ4H2Z0Cby+tK5DREd6SuJETkrEinsGfHL5LuzJE3hx3SUhKe9zkVX
-         Y/NcgIygxrIfMwrXR0D84rZqE/yuzAOORHgiwXyI=
-Date:   Sun, 22 Mar 2020 16:57:30 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Lazar <alazar@startmail.com>
-Cc:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add MAX1241 device tree
- bindings in documentation
-Message-ID: <20200322165730.11fa376a@archlinux>
-In-Reply-To: <20200322160604.GA222611@leena.republic>
-References: <20200320150114.9297-1-alazar@startmail.com>
-        <20200320150114.9297-2-alazar@startmail.com>
-        <20200321173412.52548ef1@archlinux>
-        <20200321193541.GA16892@leena.republic>
-        <1e51c4079222858410e9fe94c9d7f21d99abfe15.camel@analog.com>
-        <20200322095317.GA3099@leena.republic>
-        <20200322152735.36cb3493@archlinux>
-        <20200322160604.GA222611@leena.republic>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 22 Mar 2020 13:16:00 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4620 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgCVRP7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 13:15:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e779d410000>; Sun, 22 Mar 2020 10:15:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 22 Mar 2020 10:15:59 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 22 Mar 2020 10:15:59 -0700
+Received: from [10.25.74.3] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 22 Mar
+ 2020 17:15:53 +0000
+Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200303181052.16134-1-vidyas@nvidia.com>
+ <20200303181052.16134-6-vidyas@nvidia.com>
+ <20200322145020.GA2040@roeck-us.net>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <7e6a9643-fcdb-fd80-8e84-2983975889a9@nvidia.com>
+Date:   Sun, 22 Mar 2020 22:45:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200322145020.GA2040@roeck-us.net>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584897345; bh=81yKHmaHyYQhIkyTLm3XouWH6+1+9Fc4JlQx9GW85L4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=gFETB48tFJt3O4znt+n+8BergJZyU/hJhpkPWPbWEwB7677kL5v+g4hCX6S+pKQgV
+         XmHKtxcoChOqmxXenlsxoShjUOrRnchD2riZJT3MlWURxtx+cUEet9WRbL2ocDweXQ
+         8LrAplGao1MB3D8NDqDMkS5c+/hegqiJ6w/qIVczuJ484lwQq0tDK1cnGLDdPMGOa3
+         X6zmpemmwLFb3trGY/Y6sGkuINsuHjIu9PJD1X5E7izg0i63z3hAjrRZlG3xXmGxjj
+         xOZurhnggZUOXDlYNUwa/tlOCjAKUC1qk1jVEj4rziEWtQx5UrrhEPXBA+eVL2Z71Q
+         8GlTBqlqVo46A==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 22 Mar 2020 18:06:04 +0200
-Alexandru Lazar <alazar@startmail.com> wrote:
 
-> > You'd be surprised how often this gets added to drivers precisely because
-> > people will put it on a controllable supply.  It may well not have it's own
-> > supply but it may share one with a bunch of other external chips and
-> > all of them need to use the regulator framework controls to make sure it's
-> > only disabled when they are all suspended etc.  
+
+On 3/22/2020 8:20 PM, Guenter Roeck wrote:
+> External email: Use caution opening links or attachments
 > 
-> I figured it might be something like this :-). I've added the vdd-supply
-> binding in v5.
 > 
-> If this isn't something that can be easily handled in the core, do you
-> think we can document it somewhere as a convention/common idiom?
-> (Assuming it's not already documented, of course). It seems like it's
-> something that all IIO devices would need. I can do the writing part.
-
-Hmm. We could do with a sort of 'things you'd normally find in a driver'
-document.  We don't have such a document, but interesting to think about
-what would be in it...  Perhaps a 'best practice' document would
-be a better way of putting it.  I don't really want to see a huge
-number of patches adding regulators to drivers that don't have them already
-for example.  Clearly no one needed them yet :)
-
-If you want to take a stab at such a document that would be great.
-
-Jonathan
-
-
+> On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
+>> Add support for the endpoint mode of Synopsys DesignWare core based
+>> dual mode PCIe controllers present in Tegra194 SoC.
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> Acked-by: Thierry Reding <treding@nvidia.com>
 > 
-> Thanks,
-> Alex
+> ERROR: modpost: "dw_pcie_ep_init" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> 
+> Either the symbols must be exported, or the driver's Kconfig entry must be
+> bool, not tristate.
+Qiujun has already posted a patch to fix it @ 
+http://patchwork.ozlabs.org/patch/1258659/
 
+Thanks,
+Vidya Sagar
+> 
+> Guenter
+> 
