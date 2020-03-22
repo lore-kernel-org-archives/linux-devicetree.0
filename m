@@ -2,565 +2,128 @@ Return-Path: <SRS0=OpRu=5H=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C459C4332B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 13:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3DFC4332E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 13:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2980F2072E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 13:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A132072E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 13:05:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ycH96OQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgCVNA0 (ORCPT
+        id S1726748AbgCVNF2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 09:00:26 -0400
-Received: from out28-1.mail.aliyun.com ([115.124.28.1]:42128 "EHLO
-        out28-1.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgCVNA0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 09:00:26 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436514|-1;CH=green;DM=||false|;DS=CONTINUE|ham_alarm|0.202014-0.0013388-0.796647;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03291;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.H3S20Xm_1584881997;
-Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.H3S20Xm_1584881997)
-          by smtp.aliyun-inc.com(10.147.40.26);
-          Sun, 22 Mar 2020 20:59:58 +0800
-Subject: Re: [PATCH v6 4/6] clk: Ingenic: Add CGU driver for X1830.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1584865262-25297-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1584865262-25297-6-git-send-email-zhouyanjie@wanyeetech.com>
- <5E775A7A.70107@wanyeetech.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5E77614B.6030409@wanyeetech.com>
-Date:   Sun, 22 Mar 2020 20:59:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Sun, 22 Mar 2020 09:05:28 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40494 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbgCVNF1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Mar 2020 09:05:27 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a81so5632811wmf.5
+        for <devicetree@vger.kernel.org>; Sun, 22 Mar 2020 06:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding;
+        bh=y0obWhE6JeJc849b3MeKOon4JLevkMsZjwtU+Vr0Uc0=;
+        b=ycH96OQAdISI3933+ye9qCoVatB4K42NRNk7emUGZaYrEic3edhPWkkbA8puFRRMUF
+         A5k/ss5R9qp4pKEvBJiWhGgJ2JsvB7q+vEJye2y0j//K4imY1rdSOuaoN9DrK38LVivH
+         FPS34GSzHRmbBsqxF1gnsKc9Fdgdy338Uw4vbUjTdz7QLl4vR9rj7C00RmO/Yspx9sls
+         hOHQm9KOkPES7HF7Q5YXbRwP0Ap93CbjRjCYfz0oMty3pqcH2COYikxRcbEG6KOA15oD
+         TTGgN1bNA2gxA30Gn5SteaFWOTdyTgVB4TDhSa4nkTGrumgB/0WIVcP/UwHb1wXeziAm
+         Eovg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=y0obWhE6JeJc849b3MeKOon4JLevkMsZjwtU+Vr0Uc0=;
+        b=gkgHpBRSBovAa8JdEISWnPm8Kx9hfopZK22P3xegWCknCua1zTB//7FCzO9UiDrLXO
+         E3V7yrrIqL4zZJAnDcCM1qs2mAd1POYd2pWmZSsmXelao8XhwqMcnVO1DgXv0cvaLIfl
+         NovIoGUBiNfRGll7gY1NhtNI4gSbpC2ID87Xv8L0gwoFQCNnCkXtUiTunXlVQISAQXV+
+         azAbnwHQBbs+6UPeLYV1RIGxy8UbDgbQ8yZJXDtpUknDs43lRm2NJh9hDLkuE9AvGqAE
+         7OHxvZMZs8JTNYxNwfA+8Bc9M6hR3bzg9Iebc95EVGyCY+aWEygZhxobmRVOtba2oBYT
+         DjBA==
+X-Gm-Message-State: ANhLgQ1tDu7nzy3mCaz1CTsdUYjPgSbDNTgOumdVCuAabYkVO2hZtgCT
+        fm9nEhqkxpJepSPVdDI81qfAbw==
+X-Google-Smtp-Source: ADFU+vt663IbGfqXLqaBBoBd/TtlcKYWmh2rCAAdSzpeyW9dLOYoeNgoyGmVYk+sBiebfEUDTJQ5xw==
+X-Received: by 2002:a05:600c:2190:: with SMTP id e16mr14938974wme.42.1584882325357;
+        Sun, 22 Mar 2020 06:05:25 -0700 (PDT)
+Received: from Armstrongs-MacBook-Pro.local ([2a01:e35:2ec0:82b0:5d7b:95e6:6719:f85a])
+        by smtp.gmail.com with ESMTPSA id a11sm18675524wrx.54.2020.03.22.06.05.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 22 Mar 2020 06:05:24 -0700 (PDT)
+Subject: Re: [PATCH] ARM: dts: oxnas: Fix clear-mask property
+To:     Sungbo Eo <mans0n@gorani.run>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200321143653.2412823-1-mans0n@gorani.run>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Message-ID: <ca1a1cdc-6c20-bd2c-d1ea-edd6610f68a4@baylibre.com>
+Date:   Sun, 22 Mar 2020 14:05:22 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:45.0)
+ Gecko/20100101 Thunderbird/45.8.0
 MIME-Version: 1.0
-In-Reply-To: <5E775A7A.70107@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200321143653.2412823-1-mans0n@gorani.run>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi,
 
-On 2020年03月22日 20:49, Paul Cercueil wrote:
->
->
-> Le dim. 22 mars 2020 à 20:30, Zhou Yanjie <zhouyanjie@wanyeetech.com> 
-> a écrit :
->> Hi Paul,
->>
->> On 2020年03月22日 20:08, Paul Cercueil wrote:
->>> Hi Zhou,
->>>
->>> Le dim. 22 mars 2020 à 16:21, 周琰杰 (Zhou Yanjie) 
->>> <zhouyanjie@wanyeetech.com> a écrit :
->>>> Add support for the clocks provided by the CGU in the Ingenic X1830
->>>> SoC, making use of the cgu code to do the heavy lifting.
->>>>
->>>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->>>> ---
->>>>
->>>> Notes:
->>>>     v1->v2:
->>>>     1.Use two fields (pll_reg & bypass_reg) instead of the 2-values
->>>>       array (reg[2]).
->>>>     2.Remove the "pll_info->version" and add a 
->>>> "pll_info->rate_multiplier".
->>>>     3.Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
->>>>       to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
->>>>       the old mailbox is in an unstable state.
->>>>
->>>>     v2->v3:
->>>>     Adjust order from [4/5] in v2 to [5/5] in v3.
->>>>
->>>>     v3->v4:
->>>>     Adjust order from [5/5] in v3 to [4/4] in v4.
->>>>
->>>>     v4->v5:
->>>>     Rebase on top of kernel 5.6-rc1.
->>>>
->>>>     v5->v6:
->>>>     Add missing part of X1830's CGU.
->>>>
->>>>  drivers/clk/ingenic/Kconfig     |  10 ++
->>>>  drivers/clk/ingenic/Makefile    |   1 +
->>>>  drivers/clk/ingenic/x1830-cgu.c | 387 
->>>> ++++++++++++++++++++++++++++++++++++++++
->>>>  3 files changed, 398 insertions(+)
->>>>  create mode 100644 drivers/clk/ingenic/x1830-cgu.c
->>>>
->>>> diff --git a/drivers/clk/ingenic/Kconfig b/drivers/clk/ingenic/Kconfig
->>>> index b4555b4..580b0cf 100644
->>>> --- a/drivers/clk/ingenic/Kconfig
->>>> +++ b/drivers/clk/ingenic/Kconfig
->>>> @@ -55,6 +55,16 @@ config INGENIC_CGU_X1000
->>>>
->>>>        If building for a X1000 SoC, you want to say Y here.
->>>>
->>>> +config INGENIC_CGU_X1830
->>>> +    bool "Ingenic X1830 CGU driver"
->>>> +    default MACH_X1830
->>>> +    select INGENIC_CGU_COMMON
->>>> +    help
->>>> +      Support the clocks provided by the CGU hardware on Ingenic 
->>>> X1830
->>>> +      and compatible SoCs.
->>>> +
->>>> +      If building for a X1830 SoC, you want to say Y here.
->>>> +
->>>>  config INGENIC_TCU_CLK
->>>>      bool "Ingenic JZ47xx TCU clocks driver"
->>>>      default MACH_INGENIC
->>>> diff --git a/drivers/clk/ingenic/Makefile 
->>>> b/drivers/clk/ingenic/Makefile
->>>> index 8b1dad9..aaa4bff 100644
->>>> --- a/drivers/clk/ingenic/Makefile
->>>> +++ b/drivers/clk/ingenic/Makefile
->>>> @@ -5,4 +5,5 @@ obj-$(CONFIG_INGENIC_CGU_JZ4725B)    += jz4725b-cgu.o
->>>>  obj-$(CONFIG_INGENIC_CGU_JZ4770)    += jz4770-cgu.o
->>>>  obj-$(CONFIG_INGENIC_CGU_JZ4780)    += jz4780-cgu.o
->>>>  obj-$(CONFIG_INGENIC_CGU_X1000)        += x1000-cgu.o
->>>> +obj-$(CONFIG_INGENIC_CGU_X1830)        += x1830-cgu.o
->>>>  obj-$(CONFIG_INGENIC_TCU_CLK)        += tcu.o
->>>> diff --git a/drivers/clk/ingenic/x1830-cgu.c 
->>>> b/drivers/clk/ingenic/x1830-cgu.c
->>>> new file mode 100644
->>>> index 00000000..0bc927f
->>>> --- /dev/null
->>>> +++ b/drivers/clk/ingenic/x1830-cgu.c
->>>> @@ -0,0 +1,387 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * X1830 SoC CGU driver
->>>> + * Copyright (c) 2019 周琰杰 (Zhou Yanjie) 
->>>> <zhouyanjie@wanyeetech.com>
->>>> + */
->>>> +
->>>> +#include <linux/clk-provider.h>
->>>> +#include <linux/delay.h>
->>>> +#include <linux/of.h>
->>>> +#include <dt-bindings/clock/x1830-cgu.h>
->>>
->>> Please order the includes alphabetically (but with <> ones still  
->>> before "" ones, and with a blank line between the two).
->>>
->>
->> Sure, seems the "x1000-cgu.c" also has this problem, I will fix both 
->> in next version.
->>
->>>> +#include "cgu.h"
->>>> +#include "pm.h"
->>>> +
->>>> +/* CGU register offsets */
->>>> +#define CGU_REG_CPCCR        0x00
->>>> +#define CGU_REG_CPPCR        0x0c
->>>> +#define CGU_REG_APLL        0x10
->>>> +#define CGU_REG_MPLL        0x14
->>>> +#define CGU_REG_CLKGR0        0x20
->>>> +#define CGU_REG_OPCR        0x24
->>>> +#define CGU_REG_CLKGR1        0x28
->>>> +#define CGU_REG_DDRCDR        0x2c
->>>> +#define CGU_REG_USBPCR        0x3c
->>>> +#define CGU_REG_USBRDT        0x40
->>>> +#define CGU_REG_USBVBFIL    0x44
->>>> +#define CGU_REG_USBPCR1        0x48
->>>> +#define CGU_REG_MACCDR        0x54
->>>> +#define CGU_REG_EPLL        0x58
->>>> +#define CGU_REG_I2SCDR        0x60
->>>> +#define CGU_REG_LPCDR        0x64
->>>> +#define CGU_REG_MSC0CDR        0x68
->>>> +#define CGU_REG_I2SCDR1        0x70
->>>> +#define CGU_REG_SSICDR        0x74
->>>> +#define CGU_REG_CIMCDR        0x7c
->>>> +#define CGU_REG_MSC1CDR        0xa4
->>>> +#define CGU_REG_CMP_INTR    0xb0
->>>> +#define CGU_REG_CMP_INTRE    0xb4
->>>> +#define CGU_REG_DRCG        0xd0
->>>> +#define CGU_REG_CPCSR        0xd4
->>>> +#define CGU_REG_VPLL        0xe0
->>>> +#define CGU_REG_MACPHYC        0xe8
->>>> +
->>>> +/* bits within the OPCR register */
->>>> +#define OPCR_SPENDN0        BIT(7)
->>>> +#define OPCR_SPENDN1        BIT(6)
->>>> +
->>>> +static struct ingenic_cgu *cgu;
->>>
->>> I don't think you need this global variable at all.
->>>
->>
->> This variable will be used in x1830_cgu_init(), and it is also the 
->> same in other cgu drivers of other Ingenic processors, I think we 
->> should keep it.
->
-> The "others do it that way" has never been a valid argument ;)
->
-> It's used only in x1830_cgu_init(), so it should be a local variable 
-> within this function.
->
+Le 21/03/2020 � 15:36, Sungbo Eo a �crit :
+> Disable all rps-irq interrupts during driver initialization to prevent
+> an accidental interrupt on GIC.
+> 
+> Fixes: 84316f4ef141 ("ARM: boot: dts: Add Oxford Semiconductor OX810SE dtsi")
+> Fixes: 38d4a53733f5 ("ARM: dts: Add support for OX820 and Pogoplug V3")
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> ---
+>  arch/arm/boot/dts/ox810se.dtsi | 4 ++--
+>  arch/arm/boot/dts/ox820.dtsi   | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
+> index 9f6c2b660ed3..0755e5864c4a 100644
+> --- a/arch/arm/boot/dts/ox810se.dtsi
+> +++ b/arch/arm/boot/dts/ox810se.dtsi
+> @@ -323,8 +323,8 @@ intc: interrupt-controller@0 {
+>  					interrupt-controller;
+>  					reg = <0 0x200>;
+>  					#interrupt-cells = <1>;
+> -					valid-mask = <0xFFFFFFFF>;
+> -					clear-mask = <0>;
+> +					valid-mask = <0xffffffff>;
+> +					clear-mask = <0xffffffff>;
+>  				};
+>  
+>  				timer0: timer@200 {
+> diff --git a/arch/arm/boot/dts/ox820.dtsi b/arch/arm/boot/dts/ox820.dtsi
+> index c9b327732063..90846a7655b4 100644
+> --- a/arch/arm/boot/dts/ox820.dtsi
+> +++ b/arch/arm/boot/dts/ox820.dtsi
+> @@ -240,8 +240,8 @@ intc: interrupt-controller@0 {
+>  					reg = <0 0x200>;
+>  					interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+>  					#interrupt-cells = <1>;
+> -					valid-mask = <0xFFFFFFFF>;
+> -					clear-mask = <0>;
+> +					valid-mask = <0xffffffff>;
+> +					clear-mask = <0xffffffff>;
+>  				};
+>  
+>  				timer0: timer@200 {
+> 
 
-Sure, I'll move it into x1830_cgu_init() as a local variable.
+Thanks a lot for the patch,
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 
-> -Paul
->
->> Thanks and best regards!
->>
->>> -Paul
->>>
->>>> +
->>>> +static const s8 pll_od_encoding[64] = {
->>>> +    0x0, 0x1,  -1, 0x2,  -1,  -1,  -1, 0x3,
->>>> +     -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x4,
->>>> +     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
->>>> +     -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x5,
->>>> +     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
->>>> +     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
->>>> +     -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
->>>> +     -1,  -1,  -1,  -1,  -1,  -1,  -1, 0x6,
->>>> +};
->>>> +
->>>> +static const struct ingenic_cgu_clk_info x1830_cgu_clocks[] = {
->>>> +
->>>> +    /* External clocks */
->>>> +
->>>> +    [X1830_CLK_EXCLK] = { "ext", CGU_CLK_EXT },
->>>> +    [X1830_CLK_RTCLK] = { "rtc", CGU_CLK_EXT },
->>>> +
->>>> +    /* PLLs */
->>>> +
->>>> +    [X1830_CLK_APLL] = {
->>>> +        "apll", CGU_CLK_PLL,
->>>> +        .parents = { X1830_CLK_EXCLK, -1, -1, -1 },
->>>> +        .pll = {
->>>> +            .reg = CGU_REG_APLL,
->>>> +            .rate_multiplier = 2,
->>>> +            .m_shift = 20,
->>>> +            .m_bits = 9,
->>>> +            .m_offset = 1,
->>>> +            .n_shift = 14,
->>>> +            .n_bits = 6,
->>>> +            .n_offset = 1,
->>>> +            .od_shift = 11,
->>>> +            .od_bits = 3,
->>>> +            .od_max = 64,
->>>> +            .od_encoding = pll_od_encoding,
->>>> +            .bypass_reg = CGU_REG_CPPCR,
->>>> +            .bypass_bit = 30,
->>>> +            .enable_bit = 0,
->>>> +            .stable_bit = 3,
->>>> +        },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_MPLL] = {
->>>> +        "mpll", CGU_CLK_PLL,
->>>> +        .parents = { X1830_CLK_EXCLK, -1, -1, -1 },
->>>> +        .pll = {
->>>> +            .reg = CGU_REG_MPLL,
->>>> +            .rate_multiplier = 2,
->>>> +            .m_shift = 20,
->>>> +            .m_bits = 9,
->>>> +            .m_offset = 1,
->>>> +            .n_shift = 14,
->>>> +            .n_bits = 6,
->>>> +            .n_offset = 1,
->>>> +            .od_shift = 11,
->>>> +            .od_bits = 3,
->>>> +            .od_max = 64,
->>>> +            .od_encoding = pll_od_encoding,
->>>> +            .bypass_reg = CGU_REG_CPPCR,
->>>> +            .bypass_bit = 28,
->>>> +            .enable_bit = 0,
->>>> +            .stable_bit = 3,
->>>> +        },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_EPLL] = {
->>>> +        "epll", CGU_CLK_PLL,
->>>> +        .parents = { X1830_CLK_EXCLK, -1, -1, -1 },
->>>> +        .pll = {
->>>> +            .reg = CGU_REG_EPLL,
->>>> +            .rate_multiplier = 2,
->>>> +            .m_shift = 20,
->>>> +            .m_bits = 9,
->>>> +            .m_offset = 1,
->>>> +            .n_shift = 14,
->>>> +            .n_bits = 6,
->>>> +            .n_offset = 1,
->>>> +            .od_shift = 11,
->>>> +            .od_bits = 3,
->>>> +            .od_max = 64,
->>>> +            .od_encoding = pll_od_encoding,
->>>> +            .bypass_reg = CGU_REG_CPPCR,
->>>> +            .bypass_bit = 24,
->>>> +            .enable_bit = 0,
->>>> +            .stable_bit = 3,
->>>> +        },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_VPLL] = {
->>>> +        "vpll", CGU_CLK_PLL,
->>>> +        .parents = { X1830_CLK_EXCLK, -1, -1, -1 },
->>>> +        .pll = {
->>>> +            .reg = CGU_REG_VPLL,
->>>> +            .rate_multiplier = 2,
->>>> +            .m_shift = 20,
->>>> +            .m_bits = 9,
->>>> +            .m_offset = 1,
->>>> +            .n_shift = 14,
->>>> +            .n_bits = 6,
->>>> +            .n_offset = 1,
->>>> +            .od_shift = 11,
->>>> +            .od_bits = 3,
->>>> +            .od_max = 64,
->>>> +            .od_encoding = pll_od_encoding,
->>>> +            .bypass_reg = CGU_REG_CPPCR,
->>>> +            .bypass_bit = 26,
->>>> +            .enable_bit = 0,
->>>> +            .stable_bit = 3,
->>>> +        },
->>>> +    },
->>>> +
->>>> +    /* Muxes & dividers */
->>>> +
->>>> +    [X1830_CLK_SCLKA] = {
->>>> +        "sclk_a", CGU_CLK_MUX,
->>>> +        .parents = { -1, X1830_CLK_EXCLK, X1830_CLK_APLL, -1 },
->>>> +        .mux = { CGU_REG_CPCCR, 30, 2 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_CPUMUX] = {
->>>> +        "cpu_mux", CGU_CLK_MUX,
->>>> +        .parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
->>>> +        .mux = { CGU_REG_CPCCR, 28, 2 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_CPU] = {
->>>> +        "cpu", CGU_CLK_DIV | CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_CPUMUX, -1, -1, -1 },
->>>> +        .div = { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR1, 15 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_L2CACHE] = {
->>>> +        "l2cache", CGU_CLK_DIV,
->>>> +        .parents = { X1830_CLK_CPUMUX, -1, -1, -1 },
->>>> +        .div = { CGU_REG_CPCCR, 4, 1, 4, 22, -1, -1 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_AHB0] = {
->>>> +        "ahb0", CGU_CLK_MUX | CGU_CLK_DIV,
->>>> +        .parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
->>>> +        .mux = { CGU_REG_CPCCR, 26, 2 },
->>>> +        .div = { CGU_REG_CPCCR, 8, 1, 4, 21, -1, -1 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_AHB2PMUX] = {
->>>> +        "ahb2_apb_mux", CGU_CLK_MUX,
->>>> +        .parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
->>>> +        .mux = { CGU_REG_CPCCR, 24, 2 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_AHB2] = {
->>>> +        "ahb2", CGU_CLK_DIV,
->>>> +        .parents = { X1830_CLK_AHB2PMUX, -1, -1, -1 },
->>>> +        .div = { CGU_REG_CPCCR, 12, 1, 4, 20, -1, -1 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_PCLK] = {
->>>> +        "pclk", CGU_CLK_DIV | CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_AHB2PMUX, -1, -1, -1 },
->>>> +        .div = { CGU_REG_CPCCR, 16, 1, 4, 20, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR1, 14 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_DDR] = {
->>>> +        "ddr", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
->>>> +        .parents = { -1, X1830_CLK_SCLKA, X1830_CLK_MPLL, -1 },
->>>> +        .mux = { CGU_REG_DDRCDR, 30, 2 },
->>>> +        .div = { CGU_REG_DDRCDR, 0, 1, 4, 29, 28, 27 },
->>>> +        .gate = { CGU_REG_CLKGR0, 31 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_MAC] = {
->>>> +        "mac", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
->>>> +                     X1830_CLK_VPLL, X1830_CLK_EPLL },
->>>> +        .mux = { CGU_REG_MACCDR, 30, 2 },
->>>> +        .div = { CGU_REG_MACCDR, 0, 1, 8, 29, 28, 27 },
->>>> +        .gate = { CGU_REG_CLKGR1, 4 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_LCD] = {
->>>> +        "lcd", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
->>>> +                     X1830_CLK_VPLL, X1830_CLK_EPLL },
->>>> +        .mux = { CGU_REG_LPCDR, 30, 2 },
->>>> +        .div = { CGU_REG_LPCDR, 0, 1, 8, 28, 27, 26 },
->>>> +        .gate = { CGU_REG_CLKGR1, 9 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_MSCMUX] = {
->>>> +        "msc_mux", CGU_CLK_MUX,
->>>> +        .parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
->>>> +                     X1830_CLK_VPLL, X1830_CLK_EPLL },
->>>> +        .mux = { CGU_REG_MSC0CDR, 30, 2 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_MSC0] = {
->>>> +        "msc0", CGU_CLK_DIV | CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_MSCMUX, -1, -1, -1 },
->>>> +        .div = { CGU_REG_MSC0CDR, 0, 2, 8, 29, 28, 27 },
->>>> +        .gate = { CGU_REG_CLKGR0, 4 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_MSC1] = {
->>>> +        "msc1", CGU_CLK_DIV | CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_MSCMUX, -1, -1, -1 },
->>>> +        .div = { CGU_REG_MSC1CDR, 0, 2, 8, 29, 28, 27 },
->>>> +        .gate = { CGU_REG_CLKGR0, 5 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_SSIPLL] = {
->>>> +        "ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
->>>> +        .parents = { X1830_CLK_SCLKA, X1830_CLK_MPLL,
->>>> +                     X1830_CLK_VPLL, X1830_CLK_EPLL },
->>>> +        .mux = { CGU_REG_SSICDR, 30, 2 },
->>>> +        .div = { CGU_REG_SSICDR, 0, 1, 8, 28, 27, 26 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_SSIPLL_DIV2] = {
->>>> +        "ssi_pll_div2", CGU_CLK_FIXDIV,
->>>> +        .parents = { X1830_CLK_SSIPLL },
->>>> +        .fixdiv = { 2 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_SSIMUX] = {
->>>> +        "ssi_mux", CGU_CLK_MUX,
->>>> +        .parents = { X1830_CLK_EXCLK, X1830_CLK_SSIPLL_DIV2, -1, 
->>>> -1 },
->>>> +        .mux = { CGU_REG_SSICDR, 29, 1 },
->>>> +    },
->>>> +
->>>> +    /* Gate-only clocks */
->>>> +
->>>> +    [X1830_CLK_EMC] = {
->>>> +        "emc", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_AHB2, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 0 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_EFUSE] = {
->>>> +        "efuse", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_AHB2, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 1 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_OTG] = {
->>>> +        "otg", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_EXCLK, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 3 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_SSI0] = {
->>>> +        "ssi0", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_SSIMUX, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 6 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_SMB0] = {
->>>> +        "smb0", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_PCLK, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 7 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_SMB1] = {
->>>> +        "smb1", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_PCLK, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 8 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_SMB2] = {
->>>> +        "smb2", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_PCLK, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 9 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_UART0] = {
->>>> +        "uart0", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_EXCLK, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 14 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_UART1] = {
->>>> +        "uart1", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_EXCLK, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 15 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_SSI1] = {
->>>> +        "ssi1", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_SSIMUX, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 19 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_SFC] = {
->>>> +        "sfc", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_SSIPLL, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 20 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_PDMA] = {
->>>> +        "pdma", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_EXCLK, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR0, 21 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_DTRNG] = {
->>>> +        "dtrng", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_PCLK, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR1, 1 },
->>>> +    },
->>>> +
->>>> +    [X1830_CLK_OST] = {
->>>> +        "ost", CGU_CLK_GATE,
->>>> +        .parents = { X1830_CLK_EXCLK, -1, -1, -1 },
->>>> +        .gate = { CGU_REG_CLKGR1, 11 },
->>>> +    },
->>>> +};
->>>> +
->>>> +static void __init x1830_cgu_init(struct device_node *np)
->>>> +{
->>>> +    int retval;
->>>> +
->>>> +    cgu = ingenic_cgu_new(x1830_cgu_clocks,
->>>> +                  ARRAY_SIZE(x1830_cgu_clocks), np);
->>>> +    if (!cgu) {
->>>> +        pr_err("%s: failed to initialise CGU\n", __func__);
->>>> +        return;
->>>> +    }
->>>> +
->>>> +    retval = ingenic_cgu_register_clocks(cgu);
->>>> +    if (retval) {
->>>> +        pr_err("%s: failed to register CGU Clocks\n", __func__);
->>>> +        return;
->>>> +    }
->>>> +
->>>> +    ingenic_cgu_register_syscore_ops(cgu);
->>>> +}
->>>> +CLK_OF_DECLARE_DRIVER(x1830_cgu, "ingenic,x1830-cgu", 
->>>> x1830_cgu_init);
->>>> -- 
->>>> 2.7.4
->>>>
->>>
->>
->
+I'll apply it asap and push it to arm-soc fixes.
 
+Neil
