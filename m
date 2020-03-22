@@ -4,170 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7271CC54FCF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2ACC4332B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 331A0206F8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A2F620732
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Mar 2020 17:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584898158;
-	bh=zfhz4frlqYfSulkRHPiW5gaTisQkKjgaXVLTMLiAmZM=;
+	s=default; t=1584898630;
+	bh=Lgovlxg7dFbPO/P+o/rnIrwfYlOLF/A2RWcibjrilSc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JmTnfaGWCCq9J9fSzwgabClg1aDxGe7cEi7SehV+rwVgvt90Mmg6bO1Vwewdu+w3O
-	 JPMrsGPdPVHc/xngugj9d7sLVABtN6bwIoJM57n3ac/9udeFBjsAL6509HJaoAUUQP
-	 n9amQIioTJ+/ZgV6hRsQUdVznmBgAuz93FpNZYIo=
+	b=L+PGvyeCN6GRRTRIcMSztADVU8vRYRsv/QCDT4s2Ji1jDmwom+s5zkNqfQR1B0FBa
+	 CJ6fNaao5u46WpTUTK6oH+GqFNPBpyAdga6jEvnCCZpLZIuubMqLzTjOE++j7Y/RHP
+	 Gccsm7BXwfYHKjXd8QavAaqyvK2/ulJtSsd8w23Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgCVR3R (ORCPT
+        id S1726814AbgCVRhK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 13:29:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49996 "EHLO mail.kernel.org"
+        Sun, 22 Mar 2020 13:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbgCVR3R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Mar 2020 13:29:17 -0400
+        id S1726623AbgCVRhK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Mar 2020 13:37:10 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB28020714;
-        Sun, 22 Mar 2020 17:29:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 814FD206F8;
+        Sun, 22 Mar 2020 17:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584898155;
-        bh=zfhz4frlqYfSulkRHPiW5gaTisQkKjgaXVLTMLiAmZM=;
+        s=default; t=1584898629;
+        bh=Lgovlxg7dFbPO/P+o/rnIrwfYlOLF/A2RWcibjrilSc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B/jhkHvTVC87MZEV+fRZcPXI4jp7/Ix+aDQgab8+XAgmFNGP7r1JuvSjmpC0vP8W3
-         c1Up7/3DNCQSk1/qzA/pt4Pv9S5nICrFa/dmRMgRAjKlHW5uix+x2JAEU+srUqryKU
-         XLU7xOxLaVbnBN9oN86WSoGcmIJo+IEbaJIYvUQc=
-Date:   Sun, 22 Mar 2020 17:29:10 +0000
+        b=oYUcvBg5CpQFHeK6Liw6ik7cNSfw93xu6MvnG0PDvdqv1JGdVmSjPOzsGKZ4dtDDG
+         VmpjUJCVgQc5+j9kncqQjWELS8ztwauU3TZJgf+a2ZJw0J37fbMLbWKdZOUlYp8XAK
+         zSqT3QsCgMoRtbFiNo79Km/7lxlSXIuAvuheBSC8=
+Date:   Sun, 22 Mar 2020 17:37:04 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: vcnl4000: convert bindings to
- YAML format
-Message-ID: <20200322172910.51456fe4@archlinux>
-In-Reply-To: <6182053bb8c442e0b4d72b34c83c7f1565f4a258.1584380360.git.agx@sigxcpu.org>
-References: <cover.1584380360.git.agx@sigxcpu.org>
-        <6182053bb8c442e0b4d72b34c83c7f1565f4a258.1584380360.git.agx@sigxcpu.org>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH] dt-bindings: iio: accel: Add bmi088 accelerometer
+ bindings
+Message-ID: <20200322173704.5cc497c1@archlinux>
+In-Reply-To: <20200316065218.4103-1-mike.looijmans@topic.nl>
+References: <20200316065218.4103-1-mike.looijmans@topic.nl>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 16 Mar 2020 18:46:17 +0100
-Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+On Mon, 16 Mar 2020 07:52:18 +0100
+Mike Looijmans <mike.looijmans@topic.nl> wrote:
 
-> Convert the vcnl4000 device tree bindings to the new YAML format.
->=20
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-Looks good to me. However, I've made far too many mistakes in
-DT binding review recently, so will definitely be waiting for Rob to
-get a chance to look at it!
+> This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
+> the accelerometer part.
+> 
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> ---
+>  .../devicetree/bindings/iio/accel/bmi088.txt  | 23 +++++++++++++++++++
+
+Sorry.  All new DT bindings need to be in yaml format.
+
+Please put this in the same series as the driver.
+
+Thanks,
 
 Jonathan
 
-> ---
->  .../bindings/iio/light/vcnl4000.txt           | 24 ----------
->  .../bindings/iio/light/vcnl4000.yaml          | 45 +++++++++++++++++++
->  2 files changed, 45 insertions(+), 24 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.=
-txt
->  create mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.=
-yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt b/D=
-ocumentation/devicetree/bindings/iio/light/vcnl4000.txt
-> deleted file mode 100644
-> index 955af4555c90..000000000000
-> --- a/Documentation/devicetree/bindings/iio/light/vcnl4000.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -VISHAY VCNL4000 -  Ambient Light and proximity sensor
-> -
-> -This driver supports the VCNL4000/10/20/40 and VCNL4200 chips
-> -
-> -Required properties:
-> -
-> -	-compatible: must be one of :
-> -        vishay,vcnl4000
-> -        vishay,vcnl4010
-> -        vishay,vcnl4020
-> -        vishay,vcnl4040
-> -        vishay,vcnl4200
-> -
-> -	-reg: I2C address of the sensor, should be one from below based on the =
-model:
-> -        0x13
-> -        0x51
-> -        0x60
-> -
-> -Example:
-> -
-> -light-sensor@51 {
-> -	compatible =3D "vishay,vcnl4200";
-> -	reg =3D <0x51>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml b/=
-Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bmi088.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/bmi088.txt b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
 > new file mode 100644
-> index 000000000000..74d53cfbeb85
+> index 000000000000..691a47726dbc
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/vcnl4000.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/light/vcnl4000.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
+> @@ -0,0 +1,23 @@
+> +* Bosch BMI088 IMU combining accelerometer and gyroscope
 > +
-> +title: VISHAY VCNL4000 ambient light and proximity sensor
+> +https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
 > +
-> +maintainers:
-> +  - Peter Meerwald <pmeerw@pmeerw.net>
+> +Required properties:
 > +
-> +description: |
-> +  Ambient light sensing with proximity detection over an i2c
-> +  interface.
+> +  - compatible : should be "bosch,bmi088_accel"
+> +  - reg : the I2C address of the sensor or the SPI chip select number
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - vishay,vcnl4000
-> +      - vishay,vcnl4010
-> +      - vishay,vcnl4020
-> +      - vishay,vcnl4040
-> +      - vishay,vcnl4200
+> +Optional properties:
 > +
-> +  reg:
-> +    maxItems: 1
+> +  - interrupts : interrupt mapping for GPIO IRQ, it should be configured with
+> +		 IRQ_TYPE_EDGE_RISING
 > +
-> +required:
-> +  - compatible
-> +  - reg
+> +Example:
 > +
-> +additionalProperties: false
-> +
-> +examples:
-> +- |
-> +  i2c {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      light-sensor@51 {
-> +              compatible =3D "vishay,vcnl4200";
-> +              reg =3D <0x51>;
-> +      };
-> +  };
-> +...
+> +bmi088_accel@1 {
+> +	compatible = "bosch,bmi088_accel";
+> +	reg = <1>;
+> +	spi-max-frequency = <10000000>;
+> +	interrupt-parent = <&gpio>;
+> +	interrupts = <90 IRQ_TYPE_EDGE_RISING>;
+> +};
 
