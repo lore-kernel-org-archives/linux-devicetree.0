@@ -5,58 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E26C54FCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 11:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065E7C4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 11:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0FC2077D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 11:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C85B02070A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 11:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VBGMIJ+n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5cxysHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgCWLAb (ORCPT
+        id S1728070AbgCWLC0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 07:00:31 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44359 "EHLO
+        Mon, 23 Mar 2020 07:02:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33262 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727974AbgCWLAb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 07:00:31 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m17so7477075wrw.11;
-        Mon, 23 Mar 2020 04:00:30 -0700 (PDT)
+        with ESMTP id S1727987AbgCWLC0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 07:02:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a25so16488986wrd.0;
+        Mon, 23 Mar 2020 04:02:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=sadhhHKl37kodrpSVYR2LnIwtVMN2BKSE6OvR4D241Q=;
-        b=VBGMIJ+nSe8j7N65h6/fTgP+fPgV4ZqrJIg0hTtEsehn7H9BA+8gYR2xAzFM/ZKpAY
-         5vcm87vEKYZKCAA7Lgym+BF7/rTBHBJm4sCJ0XY0u5b+A585h8xmdhz29PWUx7Zr5Qbe
-         5LrMyMqhWTEwT37cAEMAhQS6JnSOXxX1vei7h/SZZtBsq1nM4ao5uuGdbjfPlo/GU86m
-         ZyaligkLWyB07qOg/zprBUD3g7RkRagKW2HEzd2dScXXFgb3heV3NbEWmTNqI7OmQe4A
-         J/NJjFnOdOOAbm6e92Tequk0LEYcX0b2LLFefWBlEknJ9xc5LdfMoL9hUu5LSmZ4TZJl
-         dVVQ==
+        bh=YQ2GBjATshIplvLJBnkEmU69ZuL9aT5IEeXUjRBrBsc=;
+        b=M5cxysHT4r3SLET1JXdcrPb7r/OqqF39uk/3o4c/yNFn7rWgC2LuS3QIYsiWdIBEFv
+         9JaF7/D9p30yfd1BMynaOETu93WomytHnw1m4A+J4iwTyodnulcmpsEKIxhLEq3QEMSo
+         ZIge3jJlLIPLg3o5E2p9wDtKtAANlvlHK0MekgV3bDDq+fulOpfyEI66SsryMj19tqMU
+         b8fN7dVyAdYJ/MKzcvppk8UX/qceBIdrwcWC38JIg2OyL2u6DWSaVv7OnRQVYyDZBGDD
+         e3wlQs2fEYnTD34BTvhQWOr7dkumn4qGUNbkMy/LqE/EyCGMLcrnC9nobEUJmeBw+T59
+         LJog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sadhhHKl37kodrpSVYR2LnIwtVMN2BKSE6OvR4D241Q=;
-        b=cJHilCPyl34mLT3TnycS8Sf5XphGrojyWhrYfF3FhuaUWx8Tb5dIFj+cso973VGJkA
-         79XHO63gyWdMzMjTqoJyQilvbxhxWzV7uLxphhjduie6ZNYkwAr2ZYa3BFqRVSgPkx/y
-         Li6dsg7Vutg3mN63pQyROT9DPtQ+Qdr3wUSvcnAxT5A4YdBGffCHzyEFxm+JqOoZyALA
-         fGMl5Gv1bBsxCqXiCFwboaOKfTG+93Ratqs2HGOce0ma9qPfc2C0X9yL+f1f/kzWKPEv
-         22bChJB4mcF+wLw4az9W4S7PA9gm/il7OGppTa7j+bm01CDFhANfE0G6xRppbNOQc1b/
-         HOZA==
-X-Gm-Message-State: ANhLgQ3OxgPzby+vLgmosudQ22udoe1grhDJ5xW8AvOtrJyK7Mb7aLcy
-        geV7J+7IQXnopb9MlAAq1cA=
-X-Google-Smtp-Source: ADFU+vs23hQHjnsNpDugZtYful1vTGeawfdBFZ++4cAXCzh6x7Z59NoWJpJId2Y1TDOMh6OIOUhwYg==
-X-Received: by 2002:adf:eec7:: with SMTP id a7mr29025432wrp.405.1584961229361;
-        Mon, 23 Mar 2020 04:00:29 -0700 (PDT)
+        bh=YQ2GBjATshIplvLJBnkEmU69ZuL9aT5IEeXUjRBrBsc=;
+        b=G1Hz6kYBCWmfmjSfO8ksJlXxZdH9VRHWzG1xJb+Q8DqGbU7yanC5J8d/h51w2412zA
+         DFNmQMKU0iciqS9T15hYedW53lv34YlI7MpEXq5JVqWl9PRR10qWHz6Ht5v9ZS60yceS
+         1hTqsqPzgOTSNoczjpXlqXOvL2oU7HxnjFjTwpKIKR2PzLJbU1suHXc3WnHgUciT+fB7
+         ajM9IUu9wP9O71nYw+zzZlxsbm8FlsuybYvJQ6AB6K1G+BVaQg1up/jGpwjPrV9ZfMLP
+         PeWmXmOIRdJVz8WZJb5VmCE3i3MdF8+wJlDTPjQ0IXJhOvvgjw53OAa/LwwxGL3dp+/Y
+         JlGw==
+X-Gm-Message-State: ANhLgQ3IsgNBQfIZoPUataPmZs78tzI2mmI+Vs6ksh67vRmDx6Zv+9vg
+        IyfCUGS0ZTxaGXoDAhlGJks=
+X-Google-Smtp-Source: ADFU+vuSpKlosvvv4uXBUKCBdshjKyNRNBYzyUj88SroU8xss08DtZUl+XMts+0GAZqW9SyYFilW8A==
+X-Received: by 2002:adf:a21a:: with SMTP id p26mr29193441wra.102.1584961343825;
+        Mon, 23 Mar 2020 04:02:23 -0700 (PDT)
 Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
-        by smtp.gmail.com with ESMTPSA id k18sm22461158wru.94.2020.03.23.04.00.27
+        by smtp.gmail.com with ESMTPSA id k133sm22340434wma.11.2020.03.23.04.02.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 04:00:27 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 12:00:23 +0100
+        Mon, 23 Mar 2020 04:02:22 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 12:02:21 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Dmitry Osipenko <digetx@gmail.com>
 Cc:     Jon Hunter <jonathanh@nvidia.com>,
@@ -68,15 +67,15 @@ Cc:     Jon Hunter <jonathanh@nvidia.com>,
         linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH v5 3/8] clk: tegra: Implement Tegra210 EMC clock
-Message-ID: <20200323110023.GB3883508@ulmo>
+Message-ID: <20200323110221.GC3883508@ulmo>
 References: <20200310152003.2945170-1-thierry.reding@gmail.com>
  <20200310152003.2945170-4-thierry.reding@gmail.com>
- <a5c9e3d6-2b65-ec93-d8f1-7c7680092e53@gmail.com>
+ <7a4e0ab4-e17e-9e6a-2d30-d9a321be1dc8@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
+        protocol="application/pgp-signature"; boundary="DSayHWYpDlRfCAAQ"
 Content-Disposition: inline
-In-Reply-To: <a5c9e3d6-2b65-ec93-d8f1-7c7680092e53@gmail.com>
+In-Reply-To: <7a4e0ab4-e17e-9e6a-2d30-d9a321be1dc8@gmail.com>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -84,12 +83,12 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---rS8CxjVDS/+yyDmU
+--DSayHWYpDlRfCAAQ
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 10, 2020 at 08:44:38PM +0300, Dmitry Osipenko wrote:
+On Tue, Mar 10, 2020 at 08:03:05PM +0300, Dmitry Osipenko wrote:
 > 10.03.2020 18:19, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 > > From: Joseph Lo <josephl@nvidia.com>
 > >=20
@@ -108,74 +107,33 @@ On Tue, Mar 10, 2020 at 08:44:38PM +0300, Dmitry Osipenko wrote:
 > > - major rework and cleanup
 >=20
 > ...
-> > +static u8 tegra210_clk_emc_get_parent(struct clk_hw *hw)
-> > +{
-> > +	struct tegra210_clk_emc *emc =3D to_tegra210_clk_emc(hw);
-> > +	u32 value;
-> > +	u8 src;
-> > +
-> > +	value =3D readl_relaxed(emc->regs + CLK_SOURCE_EMC);
-> > +	src =3D (value >> CLK_SOURCE_EMC_2X_CLK_SRC_SHIFT) &
-> > +			CLK_SOURCE_EMC_2X_CLK_SRC_MASK;
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static int tegra210_emc_suspend(struct device *dev)
 >=20
-> What about to use a generic FIELD_GET/PREP()?
+> The __maybe_unused attribute will be a bit cleaner than the #ifdef.
 
 Done.
 
-> > +static int tegra210_clk_emc_set_rate(struct clk_hw *hw, unsigned long =
-rate,
-> > +				     unsigned long parent_rate)
-> > +{
-> > +	struct tegra210_clk_emc *emc =3D to_tegra210_clk_emc(hw);
-> > +	struct tegra210_clk_emc_provider *provider =3D emc->provider;
-> > +	struct tegra210_clk_emc_config *config;
-> > +	struct device *dev =3D provider->dev;
-> > +	struct clk_hw *old, *new, *parent;
-> > +	u8 old_idx, new_idx, index;
-> > +	struct clk *clk;
-> > +	unsigned int i;
-> > +	int err;
-> > +
-> > +	if (!provider || !provider->configs || provider->num_configs =3D=3D 0)
-> > +		return -EINVAL;
->=20
-> Why all these checks are needed? I don't think it ever could fail,
-> couldn't it?
-
-This could fail if no EMC provider is attached, which happens, for
-example, when the EMC driver is not loaded.
-
->=20
-> > +static int emc_table_lookup(struct tegra_emc *emc, unsigned long rate)
-> > +{
-> > +	int i;
->=20
-> unsigned int
->=20
-> Same for all other occurrences in the code.
-
-This was fixed automatically after I fixed the rebase issues.
-
 Thierry
 
---rS8CxjVDS/+yyDmU
+--DSayHWYpDlRfCAAQ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl54lsQACgkQ3SOs138+
-s6EeQQ/9G63M1xZHwIQsmIIdgaOw5YN+TMj2fb5Fy/mSYOOmDYJyyyRe3dx4GvEn
-9HJ1jk7vLe54qYlncIy/Iq30OOZ9GfDKOQsebE/hc4j6EEa4h2VO8kRwUVWjTAer
-+DykULLJpXnDOki2OeMkPx5ZRQe21SQ4NNDNcnyI1e3yHv9dNsa6lkjp1+rYshAi
-SghXsdNd3yrgWYuAInyKifrPBt3VS8oeezB36G2sRRkgoWlxrYrk11R1rHmvi8vR
-r5OzzniI25NLqkDpaEOQCsjYxeyqT7tr/9W6R1lmpxhcNtKT3puIA4/jYosGIRm2
-9i7olnK19urr93jkXS+ljzj8jA6zWNMNGkORPHL/H7HT3wFxS42jEt0dyOUiat/E
-oGN188QLQqi8grfb1qp+yeN6Gzrz9CkXNKJkC9Id3cqV1S2mqGtr9t5iDzNxYCR3
-N9OtxnOK238OIEzFyeApm099w7D6ly1/yeDAUps278bbeul9sID8CCH0XGmavk5g
-9ALun6d42DG1iagOafD3Reyqstw/vOItJg689zPC5aSC9MVXuTEs/Trqh2Rlgrg4
-xOJe+9epTCemM8e8hAlXkA1I/t8vpV8RuDwj8KJ6QpdBaCRjxy9fYzpmDwpwvrnL
-81TWT8PZbKw4IqXO/b9Yc/sjtiL4K5nPAVQVQx0d+NnjFRrLADk=
-=j0rX
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl54lz0ACgkQ3SOs138+
+s6Gd3BAAuTyoEJ+JL1G9GWcOanhXD05YmbFew23yyyioslf+tvjbE65mIZ0quv65
+wLcxow76yP90BL1pX3dIbBHxs+rfq9SGdDC6L8cwT/Vh01xMti0YmWOFmmYZV/fm
+4l6OWJlwULsyaQh5q7blUqI5zX+OQ5cNPVNeO5HPpFrjhSrP7d0IbHYqcAcUo0b7
+942u/zU1r/yySYXvzOs7nZZ5+gQ6m/vTzbodk/XDZbSWWKZ4PGmrw2FlfFzmWELX
+7BoYGo8Y5fCynE7wqqFyPGOGlfr5ADydD5EhKr8ryBphTWNXHm8hL1I37o7RQ5w6
+ycwZX8lIkJMeC0x3HINZSkstv2VrPdKTH9h01K9tI/zwjBrzO5dXrfjjo1oszRg3
+caxfEzDNjUcO7qlZAJmLdspGU9iprnmXBg7TQQJ4p+tmfDkJjnHoh1+G8VmvXCIZ
+pnwS+pU80DSdcHwGFPWMs6vXpqaw92QOmNt/btkWLe06y00S/oTYLuLZ+kqPnX54
+JAppAovMhDk1U2PzesmMjzTdzLP8aneT+ScdfWPz+YjaMgoTGPY3+IYzVEaojL2K
+WYVSjyfyx5cCjHIeWKI91Mg/N3y096aOo0kRiEgHgpIwccaGezkRH1cu8eWtMPY+
+eTuE86Lh7LotXklg6Re46VNih9Q3SZDaVejoC1U9fdOjEpNqabQ=
+=Gt4N
 -----END PGP SIGNATURE-----
 
---rS8CxjVDS/+yyDmU--
+--DSayHWYpDlRfCAAQ--
