@@ -6,241 +6,110 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A565AC54FCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CE3C54FCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8506420781
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A556C2072E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgCWOix (ORCPT
+        id S1726143AbgCWO4v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:38:53 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35766 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgCWOiw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 10:38:52 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k26so13607221otr.2;
-        Mon, 23 Mar 2020 07:38:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DlYHZ7Qug1rsCZCeD/sYfAXJs9u7+r41qimAfDZUnBI=;
-        b=RjDlTzVMjFXfVHnj77cvRalohqlGBBbfsSL01nwyJGT+iVbnviylFKMLm2Sbgs3CbY
-         f8ypP8OFjJdm64+lR7LlWTxLurVt71p4jlsdEL/jkS2BYguxKPIKaPuWtaXOoEe/z+pU
-         rKjzR3FDuuOM4acdfqmbYMojal3LSjPVOEImE69w9jnUhVzPNvBxuGujrla0BMvAolKy
-         JAzPDm445cSWNBR1neXf3EsSNn4sN7R6vGSyB7bLH6AJOO4k1HA43SBX3fm7xuBNZbrR
-         XXR4ddQVl3i+U8g4tSQ3c3LbvoQRSFkBcuqcNe3PyZYUhZmbvkg0HhC3FWqcCCNzgmr8
-         Li9g==
-X-Gm-Message-State: ANhLgQ0KgmoAdWOJbksGUKX8lr8QZ8ye3x/gYOb80AnsycGddjh4PuSO
-        xGJ4dr/7qME2zIKNrCJ6xm9pNoXm/o9/xzmPja82NFcn
-X-Google-Smtp-Source: ADFU+vvF2njHJL/smstlzfyM2R+5WpsYTqcWqYM8JykflojGEF8FLu8ZfbH8kT+2l4PtHr7QxISMOryJloATOEGdbVc=
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr18223211otk.145.1584974331394;
- Mon, 23 Mar 2020 07:38:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306090720.9365-1-geert+renesas@glider.be> <20200312200523.GA17854@bogus>
-In-Reply-To: <20200312200523.GA17854@bogus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 23 Mar 2020 15:38:40 +0100
-Message-ID: <CAMuHMdWoRSE7VQ5o575Ocjfh+y1yH-ciFE1BUqqPVO9oukwgNw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: serial: sh-sci: Convert to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mon, 23 Mar 2020 10:56:51 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44195 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgCWO4v (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 10:56:51 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost.discworld.emantor.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <r.czerwinski@pengutronix.de>)
+        id 1jGOV7-0006Sg-Pz; Mon, 23 Mar 2020 15:56:25 +0100
+Message-ID: <412a4da61063b8c8a72729f03c06480c5f1374fb.camel@pengutronix.de>
+Subject: Re: [PATCH v5 2/3] hw_random: cctrng: introduce Arm CryptoCell
+ driver
+From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
+To:     Hadar Gat <hadar.gat@arm.com>, Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>
+Date:   Mon, 23 Mar 2020 15:56:19 +0100
+In-Reply-To: <1584891085-8963-3-git-send-email-hadar.gat@arm.com>
+References: <1584891085-8963-1-git-send-email-hadar.gat@arm.com>
+         <1584891085-8963-3-git-send-email-hadar.gat@arm.com>
+Organization: Pengutronix e.K.
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: r.czerwinski@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello Hadar,
 
-Thanks a lot for your comments!
+On Sun, 2020-03-22 at 17:31 +0200, Hadar Gat wrote:
+> Introduce low level Arm CryptoCell TRNG HW support.
+> 
+> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+> ---
+>  drivers/char/hw_random/Kconfig  |  12 +
+>  drivers/char/hw_random/Makefile |   1 +
+>  drivers/char/hw_random/cctrng.c | 735
+> ++++++++++++++++++++++++++++++++++++++++
+>  drivers/char/hw_random/cctrng.h |  69 ++++
+>  4 files changed, 817 insertions(+)
+>  create mode 100644 drivers/char/hw_random/cctrng.c
+>  create mode 100644 drivers/char/hw_random/cctrng.h
+> 
+> [...]
+> +static int cctrng_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *req_mem_cc_regs = NULL;
+> +	struct cctrng_drvdata *drvdata;
+> +	struct device *dev = &pdev->dev;
+> +	int rc = 0;
+> +	u32 val;
+> +	int irq;
+> +
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
+> +
+> +	drvdata->rng.name = devm_kstrdup(dev, dev_name(dev),
+> GFP_KERNEL);
+> +	if (!drvdata->rng.name)
+> +		return -ENOMEM;
+> +
+> +	drvdata->rng.read = cctrng_read;
+> +	drvdata->rng.priv = (unsigned long)drvdata;
 
-On Thu, Mar 12, 2020 at 9:05 PM Rob Herring <robh@kernel.org> wrote:
-> On Fri, Mar 06, 2020 at 10:07:20AM +0100, Geert Uytterhoeven wrote:
-> > Convert the Renesas Serial Communication Interface ((H)SCI(F)(A|B))
-> > Device Tree binding documentation to json-schema.
-> >
-> > Split the bindings in 5 files, one per major type, to ease expressing
-> > constraints.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+You are not initializing drvdata->rng.quality to a default value, which
+results in the TRNG not being used by the kernel by default. If its a
+perfect TRNG this should be set to 1024, i.e. 1024 bits of entropy per
+1024 bits of input.
 
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/serial/renesas,sci.yaml
+Regards,
+Rouven Czerwinski
 
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - const: renesas,sci
->
-> Do you plan to add to this? It can be simplified to just
-
-Not really. I just used the same construct for consistency with the other
-SCI variants.
-
-> 'const: renesas,sci'.
-
-OK.  I guess no other H8 and SuperH variants will pop up anytime soon.
-Oops, RZ/A1 has SCI, and RZ/A2 has SCIg (they keep on inventing new
-names, to be seen how compatible).
-
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
-> > @@ -0,0 +1,168 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/serial/renesas,scif.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: Renesas Serial Communication Interface with FIFO (SCIF)
-> > +
-> > +maintainers:
-> > +  - Geert Uytterhoeven <geert+renesas@glider.be>
-> > +
-> > +description:
-> > +  Each enabled UART may have an optional "serialN" alias in the "aliases" node,
-> > +  where N is the port number (non-negative decimal integer) as printed on the
-> > +  label next to the physical port.
->
-> That's every serial port...
-
-So you suggest to just remove this paragraph from all files?
-Shall I add it to serial.yaml instead?
-
-> > +  interrupts:
-> > +    description: |
-> > +      Must contain one or more interrupt-specifiers for the serial interface.
-> > +      If a single interrupt is expressed, then all events are
-> > +      multiplexed into this single interrupt.
-> > +
-> > +      If multiple interrupts are provided by the hardware, the order
-> > +      in which the interrupts are listed must match order below. Note
-> > +      that some HW interrupt events may be muxed together resulting
-> > +      in duplicate entries.
-> > +    minItems: 1
-> > +    maxItems: 6
->
-> This allows 2, 3, 4, or 5 interrupts. Is that valid? If not, then you
-
-1, 4, and 6 are valid.
-
-> should do something like this:
->
-> oneOf:
->   - items:
->       description: A combined interrupt
->   - items:
->       - description: Error interrupt
->       - ...
-
-So I tried:
-
-  interrupts:
-    oneOf:
-      - items:
-          description: A combined interrupt
-      - items:
-          - description: Error interrupt
-          - description: Receive buffer full interrupt
-          - description: Transmit buffer empty interrupt
-          - description: Transmit End interrupt
-      - items:
-          - description: Error interrupt
-          - description: Receive buffer full interrupt
-          - description: Transmit buffer empty interrupt
-          - description: Break interrupt
-          - description: Data Ready interrupt
-          - description: Transmit End interrupt
-
-That fails for devices with 4 or 6 interrupts, e.g.:
-
-    arch/arm/boot/dts/r7s9210-rza2mevb.dt.yaml: serial@e8007000:
-interrupts: [[0, 265, 4], [0, 266, 4], [0, 267, 4], [0, 265, 4], [0,
-268, 4], [0, 268, 4]] is valid under each of {'additionalItems':
-False, 'items': [{}, {}, {}, {}, {}, {}], 'maxItems': 6, 'minItems':
-6, 'type': 'array'}, {'items': {}, 'type': 'array'}
-
-Note that initially I forgot to cater for the 4-interrupt case used in
-arch/arm/boot/dts/r7s72100.dtsi, and "make dtbs_check" did not complain.
-
-> > +
-> > +  interrupt-names:
-> > +    minItems: 1
-> > +    maxItems: 6
-> > +    items:
-> > +      enum:
-> > +        - eri # Error
-> > +        - rxi # Receive buffer full
-> > +        - txi # Transmit buffer empty
-> > +        - bri # Break
-> > +        - dri # Data Ready
-> > +        - tei # Transmit End
->
-> Based on above, you probably want 'items' to be a list, not a
-> dict(schema).
-
-Like
-
-  interrupt-names:
-    oneOf:
-      - items:
-          - const: eri
-          - const: rxi
-          - const: txi
-          - const: tei
-      - items:
-          - const: eri
-          - const: rxi
-          - const: txi
-          - const: bri
-          - const: dri
-          - const: tei
-
-?
-Seems to work, but needs the duplication as the 4-interrupt case is not
-just the 4 first entries of the 6-interrupt case (tei is always last).
-
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +    items:
-> > +      enum:
-> > +        - fck # UART functional clock
-> > +        - sck # optional external clock input
-> > +        - brg_int # optional internal clock source for BRG frequency divider
-> > +        - scif_clk # optional external clock source for BRG frequency divider
->
-> Same issue again...
-
-The order is not fixed for the three optional clocks, as they may or
-may not be wired (for sck and scif_clk), or the BRG may not be present.
-Hence unlike for interrupts, I cannot drop the "enum", IIUIC?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
