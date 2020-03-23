@@ -2,109 +2,95 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DB9C54EEB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 17:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46EBC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 17:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B488920714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 17:53:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J71bVAk8"
+	by mail.kernel.org (Postfix) with ESMTP id A0C772072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 17:59:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584986371;
+	bh=2l0KQW4VoP61cJLv+dL28Z9ly7A7laSQG5Iu1ELGiNg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eDivF2kyjLjB6kFqlQqPCbwFhaAqmXw4nCm/CFK3I/0zzFVMuJ5lajBzRcO8V1EXg
+	 g65O3vdm9cOJKbZPe6gRiNNxlp0YsMxoTDFg88UwQO9nL9/5C324As7fe4fcVH3Nch
+	 GvUX8lAtSdu/8k9/+TjGtH7hfEdIIHmb08ewL8N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCWRwi (ORCPT
+        id S1727196AbgCWR7b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:52:38 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14743 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgCWRwi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 13:52:38 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e78f7390000>; Mon, 23 Mar 2020 10:51:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 23 Mar 2020 10:52:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 23 Mar 2020 10:52:37 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Mar
- 2020 17:52:37 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 23 Mar 2020 17:52:37 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.160.78]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e78f7640000>; Mon, 23 Mar 2020 10:52:37 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH v5 1/9] arm64: tegra: Fix sor powergate clocks and reset
-Date:   Mon, 23 Mar 2020 10:52:27 -0700
-Message-ID: <1584985955-19101-2-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Mon, 23 Mar 2020 13:59:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727011AbgCWR7b (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 13:59:31 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C2292076E;
+        Mon, 23 Mar 2020 17:59:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584986370;
+        bh=2l0KQW4VoP61cJLv+dL28Z9ly7A7laSQG5Iu1ELGiNg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0lqsb+hyuD6XqDBK/iujiOzptPXvHe2aV/Kkwr/P9PUnDfHuueev3+9fAESyrBbXO
+         ZkqqYSoJFuvUWkikxGH/IUJ026YcMeuNlg4tvEn2RHdNtA8m0Q8d/1izBjP/Y7z1YM
+         neW0n8jo8z3fJdmpYEmC19DdPkIw8QyaG/UxJ2uQ=
+Received: by mail-qk1-f173.google.com with SMTP id x3so4743764qki.4;
+        Mon, 23 Mar 2020 10:59:30 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3X6lkENw1D+18PwfR1dHlvEp+svbIONC0IFdXeaX3lh/nmGMJ+
+        CfwV5SOwBn319i1jyWmcJbwatv4y65OE6frLzg==
+X-Google-Smtp-Source: ADFU+vsR6Us0V+BMyVNelvszRuS/SrM36zlyf95ZYn/ZAx/QRMGOQ3N6czh+WeF4cZMmcFdLqwHXYaDLwzsbRTR1RmQ=
+X-Received: by 2002:a37:8502:: with SMTP id h2mr22475590qkd.223.1584986369516;
+ Mon, 23 Mar 2020 10:59:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584985913; bh=PTc2SyRS9NP+68XdMh+c6cj6nLmKTNHZwxALx6dnzdM=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=J71bVAk8mBk+hwQro1QjM7SO9SwRQibgoVQdkGOW2dGaeQnqs1AYtN9As1zmtq/PH
-         KmT4v6Vst6FLPJ6RuNTgpzr9kJrsCmKMBIkKAWg9FsSRWmloyD/dDNvejeCKR6eU43
-         pdwS2DTOpXUxYQl0eHA4XdJrfssUQaRR8EzKPPQlSrOH0TX/JVOXiMNnGycFlgpuOo
-         Q5HfikyW2yXRTXC+K+sMJ3DKijs+iMqwOKI18uT6ZvdkF8/n0+ZFWttERIVk7lVhFy
-         gQqIYdCJ5SvX60ghx/zz7u67Ux4J3sWAx1aZSgtxp4//+3xzJzYYRxM00kQSDmO/d5
-         v/lYdISp6P6fw==
+References: <20200320174107.29406-1-lkundrak@v3.sk> <20200320174107.29406-9-lkundrak@v3.sk>
+In-Reply-To: <20200320174107.29406-9-lkundrak@v3.sk>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 23 Mar 2020 11:59:17 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+rzaFLvZGX+dpgGhfCSsAvj06T8fcgo83m+ZJGboKsnQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+rzaFLvZGX+dpgGhfCSsAvj06T8fcgo83m+ZJGboKsnQ@mail.gmail.com>
+Subject: Re: [PATCH 08/10] powerpc/fsl: Make serial ports compatible with ns16550a
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra210 device tree lists csi clock and reset under SOR powergate
-node.
+On Fri, Mar 20, 2020 at 11:41 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> There are separate compatible strings for ns16550 and ns16550a and the
+> Freescale serial port is compatible with the latter one, with working
+> FIFO.
 
-But Tegra210 has csicil in SOR partition and csi in VENC partition.
+I don't think changing this is right. First, 'ns16550' is what's
+documented in the DT spec (and ePAPR which it's based on).
 
-So, this patch includes fix for sor powergate node.
+Second, these dts files are pretty mature/stable, so I'm less inclined
+to change them. AFAICT, this change either enables the fifo (which
+would be an untested change in behavior) or has no effect because the
+fifo is auto-detected.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+> Use the appropriate compatible string that is also consistent with ARM64
+> Freescale boards and thus avoiding one special case in the binding schema.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 64c46ce..d0eff92 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -796,7 +796,9 @@
- 			pd_sor: sor {
- 				clocks = <&tegra_car TEGRA210_CLK_SOR0>,
- 					 <&tegra_car TEGRA210_CLK_SOR1>,
--					 <&tegra_car TEGRA210_CLK_CSI>,
-+					 <&tegra_car TEGRA210_CLK_CILAB>,
-+					 <&tegra_car TEGRA210_CLK_CILCD>,
-+					 <&tegra_car TEGRA210_CLK_CILE>,
- 					 <&tegra_car TEGRA210_CLK_DSIA>,
- 					 <&tegra_car TEGRA210_CLK_DSIB>,
- 					 <&tegra_car TEGRA210_CLK_DPAUX>,
-@@ -804,7 +806,6 @@
- 					 <&tegra_car TEGRA210_CLK_MIPI_CAL>;
- 				resets = <&tegra_car TEGRA210_CLK_SOR0>,
- 					 <&tegra_car TEGRA210_CLK_SOR1>,
--					 <&tegra_car TEGRA210_CLK_CSI>,
- 					 <&tegra_car TEGRA210_CLK_DSIA>,
- 					 <&tegra_car TEGRA210_CLK_DSIB>,
- 					 <&tegra_car TEGRA210_CLK_DPAUX>,
--- 
-2.7.4
+Well, that's annoying...
 
+Rob
