@@ -2,310 +2,88 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F457C4332B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D30C4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DADB20784
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CF120787
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8v722V3"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="azDZ7UXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbgCWMKg (ORCPT
+        id S1728016AbgCWMPu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:10:36 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35964 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbgCWMKf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 08:10:35 -0400
-Received: by mail-pg1-f194.google.com with SMTP id j29so218362pgl.3;
-        Mon, 23 Mar 2020 05:10:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MlNbdsKoZglu02JmE6j7s82pOmi6hUKrXhzXXYWzb3U=;
-        b=b8v722V3lHjGLReQGi5K9OvQK6x9ONT+ZTYq1NU0THWLfDdApSvvP/M8z9/kxQrlRD
-         jg58JB8Ve57GDm99BztkqNxw3AM7mmQRs7FxA0ETQ++matXgRTHh3cj9Vt6um3V+RbK+
-         w7cR/bdN0Tq03HcSpAf/3hgUAqvLK/4a4QTwvAwSqyNI1kPFd+pSEkTMT8nRmRWGLEFx
-         u8AQBvi0moW8dQHBLGDkFnRVO/PDrJW9q338CnEcAP4esOeFQClvR2p+e70aV+wRE6LI
-         h8G2MDiT2hBXf2x0FyEWrNIuGdwKhzjixduxxWNADDVof9TvDrl4MpjICbjquVRH8ktb
-         6RVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MlNbdsKoZglu02JmE6j7s82pOmi6hUKrXhzXXYWzb3U=;
-        b=nfhNGkiJ2aS2LeJuB0+7QYuwY8wDhIlPfPddG4LUx0LGjRryAGQwd93GJa+65Bi7Qd
-         5y5KGqBLjx4VOPmh4QDuEzk27uHSU/HV1TH2N4SQONW+wAvs6/FeJkESEhHYJEBErsy8
-         pPEydpR1QAdo+k1uazfW1lz0QJ7EcsXgDl5LT+cTf5HLDSP7LfaRdv1NbPOaLlLqRRhE
-         BUdYSxPqHe15q7otDW+NiF80gXdtQRUg9rzUu5/NE38CPBufo1UiV7FyD6iVWKXK4E9+
-         prijj1zcvlgt01qyT05cOi6nvvhX6EhxeVukKgFbFb8aBne1jIHG98us3iSmqm7QaqOg
-         OXlg==
-X-Gm-Message-State: ANhLgQ15I7ZeSQUaUJf0k6bb69CpmJLraq5u5jiOZ/RCYeQjxAKigc73
-        8BELdYt3/40DO6UQ1IIomcMS6NCoQVuUOf66SXU=
-X-Google-Smtp-Source: ADFU+vtPHwwDms34oGPAgbK5FoVt8CGhBDYsS8GEceo6UTeFwpey3XsHjBzgJHRFUoWAlESzy6YFOA7a0a8rw7ZYkfU=
-X-Received: by 2002:a63:798a:: with SMTP id u132mr22684974pgc.203.1584965434383;
- Mon, 23 Mar 2020 05:10:34 -0700 (PDT)
+        Mon, 23 Mar 2020 08:15:50 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:45754 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727401AbgCWMPt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 08:15:49 -0400
+X-UUID: ebcb65c8de9a423d82d3780f683f4b53-20200323
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Wxu/rJjKNum6u7NU44aKieD1zc3Y+wnpPlval5gEFNw=;
+        b=azDZ7UXtLWoEyREFg4MhpmsOwv1FesvpT5dD9uJlt9p5/b+C0PosyEaEgPElTU0i5J9jqWbnUis0zGpoCkZIYqrwkao5/ITbDGiS0eM5/cxyTe3FbJ6InuD2YWY3qYspegvFhd3dKevXlPhLqrXHisC3daXn3AgENQdhABjS72E=;
+X-UUID: ebcb65c8de9a423d82d3780f683f4b53-20200323
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1871207188; Mon, 23 Mar 2020 20:15:41 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 23 Mar 2020 20:15:38 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 23 Mar 2020 20:15:38 +0800
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, <hsinyi@chromium.org>,
+        <linux-pm@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <michael.kao@mediatek.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [v4,5/7] thermal: mediatek: mt8183: fix bank number settings
+Date:   Mon, 23 Mar 2020 20:15:35 +0800
+Message-ID: <20200323121537.22697-6-michael.kao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200323121537.22697-1-michael.kao@mediatek.com>
+References: <20200323121537.22697-1-michael.kao@mediatek.com>
 MIME-Version: 1.0
-References: <20200323103926.21271-1-i.mikhaylov@yadro.com> <20200323103926.21271-3-i.mikhaylov@yadro.com>
-In-Reply-To: <20200323103926.21271-3-i.mikhaylov@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 23 Mar 2020 14:10:27 +0200
-Message-ID: <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:41 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wro=
-te:
->
-> Proximity sensor driver based on light/vcnl4000.c code.
-> For now supports only the single on-demand measurement.
->
-> The VCNL3020 is a fully integrated proximity sensor. Fully
-> integrated means that the infrared emitter is included in the
-> package. It has 16-bit resolution. It includes a signal
-> processing IC and features standard I2C communication
-> interface. It features an interrupt function.
+TVQ4MTgzX05VTV9aT05FUyBzaG91bGQgYmUgc2V0IHRvIDENCmJlY2F1c2UgTVQ4MTgzIGRvZXNu
+J3QgaGF2ZSBtdWx0aXBsZSBiYW5rcy4NCg0KRml4ZXM6IGE0ZmZlNmI1MmQyNyAoInRoZXJtYWw6
+IG1lZGlhdGVrOiBhZGQgc3VwcG9ydCBmb3IgTVQ4MTgzIikNClNpZ25lZC1vZmYtYnk6IE1pY2hh
+ZWwgS2FvIDxtaWNoYWVsLmthb0BtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBIc2luLVlp
+IFdhbmcgPGhzaW55aUBjaHJvbWl1bS5vcmc+DQotLS0NCiBkcml2ZXJzL3RoZXJtYWwvbXRrX3Ro
+ZXJtYWwuYyB8IDUgKysrKy0NCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxIGRl
+bGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3RoZXJtYWwvbXRrX3RoZXJtYWwuYyBi
+L2RyaXZlcnMvdGhlcm1hbC9tdGtfdGhlcm1hbC5jDQppbmRleCA3NmUzMDYwM2Q0ZDUuLjZiN2Vm
+MTk5M2Q3ZSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvdGhlcm1hbC9tdGtfdGhlcm1hbC5jDQorKysg
+Yi9kcml2ZXJzL3RoZXJtYWwvbXRrX3RoZXJtYWwuYw0KQEAgLTIxMSw2ICsyMTEsOSBAQCBlbnVt
+IHsNCiAvKiBUaGUgdG90YWwgbnVtYmVyIG9mIHRlbXBlcmF0dXJlIHNlbnNvcnMgaW4gdGhlIE1U
+ODE4MyAqLw0KICNkZWZpbmUgTVQ4MTgzX05VTV9TRU5TT1JTCTYNCiANCisvKiBUaGUgbnVtYmVy
+IG9mIGJhbmtzIGluIHRoZSBNVDgxODMgKi8NCisjZGVmaW5lIE1UODE4M19OVU1fWk9ORVMgICAg
+ICAgICAgICAgICAxDQorDQogLyogVGhlIG51bWJlciBvZiBzZW5zaW5nIHBvaW50cyBwZXIgYmFu
+ayAqLw0KICNkZWZpbmUgTVQ4MTgzX05VTV9TRU5TT1JTX1BFUl9aT05FCSA2DQogDQpAQCAtNDk3
+LDcgKzUwMCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3RoZXJtYWxfZGF0YSBtdDc2MjJf
+dGhlcm1hbF9kYXRhID0gew0KICAqLw0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3RoZXJtYWxf
+ZGF0YSBtdDgxODNfdGhlcm1hbF9kYXRhID0gew0KIAkuYXV4YWRjX2NoYW5uZWwgPSBNVDgxODNf
+VEVNUF9BVVhBRENfQ0hBTk5FTCwNCi0JLm51bV9iYW5rcyA9IE1UODE4M19OVU1fU0VOU09SU19Q
+RVJfWk9ORSwNCisJLm51bV9iYW5rcyA9IE1UODE4M19OVU1fWk9ORVMsDQogCS5udW1fc2Vuc29y
+cyA9IE1UODE4M19OVU1fU0VOU09SUywNCiAJLnZ0c19pbmRleCA9IG10ODE4M192dHNfaW5kZXgs
+DQogCS5jYWxpX3ZhbCA9IE1UODE4M19DQUxJQlJBVElPTiwNCi0tIA0KMi4xOC4wDQo=
 
-Thank you for a patch, my comments below.
-
-> Datasheet available at:
-> http://www.vishay.com/docs/84150/vcnl3020.pdf
-
-I'm thinking that we may simple introduce new tag, called Datesheet:
-to put such links.
-
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-
-...
-
->  obj-$(CONFIG_SRF08)            +=3D srf08.o
->  obj-$(CONFIG_SX9500)           +=3D sx9500.o
->  obj-$(CONFIG_VL53L0X_I2C)      +=3D vl53l0x-i2c.o
-> +obj-$(CONFIG_VCNL3020)         +=3D vcnl3020.o
-
-Perhaps keep ordered?
-
-...
-
-> +/*
-> + * vcnl3020.c - Support for Vishay VCNL3020 proximity sensor
-
-Using file names in themselves is a bad idea. Whenever you would
-rename file (for instance, to support new sensors from the same family
-in the future) you will forget (often, I see this in practice!) to
-update this line.
-Just drop it from here and try to avoid in the future.
-
-> + *
-> + * based on vcnl4000.c
-
-This sounds like a continuation of previous sentence. Drop line in
-between and use proper English grammar and punctuation.
-
-> + */
-
-...
-
-> +struct vcnl3020_data {
-> +       struct i2c_client *client;
-> +       u32 rev;
-
-> +       struct mutex vcnl3020_lock; /* for i2c operations */
-
-Simple 'lock' is enough, the rest is dup noise.
-Also, consider kernel doc format instead of odd comments.
-
-> +};
-
-...
-
-> +static const struct i2c_device_id vcnl3020_id[] =3D {
-> +       { "vcnl3020", 0 },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, vcnl3020_id);
-
-Can you group this with OF table below?
-
-...
-
-> +static int32_t vcnl3020_init(struct vcnl3020_data *data)
-
-int32_t...
-
-> +{
-
-> +       s32 rc;
-
-...s32?!
-
-Applies to entire code.
-
-> +       u32 led_current;
-> +       struct device *dev =3D &data->client->dev;
-
-Reversed xmas tree order looks better.
-
-> +       rc =3D i2c_smbus_read_byte_data(data->client, VCNL_PROD_REV);
-
-Can you use regmap I=C2=B2C API?
-
-> +       if (rc < 0) {
-> +               dev_err(dev, "Error (%d) reading product revision", rc);
-> +               goto exit;
-> +       }
-> +
-
-> +       if (rc =3D=3D VCNL3020_PROD_ID) {
-> +               data->rev =3D rc & 0xff;
-
-This conjunction looks strange. Also, why type of rev is u32 instead of u8?
-
-> +               mutex_init(&data->vcnl3020_lock);
-> +       } else {
-> +               dev_err(dev, "Product id (%x) did not match vcnl3020 (%x)=
-", rc,
-> +                       VCNL3020_PROD_ID);
-> +               rc =3D -ENODEV;
-> +               goto exit;
-> +       }
-> +
-> +       /* set led current */
-> +       rc =3D i2c_smbus_write_byte_data(data->client, VCNL_LED_CURRENT,
-> +                                      led_current);
-> +       if (rc < 0) {
-> +               dev_err(dev, "Error (%d) setting LED current", rc);
-> +               goto exit;
-> +       }
-> +
-> +       return 0;
-
-> +exit:
-> +       return rc;
-
-Useless. Return directly.
-
-> +};
-
-...
-
-> +       /* wait for data to become ready */
-> +       while (tries--) {
-> +               rc =3D i2c_smbus_read_byte_data(data->client, VCNL_COMMAN=
-D);
-> +               if (rc < 0)
-> +                       goto fail;
-> +               if (rc & VCNL_PS_RDY)
-> +                       break;
-> +               msleep(20); /* measurement takes up to 100 ms */
-> +       }
-
-Timeout loops look more naturally in do {} while format.
-
-  unsigned int tries =3D 5;
-  ...
-
-  do {
-  ...
-  } while (--tries);
-
-...
-
-> +       *val =3D (rc & 0xff) << 8;
-
-> +       *val |=3D rc & 0xff;
-
-All these conjunctions looks fishy. Why do you need them? Cant you
-rely on the returned value by I=C2=B2C API?
-
-...
-
-> +fail:
-
-Better name is 'err_unlock' or 'out_unlock'. The rule of thumb to
-describe in the label what you *about to do* there.
-
-> +       mutex_unlock(&data->vcnl3020_lock);
-> +
-> +       return rc;
-> +}
-
-...
-
-> +                       rc =3D vcnl3020_measure_proximity(data, val);
-> +                       if (rc < 0)
-
-Can rc be positive? Drop all these ' < 0' in cases where it is
-guaranteed not to be the case.
-
-> +                               return rc;
-
-...
-
-> +static int32_t vcnl3020_probe(struct i2c_client *client,
-> +                             const struct i2c_device_id *id)
-
-Can you switch to ->probe_new() ?
-
-...
-
-> +       dev_info(&client->dev, "Proximity sensor, Rev: %02x\n",
-> +                data->rev);
-
-Noise.
-
-...
-
-> +       rc =3D devm_iio_device_register(&client->dev, indio_dev);
-> +       if (rc !=3D 0)
-
-Redundant ' !=3D 0' part.
-
-> +               goto out;
-> +
-> +       return rc;
-
-> +out:
-> +       devm_iio_device_free(&client->dev, indio_dev);
-> +       return rc;
-
-Managed resources are exactly for this not to be appeared in the code.
-
-> +}
-
-...
-
-> +static const struct of_device_id vcnl3020_of_match[] =3D {
-> +       {
-> +               .compatible =3D "vishay,vcnl3020",
-> +       },
-
-Missed terminator. How did you test this?
-
-> +};
-
---
-With Best Regards,
-Andy Shevchenko
