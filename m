@@ -2,129 +2,132 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BF7C4332B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 21:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D58C4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 21:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867482073E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 21:16:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584998191;
-	bh=lAcPaGMeuTbQ0e60tGnw6ov4e5Q5aILJQN/wYj3AAMk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=U681sv9OFaEd4CMz+kCRUaxNUAWyB4myLvRItgS8FIPdqGf+34l2xtM70WqUo6rco
-	 V/8kGkoS7qxdZXX+qEosHnwhYrma6LQyJDdsshVea3xMMhxG68VorwD/vGxEo6lt2/
-	 +se2+yMReeUFM5fPG1KsqwajZ8Lvc9sSTm7OV1v0=
+	by mail.kernel.org (Postfix) with ESMTP id DC8882070A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 21:20:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A8YmmXZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCWVQ2 (ORCPT
+        id S1726986AbgCWVUo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:16:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgCWVQ1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 17:16:27 -0400
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E43AD2073E;
-        Mon, 23 Mar 2020 21:16:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584998187;
-        bh=lAcPaGMeuTbQ0e60tGnw6ov4e5Q5aILJQN/wYj3AAMk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=z5xnYgUgdU2DIBDs8HEZaSJH752225z4W2JUWCZZIukzeTeclguBbUyeCUXDTX9I8
-         56K0xXKFuMxB2oxCqLne3IK+sazlamo7gKkDX4NAYNCTIwlU+bNmXO0p1L/aH5bs+1
-         CFPOr47ciju93GlG08d1OyFZizI1aN3zdH+eNNxc=
-Received: by mail-qt1-f180.google.com with SMTP id f20so13149902qtq.6;
-        Mon, 23 Mar 2020 14:16:26 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1+8lGd7B0mnyiOmqvoggfla72NQPnqp9c/0D/Lol8BN2BPjJfy
-        lRGWyAiiokq0/hMdw1pIryXDSfx+69F03WXlhg==
-X-Google-Smtp-Source: ADFU+vum708OpcpjRaJMVDkorGVUHHFISsRaDWFsZpbGSzR6ZkKzsCsNyMn7et2Npg4zVfxkp3GAuYA09s21/oTFXis=
-X-Received: by 2002:aed:3461:: with SMTP id w88mr23486218qtd.143.1584998186039;
- Mon, 23 Mar 2020 14:16:26 -0700 (PDT)
+        Mon, 23 Mar 2020 17:20:44 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40184 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgCWVUn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 17:20:43 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so6465072plk.7;
+        Mon, 23 Mar 2020 14:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Gwk+oA56w7chZgB5rwcFzqm1eElVocnK0t0AHCBP8yQ=;
+        b=A8YmmXZ0cGVBB3dUxG1y25+NUkRk38YFfGLeUWWJ++mJoZ1YBc1+Rk/EhQTctZAKeI
+         dLaY219krh3CUOauviJMyB7ko8zTiEsdp7JsjxNonedzp2vpQNqsy0Z0iOOUmVv9Djap
+         wzLMDPQeZMuXwUVCWNIngfyA9DEOvDpbfoSk/vAEmL0GlkiWov2zYfOjxxaP7iTG1cNK
+         GzpQkSBw4fsb1Yz9EZusHfyAZdrPaJ1GA7MA6rifEZnSmIdCN7vslqhnhXx6A/pwkp/Z
+         /1uII2u0+t7Kcdw2R4fXbCNmayagQ2Cs2jIdKt30hMa2qVqgFpRkYsbWroLqNfd9emcd
+         tStg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Gwk+oA56w7chZgB5rwcFzqm1eElVocnK0t0AHCBP8yQ=;
+        b=EJe7LNTfz6I1NfEmUFBUQkxTTkTsQ3fhwxpKFwKA3s4mUXCbu5C7eTvU4Q8sxo/qvM
+         EMHszMUr9qZ9+GHrHFVcQ+ayGnAWhg7gtrHOtG8qGIZ1hTUcEosGs+cLKIbCkNkv1UR1
+         RoJDTTSZyjEQTabsOvbU2wBrkisXG6GoLYbTs9sz6YmykYhazqI9NeMvc/SQ13+nn2yE
+         vafGOt3rE/dqaAIhQ/OGzgbHeOmYSFXVPoX8RWjXBE7Y4PIA4JVs5i94C6XSpnPHNlfe
+         kBM0fw2/x440cSo8LzHpPQdnsrCqSfszllgxcEP2kEONLS5V3lX/c+CJ12ULUSH96+M5
+         vdaw==
+X-Gm-Message-State: ANhLgQ0g1qYkv/eh+1vWeV//xF93QPgI1isbcVBX2LDcReQ4srXA+3Ti
+        V9/ffQApoDD951GuSiJNYxw=
+X-Google-Smtp-Source: ADFU+vv7tlepPAmm35itIz/eXxTaP0rUCj7Y76PBef7aDXcjLbwyTDKZpymRXFDJNAm9wfFzB26DWQ==
+X-Received: by 2002:a17:90a:208:: with SMTP id c8mr1410640pjc.153.1584998442547;
+        Mon, 23 Mar 2020 14:20:42 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id s19sm14469184pfh.218.2020.03.23.14.20.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Mar 2020 14:20:42 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 14:20:39 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>, timur@kernel.org,
+        Xiubo.Lee@gmail.com, festevam@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/7] ASoC: dt-bindings: fsl_asrc: Add new property
+ fsl,asrc-format
+Message-ID: <20200323212038.GA7527@Asurada-Nvidia.nvidia.com>
+References: <cover.1583725533.git.shengjiu.wang@nxp.com>
+ <24f69c50925b93afd7a706bd888ee25d27247c78.1583725533.git.shengjiu.wang@nxp.com>
+ <20200309211943.GB11333@Asurada-Nvidia.nvidia.com>
+ <20200320173213.GA9093@bogus>
 MIME-Version: 1.0
-References: <cover.1583412540.git.amit.kucheria@linaro.org>
- <8a0cfe9e3018f7996c1563035bee76048941beb4.1583412540.git.amit.kucheria@linaro.org>
- <20200311144933.GA21587@bogus> <CAHLCerN99eKOofxcCuvNwjNGbJfB7BzoPGAPCtXHNQdN9w8Bcw@mail.gmail.com>
-In-Reply-To: <CAHLCerN99eKOofxcCuvNwjNGbJfB7BzoPGAPCtXHNQdN9w8Bcw@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 23 Mar 2020 15:16:14 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ6T3LVbKueGn53dZmR=caD2AR7yLX9gffmOc9VwF9kXQ@mail.gmail.com>
-Message-ID: <CAL_JsqJ6T3LVbKueGn53dZmR=caD2AR7yLX9gffmOc9VwF9kXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: thermal: Add yaml bindings for
- thermal zones
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320173213.GA9093@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 2:46 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> Hi Rob,
->
-> Thanks for the review.
->
-> On Wed, Mar 11, 2020 at 8:19 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Mar 05, 2020 at 06:26:43PM +0530, Amit Kucheria wrote:
-> > > As part of moving the thermal bindings to YAML, split it up into 3
-> > > bindings: thermal sensors, cooling devices and thermal zones.
-> > >
-> > > The thermal-zone binding is a software abstraction to capture the
-> > > properties of each zone - how often they should be checked, the
-> > > temperature thresholds (trips) at which mitigation actions need to be
-> > > taken and the level of mitigation needed at those thresholds.
+On Fri, Mar 20, 2020 at 11:32:13AM -0600, Rob Herring wrote:
+> On Mon, Mar 09, 2020 at 02:19:44PM -0700, Nicolin Chen wrote:
+> > On Mon, Mar 09, 2020 at 11:58:28AM +0800, Shengjiu Wang wrote:
+> > > In order to support new EASRC and simplify the code structure,
+> > > We decide to share the common structure between them. This bring
+> > > a problem that EASRC accept format directly from devicetree, but
+> > > ASRC accept width from devicetree.
+> > > 
+> > > In order to align with new ESARC, we add new property fsl,asrc-format.
+> > > The fsl,asrc-format can replace the fsl,asrc-width, then driver
+> > > can accept format from devicetree, don't need to convert it to
+> > > format through width.
+> > > 
+> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > index cb9a25165503..780455cf7f71 100644
+> > > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > > @@ -51,6 +51,11 @@ Optional properties:
+> > >  			  will be in use as default. Otherwise, the big endian
+> > >  			  mode will be in use for all the device registers.
+> > >  
+> > > +   - fsl,asrc-format	: Defines a mutual sample format used by DPCM Back
+> > > +			  Ends, which can replace the fsl,asrc-width.
+> > > +			  The value is SNDRV_PCM_FORMAT_S16_LE, or
+> > > +			  SNDRV_PCM_FORMAT_S24_LE
+> > 
+> > I am still holding the concern at the DT binding of this format,
+> > as it uses values from ASoC header file instead of a dt-binding
+> > header file -- not sure if we can do this. Let's wait for Rob's
+> > comments.
+> 
+> I assume those are an ABI as well, so it's okay to copy them unless we 
 
-[...]
+They are defined under include/uapi. So I think we can use them?
 
-> > > +          trips:
-> > > +            type: object
-> > > +            description:
-> > > +              This node describes a set of points in the temperature domain at
-> > > +              which the thermal framework needs to takes action. The actions to
-> > > +              be taken are defined in another node called cooling-maps.
-> > > +
-> > > +            patternProperties:
-> > > +              "^[a-zA-Z][a-zA-Z0-9,+\\._]{0,63}$":
-> >
-> > Drop ',', '+', '.', and ideally '_'. Probably need to add '-'.
->
-> Dropping underscore flags a lot of DTs in dtbs_check. Do you want me
-> to go fix them or can we live with the underscore. Is there some
-> document I should read on why underscore isn't desirable?
+> already have some format definitions for DT. But it does need to be copy 
+> in a header under include/dt-bindings/.
 
-Just convention. dtc will warn (with W=2), but we probably should
-document that better. Anyways, fine to leave '_' here.
+Shengjiu is actually quoting those integral values, rather than
+those macros, so actually no need copy to include/dt-bindings,
+yet whoever adds this format property to a new DT would need to
+look up the value in a header file under include/uapi. I's just
+wondering if that's okay.
 
-
-> > > +            /* ... */
-> > > +
-> > > +            gpu-thermal-top {
-> >
-> > This one is not going to match (which should cause an error).
->
-> Good catch. Unfortunately, this isn't getting caught. Nor is the
-> 12-char limitation before -thermal in the thermal zone name. I can't
-> figure out why.
-
-That's because this schema has to be included by another schema which
-matches on a parent node containing 'thermal-zones'. If
-'thermal-zones' can be at the root node, then you should rework this
-such that you have $nodename: {const: thermal-zones} as a top-level
-property.
-
-Rob
+Thanks
