@@ -2,76 +2,114 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1546C54FCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7835C54EEB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782DC20753
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5EC20409
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:36:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vHjIVGC6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbgCWPZ5 (ORCPT
+        id S1727257AbgCWPgO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:25:57 -0400
-Received: from elvis.franken.de ([193.175.24.41]:58633 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbgCWPZ4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:25:56 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jGOxd-0007im-00; Mon, 23 Mar 2020 16:25:53 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 08279C0955; Mon, 23 Mar 2020 15:46:41 +0100 (CET)
-Date:   Mon, 23 Mar 2020 15:46:40 +0100
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        Paul Boddie <paul@boddie.org.uk>
-Subject: Re: [PATCH v7 0/3] MIPS: Fixes and improvements for CI20 board
- (JZ4780)
-Message-ID: <20200323144640.GA10431@alpha.franken.de>
-References: <cover.1583528793.git.hns@goldelico.com>
+        Mon, 23 Mar 2020 11:36:14 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:64278 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727156AbgCWPgN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:36:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584977773; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=wijimHVzaAPkYdmKEb1ozTEK2M9kYeLXNSo3279w37s=;
+ b=vHjIVGC6utN2Jb/yVV2RCp2jUZISZPDISBNbZbOLWvvsGD+t3sbBidiwmojBZl+GFi1YWzUK
+ kYznyQt2O90qUtRtcP8RJ5G4fxxqHBVhPaUJX2lay3wjmPEmKKAHDGuL9gNT4ZE8Xt0RV+Xp
+ H/h4/zsAmpIAsCTDK+jy5dCZEXA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78d76c.7f9b3ececab0-smtp-out-n03;
+ Mon, 23 Mar 2020 15:36:12 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9A551C432C2; Mon, 23 Mar 2020 15:36:12 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D7712C433D2;
+        Mon, 23 Mar 2020 15:36:11 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1583528793.git.hns@goldelico.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 23 Mar 2020 21:06:11 +0530
+From:   kgunda@codeaurora.org
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH V3 2/4] backlight: qcom-wled: Add callback functions
+In-Reply-To: <20200311103047.v7rt5ii3saack22a@holly.lan>
+References: <1583760362-26978-1-git-send-email-kgunda@codeaurora.org>
+ <1583760362-26978-3-git-send-email-kgunda@codeaurora.org>
+ <20200310152719.5hpzh6osq22y4qbn@holly.lan>
+ <05ab744dfbd83b6704bd394ce3c3dfc9@codeaurora.org>
+ <20200311103047.v7rt5ii3saack22a@holly.lan>
+Message-ID: <45964027ff388aec97d27f579d96c012@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 10:06:30PM +0100, H. Nikolaus Schaller wrote:
+On 2020-03-11 16:00, Daniel Thompson wrote:
+> On Wed, Mar 11, 2020 at 12:11:00PM +0530, kgunda@codeaurora.org wrote:
+>> On 2020-03-10 20:57, Daniel Thompson wrote:
+>> > On Mon, Mar 09, 2020 at 06:56:00PM +0530, Kiran Gunda wrote:
+>> > > Add cabc_config, sync_toggle, wled_ovp_fault_status and wled_ovp_delay
+>> > > callback functions to prepare the driver for adding WLED5 support.
+>> > >
+>> > > Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> >
+>> > Overall this code would a lot easier to review if
+>> > > ---
+>> > >  drivers/video/backlight/qcom-wled.c | 196
+>> > > +++++++++++++++++++++++-------------
+>> > >  1 file changed, 126 insertions(+), 70 deletions(-)
+>> > >
+>> > > diff --git a/drivers/video/backlight/qcom-wled.c
+>> > > b/drivers/video/backlight/qcom-wled.c
+>> > > index 3d276b3..b73f273 100644
+>> > > --- a/drivers/video/backlight/qcom-wled.c
+>> > > +++ b/drivers/video/backlight/qcom-wled.c
+>> > > @@ -128,6 +128,7 @@ struct wled_config {
+>> > >  	bool cs_out_en;
+>> > >  	bool ext_gen;
+>> > >  	bool cabc;
+>> > > +	bool en_cabc;
+>> >
+>> > Does this ever get set to true?
+>> >
+>> Yes. If user wants use the cabc pin to control the brightness and
+>> use the "qcom,cabc" DT property in the device tree.
 > 
-> Signed-off-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> That sounds like what you intended the code to do!
 > 
+> Is the code that does this present in the patch? I could not find
+> it.
 > 
-> Alex Smith (1):
->   MIPS: DTS: CI20: add DT node for IR sensor
+okay... It's my bad. We already have the "cabc" for this. I will remove 
+the en_cabc in
+next series.
 > 
-> H. Nikolaus Schaller (2):
->   MIPS: DTS: CI20: multiple DTS improvements
->   MIPS: CI20: defconfig: multiple improvements
-> 
->  arch/mips/boot/dts/ingenic/ci20.dts | 19 +++++++++++++++++++
->  arch/mips/configs/ci20_defconfig    | 21 +++++++++++++++++++++
->  2 files changed, 40 insertions(+)
-
-series applied to mips-next.
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+> Daniel.
