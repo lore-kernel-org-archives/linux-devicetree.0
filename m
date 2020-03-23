@@ -2,126 +2,263 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA37C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 16:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D122C54FCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 16:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B24D20722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 16:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C7A20753
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 16:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584981737;
+	bh=02Kf9WpideHAeaiUmNJrBUV6bHi5stRkRbsCThccRjY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nFhTobdCc5cPbX5JoMNVfMm0S5MUGC0p9IgohziLLs7GDsbPTO910tnRrTwwWX6pc
+	 7Gy+rYXixcKeZqeF0xLGuePzyGnV2n0LBYyt/6jjFPhW6ve7nt3xmyH3dt0njufpYW
+	 EORTpexClf8FFxvtMk22VXaxvwAsUShBX/LRnobU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbgCWQlL (ORCPT
+        id S1727546AbgCWQmQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 12:41:11 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2585 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727494AbgCWQlK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 12:41:10 -0400
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id D63237D085BF1E6A7091;
-        Mon, 23 Mar 2020 16:41:08 +0000 (GMT)
-Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
- LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 23 Mar 2020 16:41:08 +0000
-Received: from localhost (10.47.90.106) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 23 Mar
- 2020 16:41:07 +0000
-Date:   Mon, 23 Mar 2020 16:41:02 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Mike Looijmans <mike.looijmans@topic.nl>
-CC:     Jonathan Cameron <jic23@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-Subject: Re: [PATCH] dt-bindings: iio: accel: Add bmi088 accelerometer
- bindings
-Message-ID: <20200323164102.00005abb@Huawei.com>
-In-Reply-To: <d9105fb7-fe0b-d432-fb12-d595c364f83b@topic.nl>
-References: <20200316065218.4103-1-mike.looijmans@topic.nl>
-        <20200322173704.5cc497c1@archlinux>
-        <d9105fb7-fe0b-d432-fb12-d595c364f83b@topic.nl>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 23 Mar 2020 12:42:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727357AbgCWQmQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 12:42:16 -0400
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1913520753;
+        Mon, 23 Mar 2020 16:42:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584981735;
+        bh=02Kf9WpideHAeaiUmNJrBUV6bHi5stRkRbsCThccRjY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xy/iuWM40CuwjgUhDnwM+XDKVxozGS0WmZMOgQxw9RqDiEqEqioIiXCYjZGKNcjk1
+         gK13WjTc25DhsJ79xjkIYPHLlsa5ZSSizfr6AWviYxM4yEysjYxrddozASa7JFHzNc
+         NSYhlsjcbNt0oseXfHSHdG+rg3CwXbaOPurqXKXc=
+Received: by mail-qt1-f174.google.com with SMTP id f20so12239371qtq.6;
+        Mon, 23 Mar 2020 09:42:15 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3aBxlfpoHQAHKnomoI+ngiWlX+V2SGOZuuCOzrsfPaRLLJoWDY
+        5zXbMX1+ZJYAhaSCj4jiwaWSgalqyg9tqIHLhA==
+X-Google-Smtp-Source: ADFU+vv7cTGvxC9hMAYxTeAIEH2A++JcPRe510U2M7ukQfSAPh0pK3/2XZwYvglTSrY49qlGUNpWYFGRxCL1cyLzmVU=
+X-Received: by 2002:aed:3461:: with SMTP id w88mr22287799qtd.143.1584981733920;
+ Mon, 23 Mar 2020 09:42:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.90.106]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200306090720.9365-1-geert+renesas@glider.be>
+ <20200312200523.GA17854@bogus> <CAMuHMdWoRSE7VQ5o575Ocjfh+y1yH-ciFE1BUqqPVO9oukwgNw@mail.gmail.com>
+In-Reply-To: <CAMuHMdWoRSE7VQ5o575Ocjfh+y1yH-ciFE1BUqqPVO9oukwgNw@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 23 Mar 2020 10:41:59 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL5CmL6M_njeHHYA21zs2jTQxENet+q=BJNVuz8K7Jubw@mail.gmail.com>
+Message-ID: <CAL_JsqL5CmL6M_njeHHYA21zs2jTQxENet+q=BJNVuz8K7Jubw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: serial: sh-sci: Convert to json-schema
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 23 Mar 2020 10:56:41 +0100
-Mike Looijmans <mike.looijmans@topic.nl> wrote:
+On Mon, Mar 23, 2020 at 8:38 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Rob,
+>
+> Thanks a lot for your comments!
+>
+> On Thu, Mar 12, 2020 at 9:05 PM Rob Herring <robh@kernel.org> wrote:
+> > On Fri, Mar 06, 2020 at 10:07:20AM +0100, Geert Uytterhoeven wrote:
+> > > Convert the Renesas Serial Communication Interface ((H)SCI(F)(A|B))
+> > > Device Tree binding documentation to json-schema.
+> > >
+> > > Split the bindings in 5 files, one per major type, to ease expressing
+> > > constraints.
+> > >
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/serial/renesas,sci.yaml
+>
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - items:
+> > > +          - const: renesas,sci
+> >
+> > Do you plan to add to this? It can be simplified to just
+>
+> Not really. I just used the same construct for consistency with the other
+> SCI variants.
+>
+> > 'const: renesas,sci'.
+>
+> OK.  I guess no other H8 and SuperH variants will pop up anytime soon.
+> Oops, RZ/A1 has SCI, and RZ/A2 has SCIg (they keep on inventing new
+> names, to be seen how compatible).
+>
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> > > @@ -0,0 +1,168 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: "http://devicetree.org/schemas/serial/renesas,scif.yaml#"
+> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > +
+> > > +title: Renesas Serial Communication Interface with FIFO (SCIF)
+> > > +
+> > > +maintainers:
+> > > +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> > > +
+> > > +description:
+> > > +  Each enabled UART may have an optional "serialN" alias in the "aliases" node,
+> > > +  where N is the port number (non-negative decimal integer) as printed on the
+> > > +  label next to the physical port.
+> >
+> > That's every serial port...
+>
+> So you suggest to just remove this paragraph from all files?
 
-> On 22-03-2020 18:37, Jonathan Cameron wrote:
-> > On Mon, 16 Mar 2020 07:52:18 +0100
-> > Mike Looijmans <mike.looijmans@topic.nl> wrote:
-> >   
-> >> This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
-> >> the accelerometer part.
-> >>
-> >> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> >> ---
-> >>   .../devicetree/bindings/iio/accel/bmi088.txt  | 23 +++++++++++++++++++  
-> > 
-> > Sorry.  All new DT bindings need to be in yaml format.
-> > 
-> > Please put this in the same series as the driver.  
-> 
-> sooy, I noticed this too late, patches are underway in separate mails 
-> now. Hope that isn't a blocking issue?
+Yes.
 
-For next version of either pull them together.
+> Shall I add it to serial.yaml instead?
 
-Jonathan
+Sure. I'd really like to get to having a registry of alias names we can check.
 
-> 
-> > 
-> > Thanks,
-> > 
-> > Jonathan
-> >   
-> >>   1 file changed, 23 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/iio/accel/bmi088.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/accel/bmi088.txt b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
-> >> new file mode 100644
-> >> index 000000000000..691a47726dbc
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iio/accel/bmi088.txt
-> >> @@ -0,0 +1,23 @@
-> >> +* Bosch BMI088 IMU combining accelerometer and gyroscope
-> >> +
-> >> +https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
-> >> +
-> >> +Required properties:
-> >> +
-> >> +  - compatible : should be "bosch,bmi088_accel"
-> >> +  - reg : the I2C address of the sensor or the SPI chip select number
-> >> +
-> >> +Optional properties:
-> >> +
-> >> +  - interrupts : interrupt mapping for GPIO IRQ, it should be configured with
-> >> +		 IRQ_TYPE_EDGE_RISING
-> >> +
-> >> +Example:
-> >> +
-> >> +bmi088_accel@1 {
-> >> +	compatible = "bosch,bmi088_accel";
-> >> +	reg = <1>;
-> >> +	spi-max-frequency = <10000000>;
-> >> +	interrupt-parent = <&gpio>;
-> >> +	interrupts = <90 IRQ_TYPE_EDGE_RISING>;
-> >> +};  
-> >   
-> 
-> 
+>
+> > > +  interrupts:
+> > > +    description: |
+> > > +      Must contain one or more interrupt-specifiers for the serial interface.
+> > > +      If a single interrupt is expressed, then all events are
+> > > +      multiplexed into this single interrupt.
+> > > +
+> > > +      If multiple interrupts are provided by the hardware, the order
+> > > +      in which the interrupts are listed must match order below. Note
+> > > +      that some HW interrupt events may be muxed together resulting
+> > > +      in duplicate entries.
+> > > +    minItems: 1
+> > > +    maxItems: 6
+> >
+> > This allows 2, 3, 4, or 5 interrupts. Is that valid? If not, then you
+>
+> 1, 4, and 6 are valid.
+>
+> > should do something like this:
+> >
+> > oneOf:
+> >   - items:
+> >       description: A combined interrupt
+> >   - items:
+> >       - description: Error interrupt
+> >       - ...
+>
+> So I tried:
+>
+>   interrupts:
+>     oneOf:
+>       - items:
+>           description: A combined interrupt
 
+You're missing a '-' here.
 
+>       - items:
+>           - description: Error interrupt
+>           - description: Receive buffer full interrupt
+>           - description: Transmit buffer empty interrupt
+>           - description: Transmit End interrupt
+>       - items:
+>           - description: Error interrupt
+>           - description: Receive buffer full interrupt
+>           - description: Transmit buffer empty interrupt
+>           - description: Break interrupt
+>           - description: Data Ready interrupt
+>           - description: Transmit End interrupt
+>
+> That fails for devices with 4 or 6 interrupts, e.g.:
+>
+>     arch/arm/boot/dts/r7s9210-rza2mevb.dt.yaml: serial@e8007000:
+> interrupts: [[0, 265, 4], [0, 266, 4], [0, 267, 4], [0, 265, 4], [0,
+> 268, 4], [0, 268, 4]] is valid under each of {'additionalItems':
+> False, 'items': [{}, {}, {}, {}, {}, {}], 'maxItems': 6, 'minItems':
+> 6, 'type': 'array'}, {'items': {}, 'type': 'array'}
+>
+> Note that initially I forgot to cater for the 4-interrupt case used in
+> arch/arm/boot/dts/r7s72100.dtsi, and "make dtbs_check" did not complain.
+>
+> > > +
+> > > +  interrupt-names:
+> > > +    minItems: 1
+> > > +    maxItems: 6
+> > > +    items:
+> > > +      enum:
+> > > +        - eri # Error
+> > > +        - rxi # Receive buffer full
+> > > +        - txi # Transmit buffer empty
+> > > +        - bri # Break
+> > > +        - dri # Data Ready
+> > > +        - tei # Transmit End
+> >
+> > Based on above, you probably want 'items' to be a list, not a
+> > dict(schema).
+>
+> Like
+>
+>   interrupt-names:
+>     oneOf:
+>       - items:
+>           - const: eri
+>           - const: rxi
+>           - const: txi
+>           - const: tei
+>       - items:
+>           - const: eri
+>           - const: rxi
+>           - const: txi
+>           - const: bri
+>           - const: dri
+>           - const: tei
+>
+> ?
+> Seems to work, but needs the duplication as the 4-interrupt case is not
+> just the 4 first entries of the 6-interrupt case (tei is always last).
+
+Yes, that looks right. No name for the single irq case?
+
+>
+> > > +
+> > > +  clocks:
+> > > +    minItems: 1
+> > > +    maxItems: 4
+> > > +
+> > > +  clock-names:
+> > > +    minItems: 1
+> > > +    maxItems: 4
+> > > +    items:
+> > > +      enum:
+> > > +        - fck # UART functional clock
+> > > +        - sck # optional external clock input
+> > > +        - brg_int # optional internal clock source for BRG frequency divider
+> > > +        - scif_clk # optional external clock source for BRG frequency divider
+> >
+> > Same issue again...
+>
+> The order is not fixed for the three optional clocks, as they may or
+> may not be wired (for sck and scif_clk), or the BRG may not be present.
+> Hence unlike for interrupts, I cannot drop the "enum", IIUIC?
+
+Well, you could list out every possible combination, but the above is
+fine I guess.
+
+Rob
