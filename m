@@ -2,166 +2,112 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F753C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 02:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06CFC1975A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 02:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132E320753
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 02:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="lvm2skNH"
+	by mail.kernel.org (Postfix) with ESMTP id A45CA2074D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 02:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgCWCQR (ORCPT
+        id S1727043AbgCWC0U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Mar 2020 22:16:17 -0400
-Received: from mail-bn8nam12on2046.outbound.protection.outlook.com ([40.107.237.46]:3680
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726958AbgCWCQR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Mar 2020 22:16:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TCSFPRg4zyrl2/jHTgvQHsDbP+DQ6Ei+tMgu9edt859q8ZbEDSUQUJ4lomCmCVYWbYd4ofbQLUDu46U3zNiWsCEqRZXxlnjN+8KBMSa71N+7TOQV7MrhRQI1T54Bop1pCLhl2zWgqvIZIw4cBeI9+v/8irEVI4vrc2nNl3D7kcZ9G8/OH8h8W0LVjwFAk9P5O7BLWSjKG8h20ErrLHWdVgcYgrdY6T9QQ6qkI2rDPpoRJjTUixJR+HSHsZLOpwY9iqlNiELQ5R4ygSrGtEF+P0EJ4Aa3bhE/BqgBz7D45OLW1QtWvjVf30MVHBiuEiiO0q0wekTrYlj/a43yoLm6YA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dbBvtZL/EKf7OWNdo/un9vRVM623L5JFkAzHqseC2YI=;
- b=hewXEJxWa0WhCfMaiQ7CDoGI+EfYWYCahHalZ5KUTZQ9HFCk18/8AsCot7hLFEWUAb7es0pSvZTHONBXSsaz76oeZg3uPTtPRRffgIhqgXA3q0mkOH+olquJiySPwR0ywlKNlc3SlJWSqAms2BcV45j8nvoTIlkQF7/w4jWtCKTZw836Bulmx/0CW8oi88lvGhrSG4RAql7QR7A1YHXNlkecC0EHuDV7nQiI9+CA0m63AmudivGIjE0G9kqYljYo2bgEl/a/SSXmIBGn9tUhXa1mFe/DjSglN1843yMzcAnN2dHXZ4KkAixNYduCBK1UeYdwXe/BehPHChllFMNeTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
- dkim=pass header.d=labundy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dbBvtZL/EKf7OWNdo/un9vRVM623L5JFkAzHqseC2YI=;
- b=lvm2skNHRL3yMgDBnrBYHnuGBlklIBq5SY076qBf48SS2AQXPr7aFuMV422Nhciclnr95SNcM4slSU6WFrrOFuGpOYEkfhuzZQseF3bvqG/50MsEiFV0aGhp2gPz2gzcfcK0UoXH8WYiW94DET+m9eaiNaL15k8wPBjQ3YdTY2g=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jeff@labundy.com; 
-Received: from SN6PR08MB5517.namprd08.prod.outlook.com (2603:10b6:805:fb::32)
- by SN6PR08MB5120.namprd08.prod.outlook.com (2603:10b6:805:70::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Mon, 23 Mar
- 2020 02:16:13 +0000
-Received: from SN6PR08MB5517.namprd08.prod.outlook.com
- ([fe80::e87b:9b6:d4b8:af68]) by SN6PR08MB5517.namprd08.prod.outlook.com
- ([fe80::e87b:9b6:d4b8:af68%6]) with mapi id 15.20.2835.017; Mon, 23 Mar 2020
- 02:16:12 +0000
-Date:   Sun, 22 Mar 2020 21:16:05 -0500
-From:   Jeff LaBundy <jeff@labundy.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     dmitry.torokhov@gmail.com, thierry.reding@gmail.com,
-        jic23@kernel.org, devicetree@vger.kernel.org,
-        linux-input@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH v5 2/7] mfd: Add support for Azoteq
- IQS620A/621/622/624/625
-Message-ID: <20200323021605.GA2731@labundy.com>
-References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
- <1581895931-6056-3-git-send-email-jeff@labundy.com>
- <20200224111448.GS3494@dell>
- <20200228034220.GA3510@labundy.com>
- <20200302120458.GY3494@dell>
- <20200302141117.GA11787@labundy.com>
- <20200302142405.GA3494@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200302142405.GA3494@dell>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: DM6PR17CA0002.namprd17.prod.outlook.com
- (2603:10b6:5:1b3::15) To SN6PR08MB5517.namprd08.prod.outlook.com
- (2603:10b6:805:fb::32)
+        Sun, 22 Mar 2020 22:26:20 -0400
+Received: from mx.socionext.com ([202.248.49.38]:58450 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726946AbgCWC0T (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Mar 2020 22:26:19 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 23 Mar 2020 11:26:17 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id C16FC180BCB;
+        Mon, 23 Mar 2020 11:26:17 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Mon, 23 Mar 2020 11:26:17 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 4C5014034F;
+        Mon, 23 Mar 2020 11:26:17 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 2B05112013D;
+        Mon, 23 Mar 2020 11:26:17 +0900 (JST)
+Date:   Mon, 23 Mar 2020 11:26:17 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: [PATCH v2 1/6] dt-bindings: dma: uniphier-xdmac: Remove extension register region description
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <CAK7LNASmZRszPB-o4pzeu0aQM4_cQBkRxwFM2T4_onHA4-1r8w@mail.gmail.com>
+References: <1584604252-13172-2-git-send-email-hayashi.kunihiko@socionext.com> <CAK7LNASmZRszPB-o4pzeu0aQM4_cQBkRxwFM2T4_onHA4-1r8w@mail.gmail.com>
+Message-Id: <20200323112616.E512.4A936039@socionext.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from labundy.com (136.49.227.119) by DM6PR17CA0002.namprd17.prod.outlook.com (2603:10b6:5:1b3::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Mon, 23 Mar 2020 02:16:11 +0000
-X-Originating-IP: [136.49.227.119]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fb9c19f7-95c1-471e-0c69-08d7ced02848
-X-MS-TrafficTypeDiagnostic: SN6PR08MB5120:
-X-Microsoft-Antispam-PRVS: <SN6PR08MB51204FA55EF6716EB2BC559AD3F00@SN6PR08MB5120.namprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0351D213B3
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(346002)(396003)(376002)(39830400003)(366004)(136003)(199004)(6666004)(2616005)(186003)(508600001)(33656002)(956004)(16526019)(26005)(6916009)(1076003)(86362001)(7416002)(66476007)(66556008)(36756003)(66946007)(8886007)(55016002)(8936002)(81156014)(81166006)(316002)(5660300002)(2906002)(52116002)(7696005)(4326008)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB5120;H:SN6PR08MB5517.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: labundy.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Lt6SJbb9FYxKSlN+rfNryuw8WC7AO5EvoNQJoH4kdf60PW2hUOff6+ETrcNNPYjYDb5dhqqDBfjnR0IC7WuX/tNhHnOm2RAqZoyXB83AopKq6Q8k+svk9+sy/71j/g1xM3Kcz0QnMU6SRjncwi+7/F4OpKreArZmt2wBFMwVTO7rtE8lgy52iueWJllWDPETsRaiDwxNrSK7lNJZlRgLwY4vPW+s0G+KUNbTBOcKRqn4PnpLeWDWTSJecsd0nnJE+ALb59d1QIT9AmXX9ntsTCMOjca4UgqyfXplQLpJVAIJPZ3AE0ZUjLmH8r+MWKbJ6k67xS/AFU8egJmsZsME9W9T/DO1hHzoC1XzjTV31vEoBHtQkaVJydKXxhaWO9iLkhu7cHn3QPvZT1KIgqnFbwUyFmit7BL/sx8nf447CSM4XU1tdBGJT7k16Mj+sQWV
-X-MS-Exchange-AntiSpam-MessageData: K7+lIfuY9XeXy789g03ittDPyoWjwY3w2xi0WDd5AKLVlODIo9azgObGvibx/FRs7gpa5tyEmABTBM3/WlZTDZKcKHysY9PD5TXCcYG6www4r3fPQ9P996guUmvG3HHsReQ9GuRzWp1Hwfhox5nbGQ==
-X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb9c19f7-95c1-471e-0c69-08d7ced02848
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 02:16:12.7040
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cUdrbTHpoc1jBFZ37Cqs7hGjUt/FaFuLEJF780t6r3J8pzx9EZ9qW2GJDQSYFrnPjVEOiYU7BCSQm2M1za1ImA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB5120
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lee,
+On Thu, 19 Mar 2020 23:18:29 +0900 <masahiroy@kernel.org> wrote:
 
-On Mon, Mar 02, 2020 at 02:24:05PM +0000, Lee Jones wrote:
-> On Mon, 02 Mar 2020, Jeff LaBundy wrote:
+> On Thu, Mar 19, 2020 at 4:51 PM Kunihiko Hayashi
+> <hayashi.kunihiko@socionext.com> wrote:
+> >
+> > The address of the extension register region in example is incorrect,
+> > however, this extension register region is optional
 > 
-> > Hi Lee,
-> > 
-> > On Mon, Mar 02, 2020 at 12:04:58PM +0000, Lee Jones wrote:
-> > > On Thu, 27 Feb 2020, Jeff LaBundy wrote:
-> > > 
-> > > > Hi Lee,
-> > > > 
-> > > > On Mon, Feb 24, 2020 at 11:14:48AM +0000, Lee Jones wrote:
-> > > > 
-> > > > [...]
-> > > > 
-> > > > > 
-> > > > > Well done Jeff.  Good job.
-> > > > > 
-> > > > > Applied, thanks.
-> > > > > 
-> > > > 
-> > > > Thank you for your kind words as well as your support in fleshing out this
-> > > > series.
-> > > > 
-> > > > Just to confirm, does your offer to take the remainder (once everything is
-> > > > approved) through immutable branches still stand?
-> > > 
-> > > Depends how quickly you can get the other drivers turned around.
-> > 
-> > With Uwe's approval from Friday, all five drivers are complete. Dmitry and
-> > Jonathan's approvals were given in previous review cycles and were carried
-> > forward with their permission. If anything else is required, please let me
-> > know.
 > 
-> Does Uwe's review mean that Thierry's is not required?
-
-Sorry about that; I was jumping the gun (thank you Uwe for clarifying).
-The pwm patch still needs an Ack from Thierry before it can be applied.
-
-I have not received any feedback from Thierry throughout this patch set,
-and I'd like to unblock the remainder if possible. In case Thierry does
-not respond by the time you elect to send your next pull request, would
-you be willing to drop the pwm patch and take the input and iio patches
-through your tree?
-
-If so, I'll re-send the pwm patch on its own to Thierry during a future
-cycle so that he can take it through his tree at his convenience.
-
+> On which SoC is it optional?
 > 
-> -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> In your previous DT submission, every reg was,
+> like this:
+> 
+> reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
+> 
+> 
+> 
+> and you meant
+> 
+> reg = <0x5fc10000 0x1000>, <0x5fc12000 0x800>;
+> 
+> ?
 
-Kind regards,
-Jeff LaBundy
+Yes. 'Optional' might not be appropriate because all SoCs has the region.
+
+> > and isn't currently
+> > referred from the driver, so the description of the region should be
+> > suppressed until referred by the driver.
+> 
+> This sounds like you plan to get it back
+> as you extend the driver.
+
+Right, however, it isn't desiable that the description of the region is
+changed by extending the driver.
+
+> I checked the datasheet. This controller has more registers,
+> so you split the reg into small chunks, the final form will look scary:
+> 
+> reg = <0x5fc10000 0x1000>, <0x5fc12000 0x800>,
+>       <0x5fc14000 0x100>,  <0x5fc15000 0x100>;
+> 
+> 
+> My question is why you did not use a single reg tuple
+> that covers the whole registers.
+> 
+> Is any other hardware reg interleaved in between?
+
+No, there is no other hardware reg between each region.
+
+Surely it seems pointless to divide all tuples individually.
+I'll rewrite it to cover entire xdmac reg region.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
+
