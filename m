@@ -2,117 +2,245 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7589CC4332B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A565AC54FCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEF12074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:36:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="vmgF7nxi"
+	by mail.kernel.org (Postfix) with ESMTP id 8506420781
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgCWOgL (ORCPT
+        id S1727122AbgCWOix (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:36:11 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:54959 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbgCWOgL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 10:36:11 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 32EFE2304C;
-        Mon, 23 Mar 2020 15:36:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584974169;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=y3Afpl4Mo1o7I+chKBRp6t8NkD5Siw70y/D3EPvLGIM=;
-        b=vmgF7nxi+pO6yK1h3/26DXcOEi4iESyqI+a3nBGAvWRMRSNVQh3lLVinlp2R6POQ4UGrIx
-        K7kvRdOLxhwnSAJWl3LyXXv6P93URCZhct5XuGyUqM6DbnJ5oJPHOL8Qg+NKTAt5/JRTtn
-        MOkOxyyGzoSZtzKNApo82QycuJqvLyE=
+        Mon, 23 Mar 2020 10:38:53 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35766 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgCWOiw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 10:38:52 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k26so13607221otr.2;
+        Mon, 23 Mar 2020 07:38:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DlYHZ7Qug1rsCZCeD/sYfAXJs9u7+r41qimAfDZUnBI=;
+        b=RjDlTzVMjFXfVHnj77cvRalohqlGBBbfsSL01nwyJGT+iVbnviylFKMLm2Sbgs3CbY
+         f8ypP8OFjJdm64+lR7LlWTxLurVt71p4jlsdEL/jkS2BYguxKPIKaPuWtaXOoEe/z+pU
+         rKjzR3FDuuOM4acdfqmbYMojal3LSjPVOEImE69w9jnUhVzPNvBxuGujrla0BMvAolKy
+         JAzPDm445cSWNBR1neXf3EsSNn4sN7R6vGSyB7bLH6AJOO4k1HA43SBX3fm7xuBNZbrR
+         XXR4ddQVl3i+U8g4tSQ3c3LbvoQRSFkBcuqcNe3PyZYUhZmbvkg0HhC3FWqcCCNzgmr8
+         Li9g==
+X-Gm-Message-State: ANhLgQ0KgmoAdWOJbksGUKX8lr8QZ8ye3x/gYOb80AnsycGddjh4PuSO
+        xGJ4dr/7qME2zIKNrCJ6xm9pNoXm/o9/xzmPja82NFcn
+X-Google-Smtp-Source: ADFU+vvF2njHJL/smstlzfyM2R+5WpsYTqcWqYM8JykflojGEF8FLu8ZfbH8kT+2l4PtHr7QxISMOryJloATOEGdbVc=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr18223211otk.145.1584974331394;
+ Mon, 23 Mar 2020 07:38:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 23 Mar 2020 15:36:06 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Peng Ma <peng.ma@nxp.com>
-Subject: Re: [PATCH 2/2] arm64: dts: ls1028a: add "fsl,vf610-edma" compatible
-In-Reply-To: <20200306205403.29881-2-michael@walle.cc>
-References: <20200306205403.29881-1-michael@walle.cc>
- <20200306205403.29881-2-michael@walle.cc>
-Message-ID: <bd67afcd5720265109520d2ed5403b9f@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 32EFE2304C
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[10];
-         NEURAL_HAM(-0.00)[-0.528];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+References: <20200306090720.9365-1-geert+renesas@glider.be> <20200312200523.GA17854@bogus>
+In-Reply-To: <20200312200523.GA17854@bogus>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 23 Mar 2020 15:38:40 +0100
+Message-ID: <CAMuHMdWoRSE7VQ5o575Ocjfh+y1yH-ciFE1BUqqPVO9oukwgNw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: serial: sh-sci: Convert to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ulrich Hecht <uli+renesas@fpond.eu>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi all,
+Hi Rob,
 
-Am 2020-03-06 21:54, schrieb Michael Walle:
-> The bootloader does the IOMMU fixup and dynamically adds the "iommus"
-> property to devices according to its compatible string. In case of the
-> eDMA controller this property is missing. Add it. After that the IOMMU
-> will work with the eDMA core.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+Thanks a lot for your comments!
 
-Is it possible to have this merged, so it gets into the merge window
-for 5.7? As I explained in this thread [1], without this compatible
-all boards with enabled IOMMU (and who have either sound, lpuart or
-i2c enabled), doesn't work.
+On Thu, Mar 12, 2020 at 9:05 PM Rob Herring <robh@kernel.org> wrote:
+> On Fri, Mar 06, 2020 at 10:07:20AM +0100, Geert Uytterhoeven wrote:
+> > Convert the Renesas Serial Communication Interface ((H)SCI(F)(A|B))
+> > Device Tree binding documentation to json-schema.
+> >
+> > Split the bindings in 5 files, one per major type, to ease expressing
+> > constraints.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
--michael
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/serial/renesas,sci.yaml
 
-[1] 
-https://lore.kernel.org/linux-devicetree/433418e889347784bc74f3c22c23e644@walle.cc/
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - const: renesas,sci
+>
+> Do you plan to add to this? It can be simplified to just
 
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index b152fa90cf5c..aa467bff2209 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -447,7 +447,7 @@
-> 
->  		edma0: dma-controller@22c0000 {
->  			#dma-cells = <2>;
-> -			compatible = "fsl,ls1028a-edma";
-> +			compatible = "fsl,ls1028a-edma", "fsl,vf610-edma";
->  			reg = <0x0 0x22c0000 0x0 0x10000>,
->  			      <0x0 0x22d0000 0x0 0x10000>,
->  			      <0x0 0x22e0000 0x0 0x10000>;
+Not really. I just used the same construct for consistency with the other
+SCI variants.
+
+> 'const: renesas,sci'.
+
+OK.  I guess no other H8 and SuperH variants will pop up anytime soon.
+Oops, RZ/A1 has SCI, and RZ/A2 has SCIg (they keep on inventing new
+names, to be seen how compatible).
+
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> > @@ -0,0 +1,168 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/serial/renesas,scif.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: Renesas Serial Communication Interface with FIFO (SCIF)
+> > +
+> > +maintainers:
+> > +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> > +
+> > +description:
+> > +  Each enabled UART may have an optional "serialN" alias in the "aliases" node,
+> > +  where N is the port number (non-negative decimal integer) as printed on the
+> > +  label next to the physical port.
+>
+> That's every serial port...
+
+So you suggest to just remove this paragraph from all files?
+Shall I add it to serial.yaml instead?
+
+> > +  interrupts:
+> > +    description: |
+> > +      Must contain one or more interrupt-specifiers for the serial interface.
+> > +      If a single interrupt is expressed, then all events are
+> > +      multiplexed into this single interrupt.
+> > +
+> > +      If multiple interrupts are provided by the hardware, the order
+> > +      in which the interrupts are listed must match order below. Note
+> > +      that some HW interrupt events may be muxed together resulting
+> > +      in duplicate entries.
+> > +    minItems: 1
+> > +    maxItems: 6
+>
+> This allows 2, 3, 4, or 5 interrupts. Is that valid? If not, then you
+
+1, 4, and 6 are valid.
+
+> should do something like this:
+>
+> oneOf:
+>   - items:
+>       description: A combined interrupt
+>   - items:
+>       - description: Error interrupt
+>       - ...
+
+So I tried:
+
+  interrupts:
+    oneOf:
+      - items:
+          description: A combined interrupt
+      - items:
+          - description: Error interrupt
+          - description: Receive buffer full interrupt
+          - description: Transmit buffer empty interrupt
+          - description: Transmit End interrupt
+      - items:
+          - description: Error interrupt
+          - description: Receive buffer full interrupt
+          - description: Transmit buffer empty interrupt
+          - description: Break interrupt
+          - description: Data Ready interrupt
+          - description: Transmit End interrupt
+
+That fails for devices with 4 or 6 interrupts, e.g.:
+
+    arch/arm/boot/dts/r7s9210-rza2mevb.dt.yaml: serial@e8007000:
+interrupts: [[0, 265, 4], [0, 266, 4], [0, 267, 4], [0, 265, 4], [0,
+268, 4], [0, 268, 4]] is valid under each of {'additionalItems':
+False, 'items': [{}, {}, {}, {}, {}, {}], 'maxItems': 6, 'minItems':
+6, 'type': 'array'}, {'items': {}, 'type': 'array'}
+
+Note that initially I forgot to cater for the 4-interrupt case used in
+arch/arm/boot/dts/r7s72100.dtsi, and "make dtbs_check" did not complain.
+
+> > +
+> > +  interrupt-names:
+> > +    minItems: 1
+> > +    maxItems: 6
+> > +    items:
+> > +      enum:
+> > +        - eri # Error
+> > +        - rxi # Receive buffer full
+> > +        - txi # Transmit buffer empty
+> > +        - bri # Break
+> > +        - dri # Data Ready
+> > +        - tei # Transmit End
+>
+> Based on above, you probably want 'items' to be a list, not a
+> dict(schema).
+
+Like
+
+  interrupt-names:
+    oneOf:
+      - items:
+          - const: eri
+          - const: rxi
+          - const: txi
+          - const: tei
+      - items:
+          - const: eri
+          - const: rxi
+          - const: txi
+          - const: bri
+          - const: dri
+          - const: tei
+
+?
+Seems to work, but needs the duplication as the 4-interrupt case is not
+just the 4 first entries of the 6-interrupt case (tei is always last).
+
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 4
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    maxItems: 4
+> > +    items:
+> > +      enum:
+> > +        - fck # UART functional clock
+> > +        - sck # optional external clock input
+> > +        - brg_int # optional internal clock source for BRG frequency divider
+> > +        - scif_clk # optional external clock source for BRG frequency divider
+>
+> Same issue again...
+
+The order is not fixed for the three optional clocks, as they may or
+may not be wired (for sck and scif_clk), or the BRG may not be present.
+Hence unlike for interrupts, I cannot drop the "enum", IIUIC?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
