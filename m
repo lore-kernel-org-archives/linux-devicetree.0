@@ -2,97 +2,134 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD96EC54FCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 13:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8AEC3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A6A206F8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 13:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70352072E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 13:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVXxLjLl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="P8kHhfGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbgCWNOY (ORCPT
+        id S1728366AbgCWNRV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:14:24 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40170 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728307AbgCWNOX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 09:14:23 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j17so10175455lfe.7;
-        Mon, 23 Mar 2020 06:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=E1CQtmDgklmhJ8UOqFgoAnNC1Hs9OG7/L9e38p9NJko=;
-        b=cVXxLjLlZWbliitWGuklNFT8/b/ipWnER/MBOfcjIMh6YI2DcJv8Cyx9jCRtWTlFX3
-         8aWb0xVZUcow9EfUHRy3WtM6HPg1oPk836709omTqABsL0Forp5JACWbxRI8++kjSIzC
-         wrOo/5+HT5cgZSfM3tSXwty895eyCGY+SSforbkecWud+7Bj4zApFyUDQl/JcwxeGJUq
-         xjglf2IYPC5ZQoCud4+sluk0Ba43iSiYtI3akVpKhQB4EKDbZzcyggCIseS2cMWwiNI0
-         MkzPDPw2hazLDwi30/g7ayTZDBEBAatHOfs4FV4loFqVVBcbM/HU0T2F+l9VUf/2txtG
-         va4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=E1CQtmDgklmhJ8UOqFgoAnNC1Hs9OG7/L9e38p9NJko=;
-        b=mBVkgtecUzZ8oxwL2V4B9NlA9r77SRDOLR8z3ncFoqyQiwYjXIMz9k9/G6+mbRr22+
-         ApotJUR6xDEDhiIokdh4REay+xRu0N/pc0Evs2C3Zk8w5q8CIsh5mjnOXPR2WHEX6KI5
-         iBqI6VT0wZVF6VnEetvUXhiVvxwsyVK43qNPkdg8+EhKq/ovj07adR8Pfn0JAyJWbelP
-         i5d9un4/qgJtlzlh/zydtd5U49J47zIbjCVt3BIT7HCqeFYOdd0GXkHDqdTjQbF7j7XI
-         MemhmUSXHUqv5ycEVxWzOh51H84cNF1AYL5D7KRl/Zs4QZXd3wlrxu3dIGjuX3nh7W9I
-         g8qQ==
-X-Gm-Message-State: ANhLgQ3dQYM5u0sQQil+gV1IIJ7RRUJ9YDO12RBVzE/rTAtkyq4vKuhk
-        oAMoP//gArpi6htWMNUiEiE=
-X-Google-Smtp-Source: ADFU+vsrHRmN74MSFYaqInYZvtueW7JY7IrqwVBW3ExHmXKgr3xW/dEG/H5kvPyo6PdChKHxXDQvNw==
-X-Received: by 2002:a19:550e:: with SMTP id n14mr12877759lfe.141.1584969259348;
-        Mon, 23 Mar 2020 06:14:19 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id e14sm8399787ljb.97.2020.03.23.06.14.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 06:14:18 -0700 (PDT)
-Subject: Re: [PATCH v5 3/8] clk: tegra: Implement Tegra210 EMC clock
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200310152003.2945170-1-thierry.reding@gmail.com>
- <20200310152003.2945170-4-thierry.reding@gmail.com>
- <b5fb83d8-003c-d76b-9dac-7c8ef15f2ab1@gmail.com>
- <20200323110531.GD3883508@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d57eaef9-65b9-23e5-e66b-9cea9df19fd5@gmail.com>
-Date:   Mon, 23 Mar 2020 16:14:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 23 Mar 2020 09:17:21 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:36398 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728391AbgCWNRV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 09:17:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584969440; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=khdlMni9LrUnSqeXAXRdAg8xsofhD9R5JuMv0cC8cNk=;
+ b=P8kHhfGcutG9UHIRTCEJ8EV7ZR1jbWzB6JHIQ+UgZjVKL+Gs7xtIrGroLgJl+rD9YL3meQch
+ 1uqhW5/W3G2CwBWdyncMIyS//yfcQuWmvq/T4/UdDtBHrkxUIHWgWPeVBcDX+Df71QJW+O0+
+ i0Ji6zTqKlaF8kUaPaH/TRK2GVo=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e78b6d4.7f8c2bd296f8-smtp-out-n05;
+ Mon, 23 Mar 2020 13:17:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6EF7DC43636; Mon, 23 Mar 2020 13:17:08 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A4A9DC433D2;
+        Mon, 23 Mar 2020 13:17:07 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200323110531.GD3883508@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+Date:   Mon, 23 Mar 2020 18:47:07 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     mathieu.poirier@linaro.org, bjorn.andersson@linaro.org,
+        leo.yan@linaro.org, devicetree@vger.kernel.org, robh+dt@kernel.org,
+        agross@kernel.org, david.brown@linaro.org, mark.rutland@arm.com,
+        swboyd@chromium.org, rnayak@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] coresight: etm4x: Add support for Qualcomm SC7180 SoC
+In-Reply-To: <788554ee-1b78-9651-9a95-843b8725f502@arm.com>
+References: <cover.1584689229.git.saiprakash.ranjan@codeaurora.org>
+ <07a6b272c6e71e0e480f0dd0bffaf3138c0ab4c2.1584689229.git.saiprakash.ranjan@codeaurora.org>
+ <edf1bab3-411a-ff7a-b4ca-78a8ab00c72b@arm.com>
+ <4924d6c9495d412d9ecb3e1a50ea6ca8@codeaurora.org>
+ <788554ee-1b78-9651-9a95-843b8725f502@arm.com>
+Message-ID: <2c75f3548cc735b7ac53e9d06e3b9565@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-23.03.2020 14:05, Thierry Reding пишет:
-...
->>> +static const struct dev_pm_ops tegra210_emc_pm_ops = {
->>> +	SET_SYSTEM_SLEEP_PM_OPS(tegra210_emc_suspend, tegra210_emc_resume)
->>> +};
->> What about to use the default suspend/resume level?
+On 2020-03-23 17:09, Suzuki K Poulose wrote:
+> On 03/23/2020 11:32 AM, Sai Prakash Ranjan wrote:
+>> Hi Suzuki,
+>> 
+>> On 2020-03-23 15:25, Suzuki K Poulose wrote:
+>>> On 03/20/2020 07:44 AM, Sai Prakash Ranjan wrote:
+>>>> Add ETM Peripheral IDs for Qualcomm SC7180 SoC. It has
+>>>> 2 big CPU cores based on Cortex-A76 and 6 LITTLE CPU
+>>>> cores based on Cortex-A55.
+>>>> 
+>>>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>>> ---
+>>>>   drivers/hwtracing/coresight/coresight-etm4x.c | 2 ++
+>>>>   1 file changed, 2 insertions(+)
+>>>> 
+>>>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c 
+>>>> b/drivers/hwtracing/coresight/coresight-etm4x.c
+>>>> index a90d757f7043..a153a65c4c5b 100644
+>>>> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+>>>> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+>>>> @@ -1556,6 +1556,8 @@ static const struct amba_id etm4_ids[] = {
+>>>>       CS_AMBA_UCI_ID(0x000f0211, uci_id_etm4),/* Qualcomm Kryo */
+>>>>       CS_AMBA_ID(0x000bb802),            /* Qualcomm Kryo 385 
+>>>> Cortex-A55 */
+>>>>       CS_AMBA_ID(0x000bb803),            /* Qualcomm Kryo 385 
+>>>> Cortex-A75 */
+>>>> +    CS_AMBA_ID(0x000bb805),            /* Qualcomm Kryo 4XX 
+>>>> Cortex-A55 */
+>>>> +    CS_AMBA_ID(0x000bb804),            /* Qualcomm Kryo 4XX 
+>>>> Cortex-A76 */
+>>> 
+>>> Does the DEVARCH indicate that it is an ETMv4 ? (It should !) Please
+>>> could we enforce the UCI_ID check for these components ? The
+>>> moment you add CTI components to your board this could conflict with
+>>> them unless we check the UCI_ID for ETMv4.
+>>> 
+>> 
+>> Yes I got these IDs through devarch and it does indicate that it is 
+>> ETMv4.2.
+>> 
+>> devname=7040000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7140000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7240000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7340000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7440000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7540000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7640000.etm dev->type=0x13 devarch=0x47724a13
+>> devname=7740000.etm dev->type=0x13 devarch=0x47724a13
+>> 
+>> I will add the UCI_ID as you suggested in next version.
 > 
-> I don't understand. This is already the default suspend/resume level,
-> isn't it?
+> If you do have access to the Kryo 385 variants, please fix
+> them as well.
+> 
 
-Please use SIMPLE_DEV_PM_OPS, for clarity.
+Sure, will do.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
