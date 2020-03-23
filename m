@@ -2,616 +2,498 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465EFC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 20:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3693C54FCF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 20:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5B92070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 20:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A991620836
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 20:46:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fy5B7M4W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725913AbgCWUgH (ORCPT
+        id S1725844AbgCWUqR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 16:36:07 -0400
-Received: from mga12.intel.com ([192.55.52.136]:52702 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgCWUgH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 16:36:07 -0400
-IronPort-SDR: Cd66KN2atXJLOsaT7Q1HAlnOzl6ZU/XkD/arZLPRJEmrvatwkvJpCxU6QrNwLi7O6D8YnfAz8U
- kj5CNpxDbqGQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 13:36:06 -0700
-IronPort-SDR: NLjbx4hES26YIKb8cW9RkTSkUwyx7uAQUbetRFzJwD97ciz/jnRngchnQk4fHW2L4Pq0LIotB2
- QqZqGIr1xttA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,297,1580803200"; 
-   d="scan'208";a="240040225"
-Received: from unknown (HELO kekkonen.fi.intel.com) ([10.249.35.222])
-  by orsmga008.jf.intel.com with ESMTP; 23 Mar 2020 13:36:00 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id CA8FE21EF2; Mon, 23 Mar 2020 22:35:58 +0200 (EET)
-Date:   Mon, 23 Mar 2020 22:35:58 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        andriy.shevchenko@linux.intel.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Cao Bing Bu <bingbu.cao@intel.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Louis Kuo <louis.kuo@mediatek.com>,
-        Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= 
-        <shengnan.wang@mediatek.com>
-Subject: Re: [V3, 2/2] media: i2c: Add DW9768 VCM driver
-Message-ID: <20200323203558.GA21174@kekkonen.localdomain>
-References: <20200228155958.20657-1-dongchun.zhu@mediatek.com>
- <20200228155958.20657-3-dongchun.zhu@mediatek.com>
- <20200305120516.GQ5379@paasikivi.fi.intel.com>
- <1584526824.5781.56.camel@mhfsdcap03>
- <20200318102937.GA15448@kekkonen.localdomain>
- <CAAFQd5A=_+XsvgHTz_3QAJoSk9MBPooUgVCh+9K98DKdw0CXKg@mail.gmail.com>
+        Mon, 23 Mar 2020 16:46:17 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:46046 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbgCWUqR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 16:46:17 -0400
+Received: by mail-ua1-f66.google.com with SMTP id 9so5520053uav.12
+        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 13:46:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=avSGiptGQF9hE9IPVYyfDgpvYQHJFA6GQoG6Pm5p1nI=;
+        b=fy5B7M4WVPNB6wx97QHx57yM2C5O4ieAW8exwVd8nqBhwKISmdgk8JH6b0GUZjMfyH
+         NZvHcEoZMI+QWIcrxGu5a8Tf+NcQ9F5nch7b5P/RO1NixEhCNit0wmIpl5NhYBFBxWsd
+         S/qRQie6TmA8j4GO9pSrEBO9ik+xRRON89Cpoh1pdHNeopOjhNeXZdjF7NMop1RQO+fe
+         SekXj0t5AoJyCIDZg0DYsKENuky/9tHxcNpbb8HdIqZBSJZxrfuA1V8CugjhGw810hBc
+         8CTQ0QcIuViBq1rFyYkt3l0ZnbROGEhcdLyOXk7p6wUqO6U3b+m0I8/omfH7UmZ4kiUp
+         nzrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=avSGiptGQF9hE9IPVYyfDgpvYQHJFA6GQoG6Pm5p1nI=;
+        b=a8ReXDZy57hgnBARkDWvaGrsZ0tSJCc4Jr8fe+eWrcQb1MlH/h9X+GwT+DGjh/lKHC
+         XvNWnaIGNx+TLb3Y/TzlwkAefApSDUJETwFSZq4ieHTTyVVvFLnRSFtMoOGrRKZ/5l3g
+         u/04ict4o+5yzo0FxuRcnJZzlORKeOFkHOaPnK2jbp3kf67TuOUVQBkaKNJSTtfT8zlq
+         exFMVmi2p0WSchRgUYLc4SPvLbNiqp1xQWEw9h6Lf4M/LoTpTae3xGu7HmjVOtj1zfpo
+         WJt5HIMIJyBxdTCrrGBazcPpmCjx0WgxkfofOTuLUclSe55VLNnL5eRFwYyAuk0EsNFt
+         4n2Q==
+X-Gm-Message-State: ANhLgQ1Xnb/kC3BKCFfiLdiAVlOgp2eA5JA8vRT0G/SZ8AjApA6acx2h
+        i/r3RvgqV54jQtTwQqNB2sU0nM4v39hQf4s/REDk2A==
+X-Google-Smtp-Source: ADFU+vvDAnEKB4ZFdPiysFslS8rnid5/tsQxnFQLzSdrHuIa9MfbBbVr4nylyNL61u3dVZsW1GLblgFDK3Lz+CvmCXY=
+X-Received: by 2002:ab0:5f90:: with SMTP id b16mr15354828uaj.77.1584996374341;
+ Mon, 23 Mar 2020 13:46:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5A=_+XsvgHTz_3QAJoSk9MBPooUgVCh+9K98DKdw0CXKg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1583412540.git.amit.kucheria@linaro.org>
+ <8a0cfe9e3018f7996c1563035bee76048941beb4.1583412540.git.amit.kucheria@linaro.org>
+ <20200311144933.GA21587@bogus>
+In-Reply-To: <20200311144933.GA21587@bogus>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 24 Mar 2020 02:16:03 +0530
+Message-ID: <CAHLCerN99eKOofxcCuvNwjNGbJfB7BzoPGAPCtXHNQdN9w8Bcw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] dt-bindings: thermal: Add yaml bindings for
+ thermal zones
+To:     Rob Herring <robh@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Hi Rob,
 
-On Mon, Mar 23, 2020 at 08:09:14PM +0100, Tomasz Figa wrote:
-> On Wed, Mar 18, 2020 at 11:29 AM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> >
-> > Hi Dongchun,
-> >
-> > On Wed, Mar 18, 2020 at 06:20:24PM +0800, Dongchun Zhu wrote:
-> > > Hi Sakari,
-> > >
-> > > On Thu, 2020-03-05 at 14:05 +0200, Sakari Ailus wrote:
-> > > > Hi Dongchun,
-> > > >
-> > > > Thanks for the update.
-> > > >
-> > > > On Fri, Feb 28, 2020 at 11:59:58PM +0800, Dongchun Zhu wrote:
-> > > > > This patch adds a V4L2 sub-device driver for DW9768 lens voice coil,
-> > > > > and provides control to set the desired focus via I2C serial interface.
-> > > > >
-> > > > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > > > ---
-> > > > >  MAINTAINERS                |   1 +
-> > > > >  drivers/media/i2c/Kconfig  |  10 ++
-> > > > >  drivers/media/i2c/Makefile |   1 +
-> > > > >  drivers/media/i2c/dw9768.c | 437 +++++++++++++++++++++++++++++++++++++++++++++
-> > > > >  4 files changed, 449 insertions(+)
-> > > > >  create mode 100644 drivers/media/i2c/dw9768.c
-> > > > >
-> > > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > > index b805e29..0bb894a 100644
-> > > > > --- a/MAINTAINERS
-> > > > > +++ b/MAINTAINERS
-> > > > > @@ -5139,6 +5139,7 @@ M:  Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > > >  L:       linux-media@vger.kernel.org
-> > > > >  T:       git git://linuxtv.org/media_tree.git
-> > > > >  S:       Maintained
-> > > > > +F:       drivers/media/i2c/dw9768.c
-> > > > >  F:       Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.yaml
-> > > > >
-> > > > >  DONGWOON DW9807 LENS VOICE COIL DRIVER
-> > > > > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> > > > > index c68e002..aa60781 100644
-> > > > > --- a/drivers/media/i2c/Kconfig
-> > > > > +++ b/drivers/media/i2c/Kconfig
-> > > > > @@ -1024,6 +1024,16 @@ config VIDEO_DW9714
-> > > > >     capability. This is designed for linear control of
-> > > > >     voice coil motors, controlled via I2C serial interface.
-> > > > >
-> > > > > +config VIDEO_DW9768
-> > > > > + tristate "DW9768 lens voice coil support"
-> > > > > + depends on I2C && VIDEO_V4L2 && MEDIA_CONTROLLER
-> > > > > + depends on VIDEO_V4L2_SUBDEV_API
-> > > > > + help
-> > > > > +   This is a driver for the DW9768 camera lens voice coil.
-> > > > > +   DW9768 is a 10 bit DAC with 100mA output current sink
-> > > > > +   capability. This is designed for linear control of
-> > > > > +   voice coil motors, controlled via I2C serial interface.
-> > > > > +
-> > > > >  config VIDEO_DW9807_VCM
-> > > > >   tristate "DW9807 lens voice coil support"
-> > > > >   depends on I2C && VIDEO_V4L2 && MEDIA_CONTROLLER
-> > > > > diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-> > > > > index c147bb9..ec94434 100644
-> > > > > --- a/drivers/media/i2c/Makefile
-> > > > > +++ b/drivers/media/i2c/Makefile
-> > > > > @@ -24,6 +24,7 @@ obj-$(CONFIG_VIDEO_SAA6752HS) += saa6752hs.o
-> > > > >  obj-$(CONFIG_VIDEO_AD5820)  += ad5820.o
-> > > > >  obj-$(CONFIG_VIDEO_AK7375)  += ak7375.o
-> > > > >  obj-$(CONFIG_VIDEO_DW9714)  += dw9714.o
-> > > > > +obj-$(CONFIG_VIDEO_DW9768)  += dw9768.o
-> > > > >  obj-$(CONFIG_VIDEO_DW9807_VCM)  += dw9807-vcm.o
-> > > > >  obj-$(CONFIG_VIDEO_ADV7170) += adv7170.o
-> > > > >  obj-$(CONFIG_VIDEO_ADV7175) += adv7175.o
-> > > > > diff --git a/drivers/media/i2c/dw9768.c b/drivers/media/i2c/dw9768.c
-> > > > > new file mode 100644
-> > > > > index 0000000..dec1abc
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/media/i2c/dw9768.c
-> > > > > @@ -0,0 +1,437 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > +// Copyright (c) 2020 MediaTek Inc.
-> > > > > +
-> > > > > +#include <linux/delay.h>
-> > > > > +#include <linux/i2c.h>
-> > > > > +#include <linux/module.h>
-> > > > > +#include <linux/regulator/consumer.h>
-> > > > > +#include <linux/pm_runtime.h>
-> > > >
-> > > > Alphabetical order would be nice.
-> > > >
-> > > > > +#include <media/v4l2-async.h>
-> > > > > +#include <media/v4l2-ctrls.h>
-> > > > > +#include <media/v4l2-device.h>
-> > > > > +#include <media/v4l2-subdev.h>
-> > > > > +
-> > > > > +#define DW9768_NAME                              "dw9768"
-> > > > > +#define DW9768_MAX_FOCUS_POS                     1023
-> > > > > +/*
-> > > > > + * This sets the minimum granularity for the focus positions.
-> > > > > + * A value of 1 gives maximum accuracy for a desired focus position
-> > > > > + */
-> > > > > +#define DW9768_FOCUS_STEPS                       1
-> > > > > +
-> > > > > +/*
-> > > > > + * Ring control and Power control register
-> > > > > + * Bit[1] RING_EN
-> > > > > + * 0: Direct mode
-> > > > > + * 1: AAC mode (ringing control mode)
-> > > > > + * Bit[0] PD
-> > > > > + * 0: Normal operation mode
-> > > > > + * 1: Power down mode
-> > > > > + * DW9768 requires waiting time of Topr after PD reset takes place.
-> > > > > + */
-> > > > > +#define DW9768_RING_PD_CONTROL_REG               0x02
-> > > > > +#define DW9768_PD_MODE_OFF                       0x00
-> > > > > +#define DW9768_PD_MODE_EN                        BIT(0)
-> > > > > +#define DW9768_AAC_MODE_EN                       BIT(1)
-> > > > > +
-> > > > > +/*
-> > > > > + * DW9768 separates two registers to control the VCM position.
-> > > > > + * One for MSB value, another is LSB value.
-> > > > > + * DAC_MSB: D[9:8] (ADD: 0x03)
-> > > > > + * DAC_LSB: D[7:0] (ADD: 0x04)
-> > > > > + * D[9:0] DAC data input: positive output current = D[9:0] / 1023 * 100[mA]
-> > > > > + */
-> > > > > +#define DW9768_MSB_ADDR                          0x03
-> > > > > +#define DW9768_LSB_ADDR                          0x04
-> > > > > +#define DW9768_STATUS_ADDR                       0x05
-> > > > > +
-> > > > > +/*
-> > > > > + * AAC mode control & prescale register
-> > > > > + * Bit[7:5] Namely AC[2:0], decide the VCM mode and operation time.
-> > > > > + * 000 Direct(default)
-> > > > > + * 001 AAC2 0.48xTvib
-> > > > > + * 010 AAC3 0.70xTvib
-> > > > > + * 011 AAC4 0.75xTvib
-> > > > > + * 100 Reserved
-> > > > > + * 101 AAC8 1.13xTvib
-> > > > > + * 110 Reserved
-> > > > > + * 111 Reserved
-> > > > > + * Bit[2:0] Namely PRESC[2:0], set the internal clock dividing rate as follow.
-> > > > > + * 000 2
-> > > > > + * 001 1(default)
-> > > > > + * 010 1/2
-> > > > > + * 011 1/4
-> > > > > + * 100 8
-> > > > > + * 101 4
-> > > > > + * 110 Reserved
-> > > > > + * 111 Reserved
-> > > > > + */
-> > > > > +#define DW9768_AAC_PRESC_REG                     0x06
-> > > > > +#define DW9768_AAC3_SELECT_DIVIDING_RATE_1       0x41
-> > > > > +
-> > > > > +/*
-> > > > > + * VCM period of vibration register
-> > > > > + * Bit[5:0] Defined as VCM rising periodic time (Tvib) together with PRESC[2:0]
-> > > > > + * Tvib = (6.3ms + AACT[5:0] * 0.1ms) * Dividing Rate
-> > > > > + * Dividing Rate is the internal clock dividing rate that is defined at
-> > > > > + * PRESCALE register (ADD: 0x06)
-> > > > > + */
-> > > > > +#define DW9768_AAC_TIME_REG                      0x07
-> > > > > +#define DW9768_AACT_CNT                          0x39
-> > > >
-> > > > I wonder how hardware specific are these values, this and the divider?
-> > > >
-> > > > The DW9807 has similar configuration but the defaults seem to be just
-> > > > fine. What are the defaults in this case?
-> > > >
-> > >
-> > > From hardware specific, the default value of AAC_PRESC_REG is 0x01, and
-> > > that value of AAC_TIME_REG is 0x20.
-> > >
-> > > For these two registers, each bit is defined as below.
-> > > D[7:0] (D[7:5]-> AC[2:0], D[2:0]-> PRSEC[2:0])
-> > > +------+------+------+------+------+------+------+------+
-> > > | AC2  | AC1  | AC0  |------|------|PRESC2|PRESC1|PRESC0|
-> > > +------+------+------+------+------+------+------+------+
-> > >
-> > > D[7:0] (D[5:0]-> AACT[5:0]).
-> > > +------+------+------+------+------+------+------+------+
-> > > |------+------+ AACT5| AACT4| AACT3| AACT2| AACT1| AACT0|
-> > > +------+------+------+------+------+------+------+------+
-> > >
-> > > > > +
-> > > > > +/*
-> > > > > + * DW9768 requires waiting time (delay time) of t_OPR after power-up,
-> > > > > + * or in the case of PD reset taking place.
-> > > > > + */
-> > > > > +#define DW9768_T_OPR_US                          1000
-> > > > > +
-> > > > > +/*
-> > > > > + * This acts as the minimum granularity of lens movement.
-> > > > > + * Keep this value power of 2, so the control steps can be
-> > > > > + * uniformly adjusted for gradual lens movement, with desired
-> > > > > + * number of control steps.
-> > > > > + */
-> > > > > +#define DW9768_MOVE_STEPS                        16
-> > > > > +
-> > > > > +/*
-> > > > > + * DW9768_AAC_PRESC_REG & DW9768_AAC_TIME_REG determine VCM operation time.
-> > > > > + * If DW9768_AAC_PRESC_REG set to be 0x41, DW9768_AAC_TIME_REG set to be 0x39,
-> > > > > + * VCM mode would be AAC3, Operation Time would be 0.70xTvib, that is 8.40ms.
-> > > > > + */
-> > > > > +#define DW9768_MOVE_DELAY_US                     8400
-> > > > > +#define DW9768_STABLE_TIME_US                    20000
-> > > > > +
-> > > > > +static const char * const dw9768_supply_names[] = {
-> > > > > + "vin",  /* I2C I/O interface power */
-> > > > > + "vdd",  /* VCM power */
-> > > > > +};
-> > > > > +
-> > > > > +#define DW9768_NUM_SUPPLIES ARRAY_SIZE(dw9768_supply_names)
-> > > >
-> > > > Please use ARRAY_SIZE() directly instead.
-> > > >
-> > > > > +
-> > > > > +/* dw9768 device structure */
-> > > > > +struct dw9768 {
-> > > > > + struct regulator_bulk_data supplies[DW9768_NUM_SUPPLIES];
-> > > > > + struct v4l2_ctrl_handler ctrls;
-> > > > > + struct v4l2_ctrl *focus;
-> > > > > + struct v4l2_subdev sd;
-> > > > > +};
-> > > > > +
-> > > > > +static inline struct dw9768 *to_dw9768(struct v4l2_ctrl *ctrl)
-> > > > > +{
-> > > > > + return container_of(ctrl->handler, struct dw9768, ctrls);
-> > > > > +}
-> > > > > +
-> > > > > +static inline struct dw9768 *sd_to_dw9768(struct v4l2_subdev *subdev)
-> > > > > +{
-> > > > > + return container_of(subdev, struct dw9768, sd);
-> > > > > +}
-> > > > > +
-> > > > > +struct regval_list {
-> > > > > + u8 reg_num;
-> > > > > + u8 value;
-> > > > > +};
-> > > > > +
-> > > > > +static struct regval_list dw9768_init_regs[] = {
-> > > >
-> > > > const
-> > > >
-> > > > > + {DW9768_RING_PD_CONTROL_REG, DW9768_AAC_MODE_EN},
-> > > > > + {DW9768_AAC_PRESC_REG, DW9768_AAC3_SELECT_DIVIDING_RATE_1},
-> > > > > + {DW9768_AAC_TIME_REG, DW9768_AACT_CNT},
-> > > > > +};
-> > > > > +
-> > > > > +static int dw9768_write_array(struct dw9768 *dw9768, struct regval_list *vals,
-> > > > > +                       size_t len)
-> > > > > +{
-> > > > > + struct i2c_client *client = v4l2_get_subdevdata(&dw9768->sd);
-> > > > > + unsigned int i;
-> > > > > + int ret;
-> > > > > +
-> > > > > + for (i = 0; i < len; i++) {
-> > > > > +         ret = i2c_smbus_write_byte_data(client, vals[i].reg_num,
-> > > > > +                                         vals[i].value);
-> > > > > +         if (ret < 0)
-> > > > > +                 return ret;
-> > > > > + }
-> > > > > + return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int dw9768_set_dac(struct dw9768 *dw9768, u16 val)
-> > > > > +{
-> > > > > + struct i2c_client *client = v4l2_get_subdevdata(&dw9768->sd);
-> > > > > +
-> > > > > + /* Write VCM position to registers */
-> > > > > + return i2c_smbus_write_word_data(client, DW9768_MSB_ADDR,
-> > > > > +                                  swab16(val));
-> > > > > +}
-> > > > > +
-> > > > > +static int dw9768_init(struct dw9768 *dw9768)
-> > > > > +{
-> > > > > + struct i2c_client *client = v4l2_get_subdevdata(&dw9768->sd);
-> > > > > + int ret, val;
-> > > > > +
-> > > > > + /* Reset DW9768_RING_PD_CONTROL_REG to default status 0x00 */
-> > > > > + ret = i2c_smbus_write_byte_data(client, DW9768_RING_PD_CONTROL_REG,
-> > > > > +                                 DW9768_PD_MODE_OFF);
-> > > > > + if (ret < 0)
-> > > > > +         return ret;
-> > > > > +
-> > > > > + /*
-> > > > > +  * DW9769 requires waiting delay time of t_OPR
-> > > > > +  * after PD reset takes place.
-> > > > > +  */
-> > > > > + usleep_range(DW9768_T_OPR_US, DW9768_T_OPR_US + 100);
-> > > > > +
-> > > > > + ret = dw9768_write_array(dw9768, dw9768_init_regs,
-> > > > > +                          ARRAY_SIZE(dw9768_init_regs));
-> > > > > + if (ret)
-> > > > > +         return ret;
-> > > > > +
-> > > > > + for (val = dw9768->focus->val % DW9768_MOVE_STEPS;
-> > > > > +      val <= dw9768->focus->val;
-> > > > > +      val += DW9768_MOVE_STEPS) {
-> > > > > +         ret = dw9768_set_dac(dw9768, val);
-> > > > > +         if (ret) {
-> > > > > +                 dev_err(&client->dev, "%s I2C failure: %d",
-> > > > > +                         __func__, ret);
-> > > > > +                 return ret;
-> > > > > +         }
-> > > > > +         usleep_range(DW9768_MOVE_DELAY_US,
-> > > > > +                      DW9768_MOVE_DELAY_US + 1000);
-> > > > > + }
-> > > > > +
-> > > > > + return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int dw9768_release(struct dw9768 *dw9768)
-> > > > > +{
-> > > > > + struct i2c_client *client = v4l2_get_subdevdata(&dw9768->sd);
-> > > > > + int ret, val;
-> > > > > +
-> > > > > + for (val = round_down(dw9768->focus->val, DW9768_MOVE_STEPS);
-> > > > > +      val >= 0; val -= DW9768_MOVE_STEPS) {
-> > > > > +         ret = dw9768_set_dac(dw9768, val);
-> > > > > +         if (ret) {
-> > > > > +                 dev_err(&client->dev, "%s I2C failure: %d",
-> > > > > +                         __func__, ret);
-> > > > > +                 return ret;
-> > > > > +         }
-> > > > > +         usleep_range(DW9768_MOVE_DELAY_US,
-> > > > > +                      DW9768_MOVE_DELAY_US + 1000);
-> > > > > + }
-> > > > > +
-> > > > > + /*
-> > > > > +  * Wait for the motor to stabilize after the last movement
-> > > > > +  * to prevent the motor from shaking.
-> > > > > +  */
-> > > > > + usleep_range(DW9768_STABLE_TIME_US - DW9768_MOVE_DELAY_US,
-> > > > > +              DW9768_STABLE_TIME_US - DW9768_MOVE_DELAY_US + 1000);
-> > > > > +
-> > > > > + ret = i2c_smbus_write_byte_data(client, DW9768_RING_PD_CONTROL_REG,
-> > > > > +                                 DW9768_PD_MODE_EN);
-> > > > > + if (ret < 0)
-> > > > > +         return ret;
-> > > > > +
-> > > > > + /*
-> > > > > +  * DW9769 requires waiting delay time of t_OPR
-> > > > > +  * after PD reset takes place.
-> > > > > +  */
-> > > > > + usleep_range(DW9768_T_OPR_US, DW9768_T_OPR_US + 100);
-> > > > > +
-> > > > > + return 0;
-> > > > > +}
-> > > > > +
-> > > > > +/* Power handling */
-> > > > > +static int __maybe_unused dw9768_runtime_suspend(struct device *dev)
-> > > > > +{
-> > > > > + struct i2c_client *client = to_i2c_client(dev);
-> > > > > + struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> > > > > + struct dw9768 *dw9768 = sd_to_dw9768(sd);
-> > > > > +
-> > > > > + dw9768_release(dw9768);
-> > > > > + regulator_bulk_disable(DW9768_NUM_SUPPLIES, dw9768->supplies);
-> > > > > +
-> > > > > + return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int __maybe_unused dw9768_runtime_resume(struct device *dev)
-> > > > > +{
-> > > > > + struct i2c_client *client = to_i2c_client(dev);
-> > > > > + struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> > > > > + struct dw9768 *dw9768 = sd_to_dw9768(sd);
-> > > > > + int ret;
-> > > > > +
-> > > > > + ret = regulator_bulk_enable(DW9768_NUM_SUPPLIES, dw9768->supplies);
-> > > > > + if (ret < 0) {
-> > > > > +         dev_err(dev, "failed to enable regulators\n");
-> > > > > +         return ret;
-> > > > > + }
-> > > > > +
-> > > > > + /*
-> > > > > +  * The datasheet refers to t_OPR that needs to be waited before sending
-> > > > > +  * I2C commands after power-up.
-> > > > > +  */
-> > > > > + usleep_range(DW9768_T_OPR_US, DW9768_T_OPR_US + 100);
-> > > > > +
-> > > > > + ret = dw9768_init(dw9768);
-> > > > > + if (ret < 0)
-> > > > > +         goto disable_regulator;
-> > > > > +
-> > > > > + return 0;
-> > > > > +
-> > > > > +disable_regulator:
-> > > > > + regulator_bulk_disable(DW9768_NUM_SUPPLIES, dw9768->supplies);
-> > > > > +
-> > > > > + return ret;
-> > > > > +}
-> > > > > +
-> > > > > +static int dw9768_set_ctrl(struct v4l2_ctrl *ctrl)
-> > > > > +{
-> > > > > + struct dw9768 *dw9768 = to_dw9768(ctrl);
-> > > > > +
-> > > > > + if (ctrl->id == V4L2_CID_FOCUS_ABSOLUTE)
-> > > > > +         return dw9768_set_dac(dw9768, ctrl->val);
-> > > > > +
-> > > > > + return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static const struct v4l2_ctrl_ops dw9768_ctrl_ops = {
-> > > > > + .s_ctrl = dw9768_set_ctrl,
-> > > > > +};
-> > > > > +
-> > > > > +static int dw9768_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-> > > > > +{
-> > > > > + int ret;
-> > > > > +
-> > > > > + ret = pm_runtime_get_sync(sd->dev);
-> > > > > + if (ret < 0) {
-> > > > > +         pm_runtime_put_noidle(sd->dev);
-> > > > > +         return ret;
-> > > > > + }
-> > > > > +
-> > > > > + return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int dw9768_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-> > > > > +{
-> > > > > + pm_runtime_put(sd->dev);
-> > > > > +
-> > > > > + return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static const struct v4l2_subdev_internal_ops dw9768_int_ops = {
-> > > > > + .open = dw9768_open,
-> > > > > + .close = dw9768_close,
-> > > > > +};
-> > > > > +
-> > > > > +static const struct v4l2_subdev_ops dw9768_ops = { };
-> > > > > +
-> > > > > +static int dw9768_init_controls(struct dw9768 *dw9768)
-> > > > > +{
-> > > > > + struct v4l2_ctrl_handler *hdl = &dw9768->ctrls;
-> > > > > + const struct v4l2_ctrl_ops *ops = &dw9768_ctrl_ops;
-> > > > > +
-> > > > > + v4l2_ctrl_handler_init(hdl, 1);
-> > > > > +
-> > > > > + dw9768->focus = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_FOCUS_ABSOLUTE,
-> > > > > +                                   0, DW9768_MAX_FOCUS_POS,
-> > > > > +                                   DW9768_FOCUS_STEPS, 0);
-> > > > > +
-> > > > > + if (hdl->error)
-> > > > > +         return hdl->error;
-> > > > > +
-> > > > > + dw9768->sd.ctrl_handler = hdl;
-> > > > > +
-> > > > > + return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int dw9768_probe(struct i2c_client *client)
-> > > > > +{
-> > > > > + struct device *dev = &client->dev;
-> > > > > + struct dw9768 *dw9768;
-> > > > > + unsigned int i;
-> > > > > + int ret;
-> > > > > +
-> > > > > + dw9768 = devm_kzalloc(dev, sizeof(*dw9768), GFP_KERNEL);
-> > > > > + if (!dw9768)
-> > > > > +         return -ENOMEM;
-> > > > > +
-> > > > > + v4l2_i2c_subdev_init(&dw9768->sd, client, &dw9768_ops);
-> > > > > +
-> > > > > + for (i = 0; i < DW9768_NUM_SUPPLIES; i++)
-> > > > > +         dw9768->supplies[i].supply = dw9768_supply_names[i];
-> > > > > +
-> > > > > + ret = devm_regulator_bulk_get(dev, DW9768_NUM_SUPPLIES,
-> > > > > +                               dw9768->supplies);
-> > > > > + if (ret) {
-> > > > > +         dev_err(dev, "failed to get regulators\n");
-> > > > > +         return ret;
-> > > > > + }
-> > > > > +
-> > > >
-> > > > I'd try to see the chip is accessible in probe().
-> > > >
-> > >
-> > > If probe failed, actuator device node would not be generated.
-> >
-> > Yes, this would be preferred.
-> >
-> > > When user tries to open fd, it should report error also.
-> > >
-> > > > > + ret = dw9768_init_controls(dw9768);
-> > > > > + if (ret)
-> > > > > +         goto entity_cleanup;
-> > > > > +
-> > > > > + dw9768->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> > > > > + dw9768->sd.internal_ops = &dw9768_int_ops;
-> > > > > +
-> > > > > + ret = media_entity_pads_init(&dw9768->sd.entity, 0, NULL);
-> > > > > + if (ret < 0)
-> > > > > +         goto entity_cleanup;
-> > > > > +
-> > > > > + dw9768->sd.entity.function = MEDIA_ENT_F_LENS;
-> > > > > +
-> > > > > + ret = v4l2_async_register_subdev(&dw9768->sd);
-> > > > > + if (ret < 0)
-> > > > > +         goto entity_cleanup;
-> > > > > +
-> > > > > + pm_runtime_enable(dev);
-> > > >
-> > > > Your driver appears to depend on runtime PM on DT based systems.
-> > > >
-> > > > You should either add a dependency to CONFIG_PM, or much more preferrably
-> > > > make it work without runtime PM.
-> > > >
-> > >
-> > > Do you mean using the macro like this:
-> > > #ifdef CONFIG_PM
-> > > ...
-> > > #endif
-> >
-> > No. If CONFIG_PM is disabled, the runtime PM functions do nothing. Would
-> > your driver work in that case?
-> >
-> 
-> If we make the driver handle the case of !IS_ENABLED(CONFIG_PM), I'd
-> like us to make sure that the driver only does power up in this
-> specific case to avoid blinking the camera LED on boot-up when
-> CONFIG_PM is enabled.
+Thanks for the review.
 
-Ah, you have that kind of hardware design again. :-)
+On Wed, Mar 11, 2020 at 8:19 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Mar 05, 2020 at 06:26:43PM +0530, Amit Kucheria wrote:
+> > As part of moving the thermal bindings to YAML, split it up into 3
+> > bindings: thermal sensors, cooling devices and thermal zones.
+> >
+> > The thermal-zone binding is a software abstraction to capture the
+> > properties of each zone - how often they should be checked, the
+> > temperature thresholds (trips) at which mitigation actions need to be
+> > taken and the level of mitigation needed at those thresholds.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  .../bindings/thermal/thermal-zones.yaml       | 325 ++++++++++++++++++
+> >  1 file changed, 325 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/thermal-zones.yaml b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> > new file mode 100644
+> > index 0000000000000..f8f3b72bc3119
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> > @@ -0,0 +1,325 @@
+> > +# SPDX-License-Identifier: (GPL-2.0)
+> > +# Copyright 2020 Linaro Ltd.
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/base.yaml#
+> > +
+> > +title: Thermal zone binding
+> > +
+> > +maintainers:
+> > +  - Amit Kucheria <amitk@kernel.org>
+> > +
+> > +description: |
+> > +  Thermal management is achieved in devicetree by describing the sensor hardware
+> > +  and the software abstraction of cooling devices and thermal zones required to
+> > +  take appropriate action to mitigate thermal overloads.
+> > +
+> > +  The following node types are used to completely describe a thermal management
+> > +  system in devicetree:
+> > +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
+> > +   - cooling-device: device used to dissipate heat either passively or actively
+> > +   - thermal-zones: a container of the following node types used to describe all
+> > +     thermal data for the platform
+> > +
+> > +  This binding describes the thermal-zones.
+> > +
+> > +  The polling-delay properties of a thermal-zone are bound to the maximum dT/dt
+> > +  (temperature derivative over time) in two situations for a thermal zone:
+> > +    1. when passive cooling is activated (polling-delay-passive)
+> > +    2. when the zone just needs to be monitored (polling-delay) or when
+> > +       active cooling is activated.
+> > +
+> > +  The maximum dT/dt is highly bound to hardware power consumption and
+> > +  dissipation capability. The delays should be chosen to account for said
+> > +  max dT/dt, such that a device does not cross several trip boundaries
+> > +  unexpectedly between polls. Choosing the right polling delays shall avoid
+> > +  having the device in temperature ranges that may damage the silicon structures
+> > +  and reduce silicon lifetime.
+> > +
+> > +properties:
+> > +  thermal-zones:
+> > +    type: object
+> > +    description:
+> > +      A /thermal-zones node is required in order to use the thermal framework to
+> > +      manage input from the various thermal zones in the system in order to
+> > +      mitigate thermal overload conditions. It does not represent a real device
+> > +      in the system, but acts as a container to link thermal sensor devices,
+> > +      platform-data regarding temperature thresholds and the mitigation actions
+> > +      to take when the temperature crosses those thresholds.
+> > +
+>
+> > +    properties:
+> > +      $nodename:
+> > +        pattern: "^[a-zA-Z][a-zA-Z0-9,\\-]{1,12}-thermal$"
+>
+> These 3 lines should be:
+>
+> patternProperties:
+>   "^[a-zA-Z][a-zA-Z0-9,\\-]{1,12}-thermal$":
+>
+> Though we should drop ',' as well.
+>
+> $nodename is only needed at the top level where it's kind of special.
 
-I guess that's fine for a VCM driver; just don't power the device on during
-probe. On the other hand, for an EEPROM that are common in sensors, that
-likely isn't so straightforward.
+Fixed.
 
-I wonder what kind of a reception would be for a DT property to tell
-powering the device on during probe is undesirable. Which reminds me ---
-time to respin the corresponding set for ACPI...
+> > +        type: object
+> > +        description:
+> > +          Each thermal zone node contains information about how frequently it
+> > +          must be checked, the sensor responsible for reporting temperature for
+> > +          this zone, one sub-node containing the various trip points for this
+> > +          zone and one sub-node containing all the zone cooling-maps.
+> > +
+> > +        properties:
+> > +          polling-delay:
+> > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > +            minimum: 0
+>
+> The type is unsigned, so the min is already 0.
 
--- 
-Regards,
+Dropped.
 
-Sakari Ailus
+> > +            description:
+> > +              The maximum number of milliseconds to wait between polls when
+> > +              checking this thermal zone. Setting this to 0 disables the polling
+> > +              timers setup by the thermal framework and assumes that the thermal
+> > +              sensors in this zone support interrupts.
+> > +
+> > +          polling-delay-passive:
+> > +            $ref: /schemas/types.yaml#/definitions/uint32
+> > +            minimum: 0
+
+Dropped.
+
+> > +            description:
+> > +              The maximum number of milliseconds to wait between polls when
+> > +              checking this thermal zone while doing passive cooling. Setting
+> > +              this to 0 disables the polling timers setup by the thermal
+> > +              framework and assumes that the thermal sensors in this zone
+> > +              support interrupts.
+> > +
+> > +          thermal-sensors:
+> > +            $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +            description:
+> > +              A list of thermal sensor phandles and sensor specifiers used to
+> > +              monitor this thermal zone.
+> > +
+> > +          trips:
+> > +            type: object
+> > +            description:
+> > +              This node describes a set of points in the temperature domain at
+> > +              which the thermal framework needs to takes action. The actions to
+> > +              be taken are defined in another node called cooling-maps.
+> > +
+> > +            patternProperties:
+> > +              "^[a-zA-Z][a-zA-Z0-9,+\\._]{0,63}$":
+>
+> Drop ',', '+', '.', and ideally '_'. Probably need to add '-'.
+
+Dropping underscore flags a lot of DTs in dtbs_check. Do you want me
+to go fix them or can we live with the underscore. Is there some
+document I should read on why underscore isn't desirable?
+
+Fixed the rest.
+
+>
+> > +                type: object
+> > +
+> > +                properties:
+> > +                  temperature:
+> > +                    $ref: /schemas/types.yaml#/definitions/int32
+> > +                    minimum: -273000
+> > +                    maximum: 200000
+> > +                    description:
+> > +                      An integer expressing the trip temperature in millicelsius.
+> > +
+> > +                  hysteresis:
+> > +                    $ref: /schemas/types.yaml#/definitions/uint32
+> > +                    description:
+> > +                      An unsigned integer expressing the hysteresis delta with
+> > +                      respect to the trip temperature property above, also in
+> > +                      millicelsius.
+> > +
+> > +                  type:
+>
+> Needs a type reference (string).
+
+Fixed.
+
+>
+> > +                    enum:
+> > +                        # active: enable active cooling e.g. fans
+> > +                        - active
+>
+> Wrong indentation. Should be 2 less.
+>
+> Also, I think this would be more readable:
+>
+> - active  # enable active cooling e.g. fans
+
+Yes, fixed.
+
+>
+> > +                        # passive: enable passive cooling e.g. throttling cpu
+> > +                        - passive
+> > +                        # hot: send notification to driver if .notify
+> > +                        #      callback registered
+> > +                        - hot
+> > +                        # critical: send notification to driver if .notify
+> > +                        #           callback registered and trigger a shutdown
+> > +                        - critical
+> > +                    description: |
+> > +                      There are four valid trip types: active, passive, hot,
+> > +                      critical.
+> > +
+> > +                      The critical trip type is used to set the maximum
+> > +                      temperature threshold above which the HW becomes
+> > +                      unstable and underlying firmware might even trigger a
+> > +                      reboot. Hitting the critical threshold triggers a system
+> > +                      shutdown.
+> > +
+> > +                      The hot trip type can be used to send a notification to
+> > +                      the thermal driver (if a .notify callback is registered).
+> > +                      The action to be taken is left to the driver.
+> > +
+> > +                      The passive trip type can be used to slow down HW e.g. run
+> > +                      the CPU, GPU, bus at a lower frequency.
+> > +
+> > +                      The active trip type can be used to control other HW to
+> > +                      help in cooling e.g. fans can be sped up or slowed down
+> > +
+> > +                required:
+> > +                  - temperature
+> > +                  - hysteresis
+> > +                  - type
+> > +
+> > +            additionalProperties: false
+>
+> You need 'additionalProperties' on the child nodes too, or are there
+> vendor specific properties allowed?
+
+Done. No vendor-specific properties allowed here.
+
+> > +
+> > +          cooling-maps:
+> > +            type: object
+> > +            description:
+> > +              This node describes the action to be taken when a thermal zone
+> > +              crosses one of the temperature thresholds described in the trips
+> > +              node. The action takes the form of a mapping relation between a
+> > +              trip and the target cooling device state.
+> > +
+> > +            patternProperties:
+> > +              "^map[0-9][-a-zA-Z0-9]*$":
+> > +                type: object
+> > +
+> > +                properties:
+> > +                  trip:
+> > +                    $ref: /schemas/types.yaml#/definitions/phandle
+> > +                    description:
+> > +                      A phandle of a trip point node within this thermal zone.
+> > +
+> > +                  cooling-device:
+> > +                    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > +                    description:
+> > +                      A list of cooling device phandles along with the minimum
+> > +                      and maximum cooling state specifiers for each cooling
+> > +                      device. Using the THERMAL_NO_LIMIT (-1UL) constant in the
+> > +                      cooling-device phandle limit specifier lets the framework
+> > +                      use the minimum and maximum cooling state for that cooling
+> > +                      device automatically.
+> > +
+> > +                  contribution:
+> > +                    $ref: /schemas/types.yaml#/definitions/uint32
+> > +                    minimum: 0
+> > +                    maximum: 100
+> > +                    description:
+> > +                      The contribution of the cooling devices at the trip
+> > +                      temperature, both referenced in this map, to this thermal
+> > +                      zone as a percentage.
+> > +
+> > +                required:
+> > +                  - trip
+> > +                  - cooling-device
+> > +
+>
+> 'additionalProperties' for map* nodes?
+
+Done.
+
+> > +            additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/thermal/thermal.h>
+> > +
+> > +    // Example 1: SDM845 TSENS
+> > +    soc: soc@0 {
+> > +            #address-cells = <2>;
+> > +            #size-cells = <2>;
+> > +
+> > +            /* ... */
+> > +
+> > +            tsens0: thermal-sensor@c263000 {
+> > +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> > +                    reg = <0 0x0c263000 0 0x1ff>, /* TM */
+> > +                          <0 0x0c222000 0 0x1ff>; /* SROT */
+> > +                    #qcom,sensors = <13>;
+> > +                    interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                 <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+> > +                    interrupt-names = "uplow", "critical";
+> > +                    #thermal-sensor-cells = <1>;
+> > +            };
+> > +
+> > +            tsens1: thermal-sensor@c265000 {
+> > +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> > +                    reg = <0 0x0c265000 0 0x1ff>, /* TM */
+> > +                          <0 0x0c223000 0 0x1ff>; /* SROT */
+> > +                    #qcom,sensors = <8>;
+> > +                    interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                 <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+> > +                    interrupt-names = "uplow", "critical";
+> > +                    #thermal-sensor-cells = <1>;
+> > +            };
+> > +    };
+> > +
+> > +    /* ... */
+> > +
+> > +    thermal-zones {
+> > +            cpu0-thermal {
+> > +                    polling-delay-passive = <250>;
+> > +                    polling-delay = <1000>;
+> > +
+> > +                    thermal-sensors = <&tsens0 1>;
+> > +
+> > +                    trips {
+> > +                            cpu0_alert0: trip-point0 {
+> > +                                    temperature = <90000>;
+> > +                                    hysteresis = <2000>;
+> > +                                    type = "passive";
+> > +                            };
+> > +
+> > +                            cpu0_alert1: trip-point1 {
+> > +                                    temperature = <95000>;
+> > +                                    hysteresis = <2000>;
+> > +                                    type = "passive";
+> > +                            };
+> > +
+> > +                            cpu0_crit: cpu_crit {
+> > +                                    temperature = <110000>;
+> > +                                    hysteresis = <1000>;
+> > +                                    type = "critical";
+> > +                            };
+> > +                    };
+> > +
+> > +                    cooling-maps {
+> > +                            map0 {
+> > +                                    trip = <&cpu0_alert0>;
+> > +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
+> > +                                                            THERMAL_NO_LIMIT>,
+> > +                                                     <&CPU1 THERMAL_NO_LIMIT
+> > +                                                            THERMAL_NO_LIMIT>,
+> > +                                                     <&CPU2 THERMAL_NO_LIMIT
+> > +                                                            THERMAL_NO_LIMIT>,
+> > +                                                     <&CPU3 THERMAL_NO_LIMIT
+> > +                                                            THERMAL_NO_LIMIT>;
+> > +                            };
+> > +
+> > +                            map1 {
+> > +                                    trip = <&cpu0_alert1>;
+> > +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
+> > +                                                            THERMAL_NO_LIMIT>,
+> > +                                                     <&CPU1 THERMAL_NO_LIMIT
+> > +                                                            THERMAL_NO_LIMIT>,
+> > +                                                     <&CPU2 THERMAL_NO_LIMIT
+> > +                                                            THERMAL_NO_LIMIT>,
+> > +                                                     <&CPU3 THERMAL_NO_LIMIT
+> > +                                                            THERMAL_NO_LIMIT>;
+> > +                            };
+> > +                    };
+> > +            };
+> > +
+> > +            /* ... */
+> > +
+> > +            cluster0-thermal {
+> > +                    polling-delay-passive = <250>;
+> > +                    polling-delay = <1000>;
+> > +
+> > +                    thermal-sensors = <&tsens0 5>;
+> > +
+> > +                    trips {
+> > +                            cluster0_alert0: trip-point0 {
+> > +                                    temperature = <90000>;
+> > +                                    hysteresis = <2000>;
+> > +                                    type = "hot";
+> > +                            };
+> > +                            cluster0_crit: cluster0_crit {
+> > +                                    temperature = <110000>;
+> > +                                    hysteresis = <2000>;
+> > +                                    type = "critical";
+> > +                            };
+> > +                    };
+> > +            };
+> > +
+> > +            /* ... */
+> > +
+> > +            gpu-thermal-top {
+>
+> This one is not going to match (which should cause an error).
+
+Good catch. Unfortunately, this isn't getting caught. Nor is the
+12-char limitation before -thermal in the thermal zone name. I can't
+figure out why.
+
+> > +                    polling-delay-passive = <250>;
+> > +                    polling-delay = <1000>;
+> > +
+> > +                    thermal-sensors = <&tsens0 11>;
+> > +
+> > +                    trips {
+> > +                            gpu1_alert0: trip-point0 {
+> > +                                    temperature = <90000>;
+> > +                                    hysteresis = <2000>;
+> > +                                    type = "hot";
+> > +                            };
+> > +                    };
+> > +            };
+> > +    };
+> > +...
+> > --
+> > 2.20.1
+> >
