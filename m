@@ -2,121 +2,154 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7860DC10F26
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 06:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA43C10F26
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 06:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE1C206C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 06:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC81D206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 06:13:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=diehl.com header.i=@diehl.com header.b="opILcj5z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nb+zKKAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCWGJH (ORCPT
+        id S1726191AbgCWGN5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 02:09:07 -0400
-Received: from enterprise02.smtp.diehl.com ([193.201.238.220]:33477 "EHLO
-        enterprise02.smtp.diehl.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726059AbgCWGJH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 02:09:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=diehl.com; i=@diehl.com; q=dns/txt; s=default;
-  t=1584943746; x=1616479746;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=DV4nHDiTsO9dWY3uhNYCYhJoyilaMOHIQk4sdtR6+24=;
-  b=opILcj5zLobn79ZXHdQMqkTOhwakCeCyRcWmr7euAiXRF1iPXfMj3sRM
-   RN64tHUqHFIE3AcsBmtSpSoZNSVKNrZPWZP53aifarsVWkMDhUGuJ5vhK
-   1UiheyZJa93A8BM7xtdItuuv4b59tOWePwyc7zJnXi83JvIhDI40VZ7My
-   ATOW0buoFHnB9BeNLWFzo44W7xbTdE/SFO95QaMGET06ENP5Pb9L1TSOC
-   2jKosAoCRb3TznJTt5SjgW9N2C79STI/ndzlVkbHhzR6R8q1g1RuSK/oa
-   832h36qqnu5xW38n7mPZ2v0sOnoM6UlOrf3xfSAVC4ma5pYnpPW3bsL7/
-   Q==;
-IronPort-SDR: zZhsEo+1SFDQ160x2e0cuQJ5sh1J1agpvAv/M3IST49JdxSEtIU/X6RxblVebdX+DOssLLy4fA
- g1FSZPLC9RXQ==
-From:   Denis Osterland-Heim <denis.osterland@diehl.com>
-To:     "pavel@ucw.cz" <pavel@ucw.cz>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
-Subject: Re: [PATCH v4 3/5] leds: pwm: check result of led_pwm_set() in
- led_pwm_add()
-Thread-Topic: [PATCH v4 3/5] leds: pwm: check result of led_pwm_set() in
- led_pwm_add()
-Thread-Index: AQHV/1jvS39qjeoyFEyBmW+H8QD2bqhTGRaAgAGLqoCAAP7igA==
-Date:   Mon, 23 Mar 2020 06:09:02 +0000
-Message-ID: <ca8f7ca4226de19c910440fde0c6f1e34a807fc6.camel@diehl.com>
-References: <20200321081321.15614-1-Denis.Osterland@diehl.com>
-         <20200321081321.15614-4-Denis.Osterland@diehl.com>
-         <20200321152037.GB8386@duo.ucw.cz>
-         <566ac991-2e38-6c70-4b07-c8dd78d47a06@gmail.com>
-In-Reply-To: <566ac991-2e38-6c70-4b07-c8dd78d47a06@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DB3F59BDD45B1C49A1326D7A5AD88203@diehl.internal>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-TrailerSkip: 1
-X-GBS-PROC: 415AWy8o668fDtCxszluz4NEbTdzvYfHwnlDueB0TshDKkqx0N2FbTxrbM/VCE05
+        Mon, 23 Mar 2020 02:13:57 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40813 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgCWGN5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 02:13:57 -0400
+Received: by mail-pf1-f195.google.com with SMTP id l184so7007830pfl.7;
+        Sun, 22 Mar 2020 23:13:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6RunR6reW/rdha4XOFLo/23SuT6oFo6osITud1hxX5Y=;
+        b=nb+zKKADfvG58zZQgBqsCUfbzB974vH7CsHBQk/LeoCSEFdn0+Nnbs75pJ8xLEyUxN
+         JLZfC6JTVuBWoZkcvtaeI2WUSUjSYonkMFK3HP5LKsOKWciYXmCIRQ/K4O8esW7W9wlq
+         5c1PmZe7i5qw7N5C7bbrRIU1j5VqECEn5F/2VgW/km437hskRZRBWbmcUNzp5ZS3xjDX
+         Q3x/TiKFyWzJJuhyI81XWMN5oVkgHuR0sX6BTrVelNobWglhgJhkDVVN2hIQVJJAiDIL
+         A2mstRgUlJHTt4xYtAePm2OVqfoeMd3xjyvpHb8EyoDSKJm8v+pP2oAU9h/TCDVmTzq4
+         HZHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6RunR6reW/rdha4XOFLo/23SuT6oFo6osITud1hxX5Y=;
+        b=PVE2d5LeGMYMY8isIrUWsEpdSaXXbQM7lRuRZq0/p3Jv8kp1oUQcKS4l9/wsCzxP3/
+         41tzE7NX2lQrhbfgENnoGX2zpHu1pfSYwuy91hJlnfK6jdrNWFAtCKoO6XHQfaoV4uzF
+         y0gGDSh+L2g0GDFShT5L3AihOsodrWOSCkP6rlwgDxrT5HB+YNoUwgeQXz2Jcpy309f9
+         CW+v2IfNzyYavD76xTM8qiLOguXLT2z+7w7V7FbnF5hplJwP5Lla4lDKffmV7KR08+sj
+         sRLC7EB2KB3/P47yOudvzNuk5xKMddWb1hCRdioqP0B4c/9v1MzZpzytw5ghB7Ewcgb8
+         Efdg==
+X-Gm-Message-State: ANhLgQ1b0R9by4YlALlnfbPG9bGsnzHYT+X4pDXf1n6Sx1JBpD+WZpal
+        vj87MW4EWitYVq83rJ85F3Q=
+X-Google-Smtp-Source: ADFU+vvgKLpr2Zg/O4HQWAHsJwfSiSdJMSKiaGomL4mu93OT8Ti7hK3cSqVzKOAVvhz6L/iHCCaG0Q==
+X-Received: by 2002:a65:5905:: with SMTP id f5mr19326629pgu.87.1584944036066;
+        Sun, 22 Mar 2020 23:13:56 -0700 (PDT)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id l1sm11458625pje.9.2020.03.22.23.13.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 22 Mar 2020 23:13:55 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: mailbox: Add the Spreadtrum mailbox documentation
+Date:   Mon, 23 Mar 2020 14:13:46 +0800
+Message-Id: <600e0b027a4e62a4aea8900e5a1e95e3e14b10f0.1584943873.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksDQoNCkFtIFNvbm50YWcsIGRlbiAyMi4wMy4yMDIwLCAxNTo1NiArMDEwMCBzY2hyaWVi
-IEphY2VrIEFuYXN6ZXdza2k6DQo+IE9uIDMvMjEvMjAgNDoyMCBQTSwgUGF2ZWwgTWFjaGVr
-IHdyb3RlOg0KPiA+IEhpIQ0KPiA+IA0KPiA+ID4gbGVkX3B3bV9zZXQoKSBub3cgcmV0dXJu
-cyBhbiBlcnJvciB3aGVuIHNldHRpbmcgdGhlIFBXTSBmYWlscy4NCj4gPiA+IA0KPiA+ID4g
-Q2M6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1d2VAa2xlaW5lLWtvZW5pZy5vcmc+DQo+ID4gPiBT
-aWduZWQtb2ZmLWJ5OiBEZW5pcyBPc3RlcmxhbmQtSGVpbSA8RGVuaXMuT3N0ZXJsYW5kQGRp
-ZWhsLmNvbT4NCj4gPiANCj4gPiBJIGFwcGxpZWQgMSBhbmQgMiwgYnV0IDMgZmFpbGVkIGZv
-ciBtZS4gSSdsbCBwdXNoIHVwZGF0ZWQgLW5leHQsIGNhbg0KPiA+IHlvdSBzZWUgd2hhdCBp
-cyBnb2luZyBvbiB0aGVyZT8NCj4gDQo+IENoZWNrIHRoZSBjb250ZW50cyBvZiB0aGUgcGF0
-Y2ggYWZ0ZXIgd3JpdGluZyBpdCBvbiBhIGRpc2suDQo+IEluIG15IGNhc2UgaXQgY29udGFp
-bnMgYSBibG9jayBvZiByYW5kb20gY2hhcmFjdGVycy4NCj4gSXQgaXMgcHJvYmFibHkgZHVl
-IHRvIENvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IGJhc2U2NC4NCj4gDQpzdHJhbmdlLg0K
-SW4gdGhlIHZlcnNpb24gSSByZWNlaXZlZCBieSBDQywgdGhlcmUgaXMgbm8gZ2FyYmFnZSwg
-YnV0IGFsc28gbm8gYXV0byBhcHBlbmRlZCBmb290ZXIuDQoNCkkgd2lsbCBzZW5kIHRoZSBt
-YWlsIGp1c3QgdG8gbGludXgtbGVkcyBzbyB3ZSBzaG91bGQgYWxsIHJlY2VpdmUgdGhlIHNh
-bWUgbWFpbC4NCg0KSSB3b25kZXIgaWYgdGhlICfDticgaW4gS8O2bmlnIGNhdXNlcyB0aGlz
-IHRyb3VibGUgaW4gbXkgc2VuZCBwYXRoLg0KDQpSZWdhcmRzIERlbmlzDQoNCg0KRGllaGwg
-Q29ubmVjdGl2aXR5IFNvbHV0aW9ucyBHbWJIDQpHZXNjaMOkZnRzZsO8aHJ1bmc6IEhvcnN0
-IExlb25iZXJnZXINClNpdHogZGVyIEdlc2VsbHNjaGFmdDogTsO8cm5iZXJnIC0gUmVnaXN0
-ZXJnZXJpY2h0OiBBbXRzZ2VyaWNodA0KTsO8cm5iZXJnOiBIUkIgMzIzMTUNCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQpEZXIgSW5oYWx0IGRl
-ciB2b3JzdGVoZW5kZW4gRS1NYWlsIGlzdCBuaWNodCByZWNodGxpY2ggYmluZGVuZC4gRGll
-c2UgRS1NYWlsIGVudGhhZWx0IHZlcnRyYXVsaWNoZSB1bmQvb2RlciByZWNodGxpY2ggZ2Vz
-Y2h1ZXR6dGUgSW5mb3JtYXRpb25lbi4NCkluZm9ybWllcmVuIFNpZSB1bnMgYml0dGUsIHdl
-bm4gU2llIGRpZXNlIEUtTWFpbCBmYWVsc2NobGljaGVyd2Vpc2UgZXJoYWx0ZW4gaGFiZW4u
-IEJpdHRlIGxvZXNjaGVuIFNpZSBpbiBkaWVzZW0gRmFsbCBkaWUgTmFjaHJpY2h0Lg0KSmVk
-ZSB1bmVybGF1YnRlIEZvcm0gZGVyIFJlcHJvZHVrdGlvbiwgQmVrYW5udGdhYmUsIEFlbmRl
-cnVuZywgVmVydGVpbHVuZyB1bmQvb2RlciBQdWJsaWthdGlvbiBkaWVzZXIgRS1NYWlsIGlz
-dCBzdHJlbmdzdGVucyB1bnRlcnNhZ3QuDQotIEluZm9ybWF0aW9uZW4genVtIERhdGVuc2No
-dXR6LCBpbnNiZXNvbmRlcmUgenUgSWhyZW4gUmVjaHRlbiwgZXJoYWx0ZW4gU2llIHVudGVy
-IGh0dHBzOi8vd3d3LmRpZWhsLmNvbS9ncm91cC9kZS90cmFuc3BhcmVuei11bmQtaW5mb3Jt
-YXRpb25zcGZsaWNodGVuLw0KDQpUaGUgY29udGVudHMgb2YgdGhlIGFib3ZlIG1lbnRpb25l
-ZCBlLW1haWwgaXMgbm90IGxlZ2FsbHkgYmluZGluZy4gVGhpcyBlLW1haWwgY29udGFpbnMg
-Y29uZmlkZW50aWFsIGFuZC9vciBsZWdhbGx5IHByb3RlY3RlZCBpbmZvcm1hdGlvbi4gUGxl
-YXNlIGluZm9ybSB1cyBpZiB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFpbCBieQ0KbWlz
-dGFrZSBhbmQgZGVsZXRlIGl0IGluIHN1Y2ggYSBjYXNlLiBFYWNoIHVuYXV0aG9yaXplZCBy
-ZXByb2R1Y3Rpb24sIGRpc2Nsb3N1cmUsIGFsdGVyYXRpb24sIGRpc3RyaWJ1dGlvbiBhbmQv
-b3IgcHVibGljYXRpb24gb2YgdGhpcyBlLW1haWwgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4g
-DQotIEZvciBnZW5lcmFsIGluZm9ybWF0aW9uIG9uIGRhdGEgcHJvdGVjdGlvbiBhbmQgeW91
-ciByZXNwZWN0aXZlIHJpZ2h0cyBwbGVhc2UgdmlzaXQgaHR0cHM6Ly93d3cuZGllaGwuY29t
-L2dyb3VwL2VuL3RyYW5zcGFyZW5jeS1hbmQtaW5mb3JtYXRpb24tb2JsaWdhdGlvbnMvDQo=
+From: Baolin Wang <baolin.wang@unisoc.com>
+
+Add the Spreadtrum mailbox documentation.
+
+Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+---
+Changes from v1:
+ - Add 'additionalProperties'.
+ - Split description for each entry.
+---
+ .../devicetree/bindings/mailbox/sprd-mailbox.yaml  | 62 ++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
+
+diff --git a/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
+new file mode 100644
+index 0000000..0848b18
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/mailbox/sprd-mailbox.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Spreadtrum mailbox controller bindings
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++properties:
++  compatible:
++    enum:
++      - sprd,sc9860-mailbox
++
++  reg:
++    items:
++      - description: inbox registers' base address
++      - description: outbox registers' base address
++    minItems: 2
++
++  interrupts:
++    items:
++      - description: inbox interrupt
++      - description: outbox interrupt
++    minItems: 2
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: enable
++
++  "#mbox-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#mbox-cells"
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    mailbox: mailbox@400a0000 {
++      compatible = "sprd,sc9860-mailbox";
++      reg = <0 0x400a0000 0 0x8000>, <0 0x400a8000 0 0x8000>;
++      #mbox-cells = <1>;
++      clock-names = "enable";
++      clocks = <&aon_gate 53>;
++      interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++    };
++...
+-- 
+1.9.1
+
