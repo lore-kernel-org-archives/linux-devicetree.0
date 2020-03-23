@@ -2,127 +2,310 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B488C4332B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 11:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F457C4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF12D206F9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 11:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DADB20784
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jUJqLG6N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8v722V3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgCWLgN (ORCPT
+        id S1727462AbgCWMKg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 07:36:13 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4416 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728115AbgCWLgN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 07:36:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e789eff0000>; Mon, 23 Mar 2020 04:35:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 23 Mar 2020 04:36:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 23 Mar 2020 04:36:12 -0700
-Received: from [10.26.73.76] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Mar
- 2020 11:36:09 +0000
-Subject: Re: [PATCH] pwm: tegra: Add support for Tegra194
-To:     Sandipan Patra <spatra@nvidia.com>, <treding@nvidia.com>,
-        <robh+dt@kernel.org>, <u.kleine-koenig@pengutronix.de>
-CC:     <bbasu@nvidia.com>, <ldewangan@nvidia.com>,
-        <linux-pwm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1583407653-30059-1-git-send-email-spatra@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <1e40daf7-e5f8-7b79-cabe-8aceef6dda58@nvidia.com>
-Date:   Mon, 23 Mar 2020 11:36:07 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 23 Mar 2020 08:10:36 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35964 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbgCWMKf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 08:10:35 -0400
+Received: by mail-pg1-f194.google.com with SMTP id j29so218362pgl.3;
+        Mon, 23 Mar 2020 05:10:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MlNbdsKoZglu02JmE6j7s82pOmi6hUKrXhzXXYWzb3U=;
+        b=b8v722V3lHjGLReQGi5K9OvQK6x9ONT+ZTYq1NU0THWLfDdApSvvP/M8z9/kxQrlRD
+         jg58JB8Ve57GDm99BztkqNxw3AM7mmQRs7FxA0ETQ++matXgRTHh3cj9Vt6um3V+RbK+
+         w7cR/bdN0Tq03HcSpAf/3hgUAqvLK/4a4QTwvAwSqyNI1kPFd+pSEkTMT8nRmRWGLEFx
+         u8AQBvi0moW8dQHBLGDkFnRVO/PDrJW9q338CnEcAP4esOeFQClvR2p+e70aV+wRE6LI
+         h8G2MDiT2hBXf2x0FyEWrNIuGdwKhzjixduxxWNADDVof9TvDrl4MpjICbjquVRH8ktb
+         6RVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MlNbdsKoZglu02JmE6j7s82pOmi6hUKrXhzXXYWzb3U=;
+        b=nfhNGkiJ2aS2LeJuB0+7QYuwY8wDhIlPfPddG4LUx0LGjRryAGQwd93GJa+65Bi7Qd
+         5y5KGqBLjx4VOPmh4QDuEzk27uHSU/HV1TH2N4SQONW+wAvs6/FeJkESEhHYJEBErsy8
+         pPEydpR1QAdo+k1uazfW1lz0QJ7EcsXgDl5LT+cTf5HLDSP7LfaRdv1NbPOaLlLqRRhE
+         BUdYSxPqHe15q7otDW+NiF80gXdtQRUg9rzUu5/NE38CPBufo1UiV7FyD6iVWKXK4E9+
+         prijj1zcvlgt01qyT05cOi6nvvhX6EhxeVukKgFbFb8aBne1jIHG98us3iSmqm7QaqOg
+         OXlg==
+X-Gm-Message-State: ANhLgQ15I7ZeSQUaUJf0k6bb69CpmJLraq5u5jiOZ/RCYeQjxAKigc73
+        8BELdYt3/40DO6UQ1IIomcMS6NCoQVuUOf66SXU=
+X-Google-Smtp-Source: ADFU+vtPHwwDms34oGPAgbK5FoVt8CGhBDYsS8GEceo6UTeFwpey3XsHjBzgJHRFUoWAlESzy6YFOA7a0a8rw7ZYkfU=
+X-Received: by 2002:a63:798a:: with SMTP id u132mr22684974pgc.203.1584965434383;
+ Mon, 23 Mar 2020 05:10:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1583407653-30059-1-git-send-email-spatra@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584963327; bh=Ax5Luu1Wgx/GtkJPbCn5+KhconBwWEM43/aV+eFmyS0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=jUJqLG6NJAY/qZCEoFKvpMnAMPHll61DC5NFj9AqYPyzgsFTD0xv2wus1i/vAmlm+
-         ibI2WfTWY/vZfBNtYniGGZ6vYn8OIyquhxhdV1bccnlZun2XqiZqk0HoA26SweeU+B
-         mIW+sFhuPn8In/WlNxU5j/Dpy2KozDnwd9Z1vD/IhGIUh8snwlMdCYGGbV2A6rPGBp
-         N4Ohqed20b243fzW8a4ohKYsg3Jqx6Q1YtENlXDq3q0aAXGyvopthBHr7sTQWnX+Z1
-         LZA40P6nTXLa38vFLR1ZPsRenjrWSpZ+Yp+g8XcLhMz8bd7lwi+TJPBAGwKlILUa3w
-         D+TOnrzR1R6OQ==
+References: <20200323103926.21271-1-i.mikhaylov@yadro.com> <20200323103926.21271-3-i.mikhaylov@yadro.com>
+In-Reply-To: <20200323103926.21271-3-i.mikhaylov@yadro.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 23 Mar 2020 14:10:27 +0200
+Message-ID: <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Mar 23, 2020 at 12:41 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wro=
+te:
+>
+> Proximity sensor driver based on light/vcnl4000.c code.
+> For now supports only the single on-demand measurement.
+>
+> The VCNL3020 is a fully integrated proximity sensor. Fully
+> integrated means that the infrared emitter is included in the
+> package. It has 16-bit resolution. It includes a signal
+> processing IC and features standard I2C communication
+> interface. It features an interrupt function.
 
-On 05/03/2020 11:27, Sandipan Patra wrote:
-> Tegra194 has multiple PWM controllers with each having only one output.
-> 
-> Also the maxmimum frequency is higher than earlier SoCs.
-> 
-> Add support for Tegra194 and specify the number of PWM outputs and
-> maximum supported frequency using device tree match data.
-> 
-> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt | 1 +
->  drivers/pwm/pwm-tegra.c                                      | 6 ++++++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> index 0a69ead..74c41e3 100644
-> --- a/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/nvidia,tegra20-pwm.txt
-> @@ -9,6 +9,7 @@ Required properties:
->    - "nvidia,tegra132-pwm", "nvidia,tegra20-pwm": for Tegra132
->    - "nvidia,tegra210-pwm", "nvidia,tegra20-pwm": for Tegra210
->    - "nvidia,tegra186-pwm": for Tegra186
-> +  - "nvidia,tegra194-pwm": for Tegra194
->  - reg: physical base address and length of the controller's registers
->  - #pwm-cells: should be 2. See pwm.yaml in this directory for a description of
->    the cells format.
-> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> index aa12fb3..d26ed8f 100644
-> --- a/drivers/pwm/pwm-tegra.c
-> +++ b/drivers/pwm/pwm-tegra.c
-> @@ -282,9 +282,15 @@ static const struct tegra_pwm_soc tegra186_pwm_soc = {
->  	.max_frequency = 102000000UL,
->  };
->  
-> +static const struct tegra_pwm_soc tegra194_pwm_soc = {
-> +	.num_channels = 1,
-> +	.max_frequency = 408000000UL,
+Thank you for a patch, my comments below.
+
+> Datasheet available at:
+> http://www.vishay.com/docs/84150/vcnl3020.pdf
+
+I'm thinking that we may simple introduce new tag, called Datesheet:
+to put such links.
+
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+
+...
+
+>  obj-$(CONFIG_SRF08)            +=3D srf08.o
+>  obj-$(CONFIG_SX9500)           +=3D sx9500.o
+>  obj-$(CONFIG_VL53L0X_I2C)      +=3D vl53l0x-i2c.o
+> +obj-$(CONFIG_VCNL3020)         +=3D vcnl3020.o
+
+Perhaps keep ordered?
+
+...
+
+> +/*
+> + * vcnl3020.c - Support for Vishay VCNL3020 proximity sensor
+
+Using file names in themselves is a bad idea. Whenever you would
+rename file (for instance, to support new sensors from the same family
+in the future) you will forget (often, I see this in practice!) to
+update this line.
+Just drop it from here and try to avoid in the future.
+
+> + *
+> + * based on vcnl4000.c
+
+This sounds like a continuation of previous sentence. Drop line in
+between and use proper English grammar and punctuation.
+
+> + */
+
+...
+
+> +struct vcnl3020_data {
+> +       struct i2c_client *client;
+> +       u32 rev;
+
+> +       struct mutex vcnl3020_lock; /* for i2c operations */
+
+Simple 'lock' is enough, the rest is dup noise.
+Also, consider kernel doc format instead of odd comments.
+
 > +};
+
+...
+
+> +static const struct i2c_device_id vcnl3020_id[] =3D {
+> +       { "vcnl3020", 0 },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, vcnl3020_id);
+
+Can you group this with OF table below?
+
+...
+
+> +static int32_t vcnl3020_init(struct vcnl3020_data *data)
+
+int32_t...
+
+> +{
+
+> +       s32 rc;
+
+...s32?!
+
+Applies to entire code.
+
+> +       u32 led_current;
+> +       struct device *dev =3D &data->client->dev;
+
+Reversed xmas tree order looks better.
+
+> +       rc =3D i2c_smbus_read_byte_data(data->client, VCNL_PROD_REV);
+
+Can you use regmap I=C2=B2C API?
+
+> +       if (rc < 0) {
+> +               dev_err(dev, "Error (%d) reading product revision", rc);
+> +               goto exit;
+> +       }
 > +
->  static const struct of_device_id tegra_pwm_of_match[] = {
->  	{ .compatible = "nvidia,tegra20-pwm", .data = &tegra20_pwm_soc },
->  	{ .compatible = "nvidia,tegra186-pwm", .data = &tegra186_pwm_soc },
-> +	{ .compatible = "nvidia,tegra194-pwm", .data = &tegra194_pwm_soc },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, tegra_pwm_of_match);
-> 
 
+> +       if (rc =3D=3D VCNL3020_PROD_ID) {
+> +               data->rev =3D rc & 0xff;
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+This conjunction looks strange. Also, why type of rev is u32 instead of u8?
 
-Cheers
-Jon
+> +               mutex_init(&data->vcnl3020_lock);
+> +       } else {
+> +               dev_err(dev, "Product id (%x) did not match vcnl3020 (%x)=
+", rc,
+> +                       VCNL3020_PROD_ID);
+> +               rc =3D -ENODEV;
+> +               goto exit;
+> +       }
+> +
+> +       /* set led current */
+> +       rc =3D i2c_smbus_write_byte_data(data->client, VCNL_LED_CURRENT,
+> +                                      led_current);
+> +       if (rc < 0) {
+> +               dev_err(dev, "Error (%d) setting LED current", rc);
+> +               goto exit;
+> +       }
+> +
+> +       return 0;
 
--- 
-nvpublic
+> +exit:
+> +       return rc;
+
+Useless. Return directly.
+
+> +};
+
+...
+
+> +       /* wait for data to become ready */
+> +       while (tries--) {
+> +               rc =3D i2c_smbus_read_byte_data(data->client, VCNL_COMMAN=
+D);
+> +               if (rc < 0)
+> +                       goto fail;
+> +               if (rc & VCNL_PS_RDY)
+> +                       break;
+> +               msleep(20); /* measurement takes up to 100 ms */
+> +       }
+
+Timeout loops look more naturally in do {} while format.
+
+  unsigned int tries =3D 5;
+  ...
+
+  do {
+  ...
+  } while (--tries);
+
+...
+
+> +       *val =3D (rc & 0xff) << 8;
+
+> +       *val |=3D rc & 0xff;
+
+All these conjunctions looks fishy. Why do you need them? Cant you
+rely on the returned value by I=C2=B2C API?
+
+...
+
+> +fail:
+
+Better name is 'err_unlock' or 'out_unlock'. The rule of thumb to
+describe in the label what you *about to do* there.
+
+> +       mutex_unlock(&data->vcnl3020_lock);
+> +
+> +       return rc;
+> +}
+
+...
+
+> +                       rc =3D vcnl3020_measure_proximity(data, val);
+> +                       if (rc < 0)
+
+Can rc be positive? Drop all these ' < 0' in cases where it is
+guaranteed not to be the case.
+
+> +                               return rc;
+
+...
+
+> +static int32_t vcnl3020_probe(struct i2c_client *client,
+> +                             const struct i2c_device_id *id)
+
+Can you switch to ->probe_new() ?
+
+...
+
+> +       dev_info(&client->dev, "Proximity sensor, Rev: %02x\n",
+> +                data->rev);
+
+Noise.
+
+...
+
+> +       rc =3D devm_iio_device_register(&client->dev, indio_dev);
+> +       if (rc !=3D 0)
+
+Redundant ' !=3D 0' part.
+
+> +               goto out;
+> +
+> +       return rc;
+
+> +out:
+> +       devm_iio_device_free(&client->dev, indio_dev);
+> +       return rc;
+
+Managed resources are exactly for this not to be appeared in the code.
+
+> +}
+
+...
+
+> +static const struct of_device_id vcnl3020_of_match[] =3D {
+> +       {
+> +               .compatible =3D "vishay,vcnl3020",
+> +       },
+
+Missed terminator. How did you test this?
+
+> +};
+
+--
+With Best Regards,
+Andy Shevchenko
