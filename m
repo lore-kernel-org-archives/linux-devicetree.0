@@ -2,98 +2,177 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EDDC4332B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 21:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD8CC4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 21:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF1AA20753
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 21:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF77220719
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 21:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584998836;
-	bh=8ZvWvYUnbTsBKhq2WS1Qm+lVF+ELwm4yo1eS1RXHLZU=;
+	s=default; t=1584999161;
+	bh=aXgkYoT+zhA1lrFpciqFJFTQiT7nan88F3fEsNSrJn8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XN+pJDaDL/+aflF2tSKUoqs5YM/OkXR3lAmwNP/O7BGFOxamjpPdgejr8pcGipt2K
-	 S+P/rX2jGW6cwt7DM20N3bqK5qeiJF9ER0ru+4S1jlwR3QTnjlMCRykBlxXX5gf2bC
-	 BOrxBEwC8ZuvkEwZPSgqX4RDDkSDwZj04ITUMjYY=
+	b=a+S0YoLpqLwwKN7ZQDt++ZC3ENFIcD07HnuP5SdNmnw7lJczMU6wzBJ1SrSl3mw0w
+	 drIE8BWVHzWqWNJuZSky6iKEPywBqKucnkg2N9hcxc0QuEsC1t4M80swq7ZLbpE+z3
+	 9MjvEYcG4iHkNMK+HX6BICer3nxL4gcACe0EjlrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgCWV1P (ORCPT
+        id S1726203AbgCWVcl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 17:27:15 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:34485 "EHLO
+        Mon, 23 Mar 2020 17:32:41 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:34084 "EHLO
         mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgCWV1P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 17:27:15 -0400
-Received: by mail-il1-f193.google.com with SMTP id t11so4948477ils.1;
-        Mon, 23 Mar 2020 14:27:14 -0700 (PDT)
+        with ESMTP id S1725897AbgCWVcl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 17:32:41 -0400
+Received: by mail-il1-f193.google.com with SMTP id t11so4961556ils.1;
+        Mon, 23 Mar 2020 14:32:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Lw7508pxSwFWdZ6GgiPhJPtehr+dVa5xWRm6kEQBC3U=;
-        b=YHHX0v1fHsj5MO5FbnRfxB1DOmQTBE2DED8b6MKI9lLT6175EeVQEQ/Ohs8ogXp3bD
-         9obJaWq9D4lTQokgz4eaj4kJcCz5QGY9vbLNrXMhHDqzwCASW96ujQYhaVPFKTF5YCgx
-         MKcvQ97jOpeTlBDktOqoTugqgqE2GXKI4F7hbtJwVWmGwMZh/eaJ7erYk2HL6ZIsMfEH
-         090UyE9o4pS63z8yzLBetNA8K+3unwHSwhghof6optL/vKegX14GMkR4FqBpFrVs7cLx
-         MqXmlQrs/aN2T4n0b5VoSkSYXS9okUpd6G9E8tBuB5K7gwyEBwfEKQsrUkMtZrtRB0Fs
-         IJTg==
-X-Gm-Message-State: ANhLgQ0TkIPosbbnMyee2g8bnj7O5wgl2tGb+yOcS7YHREPedLG7ebW+
-        BXKdBV2sulJBxuxZrlOqGw==
-X-Google-Smtp-Source: ADFU+vs2Uyo1ZpCwKXkQd76bn4sXAFZC1wLEqEru6Weyzn2F3XdHL9ui98NABrGBYJblP8ZmXm+p3w==
-X-Received: by 2002:a92:b61d:: with SMTP id s29mr22883085ili.66.1584998834315;
-        Mon, 23 Mar 2020 14:27:14 -0700 (PDT)
+        bh=qFDFZEF2IE5G2XSanobwC6e4wfS266KN7sjR0GtTr3A=;
+        b=GmpdE05cieHRUMaKwUAAG6jNyBcQnG/TCNfhh7DaKsLsvHaOzTYlExjeuFobjLCZ2z
+         cbYRk/ztXVAfUrQpWbr76G+tJNP7eI7lI+AqZN5TaVqdQ8MUGYrNIhBgx7bKQ5KQ+oke
+         b/M/OYpuxSrn1Gzf2u/4Hh2Y3A2InA8Ms1q0HmxMmf4Hm+dfUt+Ck/M3CDOON2qv8JaA
+         xAACfTrQnKk+DlEyvY1nmPXQpDmxjV0eEN7nzNlGwxiXLdcpvNEYyZ2Wf5H8FDSK4r5d
+         9Vkpty4T0FRL0GC6pk8QJB1TGpPmtWrWa8Q/87Dt18C6qlpPN7mya2q188gTURyiCJ5S
+         x8gw==
+X-Gm-Message-State: ANhLgQ1nz4prDEQ6Kj1j2xvMlr3pS0VJczwlUPceu4HMa59iswEVoL8n
+        IqigQZ6kcgfAwLYnnbJozg==
+X-Google-Smtp-Source: ADFU+vsdj+CL7qScZ2QMMXXFIpqS7PR2Aj0hpAbWGIXfavNyIOQeG6mSi5+SvWjx8/e821aDJWCPhg==
+X-Received: by 2002:a92:d3d0:: with SMTP id c16mr7945343ilh.22.1584999158718;
+        Mon, 23 Mar 2020 14:32:38 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id p76sm983942iod.13.2020.03.23.14.27.11
+        by smtp.gmail.com with ESMTPSA id k81sm5674964ilf.44.2020.03.23.14.32.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 14:27:13 -0700 (PDT)
-Received: (nullmailer pid 14521 invoked by uid 1000);
-        Mon, 23 Mar 2020 21:27:11 -0000
-Date:   Mon, 23 Mar 2020 15:27:11 -0600
+        Mon, 23 Mar 2020 14:32:38 -0700 (PDT)
+Received: (nullmailer pid 29102 invoked by uid 1000);
+        Mon, 23 Mar 2020 21:32:37 -0000
+Date:   Mon, 23 Mar 2020 15:32:37 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Pascal Roeleven <dev@pascalroeleven.nl>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/2] drm/panel: Add Starry KR070PE2T
-Message-ID: <20200323212711.GA6856@bogus>
-References: <20200310102725.14591-1-dev@pascalroeleven.nl>
- <20200310102725.14591-2-dev@pascalroeleven.nl>
- <20200310185422.GA22095@ravnborg.org>
- <280a128711458950b55b070dbf6f07a1@pascalroeleven.nl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Ferruh Yigit <fery@cypress.com>,
+        Henrik Rydberg <rydberg@bitmath.org>
+Subject: Re: [PATCH 1/2 v1] dt-bindings: touchscreen: Add CY8CTMA140 bindings
+Message-ID: <20200323213237.GA20027@bogus>
+References: <20200310142818.15415-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <280a128711458950b55b070dbf6f07a1@pascalroeleven.nl>
+In-Reply-To: <20200310142818.15415-1-linus.walleij@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 11:23:27AM +0100, Pascal Roeleven wrote:
-> On 2020-03-10 19:54, Sam Ravnborg wrote:
-> > A few things to improve.
-> > 
-> > The binding should be a separate patch.
-> > subject - shall start with dt-bindings:
-> > Shall be sent to deveicetree mailing list.
+On Tue, Mar 10, 2020 at 03:28:17PM +0100, Linus Walleij wrote:
+> This adds device tree bindings for the Cypress CY8CTMA140
+> touchscreen.
 > 
-> Hi Sam,
+> Cc: devicetree@vger.kernel.org
+> Cc: Ferruh Yigit <fery@cypress.com>
+> Cc: Henrik Rydberg <rydberg@bitmath.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../input/touchscreen/cypress,cy8ctma140.yaml | 72 +++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
 > 
-> Thank you very much for your review.
-> I did consider this. The reason I combined the patches, is that the binding
-> depends on the display so I thought they were related in some way. Didn't
-> know the correct procedure to handle this. I will split them apart in v2.
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml b/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
+> new file mode 100644
+> index 000000000000..66b488e48b74
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/cypress,cy8ctma140.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/touchscreen/cypress,cy8ctma140.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Cypress CY8CTMA140 series touchscreen controller bindings
+> +
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
+> +
+> +allOf:
+> +  - $ref: touchscreen.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: cypress,cy8ctma140
+> +
+> +  reg:
+> +    description: I2C client address, defined by hardware
 
-FYI, checkpatch.pl will tell you both bindings should be a separate 
-patch and that they should be in DT schema format.
+Can drop this. That's every 'reg'.
 
-Rob
+> +    const: 0x20
+> +
+> +  clock-frequency:
+> +    description: I2C client max frequency, defined by hardware
+> +    const: 400000
+
+What if I have a board which can't do 400k? Perhaps 'maximum: 400000' 
+instead.
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vcpin-supply:
+> +    description: Analog power supply regulator on VCPIN pin
+> +
+> +  vdd-supply:
+> +    description: Digital power supply regulator on VDD pin
+> +
+> +  touchscreen-inverted-x: true
+> +  touchscreen-inverted-y: true
+> +  touchscreen-size-x: true
+> +  touchscreen-size-y: true
+> +  touchscreen-swapped-x-y: true
+> +  touchscreen-max-pressure: true
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - touchscreen-size-x
+> +  - touchscreen-size-y
+> +  - touchscreen-max-pressure
+> +
+> +examples:
+> +- |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c@00000000 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      touchscreen@20 {
+> +        compatible = "cypress,cy8ctma140";
+> +        reg = <0x20>;
+> +        touchscreen-size-x = <480>;
+> +        touchscreen-size-y = <800>;
+> +        touchscreen-max-pressure = <255>;
+> +        interrupt-parent = <&gpio6>;
+> +        interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
+> +        vdd-supply = <&ab8500_ldo_aux2_reg>;
+> +        vcpin-supply = <&ab8500_ldo_aux2_reg>;
+> +      };
+> +    };
+> +
+> +...
+> -- 
+> 2.21.1
+> 
