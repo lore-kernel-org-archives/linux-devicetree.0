@@ -2,100 +2,157 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4B3C54FCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 13:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD64C4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 13:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D5E2074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 13:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211012076A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 13:38:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ou9NqB+7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNUzSNGM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgCWNVQ (ORCPT
+        id S1728285AbgCWNik (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 09:21:16 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40841 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728421AbgCWNVQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 09:21:16 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j17so10194577lfe.7;
-        Mon, 23 Mar 2020 06:21:14 -0700 (PDT)
+        Mon, 23 Mar 2020 09:38:40 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46265 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727447AbgCWNik (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 09:38:40 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j17so13705347wru.13;
+        Mon, 23 Mar 2020 06:38:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Xxi6l1fclcJsr5+CKBYbupw6npgtZlkO+8fmQyf+EsY=;
-        b=Ou9NqB+7RrddepQ984O33P/tq2gZ5gJo2BJ57OHVBgXamswQgPXBiUlSQ+vaQtgnxi
-         ytWbCwFtIoFWOcwj6qFoDy1T1YaIkmFYQurWVeuN/6avRstYoBMgeExBA/uSvgkC5Hq8
-         AlhshJ0U4TDklxFMuVpM2/25MCTX52hjVKQtTvl5AVSGdUIJ2bqc66YFJ2pLPsp/5wJF
-         rpMJ3MeOJd0uKOUSpY1ickWtL2rE/FrkxqdjeQc/PTWBhu4Dx+HsSOt4I33BvYLN69P1
-         v9JLk6EiAeIJ6SyZW80o54wj/k3C92jaovUQ8apeyjMvjPgyLaxo0IeDXP+YpL103Dfa
-         6/Nw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mB1YokxVBqP8LBRJbFIhaNMH04KnhGNaz7RjxY84kjs=;
+        b=GNUzSNGM3NfvFnA2phx1nZ3F7XeM06VgJ09maRproeAYkhJRs0KgNMi5LuWhIqQO6V
+         l9y+kNDAAUSWfjR3J6plbj3kwKP7FbAljSADb+papgmSDYWQ6RFjhY19og/C1NudsI1s
+         zR33tEF11ot4yinqFHCWjvDiXGVyQgc8GuEblrMUA19/hN8Ss5ZgVvDUUeMIh9aNYjYz
+         U/ztPvnlPtjmJyuhI5DYZXFQiHHy02Aq9vGN4C3TONqJQU8yy3T+Nu/uVZsbCw88G2iK
+         MZ2e5d4w5HKcGogDWmy9FGh96AUy90NNyTw1TDfvT1cptPM9hn5aaelC6mkME9U/Sm98
+         yBuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Xxi6l1fclcJsr5+CKBYbupw6npgtZlkO+8fmQyf+EsY=;
-        b=N7AKlcHaFwA+Jbx7Y2Rye/AFUvAfncETm5/TwSGwBf/gF9X7lgVKpb8r8nBFEJdql9
-         2n29nDEFKIHqDMDCJvjsISM9+DoZtap9wY/ADcKh2GNO4J65JjoGBXkdBg174ZdtQaf4
-         kFbgnWRxQTVciy6hDYnZblb/ZpCH9EarMgmJ648n8mK21bYB5kmy5XiWfzQlZaCd0q1h
-         yD4qeeR09FbHGula/FI66URZqFwD8KKBqNwf3mGczVKYepyoUCMHq+VGykOKy5xVJs9v
-         qhpL3m/TxQhUHXr2PJ658efvLgSDa+glyt7QGmjw6SoqadqQK8Bmiw1ORJpQCl/+pA40
-         lrqw==
-X-Gm-Message-State: ANhLgQ3RKmSBlrIpWChgMF97tSsKZb5FalspFtJzXLLoPonaCR+FGWRN
-        OcX2qei1GYbMF02OIbzSDTg=
-X-Google-Smtp-Source: ADFU+vv/DDlXXllROgGPOZCQ2p80fEzGQ1G7DOdeC4Itk4FFwdCQQA0zXRgV7tLnBj0v44Otl+k+Uw==
-X-Received: by 2002:a19:3803:: with SMTP id f3mr13350164lfa.160.1584969673354;
-        Mon, 23 Mar 2020 06:21:13 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id h14sm8214874lfc.24.2020.03.23.06.21.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 06:21:12 -0700 (PDT)
-Subject: Re: [PATCH v5 3/8] clk: tegra: Implement Tegra210 EMC clock
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mB1YokxVBqP8LBRJbFIhaNMH04KnhGNaz7RjxY84kjs=;
+        b=SFhH8K1aVUurlKCWmF4q5e/k7t5cnaQWREtYDE3o0bHxXeeT/MIKalBciAzvg5BmgT
+         Q1mBHKJhIINjFHrbLl2+nHGHdBmJLtQbb25rWYcqpW1ebVMB+y0C4lawa4huTwlMMV0g
+         Yzs7emWEi5iW3+/cnZUTc/kjrJWPNkTIHkJQxqhKHKGX34leNwqO88Px00jkIu903vKM
+         aI9yq0yx2ddCj3k1fKfvx2bBncz0JvGGP4xrhc9Rcss5DDcfJE2xirCoozlMVAdt5CE2
+         aGd8VGr3irxZKpDXnJg91FYBBahvAMw2zOwIuugqciaX9FINVZuz9dSxxzOd7pMreD0o
+         DrLA==
+X-Gm-Message-State: ANhLgQ0FJL5sQBd++Eb4BR8fpuuho8ANwVcH61LH3guwFhqdq+duwtXo
+        ldkMtCgKIfY8BXadvnuDTcY=
+X-Google-Smtp-Source: ADFU+vvKINuj0Pk6ZBI/AFTWwaMtddjaDwM5Zwj58tpuGQNPXYq6gYWorGio39rOMeRt4RAeSNoh1A==
+X-Received: by 2002:adf:e70d:: with SMTP id c13mr30855152wrm.306.1584970717995;
+        Mon, 23 Mar 2020 06:38:37 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id a73sm20893289wme.47.2020.03.23.06.38.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 06:38:36 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 14:38:35 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200310152003.2945170-1-thierry.reding@gmail.com>
- <20200310152003.2945170-4-thierry.reding@gmail.com>
- <a5c9e3d6-2b65-ec93-d8f1-7c7680092e53@gmail.com>
- <20200323110023.GB3883508@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <baf98213-39fd-468f-58ec-fadd33c8ba5e@gmail.com>
-Date:   Mon, 23 Mar 2020 16:21:11 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] clocksource: Add Tegra186 timers support
+Message-ID: <20200323133835.GH3883508@ulmo>
+References: <20200320133452.3705040-1-thierry.reding@gmail.com>
+ <20200320133452.3705040-3-thierry.reding@gmail.com>
+ <df532fef-1533-9da7-d676-f4671746fde3@gmail.com>
+ <20200320150406.GA3706404@ulmo>
+ <5a559950-0497-b24f-6484-c2513375fe62@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200323110023.GB3883508@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3ecMC0kzqsE2ddMN"
+Content-Disposition: inline
+In-Reply-To: <5a559950-0497-b24f-6484-c2513375fe62@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-23.03.2020 14:00, Thierry Reding пишет:
-...
->>> +	if (!provider || !provider->configs || provider->num_configs == 0)
->>> +		return -EINVAL;
->>
->> Why all these checks are needed? I don't think it ever could fail,
->> couldn't it?
-> 
-> This could fail if no EMC provider is attached, which happens, for
-> example, when the EMC driver is not loaded.
 
-Requesting EMC clock should return EPROBE_DEFER until provider is
-available. Please see tegra20_clk_src_onecell_get for the example.
-Tegra124 should do the same, BTW.
+--3ecMC0kzqsE2ddMN
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Mar 20, 2020 at 06:23:35PM +0300, Dmitry Osipenko wrote:
+> 20.03.2020 18:04, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Fri, Mar 20, 2020 at 05:39:01PM +0300, Dmitry Osipenko wrote:
+> >> 20.03.2020 16:34, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>> From: Thierry Reding <treding@nvidia.com>
+> >>>
+> >>> Currently this only supports a single watchdog, which uses a timer in
+> >>> the background for countdown. Eventually the timers could be used for
+> >>> various time-keeping tasks, but by default the architected timer will
+> >>> already provide that functionality.
+> >>>
+> >>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> >>> ---
+> >>>  drivers/clocksource/Kconfig          |   8 +
+> >>>  drivers/clocksource/Makefile         |   1 +
+> >>>  drivers/clocksource/timer-tegra186.c | 377 +++++++++++++++++++++++++=
+++
+> >>>  3 files changed, 386 insertions(+)
+> >>>  create mode 100644 drivers/clocksource/timer-tegra186.c
+> >> Hello Thierry,
+> >>
+> >> Shouldn't this driver reside in drivers/watchdog/? Like it's done in a
+> >> case of the T30+ driver.
+> >=20
+> > The hardware block that this binds to is primarily a time-keeping block
+> > that just so happens to also implement a watchdog. Moving this to
+> > drivers/watchdog would put us into an odd situation if we ever added
+> > code to also implement the time-keeping bits for this hardware.
+> >=20
+> > I also think that the way this is done on Tegra30 was a bad choice. The
+> > problem is that we now have two drivers (tegra_wdt.c and tegra-timer.c)
+> > that both access the same region of memory. This seems to be relatively
+> > safe to do on those chips because there's no overlap between the timer
+> > and the watchdog interfaces, but on Tegra186 and later the watchdog is
+> > actually using one of the timers, so we'd have to be extra careful how
+> > to coordinate between the two. It seems much easier to do that by having
+> > everything in the same driver and have that register multiple devices in
+> > the system.
+>=20
+> Sounds like a watchdog on Tegra20, where one of the timer is shared with
+> a watchdog function and there are no other free timers. Well, yes, it's
+> not nice.
+>=20
+> But, will you really ever need an additional clocksource on T186?
+
+I don't know. It's possible that they will become useful at some point.
+
+Thierry
+
+--3ecMC0kzqsE2ddMN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl54u9sACgkQ3SOs138+
+s6HhmxAAlcQJPxMadaHu5SXzYWXICljQrwPSVzxl0B1ALvIUVRQNswXyEcmtWBQ2
+jZ4hHyPoUuQoiFr5D5gfvYPigp39RNCxijn9kDL/QwzbLld270PZvpQIuosuhTrN
+737BcaHkhzy+sdlqf7HQC/OWPd5qwMegVL1If2UwvoyB8ENeHngTuH9PQClVXwsf
+IPeC1ewK5l0kJGnpwUNPURjCXT2vhbyG7fGWDFfkF7muqOWG8eVQLzZLfVTE47p8
+Jq81lMF/u+Bwk/GVtMDQfS4SIH97wBbuSJYb/qRiD/mO3ojdaBq6N33GfeBlhs0v
+zgFdQqFgh+hBQPf9S1kX7ViciQZAJDYxQ2pQw4Cq0MYxWur4g0Ke5UWWRWmWqmrp
+ab0DbqmsaMopG2tlKkcuFUucET4szrP0wTS3X2wqNqYp96LBECD9bvnPvjJo1Dro
+Yi9kB4GCGy+YQJSeMPnHPz7siZ+OIsMluEardSz65G37CHA/DbiZLi2v8NS4h37K
++qeOyILxXclDn54NpV13hIdvTBfDn/iysaVSBbWfNiy02UX+4a8jDe7tdkoHp4cg
+ZinamyX87pzkAOJYO1UgpbdjjGK93pClLZn5JLacJW9/QUIiag2LoeImZIM9a/hX
+YFThiI6Guo9EGewLfjuKu7sYdK5GL+LUtzHrZ6W0SfLLWSu60yA=
+=wIxO
+-----END PGP SIGNATURE-----
+
+--3ecMC0kzqsE2ddMN--
