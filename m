@@ -2,107 +2,99 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAB0C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 09:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6F1C4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 09:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8272077D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 09:18:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="G9nQPvqY"
+	by mail.kernel.org (Postfix) with ESMTP id 4D1B42074D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 09:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgCWJSF (ORCPT
+        id S1727697AbgCWJdI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 05:18:05 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:31704 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727704AbgCWJSF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 05:18:05 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02N97TuQ011197;
-        Mon, 23 Mar 2020 10:17:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=UdIOJn9PEvaK3zLSkhSUlGSzzu66xRfXTNSMnBonJJ8=;
- b=G9nQPvqYGNjjIAjTmwr3YVxhCx8A2ltNxKCg7ZAmaZZtF9Ky8bWyWHeEHn8uWxhvuW2X
- p91Jp670TMCvF/olYo1aivTuVU86Bus509S290wo4hLJ7yNTJTcwohIh5pm43MGX9dvH
- HZ+t/fsc9fkgcZACwkNVUSJKWp4ywVIw/SdEY83COOoCjHKO7c8SNFnBpqT4WMafqzSW
- A8qtUl/CbrUy8x7oOZjwLemIA1ApTqgIQXiJaoA1R+rLV1Woyq9ImU35g+MrsoTHI1o3
- Jo8R/gn4yNt1e/bmO2pzIESa6IizIpdYCJxk0ae/n18c1kmka3Ou5pSBH8uHMe0gAu/v gg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yw99592rh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Mar 2020 10:17:53 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 660FB100034;
-        Mon, 23 Mar 2020 10:17:49 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 57AE42AAA8D;
-        Mon, 23 Mar 2020 10:17:49 +0100 (CET)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 23 Mar
- 2020 10:17:48 +0100
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1473.003; Mon, 23 Mar 2020 10:17:48 +0100
-From:   Patrice CHOTARD <patrice.chotard@st.com>
-To:     Alain Volmat <avolmat@me.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dts: arm: stih407-family: remove duplicated rng nodes
-Thread-Topic: [PATCH] dts: arm: stih407-family: remove duplicated rng nodes
-Thread-Index: AQHWAGU6HT4ybsc2/E+ksa70VtGSzKhV1j6A
-Date:   Mon, 23 Mar 2020 09:17:48 +0000
-Message-ID: <6f1c708c-f415-5ed0-d39d-327737042507@st.com>
-References: <20200322161616.19111-1-avolmat@me.com>
-In-Reply-To: <20200322161616.19111-1-avolmat@me.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <65323D67C51D7046B2EE139A7B779FD7@st.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-23_02:2020-03-21,2020-03-23 signatures=0
+        Mon, 23 Mar 2020 05:33:08 -0400
+Received: from mx.socionext.com ([202.248.49.38]:5757 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727695AbgCWJdI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 05:33:08 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 23 Mar 2020 18:33:07 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 19F0D60057;
+        Mon, 23 Mar 2020 18:33:07 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 23 Mar 2020 18:33:07 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id B76B41A12AD;
+        Mon, 23 Mar 2020 18:33:06 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v3 0/6] Add devicetree features and fixes for UniPhier SoCs
+Date:   Mon, 23 Mar 2020 18:32:44 +0900
+Message-Id: <1584955970-8162-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgQWxhaW7CoMKgDQoNCk9uIDMvMjIvMjAgNToxNiBQTSwgQWxhaW4gVm9sbWF0IHdyb3RlOg0K
-PiB0aGUgMiBybmcgbm9kZXMgYXJlIGR1cGxpY2F0ZWQgd2l0aGluIHRoZSBzdGloNDA3LWZhbWls
-eS5kdHNpDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEFsYWluIFZvbG1hdCA8YXZvbG1hdEBtZS5jb20+
-DQo+IC0tLQ0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaSB8IDE0IC0t
-LS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTQgZGVsZXRpb25zKC0pDQo+DQo+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaQ0KPiBpbmRleCA3YzM2YzM3MjYwYTQuLjIz
-YTE3NDZmM2JhYSAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1mYW1p
-bHkuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpDQo+
-IEBAIC03NjcsMjAgKzc2Nyw2IEBADQo+ICAJCQkJIDwmY2xrX3NfYzBfZmxleGdlbiBDTEtfRVRI
-X1BIWT47DQo+ICAJCX07DQo+ICANCj4gLQkJcm5nMTA6IHJuZ0A4YTg5MDAwIHsNCj4gLQkJCWNv
-bXBhdGlibGUgICAgICA9ICJzdCxybmciOw0KPiAtCQkJcmVnCQk9IDwweDA4YTg5MDAwIDB4MTAw
-MD47DQo+IC0JCQljbG9ja3MgICAgICAgICAgPSA8JmNsa19zeXNpbj47DQo+IC0JCQlzdGF0dXMJ
-CT0gIm9rYXkiOw0KPiAtCQl9Ow0KPiAtDQo+IC0JCXJuZzExOiBybmdAOGE4YTAwMCB7DQo+IC0J
-CQljb21wYXRpYmxlICAgICAgPSAic3Qscm5nIjsNCj4gLQkJCXJlZwkJPSA8MHgwOGE4YTAwMCAw
-eDEwMDA+Ow0KPiAtCQkJY2xvY2tzICAgICAgICAgID0gPCZjbGtfc3lzaW4+Ow0KPiAtCQkJc3Rh
-dHVzCQk9ICJva2F5IjsNCj4gLQkJfTsNCj4gLQ0KPiAgCQltYWlsYm94MDogbWFpbGJveEA4ZjAw
-MDAwICB7DQo+ICAJCQljb21wYXRpYmxlCT0gInN0LHN0aWg0MDctbWFpbGJveCI7DQo+ICAJCQly
-ZWcJCT0gPDB4OGYwMDAwMCAweDEwMDA+Ow0KDQoNClJldmlld2VkLWJ5OiBQYXRyaWNlIENob3Rh
-cmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+DQoNClRoYW5rcw0KDQpQYXRyaWNlDQo=
+This series adds new features that includes XDMAC for each SoC, and ethernet
+aliases to inherit MAC address from u-boot and stabilization for ethernet on
+PXs3.
+
+Changes since v2:
+- dt-bindings: Consolidate register description for xdmac
+- Spread the size of xdmac register region
+
+Changes since v1:
+- dt-bindings: Remove extension register description for xdmac
+- Remove extension register area from xdmac node
+- Fix commit message for ethernet aliases
+- Remove RGMII setting for LD20 global board
+
+These patches in v1 have already been applied:
+  ARM: dts: uniphier: Add USB3 controller nodes for Pro5
+  arm64: dts: uniphier: Enable spi node for PXs3 reference board
+  arm64: dts: uniphier: Add nodes of thermal monitor and thermal zone
+    for PXs3
+  ARM: dts: uniphier: Set SCSSI clock and reset IDs for each channel
+  arm64: dts: uniphier: Set SCSSI clock and reset IDs for each channel
+
+Kunihiko Hayashi (6):
+  dt-bindings: dma: uniphier-xdmac: Consolidate register region
+    description
+  ARM: dts: uniphier: Add XDMAC node
+  arm64: dts: uniphier: Add XDMAC node
+  ARM: dts: uniphier: Add ethernet aliases
+  arm64: dts: uniphier: Add ethernet aliases
+  arm64: dts: uniphier: Stabilize Ethernet RGMII mode of PXs3 ref board
+
+ .../bindings/dma/socionext,uniphier-xdmac.yaml         |  5 ++---
+ arch/arm/boot/dts/uniphier-ld6b-ref.dts                |  1 +
+ arch/arm/boot/dts/uniphier-pro4-ace.dts                |  1 +
+ arch/arm/boot/dts/uniphier-pro4-ref.dts                |  1 +
+ arch/arm/boot/dts/uniphier-pro4-sanji.dts              |  1 +
+ arch/arm/boot/dts/uniphier-pro4.dtsi                   |  8 ++++++++
+ arch/arm/boot/dts/uniphier-pro5.dtsi                   |  8 ++++++++
+ arch/arm/boot/dts/uniphier-pxs2-gentil.dts             |  1 +
+ arch/arm/boot/dts/uniphier-pxs2-vodka.dts              |  1 +
+ arch/arm/boot/dts/uniphier-pxs2.dtsi                   |  8 ++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld11-ref.dts    |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi       |  8 ++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts    |  1 +
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi       |  8 ++++++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3-ref.dts    | 18 ++++++++++++++++++
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi       |  8 ++++++++
+ 18 files changed, 78 insertions(+), 3 deletions(-)
+
+-- 
+2.7.4
+
