@@ -4,83 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE38AC4332B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B46C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801552070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FAF20753
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585001513;
-	bh=0SFNX+KNG0mT1qcnYA/8qXz0HxLAOipFcFinQJJVi2U=;
+	s=default; t=1585001654;
+	bh=OrsdWWDpMVBkmg4P2n1X0Ud13wXuOs05aSb+v05IoxM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tKcPHT7XEBGjNB2lkPsBLpctfDwJI4dfGKJ06aS6HTgjc0Cguqn4VWs961AZJlTZF
-	 mqv83gITvNOkjfC22hXXAPbQRJp4IlJQkhO6jVSQN1YPHrmqfSGaevyn8e3wcckt/I
-	 uXZ6sldLr1lEoj861/JbrJQJYV7RMMNBv+icQ5ws=
+	b=qrXM/Yxg0vVqlXgcbGTCFkzmYMZMTdsKvyq5+SN7d/jJNB/h7uuEtZZINVMz9EJWA
+	 t53lH1S0de6gW/vpvjMuSOKhm843URli7vOh+bgcCgxhh9ZikR7vcP7HteOG0oITtw
+	 uGWD1puZz3NFs9QA3yskl2VDdcweoTyXgVSPs3UI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgCWWLw (ORCPT
+        id S1726958AbgCWWOO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:11:52 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39650 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCWWLw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:11:52 -0400
-Received: by mail-io1-f67.google.com with SMTP id c19so16082678ioo.6;
-        Mon, 23 Mar 2020 15:11:50 -0700 (PDT)
+        Mon, 23 Mar 2020 18:14:14 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36445 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgCWWOO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:14:14 -0400
+Received: by mail-il1-f193.google.com with SMTP id h3so14948113ils.3;
+        Mon, 23 Mar 2020 15:14:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U1+vG2jcfIWPGJPzyBp74dMfazPVWUvbyc5a9UEJny4=;
-        b=epj38hrD/ybOuH/WcTBJWwpzQMsVscA9iCZqnkA+UDCixXGADj4IJm0PI3mfyjR71T
-         gNhhGiPQeFNN2d//pPaYiddu/MO461SDdgXA3b7W530zF7UCeYA+kr7T7Z9uEr60flYD
-         DxEPjLjdLF8jqWu4Y/M1dbB2F2Bf/o8QSdooFH1j1A/pV49Is5FR6U3GEs5f+rc7ver0
-         bu+2I4tfHWKduHCzZcSK/pJeItheI1N0I2BNfy1buzt56VzFRs04pD87usYv2rtcpxlm
-         8xoe+fK2sV8NkA/x/HR2pcTET9czhxH7giING8G6x9QsGeVo73+leOSdmJZBCqV6dlQO
-         bbNg==
-X-Gm-Message-State: ANhLgQ3/NpeSoXbuq0qHW0b01A5DCwxuPCtCyHYHoo2SiG59X7jFOa4K
-        4AOtXFpJ99r7NNSxxQ8UEw==
-X-Google-Smtp-Source: ADFU+vvetfKAazjwYEUQHArdmRpyTlu8v3T8bGybvvKdNYFA44bdB5Y0qTiQGUn5qPEk9T9rFv8mPw==
-X-Received: by 2002:a05:6602:2251:: with SMTP id o17mr10228130ioo.101.1585001510153;
-        Mon, 23 Mar 2020 15:11:50 -0700 (PDT)
+        bh=YwDVmx/7pr36/zBUwTKAawrGVSeIBJncPSwg7RtZXaI=;
+        b=Ck2Blp+HDFleRsp3E1gSqZ3Up8yJWRB1b6U/4AF3CxyG3fozXzhKln1Q48TlEZAmc1
+         HLVDxCe1O+yZH+1tu5K3JAZV/YF9k/ZwubsqO79CXoQLmRdyAQ8ZEvTEP61PbzJXithp
+         MeWJeBbAx3E1Q+dc5aSkJzVufwS04FWJ5vL1jSUnk3lmj3Y7RvvdXB2KS28E3AcOVpeN
+         f5bqXClZUBPPw6K7U0kJl+CIIi/3Zl/DwW4lhI22oM7/SFRd/C/pvnDbV1ie1+YJaCwa
+         fNu3tI8kwEAALUiJ9byGzoooQkwCkNI6wJhUfw9k2GWHjh9T8XCoulzyfvZVox0z0Cl9
+         gQeQ==
+X-Gm-Message-State: ANhLgQ3RKNjMecA2TjzJHfsEg4o1Rf6udk7UgOQDc0vhYEQ5wWWXxzLB
+        Se6dIHQoK7097lvGRD/LuT1c0lA=
+X-Google-Smtp-Source: ADFU+vtmB9+BQuIncmj63KKHCHqFICX0S67XCzAYHEXUebAJ+2wdsOgqdZHyMJFrPNYNL3B2XPdGkg==
+X-Received: by 2002:a92:9a4d:: with SMTP id t74mr14100809ili.168.1585001652864;
+        Mon, 23 Mar 2020 15:14:12 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id l6sm5745706ilh.27.2020.03.23.15.11.49
+        by smtp.gmail.com with ESMTPSA id h12sm4651950iob.22.2020.03.23.15.14.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 15:11:49 -0700 (PDT)
-Received: (nullmailer pid 29035 invoked by uid 1000);
-        Mon, 23 Mar 2020 22:11:48 -0000
-Date:   Mon, 23 Mar 2020 16:11:48 -0600
+        Mon, 23 Mar 2020 15:14:12 -0700 (PDT)
+Received: (nullmailer pid 315 invoked by uid 1000);
+        Mon, 23 Mar 2020 22:14:10 -0000
+Date:   Mon, 23 Mar 2020 16:14:10 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, heiko@sntech.de,
-        robh+dt@kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] dt-bindings: sound: rockchip-i2s: add
- #sound-dai-cells property
-Message-ID: <20200323221148.GA29003@bogus>
-References: <20200311174322.23813-1-jbx6244@gmail.com>
- <20200311174322.23813-2-jbx6244@gmail.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 3/3] dt-bindings: rtc: Convert and update jz4740-rtc
+ doc to YAML
+Message-ID: <20200323221410.GA32740@bogus>
+References: <20200311182318.22154-1-paul@crapouillou.net>
+ <20200311182318.22154-3-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311174322.23813-2-jbx6244@gmail.com>
+In-Reply-To: <20200311182318.22154-3-paul@crapouillou.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 11 Mar 2020 18:43:22 +0100, Johan Jonker wrote:
-> '#sound-dai-cells' is required to properly interpret
-> the list of DAI specified in the 'sound-dai' property,
-> so add them to 'rockchip-i2s.yaml'
+On Wed, 11 Mar 2020 19:23:18 +0100, Paul Cercueil wrote:
+> Convert the jz4740-rtc doc to YAML, and update it to reflect the new
+> changes in the driver:
+> - More compatible strings are specified, with fallbacks if needed,
+> - The vendor-specific properties are now properly prefixed with the
+>   'ingenic,' prefix.
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  Documentation/devicetree/bindings/sound/rockchip-i2s.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
+>  .../bindings/rtc/ingenic,jz4740-rtc.txt       | 37 ---------
+>  .../devicetree/bindings/rtc/ingenic,rtc.yaml  | 83 +++++++++++++++++++
+>  2 files changed, 83 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
