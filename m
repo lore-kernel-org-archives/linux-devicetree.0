@@ -2,76 +2,83 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FB4C54FCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D67C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9636206F8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E82F42072E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:14:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XURddeuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbgCWPDv (ORCPT
+        id S1727131AbgCWPOb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:03:51 -0400
-Received: from mga05.intel.com ([192.55.52.43]:46999 "EHLO mga05.intel.com"
+        Mon, 23 Mar 2020 11:14:31 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52098 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbgCWPDv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:03:51 -0400
-IronPort-SDR: LapmL+7/Kq9IMO4nKBKaaLiQK3N2mqszyHvyB8FGbczDxy/vDNJcQmAvxFBD+f0UCJdMQ6Uo4Z
- bx56YWDEsdWg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 08:03:48 -0700
-IronPort-SDR: mHHNLNQ0A/+Zr0fMQurJa2EsXFsMlu2fBmkH6MHRuzF9OYszpfxRoiO3+8ENpbBRzAf6jj7yIa
- qbicpWu0OHiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
-   d="scan'208";a="264800941"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 23 Mar 2020 08:03:44 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jGOcD-00CGr2-UD; Mon, 23 Mar 2020 17:03:45 +0200
-Date:   Mon, 23 Mar 2020 17:03:45 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     brendanhiggins@google.com, avifishman70@gmail.com,
-        tmaimon77@gmail.com, kfting@nuvoton.com, venture@google.com,
-        yuenn@google.com, benjaminfair@google.com, robh+dt@kernel.org,
-        wsa@the-dreams.de, linux-arm-kernel@lists.infradead.org,
-        linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 1/3] dt-bindings: i2c: npcm7xx: add NPCM I2C controller
-Message-ID: <20200323150345.GP1922688@smile.fi.intel.com>
-References: <20200323134437.259210-1-tali.perry1@gmail.com>
- <20200323134437.259210-2-tali.perry1@gmail.com>
+        id S1726049AbgCWPOb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:14:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=1m+OiC3y42SS9da+Tcx1VksIIwVDt7LFueQm6zuxGVo=; b=XURddeuh+RoTABs816IckUXkfW
+        egzgUGPHZht3RdSInSrJYSrt7X9WDAhCHamL4zw3CVNk1yNkmg8mPClDl87yQBxh1ptYvfaoEDUbw
+        Axs5liIRIXS3Nl3+tBfKHmEpVjiBJ/o8J0AiUUjo1zF+QiGToIJBQ4ZHZi7to6N0iFXI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jGOmV-0000ni-Na; Mon, 23 Mar 2020 16:14:23 +0100
+Date:   Mon, 23 Mar 2020 16:14:23 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Christian Herber <christian.herber@nxp.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Marek Vasut <marex@denx.de>, netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP
+ TJA11xx
+Message-ID: <20200323151423.GA32387@lunn.ch>
+References: <AM0PR04MB70413A974A2152D27CAADFAC86F00@AM0PR04MB7041.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323134437.259210-2-tali.perry1@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <AM0PR04MB70413A974A2152D27CAADFAC86F00@AM0PR04MB7041.eurprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 03:44:35PM +0200, Tali Perry wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM I2C controller.
-> 
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/i2c/i2c-npcm7xx.txt   | 29 +++++++++++++++++++
+> Yes, it is one device with two address. This is if you call the entire IC a device. If you look at it from a PHY perspective, it is two devices with 1 address.
+> If you just look at it as a single device, it gets difficult to add PHY specific properties in the future, e.g. master/slave selection.
 
-Wouldn't be better to have it in YAML from the day 1?
+> In my opinion its important to have some kind of container for the
+> entire IC, but likewise for the individual PHYs.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yes, we need some sort of representation of two devices.
 
+Logically, the two PHYs are on the same MDIO bus, so you could have
+two nodes on the main bus.
 
+Or you consider the secondary PHY as being on an internal MDIO bus
+which is transparently bridged to the main bus. This is what was
+proposed in the last patchset.
+
+Because this bridge is transparent, the rest of the PHY/MDIO framework
+has no idea about it. So i prefer that we keep with two PHY nodes on
+the main bus. But i still think we need the master PHY to register the
+secondary PHY, due to the missing PHY ID, and the other constrains
+like resets which the master PHY has to handle.
+
+     Andrew
