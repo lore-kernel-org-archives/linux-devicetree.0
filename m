@@ -2,132 +2,140 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F541C4332E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 08:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42951C4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 09:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE8E20736
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 08:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144632074D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 09:04:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="waSIN8+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbgCWIue (ORCPT
+        id S1727611AbgCWJEB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 04:50:34 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:46833 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727587AbgCWIue (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 04:50:34 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MOiYD-1itwPf2FHL-00QBe4 for <devicetree@vger.kernel.org>; Mon, 23 Mar
- 2020 09:50:32 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 56A8C6503FF
-        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 08:50:32 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ir1z0sJ8a1WG for <devicetree@vger.kernel.org>;
-        Mon, 23 Mar 2020 09:50:32 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 0F0CC64F08E
-        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 09:50:32 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.4) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 23 Mar 2020 09:50:32 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id ED162804FB; Mon, 23 Mar 2020 09:50:00 +0100 (CET)
-Date:   Mon, 23 Mar 2020 09:50:00 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Mon, 23 Mar 2020 05:04:01 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53170 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727567AbgCWJEB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 05:04:01 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z18so4889135wmk.2
+        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 02:03:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=lPutVzS3Ynb1eSmgIsa4JmohPw4ZclRrh1KFVq8nWQ0=;
+        b=waSIN8+ApYqW/LXnPGRL/NvneWe4/UMrJ9lHgLm+ihlGugDYOwJ6NZkrFpWxvP6MC8
+         GNsIhdx1sE0PQNevvLnFU8JLGhBZQCcM2iuXOWZHDd6af+85XDnWTjRVbwkVfZgA6PeF
+         l0e1vdhqnc8FBwWg8vUGp27gtAkcfvVU/5tktj+zX+p8+lBs6MC90BoMyIOLPH2MhaTo
+         45RTZrMkvxEjep4JO6e+BufQZJamczxfLM8nme9e6rCkqkb9C0FBnOjVf9PxprElx5Zj
+         rmrlPd6yS7hTFWmy4oW4XCTX9u6yeSNaotUzdicCYqM0JaLIz/ug+LCBJ9x1OWwCwopN
+         OKDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=lPutVzS3Ynb1eSmgIsa4JmohPw4ZclRrh1KFVq8nWQ0=;
+        b=qhtOXfByulqB7t6aUc2CBw5bw5tjRn45nBNlwn2OxbUpPItP+Fia+GCpG0FqY8jRbC
+         NpaXDWWn6UnRlGuVexpmJAmuq/WoyZKus9LmHmlQ5CXbxSwKPgaMbOH74hPal3HGymeq
+         CA/zv318AcveTejHTKYcmDkS4vYPsF8wYIto6YPJ+inbg3TufpIIWvHOFBsJLj3HpsAu
+         Bqyv4qvcJQTrN1zTpucUTRTyKkUrgUS3hEy8ZwtITvfSv68CX3gn8BLUeJdXx9SwHLBg
+         hV2sHNWUzA76n7fZDOBGbQvjb4IyJlDehgqNuMpFyZMguhWomFvfIKitk/0kPsXKlxfN
+         JLUg==
+X-Gm-Message-State: ANhLgQ2Ygbwf0lVVDdbjJZ9ztI8XcVYGXGgXVZtA2T2KbGSe+f5+GnOM
+        jKDS3MGyMLq6MVQsX7ZnukGOKA==
+X-Google-Smtp-Source: ADFU+vta0fIyRtESZphpxuC88pwvr1xjRflNRJ4U+UNesyEuY+m+xd0K3+8cVkrJCyM2KNvZ6DRGtA==
+X-Received: by 2002:a1c:b144:: with SMTP id a65mr27313095wmf.54.1584954237568;
+        Mon, 23 Mar 2020 02:03:57 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id f15sm22881505wru.83.2020.03.23.02.03.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 02:03:56 -0700 (PDT)
+References: <20200302125310.742-1-linux.amoon@gmail.com> <20200302125310.742-3-linux.amoon@gmail.com> <7hlfoir8rj.fsf@baylibre.com> <CAFBinCB2WXZNRg4wdFD0RJ5k4hHqcfAOCHemvHzZE42-Mo5vzA@mail.gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     Anand Moon <linux.amoon@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v3 09/11] arm64: dts: renesas: salvator: add a connection
- from adv748x codec (HDMI input) to the R-Car SoC
-Message-ID: <20200323085000.GE4298@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-References: <cover.1584720678.git.alexander.riesen@cetitec.com>
- <077a97942890b79fef2b271e889055fc07c74939.1584720678.git.alexander.riesen@cetitec.com>
- <CAMuHMdXiG1upHQrCcuZgNLFOEoeDVcb0zWxh1BZZST5TOURDBQ@mail.gmail.com>
- <20200323084011.GC4298@pflmari>
- <CAMuHMdXa96P+boX9HgGMBKEXLKK91t3Jgu-Sy8mP5A5--EeP=A@mail.gmail.com>
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCHv2 2/2] clk: meson: g12a: set cpub_clk flags to CLK_IS_CRITICAL
+In-reply-to: <CAFBinCB2WXZNRg4wdFD0RJ5k4hHqcfAOCHemvHzZE42-Mo5vzA@mail.gmail.com>
+Date:   Mon, 23 Mar 2020 10:03:55 +0100
+Message-ID: <1jr1xjcuis.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXa96P+boX9HgGMBKEXLKK91t3Jgu-Sy8mP5A5--EeP=A@mail.gmail.com>
-X-Originating-IP: [10.8.5.4]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7066
-X-Provags-ID: V03:K1:DFLZLmgqPuDWhO//4gbyM5RUAOIcXg7M+LcHi6MvR6up9QvplWE
- Lwfuw3ux/QQIQnAmgFxh8pUt3GDl8cV0jXMJTY1ywWJmGRM15k7sqjk2ERo7L+cKN9+7EM+
- 6lso+bxy1zbH8V61xRwgH1J+gGxGaOLUy9/vx/1ByHWdzQt4HMVg2h1ZyYkt3D+SQwoJIJR
- A5IwITBaNXbuH+7kvyTGQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:p87pKciZqlI=:ERtu0RRtuTuVd5GyWA7L+k
- 3he/QuogvuacmfIt9mWkPKFulQ+1vXN3oiXfEuTiRtpKjOJMwNmFeRjq/RXBYhck9W5vNWIe5
- VDAf8+zbGDemoB8J8+kzx1EHNQaz1CYercys8Wup+RcTF7c+VHsACB/iVrAXIg8D7yZK7Vl6p
- YM3lgXKreRJpHmp/FmXM2Egn3mN1MiQKFp+BGHk0rBEHYfSh9VeAxUcTSIua9vhkkl4ZHARTS
- 2EPFi+MgcJag6myqpI8vy78/BL1wPjwxixOBY5KO9ik99l3uwYYMJ4qkFPdzB74mT4jfQovNc
- RsCx3cwVt8am21grjmXUySCm7XIDYEQSvEup89F1LFGyJLdNdbj1C8vpnVS1XSs1za7qewk00
- 0dCj1i/s12+dD/sT7uEW4xmifAfVx3V2WBGAtYQxJd87J+lyix8mNAEOT24IKWdsm6Z6bCEDR
- Dx4OydcNr1YoC6SKOGcqonH3TK43gD9XDsB+iTrE+M/zPw+X5YqaKZQSuMw0RYL+7VZgCdPiH
- bbV+rEnEUMI6alTxsOpHB/DBv40P0Ie6saUYCwXxWJZPSDEFgXGg2An7RaoopbIR0alni4tSx
- x4fUADudPXUnEY7+oqt5d7MffBCYzpWKDsiSjfdJoekCj6baAYVt871PybGizUmet+r3zmecI
- hKK+PD8wYmHK2Hf3iTLY9y4shhZXFxJ1LsrFWgAd1GXfPeveo0cRHL3Cj3mVEq6ZJ3xk15eIq
- NPGE0Bg43+SciKvWsfxsA6IkjGZU7Y67h6UyzgP0SmqX4tjZKA378LMQRF4Tfp6o0N9BAF1o+
- kpeR2ftHLgD83xb/1IH7rsDGuEVu95zcJ3ta45N1BGCMqO1uCy5ZTKhBKczRocSflIB+p3q
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
 
-Geert Uytterhoeven, Mon, Mar 23, 2020 09:48:00 +0100:
-> On Mon, Mar 23, 2020 at 9:41 AM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > Geert Uytterhoeven, Mon, Mar 23, 2020 09:34:45 +0100:
-> > > On Fri, Mar 20, 2020 at 5:43 PM Alex Riesen <alexander.riesen@cetitec.com> wrote:
-> > > > Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > >
-> > > Did I provide a Reviewed-by?
-> > >
-> > But you really did provide a lot of very useful information and it did help
-> > to improve the code. Shall I remove the tag still?
-> 
-> Please do so.
-> 
-> While I can point out issues in audio patches, my audio-foo is not strong
-> enough to provide an R-B, and I'll rely on the R-bs provided by others.
+On Fri 20 Mar 2020 at 00:39, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-Done. I left the suggested-bys in the trailer. Hope those are alright.
+> Hi Kevin,
+>
+> On Mon, Mar 2, 2020 at 6:01 PM Kevin Hilman <khilman@baylibre.com> wrote:
+> [...]
+>> > updating flags to CLK_IS_CRITICAL which help enable all the parent for
+>> > cpub_clk.
+>>
+>> With current mainline, I've tested DVFS using CPUfreq on both clusters
+>> on odroid-n2, and both clusters are booting, so I don't understand the
+>> need for this patch.
+> I *think* there is a race condition at kernel boot between cpufreq and
+> disabling orphaned clocks
+> I'm not sure I fully understand it though and I don't have any G12B
+> board to verify it
+>
+> my understanding is that u-boot runs Linux off CPU0 which is clocked by cpub_clk
+> this means we need to keep cpub_clk enabled as long as Linux wants the
+> CPU0 processor to be enabled (on 32-bit ARM platforms that would be
+> smp_operations.cpu_{kill,die})
+> cpufreq does not call clk_prepare_enable on the CPU clocks so this
+> means that the orphaned clock cleanup mechanism can disable it "at any
+> time",
 
-Regards,
-Alex
+If nothing calls enable the cpu clock while it is managed by Linux
+(cpufreq), there might something worth fixing. Adding CLK_IS_CRITICAL
+will mask an issue that is still not explained.
+
+"at any time": absolutely not.
+Disabling unused clocks, is done only once, at during the late_init
+stage.
+
+If your clock gets disabled later on, it means it has been turned on and
+off by another driver (possibly due to probe deferral)
+
+> killing everything running on CPU0 and CPU1 (which are both
+> clocked by cpub_clk)
+>
+> I have no explanation why this depends on booting from SD or eMMC.
+>
+> for the 32-bit SoCs we have CLK_IS_CRITICAL on the CPU clock as well
+> since commit 0dad1ec65bc30a
+> on G12A we have CLK_IS_CRITICAL on the sys_pll clocks, however my
+> understanding is that cpub_clk could also be fed by one of the
+> fixed_pll derived clocks (which have a gate as well, which may or may
+> not be turned off by the orphaned clock cleanup - that is pure
+> speculation from my side though).
+
+Yes there are other critical clocks on Amlogic, mostly because the SCP Fw
+driver does not claim the clocks it depends on. At least we know why
+this flag is set and there should be a comment associated with it.
+
+ATM, the issue reported by Anand (anyone else ?) is not explained. 
+
+>
+>
+> Martin
 
