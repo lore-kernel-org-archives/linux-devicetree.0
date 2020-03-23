@@ -2,165 +2,60 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5D7C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 04:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAEBC54FCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 05:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 046BF20658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 04:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF4F92073E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 05:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725816AbgCWEDZ (ORCPT
+        id S1725877AbgCWFEZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 00:03:25 -0400
-Received: from mx.socionext.com ([202.248.49.38]:59585 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725208AbgCWEDZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 00:03:25 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 23 Mar 2020 13:03:23 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 5182C60057;
-        Mon, 23 Mar 2020 13:03:23 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 23 Mar 2020 13:03:23 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id B034D1A12AD;
-        Mon, 23 Mar 2020 13:03:22 +0900 (JST)
-Received: from [10.213.132.48] (unknown [10.213.132.48])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 7646812013D;
-        Mon, 23 Mar 2020 13:03:22 +0900 (JST)
-Date:   Mon, 23 Mar 2020 13:03:22 +0900
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 2/2] PCI: uniphier: Add UniPhier PCIe endpoint controller support
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-In-Reply-To: <20200319170659.GA158868@google.com>
-References: <1584604449-13461-3-git-send-email-hayashi.kunihiko@socionext.com> <20200319170659.GA158868@google.com>
-Message-Id: <20200323130322.E519.4A936039@socionext.com>
+        Mon, 23 Mar 2020 01:04:25 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:14873 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725838AbgCWFEZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 01:04:25 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 23 Mar 2020 10:33:32 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 23 Mar 2020 10:33:18 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id F2F8A2AD4; Mon, 23 Mar 2020 10:33:17 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>, robdclark@gmail.com,
+        seanpaul@chromium.org, sean@poorly.run
+Subject: [PATCH v9 0/2] Add support for rm69299 Visionox panel driver and add devicetree bindings for visionox panel
+Date:   Mon, 23 Mar 2020 10:33:14 +0530
+Message-Id: <20200323050316.32108-1-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.70 [ja]
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Adding support for visionox rm69299 panel driver and adding bindings for the same panel.
 
-Thank you for your comment.
+Harigovindan P (2):
+  dt-bindings: display: add visionox rm69299 panel variant
+  drm/panel: add support for rm69299 visionox panel driver
 
-On Thu, 19 Mar 2020 12:06:59 -0500 <helgaas@kernel.org> wrote:
+ .../display/panel/visionox,rm69299.yaml       |  82 +++++
+ drivers/gpu/drm/panel/Kconfig                 |   8 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../gpu/drm/panel/panel-visionox-rm69299.c    | 295 ++++++++++++++++++
+ 4 files changed, 386 insertions(+)
+ create mode 100755 Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-visionox-rm69299.c
 
-> On Thu, Mar 19, 2020 at 04:54:09PM +0900, Kunihiko Hayashi wrote:
-> > This introduces specific glue layer for UniPhier platform to support
-> > PCIe controller that is based on the DesignWare PCIe core, and
-> > this driver supports endpoint mode. This supports for Pro5 SoC only.
-> 
-> Possible alternate text: ("specific glue layer" isn't the usual way to
-> describe a driver)
-> 
->   PCI: uniphier: Add Socionext UniPhier Pro5 SoC endpoint controller driver
-> 
->   Add driver for the Socionext UniPhier Pro5 SoC endpoint controller.
->   This controller is based on the DesignWare PCIe core.
-
-I see. I'll accept your suggestion for the commit log.
-
-> > +/* assertion time of intx in usec */
-> 
-> s/intx/INTx/ to match usage in spec (and in comments below :))
-
-Certainly this isn't unified. I'll fix it.
-
-> > +#define PCL_INTX_WIDTH_USEC		30
-> 
-> > +struct uniphier_pcie_ep_soc_data {
-> > +	bool is_legacy;
-> 
-> I'd prefer "unsigned int is_legacy:1".  See [1].
-> 
-> But AFAICT you actually don't need this at all (yet), since you only
-> have a single of_device_id, and it sets "is_legacy = true".  That
-> means the *not* legacy code is effectively dead and hasn't been
-> tested.
-
-Yes.
-Now I know the difference about between legacy and non-legacy SoC,
-however, currently the driver doesn't have any non-legacy SoC support.
-
-> My preference would be to add "is_legacy" and the associated tests
-> when you actually *need* them, i.e., when you add support for a
-> non-legacy device.
-
-Agreed. The test for non-legacy SoC is necessary.
-So I'll remove 'is_legacy' and related coded, and rewrite this driver
-to support only legacy device.
-
-And I'll remember [1] when adding non-legacy support.
-
-> > +static int uniphier_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep)
-> > +{
-> > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-> > +	u32 val;
-> > +
-> > +	/* assert INTx */
-> > +	val = readl(priv->base + PCL_APP_INTX);
-> > +	val |= PCL_APP_INTX_SYS_INT;
-> > +	writel(val, priv->base + PCL_APP_INTX);
-> > +
-> > +	udelay(PCL_INTX_WIDTH_USEC);
-> > +
-> > +	/* deassert INTx */
-> > +	val = readl(priv->base + PCL_APP_INTX);
-> 
-> Why do you need to read PCL_APP_INTX again here?
-
-Indeed. This 'readl' isn't unnecessary.
-
-> > +	val &= ~PCL_APP_INTX_SYS_INT;
-> > +	writel(val, priv->base + PCL_APP_INTX);
-> > +
-> > +	return 0;
-> > +}
-> 
-> > +	ret = dw_pcie_ep_init(ep);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	return 0;
-> 
-> This is equivalent to:
-> 
->   ret = dw_pcie_ep_init(ep);
->   if (ret)
->     dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
-> 
->   return ret;
-
-Agreed. I'll rewrite it next.
-
-> 
-> > +}
-> 
-> [1] https://lore.kernel.org/linux-fsdevel/CA+55aFzKQ6Pj18TB8p4Yr0M4t+S+BsiHH=BJNmn=76-NcjTj-g@mail.gmail.com/
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+-- 
+2.25.1
 
