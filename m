@@ -2,51 +2,51 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C1BC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F77C10DCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE9E20714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A1320719
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:53:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cIHfzYuX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BBm1sj+a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbgCWWxO (ORCPT
+        id S1727266AbgCWWxT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:53:14 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37452 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgCWWxN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:53:13 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02NMr7a1078475;
-        Mon, 23 Mar 2020 17:53:07 -0500
+        Mon, 23 Mar 2020 18:53:19 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53038 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgCWWxT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:53:19 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02NMrCdL046362;
+        Mon, 23 Mar 2020 17:53:12 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585003987;
-        bh=AlYOPbT4BNPZfc2h5IG4zN5fFej1106fphVO+awo/Gk=;
+        s=ti-com-17Q1; t=1585003992;
+        bh=rG2eAWzyk9qSlJA25m5JntQI0TChpArGIykV4IHhmNU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=cIHfzYuXdoGiTwc+7IMUMoFim2MgDl/kJ6F9/D6w6Ptg13Ybm1iSP8H2D2iXfggIk
-         cLxDTF0LKW1UIINyBP+5sowBxg3z3YCRRyj5P8HGK22u4CmXnnzkmi1/hWe+1NvPP/
-         uXZeEQF/K6TLZb2a4DBdFf3GaENotZvjfLN8dVOA=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02NMr7Rd107746
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Mar 2020 17:53:07 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+        b=BBm1sj+a25LnlJtWnp6mWZCEQO4BWWN+V6rec6gLM02Zgy7Yn9fe7ObKAk+MyZ8iU
+         yKJSgETUG7JtLt7cPoDDRu0XzkD4lN7fIeUJMpMl+HNcv+IpzHJpC+8bI90UcJkJHW
+         BJsAOsNXtFM/RgfFMqbsM1mRhNhFE66pk+x+xzxE=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02NMrCES032807;
+        Mon, 23 Mar 2020 17:53:12 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Mar 2020 17:53:06 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 17:53:12 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Mar 2020 17:53:06 -0500
+ Frontend Transport; Mon, 23 Mar 2020 17:53:12 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02NMr5jn080063;
-        Mon, 23 Mar 2020 17:53:06 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02NMrBar105717;
+        Mon, 23 Mar 2020 17:53:12 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>,
@@ -59,9 +59,9 @@ CC:     Murali Karicheri <m-karicheri2@ti.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v6 05/11] dt-binding: ti: am65x: document mcu cpsw nuss
-Date:   Tue, 24 Mar 2020 00:52:48 +0200
-Message-ID: <20200323225254.12759-6-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v6 08/11] arm64: dts: k3-am654-base-board: add mcu cpsw nuss pinmux and phy defs
+Date:   Tue, 24 Mar 2020 00:52:51 +0200
+Message-ID: <20200323225254.12759-9-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200323225254.12759-1-grygorii.strashko@ti.com>
 References: <20200323225254.12759-1-grygorii.strashko@ti.com>
@@ -73,250 +73,84 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document device tree bindings for The TI AM654x/J721E SoC Gigabit Ethernet MAC
-(Media Access Controller - CPSW2G NUSS). The CPSW NUSS provides Ethernet packet
-communication for the device.
+AM654 EVM base board has TI DP83867 PHY connected to external CPSW NUSS
+Port 1 in rgmii-rxid mode.
+
+Hence, add pinmux and Ethernet PHY configuration for TI am654 SoC Gigabit
+Ethernet two ports Switch subsystem (CPSW NUSS).
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Tested-by: Murali Karicheri <m-karicheri2@ti.com>
 Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   | 225 ++++++++++++++++++
- 1 file changed, 225 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 42 +++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-new file mode 100644
-index 000000000000..78bf511e2892
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
-@@ -0,0 +1,225 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/ti,k3-am654-cpsw-nuss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+index 1700996800eb..2f3d3316a1cf 100644
+--- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -7,6 +7,7 @@
+ 
+ #include "k3-am654.dtsi"
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/net/ti-dp83867.h>
+ 
+ / {
+ 	compatible =  "ti,am654-evm", "ti,am654";
+@@ -95,7 +96,30 @@
+ 	wkup_pca554_default: wkup_pca554_default {
+ 		pinctrl-single,pins = <
+ 			AM65X_WKUP_IOPAD(0x0034, PIN_INPUT, 7) /* (T1) MCU_OSPI1_CLK.WKUP_GPIO0_25 */
++		>;
++	};
 +
-+title: The TI AM654x/J721E SoC Gigabit Ethernet MAC (Media Access Controller) Device Tree Bindings
++	mcu_cpsw_pins_default: mcu_cpsw_pins_default {
++		pinctrl-single,pins = <
++			AM65X_WKUP_IOPAD(0x0058, PIN_OUTPUT, 0) /* (N4) MCU_RGMII1_TX_CTL */
++			AM65X_WKUP_IOPAD(0x005c, PIN_INPUT, 0) /* (N5) MCU_RGMII1_RX_CTL */
++			AM65X_WKUP_IOPAD(0x0060, PIN_OUTPUT, 0) /* (M2) MCU_RGMII1_TD3 */
++			AM65X_WKUP_IOPAD(0x0064, PIN_OUTPUT, 0) /* (M3) MCU_RGMII1_TD2 */
++			AM65X_WKUP_IOPAD(0x0068, PIN_OUTPUT, 0) /* (M4) MCU_RGMII1_TD1 */
++			AM65X_WKUP_IOPAD(0x006c, PIN_OUTPUT, 0) /* (M5) MCU_RGMII1_TD0 */
++			AM65X_WKUP_IOPAD(0x0078, PIN_INPUT, 0) /* (L2) MCU_RGMII1_RD3 */
++			AM65X_WKUP_IOPAD(0x007c, PIN_INPUT, 0) /* (L5) MCU_RGMII1_RD2 */
++			AM65X_WKUP_IOPAD(0x0080, PIN_INPUT, 0) /* (M6) MCU_RGMII1_RD1 */
++			AM65X_WKUP_IOPAD(0x0084, PIN_INPUT, 0) /* (L6) MCU_RGMII1_RD0 */
++			AM65X_WKUP_IOPAD(0x0070, PIN_INPUT, 0) /* (N1) MCU_RGMII1_TXC */
++			AM65X_WKUP_IOPAD(0x0074, PIN_INPUT, 0) /* (M1) MCU_RGMII1_RXC */
++		>;
++	};
+ 
++	mcu_mdio_pins_default: mcu_mdio1_pins_default {
++		pinctrl-single,pins = <
++			AM65X_WKUP_IOPAD(0x008c, PIN_OUTPUT, 0) /* (L1) MCU_MDIO0_MDC */
++			AM65X_WKUP_IOPAD(0x0088, PIN_INPUT, 0) /* (L4) MCU_MDIO0_MDIO */
+ 		>;
+ 	};
+ };
+@@ -419,3 +443,21 @@
+ 		data-lanes = <1 2>;
+ 	};
+ };
 +
-+maintainers:
-+  - Grygorii Strashko <grygorii.strashko@ti.com>
-+  - Sekhar Nori <nsekhar@ti.com>
++&mcu_cpsw {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mcu_cpsw_pins_default &mcu_mdio_pins_default>;
++};
 +
-+description:
-+  The TI AM654x/J721E SoC Gigabit Ethernet MAC (CPSW2G NUSS) has two ports
-+  (one external) and provides Ethernet packet communication for the device.
-+  CPSW2G NUSS features - the Reduced Gigabit Media Independent Interface (RGMII),
-+  Reduced Media Independent Interface (RMII), the Management Data
-+  Input/Output (MDIO) interface for physical layer device (PHY) management,
-+  new version of Common Platform Time Sync (CPTS), updated Address Lookup
-+  Engine (ALE).
-+  One external Ethernet port (port 1) with selectable RGMII/RMII interfaces and
-+  an internal Communications Port Programming Interface (CPPI5) (Host port 0).
-+  Host Port 0 CPPI Packet Streaming Interface interface supports 8 TX channels
-+  and one RX channels and operating by TI AM654x/J721E NAVSS Unified DMA
-+  Peripheral Root Complex (UDMA-P) controller.
-+  The CPSW2G NUSS is integrated into device MCU domain named MCU_CPSW0.
++&davinci_mdio {
++	phy0: ethernet-phy@0 {
++		reg = <0>;
++		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
++		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
++	};
++};
 +
-+  Additional features
-+  priority level Quality Of Service (QOS) support (802.1p)
-+  Support for Audio/Video Bridging (P802.1Qav/D6.0)
-+  Support for IEEE 1588 Clock Synchronization (2008 Annex D, Annex E and Annex F)
-+  Flow Control (802.3x) Support
-+  Time Sensitive Network Support
-+  IEEE P902.3br/D2.0 Interspersing Express Traffic
-+  IEEE 802.1Qbv/D2.2 Enhancements for Scheduled Traffic
-+  Configurable number of addresses plus VLANs
-+  Configurable number of classifier/policers
-+  VLAN support, 802.1Q compliant, Auto add port VLAN for untagged frames on
-+  ingress, Auto VLAN removal on egress and auto pad to minimum frame size.
-+  RX/TX csum offload
-+
-+  Specifications can be found at
-+    http://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
-+    http://www.ti.com/lit/ug/spruil1a/spruil1a.pdf
-+
-+properties:
-+  "#address-cells": true
-+  "#size-cells": true
-+
-+  compatible:
-+    oneOf:
-+      - const: ti,am654-cpsw-nuss
-+      - const: ti,j721e-cpsw-nuss
-+
-+  reg:
-+    maxItems: 1
-+    description:
-+       The physical base address and size of full the CPSW2G NUSS IO range
-+
-+  reg-names:
-+    items:
-+      - const: cpsw_nuss
-+
-+  ranges: true
-+
-+  dma-coherent: true
-+
-+  clocks:
-+    description: CPSW2G NUSS functional clock
-+
-+  clock-names:
-+    items:
-+      - const: fck
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  dmas:
-+    maxItems: 9
-+
-+  dma-names:
-+    items:
-+      - const: tx0
-+      - const: tx1
-+      - const: tx2
-+      - const: tx3
-+      - const: tx4
-+      - const: tx5
-+      - const: tx6
-+      - const: tx7
-+      - const: rx
-+
-+  ethernet-ports:
-+    type: object
-+    properties:
-+      '#address-cells':
-+        const: 1
-+      '#size-cells':
-+        const: 0
-+
-+    patternProperties:
-+      port@1:
-+       type: object
-+       description: CPSW2G NUSS external ports
-+
-+       allOf:
-+         - $ref: ethernet-controller.yaml#
-+
-+       properties:
-+         reg:
-+           items:
-+             - const: 1
-+           description: CPSW port number
-+
-+         phys:
-+           maxItems: 1
-+           description:  phandle on phy-gmii-sel PHY
-+
-+         label:
-+           description: label associated with this port
-+
-+         ti,mac-only:
-+           $ref: /schemas/types.yaml#definitions/flag
-+           description:
-+             Specifies the port works in mac-only mode.
-+
-+         ti,syscon-efuse:
-+           $ref: /schemas/types.yaml#definitions/phandle-array
-+           description:
-+             Phandle to the system control device node which provides access
-+             to efuse IO range with MAC addresses
-+
-+       required:
-+         - reg
-+         - phys
-+
-+    additionalProperties: false
-+
-+patternProperties:
-+  "^mdio@[0-9a-f]+$":
-+    type: object
-+    allOf:
-+      - $ref: "ti,davinci-mdio.yaml#"
-+    description:
-+      CPSW MDIO bus.
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - ranges
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - dmas
-+  - dma-names
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/pinctrl/k3.h>
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+    #include <dt-bindings/net/ti-dp83867.h>
-+
-+    mcu_cpsw: ethernet@46000000 {
-+        compatible = "ti,am654-cpsw-nuss";
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        reg = <0x0 0x46000000 0x0 0x200000>;
-+        reg-names = "cpsw_nuss";
-+        ranges = <0x0 0x0 0x46000000 0x0 0x200000>;
-+        dma-coherent;
-+        clocks = <&k3_clks 5 10>;
-+        clock-names = "fck";
-+        power-domains = <&k3_pds 5 TI_SCI_PD_EXCLUSIVE>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&mcu_cpsw_pins_default &mcu_mdio_pins_default>;
-+
-+        dmas = <&mcu_udmap 0xf000>,
-+               <&mcu_udmap 0xf001>,
-+               <&mcu_udmap 0xf002>,
-+               <&mcu_udmap 0xf003>,
-+               <&mcu_udmap 0xf004>,
-+               <&mcu_udmap 0xf005>,
-+               <&mcu_udmap 0xf006>,
-+               <&mcu_udmap 0xf007>,
-+               <&mcu_udmap 0x7000>;
-+        dma-names = "tx0", "tx1", "tx2", "tx3", "tx4", "tx5", "tx6", "tx7",
-+                    "rx";
-+
-+        ethernet-ports {
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+
-+              cpsw_port1: port@1 {
-+                    reg = <1>;
-+                    ti,mac-only;
-+                    label = "port1";
-+                    ti,syscon-efuse = <&mcu_conf 0x200>;
-+                    phys = <&phy_gmii_sel 1>;
-+
-+                    phy-mode = "rgmii-rxid";
-+                    phy-handle = <&phy0>;
-+              };
-+        };
-+
-+        davinci_mdio: mdio@f00 {
-+              compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-+              reg = <0x0 0xf00 0x0 0x100>;
-+              #address-cells = <1>;
-+              #size-cells = <0>;
-+              clocks = <&k3_clks 5 10>;
-+              clock-names = "fck";
-+              bus_freq = <1000000>;
-+
-+              phy0: ethernet-phy@0 {
-+                    reg = <0>;
-+                    ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+                    ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+              };
-+        };
-+    };
++&cpsw_port1 {
++	phy-mode = "rgmii-rxid";
++	phy-handle = <&phy0>;
++};
 -- 
 2.17.1
 
