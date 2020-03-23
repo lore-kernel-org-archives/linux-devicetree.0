@@ -2,250 +2,398 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329F8C54FCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 18:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B799C4332E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 19:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E52120637
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 18:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SbC7Ih2D"
+	by mail.kernel.org (Postfix) with ESMTP id 481552051A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 19:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584990032;
+	bh=OWIJDZpQXbFyz2hg7RD+fmgwKJdocriC/oPehC3qluw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bxpcQ6jfhtCYhRMQICBZxzprr5MCsvQAt70Yp9Bu4fFjTxQk7bJQC4E6p63ZrzJOs
+	 38+gVNg1+VMwsc1JaQmf4oTzJb5JbI2atpP1pHNBHOuK16dokQR3wn0nnMUy19c0Mn
+	 VyRuSaqcGVYPEsMLIjk9hO++G2ZhhjvII3NR6a38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbgCWStk (ORCPT
+        id S1727218AbgCWTAb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 14:49:40 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:38279 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbgCWStk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 14:49:40 -0400
-Received: by mail-pj1-f66.google.com with SMTP id m15so245186pje.3
-        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 11:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1J62+9HfSlkv3NzIyJlYav7hvhHpbiduAqAYuKWJ56w=;
-        b=SbC7Ih2DUxaxGl2gtNtmOwhFbplBnLc5bk/mh3cXsvp7HOWf+H6thuWp7k6GV4SFWl
-         2bwkKMHcatMt3EMca3epfVROO0kjMJbZB2a4ZlHPLcwGDPucKlLBUqS/Wler1sMSZxb6
-         VVVdlakmG4lbqpwioWnimupGTuHz3Rjf+T2TQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1J62+9HfSlkv3NzIyJlYav7hvhHpbiduAqAYuKWJ56w=;
-        b=YVq49MxHH/2PpoMIfDgaNCYNbYdT0uBbNDdtZKfXUEiEZtYZKEJVQ/xSsmbveShqmR
-         Iq3Crq0PC95JEQWDjIo9llHb4OlqV01QT0A0PhVl/c8zbJ5HNsHhvFqvmxHohsZD2YhH
-         5GKYR86vccHyjqRURpMAoJTRo1SffuMrG6DBIXVh744E3sDlhccyHvOeBEzx7Awq8wBJ
-         gVaCO1Dlt6r0vs//hbD74+/he2gpYc8ChB56RSu4m2iw/xYwjcbwQKP8KkSeyGUT1fJs
-         TmyEEaTg0qmHAytbhrElBIgtWROodKBEa20k+lHzj1uKef274PxEJZpVU7RaMGdF8mEx
-         6NHw==
-X-Gm-Message-State: ANhLgQ2twpKE8tzVuenxZpW6+gvSMo7l+UdMWVZThP2aqv+sGLStX6L+
-        CCniSeV61VW+8RMgTWw9OS0EJg==
-X-Google-Smtp-Source: ADFU+vvpjGAyHWqVVPVwL5kdxCIfYTBil33Sbc1RfBQNKWThdNuKFWbzHLc86aIi9iNWcwJvnb1FIw==
-X-Received: by 2002:a17:90b:4d04:: with SMTP id mw4mr821413pjb.180.1584989378516;
-        Mon, 23 Mar 2020 11:49:38 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id i11sm281182pje.30.2020.03.23.11.49.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 11:49:37 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 11:49:36 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Pradeep P V K <ppvk@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        linux-mmc-owner@vger.kernel.org,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Subject: Re: [RFC v6 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth
- scaling support
-Message-ID: <20200323184936.GC204494@google.com>
-References: <1584973502-14775-1-git-send-email-ppvk@codeaurora.org>
- <1584973502-14775-2-git-send-email-ppvk@codeaurora.org>
+        Mon, 23 Mar 2020 15:00:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727179AbgCWTAb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 15:00:31 -0400
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F8E52072D;
+        Mon, 23 Mar 2020 19:00:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584990030;
+        bh=OWIJDZpQXbFyz2hg7RD+fmgwKJdocriC/oPehC3qluw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U3W+fW0RmvbdgZB+JjcZxIYfF1ybLXRGHjElXHueCZPD3GSty7UwhwRfgIlxosDNe
+         37r47Zsm9ZxvzKgRqs3M+6PzF2uvnOazZJ91ZKyftEythqicVo84051qtg2uMrNaM1
+         8G6gnlLZOrN/DIxDaH6TCVBh4G1tz7uQV/CRJHkE=
+Received: by mail-qv1-f47.google.com with SMTP id f7so1509331qvr.11;
+        Mon, 23 Mar 2020 12:00:30 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2t96uZQTzx1xUn532IVi0EXFci4gBXYcXkkiFJCC+9YvDu9M79
+        SBmAWn7y8jmiOEY51Mg648vkfP2tvTOWczs2vQ==
+X-Google-Smtp-Source: ADFU+vt5fPloqxATEzZeWN8BcOPyhi0bdMlxeXX/WkEb8iPkU0cDTP674v4mkmIkmBAx7W46QPHOvJK5jKp0fCmQN58=
+X-Received: by 2002:ad4:4829:: with SMTP id h9mr21116070qvy.135.1584990028598;
+ Mon, 23 Mar 2020 12:00:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1584973502-14775-2-git-send-email-ppvk@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200320174107.29406-1-lkundrak@v3.sk> <20200320174107.29406-11-lkundrak@v3.sk>
+In-Reply-To: <20200320174107.29406-11-lkundrak@v3.sk>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 23 Mar 2020 13:00:17 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+GDnYviCdszhghhEVB55giPHk8N9w_KASPXG_=H+ZQig@mail.gmail.com>
+Message-ID: <CAL_Jsq+GDnYviCdszhghhEVB55giPHk8N9w_KASPXG_=H+ZQig@mail.gmail.com>
+Subject: Re: [PATCH 10/10] dt-bindings: serial: Convert 8250 to json-schema
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Pradeep,
+On Fri, Mar 20, 2020 at 11:41 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> Some fixes were done during the conversion:
 
-On Mon, Mar 23, 2020 at 07:55:01PM +0530, Pradeep P V K wrote:
-> Add interconnect bandwidths for SDHC driver using OPP framework that
-> is required by SDHC driver based on the clock frequency and bus width
-> of the card. Otherwise, the system clocks may run at minimum clock
-> speed and thus affecting the performance.
-> 
-> This change is based on
-> [RFC] mmc: host: sdhci-msm: Use the interconnect API
-> (https://lkml.org/lkml/2018/10/11/499) and
-> 
-> [PATCH v6] Introduce Bandwidth OPPs for interconnects
-> (https://lkml.org/lkml/2019/12/6/740)
-> 
-> Co-developed-by: Sahitya Tummala <stummala@codeaurora.org>
-> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> Co-developed-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
-> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+Thanks for doing this!
+
+>
+> Slightly better examples. The original example was for an OMAP serial
+> port, which is not even described by this binding, but by
+> omap_serial.txt instead.
+>
+> Added compatible strings, that were used, byt not documented:
+> andestech,uart16550, cavium,octeon-3860-uart, fsl,16550-FIFO64,
+> nvidia,tegra186-uart, nvidia,tegra194-uart, nxp,lpc1850-uart,
+> opencores,uart16550-rtlsvn105, ralink,mt7620a-uart, ralink,rt3052-uart,
+> ralink,rt3883-uart and xlnx,xps-uart16550-2.00.b.
+>
+> Removed "serial" compatible string. It's redundant with the node name
+> (which, in OFW, serves the same purpose as the compatible string).
+
+Yeah, that seems fairly useless to me.
+
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > ---
-> 
-> RFC v5 -> v6:
-> - Added new goto jump tag to put both icc paths.
-> - Removed bus vote data error check and added is_null check.
-> - Addressed minor code style comments.
-> 
->  drivers/mmc/host/sdhci-msm.c | 240 ++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 236 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 09ff731..469db65 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
+>  .../devicetree/bindings/serial/8250.txt       | 102 --------
+>  .../devicetree/bindings/serial/8250.yaml      | 246 ++++++++++++++++++
+>  2 files changed, 246 insertions(+), 102 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/8250.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/8250.yaml
+
+[...]
+
+> diff --git a/Documentation/devicetree/bindings/serial/8250.yaml b/Documentation/devicetree/bindings/serial/8250.yaml
+> new file mode 100644
+> index 0000000000000..88192f94385b0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/8250.yaml
+> @@ -0,0 +1,246 @@
+> +# Copyright 2020 Lubomir Rintel <lkundrak@v3.sk>
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serial/8250.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: UART (Universal Asynchronous Receiver/Transmitter) bindings
+
+Perhaps: "8250 series UART..."
+
+> +
+> +maintainers:
+> +  - devicetree@vger.kernel.org
+> +
+> +allOf:
+> +  - $ref: /schemas/serial.yaml#
+
+> +  - if:
+> +      not:
+> +        required:
+> +          - clock-frequency
+> +    then:
+> +      required:
+> +        - clocks
+> +  - if:
+> +      not:
+> +        required:
+> +          - clocks
+> +    then:
+> +      required:
+> +        - clock-frequency
+
+anyOf:
+  - required: [ clock-frequency ]
+  - required: [ clocks ]
+
+> +  - if:
+> +      required:
+> +        - aspeed,sirq-polarity-sense
+> +    then:
+> +      properties:
+> +        compatible:
+> +          const: aspeed,ast2500-vuart
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          const: mrvl,mmp-uart
+> +    then:
+> +      properties:
+> +        reg-shift:
+> +          const: 2
+> +      required:
+> +        - reg-shift
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: ns8250
+> +      - const: ns16450
+> +      - const: ns16550
+> +      - const: ns16550a
+> +      - const: ns16850
+> +      - const: aspeed,ast2400-vuart
+> +      - const: aspeed,ast2500-vuart
+> +      - const: intel,xscale-uart
+> +      - const: mrvl,pxa-uart
+> +      - const: nuvoton,npcm750-uart
+> +      - const: nvidia,tegra20-uart
+> +      - const: nxp,lpc3220-uart
+> +      - items:
+> +          - enum:
+> +              - altr,16550-FIFO32
+> +              - altr,16550-FIFO64
+> +              - altr,16550-FIFO128
+> +              - fsl,16550-FIFO64
+> +              - fsl,ns16550
+> +              - andestech,uart16550
+> +              - nxp,lpc1850-uart
+> +              - opencores,uart16550-rtlsvn105
+> +              - ti,da830-uart
+> +          - const: ns16550a
+> +      - items:
+> +          - enum:
+> +              - ns16750
+> +              - cavium,octeon-3860-uart
+> +              - xlnx,xps-uart16550-2.00.b
+> +              - ralink,rt2880-uart
+> +          - const: ns16550
+
+Seems to me these are just as likely to be wrong as the fsl,ns16550 as
+it's unlikely the FIFO is broken. Perhaps a note here to use
+'ns16550a' instead unless you have a broken FIFO.
+
+> +      - items:
+> +          - enum:
+> +            - ralink,mt7620a-uart
+> +            - ralink,rt3052-uart
+> +            - ralink,rt3883-uart
+> +          - const: ralink,rt2880-uart
+> +          - const: ns16550
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt7622-btif
+> +              - mediatek,mt7623-btif
+> +          - const: mediatek,mtk-btif
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt7622-btif
+> +              - mediatek,mt7623-btif
+> +          - const: mediatek,mtk-btif
+> +      - items:
+> +          - const: mrvl,mmp-uart
+> +          - const: intel,xscale-uart
+> +      - items:
+> +          - enum:
+> +              - nvidia,tegra30-uart
+> +              - nvidia,tegra114-uart
+> +              - nvidia,tegra124-uart
+> +              - nvidia,tegra186-uart
+> +              - nvidia,tegra194-uart
+> +              - nvidia,tegra210-uart
+> +          - const: nvidia,tegra20-uart
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clock-frequency: true
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  current-speed:
+> +    description: The current active speed of the UART.
+
+Needs a type reference.
+
+> +  reg-offset:
+> +    description: |
+> +      Offset to apply to the mapbase from the start of the registers.
+> +
+> +  reg-shift:
+> +    description: Quantity to shift the register offsets by.
+> +
+> +  reg-io-width:
+> +    description: |
+> +      The size (in bytes) of the IO accesses that should be performed on the
+> +      device. There are some systems that require 32-bit accesses to the
+> +      UART (e.g. TI davinci).
+
+We'll assume these have a type definition elsewhere.
+
+> +
+> +  used-by-rtas:
+> +    description: |
+> +      Set to indicate that the port is in use by the OpenFirmware RTAS and
+> +      should not be registered.
+
+Needs a type reference.
+
+> +
+> +  no-loopback-test:
+> +    description: |
+> +      Set to indicate that the port does not implements loopback test mode.
+
+s/implements/implement/
+
+Needs a type reference (or 'type: boolean').
+
+> +
+> +  fifo-size:
+> +    description: The fifo size of the UART.
+> +
+> +  auto-flow-control:
+> +    description: |
+> +      One way to enable automatic flow control support. The driver is
+> +      allowed to detect support for the capability even without this
+> +      property.
+> +
+> +  tx-threshold:
+> +    description: |
+> +      Specify the TX FIFO low water indication for parts with programmable
+> +      TX FIFO thresholds.
+
+Need a type reference for all these.
+
+> +
+> +  resets:
+> +    description: Phandle + reset specifier pairs
+
+Is there a range of number of resets? Use minItems/maxItems.
+
+> +
+> +  overrun-throttle-ms:
+> +    description: |
+> +      How long to pause uart rx when input overrun is encountered.
+> +
+> +  rts-gpios:
+> +    description: |
+> +      Specify a GPIO for RTS line to be used instead of the peripheral
+> +      function pin for the UART feature.
+
+No need to define properties from serial.yaml again. Just 'rts-gpios: true'.
+
+> +
+> +  cts-gpios:
+> +    description: |
+> +      Specify a GPIO for CTS line to be used instead of the peripheral
+> +      function pin for the UART feature.
+> +
+> +  dtr-gpios:
+> +    description: |
+> +      Specify a GPIO for DTR line to be used instead of the peripheral
+> +      function pin for the UART feature.
+> +
+> +  dsr-gpios:
+> +    description: |
+> +      Specify a GPIO for DSR line to be used instead of the peripheral
+> +      function pin for the UART feature.
+> +
+> +  rng-gpios:
+> +    description: |
+> +      Specify a GPIO for RNG line to be used instead of the peripheral
+> +      function pin for the UART feature.
+> +
+> +  dcd-gpios:
+> +    description: |
+> +      Specify a GPIO for DCD line to be used instead of the peripheral
+> +      function pin for the UART feature.
+> +
+> +  aspeed,sirq-polarity-sense:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle-array'
+> +    description: |
+> +      Phandle to aspeed,ast2500-scu compatible syscon alongside register
+> +      offset and bit number to identify how the SIRQ polarity should be
+> +      configured. One possible data source is the LPC/eSPI mode bit. Only
+> +      applicable to aspeed,ast2500-vuart.
+> +
+> +required:
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    serial@80230000 {
+> +        compatible = "ns8250";
+> +        reg = <0x80230000 0x100>;
+> +        interrupts = <10>;
+> +        reg-shift = <2>;
+> +        clock-frequency = <48000000>;
+> +    };
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    serial@49042000 {
+> +        compatible = "andestech,uart16550", "ns16550a";
+> +        reg = <0x49042000 0x400>;
+> +        interrupts = <80>;
+> +        clock-frequency = <48000000>;
+> +        cts-gpios = <&gpio3 5 GPIO_ACTIVE_LOW>;
+> +        rts-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
+> +        dtr-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
+> +        dsr-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+> +        dcd-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
+> +        rng-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+> +    };
+> +  - |
+> +    #include <dt-bindings/clock/aspeed-clock.h>
+> +    serial@1e787000 {
+> +        compatible = "aspeed,ast2500-vuart";
+> +        reg = <0x1e787000 0x40>;
+> +        reg-shift = <2>;
+> +        interrupts = <8>;
+> +        clocks = <&syscon ASPEED_CLK_APB>;
+> +        no-loopback-test;
+> +        aspeed,sirq-polarity-sense = <&syscon 0x70 25>;
+> +    };
+> +
+> +...
+> --
+> 2.25.1
 >
-> ...
->
-> +/*
-> + * Helper function to parse the exact OPP node
-> + * Returns OPP pointer on success else NULL on error
-> + */
-> +static struct dev_pm_opp
-> +		*sdhci_msm_find_opp_for_freq(struct sdhci_msm_host *msm_host,
-> +							unsigned long bw)
-> +{
-> +	struct dev_pm_opp *opp;
-> +	struct sdhci_host *host = mmc_priv(msm_host->mmc);
-> +	unsigned int freq = bw;
-> +	struct device *dev = &msm_host->pdev->dev;
-> +
-> +
-
-delete one empty line
-
-> +	if (!freq)
-> +		opp = dev_pm_opp_find_peak_bw_floor(dev, &freq);
-> +	else
-> +		opp = dev_pm_opp_find_peak_bw_exact(dev, freq, true);
-> +
-> +	/* Max bandwidth vote */
-> +	if (PTR_ERR(opp) == -ERANGE && freq > sdhci_msm_get_max_clock(host))
-> +		opp = dev_pm_opp_find_peak_bw_ceil(dev, &bw);
-> +
-> +	if (IS_ERR(opp)) {
-> +		dev_err(dev, "Failed to find OPP for freq:%u err:%ld\n",
-> +				freq, PTR_ERR(opp));
-> +		return NULL;
-> +	}
-> +	return opp;
-> +}
->
-> ...
->
-> +/*
-> + * Helper function to register for OPP and interconnect
-> + * frameworks.
-> + */
-> +static struct sdhci_msm_bus_vote_data
-> +		*sdhci_msm_bus_register(struct sdhci_msm_host *host,
-> +				struct platform_device *pdev)
-> +{
-> +	struct sdhci_msm_bus_vote_data *vote_data;
-> +	struct device *dev = &pdev->dev;
-> +	int i, err;
-> +	struct icc_path *icc_paths[BUS_INTERCONNECT_PATHS];
-> +	const char *path_names[] = {
-> +		"sdhc-ddr",
-> +		"cpu-sdhc",
-> +	};
-> +
-> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++)
-> +		icc_paths[i] = of_icc_get(&pdev->dev, path_names[i]);
-> +
-> +	if (!icc_paths[0] && !icc_paths[1]) {
-> +		dev_info(&pdev->dev, "ICC DT property is missing.Skip vote!!\n");
-> +		return NULL;
-> +	}
-> +
-> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
-> +		if (!icc_paths[i]) {
-> +			dev_err(&pdev->dev, "interconnect path '%s' is not configured\n",
-> +					path_names[i]);
-> +			err = -EINVAL;
-> +			goto handle_err;
-> +		}
-> +		if (IS_ERR(icc_paths[i])) {
-> +			err = PTR_ERR(icc_paths[i]);
-> +
-> +			if (err != -EPROBE_DEFER)
-> +				dev_err(&pdev->dev, "interconnect path '%s' is invalid:%d\n",
-> +					path_names[i], err);
-> +			goto handle_err;
-> +		}
-> +	}
-> +
-> +	err = dev_pm_opp_of_add_table(dev);
-> +	if (err) {
-> +		if (err == -ENODEV || err == -ENODATA)
-> +			dev_err(dev, "OPP dt properties missing:%d\n", err);
-> +		else
-> +			dev_err(dev, "OPP registration failed:%d\n", err);
-> +		goto put_icc;
-> +	}
-> +
-> +	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
-> +	if (!vote_data) {
-> +		err = -ENOMEM;
-> +		goto put_icc;
-> +	}
-> +	vote_data->sdhc_to_ddr = icc_paths[0];
-> +	vote_data->cpu_to_sdhc = icc_paths[1];
-> +	return vote_data;
-> +
-> +handle_err:
-> +	if (err) {
-
-the check for 'err' is not needed, this code is only executed when an error
-is encountered.
-
-> +		int other = (i == 0) ? 1 : 0;
-> +
-> +		if (!IS_ERR_OR_NULL(icc_paths[other]))
-> +			icc_put(icc_paths[other]);
-> +	}
-> +	return ERR_PTR(err);
-> +
-> +put_icc:
-> +	if (err) {
-> +		for (i = 0; i < BUS_INTERCONNECT_PATHS; i++)
-> +			icc_put(icc_paths[i]);
-> +	}
-> +	return ERR_PTR(err);
-
-The two error paths are somewhat redundant and the 'handle_err' isn't super
-clear, especially since it is disconnected from the code where the error is
-found.
-
-You could have a single handler instead:
-
-put_icc:
-	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
-		if (!IS_ERR_OR_NULL(icc_paths[i]))
-			icc_put(icc_paths[i]);
-        }
-
-	return ERR_PTR(err);
