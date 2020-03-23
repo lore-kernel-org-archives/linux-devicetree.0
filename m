@@ -2,92 +2,101 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B46C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C25C4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1FAF20753
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:14:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585001654;
-	bh=OrsdWWDpMVBkmg4P2n1X0Ud13wXuOs05aSb+v05IoxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qrXM/Yxg0vVqlXgcbGTCFkzmYMZMTdsKvyq5+SN7d/jJNB/h7uuEtZZINVMz9EJWA
-	 t53lH1S0de6gW/vpvjMuSOKhm843URli7vOh+bgcCgxhh9ZikR7vcP7HteOG0oITtw
-	 uGWD1puZz3NFs9QA3yskl2VDdcweoTyXgVSPs3UI=
+	by mail.kernel.org (Postfix) with ESMTP id 55CE720714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCWWOO (ORCPT
+        id S1725990AbgCWWlz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:14:14 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:36445 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgCWWOO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:14:14 -0400
-Received: by mail-il1-f193.google.com with SMTP id h3so14948113ils.3;
-        Mon, 23 Mar 2020 15:14:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YwDVmx/7pr36/zBUwTKAawrGVSeIBJncPSwg7RtZXaI=;
-        b=Ck2Blp+HDFleRsp3E1gSqZ3Up8yJWRB1b6U/4AF3CxyG3fozXzhKln1Q48TlEZAmc1
-         HLVDxCe1O+yZH+1tu5K3JAZV/YF9k/ZwubsqO79CXoQLmRdyAQ8ZEvTEP61PbzJXithp
-         MeWJeBbAx3E1Q+dc5aSkJzVufwS04FWJ5vL1jSUnk3lmj3Y7RvvdXB2KS28E3AcOVpeN
-         f5bqXClZUBPPw6K7U0kJl+CIIi/3Zl/DwW4lhI22oM7/SFRd/C/pvnDbV1ie1+YJaCwa
-         fNu3tI8kwEAALUiJ9byGzoooQkwCkNI6wJhUfw9k2GWHjh9T8XCoulzyfvZVox0z0Cl9
-         gQeQ==
-X-Gm-Message-State: ANhLgQ3RKNjMecA2TjzJHfsEg4o1Rf6udk7UgOQDc0vhYEQ5wWWXxzLB
-        Se6dIHQoK7097lvGRD/LuT1c0lA=
-X-Google-Smtp-Source: ADFU+vtmB9+BQuIncmj63KKHCHqFICX0S67XCzAYHEXUebAJ+2wdsOgqdZHyMJFrPNYNL3B2XPdGkg==
-X-Received: by 2002:a92:9a4d:: with SMTP id t74mr14100809ili.168.1585001652864;
-        Mon, 23 Mar 2020 15:14:12 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id h12sm4651950iob.22.2020.03.23.15.14.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 15:14:12 -0700 (PDT)
-Received: (nullmailer pid 315 invoked by uid 1000);
-        Mon, 23 Mar 2020 22:14:10 -0000
-Date:   Mon, 23 Mar 2020 16:14:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 3/3] dt-bindings: rtc: Convert and update jz4740-rtc
- doc to YAML
-Message-ID: <20200323221410.GA32740@bogus>
-References: <20200311182318.22154-1-paul@crapouillou.net>
- <20200311182318.22154-3-paul@crapouillou.net>
+        Mon, 23 Mar 2020 18:41:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41020 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgCWWlz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:41:55 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 4F3B628ED17
+Message-ID: <db57d62e189b4578aec20280d69b893797588c3d.camel@collabora.com>
+Subject: Re: [PATCH v6 0/4] Add initial i.MX8MQ support
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de,
+        devicetree@vger.kernel.org
+Date:   Mon, 23 Mar 2020 19:41:45 -0300
+In-Reply-To: <20200320131256.23294-1-p.zabel@pengutronix.de>
+References: <20200320131256.23294-1-p.zabel@pengutronix.de>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311182318.22154-3-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 11 Mar 2020 19:23:18 +0100, Paul Cercueil wrote:
-> Convert the jz4740-rtc doc to YAML, and update it to reflect the new
-> changes in the driver:
-> - More compatible strings are specified, with fallbacks if needed,
-> - The vendor-specific properties are now properly prefixed with the
->   'ingenic,' prefix.
+Hi Philipp,
+
+Tested on the EVK, looks great.
+
+On Fri, 2020-03-20 at 14:12 +0100, Philipp Zabel wrote:
+> With the i.MX8MQ decoders in active use and the i.MX8MM power domain
+> support still up in the air, I think it makes sense to merge i.MX8MQ
+> Hantro support now and accept that i.MX8MM may or may not require
+> different bindings.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  .../bindings/rtc/ingenic,jz4740-rtc.txt       | 37 ---------
->  .../devicetree/bindings/rtc/ingenic,rtc.yaml  | 83 +++++++++++++++++++
->  2 files changed, 83 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/ingenic,jz4740-rtc.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/ingenic,rtc.yaml
+> Patch 4 depends on [2] for the MAINTAINERS change.
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thanks a lot for stepping up and helping to maintain
+the driver!
+
+For all patches:
+
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+
+> Changes since v5 [1]:
+>  - Drop merged patches
+>  - Drop i.MX8MM bindings
+>  - Change example node name to video-codec
+>  - Convert i.MX8MQ bindings to YAML
+>  - Drop i.MX8MM support
+>  - Rebase onto media/master
+>  - Enable h.264 and VP8 decoding
+>  - Enable post-processing
+> 
+> [1] https://lore.kernel.org/linux-media/20190612093915.18973-1-p.zabel@pengutronix.de
+> [2] https://lore.kernel.org/linux-media/20200318132108.21873-9-ezequiel@collabora.com
+> 
+> regards
+> Philipp
+> 
+> Philipp Zabel (4):
+>   media: dt-bindings: Document i.MX8MQ VPU bindings
+>   media: hantro: add initial i.MX8MQ support
+>   arm64: dts: imx8mq: enable Hantro G1/G2 VPU
+>   media: MAINTAINERS: add myself to co-maintain Hantro G1/G2 for i.MX8MQ
+> 
+>  .../bindings/media/nxp,imx8mq-vpu.yaml        |  77 ++++++
+>  MAINTAINERS                                   |   2 +
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  27 +++
+>  drivers/staging/media/hantro/Kconfig          |  16 +-
+>  drivers/staging/media/hantro/Makefile         |   3 +
+>  drivers/staging/media/hantro/hantro_drv.c     |   3 +
+>  drivers/staging/media/hantro/hantro_hw.h      |   1 +
+>  drivers/staging/media/hantro/imx8m_vpu_hw.c   | 220 ++++++++++++++++++
+>  8 files changed, 345 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
+>  create mode 100644 drivers/staging/media/hantro/imx8m_vpu_hw.c
+> 
+
+
