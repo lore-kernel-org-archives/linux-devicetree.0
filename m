@@ -6,86 +6,86 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A305C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A26C4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3A520753
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2996C20784
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585000876;
-	bh=baxPZ3dsISS5PswIyO+sxiLEKJ/81dtCQ0sAr8ICJ3M=;
+	s=default; t=1585001077;
+	bh=AOPBox0FGNwadNDBx5AibYFv7qRynIoProGlTcDXSJ4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L22ufTlOSunJQIAJyohzGUmdhOt3VnAz8EXFi5NzV8N9iou+BvfLV5nkPRYObKrG4
-	 y8yjYHIYifdNqv78Nd9+IdhY6RRLsW0RM4kmy2bqlfcRZHnB060dPk/YezPRy0L9aT
-	 Gg/iYUgJrRhNBWZ42xCDVD7jidjsqpkVX7WLo8sI=
+	b=kpLD5ulxPeDbwWjNbQjnaS39zOSXAwD81XzRrOx8UeJrlxDhO5AJOdAiz4HzM0Qtn
+	 ALcx/0kUc7ep589X3TmJS5dkTGOcNozL7FEexiaeO663Q01iIhvFivdIFzKQYGsnqw
+	 cwueUUmiTXVOUW3Q6epUbo5dLdFBp+J5VeuLLQqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbgCWWBP (ORCPT
+        id S1725897AbgCWWEg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:01:15 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44160 "EHLO
+        Mon, 23 Mar 2020 18:04:36 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38607 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgCWWBP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:01:15 -0400
-Received: by mail-io1-f66.google.com with SMTP id v3so16013733iot.11;
-        Mon, 23 Mar 2020 15:01:15 -0700 (PDT)
+        with ESMTP id S1727025AbgCWWEg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:04:36 -0400
+Received: by mail-io1-f66.google.com with SMTP id m15so10982364iob.5;
+        Mon, 23 Mar 2020 15:04:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=moatfj5jRXvxhlq8xo+ssOSqLVqKCjMat/spioxEHRQ=;
-        b=guJKDC9Fnb9SiWQhXyXlkQ9PC1WigIrfAgwlU5mi8frn0JyAy+uAbrJTQ4NhwmiODs
-         sdoi+zWrooPc1B3ubteJJ7ZIPQw5Y90wLWW3UWKAPOobdXn1It2759xV/zfcFzxvTA+K
-         RqrpGtpNZFxkjuxRCgovVl9ewMY4MpvlF5Tm3ZbJOnB0RUHaXGQ3h/rApEmFCQRIHkYg
-         wJwGa7ihkcisATqgarxp0kGKwaLDitmdrrstR+VMNj2avGE5wLAc0XX1kKhnsmSSblRF
-         8A8PpbaC2V9r6j38dPy6oY1tVTOsKTvndsK+OfrGIQop/kviH6VoRJXAVgjxVwTJ/tkD
-         vwwQ==
-X-Gm-Message-State: ANhLgQ1DDcTS+wVicWE0ligYyEYcBE9u8bKGm4KkEuxo+XZeX0ppg8/y
-        mzNc0ENilp2JGPAWUWzcbQ==
-X-Google-Smtp-Source: ADFU+vs3cAIQeBmF64VbdwUuHkyB7YPqQzyPHXQtO+XeMGCPFEMA01amQdtzhjE6hL2OYktO6iZcHA==
-X-Received: by 2002:a5d:9f4f:: with SMTP id u15mr20642459iot.87.1585000874691;
-        Mon, 23 Mar 2020 15:01:14 -0700 (PDT)
+        bh=OxmWLYX7moIPVGiIwbbFxtiUZQmEPG+TJ66GSCPnfpE=;
+        b=hEzLAQh429bRt5qFBFddLX4wUIPoTFol5g1/1nunTlcI3TRNGYkyI8tUXp3khlv5QH
+         +vbd7H/k1yuGS4iUrwUYa0RB+Vpwop737tDa2S4ZC9HngJp2VRkF8qK77zK5aaLsZuDf
+         vGDoXGqBBL7FsbED6RWOXvoRHg6Nvirv/euDFUtqYjoHX/Vgyjt4VFeTAol8XfOb16el
+         kEAllQ25A8l9QR/fOdh9IHktLqsMMfzlStjeXA8lWfKbleVq2CtbxJwrzvu5sNp1Lz2F
+         BaDQGJhw6X6zAv52Zj8h/Oq77o+fZ4DR0XlNhmFi9anE8W3ke44vANOUwD6c3hQqa+ig
+         ABkw==
+X-Gm-Message-State: ANhLgQ2fvm1QQ1segwMH3cw3tzuezrhpFMcrG5vCxuYWJ9JncIOcWEQV
+        6R0a60JUFatqwnseeoT1Yg==
+X-Google-Smtp-Source: ADFU+vvj1yTP/dxc/c85bcfJYJQxOiDFkLfIs3nP/BoYkiG+qoSkVWyO+SkPv3v6lQjXgahyel2PfA==
+X-Received: by 2002:a02:390b:: with SMTP id l11mr7659387jaa.111.1585001075011;
+        Mon, 23 Mar 2020 15:04:35 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id p70sm5645056ilk.53.2020.03.23.15.01.13
+        by smtp.gmail.com with ESMTPSA id c28sm5728899ilf.26.2020.03.23.15.04.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 15:01:14 -0700 (PDT)
-Received: (nullmailer pid 11664 invoked by uid 1000);
-        Mon, 23 Mar 2020 22:01:12 -0000
-Date:   Mon, 23 Mar 2020 16:01:12 -0600
+        Mon, 23 Mar 2020 15:04:34 -0700 (PDT)
+Received: (nullmailer pid 17421 invoked by uid 1000);
+        Mon, 23 Mar 2020 22:04:33 -0000
+Date:   Mon, 23 Mar 2020 16:04:33 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: display: mediatek: get mipitx
- calibration data from nvmem
-Message-ID: <20200323220112.GA11622@bogus>
-References: <20200311074032.119481-1-jitao.shi@mediatek.com>
- <20200311074032.119481-3-jitao.shi@mediatek.com>
+To:     Phong LE <ple@baylibre.com>
+Cc:     narmstrong@baylibre.com, airlied@linux.ie, daniel@ffwll.ch,
+        mark.rutland@arm.com, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, sam@ravnborg.org, mripard@kernel.org,
+        heiko.stuebner@theobroma-systems.com, linus.walleij@linaro.org,
+        stephan@gerhold.net, icenowy@aosc.io, broonie@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        andriy.shevchenko@linux.intel.com, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: add ITE vendor
+Message-ID: <20200323220432.GA16431@bogus>
+References: <20200311125135.30832-1-ple@baylibre.com>
+ <20200311125135.30832-2-ple@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311074032.119481-3-jitao.shi@mediatek.com>
+In-Reply-To: <20200311125135.30832-2-ple@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 11 Mar 2020 15:40:30 +0800, Jitao Shi wrote:
-> Add properties to get get mipitx calibration data.
+On Wed, Mar 11, 2020 at 01:51:32PM +0100, Phong LE wrote:
+> Add ITE Tech Inc. prefix "ite" in vendor-prefixes. More information on:
+> http://www.ite.com.tw/
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Signed-off-by: Phong LE <ple@baylibre.com>
 > ---
->  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt    | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Already have a patch for this queued for 5.7.
+
+Rob
