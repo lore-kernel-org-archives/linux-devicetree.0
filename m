@@ -2,176 +2,140 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E033C10F26
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 05:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12308C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 06:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC3920769
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 05:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7656206C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 06:06:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgCWFah (ORCPT
+        id S1726618AbgCWGGh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 01:30:37 -0400
-Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:44123 "EHLO
-        ironport.ite.com.tw" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725955AbgCWFah (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 01:30:37 -0400
-IronPort-SDR: YbxTHeOOcFdXOuhoP3V/Htz6bnQHTfERZD1jCGnLtMR2iVr3VW3KaPqlM3GCBk+5houZHjuSHn
- ckjHSzgN7jHA==
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 23 Mar 2020 13:30:35 +0800
-Received: from CSBMAIL1.internal.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
-        by mse.ite.com.tw with ESMTP id 02N5USbj004041;
-        Mon, 23 Mar 2020 13:30:28 +0800 (GMT-8)
-        (envelope-from allen.chen@ite.com.tw)
-Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Mon, 23 Mar 2020 13:30:20 +0800
-From:   allen <allen.chen@ite.com.tw>
-CC:     Allen Chen <allen.chen@ite.com.tw>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Mon, 23 Mar 2020 02:06:37 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49725 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgCWGGh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 02:06:37 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jGGEC-0008Et-Tp; Mon, 23 Mar 2020 07:06:24 +0100
+Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jGGE8-0002sT-HS; Mon, 23 Mar 2020 07:06:20 +0100
+Date:   Mon, 23 Mar 2020 07:06:20 +0100
+From:   Philipp Zabel <pza@pengutronix.de>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Sham Muthayyan <smuthayy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 2/3] dt-bindings: Add binding for IT6505.
-Date:   Mon, 23 Mar 2020 13:21:53 +0800
-Message-ID: <1584941015-20541-3-git-send-email-allen.chen@ite.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1584941015-20541-1-git-send-email-allen.chen@ite.com.tw>
-References: <1584941015-20541-1-git-send-email-allen.chen@ite.com.tw>
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/12] pcie: qcom: add missing reset for ipq806x
+Message-ID: <20200323060620.GA1617@pengutronix.de>
+References: <20200320183455.21311-1-ansuelsmth@gmail.com>
+ <20200320183455.21311-5-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [192.168.70.14]
-X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
- CSBMAIL1.internal.ite.com.tw (192.168.65.58)
-X-TM-SNTS-SMTP: 4DB9E5599C06409A34E643D7D7F07E90C8EC27F661EB41F2CF794FDB20F7BB5F2000:8
-X-MAIL: mse.ite.com.tw 02N5USbj004041
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320183455.21311-5-ansuelsmth@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:00:25 up 32 days, 13:30, 45 users,  load average: 1.03, 0.51,
+ 0.25
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: pza@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a DT binding documentation for IT6505.
+Hi Ansuel,
 
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
----
-cros-ec does not have an associated driver that uses the standard Linux USB-C driver class.
-extcon is used to model the Type-C connector.(crbug.com/982932)
----
- .../bindings/display/bridge/ite,it6505.yaml        | 91 ++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+On Fri, Mar 20, 2020 at 07:34:47PM +0100, Ansuel Smith wrote:
+> Add missing ext reset used by ipq806x soc in
+> pcie qcom driver
+> 
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 24 ++++++++++++++++++------
+>  1 file changed, 18 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 596731b54728..ecc22fd27ea6 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -95,6 +95,7 @@ struct qcom_pcie_resources_2_1_0 {
+>  	struct reset_control *ahb_reset;
+>  	struct reset_control *por_reset;
+>  	struct reset_control *phy_reset;
+> +	struct reset_control *ext_reset;
+>  	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
+>  };
+>  
+> @@ -272,6 +273,10 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+>  	if (IS_ERR(res->por_reset))
+>  		return PTR_ERR(res->por_reset);
+>  
+> +	res->ext_reset = devm_reset_control_get(dev, "ext");
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-new file mode 100644
-index 00000000..13feeef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/ite,it6505.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ITE it6505 Device Tree Bindings
-+
-+maintainers:
-+  - Allen Chen <allen.chen@ite.com.tw>
-+
-+description: |
-+  The IT6505 is a high-performance DisplayPort 1.1a transmitter,
-+  fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications.
-+  The IT6505 supports color depth of up to 36 bits (12 bits/color)
-+  and ensures robust transmission of high-quality uncompressed video
-+  content, along with uncompressed and compressed digital audio content.
-+
-+  Aside from the various video output formats supported, the IT6505
-+  also encodes and transmits up to 8 channels of I2S digital audio,
-+  with sampling rate up to 192kHz and sample size up to 24 bits.
-+  In addition, an S/PDIF input port takes in compressed audio of up to
-+  192kHz frame rate.
-+
-+  Each IT6505 chip comes preprogrammed with an unique HDCP key,
-+  in compliance with the HDCP 1.3 standard so as to provide secure
-+  transmission of high-definition content. Users of the IT6505 need not
-+  purchase any HDCP keys or ROMs.
-+
-+properties:
-+  compatible:
-+    const: ite,it6505
-+
-+  ovdd-supply:
-+    maxItems: 1
-+    description: I/O voltage
-+
-+  pwr18-supply:
-+    maxItems: 1
-+    description: core voltage
-+
-+  interrupts:
-+    maxItems: 1
-+    description: interrupt specifier of INT pin
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: gpio specifier of RESET pin
-+
-+  extcon:
-+    maxItems: 1
-+    description: extcon specifier for the Power Delivery
-+
-+  port:
-+    type: object
-+    description: A port node pointing to DPI host port node
-+
-+required:
-+  - compatible
-+  - ovdd-supply
-+  - pwr18-supply
-+  - interrupts
-+  - reset-gpios
-+  - extcon
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c3 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        dp-bridge@5c {
-+            compatible = "ite,it6505";
-+            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
-+            reg = <0x5c>;
-+            pinctrl-names = "default";
-+            pinctrl-0 = <&it6505_pins>;
-+            ovdd-supply = <&mt6358_vsim1_reg>;
-+            pwr18-supply = <&it6505_pp18_reg>;
-+            reset-gpios = <&pio 179 1>;
-+            extcon = <&usbc_extcon>;
-+
-+            port {
-+                it6505_in: endpoint {
-+                    remote-endpoint = <&dpi_out>;
-+                };
-+            };
-+        };
-+    };
--- 
-1.9.1
+Please use devm_reset_control_get_exclusive() instead.
 
+> +	if (IS_ERR(res->ext_reset))
+> +		return PTR_ERR(res->ext_reset);
+> +
+>  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+>  	return PTR_ERR_OR_ZERO(res->phy_reset);
+>  }
+> @@ -285,6 +290,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+>  	reset_control_assert(res->axi_reset);
+>  	reset_control_assert(res->ahb_reset);
+>  	reset_control_assert(res->por_reset);
+> +	reset_control_assert(res->ext_reset);
+>  	reset_control_assert(res->phy_reset);
+>  	clk_disable_unprepare(res->iface_clk);
+>  	clk_disable_unprepare(res->core_clk);
+> @@ -301,18 +307,18 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  	u32 val;
+>  	int ret;
+>  
+> +	ret = reset_control_assert(res->ahb_reset);
+> +	if (ret) {
+> +		dev_err(dev, "cannot assert ahb reset\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+>  	if (ret < 0) {
+>  		dev_err(dev, "cannot enable regulators\n");
+>  		return ret;
+>  	}
+>  
+> -	ret = reset_control_assert(res->ahb_reset);
+> -	if (ret) {
+> -		dev_err(dev, "cannot assert ahb reset\n");
+> -		goto err_assert_ahb;
+> -	}
+> -
+
+This change is not described in the commit message.
+
+regards
+Philipp
