@@ -2,95 +2,136 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46EBC3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 17:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11442C54FCF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 18:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C772072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 17:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584986371;
-	bh=2l0KQW4VoP61cJLv+dL28Z9ly7A7laSQG5Iu1ELGiNg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eDivF2kyjLjB6kFqlQqPCbwFhaAqmXw4nCm/CFK3I/0zzFVMuJ5lajBzRcO8V1EXg
-	 g65O3vdm9cOJKbZPe6gRiNNxlp0YsMxoTDFg88UwQO9nL9/5C324As7fe4fcVH3Nch
-	 GvUX8lAtSdu/8k9/+TjGtH7hfEdIIHmb08ewL8N8=
+	by mail.kernel.org (Postfix) with ESMTP id EB32120774
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 18:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgCWR7b (ORCPT
+        id S1727851AbgCWSHl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 13:59:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727011AbgCWR7b (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 13:59:31 -0400
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C2292076E;
-        Mon, 23 Mar 2020 17:59:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584986370;
-        bh=2l0KQW4VoP61cJLv+dL28Z9ly7A7laSQG5Iu1ELGiNg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0lqsb+hyuD6XqDBK/iujiOzptPXvHe2aV/Kkwr/P9PUnDfHuueev3+9fAESyrBbXO
-         ZkqqYSoJFuvUWkikxGH/IUJ026YcMeuNlg4tvEn2RHdNtA8m0Q8d/1izBjP/Y7z1YM
-         neW0n8jo8z3fJdmpYEmC19DdPkIw8QyaG/UxJ2uQ=
-Received: by mail-qk1-f173.google.com with SMTP id x3so4743764qki.4;
-        Mon, 23 Mar 2020 10:59:30 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3X6lkENw1D+18PwfR1dHlvEp+svbIONC0IFdXeaX3lh/nmGMJ+
-        CfwV5SOwBn319i1jyWmcJbwatv4y65OE6frLzg==
-X-Google-Smtp-Source: ADFU+vsR6Us0V+BMyVNelvszRuS/SrM36zlyf95ZYn/ZAx/QRMGOQ3N6czh+WeF4cZMmcFdLqwHXYaDLwzsbRTR1RmQ=
-X-Received: by 2002:a37:8502:: with SMTP id h2mr22475590qkd.223.1584986369516;
- Mon, 23 Mar 2020 10:59:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200320174107.29406-1-lkundrak@v3.sk> <20200320174107.29406-9-lkundrak@v3.sk>
-In-Reply-To: <20200320174107.29406-9-lkundrak@v3.sk>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 23 Mar 2020 11:59:17 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+rzaFLvZGX+dpgGhfCSsAvj06T8fcgo83m+ZJGboKsnQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+rzaFLvZGX+dpgGhfCSsAvj06T8fcgo83m+ZJGboKsnQ@mail.gmail.com>
-Subject: Re: [PATCH 08/10] powerpc/fsl: Make serial ports compatible with ns16550a
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mon, 23 Mar 2020 14:07:41 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37496 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbgCWSHj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 14:07:39 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AF91B80307CA;
+        Mon, 23 Mar 2020 18:07:35 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qS4D5cx75mAd; Mon, 23 Mar 2020 21:07:34 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/6] gpio: dwapb: Fix reference clocks usage
+Date:   Mon, 23 Mar 2020 21:06:26 +0300
+Message-ID: <20200323180632.14119-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
+References: <20200306132505.8D3B88030795@mail.baikalelectronics.ru>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 11:41 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> There are separate compatible strings for ns16550 and ns16550a and the
-> Freescale serial port is compatible with the latter one, with working
-> FIFO.
+From: Serge Semin <fancer.lancer@gmail.com>
 
-I don't think changing this is right. First, 'ns16550' is what's
-documented in the DT spec (and ePAPR which it's based on).
+There is no need in any fixes to have the Baikal-T1 SoC DW GPIO controllers
+supported by the kernel DW APB GPIO driver. It works for them just fine with
+no modifications. But still there is a room for optimizations there.
 
-Second, these dts files are pretty mature/stable, so I'm less inclined
-to change them. AFAICT, this change either enables the fifo (which
-would be an untested change in behavior) or has no effect because the
-fifo is auto-detected.
+First of all as it tends to be traditional for all Baikal-T1 SoC related
+patchset we replaced the legacy plain text-based dt-binding file with
+yaml-based one. Baikal-T1 DW GPIO port A supports a debounce functionality,
+but in order to use it the corresponding reference clock must be enabled.
+We added support of that clock in the driver and made sure the dt-bindings
+had its declaration. In addition seeing both APB and debounce reference
+clocks are optional, we replaced the standard devm_clk_get() usage with
+the function of optional clocks acquisition.
 
-> Use the appropriate compatible string that is also consistent with ARM64
-> Freescale boards and thus avoiding one special case in the binding schema.
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
 
-Well, that's annoying...
+Changelog v2:
+- Use a shorter summary describing the DT bindings conversion patch.
+- Add myself to the MAINTAINERS file as a maintainer of the DW APB GPIO driver.
+- Add myself to the maintainers list of the DW APB GPIO driver DT schema.
+- Print error instead of info-message if APB/debounce clocks either
+  failed to be acquired or couldn't be enabled.
+- Rearrange the SoB tags.
+- Make sure DT schema defines the lowercase hex numbers in the main dt-node
+  name and in the sub-node names.
+- Use "allOf:" statement to apply uint32 and "minimum/maximum" limitations
+  on the "snps,nr-gpios" property of the DW APB GPIO DT schema.
+- Discard "interrupts-extended" property from the DT schema.
+- Make sure the sub-nodes have names with either 'gpio-port' or
+  'gpio-controller' prefixes.
+- Our corporate email server doesn't change Message-Id anymore, so the patchset
+  is resubmitted being in the cover-letter-threaded format.
 
-Rob
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Hoan Tran <hoan@os.amperecomputing.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (6):
+  dt-bindings: gpio: Convert snps,dw-apb-gpio to DT schema
+  dt-bindings: gpio: Add DW GPIO debounce clock property
+  dt-bindings: gpio: Add Sergey Semin to DW APB GPIO driver maintainers
+  gpio: dwapb: Use optional-clocks interface for APB ref-clock
+  gpio: dwapb: Add debounce reference clock support
+  MAINTAINERS: Add Segey Semin to maintainers of DW APB GPIO driver
+
+ .../bindings/gpio/snps,dw-apb-gpio.yaml       | 134 ++++++++++++++++++
+ .../bindings/gpio/snps-dwapb-gpio.txt         |  65 ---------
+ MAINTAINERS                                   |   1 +
+ drivers/gpio/gpio-dwapb.c                     |  41 ++++--
+ 4 files changed, 161 insertions(+), 80 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/snps,dw-apb-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+
+-- 
+2.25.1
+
