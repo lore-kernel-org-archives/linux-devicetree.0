@@ -2,56 +2,55 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05161C4332B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A305C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C336820753
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3A520753
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585000837;
-	bh=/0FVKzFHqIhe63ISdXNoCbWC3FR+88Guj0g2rxFpzA8=;
+	s=default; t=1585000876;
+	bh=baxPZ3dsISS5PswIyO+sxiLEKJ/81dtCQ0sAr8ICJ3M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UAJ+BZAfhOCNgioeGHyA+wX08Els2d38yBlx9/2YGjBsFAfm3EDF6V47uXJfE3g+c
-	 F/1KtETJLIHp9PswbF0YgvZ/2Sn39nk3jdIeFTdxX0XFOQbaD3OyDzAaRDXgU+wYff
-	 3TI1phXgQfHd6GbsWv0Cdd1NguBZaRhEHm2+QSiQ=
+	b=L22ufTlOSunJQIAJyohzGUmdhOt3VnAz8EXFi5NzV8N9iou+BvfLV5nkPRYObKrG4
+	 y8yjYHIYifdNqv78Nd9+IdhY6RRLsW0RM4kmy2bqlfcRZHnB060dPk/YezPRy0L9aT
+	 Gg/iYUgJrRhNBWZ42xCDVD7jidjsqpkVX7WLo8sI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgCWWAh (ORCPT
+        id S1725990AbgCWWBP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:00:37 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46209 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgCWWAh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:00:37 -0400
-Received: by mail-il1-f195.google.com with SMTP id e8so14845445ilc.13;
-        Mon, 23 Mar 2020 15:00:36 -0700 (PDT)
+        Mon, 23 Mar 2020 18:01:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44160 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgCWWBP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:01:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id v3so16013733iot.11;
+        Mon, 23 Mar 2020 15:01:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qFiwHqrhsKdbaQVzkW2fMkiFVAgwIM9ohgEmy5tZ2Xk=;
-        b=h2XaWn25BA8f6ZdtQT7HumjsgZtaP6yjerv0FBvcjkUiO162O/U8UWR7wttUhTeeWU
-         oqYnRtmybdIahgKbbX3/oJSjVv3YUXNh3xwcWzcqR/m8xygehiLopZDBq1jrAlbdIPCY
-         xHNeBep+J2sJNa9jseWm0Yiz9x5OBJV7g4kokMBx0sPHoCkqR4gvaThy8tY4lDJrQ8jL
-         0S/LPIDNuKTXDs43OCno432UayexhBI0CD+U98M+iPuf288pSCAm8hVgCkHTAMxd25Sv
-         tnTUu3MLCvrUwYwlag+nyW3YskBZZzVw/jgYE8J0mD/oJaKa0DiwkDEkGxRJwUcGrJRg
-         ly4g==
-X-Gm-Message-State: ANhLgQ0NJn3f7gG+rJpLxyGvxvG+zX7u6pcfAYa7hv2/Vbr+L6wvdoux
-        1DNmqlDcXFNEaoZMPOujcA==
-X-Google-Smtp-Source: ADFU+vtSXHZEpiLMs2FsMhDZIZ99EheK1oZfK6YT/nyh4eZQFkcY0AWh7hyF7JqjXt0YhfmzAA9P8Q==
-X-Received: by 2002:a92:ddcb:: with SMTP id d11mr23249377ilr.211.1585000835890;
-        Mon, 23 Mar 2020 15:00:35 -0700 (PDT)
+        bh=moatfj5jRXvxhlq8xo+ssOSqLVqKCjMat/spioxEHRQ=;
+        b=guJKDC9Fnb9SiWQhXyXlkQ9PC1WigIrfAgwlU5mi8frn0JyAy+uAbrJTQ4NhwmiODs
+         sdoi+zWrooPc1B3ubteJJ7ZIPQw5Y90wLWW3UWKAPOobdXn1It2759xV/zfcFzxvTA+K
+         RqrpGtpNZFxkjuxRCgovVl9ewMY4MpvlF5Tm3ZbJOnB0RUHaXGQ3h/rApEmFCQRIHkYg
+         wJwGa7ihkcisATqgarxp0kGKwaLDitmdrrstR+VMNj2avGE5wLAc0XX1kKhnsmSSblRF
+         8A8PpbaC2V9r6j38dPy6oY1tVTOsKTvndsK+OfrGIQop/kviH6VoRJXAVgjxVwTJ/tkD
+         vwwQ==
+X-Gm-Message-State: ANhLgQ1DDcTS+wVicWE0ligYyEYcBE9u8bKGm4KkEuxo+XZeX0ppg8/y
+        mzNc0ENilp2JGPAWUWzcbQ==
+X-Google-Smtp-Source: ADFU+vs3cAIQeBmF64VbdwUuHkyB7YPqQzyPHXQtO+XeMGCPFEMA01amQdtzhjE6hL2OYktO6iZcHA==
+X-Received: by 2002:a5d:9f4f:: with SMTP id u15mr20642459iot.87.1585000874691;
+        Mon, 23 Mar 2020 15:01:14 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id m18sm5620099ila.54.2020.03.23.15.00.34
+        by smtp.gmail.com with ESMTPSA id p70sm5645056ilk.53.2020.03.23.15.01.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 15:00:35 -0700 (PDT)
-Received: (nullmailer pid 10516 invoked by uid 1000);
-        Mon, 23 Mar 2020 22:00:33 -0000
-Date:   Mon, 23 Mar 2020 16:00:33 -0600
+        Mon, 23 Mar 2020 15:01:14 -0700 (PDT)
+Received: (nullmailer pid 11664 invoked by uid 1000);
+        Mon, 23 Mar 2020 22:01:12 -0000
+Date:   Mon, 23 Mar 2020 16:01:12 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Jitao Shi <jitao.shi@mediatek.com>
 Cc:     Mark Rutland <mark.rutland@arm.com>,
@@ -63,56 +62,30 @@ Cc:     Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
         yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
         cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
-Subject: Re: [PATCH v3 1/4] dt-bindings: display: mediatek: add property to
- control mipi tx drive current
-Message-ID: <20200323220033.GA29463@bogus>
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: display: mediatek: get mipitx
+ calibration data from nvmem
+Message-ID: <20200323220112.GA11622@bogus>
 References: <20200311074032.119481-1-jitao.shi@mediatek.com>
- <20200311074032.119481-2-jitao.shi@mediatek.com>
+ <20200311074032.119481-3-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311074032.119481-2-jitao.shi@mediatek.com>
+In-Reply-To: <20200311074032.119481-3-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 03:40:29PM +0800, Jitao Shi wrote:
-> Add a property to control mipi tx drive current:
-> "drive-strength-microamp"
+On Wed, 11 Mar 2020 15:40:30 +0800, Jitao Shi wrote:
+> Add properties to get get mipitx calibration data.
 > 
 > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 > ---
->  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt     | 4 ++++
->  1 file changed, 4 insertions(+)
+>  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt    | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> index a19a6cc375ed..d501f9ff4b1f 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> @@ -33,6 +33,9 @@ Required properties:
->  - #clock-cells: must be <0>;
->  - #phy-cells: must be <0>.
->  
-> +Optional properties:
-> +- drive-strength-microamp: adjust driving current, should be 1 ~ 0xF
 
-TBC, 1-0xf is in units of microamps? So a max drive strength of 15uA? 
-Seems a bit low.
-
-> +
->  Example:
->  
->  mipi_tx0: mipi-dphy@10215000 {
-> @@ -42,6 +45,7 @@ mipi_tx0: mipi-dphy@10215000 {
->  	clock-output-names = "mipi_tx0_pll";
->  	#clock-cells = <0>;
->  	#phy-cells = <0>;
-> +	drive-strength-microamp = <0x8>;
->  };
->  
->  dsi0: dsi@1401b000 {
-> -- 
-> 2.21.0
+Reviewed-by: Rob Herring <robh@kernel.org>
