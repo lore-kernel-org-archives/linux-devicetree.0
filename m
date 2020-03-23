@@ -2,301 +2,97 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C97C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD96EC54FCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 13:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDDC820663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A6A206F8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 13:14:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVXxLjLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgCWMfj (ORCPT
+        id S1728365AbgCWNOY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:35:39 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:58600 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728325AbgCWMfj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 08:35:39 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5FAAD1A1397;
-        Mon, 23 Mar 2020 13:35:37 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9C4551A13AB;
-        Mon, 23 Mar 2020 13:35:29 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5C8A0402EC;
-        Mon, 23 Mar 2020 20:35:20 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, horia.geanta@nxp.com, peng.fan@nxp.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 2/3] thermal: imx8mm: Add i.MX8MP support
-Date:   Mon, 23 Mar 2020 20:28:23 +0800
-Message-Id: <1584966504-21719-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
-References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 23 Mar 2020 09:14:24 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40170 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728307AbgCWNOX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 09:14:23 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j17so10175455lfe.7;
+        Mon, 23 Mar 2020 06:14:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E1CQtmDgklmhJ8UOqFgoAnNC1Hs9OG7/L9e38p9NJko=;
+        b=cVXxLjLlZWbliitWGuklNFT8/b/ipWnER/MBOfcjIMh6YI2DcJv8Cyx9jCRtWTlFX3
+         8aWb0xVZUcow9EfUHRy3WtM6HPg1oPk836709omTqABsL0Forp5JACWbxRI8++kjSIzC
+         wrOo/5+HT5cgZSfM3tSXwty895eyCGY+SSforbkecWud+7Bj4zApFyUDQl/JcwxeGJUq
+         xjglf2IYPC5ZQoCud4+sluk0Ba43iSiYtI3akVpKhQB4EKDbZzcyggCIseS2cMWwiNI0
+         MkzPDPw2hazLDwi30/g7ayTZDBEBAatHOfs4FV4loFqVVBcbM/HU0T2F+l9VUf/2txtG
+         va4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E1CQtmDgklmhJ8UOqFgoAnNC1Hs9OG7/L9e38p9NJko=;
+        b=mBVkgtecUzZ8oxwL2V4B9NlA9r77SRDOLR8z3ncFoqyQiwYjXIMz9k9/G6+mbRr22+
+         ApotJUR6xDEDhiIokdh4REay+xRu0N/pc0Evs2C3Zk8w5q8CIsh5mjnOXPR2WHEX6KI5
+         iBqI6VT0wZVF6VnEetvUXhiVvxwsyVK43qNPkdg8+EhKq/ovj07adR8Pfn0JAyJWbelP
+         i5d9un4/qgJtlzlh/zydtd5U49J47zIbjCVt3BIT7HCqeFYOdd0GXkHDqdTjQbF7j7XI
+         MemhmUSXHUqv5ycEVxWzOh51H84cNF1AYL5D7KRl/Zs4QZXd3wlrxu3dIGjuX3nh7W9I
+         g8qQ==
+X-Gm-Message-State: ANhLgQ3dQYM5u0sQQil+gV1IIJ7RRUJ9YDO12RBVzE/rTAtkyq4vKuhk
+        oAMoP//gArpi6htWMNUiEiE=
+X-Google-Smtp-Source: ADFU+vsrHRmN74MSFYaqInYZvtueW7JY7IrqwVBW3ExHmXKgr3xW/dEG/H5kvPyo6PdChKHxXDQvNw==
+X-Received: by 2002:a19:550e:: with SMTP id n14mr12877759lfe.141.1584969259348;
+        Mon, 23 Mar 2020 06:14:19 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id e14sm8399787ljb.97.2020.03.23.06.14.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 06:14:18 -0700 (PDT)
+Subject: Re: [PATCH v5 3/8] clk: tegra: Implement Tegra210 EMC clock
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200310152003.2945170-1-thierry.reding@gmail.com>
+ <20200310152003.2945170-4-thierry.reding@gmail.com>
+ <b5fb83d8-003c-d76b-9dac-7c8ef15f2ab1@gmail.com>
+ <20200323110531.GD3883508@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d57eaef9-65b9-23e5-e66b-9cea9df19fd5@gmail.com>
+Date:   Mon, 23 Mar 2020 16:14:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200323110531.GD3883508@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-i.MX8MP shares same TMU with i.MX8MM, the only difference is i.MX8MP
-has two thermal sensors while i.MX8MM ONLY has one, add multiple sensors
-support for i.MX8MM TMU driver.
+23.03.2020 14:05, Thierry Reding пишет:
+...
+>>> +static const struct dev_pm_ops tegra210_emc_pm_ops = {
+>>> +	SET_SYSTEM_SLEEP_PM_OPS(tegra210_emc_suspend, tegra210_emc_resume)
+>>> +};
+>> What about to use the default suspend/resume level?
+> 
+> I don't understand. This is already the default suspend/resume level,
+> isn't it?
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V2:
-	- Fix build warning about test_bit second argument type.
----
- drivers/thermal/imx8mm_thermal.c | 153 +++++++++++++++++++++++++++++++++------
- 1 file changed, 129 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
-index d597ceb..0d60f8d 100644
---- a/drivers/thermal/imx8mm_thermal.c
-+++ b/drivers/thermal/imx8mm_thermal.c
-@@ -5,59 +5,142 @@
-  * Author: Anson Huang <Anson.Huang@nxp.com>
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/thermal.h>
- 
- #include "thermal_core.h"
- 
- #define TER			0x0	/* TMU enable */
-+#define TPS			0x4
- #define TRITSR			0x20	/* TMU immediate temp */
- 
- #define TER_EN			BIT(31)
--#define TRITSR_VAL_MASK		0xff
-+#define TRITSR_TEMP0_VAL_MASK	0xff
-+#define TRITSR_TEMP1_VAL_MASK	0xff0000
- 
--#define TEMP_LOW_LIMIT		10
-+#define PROBE_SEL_ALL		GENMASK(31, 30)
- 
--struct imx8mm_tmu {
-+#define probe_status_offset(x)	(30 + x)
-+#define SIGN_BIT		BIT(7)
-+#define TEMP_VAL_MASK		GENMASK(6, 0)
-+
-+#define VER1_TEMP_LOW_LIMIT	10000
-+#define VER2_TEMP_LOW_LIMIT	-40000
-+#define VER2_TEMP_HIGH_LIMIT	125000
-+
-+#define TMU_VER1		0x1
-+#define TMU_VER2		0x2
-+
-+struct thermal_soc_data {
-+	u32 num_sensors;
-+	u32 version;
-+	int (*get_temp)(void *, int *);
-+};
-+
-+struct tmu_sensor {
-+	struct imx8mm_tmu *priv;
-+	u32 hw_id;
- 	struct thermal_zone_device *tzd;
-+};
-+
-+struct imx8mm_tmu {
- 	void __iomem *base;
- 	struct clk *clk;
-+	const struct thermal_soc_data *socdata;
-+	struct tmu_sensor sensors[0];
- };
- 
--static int tmu_get_temp(void *data, int *temp)
-+static int imx8mm_tmu_get_temp(void *data, int *temp)
- {
--	struct imx8mm_tmu *tmu = data;
-+	struct tmu_sensor *sensor = data;
-+	struct imx8mm_tmu *tmu = sensor->priv;
- 	u32 val;
- 
--	val = readl_relaxed(tmu->base + TRITSR) & TRITSR_VAL_MASK;
--	if (val < TEMP_LOW_LIMIT)
-+	val = readl_relaxed(tmu->base + TRITSR) & TRITSR_TEMP0_VAL_MASK;
-+	*temp = val * 1000;
-+	if (*temp < VER1_TEMP_LOW_LIMIT)
-+		return -EAGAIN;
-+
-+	return 0;
-+}
-+
-+static int imx8mp_tmu_get_temp(void *data, int *temp)
-+{
-+	struct tmu_sensor *sensor = data;
-+	struct imx8mm_tmu *tmu = sensor->priv;
-+	unsigned long val;
-+	bool ready;
-+
-+	val = readl_relaxed(tmu->base + TRITSR);
-+	ready = test_bit(probe_status_offset(sensor->hw_id), &val);
-+	if (!ready)
- 		return -EAGAIN;
- 
-+	val = sensor->hw_id ? FIELD_GET(TRITSR_TEMP1_VAL_MASK, val) :
-+	      FIELD_GET(TRITSR_TEMP0_VAL_MASK, val);
-+	if (val & SIGN_BIT) /* negative */
-+		val = (~(val & TEMP_VAL_MASK) + 1);
-+
- 	*temp = val * 1000;
-+	if (*temp < VER2_TEMP_LOW_LIMIT || *temp > VER2_TEMP_HIGH_LIMIT)
-+		return -EAGAIN;
- 
- 	return 0;
- }
- 
-+static int tmu_get_temp(void *data, int *temp)
-+{
-+	struct tmu_sensor *sensor = data;
-+	struct imx8mm_tmu *tmu = sensor->priv;
-+
-+	return tmu->socdata->get_temp(data, temp);
-+}
-+
- static struct thermal_zone_of_device_ops tmu_tz_ops = {
- 	.get_temp = tmu_get_temp,
- };
- 
-+static void imx8mm_tmu_enable(struct imx8mm_tmu *tmu, bool enable)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(tmu->base + TER);
-+	val = enable ? (val | TER_EN) : (val & ~TER_EN);
-+	writel_relaxed(val, tmu->base + TER);
-+}
-+
-+static void imx8mm_tmu_probe_sel_all(struct imx8mm_tmu *tmu)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(tmu->base + TPS);
-+	val |= PROBE_SEL_ALL;
-+	writel_relaxed(val, tmu->base + TPS);
-+}
-+
- static int imx8mm_tmu_probe(struct platform_device *pdev)
- {
-+	const struct thermal_soc_data *data;
- 	struct imx8mm_tmu *tmu;
--	u32 val;
- 	int ret;
-+	int i;
-+
-+	data = of_device_get_match_data(&pdev->dev);
- 
--	tmu = devm_kzalloc(&pdev->dev, sizeof(struct imx8mm_tmu), GFP_KERNEL);
-+	tmu = devm_kzalloc(&pdev->dev, struct_size(tmu, sensors,
-+			   data->num_sensors), GFP_KERNEL);
- 	if (!tmu)
- 		return -ENOMEM;
- 
-+	tmu->socdata = data;
-+
- 	tmu->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(tmu->base))
- 		return PTR_ERR(tmu->base);
-@@ -77,20 +160,32 @@ static int imx8mm_tmu_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	tmu->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0,
--							tmu, &tmu_tz_ops);
--	if (IS_ERR(tmu->tzd)) {
--		dev_err(&pdev->dev,
--			"failed to register thermal zone sensor: %d\n", ret);
--		return PTR_ERR(tmu->tzd);
-+	/* disable the monitor during initialization */
-+	imx8mm_tmu_enable(tmu, false);
-+
-+	for (i = 0; i < data->num_sensors; i++) {
-+		tmu->sensors[i].priv = tmu;
-+		tmu->sensors[i].tzd =
-+			devm_thermal_zone_of_sensor_register(&pdev->dev, i,
-+							     &tmu->sensors[i],
-+							     &tmu_tz_ops);
-+		if (IS_ERR(tmu->sensors[i].tzd)) {
-+			dev_err(&pdev->dev,
-+				"failed to register thermal zone sensor[%d]: %d\n",
-+				i, ret);
-+			return PTR_ERR(tmu->sensors[i].tzd);
-+		}
-+		tmu->sensors[i].hw_id = i;
- 	}
- 
- 	platform_set_drvdata(pdev, tmu);
- 
-+	/* enable all the probes for V2 TMU */
-+	if (tmu->socdata->version == TMU_VER2)
-+		imx8mm_tmu_probe_sel_all(tmu);
-+
- 	/* enable the monitor */
--	val = readl_relaxed(tmu->base + TER);
--	val |= TER_EN;
--	writel_relaxed(val, tmu->base + TER);
-+	imx8mm_tmu_enable(tmu, true);
- 
- 	return 0;
- }
-@@ -98,12 +193,9 @@ static int imx8mm_tmu_probe(struct platform_device *pdev)
- static int imx8mm_tmu_remove(struct platform_device *pdev)
- {
- 	struct imx8mm_tmu *tmu = platform_get_drvdata(pdev);
--	u32 val;
- 
- 	/* disable TMU */
--	val = readl_relaxed(tmu->base + TER);
--	val &= ~TER_EN;
--	writel_relaxed(val, tmu->base + TER);
-+	imx8mm_tmu_enable(tmu, false);
- 
- 	clk_disable_unprepare(tmu->clk);
- 	platform_set_drvdata(pdev, NULL);
-@@ -111,8 +203,21 @@ static int imx8mm_tmu_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static struct thermal_soc_data imx8mm_tmu_data = {
-+	.num_sensors = 1,
-+	.version = TMU_VER1,
-+	.get_temp = imx8mm_tmu_get_temp,
-+};
-+
-+static struct thermal_soc_data imx8mp_tmu_data = {
-+	.num_sensors = 2,
-+	.version = TMU_VER2,
-+	.get_temp = imx8mp_tmu_get_temp,
-+};
-+
- static const struct of_device_id imx8mm_tmu_table[] = {
--	{ .compatible = "fsl,imx8mm-tmu", },
-+	{ .compatible = "fsl,imx8mm-tmu", .data = &imx8mm_tmu_data, },
-+	{ .compatible = "fsl,imx8mp-tmu", .data = &imx8mp_tmu_data, },
- 	{ },
- };
- 
--- 
-2.7.4
-
+Please use SIMPLE_DEV_PM_OPS, for clarity.
