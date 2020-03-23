@@ -2,828 +2,393 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E81C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8E7C3F2CD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5659D20714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC8220714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:58:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YSYjEAYd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgCWP47 (ORCPT
+        id S1727129AbgCWP6M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:56:59 -0400
-Received: from mga12.intel.com ([192.55.52.136]:25972 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbgCWP46 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:56:58 -0400
-IronPort-SDR: krjj7NVNaRIPtDW/i/RPs0Z8OuLkP+XnNNONDU81kZLpBcy6Jqnrc1zYWSNnUkJ5WGLKjuNhDT
- JYvJvRuNiCoQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 08:56:57 -0700
-IronPort-SDR: BNnYiC2VQITkM9v+SQUXhKRBHmLA2et7wJmlJvVdo2CApTzsgG6077xe40tzgSWuEQcNuw27/3
- gO2RFey/aX+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,296,1580803200"; 
-   d="scan'208";a="235258454"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 23 Mar 2020 08:56:52 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jGPRf-00CHQX-0w; Mon, 23 Mar 2020 17:56:55 +0200
-Date:   Mon, 23 Mar 2020 17:56:55 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     brendanhiggins@google.com, avifishman70@gmail.com,
-        tmaimon77@gmail.com, kfting@nuvoton.com, venture@google.com,
-        yuenn@google.com, benjaminfair@google.com, robh+dt@kernel.org,
-        wsa@the-dreams.de, linux-arm-kernel@lists.infradead.org,
-        linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
- driver
-Message-ID: <20200323155655.GQ1922688@smile.fi.intel.com>
-References: <20200323134437.259210-1-tali.perry1@gmail.com>
- <20200323134437.259210-3-tali.perry1@gmail.com>
+        Mon, 23 Mar 2020 11:58:12 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:43421 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727270AbgCWP6L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 11:58:11 -0400
+Received: by mail-vs1-f66.google.com with SMTP id w185so2094634vsw.10
+        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 08:58:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n3nF2XEJF+3VJmtugEEG0k9Mal8VgUQrukDbfKGmZmw=;
+        b=YSYjEAYdWU+Fcf3THNsHZiqYlveQL9H5/YFc9huB2qW0SVXTH1coofuUlbrn12kIXG
+         oEk+JCxz5/G4NuMkHiNN7TAz7qKbGH/2/LivZdBvUWyHlsMIQKNiU0onzYv8obbaoTjt
+         aeVMD/Sshl9NlDcl26nZwcS9+y/BY7b/zTqTcHFSp9ZQaR0PJSbVTm8cebq6uNXVaIt6
+         59OCuJye0bTcysKaPKl2VgWUCHsPLLdSSdH9zqfrmljm1SRIc9ovUMHITte6oii5+Ggo
+         I7/RrIzz0BW+kdgHwlADprLyL3QG6UqLfHEgIq9e+d1drrFHbg7oOZajk5V27vtRp6JJ
+         fh6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n3nF2XEJF+3VJmtugEEG0k9Mal8VgUQrukDbfKGmZmw=;
+        b=E85GuOxGpl3ITXAetVeZc+WiLc/uDrzxEdENvkKsWf3gWf5B93Lj0zeWO36Dbo/KIp
+         cXLlKuDWDqoQa6ronfon0MbC1xAeKJPQIFxR1D6KzsBobSb9LGKN2WPy3DnLBvmD6PwO
+         +JIi13MOVssemPfXEuwS2GT47Lwhmz99l8KQT/Il4iMomSugEuhwqCRN1RVbYfVfGig3
+         oBW03tQR1N7olVQcWUuhgGc4ZLCHl8lcJ0yYBI+vY6wyNv5Mh7isbujotcP6BRDme/KF
+         rpjyCtn4Zi79kbhnWdlnpTqzuZAS6ZGPAMBW5YKxupSmcazHn9K6wnrEsVNx2wh+Z0fH
+         ox+g==
+X-Gm-Message-State: ANhLgQ0W6+Y673Y4sCzrHbnW7khUwLpt4THYEk+frIcAfRURlwpHiJqH
+        xAF5kHatXsWvzv8zJwGFTE6uJa2bEgyZtSeOKl3Bng==
+X-Google-Smtp-Source: ADFU+vsS91ZoQIuI8ccP/DSMa9qRHXbW9REfOAml1Q+Ozi/C0xXdvRCLJ31dq8A8mFDqpGQA5tuX7hcVDRsQj4pKH30=
+X-Received: by 2002:a05:6102:2051:: with SMTP id q17mr16732708vsr.165.1584979089841;
+ Mon, 23 Mar 2020 08:58:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323134437.259210-3-tali.perry1@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200320014107.26087-1-thara.gopinath@linaro.org> <20200320014107.26087-4-thara.gopinath@linaro.org>
+In-Reply-To: <20200320014107.26087-4-thara.gopinath@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 23 Mar 2020 16:57:33 +0100
+Message-ID: <CAPDyKFqn0E=-sNZy=09tLZn=6VxEfiXL-vUNwb9HK8+WLDBiPw@mail.gmail.com>
+Subject: Re: [Patch v5 3/6] thermal: Add generic power domain warming device driver.
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Rob Herring <robh@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 03:44:36PM +0200, Tali Perry wrote:
-> Add Nuvoton NPCM BMC I2C controller driver.
-
-...
-
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/errno.h>
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/iopoll.h>
-
-Perhaps ordered?
-
-> +enum i2c_mode {
-> +	I2C_MASTER,
-> +	I2C_SLAVE
-
-+ Comma.
-
-> +};
-
-...
-
-> +#define NPCM_I2CSEGCTL  0xE4
-
-Indentation issue, see the below lines.
-
-> +#define NPCM_I2CSEGCTL_INIT_VAL	0x0333F000
-> +
-> +// Common regs
-> +#define NPCM_I2CSDA			0x00
-
-...
-
-> +#define  I2C_FREQ_100KHZ  100
-> +#define  I2C_FREQ_400KHZ  400
-> +#define  I2C_FREQ_1MHZ   1000
-
-Can you rather use standard definitions in Hz?
-
-...
-
-> +#define NPCM_I2C_EVENT_LOG(event)	(bus->event_log |= event)
-
-Useless macro, and even harmful to some extend - it hides one of the parameter
-(proper should take bus and event, but it will be quite longer than simple
- conditional). Use in-place the conditional.
-
-...
-
-> +struct npcm_i2c {
-
-> +	u32			xmits;
-
-> +
-
-Unnecessary blank line.
-I have noticed other places with the same issue. Fix 'em all.
-
-> +};
-
-...
-
-> +static inline u16 npcm_i2c_get_index(struct npcm_i2c *bus)
-> +{
-> +	if (bus->operation == I2C_READ_OPER)
-> +		return bus->rd_ind;
-
-> +	else if (bus->operation == I2C_WRITE_OPER)
-
-Redundant 'else'
-
-> +		return bus->wr_ind;
-> +	return 0;
-> +}
-
-...
-
-> +static void npcm_i2c_disable(struct npcm_i2c *bus)
-> +{
-> +	u8 i2cctl2;
-
-+ blank line.
-
-> +	// Disable module.
-> +	i2cctl2 = ioread8(bus->reg + NPCM_I2CCTL2);
-> +	i2cctl2 = i2cctl2 & ~I2CCTL2_ENABLE;
-> +	iowrite8(i2cctl2, bus->reg + NPCM_I2CCTL2);
-> +
-> +	bus->state = I2C_DISABLE;
-> +}
-
-...
-
-> +static void npcm_i2c_enable(struct npcm_i2c *bus)
-> +{
-> +	u8 i2cctl2 = ioread8(bus->reg + NPCM_I2CCTL2);
-
-In this case direct assignment like above is okay...
-
-> +
-> +	i2cctl2 = i2cctl2 | I2CCTL2_ENABLE;
-> +	iowrite8(i2cctl2, bus->reg + NPCM_I2CCTL2);
-> +	bus->state = I2C_IDLE;
-> +}
-> +
-> +// enable\disable end of busy (EOB) interrupt
-> +static inline void npcm_i2c_eob_int(struct npcm_i2c *bus, bool enable)
-> +{
-
-> +	u8 val = ioread8(bus->reg + NPCM_I2CCST3);
-
-...but not here. Better...
-
-> +
-
-> +	// Clear EO_BUSY pending bit:
-
-...to perform it explicitly here.
-
-> +	val = val | NPCM_I2CCST3_EO_BUSY;
-> +	iowrite8(val, bus->reg + NPCM_I2CCST3);
-> +
-> +	val = ioread8(bus->reg + NPCM_I2CCTL1);
-> +	if (enable)
-> +		val = (val | NPCM_I2CCTL1_EOBINTE) & ~NPCM_I2CCTL1_RWS;
-> +	else
-> +		val = (val & ~NPCM_I2CCTL1_EOBINTE) & ~NPCM_I2CCTL1_RWS;
-> +	iowrite8(val, bus->reg + NPCM_I2CCTL1);
-> +}
-
-...
-
-> +static void npcm_i2c_int_enable(struct npcm_i2c *bus, bool enable)
-> +{
-> +	u8 val = ioread8(bus->reg + NPCM_I2CCTL1);
-> +
-> +	if (enable)
-> +		val = (val | NPCM_I2CCTL1_INTEN) & ~NPCM_I2CCTL1_RWS;
-> +	else
-> +		val = (val & ~NPCM_I2CCTL1_INTEN) & ~NPCM_I2CCTL1_RWS;
-> +	iowrite8(val, bus->reg + NPCM_I2CCTL1);
-
-	if (enable)
-		val |= NPCM_I2CCTL1_INTEN;
-	else
-		val &= ~NPCM_I2CCTL1_INTEN;
-	iowrite8(val & ~NPCM_I2CCTL1_RWS, bus->reg + NPCM_I2CCTL1);
-
-Ditto for the rest similar cases.
-
-> +}
-
-...
-
-> +	val = (val | NPCM_I2CCTL1_START) &
-> +		 ~(NPCM_I2CCTL1_STOP | NPCM_I2CCTL1_ACK);
-
-	val |= NPCM_I2CCTL1_START;
-	val &= ~(NPCM_I2CCTL1_STOP | NPCM_I2CCTL1_ACK);
-
-Ditto for other similar cases.
-
-...
-
-> +static inline void npcm_i2c_master_stop(struct npcm_i2c *bus)
-> +{
-
-> +	if (bus->fifo_use) {
-
-	if (...)
-		return;
-
-> +		npcm_i2c_select_bank(bus, I2C_BANK_1);
-> +
-> +		if (bus->operation == I2C_READ_OPER)
-> +			npcm_i2c_clear_rx_fifo(bus);
-> +		else
-> +			npcm_i2c_clear_tx_fifo(bus);
-> +
-> +		npcm_i2c_clear_fifo_int(bus);
-> +
-> +		iowrite8(0, bus->reg + NPCM_I2CTXF_CTL);
-> +	}
-> +}
-
-...
-
-> +	NPCM_I2C_EVENT_LOG(NPCM_I2C_EVENT_CB);
-
-Some magic happens here...
-
-...
-
-> +static u32 npcm_i2c_get_fifo_fullness(struct npcm_i2c *bus)
-> +{
-> +	if (bus->operation == I2C_WRITE_OPER)
-> +		return FIELD_GET(NPCM_I2CTXF_STS_TX_BYTES,
-> +				 ioread8(bus->reg + NPCM_I2CTXF_STS));
-
-> +	else if (bus->operation == I2C_READ_OPER)
-
-Redundant 'else'
-
-> +		return FIELD_GET(NPCM_I2CRXF_STS_RX_BYTES,
-> +				 ioread8(bus->reg + NPCM_I2CRXF_STS));
-> +	return 0;
-> +}
-
-...
-
-> +// configure the FIFO before using it. If nread is -1 RX FIFO will not be
-> +// configured. same for	nwrite
-
-TABs/spaces mix.
-
-...
-
-> +static void npcm_i2c_read_from_fifo(struct npcm_i2c *bus, u8 bytes_in_fifo)
-> +{
-> +	u8 data;
-> +
-> +	while (bytes_in_fifo--) {
-> +		data = npcm_i2c_rd_byte(bus);
-> +
-> +		if (bus->master_or_slave == I2C_MASTER) {
-> +			if (bus->rd_ind < bus->rd_size)
-> +				bus->rd_buf[bus->rd_ind++] = data;
-
-> +		} else { // I2C_SLAVE:
-
-Redundant (at least in this patch).
-
-> +		}
-> +	}
-> +}
-
-...
-
-> +	int rcount;
-> +	int fifo_bytes;
-
-> +	if (rcount < (2 * I2C_HW_FIFO_SIZE) && rcount > I2C_HW_FIFO_SIZE)
-
-> +		fifo_bytes = (u8)(rcount - I2C_HW_FIFO_SIZE);
-
-Why explicit casting?
-
-> +	if ((rcount - fifo_bytes) <= 0) {
-
-Why not positive conditional and drop those parentheses?
-
-> +		// last bytes are about to be read - end of transaction.
-> +		// Stop should be set before reading last byte.
-> +		NPCM_I2C_EVENT_LOG(NPCM_I2C_EVENT_READ4);
-> +
-> +		bus->state = I2C_STOP_PENDING;
-> +		bus->stop_ind = ind;
-> +
-> +		npcm_i2c_eob_int(bus, true);
-> +		npcm_i2c_master_stop(bus);
-> +		npcm_i2c_read_from_fifo(bus, fifo_bytes);
-> +	} else {
-> +		NPCM_I2C_EVENT_LOG(NPCM_I2C_EVENT_READ3);
-> +		npcm_i2c_read_from_fifo(bus, fifo_bytes);
-> +		rcount = bus->rd_size - bus->rd_ind;
-> +		npcm_i2c_set_fifo(bus, rcount, -1);
-> +	}
-
-...
-
-> +static void npcm_i2c_int_master_handler_read(struct npcm_i2c *bus)
-> +{
-> +	u16 block_extra_bytes_size;
-> +	u8 data;
-> +
-> +	// Master read operation (pure read or following a write operation).
-> +	NPCM_I2C_EVENT_LOG(NPCM_I2C_EVENT_READ);
-> +
-> +	// added bytes to the packet:
-> +	block_extra_bytes_size = (u8)bus->read_block_use + (u8)bus->PEC_use;
-
-Why explicit castings?
-
-> +
-> +	// Perform master read, distinguishing between last byte and the rest of
-> +	// the bytes. The last byte should be read when the clock is stopped
-> +	if (bus->rd_ind == 0) { //first byte handling:
-> +		// in block protocol first byte is the size
-> +		NPCM_I2C_EVENT_LOG(NPCM_I2C_EVENT_READ1);
-> +		if (bus->read_block_use) {
-> +			// first byte in block protocol is the size:
-> +			data = npcm_i2c_rd_byte(bus);
-
-> +			// if slave returned illegal size. read up to 32 bytes.
-> +			if (data >= I2C_SMBUS_BLOCK_MAX)
-> +				data = I2C_SMBUS_BLOCK_MAX;
-
-min() / min_t() ? See below...
-
-> +
-> +			// is data is 0 -> not supported. read at least one byte
-> +			if (data == 0)
-> +				data = 1;
-
-...actually clamp_val().
-
-> +			bus->rd_size = data + block_extra_bytes_size;
-> +
-> +			bus->rd_buf[bus->rd_ind++] = data;
-> +
-> +			// clear RX FIFO interrupt status:
-> +			if (bus->fifo_use) {
-> +				data = ioread8(bus->reg + NPCM_I2CFIF_CTS);
-> +				data = data | NPCM_I2CFIF_CTS_RXF_TXE;
-> +				iowrite8(data, bus->reg + NPCM_I2CFIF_CTS);
-> +			}
-
-> +			npcm_i2c_set_fifo(bus, (bus->rd_size - 1), -1);
-
-Too many parentheses.
-
-> +			npcm_i2c_stall_after_start(bus, false);
-> +		} else {
-> +			npcm_i2c_clear_tx_fifo(bus);
-> +			npcm_i2c_master_fifo_read(bus);
-> +		}
-> +	} else {
-> +		if (bus->rd_size == block_extra_bytes_size &&
-> +		    bus->read_block_use) {
-> +			bus->state = I2C_STOP_PENDING;
-> +			bus->stop_ind = I2C_BLOCK_BYTES_ERR_IND;
-> +			bus->cmd_err = -EIO;
-> +			npcm_i2c_eob_int(bus, true);
-> +			npcm_i2c_master_stop(bus);
-
-> +			npcm_i2c_read_from_fifo(bus,
-> +						npcm_i2c_get_fifo_fullness(bus)
-> +						);
-
-Bad style. Combine last two lines together.
-
-> +		} else {
-> +			NPCM_I2C_EVENT_LOG(NPCM_I2C_EVENT_READ2);
-> +			npcm_i2c_master_fifo_read(bus);
-> +		}
-> +	}
-> +}
-
-...
-
-> +static irqreturn_t npcm_i2c_int_master_handler(struct npcm_i2c *bus)
-> +{
-
-> +			npcm_i2c_eob_int(bus,  false);
-
-Extra spaces.
-I have noticed more places with the same issue, fix 'em all.
-
-> +			val = NPCM_I2CST_BER | NPCM_I2CST_NEGACK |
-> +				 NPCM_I2CST_STASTR;
-
-Make it temporary variable and use here and below...
-
-> +			val = NPCM_I2CST_BER | NPCM_I2CST_NEGACK |
-> +				 NPCM_I2CST_STASTR;
-
-...here.
-
-> +	return ret;
-> +}
-
-Refactoring of such a big function will be benefit to all. And you may decrease
-indentation level at the same time.
-
-...
-
-> +	fif_cts = (fif_cts & ~NPCM_I2CFIF_CTS_SLVRSTR) |
-> +		  NPCM_I2CFIF_CTS_CLR_FIFO;
-
-	fif_cts &= ~NPCM_I2CFIF_CTS_SLVRSTR;
-	fif_cts |= NPCM_I2CFIF_CTS_CLR_FIFO;
-
-...
-
-> +	if (npcm_i2c_get_SDA(_adap) == 0) {
-> +		// Repeat the following sequence until SDA is released
-> +		do {
-> +			// Issue a single SCL cycle
-> +			iowrite8(NPCM_I2CCST_TGSCL, bus->reg + NPCM_I2CCST);
-
-> +			retries = 10;
-> +			while (retries != 0 &&
-> +			       FIELD_GET(NPCM_I2CCST_TGSCL,
-> +					 ioread8(bus->reg + NPCM_I2CCST))) {
-> +				udelay(20);
-> +				retries--;
-> +			}
-
-timeout loops more natural in do {} while form. But here is
-readx_poll_timeout() NIH.
-
-> +			// tgclk failed to toggle
-> +			if (retries == 0)
-> +				dev_err(bus->dev, "recovery toggle timeout");
-
-If it's an error, why we are still continuing?
-
-> +			// If SDA line is inactive (high), stop
-> +			if (npcm_i2c_get_SDA(_adap))
-> +				done = true;
-
-> +		} while ((!done) && (--iter != 0));
-
-Too many parentheses. done can be dropped (below you may use iter in condition).
-
-> +		// If SDA line is released: send start-addr-stop, to re-sync.
-> +		if (done) {
-> +			npcm_i2c_master_start(bus);
+On Fri, 20 Mar 2020 at 02:41, Thara Gopinath <thara.gopinath@linaro.org> wrote:
 >
-> +			// Wait until START condition is sent, or RETRIES_NUM
-> +			retries = RETRIES_NUM;
-> +			while (retries && !npcm_i2c_is_master(bus)) {
-> +				udelay(20);
-> +				retries--;
-> +			}
-
-do {} while ().
-
-> +			// If START condition was sent
-> +			if (retries > 0) {
-> +				// Send an address byte in write direction:
-> +				npcm_i2c_wr_byte(bus, bus->dest_addr);
-> +				udelay(200);
-> +				npcm_i2c_master_stop(bus);
-> +				udelay(200);
-> +				status = 0;
-> +			}
-> +		}
-> +	}
-
-...
-
-> +	if (unlikely(npcm_i2c_get_SDA(_adap) == 0)) {
-> +		// Generate a START, to synchronize Master and Slave
-> +		npcm_i2c_master_start(bus);
+> Resources modeled as power domains in linux kernel can  be used to warm the
+> SoC(eg. mx power domain on sdm845).  To support this feature, introduce a
+> generic power domain warming device driver that can be plugged into the
+> thermal framework (The thermal framework itself requires further
+> modifiction to support a warming device in place of a cooling device.
+> Those extensions are not introduced in this patch series).
+>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>
+> v3->v4:
+>         - Removed late_init hook pd_warming_device_ops.
+>         - Use of_genpd_add_device instead of pm_genpd_add_device to attach
+>           device to the generic power domain.
+>         - Use thermal_of_cooling_device_parent_register to register the
+>           cooling device so that the device with genpd attached can be
+>           made parent of the cooling device.
+>         - With above changes, remove reference to generic_pm_domain in
+>           pd_warming_device.
+>
+> v4->v5:
+>         - All the below changes are as per Ulf's review comments.
+>         - Renamed pwr_domain_warming.c and pwr_domain_warming.h to
+>           pd_warming.c and pd_warming.h.
+>         - Renamed pwr_domain_warming_register API to
+>           of_pd_warming_register.
+>         - Dropped in-param pd_name to of_pd_warming_register.
+>         - Introduced ID allocator to uniquely identify each power domain
+>           warming device.
+>         - Introduced pd_warming_release to handle device kfree for
+>           pd_warming_device.
+>         - Introduced pm_genpd_remove_device in the error exit path
+>           of of_pd_warming_register.
+>
+>  drivers/thermal/Kconfig      |  10 +++
+>  drivers/thermal/Makefile     |   2 +
+>  drivers/thermal/pd_warming.c | 168 +++++++++++++++++++++++++++++++++++
+>  include/linux/pd_warming.h   |  29 ++++++
+>  4 files changed, 209 insertions(+)
+>  create mode 100644 drivers/thermal/pd_warming.c
+>  create mode 100644 include/linux/pd_warming.h
+>
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 4d6753f2b18f..92522d541d0e 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -206,6 +206,16 @@ config DEVFREQ_THERMAL
+>
+>           If you want this support, you should say Y here.
+>
+> +config PWR_DOMAIN_WARMING_THERMAL
+> +       bool "Power Domain based warming device"
+> +       depends on PM_GENERIC_DOMAINS_OF
+> +       help
+> +         This implements the generic power domain based warming
+> +         mechanism through increasing the performance state of
+> +         a power domain.
 > +
-> +		// Wait until START condition is sent, or RETRIES_NUM
-> +		retries = RETRIES_NUM;
-
-> +		while (retries && !npcm_i2c_is_master(bus))
-> +			retries--;
-
-do {} while (). Fix them all.
-
-> +		// set SCL low for a long time (note: this is unlikely)
-> +		usleep_range(25000, 35000);
-> +		npcm_i2c_master_stop(bus);
-> +		udelay(200);
-> +		status = 0;
-> +	}
-
-...
-
-> +static bool npcm_i2c_init_clk(struct npcm_i2c *bus, u32 bus_freq)
-> +{
-> +	u32  k1 = 0;
-> +	u32  k2 = 0;
-> +	u8   dbnct = 0;
-> +	u32  sclfrq = 0;
-> +	u8   hldt = 7;
-> +	bool fast_mode = false;
-> +	u32  src_clk_freq; // in KHz
-
-This is very cryptic.
-
-The function deserve a good comment above which shows all formulas in use with
-reference to datasheet pages, etc.
-
-> +		// Master or Slave with frequency > 25 MHZ
-> +		else if (src_clk_freq > 25000) {
-
-> +			hldt = (u8)__KERNEL_DIV_ROUND_UP(src_clk_freq * 300,
-> +							 1000000) + 7;
+> +         If you want this support, you should say Y here.
 > +
-> +			k1 = __KERNEL_DIV_ROUND_UP(src_clk_freq * 1600,
-> +						   1000000);
-> +			k2 = __KERNEL_DIV_ROUND_UP(src_clk_freq * 900,
-> +						   1000000);
-
-Why casting? Why __ special macro? Isn't DIV_ROUND_UP() enough?
-Ditto for other similar cases.
-
-> +			k1 = round_up(k1, 2);
-> +			k2 = round_up(k2 + 1, 2);
-> +			if (k1 < SCLFRQ_MIN || k1 > SCLFRQ_MAX ||
-> +			    k2 < SCLFRQ_MIN || k2 > SCLFRQ_MAX)
-> +				return false;
-> +		}
-
-> +	// After clock parameters calculation update reg (ENABLE should be 0):
-> +	iowrite8(FIELD_PREP(I2CCTL2_SCLFRQ6_0, sclfrq & 0x7F),
-
-Magic number.
-
-> +		 bus->reg + NPCM_I2CCTL2);
+>  config THERMAL_EMULATION
+>         bool "Thermal emulation mode support"
+>         help
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 8c8ed7b79915..7db87a779126 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -28,6 +28,8 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)   += clock_cooling.o
+>  # devfreq cooling
+>  thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
+>
+> +thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)       += pd_warming.o
 > +
-> +	// force to bank 0, set SCL and fast mode
-> +	iowrite8(FIELD_PREP(I2CCTL3_400K_MODE, fast_mode) |
-> +		 FIELD_PREP(I2CCTL3_SCLFRQ8_7, (sclfrq >> 7) & 0x3),
-> +		 bus->reg + NPCM_I2CCTL3);
+>  # platform thermal drivers
+>  obj-y                          += broadcom/
+>  obj-$(CONFIG_THERMAL_MMIO)             += thermal_mmio.o
+> diff --git a/drivers/thermal/pd_warming.c b/drivers/thermal/pd_warming.c
+> new file mode 100644
+> index 000000000000..c0854d2e4b92
+> --- /dev/null
+> +++ b/drivers/thermal/pd_warming.c
+> @@ -0,0 +1,168 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, Linaro Ltd
+> + */
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/slab.h>
+> +#include <linux/pd_warming.h>
 > +
-> +	// Select Bank 0 to access NPCM_I2CCTL4/NPCM_I2CCTL5
-> +	npcm_i2c_select_bank(bus, I2C_BANK_0);
-
-> +		iowrite8((u8)k1 / 2, bus->reg + NPCM_I2CSCLLT);
-> +		iowrite8((u8)k2 / 2, bus->reg + NPCM_I2CSCLHT);
-
-Why casting?
-
-...
-
-> +	if (FIELD_GET(I2C_VER_FIFO_EN, ioread8(bus->reg + I2C_VER))) {
-> +		bus->fifo_use = true;
-> +		npcm_i2c_select_bank(bus, I2C_BANK_0);
-> +		val = ioread8(bus->reg + NPCM_I2CFIF_CTL);
-
-> +		iowrite8(val | NPCM_I2CFIF_CTL_FIFO_EN,
-> +			 bus->reg + NPCM_I2CFIF_CTL);
-
-Do it in two operations.
-
-> +		npcm_i2c_select_bank(bus, I2C_BANK_1);
-> +	} else {
-> +		bus->fifo_use = false;
-> +	}
-> +
-> +	// Configure I2C module clock frequency
-> +	if (!npcm_i2c_init_clk(bus, bus_freq)) {
-> +		dev_err(bus->dev, "npcm_i2c_init_clk failed\n");
-> +		return false;
-> +	}
-> +
-> +	// Enable module (before configuring CTL1)
-> +	npcm_i2c_enable(bus);
-> +	bus->state = I2C_IDLE;
-> +
-> +	// Enable I2C int and New Address Match int source
-> +	val = ioread8(bus->reg + NPCM_I2CCTL1);
-
-> +	val = (val | NPCM_I2CCTL1_NMINTE) & ~NPCM_I2CCTL1_RWS;
-
-Usually we mask first, then disjunct with new bits.
-Actually this applies to all code where I also suggest to split to two
-operations.
-
-> +	iowrite8(val, bus->reg + NPCM_I2CCTL1);
-
-...
-
-> +	ret = of_property_read_u32(pdev->dev.of_node,
-> +				   "bus-frequency", &clk_freq);
-
-With ugly ifdefery this seems suspicious. Probably you imply
-device_property_read_u32()?
-
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Could not read bus-frequency property\n");
-> +		clk_freq = 100000;
-> +	}
-> +
-> +	ret = npcm_i2c_init_module(bus, I2C_MASTER, clk_freq / 1000);
-
-> +	if (!ret) {
-
-0 is error condition?!
-
-> +		dev_err(&pdev->dev, "npcm_i2c_init_module() failed\n");
-
-> +		return -1;
-
-Use proper error coded.
-
-> +	}
-
-...
-
-> +	bus->dest_addr = (u8)(slave_addr << 1);// Translate 7bit to 8bit format
-
-Awful formatting (comments) and casting.
-
-> +		i2cfif_cts = (i2cfif_cts & ~NPCM_I2CFIF_CTS_SLVRSTR) |
-> +			 NPCM_I2CFIF_CTS_CLR_FIFO;
-
-Do it in two operations.
-
-...
-
-> +	if (unlikely(bus->state == I2C_DISABLE)) {
-
-Why unlikely() is in use? Any performance improvement? Show numbers.
-
-> +		dev_err(bus->dev, "I2C%d module is disabled", bus->num);
-> +		return -EINVAL;
-> +	}
-
-...
-
-> +	time_left = jiffies +
-> +		    msecs_to_jiffies(DEFAULT_STALL_COUNT) + 1;
-> +	do {
-> +		/* we must clear slave address immediately when the bus is not
-> +		 * busy, so we spinlock it, but we don't keep the lock for the
-> +		 * entire while since it is too long.
-> +		 */
-
-> +		spin_lock_irqsave(&bus->lock, flags);
-> +		bus_busy = ioread8(bus->reg + NPCM_I2CCST) & NPCM_I2CCST_BB;
-> +		spin_unlock_irqrestore(&bus->lock, flags);
-
-> +		if (!bus_busy)
-> +			break;
-
-This can be part of below condition.
-
-> +
-> +	} while (time_is_after_jiffies(time_left));
-
-...
-
-> +	if (!npcm_i2c_master_start_xmit(bus, slave_addr, nwrite, nread,
-> +					write_data, read_data, read_PEC,
-> +					read_block))
-
-> +		ret = -(EBUSY);
-> +
-> +	if (ret != -(EBUSY)) {
-
-Too many parentheses. Fix them all in entire driver.
-
-> +		time_left = wait_for_completion_timeout(&bus->cmd_complete,
-> +							timeout);
-> +
-> +		if (time_left == 0) {
-> +			NPCM_I2C_EVENT_LOG(NPCM_I2C_EVENT_TO);
-> +			if (bus->master_or_slave == I2C_MASTER) {
-
-> +				dev_dbg(bus->dev,
-> +					"i2c%d TO = %d\n", bus->num, timeout);
-
-Why not first line fit enough?
-
-> +				i2c_recover_bus(adap);
-> +				bus->cmd_err = -EIO;
-> +				bus->state = I2C_IDLE;
-> +			}
-> +		}
-> +	}
-> +	ret = bus->cmd_err;
-
-> +	// If nothing went wrong, return number of messages x-ferred.
-> +	if (ret >= 0)
-> +		return num;
-> +
-> +	return ret;
-
-Why not traditional pattern, i.e.
-
-	if (ret < 0)
-		return ret;
-
-?
-
-> +}
-
-...
-
-> +static u32 npcm_i2c_functionality(struct i2c_adapter *adap)
-> +{
-> +	return I2C_FUNC_I2C |
-> +		   I2C_FUNC_SMBUS_EMUL |
-> +		   I2C_FUNC_SMBUS_BLOCK_DATA |
-> +		   I2C_FUNC_SMBUS_PEC
-> +		   ;
-
-Awful indentation.
-
-> +}
-
-...
-
-> +static const struct i2c_adapter_quirks npcm_i2c_quirks = {
-> +	.max_read_len = 32768,
-> +	.max_write_len = 32768,
-> +	.max_num_msgs = 2,
-> +	.flags = I2C_AQ_COMB_WRITE_THEN_READ
-
-Missed comma.
-
+> +struct pd_warming_device {
+> +       struct thermal_cooling_device *cdev;
+> +       struct device dev;
+> +       int id;
+> +       int max_state;
+> +       int cur_state;
+> +       bool runtime_resumed;
 > +};
-
-...
-
-> +static int  npcm_i2c_probe_bus(struct platform_device *pdev)
+> +
+> +static DEFINE_IDA(pd_ida);
+> +
+> +static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
+> +                                unsigned long *state)
 > +{
-
-> +#ifdef CONFIG_OF
-
-Why this ugly ifdefery?
-
-> +	num = of_alias_get_id(pdev->dev.of_node, "i2c");
-> +	bus->num = num;
-
-> +	i2c_clk = devm_clk_get(&pdev->dev, NULL);
-
-Can't be optional?
-
-> +	if (IS_ERR(i2c_clk))
-
-> +		return	-EPROBE_DEFER;
-
-Why shadow an error code? Fix them all.
-
-> +	bus->apb_clk = clk_get_rate(i2c_clk);
-> +#endif //  CONFIG_OF
-
-> +	bus->irq = platform_get_irq(pdev, 0);
-> +	if (bus->irq < 0)
-
-> +		return -ENODEV;
-
-Why shadowed error code?
-
-> +	ret = i2c_add_numbered_adapter(&bus->adap);
-
-> +	if (ret < 0)
-
-What about positive? Do they ever happen?
-Hint: drop ' < 0' part in each case you have in this driver where it's not
-needed.
-
-> +		return ret;
+> +       struct pd_warming_device *pd_wdev = cdev->devdata;
 > +
-> +	platform_set_drvdata(pdev, bus);
-> +
-> +	return 0;
+> +       *state = pd_wdev->max_state;
+> +       return 0;
 > +}
+> +
+> +static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
+> +                                unsigned long *state)
+> +{
+> +       struct pd_warming_device *pd_wdev = cdev->devdata;
+> +
+> +       *state = dev_pm_genpd_get_performance_state(&pd_wdev->dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
+> +                                unsigned long state)
+> +{
+> +       struct pd_warming_device *pd_wdev = cdev->devdata;
+> +       struct device *dev = &pd_wdev->dev;
+> +       int ret;
+> +
+> +       ret = dev_pm_genpd_set_performance_state(dev, state);
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (state && !pd_wdev->runtime_resumed) {
+> +               ret = pm_runtime_get_sync(dev);
+> +               pd_wdev->runtime_resumed = true;
+> +       } else if (!state && pd_wdev->runtime_resumed) {
+> +               ret = pm_runtime_put(dev);
+> +               pd_wdev->runtime_resumed = false;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
+> +       .get_max_state  = pd_wdev_get_max_state,
+> +       .get_cur_state  = pd_wdev_get_cur_state,
+> +       .set_cur_state  = pd_wdev_set_cur_state,
+> +};
+> +
+> +static void pd_warming_release(struct device *dev)
+> +{
+> +       kfree(dev);
 
-...
+This is wrong, you should free a "struct pd_warming_device *". Use the
+"container of" macro to get it from 'dev'.
 
-> +MODULE_VERSION("0.1.1");
+> +}
+> +
+> +struct thermal_cooling_device *
+> +of_pd_warming_register(struct device *parent, int pd_id)
+> +{
+> +       struct pd_warming_device *pd_wdev;
+> +       struct of_phandle_args pd_args;
+> +       char cdev_name[THERMAL_NAME_LENGTH];
+> +       int ret;
+> +
+> +       pd_wdev = kzalloc(sizeof(*pd_wdev), GFP_KERNEL);
+> +       if (!pd_wdev)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       dev_set_name(&pd_wdev->dev, "%s_%d_warming_dev",
+> +                    dev_name(parent), pd_id);
+> +       pd_wdev->dev.parent = parent;
+> +       pd_wdev->dev.release = pd_warming_release;
+> +
+> +       ret = device_register(&pd_wdev->dev);
+> +       if (ret) {
+> +               put_device(&pd_wdev->dev);
+> +               goto free_pd_wdev;
+> +       }
+> +
+> +       ret = ida_simple_get(&pd_ida, 0, 0, GFP_KERNEL);
+> +       if (ret < 0)
+> +               goto unregister_device;
 
-Does it make any sense?
+If you use and ida, you might as well use it as a part of the
+dev_set_name() above.
 
--- 
-With Best Regards,
-Andy Shevchenko
+That should give you a unique name, similar to how you use it for the
+cdev_name below.
 
+> +
+> +       pd_wdev->id = ret;
+> +
+> +       pd_args.np = parent->of_node;
+> +       pd_args.args[0] = pd_id;
+> +       pd_args.args_count = 1;
+> +
+> +       ret = of_genpd_add_device(&pd_args, &pd_wdev->dev);
+> +
+> +       if (ret)
+> +               goto remove_ida;
+> +
+> +       ret = dev_pm_genpd_performance_state_count(&pd_wdev->dev);
+> +       if (ret < 0)
+> +               goto out_genpd;
+> +
+> +       pd_wdev->max_state = ret - 1;
+> +       pm_runtime_enable(&pd_wdev->dev);
+> +       pd_wdev->runtime_resumed = false;
+> +
+> +       snprintf(cdev_name, sizeof(cdev_name), "thermal-pd-%d", pd_wdev->id);
+> +       pd_wdev->cdev = thermal_of_cooling_device_register
+> +                                       (NULL, cdev_name, pd_wdev,
+> +                                        &pd_warming_device_ops);
+> +       if (IS_ERR(pd_wdev->cdev)) {
+> +               pr_err("unable to register %s cooling device\n", cdev_name);
+> +               ret = PTR_ERR(pd_wdev->cdev);
+> +               goto out_runtime_disable;
+> +       }
+> +
+> +       return pd_wdev->cdev;
+> +
+> +out_runtime_disable:
+> +       pm_runtime_disable(&pd_wdev->dev);
+> +out_genpd:
+> +       pm_genpd_remove_device(&pd_wdev->dev);
+> +remove_ida:
+> +       ida_simple_remove(&pd_ida, pd_wdev->id);
+> +unregister_device:
+> +       device_unregister(&pd_wdev->dev);
+> +       pd_warming_release(&pd_wdev->dev);
 
+This is wrong, drop this.
+
+> +free_pd_wdev:
+> +       kfree(pd_wdev);
+
+Since you should free this from the ->release() callback, there is no
+need to do this here.
+
+> +       return ERR_PTR(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(of_pd_warming_register);
+> +
+> +void pd_warming_unregister(struct thermal_cooling_device *cdev)
+> +{
+> +       struct pd_warming_device *pd_wdev = cdev->devdata;
+> +       struct device *dev = &pd_wdev->dev;
+> +
+> +       if (pd_wdev->runtime_resumed) {
+> +               dev_pm_genpd_set_performance_state(dev, 0);
+> +               pm_runtime_put(dev);
+> +               pd_wdev->runtime_resumed = false;
+> +       }
+> +       pm_runtime_disable(dev);
+> +       pm_genpd_remove_device(dev);
+> +       ida_simple_remove(&pd_ida, pd_wdev->id);
+> +       thermal_cooling_device_unregister(cdev);
+> +       kfree(pd_wdev);
+
+Don't use kfree here, but instead device_unregister(dev);
+
+> +}
+> +EXPORT_SYMBOL_GPL(pd_warming_unregister);
+> diff --git a/include/linux/pd_warming.h b/include/linux/pd_warming.h
+> new file mode 100644
+> index 000000000000..550a5683b56d
+> --- /dev/null
+> +++ b/include/linux/pd_warming.h
+> @@ -0,0 +1,29 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, Linaro Ltd.
+> + */
+> +#ifndef __PWR_DOMAIN_WARMING_H__
+> +#define __PWR_DOMAIN_WARMING_H__
+> +
+> +#include <linux/pm_domain.h>
+> +#include <linux/thermal.h>
+> +
+> +#ifdef CONFIG_PWR_DOMAIN_WARMING_THERMAL
+> +struct thermal_cooling_device *
+> +of_pd_warming_register(struct device *parent, int pd_id);
+> +
+> +void pd_warming_unregister(struct thermal_cooling_device *cdev);
+> +
+> +#else
+> +static inline struct thermal_cooling_device *
+> +of_pd_warming_register(struct device *parent, int pd_id)
+> +{
+> +       return ERR_PTR(-ENOSYS);
+> +}
+> +
+> +static inline void
+> +pd_warming_unregister(struct thermal_cooling_device *cdev)
+> +{
+> +}
+> +#endif /* CONFIG_PWR_DOMAIN_WARMING_THERMAL */
+> +#endif /* __PWR_DOMAIN_WARMING_H__ */
+> --
+> 2.20.1
+>
+
+Besides the few things above, this looks good to me.
+
+Kind regards
+Uffe
