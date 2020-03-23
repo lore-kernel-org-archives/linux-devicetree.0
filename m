@@ -2,90 +2,97 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B46C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 19:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 110ECC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 20:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8592070A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 19:56:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584993401;
-	bh=NQaRm7h02AQ+1aFMatSyKbSNGnAj6l0t76/7oFmkOUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Aaadv0G5mxINf3IxLdliARAWPKuXWcdBuWZ0qqAvHqxJ8d60na1iJLxogUaE1lbxY
-	 0JBonA5wCi17P3MnuHdy329xmwJyEiY0/vLFYX8iuMv2BNZoXFZiHrmeh7YCLZVbMu
-	 AXAnS2Zl/aTPcuyVtuhLA+71W1L4KmwINgjuw868=
+	by mail.kernel.org (Postfix) with ESMTP id D31B52073C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 20:17:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CuzS2ciF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgCWT4l (ORCPT
+        id S1727046AbgCWURX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 15:56:41 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46885 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgCWT4l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 15:56:41 -0400
-Received: by mail-io1-f67.google.com with SMTP id a20so8418031ioo.13;
-        Mon, 23 Mar 2020 12:56:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qXevwrfc2p5AdDU33jwvkxHfjutpsoW73v5+sjJRTb0=;
-        b=j0ryfBGG7XuNoBOau6gEB1+gtV/03celkDK6vHlIDjjPB5DbbDUlMuxEkBxSJrX9Us
-         RJpj06biB0MVgQxAR+noDYIHFAxke+1eHNOizifI7/9WwRwYY20RR0b2tfRKszNbuQh0
-         sc1GdAoDTBpJ8g1zHjHK899fvLjZ6DW+UcDlfn7XyW2AGAuEXKYDXVPbs/mU0rWS/on7
-         s0atcTxorreDTii7KHIQnsZAYdsNGaPL4vjX5KmJefA02o/Xzsvh4pwgwABP82zBu8Iv
-         uqxtHBa2Udh58n3ejK90AJOW3NqCH6y+XjoT9unXxHgSEIeh1oV3rym/EujAHbGgmIZf
-         /6CA==
-X-Gm-Message-State: ANhLgQ1cLfECVfTPIZBDrknloZy5jCoZnlT4bFMM++wxD8AxLsWVNzsV
-        JlJM0CPzRYG/xNOf3g8WJA==
-X-Google-Smtp-Source: ADFU+vtLwq6QT60pJAfxzLxrg6bcvqD+KMyEIEHEsy8Q+CFNUhFt660np21tKveAFvaUbUdZlOgs9g==
-X-Received: by 2002:a5d:9301:: with SMTP id l1mr20763884ion.68.1584993399925;
-        Mon, 23 Mar 2020 12:56:39 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id p14sm4584248ios.38.2020.03.23.12.56.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 12:56:39 -0700 (PDT)
-Received: (nullmailer pid 8120 invoked by uid 1000);
-        Mon, 23 Mar 2020 19:56:38 -0000
-Date:   Mon, 23 Mar 2020 13:56:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     andy.tang@nxp.com
-Cc:     daniel.lezcano@linaro.org, edubezval@gmail.com,
-        rui.zhang@intel.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yuantian Tang <andy.tang@nxp.com>
-Subject: Re: [PATCH] dt-bindings: thermal: make cooling-maps property optional
-Message-ID: <20200323195638.GA8059@bogus>
-References: <20200309045411.21859-1-andy.tang@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309045411.21859-1-andy.tang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 23 Mar 2020 16:17:23 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:49545 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726982AbgCWURX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 16:17:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584994643; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=f+CR1kcG4Nmj1zbB3rR2lH3I1Cysjzz9Pe1f5KmSe4o=; b=CuzS2ciFJ78FjqhVEcjitAOWDKcrp4L6mrPAg4ipxUxhEyNP3JKt8H/8QgwyyqX1iTvYB11n
+ 4vvnG/fxOqRwuuu8SLqeLBBgfWauC2GImvl76yZV719/fHJ7GczJZPlc9J0EGOGCsUn5D/ue
+ 3OO1ZbIzWMNktbodROl9V2/M9Zg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e791953.7f8b43b79880-smtp-out-n01;
+ Mon, 23 Mar 2020 20:17:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CE044C433BA; Mon, 23 Mar 2020 20:17:21 +0000 (UTC)
+Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 91EEFC432C2;
+        Mon, 23 Mar 2020 20:17:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 91EEFC432C2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v2 4/4] phy: qcom-qmp: Use proper PWRDOWN offset for sm8150 USB
+Date:   Mon, 23 Mar 2020 13:17:12 -0700
+Message-Id: <1584994632-31193-5-git-send-email-wcheng@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1584994632-31193-1-git-send-email-wcheng@codeaurora.org>
+References: <1584994632-31193-1-git-send-email-wcheng@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon,  9 Mar 2020 12:54:11 +0800, andy.tang@nxp.com wrote:
-> From: Yuantian Tang <andy.tang@nxp.com>
-> 
-> Cooling-maps doesn't have to be a required property because there may
-> be no cooling device on system, or there are no enough cooling devices for
-> each thermal zone in multiple thermal zone cases since cooling devices
-> can't be shared.
-> So make this property optional to remove such limitations.
-> 
-> For thermal zones with no cooling-maps, there could be critic trips
-> that can trigger CPU reset or shutdown. So they still can take actions.
-> 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> ---
->  Documentation/devicetree/bindings/thermal/thermal.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+The register map for SM8150 QMP USB SSPHY has moved
+QPHY_POWER_DOWN_CONTROL to a different offset.  Allow for
+an offset in the register table to override default value
+if it is a DP capable PHY.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index cc04471..71a230a 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -164,6 +164,7 @@ enum qphy_reg_layout {
+ 	[QPHY_SW_RESET]			= 0x00,
+ 	[QPHY_START_CTRL]		= 0x44,
+ 	[QPHY_PCS_STATUS]		= 0x14,
++	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x40,
+ };
+ 
+ static const unsigned int sdm845_ufsphy_regs_layout[] = {
+@@ -1627,6 +1628,9 @@ static int qcom_qmp_phy_com_init(struct qmp_phy *qphy)
+ 	if (cfg->has_phy_com_ctrl)
+ 		qphy_setbits(serdes, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
+ 			     SW_PWRDN);
++	else if (!cfg->has_phy_com_ctrl && cfg->regs[QPHY_COM_POWER_DOWN_CONTROL])
++		qphy_setbits(pcs, cfg->regs[QPHY_COM_POWER_DOWN_CONTROL],
++			     cfg->pwrdn_ctrl);
+ 	else
+ 		qphy_setbits(pcs, QPHY_POWER_DOWN_CONTROL, cfg->pwrdn_ctrl);
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
