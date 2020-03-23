@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B278DC4332B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626C5C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842D720719
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EDB2073E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 22:53:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qDU3xfyd"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xNucDgl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgCWWxG (ORCPT
+        id S1727135AbgCWWxI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 18:53:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53012 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbgCWWxF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:53:05 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02NMqwLU046211;
-        Mon, 23 Mar 2020 17:52:58 -0500
+        Mon, 23 Mar 2020 18:53:08 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37438 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbgCWWxH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 18:53:07 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02NMr1if078443;
+        Mon, 23 Mar 2020 17:53:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585003978;
-        bh=r+sfqraITYcKJAQvGWd1Eaf2bkxsbyuiSdj02KQUtLM=;
+        s=ti-com-17Q1; t=1585003981;
+        bh=eFFCWGJQPMy3hpek6CzYlXeJcFw4RWf4zuUKEdqx4Jk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qDU3xfydhzoAMTW4OURb+SlNnr7hjs0MAbuNLcFHEASMQxcdn35YME5oRldzz8456
-         G6ZG0/UEhJklk3NbAQHXRutZ2/ujMOJ61jAdd+VQERcJxTa/KK8fGtvibdnKc/3Rvx
-         mUtPy+SAXkGUo1mHuETYiQELsLijo7cUp7B2PHNA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02NMqwWW049927
+        b=xNucDgl7RQgQXlSS3vHJqXEplxoO7dvameW2jP5a3KS6eFLmHfQDFWeZeDacy7B1q
+         7rEkk+ML7c27ganL+hhxClCNvFpagRWls5CLKPxp+C5SOBJUO/w572+QD7Pu6SLGLv
+         bjZ4eMz80pf4KcKGcqEtwyLK08z8JO834kPH1Gdw=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02NMr1XX106943
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Mar 2020 17:52:58 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 23 Mar 2020 17:53:01 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Mar 2020 17:52:58 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 17:53:01 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Mar 2020 17:52:58 -0500
+ Frontend Transport; Mon, 23 Mar 2020 17:53:01 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02NMqvjJ125515;
-        Mon, 23 Mar 2020 17:52:57 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02NMr0I7051244;
+        Mon, 23 Mar 2020 17:53:00 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>,
@@ -59,9 +59,9 @@ CC:     Murali Karicheri <m-karicheri2@ti.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v6 01/11] phy: ti: gmii-sel: simplify config dependencies between net drivers and gmii phy
-Date:   Tue, 24 Mar 2020 00:52:44 +0200
-Message-ID: <20200323225254.12759-2-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v6 03/11] net: ethernet: ti: ale: add support for mac-only mode
+Date:   Tue, 24 Mar 2020 00:52:46 +0200
+Message-ID: <20200323225254.12759-4-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200323225254.12759-1-grygorii.strashko@ti.com>
 References: <20200323225254.12759-1-grygorii.strashko@ti.com>
@@ -73,52 +73,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The phy-gmii-sel can be only auto selected in Kconfig and now the pretty
-complex Kconfig dependencies are defined for phy-gmii-sel driver, which
-also need to be updated every time phy-gmii-sel is re-used for any new
-networking driver.
+The new CPSW ALE version, available on TI K3 AM654/J721E SoCs family,
+allows to switch any external port to MAC only mode. When MAC only mode
+enabled this port be treated like a MAC port for the host. All traffic
+received is only sent to the host. The host must direct traffic to this
+port as the lookup engine will not send traffic to the ports with the
+p0_maconly bit set and the p0_no_learn also set. If p0_maconly bit is set
+and the p0_no_learn is not set, the host can send non-directed packets that
+can be sent to the destination of a MacOnly port. It is also possible that
+The host can broadcast to all ports including MacOnly ports in this mode.
 
-Simplify Kconfig definition for phy-gmii-sel PHY driver - drop all
-dependencies and from networking drivers and rely on using 'imply
-PHY_TI_GMII_SEL' in Kconfig definitions for networking drivers instead.
+This patch add ALE supprt for MAC only mode.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Tested-by: Murali Karicheri <m-karicheri2@ti.com>
 Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/net/ethernet/ti/Kconfig | 1 +
- drivers/phy/ti/Kconfig          | 3 ---
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/ti/cpsw_ale.c | 16 ++++++++++++++++
+ drivers/net/ethernet/ti/cpsw_ale.h |  2 ++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index bf98e0fa7d8b..8a6ca16eee3b 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -53,6 +53,7 @@ config TI_CPSW
- 	select MFD_SYSCON
- 	select PAGE_POOL
- 	select REGMAP
-+	imply PHY_TI_GMII_SEL
- 	---help---
- 	  This driver supports TI's CPSW Ethernet Switch.
- 
-diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
-index 6dbe9d0b9ff3..15a3bcf32308 100644
---- a/drivers/phy/ti/Kconfig
-+++ b/drivers/phy/ti/Kconfig
-@@ -106,11 +106,8 @@ config TWL4030_USB
- 
- config PHY_TI_GMII_SEL
- 	tristate
--	default y if TI_CPSW=y || TI_CPSW_SWITCHDEV=y
--	depends on TI_CPSW || TI_CPSW_SWITCHDEV || COMPILE_TEST
- 	select GENERIC_PHY
- 	select REGMAP
--	default m
- 	help
- 	  This driver supports configuring of the TI CPSW Port mode depending on
- 	  the Ethernet PHY connected to the CPSW Port.
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+index 5815225c000c..719e7846127c 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -779,6 +779,22 @@ static struct ale_control_info ale_controls[ALE_NUM_CONTROLS] = {
+ 		.port_shift	= 0,
+ 		.bits		= 1,
+ 	},
++	[ALE_PORT_MACONLY]	= {
++		.name		= "mac_only_port_mode",
++		.offset		= ALE_PORTCTL,
++		.port_offset	= 4,
++		.shift		= 11,
++		.port_shift	= 0,
++		.bits		= 1,
++	},
++	[ALE_PORT_MACONLY_CAF]	= {
++		.name		= "mac_only_port_caf",
++		.offset		= ALE_PORTCTL,
++		.port_offset	= 4,
++		.shift		= 13,
++		.port_shift	= 0,
++		.bits		= 1,
++	},
+ 	[ALE_PORT_MCAST_LIMIT]	= {
+ 		.name		= "mcast_limit",
+ 		.offset		= ALE_PORTCTL,
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
+index 70d0955c2652..eaca73c17ae7 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.h
++++ b/drivers/net/ethernet/ti/cpsw_ale.h
+@@ -62,6 +62,8 @@ enum cpsw_ale_control {
+ 	ALE_PORT_UNKNOWN_MCAST_FLOOD,
+ 	ALE_PORT_UNKNOWN_REG_MCAST_FLOOD,
+ 	ALE_PORT_UNTAGGED_EGRESS,
++	ALE_PORT_MACONLY,
++	ALE_PORT_MACONLY_CAF,
+ 	ALE_PORT_BCAST_LIMIT,
+ 	ALE_PORT_MCAST_LIMIT,
+ 	ALE_NUM_CONTROLS,
 -- 
 2.17.1
 
