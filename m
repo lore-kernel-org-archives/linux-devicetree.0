@@ -2,102 +2,114 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A05C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 698C6C4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9C6207FC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D71020789
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 12:18:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WVq7BLBF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HSUd4vdQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbgCWMPo (ORCPT
+        id S1727381AbgCWMSk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 08:15:44 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:61955 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727303AbgCWMPo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 08:15:44 -0400
-X-UUID: 9c596e1c356f48b498aefbbde324757d-20200323
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Syxtl64f/oiHmFDozNPlTQ/y9hPgVybUbznOPaoIJLs=;
-        b=WVq7BLBFAVRGwysc2XISyaUEeWklgVbg4nAC5J1+72gq0s9hqfPeGmaRE22VMMS1//scEXCwM/w2NiRmYfM1w/gCV5GHYrM61lrM1uMi3Gk54jHUdmXeeOw+ppDb1tFtb4mqWae3A6+n1zBecWPV5UL3zXJfOayjRB7PA1wGfMU=;
-X-UUID: 9c596e1c356f48b498aefbbde324757d-20200323
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <michael.kao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1151621450; Mon, 23 Mar 2020 20:15:41 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 23 Mar 2020 20:15:38 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 23 Mar 2020 20:15:38 +0800
-From:   Michael Kao <michael.kao@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <hsinyi@chromium.org>,
-        <linux-pm@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        <michael.kao@mediatek.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [v4,4/7] arm64: dts: mt8183: Configure CPU cooling
-Date:   Mon, 23 Mar 2020 20:15:34 +0800
-Message-ID: <20200323121537.22697-5-michael.kao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200323121537.22697-1-michael.kao@mediatek.com>
-References: <20200323121537.22697-1-michael.kao@mediatek.com>
+        Mon, 23 Mar 2020 08:18:40 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39182 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbgCWMSk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 08:18:40 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a43so15931462edf.6
+        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 05:18:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LOuNnZgzyqcm8GFQy/Cs3MTKU0ONrbIzdq5zmi+oP6k=;
+        b=HSUd4vdQOWkpZOlavXsGiTaSMf+lCfYpsCdFJSbN9eAuxw2kaPfwFbxExOUNmiJINM
+         qb51YiC/4XO/9TFlK2gh3latsgjR8hoxSztzkUbqvez1Aadg52NkenrzRj0pCZ7iMDMO
+         EePCTMvP8wdYeSdRSSGskUq0p1GfyStpyBmqI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LOuNnZgzyqcm8GFQy/Cs3MTKU0ONrbIzdq5zmi+oP6k=;
+        b=AZRhuiLqSLFWIGl58p5srhgeSKJL2Ya+NGmCFtw98HLqOtZDeTHF/ZIm2Gs7eURU4N
+         OFQQI1Hj6KbGOTA1lQjZ8KKS9ROA2CXeV3tg9VkLSQ0K3b8k/X+Vm3e5v7+5KdogrbOn
+         wvcjsc/4aVPdiKiLmBn23SO8OIdt6288v78scQgNWHvWHnq2m/I6h6iDssU5fP1+4Xet
+         5dPPNMC1h37fgf8ZP2GaHgtM5LNA4cWW6glH79AR8PBX8Hva84MJ1rD2WVGMw8gWDkyL
+         WbL0cIEO9MKh08zQIRC8azX+M+Wc93BCsCVdSvizmOYvLBVLz8qVAE1lS9WmCGGcVC5P
+         u/Jg==
+X-Gm-Message-State: ANhLgQ2BbK763DGBxUUg1MEVdhowtQHo/jySrLssvo5Weghzg8gHMJk/
+        J2X9hc2KvWwRPtLE+L8YcpTBLh04v3E=
+X-Google-Smtp-Source: ADFU+vsANJCX/y95X41kOnV/UQWVr0fNshsEsdlzNDL2cLSoSHKvXZd8Vb2x5u8eEWfDtIroFd0iWw==
+X-Received: by 2002:a17:906:361a:: with SMTP id q26mr9808462ejb.310.1584965918058;
+        Mon, 23 Mar 2020 05:18:38 -0700 (PDT)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
+        by smtp.gmail.com with ESMTPSA id h2sm1074826edt.44.2020.03.23.05.18.35
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 05:18:36 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id d1so14546719wmb.2
+        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 05:18:35 -0700 (PDT)
+X-Received: by 2002:a1c:6a1a:: with SMTP id f26mr1797828wmc.55.1584965915045;
+ Mon, 23 Mar 2020 05:18:35 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200306034946.11223-1-bibby.hsieh@mediatek.com>
+ <20200306034946.11223-2-bibby.hsieh@mediatek.com> <20200322130710.GA1091@ninjato>
+In-Reply-To: <20200322130710.GA1091@ninjato>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Mon, 23 Mar 2020 13:18:22 +0100
+X-Gmail-Original-Message-ID: <CAAFQd5ANJcReHD_n0LorS+bjE8Cn_W-kY5LNgGG+L+jMmywYfA@mail.gmail.com>
+Message-ID: <CAAFQd5ANJcReHD_n0LorS+bjE8Cn_W-kY5LNgGG+L+jMmywYfA@mail.gmail.com>
+Subject: Re: [PATCH v12 1/2] dt-binding: i2c: add bus-supply property
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-MTK:  N
-Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RnJvbTogTWF0dGhpYXMgS2FlaGxja2UgPG1rYUBjaHJvbWl1bS5vcmc+DQoNCkFkZCB0d28gcGFz
-c2l2ZSB0cmlwIHBvaW50cyBhdCA2OMKwQyBhbmQgODDCsEMgZm9yIHRoZSBDUFUgdGVtcGVyYXR1
-cmUuDQoNClNpZ25lZC1vZmYtYnk6IE1hdHRoaWFzIEthZWhsY2tlIDxta2FAY2hyb21pdW0ub3Jn
-Pg0KU2lnbmVkLW9mZi1ieTogTWljaGFlbCBLYW8gPG1pY2hhZWwua2FvQG1lZGlhdGVrLmNvbT4N
-Ci0tLQ0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kgfCA1NSArKysr
-KysrKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNTUgaW5zZXJ0aW9ucygrKQ0K
-DQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSBi
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kNCmluZGV4IDE4MmZhNjI2
-NGUwZC4uNTlhYjI5NTdkODVkIDEwMDY0NA0KLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRp
-YXRlay9tdDgxODMuZHRzaQ0KKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgx
-ODMuZHRzaQ0KQEAgLTY3NSw2ICs2NzUsNjEgQEANCiAJCQkJcG9sbGluZy1kZWxheSA9IDw1MDA+
-Ow0KIAkJCQl0aGVybWFsLXNlbnNvcnMgPSA8JnRoZXJtYWwgMD47DQogCQkJCXN1c3RhaW5hYmxl
-LXBvd2VyID0gPDUwMDA+Ow0KKw0KKwkJCQl0cmlwcyB7DQorCQkJCQl0aHJlc2hvbGQ6IHRyaXAt
-cG9pbnRAMCB7DQorCQkJCQkJdGVtcGVyYXR1cmUgPSA8NjgwMDA+Ow0KKwkJCQkJCWh5c3RlcmVz
-aXMgPSA8MjAwMD47DQorCQkJCQkJdHlwZSA9ICJwYXNzaXZlIjsNCisJCQkJCX07DQorDQorCQkJ
-CQl0YXJnZXQ6IHRyaXAtcG9pbnRAMSB7DQorCQkJCQkJdGVtcGVyYXR1cmUgPSA8ODAwMDA+Ow0K
-KwkJCQkJCWh5c3RlcmVzaXMgPSA8MjAwMD47DQorCQkJCQkJdHlwZSA9ICJwYXNzaXZlIjsNCisJ
-CQkJCX07DQorDQorCQkJCQljcHVfY3JpdDogY3B1LWNyaXQgew0KKwkJCQkJCXRlbXBlcmF0dXJl
-ID0gPDExNTAwMD47DQorCQkJCQkJaHlzdGVyZXNpcyA9IDwyMDAwPjsNCisJCQkJCQl0eXBlID0g
-ImNyaXRpY2FsIjsNCisJCQkJCX07DQorCQkJCX07DQorDQorCQkJCWNvb2xpbmctbWFwcyB7DQor
-CQkJCQltYXAwIHsNCisJCQkJCQl0cmlwID0gPCZ0YXJnZXQ+Ow0KKwkJCQkJCWNvb2xpbmctZGV2
-aWNlID0gPCZjcHUwDQorCQkJCQkJCVRIRVJNQUxfTk9fTElNSVQNCisJCQkJCQkJVEhFUk1BTF9O
-T19MSU1JVD4sDQorCQkJCQkJCQkgPCZjcHUxDQorCQkJCQkJCVRIRVJNQUxfTk9fTElNSVQNCisJ
-CQkJCQkJVEhFUk1BTF9OT19MSU1JVD4sDQorCQkJCQkJCQkgPCZjcHUyDQorCQkJCQkJCVRIRVJN
-QUxfTk9fTElNSVQNCisJCQkJCQkJVEhFUk1BTF9OT19MSU1JVD4sDQorCQkJCQkJCQkgPCZjcHUz
-DQorCQkJCQkJCVRIRVJNQUxfTk9fTElNSVQNCisJCQkJCQkJVEhFUk1BTF9OT19MSU1JVD47DQor
-CQkJCQkJY29udHJpYnV0aW9uID0gPDMwNzI+Ow0KKwkJCQkJfTsNCisJCQkJCW1hcDEgew0KKwkJ
-CQkJCXRyaXAgPSA8JnRhcmdldD47DQorCQkJCQkJY29vbGluZy1kZXZpY2UgPSA8JmNwdTQNCisJ
-CQkJCQkJVEhFUk1BTF9OT19MSU1JVA0KKwkJCQkJCQlUSEVSTUFMX05PX0xJTUlUPiwNCisJCQkJ
-CQkJCSA8JmNwdTUNCisJCQkJCQkJVEhFUk1BTF9OT19MSU1JVA0KKwkJCQkJCQlUSEVSTUFMX05P
-X0xJTUlUPiwNCisJCQkJCQkJCSA8JmNwdTYNCisJCQkJCQkJVEhFUk1BTF9OT19MSU1JVA0KKwkJ
-CQkJCQlUSEVSTUFMX05PX0xJTUlUPiwNCisJCQkJCQkJCSA8JmNwdTcNCisJCQkJCQkJVEhFUk1B
-TF9OT19MSU1JVA0KKwkJCQkJCQlUSEVSTUFMX05PX0xJTUlUPjsNCisJCQkJCQljb250cmlidXRp
-b24gPSA8MTAyND47DQorCQkJCQl9Ow0KKwkJCQl9Ow0KIAkJCX07DQogDQogCQkJLyogVGhlIHR6
-dHMxIH4gdHp0czYgZG9uJ3QgbmVlZCB0byBwb2xsaW5nICovDQotLSANCjIuMTguMA0K
+On Sun, Mar 22, 2020 at 2:07 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+> Hi,
+>
+> thanks for the patches!
+>
+> I have a high level question about them, first.
+>
+> > +- bus-supply
+> > +     phandle to the regulator that provides power to i2c.
+>
+> I think this is not clear enough. I assume it means the regulator for
+> driving SCL/SDA? In the coverletter you mention also an EEPROM. In your
+> case, this is driven by the same regulator? I am skeptical we can
+> abstract it like this because I2C devices could be driven by various
+> regulators in the system, so there couldn't be one "bus regulator". The
+> regulator for the EEPROM should be described in the EEPROM node. So,
+> this "bus supply" is only for driving SCL/SDA?
 
+In our case the bus-supply regulator drives the voltage rail to which
+SCL/SDA are pulled up and there is an EEPROM on the bus, powered by
+yet another rail. There is also another slave on the bus which uses
+the same regulator as the bus-supply for its own power.
+
+In other words, bus-supply only ensures that SCL and SDA are in a
+usable state. Other consumers need to refer to the regulator in their
+own supplies if they need it for their own power.
+
+Does this answer your questions?
+
+Best regards,
+Tomasz
