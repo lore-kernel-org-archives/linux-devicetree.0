@@ -2,158 +2,104 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77807C4332B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632CDC4332B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 433C72074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:10:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hVqEXbwk"
+	by mail.kernel.org (Postfix) with ESMTP id 36CDE20735
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 14:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584973264;
+	bh=e8hZ/g1bNvklC5cvNY4Apt+hoToW8hqn4IgzX984TW0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0O95mTHU3xg19gwnhjtAJvDk7fIrw3eftFJCfADeZMQD6tB3wGSUaN7LKNrZlB3Fl
+	 ls8Ca14UMOVdEyCJRi5ByEPjyea68Zr3EHpuLH/571KjngcimUlMRZl1VacTlman+w
+	 fwMeZ0qv5yvX9mk3JtMZQMSga4w6ZXADiAPZ1bMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgCWOKi (ORCPT
+        id S1728542AbgCWOVD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 10:10:38 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43349 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728567AbgCWOKg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Mar 2020 10:10:36 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b2so17221185wrj.10
-        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 07:10:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LZ9FwjEcwHHutv4afTykwwLWTmNIc1Z2hV31xAwBGZQ=;
-        b=hVqEXbwkYW1fstFsmTfDwrVSrgs3YS7klpw61QuXvHp+HfsllzFqX52lt9J7M5etup
-         iarAbinn9KKrxpIDn7rXBl6vlCVy7lRDow373VP8B6nu4d1aizbVjtTvqR6xKSHySQNZ
-         55Qo3HRwZQP2rkLIaxTRiseFLmoFL5TIfFabJ+p1UD4xZPZfHJ73hrDJPEjrekJbsHo8
-         TM5XKgqimXfS2u7dxvoA5Rw/BKwe2msZAcuK/woSE7eOU/VT1t4kWXOkLlmfaI9Rft1B
-         qpXzlW46rLGGG+NNkJLS+jrPl0zbdjDX5kGjhT4R88jNI67KUROonOccQepnbq9tXZhs
-         sZ/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=LZ9FwjEcwHHutv4afTykwwLWTmNIc1Z2hV31xAwBGZQ=;
-        b=IPLJa/heDSotbSy8UCMaiDXbuLxgip0gY6nLdmiNtwRmfh2FMih5fwVsaxe3y3x6Q8
-         bJcGmdvpiuwjuJlo9n7Sshi3nlSnMYKinMHg2b8hiDtlTp9VbUhvZMUbsxASv02mS6aU
-         o/gv3O+mhtGm+K3+3ZMj67mMeR7yseYB8gdYLcOIUvUOXYAnnJTGC7TAZu2QZkdKgkpr
-         Bu29iR4zmTKigBj7PMxZP9u7t2LRj814G4BC3Bmqq5VjBxkKkFNyXQBMYTgBwQp9ptyg
-         SUacqD8NkoymFDKh6CUIT+Quhgfzdd3LnR8InPM9ivkKeghEjUQUDkBQuo5jm7OM2diq
-         CtgQ==
-X-Gm-Message-State: ANhLgQ0WNEqC7gf1G0DCAoTdVYTxVy/ZP8Zf8nPacZ1WYLvYI1U9bEd4
-        CsKwjePxm+RyJaIyRB6Gs6Y6EQ==
-X-Google-Smtp-Source: ADFU+vsJHBjxsKMzHTjIPw4AeA2gh5Jp76Awx02d6hNDt0Fimxd7p+H+5OyZLJYdHJSv1veUnvaaXA==
-X-Received: by 2002:a5d:4b52:: with SMTP id w18mr16935915wrs.233.1584972633074;
-        Mon, 23 Mar 2020 07:10:33 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:d702:b4a5:b331:1282? ([2a01:e34:ed2f:f020:d702:b4a5:b331:1282])
-        by smtp.googlemail.com with ESMTPSA id o14sm7521567wmh.22.2020.03.23.07.10.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 07:10:32 -0700 (PDT)
-Subject: Re: [PATCH V3 2/3] thermal: imx8mm: Add i.MX8MP support
-To:     Anson Huang <Anson.Huang@nxp.com>, rui.zhang@intel.com,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, horia.geanta@nxp.com, peng.fan@nxp.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
- <1584966504-21719-2-git-send-email-Anson.Huang@nxp.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <644b108e-596c-64d6-9693-80ac7f706dc7@linaro.org>
-Date:   Mon, 23 Mar 2020 15:10:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 23 Mar 2020 10:21:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728446AbgCWOVD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 10:21:03 -0400
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F83720735;
+        Mon, 23 Mar 2020 14:21:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584973263;
+        bh=e8hZ/g1bNvklC5cvNY4Apt+hoToW8hqn4IgzX984TW0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BB4Ru6T1NkxKNSViSeB7Ky4cBEWTioqOpo64eC5YmhBY7D0rFuTE22ak1rvOPpLJq
+         oxsJMFPMMGnxNVy/KLt6HoyHymfZqTTC9/S63wCeBl98V/CCQJN2N7UjJPbw2cdWXv
+         iIN0Qah4ohu4uMZxPk1Sp1h9jSIEZ/6man5hzuPM=
+Received: by mail-qv1-f45.google.com with SMTP id z13so7243012qvw.3;
+        Mon, 23 Mar 2020 07:21:03 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2S/tSxpY+/PbAhgz0CedCcg54Z0IYGx6EItPgZjgVNnqWML9QH
+        0/ExMFwiaH4n4UT4dbyS4QKL4IItQB8IXy3Z7Q==
+X-Google-Smtp-Source: ADFU+vuEfOdadZVySdc7iq8l12uQIlz1tLgqs39PWkTAjyHZZ5yGYfX2C/lrU7LWzLsHdW/r1B4I6TObLucuUl7YGEw=
+X-Received: by 2002:a05:6214:a6f:: with SMTP id ef15mr20183351qvb.79.1584973262182;
+ Mon, 23 Mar 2020 07:21:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1584966504-21719-2-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200313052252.25389-1-o.rempel@pengutronix.de>
+ <20200313052252.25389-2-o.rempel@pengutronix.de> <545d5e46-644a-51fb-0d67-881dfe23e9d8@gmail.com>
+ <20200313181056.GA29732@lunn.ch> <20200313181601.sbxdrqdjqfj3xn3e@pengutronix.de>
+ <15dafdcd-1979-bf35-3968-c80ffc113001@gmail.com> <20200313185327.nawcp2imfldyhpqa@pengutronix.de>
+ <20200317115626.4ncavxdcw4wu5zgc@pengutronix.de> <137a6dd3-c5ba-25b1-67ff-f0112afd7f34@gmail.com>
+ <20200320230504.GA30209@bogus> <a1968447-5dd9-e309-6a3e-48ed05c2ab93@gmail.com>
+In-Reply-To: <a1968447-5dd9-e309-6a3e-48ed05c2ab93@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 23 Mar 2020 08:20:50 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+KHfW0LtzJQFjB7HTWFBGf_9fe79nKBSe-g5npRYfZ6A@mail.gmail.com>
+Message-ID: <CAL_Jsq+KHfW0LtzJQFjB7HTWFBGf_9fe79nKBSe-g5npRYfZ6A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP TJA11xx
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Marek Vasut <marex@denx.de>, netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 23/03/2020 13:28, Anson Huang wrote:
-> i.MX8MP shares same TMU with i.MX8MM, the only difference is i.MX8MP
-> has two thermal sensors while i.MX8MM ONLY has one, add multiple sensors
-> support for i.MX8MM TMU driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V2:
-> 	- Fix build warning about test_bit second argument type.
-> ---
+On Sun, Mar 22, 2020 at 3:09 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 3/20/2020 4:05 PM, Rob Herring wrote:
+> >>>> Because the primary PHY0 can be autodetected by the bus scan.
+> >>>> But I have nothing against your suggestions. Please, some one should say the
+> >>>> last word here, how exactly it should be implemented?
+> >>
+> >> It's not for me to decide, I was hoping the Device Tree maintainers
+> >> could chime in, your current approach would certainly work although it
+> >> feels visually awkward.
+> >
+> > Something like this is what I'd do:
+> >
+> > ethernet-phy@4 {
+> >   compatible = "nxp,tja1102";
+> >   reg = <4 5>;
+> > };
+>
+> But the parent (MDIO bus controller) has #address-cells = 1 and
+> #size-cells = 0, so how can this be made to work without creating two
+> nodes or a first node encapsulating another one?
 
-Please, just send a fix on top of this patch because the series is
-already merged.
+That is the size of the address, not how many addresses there are. If
+the device has 2 addresses, then 2 address entries seems entirely
+appropriate.
 
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Rob
