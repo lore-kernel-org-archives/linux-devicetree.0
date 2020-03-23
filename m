@@ -2,83 +2,76 @@ Return-Path: <SRS0=2gCm=5I=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D67C3F2CD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1546C54FCE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82F42072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:14:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="XURddeuh"
+	by mail.kernel.org (Postfix) with ESMTP id 782DC20753
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Mar 2020 15:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgCWPOb (ORCPT
+        id S1727280AbgCWPZ5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Mar 2020 11:14:31 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:52098 "EHLO vps0.lunn.ch"
+        Mon, 23 Mar 2020 11:25:57 -0400
+Received: from elvis.franken.de ([193.175.24.41]:58633 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbgCWPOb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Mar 2020 11:14:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=1m+OiC3y42SS9da+Tcx1VksIIwVDt7LFueQm6zuxGVo=; b=XURddeuh+RoTABs816IckUXkfW
-        egzgUGPHZht3RdSInSrJYSrt7X9WDAhCHamL4zw3CVNk1yNkmg8mPClDl87yQBxh1ptYvfaoEDUbw
-        Axs5liIRIXS3Nl3+tBfKHmEpVjiBJ/o8J0AiUUjo1zF+QiGToIJBQ4ZHZi7to6N0iFXI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jGOmV-0000ni-Na; Mon, 23 Mar 2020 16:14:23 +0100
-Date:   Mon, 23 Mar 2020 16:14:23 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Christian Herber <christian.herber@nxp.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
+        id S1727388AbgCWPZ4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Mar 2020 11:25:56 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jGOxd-0007im-00; Mon, 23 Mar 2020 16:25:53 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 08279C0955; Mon, 23 Mar 2020 15:46:41 +0100 (CET)
+Date:   Mon, 23 Mar 2020 15:46:40 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Marek Vasut <marex@denx.de>, netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP
- TJA11xx
-Message-ID: <20200323151423.GA32387@lunn.ch>
-References: <AM0PR04MB70413A974A2152D27CAADFAC86F00@AM0PR04MB7041.eurprd04.prod.outlook.com>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        Paul Boddie <paul@boddie.org.uk>
+Subject: Re: [PATCH v7 0/3] MIPS: Fixes and improvements for CI20 board
+ (JZ4780)
+Message-ID: <20200323144640.GA10431@alpha.franken.de>
+References: <cover.1583528793.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB70413A974A2152D27CAADFAC86F00@AM0PR04MB7041.eurprd04.prod.outlook.com>
+In-Reply-To: <cover.1583528793.git.hns@goldelico.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Yes, it is one device with two address. This is if you call the entire IC a device. If you look at it from a PHY perspective, it is two devices with 1 address.
-> If you just look at it as a single device, it gets difficult to add PHY specific properties in the future, e.g. master/slave selection.
+On Fri, Mar 06, 2020 at 10:06:30PM +0100, H. Nikolaus Schaller wrote:
+> 
+> Signed-off-by: Paul Boddie <paul@boddie.org.uk>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> 
+> 
+> Alex Smith (1):
+>   MIPS: DTS: CI20: add DT node for IR sensor
+> 
+> H. Nikolaus Schaller (2):
+>   MIPS: DTS: CI20: multiple DTS improvements
+>   MIPS: CI20: defconfig: multiple improvements
+> 
+>  arch/mips/boot/dts/ingenic/ci20.dts | 19 +++++++++++++++++++
+>  arch/mips/configs/ci20_defconfig    | 21 +++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
 
-> In my opinion its important to have some kind of container for the
-> entire IC, but likewise for the individual PHYs.
+series applied to mips-next.
 
-Yes, we need some sort of representation of two devices.
+Thomas.
 
-Logically, the two PHYs are on the same MDIO bus, so you could have
-two nodes on the main bus.
-
-Or you consider the secondary PHY as being on an internal MDIO bus
-which is transparently bridged to the main bus. This is what was
-proposed in the last patchset.
-
-Because this bridge is transparent, the rest of the PHY/MDIO framework
-has no idea about it. So i prefer that we keep with two PHY nodes on
-the main bus. But i still think we need the master PHY to register the
-secondary PHY, due to the missing PHY ID, and the other constrains
-like resets which the master PHY has to handle.
-
-     Andrew
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
