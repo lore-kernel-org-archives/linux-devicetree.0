@@ -2,94 +2,100 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01CBC2BAEE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 13:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBA8C2BAEE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 13:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87359206F6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 13:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585057485;
-	bh=eS0o/kRjog1FzGHzsXv70k3r6k3VzZc77nna9n1P+I4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VQyf+62GaPCtdSig1F2STWIellhWosvVDSnbZnZYm6NgTymyl4F9DMb6uk5DJV6DF
-	 SX0uAIBb4YzCLWumZaHllhcYjggU8t/wrMZKXvV2WgQpDNdePDCYsAm+oe/PlFpn5t
-	 d8VxWbyIMTjPDYcpKecZPXqEjPuMaoX9730WX39M=
+	by mail.kernel.org (Postfix) with ESMTP id 8F62C20753
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 13:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgCXNoo (ORCPT
+        id S1727921AbgCXNr0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:44:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:35388 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727960AbgCXNom (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:44:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 547291FB;
-        Tue, 24 Mar 2020 06:44:42 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD68E3F52E;
-        Tue, 24 Mar 2020 06:44:41 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 13:44:40 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc:     Johan Jonker <jbx6244@gmail.com>, lgirdwood@gmail.com,
-        robh+dt@kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: sound: convert rockchip spdif
- bindings to yaml
-Message-ID: <20200324134440.GD7039@sirena.org.uk>
-References: <20200324123155.11858-1-jbx6244@gmail.com>
- <20200324133506.GC7039@sirena.org.uk>
- <2135168.SEOWuCda4h@diego>
+        Tue, 24 Mar 2020 09:47:26 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:62984 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728814AbgCXNr0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:47:26 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ODj9v1027853;
+        Tue, 24 Mar 2020 09:47:24 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs626ad-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Mar 2020 09:47:24 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02ODlN44053368
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 24 Mar 2020 09:47:23 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 24 Mar
+ 2020 09:47:22 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 24 Mar 2020 09:47:22 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02ODlDnl002365;
+        Tue, 24 Mar 2020 09:47:20 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <Laszlo.Nagy@analog.com>,
+        <Andrei.Grozav@analog.com>, <Michael.Hennerich@analog.com>,
+        <Istvan.Csomortani@analog.com>, <Adrian.Costina@analog.com>,
+        <Dragos.Bogdan@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v13 3/8] iio: buffer-dmaengine: use %zu specifier for sprintf(align)
+Date:   Tue, 24 Mar 2020 15:46:31 +0200
+Message-ID: <20200324134636.64643-4-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200324134636.64643-1-alexandru.ardelean@analog.com>
+References: <20200324134636.64643-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/unnNtmY43mpUSKx"
-Content-Disposition: inline
-In-Reply-To: <2135168.SEOWuCda4h@diego>
-X-Cookie: I feel ... JUGULAR ...
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-24_05:2020-03-23,2020-03-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=901
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003240074
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The 'size_t' type behaves differently on 64-bit architectures, and causes
+compiler a warning of the sort "format '%u' expects argument of type
+'unsigned int', but argument 3 has type 'size_t {aka long unsigned int}'".
 
---/unnNtmY43mpUSKx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This change adds the correct specifier for the 'align' field.
 
-On Tue, Mar 24, 2020 at 02:39:56PM +0100, Heiko St=FCbner wrote:
-> Am Dienstag, 24. M=E4rz 2020, 14:35:06 CET schrieb Mark Brown:
+Fixes: 4538c18568099 ("iio: buffer-dmaengine: Report buffer length requirements")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/buffer/industrialio-buffer-dmaengine.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > This is the second v2 you've sent of this today
+diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+index b129693af0fd..94da3b1ca3a2 100644
+--- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
++++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+@@ -134,7 +134,7 @@ static ssize_t iio_dmaengine_buffer_get_length_align(struct device *dev,
+ 	struct dmaengine_buffer *dmaengine_buffer =
+ 		iio_buffer_to_dmaengine_buffer(indio_dev->buffer);
+ 
+-	return sprintf(buf, "%u\n", dmaengine_buffer->align);
++	return sprintf(buf, "%zu\n", dmaengine_buffer->align);
+ }
+ 
+ static IIO_DEVICE_ATTR(length_align_bytes, 0444,
+-- 
+2.17.1
 
-> hmm at least when looking at my inbox ... I got one series for
-> spdif in v2 (this one) and one for i2s in v2. And yes they do look
-> somewhat identical in what they do but of course handle binding
-> changes for different controllers.
-
-Ah, this is one reason why I complain about subject lines - the
-extra dt-bindings at the front hides the difference in subject lines for
-me.
-
---/unnNtmY43mpUSKx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl56DscACgkQJNaLcl1U
-h9AX1gf/aMYAaXz2aq59CMWwQKWFUEAhfQ7OLuhs5LSFsPlUBZXUMot13HRqsiKz
-uwZgsBhO7MErfMs6l85z52J7uQ56RYXkIdfdm0m0PUVVyZsUxDHMKmV6xnS3NpHm
-f1COnrZDwRLRrP4qWCipkWJFRTF/9PynetTfYX456+g6aeBI7mNlO+OdY+EWis3v
-lMI5+/zO0RCkIgKb3qYp4gknlqYz+1HtIgu8RBy3JaDQk1BGNP85KFxRmGPyOe2U
-8H+Tu1uO9iIGgP7XAMJFsusQTC2QmPfhGH2GG9S/R2k+gZEjELOhcGtlfOl9+S+E
-gpQaRpbPjoAKtCy9IPoiy6watAt2ZA==
-=WwdV
------END PGP SIGNATURE-----
-
---/unnNtmY43mpUSKx--
