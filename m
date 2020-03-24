@@ -2,200 +2,168 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 733D6C2BAEE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79EBC41621
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 16:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6C52073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FB420774
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 16:05:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YHsHf9RC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHkvzsim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgCXP7Q (ORCPT
+        id S1727665AbgCXQFM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:59:16 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39358 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgCXP6y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 11:58:54 -0400
-Received: by mail-wm1-f65.google.com with SMTP id a9so4091683wmj.4
-        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 08:58:53 -0700 (PDT)
+        Tue, 24 Mar 2020 12:05:12 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38806 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbgCXQFL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 12:05:11 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w2so7967306oic.5;
+        Tue, 24 Mar 2020 09:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XPYOl9OSvnlb7pbajpjD/KFcLeeFx7WRfchUdrcylgw=;
-        b=YHsHf9RCWJ9Rkt8w6oePRTlQPhaIlN8o9yI18GdZk6d549IZQI9P0+hsaofIYyEuYJ
-         Pu4WSGVwS4cBplZPuQ3WqdbIeCm+pJ8I7Q55t8f5yS57f49NCTL6DeIx97+mL4ijqlXM
-         Sy+4gHnjl43p9nDSLap7RJ3f7oMqOMH7TO1cruo0H8JyPGX9id6qeoDIJzaTjBskAav7
-         uQu6aJZCeEM/zClNuaDzR74lg++HuvFmB41duTI54392uEqAuGclZmUHHpfCUabph7fX
-         BFrXxCxj3bYBkmJuiK7X8NVRLWhBcm8zMQchXuJ3gpD9r3GZhHgLzqyaMcFTyTbxfKVf
-         ufJw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2BPzC8bByA/HvMLHNDuJ/sryGIc/DaJrplgVtUGBycE=;
+        b=HHkvzsimNnAlbEd2ZUuSi3tppCCvuexXM92gmWz1PrPvT8/YodDM04j4ICKWyAnScu
+         lQVc8GqPm4s6NagQmUmrlPB8LC59XBwe3fmOfxFvTQGDlBc/DJ2kCEYJuPyjN/jdZMCM
+         WiGVrfbWQgF3pVXk+hsDa3w91B18+Biggx1VXjLNfI5FxYLHGf0VdRKmKAdrd2uze/Df
+         j3/Cdi7oHcf5/pk9AXFpihMvrZN+eeoVsYw7CYhCxrifXYc4ZvSBdl2dCQZ6SZAoS63j
+         7YOSDq8EkuTiktCrVOqggeQQ7SfhdhgjX+Rk4fNnZ0gV+jVf1rd/C3UA87E3s4iGSJBU
+         XjhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XPYOl9OSvnlb7pbajpjD/KFcLeeFx7WRfchUdrcylgw=;
-        b=AQ5G1a6dNHATXmtBridfNWQa9tO1hfsmadidCnWcC83lNC7v4PNRuBOqjRAxiZaoy1
-         OnGHgXKJZPT//rMBZb9OA8xoajAnAqdm3tJB+3Z9sfX4CCMBddoTT2Tuh5UzV+6B29aC
-         HupAMLqCVEUTHwGcrB6yyFE5AxMYoGSz971y1Lo8bztK0zsJYId+dm+X2hf+Duer2TdY
-         K19b8mpP/vj9Xz0wRZljkszApEmCRa9/x76guqwgskY344epg4k4v+2y56fKoL+UHuBI
-         pqaBKFEdJhqVkCeopWHvftKN47TDN6wAhH7/ecJdKQxGNFzs7I92Zm3PHAdl/Jl9Q2i6
-         sBwA==
-X-Gm-Message-State: ANhLgQ0TKSXAG8aO+bY9xrc2hJ0d0cM/Z2J+Fmw++IIn2BGbrMxxAiBz
-        b0S/QR0KWZX3EX2KLn45riUVPA==
-X-Google-Smtp-Source: ADFU+vuZkUbQmRe+H1djjQ4pvSEQwOP24JfoxEbqOVwByz2BSkhjvCiifE7uaI//6oPP5ccMUuMJrA==
-X-Received: by 2002:a1c:9ecb:: with SMTP id h194mr6657099wme.49.1585065531892;
-        Tue, 24 Mar 2020 08:58:51 -0700 (PDT)
-Received: from xps7590.local ([2a02:2450:102f:13b8:e15d:2127:89a:e5dc])
-        by smtp.gmail.com with ESMTPSA id t124sm4993321wmg.13.2020.03.24.08.58.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 08:58:51 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        shawnguo@kernel.org, olof@lixom.net, Anson.Huang@nxp.com,
-        dinguyen@kernel.org, leonard.crestez@nxp.com,
-        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>
-Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [v3 2/6] arm64: dts: apq8016-sbc: Add CCI/Sensor nodes
-Date:   Tue, 24 Mar 2020 16:58:38 +0100
-Message-Id: <20200324155843.10719-3-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200324155843.10719-1-robert.foss@linaro.org>
-References: <20200324155843.10719-1-robert.foss@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2BPzC8bByA/HvMLHNDuJ/sryGIc/DaJrplgVtUGBycE=;
+        b=EhYdHJTxBwrHxlB4+C3Ou4tFP6XqdGhA4pdUhNPWIFpPyOzFMILMtHu5rYnVdSWM5c
+         cEK7WjSbMPV+aO/kLpNiwpvCTPEgNoF6XThm0D63tq84fs7uuG7D+1lGu/nzEqLYlYmX
+         0YORDKY+cI7EB4LvGnZ15oCCimeBfBRbD1gSUnGETIJUNKyge4NNtkWjlhuDjxjeI3Jk
+         exz7CvAvXepyoeuO9jaNTAHc8GF5/yZ92da+hQYq13mc/9IR/18Q/FBQf4F2kuWwOiZm
+         avW2xOKtHW1f6iMtlccCilX/Sc2FKAuksFkGiHM5TlyfzDzCQfpjpq68hlmRjlkIcR4J
+         DlQA==
+X-Gm-Message-State: ANhLgQ1I7xffVsiugQC86JTFvcq4l9WR8SRzR6S1oPiJgW5PzcSVfJ6x
+        gws2/S4LWmj/V1k/Rk2wEloH1zZuVl1+IpyDMGc=
+X-Google-Smtp-Source: ADFU+vtuwcJhmNvSXVMH0kkPrvHbOp86UIi0sjchaCanrt6uGW6T2n+s1rq6XKFSlBRFrUjjFNxXPvfnLddzYsV6iIY=
+X-Received: by 2002:aca:cf0d:: with SMTP id f13mr3817816oig.162.1585065910345;
+ Tue, 24 Mar 2020 09:05:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200319124452.3yfcvq754vi4q2rv@gilmour.lan> <20200319130348.GC4872@pendragon.ideasonboard.com>
+ <CA+V-a8s-GZsYuBLyGnzURZfGD42f0c+QEan6FSwb2ew1=7Gj3g@mail.gmail.com> <20200324154045.whiy6uvlg2mrjv5a@gilmour.lan>
+In-Reply-To: <20200324154045.whiy6uvlg2mrjv5a@gilmour.lan>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 24 Mar 2020 16:04:43 +0000
+Message-ID: <CA+V-a8tMVoJOdgM_S0sJ0WEGhwBirCC4mi-TtxLCn1SKVXXiBQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to assigned-clock-rates
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+Hi Maxime,
 
-Add cci device to msm8916.dtsi.
-Add default 96boards camera node for db410c (apq8016-sbc).
+On Tue, Mar 24, 2020 at 3:40 PM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> On Thu, Mar 19, 2020 at 01:17:51PM +0000, Lad, Prabhakar wrote:
+> > Hi Laurent,
+> >
+> > On Thu, Mar 19, 2020 at 1:04 PM Laurent Pinchart
+> > <laurent.pinchart@ideasonboard.com> wrote:
+> > >
+> > > Hi Maxime,
+> > >
+> > > On Thu, Mar 19, 2020 at 01:44:52PM +0100, Maxime Ripard wrote:
+> > > > On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
+> > > > > Use assigned-clock-rates to specify the clock rate. Also mark
+> > > > > clock-frequency property as deprecated.
+> > > > >
+> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
+> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > > > index 72ad992..e62fe82 100644
+> > > > > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> > > > > @@ -8,7 +8,7 @@ Required Properties:
+> > > > >  - compatible: Value should be "ovti,ov5645".
+> > > > >  - clocks: Reference to the xclk clock.
+> > > > >  - clock-names: Should be "xclk".
+> > > > > -- clock-frequency: Frequency of the xclk clock.
+> > > > > +- clock-frequency (deprecated): Frequency of the xclk clock.
+> > > > >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> > > > >    to the hardware pin PWDNB which is physically active low.
+> > > > >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> > > > > @@ -37,7 +37,8 @@ Example:
+> > > > >
+> > > > >                     clocks = <&clks 200>;
+> > > > >                     clock-names = "xclk";
+> > > > > -                   clock-frequency = <24000000>;
+> > > > > +                   assigned-clocks = <&clks 200>;
+> > > > > +                   assigned-clock-rates = <24000000>;
+> > > > >
+> > > > >                     vdddo-supply = <&camera_dovdd_1v8>;
+> > > > >                     vdda-supply = <&camera_avdd_2v8>;
+> > > >
+> > > > clock-frequency is quite different from assigned-clock-rates though,
+> > > > semantically speaking. clock-frequency is only about what the clock
+> > > > frequency is, while assigned-clock-rates will change the rate as well,
+> > > > and you have no idea how long it will last.
+> > >
+> > > The driver currently reads the clock-frequency property and then calls
+> > > clk_set_rate(). I agree tht assigned-clock-rates isn't a panacea, but I
+> > > think it's less of a hack than what we currently have.
+> > >
+> > > As discussed on IRC, maybe the best option in this specific case is to
+> > > drop clock-frequency and assigned-clok-rates, and call clk_set_rate()
+> > > with a hardcoded frequency of 24MHz in the driver, as that's the only
+> > > frequency the driver supports.
+> > >
+> > Does this mean any driver which has a fixed clock requirement shouldn't be a
+> > DT property and should be just handled by the drivers internally ?
+>
+> It's hard to give a generic policy, but here, the hardware is pretty
+> flexible since it can deal with anything between 6MHz to 50-something
+> MHz, it's the driver that chooses to enforce a 24MHz and be pedantic
+> about it, so it's up to the driver to enforce that policy, not to the
+> DT since it's essentially a software limitation, not a hardware one.
+>
+Thank you for the clarification, Ill drop patches 1-4 from this series.
 
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Robert Foss <robert.foss@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Cheers,
+--Prabhakar
 
-Changes since v1:
- - Reference CCI by label
- - Don't use generic node names
- - Move regulator nodes out of /soc
- - Use CCI label and move node out of /soc
- - Use reference for camss and move node out of /soc
- - Use reference for cci-i2c0 and move out of /cci
- - Disable camera_read by default, since no mezzanine board is guaranteed
-
-
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 76 +++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 037e26b3f8d5..d98c7e9e6eb9 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -51,6 +51,30 @@ chosen {
- 		stdout-path = "serial0";
- 	};
- 
-+	camera_vdddo_1v8: camera_vdddo_1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdddo";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	camera_vdda_2v8: camera_vdda_2v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vdda";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		regulator-always-on;
-+	};
-+
-+	camera_vddd_1v5: camera_vddd_1v5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "camera_vddd";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+	};
-+
- 	reserved-memory {
- 		ramoops@bff00000{
- 			compatible = "ramoops";
-@@ -538,6 +562,58 @@ button@0 {
- 	};
- };
- 
-+&camss {
-+	status = "ok";
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			csiphy0_ep: endpoint {
-+				clock-lanes = <1>;
-+				data-lanes = <0 2>;
-+				remote-endpoint = <&ov5640_ep>;
-+				status = "okay";
-+			};
-+		};
-+	};
-+};
-+
-+&cci {
-+	status = "ok";
-+};
-+
-+&cci_i2c0 {
-+	camera_rear@3b {
-+		compatible = "ovti,ov5640";
-+		reg = <0x3b>;
-+
-+		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&camera_rear_default>;
-+
-+		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-+		clock-names = "xclk";
-+		clock-frequency = <23880000>;
-+
-+		vdddo-supply = <&camera_vdddo_1v8>;
-+		vdda-supply = <&camera_vdda_2v8>;
-+		vddd-supply = <&camera_vddd_1v5>;
-+
-+		/* No camera mezzanine by default */
-+		status = "disabled";
-+
-+		port {
-+			ov5640_ep: endpoint {
-+				clock-lanes = <1>;
-+				data-lanes = <0 2>;
-+				remote-endpoint = <&csiphy0_ep>;
-+			};
-+		};
-+	};
-+};
-+
- &spmi_bus {
- 	pm8916_0: pm8916@0 {
- 		pon@800 {
--- 
-2.25.1
-
+> Maxime
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
