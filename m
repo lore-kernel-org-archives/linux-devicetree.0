@@ -2,99 +2,118 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1911CC4332B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10752C41621
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6300208D6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE55920870
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qkkU2Hsy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RKCe9AqJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgCXKU5 (ORCPT
+        id S1727230AbgCXKdG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:20:57 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34673 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727485AbgCXKU4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 06:20:56 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 65so3990776wrl.1
-        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 03:20:54 -0700 (PDT)
+        Tue, 24 Mar 2020 06:33:06 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35129 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbgCXKdF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 06:33:05 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d5so8390384wrn.2
+        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 03:33:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GhA9x8hO0OSqZFQSsNcZ2UKUqCG4/t+w/VnuL1kPUHU=;
-        b=qkkU2Hsy3KDoPTQpcjYY1qdbEx1TTR+31GrBzsfrej5riME6gzYRij4LFJmmSnTlYn
-         uj/LhvVBDDEXQRX7bKMRLx6uC0Arw3UVexvCTGXLLPd0KvtNlZDpQ/iSPPpCvfeD0322
-         t5zFFnmBEAjdW2Lm7kugnAuT2aXCMf5miFReQar54A4WiMMmWmqciJhne0zU/qvbqbaG
-         W8odiVk5SpXaLfVOXq56uqevXAfUJi96Fz8kjWViOqX0ChuAew4G88CPv2PEnlwMUgKa
-         utrQa8uQqj3RjbNG5P9/9SQ2rcPjEpQJ16muoqs9rDaO7yh098l6yDOWeyHiGClZvjIH
-         6hjg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=IrXGZHQOvRbVrdhyf/YbRhdpgB7gnLqs/mPRG5sDLy8=;
+        b=RKCe9AqJsuMkR/lMvYJWSWdCJnc1DPMPpVeLHXBVb+QXi4dQYkPD+C/kF0fBm3IHMF
+         WEt7EA8eWrnGZDE+025B+xvia3MieEBNPFwUPFuJSKS7A//eicws5oy4X4T8tqm11l05
+         94eqTdiVFrR/HvNYYACXO3bLpi2UUTnj9M6fnwIWBuyn7BuxOgfRgiNRy2F/pUKfutyw
+         /TzVrgmhXXMqkodvQ1gkSAyO9biPMerMgQwY5O6NnNRjxpn+t18puUb8vLX5k3gwoPM4
+         PiSrnmaRu3kOGD+2VEZjV6L1wYvs7tfOvs/mF0WanLBpv3BTNWjfKrTiLRieE0IMqoC0
+         T9uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GhA9x8hO0OSqZFQSsNcZ2UKUqCG4/t+w/VnuL1kPUHU=;
-        b=IYwEpJPS0FPPJB5T1OLNkGLGFKrWHgIaCYmLnklJO+dgqNroCsM9c8MId1MlpJP455
-         3lz23Jos9Qd84iB05s6ijoZWNOBQKbLvlB3brijzR1SluunV5BmjxOs8LFgmAaEY+JLZ
-         VWPyppmrImpwB3655ecLbCjAHwDroa0uu7Hid+t4Ku902dqsJbtMKEPBF3mxz6jAjzrU
-         w52fciELa1CtjyHuPCrOVDsaNUNKlF0WT9ePGp53MsiIBHN4jwckMNHrNESPguolgD3u
-         pYLjvvCgXjvFo734Kc36Hr3zusU1ZfFuX8YBR24zW3cS9heSP+FGy2l7jF5zHM7GsidU
-         eEFw==
-X-Gm-Message-State: ANhLgQ34ZE/q4tM0r0dxdv1mhphyfwETelxkDGZm0iNZBLnX+nnd5zMK
-        KxIBsv3mpMNoPTkXLMkLtmhVdA==
-X-Google-Smtp-Source: ADFU+vsOUkcfU1BNDYfhQfb1PA6CgnmWBbxotLsJb0kQIO5yklTREcusHubmGOMO+cINekbgUIW0dA==
-X-Received: by 2002:a05:6000:a:: with SMTP id h10mr8576233wrx.226.1585045254135;
-        Tue, 24 Mar 2020 03:20:54 -0700 (PDT)
-Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id h5sm2879527wro.83.2020.03.24.03.20.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=IrXGZHQOvRbVrdhyf/YbRhdpgB7gnLqs/mPRG5sDLy8=;
+        b=I0252opJdJzNZO4ng4SA3LuLBkmRz+ny1KCkRMap6D0sB/rgjeXOWlIoq18yvNJ4n3
+         Lsn3hxkVI8Bvca8Bo7MFUWGP90HPcMZ5/dql2CAZexEzsuUKZ0LuLamksZC/uzpjBuSf
+         0ocafptiPE5aBqiwG8PSZ4WtrMbHkgiYCS+jCWuHybzhiRRHr27L5l7DtNdR3ogWHQl7
+         2OyfDz8fvhcsVD/vwFnHDT/Aqkzm2j0HRrEq/X+IlXLXrfUji3YxRt1NSjhgdsd1nxNK
+         TiGyEh5K5BGfnhfxAdyZ6ZJUDHmpXDhgu/psGul22z/OiYrMX/2z80kcvent5/NbGydP
+         6riQ==
+X-Gm-Message-State: ANhLgQ2WatB+QtwveJsISFffghJc5WwXsLBI5r94ptGuRBJbdbjG7z0N
+        vekyB4prQPUZS83omqYK5TDMyA==
+X-Google-Smtp-Source: ADFU+vtHp9ysDVVXPgqTHTn9l98ma/U7CpdYITGz7jbimYm+l7hrGG3ySHDK1cpVtfXjt18py39TrA==
+X-Received: by 2002:adf:de01:: with SMTP id b1mr10143860wrm.376.1585045984218;
+        Tue, 24 Mar 2020 03:33:04 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id o26sm3564319wmc.33.2020.03.24.03.33.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 03:20:53 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
-        martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/13] dt-bindings: usb: dwc3: remove amlogic compatible entries
-Date:   Tue, 24 Mar 2020 11:20:29 +0100
-Message-Id: <20200324102030.31000-13-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200324102030.31000-1-narmstrong@baylibre.com>
-References: <20200324102030.31000-1-narmstrong@baylibre.com>
+        Tue, 24 Mar 2020 03:33:03 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 10:33:52 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, jic23@kernel.org
+Subject: Re: [PATCH v7 2/7] mfd: rn5t618: add IRQ support
+Message-ID: <20200324103352.GH5477@dell>
+References: <20200320081105.12026-1-andreas@kemnade.info>
+ <20200320081105.12026-3-andreas@kemnade.info>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200320081105.12026-3-andreas@kemnade.info>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is now a dedicated driver for these SoCs making the old compatible
-obsolete.
+On Fri, 20 Mar 2020, Andreas Kemnade wrote:
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/usb/dwc3.txt | 2 --
- 1 file changed, 2 deletions(-)
+> This adds support for IRQ handling in the RC5T619 which is required
+> for properly implementing subdevices like RTC.
+> For now only definitions for the variant RC5T619 are included.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Changes in v7:
+> more cleanups in IRQ init
+> 
+> Changes in v5:
+> rn5t618_irq_init static
+> 
+> Changes in v4:
+> merge rn5t618-irq.c into rn5t618.c
+> use macros for IRQ table
+> 
+> Changes in v3:
+> alignment cleanup
+> 
+> Changes in v2:
+> - no dead code, did some more testing and thinking for that
+> - remove extra empty lines
+>  drivers/mfd/Kconfig         |  1 +
+>  drivers/mfd/rn5t618.c       | 78 ++++++++++++++++++++++++++++++++++++-
+>  include/linux/mfd/rn5t618.h | 15 +++++++
+>  3 files changed, 93 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 66780a47ad85..2ef0bcc30648 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -14,8 +14,6 @@ Required properties:
- Exception for clocks:
-   clocks are optional if the parent node (i.e. glue-layer) is compatible to
-   one of the following:
--    "amlogic,meson-axg-dwc3"
--    "amlogic,meson-gxl-dwc3"
-     "cavium,octeon-7130-usb-uctl"
-     "qcom,dwc3"
-     "samsung,exynos5250-dwusb3"
+Looks good to me now:
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
 -- 
-2.22.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
