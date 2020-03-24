@@ -2,291 +2,180 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7998C4332B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1E0C54FCE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C6620786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100A92080C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgCXLFY (ORCPT
+        id S1727304AbgCXLIS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:05:24 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40287 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgCXLFX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 07:05:23 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jGhML-0000j7-UB; Tue, 24 Mar 2020 12:04:37 +0100
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jGhML-0006aD-BK; Tue, 24 Mar 2020 12:04:37 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: [PATCH v3 3/5] ARM: dts: add Protonic WD2 board
-Date:   Tue, 24 Mar 2020 12:04:30 +0100
-Message-Id: <20200324110432.25062-4-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200324110432.25062-1-o.rempel@pengutronix.de>
-References: <20200324110432.25062-1-o.rempel@pengutronix.de>
+        Tue, 24 Mar 2020 07:08:18 -0400
+Received: from mailgate1.rohmeurope.com ([87.129.152.131]:62720 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727207AbgCXLIS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 07:08:18 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Mar 2020 07:08:17 EDT
+X-AuditID: c0a8fbf4-489ff70000004419-0d-5e79e69b5007
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id F6.DD.17433.B96E97E5; Tue, 24 Mar 2020 11:53:15 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0487.000; Tue, 24 Mar 2020 11:53:09 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "talgi@mellanox.com" <talgi@mellanox.com>,
+        "brendanhiggins@google.com" <brendanhiggins@google.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Gary.Hook@amd.com" <Gary.Hook@amd.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davidgow@google.com" <davidgow@google.com>,
+        "changbin.du@intel.com" <changbin.du@intel.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "olteanv@gmail.com" <olteanv@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "bp@suse.de" <bp@suse.de>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
+        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Thread-Topic: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Thread-Index: AQHWAbbAyLpT1a+wPEGvvo/J38Wk46hXbxYAgAARjYA=
+Date:   Tue, 24 Mar 2020 10:53:09 +0000
+Message-ID: <03f7053576e60632d7ac3bc074afe5d8d63e3714.camel@fi.rohmeurope.com>
+References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+         <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200324095024.GE1922688@smile.fi.intel.com>
+In-Reply-To: <20200324095024.GE1922688@smile.fi.intel.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8B22C55CE6217F46BCF049734AECBDDD@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wTZxjH895d7w7ktrNU+9q5JdTgFFQ0bMubxTm2ZNmpiXHxjy3LhB1y
+        UDba4rXVYszGfrgoRC1OLNbCGFhB7SxtCW7abow0A0Vh/BjgomOM1gwSixtklel0d54Kf73f
+        9/0+3+fz/PG8NK4OUjq62GQVRBNfoieTifbmu4HVJ26W5a6tH9Ygt89LooOfOjE0OzMFUNXh
+        lahv5EscVY9FSeTv68SQs/pngNy9nxOoy99CoK8iPSp0Z/AIgT5r9JGocnIp6u1todA/g/sx
+        dPReE4YGLrhJNH0wApBnuA9Dbk8XgRqblqOWYAJDt647CbQvHKFQ2HlKhbovWtGx2jCFgoFq
+        HA3//SuGwvdnCRT+bRqgn/6aBTlp3L7+/0jOW+cFXOvpaxj3nesGxbW1p3P1ARsXbM7gGkMT
+        GBc4c4DkjpxqUHHXh0IkF+/pobiumrsE52hoB1zdpbe4H2q91FbNuwvW5/PWXduKi0xZG95f
+        YKiOJZVeXm1/MG0sB62rKkASDdkXYHz0T1UFSKbV7C8Afj+UeHTpAtB32k9WAJom2fWw4hol
+        BzTsZvhvfATINTgbYuD+WxFMNlLZjbB5tF+lFG2CTV+ESUW/DOOdDiBrgk2H3pmrhKwZdguM
+        fnOCUmCDAIb6ruCykSQF+gduP2wE2GfhgfL4QwDOamHgZkKljM3Ck6FeXNGL4MT4/UfvafB8
+        4hwhD42zK6HvQpYic+D5yk1KlzR4tHKMUkZYCC8djxIOsNg1D+CaC7vmwq55Yde8cD1QnQHQ
+        yBeXFPFWYd0aUbCtEc0Go3TsMBsDQFnCmW/Bg46NHQCjQQdYQmP6RYx2vCxX/VS+uaDMwFsM
+        eaKtRLB0AEjjeg0TFOy5aqaAL9sjiObH1jM0odcyz49VbVezMutDQSgVxMfuUprWQ4aUVl29
+        UBSKBHthcYl1zsboJLl5sk5jEUwFgsjbrIY8eTnyLNJ2yFaKxHXFpDhjKeWN0qsSvQwyacdE
+        bQNOR2o9DbiaMJlNgk7LMDKJlUsNNtMT0CTQ0kCfyuyNSm6K9BOf9JmUEJiEKHLtlhFWfs7S
+        lYNtnmOrpk5672T6yO623fmWnNfW1rQOTLwxGnv9cOory3UvDZ3r/jobOg9l+z/KdC32ba/K
+        WhIbyn7uHdHhtI/v3LtiZ3NVxq6Yv23q9oYrNYXuj5Pfs7/pefuTG5WvjpjPPn3IUde5dXDP
+        jy/uSP+j8Gx+4uqK48tal2ku3kv5fXO7tzP6gZ6wGPh1Gbho4f8HQZAdvUYEAAA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the Protonic WD2 board, which is an internal development
-platform for low-cost agricultural Virtual Terminals based on COTS tablets
-and web applications.
-It inherits from the PRTI6Q base class.
-
-Signed-off-by: David Jander <david@protonic.nl>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- .../devicetree/bindings/arm/fsl.yaml          |   1 +
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/imx6q-prtwd2.dts            | 188 ++++++++++++++++++
- 3 files changed, 190 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-prtwd2.dts
-
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 3b52b582efdf..5bdf8d38b2f0 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -120,6 +120,7 @@ properties:
-               - fsl,imx6q-sabrelite
-               - fsl,imx6q-sabresd
-               - prt,prti6q                      # Protonic PRTI6Q board
-+              - prt,prtwd2                      # Protonic WD2 board
-               - technologic,imx6q-ts4900
-               - technologic,imx6q-ts7970
-               - toradex,apalis_imx6q            # Apalis iMX6 Module
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 3f500a9e88a9..b6fc2b375a61 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -531,6 +531,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-phytec-pbab01.dtb \
- 	imx6q-pistachio.dtb \
- 	imx6q-prti6q.dtb \
-+	imx6q-prtwd2.dtb \
- 	imx6q-rex-pro.dtb \
- 	imx6q-sabreauto.dtb \
- 	imx6q-sabrelite.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-prtwd2.dts b/arch/arm/boot/dts/imx6q-prtwd2.dts
-new file mode 100644
-index 000000000000..57d2a595d8d1
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-prtwd2.dts
-@@ -0,0 +1,188 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (c) 2018 Protonic Holland
-+ */
-+
-+/dts-v1/;
-+#include "imx6q.dtsi"
-+#include "imx6qdl-prti6q.dtsi"
-+#include <dt-bindings/leds/common.h>
-+
-+/ {
-+	model = "Protonic WD2 board";
-+	compatible = "prt,prtwd2", "fsl,imx6q";
-+
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = <0x10000000 0x20000000>;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	usdhc2_wifi_pwrseq: usdhc2_wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wifi_npd>;
-+		reset-gpios = <&gpio6 10 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	/* PRTWD2 rev 1 bitbang I2C for Ethernet Switch */
-+	i2c@4 {
-+		compatible = "i2c-gpio";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_i2c4>;
-+		sda-gpios = <&gpio1 22 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+		scl-gpios = <&gpio1 31 GPIO_ACTIVE_HIGH>;
-+		i2c-gpio,delay-us = <20>;	/* ~10 kHz */
-+		i2c-gpio,scl-output-only;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-0 = <&pinctrl_can1 &pinctrl_can1phy>;
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rmii";
-+	clocks = <&clks IMX6QDL_CLK_ENET>,
-+		 <&clks IMX6QDL_CLK_ENET>;
-+	clock-names = "ipg", "ahb";
-+	status = "okay";
-+
-+	fixed-link {
-+		speed = <100>;
-+		pause;
-+		full-duplex;
-+	};
-+};
-+
-+&i2c3 {
-+	adc@49 {
-+		compatible = "ti,ads1015";
-+		reg = <0x49>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* V in */
-+		channel@4 {
-+			reg = <4>;
-+			ti,gain = <1>;
-+			ti,datarate = <3>;
-+		};
-+
-+		/* I charge */
-+		channel@5 {
-+			reg = <5>;
-+			ti,gain = <1>;
-+			ti,datarate = <3>;
-+		};
-+
-+		/* V bus  */
-+		channel@6 {
-+			reg = <6>;
-+			ti,gain = <1>;
-+			ti,datarate = <3>;
-+		};
-+
-+		/* nc */
-+		channel@7 {
-+			reg = <7>;
-+			ti,gain = <1>;
-+			ti,datarate = <3>;
-+		};
-+	};
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	non-removable;
-+	no-1-8-v;
-+	non-removable;
-+	mmc-pwrseq = <&usdhc2_wifi_pwrseq>;
-+	pm-ignore-notify;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	wifi@1 {
-+		compatible = "brcm,bcm4329-fmac";
-+		reg = <1>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usb_eth_chg>;
-+
-+	pinctrl_can1phy: can1phy {
-+		fsl,pins = <
-+			/* CAN1_SR */
-+			MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x13070
-+		>;
-+	};
-+
-+	pinctrl_enet: enetgrp {
-+		fsl,pins = <
-+			/* MX6QDL_ENET_PINGRP4 */
-+			MX6QDL_PAD_ENET_RXD0__ENET_RX_DATA0     0x1b0b0
-+			MX6QDL_PAD_ENET_RXD1__ENET_RX_DATA1     0x1b0b0
-+			MX6QDL_PAD_ENET_RX_ER__ENET_RX_ER       0x130b0
-+			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN       0x1b0b0
-+			MX6QDL_PAD_ENET_TXD0__ENET_TX_DATA0     0x1b0b0
-+			MX6QDL_PAD_ENET_TXD1__ENET_TX_DATA1     0x1b0b0
-+			MX6QDL_PAD_ENET_CRS_DV__ENET_RX_EN      0x1b0b0
-+
-+			MX6QDL_PAD_GPIO_16__ENET_REF_CLK   0x1b0b0
-+			/* Phy reset */
-+			MX6QDL_PAD_CSI0_DAT4__GPIO5_IO22   0x1b0b0
-+			/* nINTRP */
-+			MX6QDL_PAD_CSI0_DAT5__GPIO5_IO23   0x1b0b0
-+
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x10030
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x10030
-+		>;
-+	};
-+
-+	pinctrl_i2c4: i2c4grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_MDIO__GPIO1_IO22	0x1f8b0
-+			MX6QDL_PAD_ENET_MDC__GPIO1_IO31		0x1f8b0
-+		>;
-+	};
-+
-+	pinctrl_usb_eth_chg: usbethchggrp {
-+		fsl,pins = <
-+			/* USB charging control */
-+			MX6QDL_PAD_NANDF_CS0__GPIO6_IO11	0x130b0
-+			MX6QDL_PAD_NANDF_CS1__GPIO6_IO14	0x130b0
-+			MX6QDL_PAD_NANDF_CS2__GPIO6_IO15	0x130b0
-+			MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x130b0
-+			>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170b9
-+			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100b9
-+			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
-+			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
-+			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
-+			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
-+		>;
-+	};
-+
-+	pinctrl_wifi_npd: wifinpd {
-+		fsl,pins = <
-+			/* WL_REG_ON */
-+			MX6QDL_PAD_NANDF_RB0__GPIO6_IO10	0x13069
-+		>;
-+	};
-+};
--- 
-2.25.1
-
+DQpIZWxsbyBBbmR5LA0KDQpJIGRvIGFncmVlIHdpdGggbW9zdCBvZiB0aGUgdGhpbmdzIHlvdSBw
+b2ludGVkIG91dC4gSSBkaWRuJ3QgY29tbWVudA0KdGhlbS4NCg0KT24gVHVlLCAyMDIwLTAzLTI0
+IGF0IDExOjUwICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6DQo+IE9uIFR1ZSwgTWFyIDI0
+LCAyMDIwIGF0IDEwOjMyOjE5QU0gKzAyMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90ZToNCj4gPiBU
+aGUgUk9ITSBCRDk5OTU0IGlzIGEgQmF0dGVyeSBNYW5hZ2VtZW50IExTSSBmb3IgMS00IGNlbGwg
+TGl0aGl1bS0NCj4gPiBJb24NCj4gPiBzZWNvbmRhcnkgYmF0dGVyeSBpbnRlbmRlZCB0byBiZSB1
+c2VkIGluIHNwYWNlLWNvbnN0cmFpbnQgZXF1aXBtZW50DQo+ID4gc3VjaA0KPiA+IGFzIExvdyBw
+cm9maWxlIE5vdGVib29rIFBDLCBUYWJsZXRzIGFuZCBvdGhlciBhcHBsaWNhdGlvbnMuIEJEOTk5
+NTQNCj4gPiBwcm92aWRlcyBhIER1YWwtc291cmNlIEJhdHRlcnkgQ2hhcmdlciwgdHdvIHBvcnQg
+QkMxLjIgZGV0ZWN0aW9uDQo+ID4gYW5kIGENCj4gPiBCYXR0ZXJ5IE1vbml0b3IuDQo+IC4uLg0K
+PiANCj4gPiArI2luY2x1ZGUgPGxpbnV4L2FjcGkuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L29m
+Lmg+DQo+IA0KPiBJIGRpZG4ndCBmaW5kIGFueSBldmlkZW5jZSBvZiB1c2Ugb2YgdGhvc2UgdHdv
+LCBvdGhlcndpc2UsIG1pc3NlZA0KPiBwcm9wZXJ0eS5oDQo+IGFuZCBwZXJoYXBzIG1vZF9kZXZp
+Y2V0YWJsZS5oLg0KPiANCg0KSSdsbCBjaGVjayB0aGlzLCB0aGFua3MuDQoNCj4gDQo+ID4gKwku
+Y2FjaGVfdHlwZSA9IFJFR0NBQ0hFX1JCVFJFRSwNCj4gPiArDQo+ID4gKwkucmFuZ2VzID0gcmVn
+bWFwX3JhbmdlX2NmZywNCj4gPiArCS5udW1fcmFuZ2VzID0gQVJSQVlfU0laRShyZWdtYXBfcmFu
+Z2VfY2ZnKSwNCj4gPiArCS52YWxfZm9ybWF0X2VuZGlhbiA9IFJFR01BUF9FTkRJQU5fTElUVExF
+LA0KPiA+ICsJLndyX3RhYmxlID0gJmJkOTk5NXhfd3JpdGVhYmxlX3JlZ3MsDQo+ID4gKwkudm9s
+YXRpbGVfdGFibGUgPSAmYmQ5OTk1eF92b2xhdGlsZV9yZWdzLA0KPiA+ICt9Ow0KPiANCj4gLi4u
+DQo+IA0KPiA+ICsjZGVmaW5lIElESTBUX0JJVCAweDENCj4gDQo+IEluIGNvbnRlbXBvcmFyeSB3
+b3JsZCBzb21lYm9keSBjYW4gYmUgb2ZmZW5kZWQgKG5vdCBtZSkuDQoNClllYWguIEFuZCB3aGVu
+IHNvbWVvbmUgZ2V0cyBvZmZlbmRlZCBhbmQgY29tcGxhaW5zIEkgd2lsbCBjaGFuZ2UgdGhpcw0K
+OikgQW5kIG1heWJlIGV4cGxhaW4gdG8gaGltL2hlciB3aHkgSSB0aGluayB0aGlzIGlzIGFuIGlk
+aW90IGJpdC4NCkJlc2lkZXMsIGl0IGRlc2NyaWJlcyB0aGUgYml0IHF1aXRlIHdlbGwuDQoNCj4g
+Li4uDQo+IA0KPiA+ICsJCS8qDQo+ID4gKwkJICogdGhlIGFjdHVhbCByYW5nZSA6IDI1NjAgdG8g
+MTkyMDAgbVYuIE5vIG1hdHRlciB3aGF0DQo+ID4gdGhlDQo+IA0KPiB0IC0+IFQNCj4gDQo+ID4g
+KwkJICogcmVnaXN0ZXIgc2F5cw0KPiA+ICsJCSAqLw0KPiA+ICsJCXZhbC0+aW50dmFsID0gbWF4
+KHZhbC0+aW50dmFsLCAyNTYwKTsNCj4gPiArCQl2YWwtPmludHZhbCA9IG1pbih2YWwtPmludHZh
+bCwgMTkyMDApOw0KPiANCj4gY2xhbXBfdmFsKCkNCg0KVGhhbmtzISBJIGRpZG4ndCBrbm93IG9m
+IHRoaXMuIEkgbGVhcm5lZCBzb21ldGhpbmcgYWdhaW4gOikNCg0KPiAuLi4NCj4gDQo+ID4gKwlm
+b3IgKGkgPSBmZnModG1wKTsgaTsgaSA9IGZmcyh0bXApKSB7DQo+IA0KPiBOSUggb2YgZm9yX2Vh
+Y2hfc2V0X2JpdCgpLg0KDQpXaGF0IGRvZXMgdGhlIE5JSCBzdGFuZCBmb3I/DQpBbnl3YXlzLCBJ
+IGFncmVlLiBUaGlzIGlzIHByb2JhYmx5IGJldHRlciBpZiBJIHVzZSBmb3JfZWFjaF9zZXRfYml0
+KCkNCg0KPiANCj4gPiArCWRvIHsNCj4gPiArCQlyZXQgPSByZWdtYXBfZmllbGRfcmVhZChiZC0+
+cm1hcF9maWVsZHNbRl9PVFBMRF9TVEFURV0sIA0KPiA+ICZzdGF0ZSk7DQo+ID4gKwkJaWYgKHJl
+dCkNCj4gPiArCQkJcmV0dXJuIHJldDsNCj4gPiArDQo+ID4gKwkJbXNsZWVwKDEwKTsNCj4gPiAr
+CX0gd2hpbGUgKHN0YXRlID09IDAgJiYgLS1yc3RfY2hlY2tfY291bnRlcik7DQo+IA0KPiByZWdt
+YXBfcmVhZF9wb2xsX3RpbWVvdXQoKSBleGlzdHMsIGJ1dCBJIHNlZSB5b3UgdXNlIGl0IGZvciBm
+aWVsZC4NCj4gUGVyaGFwcyBpdCdzDQo+IGEgdGltZSB0byBpbnRyb2R1Y2Ugc2ltaWxhciBoZWxw
+ZXIgZm9yIGZpZWxkIHBvbGxpbmcuDQoNClRoaXMgc2VyaWVzIGlzIGFnYWluIGdldHRpbmcgbGVu
+Z3RoeS4uLiBJJ2xsIHNlZSBpZiBJIGFkZCBzdWNoIGFuIEFQSQ0KaW4gdGhpcyBzZXJpZXMuIEkn
+dmUgbGVhcm5lZCB0aGF0IGFkZGluZyBjaGFuZ2VzIHdpbGwgaW5jcmVhc2UgdGhlIHRpbWUNCml0
+IHRha2VzIHRvIHB1c2ggdGhlIHNlcmllcyB0aHJvdWdoLiBJdCBtaWdodCBiZSBtb3JlIHJldmll
+d2VyIGZyaWVuZGx5DQp0byBhZGQgaXQgaW4gb3duIHBhdGNoIHdpdGggbGltaXRlZCByZXZpZXcg
+YXVkaWVuY2UgKGFzIHdvdWxkIGJlIHRoZQ0KcGF0Y2ggMTAvMTAgaW4gdGhpcyBzZXJpZXMpLiBC
+dXQgSSB0aGluayB5b3VyIHBvaW50IGlzIHZhbGlkLg0KDQo+IC4uLg0KPiANCj4gPiArc3RhdGlj
+IGNvbnN0IHN0cnVjdCBsaW5lYXJfcmFuZ2UgaW5wdXRfY3VycmVudF9saW1pdF9yYW5nZXNbXSA9
+IHsNCj4gPiArCXsNCj4gPiArCQkubWluID0gMCwNCj4gPiArCQkuc3RlcCA9IDMyMDAwLA0KPiA+
+ICsJCS5taW5fc2VsID0gMHgwLA0KPiANCj4gUGVyaGFwcyAweDAwMCB0byBtYXRjaCBtYXhfc2Vs
+IHdpZHRoLiBTYW1lIGFwcGxpZXMgdG8gb3RoZXIgcGxhY2VzLg0KDQpJIGRvbid0IHJlYWxseSBz
+ZWUgdGhlIHZhbHVlIG9mIHRoaXMgc3VnZ2VzdGlvbi4NCg0KPiA+ICsJCS5tYXhfc2VsID0gMHgx
+ZmYsDQo+ID4gKwl9LA0KPiA+ICt9Ow0KPiANCj4gLi4uDQo+IA0KPiA+ICsJLyoNCj4gPiArCSAq
+ICB0aGUgcG93ZXJfc3VwcGx5X2dldF9iYXR0ZXJ5X2luZm8gZG9lcyBub3Qgc3VwcG9ydCBnZXR0
+aW5nDQo+ID4gdmFsdWVzDQo+IA0KPiB0IC0+IFQNCj4gQWxzbyB3aGVuIHdlIHJlZmVyIHRvIGZ1
+bmN0aW9uIHVzZSAoKSBzdWZmaXguDQo+IA0KPiA+ICsJICogZnJvbSBBQ1BJLiBMZXQncyBmaXgg
+aXQgaWYgcmVxdWlyZWQgOikNCj4gPiArCSAqLw0KPiANCj4gQW5kIHllcywgZ29vZCBxdWVzdGlv
+biB3aHkgeW91IHNpbXBsZSBkbyBub3QgZml4IGl0IHRoZXJlPw0KPiANCg0KQmVjYXVzZSBJIGRv
+bid0IG5lZWQgQUNQSSBhdCB0aGUgbW9tZW50IGFuZCBiZWNhdXNlIEkgd291bGQgbGlrZSB0bw0K
+bGltaXQgdGhlIHNpemUgb2YgYWxyZWFkeSBsZW5ndGh5IHNlcmllcy4gDQoNCj4gLi4uDQo+IA0K
+PiA+ICtzdGF0aWMgaW50IGJkOTk5NXhfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwN
+Cj4gPiArCQkJIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkNCj4gDQo+IENhbiB5b3Ug
+c3dpdGNoIHRvIC0+cHJvYmVfbmV3KCkgKE5vdGUsIGl0IGRvZXNuJ3QgbWVhbiB5b3UgbmVlZCB0
+bw0KPiBkcm9wIEnCskMgSUQgdGFibGUpDQoNCkkgY2FuLiBUaGFua3MuDQoNCj4gDQo+IC4uLg0K
+PiANCj4gPiArCWlmICghZGV2LT5wbGF0Zm9ybV9kYXRhKSB7DQo+IA0KPiBkZXZfZ2V0X3BsYXRk
+YXRhKCkNCj4gDQo+ID4gKwkJcmV0ID0gYmQ5OTk1eF9md19wcm9iZShiZCk7DQo+ID4gKwkJaWYg
+KHJldCA8IDApIHsNCj4gPiArCQkJZGV2X2VycihkZXYsICJDYW5ub3QgcmVhZCBkZXZpY2UNCj4g
+PiBwcm9wZXJ0aWVzLlxuIik7DQo+ID4gKwkJCXJldHVybiByZXQ7DQo+ID4gKwkJfQ0KPiA+ICsJ
+fSBlbHNlIHsNCj4gPiArCQlyZXR1cm4gLUVOT0RFVjsNCj4gDQo+IFNvLCBleGlzdGluZyBwbGF0
+Zm9ybSBkYXRhIGxlYWRzIHRvIGFuIGVycm9yPyENCg0KWWVzLiBBcyBjdXJyZW50bHkgd2Ugb25s
+eSB1c2UgRFQuIElmIHNvbWVvbmUgbmVlZHMgcGxhdGRhdGEgdGhleSBuZWVkDQp0byBpbXByb3Zl
+IHRoZSBkcml2ZXINCg0KPiA+ICsjaWZuZGVmIEJEOTk5NTRfQ0hBUkdFUl9IDQo+ID4gKyNkZWZp
+bmUgQkQ5OTk1NF9DSEFSR0VSX0gNCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9yZWdtYXAu
+aD4NCj4gDQo+IEl0IGlzIG5vdCB0aGUgaGVhZGVyIHlvdSBoYXZlIHVzZXJzIGZvci4NCj4gUHJv
+cGVyIG9uZSBzaG91bGQgYmUgYml0cy5oLg0KDQpIdWg/IHN0cnVjdCByZWdfZmllbGQgaXMgaW4g
+cmVnbWFwLmgsIHJpZ2h0Pw0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4NCg==
