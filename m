@@ -2,151 +2,112 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DBCC10DCE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 05:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82431C41621
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 07:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF1F20663
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 05:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA6D20663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 07:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="A9UJ79vk"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="H+KIEHyR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgCXFlf (ORCPT
+        id S1727367AbgCXHFV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 01:41:35 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41537 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgCXFlf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 01:41:35 -0400
-Received: by mail-lj1-f194.google.com with SMTP id n17so6899937lji.8
-        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 22:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iyP635DGCeoY4s0M1SRFYb49T5chldy4BU1GFRwdRGU=;
-        b=A9UJ79vk+ocv+jJZF/E6Y5JwxBu0niMrhkdEgBfKszB8ITBkQ6zBLOvm2QDSieCXIp
-         JEKa7yZv0DEKJBUynnrJdv4LBdwa2q7ISiAZ6/d1K9q+3iQ/3ZXm4dOlGBB316oSS7lm
-         5JLISYSN0vJt2SdT1CNUIze+NSrv4VYTM83SE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iyP635DGCeoY4s0M1SRFYb49T5chldy4BU1GFRwdRGU=;
-        b=SWKucA4LCtQ+xZrMO8XzL0u9+p0DgP71hitGd39eJ5QCEHMv5edcCCmxy6srK/J97m
-         09yAgHTFNhY/iqLcerQ+vnR6nChoa+7WW5QV5S/vvyWONT59zHXVCALrjtJPx6yGtS/v
-         JTp7B9L20WsW28xHH86O93gXINqmrIP/c4SxtZgrwbXOjbvlBpnTUGO+t1u94wxekt0J
-         PKc90fopaVui3U11/qjUkD4aSjGkG8YWknPP3Dp0kUW+QllqkE/xo6vWiKayolcN+XC6
-         mbS2wLs/TDHdDZTJLzMR25rQiIdEK6zr0V93o2gYJ7zVHxdevq8dTFsNYm1b4KjMEbho
-         ANdA==
-X-Gm-Message-State: ANhLgQ0oiwUZXJbM+hAcojBID2k5pIGNBf/LugjrPAuje7xKsB8mZuv7
-        uoTp+CC+2EUoO6LVm66rRS/OzyJPAa+p2ixG88vHTw==
-X-Google-Smtp-Source: ADFU+vsEwAjW9fB2hm9yRNmxVuCvhrnUJ4efiJHOCdo9q5cny3sLyQh6EWdsSs61ggDHMhVTvc80JVacscZJoN3OKOQ=
-X-Received: by 2002:a2e:6819:: with SMTP id c25mr15551262lja.195.1585028492318;
- Mon, 23 Mar 2020 22:41:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
- <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com>
- <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com> <CAHO=5PHEE4C9rArembX3cJP_eQ1KGS6gPj6POYtQhZ=Pp8po+A@mail.gmail.com>
-In-Reply-To: <CAHO=5PHEE4C9rArembX3cJP_eQ1KGS6gPj6POYtQhZ=Pp8po+A@mail.gmail.com>
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Date:   Tue, 24 Mar 2020 11:11:20 +0530
-Message-ID: <CAHO=5PFVqdOxKJkO0PoHKhTXEF0VtKqZjCHBSfu9W00_vEGrng@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        Tue, 24 Mar 2020 03:05:21 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25912 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725951AbgCXHFV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 03:05:21 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O6w7UW031495;
+        Tue, 24 Mar 2020 08:04:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=7wFcBKQjS8GhVVGG87TFgIBhk0ZNc73e9zHBQoR6jPY=;
+ b=H+KIEHyRnN+J5BtxQqblKuhxxdXZRxg8buLFoEaG1of1OIxaFRRjzifDhHv4j0dllHti
+ J4EP0mjdblnV1wdlHVKmcLKYIorYddmi4mRYNaQfbYgYXTDEl5WZh7XSdAts4eK2TIGo
+ McPZzs5N073ymvfOtiH1iRCxlxNQBJqcZEyxj238yO8QAe24rhIgX9iO2iv44IPWLgnQ
+ 7O5VAgMFvfs3boxtLTORHZA1rvl9BPaZMxozdM6gTgRXufBnd+sxFjADdLZZ5NzWLow4
+ Zfe4kFzEOaeFAcv/dnWUPOt96kfZiqHMxKzGjuFXwqi1sVF3JwmeewCcyEg7ak2NFA/g DQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw8xdx06x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Mar 2020 08:04:53 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2CEB4100050;
+        Tue, 24 Mar 2020 08:04:50 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F10752123A8;
+        Tue, 24 Mar 2020 08:04:49 +0100 (CET)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 24 Mar
+ 2020 08:04:49 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Tue, 24 Mar 2020 08:04:49 +0100
+From:   Christophe ROULLIER <christophe.roullier@st.com>
+To:     "davem@davemloft.net" <davem@davemloft.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCHv2 0/2] Convert stm32 dwmac to DT schema
+Thread-Topic: [PATCHv2 0/2] Convert stm32 dwmac to DT schema
+Thread-Index: AQHV/G8jyopfPfKg2U20W1fFmsf4ZahXS1cA
+Date:   Tue, 24 Mar 2020 07:04:49 +0000
+Message-ID: <ceaf3163-7387-aa2a-6905-9d4faf92fc93@st.com>
+References: <20200317151706.25810-1-christophe.roullier@st.com>
+In-Reply-To: <20200317151706.25810-1-christophe.roullier@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.51]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9BE064A5AA0DF74DB1E0A60AD74FCA3B@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-24_01:2020-03-23,2020-03-24 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 11:29 AM Rayagonda Kokatanur
-<rayagonda.kokatanur@broadcom.com> wrote:
->
-> On Tue, Mar 3, 2020 at 10:26 AM Rayagonda Kokatanur
-> <rayagonda.kokatanur@broadcom.com> wrote:
-> >
-> > On Fri, Feb 28, 2020 at 7:20 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Fri, Feb 28, 2020 at 2:48 AM Rayagonda Kokatanur
-> > > <rayagonda.kokatanur@broadcom.com> wrote:
-> > > >
-> > > > Generally i2c addr should not be greater than 10-bit. The highest 2 bits
-> > > > are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
-> > > > these flags if check slave addr valid.
-> > > >
-> > > > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> > > > ---
-> > > >  scripts/dtc/Makefile | 2 +-
-> > > >  scripts/dtc/checks.c | 5 +++++
-> > > >  2 files changed, 6 insertions(+), 1 deletion(-)
-> > >
-> > > dtc changes must be submitted against upstream dtc.
-> >
-> > Please let me know link to clone the upstream dtc branch.
-> > >
-> > >
-> > > > diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> > > > index 3acbb410904c..c5e8d6a9e73c 100644
-> > > > --- a/scripts/dtc/Makefile
-> > > > +++ b/scripts/dtc/Makefile
-> > > > @@ -9,7 +9,7 @@ dtc-objs        := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
-> > > >  dtc-objs       += dtc-lexer.lex.o dtc-parser.tab.o
-> > > >
-> > > >  # Source files need to get at the userspace version of libfdt_env.h to compile
-> > > > -HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
-> > > > +HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
-> > > >
-> > > >  ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
-> > > >  ifneq ($(CHECK_DTBS),)
-> > > > diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-> > > > index 756f0fa9203f..17c9ed4137b5 100644
-> > > > --- a/scripts/dtc/checks.c
-> > > > +++ b/scripts/dtc/checks.c
-> > > > @@ -3,6 +3,7 @@
-> > > >   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
-> > > >   */
-> > > >
-> > > > +#include <linux/bits.h>
-> > >
-> > > Not a UAPI header not that that would be much better as dtc also builds on Mac.
-> > >
-> > > >  #include "dtc.h"
-> > > >  #include "srcpos.h"
-> > > >
-> > > > @@ -17,6 +18,9 @@
-> > > >  #define TRACE(c, fmt, ...)     do { } while (0)
-> > > >  #endif
-> > > >
-> > > > +#define I2C_TEN_BIT_ADDRESS    BIT(31)
-> > > > +#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
-> > > > +
-> > > >  enum checkstatus {
-> > > >         UNCHECKED = 0,
-> > > >         PREREQ,
-> > > > @@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
-> > > >
-> > > >         for (len = prop->val.len; len > 0; len -= 4) {
-> > > >                 reg = fdt32_to_cpu(*(cells++));
-> > > > +               reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
-> > >
-> > > I'd just mask the top byte so we don't have to update on the next flag we add.
-> > Do you mean something like this, shown below ?
-> > reg &= 0xFFFF_FC000;
->
-> Hi Rob, waiting for your answer.
-Hi Rob,
-Waiting for your answer.
-
->
-> >
-> > >
-> > > Rob
+SGksDQoNCkdlbnRsZSByZW1pbmRlcg0KDQpUaGFua3MgaW4gYWR2YW5jZS4NCkNocmlzdG9waGUu
+DQoNCk9uIDE3LzAzLzIwMjAgMTY6MTcsIENocmlzdG9waGUgUm91bGxpZXIgd3JvdGU6DQo+IENv
+bnZlcnQgc3RtMzIgZHdtYWMgdG8gRFQgc2NoZW1hDQo+DQo+IENocmlzdG9waGUgUm91bGxpZXIg
+KDIpOg0KPiAgICBkdC1iaW5kaW5nczogbmV0OiBkd21hYzogaW5jcmVhc2UgJ21heEl0ZW1zJyBm
+b3IgJ2Nsb2NrcycsDQo+ICAgICAgJ2Nsb2NrLW5hbWVzJyBwcm9wZXJ0aWVzDQo+ICAgIGR0LWJp
+bmRpbmdzOiBuZXQ6IGR3bWFjOiBDb252ZXJ0IHN0bTMyIGR3bWFjIHRvIERUIHNjaGVtYQ0KPg0K
+PiB2MS0+djI6DQo+IHVwZGF0ZSBmcm9tIFJvYiAoc29sdmUgY2hlY2twYXRjaCBlcnJvcnMgd2l0
+aCB0cmFpbGluZyBXUywNCj4gcmVuYW1lICJFeGFtcGxlIiwgV3JhcCBsaW5lcykNCj4NCj4gICAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvc25wcyxkd21hYy55YW1sICAgfCAgIDggKy0NCj4g
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvc3RtMzItZHdtYWMudHh0ICAgfCAgNDQgLS0t
+LS0NCj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvc3RtMzItZHdtYWMueWFtbCAgfCAx
+NjAgKysrKysrKysrKysrKysrKysrDQo+ICAgMyBmaWxlcyBjaGFuZ2VkLCAxNjcgaW5zZXJ0aW9u
+cygrKSwgNDUgZGVsZXRpb25zKC0pDQo+ICAgZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvc3RtMzItZHdtYWMudHh0DQo+ICAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvc3RtMzItZHdt
+YWMueWFtbA0KPg==
