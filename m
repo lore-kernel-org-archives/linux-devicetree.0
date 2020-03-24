@@ -2,130 +2,331 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E921C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE2EC4332B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AFC2051A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681432070A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbgCXJtf (ORCPT
+        id S1727112AbgCXJub (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:49:35 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43607 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgCXJte (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 05:49:34 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jGgBZ-0008G8-MI; Tue, 24 Mar 2020 10:49:25 +0100
-Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jGgBY-00070X-Ea; Tue, 24 Mar 2020 10:49:24 +0100
-Date:   Tue, 24 Mar 2020 10:49:24 +0100
-From:   Philipp Zabel <pza@pengutronix.de>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] phy: qcom-snps: Add SNPS USB PHY driver for QCOM
- based SOCs
-Message-ID: <20200324094924.GA22281@pengutronix.de>
-References: <1584994632-31193-1-git-send-email-wcheng@codeaurora.org>
- <1584994632-31193-3-git-send-email-wcheng@codeaurora.org>
+        Tue, 24 Mar 2020 05:50:31 -0400
+Received: from mga01.intel.com ([192.55.52.88]:22401 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726563AbgCXJub (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 05:50:31 -0400
+IronPort-SDR: 3c7kcUqvWcDDfHtie8GXZCqJmhXmGTW4qkTcDID0bFWtdpa7Eu0LH7BQZsnKsHVXTTQ4e2pr3X
+ mHeL7tfS22qA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 02:50:31 -0700
+IronPort-SDR: 7qTtx2V3hntiFz5XSVMoESWmCqDXxAo9Sjvu4vvh1Q7uOxbeJZyrYx3oI+CamvzI5XDdbkixsd
+ MPms7UxGquZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,299,1580803200"; 
+   d="scan'208";a="446163213"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 24 Mar 2020 02:50:23 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jGgCW-00CUef-Bz; Tue, 24 Mar 2020 11:50:24 +0200
+Date:   Tue, 24 Mar 2020 11:50:24 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Gary Hook <Gary.Hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Tal Gilboa <talgi@mellanox.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Message-ID: <20200324095024.GE1922688@smile.fi.intel.com>
+References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+ <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1584994632-31193-3-git-send-email-wcheng@codeaurora.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:44:11 up 33 days, 17:14, 83 users,  load average: 0.32, 0.42,
- 0.32
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: pza@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Wesley,
+On Tue, Mar 24, 2020 at 10:32:19AM +0200, Matti Vaittinen wrote:
+> The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
+> secondary battery intended to be used in space-constraint equipment such
+> as Low profile Notebook PC, Tablets and other applications. BD99954
+> provides a Dual-source Battery Charger, two port BC1.2 detection and a
+> Battery Monitor.
 
-On Mon, Mar 23, 2020 at 01:17:10PM -0700, Wesley Cheng wrote:
-> This adds the SNPS FemtoPHY driver used in QCOM SOCs.  There
-> are potentially multiple instances of this UTMI PHY on the
-> SOC, all which can utilize this driver.
-> 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> ---
->  drivers/phy/qualcomm/Kconfig             |  10 ++
->  drivers/phy/qualcomm/Makefile            |   1 +
->  drivers/phy/qualcomm/phy-qcom-snps-7nm.c | 294 +++++++++++++++++++++++++++++++
->  3 files changed, 305 insertions(+)
->  create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-> 
-[...]
-> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-7nm.c b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-> new file mode 100644
-> index 0000000..8d4ba53
-> --- /dev/null
-> +++ b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-> @@ -0,0 +1,294 @@
-[...]
-> +static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+...
+
+> + *	Bugs added by:
+> + *		Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+
+Bugs or not, but some style improvements can be done.
+
+...
+
+> +#include <linux/acpi.h>
+
+> +#include <linux/of.h>
+
+I didn't find any evidence of use of those two, otherwise, missed property.h
+and perhaps mod_devicetable.h.
+
+...
+
+> +static const struct regmap_config bd9995x_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 16,
+> +	.reg_stride = 1,
+
+> +	.max_register = 3*0x100,
+
+Spaces, please.
+
+> +	.cache_type = REGCACHE_RBTREE,
+> +
+> +	.ranges = regmap_range_cfg,
+> +	.num_ranges = ARRAY_SIZE(regmap_range_cfg),
+> +	.val_format_endian = REGMAP_ENDIAN_LITTLE,
+> +	.wr_table = &bd9995x_writeable_regs,
+> +	.volatile_table = &bd9995x_volatile_regs,
+> +};
+
+...
+
+> +#define IDI0T_BIT 0x1
+
+In contemporary world somebody can be offended (not me).
+
+...
+
+> +static int bd9995x_get_prop_batt_present(struct bd9995x_device *bd)
 > +{
-> +	struct device *dev = &pdev->dev;
-> +	struct qcom_snps_hsphy *hsphy;
-> +	struct phy_provider *phy_provider;
-> +	struct phy *generic_phy;
-> +	struct resource *res;
-> +	int ret, i;
-> +	int num;
+> +	int ret, tmp;
 > +
-> +	hsphy = devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
-> +	if (!hsphy)
-> +		return -ENOMEM;
+> +	ret = regmap_field_read(bd->rmap_fields[F_BATTEMP], &tmp);
+> +	if (ret)
+> +		return false;
 > +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	hsphy->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(hsphy->base))
-> +		return PTR_ERR(hsphy->base);
+
+> +	return (tmp != BATT_OPEN) ? true : false;
+
+C 101 (I saw somewhere coccinelle script for this):
+
+	return tmp != BATT_OPEN;
+
+> +}
+
+...
+
+> +		/*
+> +		 * the actual range : 2560 to 19200 mV. No matter what the
+
+t -> T
+
+> +		 * register says
+> +		 */
+
+> +		val->intval = max(val->intval, 2560);
+> +		val->intval = min(val->intval, 19200);
+
+clamp_val()
+
+> +		val->intval *= 1000;
+
+...
+
+> +	/* The idiot bit does not represent any sub-registers */
+> +	tmp &= ~(IDI0T_BIT);
+
+Besides above, this has too many parentheses.
+
+...
+
+> +	for (i = ffs(tmp); i; i = ffs(tmp)) {
+
+NIH of for_each_set_bit().
+
+> +		int sub_status, sub_mask;
+> +		int sub_status_reg[] = {
+> +			-1, INT1_STATUS, INT2_STATUS, INT3_STATUS, INT4_STATUS,
+> +			INT5_STATUS, INT6_STATUS, INT7_STATUS,
+> +		};
+> +		struct regmap_field *sub_mask_f[] = {
+> +			NULL, bd->rmap_fields[F_INT1_SET],
+> +			bd->rmap_fields[F_INT2_SET],
+> +			bd->rmap_fields[F_INT3_SET],
+> +			bd->rmap_fields[F_INT4_SET],
+> +			bd->rmap_fields[F_INT5_SET],
+> +			bd->rmap_fields[F_INT6_SET],
+> +			bd->rmap_fields[F_INT7_SET],
+> +		};
 > +
-> +	hsphy->ref_clk = devm_clk_get(dev, "ref");
-> +	if (IS_ERR(hsphy->ref_clk)) {
-> +		ret = PTR_ERR(hsphy->ref_clk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get ref clk, %d\n", ret);
-> +		return ret;
+
+> +		tmp &= ~(1 << (i - 1));
+
+See above.
+
+> +
+> +		if (i - 1 > ARRAY_SIZE(sub_status_reg))
+> +			break;
+
+See above. You may prepare tmp beforehand.
+
 > +	}
+
+...
+
+> +	do {
+> +		ret = regmap_field_read(bd->rmap_fields[F_OTPLD_STATE], &state);
+> +		if (ret)
+> +			return ret;
 > +
-> +	hsphy->phy_reset = devm_reset_control_get_by_index(&pdev->dev, 0);
-> +	if (IS_ERR(hsphy->phy_reset)) {
-> +		dev_err(dev, "failed to get phy core reset\n");
-> +		return PTR_ERR(hsphy->phy_reset);
+> +		msleep(10);
+> +	} while (state == 0 && --rst_check_counter);
+
+regmap_read_poll_timeout() exists, but I see you use it for field. Perhaps it's
+a time to introduce similar helper for field polling.
+
+...
+
+> +static const struct linear_range input_current_limit_ranges[] = {
+> +	{
+> +		.min = 0,
+> +		.step = 32000,
+
+> +		.min_sel = 0x0,
+
+Perhaps 0x000 to match max_sel width. Same applies to other places.
+
+> +		.max_sel = 0x1ff,
+> +	},
+> +};
+
+...
+
+> +	/*
+> +	 *  the power_supply_get_battery_info does not support getting values
+
+t -> T
+Also when we refer to function use () suffix.
+
+> +	 * from ACPI. Let's fix it if required :)
+> +	 */
+
+And yes, good question why you simple do not fix it there?
+
+...
+
+> +static int bd9995x_probe(struct i2c_client *client,
+> +			 const struct i2c_device_id *id)
+
+Can you switch to ->probe_new() (Note, it doesn't mean you need to drop I²C ID table)
+
+...
+
+> +	if (!dev->platform_data) {
+
+dev_get_platdata()
+
+> +		ret = bd9995x_fw_probe(bd);
+> +		if (ret < 0) {
+> +			dev_err(dev, "Cannot read device properties.\n");
+> +			return ret;
+> +		}
+> +	} else {
+
+> +		return -ENODEV;
+
+So, existing platform data leads to an error?!
+
 > +	}
 
-There is only a single reset specified, so there is no need for
-_by_index. Also please explicitly request exclusive reset control
-for this driver, I suggest:
+...
 
-	hsphy->phy_reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+> +	/*
 
-If you do want to prepare for future addition of other resets to the
-bindings (but if so, why not specify those right now?), you should add
-a reset-names property and request the reset control by id string
-instead.
+> +	 * reset all registers to default values. This should also disable
 
-regards
-Philipp
+r -> R. Check all your messages for proper grammar.
+
+> +	 * CHG_EN bit. If this is not required we can get rid of the remove.
+> +	 */
+
+...
+
+> +	dev_info(bd->dev, "Driver for DB99954 chip removed\n");
+
+Noise. You can easily check this by using initcall_debug facility.
+
+...
+
+> +static const struct of_device_id bd9995x_of_match[] = {
+> +	{ .compatible = "rohm,bd99954", },
+> +	{ },
+
+Terminator lines better without comma. Preventing new potential bugs in the future :-)
+
+> +};
+> +MODULE_DEVICE_TABLE(of, bd9995x_of_match);
+> +
+> +static const struct acpi_device_id bd9995x_acpi_match[] = {
+> +	{"BD999540", 0},
+
+> +	{},
+
+Ditto.
+
+> +};
+> +MODULE_DEVICE_TABLE(acpi, bd9995x_acpi_match);
+
+...
+
+> +#ifndef BD99954_CHARGER_H
+> +#define BD99954_CHARGER_H
+> +
+> +#include <linux/regmap.h>
+
+It is not the header you have users for.
+Proper one should be bits.h.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
