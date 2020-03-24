@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883C9C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1911CC4332B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA00208C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6300208D6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:21:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="G9GUxZPZ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qkkU2Hsy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbgCXKU5 (ORCPT
+        id S1727507AbgCXKU5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Tue, 24 Mar 2020 06:20:57 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:47012 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727491AbgCXKU5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 06:20:57 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j17so17281119wru.13
-        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 03:20:56 -0700 (PDT)
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34673 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727485AbgCXKU4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 06:20:56 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 65so3990776wrl.1
+        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 03:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=67sFvVtkG1ivlSk+fGwbgHaYe6cmIRn/pWHBZ0lu9g4=;
-        b=G9GUxZPZnPhLAajMtiZxgmUxpYrGOcJIkPozWgUDMvAuy8EBmZbwC30xlR9wHUDnJV
-         ALFika3tbYFYgOcbEy6lLg62lZVK5VultjcamVietFmwqmduFKScAs2xljobVRPKpRXB
-         i+0XwLWm2dPB3T/cVEbeziTgctq2IaB8JoXEKasglnWC/N+nQosrtmb+n8kp06GIIR0w
-         30OWNQB2zwjvbXX5cMH+cNlV+3NUfzEfVtxBP2DaojGqjDvF5egj+tn0DSOrKutBLBFj
-         t77PxOjT7DJ0Obl93NXUkDItQyzWrNOnIQ9JmQ3KbXHMtLKZy6nVXVOBML4RvL87vvDb
-         rSqg==
+        bh=GhA9x8hO0OSqZFQSsNcZ2UKUqCG4/t+w/VnuL1kPUHU=;
+        b=qkkU2Hsy3KDoPTQpcjYY1qdbEx1TTR+31GrBzsfrej5riME6gzYRij4LFJmmSnTlYn
+         uj/LhvVBDDEXQRX7bKMRLx6uC0Arw3UVexvCTGXLLPd0KvtNlZDpQ/iSPPpCvfeD0322
+         t5zFFnmBEAjdW2Lm7kugnAuT2aXCMf5miFReQar54A4WiMMmWmqciJhne0zU/qvbqbaG
+         W8odiVk5SpXaLfVOXq56uqevXAfUJi96Fz8kjWViOqX0ChuAew4G88CPv2PEnlwMUgKa
+         utrQa8uQqj3RjbNG5P9/9SQ2rcPjEpQJ16muoqs9rDaO7yh098l6yDOWeyHiGClZvjIH
+         6hjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=67sFvVtkG1ivlSk+fGwbgHaYe6cmIRn/pWHBZ0lu9g4=;
-        b=rsFyoLaZFZ2nF+spM6yIGjynkl9sFqayrSinLrh9m2tlQfdpIhV0hd3sb0oqAweIoh
-         5Cb9udIztC538jtZxoyEeT7SlxUn4evNKj3S/BO9CQck/kgBeK93ApQI1BDoLE5Hoaek
-         BKyK2ft1vXmBVmEUOnkeiapmyYhh7hVP9HhijpHhEduXWkfhHna78HzFH0JvDgSeoPzs
-         Dl3aXCQ38QPi4D9R+8DUd4s0rQaa1o9rmA1QYZQhZ+Jom9BtGeEuMilhEhpD3io6tzaA
-         rTi29MOK4Y7eD12sHD2DdmsX6pmHms+n3hgSGX5SgBGeacfr96pd009MNru8XbY6MevC
-         joBg==
-X-Gm-Message-State: ANhLgQ2wMgPyJBgs0Ymf7pTt34/1fKVGX+0y7tqE2TysePD+VPWbHUs8
-        E+fzOLnNdYrvYOUkuHLCZLbjbg==
-X-Google-Smtp-Source: ADFU+vuGwhRTHhtQBh24wMOPnFqWmD8WEDTDqhBcn0GQZbxNq7+HwZ5AGbojto+87MT0Z8I4IEGjhQ==
-X-Received: by 2002:adf:fd87:: with SMTP id d7mr35578867wrr.393.1585045255321;
-        Tue, 24 Mar 2020 03:20:55 -0700 (PDT)
-Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id h5sm2879527wro.83.2020.03.24.03.20.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=GhA9x8hO0OSqZFQSsNcZ2UKUqCG4/t+w/VnuL1kPUHU=;
+        b=IYwEpJPS0FPPJB5T1OLNkGLGFKrWHgIaCYmLnklJO+dgqNroCsM9c8MId1MlpJP455
+         3lz23Jos9Qd84iB05s6ijoZWNOBQKbLvlB3brijzR1SluunV5BmjxOs8LFgmAaEY+JLZ
+         VWPyppmrImpwB3655ecLbCjAHwDroa0uu7Hid+t4Ku902dqsJbtMKEPBF3mxz6jAjzrU
+         w52fciELa1CtjyHuPCrOVDsaNUNKlF0WT9ePGp53MsiIBHN4jwckMNHrNESPguolgD3u
+         pYLjvvCgXjvFo734Kc36Hr3zusU1ZfFuX8YBR24zW3cS9heSP+FGy2l7jF5zHM7GsidU
+         eEFw==
+X-Gm-Message-State: ANhLgQ34ZE/q4tM0r0dxdv1mhphyfwETelxkDGZm0iNZBLnX+nnd5zMK
+        KxIBsv3mpMNoPTkXLMkLtmhVdA==
+X-Google-Smtp-Source: ADFU+vsOUkcfU1BNDYfhQfb1PA6CgnmWBbxotLsJb0kQIO5yklTREcusHubmGOMO+cINekbgUIW0dA==
+X-Received: by 2002:a05:6000:a:: with SMTP id h10mr8576233wrx.226.1585045254135;
         Tue, 24 Mar 2020 03:20:54 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
+        by smtp.gmail.com with ESMTPSA id h5sm2879527wro.83.2020.03.24.03.20.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 03:20:53 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
         martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org
-Cc:     linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 13/13] dt-bindings: usb: amlogic,dwc3: remove old DWC3 wrapper
-Date:   Tue, 24 Mar 2020 11:20:30 +0100
-Message-Id: <20200324102030.31000-14-narmstrong@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 12/13] dt-bindings: usb: dwc3: remove amlogic compatible entries
+Date:   Tue, 24 Mar 2020 11:20:29 +0100
+Message-Id: <20200324102030.31000-13-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200324102030.31000-1-narmstrong@baylibre.com>
 References: <20200324102030.31000-1-narmstrong@baylibre.com>
@@ -74,66 +74,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+There is now a dedicated driver for these SoCs making the old compatible
+obsolete.
 
-There is now an updated bindings for these SoCs making the old
-compatible obsolete.
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../devicetree/bindings/usb/amlogic,dwc3.txt  | 42 -------------------
- 1 file changed, 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+ Documentation/devicetree/bindings/usb/dwc3.txt | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt b/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-deleted file mode 100644
-index 9a8b631904fd..000000000000
---- a/Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
-+++ /dev/null
-@@ -1,42 +0,0 @@
--Amlogic Meson GX DWC3 USB SoC controller
--
--Required properties:
--- compatible:	depending on the SoC this should contain one of:
--			* amlogic,meson-axg-dwc3
--			* amlogic,meson-gxl-dwc3
--- clocks:	a handle for the "USB general" clock
--- clock-names:	must be "usb_general"
--- resets:	a handle for the shared "USB OTG" reset line
--- reset-names:	must be "usb_otg"
--
--Required child node:
--A child node must exist to represent the core DWC3 IP block. The name of
--the node is not important. The content of the node is defined in dwc3.txt.
--
--PHY documentation is provided in the following places:
--- Documentation/devicetree/bindings/phy/meson-gxl-usb2-phy.txt
--- Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
--
--Example device nodes:
--		usb0: usb@ff500000 {
--			compatible = "amlogic,meson-axg-dwc3";
--			#address-cells = <2>;
--			#size-cells = <2>;
--			ranges;
--
--			clocks = <&clkc CLKID_USB>;
--			clock-names = "usb_general";
--			resets = <&reset RESET_USB_OTG>;
--			reset-names = "usb_otg";
--
--			dwc3: dwc3@ff500000 {
--				compatible = "snps,dwc3";
--				reg = <0x0 0xff500000 0x0 0x100000>;
--				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
--				dr_mode = "host";
--				maximum-speed = "high-speed";
--				snps,dis_u2_susphy_quirk;
--				phys = <&usb3_phy>, <&usb2_phy0>;
--				phy-names = "usb2-phy", "usb3-phy";
--			};
--		};
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 66780a47ad85..2ef0bcc30648 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -14,8 +14,6 @@ Required properties:
+ Exception for clocks:
+   clocks are optional if the parent node (i.e. glue-layer) is compatible to
+   one of the following:
+-    "amlogic,meson-axg-dwc3"
+-    "amlogic,meson-gxl-dwc3"
+     "cavium,octeon-7130-usb-uctl"
+     "qcom,dwc3"
+     "samsung,exynos5250-dwusb3"
 -- 
 2.22.0
 
