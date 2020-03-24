@@ -2,423 +2,847 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB94C4332B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB38C4332B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162E92080C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:01:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ectrir8Y"
+	by mail.kernel.org (Postfix) with ESMTP id ED3FF20786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgCXLBB (ORCPT
+        id S1727095AbgCXLEp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:01:01 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47104 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727130AbgCXLBB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 07:01:01 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02OB0wJu096452;
-        Tue, 24 Mar 2020 06:00:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585047658;
-        bh=tBJIEoRveacmGEr2YLgHYGxxTroyz+58IYtBx5PsNbU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Ectrir8YVyyJrMPWzLK9HiDSuSSTWAgVtt/Q/DSsHP3OBe9gq183fhLBo58sz6g46
-         1WlN5/v0T39oycpNyoaaHhFYUVKkkrhz+s0PeTfUIw5Ozbh7uzdgal0P9OceSDIlGI
-         CRPVDSFoaLHQMdWnP7HK63aecWo+NnKxW+uTnxTc=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02OB0wj1111741
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 24 Mar 2020 06:00:58 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 24
- Mar 2020 06:00:58 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 24 Mar 2020 06:00:57 -0500
-Received: from sokoban.bb.dnainternet.fi (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02OB0rAl008648;
-        Tue, 24 Mar 2020 06:00:55 -0500
-From:   Tero Kristo <t-kristo@ti.com>
-To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <s-anna@ti.com>, <afd@ti.com>, Rob Herring <robh@kernel.org>,
-        <devicetree@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv9 01/15] dt-bindings: remoteproc: Add OMAP remoteproc bindings
-Date:   Tue, 24 Mar 2020 13:00:21 +0200
-Message-ID: <20200324110035.29907-2-t-kristo@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200324110035.29907-1-t-kristo@ti.com>
-References: <20200324110035.29907-1-t-kristo@ti.com>
+        Tue, 24 Mar 2020 07:04:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45907 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbgCXLEp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 07:04:45 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jGhML-0000j6-UH; Tue, 24 Mar 2020 12:04:37 +0100
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jGhML-0006a3-9G; Tue, 24 Mar 2020 12:04:37 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: [PATCH v3 2/5] ARM: dts: add Protonic PRTI6Q board
+Date:   Tue, 24 Mar 2020 12:04:29 +0100
+Message-Id: <20200324110432.25062-3-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200324110432.25062-1-o.rempel@pengutronix.de>
+References: <20200324110432.25062-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+Protonic PRTI6Q is a development board and a base class for different
+specific customer application boards based on the i.MX6 family of SoCs,
+developed by Protonic Holland.
 
-Add the device tree bindings document for the IPU and DSP
-remote processor devices on OMAP4+ SoCs.
-
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Suman Anna <s-anna@ti.com>
-[t-kristo@ti.com: converted to schema]
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Andrew F. Davis <afd@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: David Jander <david@protonic.nl>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
-v9:
-  * no changes
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/imx6q-prti6q.dts            | 551 ++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-prti6q.dtsi         | 185 ++++++
+ 4 files changed, 738 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-prti6q.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-prti6q.dtsi
 
- .../remoteproc/ti,omap-remoteproc.yaml        | 324 ++++++++++++++++++
- 1 file changed, 324 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-
-diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index a8e0b4a813ed..3b52b582efdf 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -119,6 +119,7 @@ properties:
+               - fsl,imx6q-sabreauto
+               - fsl,imx6q-sabrelite
+               - fsl,imx6q-sabresd
++              - prt,prti6q                      # Protonic PRTI6Q board
+               - technologic,imx6q-ts4900
+               - technologic,imx6q-ts7970
+               - toradex,apalis_imx6q            # Apalis iMX6 Module
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d6546d2676b9..3f500a9e88a9 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -530,6 +530,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-phytec-mira-rdk-nand.dtb \
+ 	imx6q-phytec-pbab01.dtb \
+ 	imx6q-pistachio.dtb \
++	imx6q-prti6q.dtb \
+ 	imx6q-rex-pro.dtb \
+ 	imx6q-sabreauto.dtb \
+ 	imx6q-sabrelite.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-prti6q.dts b/arch/arm/boot/dts/imx6q-prti6q.dts
 new file mode 100644
-index 000000000000..084960a8f17a
+index 000000000000..46a455e20fa3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-@@ -0,0 +1,324 @@
-+# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/remoteproc/ti,omap-remoteproc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/arch/arm/boot/dts/imx6q-prti6q.dts
+@@ -0,0 +1,551 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/*
++ * Copyright (c) 2014 Protonic Holland
++ */
 +
-+title: OMAP4+ Remoteproc Devices
++/dts-v1/;
++#include "imx6q.dtsi"
++#include "imx6qdl-prti6q.dtsi"
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/sound/fsl-imx-audmux.h>
 +
-+maintainers:
-+  - Suman Anna <s-anna@ti.com>
++/ {
++	model = "Protonic PRTI6Q board";
++	compatible = "prt,prti6q", "fsl,imx6q";
 +
-+description:
-+  The OMAP family of SoCs usually have one or more slave processor sub-systems
-+  that are used to offload some of the processor-intensive tasks, or to manage
-+  other hardware accelerators, for achieving various system level goals.
++	memory@10000000 {
++		device_type = "memory";
++		reg = <0x10000000 0xf0000000>;
++	};
 +
-+  The processor cores in the sub-system are usually behind an IOMMU, and may
-+  contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
-+  caches, an Interrupt Controller, a Cache Controller etc.
++	backlight_lcd: backlight-lcd {
++		compatible = "pwm-backlight";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_backlight>;
++		pwms = <&pwm1 0 5000000>;
++		brightness-levels = <0 16 64 255>;
++		num-interpolated-steps = <16>;
++		default-brightness-level = <16>;
++		power-supply = <&reg_3v3>;
++		enable-gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>;
++		status = "okay";
++	};
 +
-+  The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
-+  sub-system. The DSP processor sub-system can contain any of the TI's C64x,
-+  C66x or C67x family of DSP cores as the main execution unit. The IPU processor
-+  sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core
-+  Cortex-M4 processors.
++	can3_25m_osc: can3-25m-osc {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++	};
 +
-+  Each remote processor sub-system is represented as a single DT node. Each node
-+  has a number of required or optional properties that enable the OS running on
-+  the host processor (MPU) to perform the device management of the remote
-+  processor and to communicate with the remote processor. The various properties
-+  can be classified as constant or variable. The constant properties are
-+  dictated by the SoC and does not change from one board to another having the
-+  same SoC. Examples of constant properties include 'iommus', 'reg'. The
-+  variable properties are dictated by the system integration aspects such as
-+  memory on the board, or configuration used within the corresponding firmware
-+  image. Examples of variable properties include 'mboxes', 'memory-region',
-+  'timers', 'watchdog-timers' etc.
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_leds>;
 +
-+properties:
-+  compatible:
-+    enum:
-+      - ti,omap4-dsp
-+      - ti,omap5-dsp
-+      - ti,dra7-dsp
-+      - ti,omap4-ipu
-+      - ti,omap5-ipu
-+      - ti,dra7-ipu
++		led-debug0 {
++			function = LED_FUNCTION_STATUS;
++			gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
 +
-+  iommus:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      phandles to OMAP IOMMU nodes, that need to be programmed
-+      for this remote processor to access any external RAM memory or
-+      other peripheral device address spaces. This property usually
-+      has only a single phandle. Multiple phandles are used only in
-+      cases where the sub-system has different ports for different
-+      sub-modules within the processor sub-system (eg: DRA7 DSPs),
-+      and need the same programming in both the MMUs.
++		led-debug1 {
++			function = LED_FUNCTION_SD;
++			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "disk-activity";
++		};
++	};
 +
-+  mboxes:
-+    minItems: 1
-+    maxItems: 2
-+    description: |
-+      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
-+      communication with the remote processor. The specifier format is
-+      as per the bindings,
-+      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
-+      This property should match with the sub-mailbox node used in
-+      the firmware image.
++	panel {
++		compatible = "kyo,tcg121xglp";
++		backlight = <&backlight_lcd>;
 +
-+  clocks:
-+    description: |
-+      Main functional clock for the remote processor
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
 +
-+  resets:
-+    description: |
-+      Reset handles for the remote processor
++	reg_wifi: regulator-wifi {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_wifi_npd>;
++		enable-active-high;
++		gpio = <&gpio1 26 GPIO_ACTIVE_HIGH>;
++		regulator-max-microvolt = <1800000>;
++		regulator-min-microvolt = <1800000>;
++		regulator-name = "regulator-WL12xx";
++		startup-delay-us = <70000>;
++	};
 +
-+  firmware-name:
-+    description: |
-+      Default name of the firmware to load to the remote processor.
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "prti6q-sgtl5000";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,widgets =
++			"Microphone", "Microphone Jack",
++			"Line", "Line In Jack",
++			"Headphone", "Headphone Jack",
++			"Speaker", "External Speaker";
++		simple-audio-card,routing =
++			"MIC_IN", "Microphone Jack",
++			"LINE_IN", "Line In Jack",
++			"Headphone Jack", "HP_OUT",
++			"External Speaker", "LINE_OUT";
 +
-+# Optional properties:
-+# --------------------
-+# Some of these properties are mandatory on some SoCs, and some are optional
-+# depending on the configuration of the firmware image to be executed on the
-+# remote processor. The conditions are mentioned for each property.
-+#
-+# The following are the optional properties:
++		simple-audio-card,cpu {
++			sound-dai = <&ssi1>;
++			system-clock-frequency = <0>;
++		};
 +
-+  memory-region:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: |
-+      phandle to the reserved memory node to be associated
-+      with the remoteproc device. The reserved memory node
-+      can be a CMA memory node, and should be defined as
-+      per the bindings,
-+      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++		simple-audio-card,codec {
++			sound-dai = <&sgtl5000>;
++			bitclock-master;
++			frame-master;
++		};
++	};
 +
-+  reg:
-+    description: |
-+      Address space for any remoteproc memories present on
-+      the SoC. Should contain an entry for each value in
-+      'reg-names'. These are mandatory for all DSP and IPU
-+      processors that have them (OMAP4/OMAP5 DSPs do not have
-+      any RAMs)
++	sound-spdif {
++		compatible = "fsl,imx-audio-spdif";
++		model = "imx-spdif";
++		spdif-controller = <&spdif>;
++		spdif-in;
++		spdif-out;
++	};
++};
 +
-+  reg-names:
-+    description: |
-+      Required names for each of the address spaces defined in
-+      the 'reg' property. Expects the names from the following
-+      list, in the specified order, each representing the corresponding
-+      internal RAM memory region.
-+    minItems: 1
-+    maxItems: 3
-+    items:
-+      - const: l2ram
-+      - const: l1pram
-+      - const: l1dram
++&audmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_audmux>;
++	status = "okay";
 +
-+  ti,bootreg:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      Should be a triple of the phandle to the System Control
-+      Configuration region that contains the boot address
-+      register, the register offset of the boot address
-+      register within the System Control module, and the bit
-+      shift within the register. This property is required for
-+      all the DSP instances on OMAP4, OMAP5 and DRA7xx SoCs.
++	mux_ssi1 {
++		fsl,audmux-port = <0>;
++		fsl,port-config = <
++			IMX_AUDMUX_V2_PTCR_SYN 		0
++			IMX_AUDMUX_V2_PTCR_TFSEL(2) 	0
++			IMX_AUDMUX_V2_PTCR_TCSEL(2) 	0
++			IMX_AUDMUX_V2_PTCR_TFSDIR 	0
++			IMX_AUDMUX_V2_PTCR_TCLKDIR IMX_AUDMUX_V2_PDCR_RXDSEL(2)
++		>;
++	};
 +
-+  ti,autosuspend-delay-ms:
-+    description: |
-+      Custom autosuspend delay for the remoteproc in milliseconds.
-+      Recommended values is preferable to be in the order of couple
-+      of seconds. A negative value can also be used to disable the
-+      autosuspend behavior.
++	mux_pins3 {
++		fsl,audmux-port = <2>;
++		fsl,port-config = <
++			IMX_AUDMUX_V2_PTCR_SYN IMX_AUDMUX_V2_PDCR_RXDSEL(0)
++			0		       IMX_AUDMUX_V2_PDCR_TXRXEN
++		>;
++	};
++};
 +
-+  ti,timers:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      One or more phandles to OMAP DMTimer nodes, that serve
-+      as System/Tick timers for the OS running on the remote
-+      processors. This will usually be a single timer if the
-+      processor sub-system is running in SMP mode, or one per
-+      core in the processor sub-system. This can also be used
-+      to reserve specific timers to be dedicated to the
-+      remote processors.
++&can2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_can2>;
++	status = "okay";
++};
 +
-+      This property is mandatory on remote processors requiring
-+      external tick wakeup, and to support Power Management
-+      features. The timers to be used should match with the
-+      timers used in the firmware image.
++&ecspi1 {
++	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi1>;
++	status = "okay";
 +
-+  ti,watchdog-timers:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      One or more phandles to OMAP DMTimer nodes, used to
-+      serve as Watchdog timers for the processor cores. This
-+      will usually be one per executing processor core, even
-+      if the processor sub-system is running a SMP OS.
++	flash@0 {
++		compatible = "winbond,w25q64", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <20000000>;
 +
-+      The timers to be used should match with the watchdog
-+      timers used in the firmware image.
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
 +
-+if:
-+  properties:
-+    compatible:
-+      enum:
-+        - ti,dra7-dsp
-+then:
-+  properties:
-+    reg:
-+      minItems: 3
-+      maxItems: 3
-+  required:
-+    - reg
-+    - reg-names
-+    - ti,bootreg
++			partition@0 {
++				label = "boot";
++				reg = <0x0 0x80000>;
++			};
 +
-+else:
-+  if:
-+    properties:
-+      compatible:
-+        enum:
-+          - ti,omap4-ipu
-+          - ti,omap5-ipu
-+          - ti,dra7-ipu
-+  then:
-+    properties:
-+      reg:
-+        minItems: 1
-+        maxItems: 1
-+      ti,bootreg: false
-+    required:
-+      - reg
-+      - reg-names
++			partition@80000 {
++				label = "env";
++				reg = <0x80000 0x10000>;
++			};
 +
-+  else:
-+    properties:
-+      reg: false
-+    required:
-+      - ti,bootreg
++			partition@90000 {
++				label = "spare";
++				reg = <0x90000 0x370000>;
++			};
++		};
++	};
++};
 +
-+required:
-+  - compatible
-+  - iommus
-+  - mboxes
-+  - clocks
-+  - resets
-+  - firmware-name
++&ecspi2 {
++	cs-gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>, <&gpio4 25 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi2 &pinctrl_ecspi2_cs>;
++	status = "okay";
 +
-+additionalProperties: false
++	can3@0 {
++		compatible = "microchip,mcp2515";
++		reg = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_can3>;
++		clocks = <&can3_25m_osc>;
++		interrupts-extended = <&gpio3 20 IRQ_TYPE_LEVEL_LOW>;
++		spi-max-frequency = <5000000>;
++	};
 +
-+examples:
-+  - |
++	adc@1 {
++		compatible = "ti,adc128s052";
++		reg = <1>;
++		spi-max-frequency = <2000000>;
++		vref-supply = <&reg_3v3>;
++	};
++};
 +
-+    //Example 1: OMAP4 DSP
++&ecspi3 {
++	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi3>;
++	status = "okay";
++};
 +
-+    /* DSP Reserved Memory node */
-+    #include <dt-bindings/clock/omap4.h>
-+    reserved-memory {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rgmii-id";
++	phy-handle = <&rgmii_phy>;
++	status = "okay";
 +
-+        dsp_memory_region: dsp-memory@98000000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0x98000000 0x800000>;
-+            reusable;
-+        };
-+    };
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+    /* DSP node */
-+    ocp {
-+        dsp: dsp {
-+            compatible = "ti,omap4-dsp";
-+            ti,bootreg = <&scm_conf 0x304 0>;
-+            iommus = <&mmu_dsp>;
-+            mboxes = <&mailbox &mbox_dsp>;
-+            memory-region = <&dsp_memory_region>;
-+            ti,timers = <&timer5>;
-+            ti,watchdog-timers = <&timer6>;
-+            clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
-+            resets = <&prm_tesla 0>, <&prm_tesla 1>;
-+            firmware-name = "omap4-dsp-fw.xe64T";
-+        };
-+    };
++		/* Microchip KSZ9031RNX PHY */
++		rgmii_phy: ethernet-phy@0 {
++			reg = <0>;
++			interrupts-extended = <&gpio1 28 IRQ_TYPE_LEVEL_LOW>;
++			reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
++			reset-assert-us = <10000>;
++			reset-deassert-us = <300>;
++		};
++	};
++};
 +
-+  - |+
++&hdmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hdmi>;
++	ddc-i2c-bus = <&i2c2>;
++	status = "okay";
++};
 +
-+    //Example 2: OMAP5 IPU
++&i2c1 {
++	sgtl5000: codec@a {
++		compatible = "fsl,sgtl5000";
++		reg = <0xa>;
++		#sound-dai-cells = <0>;
++		clocks = <&clks 201>;
++		VDDA-supply = <&reg_3v3>;
++		VDDIO-supply = <&reg_3v3>;
++		VDDD-supply = <&reg_1v8>;
++	};
++};
 +
-+    /* IPU Reserved Memory node */
-+    #include <dt-bindings/clock/omap5.h>
-+    reserved-memory {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
++/* DDC */
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
 +
-+        ipu_memory_region: ipu-memory@95800000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0 0x95800000 0 0x3800000>;
-+            reusable;
-+        };
-+    };
++&i2c3 {
++	adc@49 {
++		compatible = "ti,ads1015";
++		reg = <0x49>;
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+    /* IPU node */
-+    ocp {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
++		/* can2_l */
++		channel@4 {
++			reg = <4>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
 +
-+        ipu: ipu@55020000 {
-+            compatible = "ti,omap5-ipu";
-+            reg = <0x55020000 0x10000>;
-+            reg-names = "l2ram";
-+            iommus = <&mmu_ipu>;
-+            mboxes = <&mailbox &mbox_ipu>;
-+            memory-region = <&ipu_memory_region>;
-+            ti,timers = <&timer3>, <&timer4>;
-+            ti,watchdog-timers = <&timer9>, <&timer11>;
-+            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
-+            resets = <&prm_core 2>;
-+            firmware-name = "omap5-ipu-fw.xem4";
-+        };
-+    };
++		/* can2_h */
++		channel@5 {
++			reg = <5>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
 +
-+  - |+
++		/* can1_l */
++		channel@6 {
++			reg = <6>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
 +
-+    //Example 3: DRA7xx/AM57xx DSP
++		/* can1_h */
++		channel@7 {
++			reg = <7>;
++			ti,gain = <3>;
++			ti,datarate = <3>;
++		};
++	};
++};
 +
-+    /* DSP1 Reserved Memory node */
-+    #include <dt-bindings/clock/dra7.h>
-+    reserved-memory {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
++&pcie {
++	status = "okay";
++};
 +
-+        dsp1_memory_region: dsp1-memory@99000000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0x0 0x99000000 0x0 0x4000000>;
-+            reusable;
-+        };
-+    };
++&pwm1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm1>;
++	status = "okay";
++};
 +
-+    /* DSP1 node */
-+    ocp {
-+        #address-cells = <1>;
-+        #size-cells = <1>;
++&ldb {
++	status = "okay";
 +
-+        dsp1: dsp@40800000 {
-+            compatible = "ti,dra7-dsp";
-+            reg = <0x40800000 0x48000>,
-+                  <0x40e00000 0x8000>,
-+                  <0x40f00000 0x8000>;
-+            reg-names = "l2ram", "l1pram", "l1dram";
-+            ti,bootreg = <&scm_conf 0x55c 0>;
-+            iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
-+            mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
-+            memory-region = <&dsp1_memory_region>;
-+            ti,timers = <&timer5>;
-+            ti,watchdog-timers = <&timer10>;
-+            resets = <&prm_dsp1 0>;
-+            clocks = <&dsp1_clkctrl DRA7_DSP1_MMU0_DSP1_CLKCTRL 0>;
-+            firmware-name = "dra7-dsp1-fw.xe66";
-+        };
-+    };
++	lvds-channel@0 {
++		status = "okay";
++
++		port@4 {
++			reg = <4>;
++
++			lvds0_out: endpoint {
++				remote-endpoint = <&panel_in>;
++			};
++		};
++	};
++};
++
++&sata {
++	status = "okay";
++};
++
++&snvs_poweroff {
++	status = "okay";
++};
++
++&spdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spdif>;
++	status = "okay";
++};
++
++&ssi1 {
++	#sound-dai-cells = <0>;
++	fsl,mode = "i2s-slave";
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart5>;
++	status = "okay";
++};
++
++&usbotg {
++	pinctrl-0 = <&pinctrl_usbotg &pinctrl_usbotg_id>;
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	non-removable;
++	vmmc-supply = <&reg_wifi>;
++	cap-power-off-card;
++	keep-power-in-suspend;
++	status = "okay";
++
++	wifi {
++		compatible = "ti,wl1271";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_wifi>;
++		irq-gpio = <&gpio1 30 GPIO_ACTIVE_HIGH>;
++		ref-clock-frequency = "38400000";
++		tcxo-clock-frequency = "19200000";
++	};
++};
++
++&iomuxc {
++	pinctrl_audmux: audmuxgrp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1		0x030b0
++			MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
++			MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
++			MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
++			MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
++		>;
++	};
++
++	pinctrl_backlight: backlightgrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT7__GPIO4_IO28	0x1b0b0
++		>;
++	};
++
++	pinctrl_can2: can2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x80000000
++			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x80000000
++		>;
++	};
++
++	pinctrl_can3: can3grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b1
++		>;
++	};
++
++	pinctrl_ecspi1: ecspi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
++			MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
++			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
++			/* CS */
++			MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x000b1
++		>;
++	};
++
++	pinctrl_ecspi2: ecspi2grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_OE__ECSPI2_MISO		0x100b1
++			MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK		0x100b1
++			MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI		0x100b1
++			MX6QDL_PAD_EIM_RW__GPIO2_IO26		0x000b1
++		>;
++	};
++
++	pinctrl_ecspi2_cs: ecspi2csgrp {
++		fsl,pins = <
++			/* ADC128S022 CS */
++			MX6QDL_PAD_DISP0_DAT4__GPIO4_IO25	0x1b0b1
++		>;
++	};
++
++	pinctrl_ecspi3: ecspi3grp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
++			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
++			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
++			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x000b1
++		>;
++	};
++
++	pinctrl_enet: enetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
++			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
++			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
++			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
++			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
++			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
++			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x10030
++			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x10030
++			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x10030
++			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x10030
++			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x10030
++			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x10030
++			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x10030
++			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x10030
++			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x10030
++
++			/* Phy reset */
++			MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x1b0b0
++			MX6QDL_PAD_ENET_TX_EN__GPIO1_IO28	0x1b0b1
++		>;
++	};
++
++	pinctrl_hdmi: hdmigrp {
++		fsl,pins = <
++			/* NOTE: DDC is done via I2C2, so DON'T
++			 * configure DDC pins for HDMI!
++			 */
++			MX6QDL_PAD_EIM_A25__HDMI_TX_CEC_LINE	0x1f8b0
++		>;
++	};
++
++	/* DDC */
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL3__I2C2_SCL	0x4001b8b1
++			MX6QDL_PAD_KEY_ROW3__I2C2_SDA	0x4001b8b1
++		>;
++	};
++
++	pinctrl_leds: ledsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_8__GPIO1_IO08		0x1b0b0
++			MX6QDL_PAD_GPIO_9__GPIO1_IO09		0x1b0b0
++		>;
++	};
++
++	pinctrl_pwm1: pwm1grp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT8__PWM1_OUT		0x1b0b0
++		>;
++	};
++
++	pinctrl_spdif: spdifgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_16__SPDIF_IN		0x1b0b0
++			MX6QDL_PAD_GPIO_19__SPDIF_OUT		0x1b0b0
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D26__UART2_RX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D27__UART2_TX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D28__UART2_DTE_CTS_B	0x1b0b1
++			MX6QDL_PAD_EIM_D29__UART2_DTE_RTS_B	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart5: uart5grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
++			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_usbotg_id: usbotgidgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x1f058
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170b9
++			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100b9
++			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
++			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
++			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
++			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
++		>;
++	};
++
++	pinctrl_wifi: wifigrp {
++		fsl,pins = <
++			/* WL12xx IRQ */
++			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x10880
++		>;
++	};
++
++	pinctrl_wifi_npd: wifinpd {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b8b0
++		>;
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-prti6q.dtsi b/arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+new file mode 100644
+index 000000000000..f32ed2040b6a
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+@@ -0,0 +1,185 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
++/*
++ * Copyright (c) 2014 Protonic Holland
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	chosen {
++		stdout-path = &uart4;
++	};
++
++	reg_1v8: regulator-1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
++	reg_3v3: regulator-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_usb_h1_vbus: regulator-h1-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "h1-vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	reg_usb_otg_vbus: regulator-otg-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "otg-vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 22 0>;
++		enable-active-high;
++	};
++};
++
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_can1>;
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	temperature-sensor@70 {
++		compatible = "ti,tmp103";
++		reg = <0x70>;
++	};
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
++	phy_type = "utmi";
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	phy_type = "utmi";
++	dr_mode = "host";
++	disable-over-current;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++
++	partitions {
++		compatible = "fixed-partitions";
++		#size-cells = <1>;
++		#address-cells = <1>;
++
++		bootstate_backend: bootstate_backend@f0000 {
++			reg = <0xf0000 0x10000>;
++			label = "bootstate";
++		};
++	};
++};
++
++&iomuxc {
++	pinctrl_can1: can1grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX	0x80000000
++			MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX	0x80000000
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA		0x4001f8b1
++			MX6QDL_PAD_CSI0_DAT9__I2C1_SCL		0x4001f8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_5__I2C3_SCL	      0x4001b8b1
++			MX6QDL_PAD_GPIO_6__I2C3_SDA	      0x4001b8b1
++		>;
++	};
++
++	pinctrl_uart4: uart4grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
++			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__SD1_CMD		0x170f9
++			MX6QDL_PAD_SD1_CLK__SD1_CLK		0x100f9
++			MX6QDL_PAD_SD1_DAT0__SD1_DATA0		0x170f9
++			MX6QDL_PAD_SD1_DAT1__SD1_DATA1		0x170f9
++			MX6QDL_PAD_SD1_DAT2__SD1_DATA2		0x170f9
++			MX6QDL_PAD_SD1_DAT3__SD1_DATA3		0x170f9
++			MX6QDL_PAD_GPIO_1__GPIO1_IO01		0x1b0b0
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17099
++			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10099
++			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17099
++			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17099
++			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17099
++			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17099
++			MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x17099
++			MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x17099
++			MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x17099
++			MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17099
++			MX6QDL_PAD_SD3_RST__SD3_RESET           0x1b0b1
++		>;
++	};
++
++	pinctrl_usbotg: usbotggrp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D21__USB_OTG_OC	0x1b0b0
++			MX6QDL_PAD_EIM_D22__GPIO3_IO22	0x1b0b0
++		>;
++	};
++};
 -- 
-2.17.1
+2.25.1
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
