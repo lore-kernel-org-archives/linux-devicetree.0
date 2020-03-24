@@ -2,87 +2,84 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB19C4332B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE75C4332B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 765992051A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF732051A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgCXJpf (ORCPT
+        id S1726524AbgCXJqM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:45:35 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:11754 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727050AbgCXJpf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:45:35 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O9jLsc007421;
-        Tue, 24 Mar 2020 05:45:32 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs61j6s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 05:45:32 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02O9jUSc002585
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 24 Mar 2020 05:45:31 -0400
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 24 Mar 2020 02:45:29 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 24 Mar 2020 02:45:29 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02O9jRKg027422;
-        Tue, 24 Mar 2020 05:45:28 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>
-Subject: [RESEND PATCH 0/2] iio: dac: ad5770r: dt bindings fixes
-Date:   Tue, 24 Mar 2020 11:45:04 +0200
-Message-ID: <20200324094506.55938-1-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 24 Mar 2020 05:46:12 -0400
+Received: from smtpbgsg2.qq.com ([54.254.200.128]:32863 "EHLO smtpbgsg2.qq.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727324AbgCXJqM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 05:46:12 -0400
+X-QQ-mid: bizesmtp17t1585043161txrzbg3g
+Received: from localhost.localdomain (unknown [210.242.163.205])
+        by esmtp6.qq.com (ESMTP) with 
+        id ; Tue, 24 Mar 2020 17:45:58 +0800 (CST)
+X-QQ-SSF: 01400000002000I0R720000A0000000
+X-QQ-FEAT: QzH0LXO1kxblCOA3FX5oB6XbkyGsnhwJmuMZvC7UyqecKsDN6omVQuaXllHwO
+        13OEo9gQdSgoPQlMHybM3xob8LwXKmmvQ7LwD/nqE37KmEeEo5y2Ludcknjvo5FkPEps8c3
+        Bhh0Akm8oJE/1I6q0sGxV/bUZlGo/Xxuiz2+9qlxE4rYwT14Pnt1ha79+zfALp0YOKVnThi
+        myqkMatG/lFLx6eqN/yBZwr6jHCT25YMIOgZVplJwK58a9wGqzDsiE470YRp5AwwUzcNbk5
+        SKBVPYE+3zIKv3WCR1w0sh9PC7TVSVaV6tDrlpUWWE3bqlJ+Cg4ORiqFoH0a1+XPaEVMyFE
+        DfMvqJqW2k2PXKqHUtF3x1SrNK+Ywhm3jUOXR1q
+X-QQ-GoodBg: 2
+From:   David Lu <david.lu@bitland.com.cn>
+To:     david.lu@bitland.com.cn
+Cc:     jungle.chiang@bitland.com.cn,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: boe,tv101wum-n16: Add compatible for boe tv105wum-nw0.
+Date:   Tue, 24 Mar 2020 17:45:25 +0800
+Message-Id: <20200324094525.4758-1-david.lu@bitland.com.cn>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-24_02:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 clxscore=1011 suspectscore=0 spamscore=0 mlxlogscore=781
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240051
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:bitland.com.cn:qybgforeign:qybgforeign7
+X-QQ-Bgrelay: 1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+Add bindings documentation for BOE TV105WUM-NW0 10.5" WUXGA TFT LCD
+panel.
 
-This aims to replace use of num property from dt nodes with
-reg property both in dt bindings and driver and fix
-dt bindings errors.
+Signed-off-by: David Lu <david.lu@bitland.com.cn>
+Change-Id: I450c0e52aae080728d4794bdffc50bb0d2f39f40
+---
+ .../devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml     | 2 ++
+ 1 file changed, 2 insertions(+)
 
-1. read from fwnode reg property instead of num property
-
-2. replace num property with reg property and fix dt
-bindings errors
-
-Alexandru Tachici (2):
-  iio: dac: ad5770r: read channel nr from reg
-  dt-bindings: iio: dac: AD5570R fix bindings errors
-
- .../bindings/iio/dac/adi,ad5770r.yaml         | 77 ++++++++++---------
- drivers/iio/dac/ad5770r.c                     |  2 +-
- 2 files changed, 41 insertions(+), 38 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+index 740213459134..7f5df5851017 100644
+--- a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
++++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+@@ -24,6 +24,8 @@ properties:
+       - boe,tv101wum-n53
+         # AUO B101UAN08.3 10.1" WUXGA TFT LCD panel
+       - auo,b101uan08.3
++        # BOE TV105WUM-NW0 10.5" WUXGA TFT LCD panel
++      - boe,tv105wum-nw0
+ 
+   reg:
+     description: the virtual channel number of a DSI peripheral
 -- 
-2.20.1
+2.24.1
+
+
 
