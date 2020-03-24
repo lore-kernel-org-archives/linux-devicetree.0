@@ -2,109 +2,111 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1739C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517F2C4332B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB24208D5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30AAA20870
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:36:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbgCXKev (ORCPT
+        id S1727213AbgCXKgG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:34:51 -0400
-Received: from sauhun.de ([88.99.104.3]:48924 "EHLO pokefinder.org"
+        Tue, 24 Mar 2020 06:36:06 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62844 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbgCXKev (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:34:51 -0400
-Received: from localhost (p54B3339A.dip0.t-ipconnect.de [84.179.51.154])
-        by pokefinder.org (Postfix) with ESMTPSA id D13B92C08EF;
-        Tue, 24 Mar 2020 11:34:48 +0100 (CET)
-Date:   Tue, 24 Mar 2020 11:34:48 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1727201AbgCXKgG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 06:36:06 -0400
+IronPort-SDR: dcAOxkDoSZK05LN2jKE2yreu9ci2Af/De+eW6dywMIXZst/rDpaEMLosM6CbL9PxaGPb7PMHZX
+ eXci96JS2C9g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 03:36:05 -0700
+IronPort-SDR: zht+CM67eDL0WyqMDvo8EzEqKBTQrdKyZEvlUHQrDxhdF91Nm+Yg/36Y4EV9R5v02T7UU2XIbV
+ S8ba3qhgWZNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
+   d="scan'208";a="393240574"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2020 03:35:56 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jGgub-00CVDz-DA; Tue, 24 Mar 2020 12:35:57 +0200
+Date:   Tue, 24 Mar 2020 12:35:57 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Gary Hook <Gary.Hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v12 1/2] dt-binding: i2c: add bus-supply property
-Message-ID: <20200324103448.GE1134@ninjato>
-References: <20200306034946.11223-1-bibby.hsieh@mediatek.com>
- <20200306034946.11223-2-bibby.hsieh@mediatek.com>
- <20200322130710.GA1091@ninjato>
- <CAAFQd5ANJcReHD_n0LorS+bjE8Cn_W-kY5LNgGG+L+jMmywYfA@mail.gmail.com>
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Tal Gilboa <talgi@mellanox.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Message-ID: <20200324103557.GH1922688@smile.fi.intel.com>
+References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+ <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200324095024.GE1922688@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tVmo9FyGdCe4F4YN"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAFQd5ANJcReHD_n0LorS+bjE8Cn_W-kY5LNgGG+L+jMmywYfA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200324095024.GE1922688@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Mar 24, 2020 at 11:50:24AM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 24, 2020 at 10:32:19AM +0200, Matti Vaittinen wrote:
 
---tVmo9FyGdCe4F4YN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > +#include <linux/acpi.h>
+> 
+> > +#include <linux/of.h>
+> 
+> I didn't find any evidence of use of those two, otherwise, missed property.h
+> and perhaps mod_devicetable.h.
 
+...
 
-> > > +- bus-supply
-> > > +     phandle to the regulator that provides power to i2c.
-> >
-> > I think this is not clear enough. I assume it means the regulator for
-> > driving SCL/SDA? In the coverletter you mention also an EEPROM. In your
-> > case, this is driven by the same regulator? I am skeptical we can
-> > abstract it like this because I2C devices could be driven by various
-> > regulators in the system, so there couldn't be one "bus regulator". The
-> > regulator for the EEPROM should be described in the EEPROM node. So,
-> > this "bus supply" is only for driving SCL/SDA?
->=20
-> In our case the bus-supply regulator drives the voltage rail to which
-> SCL/SDA are pulled up and there is an EEPROM on the bus, powered by
-> yet another rail. There is also another slave on the bus which uses
-> the same regulator as the bus-supply for its own power.
->=20
-> In other words, bus-supply only ensures that SCL and SDA are in a
-> usable state. Other consumers need to refer to the regulator in their
-> own supplies if they need it for their own power.
->=20
-> Does this answer your questions?
+> > +MODULE_DEVICE_TABLE(of, bd9995x_of_match);
 
-Yes, this was exactly what I was assuming.
+> > +MODULE_DEVICE_TABLE(acpi, bd9995x_acpi_match);
 
-So, I think the above documentation should be changed: s|i2c|SCL/SDA|
+I have to add since you are using those macros without ifdeffery, you should
+get warning in !ACPI and/or !OF cases.
 
-D'accord?
+So, drop those of_match_ptr() / ACPI_PTR() and thus above headers.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---tVmo9FyGdCe4F4YN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl554kQACgkQFA3kzBSg
-KbamcA/+Ll60/Efzo6FG3APE0g6ZjxtUBgbCskbrOq6AAiExxWU0zzl2zcvkimxm
-EzB4MMQDk7XBRnr8IeBNOHgT9F7txegCzrSzCTV8j0peut5akg385S8heeM5b9e+
-udCKQahb2tb8vOCZFOTn9OoguZ+VDNhOYCGIoBcgUCA/YWcuomaxt/VPACI+E558
-TWqhouadPIqQiRLGuF6N+Ya8Tri9i6cURoYa1uZKL/bsnxKc0TkcWiiOzYXmB+Fu
-I6uNg5XJxRzIvYDAeMuWxvUOazNcdJldc1l+neD3HKhKQs+OKyVl25JD7tLpgZNU
-CHQHoItGULjh7sapaG3BbjkW//SHTumw6G6JBYNrjrzA3Tr6gv6+dymXyPKp62sA
-9XFwguFD2LntFyVBsuBs0tN8jycZNkp0wgEXnTetn2gFQP70lXby6wlhTkUahEHf
-WIcDERSPKv7UleKiwaZx9p3KMZisxMMdJZjArKwbLE7xu0iFjwhepD4D4wlmHrT+
-dDVLJJJDShtwpTqSFsGjdo6xDT5Hzx7Vdv/dSBtLk9P+OSj3AwgVA3bG+PnXUzLW
-C5WvW28kFg78c49B7vlYVnNcoxhIJuuloiCeKGXwjba0OZ1nRjHi37VC5Q4S43Mu
-DpVsDnjrkImZub+ijqjHgfLXL5OSV/NVDjrVsCnq8zZlbkHgGgM=
-=/K3S
------END PGP SIGNATURE-----
-
---tVmo9FyGdCe4F4YN--
