@@ -2,114 +2,100 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E891C41621
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 14:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F342DC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 14:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260F02080C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 14:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C841520788
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 14:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YiMsSpud"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cObX7ajU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgCXOff (ORCPT
+        id S1727888AbgCXOnt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:35:35 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:46566 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbgCXOff (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 10:35:35 -0400
-Received: by mail-vs1-f65.google.com with SMTP id z125so11199435vsb.13
-        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 07:35:34 -0700 (PDT)
+        Tue, 24 Mar 2020 10:43:49 -0400
+Received: from mail-qt1-f173.google.com ([209.85.160.173]:42624 "EHLO
+        mail-qt1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbgCXOnt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 10:43:49 -0400
+Received: by mail-qt1-f173.google.com with SMTP id t9so11143190qto.9;
+        Tue, 24 Mar 2020 07:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vHxRlatObgRvnysxTZAZ7i5pl1JSDT2R3bHKmGhkgUE=;
-        b=YiMsSpudpT6FxZHxA6De/saSAHGXK7VlyDXtpNtN9hNzxOPelBBcnUkk9LPz8Mz4Ir
-         KztvWvGmrqbAk7jwUQE14sSAWV4hf05oN5i6odmjR/cou/29qpALc9peKPyrjgXDkrAc
-         oq6V4L/S8pZ9LSBWm00J5so+SUpk1hSQ8Va+g=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6hZ3mKFxh7nBErS5Qg4UsC0Q2wGLsvJidQirvrTzzSQ=;
+        b=cObX7ajULHqU7zTNfhCt1smSq/VvkzTYK65I2TiJW95LK/16Fy2gnAdCMz31/4qcA+
+         H2aHXvog8Z1S7P9k0RvGOr4Rv+XktKW/7KIq6A8Ww/ABuDDEObyr9KKoBn1yENOydz02
+         fU6qS4jz7xl892/+H+yiwY4xj3vXMwHafjRR3bBOJP5xNb/tBwK2s6fksrL67g1aTswU
+         FhmCxxNkY7ssCMxN9Dak7cAd2TLud8QKQmltq6w5GXJwQKAEXwGYV8aB7dmbth4WKq4e
+         KTliUCGSxux7Y6OefDxXVvas/QoYjkC/b3GH2ofs5ydt8tWCamLiAlcU/+KsCl0uNFmz
+         8qWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vHxRlatObgRvnysxTZAZ7i5pl1JSDT2R3bHKmGhkgUE=;
-        b=VMz5ntOEmgVre6+05aJX9lbDWP7NCIGI/kYGbRkvOtwuzL+zoCtxL5eAyrDOxHr8FJ
-         3CFNYZx90FN6/947Ivxb8G4CPkSlAzkT179fjXCsys74cKF6diR+xmLvvo+XNYtPr7Dv
-         wFfH8U207PRFFSOXSjxeQaGwWR7tPRtMSA9iNeQR1H5H+oa4E6bWUC6VdXHoGlKuanCW
-         sv0uqM0OjydA6rosVN7cIYOR1eKpmSjnx71huweXPwCwkX2c0BgY3eWoA5njBB+MqDw/
-         N5tfn9XHldFKSGWbqrliy2t6Wat2Xl7OJXr2bsFYH+OssLUERODyMOLXTR+JucfEL2T1
-         gMLQ==
-X-Gm-Message-State: ANhLgQ1LEw3kDFDUk/NMDRZhyvALTK+3XwXXJ4frJZ3Inl5nArz6loab
-        2f5gkkv/rXO8uErgr2pCZ7Z54ryLyaY=
-X-Google-Smtp-Source: ADFU+vu9iKAuvdlts7qQhDSy2h8qtsaJSw7mEXlEYbgUdtOyN9dodGEH8ZEjBAKjsfS6nQwZj1czvA==
-X-Received: by 2002:a67:b001:: with SMTP id z1mr20452422vse.82.1585060533214;
-        Tue, 24 Mar 2020 07:35:33 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id g1sm10503897uak.5.2020.03.24.07.35.32
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 07:35:32 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id r47so6338897uad.11
-        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 07:35:32 -0700 (PDT)
-X-Received: by 2002:a9f:300a:: with SMTP id h10mr18039835uab.91.1585060531555;
- Tue, 24 Mar 2020 07:35:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6hZ3mKFxh7nBErS5Qg4UsC0Q2wGLsvJidQirvrTzzSQ=;
+        b=cIC1EFE151zy7yBFLOJnNhMfAOnH50PrvAIZ5dni8bm2szNpi5OFoWBePgAJDbSpdQ
+         XIrkk4gIZD2Z6YAO3YCv9cHtPM/5VLHr4xDVyd+u5bNgV1YDuslmMOOydmhMadNtxG/4
+         wMULYDpauSqyt8+bMPXRGJgWT96gKlr1+fGe/r5ePZhOWvBZ8JkLfIORfQ/WnmIrg0yK
+         x2X32FcHAe9UznfUfd4RokvSiXXog4zRato+wc9XmZuufUiSaPyyNAcWPVS5jOeI2FwX
+         0PUeA4QBsNc54q4/C2qOVi8M7GXaTGqikLAjspyZ62aHhWF9IBrX7f+16l8PFcXiv/5c
+         jwLQ==
+X-Gm-Message-State: ANhLgQ131bkCKbyCQNb6eF3kwS1lH4yJkZtb0ixn/VYIDUQ1M6hZn0sl
+        Z15kPvmEkMYRI1XcR8nmG5CcCg5J9k8=
+X-Google-Smtp-Source: ADFU+vtqb2HjPXS6RLREfTrVNSOCGBWkXzFhUbc9muoSfFghXzvbywcda2wPQplRdBZenYOtgOBE7Q==
+X-Received: by 2002:ac8:1611:: with SMTP id p17mr22233916qtj.300.1585061025878;
+        Tue, 24 Mar 2020 07:43:45 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id y41sm14749800qtc.72.2020.03.24.07.43.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 07:43:44 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: vendor-prefixes: Add Beacon vendor prefix
+Date:   Tue, 24 Mar 2020 09:43:22 -0500
+Message-Id: <20200324144324.21178-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 24 Mar 2020 07:35:18 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com>
-Message-ID: <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Beacon EmebeddedWorks is the brand owned by Compass Electronics Group,
+LLC based out of the United States.
+https://beaconembedded.com/
 
-On Sun, Mar 22, 2020 at 11:14 PM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->
-> "The PM core always increments the runtime usage counter
-> before calling the ->suspend() callback and decrements it
-> after calling the ->resume() callback"
->
-> DPU and DSI are managed as runtime devices. When
-> suspend is triggered, PM core adds a refcount on all the
-> devices and calls device suspend, since usage count is
-> already incremented, runtime suspend was not getting called
-> and it kept the clocks on which resulted in target not
-> entering into XO shutdown.
->
-> Add changes to manage runtime devices during pm sleep.
->
-> Changes in v1:
->  - Remove unnecessary checks in the function
->      _dpu_kms_disable_dpu (Rob Clark).
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-I'm wondering what happened with my feedback on v1, AKA:
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 4c8eaa11daff..7ee772b1840a 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -141,6 +141,8 @@ patternProperties:
+     description: Shenzhen AZW Technology Co., Ltd.
+   "^bananapi,.*":
+     description: BIPAI KEJI LIMITED
++  "^beacon,.*":
++    description: Compass Electronics Group, LLC
+   "^bhf,.*":
+     description: Beckhoff Automation GmbH & Co. KG
+   "^bitmain,.*":
+-- 
+2.25.1
 
-https://lore.kernel.org/r/CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com
-
-Maybe you didn't see it?  ...or if you or Rob think I'm way off base
-(always possible) then please tell me so.
-
-Thanks!
-
--Doug
