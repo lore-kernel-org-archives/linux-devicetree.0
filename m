@@ -2,132 +2,137 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1109EC54FCE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF272C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB6720714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88665208CA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5/TSnOH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XS7FO5qu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgCXMDO (ORCPT
+        id S1727545AbgCXMU5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:03:14 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45548 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727238AbgCXMDN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 08:03:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b9so7304348pls.12;
-        Tue, 24 Mar 2020 05:03:12 -0700 (PDT)
+        Tue, 24 Mar 2020 08:20:57 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44613 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbgCXMUy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 08:20:54 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j188so9147758lfj.11
+        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 05:20:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=J2EXDFgxva5oF0426JjSTRbKqwLaE46RW/hlFLUbrrA=;
-        b=G5/TSnOHqp5DlvZeCBAifsCPJVcPcwb9Bepaavt3fg4yKA34r6/pNilltLQNEnhbcn
-         5BQ7/UWFVlePUAVM277SAwkeJJ9BO1PAPl3xa+nYtYBQziiAvJvgFyOkA9rDVvLeVwtI
-         IEfWnkwFz0fsZ3X9HCnYHGx+CLiyk+X61kZ0noAhYFHRG6vtYolDzMGP6jOT59IBvhi8
-         XSraOhsyArognYXGKQFqpzlZyburAUHq23mcrd9M4sntUkuTX4Sayx17qlk1zGauNvE5
-         0M81TYnmG0eOMpyAzCrPf9HBIgFn1+//GjuEjCYq2Eh54wQvZ5isrPm86ujp/BGNNvtS
-         eT5g==
+        bh=xE4MP5AqUCPd9XtoEWD/FK2YPE6NfLNz1ySPK/KUqcg=;
+        b=XS7FO5quXRQMzlcU6oLgb0XC3ZGpFmBkGVb2+urTxc0RoXE+LhQwMcjmE1iMAOa4zj
+         5PDAtVRds458I1ZL9d59wLIw4CZpPrU4m4igICIiVAXvDor0bsq0DssE4nmVlA1PDTlr
+         9Juvmpsk6zwiXtmO5tbpYKysU5GPTSeag89VuFevHBL8HovL4xeC2CptKa/9avBarldI
+         TNKRCuIdtZyWoZlwAcrKcb4Cq5dHK9UKgDmiunIO8+8Ty4coajwPeKXNmvWqU9OBiiIQ
+         YkQFBoINbMMKzAyLh7/C9VyRE7zFm2KikI2U9i1pS66meUqbKQlBhvdRAOHMPTiLB293
+         udYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=J2EXDFgxva5oF0426JjSTRbKqwLaE46RW/hlFLUbrrA=;
-        b=RJndM1W2jrtOLiV2M34Wj7iGFuhoOrT7lg7t8aqAsoZCDsyw+HE3d1fvpzmjbrvFsD
-         i37td2XlJ8KbJpr5g3sSSU8N9ColG4ZfCZK66dxwZaJsxh8kJj8+yyhaFUSfJi+UQHi0
-         7mh79fJEWUd53Kt6mheqZR9I9mj/lNwy1+Rqqni2UBPyv18xgxB2dPMEQkdjJFUHZ90j
-         wXikZ3N9inQFkwmPUay/RGNGexEI79KLJnZOQYd3oGtV6yqJAWH6x0hrcisV4W0GgqmM
-         PibOnplzRxHdGkgJS1Fn5e48srAm/2qcf1GvP6ehAki8PH30MkXMj+niHPNjQvG+TEjR
-         k69g==
-X-Gm-Message-State: ANhLgQ28QENBpWreo6o3Yu4xUBEJxy1TiwtFBcwyNnxh5A5ynJnUqndE
-        yUxKK/54t14QMb87HGZ4W8u1rPUDogLsB6mdUy9rCy+YE2I=
-X-Google-Smtp-Source: ADFU+vt4rHgVamUtya4h3lHE3q6Yop3GkBHyB2s5gDiR0Em1mTuxwPzZuqQ5a6G8Mr9p+7OsPvhIrBUPP5Fwdd0Xj68=
-X-Received: by 2002:a17:902:54f:: with SMTP id 73mr26037755plf.255.1585051391994;
- Tue, 24 Mar 2020 05:03:11 -0700 (PDT)
+        bh=xE4MP5AqUCPd9XtoEWD/FK2YPE6NfLNz1ySPK/KUqcg=;
+        b=Ezm53KtqibQqVqucAZK9s5UHS4Rs9kkjcgwNBU3SaT7Y1bFhJJpdj/mpF+uHgxP12M
+         zaIntYKUkvrcxH2+pfXXV8RW+N4ujkqBRbkoUNl5G2/uonzl1CJOD20IxDlAOaG1BIXC
+         IOAJnqQZjjWX/X5leJ+Af/2pNUmxzzr52q4PnBGbh0gndJHiWzmYUMVFxbqDLNuiJPD8
+         c67wq6Mkwko7d9Hh818SFLDwjFzb5EHkSQgTcyogNNQOUau1rfp5aU1Z1BQTDkW6soQv
+         0c+E8Fe1FG/o7HmLQnGkteMDdTHY2rWxTXKRXNI1E5g4ud1VtUZPJ0rRHxNVEZsSkblz
+         pVUA==
+X-Gm-Message-State: ANhLgQ0BqGI0odlgFKQup9I7EtRenLju+3Q10JS5VcrxracrM9qDII2y
+        HRsbwezeLsZYmHosxcxbIEnQ31ASeDgZqrLLtWRcdg==
+X-Google-Smtp-Source: ADFU+vvOwzEWB/KB6v68gGlAUeCZXrHF76lOWQJ2agZ6yCYIP2gtQNst0yT5ZM3f+idvKa0KVyZTDM7DqQh+3t9vivQ=
+X-Received: by 2002:ac2:5b49:: with SMTP id i9mr2148928lfp.21.1585052452258;
+ Tue, 24 Mar 2020 05:20:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200323103926.21271-1-i.mikhaylov@yadro.com> <20200323103926.21271-3-i.mikhaylov@yadro.com>
- <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com> <321453af40ca49839bc7b9d1c65b828841492f72.camel@yadro.com>
-In-Reply-To: <321453af40ca49839bc7b9d1c65b828841492f72.camel@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 24 Mar 2020 14:03:04 +0200
-Message-ID: <CAHp75VeHRxgKFfiqO3V+=jMB-Pqe9-1YM+0oFuuo=cjJfJa+bA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+References: <20200323234505.226919-1-rajatja@google.com> <20200324115059.GA2333340@kroah.com>
+In-Reply-To: <20200324115059.GA2333340@kroah.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Tue, 24 Mar 2020 05:20:14 -0700
+Message-ID: <CACK8Z6EHAv03XGXT0sY2H3TSjS4-yQtCscbHG_o1qCuG94zb6g@mail.gmail.com>
+Subject: Re: [PATCH RESEND 1/5] input/serio/i8042: Attach fwnode to serio
+ i8042 kbd device
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Furquan Shaikh <furquan@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Benson Leung <bleung@google.com>,
+        Zentaro Kavanagh <zentaro@google.com>,
+        Dominik Behr <dbehr@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 1:52 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> On Mon, 2020-03-23 at 14:10 +0200, Andy Shevchenko wrote:
-> > On Mon, Mar 23, 2020 at 12:41 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+Hello,
 
-...
-
-> > > +static int32_t vcnl3020_init(struct vcnl3020_data *data)
-> >
-> > int32_t...
-> >
-> > > +{
-> > > +       s32 rc;
-> >
-> > ...s32?!
-> >
-> > Applies to entire code.
+On Tue, Mar 24, 2020 at 4:51 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> checkpatch.pl --strict doesn't show anything bad in it but I can change from
-> int32_t/s32 into int easily, it's not a problem for me.
-
-The problem is consistency. You code should be self-consistent.
-And yes, s32 is quite unusual for (generic) returning variables.
-
-...
-
-> > > +       dev_info(&client->dev, "Proximity sensor, Rev: %02x\n",
-> > > +                data->rev);
+> On Mon, Mar 23, 2020 at 04:45:01PM -0700, Rajat Jain wrote:
+> > Attach the firmware node to the serio i8042 kbd device so that device
+> > properties can be passed from the firmware.
 > >
-> > Noise.
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > Change-Id: I36032f4bdee1dc52f26b57734068fd0ee7a6db0b
 >
-> Doesn't it help to determine the presence of driver to a common user?
+> Didn't you run checkpatch.pl on your patches which told you to remove
+> all of these Change-Id: values?
 
-You have a lot of knobs to detect this. Starting from sysfs to 'initcall_debug'.
+My apologies. However I did run checkpatch.pl on my patches before
+sending (also checked just now again) and it did not complain about
+the Change-Id values in the commit log. Not sure if I'm running the
+command incorrectly?
 
-...
+rajatja@rajat2:~/stock_kernel/linux$ ./scripts/checkpatch.pl
+../patches/input_atkbd/v1/000*
+-----------------------------------------------------------------------------------------
+../patches/input_atkbd/v1/0001-input-serio-i8042-Attach-fwnode-to-serio-i8042-kbd-d.patch
+-----------------------------------------------------------------------------------------
+total: 0 errors, 0 warnings, 28 lines checked
 
-> > > +               goto out;
-> > > +
-> > > +       return rc;
-> > > +out:
-> > > +       devm_iio_device_free(&client->dev, indio_dev);
-> > > +       return rc;
-> >
-> > Managed resources are exactly for this not to be appeared in the code.
+../patches/input_atkbd/v1/0001-input-serio-i8042-Attach-fwnode-to-serio-i8042-kbd-d.patch
+has no obvious style problems and is ready for submission.
+-----------------------------------------------------------------------------------------
+../patches/input_atkbd/v1/0002-Input-atkbd-Expose-function-row-physical-map-to-user.patch
+-----------------------------------------------------------------------------------------
+total: 0 errors, 0 warnings, 106 lines checked
+../patches/input_atkbd/v1/0002-Input-atkbd-Expose-function-row-physical-map-to-user.patch
+has no obvious style problems and is ready for submission.
+......
+<snip>
+......
+
+I will now resubmit the patches removing the Change-Id(s).
+
+Thanks & Best Regards,
+
+Rajat
+
+
+
 >
-> I can do something like this:
-> return devm_iio_device_register(&client->dev, indio_dev);
+> Please do so...
 >
-> Would it suffice?
-
-I think so, but you may double check with documentation.
-
--- 
-With Best Regards,
-Andy Shevchenko
+> greg k-h
