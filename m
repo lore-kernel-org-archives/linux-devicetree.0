@@ -2,674 +2,220 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FA9C41621
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 17:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94389C41621
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 17:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA932076F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 17:19:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kBGmh0Is"
+	by mail.kernel.org (Postfix) with ESMTP id 68AF92080C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 17:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585071168;
+	bh=QmVtxwZqmwSlLF+y0d92qHAguQYAoBqg2uqivBe59m4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=su5v5bfqzVOArhkHRGZdEFvkgWDJvLjNhg3yHUgQlKQQPmjNGEjr5jDCNJPSwqNEr
+	 3RB3aPLuZtldi0Ha4sk/zQ/4Is3AapTCN1zAfl1/g31MGGBsoSUKVkVabjt/RANJ98
+	 R2UsL+s/1486poDMaO8a1iO4VUGFzKmEesNmHN3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbgCXRTV (ORCPT
+        id S1727740AbgCXRcp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:19:21 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:51420 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727618AbgCXRTU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:19:20 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2B710C0AB6;
-        Tue, 24 Mar 2020 17:19:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1585070359; bh=2QP/AMCYY5OZlhosxCkkAXzxRgBxPrrSDdzsBqHJb9o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=kBGmh0Is46AcIlilm+IgEgEZKGN0KB31js2bxCmgWDxD6JrBxUbNXtpNgCrM7nBuO
-         rV1HfYLTVgsX65Z3imFJoYQ3/ofDYDsEJ/c46lIJm2u5Hdcjq3eDubynbHOgj9S7FL
-         Oqf+iqXU7Fp6CFP5v2nuQ+joyq6w8hK3mFO1VXuAfLr8IBtY85Fa3NBj6lMuIL9DF+
-         OLfZDI+8YJNlgA4iyrtps+b7hGLgvAfe/3/2n7jHgEgdMzVwFWez1v4b2UDma9aVnE
-         zDGcvXTsG7JNLC8FQeFUX8J24UYiWg3AhPlIOorGofGKSeopKSYF8F5PpFkdmbqxWr
-         w3YhLR+lQWfvg==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id B5A41A0061;
-        Tue, 24 Mar 2020 17:19:16 +0000 (UTC)
-From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
-To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: [PATCH 3/4] drm: ipk: Add extensions for DW MIPI DSI Host driver
-Date:   Tue, 24 Mar 2020 18:18:21 +0100
-Message-Id: <8ee8c9ccec2856c81cb3a6decacbc6739e20bae5.1585067507.git.angelo.ribeiro@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1585067507.git.angelo.ribeiro@synopsys.com>
-References: <cover.1585067507.git.angelo.ribeiro@synopsys.com>
-In-Reply-To: <cover.1585067507.git.angelo.ribeiro@synopsys.com>
-References: <cover.1585067507.git.angelo.ribeiro@synopsys.com>
+        Tue, 24 Mar 2020 13:32:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:38756 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727487AbgCXRco (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:32:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0727B1FB;
+        Tue, 24 Mar 2020 10:32:44 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 749413F71F;
+        Tue, 24 Mar 2020 10:32:43 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 17:32:41 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "regulator: qcom_smd: Add pmi8994 regulator support" to the regulator tree
+In-Reply-To:  <20200324041424.518160-1-bjorn.andersson@linaro.org>
+Message-Id:  <applied-20200324041424.518160-1-bjorn.andersson@linaro.org>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Synopsys DesignWare IPK specific extensions for Synopsys DesignWare
-MIPI DSI Host driver.
+The patch
 
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+   regulator: qcom_smd: Add pmi8994 regulator support
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 86332c343491c6d2228a1e0c80b1ea98a2653d20 Mon Sep 17 00:00:00 2001
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Date: Mon, 23 Mar 2020 21:14:24 -0700
+Subject: [PATCH] regulator: qcom_smd: Add pmi8994 regulator support
+
+The pmi8994 is commonly found on MSM8996 based devices, such as the
+Dragonboard 820c, where it supplies power to a number of LDOs on the
+primary PMIC.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200324041424.518160-1-bjorn.andersson@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/gpu/drm/ipk/Kconfig           |   9 +
- drivers/gpu/drm/ipk/Makefile          |   2 +
- drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c | 556 ++++++++++++++++++++++++++++++++++
- 3 files changed, 567 insertions(+)
- create mode 100644 drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
+ .../regulator/qcom,smd-rpm-regulator.txt      | 13 +++++
+ drivers/regulator/qcom_smd-regulator.c        | 47 +++++++++++++++++++
+ include/linux/soc/qcom/smd-rpm.h              |  1 +
+ 3 files changed, 61 insertions(+)
 
-diff --git a/drivers/gpu/drm/ipk/Kconfig b/drivers/gpu/drm/ipk/Kconfig
-index 1f87444..49819e5 100644
---- a/drivers/gpu/drm/ipk/Kconfig
-+++ b/drivers/gpu/drm/ipk/Kconfig
-@@ -11,3 +11,12 @@ config DRM_IPK
- 	  Enable support for the Synopsys DesignWare DRM DSI.
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called ipk-drm.
-+
-+config DRM_IPK_DSI
-+	tristate "Synopsys DesignWare IPK specific extensions for MIPI DSI"
-+	depends on DRM_IPK
-+	select DRM_DW_MIPI_DSI
-+	help
-+	  Choose this option for Synopsys DesignWare IPK MIPI DSI support.
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called dw-mipi-dsi-ipk.
-diff --git a/drivers/gpu/drm/ipk/Makefile b/drivers/gpu/drm/ipk/Makefile
-index 51d2774..c80503f 100644
---- a/drivers/gpu/drm/ipk/Makefile
-+++ b/drivers/gpu/drm/ipk/Makefile
-@@ -4,3 +4,5 @@ ipk-drm-y := \
- 	dw-vpg.o
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+index d126df043403..dea4384f4c03 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+@@ -26,6 +26,7 @@ Regulator nodes are identified by their compatible:
+ 		    "qcom,rpm-pm8994-regulators"
+ 		    "qcom,rpm-pm8998-regulators"
+ 		    "qcom,rpm-pma8084-regulators"
++		    "qcom,rpm-pmi8994-regulators"
+ 		    "qcom,rpm-pmi8998-regulators"
+ 		    "qcom,rpm-pms405-regulators"
  
- obj-$(CONFIG_DRM_IPK) += ipk-drm.o
-+
-+obj-$(CONFIG_DRM_IPK_DSI) += dw-mipi-dsi-ipk.o
-diff --git a/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c b/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
-new file mode 100644
-index 0000000..070eccb
---- /dev/null
-+++ b/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
-@@ -0,0 +1,556 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019-2020 Synopsys, Inc. and/or its affiliates.
-+ * Synopsys DesignWare MIPI DSI solution driver
-+ *
-+ * Author: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
-+ * Author: Luis Oliveira <luis.oliveira@synopsys.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/bridge/dw_mipi_dsi.h>
-+#include <video/mipi_display.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_device.h>
-+#include <drm/drm_print.h>
-+
-+#define DW_DPHY_LPCLK_CTRL	0x94
-+#define DW_DPHY_RSTZ		0xA0
-+#define DW_DPHY_IF_CFG		0xA4
-+#define DW_DPHY_ULPS_CTRL	0xA8
-+#define DW_DPHY_TX_TRIGGERS	0xAC
-+#define DW_DPHY_STATUS		0xB0
-+#define DW_DPHY_TST_CTRL0	0xB4
-+#define DW_DPHY_TST_CTRL1	0xB8
-+#define DW_GEN3_IF_TESTER	0x3c
-+#define DW_GEN3_IF_SOC_PLL	0x48
-+#define DW_GEN3_IF_SOC_PLL_EN	0x4C
-+
-+#define DW_12BITS_DPHY_RDY_L0	0x507
-+#define DW_12BITS_DPHY_RDY_L1	0x707
-+#define DW_12BITS_DPHY_RDY_L2	0x907
-+#define DW_12BITS_DPHY_RDY_L3	0xB07
-+
-+#define DW_LANE_MIN_KBPS	80000
-+#define DW_LANE_MAX_KBPS	2500000000
-+#define DW_DPHY_DIV_UPPER_LIMIT	8000
-+#define DW_DPHY_DIV_LOWER_LIMIT	2000
-+#define DW_MIN_OUTPUT_FREQ	80
-+#define DW_LPHS_TIM_TRANSIONS	0x40
-+
-+enum dw_glueiftester {
-+	GLUE_LOGIC = 0x4,
-+	RX_PHY = 0x2,
-+	TX_PHY = 0x1,
-+	RESET = 0x0,
-+};
-+
-+struct dw_range_dphy {
-+	u32 freq;
-+	u8 hs_freq_range;
-+	u32 osc_freq_target;
-+} dw_range_gen3[] = {
-+	{ 80, 0x00, 0x3f }, { 90, 0x10, 0x3f }, { 100, 0x20, 0x3f },
-+	{ 110, 0x30, 0x39 }, { 120, 0x01, 0x39 }, { 130, 0x11, 0x39 },
-+	{ 140, 0x21, 0x39 }, { 150, 0x31, 0x39 }, { 160, 0x02, 0x39 },
-+	{ 170, 0x12, 0x2f }, { 180, 0x22, 0x2f }, { 190, 0x32, 0x2f },
-+	{ 205, 0x03, 0x2f }, { 220, 0x13, 0x29 }, { 235, 0x23, 0x29 },
-+	{ 250, 0x33, 0x29 }, { 275, 0x04, 0x29 }, { 300, 0x14, 0x29 },
-+	{ 325, 0x25, 0x29 }, { 350, 0x35, 0x1f }, { 400, 0x05, 0x1f },
-+	{ 450, 0x16, 0x19 }, { 500, 0x26, 0x19 }, { 550, 0x37, 0x19 },
-+	{ 600, 0x07, 0x19 }, { 650, 0x18, 0x19 }, { 700, 0x28, 0x0f },
-+	{ 750, 0x39, 0x0f }, { 800, 0x09, 0x0f }, { 850, 0x19, 0x0f },
-+	{ 900, 0x29, 0x09 }, { 950, 0x3a, 0x09 }, { 1000, 0x0a, 0x09 },
-+	{ 1050, 0x1a, 0x09 }, { 1100, 0x2a, 0x09 }, { 1150, 0x3b, 0x09 },
-+	{ 1200, 0x0b, 0x09 }, { 1250, 0x1b, 0x09 }, { 1300, 0x2b, 0x09 },
-+	{ 1350, 0x3c, 0x03 }, { 1400, 0x0c, 0x03 }, { 1450, 0x1c, 0x03 },
-+	{ 1500, 0x2c, 0x03 }, { 1550, 0x3d, 0x03 }, { 1600, 0x0d, 0x03 },
-+	{ 1650, 0x1d, 0x03 }, { 1700, 0x2e, 0x03 }, { 1750, 0x3e, 0x03 },
-+	{ 1800, 0x0e, 0x03 }, { 1850, 0x1e, 0x03 }, { 1900, 0x2f, 0x03 },
-+	{ 1950, 0x3f, 0x03 }, { 2000, 0x0f, 0x03 }, { 2050, 0x40, 0x03 },
-+	{ 2100, 0x41, 0x03 }, { 2150, 0x42, 0x03 }, { 2200, 0x43, 0x03 },
-+	{ 2250, 0x44, 0x03 }, {  2300, 0x45, 0x01 }, { 2350, 0x46, 0x01 },
-+	{ 2400, 0x47, 0x01 }, {  2450, 0x48, 0x01 }, { 2500, 0x49, 0x01 }
-+};
-+
-+struct dw_dsi_ipk {
-+	void __iomem *base;
-+	void __iomem *base_phy;
-+	struct clk *pllref_clk;
-+	struct dw_mipi_dsi *dsi;
-+	u32 lane_min_kbps;
-+	u32 lane_max_kbps;
-+	int range;
-+	int in_div;
-+	int loop_div;
-+};
-+
-+#define dw_mipi_dsi_to_dw_dsi_ipk(target) \
-+	container_of(target, struct dw_dsi_ipk, dsi)
-+
-+static void dw_dsi_write(struct dw_dsi_ipk *dsi, u32 reg, u32 val)
-+{
-+	writel(val, dsi->base + reg);
-+}
-+
-+static u32 dw_dsi_read(struct dw_dsi_ipk *dsi, u32 reg)
-+{
-+	return readl(dsi->base + reg);
-+}
-+
-+static void dw_phy_write(struct dw_dsi_ipk *dsi, u32 reg, u32 val)
-+{
-+	writel(val, dsi->base_phy + reg);
-+}
-+
-+static void dw_dsi_phy_write_part(struct dw_dsi_ipk *dsi, u32 reg_address,
-+				  u32 data, u8 shift, u8 width)
-+{
-+	u32 temp = dw_dsi_read(dsi, reg_address);
-+	u32 mask = (1 << width) - 1;
-+
-+	temp &= ~(mask << shift);
-+	temp |= (data & mask) << shift;
-+	dw_dsi_write(dsi, reg_address, temp);
-+}
-+
-+static void dw_dsi_phy_test_data_in(struct dw_dsi_ipk *dsi, u8 test_data)
-+{
-+	dw_dsi_phy_write_part(dsi, DW_DPHY_TST_CTRL1, test_data, 0, 8);
-+}
-+
-+static void dw_dsi_phy_test_clock(struct dw_dsi_ipk *dsi, int value)
-+{
-+	dw_dsi_phy_write_part(dsi, DW_DPHY_TST_CTRL0, value, 1, 1);
-+}
-+
-+static void dw_dsi_phy_test_en(struct dw_dsi_ipk *dsi, u8 on_falling_edge)
-+{
-+	dw_dsi_phy_write_part(dsi, DW_DPHY_TST_CTRL1, on_falling_edge, 16, 1);
-+}
-+
-+static void dw_dsi_phy_test_clear(struct dw_dsi_ipk *dsi, int value)
-+{
-+	dw_dsi_phy_write_part(dsi, DW_DPHY_TST_CTRL0, value, 0, 1);
-+}
-+
-+static void dw_dsi_phy_write(struct dw_dsi_ipk *dsi, u16 address,
-+			     u32 value, u8 data_length)
-+{
-+	u8 data[4];
-+	int i;
-+
-+	data[0] = value;
-+
-+	dw_dsi_write(dsi, DW_DPHY_TST_CTRL0, 0);
-+	dw_dsi_write(dsi, DW_DPHY_TST_CTRL1, 0);
-+
-+	dw_dsi_phy_test_en(dsi, 1);
-+	dw_dsi_phy_test_clock(dsi, 1);
-+	dw_dsi_phy_test_data_in(dsi, 0x00);
-+	dw_dsi_phy_test_clock(dsi, 0);
-+	dw_dsi_write(dsi, DW_DPHY_TST_CTRL1, 0);
-+	dw_dsi_write(dsi, DW_DPHY_TST_CTRL1, (u8)(address >> 8));
-+	dw_dsi_phy_test_clock(dsi, 1);
-+	dw_dsi_phy_test_clock(dsi, 0);
-+	dw_dsi_phy_test_en(dsi, 1);
-+	dw_dsi_phy_test_clock(dsi, 1);
-+	dw_dsi_phy_test_data_in(dsi, ((u8)address));
-+	dw_dsi_phy_test_clock(dsi, 0);
-+	dw_dsi_phy_test_en(dsi, 0);
-+
-+	for (i = data_length; i > 0; i--) {
-+		dw_dsi_phy_test_data_in(dsi, ((u8)data[i - 1]));
-+		dw_dsi_phy_test_clock(dsi, 1);
-+		dw_dsi_phy_test_clock(dsi, 0);
-+	}
-+}
-+
-+static void dw_dsi_phy_delay(struct dw_dsi_ipk *dsi, int value)
-+{
-+	u32 data = value << 2;
-+
-+	dw_dsi_phy_write(dsi, DW_12BITS_DPHY_RDY_L0, data, 1);
-+	dw_dsi_phy_write(dsi, DW_12BITS_DPHY_RDY_L1, data, 1);
-+	dw_dsi_phy_write(dsi, DW_12BITS_DPHY_RDY_L2, data, 1);
-+	dw_dsi_phy_write(dsi, DW_12BITS_DPHY_RDY_L3, data, 1);
-+}
-+
-+static int dsi_pll_get_clkout_khz(int clkin_khz, int idf, int ndiv, int odf)
-+{
-+	int divisor = idf * odf;
-+
-+	/* prevent from division by 0 */
-+	if (!divisor)
-+		return 0;
-+
-+	return DIV_ROUND_CLOSEST(clkin_khz * ndiv, divisor);
-+}
-+
-+static int dsi_pll_get_params(struct dw_dsi_ipk *dsi, int in_freq,
-+			      int out_freq, int *idf, int *ndiv, int *odf)
-+{
-+	int range, tmp_loop_div, tmp_in_freq, delta, step = 0, flag = 0;
-+	int out_data_rate = out_freq * 2;
-+	int loop_div = 0; /* M */
-+	int out_div; /* VCO */
-+	int in_div; /* N */
-+
-+	/* Find ranges */
-+	for (range = 0; ARRAY_SIZE(dw_range_gen3) &&
-+	     (out_data_rate / 1000) > dw_range_gen3[range].freq; range++)
-+		;
-+
-+	if (range >= ARRAY_SIZE(dw_range_gen3))
-+		return -EINVAL;
-+
-+	if ((dw_range_gen3[range].osc_freq_target >> 4) == 3)
-+		out_div = 8;
-+	else if ((dw_range_gen3[range].osc_freq_target >> 4) == 2)
-+		out_div = 4;
-+	else
-+		out_div = 2;
-+
-+	if (dw_range_gen3[range].freq > 640)
-+		out_div = 1;
-+
-+	out_freq = out_freq * out_div;
-+
-+	loop_div = (out_freq * (in_freq / DW_DPHY_DIV_LOWER_LIMIT)) / in_freq;
-+
-+	/* here delta will account for the rounding */
-+	delta = (loop_div * in_freq) / (in_freq / DW_DPHY_DIV_LOWER_LIMIT) -
-+		out_freq;
-+
-+	for (in_div = 1 + in_freq / DW_DPHY_DIV_UPPER_LIMIT;
-+	     (in_freq / in_div >= DW_DPHY_DIV_LOWER_LIMIT) && !flag; in_div++) {
-+		tmp_loop_div = out_freq * in_div / in_freq;
-+		tmp_in_freq = in_freq / in_div;
-+		if (tmp_loop_div % 2) {
-+			tmp_loop_div += 1;
-+			if (out_freq == tmp_loop_div * tmp_in_freq) {
-+				/* Exact values found */
-+				flag = 1;
-+				loop_div = tmp_loop_div;
-+				delta = tmp_loop_div * tmp_in_freq - out_freq;
-+				in_div--;
-+			} else if (tmp_loop_div * tmp_in_freq - out_freq <
-+				   delta) {
-+				/* Values found with smaller delta */
-+				loop_div = tmp_loop_div;
-+				delta = tmp_loop_div * tmp_in_freq - out_freq;
-+				step = 0;
-+			}
-+		} else if (out_freq == tmp_loop_div * tmp_in_freq) {
-+			/* Exact values found */
-+			flag = 1;
-+			loop_div = tmp_loop_div;
-+			delta = out_freq - tmp_loop_div * tmp_in_freq;
-+			in_div--;
-+		} else if (out_freq - tmp_loop_div * tmp_in_freq < delta) {
-+			/* Values found with smaller delta */
-+			loop_div = tmp_loop_div;
-+			delta = out_freq - tmp_loop_div * tmp_in_freq;
-+			step = 1;
-+		}
-+	}
-+
-+	if (!flag)
-+		in_div = step + loop_div * in_freq / out_freq;
-+
-+	*idf = in_div;
-+	*ndiv = loop_div;
-+	*odf = out_div;
-+
-+	dsi->range = range;
-+	dsi->in_div = in_div;
-+	dsi->loop_div = loop_div;
-+
-+	return 0;
-+}
-+
-+/* DPHY GEN 3 12 bits */
-+static void dw_phy_init_gen3_128(void *priv_data)
-+{
-+	struct dw_dsi_ipk *dsi = priv_data;
-+	int loop_div = dsi->loop_div;
-+	int in_div = dsi->in_div;
-+	int range = dsi->range;
-+	u32 data;
-+
-+	/* hs frequency range [6:0] */
-+	data = dw_range_gen3[range].hs_freq_range;
-+	dw_dsi_phy_write(dsi, 0x02, data, 1);
-+
-+	/* [7:6] reserved | [5] hsfreqrange_ovr_en_rw |
-+	 * [4:1] target_state_rw | [0] force_state_rw
-+	 */
-+	dw_dsi_phy_write(dsi, 0x01, 0x20, 1);
-+
-+	/* PLL Lock Configurations */
-+	dw_dsi_phy_write(dsi, 0x173, 0x02, 1);
-+	dw_dsi_phy_write(dsi, 0x174, 0x00, 1);
-+	dw_dsi_phy_write(dsi, 0x175, 0x60, 1);
-+	dw_dsi_phy_write(dsi, 0x176, 0x03, 1);
-+	dw_dsi_phy_write(dsi, 0x166, 0x01, 1);
-+
-+	/* Charge-pump Programmability */
-+	/* [7] pll_vco_cntrl_ovr_en |
-+	 * [6:1] pll_vco_cntrl_ovr | [0] pll_m_ovr_en
-+	 */
-+	if (dw_range_gen3[range].freq > 640)
-+		data = 1 | (dw_range_gen3[range].osc_freq_target << 1);
-+	else
-+		data = 1 | (1 << 7) |
-+			  (dw_range_gen3[range].osc_freq_target << 1);
-+
-+	dw_dsi_phy_write(dsi, 0x17b, data, 1);
-+	dw_dsi_phy_write(dsi, 0x15e, 0x10, 1);
-+	dw_dsi_phy_write(dsi, 0x162, 0x04, 1);
-+	dw_dsi_phy_write(dsi, 0x16e, 0x0c, 1);
-+
-+	/* Slew-Rate */
-+	dw_dsi_phy_write(dsi, 0x26b, 0x04, 1);
-+
-+	/* pll_n_ovr_en_rw | PLL input divider ratio [6:3] |
-+	 * pll_tstplldig_rw
-+	 */
-+	data = (1 << 7) | (in_div - 1) << 3;
-+	dw_dsi_phy_write(dsi, 0x178, data, 1);
-+
-+	/* PLL loop divider ratio [7:0] */
-+	data = loop_div - 2;
-+	dw_dsi_phy_write(dsi, 0x179, data, 1);
-+
-+	/* PLL loop divider ratio [9:8] */
-+	data = (loop_div - 2) >> 8;
-+	dw_dsi_phy_write(dsi, 0x17a, data, 1);
-+
-+	if (dw_range_gen3[range].freq < 450)
-+		dw_dsi_phy_write(dsi, 0x1ac, 0x1b, 1);
-+	else
-+		dw_dsi_phy_write(dsi, 0x1ac, 0x0b, 1);
-+}
-+
-+static int dw_mipi_dsi_phy_init(void *priv_data)
-+{
-+	struct dw_dsi_ipk *dsi = priv_data;
-+	int range = dsi->range;
-+	unsigned int in_freq;
-+	u32 data;
-+
-+	in_freq = (unsigned int)(clk_get_rate(dsi->pllref_clk) / 1000);
-+
-+	dw_phy_write(dsi, DW_GEN3_IF_TESTER, RESET);
-+	dw_phy_write(dsi, DW_GEN3_IF_TESTER, GLUE_LOGIC);
-+	dw_dsi_phy_test_clear(dsi, 1);
-+	dw_dsi_phy_test_clear(dsi, 0);
-+
-+	dw_dsi_phy_write(dsi, 0x30, 0x0f, 1);
-+
-+	data = ((in_freq / 1000) - 17) * 4;
-+	dw_dsi_phy_write(dsi, 0x02, data, 1);
-+
-+	dw_dsi_phy_write(dsi, 0x20, 0x3f, 1);
-+
-+	/* RESET RX */
-+	dw_phy_write(dsi, DW_GEN3_IF_TESTER, RESET);
-+	dw_phy_write(dsi, DW_GEN3_IF_TESTER, RX_PHY);
-+	dw_dsi_phy_test_clear(dsi, 1);
-+	dw_dsi_phy_test_clear(dsi, 0);
-+
-+	/* RESET TX */
-+	dw_phy_write(dsi, DW_GEN3_IF_TESTER, RESET);
-+	dw_phy_write(dsi, DW_GEN3_IF_TESTER, TX_PHY);
-+	dw_dsi_phy_test_clear(dsi, 1);
-+	dw_dsi_phy_test_clear(dsi, 0);
-+
-+	dw_phy_init_gen3_128(priv_data);
-+
-+	if (dw_range_gen3[range].freq > 648)
-+		dw_dsi_phy_delay(dsi, 5);
-+	else
-+		dw_dsi_phy_delay(dsi, 4);
-+
-+	DRM_DEBUG_DRIVER("Phy configured\n");
-+
-+	return 0;
-+}
-+
-+static int
-+dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
-+			  unsigned long mode_flags, u32 lanes, u32 format,
-+			  unsigned int *lane_mbps)
-+{
-+	int idf = 0, ndiv = 0, odf = 0, pll_in_khz, pll_out_khz, ret, bpp;
-+	struct dw_dsi_ipk *dsi = priv_data;
-+
-+	DRM_DEBUG_DRIVER("\n");
-+
-+	dsi->lane_min_kbps = (unsigned int)DW_LANE_MIN_KBPS;
-+	dsi->lane_max_kbps = (unsigned int)DW_LANE_MAX_KBPS;
-+
-+	pll_in_khz = (unsigned int)(clk_get_rate(dsi->pllref_clk) / 1000);
-+
-+	/* Compute requested pll out */
-+	bpp = mipi_dsi_pixel_format_to_bpp((enum mipi_dsi_pixel_format)format);
-+	pll_out_khz = ((mode->clock * bpp) / lanes) / 2;
-+
-+	if (pll_out_khz > dsi->lane_max_kbps) {
-+		pll_out_khz = dsi->lane_max_kbps;
-+		DRM_WARN("Warning max phy mbps is used\n");
-+	}
-+
-+	if (pll_out_khz < dsi->lane_min_kbps) {
-+		pll_out_khz = dsi->lane_min_kbps;
-+		DRM_WARN("Warning min phy mbps is used\n");
-+	}
-+
-+	ret = dsi_pll_get_params(dsi, pll_in_khz, pll_out_khz,
-+				 &idf, &ndiv, &odf);
-+	if (ret)
-+		DRM_WARN("Warning dsi_pll_get_params(): bad params\n");
-+
-+	/* Get the adjusted pll out value */
-+	pll_out_khz = dsi_pll_get_clkout_khz(pll_in_khz, idf, ndiv, odf);
-+
-+	*lane_mbps = (pll_out_khz / 1000) * 2;
-+
-+	DRM_DEBUG_DRIVER("pll_in %ukHz pll_out %ukHz lane_mbps %uMHz\n",
-+			 pll_in_khz, pll_out_khz, *lane_mbps);
-+
-+	return ret;
-+}
-+
-+static int
-+dw_mipi_dsi_phy_get_timing(void *priv_data, unsigned int lane_mbps,
-+			   struct dw_mipi_dsi_dphy_timing *timing)
-+{
-+	timing->clk_hs2lp = DW_LPHS_TIM_TRANSIONS;
-+	timing->clk_lp2hs = DW_LPHS_TIM_TRANSIONS;
-+	timing->data_hs2lp = DW_LPHS_TIM_TRANSIONS;
-+	timing->data_lp2hs = DW_LPHS_TIM_TRANSIONS;
-+
-+	return 0;
-+}
-+
-+static const struct dw_mipi_dsi_phy_ops dw_dsi_ipk_phy_ops = {
-+	.init = dw_mipi_dsi_phy_init,
-+	.get_lane_mbps = dw_mipi_dsi_get_lane_mbps,
-+	.get_timing = dw_mipi_dsi_phy_get_timing,
-+};
-+
-+static struct dw_mipi_dsi_plat_data dw_dsi_ipk_plat_data = {
-+	.max_data_lanes = 4,
-+	.phy_ops = &dw_dsi_ipk_phy_ops,
-+};
-+
-+static const struct of_device_id dw_ipk_dt_ids[] = {
-+	{.compatible = "snps,dw-ipk-dsi",
-+	 .data = &dw_dsi_ipk_plat_data,},
-+	{ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, dw_ipk_dt_ids);
-+
-+static int dw_dsi_ipk_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct dw_dsi_ipk *dsi;
-+	struct resource *res;
-+	struct clk *pclk;
-+	int ret;
-+
-+	DRM_DEBUG_DRIVER("\n");
-+
-+	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
-+	if (!dsi)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dsi");
-+	dsi->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(dsi->base)) {
-+		ret = PTR_ERR(dsi->base);
-+		DRM_ERROR("Unable to get dsi registers %d\n", ret);
-+		return ret;
-+	}
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
-+	dsi->base_phy = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(dsi->base_phy)) {
-+		ret = PTR_ERR(dsi->base_phy);
-+		DRM_ERROR("Unable to get PHY registers %d\n", ret);
-+		return ret;
-+	}
-+
-+	pclk = devm_clk_get(dev, "pclk");
-+	if (IS_ERR(pclk)) {
-+		ret = PTR_ERR(pclk);
-+		DRM_ERROR("Unable to get peripheral clock: %d\n", ret);
-+		goto err_dsi_probe;
-+	}
-+
-+	ret = clk_prepare_enable(pclk);
-+	if (ret)
-+		goto err_dsi_probe;
-+
-+	dsi->pllref_clk = devm_clk_get(dev, "ref");
-+	if (IS_ERR(dsi->pllref_clk)) {
-+		ret = PTR_ERR(dsi->pllref_clk);
-+		DRM_ERROR("Unable to get pll reference clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(dsi->pllref_clk);
-+	if (ret)
-+		return ret;
-+
-+	dw_dsi_ipk_plat_data.base = dsi->base;
-+	dw_dsi_ipk_plat_data.priv_data = dsi;
-+
-+	platform_set_drvdata(pdev, dsi);
-+
-+	dsi->dsi = dw_mipi_dsi_probe(pdev, &dw_dsi_ipk_plat_data);
-+	if (IS_ERR(dsi->dsi)) {
-+		ret = PTR_ERR(dsi->dsi);
-+		DRM_ERROR("Failed to initialize mipi dsi host: %d\n", ret);
-+		goto err_dsi_probe;
-+	}
-+
-+	return ret;
-+
-+err_dsi_probe:
-+	clk_disable_unprepare(dsi->pllref_clk);
-+	return ret;
-+}
-+
-+static int dw_dsi_ipk_remove(struct platform_device *pdev)
-+{
-+	struct dw_dsi_ipk *dsi = platform_get_drvdata(pdev);
-+
-+	dw_mipi_dsi_remove(dsi->dsi);
-+
-+	return 0;
-+}
-+
-+struct platform_driver dw_mipi_dsi_ipk_driver = {
-+	.probe		= dw_dsi_ipk_probe,
-+	.remove		= dw_dsi_ipk_remove,
-+	.driver		= {
-+		.name	= "ipk-dw-mipi-dsi",
-+		.of_match_table = dw_ipk_dt_ids,
+@@ -143,6 +144,15 @@ Regulator nodes are identified by their compatible:
+ 	Definition: reference to regulator supplying the input pin, as
+ 		    described in the data sheet
+ 
++- vdd_s1-supply:
++- vdd_s2-supply:
++- vdd_s3-supply:
++- vdd_bst_byp-supply:
++	Usage: optional (pmi8994 only)
++	Value type: <phandle>
++	Definition: reference to regulator supplying the input pin, as
++		    described in the data sheet
++
+ - vdd_s1-supply:
+ - vdd_s2-supply:
+ - vdd_s3-supply:
+@@ -259,6 +269,9 @@ pma8084:
+ 	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
+ 	l21, l22, l23, l24, l25, l26, l27, lvs1, lvs2, lvs3, lvs4, 5vs1
+ 
++pmi8994:
++	s1, s2, s3, boost-bypass
++
+ pmi8998:
+ 	bob
+ 
+diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
+index fff8d5fdef6a..fdde4195cefb 100644
+--- a/drivers/regulator/qcom_smd-regulator.c
++++ b/drivers/regulator/qcom_smd-regulator.c
+@@ -445,6 +445,44 @@ static const struct regulator_desc pm8994_lnldo = {
+ 	.ops = &rpm_smps_ldo_ops_fixed,
+ };
+ 
++static const struct regulator_desc pmi8994_ftsmps = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(350000,  0, 199, 5000),
++		REGULATOR_LINEAR_RANGE(700000, 200, 349, 10000),
 +	},
++	.n_linear_ranges = 2,
++	.n_voltages = 350,
++	.ops = &rpm_smps_ldo_ops,
 +};
 +
-+module_platform_driver(dw_mipi_dsi_ipk_driver);
++static const struct regulator_desc pmi8994_hfsmps = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(350000,  0,  80, 12500),
++		REGULATOR_LINEAR_RANGE(700000, 81, 141, 25000),
++	},
++	.n_linear_ranges = 2,
++	.n_voltages = 142,
++	.ops = &rpm_smps_ldo_ops,
++};
 +
-+MODULE_AUTHOR("Angelo Ribeiro <angelo.ribeiro@synopsys.com>");
-+MODULE_AUTHOR("Luis Oliveira <luis.oliveira@synopsys.com>");
-+MODULE_DESCRIPTION("Synopsys IPK DW MIPI DSI host controller driver");
-+MODULE_LICENSE("GPL v2");
++static const struct regulator_desc pmi8994_bby = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(3000000, 0, 44, 50000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 45,
++	.ops = &rpm_bob_ops,
++};
++
++static const struct regulator_desc pmi8994_boost = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(4000000, 0, 30, 50000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 31,
++	.ops = &rpm_smps_ldo_ops,
++};
++
+ static const struct regulator_desc pm8998_ftsmps = {
+ 	.linear_ranges = (struct regulator_linear_range[]) {
+ 		REGULATOR_LINEAR_RANGE(320000, 0, 258, 4000),
+@@ -780,6 +818,14 @@ static const struct rpm_regulator_data rpm_pm8994_regulators[] = {
+ 	{}
+ };
+ 
++static const struct rpm_regulator_data rpm_pmi8994_regulators[] = {
++	{ "s1", QCOM_SMD_RPM_SMPB, 1, &pmi8994_ftsmps, "vdd_s1" },
++	{ "s2", QCOM_SMD_RPM_SMPB, 2, &pmi8994_hfsmps, "vdd_s2" },
++	{ "s2", QCOM_SMD_RPM_SMPB, 3, &pmi8994_hfsmps, "vdd_s3" },
++	{ "boost-bypass", QCOM_SMD_RPM_BBYB, 1, &pmi8994_bby, "vdd_bst_byp" },
++	{}
++};
++
+ static const struct rpm_regulator_data rpm_pm8998_regulators[] = {
+ 	{ "s1", QCOM_SMD_RPM_SMPA, 1, &pm8998_ftsmps, "vdd_s1" },
+ 	{ "s2", QCOM_SMD_RPM_SMPA, 2, &pm8998_ftsmps, "vdd_s2" },
+@@ -862,6 +908,7 @@ static const struct of_device_id rpm_of_match[] = {
+ 	{ .compatible = "qcom,rpm-pm8994-regulators", .data = &rpm_pm8994_regulators },
+ 	{ .compatible = "qcom,rpm-pm8998-regulators", .data = &rpm_pm8998_regulators },
+ 	{ .compatible = "qcom,rpm-pma8084-regulators", .data = &rpm_pma8084_regulators },
++	{ .compatible = "qcom,rpm-pmi8994-regulators", .data = &rpm_pmi8994_regulators },
+ 	{ .compatible = "qcom,rpm-pmi8998-regulators", .data = &rpm_pmi8998_regulators },
+ 	{ .compatible = "qcom,rpm-pms405-regulators", .data = &rpm_pms405_regulators },
+ 	{}
+diff --git a/include/linux/soc/qcom/smd-rpm.h b/include/linux/soc/qcom/smd-rpm.h
+index 9e4fdd861a51..da304ce8c8f7 100644
+--- a/include/linux/soc/qcom/smd-rpm.h
++++ b/include/linux/soc/qcom/smd-rpm.h
+@@ -10,6 +10,7 @@ struct qcom_smd_rpm;
+ /*
+  * Constants used for addressing resources in the RPM.
+  */
++#define QCOM_SMD_RPM_BBYB	0x62796262
+ #define QCOM_SMD_RPM_BOBB	0x62626f62
+ #define QCOM_SMD_RPM_BOOST	0x61747362
+ #define QCOM_SMD_RPM_BUS_CLK	0x316b6c63
 -- 
-2.7.4
+2.20.1
 
