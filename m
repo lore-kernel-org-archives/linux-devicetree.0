@@ -6,56 +6,56 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3980C54FCE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA675C4332B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E9C20786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D2B620786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 10:57:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c1xTKH3B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XzPL8rmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgCXK5N (ORCPT
+        id S1727196AbgCXK5s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:57:13 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33848 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbgCXK5N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 06:57:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 65so4129083wrl.1
-        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 03:57:11 -0700 (PDT)
+        Tue, 24 Mar 2020 06:57:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39924 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbgCXK5s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 06:57:48 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p10so8417051wrt.6
+        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 03:57:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=rxfBoUcTAjy/KXQNUn7YUvrT2t4HIupwqUhZ33S66ss=;
-        b=c1xTKH3BAJuomeNyz2i+suC7oboh1pmfXLPPnrnJtADS55zxZadAuhFVqWZpQflV4E
-         WACXYT7z9kMKrZBJ9a3O20E2Q8OYBg9NX2uWhKaXIdiqKRUFmzpSQum6gsv5bWN2TLai
-         8Blo1IYYk0myZ+R16jwLesrB2gmLQA3KEsK75uXPhFgGSsg4Xx8WUHm24wbmetV3EGMq
-         kN8UbbcflEF6GQ3GoiZ65hJugQur6GrLDD9bYIljFPFMJrq21t2mFJ50X1EoWwLs8zlx
-         yUtePUy9qDaN70PuJdDARuGl3K04koFAvgEkDaYKmCXUnxmMDyNTZUmkVPPH044AcQgT
-         7sEA==
+        bh=DOA10CRKFJGu8b5wtBJ2yLDJfOkq/sBVSQmhdUC4ypY=;
+        b=XzPL8rmmIVLxiwmtlWoRSXM0V5GpXguC00V1OiwP6D+VNJxQu2ndjNH1DMpUjS28PQ
+         95d55nIqF92A5FJDVtQG8Jzb05LrNkZmBvwRk7n8ylcgjn2PXRej0umf85yg4FJtwRIf
+         1d6lguSarwuUd5qHDfnSxccZHHNay6tDtznC6eX6gJLk7WG884AyXPo8Re0uFBwUCYRa
+         EJvXYkjpEwuOQ+odcen6exRdljEbPs65kh1We93B8zHf7DKnQ9qYQGqCQip3Pr7KLhbt
+         MOAHL7oolr6K4tZz9zakUdiOTZZ68VaGyLG81OjlfADYwnOzGldnrkt5IBYVDJai8PZR
+         9zoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=rxfBoUcTAjy/KXQNUn7YUvrT2t4HIupwqUhZ33S66ss=;
-        b=lc9VAaYuFxBVN5WFDKg3yxx0uuyLAvZZMglicUG15OlYnFmN1h93Z2MxCnXNFPEYsF
-         XTqZZ3m0bvDAy9XNaQBbu306Bo8iZMJtBuQ65jNEEZvQoViN2AnWys/N2W4xFDEJsF/z
-         oaaW/A9tOZ9Y3l6cDESxRXr1CW7YFDf0NjbLu/TYMJhRDCs5HKBjv9UFXh/vjoDgFTPy
-         Xn0PlW8PgTOyKZK0opl/RkqJF9yupn7F04PeOcl4sUNxRZWrt+2lJuhHBG+Kc4Kb9STM
-         cArmSFkTuXTaNoeQYvvjoQrV7lCyNP2o2G5pZ93e4ptvuLgTFdD3AhRnAfBaBkUkXrbD
-         +10g==
-X-Gm-Message-State: ANhLgQ17grrYvrh63Q2YWQG6bu1pF1dBMXusYKeM6XMDMBaP2OMTz7v1
-        SF1gv7cglKzfZBpfmzDIIjiw/g==
-X-Google-Smtp-Source: ADFU+vu/Xqcc5SljHMAFXyLi9BXIlptXWFB94z0f4tJWF2QaBlwACgFlkmLPeyXxq4y2mK7N7ncepA==
-X-Received: by 2002:adf:b6a5:: with SMTP id j37mr35424592wre.412.1585047431070;
-        Tue, 24 Mar 2020 03:57:11 -0700 (PDT)
+        bh=DOA10CRKFJGu8b5wtBJ2yLDJfOkq/sBVSQmhdUC4ypY=;
+        b=mwAjYT+K2M7dhmOOnhG8guWwUn5SJXmwpnJ8XmwNQlZwHgV7439gh3Xna2n60WIm1z
+         HyoLcesvyoLN8BbMnbCAGjlY0Acq6YXJUm0D/cNAvqSzYmHcm2lR9VepqmVr5asCEq9f
+         x7+EafwQ0sZP/2h12sHwpK5ueuN4PGUTGvpubpsZke09rfz/e32J6fdNdwxLuw40lctE
+         9H9MPsblIf81eHNiuOhWIeoBIneQeha+d8+GlJq+GmJkbBuAI24BMAa0J+H5Boq07Tc3
+         cceH2ta0JsVzdxlSsYszDLrq5ecOAm5XJFhcl9KO4hsW/AC/xBBZ3edNDWxzgWgAY5ue
+         G2hQ==
+X-Gm-Message-State: ANhLgQ12Hyx6LfoX+Z27hzhAym+RBdmyiIACkqBsD8Lp7WfBU2yUvmCV
+        wWtpVpxO2rLFarNKAUyjpM3Asw==
+X-Google-Smtp-Source: ADFU+vt2lLYB0Tgp6XRl+Nd0We086rBZL2iX6nYLI5T5X83Rf+H43VbfRkFbjVqQgqGMEydvpBiXPQ==
+X-Received: by 2002:adf:ba48:: with SMTP id t8mr36017493wrg.329.1585047466432;
+        Tue, 24 Mar 2020 03:57:46 -0700 (PDT)
 Received: from dell ([2.27.35.213])
-        by smtp.gmail.com with ESMTPSA id h132sm2862295wmf.18.2020.03.24.03.57.09
+        by smtp.gmail.com with ESMTPSA id c7sm17274309wrn.49.2020.03.24.03.57.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 03:57:10 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 10:57:59 +0000
+        Tue, 24 Mar 2020 03:57:45 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 10:58:35 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Andreas Kemnade <andreas@kemnade.info>
 Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
@@ -64,15 +64,15 @@ Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
         stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
         letux-kernel@openphoenux.org, knaack.h@gmx.de, lars@metafoo.de,
         pmeerw@pmeerw.net, linux-iio@vger.kernel.org, jic23@kernel.org
-Subject: Re: [PATCH v7 4/7] mfd: rn5t618: add more subdevices
-Message-ID: <20200324105759.GI5477@dell>
+Subject: Re: [PATCH v7 7/7] mfd: rn5t618: cleanup i2c_device_id
+Message-ID: <20200324105835.GJ5477@dell>
 References: <20200320081105.12026-1-andreas@kemnade.info>
- <20200320081105.12026-5-andreas@kemnade.info>
+ <20200320081105.12026-8-andreas@kemnade.info>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200320081105.12026-5-andreas@kemnade.info>
+In-Reply-To: <20200320081105.12026-8-andreas@kemnade.info>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -80,20 +80,16 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Fri, 20 Mar 2020, Andreas Kemnade wrote:
 
-> Since the RC5T619 has a RTC, use a separate subdevice list for that.
-> The ADC should be the same as in the RN5T618, according to drivers
-> in the wild, but since it is not tested, the ADC is only added for
-> the RC5T619.
+> That list was just empty, so it can be removed if .probe_new
+> instead of .probe is used
 > 
+> Suggested-by: Lee Jones <lee.jones@linaro.org>
 > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 > ---
-> Changes in v6:
-> - squashed with patch from former ADC patchset
-> 
-> Changes in v3:
-> - alignment cleanup
->  drivers/mfd/rn5t618.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
+> Functional independent from the other patches, but since they are
+> touching similar areas, commit/merge conflicts would occur.
+>  drivers/mfd/rn5t618.c | 11 ++---------
+>  1 file changed, 2 insertions(+), 9 deletions(-)
 
 For my own reference:
   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
