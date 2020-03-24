@@ -2,84 +2,130 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE75C4332B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E921C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF732051A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82AFC2051A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgCXJqM (ORCPT
+        id S1727150AbgCXJtf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:46:12 -0400
-Received: from smtpbgsg2.qq.com ([54.254.200.128]:32863 "EHLO smtpbgsg2.qq.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727324AbgCXJqM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:46:12 -0400
-X-QQ-mid: bizesmtp17t1585043161txrzbg3g
-Received: from localhost.localdomain (unknown [210.242.163.205])
-        by esmtp6.qq.com (ESMTP) with 
-        id ; Tue, 24 Mar 2020 17:45:58 +0800 (CST)
-X-QQ-SSF: 01400000002000I0R720000A0000000
-X-QQ-FEAT: QzH0LXO1kxblCOA3FX5oB6XbkyGsnhwJmuMZvC7UyqecKsDN6omVQuaXllHwO
-        13OEo9gQdSgoPQlMHybM3xob8LwXKmmvQ7LwD/nqE37KmEeEo5y2Ludcknjvo5FkPEps8c3
-        Bhh0Akm8oJE/1I6q0sGxV/bUZlGo/Xxuiz2+9qlxE4rYwT14Pnt1ha79+zfALp0YOKVnThi
-        myqkMatG/lFLx6eqN/yBZwr6jHCT25YMIOgZVplJwK58a9wGqzDsiE470YRp5AwwUzcNbk5
-        SKBVPYE+3zIKv3WCR1w0sh9PC7TVSVaV6tDrlpUWWE3bqlJ+Cg4ORiqFoH0a1+XPaEVMyFE
-        DfMvqJqW2k2PXKqHUtF3x1SrNK+Ywhm3jUOXR1q
-X-QQ-GoodBg: 2
-From:   David Lu <david.lu@bitland.com.cn>
-To:     david.lu@bitland.com.cn
-Cc:     jungle.chiang@bitland.com.cn,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: boe,tv101wum-n16: Add compatible for boe tv105wum-nw0.
-Date:   Tue, 24 Mar 2020 17:45:25 +0800
-Message-Id: <20200324094525.4758-1-david.lu@bitland.com.cn>
-X-Mailer: git-send-email 2.24.1
+        Tue, 24 Mar 2020 05:49:35 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43607 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgCXJte (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 05:49:34 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jGgBZ-0008G8-MI; Tue, 24 Mar 2020 10:49:25 +0100
+Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jGgBY-00070X-Ea; Tue, 24 Mar 2020 10:49:24 +0100
+Date:   Tue, 24 Mar 2020 10:49:24 +0100
+From:   Philipp Zabel <pza@pengutronix.de>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] phy: qcom-snps: Add SNPS USB PHY driver for QCOM
+ based SOCs
+Message-ID: <20200324094924.GA22281@pengutronix.de>
+References: <1584994632-31193-1-git-send-email-wcheng@codeaurora.org>
+ <1584994632-31193-3-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:bitland.com.cn:qybgforeign:qybgforeign7
-X-QQ-Bgrelay: 1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584994632-31193-3-git-send-email-wcheng@codeaurora.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:44:11 up 33 days, 17:14, 83 users,  load average: 0.32, 0.42,
+ 0.32
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: pza@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add bindings documentation for BOE TV105WUM-NW0 10.5" WUXGA TFT LCD
-panel.
+Hi Wesley,
 
-Signed-off-by: David Lu <david.lu@bitland.com.cn>
-Change-Id: I450c0e52aae080728d4794bdffc50bb0d2f39f40
----
- .../devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml     | 2 ++
- 1 file changed, 2 insertions(+)
+On Mon, Mar 23, 2020 at 01:17:10PM -0700, Wesley Cheng wrote:
+> This adds the SNPS FemtoPHY driver used in QCOM SOCs.  There
+> are potentially multiple instances of this UTMI PHY on the
+> SOC, all which can utilize this driver.
+> 
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  drivers/phy/qualcomm/Kconfig             |  10 ++
+>  drivers/phy/qualcomm/Makefile            |   1 +
+>  drivers/phy/qualcomm/phy-qcom-snps-7nm.c | 294 +++++++++++++++++++++++++++++++
+>  3 files changed, 305 insertions(+)
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> 
+[...]
+> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-7nm.c b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> new file mode 100644
+> index 0000000..8d4ba53
+> --- /dev/null
+> +++ b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> @@ -0,0 +1,294 @@
+[...]
+> +static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct qcom_snps_hsphy *hsphy;
+> +	struct phy_provider *phy_provider;
+> +	struct phy *generic_phy;
+> +	struct resource *res;
+> +	int ret, i;
+> +	int num;
+> +
+> +	hsphy = devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
+> +	if (!hsphy)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	hsphy->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(hsphy->base))
+> +		return PTR_ERR(hsphy->base);
+> +
+> +	hsphy->ref_clk = devm_clk_get(dev, "ref");
+> +	if (IS_ERR(hsphy->ref_clk)) {
+> +		ret = PTR_ERR(hsphy->ref_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get ref clk, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	hsphy->phy_reset = devm_reset_control_get_by_index(&pdev->dev, 0);
+> +	if (IS_ERR(hsphy->phy_reset)) {
+> +		dev_err(dev, "failed to get phy core reset\n");
+> +		return PTR_ERR(hsphy->phy_reset);
+> +	}
 
-diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-index 740213459134..7f5df5851017 100644
---- a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
-@@ -24,6 +24,8 @@ properties:
-       - boe,tv101wum-n53
-         # AUO B101UAN08.3 10.1" WUXGA TFT LCD panel
-       - auo,b101uan08.3
-+        # BOE TV105WUM-NW0 10.5" WUXGA TFT LCD panel
-+      - boe,tv105wum-nw0
- 
-   reg:
-     description: the virtual channel number of a DSI peripheral
--- 
-2.24.1
+There is only a single reset specified, so there is no need for
+_by_index. Also please explicitly request exclusive reset control
+for this driver, I suggest:
 
+	hsphy->phy_reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
 
+If you do want to prepare for future addition of other resets to the
+bindings (but if so, why not specify those right now?), you should add
+a reset-names property and request the reset control by id string
+instead.
 
+regards
+Philipp
