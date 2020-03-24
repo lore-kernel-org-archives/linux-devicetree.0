@@ -2,100 +2,151 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85277C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 05:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71DBCC10DCE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 05:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9BC2073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 05:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF1F20663
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 05:41:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NcdOkx+L"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="A9UJ79vk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725927AbgCXFQs (ORCPT
+        id S1726358AbgCXFlf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 01:16:48 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:28303 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725853AbgCXFQs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 01:16:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585027008; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=HJVvgeexErEjlhM7G8ecIrzeSjkVY0caLFRfY64utGo=; b=NcdOkx+LZawRy+ddCopLATegD+v09mUo3XdzMEessd4ZN13L706ks8tw7HWbuhw2hI2qdnR2
- VCBl2TgkRUyVltjb9TBEKiMBjHAEliAMXrQY6ZWL+uxcVAfoyZvQOyjp78HFIpVu3rGfNzXE
- smPiJ+qxgEtFOKSzXnPfNniZcgk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7997bf.7ff25d1ba928-smtp-out-n01;
- Tue, 24 Mar 2020 05:16:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 84445C43636; Tue, 24 Mar 2020 05:16:47 +0000 (UTC)
-Received: from [192.168.0.13] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A65DAC433D2;
-        Tue, 24 Mar 2020 05:16:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A65DAC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V5 3/3] dt-bindings: geni-se: Add binding for UART pin
- swap
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>, rojay@codeaurora.org,
-        c_skakit@codeaurora.org, Matthias Kaehlcke <mka@chromium.org>
-References: <1584095350-841-1-git-send-email-akashast@codeaurora.org>
- <1584095350-841-4-git-send-email-akashast@codeaurora.org>
- <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <ee34573a-e4ff-ad43-64ed-53439206d534@codeaurora.org>
-Date:   Tue, 24 Mar 2020 10:46:40 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 24 Mar 2020 01:41:35 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41537 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgCXFlf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 01:41:35 -0400
+Received: by mail-lj1-f194.google.com with SMTP id n17so6899937lji.8
+        for <devicetree@vger.kernel.org>; Mon, 23 Mar 2020 22:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iyP635DGCeoY4s0M1SRFYb49T5chldy4BU1GFRwdRGU=;
+        b=A9UJ79vk+ocv+jJZF/E6Y5JwxBu0niMrhkdEgBfKszB8ITBkQ6zBLOvm2QDSieCXIp
+         JEKa7yZv0DEKJBUynnrJdv4LBdwa2q7ISiAZ6/d1K9q+3iQ/3ZXm4dOlGBB316oSS7lm
+         5JLISYSN0vJt2SdT1CNUIze+NSrv4VYTM83SE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iyP635DGCeoY4s0M1SRFYb49T5chldy4BU1GFRwdRGU=;
+        b=SWKucA4LCtQ+xZrMO8XzL0u9+p0DgP71hitGd39eJ5QCEHMv5edcCCmxy6srK/J97m
+         09yAgHTFNhY/iqLcerQ+vnR6nChoa+7WW5QV5S/vvyWONT59zHXVCALrjtJPx6yGtS/v
+         JTp7B9L20WsW28xHH86O93gXINqmrIP/c4SxtZgrwbXOjbvlBpnTUGO+t1u94wxekt0J
+         PKc90fopaVui3U11/qjUkD4aSjGkG8YWknPP3Dp0kUW+QllqkE/xo6vWiKayolcN+XC6
+         mbS2wLs/TDHdDZTJLzMR25rQiIdEK6zr0V93o2gYJ7zVHxdevq8dTFsNYm1b4KjMEbho
+         ANdA==
+X-Gm-Message-State: ANhLgQ0oiwUZXJbM+hAcojBID2k5pIGNBf/LugjrPAuje7xKsB8mZuv7
+        uoTp+CC+2EUoO6LVm66rRS/OzyJPAa+p2ixG88vHTw==
+X-Google-Smtp-Source: ADFU+vsEwAjW9fB2hm9yRNmxVuCvhrnUJ4efiJHOCdo9q5cny3sLyQh6EWdsSs61ggDHMhVTvc80JVacscZJoN3OKOQ=
+X-Received: by 2002:a2e:6819:: with SMTP id c25mr15551262lja.195.1585028492318;
+ Mon, 23 Mar 2020 22:41:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKLoiPUhiJDuYX+bSQwoCLTXOvtNyEB8ti__xMfEDyxNQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
+ <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com>
+ <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com> <CAHO=5PHEE4C9rArembX3cJP_eQ1KGS6gPj6POYtQhZ=Pp8po+A@mail.gmail.com>
+In-Reply-To: <CAHO=5PHEE4C9rArembX3cJP_eQ1KGS6gPj6POYtQhZ=Pp8po+A@mail.gmail.com>
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Date:   Tue, 24 Mar 2020 11:11:20 +0530
+Message-ID: <CAHO=5PFVqdOxKJkO0PoHKhTXEF0VtKqZjCHBSfu9W00_vEGrng@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 3/20/2020 11:37 PM, Rob Herring wrote:
-> On Fri, Mar 13, 2020 at 4:29 AM Akash Asthana <akashast@codeaurora.org> wrote:
->> Add documentation to support RX/TX/CTS/RTS pin swap in HW.
->>
->> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
->> ---
->> Changes in V5:
->>   -  As per Matthias's comment, remove rx-tx-cts-rts-swap property from UART
->>      child node.
->>
->>   Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 6 ++++++
->>   1 file changed, 6 insertions(+)
-> STM32 folks need something similar. Can you move this to a common
-> location. That's serial.txt, but that is being converted to DT schema.
+On Wed, Mar 4, 2020 at 11:29 AM Rayagonda Kokatanur
+<rayagonda.kokatanur@broadcom.com> wrote:
 >
-> Rob
+> On Tue, Mar 3, 2020 at 10:26 AM Rayagonda Kokatanur
+> <rayagonda.kokatanur@broadcom.com> wrote:
+> >
+> > On Fri, Feb 28, 2020 at 7:20 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Fri, Feb 28, 2020 at 2:48 AM Rayagonda Kokatanur
+> > > <rayagonda.kokatanur@broadcom.com> wrote:
+> > > >
+> > > > Generally i2c addr should not be greater than 10-bit. The highest 2 bits
+> > > > are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
+> > > > these flags if check slave addr valid.
+> > > >
+> > > > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> > > > ---
+> > > >  scripts/dtc/Makefile | 2 +-
+> > > >  scripts/dtc/checks.c | 5 +++++
+> > > >  2 files changed, 6 insertions(+), 1 deletion(-)
+> > >
+> > > dtc changes must be submitted against upstream dtc.
+> >
+> > Please let me know link to clone the upstream dtc branch.
+> > >
+> > >
+> > > > diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> > > > index 3acbb410904c..c5e8d6a9e73c 100644
+> > > > --- a/scripts/dtc/Makefile
+> > > > +++ b/scripts/dtc/Makefile
+> > > > @@ -9,7 +9,7 @@ dtc-objs        := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
+> > > >  dtc-objs       += dtc-lexer.lex.o dtc-parser.tab.o
+> > > >
+> > > >  # Source files need to get at the userspace version of libfdt_env.h to compile
+> > > > -HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
+> > > > +HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
+> > > >
+> > > >  ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
+> > > >  ifneq ($(CHECK_DTBS),)
+> > > > diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+> > > > index 756f0fa9203f..17c9ed4137b5 100644
+> > > > --- a/scripts/dtc/checks.c
+> > > > +++ b/scripts/dtc/checks.c
+> > > > @@ -3,6 +3,7 @@
+> > > >   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
+> > > >   */
+> > > >
+> > > > +#include <linux/bits.h>
+> > >
+> > > Not a UAPI header not that that would be much better as dtc also builds on Mac.
+> > >
+> > > >  #include "dtc.h"
+> > > >  #include "srcpos.h"
+> > > >
+> > > > @@ -17,6 +18,9 @@
+> > > >  #define TRACE(c, fmt, ...)     do { } while (0)
+> > > >  #endif
+> > > >
+> > > > +#define I2C_TEN_BIT_ADDRESS    BIT(31)
+> > > > +#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
+> > > > +
+> > > >  enum checkstatus {
+> > > >         UNCHECKED = 0,
+> > > >         PREREQ,
+> > > > @@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+> > > >
+> > > >         for (len = prop->val.len; len > 0; len -= 4) {
+> > > >                 reg = fdt32_to_cpu(*(cells++));
+> > > > +               reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
+> > >
+> > > I'd just mask the top byte so we don't have to update on the next flag we add.
+> > Do you mean something like this, shown below ?
+> > reg &= 0xFFFF_FC000;
+>
+> Hi Rob, waiting for your answer.
+Hi Rob,
+Waiting for your answer.
 
-Okay, once serial.txt is converted to DT schema, I will move it there.
-
-Regards,
-
-Akash
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+>
+> >
+> > >
+> > > Rob
