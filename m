@@ -2,149 +2,214 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BECC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 17:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5202C54EEB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 17:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 188CA2076E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 17:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D976206F6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 17:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgCXRo5 (ORCPT
+        id S1727848AbgCXRpC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:44:57 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:42842 "EHLO
+        Tue, 24 Mar 2020 13:45:02 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:42944 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbgCXRo5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 13:44:57 -0400
+        with ESMTP id S1727304AbgCXRpC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 13:45:02 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 7FE358030776;
-        Tue, 24 Mar 2020 17:44:50 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id CF7728030786;
+        Tue, 24 Mar 2020 17:44:59 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 882jLCueSa2y; Tue, 24 Mar 2020 20:44:48 +0300 (MSK)
+        with ESMTP id Ay0uddZimZzh; Tue, 24 Mar 2020 20:44:59 +0300 (MSK)
 From:   <Sergey.Semin@baikalelectronics.ru>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paul.burton@imgtec.com>,
+        Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
         Arnd Bergmann <arnd@arndb.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 0/6] clocksource: Fix MIPS GIC and DW APB Timer for Baikal-T1 SoC support
-Date:   Tue, 24 Mar 2020 20:43:19 +0300
-Message-ID: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
+Subject: [PATCH v2 3/6] clocksource: dw_apb_timer: Set clockevent any-possible-CPU mask
+Date:   Tue, 24 Mar 2020 20:43:22 +0300
+Message-ID: <20200324174325.14213-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
+ <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Serge Semin <fancer.lancer@gmail.com>
+From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-As for all Baikal-T1 SoC related patchsets, which need this, we replaced
-the DW APB Timer legacy plain text-based dt-binding file with DT schema.
-Similarly the MIPS GIC bindings file is also converted to DT schema seeing
-it also defines the MIPS GIC Timer binding.
+Currently the DW APB Timer driver binds all clockevent timers to
+CPU #0. This isn't good for multiple reasons. First of all seeing
+the device is placed on APB bus (which makes it accessible from any
+CPU core), accessible over MMIO and having the DYNIRQ flag set we
+can be sure that manually binding the timer to any CPU just isn't
+correct. By doing so we just set an extra limitation on device usage.
+This also doesn't reflect the device actual capability, since by
+setting the IRQ affinity we can make it virtually local to any CPU.
+Secondly imagine if you had a real CPU-local timer with the same
+rating and the same CPU-affinity. In this case if DW APB timer was
+registered first, then due to the clockevent framework tick-timer
+selection procedure we'll end up with the real CPU-local timer being
+left unselected for clock-events tracking. But on most of the platforms
+(MIPS/ARM/etc) such timers are normally embedded into the CPU core and
+are accessible with much better performance then devices placed on APB.
+For instance in MIPS architectures there is r4k-timer, which is
+CPU-local, assigned with the same rating, and normally its
+clockevent device is registered after the platform-specific one.
 
-Aside from MIPS-specific r4k timer Baikal-T1 chip also provides a
-functionality of two another timers: embedded into the MIPS GIC timer and
-three external DW timers available over APB bus. But we can't use them
-before the corresponding drivers are properly fixed. First of all DW APB
-Timer shouldn't be bound to a single CPU, since as being accessible over
-APB they are external with respect to all possible CPUs. Secondly there
-might be more than just two DW APB Timers in the system (Baikal-T1 has
-three of them), so permit the driver to use one of them as a clocksource
-and the rest - for clockevents. Thirdly it's possible to use MIPS GIC
-timer as a clocksource so register it in the corresponding subsystem
-(the patch has been found in the Paul Burton MIPS repo so I left the
-original Signed-off-by attribute). Finally in the same way as r4k timer
-the MIPS GIC timer should be used with care when CPUFREQ config is enabled
-since in case of CM2 the timer counting depends on the CPU reference clock
-frequency while the clocksource subsystem currently doesn't support the
-timers with non-stable clock.
-
-This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-commit 98d54f81e36b ("Linux 5.6-rc4").
-
-Changelog v2:
-- Fix the SoB tags.
-- Our corporate email server doesn't change Message-Id anymore, so the
-  patchset is resubmitted being in the cover-letter-threaded format.
-- Convert the "snps,dw-apb-timer" binding to DT schema in a dedicated
-  patch.
-- Convert the "mti,gic" binding to DT schema in a dedicated patch.
+So in order to fix all of these issues lets set the DW APB clockevent
+timer cpumask to be 'cpu_possible_mask'. By doing so the clockevent
+framework would prefer to select the real CPU-local timer instead
+of DW APB one. Otherwise if there is no other than DW APB device for
+clockevents tracking then it will be selected.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paul.burton@imgtec.com>
+Cc: Paul Burton <paulburton@kernel.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: devicetree@vger.kernel.org
-Cc: linux-rtc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+---
+ drivers/clocksource/dw_apb_timer.c    | 18 +++++++-----------
+ drivers/clocksource/dw_apb_timer_of.c |  3 +--
+ include/linux/dw_apb_timer.h          |  2 +-
+ 3 files changed, 9 insertions(+), 14 deletions(-)
 
-Paul Burton (1):
-  clocksource: mips-gic-timer: Register as sched_clock
-
-Serge Semin (5):
-  dt-bindings: rtc: Convert snps,dw-apb-timer to DT schema
-  dt-bindings: interrupt-controller: Convert mti,gic to DT schema
-  clocksource: dw_apb_timer: Set clockevent any-possible-CPU mask
-  clocksource: dw_apb_timer_of: Fix missing clockevent timers
-  clocksource: mips-gic-timer: Set limitations on
-    clocksource/sched-clocks usage
-
- .../interrupt-controller/mips-gic.txt         |  67 --------
- .../interrupt-controller/mti,gic.yaml         | 152 ++++++++++++++++++
- .../devicetree/bindings/rtc/dw-apb.txt        |  32 ----
- .../bindings/rtc/snps,dw-apb-timer.yaml       |  88 ++++++++++
- drivers/clocksource/dw_apb_timer.c            |  18 +--
- drivers/clocksource/dw_apb_timer_of.c         |   9 +-
- drivers/clocksource/mips-gic-timer.c          |  30 +++-
- include/linux/dw_apb_timer.h                  |   2 +-
- 8 files changed, 276 insertions(+), 122 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
- delete mode 100644 Documentation/devicetree/bindings/rtc/dw-apb.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/snps,dw-apb-timer.yaml
-
+diff --git a/drivers/clocksource/dw_apb_timer.c b/drivers/clocksource/dw_apb_timer.c
+index 654766538f93..f213bcb4cf71 100644
+--- a/drivers/clocksource/dw_apb_timer.c
++++ b/drivers/clocksource/dw_apb_timer.c
+@@ -106,6 +106,7 @@ static irqreturn_t dw_apb_clockevent_irq(int irq, void *data)
+ 		dw_ced->eoi(&dw_ced->timer);
+ 
+ 	evt->event_handler(evt);
++
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -123,8 +124,7 @@ static int apbt_shutdown(struct clock_event_device *evt)
+ 	struct dw_apb_clock_event_device *dw_ced = ced_to_dw_apb_ced(evt);
+ 	u32 ctrl;
+ 
+-	pr_debug("%s CPU %d state=shutdown\n", __func__,
+-		 cpumask_first(evt->cpumask));
++	pr_debug("%s state=shutdown\n", __func__);
+ 
+ 	ctrl = apbt_readl(&dw_ced->timer, APBTMR_N_CONTROL);
+ 	ctrl &= ~APBTMR_CONTROL_ENABLE;
+@@ -137,8 +137,7 @@ static int apbt_set_oneshot(struct clock_event_device *evt)
+ 	struct dw_apb_clock_event_device *dw_ced = ced_to_dw_apb_ced(evt);
+ 	u32 ctrl;
+ 
+-	pr_debug("%s CPU %d state=oneshot\n", __func__,
+-		 cpumask_first(evt->cpumask));
++	pr_debug("%s state=oneshot\n", __func__);
+ 
+ 	ctrl = apbt_readl(&dw_ced->timer, APBTMR_N_CONTROL);
+ 	/*
+@@ -170,8 +169,7 @@ static int apbt_set_periodic(struct clock_event_device *evt)
+ 	unsigned long period = DIV_ROUND_UP(dw_ced->timer.freq, HZ);
+ 	u32 ctrl;
+ 
+-	pr_debug("%s CPU %d state=periodic\n", __func__,
+-		 cpumask_first(evt->cpumask));
++	pr_debug("%s state=periodic\n", __func__);
+ 
+ 	ctrl = apbt_readl(&dw_ced->timer, APBTMR_N_CONTROL);
+ 	ctrl |= APBTMR_CONTROL_MODE_PERIODIC;
+@@ -194,8 +192,7 @@ static int apbt_resume(struct clock_event_device *evt)
+ {
+ 	struct dw_apb_clock_event_device *dw_ced = ced_to_dw_apb_ced(evt);
+ 
+-	pr_debug("%s CPU %d state=resume\n", __func__,
+-		 cpumask_first(evt->cpumask));
++	pr_debug("%s state=resume\n", __func__);
+ 
+ 	apbt_enable_int(&dw_ced->timer);
+ 	return 0;
+@@ -222,7 +219,6 @@ static int apbt_next_event(unsigned long delta,
+ /**
+  * dw_apb_clockevent_init() - use an APB timer as a clock_event_device
+  *
+- * @cpu:	The CPU the events will be targeted at.
+  * @name:	The name used for the timer and the IRQ for it.
+  * @rating:	The rating to give the timer.
+  * @base:	I/O base for the timer registers.
+@@ -237,7 +233,7 @@ static int apbt_next_event(unsigned long delta,
+  * releasing the IRQ.
+  */
+ struct dw_apb_clock_event_device *
+-dw_apb_clockevent_init(int cpu, const char *name, unsigned rating,
++dw_apb_clockevent_init(const char *name, unsigned int rating,
+ 		       void __iomem *base, int irq, unsigned long freq)
+ {
+ 	struct dw_apb_clock_event_device *dw_ced =
+@@ -257,7 +253,7 @@ dw_apb_clockevent_init(int cpu, const char *name, unsigned rating,
+ 	dw_ced->ced.max_delta_ticks = 0x7fffffff;
+ 	dw_ced->ced.min_delta_ns = clockevent_delta2ns(5000, &dw_ced->ced);
+ 	dw_ced->ced.min_delta_ticks = 5000;
+-	dw_ced->ced.cpumask = cpumask_of(cpu);
++	dw_ced->ced.cpumask = cpu_possible_mask;
+ 	dw_ced->ced.features = CLOCK_EVT_FEAT_PERIODIC |
+ 				CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ;
+ 	dw_ced->ced.set_state_shutdown = apbt_shutdown;
+diff --git a/drivers/clocksource/dw_apb_timer_of.c b/drivers/clocksource/dw_apb_timer_of.c
+index 8c28b127759f..0a2505b323d7 100644
+--- a/drivers/clocksource/dw_apb_timer_of.c
++++ b/drivers/clocksource/dw_apb_timer_of.c
+@@ -73,8 +73,7 @@ static void __init add_clockevent(struct device_node *event_timer)
+ 
+ 	timer_get_base_and_rate(event_timer, &iobase, &rate);
+ 
+-	ced = dw_apb_clockevent_init(0, event_timer->name, 300, iobase, irq,
+-				     rate);
++	ced = dw_apb_clockevent_init(event_timer->name, 300, iobase, irq, rate);
+ 	if (!ced)
+ 		panic("Unable to initialise clockevent device");
+ 
+diff --git a/include/linux/dw_apb_timer.h b/include/linux/dw_apb_timer.h
+index 14f072edbca5..2f3597a199bb 100644
+--- a/include/linux/dw_apb_timer.h
++++ b/include/linux/dw_apb_timer.h
+@@ -40,7 +40,7 @@ void dw_apb_clockevent_resume(struct dw_apb_clock_event_device *dw_ced);
+ void dw_apb_clockevent_stop(struct dw_apb_clock_event_device *dw_ced);
+ 
+ struct dw_apb_clock_event_device *
+-dw_apb_clockevent_init(int cpu, const char *name, unsigned rating,
++dw_apb_clockevent_init(const char *name, unsigned int rating,
+ 		       void __iomem *base, int irq, unsigned long freq);
+ struct dw_apb_clocksource *
+ dw_apb_clocksource_init(unsigned rating, const char *name, void __iomem *base,
 -- 
 2.25.1
 
