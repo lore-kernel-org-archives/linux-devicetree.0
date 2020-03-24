@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF1FC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8587C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12F720714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9131020714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:41:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="SgUP4D36"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="XCjISrZ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbgCXPlQ (ORCPT
+        id S1727857AbgCXPlW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:41:16 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17808 "EHLO
+        Tue, 24 Mar 2020 11:41:22 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17809 "EHLO
         sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727857AbgCXPlQ (ORCPT
+        by vger.kernel.org with ESMTP id S1727510AbgCXPlW (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:41:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585064385;
+        Tue, 24 Mar 2020 11:41:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585064299;
         s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
         h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=9Rcu36G6rAVdZubjv9nlWJ08myU9AyosJCykkETK6LQ=;
-        b=SgUP4D369C7SKyMXxahyltWu5BVmrAk2rj7jc//i9zPZLh4IHz4Z5KHrNhvFzwPf
-        oaaTjwURl/0hiUzf7p+8VqUsHPbI5SnBJj/1sZw4xU0bVfplETP3vHBaIZIkaLzvCrY
-        oueWeGjdZUoj2xxZz4LQj7WhZjm5C2wgFIRgcSt0=
+        bh=/2lzGckd44y7J3i8bIgDra9A9mus3vdjKhhw5nanvI0=;
+        b=XCjISrZ9zlFOR8/lqe/aheiantPiD9d0DXcU1cKAexkgj3+b2QefhU5XtkKKCNnR
+        Nziduw+XFKxju0FCx0aBhfhUmEZiUdjg+R7iLF7lbct59R5/LBUDlK2Bnh2BuZBDQaE
+        bD7TeG7+iY6bT8eTFZZwgBGhfTmREVK1BTpXzPi8=
 Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 15850643829481008.2720751464285; Tue, 24 Mar 2020 23:39:42 +0800 (CST)
+        with SMTPS id 1585064296717138.06027004625264; Tue, 24 Mar 2020 23:38:16 +0800 (CST)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -42,12 +42,12 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200324153624.23109-12-jiaxun.yang@flygoat.com>
-Subject: [PATCH v6 11/11] MIPS: Loongson64: Move MIPS_CPU_IRQ_BASE
-Date:   Tue, 24 Mar 2020 23:36:08 +0800
+Message-ID: <20200324153624.23109-7-jiaxun.yang@flygoat.com>
+Subject: [PATCH v6 06/11] irqchip: mips-cpu: Convert to simple domain
+Date:   Tue, 24 Mar 2020 23:36:03 +0800
 X-Mailer: git-send-email 2.26.0.rc2
 In-Reply-To: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
 References: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
@@ -60,29 +60,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-To prevent CPU IRQ collide with PCH IRQ, we move down
-CPU IRQ BASE to 16.
+The old code is using legacy domain to setup irq_domain for CPU interrupts
+which requires irq_desc to be preallocated.
+
+However, when MIPS_CPU_IRQ_BASE >=3D 16, irq_desc for CPU IRQs may end up
+unallocated and lead to incorrect behavior.
+
+Thus we convert the legacy domain to simple domain which can allocate irq_d=
+esc
+during initialization.
 
 Co-developed-by: Huacai Chen <chenhc@lemote.com>
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- arch/mips/include/asm/mach-loongson64/irq.h | 2 +-
+ drivers/irqchip/irq-mips-cpu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/mach-loongson64/irq.h b/arch/mips/includ=
-e/asm/mach-loongson64/irq.h
-index d41dc4a76e6d..0041bd490ab8 100644
---- a/arch/mips/include/asm/mach-loongson64/irq.h
-+++ b/arch/mips/include/asm/mach-loongson64/irq.h
-@@ -5,7 +5,7 @@
- #include <boot_param.h>
+diff --git a/drivers/irqchip/irq-mips-cpu.c b/drivers/irqchip/irq-mips-cpu.=
+c
+index 95d4fd8f7a96..c3cf7fa76424 100644
+--- a/drivers/irqchip/irq-mips-cpu.c
++++ b/drivers/irqchip/irq-mips-cpu.c
+@@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct device_no=
+de *of_node)
+ =09clear_c0_status(ST0_IM);
+ =09clear_c0_cause(CAUSEF_IP);
 =20
- /* cpu core interrupt numbers */
--#define MIPS_CPU_IRQ_BASE 56
-+#define MIPS_CPU_IRQ_BASE 16
-=20
- #include <asm/mach-generic/irq.h>
-=20
+-=09irq_domain =3D irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE, 0,
++=09irq_domain =3D irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
+ =09=09=09=09=09   &mips_cpu_intc_irq_domain_ops,
+ =09=09=09=09=09   NULL);
+ =09if (!irq_domain)
 --=20
 2.26.0.rc2
 
