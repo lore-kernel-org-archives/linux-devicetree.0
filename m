@@ -2,149 +2,97 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14741C54EEB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 18:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E519C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 19:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5741208DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 18:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE102076E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 19:19:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9/9A+Oy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRZLcd1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgCXSUx (ORCPT
+        id S1725877AbgCXTTJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:20:53 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46613 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgCXSUw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 14:20:52 -0400
-Received: by mail-lf1-f65.google.com with SMTP id q5so2203146lfb.13;
-        Tue, 24 Mar 2020 11:20:51 -0700 (PDT)
+        Tue, 24 Mar 2020 15:19:09 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43422 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgCXTTJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 15:19:09 -0400
+Received: by mail-lj1-f196.google.com with SMTP id g27so11038956ljn.10;
+        Tue, 24 Mar 2020 12:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vZ2grX9EdtsDCTdMZUk+KGs8dumK5Lsw3WmRUPsPmLQ=;
-        b=g9/9A+OyX8xJITb28HO9MKB6+cdg+n52KnynJT9xR6eCDDU3Xgg0ucNRZ6fgDnzsSf
-         LjC5k/hBDKSg6GWsUm+VdneNJMaVgFNOaGB/xKBKIVcQAmEB/xjZ/3M8YEkJeCUjmB9M
-         GzHm4Ctk5/9bkQt7bpe1K3Qdtn/ut2kVeTk48xb7qKCqo27MV7thqXYBmvDkm4KKHvcO
-         gC5L4Uq2D3dyC59Moj++lKKAHRqfj6o3WliVPfJ+jSG16H+L0SWaIqzGKlaBYeKcAI80
-         y8BGym5dGtclGStfcNoFa39gvxtFXj/Bks7ZG8EhJEZphRbld5Mf07Dy7Vz9+I35cMNF
-         nysw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7fQRQ3RTaos7/s0RQFo8A2f8cwQKwdrnRsxFFOCClLE=;
+        b=SRZLcd1dIEBKj/kS2qUqsbMwlhI5ud2ZbTHlDk7yGUlOsOVBHJxPhBawWOCURFlOdk
+         u8PvEMlsQXqro1nxtTYtlrtrto7FnV5GLDN83V80ufxIOKklXz3awO+ZXr3kH/PUiMVi
+         FLXMe3uoji3p6IHxOajLBdgBpGQe9BnBdN7TUfZF5ynv8S6J3ZuVSS83OqjvGyCtAzBU
+         a9K2pOVHad/FvUI95Wpd9VMxukphyUaxtyDcP19m93NxMkiGi9wW91ECz0a3mIH+1TQL
+         hLL8U/f/cHkCTbz9ZMY7gj4y9VbGmlqMpez5yMcNJX3AfjUazsisgpSGtfcATWSDHN1t
+         zvDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vZ2grX9EdtsDCTdMZUk+KGs8dumK5Lsw3WmRUPsPmLQ=;
-        b=pehOLrjkfV53m51U+DQOZoYNoMeKeReKgJEjaB3t9jGoNxW3qZ8XP1Drm5VbhEXlhZ
-         rl7htfsT5RFtb4mrcCWWKoY6opCk5OEDW4Z1TSuV8fOqBG0ZAbTrwHPkQOOdyW+vz0ay
-         OcP6wg66DtzNbKDPjL4hpd+qtp19iWVWishhOOY7YyN/GAp02TTmwpeCjwmLfwJR33+g
-         rQ5gP4QvGdNbq9IpBiYEKgFVNMknlkZ+3YXHV3FkM4/6l7vqGpFk0e6BYHb8k2Ok/LUH
-         JN3cgaPjy9mvYlGN4Db91iFvH4Ci6Z5BOBKoCQbLIy/nossX/IyS1i63avvaLwLnM4xi
-         dPzg==
-X-Gm-Message-State: ANhLgQ0gHruR62C9u5uXnrbixVMW5HOAEKQ6jMI6CMBMbi+sof3M/wu3
-        DQIYwQ1i7hu9gn7VQyllpls=
-X-Google-Smtp-Source: ADFU+vtFvpq0POhOnkLU430bk6n5oSPRbp8Bisgt5nf1Ld/HAQp/Rad6pPPa6Xb4zIivCVN1cWWmVg==
-X-Received: by 2002:a19:6f07:: with SMTP id k7mr13886435lfc.79.1585074050889;
-        Tue, 24 Mar 2020 11:20:50 -0700 (PDT)
-Received: from mobilestation ([95.79.136.110])
-        by smtp.gmail.com with ESMTPSA id h10sm10603614ljg.38.2020.03.24.11.20.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 11:20:50 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 21:20:47 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Sergey.Semin@baikalelectronics.ru,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: rtc: Convert snps,dw-apb-timer to DT
- schema
-Message-ID: <20200324182047.iziujb7n7slqtzck@mobilestation>
-References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
- <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200324174325.14213-2-Sergey.Semin@baikalelectronics.ru>
- <20200324180709.GO5504@piout.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7fQRQ3RTaos7/s0RQFo8A2f8cwQKwdrnRsxFFOCClLE=;
+        b=JRUix2muZiiC0lIvayLHUD2r9etdFBZO5bERprbllDVQ/YjymrGB+C3WGUbREQ6Br1
+         twf/NnUizmkF8ooNtRZLoSJxOvAkelqt66Msra/APXHvt4bbq9vO3styy4uFmguDdvNw
+         e3hvQGLfStXKlURKgEM+NGpMen7H75UcO5ynLxVQPajb9FI3Ay2G3foQcgbyqY9HE+sM
+         8j8cNcsfwwnJiCrpZIKJA7qcDZX/YDIAKFhgxKZnT+TbIPQpHRkBcjRMkXOSPVFxa0bg
+         QN9NTfMUfgpb39wFfoqYD+Iivek8oUGTNG6w+F5YhoxeoAqUeum1mR7KoFQI6vrn5CzU
+         nrLw==
+X-Gm-Message-State: AGi0PubQ/yMonjWNa5xUZOoP1OntrE5qVwQPUW0hi41k1JNOrQGeY2Cw
+        Xow+zJ5f0EXXoUVX9KI+v+FXso1T
+X-Google-Smtp-Source: ADFU+vvbl9s0AQapsahwCNsJ69SeiSCjVA0b7vlkq3l4smsy1tslBIfS0q8sR8mJpvsPurY60HmuUQ==
+X-Received: by 2002:a2e:800a:: with SMTP id j10mr507176ljg.65.1585077544943;
+        Tue, 24 Mar 2020 12:19:04 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id 9sm12167157ljf.0.2020.03.24.12.19.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 12:19:03 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 9/9] arm64: tegra: Add Tegra VI CSI support in
+ device tree
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-10-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <672819ea-01d3-2eca-8bb7-84ffd64256d4@gmail.com>
+Date:   Tue, 24 Mar 2020 22:19:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324180709.GO5504@piout.net>
+In-Reply-To: <1584985955-19101-10-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Alexandre
+23.03.2020 20:52, Sowjanya Komatineni пишет:
+...
+> +			pd_venc: venc {
+> +				clocks = <&tegra_car TEGRA210_CLK_VI>,
+> +					 <&tegra_car TEGRA210_CLK_CSI>;
+> +				resets = <&mc TEGRA210_MC_RESET_VI>,
 
-On Tue, Mar 24, 2020 at 07:07:09PM +0100, Alexandre Belloni wrote:
-> Hi,
-> 
-> On 24/03/2020 20:43:20+0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Modern device tree bindings are supposed to be created as YAML-files
-> > in accordance with DT schema. This commit replaces Synopsys DW Timer
-> > legacy bare text binding with YAML file. As before the binding file
-> > states that the corresponding dts node is supposed to be compatible
-> > with generic DW APB Timer indicated by the "snps,dw-apb-timer"
-> > compatible string and to provide a mandatory registers memory range,
-> > one timer interrupt, either reference clock source or a fixed clock
-> > rate value. It may also have an optional APB bus reference clock
-> > phandle specified.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Alessandro Zummo <a.zummo@towertech.it>
-> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-rtc@vger.kernel.org
-> > 
-> > ---
-> > 
-> > I have doubts that this binding file belongs to the bindings/rtc
-> > directory seeing it's a pure timer with no rtc facilities like
-> > days/months/years counting and alarms. What about moving it to the
-> > "Documentation/devicetree/bindings/timer/" directory?
-> > 
-> 
-> Exactly my reaction when seeing the patch, please move it out of
-> bindings/rtc/
-> 
+The MC resetting should be needed only for a hardware hot-resetting. It
+should be wrong to add it to the power domain.
 
-Agreed. I am pretty sure Rob find something to be fixed and the main part
-of the patchset still hasn't been reviewed. So v3 will be necessary for sure.
-I'll move this binding out of rtc in a dedicated patch then.
-
--Sergey
-
-P.S. For some reason your email still hasn't been delivered to my corporate
-email, so responding from the private one.
-
-> 
-> -- 
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> +					 <&tegra_car TEGRA210_RST_VI>,
+> +					 <&tegra_car TEGRA210_CLK_CSI>;
+> +				#power-domain-cells = <0>;
+> +			};
+>  		};
