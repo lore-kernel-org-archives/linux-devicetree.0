@@ -2,137 +2,246 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF272C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B00C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88665208CA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB34520870
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XS7FO5qu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/Ol+rcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbgCXMU5 (ORCPT
+        id S1727544AbgCXMcF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:20:57 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44613 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbgCXMUy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 08:20:54 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j188so9147758lfj.11
-        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 05:20:53 -0700 (PDT)
+        Tue, 24 Mar 2020 08:32:05 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42201 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgCXMcF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 08:32:05 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so8977583wrx.9;
+        Tue, 24 Mar 2020 05:32:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xE4MP5AqUCPd9XtoEWD/FK2YPE6NfLNz1ySPK/KUqcg=;
-        b=XS7FO5quXRQMzlcU6oLgb0XC3ZGpFmBkGVb2+urTxc0RoXE+LhQwMcjmE1iMAOa4zj
-         5PDAtVRds458I1ZL9d59wLIw4CZpPrU4m4igICIiVAXvDor0bsq0DssE4nmVlA1PDTlr
-         9Juvmpsk6zwiXtmO5tbpYKysU5GPTSeag89VuFevHBL8HovL4xeC2CptKa/9avBarldI
-         TNKRCuIdtZyWoZlwAcrKcb4Cq5dHK9UKgDmiunIO8+8Ty4coajwPeKXNmvWqU9OBiiIQ
-         YkQFBoINbMMKzAyLh7/C9VyRE7zFm2KikI2U9i1pS66meUqbKQlBhvdRAOHMPTiLB293
-         udYg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=38HH6IBZZ8KwOhVeRkDxUvCLLKPnaez8n8AXFpKIeMg=;
+        b=Y/Ol+rcdr7tU1DcIzrNVazfo8/dsyiQnuabpEE+kK6YL1CclxM53LcSLSMYcUfSizu
+         UfmmS9zioH/kNWHK9/3B3bRLKMF2wqyn1jHjjFCC5RDo3E1SpIjS1mMhw2bD3WvqvT2o
+         WVZntinXqcni7oCriGPu9d5TE+xXEPnduS7mddVE8Yn8PgN/9s2GXDtkEsAaJjSiXKbM
+         mtBPdIvs8DBubpqsmDTrARuZznNpC6SpNnMjaBYcgs+Zedl3HmirCkPe6OB7XF0y200F
+         wY+oNrmQ3YLm9OWD0GbgUliGQ2BvpMgK/0D2mUtMnMRxpIKla/pSzux5D3LYtEQJqRgK
+         VZVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xE4MP5AqUCPd9XtoEWD/FK2YPE6NfLNz1ySPK/KUqcg=;
-        b=Ezm53KtqibQqVqucAZK9s5UHS4Rs9kkjcgwNBU3SaT7Y1bFhJJpdj/mpF+uHgxP12M
-         zaIntYKUkvrcxH2+pfXXV8RW+N4ujkqBRbkoUNl5G2/uonzl1CJOD20IxDlAOaG1BIXC
-         IOAJnqQZjjWX/X5leJ+Af/2pNUmxzzr52q4PnBGbh0gndJHiWzmYUMVFxbqDLNuiJPD8
-         c67wq6Mkwko7d9Hh818SFLDwjFzb5EHkSQgTcyogNNQOUau1rfp5aU1Z1BQTDkW6soQv
-         0c+E8Fe1FG/o7HmLQnGkteMDdTHY2rWxTXKRXNI1E5g4ud1VtUZPJ0rRHxNVEZsSkblz
-         pVUA==
-X-Gm-Message-State: ANhLgQ0BqGI0odlgFKQup9I7EtRenLju+3Q10JS5VcrxracrM9qDII2y
-        HRsbwezeLsZYmHosxcxbIEnQ31ASeDgZqrLLtWRcdg==
-X-Google-Smtp-Source: ADFU+vvOwzEWB/KB6v68gGlAUeCZXrHF76lOWQJ2agZ6yCYIP2gtQNst0yT5ZM3f+idvKa0KVyZTDM7DqQh+3t9vivQ=
-X-Received: by 2002:ac2:5b49:: with SMTP id i9mr2148928lfp.21.1585052452258;
- Tue, 24 Mar 2020 05:20:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200323234505.226919-1-rajatja@google.com> <20200324115059.GA2333340@kroah.com>
-In-Reply-To: <20200324115059.GA2333340@kroah.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Tue, 24 Mar 2020 05:20:14 -0700
-Message-ID: <CACK8Z6EHAv03XGXT0sY2H3TSjS4-yQtCscbHG_o1qCuG94zb6g@mail.gmail.com>
-Subject: Re: [PATCH RESEND 1/5] input/serio/i8042: Attach fwnode to serio
- i8042 kbd device
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Benson Leung <bleung@google.com>,
-        Zentaro Kavanagh <zentaro@google.com>,
-        Dominik Behr <dbehr@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=38HH6IBZZ8KwOhVeRkDxUvCLLKPnaez8n8AXFpKIeMg=;
+        b=H4K2Ec5eAr6cbF7ff4l5ZTO9buKUT7LkO/kDOf0vqE/9z2UMH/vMuh4dD4OmNcAp23
+         +XzWxKb++r6F1oiPv/DGur8JJYklQJ8YEd+koOH/Ea0bb+Vtt1tYAsnLnDWS4LfRlAPS
+         9Xcqlxg0x1qRFQx5ik4rEmYSB9n/OBMOKmyXYYg4w1c/y+8itj/wSotbZXhbkysq0LNG
+         HbEnrB3G+nh72PFcuE4gsMCpIW7ksnGA/1Q0YfMrcs3Vn/hEauyCEZ1lHJrvTx9u+CSx
+         MJmf42e49SLP/M02E5rvNeHJJaC0e0BZ/CDPfSJPQd45ZcOAgKIGe6qGagiAFIlZuFHv
+         ACHg==
+X-Gm-Message-State: ANhLgQ3UAM82/6EyR+eLr69ZAS/Uhu/1QfCUUYJ18pIxIoONozMh/tG0
+        DzsX6IwmdElKF9lKdGn2n3M=
+X-Google-Smtp-Source: ADFU+vvFIE2vNG3pnPtwtqRC3C7VN+xu15u5CiQVqBh1dcbhtvBZKQfCVDa8GL72rD3CAfaOW8FOxw==
+X-Received: by 2002:adf:f104:: with SMTP id r4mr26880182wro.375.1585053122512;
+        Tue, 24 Mar 2020 05:32:02 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id k185sm4215029wmb.7.2020.03.24.05.32.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Mar 2020 05:32:01 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     lgirdwood@gmail.com
+Cc:     broonie@kernel.org, heiko@sntech.de, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] dt-bindings: sound: convert rockchip spdif bindings to yaml
+Date:   Tue, 24 Mar 2020 13:31:53 +0100
+Message-Id: <20200324123155.11858-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Current dts files with 'spdif' nodes are manually verified.
+In order to automate this process rockchip-spdif.txt
+has to be converted to yaml.
 
-On Tue, Mar 24, 2020 at 4:51 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, Mar 23, 2020 at 04:45:01PM -0700, Rajat Jain wrote:
-> > Attach the firmware node to the serio i8042 kbd device so that device
-> > properties can be passed from the firmware.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > Change-Id: I36032f4bdee1dc52f26b57734068fd0ee7a6db0b
->
-> Didn't you run checkpatch.pl on your patches which told you to remove
-> all of these Change-Id: values?
+Also rk3188.dtsi, rk3288.dtsi use an extra fallback string,
+so change this in the documentation.
 
-My apologies. However I did run checkpatch.pl on my patches before
-sending (also checked just now again) and it did not complain about
-the Change-Id values in the commit log. Not sure if I'm running the
-command incorrectly?
+Changed:
+"rockchip,rk3188-spdif", "rockchip,rk3066-spdif"
+"rockchip,rk3288-spdif", "rockchip,rk3066-spdif"
 
-rajatja@rajat2:~/stock_kernel/linux$ ./scripts/checkpatch.pl
-../patches/input_atkbd/v1/000*
------------------------------------------------------------------------------------------
-../patches/input_atkbd/v1/0001-input-serio-i8042-Attach-fwnode-to-serio-i8042-kbd-d.patch
------------------------------------------------------------------------------------------
-total: 0 errors, 0 warnings, 28 lines checked
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+Changed V2:
+  dmas and dma-names layout
+---
+ .../devicetree/bindings/sound/rockchip-spdif.txt   | 45 -----------
+ .../devicetree/bindings/sound/rockchip-spdif.yaml  | 94 ++++++++++++++++++++++
+ 2 files changed, 94 insertions(+), 45 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/rockchip-spdif.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
 
-../patches/input_atkbd/v1/0001-input-serio-i8042-Attach-fwnode-to-serio-i8042-kbd-d.patch
-has no obvious style problems and is ready for submission.
------------------------------------------------------------------------------------------
-../patches/input_atkbd/v1/0002-Input-atkbd-Expose-function-row-physical-map-to-user.patch
------------------------------------------------------------------------------------------
-total: 0 errors, 0 warnings, 106 lines checked
-../patches/input_atkbd/v1/0002-Input-atkbd-Expose-function-row-physical-map-to-user.patch
-has no obvious style problems and is ready for submission.
-......
-<snip>
-......
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
+deleted file mode 100644
+index ec20c1271..000000000
+--- a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
++++ /dev/null
+@@ -1,45 +0,0 @@
+-* Rockchip SPDIF transceiver
+-
+-The S/PDIF audio block is a stereo transceiver that allows the
+-processor to receive and transmit digital audio via an coaxial cable or
+-a fibre cable.
+-
+-Required properties:
+-
+-- compatible: should be one of the following:
+-   - "rockchip,rk3066-spdif"
+-   - "rockchip,rk3188-spdif"
+-   - "rockchip,rk3228-spdif"
+-   - "rockchip,rk3288-spdif"
+-   - "rockchip,rk3328-spdif"
+-   - "rockchip,rk3366-spdif"
+-   - "rockchip,rk3368-spdif"
+-   - "rockchip,rk3399-spdif"
+-- reg: physical base address of the controller and length of memory mapped
+-  region.
+-- interrupts: should contain the SPDIF interrupt.
+-- dmas: DMA specifiers for tx dma. See the DMA client binding,
+-  Documentation/devicetree/bindings/dma/dma.txt
+-- dma-names: should be "tx"
+-- clocks: a list of phandle + clock-specifier pairs, one for each entry
+-  in clock-names.
+-- clock-names: should contain following:
+-   - "hclk": clock for SPDIF controller
+-   - "mclk" : clock for SPDIF bus
+-
+-Required properties on RK3288:
+-  - rockchip,grf: the phandle of the syscon node for the general register
+-                   file (GRF)
+-
+-Example for the rk3188 SPDIF controller:
+-
+-spdif: spdif@1011e000 {
+-	compatible = "rockchip,rk3188-spdif", "rockchip,rk3066-spdif";
+-	reg = <0x1011e000 0x2000>;
+-	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+-	dmas = <&dmac1_s 8>;
+-	dma-names = "tx";
+-	clock-names = "hclk", "mclk";
+-	clocks = <&cru HCLK_SPDIF>, <&cru SCLK_SPDIF>;
+-	#sound-dai-cells = <0>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+new file mode 100644
+index 000000000..d1c72c8a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+@@ -0,0 +1,94 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/rockchip-spdif.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip SPDIF transceiver
++
++description:
++  The S/PDIF audio block is a stereo transceiver that allows the
++  processor to receive and transmit digital audio via a coaxial or
++  fibre cable.
++
++maintainers:
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  compatible:
++    oneOf:
++      - const: rockchip,rk3066-spdif
++      - const: rockchip,rk3228-spdif
++      - const: rockchip,rk3328-spdif
++      - const: rockchip,rk3366-spdif
++      - const: rockchip,rk3368-spdif
++      - const: rockchip,rk3399-spdif
++      - items:
++          - enum:
++            - rockchip,rk3188-spdif
++            - rockchip,rk3288-spdif
++          - const: rockchip,rk3066-spdif
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: clock for SPDIF bus
++      - description: clock for SPDIF controller
++
++  clock-names:
++    items:
++      - const: mclk
++      - const: hclk
++
++  dmas:
++    maxItems: 1
++
++  dma-names:
++    const: tx
++
++  rockchip,grf:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      The phandle of the syscon node for the GRF register.
++      Required property on RK3288.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - dmas
++  - dma-names
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: rockchip,rk3288-spdif
++
++then:
++  required:
++    - rockchip,grf
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3188-cru-common.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    spdif: spdif@1011e000 {
++      compatible = "rockchip,rk3188-spdif", "rockchip,rk3066-spdif";
++      reg = <0x1011e000 0x2000>;
++      interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru SCLK_SPDIF>, <&cru HCLK_SPDIF>;
++      clock-names = "mclk", "hclk";
++      dmas = <&dmac1_s 8>;
++      dma-names = "tx";
++    };
+-- 
+2.11.0
 
-I will now resubmit the patches removing the Change-Id(s).
-
-Thanks & Best Regards,
-
-Rajat
-
-
-
->
-> Please do so...
->
-> greg k-h
