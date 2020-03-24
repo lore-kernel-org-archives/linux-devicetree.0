@@ -2,155 +2,120 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38BBC41621
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00FBC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A51420775
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585064872;
-	bh=WtoEx689uIy92IuHg5B9nN2uCDlFhHGSJ6zHQ9Z88oE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JgExk7GZrnXWHOgkhy0clwlUY0HSmN5T7OBZU5DgaIsQQh8yXs2zFWNZaN1EtrLyW
-	 NdLD9jcXGmthkkg+mvRkX93jcXwGMdcz8NcVUpPK0eRVXd/jm4vimXTtMNOeKPLOCc
-	 ftZI3kotxo4QsqMFalE1fchcw9sX+BAggX91X/2Y=
+	by mail.kernel.org (Postfix) with ESMTP id ACB3120774
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:49:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="omQWnEiN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Sa24C2bM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgCXPrw (ORCPT
+        id S1727730AbgCXPt0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:47:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbgCXPrv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:47:51 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB90A2076F;
-        Tue, 24 Mar 2020 15:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585064871;
-        bh=WtoEx689uIy92IuHg5B9nN2uCDlFhHGSJ6zHQ9Z88oE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=auDPhKwZe7ytFdQC8taLMul6iS+xsqB/7ZpB/ZE4b8VePFmsYDE1fldA2fWnfpm14
-         H8lop1IChvRXPSjcuLF9QfEyGadWme4M5C8zKSuD/kLMPS4KHs8kbOblr/AAjYYozz
-         w3FhB7T4ac8r4+ee6enf1SA31lUjkVzDYzsHTUzo=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jGlmP-00FKPD-5c; Tue, 24 Mar 2020 15:47:49 +0000
-Date:   Tue, 24 Mar 2020 15:47:47 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 24 Mar 2020 11:49:26 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:44235 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727634AbgCXPtZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:49:25 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 963E4580208;
+        Tue, 24 Mar 2020 11:49:24 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 24 Mar 2020 11:49:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=i7HBmzxid/ci7fk+gbb7Mxl+YrD
+        WbK/5oiBZwSKFtdo=; b=omQWnEiN35VVoWHD5HNnqs+mGwGhtQ/DUI+4MwgSrOI
+        5xKUariUf8Hqcn5hsOp6ol5Oldyos3xuIURl6a7E1e8kFBL4WdsKpy8/n1XpdYD3
+        YwXSjFpaojQ+uMJu0GusJTUOTF9PG/RGvqFMCve4mIBYTNVA0B9tD2edyv8agphF
+        Oi70ygmukHOdawpsnx3HWEdUcRVbcL+e6u5Ee5AEz8kri/obJgykARX8hSJAcO/B
+        r7b6dM+sZYYgvE910PS4Guc6gXcfo4YPRGGiQr7lQlEz8Q201je4xzxSt9yQDl7p
+        txJns9ytOdaTpLqs0DBeTrtLHIlIowuFh91Ylm2rfmg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=i7HBmz
+        xid/ci7fk+gbb7Mxl+YrDWbK/5oiBZwSKFtdo=; b=Sa24C2bMReuBLUxas1IqsB
+        t7aUDg2OcLRo5hBwzT1O/hU+WJDqz5gP3v6s8ziTfuIANB/G7qmGMwXaUkax03Zd
+        bIH3jYRQ2GM2EJEBOyZcuP7A9qDHf0tB3Lp2gbNdnKv7uhOt1u+t5vHt0Qzv22Zk
+        UvYoBBW0sAWEMceUhydqsUI9Ulo6RNCsm1Gcbi7linSp3+viSn1RzUX6itf5BTgn
+        tObmpbNk8JVKJb3thFuYKJrizSuLSoE/J71K+q0H9CTDGT3/M99iik+83YvrycWy
+        ORPwwIdCWOHS9w9FQaE0wkzHOaDnBuB6VL5VCc+VIL+BeMh+LwwRwk6cFRMnJK+A
+        ==
+X-ME-Sender: <xms:Aix6XggI_XoaSRKF1cTbec_S__4Ws_hUKhL7Xb3u3gCW7Xv6gxjBCQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehuddghedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:Aix6Xi_hiquxvOuvSn2hh2bm6t0Ev4R1CVq4EpwP6xkG6H-f7ZZuFw>
+    <xmx:Aix6Xp8kpUGnmlgCJGyrT29fExKE_3YhPocZYrvHIBj2wPJZ95M9LQ>
+    <xmx:Aix6Xsvw0sz2LWAqfvg33JkDn5xh228gLSdXctVhd1TWNba11nskxQ>
+    <xmx:BCx6XkBm-5giGTWGlsOJG8qvnhn90YLLEpzTGbzJvoJqa-zuVlPQSQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 85815328005A;
+        Tue, 24 Mar 2020 11:49:22 -0400 (EDT)
+Date:   Tue, 24 Mar 2020 16:49:20 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Pascal Roeleven <dev@pascalroeleven.nl>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 00/11] Modernize Loongson64 Machine v6
-Message-ID: <20200324154747.18e8ccd5@why>
-In-Reply-To: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
-        <20200324153624.23109-1-jiaxun.yang@flygoat.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2 0/5] Add support for Topwise A721 tablet
+Message-ID: <20200324154920.sof6pu7eolnhwkrg@gilmour.lan>
+References: <20200320112205.7100-1-dev@pascalroeleven.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, tsbogend@alpha.franken.de, chenhc@lemote.com, allison@lohutok.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6vyavs63upj3cdfk"
+Content-Disposition: inline
+In-Reply-To: <20200320112205.7100-1-dev@pascalroeleven.nl>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Jiaxun,
 
-On Tue, 24 Mar 2020 23:35:57 +0800
-Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+--6vyavs63upj3cdfk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Loongson have a long history of contributing their code to mainline kernel.
-> However, it seems like recent years, they are focusing on maintain a kernel by themselves
-> rather than contribute there code to the community.
-> 
-> Kernel is progress rapidly too. Their code slept in mainline for a long peroid without proper
-> maintainance and became outdated.
-> 
-> This patchset brings modern DeviceTree and irqchip support to the Loongson64 machine, and leaves
-> Loongson 2e/f alone since they are too legacy to touch.
-> 
-> PCI and some legacy I/O device will be converted later, together with LS7A PCH support.
-> 
-> v1:
-> - dt-bindings fixup according to Rob's comments
-> - irqchip fixup according to Marc's comments
-> - ls3-iointc: Make Core&IP map per-IRQ
-> - Regenerate kconfigs
-> - Typo & style improvements
-> 
-> v2:
-> - dt-bindings: Fix IOINTC, collect Rob's review tag
-> - dtbs: Drop CPU Node, merge different ways according to Huacai and Paul's comments
-> 
-> v3:
-> - Split code have been merged
-> - Fix IOINTC binding to allow map any child IRQ to and parent
-> - Convert "HTINTC" into "HTPIC", which mixed HT vectors processing and i8259
-> - Naming style fix according to Huacai's suggestions
-> 
-> v4:
-> - More naming related fixes
-> 
-> v5:
-> - irqchip fixes thanks to maz (see per file changelog)
-> - Remove unnecessary details in dt-bindings
-> - Credit Huacai with Co-developed-by
-> 
-> v6:
-> - HTPIC minor fix
-> - device binding naming fix 
-> 
-> ---
-> Jiaxun Yang (11):
->   irqchip: Add driver for Loongson I/O Local Interrupt Controller
->   irqchip: loongson-liointc: Workaround LPC IRQ Errata
->   dt-bindings: interrupt-controller: Add Loongson LIOINTC
->   irqchip: Add driver for Loongson-3 HyperTransport PIC controller
->   dt-bindings: interrupt-controller: Add Loongson-3 HTPIC
->   irqchip: mips-cpu: Convert to simple domain
->   MIPS: Loongson64: Drop legacy IRQ code
->   dt-bindings: mips: Add loongson boards
->   MIPS: Loongson64: Add generic dts
->   MIPS: Loongson64: Load built-in dtbs
->   MIPS: Loongson64: Move MIPS_CPU_IRQ_BASE
+Hi,
 
-[...]
+On Fri, Mar 20, 2020 at 12:21:31PM +0100, Pascal Roeleven wrote:
+> This series add support for the Topwise A721 tablet and it's display.
+> It is an old tablet (around 2012) but it might be useful as reference
+> as the devicetree is pretty complete.
 
-How do you want to get these merged? I can take the first 6 patches
-through the irqchip tree, and leave the rest to go via the MIPS tree.
+It looks good to me for the last 2 patches, I'll wait for feedback
+=66rom Thierry or Sam on the panel side.
 
-Otherwise, if you plan to have the whole thing go via the MIPS tree,
-please add my:
+Maxime
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+--6vyavs63upj3cdfk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-to patches 1, 2, 4 and 6.
+-----BEGIN PGP SIGNATURE-----
 
-Please let me know quickly, as I'd like to close the irqchip tree
-tomorrow.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXnosAAAKCRDj7w1vZxhR
+xeQMAQC1tUnrU73kvtF/6Q8eBOkIo4PsfbA/FzLXnyX9q4izkgD/UhROpt15xFmZ
+fjKg+K19nxzSkwcl7IBQrED6L4Ok1wk=
+=SI+q
+-----END PGP SIGNATURE-----
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+--6vyavs63upj3cdfk--
