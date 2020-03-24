@@ -2,153 +2,146 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43BFC41621
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 08:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A8EC4332B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 08:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B84208CA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 08:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F8E20836
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 08:16:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TYxi9wxq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726166AbgCXILB (ORCPT
+        id S1727233AbgCXIQE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:11:01 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39747 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726155AbgCXILB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 04:11:01 -0400
-Received: by mail-ot1-f67.google.com with SMTP id x11so4095778otp.6;
-        Tue, 24 Mar 2020 01:11:00 -0700 (PDT)
+        Tue, 24 Mar 2020 04:16:04 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54064 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbgCXIQE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 04:16:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b12so2165991wmj.3
+        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 01:16:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=nCmrtRi63VazCm5/zsbCw7DEK5Z7dLbwQao7Tq0w8UI=;
+        b=TYxi9wxqyr7ZuG8v7NeMKLzIJ5DKBo0KD25LlPVXxOMPs9byUNhx5xErNOM2TNuu4W
+         uBQ5djcQQUevw22VSpRPc+SGlWLzzM3AHp1SwUhrvqAOIhayuejqPjAmtJP7agqPd6TX
+         7/A5dhfR3w1WC3TWWDv/dQ+y2AT4kyf6qBWOnSNmY0LDL8p2FCUI+v3XQIIgF+P0Gjo9
+         ZVRykXOxoW2DEfM77oSzjwjeNrqKvnGsSqmbQCDnBQEI2lziwn2q89CgYC56yEf7YG90
+         CbgVL68NrZX32+c59WxzYUknlxv/eGId9maiUFN2jENO3yLPZlOWOY7eLLTIoqpCuS0g
+         BWOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GDNMdncUrveLnNCIuqkigHaNj5T9kUim+zbpHWBr6R8=;
-        b=L1vhi9oUSZpKohJ2P213dsi0YB/a/jKzOv2KaQMLzVYcplq011VCWqwtQZkZ36by8B
-         qAl7144xWUPSLbO6ycGwPeUswiLWBnMUyysovU53CXzBQwKx9oPBDe1/qkuAWXqZnP+N
-         yMVjknVW7R9qBOlNU4TMd0vaPP86SKFd6DHfICGI1X1I2KKAu4DpCuRj3DltH7T28s19
-         uj0qYLzNHDwxlzumosOx9JjVi+F8Vjkcv6+hAOFgeTGpzgIqlgsKJVNCM9n3RXB3PTZF
-         I1oh7nz5Zpk0hhFVetFDk+wQejPH7PsXdgsOD58XnNNRoMQXiueS4KGzmUGpX3zj+RKG
-         objg==
-X-Gm-Message-State: ANhLgQ2kjfhCOSzCqwh1TIqlMdzWwGTawRyi0abzrq3UioWljipOweeR
-        UZXw06zlH78z1dLKEE20Bd56YmsvD+7c/0qQDU4K2Q==
-X-Google-Smtp-Source: ADFU+vuBoXKVlPk0uv5lnR6f0/AvkW/pjUP3vcSJaQsFMeozW3lgjdaBEI6rir0p9fFrmZAPCnjLmq0YV8GUG4QVuKc=
-X-Received: by 2002:a05:6830:15c2:: with SMTP id j2mr346245otr.107.1585037460075;
- Tue, 24 Mar 2020 01:11:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=nCmrtRi63VazCm5/zsbCw7DEK5Z7dLbwQao7Tq0w8UI=;
+        b=MCh/Vy3AeUjdUJfisGWoIcHh3uiqbFN7purT9RbQu706gcLiE3mFGSAz94/tmxMw/v
+         4PqvCIqQjX0yulyvAmGu9+VgeZIv8Lw3Xjn8zvMnxGsWFEg17lz/YEjwIwAUF26gvWAu
+         wld5Q8i6U2AQlR1kyLd2mWu8FVKI4DfGUXYUMILMl+SPEQGQQypfk93xhx+1Moqu0rkD
+         QqB7jSg7JxYui9R61YBUyZu2Q3XRioE7qf5MqFvr3FlSQEKyVjLGaXgGym9OSwxblGx6
+         gRvwjV2yITPRTp4yLpiMo6svfgKV3k/xy8DypPAfMUHCefKuy0EClAQVhWMYE1AJUTqo
+         WpWQ==
+X-Gm-Message-State: ANhLgQ0fSzgclQUlrtdGzZBAF5Ry7B9rYdAhzWNGy5imACVGTDiPIhZ9
+        YP+iRe5jPUz0bNCxkRZWoZo3kw==
+X-Google-Smtp-Source: ADFU+vu2MY3Q/scatxmu05MiPn0AajbEO2ZWaYCbPYz5dU4kEJeQFhYcQWrbv+Zv6zDqL1jyIuSs7w==
+X-Received: by 2002:a05:600c:2283:: with SMTP id 3mr3900004wmf.157.1585037762724;
+        Tue, 24 Mar 2020 01:16:02 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id n124sm3337129wma.11.2020.03.24.01.16.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 01:16:01 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 08:16:51 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     dmitry.torokhov@gmail.com, thierry.reding@gmail.com,
+        jic23@kernel.org, devicetree@vger.kernel.org,
+        linux-input@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v5 2/7] mfd: Add support for Azoteq
+ IQS620A/621/622/624/625
+Message-ID: <20200324081651.GG5477@dell>
+References: <1581895931-6056-1-git-send-email-jeff@labundy.com>
+ <1581895931-6056-3-git-send-email-jeff@labundy.com>
+ <20200224111448.GS3494@dell>
+ <20200228034220.GA3510@labundy.com>
+ <20200302120458.GY3494@dell>
+ <20200302141117.GA11787@labundy.com>
+ <20200302142405.GA3494@dell>
+ <20200323021605.GA2731@labundy.com>
 MIME-Version: 1.0
-References: <20200306090720.9365-1-geert+renesas@glider.be>
- <20200312200523.GA17854@bogus> <CAMuHMdWoRSE7VQ5o575Ocjfh+y1yH-ciFE1BUqqPVO9oukwgNw@mail.gmail.com>
- <CAL_JsqL5CmL6M_njeHHYA21zs2jTQxENet+q=BJNVuz8K7Jubw@mail.gmail.com>
-In-Reply-To: <CAL_JsqL5CmL6M_njeHHYA21zs2jTQxENet+q=BJNVuz8K7Jubw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 24 Mar 2020 09:10:48 +0100
-Message-ID: <CAMuHMdWTf0ZkbQm-jgiNNTYhxnKfAbomK7mcvDhcMNfCbq8pEg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: serial: sh-sci: Convert to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200323021605.GA2731@labundy.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Sun, 22 Mar 2020, Jeff LaBundy wrote:
 
-On Mon, Mar 23, 2020 at 5:42 PM Rob Herring <robh@kernel.org> wrote:
-> On Mon, Mar 23, 2020 at 8:38 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Mar 12, 2020 at 9:05 PM Rob Herring <robh@kernel.org> wrote:
-> > > On Fri, Mar 06, 2020 at 10:07:20AM +0100, Geert Uytterhoeven wrote:
-> > > > Convert the Renesas Serial Communication Interface ((H)SCI(F)(A|B))
-> > > > Device Tree binding documentation to json-schema.
-> > > >
-> > > > Split the bindings in 5 files, one per major type, to ease expressing
-> > > > constraints.
-> > > >
-> > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Hi Lee,
+> 
+> On Mon, Mar 02, 2020 at 02:24:05PM +0000, Lee Jones wrote:
+> > On Mon, 02 Mar 2020, Jeff LaBundy wrote:
+> > 
+> > > Hi Lee,
+> > > 
+> > > On Mon, Mar 02, 2020 at 12:04:58PM +0000, Lee Jones wrote:
+> > > > On Thu, 27 Feb 2020, Jeff LaBundy wrote:
+> > > > 
+> > > > > Hi Lee,
+> > > > > 
+> > > > > On Mon, Feb 24, 2020 at 11:14:48AM +0000, Lee Jones wrote:
+> > > > > 
+> > > > > [...]
+> > > > > 
+> > > > > > 
+> > > > > > Well done Jeff.  Good job.
+> > > > > > 
+> > > > > > Applied, thanks.
+> > > > > > 
+> > > > > 
+> > > > > Thank you for your kind words as well as your support in fleshing out this
+> > > > > series.
+> > > > > 
+> > > > > Just to confirm, does your offer to take the remainder (once everything is
+> > > > > approved) through immutable branches still stand?
+> > > > 
+> > > > Depends how quickly you can get the other drivers turned around.
+> > > 
+> > > With Uwe's approval from Friday, all five drivers are complete. Dmitry and
+> > > Jonathan's approvals were given in previous review cycles and were carried
+> > > forward with their permission. If anything else is required, please let me
+> > > know.
+> > 
+> > Does Uwe's review mean that Thierry's is not required?
+> 
+> Sorry about that; I was jumping the gun (thank you Uwe for clarifying).
+> The pwm patch still needs an Ack from Thierry before it can be applied.
+> 
+> I have not received any feedback from Thierry throughout this patch set,
+> and I'd like to unblock the remainder if possible. In case Thierry does
+> not respond by the time you elect to send your next pull request, would
+> you be willing to drop the pwm patch and take the input and iio patches
+> through your tree?
+> 
+> If so, I'll re-send the pwm patch on its own to Thierry during a future
+> cycle so that he can take it through his tree at his convenience.
 
-> > > > +  interrupts:
-> > > > +    description: |
-> > > > +      Must contain one or more interrupt-specifiers for the serial interface.
-> > > > +      If a single interrupt is expressed, then all events are
-> > > > +      multiplexed into this single interrupt.
-> > > > +
-> > > > +      If multiple interrupts are provided by the hardware, the order
-> > > > +      in which the interrupts are listed must match order below. Note
-> > > > +      that some HW interrupt events may be muxed together resulting
-> > > > +      in duplicate entries.
-> > > > +    minItems: 1
-> > > > +    maxItems: 6
-> > >
-> > > This allows 2, 3, 4, or 5 interrupts. Is that valid? If not, then you
-> >
-> > 1, 4, and 6 are valid.
-> >
-> > > should do something like this:
-> > >
-> > > oneOf:
-> > >   - items:
-> > >       description: A combined interrupt
-> > >   - items:
-> > >       - description: Error interrupt
-> > >       - ...
-> >
-> > So I tried:
-> >
-> >   interrupts:
-> >     oneOf:
-> >       - items:
-> >           description: A combined interrupt
->
-> You're missing a '-' here.
+Hopefully we hear fro Thierry.
 
-Thanks, that did the trick!
-
-(Your example above also didn't have the '-', so I though it was special
- syntax for a single-entry ;-)
-
-> >   interrupt-names:
-> >     oneOf:
-> >       - items:
-> >           - const: eri
-> >           - const: rxi
-> >           - const: txi
-> >           - const: tei
-> >       - items:
-> >           - const: eri
-> >           - const: rxi
-> >           - const: txi
-> >           - const: bri
-> >           - const: dri
-> >           - const: tei
-> >
-> > ?
-> > Seems to work, but needs the duplication as the 4-interrupt case is not
-> > just the 4 first entries of the 6-interrupt case (tei is always last).
->
-> Yes, that looks right. No name for the single irq case?
-
-No, initially there were no interrupt-names at all, so interrupt-names is
-optional.  The single muxed interrupt variant was the first variant to be
-DTified.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+If not, yes I can apply the set without the PWM patch.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
