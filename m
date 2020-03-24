@@ -2,121 +2,99 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F997C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 19:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B6AC2BAEE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 19:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4624D2074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 19:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F03820714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 19:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lNnPCzPV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djAXMRGp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725953AbgCXTUF (ORCPT
+        id S1725877AbgCXTeZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 15:20:05 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39454 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgCXTUF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 15:20:05 -0400
-Received: by mail-lj1-f194.google.com with SMTP id i20so7794941ljn.6;
-        Tue, 24 Mar 2020 12:20:03 -0700 (PDT)
+        Tue, 24 Mar 2020 15:34:25 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:45602 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727150AbgCXTeY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 15:34:24 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v4so10587115lfo.12;
+        Tue, 24 Mar 2020 12:34:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=skcCG2QHTd+EzEBtFrASrhFP0Iy2GqsEnBeidQvJs00=;
-        b=lNnPCzPVQ23JfLuXiGDK1zzejW9N7ZjGsOBuBBj5/Mo8tHopaI9xdhmNJkp7cjDfr2
-         +GfMKXI13LF8LrC8iwuP+4I2CjAc6N/I1ZYahcNLNsqVg58Xz5eKiyjLoPMIylJ4DXRc
-         rit6/Zloqe4yM6aZUJKR7B90BrvhFmekimUb5kFLMLkJ/Ov+8ZXLWFQoyZlklhLH2TMT
-         6l1pr67QAC0+9EkPawhKyscWrJ+Wu2VqkipUEM38gZCL/q4lZoFEA3LCsKZsiMc+TcRN
-         E0LD6QDyR3iFLzUgfKuiP4oJVp9h29AkwqFLkDETqnG9Zx8HoJX6eu7gjlZ5znQijthS
-         hwwQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BuW1pgtMi1nFDluniTHUYAMhP+ECNJICP5kvAttrp90=;
+        b=djAXMRGpfX/uYnxHJ3wl2qCQUySXiH6H9DG4JMMCYNMq+CNKLKGF43SapUWG/r/Sf4
+         9jJQY9v5nX2vWjGcBkQV6PJN0djRJL8yL7kzP7wOERKNka2dR1DI6/7IZ1iDLorQSymH
+         g4ha+k4Hg7vSp7GajygnZJtjf2DJuxcohHO4EZ6207TwbQg2DpmeWx425DGGClfDKQds
+         9pl/yqXmqdStvtaXrMDpMHP/+g3ZF+mlT1jkDlTJN5lZ3clkfzHhb5YCor7FDdD7Q5R5
+         ogEIx2Fuiom+0hLoUv/fY2iD3A3SXawE2a/bd3OenLkmaq6gxfuSXqBlTV1Hoxo5m1au
+         dc8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=skcCG2QHTd+EzEBtFrASrhFP0Iy2GqsEnBeidQvJs00=;
-        b=S+rks27hVwdID1oKdeNBhH7J/1sS/08fr/86rWZEysSeweZXycGFjpW6WCBEBAHny4
-         Upy99TwxTAc7mezB3NoReb1p2rNgSHA6j3Zsnc1vWcYx0/bL9vaZPVCcf1cxitPrgRcR
-         ld7dZtBoKNxrRIWeA7tRDzV901+4bVWrQTzYyD5F7liUiLVNhVcu97paL50pJGvQHAMc
-         kK8FgCW2YNj01sc43FZ/06A1jnT4dSTK3bxwhTZ3pYf8UNDu1CNbzs5Fi1YcY21fzSBP
-         87K+FDPgRzmY3jg1rEDU/z303LyWS/EGbYwJNZ794VqC3rKq5PNPgQQNkT7AZeqErk7/
-         092Q==
-X-Gm-Message-State: ANhLgQ1jxuvoyfejSgB4QOHOoG8xfcCw3689Oww4XsMFQuEPgdU+jhdX
-        enHgveLBinYa5Y5wtCWmL/9Lacyy
-X-Google-Smtp-Source: ADFU+vt3z3fmr5IIMuRF8uor2xaYwQG2ck/m7Ac6qsciHHZxdL/2i5Re16nQGaFl6kTdI3iURuH+yw==
-X-Received: by 2002:a2e:81c9:: with SMTP id s9mr2169449ljg.69.1585077602671;
-        Tue, 24 Mar 2020 12:20:02 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id a22sm3245335ljm.28.2020.03.24.12.20.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 12:20:02 -0700 (PDT)
-Subject: Re: [RFC PATCH v5 5/9] dt-binding: tegra: Add VI and CSI bindings
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-6-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2256dc66-f3f9-3400-85e9-0641729b1316@gmail.com>
-Date:   Tue, 24 Mar 2020 22:20:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BuW1pgtMi1nFDluniTHUYAMhP+ECNJICP5kvAttrp90=;
+        b=pTFJtmhBmky5JCLfCL0x6HJIG54oFw70qWIOccmM619f2A7+czr6X+AlbbyciRvr0R
+         wwN/EUdgJ3/88C2R3VjYkUxqdRWjchBSXcZ0JiF7m/QET0Nf6go39GN30l8a4IVqULBS
+         qMV4d6WlQkYWWxVPIMWyWzii6l7lEI5MWfcoMddBMhwFhI9Ep03KId7tH1WVgQhWcoet
+         0pptcAH6r6QgpiRKSvUDUnGNBrlBwNjIij56kYc3gnzm8JBTwZqH9wkEIDKtLd8MrP8c
+         ytJ48jQBjplFvfJiqmafNNoSfpTHD2+nq5vRfnZoMqx7DRrbZzVFrcKlt/31rE/cBssG
+         wK/Q==
+X-Gm-Message-State: ANhLgQ3p3SdykDZMx21Xx6pVo7FQIvRP4AA7XAsv+BEHY0nVobIUoLp3
+        mzJ9nIHgjgPr+2qiZt/vHBzpJdyZyo1ApfKGjDk=
+X-Google-Smtp-Source: ADFU+vtCUdIkmuQsY4QzJUMqNYV6lYZDkx1LNuGCgcfEy8vGbUSEMIGt5lO92LiWyGxs7J1Z7ulaFxz0Vq1YTqoUtYA=
+X-Received: by 2002:a05:6512:3b7:: with SMTP id v23mr1260787lfp.66.1585078462025;
+ Tue, 24 Mar 2020 12:34:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1584985955-19101-6-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <cover.1584730033.git.agx@sigxcpu.org> <c7fd138e00608a108dae3651ab10d583a60040fc.1584730033.git.agx@sigxcpu.org>
+In-Reply-To: <c7fd138e00608a108dae3651ab10d583a60040fc.1584730033.git.agx@sigxcpu.org>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 24 Mar 2020 16:34:13 -0300
+Message-ID: <CAOMZO5Dhy7ahcR-S=QG=pumxXa8HnQoWpg0TdFyeu_Levdh9_Q@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: display/bridge: Add binding for NWL
+ mipi dsi host controller
+To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-23.03.2020 20:52, Sowjanya Komatineni пишет:
-> Tegra contains VI controller which can support up to 6 MIPI CSI
-> camera sensors.
-> 
-> Each Tegra CSI port from CSI unit can be one-to-one mapper to
-> VI channel and can capture from an external camera sensor or
-> from built-in test pattern generator.
-> 
-> This patch adds dt-bindings for Tegra VI and CSI.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  .../display/tegra/nvidia,tegra20-host1x.txt        | 67 +++++++++++++++++-----
->  1 file changed, 54 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> index 9999255..9421569 100644
-> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> @@ -40,14 +40,25 @@ of the following host1x client modules:
->  
->    Required properties:
->    - compatible: "nvidia,tegra<chip>-vi"
-> -  - reg: Physical base address and length of the controller's registers.
-> +  - reg: Physical base address and length of the controller registers.
->    - interrupts: The interrupt outputs from the controller.
-> -  - clocks: Must contain one entry, for the module clock.
-> +  - clocks: Must contain an entry for the module clock "vi"
->      See ../clocks/clock-bindings.txt for details.
+On Fri, Mar 20, 2020 at 3:49 PM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+>
+> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+>
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+> Tested-by: Robert Chiras <robert.chiras@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-> -  - resets: Must contain an entry for each entry in reset-names.
-> -    See ../reset/reset.txt for details.
-> -  - reset-names: Must include the following entries:
-> -    - vi
-
-This should be a wrong change because ARM32 Tegra SoCs do not use power
-domain.
-
-> +  - power-domains: Must include venc powergate node as vi is in VE partition.
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
