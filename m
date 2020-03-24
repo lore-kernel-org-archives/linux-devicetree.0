@@ -2,131 +2,149 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103BEC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE51C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D776E20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8376F20714
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:39:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="AO6AlwPr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ONu4l2SC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbgCXPix (ORCPT
+        id S1728551AbgCXPjH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:38:53 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17886 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728880AbgCXPiw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:38:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585064228;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=yVxhTjIGSsBi1j8l4nZCtCI9CxiYbq8eizSoxYeSElA=;
-        b=AO6AlwPrQRwm0AVTs9LyPiXbQjQW1TeU9Or5Ri+dYG9Y/sDThh8JX6RQSKnGZjKU
-        aVkNpqQzapNkW53UJhIW/OJ/TUW9plkYAwbczST5PJAG+yrQMLTfKXIpItrqGey687u
-        TGitPAl6D1jZ9bN5ddsj98TldBlwtKvoWea1CYi4=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1585064227678486.8301291945695; Tue, 24 Mar 2020 23:37:07 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200324153624.23109-3-jiaxun.yang@flygoat.com>
-Subject: [PATCH v6 02/11] irqchip: loongson-liointc: Workaround LPC IRQ Errata
-Date:   Tue, 24 Mar 2020 23:35:59 +0800
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
-References: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
+        Tue, 24 Mar 2020 11:39:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36635 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728445AbgCXPjG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 11:39:06 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l23so7329517otf.3
+        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 08:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gdNgUyovH3fFL036Rwp6qFNO07syiek5Tdf11PTq7yM=;
+        b=ONu4l2SCV9dgZFVg2UfYC52IuLbDCEb5mUeYEhKuzsvwFmPCM5N8SJEEk4UafeWoac
+         DoP3VVqPJ1Dk2LAERFmDMuVGBO0TY89uQuoBp7MFHclOAMl3bheWXApCowCeUXM/iSYl
+         Nki8KGmmkSaOqM2fHh6N8WGQtlddbJhB3NDhpJ++w3NiESRoLgfLeVfr2rbE+cELcGxq
+         o2DKUdhGkONXExSAuo9kb0sL0NAcnUZsgjhHgPJPpfzcsj07J5frb6YO7TEkmwK/jufN
+         epMmVkXkVFOiJMmQSqJtLz6OILDjXl85QLHgLlYPCaP8HtfqS6wc3U9QgUQs5Zr3ATYI
+         g9ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gdNgUyovH3fFL036Rwp6qFNO07syiek5Tdf11PTq7yM=;
+        b=puSLFDBdPX5TEbDw109EJMcOYsb3lTWvaqijEeEbQ9pMsF+tv5mt37kiXuknU+wVSg
+         MmkbiDaKkPOZzspXdD4+7HoKXQ1hD6G4uHCVVcyFlB5GNZtaJ8j2m0w3U7ssIk8Tgrk2
+         AHAuOwdHr+SC8FX2Q9F+WRQHtzTzm07Wbw+h2jdA5FATluu/ScM4+HodBujpsrF3EmNi
+         yNZ1dPdk5B1JlpyD4mw/MSsoj8UxLNuyTB1g/0RWW0MpEeNa474vaqwDaYTKZ26tnNFo
+         6YGLFavmx5JKFUcnZKJkoeGKEcQOwDNUqrjndN7rYEo7WKoNjbRM52mhx5DAhfulFZfh
+         ys/A==
+X-Gm-Message-State: ANhLgQ1HUxgaH24aeZPHfEhttQreCJbAKpuxKfSgyeT1bp38u+cOipcR
+        JJdv/ggO7Le62kyd9wenffv10hE2rvG8VgGLtcW95A==
+X-Google-Smtp-Source: ADFU+vtLsKQwanUzdtbf2Q0mesZdWrEI+84/TzmxAH6yGULo2vc9lF+1ZHeUnyQ0lDvVCPKemKF+dhoLeJTrSBfVjBc=
+X-Received: by 2002:a4a:e48a:: with SMTP id s10mr2128023oov.10.1585064345759;
+ Tue, 24 Mar 2020 08:39:05 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200317135740.19412-1-robert.foss@linaro.org>
+ <20200317135740.19412-7-robert.foss@linaro.org> <2523204.mvXUDI8C0e@g550jk>
+In-Reply-To: <2523204.mvXUDI8C0e@g550jk>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Tue, 24 Mar 2020 16:38:54 +0100
+Message-ID: <CAG3jFyuiVFHfNVwCAEynH0j8fK91k32m+nvZYYR79gju9cwPKQ@mail.gmail.com>
+Subject: Re: [v2 6/6] arm64: defconfig: Enable QCOM CAMCC, CAMSS and CCI drivers
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, shawnguo@kernel.org, olof@lixom.net,
+        maxime@cerno.tech, Anson.Huang@nxp.com, dinguyen@kernel.org,
+        leonard.crestez@nxp.com,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Loic Poulain <loic.poulain@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The 1.0 version of that controller has a bug that status bit
-of LPC IRQ sometimes doesn't get set correctly.
+Hey Luca,
 
-So we can always blame LPC IRQ when spurious interrupt happens
-at the parent interrupt line which LPC IRQ supposed to route
-to.
+On Fri, 20 Mar 2020 at 20:52, Luca Weiss <luca@z3ntu.xyz> wrote:
+>
+> Hi Robert,
+>
+> On Dienstag, 17. M=C3=A4rz 2020 14:57:40 CET Robert Foss wrote:
+> > Build camera clock, isp and controller drivers as modules.
+> >
+> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  arch/arm64/configs/defconfig | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfi=
+g
+> > index 4db223dbc549..7cb6989249ab 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -376,6 +376,7 @@ CONFIG_I2C_MESON=3Dy
+> >  CONFIG_I2C_MV64XXX=3Dy
+> >  CONFIG_I2C_OWL=3Dy
+> >  CONFIG_I2C_PXA=3Dy
+> > +CONFIG_I2C_QCOM_CCI=3Dm
+> >  CONFIG_I2C_QCOM_GENI=3Dm
+> >  CONFIG_I2C_QUP=3Dy
+> >  CONFIG_I2C_RK3X=3Dy
+> > @@ -530,6 +531,7 @@ CONFIG_VIDEO_SAMSUNG_S5P_MFC=3Dm
+> >  CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=3Dm
+> >  CONFIG_VIDEO_RENESAS_FCP=3Dm
+> >  CONFIG_VIDEO_RENESAS_VSP1=3Dm
+> > +CONFIG_VIDEO_QCOM_CAMSS=3Dm
+> >  CONFIG_DRM=3Dm
+> >  CONFIG_DRM_I2C_NXP_TDA998X=3Dm
+> >  CONFIG_DRM_NOUVEAU=3Dm
+> > @@ -732,6 +734,7 @@ CONFIG_MSM_GCC_8994=3Dy
+> >  CONFIG_MSM_MMCC_8996=3Dy
+> >  CONFIG_MSM_GCC_8998=3Dy
+> >  CONFIG_QCS_GCC_404=3Dy
+> > +CONFIG_SDM_CAMCC_845=3Dm
+>
+> You seem to have this option twice in this patch.
 
-Co-developed-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- drivers/irqchip/irq-loongson-liointc.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Thanks for catching this.
+I'll send out a fix in v3.
 
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-l=
-oongson-liointc.c
-index 8b6d7b8ddaca..d5054e90eab8 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -32,6 +32,8 @@
-=20
- #define LIOINTC_SHIFT_INTx=094
-=20
-+#define LIOINTC_ERRATA_IRQ=0910
-+
- struct liointc_handler_data {
- =09struct liointc_priv=09*priv;
- =09u32=09=09=09parent_int_map;
-@@ -41,6 +43,7 @@ struct liointc_priv {
- =09struct irq_chip_generic=09=09*gc;
- =09struct liointc_handler_data=09handler[LIOINTC_NUM_PARENT];
- =09u8=09=09=09=09map_cache[LIOINTC_CHIP_IRQ];
-+=09bool=09=09=09=09have_lpc_irq_errata;
- };
-=20
- static void liointc_chained_handle_irq(struct irq_desc *desc)
-@@ -54,8 +57,14 @@ static void liointc_chained_handle_irq(struct irq_desc *=
-desc)
-=20
- =09pending =3D readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
-=20
--=09if (!pending)
--=09=09spurious_interrupt();
-+=09if (!pending) {
-+=09=09/* Always blame LPC IRQ if we have that bug and LPC IRQ is enabled *=
-/
-+=09=09if (handler->priv->have_lpc_irq_errata &&
-+=09=09=09(handler->parent_int_map & ~gc->mask_cache & BIT(LIOINTC_ERRATA_I=
-RQ)))
-+=09=09=09pending =3D BIT(LIOINTC_ERRATA_IRQ);
-+=09=09else
-+=09=09=09spurious_interrupt();
-+=09}
-=20
- =09while (pending) {
- =09=09int bit =3D __ffs(pending);
-@@ -164,6 +173,9 @@ int __init liointc_of_init(struct device_node *node,
- =09=09goto out_iounmap;
- =09}
-=20
-+=09if (of_device_is_compatible(node, "loongson,liointc-1.0"))
-+=09=09priv->have_lpc_irq_errata =3D true;
-+
- =09sz =3D of_property_read_variable_u32_array(node, "loongson,parent_int_m=
-ap",
- =09=09=09=09=09=09&of_parent_int_map[0], LIOINTC_NUM_PARENT,
- =09=09=09=09=09=09LIOINTC_NUM_PARENT);
---=20
-2.26.0.rc2
-
-
+>
+> >  CONFIG_SDM_GCC_845=3Dy
+> >  CONFIG_SM_GCC_8150=3Dy
+> >  CONFIG_QCOM_HFPLL=3Dy
+> > @@ -762,6 +765,7 @@ CONFIG_QCOM_COMMAND_DB=3Dy
+> >  CONFIG_QCOM_GENI_SE=3Dy
+> >  CONFIG_QCOM_GLINK_SSR=3Dm
+> >  CONFIG_QCOM_RMTFS_MEM=3Dm
+> > +CONFIG_SDM_CAMCC_845=3Dm
+>
+> ^
+>
+> >  CONFIG_QCOM_RPMH=3Dy
+> >  CONFIG_QCOM_RPMHPD=3Dy
+> >  CONFIG_QCOM_SMEM=3Dy
+>
+> Regards
+> Luca
+>
+>
