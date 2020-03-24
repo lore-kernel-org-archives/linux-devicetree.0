@@ -2,160 +2,114 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51E6C2BAEE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 14:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E891C41621
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 14:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957EF2073E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 14:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260F02080C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 14:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oDwhGi3F"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YiMsSpud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgCXOO2 (ORCPT
+        id S1727686AbgCXOff (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:14:28 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:40548 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727289AbgCXOO2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:14:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585059267; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=D0tDkkn7yvngL5blqt4Sx3OwfBCinbjELusDX5Nb7E0=;
- b=oDwhGi3FYoUsSZZvHs2AG3Dd3hOubS17fM+ydWAiunGlbVAdOYf8Qiw4D6xQ6zC9npaDhDgj
- AvRNpS+L+Lt9sHsEQaPSYCefGFII8dvfbFA8cWoSW3lYNm+A7HwY8RD+hIKgBxKOr4m7LWZ0
- Z9pwcAOV/Mdbzhn59LH1LqxX1x8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7a15ad.7f3a66449b58-smtp-out-n03;
- Tue, 24 Mar 2020 14:14:05 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 84AE6C433CB; Tue, 24 Mar 2020 14:14:04 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 928C0C433D2;
-        Tue, 24 Mar 2020 14:14:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 928C0C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 24 Mar 2020 10:35:35 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:46566 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727507AbgCXOff (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 10:35:35 -0400
+Received: by mail-vs1-f65.google.com with SMTP id z125so11199435vsb.13
+        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 07:35:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vHxRlatObgRvnysxTZAZ7i5pl1JSDT2R3bHKmGhkgUE=;
+        b=YiMsSpudpT6FxZHxA6De/saSAHGXK7VlyDXtpNtN9hNzxOPelBBcnUkk9LPz8Mz4Ir
+         KztvWvGmrqbAk7jwUQE14sSAWV4hf05oN5i6odmjR/cou/29qpALc9peKPyrjgXDkrAc
+         oq6V4L/S8pZ9LSBWm00J5so+SUpk1hSQ8Va+g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vHxRlatObgRvnysxTZAZ7i5pl1JSDT2R3bHKmGhkgUE=;
+        b=VMz5ntOEmgVre6+05aJX9lbDWP7NCIGI/kYGbRkvOtwuzL+zoCtxL5eAyrDOxHr8FJ
+         3CFNYZx90FN6/947Ivxb8G4CPkSlAzkT179fjXCsys74cKF6diR+xmLvvo+XNYtPr7Dv
+         wFfH8U207PRFFSOXSjxeQaGwWR7tPRtMSA9iNeQR1H5H+oa4E6bWUC6VdXHoGlKuanCW
+         sv0uqM0OjydA6rosVN7cIYOR1eKpmSjnx71huweXPwCwkX2c0BgY3eWoA5njBB+MqDw/
+         N5tfn9XHldFKSGWbqrliy2t6Wat2Xl7OJXr2bsFYH+OssLUERODyMOLXTR+JucfEL2T1
+         gMLQ==
+X-Gm-Message-State: ANhLgQ1LEw3kDFDUk/NMDRZhyvALTK+3XwXXJ4frJZ3Inl5nArz6loab
+        2f5gkkv/rXO8uErgr2pCZ7Z54ryLyaY=
+X-Google-Smtp-Source: ADFU+vu9iKAuvdlts7qQhDSy2h8qtsaJSw7mEXlEYbgUdtOyN9dodGEH8ZEjBAKjsfS6nQwZj1czvA==
+X-Received: by 2002:a67:b001:: with SMTP id z1mr20452422vse.82.1585060533214;
+        Tue, 24 Mar 2020 07:35:33 -0700 (PDT)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id g1sm10503897uak.5.2020.03.24.07.35.32
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 07:35:32 -0700 (PDT)
+Received: by mail-ua1-f41.google.com with SMTP id r47so6338897uad.11
+        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 07:35:32 -0700 (PDT)
+X-Received: by 2002:a9f:300a:: with SMTP id h10mr18039835uab.91.1585060531555;
+ Tue, 24 Mar 2020 07:35:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/3] dt-bindings: ath10k: Add wifi-firmware subnode for
- wifi node
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1585054044-18667-2-git-send-email-pillair@codeaurora.org>
-References: <1585054044-18667-2-git-send-email-pillair@codeaurora.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rakesh Pillai <pillair@codeaurora.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200324141404.84AE6C433CB@smtp.codeaurora.org>
-Date:   Tue, 24 Mar 2020 14:14:04 +0000 (UTC)
+References: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
+In-Reply-To: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 24 Mar 2020 07:35:18 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com>
+Message-ID: <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rakesh Pillai <pillair@codeaurora.org> wrote:
+Hi,
 
-> Add a wifi-firmware subnode for the wifi node.
-> This wifi-firmware subnode is needed for the
-> targets which do not support TrustZone.
-> 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+On Sun, Mar 22, 2020 at 11:14 PM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+>
+> "The PM core always increments the runtime usage counter
+> before calling the ->suspend() callback and decrements it
+> after calling the ->resume() callback"
+>
+> DPU and DSI are managed as runtime devices. When
+> suspend is triggered, PM core adds a refcount on all the
+> devices and calls device suspend, since usage count is
+> already incremented, runtime suspend was not getting called
+> and it kept the clocks on which resulted in target not
+> entering into XO shutdown.
+>
+> Add changes to manage runtime devices during pm sleep.
+>
+> Changes in v1:
+>  - Remove unnecessary checks in the function
+>      _dpu_kms_disable_dpu (Rob Clark).
 
-Fails to build and has warnings. How did you test this?
+I'm wondering what happened with my feedback on v1, AKA:
 
-drivers/net/wireless/ath/ath10k/qmi.c: In function 'ath10k_qmi_msa_mem_info_send_sync_msg':
-drivers/net/wireless/ath/ath10k/qmi.c:160:23: error: 'struct ath10k_qmi' has no member named 'msa_pa'
-  max_mapped_addr = qmi->msa_pa + qmi->msa_mem_size;
-                       ^~
-drivers/net/wireless/ath/ath10k/qmi.c:160:37: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
-  max_mapped_addr = qmi->msa_pa + qmi->msa_mem_size;
-                                     ^~
-drivers/net/wireless/ath/ath10k/qmi.c:163:41: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
-   if (resp.mem_region_info[i].size > qmi->msa_mem_size ||
-                                         ^~
-drivers/net/wireless/ath/ath10k/qmi.c:165:48: error: 'struct ath10k_qmi' has no member named 'msa_pa'
-       resp.mem_region_info[i].region_addr < qmi->msa_pa ||
-                                                ^~
-make[5]: *** [drivers/net/wireless/ath/ath10k/qmi.o] Error 1
-make[5]: *** Waiting for unfinished jobs....
-In file included from ./include/linux/byteorder/little_endian.h:5,
-                 from ./arch/x86/include/uapi/asm/byteorder.h:5,
-                 from ./include/asm-generic/bitops/le.h:6,
-                 from ./arch/x86/include/asm/bitops.h:395,
-                 from ./include/linux/bitops.h:29,
-                 from ./include/linux/kernel.h:12,
-                 from ./include/linux/clk.h:13,
-                 from drivers/net/wireless/ath/ath10k/snoc.c:6:
-drivers/net/wireless/ath/ath10k/snoc.c: In function 'ath10k_msa_dump_memory':
-drivers/net/wireless/ath/ath10k/snoc.c:1424:54: error: 'struct ath10k_qmi' has no member named 'msa_va'
-  hdr->start = cpu_to_le32((unsigned long)ar_snoc->qmi->msa_va);
-                                                      ^~
-./include/uapi/linux/byteorder/little_endian.h:33:51: note: in definition of macro '__cpu_to_le32'
- #define __cpu_to_le32(x) ((__force __le32)(__u32)(x))
-                                                   ^
-drivers/net/wireless/ath/ath10k/snoc.c:1424:15: note: in expansion of macro 'cpu_to_le32'
-  hdr->start = cpu_to_le32((unsigned long)ar_snoc->qmi->msa_va);
-               ^~~~~~~~~~~
-drivers/net/wireless/ath/ath10k/snoc.c:1425:40: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
-  hdr->length = cpu_to_le32(ar_snoc->qmi->msa_mem_size);
-                                        ^~
-./include/uapi/linux/byteorder/little_endian.h:33:51: note: in definition of macro '__cpu_to_le32'
- #define __cpu_to_le32(x) ((__force __le32)(__u32)(x))
-                                                   ^
-drivers/net/wireless/ath/ath10k/snoc.c:1425:16: note: in expansion of macro 'cpu_to_le32'
-  hdr->length = cpu_to_le32(ar_snoc->qmi->msa_mem_size);
-                ^~~~~~~~~~~
-drivers/net/wireless/ath/ath10k/snoc.c:1427:40: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
-  if (current_region->len < ar_snoc->qmi->msa_mem_size) {
-                                        ^~
-drivers/net/wireless/ath/ath10k/snoc.c:1428:27: error: 'struct ath10k_qmi' has no member named 'msa_va'
-   memcpy(buf, ar_snoc->qmi->msa_va, current_region->len);
-                           ^~
-drivers/net/wireless/ath/ath10k/snoc.c:1430:41: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
-        current_region->len, ar_snoc->qmi->msa_mem_size);
-                                         ^~
-drivers/net/wireless/ath/ath10k/snoc.c:1432:27: error: 'struct ath10k_qmi' has no member named 'msa_va'
-   memcpy(buf, ar_snoc->qmi->msa_va, ar_snoc->qmi->msa_mem_size);
-                           ^~
-drivers/net/wireless/ath/ath10k/snoc.c:1432:49: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
-   memcpy(buf, ar_snoc->qmi->msa_va, ar_snoc->qmi->msa_mem_size);
-                                                 ^~
-drivers/net/wireless/ath/ath10k/snoc.c: In function 'ath10k_fw_deinit':
-drivers/net/wireless/ath/ath10k/snoc.c:1593:14: error: assignment of read-only variable 'mapped_size'
-  mapped_size = ar_snoc->fw.mapped_mem_size;
-              ^
-drivers/net/wireless/ath/ath10k/snoc.c:1599:46: warning: format '%d' expects argument of type 'int', but argument 3 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
-   ath10k_err(ar, "failed to unmap firmware: %d\n",
-                                             ~^
-                                             %ld
-       unmapped_size);
-       ~~~~~~~~~~~~~                           
-make[5]: *** [drivers/net/wireless/ath/ath10k/snoc.o] Error 1
-make[4]: *** [drivers/net/wireless/ath/ath10k] Error 2
-make[3]: *** [drivers/net/wireless/ath] Error 2
-make[2]: *** [drivers/net/wireless] Error 2
-make[1]: *** [drivers/net] Error 2
-make: *** [drivers] Error 2
+https://lore.kernel.org/r/CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com
 
-3 patches set to Changes Requested.
+Maybe you didn't see it?  ...or if you or Rob think I'm way off base
+(always possible) then please tell me so.
 
-11455345 [1/3] dt-bindings: ath10k: Add wifi-firmware subnode for wifi node
-11455351 [2/3] ath10k: Setup the msa resources before qmi init
-11455353 [3/3] ath10k: Add support for targets without trustzone
+Thanks!
 
--- 
-https://patchwork.kernel.org/patch/11455345/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+-Doug
