@@ -2,120 +2,104 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB26C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 18:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F829C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 18:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DD52080C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 18:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585073119;
-	bh=gwowZflma4HOUrkpOxfcknYhcrXvqIPfeMghYSj8EKs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=WEEH7PAK3f8fG1nHGVDF+EeRqd+S12KvqG1wHPObc/tqpp7zBn8t1/tu/YHfz85ET
-	 pYLQ5x+85VtT6dnC/WBjKT7mVXq9mVXtg9x4z/UIa1+lnNnfam3Ame63v1jxuLdrS+
-	 IoDZGzcQzXtC40CvPnsTR+SaNIfpHwEwAl+gp07Y=
+	by mail.kernel.org (Postfix) with ESMTP id 825802074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 18:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCXSFS (ORCPT
+        id S1727448AbgCXSHO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:05:18 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46166 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbgCXSFR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 14:05:17 -0400
-Received: by mail-io1-f65.google.com with SMTP id a20so11798695ioo.13;
-        Tue, 24 Mar 2020 11:05:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nyDEVt1mvrogKhA8Gqx9BDr8ZhtFuURVk0awOOjdRAk=;
-        b=FRvVpYZQ7kbHljZAiALiNAYG2hMeiVKXcQ1YWleARDSyLEBqaXP1dJpny0a+TDuhUh
-         qYHnfX6qZDseEAXVITgxaKuiaG6+MNuN81fk8cjdTcp78Ogomzzflo+4Fy7sMtYFymhi
-         wjMStuKRdM+uNSEFGmjL58iBB0VnBZZ7SbD0LXbLlGFURR1vkyjkYV1V9NH8ZCqdxsLh
-         l1UuunmM0F9PZ9sf4PH2fbHAEUWK7X5odUv3t0qWossqDTG2SLurJPzdh5hnMFEJqDGs
-         e445soVE84Y1uOIl/XiXYencK70axgE4+dPhRPG0eVc3SweVfZ62lwb6cf8Snyk1IeoK
-         sjUQ==
-X-Gm-Message-State: ANhLgQ2xeVxUvivr1m/NbjGu4HMGnRTP6KJE+953m0Xoc+ftFHbawdAy
-        UE38gKZ6k65O8Ou1KnwvGA==
-X-Google-Smtp-Source: ADFU+vviVLJ2406W4da5BKPv3JBD0h+tKl7SMZvgGaaTsZAT3LHrZ3tTM5vdWhgLvBrZ8lN+deNRYw==
-X-Received: by 2002:a02:740d:: with SMTP id o13mr25847674jac.113.1585073114974;
-        Tue, 24 Mar 2020 11:05:14 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.250])
-        by smtp.googlemail.com with ESMTPSA id h12sm5348493iob.22.2020.03.24.11.05.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 11:05:14 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: thermal: tsens: Fix nvmem-cell-names schema
-Date:   Tue, 24 Mar 2020 12:05:12 -0600
-Message-Id: <20200324180513.3882-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 24 Mar 2020 14:07:14 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:33159 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727611AbgCXSHO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 14:07:14 -0400
+X-Originating-IP: 86.202.105.35
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 77F59C000B;
+        Tue, 24 Mar 2020 18:07:09 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 19:07:09 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] dt-bindings: rtc: Convert snps,dw-apb-timer to DT
+ schema
+Message-ID: <20200324180709.GO5504@piout.net>
+References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
+ <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200324174325.14213-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324174325.14213-2-Sergey.Semin@baikalelectronics.ru>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There's a typo 'nvmem-cells-names' in the schema which means the correct
-'nvmem-cell-names' in the examples are not checked. The possible values
-are wrong too both in that the 2nd entry is not specified correctly and the
-values are just wrong based on the dts files in the kernel.
+Hi,
 
-Fixes: a877e768f655 ("dt-bindings: thermal: tsens: Convert over to a yaml schema")
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/thermal/qcom-tsens.yaml          | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+On 24/03/2020 20:43:20+0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> Modern device tree bindings are supposed to be created as YAML-files
+> in accordance with DT schema. This commit replaces Synopsys DW Timer
+> legacy bare text binding with YAML file. As before the binding file
+> states that the corresponding dts node is supposed to be compatible
+> with generic DW APB Timer indicated by the "snps,dw-apb-timer"
+> compatible string and to provide a mandatory registers memory range,
+> one timer interrupt, either reference clock source or a fixed clock
+> rate value. It may also have an optional APB bus reference clock
+> phandle specified.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-rtc@vger.kernel.org
+> 
+> ---
+> 
+> I have doubts that this binding file belongs to the bindings/rtc
+> directory seeing it's a pure timer with no rtc facilities like
+> days/months/years counting and alarms. What about moving it to the
+> "Documentation/devicetree/bindings/timer/" directory?
+> 
 
-diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-index eac644d9e238..7a38d2116059 100644
---- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-+++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-@@ -52,13 +52,12 @@ properties:
-     description:
-       Reference to an nvmem node for the calibration data
- 
--  nvmem-cells-names:
-+  nvmem-cell-names:
-     minItems: 1
-     maxItems: 2
-     items:
--      - enum:
--        - caldata
--        - calsel
-+      - const: calib
-+      - const: calib_sel
- 
-   "#qcom,sensors":
-     allOf:
-@@ -124,7 +123,7 @@ examples:
-                  <0x4a8000 0x1000>; /* SROT */
- 
-            nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
--           nvmem-cell-names = "caldata", "calsel";
-+           nvmem-cell-names = "calib", "calib_sel";
- 
-            interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-            interrupt-names = "uplow";
+Exactly my reaction when seeing the patch, please move it out of
+bindings/rtc/
+
+
 -- 
-2.20.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
