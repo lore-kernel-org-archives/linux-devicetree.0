@@ -2,143 +2,82 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98ABC4332B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA7EC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82455208C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49342207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:47:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FbYjimOK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ACJghN2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727223AbgCXMfx (ORCPT
+        id S1727534AbgCXMrj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:35:53 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:40926 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727668AbgCXMfw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 08:35:52 -0400
-Received: by mail-pg1-f202.google.com with SMTP id n16so13394991pgl.7
-        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 05:35:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=hVHQV/dj3HvNuxis1PdKXEZxW+M5qBzMZyzK/EGMeCk=;
-        b=FbYjimOK12I3PtYwelwNdAM2oLqQiMBiW6ebqxTWZSWqK1WLC+1+frlwjsMx9DI0CB
-         /yfXTd2ISAw1B9RmhQ2JWRGMh+q5h0RvT2rl8xxYQxy6QKE9UUX7jAGn2q7Hrc3vstib
-         Vxo9M9Xjb52PXkfCA0EDImFlAzYoWgv/DOD7q3CbUAIRhTShV3HgYgO3AJ9x1P86gTSw
-         eaGh29VpqQpDD8VO/Ty4W3ecqFe73U60Gveu6iqzJigkW8z4DYo6PMi09w2M9zsC+UrZ
-         0jwTerdfdH62UUszaOpPEALroapa4mktu665iMT193wZhGKHqm1NY0CSalVcWI6DDnDJ
-         r7ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=hVHQV/dj3HvNuxis1PdKXEZxW+M5qBzMZyzK/EGMeCk=;
-        b=RddewFHdtzHHIT5YQiIoDulWACq8Tkv6BuAh+CHNLdZENfAvHrOI5ojr5u97GE58iO
-         sqsCZyu/GDApwjQkncAsQRF9rLh5uR91vCCFWyPpqffW5e0CBZjl2HYjACHO6y1VoALS
-         pWEdL6/S3vfFlbdji1C3xkuKz2rkNrrMcYC46kDpWu+1rTesfiZ72Jq7FLtmJrO4Uqfj
-         fnGLHWBdMR6/5F9RvyjKSHpK3slMjTGu6IlSRwE7A2PDPQ1uWfZ8Andls8YhdpiiGOek
-         vxBsKQGfnTIbQi7kzCPHUl6EDIsmuXt7ujo/6DlFiFf9QdSdMZrH4EuFcdqqdBDm8Oae
-         cm6w==
-X-Gm-Message-State: ANhLgQ08jLyAos2b04mtxrNLY3mLSMIYNaNmsy07oxvMA7+5TTgiaTWf
-        g2OmvGbQSkZOxeY3wCn+YIZSZM3qwpQw
-X-Google-Smtp-Source: ADFU+vsjCoKpoZ06ftk7XttqwAP+E9Yftk1Lj/gHqvVXELUNqecE5DCpQGtBz3ovvibLOkGOpmVDNkzSdZyn
-X-Received: by 2002:a17:90a:bb92:: with SMTP id v18mr5069386pjr.171.1585053351277;
- Tue, 24 Mar 2020 05:35:51 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 05:35:18 -0700
-In-Reply-To: <20200324123518.239768-1-rajatja@google.com>
-Message-Id: <20200324123518.239768-5-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200324123518.239768-1-rajatja@google.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v2 5/5] dt-bindings: input/atkbd.txt: Add binding info for
- "keymap" property
-From:   Rajat Jain <rajatja@google.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajat Jain <rajatja@google.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, furquan@google.com,
-        dlaurie@google.com, bleung@google.com, zentaro@google.com,
-        dbehr@google.com
-Cc:     rajatxjain@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 24 Mar 2020 08:47:39 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:16536 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727502AbgCXMrj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:47:39 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585054059; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=+KQN9xMVdPONR0ZqJSh7cXvXgPgruBMXlHRgc5SZ7Eo=; b=ACJghN2yTYJqK4Tkg97JT3vbeQVFcu1KzmbACLid3Sz1OVUZyYWu6ZgjhmtOuXwNETrDVno0
+ RfQURiqJOyitCgaLKC5MIXkDWyGxOTu6WFKtNMdtk4iCWu9toR4lrgdIO+TqiECBlStIytDb
+ DM1wZkvsO2O24BFth8Ku+ZOJsEI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7a0164.7f14b33602d0-smtp-out-n04;
+ Tue, 24 Mar 2020 12:47:32 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 60997C432C2; Tue, 24 Mar 2020 12:47:31 +0000 (UTC)
+Received: from pillair-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1FD1FC433CB;
+        Tue, 24 Mar 2020 12:47:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1FD1FC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     ath10k@lists.infradead.org
+Cc:     linux-wireless@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH 0/3] Add support to handle targets without TrustZone
+Date:   Tue, 24 Mar 2020 18:17:21 +0530
+Message-Id: <1585054044-18667-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the info for keymap property that allows firmware to specify the
-mapping from physical code to linux keycode, that the kernel should use.
+The iommu mapping for S2 SIDs are taken care by TrustZone.
+For the targets which does not have the support of TrustZone,
+these mappings need to be created in the driver using an
+iommu domain.
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v2: Remove the Change-Id from the commit log
+Leaving these SIDs unconfigured will result in a global
+smmu fault. Hence configuring them for Non-TrustZone targets
+is mandatory.
 
- .../devicetree/bindings/input/atkbd.txt       | 27 ++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+Rakesh Pillai (3):
+  dt-bindings: ath10k: Add wifi-firmware subnode for wifi node
+  ath10k: Setup the msa resources before qmi init
+  ath10k: Add support for targets without trustzone
 
-diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
-index 816653eb8e98d..0a0037d70adc8 100644
---- a/Documentation/devicetree/bindings/input/atkbd.txt
-+++ b/Documentation/devicetree/bindings/input/atkbd.txt
-@@ -6,9 +6,15 @@ Optional properties:
- 			An ordered array of the physical codes for the function
- 			row keys. Arranged in order from left to right.
- 
-+	keymap:
-+			An array of the u32 entries to specify mapping from the
-+			keyboard physcial codes to linux keycodes. The top 16
-+			bits of each entry are the physical code, and bottom
-+			16 bits are the	linux keycode.
-+
- Example:
- 
--	This is a sample ACPI _DSD node describing the property:
-+	This is a sample ACPI _DSD node describing the properties:
- 
-         Name (_DSD, Package () {
-                 ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-@@ -29,6 +35,25 @@ Example:
-                                         0xAE, /* T12 VOL_DOWN */
-                                         0xB0, /* T13 VOL_UP */
-                                 }
-+                        },
-+                        Package () { "keymap",
-+                                Package () {
-+                                        0xEA009E, /* EA -> KEY_BACK */
-+                                        0xE700AD, /* E7 -> KEY_REFRESH */
-+                                        0x910174, /* 91 -> KEY_FULL_SCREEN */
-+                                        0x920078, /* 92 -> KEY_SCALE */
-+                                        0x930280, /* 93 -> 0x280 */
-+                                        0x9400E0, /* 94 -> KEY_BRIGHTNESS_DOWN*/
-+                                        0x9500E1, /* 95 -> KEY_BRIGHTNESS_UP */
-+                                        0x960279, /* 96 -> KEY_PRIVACY_SCRN_TOGGLE*/
-+                                        0x9700E5, /* 97 -> KEY_KBDILLUMDOWN */
-+                                        0x9800E6, /* 98 -> KEY_KBDILLUMUP */
-+                                        0xA00071, /* A0 -> KEY_MUTE */
-+                                        0xAE0072, /* AE -> KEY_VOLUMEDOWN */
-+                                        0xB00073, /* B0 -> KEY_VOLUMEUP */
-+					...
-+					<snip other entries>
-+                                }
-                         }
-                 }
-         })
+ .../bindings/net/wireless/qcom,ath10k.txt          |  14 ++
+ drivers/net/wireless/ath/ath10k/core.h             |   5 +
+ drivers/net/wireless/ath/ath10k/qmi.c              |  55 +------
+ drivers/net/wireless/ath/ath10k/qmi.h              |   3 -
+ drivers/net/wireless/ath/ath10k/snoc.c             | 170 ++++++++++++++++++++-
+ drivers/net/wireless/ath/ath10k/snoc.h             |   7 +
+ 6 files changed, 200 insertions(+), 54 deletions(-)
+
 -- 
-2.25.1.696.g5e7596f4ac-goog
-
+2.7.4
