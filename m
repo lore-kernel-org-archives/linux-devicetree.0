@@ -2,69 +2,63 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAF4C41621
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB19C4332B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651182051A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765992051A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 09:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgCXJpj (ORCPT
+        id S1727092AbgCXJpf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:45:39 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:12252 "EHLO
+        Tue, 24 Mar 2020 05:45:35 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:11754 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727063AbgCXJpg (ORCPT
+        by vger.kernel.org with ESMTP id S1727050AbgCXJpf (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:45:36 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O9fb1f030395;
-        Tue, 24 Mar 2020 05:45:34 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywfu593hc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 05:45:33 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 02O9jWl0025046
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 24 Mar 2020 05:45:35 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O9jLsc007421;
         Tue, 24 Mar 2020 05:45:32 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs61j6s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Mar 2020 05:45:32 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02O9jUSc002585
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 24 Mar 2020 05:45:31 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 24 Mar 2020 05:45:32 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 24 Mar 2020 05:45:31 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 24 Mar 2020 05:45:31 -0400
+ 15.1.1779.2; Tue, 24 Mar 2020 02:45:29 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 24 Mar 2020 02:45:29 -0700
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02O9jRKi027422;
-        Tue, 24 Mar 2020 05:45:30 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02O9jRKg027422;
+        Tue, 24 Mar 2020 05:45:28 -0400
 From:   <alexandru.tachici@analog.com>
 To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>
 CC:     <jic23@kernel.org>, <robh+dt@kernel.org>
-Subject: [RESEND PATCH 2/2] dt-bindings: iio: dac: AD5570R fix bindings errors
-Date:   Tue, 24 Mar 2020 11:45:06 +0200
-Message-ID: <20200324094506.55938-3-alexandru.tachici@analog.com>
+Subject: [RESEND PATCH 0/2] iio: dac: ad5770r: dt bindings fixes
+Date:   Tue, 24 Mar 2020 11:45:04 +0200
+Message-ID: <20200324094506.55938-1-alexandru.tachici@analog.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200324094506.55938-1-alexandru.tachici@analog.com>
-References: <20200324094506.55938-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
  definitions=2020-03-24_02:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 impostorscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0
- lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003240051
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 clxscore=1011 suspectscore=0 spamscore=0 mlxlogscore=781
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003240051
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -72,186 +66,23 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-Replaced num property with reg property, fixed errors
-reported by dt-binding-check.
+This aims to replace use of num property from dt nodes with
+reg property both in dt bindings and driver and fix
+dt bindings errors.
 
-Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
+1. read from fwnode reg property instead of num property
+
+2. replace num property with reg property and fix dt
+bindings errors
+
+Alexandru Tachici (2):
+  iio: dac: ad5770r: read channel nr from reg
+  dt-bindings: iio: dac: AD5570R fix bindings errors
+
  .../bindings/iio/dac/adi,ad5770r.yaml         | 77 ++++++++++---------
- 1 file changed, 40 insertions(+), 37 deletions(-)
+ drivers/iio/dac/ad5770r.c                     |  2 +-
+ 2 files changed, 41 insertions(+), 38 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-index d9c25cf4b92f..d1755dbc1a41 100644
---- a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-+++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-@@ -2,7 +2,7 @@
- # Copyright 2020 Analog Devices Inc.
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/bindings/iio/dac/adi,ad5770r.yaml#
-+$id: http://devicetree.org/schemas/iio/dac/adi,ad5770r.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Analog Devices AD5770R DAC device driver
-@@ -49,83 +49,84 @@ properties:
-       asserted during driver probe.
-     maxItems: 1
- 
--  channel0:
-+  channel@0:
-     description: Represents an external channel which are
-       connected to the DAC. Channel 0 can act both as a current
-       source and sink.
-     type: object
- 
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          const: 0
- 
-       adi,range-microamp:
-           description: Output range of the channel.
-           oneOf:
--            - $ref: /schemas/types.yaml#/definitions/int32-array
-             - items:
--                - enum: [0 300000]
--                - enum: [-60000 0]
--                - enum: [-60000 300000]
-+                - const: 0
-+                - const: 300000
-+            - items:
-+                - const: -60000
-+                - const: 0
-+            - items:
-+                - const: -60000
-+                - const: 300000
- 
--  channel1:
-+  channel@1:
-     description: Represents an external channel which are
-       connected to the DAC.
-     type: object
- 
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          const: 1
- 
-       adi,range-microamp:
-           description: Output range of the channel.
-           oneOf:
--            - $ref: /schemas/types.yaml#/definitions/uint32-array
-             - items:
--                - enum: [0 140000]
--                - enum: [0 250000]
-+                - const: 0
-+                - const: 140000
-+            - items:
-+                - const: 0
-+                - const: 250000
- 
--  channel2:
-+  channel@2:
-     description: Represents an external channel which are
-       connected to the DAC.
-     type: object
- 
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          const: 2
- 
-       adi,range-microamp:
-           description: Output range of the channel.
-           oneOf:
--            - $ref: /schemas/types.yaml#/definitions/uint32-array
-             - items:
--                - enum: [0 140000]
--                - enum: [0 250000]
-+                - const: 0
-+                - const: 55000
-+            - items:
-+                - const: 0
-+                - const: 150000
- 
- patternProperties:
-   "^channel@([3-5])$":
-     type: object
-     description: Represents the external channels which are connected to the DAC.
-     properties:
--      num:
-+      reg:
-         description: This represents the channel number.
--        items:
--          minimum: 3
--          maximum: 5
- 
-       adi,range-microamp:
-           description: Output range of the channel.
-           oneOf:
--            - $ref: /schemas/types.yaml#/definitions/uint32-array
-             - items:
--                - enum: [0 45000]
--                - enum: [0 100000]
-+                - const: 0
-+                - const: 45000
-+            - items:
-+                - const: 0
-+                - const: 100000
- 
- required:
- - reg
-@@ -150,34 +151,36 @@ examples:
-                         vref-supply = <&vref>;
-                         adi,external-resistor;
-                         reset-gpios = <&gpio 22 0>;
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
- 
-                         channel@0 {
--                                num = <0>;
--                                adi,range-microamp = <(-60000) 300000>;
-+                                reg = <0>;
-+                                adi,range-microamp = <0 300000>;
-                         };
- 
-                         channel@1 {
--                                num = <1>;
-+                                reg = <1>;
-                                 adi,range-microamp = <0 140000>;
-                         };
- 
-                         channel@2 {
--                                num = <2>;
-+                                reg = <2>;
-                                 adi,range-microamp = <0 55000>;
-                         };
- 
-                         channel@3 {
--                                num = <3>;
-+                                reg = <3>;
-                                 adi,range-microamp = <0 45000>;
-                         };
- 
-                         channel@4 {
--                                num = <4>;
-+                                reg = <4>;
-                                 adi,range-microamp = <0 45000>;
-                         };
- 
-                         channel@5 {
--                                num = <5>;
-+                                reg = <5>;
-                                 adi,range-microamp = <0 45000>;
-                         };
-                 };
 -- 
 2.20.1
 
