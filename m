@@ -2,182 +2,150 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4DEC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0740C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B576C20870
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:52:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Ca64qgUo"
+	by mail.kernel.org (Postfix) with ESMTP id 843332070A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 11:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgCXLwb (ORCPT
+        id S1727325AbgCXL5B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:52:31 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:35964 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727400AbgCXLwb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 07:52:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id EFA3241286;
-        Tue, 24 Mar 2020 11:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1585050747; x=1586865148; bh=r/+JpB/tzVggc5+uUHeVaa6fh
-        /sE674WIfm1mQzEXGE=; b=Ca64qgUokGK2sYLawspct1XYaPuroDblVruX3BjtG
-        s/bWrsVasOqeFifGlhcXXYeyBR7+Y03KBxOwUTNqh65RgPkdxYCRZBZ9hdFOOZIn
-        Bpb01eb6sFlx0VpvgNi8EnP45mAtJxrZ654Bt9qIV3L1AlzXrPaC1G5+/voM0nEk
-        gc=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lmXVjV-HORA3; Tue, 24 Mar 2020 14:52:27 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 1286441259;
-        Tue, 24 Mar 2020 14:52:27 +0300 (MSK)
-Received: from localhost.localdomain (10.199.1.182) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Tue, 24 Mar 2020 14:52:27 +0300
-Message-ID: <321453af40ca49839bc7b9d1c65b828841492f72.camel@yadro.com>
-Subject: Re: [PATCH 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 24 Mar 2020 14:52:30 +0300
-In-Reply-To: <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com>
-References: <20200323103926.21271-1-i.mikhaylov@yadro.com>
-         <20200323103926.21271-3-i.mikhaylov@yadro.com>
-         <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Tue, 24 Mar 2020 07:57:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:59102 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727066AbgCXL5A (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 07:57:00 -0400
+IronPort-SDR: wDJAJ0pRgJm+OgyMOSJSBpFmruGNlc1nwaBtRUnJJ55PmIgnQjPFrbY4QrzdTVzg9P/SZArJ2s
+ xqYwa/w8cd1A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 04:56:59 -0700
+IronPort-SDR: 2Sj/qNA+FiNvJUfbIkx9MSE/0ag2nn3/HFOZ0kego6vH4CHtnziZyEAegdZW52/ECsXZWJ0tCp
+ /rHHc+E6NNtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
+   d="scan'208";a="293042063"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 24 Mar 2020 04:56:52 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jGiAv-00CWGR-Do; Tue, 24 Mar 2020 13:56:53 +0200
+Date:   Tue, 24 Mar 2020 13:56:53 +0200
+From:   "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "talgi@mellanox.com" <talgi@mellanox.com>,
+        "brendanhiggins@google.com" <brendanhiggins@google.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Gary.Hook@amd.com" <Gary.Hook@amd.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davidgow@google.com" <davidgow@google.com>,
+        "changbin.du@intel.com" <changbin.du@intel.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "olteanv@gmail.com" <olteanv@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "bp@suse.de" <bp@suse.de>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
+        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Message-ID: <20200324115653.GI1922688@smile.fi.intel.com>
+References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+ <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200324095024.GE1922688@smile.fi.intel.com>
+ <03f7053576e60632d7ac3bc074afe5d8d63e3714.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.199.1.182]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03f7053576e60632d7ac3bc074afe5d8d63e3714.camel@fi.rohmeurope.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2020-03-23 at 14:10 +0200, Andy Shevchenko wrote:
-> On Mon, Mar 23, 2020 at 12:41 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> > Proximity sensor driver based on light/vcnl4000.c code.
-> > For now supports only the single on-demand measurement.
+On Tue, Mar 24, 2020 at 10:53:09AM +0000, Vaittinen, Matti wrote:
+> On Tue, 2020-03-24 at 11:50 +0200, Andy Shevchenko wrote:
+> > On Tue, Mar 24, 2020 at 10:32:19AM +0200, Matti Vaittinen wrote:
+
+...
+
+> > > +	for (i = ffs(tmp); i; i = ffs(tmp)) {
 > > 
-> > The VCNL3020 is a fully integrated proximity sensor. Fully
-> > integrated means that the infrared emitter is included in the
-> > package. It has 16-bit resolution. It includes a signal
-> > processing IC and features standard I2C communication
-> > interface. It features an interrupt function.
+> > NIH of for_each_set_bit().
 > 
-> Thank you for a patch, my comments below.
-> 
-> > Datasheet available at:
-> > http://www.vishay.com/docs/84150/vcnl3020.pdf
-> 
-> I'm thinking that we may simple introduce new tag, called Datesheet:
-> to put such links.
-> 
-> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> 
-> ...
-> 
-> >  obj-$(CONFIG_SRF08)            += srf08.o
-> >  obj-$(CONFIG_SX9500)           += sx9500.o
-> >  obj-$(CONFIG_VL53L0X_I2C)      += vl53l0x-i2c.o
-> > +obj-$(CONFIG_VCNL3020)         += vcnl3020.o
-> 
-> Perhaps keep ordered?
+> What does the NIH stand for?
 
-Oops.
+Not Invented Here syndrome :-)
 
-> 
-> ...
-> 
-> > +static int32_t vcnl3020_init(struct vcnl3020_data *data)
-> 
-> int32_t...
-> 
-> > +{
-> > +       s32 rc;
-> 
-> ...s32?!
-> 
-> Applies to entire code.
+> Anyways, I agree. This is probably better if I use for_each_set_bit()
 
-checkpatch.pl --strict doesn't show anything bad in it but I can change from
-int32_t/s32 into int easily, it's not a problem for me.
+...
 
+> > > +	if (!dev->platform_data) {
+> > 
+> > dev_get_platdata()
+> > 
+> > > +		ret = bd9995x_fw_probe(bd);
+> > > +		if (ret < 0) {
+> > > +			dev_err(dev, "Cannot read device
+> > > properties.\n");
+> > > +			return ret;
+> > > +		}
+> > > +	} else {
+> > > +		return -ENODEV;
+> > 
+> > So, existing platform data leads to an error?!
 > 
-> > +       u32 led_current;
-> > +       struct device *dev = &data->client->dev;
-> 
-> Reversed xmas tree order looks better.
-> 
-> > +       rc = i2c_smbus_read_byte_data(data->client, VCNL_PROD_REV);
-> 
-> Can you use regmap I²C API?
-> 
+> Yes. As currently we only use DT. If someone needs platdata they need
+> to improve the driver
 
-That's a nice idea.
+I think the idea to avoid platform data in new code as much as possible.
+And it's unusual to have somebody to use this driver with platform_data set.
+Why not simple ignore it?
 
-> ...
-> 
-> > +       dev_info(&client->dev, "Proximity sensor, Rev: %02x\n",
-> > +                data->rev);
-> 
-> Noise.
+...
 
-Doesn't it help to determine the presence of driver to a common user?
-
+> > > +#ifndef BD99954_CHARGER_H
+> > > +#define BD99954_CHARGER_H
+> > > +
+> > > +#include <linux/regmap.h>
+> > 
+> > It is not the header you have users for.
+> > Proper one should be bits.h.
 > 
-> > +               goto out;
-> > +
-> > +       return rc;
-> > +out:
-> > +       devm_iio_device_free(&client->dev, indio_dev);
-> > +       return rc;
-> 
-> Managed resources are exactly for this not to be appeared in the code.
+> Huh? struct reg_field is in regmap.h, right?
 
-I can do something like this:
-return devm_iio_device_register(&client->dev, indio_dev);
+In that long list of some enums I definitely missed something. Just double
+check the users anyway.
 
-Would it suffice?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> 
-> > +}
-> 
-> ...
-> 
-> > +static const struct of_device_id vcnl3020_of_match[] = {
-> > +       {
-> > +               .compatible = "vishay,vcnl3020",
-> > +       },
-> 
-> Missed terminator. How did you test this?
-
-All works fine with real hw, I'll add terminator.
-Agree with everything else.
-
-Thanks. 
 
