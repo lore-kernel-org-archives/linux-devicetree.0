@@ -2,113 +2,132 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D18C41621
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBDDC4332B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF5B20870
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228C32070A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 12:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TN2CwCxN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lrkNOvRm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725767AbgCXMcG (ORCPT
+        id S1727534AbgCXMf1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:32:06 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38940 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727130AbgCXMcF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 08:32:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so8781914wrt.6;
-        Tue, 24 Mar 2020 05:32:04 -0700 (PDT)
+        Tue, 24 Mar 2020 08:35:27 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:36801 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727521AbgCXMf1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 08:35:27 -0400
+Received: by mail-pf1-f201.google.com with SMTP id h125so13846660pfg.3
+        for <devicetree@vger.kernel.org>; Tue, 24 Mar 2020 05:35:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=atHO2cCzgOMkDYaDPQrtakvRe3Ydex6Qe9QJS9pzzX8=;
-        b=TN2CwCxNWlYG1JfPYWRaeZ2r0cqpdUtqKj4DxRAJ+Vcp+KYsdavUdDfv5MMVdDam89
-         QsN80wkxMFNnZKozAPaRWDyiNjGIWm6PhzoTyQ4IluC4yb2kXCp4GlMM3MOTkPGhRcrv
-         jg55wqIdWr9IpkIsMIrKYD+pUyQIECB7tWUNtG/DY/Dyoux6kqUgoyMCatfdDPKftdod
-         nUyk7yIZBGb/ZZIWWVo/QXHt0YLbh+mpnA6XO0f8vHvVvsyg5SWsO0z8oGQ5LyzPwZ0u
-         tdtoZFiZgqZKL+s+SDNNFuHRKgGDu2/NE51KiSKcxi2rG1z1IfTz14bey+GX8KqPdW8U
-         tvFA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=5LJBH8xQN/jQBYcxN7fADpsh/S4ILyM2BLQ/YSrufN0=;
+        b=lrkNOvRmUfIaF/A680qHGLiVgg0GQPkzG6FPhLtY747Zb6pLNG8Zgn8lppIsH1ATDA
+         qi2aczpwz1DwrvZaRiIJjdZuljpnhbxcIlV3tH30rFehu9n/VcQCT72NRCumITBYwZcs
+         u2vqZHudgsefVYz+OnKrpUocL7ncCUxYD1sWAeTYAVKhNG36dPUFEeG2EsskGXE8Gqv7
+         W6t9VEvV6CZYmMIXsJng/CIAM5+9WkHrlLR16tuWvMJ5B0LjGhrKJnMuf5yTBkRfeVcS
+         7vQ9gQmNzQA/SHCh04nyP551vhjc9mEyIRgpsmkCP+XyWgTn8pTj+emFXRd7rC+KrqDH
+         BUPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=atHO2cCzgOMkDYaDPQrtakvRe3Ydex6Qe9QJS9pzzX8=;
-        b=RNuNvL35scwrqtwGPj5dq9XPJ+vwogYw61mOdPesqkqHPkdIvUe4u3rxqbxttbm5tQ
-         4Xo/M5nN+I8HXWxx08ZOywCp768AP1NSOYBPGF6pVtAv1pBIuQffsc+FFlkTY8ahZn4z
-         BbN7t1W+4lgwva1TYoG/oqpWh1pGpDvIfdNBZ7DfrNNgmoKCai13P2kAhLEHwbFnLQDv
-         7StkAVtAfwBIzUMaaem/tstzM3k/hQQaWtxkVvTt905bZqgfagaBv+Nk6u9lNFNTFjqL
-         Lr2PpMgIokqLiAe0FczA5KFxw8TQTX4/OVULco99sRtA5NLhdcvdDmDR2q/wPswmXPj2
-         cAHg==
-X-Gm-Message-State: ANhLgQ3H5VSxVx+EhQpRkZyN7+3CqknFeP/RR/UjqWJ3y0+gIPgbPHBC
-        dyS7g3OGhaVOQvEa17oaZ14=
-X-Google-Smtp-Source: ADFU+vvwc7ZZX4Hf0V7jwJm1hdyW8wN+2s2AUbaBpJXWj10D0kLU62MU+6Z0rzHvlOwAe0jPxp+BMw==
-X-Received: by 2002:adf:f688:: with SMTP id v8mr36392951wrp.344.1585053123707;
-        Tue, 24 Mar 2020 05:32:03 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k185sm4215029wmb.7.2020.03.24.05.32.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Mar 2020 05:32:03 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     lgirdwood@gmail.com
-Cc:     broonie@kernel.org, heiko@sntech.de, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] dt-bindings: sound: rockchip-spdif: add #sound-dai-cells property
-Date:   Tue, 24 Mar 2020 13:31:54 +0100
-Message-Id: <20200324123155.11858-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200324123155.11858-1-jbx6244@gmail.com>
-References: <20200324123155.11858-1-jbx6244@gmail.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=5LJBH8xQN/jQBYcxN7fADpsh/S4ILyM2BLQ/YSrufN0=;
+        b=nQ4zdPY6kGttge94+4sYQJnd74VhEJ1QMLkJFccn8ZOQRame1NWnFJjOC4H+7voqdh
+         oEnahyoVPxXtipJhnIlCmpi7E/v7qnPN2/xq73s569IFhAlw+BfDfIMbidgO2/YOrH3i
+         Imi3MJQLYiIjEyzXECvcId0+4J1UoyNbUQOAmLRV4KB0uRBQCr8Pi/2JVaST+LZaR1sA
+         uW5lpn/ZXQcoq4S9QNy8/2q2N1iJovdY4L/oUXmc56kben1W3zBJ14nplD2af9HNk8bY
+         P3XRLzE9vszAVPiWOhyicGPwRBDcmSGSKszGuGlaNWaqo4BepmZPjIyrlMrxRu/j8KcA
+         lPng==
+X-Gm-Message-State: ANhLgQ1bKjvAkIU1MXCrTmtxHm/8ALINHrm+DyH3Tz1Wc6y7STcOxg6X
+        Ja1uLQKzlgkIbch6vpD0JRfQ5YG3wRmE
+X-Google-Smtp-Source: ADFU+vu288sFSt11Qek/NJ9edzx6Ik5VpV0z7KGXLXL8qHNO1/Re0wIomUu+WPPbOweT/mkzeqW3EKHV9Tjl
+X-Received: by 2002:a17:90a:ba93:: with SMTP id t19mr4040036pjr.67.1585053326283;
+ Tue, 24 Mar 2020 05:35:26 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 05:35:14 -0700
+Message-Id: <20200324123518.239768-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v2 1/5] input/serio/i8042: Attach fwnode to serio i8042 kbd device
+From:   Rajat Jain <rajatja@google.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajat Jain <rajatja@google.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, furquan@google.com,
+        dlaurie@google.com, bleung@google.com, zentaro@google.com,
+        dbehr@google.com
+Cc:     rajatxjain@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-'#sound-dai-cells' is required to properly interpret
-the list of DAI specified in the 'sound-dai' property,
-so add them to 'rockchip-spdif.yaml'
+Attach the firmware node to the serio i8042 kbd device so that device
+properties can be passed from the firmware.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
- Documentation/devicetree/bindings/sound/rockchip-spdif.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+v2: Remove the Change-Id from the commit log
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-index d1c72c8a5..0546fd4cc 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-+++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-@@ -57,6 +57,9 @@ properties:
-       The phandle of the syscon node for the GRF register.
-       Required property on RK3288.
+ drivers/input/serio/i8042-x86ia64io.h | 1 +
+ drivers/input/serio/i8042.c           | 3 +++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
+index dc974c288e880..ed9ec4310d976 100644
+--- a/drivers/input/serio/i8042-x86ia64io.h
++++ b/drivers/input/serio/i8042-x86ia64io.h
+@@ -927,6 +927,7 @@ static int i8042_pnp_kbd_probe(struct pnp_dev *dev, const struct pnp_device_id *
+ 	}
+ 	i8042_pnp_id_to_string(dev->id, i8042_kbd_firmware_id,
+ 			       sizeof(i8042_kbd_firmware_id));
++	i8042_kbd_fwnode = dev_fwnode(&dev->dev);
  
-+  "#sound-dai-cells":
-+    const: 0
-+
- required:
-   - compatible
-   - reg
-@@ -65,6 +68,7 @@ required:
-   - clock-names
-   - dmas
-   - dma-names
-+  - "#sound-dai-cells"
+ 	/* Keyboard ports are always supposed to be wakeup-enabled */
+ 	device_set_wakeup_enable(&dev->dev, true);
+diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
+index 20ff2bed3917a..0dddf273afd94 100644
+--- a/drivers/input/serio/i8042.c
++++ b/drivers/input/serio/i8042.c
+@@ -21,6 +21,7 @@
+ #include <linux/i8042.h>
+ #include <linux/slab.h>
+ #include <linux/suspend.h>
++#include <linux/property.h>
  
- if:
-   properties:
-@@ -91,4 +95,5 @@ examples:
-       clock-names = "mclk", "hclk";
-       dmas = <&dmac1_s 8>;
-       dma-names = "tx";
-+      #sound-dai-cells = <0>;
-     };
+ #include <asm/io.h>
+ 
+@@ -124,6 +125,7 @@ MODULE_PARM_DESC(unmask_kbd_data, "Unconditional enable (may reveal sensitive da
+ static bool i8042_bypass_aux_irq_test;
+ static char i8042_kbd_firmware_id[128];
+ static char i8042_aux_firmware_id[128];
++static struct fwnode_handle *i8042_kbd_fwnode;
+ 
+ #include "i8042.h"
+ 
+@@ -1335,6 +1337,7 @@ static int __init i8042_create_kbd_port(void)
+ 	strlcpy(serio->phys, I8042_KBD_PHYS_DESC, sizeof(serio->phys));
+ 	strlcpy(serio->firmware_id, i8042_kbd_firmware_id,
+ 		sizeof(serio->firmware_id));
++	set_primary_fwnode(&serio->dev, i8042_kbd_fwnode);
+ 
+ 	port->serio = serio;
+ 	port->irq = I8042_KBD_IRQ;
 -- 
-2.11.0
+2.25.1.696.g5e7596f4ac-goog
 
