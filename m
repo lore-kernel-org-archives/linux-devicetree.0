@@ -2,189 +2,424 @@ Return-Path: <SRS0=2e0x=5J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21328C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49E5C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E623D20714
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C95F2073E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Mar 2020 15:41:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="TixMqDr3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BjBkNffj"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="LsnnVGku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgCXPkt (ORCPT
+        id S1728322AbgCXPlJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:40:49 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:49655 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727510AbgCXPkt (ORCPT
+        Tue, 24 Mar 2020 11:41:09 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17807 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727857AbgCXPlI (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:40:49 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6EC37580187;
-        Tue, 24 Mar 2020 11:40:47 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 24 Mar 2020 11:40:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=lR0eBIanF6SDCnxFLTSyE8ziSKg
-        i9ZA+hhtsHfD2qAA=; b=TixMqDr3fI806sOY6xWM1xXk/HuR5Sl4JafhqvNyYCh
-        B0WnbHWQLOO/1xO3PFhETsvKzKyyEM88a0AaojKb7Z7jEAY7iBfwNSPkX7HeNFhP
-        EpVoSgsuZtGVDGoBCmKTFfXrDkcnCGOxzvDPtk7CplrnmncsR3pI089wwgutQyOl
-        r9c4STe+YabsAQZyWWaej1FAM3C2S7RoT2JjIigyyOE4sFLStzFrVqAlujo5Y7Vu
-        duNNH6cgHIIj02nefyBxBJcAJneMRe7HJ+0/UkxGCKKLuzYUEBgya224oMv9FJQ8
-        hfkxFh4t20pQdpM7EhYCvXT2s9wHPi5dnalEcb5Rayg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=lR0eBI
-        anF6SDCnxFLTSyE8ziSKgi9ZA+hhtsHfD2qAA=; b=BjBkNffjGWUc/5jO4przwO
-        m59Z+khlWSZ+YRhAy0e926I4p4hSBXhtqDoIV/ttcdvFNvFP7jrBppP4f8ENR3fy
-        x1uQbKV6JcLOBipoIyP3jrVTNTedqJHP4cSabAQ/rYi8ndXBL33kHLHOjodHgE6D
-        Fnqe3JIsYpplYmQHIuQ6PIKdNyDshuUMRlWDC/n4fsQ9ElI1YNkfeiIVkoZ4Q8vp
-        fQDoCqp7yY3eY7AHpOL/ZNL5CBDO8jHaulswREydapxFOLUDBt+Hh+HyqJq4RhAn
-        q6eymUBCE4G0MWyZYWMxTTJNsdGOtrkVqk7c0stXqR13ZtgqmC9VVNcaRhkKph6w
-        ==
-X-ME-Sender: <xms:_il6Xt4ksL-jhcvZmkMCViNSBNo_RZcE01s0-7JRpOaAC5BY7DBs2Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehuddggeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:_il6XrOD7fk_9C_XwgCcc_S_KP163e5_Z8_eD_LWJkl0VBKflvYB0Q>
-    <xmx:_il6XopYb_SZOG4texGiaC00k_z4vPuvlVbEHFAJ4hOcMuQW7FPmEQ>
-    <xmx:_il6XtKI1PhRtOFQ3CLV-Slek7_CFFK3anEYIZsnEFTNFkZcbvKM3A>
-    <xmx:_yl6XjBaAJpG6w4gxocQIXvtVa5yNQPAsyZ6cZubr3X6ZjCqfUjYGQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1E4E63280064;
-        Tue, 24 Mar 2020 11:40:46 -0400 (EDT)
-Date:   Tue, 24 Mar 2020 16:40:45 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Tue, 24 Mar 2020 11:41:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585064315;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=RJx6IG5lpnFNfeFR/IZXZElZq25cRryFOCMHtYhUKtw=;
+        b=LsnnVGkuhqz92yh/PQ+lpVVjeYLBICb5zh00O9m9cxaFjdKfUhFI8z2L1cnM3udL
+        T1S6zcdxBpTk5P9gRza0ebDXqKa5eqkCw825Vg5j8hDBUpVJFMlAeksdGdHY+zIOSzB
+        Yn1EdaTDXWXiZdTCBJ499O7XB8OTv7ZOeLB5vb60=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 158506431408471.55157561061696; Tue, 24 Mar 2020 23:38:34 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        linux-media <linux-media@vger.kernel.org>
-Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to
- assigned-clock-rates
-Message-ID: <20200324154045.whiy6uvlg2mrjv5a@gilmour.lan>
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200319124452.3yfcvq754vi4q2rv@gilmour.lan>
- <20200319130348.GC4872@pendragon.ideasonboard.com>
- <CA+V-a8s-GZsYuBLyGnzURZfGD42f0c+QEan6FSwb2ew1=7Gj3g@mail.gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Message-ID: <20200324153624.23109-8-jiaxun.yang@flygoat.com>
+Subject: [PATCH v6 07/11] MIPS: Loongson64: Drop legacy IRQ code
+Date:   Tue, 24 Mar 2020 23:36:04 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
+References: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="766st27slgtqfmag"
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8s-GZsYuBLyGnzURZfGD42f0c+QEan6FSwb2ew1=7Gj3g@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+We've made generic irqchip drivers for Loongson-3 platform, it's time
+to say goodbye to these legacy code.
 
---766st27slgtqfmag
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Co-developed-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ .../include/asm/mach-loongson64/boot_param.h  |   2 +
+ arch/mips/include/asm/mach-loongson64/irq.h   |  30 +---
+ arch/mips/loongson64/Makefile                 |   2 +-
+ arch/mips/loongson64/init.c                   |   6 +
+ arch/mips/loongson64/irq.c                    | 162 ------------------
+ arch/mips/loongson64/smp.c                    |  28 ++-
+ 6 files changed, 21 insertions(+), 209 deletions(-)
+ delete mode 100644 arch/mips/loongson64/irq.c
 
-On Thu, Mar 19, 2020 at 01:17:51PM +0000, Lad, Prabhakar wrote:
-> Hi Laurent,
->
-> On Thu, Mar 19, 2020 at 1:04 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > Hi Maxime,
-> >
-> > On Thu, Mar 19, 2020 at 01:44:52PM +0100, Maxime Ripard wrote:
-> > > On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
-> > > > Use assigned-clock-rates to specify the clock rate. Also mark
-> > > > clock-frequency property as deprecated.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
-> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > index 72ad992..e62fe82 100644
-> > > > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > @@ -8,7 +8,7 @@ Required Properties:
-> > > >  - compatible: Value should be "ovti,ov5645".
-> > > >  - clocks: Reference to the xclk clock.
-> > > >  - clock-names: Should be "xclk".
-> > > > -- clock-frequency: Frequency of the xclk clock.
-> > > > +- clock-frequency (deprecated): Frequency of the xclk clock.
-> > > >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > > >    to the hardware pin PWDNB which is physically active low.
-> > > >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > > > @@ -37,7 +37,8 @@ Example:
-> > > >
-> > > >                     clocks = <&clks 200>;
-> > > >                     clock-names = "xclk";
-> > > > -                   clock-frequency = <24000000>;
-> > > > +                   assigned-clocks = <&clks 200>;
-> > > > +                   assigned-clock-rates = <24000000>;
-> > > >
-> > > >                     vdddo-supply = <&camera_dovdd_1v8>;
-> > > >                     vdda-supply = <&camera_avdd_2v8>;
-> > >
-> > > clock-frequency is quite different from assigned-clock-rates though,
-> > > semantically speaking. clock-frequency is only about what the clock
-> > > frequency is, while assigned-clock-rates will change the rate as well,
-> > > and you have no idea how long it will last.
-> >
-> > The driver currently reads the clock-frequency property and then calls
-> > clk_set_rate(). I agree tht assigned-clock-rates isn't a panacea, but I
-> > think it's less of a hack than what we currently have.
-> >
-> > As discussed on IRC, maybe the best option in this specific case is to
-> > drop clock-frequency and assigned-clok-rates, and call clk_set_rate()
-> > with a hardcoded frequency of 24MHz in the driver, as that's the only
-> > frequency the driver supports.
-> >
-> Does this mean any driver which has a fixed clock requirement shouldn't be a
-> DT property and should be just handled by the drivers internally ?
+diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips=
+/include/asm/mach-loongson64/boot_param.h
+index 8c286bedff3e..2ed483e32d8c 100644
+--- a/arch/mips/include/asm/mach-loongson64/boot_param.h
++++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+@@ -2,6 +2,8 @@
+ #ifndef __ASM_MACH_LOONGSON64_BOOT_PARAM_H_
+ #define __ASM_MACH_LOONGSON64_BOOT_PARAM_H_
+=20
++#include <linux/types.h>
++
+ #define SYSTEM_RAM_LOW=09=091
+ #define SYSTEM_RAM_HIGH=09=092
+ #define SYSTEM_RAM_RESERVED=093
+diff --git a/arch/mips/include/asm/mach-loongson64/irq.h b/arch/mips/includ=
+e/asm/mach-loongson64/irq.h
+index 0d3955616e42..d41dc4a76e6d 100644
+--- a/arch/mips/include/asm/mach-loongson64/irq.h
++++ b/arch/mips/include/asm/mach-loongson64/irq.h
+@@ -7,34 +7,6 @@
+ /* cpu core interrupt numbers */
+ #define MIPS_CPU_IRQ_BASE 56
+=20
+-#define LOONGSON_UART_IRQ   (MIPS_CPU_IRQ_BASE + 2) /* UART */
+-#define LOONGSON_BRIDGE_IRQ (MIPS_CPU_IRQ_BASE + 3) /* CASCADE */
+-#define LOONGSON_TIMER_IRQ  (MIPS_CPU_IRQ_BASE + 7) /* CPU Timer */
+-
+-#define LOONGSON_HT1_CFG_BASE=09=09loongson_sysconf.ht_control_base
+-#define LOONGSON_HT1_INT_VECTOR_BASE=09(LOONGSON_HT1_CFG_BASE + 0x80)
+-#define LOONGSON_HT1_INT_EN_BASE=09(LOONGSON_HT1_CFG_BASE + 0xa0)
+-#define LOONGSON_HT1_INT_VECTOR(n)=09\
+-=09=09LOONGSON3_REG32(LOONGSON_HT1_INT_VECTOR_BASE, 4 * (n))
+-#define LOONGSON_HT1_INTN_EN(n)=09=09\
+-=09=09LOONGSON3_REG32(LOONGSON_HT1_INT_EN_BASE, 4 * (n))
+-
+-#define LOONGSON_INT_ROUTER_OFFSET=090x1400
+-#define LOONGSON_INT_ROUTER_INTEN=09\
+-=09  LOONGSON3_REG32(LOONGSON3_REG_BASE, LOONGSON_INT_ROUTER_OFFSET + 0x24=
+)
+-#define LOONGSON_INT_ROUTER_INTENSET=09\
+-=09  LOONGSON3_REG32(LOONGSON3_REG_BASE, LOONGSON_INT_ROUTER_OFFSET + 0x28=
+)
+-#define LOONGSON_INT_ROUTER_INTENCLR=09\
+-=09  LOONGSON3_REG32(LOONGSON3_REG_BASE, LOONGSON_INT_ROUTER_OFFSET + 0x2c=
+)
+-#define LOONGSON_INT_ROUTER_ENTRY(n)=09\
+-=09  LOONGSON3_REG8(LOONGSON3_REG_BASE, LOONGSON_INT_ROUTER_OFFSET + n)
+-#define LOONGSON_INT_ROUTER_LPC=09=09LOONGSON_INT_ROUTER_ENTRY(0x0a)
+-#define LOONGSON_INT_ROUTER_HT1(n)=09LOONGSON_INT_ROUTER_ENTRY(n + 0x18)
+-
+-#define LOONGSON_INT_COREx_INTy(x, y)=09(1<<(x) | 1<<(y+4))=09/* route to =
+int y of core x */
+-
+-extern void fixup_irqs(void);
+-extern void loongson3_ipi_interrupt(struct pt_regs *regs);
+-
+ #include <asm/mach-generic/irq.h>
++
+ #endif /* __ASM_MACH_LOONGSON64_IRQ_H_ */
+diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
+index 7821891bc5d0..b7f40b179c71 100644
+--- a/arch/mips/loongson64/Makefile
++++ b/arch/mips/loongson64/Makefile
+@@ -2,7 +2,7 @@
+ #
+ # Makefile for Loongson-3 family machines
+ #
+-obj-$(CONFIG_MACH_LOONGSON64) +=3D irq.o cop2-ex.o platform.o acpi_init.o =
+dma.o \
++obj-$(CONFIG_MACH_LOONGSON64) +=3D cop2-ex.o platform.o acpi_init.o dma.o =
+\
+ =09=09=09=09setup.o init.o env.o time.o reset.o \
+=20
+ obj-$(CONFIG_SMP)=09+=3D smp.o
+diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
+index 5ac1a0f35ca4..da38944471f4 100644
+--- a/arch/mips/loongson64/init.c
++++ b/arch/mips/loongson64/init.c
+@@ -4,6 +4,7 @@
+  * Author: Wu Zhangjin, wuzhangjin@gmail.com
+  */
+=20
++#include <linux/irqchip.h>
+ #include <linux/memblock.h>
+ #include <asm/bootinfo.h>
+ #include <asm/traps.h>
+@@ -44,3 +45,8 @@ void __init prom_init(void)
+ void __init prom_free_prom_memory(void)
+ {
+ }
++
++void __init arch_init_irq(void)
++{
++=09irqchip_init();
++}
+diff --git a/arch/mips/loongson64/irq.c b/arch/mips/loongson64/irq.c
+deleted file mode 100644
+index 79ad797497e4..000000000000
+--- a/arch/mips/loongson64/irq.c
++++ /dev/null
+@@ -1,162 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#include <loongson.h>
+-#include <irq.h>
+-#include <linux/interrupt.h>
+-#include <linux/init.h>
+-
+-#include <asm/irq_cpu.h>
+-#include <asm/i8259.h>
+-#include <asm/mipsregs.h>
+-
+-#include "smp.h"
+-
+-extern void loongson3_send_irq_by_ipi(int cpu, int irqs);
+-
+-unsigned int irq_cpu[16] =3D {[0 ... 15] =3D -1};
+-unsigned int ht_irq[] =3D {0, 1, 3, 4, 5, 6, 7, 8, 12, 14, 15};
+-unsigned int local_irq =3D 1<<0 | 1<<1 | 1<<2 | 1<<7 | 1<<8 | 1<<12;
+-
+-int plat_set_irq_affinity(struct irq_data *d, const struct cpumask *affini=
+ty,
+-=09=09=09  bool force)
+-{
+-=09unsigned int cpu;
+-=09struct cpumask new_affinity;
+-
+-=09/* I/O devices are connected on package-0 */
+-=09cpumask_copy(&new_affinity, affinity);
+-=09for_each_cpu(cpu, affinity)
+-=09=09if (cpu_data[cpu].package > 0)
+-=09=09=09cpumask_clear_cpu(cpu, &new_affinity);
+-
+-=09if (cpumask_empty(&new_affinity))
+-=09=09return -EINVAL;
+-
+-=09cpumask_copy(d->common->affinity, &new_affinity);
+-
+-=09return IRQ_SET_MASK_OK_NOCOPY;
+-}
+-
+-static void ht_irqdispatch(void)
+-{
+-=09unsigned int i, irq;
+-=09struct irq_data *irqd;
+-=09struct cpumask affinity;
+-
+-=09irq =3D LOONGSON_HT1_INT_VECTOR(0);
+-=09LOONGSON_HT1_INT_VECTOR(0) =3D irq; /* Acknowledge the IRQs */
+-
+-=09for (i =3D 0; i < ARRAY_SIZE(ht_irq); i++) {
+-=09=09if (!(irq & (0x1 << ht_irq[i])))
+-=09=09=09continue;
+-
+-=09=09/* handled by local core */
+-=09=09if (local_irq & (0x1 << ht_irq[i])) {
+-=09=09=09do_IRQ(ht_irq[i]);
+-=09=09=09continue;
+-=09=09}
+-
+-=09=09irqd =3D irq_get_irq_data(ht_irq[i]);
+-=09=09cpumask_and(&affinity, irqd->common->affinity, cpu_active_mask);
+-=09=09if (cpumask_empty(&affinity)) {
+-=09=09=09do_IRQ(ht_irq[i]);
+-=09=09=09continue;
+-=09=09}
+-
+-=09=09irq_cpu[ht_irq[i]] =3D cpumask_next(irq_cpu[ht_irq[i]], &affinity);
+-=09=09if (irq_cpu[ht_irq[i]] >=3D nr_cpu_ids)
+-=09=09=09irq_cpu[ht_irq[i]] =3D cpumask_first(&affinity);
+-
+-=09=09if (irq_cpu[ht_irq[i]] =3D=3D 0) {
+-=09=09=09do_IRQ(ht_irq[i]);
+-=09=09=09continue;
+-=09=09}
+-
+-=09=09/* balanced by other cores */
+-=09=09loongson3_send_irq_by_ipi(irq_cpu[ht_irq[i]], (0x1 << ht_irq[i]));
+-=09}
+-}
+-
+-#define UNUSED_IPS (CAUSEF_IP5 | CAUSEF_IP4 | CAUSEF_IP1 | CAUSEF_IP0)
+-
+-asmlinkage void plat_irq_dispatch(void)
+-{
+-=09unsigned int pending;
+-
+-=09pending =3D read_c0_cause() & read_c0_status() & ST0_IM;
+-
+-=09if (pending & CAUSEF_IP7)
+-=09=09do_IRQ(LOONGSON_TIMER_IRQ);
+-#if defined(CONFIG_SMP)
+-=09if (pending & CAUSEF_IP6)
+-=09=09loongson3_ipi_interrupt(NULL);
+-#endif
+-=09if (pending & CAUSEF_IP3)
+-=09=09ht_irqdispatch();
+-=09if (pending & CAUSEF_IP2)
+-=09=09do_IRQ(LOONGSON_UART_IRQ);
+-=09if (pending & UNUSED_IPS) {
+-=09=09pr_err("%s : spurious interrupt\n", __func__);
+-=09=09spurious_interrupt();
+-=09}
+-}
+-
+-static inline void mask_loongson_irq(struct irq_data *d) { }
+-static inline void unmask_loongson_irq(struct irq_data *d) { }
+-
+- /* For MIPS IRQs which shared by all cores */
+-static struct irq_chip loongson_irq_chip =3D {
+-=09.name=09=09=3D "Loongson",
+-=09.irq_ack=09=3D mask_loongson_irq,
+-=09.irq_mask=09=3D mask_loongson_irq,
+-=09.irq_mask_ack=09=3D mask_loongson_irq,
+-=09.irq_unmask=09=3D unmask_loongson_irq,
+-=09.irq_eoi=09=3D unmask_loongson_irq,
+-};
+-
+-void irq_router_init(void)
+-{
+-=09int i;
+-
+-=09/* route LPC int to cpu core0 int 0 */
+-=09LOONGSON_INT_ROUTER_LPC =3D
+-=09=09LOONGSON_INT_COREx_INTy(loongson_sysconf.boot_cpu_id, 0);
+-=09/* route HT1 int0 ~ int7 to cpu core0 INT1*/
+-=09for (i =3D 0; i < 8; i++)
+-=09=09LOONGSON_INT_ROUTER_HT1(i) =3D
+-=09=09=09LOONGSON_INT_COREx_INTy(loongson_sysconf.boot_cpu_id, 1);
+-=09/* enable HT1 interrupt */
+-=09LOONGSON_HT1_INTN_EN(0) =3D 0xffffffff;
+-=09/* enable router interrupt intenset */
+-=09LOONGSON_INT_ROUTER_INTENSET =3D
+-=09=09LOONGSON_INT_ROUTER_INTEN | (0xffff << 16) | 0x1 << 10;
+-}
+-
+-void __init arch_init_irq(void)
+-{
+-=09struct irq_chip *chip;
+-
+-=09clear_c0_status(ST0_IM | ST0_BEV);
+-
+-=09irq_router_init();
+-=09mips_cpu_irq_init();
+-=09init_i8259_irqs();
+-=09chip =3D irq_get_chip(I8259A_IRQ_BASE);
+-=09chip->irq_set_affinity =3D plat_set_irq_affinity;
+-
+-=09irq_set_chip_and_handler(LOONGSON_UART_IRQ,
+-=09=09=09&loongson_irq_chip, handle_percpu_irq);
+-=09irq_set_chip_and_handler(LOONGSON_BRIDGE_IRQ,
+-=09=09=09&loongson_irq_chip, handle_percpu_irq);
+-
+-=09set_c0_status(STATUSF_IP2 | STATUSF_IP3 | STATUSF_IP6);
+-}
+-
+-#ifdef CONFIG_HOTPLUG_CPU
+-
+-void fixup_irqs(void)
+-{
+-=09irq_cpu_offline();
+-=09clear_c0_status(ST0_IM);
+-}
+-
+-#endif
+diff --git a/arch/mips/loongson64/smp.c b/arch/mips/loongson64/smp.c
+index de8e0741ce2d..e1fe8bbb377d 100644
+--- a/arch/mips/loongson64/smp.c
++++ b/arch/mips/loongson64/smp.c
+@@ -4,6 +4,7 @@
+  * Author: Chen Huacai, chenhc@lemote.com
+  */
+=20
++#include <irq.h>
+ #include <linux/init.h>
+ #include <linux/cpu.h>
+ #include <linux/sched.h>
+@@ -25,6 +26,8 @@
+=20
+ DEFINE_PER_CPU(int, cpu_state);
+=20
++#define LS_IPI_IRQ (MIPS_CPU_IRQ_BASE + 6)
++
+ static void *ipi_set0_regs[16];
+ static void *ipi_clear0_regs[16];
+ static void *ipi_status0_regs[16];
+@@ -302,20 +305,13 @@ loongson3_send_ipi_mask(const struct cpumask *mask, u=
+nsigned int action)
+ =09=09ipi_write_action(cpu_logical_map(i), (u32)action);
+ }
+=20
+-#define IPI_IRQ_OFFSET 6
+-
+-void loongson3_send_irq_by_ipi(int cpu, int irqs)
+-{
+-=09ipi_write_action(cpu_logical_map(cpu), irqs << IPI_IRQ_OFFSET);
+-}
+=20
+-void loongson3_ipi_interrupt(struct pt_regs *regs)
++static irqreturn_t loongson3_ipi_interrupt(int irq, void *dev_id)
+ {
+ =09int i, cpu =3D smp_processor_id();
+-=09unsigned int action, c0count, irqs;
++=09unsigned int action, c0count;
+=20
+ =09action =3D ipi_read_clear(cpu);
+-=09irqs =3D action >> IPI_IRQ_OFFSET;
+=20
+ =09if (action & SMP_RESCHEDULE_YOURSELF)
+ =09=09scheduler_ipi();
+@@ -335,13 +331,7 @@ void loongson3_ipi_interrupt(struct pt_regs *regs)
+ =09=09__wbflush(); /* Let others see the result ASAP */
+ =09}
+=20
+-=09if (irqs) {
+-=09=09int irq;
+-=09=09while ((irq =3D ffs(irqs))) {
+-=09=09=09do_IRQ(irq-1);
+-=09=09=09irqs &=3D ~(1<<(irq-1));
+-=09=09}
+-=09}
++=09return IRQ_HANDLED;
+ }
+=20
+ #define MAX_LOOPS 800
+@@ -438,6 +428,9 @@ static void __init loongson3_smp_setup(void)
+=20
+ static void __init loongson3_prepare_cpus(unsigned int max_cpus)
+ {
++=09if (request_irq(LS_IPI_IRQ, loongson3_ipi_interrupt,
++=09=09=09IRQF_PERCPU | IRQF_NO_SUSPEND, "SMP_IPI", NULL))
++=09=09pr_err("Failed to request IPI IRQ\n");
+ =09init_cpu_present(cpu_possible_mask);
+ =09per_cpu(cpu_state, smp_processor_id()) =3D CPU_ONLINE;
+ }
+@@ -484,7 +477,8 @@ static int loongson3_cpu_disable(void)
+ =09set_cpu_online(cpu, false);
+ =09calculate_cpu_foreign_map();
+ =09local_irq_save(flags);
+-=09fixup_irqs();
++=09irq_cpu_offline();
++=09clear_c0_status(ST0_IM);
+ =09local_irq_restore(flags);
+ =09local_flush_tlb_all();
+=20
+--=20
+2.26.0.rc2
 
-It's hard to give a generic policy, but here, the hardware is pretty
-flexible since it can deal with anything between 6MHz to 50-something
-MHz, it's the driver that chooses to enforce a 24MHz and be pedantic
-about it, so it's up to the driver to enforce that policy, not to the
-DT since it's essentially a software limitation, not a hardware one.
 
-Maxime
-
---766st27slgtqfmag
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXnop/QAKCRDj7w1vZxhR
-xUp3AQC4CpS3+gKsDPAnZm8pakj0NLuoi+oYlCsyVqEEtPSmBQD/W0Fnywv9KUiq
-QETeY979lVRzXw6cNCOb1qDBjB9TGQE=
-=nwfk
------END PGP SIGNATURE-----
-
---766st27slgtqfmag--
