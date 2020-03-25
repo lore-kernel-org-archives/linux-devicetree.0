@@ -2,154 +2,385 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D23BC2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 20:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B478C2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 20:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 151712074D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 20:47:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ligrhZRB"
+	by mail.kernel.org (Postfix) with ESMTP id 291D2206F8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 20:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgCYUrg (ORCPT
+        id S1727374AbgCYUt6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 16:47:36 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40228 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727399AbgCYUr2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 16:47:28 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02PKl95h077596;
-        Wed, 25 Mar 2020 15:47:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585169229;
-        bh=su3OnrwWaoP5rlZR/deFktge++Fj5bDZrQZR54Y++tA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ligrhZRBShmDgJ426W+gV5q4sn+soW1IZh5UM05d/JgAZo/LWVOZKwrJxDXAImos5
-         TG+wSHZpzHizdogRMIxPmvRAleCaZDzvGMgO5wDOhxMdmlnM1u/capN6/k7ZAmw2UV
-         s+kzRXCoMgfi/iAfmi+T42+YiWR7pRxHk9apQSto=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02PKl92Y068125
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 25 Mar 2020 15:47:09 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 25
- Mar 2020 15:47:08 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 25 Mar 2020 15:47:08 -0500
-Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02PKl8Ih080245;
-        Wed, 25 Mar 2020 15:47:08 -0500
-Received: from localhost ([10.250.35.147])
-        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 02PKl8qq063403;
-        Wed, 25 Mar 2020 15:47:08 -0500
-From:   Suman Anna <s-anna@ti.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Clement Leger <cleger@kalray.eu>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 4/4] remoteproc/k3-dsp: Add support for C71x DSPs
-Date:   Wed, 25 Mar 2020 15:47:01 -0500
-Message-ID: <20200325204701.16862-5-s-anna@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200325204701.16862-1-s-anna@ti.com>
-References: <20200325204701.16862-1-s-anna@ti.com>
+        Wed, 25 Mar 2020 16:49:58 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48412 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727356AbgCYUt6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 16:49:58 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 707958030778;
+        Wed, 25 Mar 2020 20:49:54 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id K_XICqRFe6dt; Wed, 25 Mar 2020 23:49:53 +0300 (MSK)
+Date:   Wed, 25 Mar 2020 23:49:44 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/6] dt-bindings: i2c: Replace DW I2C legacy bindings
+ with YAML-based one
+Message-ID: <20200325204944.cgkca7jvxtud3emk@ubsrv2.baikal.int>
+References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132011.66A7A80307C4@mail.baikalelectronics.ru>
+ <20200312214308.GA17405@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200312214308.GA17405@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Texas Instrument's K3 J721E SoCs have a newer next-generation
-C71x DSP Subsystem in the MAIN voltage domain in addition to the
-previous generation C66x DSP subsystems. The C71x DSP subsystem is
-based on the TMS320C71x DSP CorePac module. The C71x CPU is a true
-64-bit machine including 64-bit memory addressing and single-cycle
-64-bit base arithmetic operations and supports vector signal processing
-providing a significant lift in DSP processing power over C66x DSPs.
-J721E SoCs use a C711 (a one-core 512-bit vector width CPU core) DSP
-that is cache coherent with the A72 Arm cores.
+On Thu, Mar 12, 2020 at 04:43:08PM -0500, Rob Herring wrote:
+> On Fri, Mar 06, 2020 at 04:19:51PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Modern device tree bindings are supposed to be created as YAML-files
+> > in accordance with dt-schema. This commit replaces Synopsys DW I2C
+> > legacy bare text bindings with YAML file. As before the bindings file
+> > states that the corresponding dts node is supposed to be compatible
+> > either with generic DW I2C controller or with Microsemi Ocelot SoC I2C
+> > one, to have registers, interrupts and clocks properties. In addition
+> > the node may have clock-frequency, i2c-sda-hold-time-ns,
+> > i2c-scl-falling-time-ns and i2c-sda-falling-time-ns optional properties.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > ---
+> >  .../bindings/i2c/i2c-designware.txt           |  73 --------
+> >  .../bindings/i2c/snps,designware-i2c.yaml     | 156 ++++++++++++++++++
+> >  2 files changed, 156 insertions(+), 73 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> >  create mode 100644 Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> > deleted file mode 100644
+> > index 08be4d3846e5..000000000000
+> > --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> > +++ /dev/null
+> > @@ -1,73 +0,0 @@
+> > -* Synopsys DesignWare I2C
+> > -
+> > -Required properties :
+> > -
+> > - - compatible : should be "snps,designware-i2c"
+> > -                or "mscc,ocelot-i2c" with "snps,designware-i2c" for fallback
+> > - - reg : Offset and length of the register set for the device
+> > - - interrupts : <IRQ> where IRQ is the interrupt number.
+> > - - clocks : phandles for the clocks, see the description of clock-names below.
+> > -   The phandle for the "ic_clk" clock is required. The phandle for the "pclk"
+> > -   clock is optional. If a single clock is specified but no clock-name, it is
+> > -   the "ic_clk" clock. If both clocks are listed, the "ic_clk" must be first.
+> > -
+> > -Recommended properties :
+> > -
+> > - - clock-frequency : desired I2C bus clock frequency in Hz.
+> > -
+> > -Optional properties :
+> > -
+> > - - clock-names : Contains the names of the clocks:
+> > -    "ic_clk", for the core clock used to generate the external I2C clock.
+> > -    "pclk", the interface clock, required for register access.
+> > -
+> > - - reg : for "mscc,ocelot-i2c", a second register set to configure the SDA hold
+> > -   time, named ICPU_CFG:TWI_DELAY in the datasheet.
+> > -
+> > - - i2c-sda-hold-time-ns : should contain the SDA hold time in nanoseconds.
+> > -   This option is only supported in hardware blocks version 1.11a or newer and
+> > -   on Microsemi SoCs ("mscc,ocelot-i2c" compatible).
+> > -
+> > - - i2c-scl-falling-time-ns : should contain the SCL falling time in nanoseconds.
+> > -   This value which is by default 300ns is used to compute the tLOW period.
+> > -
+> > - - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
+> > -   This value which is by default 300ns is used to compute the tHIGH period.
+> > -
+> > -Examples :
+> > -
+> > -	i2c@f0000 {
+> > -		#address-cells = <1>;
+> > -		#size-cells = <0>;
+> > -		compatible = "snps,designware-i2c";
+> > -		reg = <0xf0000 0x1000>;
+> > -		interrupts = <11>;
+> > -		clock-frequency = <400000>;
+> > -	};
+> > -
+> > -	i2c@1120000 {
+> > -		#address-cells = <1>;
+> > -		#size-cells = <0>;
+> > -		compatible = "snps,designware-i2c";
+> > -		reg = <0x1120000 0x1000>;
+> > -		interrupt-parent = <&ictl>;
+> > -		interrupts = <12 1>;
+> > -		clock-frequency = <400000>;
+> > -		i2c-sda-hold-time-ns = <300>;
+> > -		i2c-sda-falling-time-ns = <300>;
+> > -		i2c-scl-falling-time-ns = <300>;
+> > -	};
+> > -
+> > -	i2c@1120000 {
+> > -		#address-cells = <1>;
+> > -		#size-cells = <0>;
+> > -		reg = <0x2000 0x100>;
+> > -		clock-frequency = <400000>;
+> > -		clocks = <&i2cclk>;
+> > -		interrupts = <0>;
+> > -
+> > -		eeprom@64 {
+> > -			compatible = "linux,slave-24c02";
+> > -			reg = <0x40000064>;
+> > -		};
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > new file mode 100644
+> > index 000000000000..3f348f1ce172
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
+> > @@ -0,0 +1,156 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/i2c/snps,designware-i2c.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Synopsys DesignWare APB I2C Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/i2c/i2c-controller.yaml#
+> > +
+> > +if:
+> > +  properties:
+> > +    compatible:
+> > +      contains:
+> > +        const: mscc,ocelot-i2c
+> > +then:
+> > +  properties:
+> > +    reg:
+> > +      minItems: 1
+> > +      items:
+> > +        - description: DW APB I2C controller memory mapped registers.
+> > +        - description: ICPU_CFG:TWI_DELAY registers to setup the SDA hold time.
+> 
+> This won't work (it would be good to have an example that exercises 
+> this). You need to move this definition to the main 'reg' definition 
+> below and then do:
+> 
+> if:
+>   properties:
+>     compatible:
+>       not:
+>         contains:
+>           const: mscc,ocelot-i2c
+> then:
+>   properties:
+>     reg:
+>       maxItems: 1
+> 
 
-Each subsystem has one or more Fixed/Floating-Point DSP CPUs, with 32 KB
-of L1P Cache, 48 KB of L1D SRAM that can be configured and partitioned as
-either RAM and/or Cache, and 512 KB of L2 SRAM configurable as either RAM
-and/or Cache. The CorePac also includes a Matrix Multiplication Accelerator
-(MMA), a Stream Engine (SE) and a C71x Memory Management Unit (CMMU), an
-Interrupt Controller (INTC) and a Powerdown Management Unit (PMU) modules.
+Hm, I thought I tested this. Apparently I didn't do this well. Thanks for
+pointing me out to this problem. I'll add the mscc,ocelot-i2c node to the examples
+list to cover the optional two-regs case as well.
 
-Update the existing K3 DSP remoteproc driver to add support for this C71x
-DSP subsystem. The firmware loading support is provided by using the newly
-added 64-bit ELF loader support, and is limited to images using only
-external DDR memory at the moment. The L1D and L2 SRAMs are used as scratch
-memory when using as RAMs, and cannot be used for loadable segments. The
-CMMU is also not supported to begin with, and the driver is designed to
-treat the MMU as if it is in bypass mode.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - description: Generic Synopsys DesignWare I2C controller.
+> > +        const: snps,designware-i2c
+> > +      - description: Microsemi Ocelot SoCs I2C controller.
+> > +        items:
+> > +          - const: mscc,ocelot-i2c
+> > +          - const: snps,designware-i2c
+> > +
+> > +  reg:
+> > +    items:
+> > +      - description: DW APB I2C controller memory mapped registers.
+> > +
+> > +  "#address-cells": true
+> > +
+> > +  "#size-cells": true
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    items:
+> > +      - description: I2C controller reference clock source.
+> > +      - description: APB interface clock source.
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    items:
+> > +      - const: ref
+> > +      - const: pclk
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  clock-frequency:
+> > +    description: Desired I2C bus clock frequency in Hz.
+> > +    enum: [100000, 400000, 1000000, 3400000]
+> > +    default: 400000
+> > +
+> > +  i2c-sda-hold-time-ns:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> Anything with a unit suffix has a type, so you can drop this.
+> 
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- drivers/remoteproc/ti_k3_dsp_remoteproc.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Yes, but this and the following time-related properties are supposed to be
+single numbers (see ./drivers/i2c/i2c-core-base.c for details), while "^.*-ns$"
+is defined as uint32-array. So if I removed this $ref, I would have to add a
+constraint like:
 
-diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-index 7b712ef74611..48d26f7d5f48 100644
---- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-@@ -649,6 +649,9 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
- 
- 	rproc->has_iommu = false;
- 	rproc->recovery_disabled = true;
-+	/* C71x is a 64-bit processor, so plug in generic .sanity_check ops */
-+	rproc->ops->sanity_check = rproc_elf_sanity_check;
-+
- 	kproc = rproc->priv;
- 	kproc->rproc = rproc;
- 	kproc->dev = dev;
-@@ -789,6 +792,12 @@ static const struct k3_dsp_mem_data c66_mems[] = {
- 	{ .name = "l1dram", .dev_addr = 0xf00000 },
- };
- 
-+/* C71x cores only have a L1P Cache, there are no L1P SRAMs */
-+static const struct k3_dsp_mem_data c71_mems[] = {
-+	{ .name = "l2sram", .dev_addr = 0x800000 },
-+	{ .name = "l1dram", .dev_addr = 0xe00000 },
-+};
-+
- static const struct k3_dsp_dev_data c66_data = {
- 	.mems = c66_mems,
- 	.num_mems = ARRAY_SIZE(c66_mems),
-@@ -796,8 +805,16 @@ static const struct k3_dsp_dev_data c66_data = {
- 	.uses_lreset = true,
- };
- 
-+static const struct k3_dsp_dev_data c71_data = {
-+	.mems = c71_mems,
-+	.num_mems = ARRAY_SIZE(c71_mems),
-+	.boot_align_addr = SZ_2M,
-+	.uses_lreset = false,
-+};
-+
- static const struct of_device_id k3_dsp_of_match[] = {
- 	{ .compatible = "ti,j721e-c66-dsp", .data = &c66_data, },
-+	{ .compatible = "ti,j721e-c71-dsp", .data = &c71_data, },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, k3_dsp_of_match);
--- 
-2.23.0
++ maxItems: 1
++ items:
++   maxItems: 1
 
+which isn't that obvious, than just explicit uint32-type setting.
+
+> > +    description: |
+> > +      The property should contain the SDA hold time in nanoseconds. This option
+> > +      is only supported in hardware blocks version 1.11a or newer or on
+> > +      Microsemi SoCs.
+> > +
+> > +  i2c-scl-falling-time-ns:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: |
+> > +      The property should contain the SCL falling time in nanoseconds.
+> > +      This value is used to compute the tLOW period.
+> > +    default: 300
+> > +
+> > +  i2c-sda-falling-time-ns:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description: |
+> > +      The property should contain the SDA falling time in nanoseconds.
+> > +      This value is used to compute the tHIGH period.
+> > +    default: 300
+> > +
+> > +  dmas:
+> > +    items:
+> > +      - description: TX DMA Channel.
+> > +      - description: RX DMA Channel.
+> > +
+> > +  dma-names:
+> > +    items:
+> > +      - const: tx
+> > +      - const: rx
+> > +
+> 
+> > +patternProperties:
+> > +  "^.*@[0-9a-f]+$":
+> > +    type: object
+> > +    properties:
+> > +      reg:
+> > +        maxItems: 1
+> 
+> No need for this as i2c-controller.yaml does this.
+> 
+
+Agreed.
+
+> > +
+> > +additionalProperties: false
+> 
+> This doesn't work with i2c-controller.yaml. Change it to 
+> 'unevaluatedProperties: false' and eventually that will do what we need.
+> 
+
+Yeah, I tried the "unevaluatedProperties: false" setting and discovered that
+it didn't work. That's why I defined all the possible properties in this
+DT schema with at least boolean type including the sub-node
+pattern-based properties and set the "additionalProperties:
+false", so unknown properties would cause the dt_binding_check error.
+
+Since you are saying that unevaluatedProperties: is not implemented,
+but it will be in future, and it's ok that currently we may have some
+unevaluated properties left declared, then I'll do as you say:
+remove all dummy boolean properties and replace "additionalProperties"
+property with "unevaluatedProperties" one.
+
+Regards,
+-Sergey
+
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +  - interrupts
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c@f0000 {
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +      compatible = "snps,designware-i2c";
+> > +      reg = <0xf0000 0x1000>;
+> > +      interrupts = <11>;
+> > +      clock-frequency = <400000>;
+> > +    };
+> > +
+> > +  - |
+> > +    i2c@1120000 {
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +      compatible = "snps,designware-i2c";
+> > +      reg = <0x1120000 0x1000>;
+> > +      interrupt-parent = <&ictl>;
+> > +      interrupts = <12 1>;
+> > +      clock-frequency = <400000>;
+> > +      i2c-sda-hold-time-ns = <300>;
+> > +      i2c-sda-falling-time-ns = <300>;
+> > +      i2c-scl-falling-time-ns = <300>;
+> > +    };
+> > +
+> > +  - |
+> > +    i2c@1120000 {
+> > +      compatible = "snps,designware-i2c";
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +      reg = <0x2000 0x100>;
+> > +      clock-frequency = <400000>;
+> > +      clocks = <&i2cclk>;
+> > +      interrupts = <0>;
+> > +
+> > +      eeprom@64 {
+> > +        compatible = "linux,slave-24c02";
+> > +        reg = <0x40000064>;
+> > +      };
+> > +    };
+> > +...
+> > -- 
+> > 2.25.1
+> > 
