@@ -2,99 +2,154 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CCCC54FD2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A56C54FCF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B850D20722
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E778A20714
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:32:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="UarPfnSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgCYC3G (ORCPT
+        id S1727272AbgCYCct (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:29:06 -0400
-Received: from baldur.buserror.net ([165.227.176.147]:55846 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbgCYC3G (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 22:29:06 -0400
-X-Greylist: delayed 968 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Mar 2020 22:29:05 EDT
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1jGvSx-0004so-1k; Tue, 24 Mar 2020 21:08:23 -0500
-Message-ID: <81c68751cb89bbff13a09467b94530a555d69552.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        robh+dt@kernel.org, mark.rutland@arm.com, paulus@samba.org,
-        benh@kernel.crashing.org
-Cc:     Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 24 Mar 2020 21:08:21 -0500
-In-Reply-To: <877dz9xkhr.fsf@mpe.ellerman.id.au>
-References: <20200324213612.31614-1-chris.packham@alliedtelesis.co.nz>
-         <877dz9xkhr.fsf@mpe.ellerman.id.au>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: mpe@ellerman.id.au, chris.packham@alliedtelesis.co.nz, robh+dt@kernel.org, mark.rutland@arm.com, paulus@samba.org, benh@kernel.crashing.org, hamish.martin@alliedtelesis.co.nz, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH] powerpc/fsl: Add cache properties for T2080/T2081
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Tue, 24 Mar 2020 22:32:49 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17833 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727259AbgCYCct (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 22:32:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585103515;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=IrhqHZkIgBzBX0NyQ/AdHmhnZ5Hiqdy+Ikjqv3i39Yo=;
+        b=UarPfnSOcQ4sjXrN8oKc7mlQTD0HEm33Qx8s6HXUka0Z4prsBLK6HU8zxXq88j3G
+        4W9MGjhQ8vnuw9SyB9ou2bTaJC8pEKR1ek9/mdl/CQZ4yGD4Pf4fGV5SDSqVpgdQjaj
+        yQFc1h4wr5SQ4i3m89+VtFwnmaU2xmWJCkMhHwSE=
+Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
+        with SMTPS id 15851035137201004.1544709728074; Wed, 25 Mar 2020 10:31:53 +0800 (CST)
+Date:   Wed, 25 Mar 2020 10:31:50 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAAhV-H7__WmeWZ4w8Kc37WztRZ+-du9nKbVkRJeK7=ZhPaVY3g@mail.gmail.com>
+References: <20200324153624.23109-1-jiaxun.yang@flygoat.com> <20200324153624.23109-3-jiaxun.yang@flygoat.com> <CAAhV-H7__WmeWZ4w8Kc37WztRZ+-du9nKbVkRJeK7=ZhPaVY3g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 02/11] irqchip: loongson-liointc: Workaround LPC IRQ Errata
+To:     Huacai Chen <chenhc@lemote.com>
+CC:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <C87B57FD-F4C2-4464-9692-A28DE343FDDB@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2020-03-25 at 12:59 +1100, Michael Ellerman wrote:
-> Chris Packham <chris.packham@alliedtelesis.co.nz> writes:
-> > Add the d-cache/i-cache properties for the T208x SoCs. The L1 cache on
-> > these SoCs is 32KiB and is split into 64 byte blocks (lines).
-> > 
-> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> > ---
-> >  arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> 
-> LGTM.
-> 
-> I'll wait a few days to see if Scott wants to ack it.
-> 
-> cheers
-> 
-> 
-> > diff --git a/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
-> > b/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
-> > index 3f745de44284..2ad27e16ac16 100644
-> > --- a/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
-> > +++ b/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
-> > @@ -81,6 +81,10 @@ cpus {
-> >  		cpu0: PowerPC,e6500@0 {
-> >  			device_type = "cpu";
-> >  			reg = <0 1>;
-> > +			d-cache-line-size = <64>;
-> > +			i-cache-line-size = <64>;
-> > +			d-cache-size = <32768>;
-> > +			i-cache-size = <32768>;
-> >  			clocks = <&clockgen 1 0>;
-> >  			next-level-cache = <&L2_1>;
-> >  			fsl,portid-mapping = <0x80000000>;
-
-U-Boot should be setting d/i-cache-size and d/i-cache-block-size -- are you
-using something else?
-
-The line size is the same as the block size so we don't need a separate d/i-
-cache-line-size.
-
--Scott
 
 
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=889=
+:52:26, Huacai Chen <chenhc@lemote=2Ecom> =E5=86=99=E5=88=B0:
+>Hi, Jiaxun,
+>
+>On Tue, Mar 24, 2020 at 11:39 PM Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom=
+>
+>wrote:
+>>
+>> The 1=2E0 version of that controller has a bug that status bit
+>> of LPC IRQ sometimes doesn't get set correctly=2E
+>>
+>> So we can always blame LPC IRQ when spurious interrupt happens
+>> at the parent interrupt line which LPC IRQ supposed to route
+>> to=2E
+>>
+>> Co-developed-by: Huacai Chen <chenhc@lemote=2Ecom>
+>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>> ---
+>>  drivers/irqchip/irq-loongson-liointc=2Ec | 16 ++++++++++++++--
+>>  1 file changed, 14 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-loongson-liointc=2Ec
+>b/drivers/irqchip/irq-loongson-liointc=2Ec
+>> index 8b6d7b8ddaca=2E=2Ed5054e90eab8 100644
+>> --- a/drivers/irqchip/irq-loongson-liointc=2Ec
+>> +++ b/drivers/irqchip/irq-loongson-liointc=2Ec
+>> @@ -32,6 +32,8 @@
+>>
+>>  #define LIOINTC_SHIFT_INTx     4
+>>
+>> +#define LIOINTC_ERRATA_IRQ     10
+>> +
+>>  struct liointc_handler_data {
+>>         struct liointc_priv     *priv;
+>>         u32                     parent_int_map;
+>> @@ -41,6 +43,7 @@ struct liointc_priv {
+>>         struct irq_chip_generic         *gc;
+>>         struct liointc_handler_data     handler[LIOINTC_NUM_PARENT];
+>>         u8                              map_cache[LIOINTC_CHIP_IRQ];
+>> +       bool                            have_lpc_irq_errata;
+>Maybe has_lpc_irq_errata?
+
+Fixed, thanks=2E
+
+>
+>>  };
+>>
+>>  static void liointc_chained_handle_irq(struct irq_desc *desc)
+>> @@ -54,8 +57,14 @@ static void liointc_chained_handle_irq(struct
+>irq_desc *desc)
+>>
+>>         pending =3D readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
+>>
+>> -       if (!pending)
+>> -               spurious_interrupt();
+>> +       if (!pending) {
+>> +               /* Always blame LPC IRQ if we have that bug and LPC
+>IRQ is enabled */
+>> +               if (handler->priv->have_lpc_irq_errata &&
+>> +                       (handler->parent_int_map & ~gc->mask_cache &
+>BIT(LIOINTC_ERRATA_IRQ)))
+>> +                       pending =3D BIT(LIOINTC_ERRATA_IRQ);
+>> +               else
+>> +                       spurious_interrupt();
+>> +       }
+>>
+>>         while (pending) {
+>>                 int bit =3D __ffs(pending);
+>> @@ -164,6 +173,9 @@ int __init liointc_of_init(struct device_node
+>*node,
+>>                 goto out_iounmap;
+>>         }
+>>
+>> +       if (of_device_is_compatible(node, "loongson,liointc-1=2E0"))
+>> +               priv->have_lpc_irq_errata =3D true;
+>> +
+>>         sz =3D of_property_read_variable_u32_array(node,
+>"loongson,parent_int_map",
+>>                                               =20
+>&of_parent_int_map[0], LIOINTC_NUM_PARENT,
+>>                                                 LIOINTC_NUM_PARENT);
+>> --
+>> 2=2E26=2E0=2Erc2
+>>
+>>
+>
+>Regards,
+>Huacai Chen
+
+--=20
+Jiaxun Yang
