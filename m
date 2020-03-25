@@ -2,343 +2,98 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66589C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 12:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F046C54FD3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 12:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2603A20772
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 12:13:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeg4XdTK"
+	by mail.kernel.org (Postfix) with ESMTP id 3CF9B2077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 12:39:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCYMNp (ORCPT
+        id S1727346AbgCYMjV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:13:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33051 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbgCYMNp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 08:13:45 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a25so2815341wrd.0;
-        Wed, 25 Mar 2020 05:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hOl/owfaYb87sP9mVjhujvo/kAvWxhYs1nSOGilmW4A=;
-        b=jeg4XdTKu/XvPZ1Xt3cF8yIQaKYs5aWC2NHt59RttrPbt0SqxL2nONJvUXDtWR3VsM
-         he/pJZaKOoztPwWFclpqXDea5mIxyMAXnmrmQBRA3Lo1X2D0c9AtixK0wOl5PJVOKxsP
-         dtrIBzMNlVI0yIXWPyGzcLXIg6VTsUTkqvOFD5AaYZZLdfWhWub+Ai197xzoUIYQdOiB
-         U+EuUQvyxX0Cwf6/0k68URomy6Raj2+HVNMsmLdVBBVrJhxocwaam1YWoKzvZ3XSTdIn
-         g4z0cAGsqFFqmCd0myDe/h4G3ntMr5OezQaQCanFHA92fGQDPU+iQbhOOfQ9I6iodafQ
-         Zs+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hOl/owfaYb87sP9mVjhujvo/kAvWxhYs1nSOGilmW4A=;
-        b=XpYh76mfoMyrsm6us0FLyZVdZK7ZR3jhDh5i6ONH8ln5Io3tPpOBtGrHTa4mPz9BUk
-         FEI0//fCvZRorNNe2h9HSkdqs904o49f5BYVMhXc8bGZ6VMR47ZJVn5l+a3newSujdDz
-         hIq/o1QM9dzpYv8YW4TR1NE6Cu6PcAbWUiz79evhEmOAG4K0ZZXY3HUKgYQVqvkLYvWL
-         eyZ7ZG5HhczO/qij/lvXbL8K5UmRZ7hwxwWQMN+qJO0pzJOVuBspWzi1sjSeFlogrcgH
-         ZDDUJU5wf7EvK6bxLLs3US0fwVPy3rYSqD3h/v2v46pUBatl4nO0AC5k7NnUu7B/0xHM
-         zQ9Q==
-X-Gm-Message-State: ANhLgQ1SBDVtTPJdUpG5U+8he/QNjBwVrryEu0pc+XlZpVyWFpKO+qPG
-        BiWlvninZiu+cWOcSk666+M=
-X-Google-Smtp-Source: ADFU+vsAfNfD810hUfVVo81ck+67IHCKX2XgtJjX/9gCIeuNFKMXkmYoMLeOykpyMlq1qsRO68Tlig==
-X-Received: by 2002:a5d:4e05:: with SMTP id p5mr3120806wrt.59.1585138421936;
-        Wed, 25 Mar 2020 05:13:41 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k9sm35010397wrd.74.2020.03.25.05.13.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Mar 2020 05:13:41 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     kishon@ti.com
-Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: phy: convert phy-rockchip-inno-usb2 bindings to yaml
-Date:   Wed, 25 Mar 2020 13:13:35 +0100
-Message-Id: <20200325121335.12249-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 25 Mar 2020 08:39:21 -0400
+Received: from elvis.franken.de ([193.175.24.41]:34061 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727316AbgCYMjV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:39:21 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jH5JN-0002o0-00; Wed, 25 Mar 2020 13:39:09 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id B928DC09A5; Wed, 25 Mar 2020 13:37:42 +0100 (CET)
+Date:   Wed, 25 Mar 2020 13:37:42 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
+Message-ID: <20200325123742.GA9911@alpha.franken.de>
+References: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
+ <20200325035537.156911-7-jiaxun.yang@flygoat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325035537.156911-7-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Current dts files for Rockchip with 'usb2-phy' subnodes
-are manually verified. In order to automate this process
-phy-rockchip-inno-usb2.txt has to be converted to yaml.
+On Wed, Mar 25, 2020 at 11:54:59AM +0800, Jiaxun Yang wrote:
+> The old code is using legacy domain to setup irq_domain for CPU interrupts
+> which requires irq_desc to be preallocated.
+> 
+> However, when MIPS_CPU_IRQ_BASE >= 16, irq_desc for CPU IRQs may end up
+> unallocated and lead to incorrect behavior.
+> 
+> Thus we convert the legacy domain to simple domain which can allocate
+> irq_desc during initialization.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Co-developed-by: Huacai Chen <chenhc@lemote.com>
+> Signed-off-by: Huacai Chen <chenhc@lemote.com>
+> Reviewed-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/irqchip/irq-mips-cpu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-mips-cpu.c b/drivers/irqchip/irq-mips-cpu.c
+> index 95d4fd8f7a96..c3cf7fa76424 100644
+> --- a/drivers/irqchip/irq-mips-cpu.c
+> +++ b/drivers/irqchip/irq-mips-cpu.c
+> @@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct device_node *of_node)
+>  	clear_c0_status(ST0_IM);
+>  	clear_c0_cause(CAUSEF_IP);
+>  
+> -	irq_domain = irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE, 0,
+> +	irq_domain = irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
+>  					   &mips_cpu_intc_irq_domain_ops,
+>  					   NULL);
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
-Changes v3:
-  Replace oneOf by enum
-  Remove allOf phy-provider.yaml
-  Add "#phy-cells"
-  Add additionalProperties: false
+this breaks at least IP30 and guess it will break every platform where
+MIPS_CPU_IRQ_BASE == 0. add_legacy will always do irq_domain_associate_many(),
+while add_simple doesn't do it, if first_irq == 0.
 
-Changes v2:
-  Keep "rockchip,rk3366-usb2phy" support.
-  Add "#phy-cells" to example.
-  Add allOf phy-provider.yaml
----
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |  81 -----------
- .../bindings/phy/phy-rockchip-inno-usb2.yaml       | 155 +++++++++++++++++++++
- 2 files changed, 155 insertions(+), 81 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
- create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
+Marc, what is the reason not doing it all the time ? What's the correct
+way here to work with irq_domain_add_simple() in this case ?
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-deleted file mode 100644
-index 541f52988..000000000
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-+++ /dev/null
-@@ -1,81 +0,0 @@
--ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
--
--Required properties (phy (parent) node):
-- - compatible : should be one of the listed compatibles:
--	* "rockchip,px30-usb2phy"
--	* "rockchip,rk3228-usb2phy"
--	* "rockchip,rk3328-usb2phy"
--	* "rockchip,rk3366-usb2phy"
--	* "rockchip,rk3399-usb2phy"
--	* "rockchip,rv1108-usb2phy"
-- - reg : the address offset of grf for usb-phy configuration.
-- - #clock-cells : should be 0.
-- - clock-output-names : specify the 480m output clock name.
--
--Optional properties:
-- - clocks : phandle + phy specifier pair, for the input clock of phy.
-- - clock-names : input clock name of phy, must be "phyclk".
-- - assigned-clocks : phandle of usb 480m clock.
-- - assigned-clock-parents : parent of usb 480m clock, select between
--		 usb-phy output 480m and xin24m.
--		 Refer to clk/clock-bindings.txt for generic clock
--		 consumer properties.
-- - rockchip,usbgrf : phandle to the syscon managing the "usb general
--		 register files". When set driver will request its
--		 phandle as one companion-grf for some special SoCs
--		 (e.g RV1108).
-- - extcon : phandle to the extcon device providing the cable state for
--		 the otg phy.
--
--Required nodes : a sub-node is required for each port the phy provides.
--		 The sub-node name is used to identify host or otg port,
--		 and shall be the following entries:
--	* "otg-port" : the name of otg port.
--	* "host-port" : the name of host port.
--
--Required properties (port (child) node):
-- - #phy-cells : must be 0. See ./phy-bindings.txt for details.
-- - interrupts : specify an interrupt for each entry in interrupt-names.
-- - interrupt-names : a list which should be one of the following cases:
--	Regular case:
--	* "otg-id" : for the otg id interrupt.
--	* "otg-bvalid" : for the otg vbus interrupt.
--	* "linestate" : for the host/otg linestate interrupt.
--	Some SoCs use one interrupt with the above muxed together, so for these
--	* "otg-mux" : otg-port interrupt, which mux otg-id/otg-bvalid/linestate
--		to one.
--
--Optional properties:
-- - phy-supply : phandle to a regulator that provides power to VBUS.
--		See ./phy-bindings.txt for details.
--
--Example:
--
--grf: syscon@ff770000 {
--	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--...
--
--	u2phy: usb2-phy@700 {
--		compatible = "rockchip,rk3366-usb2phy";
--		reg = <0x700 0x2c>;
--		#clock-cells = <0>;
--		clock-output-names = "sclk_otgphy0_480m";
--
--		u2phy_otg: otg-port {
--			#phy-cells = <0>;
--			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "otg-id", "otg-bvalid", "linestate";
--		};
--
--		u2phy_host: host-port {
--			#phy-cells = <0>;
--			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "linestate";
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
-new file mode 100644
-index 000000000..cb71561a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
-@@ -0,0 +1,155 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/phy-rockchip-inno-usb2.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip USB2.0 phy with inno IP block
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,px30-usb2phy
-+      - rockchip,rk3228-usb2phy
-+      - rockchip,rk3328-usb2phy
-+      - rockchip,rk3366-usb2phy
-+      - rockchip,rk3399-usb2phy
-+      - rockchip,rv1108-usb2phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    description:
-+      The usb 480m output clock name.
-+
-+  "#clock-cells":
-+    const: 0
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: phyclk
-+
-+  assigned-clocks:
-+    description:
-+      Phandle of the usb 480m clock.
-+
-+  assigned-clock-parents:
-+    description:
-+      Parent of the usb 480m clock.
-+      Select between usb-phy output 480m and xin24m.
-+      Refer to clk/clock-bindings.txt for generic clock consumer properties.
-+
-+  extcon:
-+    description:
-+      Phandle to the extcon device providing the cable state for the otg phy.
-+
-+  rockchip,usbgrf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to the syscon managing the 'usb general register files'.
-+      When set the driver will request its phandle as one companion-grf
-+      for some special SoCs (e.g rv1108).
-+
-+  host-port:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      "#phy-cells":
-+        const: 0
-+
-+      interrupts:
-+        description: host linestate interrupt
-+
-+      interrupt-names:
-+        const: linestate
-+
-+      phy-supply:
-+        description:
-+          Phandle to a regulator that provides power to VBUS.
-+          See ./phy-bindings.txt for details.
-+
-+    required:
-+      - "#phy-cells"
-+      - interrupts
-+      - interrupt-names
-+
-+  otg-port:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      "#phy-cells":
-+        const: 0
-+
-+      interrupts:
-+        minItems: 1
-+        maxItems: 3
-+
-+      interrupt-names:
-+        oneOf:
-+          - const: linestate
-+          - const: otg-mux
-+          - items:
-+            - const: otg-bvalid
-+            - const: otg-id
-+            - const: linestate
-+
-+      phy-supply:
-+        description:
-+          Phandle to a regulator that provides power to VBUS.
-+          See ./phy-bindings.txt for details.
-+
-+    required:
-+      - "#phy-cells"
-+      - interrupts
-+      - interrupt-names
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock-output-names
-+  - "#clock-cells"
-+  - "#phy-cells"
-+  - host-port
-+  - otg-port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3399-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    u2phy0: usb2-phy@e450 {
-+      compatible = "rockchip,rk3399-usb2phy";
-+      reg = <0xe450 0x10>;
-+      clocks = <&cru SCLK_USB2PHY0_REF>;
-+      clock-names = "phyclk";
-+      clock-output-names = "clk_usbphy0_480m";
-+      #clock-cells = <0>;
-+      #phy-cells = <0>;
-+
-+      u2phy0_host: host-port {
-+        #phy-cells = <0>;
-+        interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>;
-+        interrupt-names = "linestate";
-+      };
-+
-+      u2phy0_otg: otg-port {
-+        #phy-cells = <0>;
-+        interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH 0>,
-+                     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH 0>,
-+                     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH 0>;
-+        interrupt-names = "otg-bvalid", "otg-id", "linestate";
-+      };
-+    };
+Thomas.
+
 -- 
-2.11.0
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
