@@ -2,154 +2,197 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A56C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BB5C54FCF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E778A20714
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD6520753
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:33:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="UarPfnSO"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="W/jVXBb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbgCYCct (ORCPT
+        id S1727275AbgCYCdf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:32:49 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17833 "EHLO
+        Tue, 24 Mar 2020 22:33:35 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17895 "EHLO
         sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727259AbgCYCct (ORCPT
+        by vger.kernel.org with ESMTP id S1727259AbgCYCde (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 22:32:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585103515;
+        Tue, 24 Mar 2020 22:33:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585103391;
         s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=IrhqHZkIgBzBX0NyQ/AdHmhnZ5Hiqdy+Ikjqv3i39Yo=;
-        b=UarPfnSOcQ4sjXrN8oKc7mlQTD0HEm33Qx8s6HXUka0Z4prsBLK6HU8zxXq88j3G
-        4W9MGjhQ8vnuw9SyB9ou2bTaJC8pEKR1ek9/mdl/CQZ4yGD4Pf4fGV5SDSqVpgdQjaj
-        yQFc1h4wr5SQ4i3m89+VtFwnmaU2xmWJCkMhHwSE=
-Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
-        with SMTPS id 15851035137201004.1544709728074; Wed, 25 Mar 2020 10:31:53 +0800 (CST)
-Date:   Wed, 25 Mar 2020 10:31:50 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAAhV-H7__WmeWZ4w8Kc37WztRZ+-du9nKbVkRJeK7=ZhPaVY3g@mail.gmail.com>
-References: <20200324153624.23109-1-jiaxun.yang@flygoat.com> <20200324153624.23109-3-jiaxun.yang@flygoat.com> <CAAhV-H7__WmeWZ4w8Kc37WztRZ+-du9nKbVkRJeK7=ZhPaVY3g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 02/11] irqchip: loongson-liointc: Workaround LPC IRQ Errata
-To:     Huacai Chen <chenhc@lemote.com>
-CC:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=RoTb4kC5GgUMShP6k070ckUx+pQjKkreZ+DIkNKvl5E=;
+        b=W/jVXBb3rU1ZixAei7Ey/PGfP3D3ZbRAMq0Kzen1ORcgwH16AkbkgMf9YShmMIt+
+        8k712+8guc5+r6nQ5v6VZ5gikbL5izqhsmrdtQKH3jGDpVTxcKyQsZgykrnieTexuLl
+        r9/0C/bSWCtLhZkcmR1DGdV0AQ35RmgTIvqejpCI=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 1585103387861247.16580834429317; Wed, 25 Mar 2020 10:29:47 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Yinglu Yang <yangyinglu@loongson.cn>,
         Allison Randal <allison@lohutok.net>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <C87B57FD-F4C2-4464-9692-A28DE343FDDB@flygoat.com>
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Manuel Lauss <manuel.lauss@gmail.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-ide@vger.kernel.org
+Message-ID: <20200325022916.106641-1-jiaxun.yang@flygoat.com>
+Subject: [PATCH v7 00/12] Modernize Loongson64 Machine v6
+Date:   Wed, 25 Mar 2020 10:28:16 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+References: 
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Loongson have a long history of contributing their code to mainline kernel.
+However, it seems like recent years, they are focusing on maintain a kernel=
+ by themselves
+rather than contribute there code to the community.
 
+Kernel is progress rapidly too. Their code slept in mainline for a long per=
+oid without proper
+maintainance and became outdated.
 
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=889=
-:52:26, Huacai Chen <chenhc@lemote=2Ecom> =E5=86=99=E5=88=B0:
->Hi, Jiaxun,
->
->On Tue, Mar 24, 2020 at 11:39 PM Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom=
->
->wrote:
->>
->> The 1=2E0 version of that controller has a bug that status bit
->> of LPC IRQ sometimes doesn't get set correctly=2E
->>
->> So we can always blame LPC IRQ when spurious interrupt happens
->> at the parent interrupt line which LPC IRQ supposed to route
->> to=2E
->>
->> Co-developed-by: Huacai Chen <chenhc@lemote=2Ecom>
->> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> ---
->>  drivers/irqchip/irq-loongson-liointc=2Ec | 16 ++++++++++++++--
->>  1 file changed, 14 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-loongson-liointc=2Ec
->b/drivers/irqchip/irq-loongson-liointc=2Ec
->> index 8b6d7b8ddaca=2E=2Ed5054e90eab8 100644
->> --- a/drivers/irqchip/irq-loongson-liointc=2Ec
->> +++ b/drivers/irqchip/irq-loongson-liointc=2Ec
->> @@ -32,6 +32,8 @@
->>
->>  #define LIOINTC_SHIFT_INTx     4
->>
->> +#define LIOINTC_ERRATA_IRQ     10
->> +
->>  struct liointc_handler_data {
->>         struct liointc_priv     *priv;
->>         u32                     parent_int_map;
->> @@ -41,6 +43,7 @@ struct liointc_priv {
->>         struct irq_chip_generic         *gc;
->>         struct liointc_handler_data     handler[LIOINTC_NUM_PARENT];
->>         u8                              map_cache[LIOINTC_CHIP_IRQ];
->> +       bool                            have_lpc_irq_errata;
->Maybe has_lpc_irq_errata?
+This patchset brings modern DeviceTree and irqchip support to the Loongson6=
+4 machine, and leaves
+Loongson 2e/f alone since they are too legacy to touch.
 
-Fixed, thanks=2E
+PCI and some legacy I/O device will be converted later, together with LS7A =
+PCH support.
 
->
->>  };
->>
->>  static void liointc_chained_handle_irq(struct irq_desc *desc)
->> @@ -54,8 +57,14 @@ static void liointc_chained_handle_irq(struct
->irq_desc *desc)
->>
->>         pending =3D readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
->>
->> -       if (!pending)
->> -               spurious_interrupt();
->> +       if (!pending) {
->> +               /* Always blame LPC IRQ if we have that bug and LPC
->IRQ is enabled */
->> +               if (handler->priv->have_lpc_irq_errata &&
->> +                       (handler->parent_int_map & ~gc->mask_cache &
->BIT(LIOINTC_ERRATA_IRQ)))
->> +                       pending =3D BIT(LIOINTC_ERRATA_IRQ);
->> +               else
->> +                       spurious_interrupt();
->> +       }
->>
->>         while (pending) {
->>                 int bit =3D __ffs(pending);
->> @@ -164,6 +173,9 @@ int __init liointc_of_init(struct device_node
->*node,
->>                 goto out_iounmap;
->>         }
->>
->> +       if (of_device_is_compatible(node, "loongson,liointc-1=2E0"))
->> +               priv->have_lpc_irq_errata =3D true;
->> +
->>         sz =3D of_property_read_variable_u32_array(node,
->"loongson,parent_int_map",
->>                                               =20
->&of_parent_int_map[0], LIOINTC_NUM_PARENT,
->>                                                 LIOINTC_NUM_PARENT);
->> --
->> 2=2E26=2E0=2Erc2
->>
->>
->
->Regards,
->Huacai Chen
+v1:
+- dt-bindings fixup according to Rob's comments
+- irqchip fixup according to Marc's comments
+- ls3-iointc: Make Core&IP map per-IRQ
+- Regenerate kconfigs
+- Typo & style improvements
+
+v2:
+- dt-bindings: Fix IOINTC, collect Rob's review tag
+- dtbs: Drop CPU Node, merge different ways according to Huacai and Paul's =
+comments
+
+v3:
+- Split code have been merged
+- Fix IOINTC binding to allow map any child IRQ to and parent
+- Convert "HTINTC" into "HTPIC", which mixed HT vectors processing and i825=
+9
+- Naming style fix according to Huacai's suggestions
+
+v4:
+- More naming related fixes
+
+v5:
+- irqchip fixes thanks to maz (see per file changelog)
+- Remove unnecessary details in dt-bindings
+- Credit Huacai with Co-developed-by
+
+v6:
+- HTPIC minor fix
+- device binding naming fix=20
+
+v7:
+- Add Huacai's sign-off
+- Fix all reasonable checkpatch warnings
+
+Jiaxun Yang (12):
+  irqchip: Add driver for Loongson I/O Local Interrupt Controller
+  irqchip: loongson-liointc: Workaround LPC IRQ Errata
+  dt-bindings: interrupt-controller: Add Loongson LIOINTC
+  irqchip: Add driver for Loongson-3 HyperTransport PIC controller
+  dt-bindings: interrupt-controller: Add Loongson-3 HTPIC
+  irqchip: mips-cpu: Convert to simple domain
+  MIPS: Loongson64: Drop legacy IRQ code
+  dt-bindings: mips: Add loongson boards
+  MIPS: Loongson64: Add generic dts
+  MIPS: Loongson64: Load built-in dtbs
+  MIPS: Loongson64: Move MIPS_CPU_IRQ_BASE
+  MAINTAINERS: Update Loongson64 entry
+
+ .../interrupt-controller/loongson,htpic.yaml  |  59 ++++
+ .../loongson,liointc.yaml                     |  93 ++++++
+ .../bindings/mips/loongson/devices.yaml       |  27 ++
+ MAINTAINERS                                   |   1 +
+ arch/mips/Kconfig                             |   6 +-
+ arch/mips/boot/dts/Makefile                   |   1 +
+ arch/mips/boot/dts/loongson/Makefile          |   4 +
+ .../boot/dts/loongson/loongson3-package.dtsi  |  64 +++++
+ .../dts/loongson/loongson3_4core_rs780e.dts   |  25 ++
+ .../dts/loongson/loongson3_8core_rs780e.dts   |  25 ++
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  26 ++
+ arch/mips/include/asm/i8259.h                 |   1 +
+ .../include/asm/mach-loongson64/boot_param.h  |   2 +
+ .../asm/mach-loongson64/builtin_dtbs.h        |  13 +
+ arch/mips/include/asm/mach-loongson64/irq.h   |  32 +--
+ .../include/asm/mach-loongson64/loongson.h    |   1 +
+ arch/mips/loongson64/Makefile                 |   2 +-
+ arch/mips/loongson64/env.c                    |  23 ++
+ arch/mips/loongson64/init.c                   |   6 +
+ arch/mips/loongson64/irq.c                    | 162 -----------
+ arch/mips/loongson64/setup.c                  |  16 ++
+ arch/mips/loongson64/smp.c                    |  28 +-
+ drivers/irqchip/Kconfig                       |  19 ++
+ drivers/irqchip/Makefile                      |   2 +
+ drivers/irqchip/irq-loongson-htpic.c          | 149 ++++++++++
+ drivers/irqchip/irq-loongson-liointc.c        | 270 ++++++++++++++++++
+ drivers/irqchip/irq-mips-cpu.c                |   2 +-
+ 27 files changed, 846 insertions(+), 213 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/=
+loongson,htpic.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/=
+loongson,liointc.yaml
+ create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices=
+.yaml
+ create mode 100644 arch/mips/boot/dts/loongson/Makefile
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3-package.dtsi
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+ create mode 100644 arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+ delete mode 100644 arch/mips/loongson64/irq.c
+ create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+ create mode 100644 drivers/irqchip/irq-loongson-liointc.c
 
 --=20
-Jiaxun Yang
+2.26.0.rc2
+
+
