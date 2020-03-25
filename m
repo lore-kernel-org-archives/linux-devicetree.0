@@ -2,139 +2,175 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8B9C54FD5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E09CC54FCF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6167A20775
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB27020772
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="CBFe9Qt9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWx3uxsI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgCYPMU (ORCPT
+        id S1727585AbgCYPYJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:12:20 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:48258 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727452AbgCYPMU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:12:20 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 2D71441286;
-        Wed, 25 Mar 2020 15:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1585149135; x=1586963536; bh=fHWb5Yr/KDrAgGobWOxbXkxjTaxaIsnDfWn
-        qfiqYHjk=; b=CBFe9Qt9lMl3+AI1SGnZgXvKuKTZ/AOzA0u5/DvuD2gNFv7GpV8
-        li5Pr6rpS2vJztRZ9Ylgo6fXKt+qijFEX1In1sHmcTEEMjMHkP4vVUBpGjJ55QDT
-        3XeBCrRxMlvgoWtDzPCPhw+KazIk5/ucKNgtQ0GRECBBndyW4PwiV2fY=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id s9Ukk5G1VB5z; Wed, 25 Mar 2020 18:12:15 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id AD8684128B;
-        Wed, 25 Mar 2020 18:12:14 +0300 (MSK)
-Received: from localhost.yadro.com (10.199.1.182) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 25
- Mar 2020 18:12:15 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 1/2] iio: proximity: provide device tree binding document
-Date:   Wed, 25 Mar 2020 18:12:10 +0300
-Message-ID: <20200325151211.19949-2-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200325151211.19949-1-i.mikhaylov@yadro.com>
-References: <20200325151211.19949-1-i.mikhaylov@yadro.com>
+        Wed, 25 Mar 2020 11:24:09 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33557 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgCYPYJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 11:24:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id w25so2383185wmi.0;
+        Wed, 25 Mar 2020 08:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZMzufbtndIxfQmBLHm23V9WfnXjvY8mO2yqPIZB5gDU=;
+        b=BWx3uxsIk3pmb2jYX66+b2iKsIcsASs+LIcGSs6TBhRMhO4d47dl5rADijn3UGRvhG
+         8SbW3uZcnKsVSII2ZWj3H0gpUbkVkXH5erKpe37NtGfwZgfStOHNHEfhnGACSkzQgyEz
+         +B0zcyCDoE2S2hxXdvLrgOFeE5LRidNP56uniTd4uImISpjt/58IUPOpu/uh6ENksJQg
+         Tl0ndJnxVQbDI4e1ab/e0zr7Y5Bx/dnfRn2UXDSjAbFh3DI1nmLWOsMA4t+ulkynzqRK
+         JR5qnSmRrbE+4C++d7xOu4FP/98FEZ3n24yXMUfIQFf+bL407buCybsBVsB33auHrnMn
+         jiHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZMzufbtndIxfQmBLHm23V9WfnXjvY8mO2yqPIZB5gDU=;
+        b=q3e7scXMd05fIngk1zLlrX1u5BJ4yJBrnLfZkAhOvdMsGcBelohGZuv/UGp+BhKwy4
+         ENcCIXQ1ZSm+vo114BWA7OIR7WyOolK85q4+Udy2555H8s62QSKfCSdFp+eHLzIZStTm
+         dF3M73MnotW0XInKVvWH57T+6HugUnGdeqkC2sEMX0g3+Svus31XkWsxyW/dKvKwUJv5
+         fNFcT/ZADaeYZLF3awsefIqiKAHIvhpuvdAVM71i9HjMHXxaxrsKOSbSo1mC4n/wC+0N
+         iK1y+vOEB1j3CPPRpOvFRY3/t6gH1VNyiwJKeDLoXdCOJ9/tvdRspUb1jeP6ajLH50+W
+         +fKA==
+X-Gm-Message-State: ANhLgQ1BbprszxZjM/uomUZFfryR7UZWAPMwRiVI55+ioxs5w2v0zIBs
+        PC7PLn2j62P+9udQjilCf24=
+X-Google-Smtp-Source: ADFU+vsWlzfyvxWYK0fqQ9xx/KR19mVEHdF1RmHNZrFAbD14EJSxOKx23xH5kcAD+ENM2oOknweSgw==
+X-Received: by 2002:a1c:4d7:: with SMTP id 206mr3847830wme.5.1585149847168;
+        Wed, 25 Mar 2020 08:24:07 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f29:6000:f4a0:1b38:2faf:56e9? (p200300EA8F296000F4A01B382FAF56E9.dip0.t-ipconnect.de. [2003:ea:8f29:6000:f4a0:1b38:2faf:56e9])
+        by smtp.googlemail.com with ESMTPSA id o16sm35397700wrs.44.2020.03.25.08.24.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 08:24:06 -0700 (PDT)
+Subject: Re: [PATCH 1/2] net: phy: micrel.c: add rgmii interface delay
+ possibility to ksz9131
+To:     Philippe Schenker <philippe.schenker@toradex.com>, andrew@lunn.ch,
+        f.fainelli@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com
+Cc:     o.rempel@pengutronix.de, linux-kernel@vger.kernel.org,
+        silvan.murer@gmail.com, s.hauer@pengutronix.de,
+        a.fatoum@pengutronix.de, "David S. Miller" <davem@davemloft.net>
+References: <20200325150329.228329-1-philippe.schenker@toradex.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <d1067087-2cb8-f7c7-7929-2c4c9d2a4cb3@gmail.com>
+Date:   Wed, 25 Mar 2020 16:24:00 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.1.182]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200325150329.228329-1-philippe.schenker@toradex.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mostly standard i2c driver with some additional led-current option
-for vcnl3020.
+On 25.03.2020 16:03, Philippe Schenker wrote:
+> The KSZ9131 provides DLL controlled delays on RXC and TXC lines. This
+> patch makes use of those delays. The information which delays should
+> be enabled or disabled comes from the interface names, documented in
+> ethernet-controller.yaml:
+> 
+> rgmii:      Disable RXC and TXC delays
+> rgmii-id:   Enable RXC and TXC delays
+> rgmii-txid: Enable only TXC delay, disable RXC delay
+> rgmii-rxid: Enable onlx RXC delay, disable TXC delay
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> ---
+> 
+>  drivers/net/phy/micrel.c | 45 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+> index 63dedec0433d..d3ad09774847 100644
+> --- a/drivers/net/phy/micrel.c
+> +++ b/drivers/net/phy/micrel.c
+> @@ -704,6 +704,48 @@ static int ksz9131_of_load_skew_values(struct phy_device *phydev,
+>  	return phy_write_mmd(phydev, 2, reg, newval);
+>  }
+>  
+> +/* MMD Address 0x2 */
+> +#define KSZ9131RN_RXC_DLL_CTRL		76
+> +#define KSZ9131RN_TXC_DLL_CTRL		77
+> +#define KSZ9131RN_DLL_CTRL_BYPASS	BIT_MASK(12)
+> +#define KSZ9131RN_DLL_ENABLE_DELAY	0
+> +#define KSZ9131RN_DLL_DISABLE_DELAY	BIT(12)
+> +
+> +static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
+> +{
+> +	int ret;
+> +	u16 rxcdll_val, txcdll_val;
+> +
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- .../bindings/iio/proximity/vcnl3020.yaml      | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+Reverse xmas tree order please.
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-new file mode 100644
-index 000000000000..76c29514c663
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Integrated Proximity Sensor With Infrared Emitter
-+
-+maintainers:
-+  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
-+
-+description: |
-+  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
-+  that the infrared emitter is included in the package. It has 16-bit
-+  resolution. It includes a signal processing IC and features standard I2C
-+  communication interface. It features an interrupt function.
-+
-+  Specifications about the devices can be found at:
-+  https://www.vishay.com/docs/84150/vcnl3020.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - vishay,vcnl3020
-+
-+  reg:
-+    maxItems: 1
-+
-+  led-current:
-+    description:
-+        IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
-+        1 = 10 mA, 20 = 200 mA (2 = 20 mA = DEFAULT). LED Current is
-+        limited to 200 mA for values higher than decimal 20.
-+
-+required:
-+  - compatible
-+  - reg
-+  - led-current
-+
-+examples:
-+  - |
-+    iio-proximity@13 {
-+       compatible = "vishay,vcnl3020";
-+       reg = <0x13>;
-+
-+       led-current = <0x14>;
-+    };
--- 
-2.21.1
+> +	switch (phydev->interface) {
+> +	case PHY_INTERFACE_MODE_RGMII:
+> +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_ID:
+> +		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_RXID:
+> +		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_TXID:
+> +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		break;
+> +	default:
+> +		return 0;
+> +	}
+> +
+> +	ret = phy_modify_mmd_changed(phydev, 2, KSZ9131RN_RXC_DLL_CTRL,
+> +				     KSZ9131RN_DLL_CTRL_BYPASS, rxcdll_val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return phy_modify_mmd_changed(phydev, 2, KSZ9131RN_TXC_DLL_CTRL,
+> +				     KSZ9131RN_DLL_CTRL_BYPASS, txcdll_val);
+
+phy_modify_mmd_changed() returns 1 if the register value was changed,
+and that's not what you want here. Simply use phy_modify_mmd() in both
+occurrences. And your function has a return value, but it's not used by
+the caller.
+
+> +}
+> +
+>  static int ksz9131_config_init(struct phy_device *phydev)
+>  {
+>  	const struct device *dev = &phydev->mdio.dev;
+> @@ -730,6 +772,9 @@ static int ksz9131_config_init(struct phy_device *phydev)
+>  	if (!of_node)
+>  		return 0;
+>  
+> +	if (phy_interface_is_rgmii(phydev))
+> +		ksz9131_config_rgmii_delay(phydev);
+> +
+>  	ret = ksz9131_of_load_skew_values(phydev, of_node,
+>  					  MII_KSZ9031RN_CLK_PAD_SKEW, 5,
+>  					  clk_skews, 2);
+> 
 
