@@ -2,77 +2,151 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B129C1975A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 12:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9976CC1975A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 13:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E825D2078D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 12:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A372078A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 13:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585141207;
+	bh=10BVdmjEkYczxJmcDOG7xNE1dub7UU7afSw9H9CUwv4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wkcsHUESU6bQjQ3ST2ucqo/5djjSP42S18SxLG4wYKy97BuiGChTTu+m3e2p+rAmO
+	 QRMuT4yedJ6kbCiwoqaTQ0Z7PxhHAFtNnmiglVlfMHxtLtPacc2/gqc0Ed00tzL1ix
+	 elhM374KFAvyP/ffDgApuzMz8DE5rk1NC/x4N9D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgCYM7G (ORCPT
+        id S1727177AbgCYNAE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:59:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44644 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbgCYM7G (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 08:59:06 -0400
-Received: by mail-ot1-f66.google.com with SMTP id a49so1748898otc.11;
-        Wed, 25 Mar 2020 05:59:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r5g7FyrJO2TMfJgZazRdghxGNh9axm0w8GCfQXdkFrQ=;
-        b=L91RvCWCeaAT23dE/P/Yh1rdL8IT8cANa0Sp238TJ/4050VOx6Y8Kyz1R+oXL+GGiN
-         L2nBcfl26VdgHpUI50H7PwzxzxeI9tzSda7u2Wwp7kls4V5i+alu0yXDz1a2WS6gmCRC
-         XlUQrTvlLMTGiWG+bnn2v9reka+zkSH4DmeQzccuo0NXSdgdsVor7HacuhbCNcrP+H9/
-         9vLjyR8XDkEcZytycZ09Kk6L/pRRVmX668FipAjFK2bvZRCjKsgB10kMo2NUVNWhhP8E
-         Ls1/AH83A1P4VQVSZ1xKMwRmUfIQVUsCL3q1kE9eE+fCZEGRBQ5ek3r7UJJJP6+unWln
-         40uw==
-X-Gm-Message-State: ANhLgQ1rCSvTEdQp5RbJhAC+/AersIiwwubEvFlwRW2ziTr8HsY4hFiu
-        VBvOFjZV0MdAzfj5FJlloF1/1uXUrt9i9RMmuoo=
-X-Google-Smtp-Source: ADFU+vsWK7JMXFGW3VJJmYSqALCXY+LjYa9xG7lOM+uZiuCt4O1D/3T6qkozwBXjms+LpEZD994usN3u6jIA8Rl7mF4=
-X-Received: by 2002:a9d:7590:: with SMTP id s16mr2319984otk.250.1585141145744;
- Wed, 25 Mar 2020 05:59:05 -0700 (PDT)
+        Wed, 25 Mar 2020 09:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726969AbgCYNAE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:00:04 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DC2F20772;
+        Wed, 25 Mar 2020 13:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585141203;
+        bh=10BVdmjEkYczxJmcDOG7xNE1dub7UU7afSw9H9CUwv4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QxNckFLWO2LCHbcpQ3NdtWPb9OqvbBXtFecC8lVDZMVbCRhf0mctSW7xZwmrDjA+X
+         VwhdY0C+g0se/lzW0MkO7XkEJY6soI8NMfGX7oeJ2fRJ0+aUcNW4iD8sIBh72sSBUe
+         6XgF903X3IivBNH7TyM4JERsSb20cnYlIH0+UntA=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jH5dZ-00FZbV-Ma; Wed, 25 Mar 2020 13:00:01 +0000
 MIME-Version: 1.0
-References: <1585117006-8266-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1585117006-8266-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1585117006-8266-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 25 Mar 2020 13:58:54 +0100
-Message-ID: <CAMuHMdUzDMLd6ya06Dv-jLEzbu3KeTrgZ8O+iUguepe3AWzd4w@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: usb: renesas,usbhs: add r8a77961 support
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 25 Mar 2020 13:00:01 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
+        Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
         Rob Herring <robh+dt@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
+In-Reply-To: <20200325123742.GA9911@alpha.franken.de>
+References: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
+ <20200325035537.156911-7-jiaxun.yang@flygoat.com>
+ <20200325123742.GA9911@alpha.franken.de>
+Message-ID: <a69f727d37daac6e20ac08de022245b1@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: tsbogend@alpha.franken.de, jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, chenhc@lemote.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, andriy.shevchenko@linux.intel.com, allison@lohutok.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 7:17 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> This patch adds support for r8a77961 (R-Car M3-W+).
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+On 2020-03-25 12:37, Thomas Bogendoerfer wrote:
+> On Wed, Mar 25, 2020 at 11:54:59AM +0800, Jiaxun Yang wrote:
+>> The old code is using legacy domain to setup irq_domain for CPU 
+>> interrupts
+>> which requires irq_desc to be preallocated.
+>> 
+>> However, when MIPS_CPU_IRQ_BASE >= 16, irq_desc for CPU IRQs may end 
+>> up
+>> unallocated and lead to incorrect behavior.
+>> 
+>> Thus we convert the legacy domain to simple domain which can allocate
+>> irq_desc during initialization.
+>> 
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> Co-developed-by: Huacai Chen <chenhc@lemote.com>
+>> Signed-off-by: Huacai Chen <chenhc@lemote.com>
+>> Reviewed-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  drivers/irqchip/irq-mips-cpu.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/irqchip/irq-mips-cpu.c 
+>> b/drivers/irqchip/irq-mips-cpu.c
+>> index 95d4fd8f7a96..c3cf7fa76424 100644
+>> --- a/drivers/irqchip/irq-mips-cpu.c
+>> +++ b/drivers/irqchip/irq-mips-cpu.c
+>> @@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct 
+>> device_node *of_node)
+>>  	clear_c0_status(ST0_IM);
+>>  	clear_c0_cause(CAUSEF_IP);
+>> 
+>> -	irq_domain = irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE, 0,
+>> +	irq_domain = irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
+>>  					   &mips_cpu_intc_irq_domain_ops,
+>>  					   NULL);
+> 
+> this breaks at least IP30 and guess it will break every platform where
+> MIPS_CPU_IRQ_BASE == 0. add_legacy will always do 
+> irq_domain_associate_many(),
+> while add_simple doesn't do it, if first_irq == 0.
+> 
+> Marc, what is the reason not doing it all the time ? What's the correct
+> way here to work with irq_domain_add_simple() in this case ?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On a fully DT-ified platform, using non-legacy irqdomains, virtual 
+interrupts
+are allocated as a "random" number, depending on the order of 
+allocation,
+and on demand.
 
-Gr{oetje,eeting}s,
+The first_irq hack in irq_domain_add_simple() is just a way to still 
+allocate
+descriptors upfront (and I wish we could drop it...).
 
-                        Geert
+If you have legacy code that "knows" about the relationship between 
+Linux's
+virtual interrupt and the hwirq (that is only meaningful to the 
+interrupt
+controller), you're screwed, and need to stick to the legacy irqdomain.
 
+It feels like the MIPS code is squarely in the latter case, so I guess 
+this
+patch is probably the wrong thing to do for this architecture.
+
+Thanks,
+
+         M.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Jazz is not dead. It just smells funny...
