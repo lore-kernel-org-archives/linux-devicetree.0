@@ -2,137 +2,173 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F65C54FD0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAA6C1975A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9267C2073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487F62073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XtpjmpZH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1vLle3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbgCYPuY (ORCPT
+        id S1727174AbgCYPyG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:50:24 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:36303 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727833AbgCYPuV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 11:50:21 -0400
-Received: by mail-vs1-f67.google.com with SMTP id 184so1027594vsu.3
-        for <devicetree@vger.kernel.org>; Wed, 25 Mar 2020 08:50:20 -0700 (PDT)
+        Wed, 25 Mar 2020 11:54:06 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:33249 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgCYPyG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 11:54:06 -0400
+Received: by mail-pj1-f67.google.com with SMTP id jz1so2395405pjb.0;
+        Wed, 25 Mar 2020 08:54:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5R9OlcysTIjSd6LSQUVfdd7d9zM2FdO/Mwd40Pw5oqo=;
-        b=XtpjmpZHorFljb0nMx6/72BT6LEyg6Yu3GZqe2zFozULuw0vZvc0DGxN1dv5nyYcCC
-         hHWAbWGSOUvReB9nY4FED4Ar/y5wjn/ZL8FKAYhFCQofbGaikMQxNWYRkq+MvceY2mpy
-         N4Sp0qbxAYASySnf+wDwpkd2kniFgXVKTcZFs=
+        bh=m2KTzbKyqjKYw4vr9/LcS8DzT4Q8P/nBfhkd8Raxax0=;
+        b=J1vLle3i29D1ETVntQbTdDTo7RbhoAw4biGBEDwG+xA9B4DG3sbgqMKgP3pTvAKQT4
+         bapLIr0OOYwFQPfPRaIfl7yokOqbx+ItAiIhLj667sdoKkZkf5GekVnBYl4tZ2G6GCcJ
+         iRJNaGGoWZ5Yleyvy0DQJLYJUBxfc6sL9KG9zdAN3s3ZX9g33lrIvZhuRddMvSKtX7MC
+         wy1hIfDzWHbcAOVE8fi19Da+UBBOV2+LZtRjFvY+itZJJd+tPnEgWkji64tWIK7kXjlP
+         ZUBeNugEChi6JH16CzF2ti+g8kUB6s4Lz0lddmdx3bcwrdvXSfmTGGDcLZ+82bZwOfgb
+         6Dng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5R9OlcysTIjSd6LSQUVfdd7d9zM2FdO/Mwd40Pw5oqo=;
-        b=ibK222rUVzbD8KHoZgcNvZ5/qm1OdQ7zfqbamlo+I8fHa+ACxNRyW0s8nl66SPZd+V
-         YU72zFI6hYVDP7OEvoZUZImzGE1BlYylZ85aa6Bn/NiCZnEwfhXpD0Xznt9TzZMDR7my
-         UFjlfLQc+Sq/UiRnOncdKcjBRP4cPnpQZey4n4byk88EIoZaAOceLgSBv+ZJ54ZWWqiG
-         PNJD5iboLGjVSoH5e1yc+9jvamIKseUAEEwEL7ynP7YwWzwk7L/2/DpqOZFpc/teYALo
-         wuCqiE6Lv9XZxW/FbFpOG0V+pqfs9a0PXseG60B4TyirVwmCC9XlvDpXVpHNnoB8wX0q
-         VOEA==
-X-Gm-Message-State: ANhLgQ09Tg6wullTBq+E3sJ8ob3p+wHR/FVoAmslkX1w3Wvw5jImUozy
-        YSPXAjQj5/p928Lfn8LbkJy8KYEhwXs=
-X-Google-Smtp-Source: ADFU+vsYZAXWqh+YjL1dwXUfnrhm3Q2ejDDZNHTzcNJqqORNyWs1qWiwv322Krb0Nvd3PBSid2dxng==
-X-Received: by 2002:a67:f6d0:: with SMTP id v16mr3106888vso.49.1585151419352;
-        Wed, 25 Mar 2020 08:50:19 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id s17sm10415260vss.32.2020.03.25.08.50.18
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 08:50:18 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id o3so1800404vsd.4
-        for <devicetree@vger.kernel.org>; Wed, 25 Mar 2020 08:50:18 -0700 (PDT)
-X-Received: by 2002:a67:694f:: with SMTP id e76mr2833828vsc.73.1585151417831;
- Wed, 25 Mar 2020 08:50:17 -0700 (PDT)
+        bh=m2KTzbKyqjKYw4vr9/LcS8DzT4Q8P/nBfhkd8Raxax0=;
+        b=AOifu5JN5pkSuDXtL2AkhEeDtsTRkZHxarGCDNz1E2snZ9NUtQtldqOJ+2l1D3WIjw
+         iElxBn5iz0mqTr5U8ngei4WQlVMTUIP+uG6ZKqNtxe+cbNsdCF931dUOFEUtxHOtcu6T
+         NCdOo/fbbmMjFVlty7Np189uYjg53//vgkap51b4BBKkDdEGZE/xJ8nK9yRWQRClPrrD
+         gIvWSNYhG9on/rUPBvC7rGt7ZKrhQyIcn9Af+Ng8hEb0br77xu3PntnD5pUSNferTOvv
+         f/MBfC1/PGYZqYUW/1J7Wa5sdo1fOWPwyA6CBbf61i2hTDbHg7ELGpX02RAsZhF5Absj
+         X3Qw==
+X-Gm-Message-State: ANhLgQ00oaPdqAMAhEC6PZGNb3telphfF8miBms/dtCULvMYHwI6UahT
+        TIpvBpv9WrTRQC6VZQZdSXzhADg1Dd7p96AOhY0=
+X-Google-Smtp-Source: ADFU+vs1t1sRby5FeNyrAmPWma3Y7Ur7v+64WoOhzdYpplXZSsXcLF5yer3YjgSOIvPcvdhBWolXsHmRB3zEkOiP0sQ=
+X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr4520249pjn.8.1585151644817;
+ Wed, 25 Mar 2020 08:54:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
- <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com> <CAF6AEGs5saoU3FeO++S+YD=Js499HB2CjK8neYCXAZmCjgy2nQ@mail.gmail.com>
-In-Reply-To: <CAF6AEGs5saoU3FeO++S+YD=Js499HB2CjK8neYCXAZmCjgy2nQ@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 25 Mar 2020 08:50:05 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VxeCUEEFi9T0Jand3EWkaQTLnQkT3v5yjyjLi4yDeQ-w@mail.gmail.com>
-Message-ID: <CAD=FV=VxeCUEEFi9T0Jand3EWkaQTLnQkT3v5yjyjLi4yDeQ-w@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
+References: <20200325151211.19949-1-i.mikhaylov@yadro.com> <20200325151211.19949-3-i.mikhaylov@yadro.com>
+In-Reply-To: <20200325151211.19949-3-i.mikhaylov@yadro.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 25 Mar 2020 17:53:57 +0200
+Message-ID: <CAHp75VfjqtAtS-iXS6vz452m-EUtPcNt7EPm1JvQwC4VeX-k1A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Mar 25, 2020 at 8:40 AM Rob Clark <robdclark@gmail.com> wrote:
+On Wed, Mar 25, 2020 at 5:14 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
 >
-> On Tue, Mar 24, 2020 at 7:35 AM Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Sun, Mar 22, 2020 at 11:14 PM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
-> > >
-> > > "The PM core always increments the runtime usage counter
-> > > before calling the ->suspend() callback and decrements it
-> > > after calling the ->resume() callback"
-> > >
-> > > DPU and DSI are managed as runtime devices. When
-> > > suspend is triggered, PM core adds a refcount on all the
-> > > devices and calls device suspend, since usage count is
-> > > already incremented, runtime suspend was not getting called
-> > > and it kept the clocks on which resulted in target not
-> > > entering into XO shutdown.
-> > >
-> > > Add changes to manage runtime devices during pm sleep.
-> > >
-> > > Changes in v1:
-> > >  - Remove unnecessary checks in the function
-> > >      _dpu_kms_disable_dpu (Rob Clark).
-> >
-> > I'm wondering what happened with my feedback on v1, AKA:
-> >
-> > https://lore.kernel.org/r/CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com
-> >
-> > Maybe you didn't see it?  ...or if you or Rob think I'm way off base
-> > (always possible) then please tell me so.
-> >
+> Proximity sensor driver based on light/vcnl4000.c code.
+> For now supports only the single on-demand measurement.
 >
-> At least w/ the current patch, disable_dpu should not be called for
-> screen-off (although I'd hope if all the screens are off the device
-> would suspend).
+> The VCNL3020 is a fully integrated proximity sensor. Fully
+> integrated means that the infrared emitter is included in the
+> package. It has 16-bit resolution. It includes a signal
+> processing IC and features standard I2C communication
+> interface. It features an interrupt function.
 
-OK, that's good.
+Thank you for an update, my comments below.
 
-> But I won't claim to be a pm expert.. so not really
-> sure if this is the best approach or not.  I don't think our
-> arrangement of sub-devices under a parent is completely abnormal, so
-> it does feel like there should be a simpler solution..
+...
 
-I think the other arguments about asymmetry are still valid and I've
-fixed bugs around this type of thing in the past.  For instance, see
-commit f7ccbed656f7 ("drm/rockchip: Suspend DP late").
+> +config VCNL3020
+> +       tristate "VCNL3020 proximity sensor"
 
+> +       depends on I2C
 
--Doug
+REGMAP_I2C
+
+...
+
+> +struct vcnl3020_data {
+> +       struct regmap *regmap;
+
+> +       struct i2c_client *client;
+
+Since you have switched to regmap I2C API, do you really need client
+here, perhaps struct device *dev would be enough?
+
+> +       u8 rev;
+> +       struct mutex lock;
+> +};
+
+...
+
+> +       rc = regmap_read(data->regmap, VCNL_PROD_REV, &reg);
+
+> +       if (rc < 0) {
+
+I think you may drop all these ' < 0' checks for regmap, otherwise can
+you elaborate what positive return code, if any, means?
+
+> +               dev_err(&data->client->dev,
+> +                       "Error (%d) reading product revision", rc);
+> +               return rc;
+> +       }
+
+...
+
+> +       rc = regmap_write(data->regmap, VCNL_LED_CURRENT, led_current);
+> +       if (rc < 0) {
+
+...after above change...
+
+> +               dev_err(&data->client->dev, "Error (%d) setting LED current",
+> +                       rc);
+
+> +               return rc;
+> +       }
+> +
+> +       return 0;
+
+...simple return rc; here.
+
+...
+
+> +       /* wait for data to become ready */
+> +       do {
+> +               rc = regmap_read(data->regmap, VCNL_COMMAND, &reg);
+> +               if (rc < 0)
+> +                       goto err_unlock;
+> +               if (reg & VCNL_PS_RDY)
+> +                       break;
+> +               msleep(20); /* measurement takes up to 100 ms */
+> +       } while (--tries);
+
+regmap_read_poll_timeput()
+
+...
+
+> +static const struct iio_chan_spec vcnl3020_channels[] = {
+> +       {
+> +               .type = IIO_PROXIMITY,
+> +               .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+
+> +       }
+
+Leave comma here.
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
