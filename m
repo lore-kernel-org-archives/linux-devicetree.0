@@ -2,122 +2,375 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306E1C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50771C54FCF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC8A120724
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:38:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ilkOae9L"
+	by mail.kernel.org (Postfix) with ESMTP id 1DFD42070A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgCYCiO (ORCPT
+        id S1727253AbgCYCmW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:38:14 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51896 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727281AbgCYCiO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 22:38:14 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1645F8364E;
-        Wed, 25 Mar 2020 15:38:10 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1585103890;
-        bh=ZzysIO/9RPDV/A3vlTmlFXsSYJO80TeqS/R9s7obePE=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=ilkOae9LxdGbrVW/WD2EbGvKSoIym4cmTHupObqiTYpRhEY/BkStZftFjVqflVCLs
-         7SbyLckNAZuwymM6jGy5UM0ETFXnNgIB52k8S7kMVlx0RV2isSRLKhVGfJoHo38Rca
-         ewgDx5ueBXArhY28cv7ENLdIC98Kx0YnCZ8Xz562nZ1UBVM6GECsvVRMQnzrWidTEp
-         DB39TCvxQJ3HJyW5tg+wDO+7YD5Y+oHX+sqAJe92Bh2ub1QRwkmapd7GOvdwAeFava
-         JfoCUxF+UkpcRF2l9Mmp/1f2/8s/JSJ7AUKXgCZe6k7pxOHh/eQT1hoidjfAqarYMy
-         3+cIS24Hy0XfA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e7ac4130000>; Wed, 25 Mar 2020 15:38:11 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 25 Mar 2020 15:38:04 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 25 Mar 2020 15:38:04 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "oss@buserror.net" <oss@buserror.net>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH] powerpc/fsl: Add cache properties for T2080/T2081
-Thread-Topic: [PATCH] powerpc/fsl: Add cache properties for T2080/T2081
-Thread-Index: AQHWAiQ+A9/gcoCawUaa9nFTUYpnM6hXs9EAgAACfICAAAhNAA==
-Date:   Wed, 25 Mar 2020 02:38:04 +0000
-Message-ID: <ae2930cdc30779ec0c6183e73849b47dcf5d57b0.camel@alliedtelesis.co.nz>
-References: <20200324213612.31614-1-chris.packham@alliedtelesis.co.nz>
-         <877dz9xkhr.fsf@mpe.ellerman.id.au>
-         <81c68751cb89bbff13a09467b94530a555d69552.camel@buserror.net>
-In-Reply-To: <81c68751cb89bbff13a09467b94530a555d69552.camel@buserror.net>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.14.96]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2AB8EC276708ED4F893AB64140E9BBF0@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Tue, 24 Mar 2020 22:42:22 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:42574 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbgCYCmW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 22:42:22 -0400
+Received: by mail-il1-f195.google.com with SMTP id f16so506899ilj.9;
+        Tue, 24 Mar 2020 19:42:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=l/cAZRgqz3ZcWFg8QgUT6KnUVYwAN99fj/1pfAMCGCg=;
+        b=F4Jy6y3x6UfXAY5Wkne09DQ1TG8fMrO4+Hgo0BpIO4seBtIfEAj2iOKU3EctLVaL6c
+         xJJu+IqoUg5X4x5Nu06S3gPJ3GboirN5qXggnoE3iGCVDc24FhcPDMHgnHXfi5T7ndxp
+         jITEIYsXIxw6Q0tXnlX1OtmuloQkOh/NZqsE8dDcLoSxtDbIM12dC8AjH+1INSXLVYe9
+         bt3TLnAvTKSEy8qugEaqTphNM0HDOE1ruIi33DqVPypVsvuGcezY2i2wfsG8Sl1+VuWG
+         rxPPZfscKc1pJJSLEG9IvGx2kv9QazE7Do0zktM31t4wNHjfUybKyf9ylgZ6j02tByBf
+         sMlQ==
+X-Gm-Message-State: ANhLgQ10tD7O0svy5fTLzSQZXzQD6HefH2T1cAPSKTE5xp4jibCO4xSy
+        +uhVglK3Jxk4KhWR09VYnb5fSiIwu590HiHz6uI=
+X-Google-Smtp-Source: ADFU+vtwtiKCArP8bymyiisCae+Kjre+mE6fzgDq2W94kWA2k+qHRBQ/o96TTccslMQvLEZYZ07tts37DXp00W+JjNA=
+X-Received: by 2002:a92:8f53:: with SMTP id j80mr1461801ild.171.1585104139035;
+ Tue, 24 Mar 2020 19:42:19 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
+ <20200324153624.23109-10-jiaxun.yang@flygoat.com> <CAAhV-H57na90xg0+cXeGC_rih9wiZBEZcVm+3AnY90To19wqbw@mail.gmail.com>
+ <5234EAAC-126F-402B-84A8-494C1AF5A912@flygoat.com>
+In-Reply-To: <5234EAAC-126F-402B-84A8-494C1AF5A912@flygoat.com>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Wed, 25 Mar 2020 10:49:03 +0800
+Message-ID: <CAAhV-H5YO-C3Qr+Xnz3fhoUTcZahp0+M7SZfPrKaPSoeLEwz5g@mail.gmail.com>
+Subject: Re: [PATCH v6 09/11] MIPS: Loongson64: Add generic dts
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTI0IGF0IDIxOjA4IC0wNTAwLCBTY290dCBXb29kIHdyb3RlOg0KPiBP
-biBXZWQsIDIwMjAtMDMtMjUgYXQgMTI6NTkgKzExMDAsIE1pY2hhZWwgRWxsZXJtYW4gd3JvdGU6
-DQo+ID4gQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56PiB3
-cml0ZXM6DQo+ID4gPiBBZGQgdGhlIGQtY2FjaGUvaS1jYWNoZSBwcm9wZXJ0aWVzIGZvciB0aGUg
-VDIwOHggU29Dcy4gVGhlIEwxDQo+ID4gPiBjYWNoZSBvbg0KPiA+ID4gdGhlc2UgU29DcyBpcyAz
-MktpQiBhbmQgaXMgc3BsaXQgaW50byA2NCBieXRlIGJsb2NrcyAobGluZXMpLg0KPiA+ID4gDQo+
-ID4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRl
-bGVzaXMuY28ubno+DQo+ID4gPiAtLS0NCj4gPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
-L3QyMDh4c2ktcHJlLmR0c2kgfCAxNiArKysrKysrKysrKysrKysrDQo+ID4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDE2IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBMR1RNLg0KPiA+IA0KPiA+IEknbGwg
-d2FpdCBhIGZldyBkYXlzIHRvIHNlZSBpZiBTY290dCB3YW50cyB0byBhY2sgaXQuDQo+ID4gDQo+
-ID4gY2hlZXJzDQo+ID4gDQo+ID4gDQo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jv
-b3QvZHRzL2ZzbC90MjA4eHNpLXByZS5kdHNpDQo+ID4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0
-cy9mc2wvdDIwOHhzaS1wcmUuZHRzaQ0KPiA+ID4gaW5kZXggM2Y3NDVkZTQ0Mjg0Li4yYWQyN2Ux
-NmFjMTYgMTAwNjQ0DQo+ID4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDh4
-c2ktcHJlLmR0c2kNCj4gPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwOHhz
-aS1wcmUuZHRzaQ0KPiA+ID4gQEAgLTgxLDYgKzgxLDEwIEBAIGNwdXMgew0KPiA+ID4gIAkJY3B1
-MDogUG93ZXJQQyxlNjUwMEAwIHsNCj4gPiA+ICAJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KPiA+
-ID4gIAkJCXJlZyA9IDwwIDE+Ow0KPiA+ID4gKwkJCWQtY2FjaGUtbGluZS1zaXplID0gPDY0PjsN
-Cj4gPiA+ICsJCQlpLWNhY2hlLWxpbmUtc2l6ZSA9IDw2ND47DQo+ID4gPiArCQkJZC1jYWNoZS1z
-aXplID0gPDMyNzY4PjsNCj4gPiA+ICsJCQlpLWNhY2hlLXNpemUgPSA8MzI3Njg+Ow0KPiA+ID4g
-IAkJCWNsb2NrcyA9IDwmY2xvY2tnZW4gMSAwPjsNCj4gPiA+ICAJCQluZXh0LWxldmVsLWNhY2hl
-ID0gPCZMMl8xPjsNCj4gPiA+ICAJCQlmc2wscG9ydGlkLW1hcHBpbmcgPSA8MHg4MDAwMDAwMD47
-DQo+IA0KPiBVLUJvb3Qgc2hvdWxkIGJlIHNldHRpbmcgZC9pLWNhY2hlLXNpemUgYW5kIGQvaS1j
-YWNoZS1ibG9jay1zaXplIC0tDQo+IGFyZSB5b3UNCj4gdXNpbmcgc29tZXRoaW5nIGVsc2U/DQoN
-Ck5vcGUgaXQgaXMgdS1ib290IHNwZWNpZmljYWxseQ0KDQpVLUJvb3QgMjAxNy4wMS1yYzMtZGly
-dHkNCg0KSSdtIHByZXR0eSBzdXJlIHRoZSAnLWRpcnR5JyBpcyBqdXN0IGEgY2hhbmdlIHRvIHVz
-ZSBhIGRpZmZlcmVudCBjcm9zcy0NCmNvbXBpbGVyIGJ1dCBJIGNhbid0IGNvbmZpcm0gYW5kIEkn
-bSBhIGxpdHRsZSBoZXNpdGFudCB0byB0cnkgdXBkYXRpbmcNCmFzIEkndmUgb25seSBnb3QgcmVt
-b3RlIGFjY2VzcyB0byB0aGUgYm9hcmQgcmlnaHQgbm93Lg0KDQo+IA0KPiBUaGUgbGluZSBzaXpl
-IGlzIHRoZSBzYW1lIGFzIHRoZSBibG9jayBzaXplIHNvIHdlIGRvbid0IG5lZWQgYQ0KPiBzZXBh
-cmF0ZSBkL2ktDQo+IGNhY2hlLWxpbmUtc2l6ZS4NCj4gDQoNCkknbSBub3Qgc3VyZSB0aGF0J2xs
-IHdvcmsgbG9va2luZyBhdCB0aGUgY29kZVsxXS4gSXQgaGFzIGxvZ2ljIHRvIHNldA0KYnNpemVw
-IHRvIGxzaXplcCBpZiBubyBibG9jayBzaXplIGlzIHNldCBidXQgbm90IHRoZSBvdGhlciB3YXkg
-cm91bmQuDQpMb29raW5nIGF0IHRoZSBzcGVjIGZyb20gZGV2aWNldHJlZS5vcmcgdGhpcyBhY3R1
-YWxseSBzZWVtcyB3cm9uZy4NClBlcmhhcHMgdGhhdCBpcyB0aGUgcmVhbCBzb3VyY2Ugb2YgdGhl
-IGVycm9yLg0KDQotLQ0KWzFdIC0gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
-L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvYXJjaC9wb3dlcnBjL2tlcm5lbC9z
-ZXR1cF82NC5jI241MTANCg0KDQo=
+Hi, Jiaxun,
+
+On Wed, Mar 25, 2020 at 10:09 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+>
+>
+> 于 2020年3月25日 GMT+08:00 上午10:11:05, Huacai Chen <chenhc@lemote.com> 写到:
+> >Hi, Jiaxun,
+> >
+> >On Tue, Mar 24, 2020 at 11:40 PM Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >wrote:
+> >>
+> >> Add generic device dts for Loongson-3 devices.
+> >> They are currently almost identical but will be different later.
+> >> Some PCH devices like PCI Host Bridge is still enabled by platform
+> >> code for now.
+> >>
+> >> Co-developed-by: Huacai Chen <chenhc@lemote.com>
+> >> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> >> ---
+> >>  arch/mips/Kconfig                             |  6 +-
+> >>  arch/mips/boot/dts/Makefile                   |  1 +
+> >>  arch/mips/boot/dts/loongson/Makefile          |  4 ++
+> >>  .../boot/dts/loongson/loongson3-package.dtsi  | 62
+> >+++++++++++++++++++
+> >>  .../dts/loongson/loongson3_4core_rs780e.dts   | 25 ++++++++
+> >>  .../dts/loongson/loongson3_8core_rs780e.dts   | 25 ++++++++
+> >>  arch/mips/boot/dts/loongson/rs780e-pch.dtsi   | 26 ++++++++
+> >>  7 files changed, 147 insertions(+), 2 deletions(-)
+> >>  create mode 100644 arch/mips/boot/dts/loongson/Makefile
+> >>  create mode 100644
+> >arch/mips/boot/dts/loongson/loongson3-package.dtsi
+> >>  create mode 100644
+> >arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+> >>  create mode 100644
+> >arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+> >>  create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+> >>
+> >> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> >> index ca3045b2a2d9..4a0b2f494d79 100644
+> >> --- a/arch/mips/Kconfig
+> >> +++ b/arch/mips/Kconfig
+> >> @@ -486,9 +486,11 @@ config MACH_LOONGSON64
+> >>         select SYS_SUPPORTS_HIGHMEM
+> >>         select SYS_SUPPORTS_LITTLE_ENDIAN
+> >>         select SYS_SUPPORTS_ZBOOT
+> >> -       select LOONGSON_MC146818
+> >>         select ZONE_DMA32
+> >>         select NUMA
+> >> +       select COMMON_CLK
+> >> +       select USE_OF
+> >> +       select BUILTIN_DTB
+> >>         help
+> >>           This enables the support of Loongson-2/3 family of
+> >machines.
+> >>
+> >> @@ -3081,7 +3083,7 @@ endchoice
+> >>  choice
+> >>         prompt "Kernel command line type" if !CMDLINE_OVERRIDE
+> >>         default MIPS_CMDLINE_FROM_DTB if USE_OF && !ATH79 &&
+> >!MACH_INGENIC && \
+> >> -                                        !MIPS_MALTA && \
+> >> +                                        !MACH_LOONGSON64 &&
+> >!MIPS_MALTA && \
+> >>                                          !CAVIUM_OCTEON_SOC
+> >>         default MIPS_CMDLINE_FROM_BOOTLOADER
+> >>
+> >> diff --git a/arch/mips/boot/dts/Makefile
+> >b/arch/mips/boot/dts/Makefile
+> >> index 1e79cab8e269..d429a69bfe30 100644
+> >> --- a/arch/mips/boot/dts/Makefile
+> >> +++ b/arch/mips/boot/dts/Makefile
+> >> @@ -4,6 +4,7 @@ subdir-y        += cavium-octeon
+> >>  subdir-y       += img
+> >>  subdir-y       += ingenic
+> >>  subdir-y       += lantiq
+> >> +subdir-y       += loongson
+> >>  subdir-y       += mscc
+> >>  subdir-y       += mti
+> >>  subdir-y       += netlogic
+> >> diff --git a/arch/mips/boot/dts/loongson/Makefile
+> >b/arch/mips/boot/dts/loongson/Makefile
+> >> new file mode 100644
+> >> index 000000000000..56d379471262
+> >> --- /dev/null
+> >> +++ b/arch/mips/boot/dts/loongson/Makefile
+> >> @@ -0,0 +1,4 @@
+> >> +# SPDX_License_Identifier: GPL_2.0
+> >> +dtb-$(CONFIG_MACH_LOONGSON64)  += loongson3_4core_rs780e.dtb
+> >loongson3_8core_rs780e.dtb
+> >> +
+> >> +obj-$(CONFIG_BUILTIN_DTB)      += $(addsuffix .o, $(dtb-y))
+> >> diff --git a/arch/mips/boot/dts/loongson/loongson3-package.dtsi
+> >b/arch/mips/boot/dts/loongson/loongson3-package.dtsi
+> >> new file mode 100644
+> >> index 000000000000..d09c313603f1
+> >> --- /dev/null
+> >> +++ b/arch/mips/boot/dts/loongson/loongson3-package.dtsi
+> >> @@ -0,0 +1,62 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +
+> >> +#include <dt-bindings/interrupt-controller/irq.h>
+> >> +
+> >> +/ {
+> >> +       #address-cells = <2>;
+> >> +       #size-cells = <2>;
+> >> +
+> >I still add something like this here:
+> >
+> >                cpu@0 {
+> >                        compatible = "loongson,loongson3";
+> >                        device_type = "cpu";
+> >                        reg = <0x0>;
+> >                        next-level-cache = <&scache0>;
+> >                };
+> >
+> >Because it at least solve the problem of cache hierarchy, which cause
+> >"lscpu" crash.
+>
+> That's another problem.
+> Previous discussion with rob and Paul all suggested that we shouldn't add cpu node.
+> At least for now.
+>
+Maybe Rob and Paul had never care about the cache hierarchy problem?
+And I think the generic .dts files should not be modified from time to
+time.
+
+> >
+> >> +       cpuintc: interrupt-controller {
+> >> +               #address-cells = <0>;
+> >> +               #interrupt-cells = <1>;
+> >> +               interrupt-controller;
+> >> +               compatible = "mti,cpu-interrupt-controller";
+> >> +       };
+> >> +
+> >> +       package0: bus@1fe00000 {
+> >> +               compatible = "simple-bus";
+> >> +               #address-cells = <2>;
+> >> +               #size-cells = <1>;
+> >> +               ranges = <0 0x1fe00000 0 0x1fe00000 0x100000
+> >> +                       0 0x3ff00000 0 0x3ff00000 0x100000
+> >> +                       0xefd 0xfb000000 0xefd 0xfb000000 0x10000000
+> >/* 3A HT Config Space */
+> >> +                       0x1efd 0xfb000000 0x1efd 0xfb000000
+> >0x10000000 /* 3B HT Config Space */>;
+> >> +
+> >> +               liointc: interrupt-controller@3ff01400 {
+> >> +                       compatible = "loongson,liointc-1.0";
+> >> +                       reg = <0 0x3ff01400 0x64>;
+> >> +
+> >> +                       interrupt-controller;
+> >> +                       #interrupt-cells = <2>;
+> >> +
+> >> +                       interrupt-parent = <&cpuintc>;
+> >> +                       interrupts = <2>, <3>;
+> >> +                       interrupt-names = "int0", "int1";
+> >> +
+> >> +                       loongson,parent_int_map = <0xf0ffffff>, /*
+> >int0 */
+> >> +                                               <0x0f000000>, /* int1
+> >*/
+> >> +                                               <0x00000000>, /* int2
+> >*/
+> >> +                                               <0x00000000>; /* int3
+> >*/
+> >> +
+> >> +               };
+> >> +
+> >> +               cpu_uart0: serial@1fe001e0 {
+> >> +                       compatible = "ns16550a";
+> >> +                       reg = <0 0x1fe001e0 0x8>;
+> >> +                       clock-frequency = <33000000>;
+> >> +                       interrupt-parent = <&liointc>;
+> >> +                       interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                       no-loopback-test;
+> >> +               };
+> >> +
+> >> +               cpu_uart1: serial@1fe001e8 {
+> >> +                       status = "disabled";
+> >Why disable UART1 by default, is it cause problems?
+>
+> Yes. It would cause endless suprious interrupt.
+> And most machine didn't exposed that port.
+> So I'd prefer disable it.
+I think the default .dts file should enable devices as many as
+possible, and suprious interrupts have not cause serious problems.
+
+>
+> >
+> >> +                       compatible = "ns16550a";
+> >> +                       reg = <0 0x1fe001e8 0x8>;
+> >> +                       clock-frequency = <33000000>;
+> >> +                       interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+> >> +                       interrupt-parent = <&liointc>;
+> >> +                       no-loopback-test;
+> >> +               };
+> >> +       };
+> >> +};
+> >> diff --git a/arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+> >b/arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+> >> new file mode 100644
+> >> index 000000000000..6b5694ca0f95
+> >> --- /dev/null
+> >> +++ b/arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+> >> @@ -0,0 +1,25 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +
+> >> +/dts-v1/;
+> >> +
+> >> +#include "loongson3-package.dtsi"
+> >> +#include "rs780e-pch.dtsi"
+> >> +
+> >> +/ {
+> >> +       compatible = "loongson,loongson3-4core-rs780e";
+> >> +};
+> >> +
+> >> +&package0 {
+> >> +       htpic: interrupt-controller@efdfb000080 {
+> >> +               compatible = "loongson,htpic-1.0";
+> >> +               reg = <0xefd 0xfb000080 0x40>;
+> >> +               interrupt-controller;
+> >> +               #interrupt-cells = <1>;
+> >> +
+> >> +               interrupt-parent = <&liointc>;
+> >> +               interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                               <25 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                               <26 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                               <27 IRQ_TYPE_LEVEL_HIGH>;
+> >> +       };
+> >> +};
+> >> diff --git a/arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+> >b/arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+> >> new file mode 100644
+> >> index 000000000000..ffefa2f829b0
+> >> --- /dev/null
+> >> +++ b/arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+> >> @@ -0,0 +1,25 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +
+> >> +/dts-v1/;
+> >> +
+> >> +#include "loongson3-package.dtsi"
+> >> +#include "rs780e-pch.dtsi"
+> >> +
+> >> +/ {
+> >> +       compatible = "loongson,loongson3-8core-rs780e";
+> >> +};
+> >> +
+> >> +&package0 {
+> >> +       htpic: interrupt-controller@1efdfb000080 {
+> >> +               compatible = "loongson,htpic-1.0";
+> >> +               reg = <0x1efd 0xfb000080 0x40>;
+> >> +               interrupt-controller;
+> >> +               #interrupt-cells = <1>;
+> >> +
+> >> +               interrupt-parent = <&liointc>;
+> >> +               interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                               <25 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                               <26 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                               <27 IRQ_TYPE_LEVEL_HIGH>;
+> >> +       };
+> >> +};
+> >> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+> >b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+> >> new file mode 100644
+> >> index 000000000000..45c54d555fa4
+> >> --- /dev/null
+> >> +++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+> >> @@ -0,0 +1,26 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +
+> >> +/ {
+> >> +       bus@10000000 {
+> >> +               compatible = "simple-bus";
+> >> +               #address-cells = <2>;
+> >> +               #size-cells = <2>;
+> >> +               ranges = <0 0x10000000 0 0x10000000 0 0x10000000
+> >> +                               0 0x40000000 0 0x40000000 0
+> >0x40000000
+> >> +                               0xfd 0xfe000000 0xfd 0xfe000000  0
+> >0x2000000 /* PCI Config Space */>;
+> >> +
+> >> +               isa {
+> >> +                       compatible = "isa";
+> >> +                       #address-cells = <2>;
+> >> +                       #size-cells = <1>;
+> >> +                       ranges = <1 0 0 0 0x1000>;
+> >> +
+> >> +                       rtc0: rtc@70 {
+> >> +                               compatible = "motorola,mc146818";
+> >> +                               reg = <1 0x70 0x8>;
+> >> +                               interrupts = <8>;
+> >> +                               interrupt-parent = <&htpic>;
+> >> +                       };
+> >> +               };
+> >> +       };
+> >> +};
+> >> --
+> >> 2.26.0.rc2
+> >>
+> >>
+> >
+> >Regards,
+> >Huacai
+>
+> --
+> Jiaxun Yang
+
+Regards,
+Huacai
