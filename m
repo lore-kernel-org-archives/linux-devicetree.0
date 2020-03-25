@@ -2,124 +2,177 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88C3C1975A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DC4C54FD5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B80C20789
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:37:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585150628;
-	bh=oFXULYKX2minzKx5vxHtI63XAdjYTOaBbYv6XpZTy8U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=F+hP/0DwRF2H6Ky19Mf0kHllqU7AFdhln70yvcWTGiGg5BPAW4UhBLqJi6BZiHDV9
-	 U3wlG9hFZrJ+Kc8y7gdyXTV+tFgndOL+jWNBwKHvRABrojNBvRO7eJW4Eqd3565DMN
-	 aueXVZvmM8zisYOcxqYp3J+W33KaYhvZDix6nEw4=
+	by mail.kernel.org (Postfix) with ESMTP id E5FEB2077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:37:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J5cfQtP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbgCYPhI (ORCPT
+        id S1727604AbgCYPhW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:37:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727598AbgCYPhH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:37:07 -0400
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E3F207FC;
-        Wed, 25 Mar 2020 15:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585150627;
-        bh=oFXULYKX2minzKx5vxHtI63XAdjYTOaBbYv6XpZTy8U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EmXJ2ROEV4uIH8BVYnhJow+4A1BNHgFJhRUt9XQCD6kAaBxpBQ9HUZgP/XrSHK5bj
-         h411zoPSO8xwuCbPMBajeLkGTqC6LflkOK0k89zrhsMNcNwB79zSWQ8gkX1NCxcuMl
-         UqyaakkDQgHMStjvRjvEPxTPWKjs7WOVKBmfOH8Y=
-Received: by mail-ed1-f51.google.com with SMTP id de14so2921639edb.4;
-        Wed, 25 Mar 2020 08:37:06 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2B6uIAJpvwbNRha58/NuFm5VlXCKDbgu5vvcB5/RS7aFH/4A1p
-        DyGGDf1Arg9V3t+2FrsEm2zNB5UlbiHqWXnaZg==
-X-Google-Smtp-Source: ADFU+vvSoNJiU20ECt+7uu1vArut7MOjxMslvG/4PUR+3ZtOhd8DgCxmMnQcFYZJdkJa/fK+7IMDcrBp7ZaC6D/3Es4=
-X-Received: by 2002:a50:9f07:: with SMTP id b7mr3556024edf.148.1585150625023;
- Wed, 25 Mar 2020 08:37:05 -0700 (PDT)
+        Wed, 25 Mar 2020 11:37:22 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43480 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727598AbgCYPhV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 11:37:21 -0400
+Received: by mail-wr1-f66.google.com with SMTP id b2so3648952wrj.10
+        for <devicetree@vger.kernel.org>; Wed, 25 Mar 2020 08:37:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=rhpfx4/m5UT7Xzs51ZxQ03MQcWW4S3aHcV6k0fxCgW8=;
+        b=J5cfQtP2IIFUEbxhdInPj+h0Pr08nmDXVvEoAiHkRcUhApMPv+9kGmE22t5XJkLIlo
+         J3ntJB0cVM00iT4bGkgdPULTN0af8r1F2/kGRjEDLDhCvj71lEDk82Op1oz+UTjbwAe6
+         ebkQ9qfIZsgmNDJtLgMlWLsVq1dC8EonjZAIKhhkf3WMkPDnUyjXzwCYqqseOJa0eTY0
+         Nm/K2QPOZ0T7SnJn3RtErSbh+SoUGHtZQDR426H2zGajpzuzmKTebQSnp3AFnJ2KySyC
+         MRg/T+kx9XuF791FNcTFtVP+eeKs8t8XoocVmLSMlSuiL0XaNvgiia1HOi10aGrXvTEz
+         9VoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rhpfx4/m5UT7Xzs51ZxQ03MQcWW4S3aHcV6k0fxCgW8=;
+        b=VV8nlk/8iR/53AzLa+/zyPDl2VtC5VI+H8DN25FB+7bwGCaxbs8rTvpWA5U7lP+E6O
+         d7X+3kiv79GfnA3YjGOpotake5XtMgQNnq+vk24SyH4q8CTal0kvG+LzelHHsGPFDMC+
+         Axz0B1SiB72Sb85lzOaV1PIYEouOzCNXQ3EEWYovaivtEKI55DQTcdLTyw8hCq3QqTVL
+         yoyg0Ru63nOCEDMCGweFN6JGb9VX9nfoZWqVIVEgbcy1qKGXaBGOinNSdgzEuBW3Oe+l
+         JiOHFd3ktYESpJxjJ2DRlLDGMH8UO3yiKb+TAWZfdtxRqKy9dCkJ0NaC8+vCExmz3aME
+         efQg==
+X-Gm-Message-State: ANhLgQ2qTyx2gz5dMtb9ZqIC6yKfrrC6PCWRp1ap7wrxgpcLOJ4KwznS
+        JR5pYjxr4oc/KKh/Civm+PDSqw==
+X-Google-Smtp-Source: ADFU+vtbCx/qzTnNrFqm0cBm6DM0BazSQKDuz/1yNhs2QgSHiwkVDNNDvOCUr4fzyCbs355QcF6C+A==
+X-Received: by 2002:adf:a343:: with SMTP id d3mr3855930wrb.50.1585150638866;
+        Wed, 25 Mar 2020 08:37:18 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id n2sm36691078wro.25.2020.03.25.08.37.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 08:37:18 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 15:37:16 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Kiran Gunda <kgunda@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V4 3/4] backlight: qcom-wled: Add WLED5 bindings
+Message-ID: <20200325153716.tcx3t4bd6p3gr2x6@holly.lan>
+References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
+ <1584985618-25689-4-git-send-email-kgunda@codeaurora.org>
 MIME-Version: 1.0
-References: <20200311165322.1594233-1-enric.balletbo@collabora.com>
- <20200311165322.1594233-4-enric.balletbo@collabora.com> <158474603935.125146.14986079780178656133@swboyd.mtv.corp.google.com>
-In-Reply-To: <158474603935.125146.14986079780178656133@swboyd.mtv.corp.google.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 25 Mar 2020 23:36:52 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8jPkOrdUx7iH=q7kTH2+nPE8igX5-p6ZzwC7aHkQwF+A@mail.gmail.com>
-Message-ID: <CAAOTY_8jPkOrdUx7iH=q7kTH2+nPE8igX5-p6ZzwC7aHkQwF+A@mail.gmail.com>
-Subject: Re: [PATCH v12 3/5] clk / soc: mediatek: Move mt8173 MMSYS to
- platform driver
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        David Airlie <airlied@linux.ie>, CK Hu <ck.hu@mediatek.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>, mturquette@baylibre.com,
-        p.zabel@pengutronix.de, Rob Herring <robh+dt@kernel.org>,
-        ulrich.hecht+renesas@gmail.com,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        James Liao <jamesjj.liao@mediatek.com>,
-        hat.com@freedesktop.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        linux-clk@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>, wens@csie.org,
-        Allison Randal <allison@lohutok.net>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        frank-w@public-files.de, Seiya Wang <seiya.wang@mediatek.com>,
-        sean.wang@mediatek.com, Houlong Wei <houlong.wei@mediatek.com>,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
-        matthias.bgg@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584985618-25689-4-git-send-email-kgunda@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Stephen Boyd <sboyd@kernel.org> =E6=96=BC 2020=E5=B9=B43=E6=9C=8821=E6=97=
-=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=887:14=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Quoting Enric Balletbo i Serra (2020-03-11 09:53:20)
-> > From: Matthias Brugger <mbrugger@suse.com>
-> >
-> > There is no strong reason for this to use CLK_OF_DECLARE instead of
-> > being a platform driver. Plus, MMSYS provides clocks but also a shared
-> > register space for the mediatek-drm and the mediatek-mdp
-> > driver. So move the MMSYS clocks to a new platform driver and also
-> > create a new MMSYS platform driver in drivers/soc/mediatek that
-> > instantiates the clock driver.
-> >
-> > Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> > ---
->
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->
-> Unless you want me to pick this up by itself?
+On Mon, Mar 23, 2020 at 11:16:57PM +0530, Kiran Gunda wrote:
+> Add WLED5 specific bindings.
+> 
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> ---
+>  .../bindings/leds/backlight/qcom-wled.yaml         | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> index 8a388bf..159115f 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> @@ -20,6 +20,7 @@ properties:
+>         - qcom,pm8941-wled
+>         - qcom,pmi8998-wled
+>         - qcom,pm660l-wled
+> +       - qcom,pm8150l-wled
+>  
+>    reg:
+>      maxItems: 1
+> @@ -28,10 +29,23 @@ properties:
+>      maxItems: 1
+>      description:
+>        brightness value on boot, value from 0-4095.
+> +      For pm8150l this value vary from 0-4095 or 0-32767
+> +      depending on the brightness control mode. If CABC is
+> +      enabled 0-4095 range is used.
 
-I would like Matthias to pick up this series together.
+I rather dislike some of the property descriptions using PMIC version
+numbers to distinguish between peripheral versions and others using
+WLEDx version numbers.
 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Could the property description be rephrased to use WLED3/4/5 terminology
+instead?
+
+
+>      allOf:
+>        - $ref: /schemas/types.yaml#/definitions/uint32
+>          default: 2048
+>  
+> +  max-brightness:
+> +    maxItems: 1
+> +    description:
+> +      Maximum brightness level. Allowed values are,
+> +      for pmi8998 it is  0-4095.
+> +      For pm8150l, this can be either 4095 or 32767.
+> +      If CABC is enabled, this is capped to 4095.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+
+Similar thing here, is PMI8998 simply a synonym for WLED4 or there
+something special about the PMIC versioning that requires it to be used?
+
+
+Daniel.
+
+
+>    label:
+>      maxItems: 1
+>      description:
+> @@ -124,6 +138,31 @@ properties:
+>        value for PM8941 from 1 to 3. Default 2
+>        For PMI8998 from 1 to 4.
+>  
+> +  qcom,modulator-sel:
+> +    maxItems: 1
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Selects the modulator used for brightness modulation.
+> +      Allowed values are,
+> +               0 - Modulator A
+> +               1 - Modulator B
+> +      If not specified, then modulator A will be used by default.
+> +      This property is applicable only to WLED5 peripheral.
+> +
+> +  qcom,cabc-sel:
+> +    maxItems: 1
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Selects the CABC pin signal used for brightness modulation.
+> +      Allowed values are,
+> +              0 - CABC disabled
+> +              1 - CABC 1
+> +              2 - CABC 2
+> +              3 - External signal (e.g. LPG) is used for dimming
+> +      This property is applicable only to WLED5 peripheral.
+> +
+>    interrupts:
+>      maxItems: 2
+>      description:
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>  a Linux Foundation Collaborative Project
