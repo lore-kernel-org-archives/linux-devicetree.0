@@ -2,104 +2,137 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A20C1975A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F65C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16A0E2073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9267C2073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Irn64M+M"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XtpjmpZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgCYPsB (ORCPT
+        id S1727758AbgCYPuY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:48:01 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39595 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbgCYPsB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 11:48:01 -0400
-Received: by mail-pj1-f68.google.com with SMTP id z3so651689pjr.4;
-        Wed, 25 Mar 2020 08:48:00 -0700 (PDT)
+        Wed, 25 Mar 2020 11:50:24 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:36303 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727833AbgCYPuV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 11:50:21 -0400
+Received: by mail-vs1-f67.google.com with SMTP id 184so1027594vsu.3
+        for <devicetree@vger.kernel.org>; Wed, 25 Mar 2020 08:50:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sHLzrrFkz02OANjXXXqYyNxuX8bvrVIchzwqAUHYgdc=;
-        b=Irn64M+Metg1KLx4yeGU1A1For4ZpyIGrSlxfUdZSvDUCZAZxyGeeVYHi9vdMWgPJx
-         dSW6MinuHTPYnFcTz+bx6C73F0VDbgOapZ8zA4ftKuF2/pIAqc9FbasaEx7wgb2v0u9d
-         V/qznbasgzvRWo4tQJLjn7yhjlAux1soZc9MjjbZq8zBmnVhOV/hQpmPoEOienzSwUKF
-         +HUNXXrtRxMMfOevMkbMpxKjBbqt1ByfWajuVOUey073jBVA6J5EvcFpujOaWHKJMtpU
-         zVZC9iyBW8EFSKmD5IDG7HDZBsQyn9uqgU8GOWhAQmr/LS1Edq1/UTxsFf9YX78eXKJ9
-         JYUw==
+        bh=5R9OlcysTIjSd6LSQUVfdd7d9zM2FdO/Mwd40Pw5oqo=;
+        b=XtpjmpZHorFljb0nMx6/72BT6LEyg6Yu3GZqe2zFozULuw0vZvc0DGxN1dv5nyYcCC
+         hHWAbWGSOUvReB9nY4FED4Ar/y5wjn/ZL8FKAYhFCQofbGaikMQxNWYRkq+MvceY2mpy
+         N4Sp0qbxAYASySnf+wDwpkd2kniFgXVKTcZFs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sHLzrrFkz02OANjXXXqYyNxuX8bvrVIchzwqAUHYgdc=;
-        b=sWTVPgwNq94KSxmvnpyHmNwuM2ee9KqCUgg73Sv3r0Bs4YaJfibrX5uJZBGfxiJBpT
-         lNAG1NI0dAqvasdFMrbzyB1rK9AoCbOCkDHNGKSTCBsb8T2Kq4/ItoR2D2O4GxiLoZoX
-         mE8NST142NzFwOLMsxQ4HqLd97s6eOKKwN8IuxLQbg58WnorMCnIcy2VVNqm2n3wr+E8
-         DxNw8+G10e6zToJVsPaXAtwGwoAZRUZOmi4pCZQcFotbFQDCiQC4oRFhKpRKrsmhO/2Y
-         W2tVLVIOrFPeg4fteUx5kQw5Wb85Su2/4WamQPf3Q6abKzanVXhHnto4GHyrD/YLhaPR
-         n/5g==
-X-Gm-Message-State: ANhLgQ3tiWl+39x+YQlDsHOLwiTvnmwH8Uou07+2kNs5BglkISUPnoAt
-        hSOdfpVRogdC9gCZq1s3tkxA9o1UVR4AUKkXtR5VV3PD
-X-Google-Smtp-Source: ADFU+vu2Wws6sn7JbXvxhKP610uZyziu+NwzlFdVceSABJSdPjxRhAUXSVWDb9uo1oVEvddulgPCEVW6/siZQogcHfI=
-X-Received: by 2002:a17:90a:3602:: with SMTP id s2mr4345960pjb.143.1585151280026;
- Wed, 25 Mar 2020 08:48:00 -0700 (PDT)
+        bh=5R9OlcysTIjSd6LSQUVfdd7d9zM2FdO/Mwd40Pw5oqo=;
+        b=ibK222rUVzbD8KHoZgcNvZ5/qm1OdQ7zfqbamlo+I8fHa+ACxNRyW0s8nl66SPZd+V
+         YU72zFI6hYVDP7OEvoZUZImzGE1BlYylZ85aa6Bn/NiCZnEwfhXpD0Xznt9TzZMDR7my
+         UFjlfLQc+Sq/UiRnOncdKcjBRP4cPnpQZey4n4byk88EIoZaAOceLgSBv+ZJ54ZWWqiG
+         PNJD5iboLGjVSoH5e1yc+9jvamIKseUAEEwEL7ynP7YwWzwk7L/2/DpqOZFpc/teYALo
+         wuCqiE6Lv9XZxW/FbFpOG0V+pqfs9a0PXseG60B4TyirVwmCC9XlvDpXVpHNnoB8wX0q
+         VOEA==
+X-Gm-Message-State: ANhLgQ09Tg6wullTBq+E3sJ8ob3p+wHR/FVoAmslkX1w3Wvw5jImUozy
+        YSPXAjQj5/p928Lfn8LbkJy8KYEhwXs=
+X-Google-Smtp-Source: ADFU+vsYZAXWqh+YjL1dwXUfnrhm3Q2ejDDZNHTzcNJqqORNyWs1qWiwv322Krb0Nvd3PBSid2dxng==
+X-Received: by 2002:a67:f6d0:: with SMTP id v16mr3106888vso.49.1585151419352;
+        Wed, 25 Mar 2020 08:50:19 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id s17sm10415260vss.32.2020.03.25.08.50.18
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 08:50:18 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id o3so1800404vsd.4
+        for <devicetree@vger.kernel.org>; Wed, 25 Mar 2020 08:50:18 -0700 (PDT)
+X-Received: by 2002:a67:694f:: with SMTP id e76mr2833828vsc.73.1585151417831;
+ Wed, 25 Mar 2020 08:50:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200325151211.19949-1-i.mikhaylov@yadro.com>
-In-Reply-To: <20200325151211.19949-1-i.mikhaylov@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 25 Mar 2020 17:47:52 +0200
-Message-ID: <CAHp75Vc13sKEF0jHY=Bzde3e0t9tnkX-42LrRQigZRmqRQfKHw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] iio: proximity: driver for vcnl3020
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
+References: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com> <CAF6AEGs5saoU3FeO++S+YD=Js499HB2CjK8neYCXAZmCjgy2nQ@mail.gmail.com>
+In-Reply-To: <CAF6AEGs5saoU3FeO++S+YD=Js499HB2CjK8neYCXAZmCjgy2nQ@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 25 Mar 2020 08:50:05 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VxeCUEEFi9T0Jand3EWkaQTLnQkT3v5yjyjLi4yDeQ-w@mail.gmail.com>
+Message-ID: <CAD=FV=VxeCUEEFi9T0Jand3EWkaQTLnQkT3v5yjyjLi4yDeQ-w@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 5:14 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->
-> Add proximity sensor driver for Vishay vcnl3020. Only on-demand
-> measurement is supported for now.
->
+Hi,
 
-You missed chagelog here. (For the future, please, don't miss, but now
-send a followup message what you have done in v2)
-
-> Ivan Mikhaylov (2):
->   iio: proximity: provide device tree binding document
->   iio: proximity: Add driver support for vcnl3020 proximity sensor
+On Wed, Mar 25, 2020 at 8:40 AM Rob Clark <robdclark@gmail.com> wrote:
 >
->  .../bindings/iio/proximity/vcnl3020.yaml      |  47 ++++
->  drivers/iio/proximity/Kconfig                 |  10 +
->  drivers/iio/proximity/Makefile                |   1 +
->  drivers/iio/proximity/vcnl3020.c              | 242 ++++++++++++++++++
->  4 files changed, 300 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
->  create mode 100644 drivers/iio/proximity/vcnl3020.c
+> On Tue, Mar 24, 2020 at 7:35 AM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Sun, Mar 22, 2020 at 11:14 PM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+> > >
+> > > "The PM core always increments the runtime usage counter
+> > > before calling the ->suspend() callback and decrements it
+> > > after calling the ->resume() callback"
+> > >
+> > > DPU and DSI are managed as runtime devices. When
+> > > suspend is triggered, PM core adds a refcount on all the
+> > > devices and calls device suspend, since usage count is
+> > > already incremented, runtime suspend was not getting called
+> > > and it kept the clocks on which resulted in target not
+> > > entering into XO shutdown.
+> > >
+> > > Add changes to manage runtime devices during pm sleep.
+> > >
+> > > Changes in v1:
+> > >  - Remove unnecessary checks in the function
+> > >      _dpu_kms_disable_dpu (Rob Clark).
+> >
+> > I'm wondering what happened with my feedback on v1, AKA:
+> >
+> > https://lore.kernel.org/r/CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com
+> >
+> > Maybe you didn't see it?  ...or if you or Rob think I'm way off base
+> > (always possible) then please tell me so.
+> >
 >
-> --
-> 2.21.1
->
+> At least w/ the current patch, disable_dpu should not be called for
+> screen-off (although I'd hope if all the screens are off the device
+> would suspend).
+
+OK, that's good.
+
+> But I won't claim to be a pm expert.. so not really
+> sure if this is the best approach or not.  I don't think our
+> arrangement of sub-devices under a parent is completely abnormal, so
+> it does feel like there should be a simpler solution..
+
+I think the other arguments about asymmetry are still valid and I've
+fixed bugs around this type of thing in the past.  For instance, see
+commit f7ccbed656f7 ("drm/rockchip: Suspend DP late").
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+-Doug
