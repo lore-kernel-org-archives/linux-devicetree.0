@@ -2,113 +2,126 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74982C54FD4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C42BC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547372077D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED3120775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:38:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eReNsT3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgCYKfp (ORCPT
+        id S1727448AbgCYKij (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:35:45 -0400
-Received: from protonic.xs4all.nl ([83.163.252.89]:39992 "EHLO protonic.nl"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727407AbgCYKfo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:35:44 -0400
-X-Greylist: delayed 409 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 06:35:43 EDT
-Received: from erd988 (erd988.prtnl [192.168.224.30])
-        by sparta.prtnl (Postfix) with ESMTP id A803844A024D;
-        Wed, 25 Mar 2020 11:28:52 +0100 (CET)
-Date:   Wed, 25 Mar 2020 11:28:51 +0100
-From:   David Jander <david@protonic.nl>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Miller <davem@davemloft.net>, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, mark.rutland@arm.com,
-        robh+dt@kernel.org, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        marex@denx.de, devicetree@vger.kernel.org, olteanv@gmail.com
-Subject: Re: user space interface for configuring T1 PHY management mode
- (master/slave)
-Message-ID: <20200325112851.43b3e6bc@erd988>
-In-Reply-To: <20200325101111.GZ25745@shell.armlinux.org.uk>
-References: <20200325083449.GA8404@pengutronix.de>
-        <20200325101111.GZ25745@shell.armlinux.org.uk>
-Organization: Protonic Holland
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 25 Mar 2020 06:38:39 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36594 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgCYKij (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 06:38:39 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 31so2330663wrs.3;
+        Wed, 25 Mar 2020 03:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=/wgvz2lVpp5+P73ebkZ5cpJlG6NyplWSlH1ZFZco8LM=;
+        b=eReNsT3/ql4XtBGPugbUGLIbqp4B391Ps/1xoYiR+OGIUAH8+B72MCrP2HlKPfoWaP
+         pqYGsv0O8ZMQL6PQ+IalWVy372tw3azPRtzZgqDbyElePH+Tqh+q33JT2PdJ0HFxNGP5
+         qRaT84ztZV1Oows1zWBxj5nUJUo4aoP26PcBpAec19SxZPm2MMk9Uq/svtyyxKJa3orv
+         yvka7cvw1E52RdM4qI00bCg31CXx3lSjeUvvg7UbfjpHHVojeBhPr/W/FFRckGeye2FJ
+         15R/lKijLyeFma7tkjaxFYbz40cTthdWPkHJoqQNrVmFBJPB1baHaW6/959pOfdz/cVB
+         JpJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=/wgvz2lVpp5+P73ebkZ5cpJlG6NyplWSlH1ZFZco8LM=;
+        b=NyQYEg2N4vhWsYaC8KGYmjPs+SxPCb0DZllR1/yTYEkoZr73ORNp8EfRfUdMzLGycG
+         nMnaFlDN+hOMXAE+dN/ltwaf60dgjfvtgutq1G0IUMeXHHZecfZaTL7zkArsLgeCmI8a
+         Tg9bWzVpSJzjBlwFDrP9cmEfzPUkYqhC2nNGPsl68dBqyQ4Fksq6fvCBvjwj5r60MAIm
+         k6eDJRThw7urS3nYy2m+xglpoI3vuOGf93pK+kceFdhYLFjyBAqcFWKtLT0uHXV36rm6
+         awVmOhJaky7aI6U7g/Q41AOIB7DMwlkzXq/OzClhUx6MvUIh8u9y10GNMJX0jdVPuU1S
+         1sGw==
+X-Gm-Message-State: ANhLgQ1qvsd9SnBFxsJ4ohkbcCS2SQOqf1bw5SYY5fQ33ul1FSkD042i
+        n9b/NP8sm4kWSkJEbPngynkHytOs
+X-Google-Smtp-Source: ADFU+vt2Dw8Gg8y8PXMVIdEPTxwRM9hacRHxiTFN7DEjZdRm/qg5K+XBLFsyyZk6b1ZiLZCI4gwDuw==
+X-Received: by 2002:a5d:53d1:: with SMTP id a17mr2871409wrw.41.1585132716907;
+        Wed, 25 Mar 2020 03:38:36 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id i21sm9163108wmb.23.2020.03.25.03.38.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Mar 2020 03:38:36 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/2] dt-bindings: display: rockchip-vop: add additional properties
+Date:   Wed, 25 Mar 2020 11:38:28 +0100
+Message-Id: <20200325103828.5422-2-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200325103828.5422-1-jbx6244@gmail.com>
+References: <20200325103828.5422-1-jbx6244@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 25 Mar 2020 10:11:12 +0000
-Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
+In the old txt situation we add/describe only properties that are used
+by the driver/hardware itself. With yaml it also filters things in a
+node that are used by other drivers like 'assigned-clocks' and
+'assigned-clock-rates' for rk3399 and 'power-domains' for most
+Rockchip Socs in 'vop' nodes, so add them to 'rockchip-vop.yaml'.
 
-> On Wed, Mar 25, 2020 at 09:34:49AM +0100, Oleksij Rempel wrote:
-> > Hi all,
-> > 
-> > I'm working on mainlining of NXP1102 PHY (BroadR Reach/802.3bw) support.
-> > 
-> > Basic functionality is working and support with mainline kernel. Now it is
-> > time to extend it. According to the specification, each PHY can be master
-> > or slave.
-> > 
-> > The HW can be pre configured via bootstrap pins or fuses to have a default
-> > configuration. But in some cases we still need to be able to configure the
-> > PHY in a different mode: 
-> > --------------------------------------------------------------------------------
-> > http://www.ieee802.org/3/1TPCESG/public/BroadR_Reach_Automotive_Spec_V3.0.pdf
-> > 
-> > 6.1 MASTER-SLAVE configuration resolution
-> > 
-> > All BroadR-Reach PHYs will default to configure as SLAVE upon power up or
-> > reset until a management system (for example, processor/microcontroller)
-> > configures it to be MASTER. MASTER-SLAVE assignment for each link
-> > configuration is necessary for establishing the timing control of each PHY.
-> > 
-> > 6.2 PHY-Initialization
-> > 
-> > Both PHYs sharing a link segment are capable of being MASTER or SLAVE. In
-> > IEEE 802.3-2012, MASTER-SLAVE resolution is attained during the
-> > Auto-Negotiation process (see IEEE 802.3-2012 Clause 28). However, the
-> > latency for this process is not acceptable for automotive application. A
-> > forced assignment scheme is employed depending on the physical deployment
-> > of the PHY within the car. This process is conducted at the power-up or
-> > reset condition. The station management system manually configures the
-> > BroadR-Reach PHY to be MASTER (before the link acquisition process starts)
-> > while the link partner defaults to SLAVE (un-managed).
-> > --------------------------------------------------------------------------------
-> > 
-> > Should phylink be involved in this configuration? What's the proper user
-> > space interface to use for this kind of configuration?  ethtool or ip
-> > comes into mind. Further having a Device Tree property to configure a
-> > default mode to overwrite the boot strap pins would be nice to have.  
-> 
-> Well, the first question would be whether this is something that
-> userspace needs to alter, or whether static configuration at boot
-> time is what is necessary.
-> 
-> Given what is in the description, it seems that the concern is with
-> the latency it takes for the link to come up. I would suggest that
-> the lowest latency would be achieved when using static configuration
-> rather than waiting for the kernel to fully boot and userspace to
-> start before configuring the PHY.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ .../devicetree/bindings/display/rockchip/rockchip-vop.yaml    | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Yes, that would be the fastest, and in many cases the preferred way. But the
-lack of auto negotiation is not a choice. It is imposed by the spec. Because
-of this, and since the PHY's are configurable in software, there is some need
-for configuration in user-space. Of course latency would not be an issue in
-such a case, otherwise a fixed strapped configuration was chosen.
-
-Best regards,
-
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+index bc58c5132..497a9fb2d 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
+@@ -75,9 +75,18 @@ properties:
+       A port node with endpoint definitions as defined in
+       Documentation/devicetree/bindings/media/video-interfaces.txt.
+ 
++  assigned-clocks:
++    maxItems: 2
++
++  assigned-clock-rates:
++    maxItems: 2
++
+   iommus:
+     maxItems: 1
+ 
++  power-domains:
++    maxItems: 1
++
+ required:
+   - compatible
+   - reg
+@@ -95,6 +104,7 @@ examples:
+     #include <dt-bindings/clock/rk3288-cru.h>
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/power/rk3288-power.h>
+     vopb: vopb@ff930000 {
+       compatible = "rockchip,rk3288-vop";
+       reg = <0x0 0xff930000 0x0 0x19c>,
+@@ -104,6 +114,7 @@ examples:
+                <&cru DCLK_VOP0>,
+                <&cru HCLK_VOP0>;
+       clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
++      power-domains = <&power RK3288_PD_VIO>;
+       resets = <&cru SRST_LCDC1_AXI>,
+                <&cru SRST_LCDC1_AHB>,
+                <&cru SRST_LCDC1_DCLK>;
 -- 
-David Jander
-Protonic Holland.
+2.11.0
+
