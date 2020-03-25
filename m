@@ -2,108 +2,270 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA42C1975A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 14:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1769CC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 14:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CA720789
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 14:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31F72077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 14:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RpqWsxtL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u6luavn1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgCYOef (ORCPT
+        id S1727501AbgCYOff (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:34:35 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:19730 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727566AbgCYOef (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:34:35 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PEWvHx012902;
-        Wed, 25 Mar 2020 15:34:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=tdaK4kNuJv1E9o/omGzEOLv3OEUVPQ8rJCVCtHHOQ7E=;
- b=RpqWsxtL8DoKhjuaok0OltLjnuzvXX+Md6Vy/dXbOOwA0IbOjluaMj3zIolvxrSvPUqv
- NLZoeZzv88UrVpgnyVRIOTi1gDaObX0YlI7RepoCemCnuEHEunrUJw8jH03xbO6hGFy0
- hEdCXAUm7vdPLvmJQ8V251btNF1v1uGmRxvKE2b2+yY3VwT+usuz+Mh701pWGlG0aEPm
- FrbdBkS7iE++6PgWuxyxdTBbcKOtXYigze2eKqhX9YFlq6HZQQlHKvdMPhll90y1370g
- RQJdYX/VTGHyXOOjIqnliKT0TXakaCKt+hPETi+mjQgn9gfssRvjOnlWewgnJX/3zdss qw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yw9k066um-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Mar 2020 15:34:21 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 50D32100034;
-        Wed, 25 Mar 2020 15:34:20 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3AE022B2527;
-        Wed, 25 Mar 2020 15:34:20 +0100 (CET)
-Received: from localhost (10.75.127.50) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar 2020 15:34:19
- +0100
-From:   Ludovic Barre <ludovic.barre@st.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V2 1/2] mmc: mmci_sdmmc: fix clear busyd0end irq flag
-Date:   Wed, 25 Mar 2020 15:34:08 +0100
-Message-ID: <20200325143409.13005-2-ludovic.barre@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200325143409.13005-1-ludovic.barre@st.com>
-References: <20200325143409.13005-1-ludovic.barre@st.com>
+        Wed, 25 Mar 2020 10:35:35 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:40249 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727569AbgCYOff (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 10:35:35 -0400
+Received: by mail-qv1-f65.google.com with SMTP id cy12so1128958qvb.7
+        for <devicetree@vger.kernel.org>; Wed, 25 Mar 2020 07:35:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+kwXOGpMaPekrAzfhftfE+gw1YnXEMbIx547SEtRJs8=;
+        b=u6luavn1Vsw0nblaWrGICZrBOI5aygYZDNJfSeSFwROrkidjCDpGRJgdi+mMUs+U9A
+         26JsvmnurOMQEScqA26HQRFi4gm1TdEoiPfyNgm61+5ElwYvpXdwjZIq0WDJNpo6GOIl
+         mRyvDRy0cvxi/aMelDBdZxLuBFv3lg9MAHWR5F940+ht5bkDBC7PRRUzuPqTHg+mP+r2
+         xX1yUBj2Sp6HbxoRaFEK7zBrX7C44/pI6m1V8rQbsm8ojLa5IKBI/k9HD5JNpH62a9TS
+         b491lAKXeaksvjjDBsDn77sAoj/E6wd/c03D8zTphOR3/5K9c6XkVzfgh/qzgpk4UXGy
+         T5FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+kwXOGpMaPekrAzfhftfE+gw1YnXEMbIx547SEtRJs8=;
+        b=dprqb8Bc7t8soGjtlT1fYaHgBHY7zMgVRfuXkmALRK0mwLYjTlb1jwBoE8nXhqw9Ru
+         d96daXUFIVThmDglDzuGhz64OovGi0nyqEpA1N8JrfYGB1vOhv2wP+OnRjBkLh+TCh4F
+         +hIywKmGsc5GC9eppBLVoM+cyAUN8kU9sTYKkCh4xuV4AwLEywmtVby6pYCzcO0aHDk6
+         tCTtAE2qO0qJWWMIfeMZgOAt/zLfXEuDeFz2ECG20LcYRxvWylcmgiQ2N5lxOVbfmKqB
+         ebn2cZNw/VdiSYr0pVzHF7QBfL2tyAU9NYTuX0aq/B/Vbsh+jmHV5hck94t67CENXlG0
+         gtcw==
+X-Gm-Message-State: ANhLgQ3aCoyTVzT7FSKpt3EW8A96YYA2YRqeEaUTwfwxkS84y3X+uQXb
+        iM/mKYf11I0kLgoh8cEn9u3eKg==
+X-Google-Smtp-Source: ADFU+vuNxobH1Mq6LBSt0Der6JSj8ojaHpucegR+t8b4DvSDA49x5wkorDVhZyM7KlZMcxClhmiQkg==
+X-Received: by 2002:a0c:fe87:: with SMTP id d7mr2362960qvs.37.1585146934157;
+        Wed, 25 Mar 2020 07:35:34 -0700 (PDT)
+Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id l18sm15345100qke.132.2020.03.25.07.35.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 07:35:33 -0700 (PDT)
+Subject: Re: [Patch v5 3/6] thermal: Add generic power domain warming device
+ driver.
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, Rob Herring <robh@kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200320014107.26087-1-thara.gopinath@linaro.org>
+ <20200320014107.26087-4-thara.gopinath@linaro.org>
+ <CAPDyKFqn0E=-sNZy=09tLZn=6VxEfiXL-vUNwb9HK8+WLDBiPw@mail.gmail.com>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <31aba776-28ee-3aac-08eb-6f39f8279bfe@linaro.org>
+Date:   Wed, 25 Mar 2020 10:35:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-25_07:2020-03-24,2020-03-25 signatures=0
+In-Reply-To: <CAPDyKFqn0E=-sNZy=09tLZn=6VxEfiXL-vUNwb9HK8+WLDBiPw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The busyd0 line transition can be very fast. The busy request
-may be completed by busy_d0end without wait the busy_d0 steps.
-The busyd0end irq flag must be cleared even if no busy_status.
+Hi Ulf,
+Thanks for the review!
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/mmc/host/mmci_stm32_sdmmc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 3/23/20 11:57 AM, Ulf Hansson wrote:
 
-diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-index f76e82f8f12f..d33e62bd6153 100644
---- a/drivers/mmc/host/mmci_stm32_sdmmc.c
-+++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-@@ -358,11 +358,11 @@ static bool sdmmc_busy_complete(struct mmci_host *host, u32 status, u32 err_msk)
- 	if (host->busy_status) {
- 		writel_relaxed(mask & ~host->variant->busy_detect_mask,
- 			       base + MMCIMASK0);
--		writel_relaxed(host->variant->busy_detect_mask,
--			       base + MMCICLEAR);
- 		host->busy_status = 0;
- 	}
- 
-+	writel_relaxed(host->variant->busy_detect_mask, base + MMCICLEAR);
-+
- 	return true;
- }
- 
+--snip
+>> +
+>> +static void pd_warming_release(struct device *dev)
+>> +{
+>> +       kfree(dev);
+> 
+> This is wrong, you should free a "struct pd_warming_device *". Use the
+> "container of" macro to get it from 'dev'.
+
+Will fix this.
+> 
+>> +}
+>> +
+>> +struct thermal_cooling_device *
+>> +of_pd_warming_register(struct device *parent, int pd_id)
+>> +{
+>> +       struct pd_warming_device *pd_wdev;
+>> +       struct of_phandle_args pd_args;
+>> +       char cdev_name[THERMAL_NAME_LENGTH];
+>> +       int ret;
+>> +
+>> +       pd_wdev = kzalloc(sizeof(*pd_wdev), GFP_KERNEL);
+>> +       if (!pd_wdev)
+>> +               return ERR_PTR(-ENOMEM);
+>> +
+>> +       dev_set_name(&pd_wdev->dev, "%s_%d_warming_dev",
+>> +                    dev_name(parent), pd_id);
+>> +       pd_wdev->dev.parent = parent;
+>> +       pd_wdev->dev.release = pd_warming_release;
+>> +
+>> +       ret = device_register(&pd_wdev->dev);
+>> +       if (ret) {
+>> +               put_device(&pd_wdev->dev);
+>> +               goto free_pd_wdev;
+>> +       }
+>> +
+>> +       ret = ida_simple_get(&pd_ida, 0, 0, GFP_KERNEL);
+>> +       if (ret < 0)
+>> +               goto unregister_device;
+> 
+> If you use and ida, you might as well use it as a part of the
+> dev_set_name() above.
+> 
+> That should give you a unique name, similar to how you use it for the
+> cdev_name below.
+
+dev_set_name above already has a unique name with the power controller 
+name and the power domain id. cdev on the other hand creates a virtual 
+thermal device and needs a unique name.
+
+> 
+>> +
+>> +       pd_wdev->id = ret;
+>> +
+>> +       pd_args.np = parent->of_node;
+>> +       pd_args.args[0] = pd_id;
+>> +       pd_args.args_count = 1;
+>> +
+>> +       ret = of_genpd_add_device(&pd_args, &pd_wdev->dev);
+>> +
+>> +       if (ret)
+>> +               goto remove_ida;
+>> +
+>> +       ret = dev_pm_genpd_performance_state_count(&pd_wdev->dev);
+>> +       if (ret < 0)
+>> +               goto out_genpd;
+>> +
+>> +       pd_wdev->max_state = ret - 1;
+>> +       pm_runtime_enable(&pd_wdev->dev);
+>> +       pd_wdev->runtime_resumed = false;
+>> +
+>> +       snprintf(cdev_name, sizeof(cdev_name), "thermal-pd-%d", pd_wdev->id);
+>> +       pd_wdev->cdev = thermal_of_cooling_device_register
+>> +                                       (NULL, cdev_name, pd_wdev,
+>> +                                        &pd_warming_device_ops);
+>> +       if (IS_ERR(pd_wdev->cdev)) {
+>> +               pr_err("unable to register %s cooling device\n", cdev_name);
+>> +               ret = PTR_ERR(pd_wdev->cdev);
+>> +               goto out_runtime_disable;
+>> +       }
+>> +
+>> +       return pd_wdev->cdev;
+>> +
+>> +out_runtime_disable:
+>> +       pm_runtime_disable(&pd_wdev->dev);
+>> +out_genpd:
+>> +       pm_genpd_remove_device(&pd_wdev->dev);
+>> +remove_ida:
+>> +       ida_simple_remove(&pd_ida, pd_wdev->id);
+>> +unregister_device:
+>> +       device_unregister(&pd_wdev->dev);
+>> +       pd_warming_release(&pd_wdev->dev);
+> 
+> This is wrong, drop this.
+
+Oops . sorry . Will do. Will fix rest of the comments below as well.
+
+> 
+>> +free_pd_wdev:
+>> +       kfree(pd_wdev);
+> 
+> Since you should free this from the ->release() callback, there is no
+> need to do this here.
+> 
+>> +       return ERR_PTR(ret);
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_pd_warming_register);
+>> +
+>> +void pd_warming_unregister(struct thermal_cooling_device *cdev)
+>> +{
+>> +       struct pd_warming_device *pd_wdev = cdev->devdata;
+>> +       struct device *dev = &pd_wdev->dev;
+>> +
+>> +       if (pd_wdev->runtime_resumed) {
+>> +               dev_pm_genpd_set_performance_state(dev, 0);
+>> +               pm_runtime_put(dev);
+>> +               pd_wdev->runtime_resumed = false;
+>> +       }
+>> +       pm_runtime_disable(dev);
+>> +       pm_genpd_remove_device(dev);
+>> +       ida_simple_remove(&pd_ida, pd_wdev->id);
+>> +       thermal_cooling_device_unregister(cdev);
+>> +       kfree(pd_wdev);
+> 
+> Don't use kfree here, but instead device_unregister(dev);
+> 
+>> +}
+>> +EXPORT_SYMBOL_GPL(pd_warming_unregister);
+>> diff --git a/include/linux/pd_warming.h b/include/linux/pd_warming.h
+>> new file mode 100644
+>> index 000000000000..550a5683b56d
+>> --- /dev/null
+>> +++ b/include/linux/pd_warming.h
+>> @@ -0,0 +1,29 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2019, Linaro Ltd.
+>> + */
+>> +#ifndef __PWR_DOMAIN_WARMING_H__
+>> +#define __PWR_DOMAIN_WARMING_H__
+>> +
+>> +#include <linux/pm_domain.h>
+>> +#include <linux/thermal.h>
+>> +
+>> +#ifdef CONFIG_PWR_DOMAIN_WARMING_THERMAL
+>> +struct thermal_cooling_device *
+>> +of_pd_warming_register(struct device *parent, int pd_id);
+>> +
+>> +void pd_warming_unregister(struct thermal_cooling_device *cdev);
+>> +
+>> +#else
+>> +static inline struct thermal_cooling_device *
+>> +of_pd_warming_register(struct device *parent, int pd_id)
+>> +{
+>> +       return ERR_PTR(-ENOSYS);
+>> +}
+>> +
+>> +static inline void
+>> +pd_warming_unregister(struct thermal_cooling_device *cdev)
+>> +{
+>> +}
+>> +#endif /* CONFIG_PWR_DOMAIN_WARMING_THERMAL */
+>> +#endif /* __PWR_DOMAIN_WARMING_H__ */
+>> --
+>> 2.20.1
+>>
+> 
+> Besides the few things above, this looks good to me.
+> 
+> Kind regards
+> Uffe
+> 
+
 -- 
-2.17.1
-
+Warm Regards
+Thara
