@@ -2,170 +2,275 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C919DC2D0E6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 20:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A85C2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 20:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968A520658
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 20:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41B52074D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 20:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="g4VNlZdP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d+RZYVj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbgCYUEA (ORCPT
+        id S1727469AbgCYUS5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 16:04:00 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:33049 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727316AbgCYUD7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 16:03:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585166638; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=3D6rKVomxFnkyZEpJNCASMp1XYz2rOhrRpdYgZA8Qqg=;
- b=g4VNlZdPAIkA8cYHZR38cONiwvnoDndznbWWiKmy+e+L6MR+fqo+A/hfi62jF5HWG2VH8yUG
- DfxkveDZl6AQ1WwC/CNNMA13f5Olx03WOALiwnFhCVJHtdH0zj+SL0ecxa4LU5eSpBIyVwIY
- e+YXKNNDEJJQENYaX3ihJGxwp7A=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7bb92b.7f5cd6d6adc0-smtp-out-n01;
- Wed, 25 Mar 2020 20:03:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 92005C43637; Wed, 25 Mar 2020 20:03:54 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0F70C433D2;
-        Wed, 25 Mar 2020 20:03:53 +0000 (UTC)
+        Wed, 25 Mar 2020 16:18:57 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38438 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727316AbgCYUS5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 16:18:57 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02PKIj6j085839;
+        Wed, 25 Mar 2020 15:18:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585167525;
+        bh=YWnbA9p3RGUrjpZGEuExQ7ejQ8cGZmK3O4zvWi+b1+8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=d+RZYVj0RwSPPge/qLJk4R6+yDy3WaPygHYxDbfzOGyWaEidrnA2sSZImU8CRS1I4
+         agwEpd5MguGvf8ARG05JShVCLXYZrCjEHIdTcsn+Q/ZCginBvn/h+h2WfT5q57z0mq
+         4bn8Vz6HrmGCbkx/3Lr1iJpsSOjzLyMTN6zLKY3g=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02PKIjJN019777;
+        Wed, 25 Mar 2020 15:18:45 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 25
+ Mar 2020 15:18:45 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 25 Mar 2020 15:18:45 -0500
+Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02PKIjws098090;
+        Wed, 25 Mar 2020 15:18:45 -0500
+Received: from localhost ([10.250.35.147])
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 02PKIjHl090856;
+        Wed, 25 Mar 2020 15:18:45 -0500
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH 1/3] dt-bindings: remoteproc: Add bindings for C66x DSPs on TI K3 SoCs
+Date:   Wed, 25 Mar 2020 15:18:37 -0500
+Message-ID: <20200325201839.15896-2-s-anna@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200325201839.15896-1-s-anna@ti.com>
+References: <20200325201839.15896-1-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 26 Mar 2020 01:33:53 +0530
-From:   kalyan_t@codeaurora.org
-To:     Doug Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM
- sleep
-In-Reply-To: <CAD=FV=VxeCUEEFi9T0Jand3EWkaQTLnQkT3v5yjyjLi4yDeQ-w@mail.gmail.com>
-References: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
- <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com>
- <CAF6AEGs5saoU3FeO++S+YD=Js499HB2CjK8neYCXAZmCjgy2nQ@mail.gmail.com>
- <CAD=FV=VxeCUEEFi9T0Jand3EWkaQTLnQkT3v5yjyjLi4yDeQ-w@mail.gmail.com>
-Message-ID: <114130f68c494f83303c51157e2c5bfa@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-03-25 21:20, Doug Anderson wrote:
-> Hi,
-> 
-> On Wed, Mar 25, 2020 at 8:40 AM Rob Clark <robdclark@gmail.com> wrote:
->> 
->> On Tue, Mar 24, 2020 at 7:35 AM Doug Anderson <dianders@chromium.org> 
->> wrote:
->> >
->> > Hi,
->> >
->> > On Sun, Mar 22, 2020 at 11:14 PM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->> > >
->> > > "The PM core always increments the runtime usage counter
->> > > before calling the ->suspend() callback and decrements it
->> > > after calling the ->resume() callback"
->> > >
->> > > DPU and DSI are managed as runtime devices. When
->> > > suspend is triggered, PM core adds a refcount on all the
->> > > devices and calls device suspend, since usage count is
->> > > already incremented, runtime suspend was not getting called
->> > > and it kept the clocks on which resulted in target not
->> > > entering into XO shutdown.
->> > >
->> > > Add changes to manage runtime devices during pm sleep.
->> > >
->> > > Changes in v1:
->> > >  - Remove unnecessary checks in the function
->> > >      _dpu_kms_disable_dpu (Rob Clark).
->> >
->> > I'm wondering what happened with my feedback on v1, AKA:
->> >
->> > https://lore.kernel.org/r/CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com
->> >
->> > Maybe you didn't see it?  ...or if you or Rob think I'm way off base
->> > (always possible) then please tell me so.
->> >
--- I didn't notice your comments earlier. Apologies !!
+Some Texas Instruments K3 family of SoCs have one of more Digital Signal
+Processor (DSP) subsystems that are comprised of either a TMS320C66x
+CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
+Add the device tree bindings document for the C66x DSP devices on these
+SoCs. The added example illustrates the DT nodes for the first C66x DSP
+device present on the K3 J721E family of SoCs.
 
->> 
->> At least w/ the current patch, disable_dpu should not be called for
->> screen-off (although I'd hope if all the screens are off the device
->> would suspend).
-> 
-> OK, that's good.
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 180 ++++++++++++++++++
+ 1 file changed, 180 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
 
--- Rob has answered it, with current change disable_dpu will only be 
-called during pm_suspend.
-> 
->> But I won't claim to be a pm expert.. so not really
->> sure if this is the best approach or not.  I don't think our
->> arrangement of sub-devices under a parent is completely abnormal, so
->> it does feel like there should be a simpler solution..
-> 
-> I think the other arguments about asymmetry are still valid and I've
-> fixed bugs around this type of thing in the past.  For instance, see
-> commit f7ccbed656f7 ("drm/rockchip: Suspend DP late").
-> 
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+new file mode 100644
+index 000000000000..416e3abe7937
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+@@ -0,0 +1,180 @@
++# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI K3 DSP devices
++
++maintainers:
++  - Suman Anna <s-anna@ti.com>
++
++description: |
++  The TI K3 family of SoCs usually have one or more TI DSP Core sub-systems
++  that are used to offload some of the processor-intensive tasks or algorithms,
++  for achieving various system level goals.
++
++  These processor sub-systems usually contain additional sub-modules like
++  L1 and/or L2 caches/SRAMs, an Interrupt Controller, an external memory
++  controller, a dedicated local power/sleep controller etc. The DSP processor
++  cores in the K3 SoCs are usually either a TMS320C66x CorePac processor or a
++  TMS320C71x CorePac processor.
++
++  Each DSP Core sub-system is represented as a single DT node. Each node has a
++  number of required or optional properties that enable the OS running on the
++  host processor (Arm CorePac) to perform the device management of the remote
++  processor and to communicate with the remote processor.
++
++properties:
++  compatible:
++    const: ti,j721e-c66-dsp
++    description:
++      Use "ti,j721e-c66-dsp" for C66x DSPs on K3 J721E SoCs
++
++  reg:
++    description: |
++      Should contain an entry for each value in 'reg-names'.
++      Each entry should have the memory region's start address
++      and the size of the region, the representation matching
++      the parent node's '#address-cells' and '#size-cells' values.
++    minItems: 3
++    maxItems: 3
++
++  reg-names:
++    description: |
++      Should contain strings with the names of the specific internal
++      internal memory regions, and should be defined in this order
++    maxItems: 3
++    items:
++      - const: l2sram
++      - const: l1pram
++      - const: l1dram
++
++  ti,sci:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Should be a phandle to the TI-SCI System Controller node
++
++  ti,sci-dev-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Should contain the TI-SCI device id corresponding to the DSP core.
++      Please refer to the corresponding System Controller documentation
++      for valid values for the DSP cores.
++
++  ti,sci-proc-ids:
++    description: Should contain a single tuple of <proc_id host_id>.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-matrix
++      - maxItems: 1
++        items:
++          items:
++            - description: TI-SCI processor id for the DSP core device
++            - description: TI-SCI host id to which processor control
++                           ownership should be transferred to
++
++  resets:
++    description: |
++      Should contain the phandle to the reset controller node
++      managing the resets for this device, and a reset
++      specifier. Please refer to the following reset bindings
++      for the reset argument specifier,
++      Documentation/devicetree/bindings/reset/ti,sci-reset.txt
++
++  firmware-name:
++    description: |
++      Should contain the name of the default firmware image
++      file located on the firmware search path
++
++  mboxes:
++    description: |
++      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
++      communication with the remote processor. This property should match
++      with the sub-mailbox node used in the firmware image. The specifier
++      format is as per the bindings,
++      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
++
++  memory-region:
++    minItems: 2
++    description: |
++      phandle to the reserved memory nodes to be associated with the remoteproc
++      device. There should be atleast two reserved memory nodes defined - the
++      first one would be used for dynamic DMA allocations like vrings and vring
++      buffers, and the remaining ones used for the firmware image sections. The
++      reserved memory nodes should be carveout nodes, and should be defined as
++      per the bindings in
++      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++
++# Optional properties:
++# --------------------
++
++  sram:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    minItems: 1
++    description: |
++      pHandles to one or more reserved on-chip SRAM regions. The regions
++      should be defined as child nodes of the respective SRAM node, and
++      should be defined as per the generic bindings in,
++      Documentation/devicetree/bindings/sram/sram.yaml
++
++required:
++ - compatible
++ - reg
++ - reg-names
++ - ti,sci
++ - ti,sci-dev-id
++ - ti,sci-proc-ids
++ - resets
++ - firmware-name
++ - mboxes
++ - memory-region
++
++additionalProperties: false
++
++examples:
++  - |
++
++    //Example: J721E SoC
++    /* DSP Carveout reserved memory nodes */
++    reserved-memory {
++        #address-cells = <2>;
++        #size-cells = <2>;
++        ranges;
++
++        c66_0_dma_memory_region: c66-dma-memory@a6000000 {
++            compatible = "shared-dma-pool";
++            reg = <0x00 0xa6000000 0x00 0x100000>;
++            no-map;
++        };
++
++        c66_0_memory_region: c66-memory@a6100000 {
++            compatible = "shared-dma-pool";
++            reg = <0x00 0xa6100000 0x00 0xf00000>;
++            no-map;
++        };
++    };
++
++    cbass_main: interconnect@100000 {
++        compatible = "simple-bus";
++        #address-cells = <2>;
++        #size-cells = <2>;
++        ranges = <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
++                 <0x4d 0x81800000 0x4d 0x81800000 0x00 0x00800000>; /* C66_1 */
++
++        /* J721E C66_0 DSP node */
++        c66_0: dsp@4d80800000 {
++            compatible = "ti,j721e-c66-dsp";
++            reg = <0x4d 0x80800000 0x00 0x00048000>,
++                  <0x4d 0x80e00000 0x00 0x00008000>,
++                  <0x4d 0x80f00000 0x00 0x00008000>;
++            reg-names = "l2sram", "l1pram", "l1dram";
++            ti,sci = <&dmsc>;
++            ti,sci-dev-id = <142>;
++            ti,sci-proc-ids = <0x03 0xFF>;
++            resets = <&k3_reset 142 1>;
++            firmware-name = "j7-c66_0-fw";
++            memory-region = <&c66_0_dma_memory_region>,
++                            <&c66_0_memory_region>;
++            mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
++        };
++    };
+-- 
+2.23.0
 
-* What happens if suspend is aborted partway through (by getting a
-wakeup even as you're suspending, for instance)?  In such a case some
-of the normal suspend calls will be called but "suspend_late" won't be
-called.  Does that mess up your counting?
-
--- I understand this concern, i'll explore a bit more on how to handle 
-"failed to suspend","early awake"
-cases (to restore the usage_count) since suspend_late wont be called.
-
-*From your description, it sure seems like this part of the
-runtime_pm.rst doc is relevant to you:
-
-Did I misunderstand and this isn't what you want?  Looking a bit
-further, maybe the right thing is to use the "SMART_SUSPEND" flag?
-
--- if you notice in the device_prepare 
-(https://elixir.bootlin.com/linux/latest/source/drivers/base/power/main.c#L1913)
-there is a pm_runtime_get_noresume at L1931, which will increment the 
-usagecount before triggering client prepare call, hence implementing 
-prepare wont fetch us much.
-
-This appears to be more for the cases when device is runtime suspended 
-and suspend followed later
-"one example usecase that i can think of, is screen timeout after that 
-suspend is triggered"
-
-currently the problem i am looking at is that
-	PM Core does +1 in device prepare
-		DPU driver does -1 in suspend
-		DPU driver does +1 in suspend late  ( look for right place )
-	PM core does -1 in device complete
-
-i'll get back after exploring a bit.
-
-> 
-> -Doug
