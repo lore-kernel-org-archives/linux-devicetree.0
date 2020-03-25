@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBB1C1975A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E41C54FD7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B972073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D032077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbgCYPkG (ORCPT
+        id S1727855AbgCYPj1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:40:06 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:53400 "EHLO inva021.nxp.com"
+        Wed, 25 Mar 2020 11:39:27 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:52840 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727702AbgCYPj3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:39:29 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 30559200561;
-        Wed, 25 Mar 2020 16:39:27 +0100 (CET)
+        id S1727710AbgCYPj1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:39:27 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F8751A057C;
+        Wed, 25 Mar 2020 16:39:25 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2254120055D;
-        Wed, 25 Mar 2020 16:39:27 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9097A1A0557;
+        Wed, 25 Mar 2020 16:39:25 +0100 (CET)
 Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6DA31203CE;
-        Wed, 25 Mar 2020 16:39:26 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id DBD94203CE;
+        Wed, 25 Mar 2020 16:39:24 +0100 (CET)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <kernel@pengutronix.de>,
@@ -44,9 +44,9 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2 05/13] clk: imx: gate2: Allow single bit gating clock
-Date:   Wed, 25 Mar 2020 17:38:43 +0200
-Message-Id: <1585150731-3354-6-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v2 03/13] arm64: dts: imx8mp: Add AIPS 4 and 5
+Date:   Wed, 25 Mar 2020 17:38:41 +0200
+Message-Id: <1585150731-3354-4-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585150731-3354-1-git-send-email-abel.vesa@nxp.com>
 References: <1585150731-3354-1-git-send-email-abel.vesa@nxp.com>
@@ -56,122 +56,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Audiomix on i.MX8MP registers two gates that share the same enable count
-but use the same bit to control the gate instead of two bits. By adding
-the flag IMX_CLK_GATE2_SINGLE_BIT we allow the gate2 to use the generic
-gate ops for enable, disable and is_enabled.
-For the disable_unused, nothing happens if this flag is specified.
+There are 5 AIPS maps in total, according to the RM. Add the missing
+ones here.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- drivers/clk/imx/clk-gate2.c | 31 +++++++++++++++++++++++--------
- drivers/clk/imx/clk.h       | 13 +++++++++++++
- 2 files changed, 36 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/imx/clk-gate2.c b/drivers/clk/imx/clk-gate2.c
-index ce0060e..b87ab3c 100644
---- a/drivers/clk/imx/clk-gate2.c
-+++ b/drivers/clk/imx/clk-gate2.c
-@@ -41,21 +41,26 @@ static int clk_gate2_enable(struct clk_hw *hw)
- 	struct clk_gate2 *gate = to_clk_gate2(hw);
- 	u32 reg;
- 	unsigned long flags;
-+	int ret = 0;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index 9b1616e..c08156f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -318,7 +318,7 @@
  
- 	spin_lock_irqsave(gate->lock, flags);
+ 		aips2: bus@30400000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
+-			reg = <0x305f0000 0x400000>;
++			reg = <0x305f0000 0x10000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+@@ -378,7 +378,7 @@
  
- 	if (gate->share_count && (*gate->share_count)++ > 0)
- 		goto out;
+ 		aips3: bus@30800000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
+-			reg = <0x309f0000 0x400000>;
++			reg = <0x309f0000 0x10000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges;
+@@ -641,6 +641,22 @@
+ 			};
+ 		};
  
--	reg = readl(gate->reg);
--	reg &= ~(3 << gate->bit_idx);
--	reg |= gate->cgr_val << gate->bit_idx;
--	writel(reg, gate->reg);
-+	if (gate->flags & IMX_CLK_GATE2_SINGLE_BIT) {
-+		ret = clk_gate_ops.enable(hw);
-+	} else {
-+		reg = readl(gate->reg);
-+		reg &= ~(3 << gate->bit_idx);
-+		reg |= gate->cgr_val << gate->bit_idx;
-+		writel(reg, gate->reg);
-+	}
- 
- out:
- 	spin_unlock_irqrestore(gate->lock, flags);
- 
--	return 0;
-+	return ret;
- }
- 
- static void clk_gate2_disable(struct clk_hw *hw)
-@@ -73,9 +78,13 @@ static void clk_gate2_disable(struct clk_hw *hw)
- 			goto out;
- 	}
- 
--	reg = readl(gate->reg);
--	reg &= ~(3 << gate->bit_idx);
--	writel(reg, gate->reg);
-+	if (gate->flags & IMX_CLK_GATE2_SINGLE_BIT) {
-+		clk_gate_ops.disable(hw);
-+	} else {
-+		reg = readl(gate->reg);
-+		reg &= ~(3 << gate->bit_idx);
-+		writel(reg, gate->reg);
-+	}
- 
- out:
- 	spin_unlock_irqrestore(gate->lock, flags);
-@@ -95,6 +104,9 @@ static int clk_gate2_is_enabled(struct clk_hw *hw)
- {
- 	struct clk_gate2 *gate = to_clk_gate2(hw);
- 
-+	if (gate->flags & IMX_CLK_GATE2_SINGLE_BIT)
-+		return clk_gate_ops.is_enabled(hw);
++		aips4: bus@32c00000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			reg = <0x32c00000 0x10000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++		};
 +
- 	return clk_gate2_reg_is_enabled(gate->reg, gate->bit_idx);
- }
- 
-@@ -104,6 +116,9 @@ static void clk_gate2_disable_unused(struct clk_hw *hw)
- 	unsigned long flags;
- 	u32 reg;
- 
-+	if (gate->flags & IMX_CLK_GATE2_SINGLE_BIT)
-+		return;
++		aips5: bus@30c00000 {
++			compatible = "fsl,aips-bus", "simple-bus";
++			reg = <0x30c00000 0x10000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++		};
 +
- 	spin_lock_irqsave(gate->lock, flags);
- 
- 	if (!gate->share_count || *gate->share_count == 0) {
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index f074dd8..01ff1db 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -5,6 +5,8 @@
- #include <linux/spinlock.h>
- #include <linux/clk-provider.h>
- 
-+#define IMX_CLK_GATE2_SINGLE_BIT	1
-+
- extern spinlock_t imx_ccm_lock;
- 
- void imx_check_clocks(struct clk *clks[], unsigned int count);
-@@ -355,6 +357,17 @@ static inline struct clk_hw *imx_clk_hw_gate2_shared2(const char *name,
- 				  &imx_ccm_lock, share_count);
- }
- 
-+static inline struct clk_hw *imx_dev_clk_hw_gate_shared(struct device *dev,
-+				const char *name, const char *parent,
-+				void __iomem *reg, u8 shift,
-+				unsigned int *share_count)
-+{
-+	return clk_hw_register_gate2(NULL, name, parent, CLK_SET_RATE_PARENT |
-+					CLK_OPS_PARENT_ENABLE, reg, shift, 0x3,
-+					IMX_CLK_GATE2_SINGLE_BIT,
-+					&imx_ccm_lock, share_count);
-+}
-+
- static inline struct clk *imx_clk_gate2_cgr(const char *name,
- 		const char *parent, void __iomem *reg, u8 shift, u8 cgr_val)
- {
+ 		gic: interrupt-controller@38800000 {
+ 			compatible = "arm,gic-v3";
+ 			reg = <0x38800000 0x10000>,
 -- 
 2.7.4
 
