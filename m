@@ -2,128 +2,82 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30818C54FD8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9045DC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B102078A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB142077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCYKEE (ORCPT
+        id S1727275AbgCYKGi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:04:04 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:59654 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727545AbgCYKEE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 06:04:04 -0400
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id Ja3y220115USYZQ01a3ykx; Wed, 25 Mar 2020 11:04:01 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jH2tC-00033U-Qh; Wed, 25 Mar 2020 11:03:58 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jH2tC-0003Zq-PQ; Wed, 25 Mar 2020 11:03:58 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
+        Wed, 25 Mar 2020 06:06:38 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37606 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbgCYKGi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 06:06:38 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w13so1564414oih.4;
+        Wed, 25 Mar 2020 03:06:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XXCY0F7DAXSqojLJLjTu88ZZhdvD+lFAXQtmKEoxEz4=;
+        b=Kl3DkjHYzaOS5cCzuIjpvvIpmtDM5Odetpxm7W3f5H/BlfIjfLHpopsdh1oJkHMmYk
+         Wx7GEMvTeJjZCgsMjC1kbyHpwwvl4BlFO3OrTBIRcyCKwUcqKWofFmbfV67qXNCDea0z
+         To358X9utcaAmBFZBmwbZzl65G0vtMg3ldrcptVbqIyQZO9+Jkg3jRff16o7xZFrK0jI
+         1iUzQ/uOzpGsZR9JPHBLDcDW7b9PtMNUbQSpZsYBW2Rw+bh759GAZzW5ZBHiPfeYUN0n
+         p0M8VoQq+Z5tIEMFmGQXjdVQYk1xOrbohN7sGZKJxt1CCRNub1KmwC/rbP/0pVvVs7nk
+         Ryjw==
+X-Gm-Message-State: ANhLgQ32tLYGKcdQTvtCoBiLglUa2p5vIjc9cWfovr69hfOA6ivOFc3J
+        tV+4jEGt59jgFEMKtCYfRUqXYJNHOMnGOQB0g03pQg==
+X-Google-Smtp-Source: ADFU+vuW1xwLkjmwJ9CC5/w1Y6qQ6FOnIt8Ocx+5lhRCcSaVeMvsDb+qtChtKhI31/obOmSKKa4gSe/IlInpyiczGT8=
+X-Received: by 2002:aca:4e57:: with SMTP id c84mr1834888oib.148.1585130797906;
+ Wed, 25 Mar 2020 03:06:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200325100357.13705-1-geert+renesas@glider.be>
+In-Reply-To: <20200325100357.13705-1-geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 25 Mar 2020 11:06:26 +0100
+Message-ID: <CAMuHMdXfEeNzcgYYxLv-3HKxu+FnHAuGpCWtBFdLVgGB8U==hw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] gpiolib: gpio_set_config() cleanups
 To:     Rob Herring <robh@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Ulrich Hecht <uli+renesas@fpond.eu>,
         Chris Brandt <chris.brandt@renesas.com>,
         Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-sh@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/2] gpiolib: Pass gpio_desc to gpio_set_config()
-Date:   Wed, 25 Mar 2020 11:03:56 +0100
-Message-Id: <20200325100357.13705-2-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200325100357.13705-1-geert+renesas@glider.be>
-References: <20200325100357.13705-1-geert+renesas@glider.be>
+        Rich Felker <dalias@libc.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        "moderated list:H8/300 ARCHITECTURE" 
+        <uclinux-h8-devel@lists.sourceforge.jp>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-All callers of gpio_set_config() have to convert a gpio_desc to a
-gpio_chip and offset.  Avoid these duplicated conversion steps by
-letting gpio_set_config() take a gpio_desc pointer directly.
+On Wed, Mar 25, 2020 at 11:04 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>         Hi Linus, Bartosz,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpio/gpiolib.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+Please ignore, obviously I made a mistake with a scripted sent.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index cf7ee9a0ddde6b45..8eeb29de12cb5811 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3244,9 +3244,9 @@ static int gpio_do_set_config(struct gpio_chip *gc, unsigned int offset,
- 	return gc->set_config(gc, offset, config);
- }
- 
--static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
--			   enum pin_config_param mode)
-+static int gpio_set_config(struct gpio_desc *desc, enum pin_config_param mode)
- {
-+	struct gpio_chip *chip = desc->gdev->chip;
- 	unsigned long config;
- 	unsigned arg;
- 
-@@ -3261,7 +3261,7 @@ static int gpio_set_config(struct gpio_chip *gc, unsigned int offset,
- 	}
- 
- 	config = PIN_CONF_PACKED(mode, arg);
--	return gpio_do_set_config(gc, offset, config);
-+	return gpio_do_set_config(chip, gpio_chip_hwgpio(desc), config);
- }
- 
- static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
-@@ -3277,7 +3277,7 @@ static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
- 		bias = PIN_CONFIG_BIAS_PULL_DOWN;
- 
- 	if (bias) {
--		ret = gpio_set_config(chip, gpio_chip_hwgpio(desc), bias);
-+		ret = gpio_set_config(desc, bias);
- 		if (ret != -ENOTSUPP)
- 			return ret;
- 	}
-@@ -3435,8 +3435,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 	gc = desc->gdev->chip;
- 	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags)) {
- 		/* First see if we can enable open drain in hardware */
--		ret = gpio_set_config(gc, gpio_chip_hwgpio(desc),
--				      PIN_CONFIG_DRIVE_OPEN_DRAIN);
-+		ret = gpio_set_config(desc, PIN_CONFIG_DRIVE_OPEN_DRAIN);
- 		if (!ret)
- 			goto set_output_value;
- 		/* Emulate open drain by not actively driving the line high */
-@@ -3446,8 +3445,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 		}
- 	}
- 	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
--		ret = gpio_set_config(gc, gpio_chip_hwgpio(desc),
--				      PIN_CONFIG_DRIVE_OPEN_SOURCE);
-+		ret = gpio_set_config(desc, PIN_CONFIG_DRIVE_OPEN_SOURCE);
- 		if (!ret)
- 			goto set_output_value;
- 		/* Emulate open source by not actively driving the line low */
-@@ -3456,8 +3454,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 			goto set_output_flag;
- 		}
- 	} else {
--		gpio_set_config(gc, gpio_chip_hwgpio(desc),
--				PIN_CONFIG_DRIVE_PUSH_PULL);
-+		gpio_set_config(desc, PIN_CONFIG_DRIVE_PUSH_PULL);
- 	}
- 
- set_output_value:
+Sorry for the mess.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
