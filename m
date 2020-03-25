@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D656CC54FCF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2564C54FCF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A852077D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E2320772
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgCYPj2 (ORCPT
+        id S1727702AbgCYPkP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:39:28 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:53380 "EHLO inva021.nxp.com"
+        Wed, 25 Mar 2020 11:40:15 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:52792 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgCYPj2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:39:28 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6BD2520056B;
-        Wed, 25 Mar 2020 16:39:26 +0100 (CET)
+        id S1727691AbgCYPj1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:39:27 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 23E501A04FA;
+        Wed, 25 Mar 2020 16:39:24 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5E59C20055D;
-        Wed, 25 Mar 2020 16:39:26 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1690F1A00F9;
+        Wed, 25 Mar 2020 16:39:24 +0100 (CET)
 Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 9FC08203CE;
-        Wed, 25 Mar 2020 16:39:25 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 61A9E203CE;
+        Wed, 25 Mar 2020 16:39:23 +0100 (CET)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <kernel@pengutronix.de>,
@@ -44,9 +44,9 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2 04/13] arm64: dts: imx8mp: Add audiomix node
-Date:   Wed, 25 Mar 2020 17:38:42 +0200
-Message-Id: <1585150731-3354-5-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v2 01/13] mfd: Add i.MX generic mix support
+Date:   Wed, 25 Mar 2020 17:38:39 +0200
+Message-Id: <1585150731-3354-2-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585150731-3354-1-git-send-email-abel.vesa@nxp.com>
 References: <1585150731-3354-1-git-send-email-abel.vesa@nxp.com>
@@ -56,31 +56,109 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Audiomix is a mix of multiple functionalities controlled by the audio IPs.
-In order to split the functionality between the rightfull drivers, it
-will be probled by the imx-mix MFD driver.
+Some of the i.MX SoCs have a IP for interfacing the dedicated IPs with
+clocks, resets and interrupts, plus some other specific control registers.
+To allow the functionality to be split between drivers, this MFD driver is
+added that has only two purposes: register the devices and map the entire
+register addresses. Everything else is left to the dedicated drivers that
+will bind to the registered devices.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/mfd/Kconfig   | 11 +++++++++++
+ drivers/mfd/Makefile  |  1 +
+ drivers/mfd/imx-mix.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 60 insertions(+)
+ create mode 100644 drivers/mfd/imx-mix.c
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index c08156f..3e4c376 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -655,6 +655,11 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-+
-+			audiomix: audiomix@30e20000 {
-+				compatible = "fsl,imx8mp-mix";
-+				reg = <0x30e20000 0x10000>;
-+			};
- 		};
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 3c547ed..3c89288 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -460,6 +460,17 @@ config MFD_MX25_TSADC
+ 	  i.MX25 processors. They consist of a conversion queue for general
+ 	  purpose ADC and a queue for Touchscreens.
  
- 		gic: interrupt-controller@38800000 {
++config MFD_IMX_MIX
++	tristate "NXP i.MX Generic Mix Control Driver"
++	depends on OF || COMPILE_TEST
++	help
++	  Enable generic mixes support. On some i.MX platforms, there are
++	  devices that are a mix of multiple functionalities like reset
++	  controllers, clock controllers and some others. In order to split
++	  those functionalities between the right drivers, this MFD populates
++	  with virtual devices based on what's found in the devicetree node,
++	  leaving the rest of the behavior control to the dedicated driver.
++
+ config MFD_HI6421_PMIC
+ 	tristate "HiSilicon Hi6421 PMU/Codec IC"
+ 	depends on OF
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index f935d10..5b2ae5d 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -113,6 +113,7 @@ obj-$(CONFIG_MFD_TWL4030_AUDIO)	+= twl4030-audio.o
+ obj-$(CONFIG_TWL6040_CORE)	+= twl6040.o
+ 
+ obj-$(CONFIG_MFD_MX25_TSADC)	+= fsl-imx25-tsadc.o
++obj-$(CONFIG_MFD_IMX_MIX)	+= imx-mix.o
+ 
+ obj-$(CONFIG_MFD_MC13XXX)	+= mc13xxx-core.o
+ obj-$(CONFIG_MFD_MC13XXX_SPI)	+= mc13xxx-spi.o
+diff --git a/drivers/mfd/imx-mix.c b/drivers/mfd/imx-mix.c
+new file mode 100644
+index 00000000..f3b2006
+--- /dev/null
++++ b/drivers/mfd/imx-mix.c
+@@ -0,0 +1,48 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 NXP.
++ */
++
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/spinlock.h>
++#include <linux/types.h>
++#include <linux/platform_device.h>
++#include <linux/of_platform.h>
++
++#include <linux/mfd/core.h>
++
++static int imx_mix_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	void __iomem *base;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	dev_set_drvdata(dev, base);
++
++	return devm_of_platform_populate(dev);
++}
++
++static const struct of_device_id imx_mix_of_match[] = {
++	{ .compatible = "fsl,imx8mp-mix" },
++	{ /* Sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, imx_mix_of_match);
++
++static struct platform_driver imx_mix_driver = {
++	.probe = imx_mix_probe,
++	.driver = {
++		.name = "imx-mix",
++		.of_match_table = of_match_ptr(imx_mix_of_match),
++	},
++};
++module_platform_driver(imx_mix_driver);
 -- 
 2.7.4
 
