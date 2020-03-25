@@ -2,74 +2,86 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A89C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 21:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 031C5C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 21:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F3E20737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 21:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD60F2082D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 21:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbgCYVFQ (ORCPT
+        id S1727355AbgCYVJw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:05:16 -0400
-Received: from smtp-out.xnet.cz ([178.217.244.18]:33305 "EHLO smtp-out.xnet.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727253AbgCYVFQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:05:16 -0400
-X-Greylist: delayed 345 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 17:05:15 EDT
-Received: from meh.true.cz (meh.true.cz [108.61.167.218])
-        (Authenticated sender: petr@true.cz)
-        by smtp-out.xnet.cz (Postfix) with ESMTPSA id EFC7349FA;
-        Wed, 25 Mar 2020 21:59:28 +0100 (CET)
-Received: by meh.true.cz (OpenSMTPD) with ESMTP id cc5d5bd2;
-        Wed, 25 Mar 2020 21:59:14 +0100 (CET)
-From:   =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: allwinner: a64: olinuxino: add user red LED
-Date:   Wed, 25 Mar 2020 21:59:24 +0100
-Message-Id: <20200325205924.30736-1-ynezz@true.cz>
+        Wed, 25 Mar 2020 17:09:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48478 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbgCYVJw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 17:09:52 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 85E2A80307C2;
+        Wed, 25 Mar 2020 21:09:50 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Cv3gjaAA1V8B; Thu, 26 Mar 2020 00:09:49 +0300 (MSK)
+Date:   Thu, 26 Mar 2020 00:09:41 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/6] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C
+ controller
+Message-ID: <20200325210941.x6wqnlmauxmfkd4j@ubsrv2.baikal.int>
+References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132018.C268A8030792@mail.baikalelectronics.ru>
+ <20200312214340.GA30360@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200312214340.GA30360@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is a red LED marked as `GPIO_LED1` on the silkscreen and connected
-to PE17 by default. So lets add this missing bit in the current hardware
-description.
+On Thu, Mar 12, 2020 at 04:43:40PM -0500, Rob Herring wrote:
+> On Fri, 6 Mar 2020 16:19:52 +0300, <Sergey.Semin@baikalelectronics.ru> wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Just add the "be,bt1-i2c" compatible string to the bindings. The rest of
+> > the DW APB I2C properties can be freely used to describe the Baikal-T1
+> > I2C controller dts-node.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > ---
+> >  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Seeing you and us having doubts regarding our vendor prefix and the
+corresponding patch still hasn't been accepted, in the next patchset release
+perhaps I will have to change the compatible string of this driver. It depends
+on a result of the discussion: https://lkml.org/lkml/2020/3/13/239
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 6dfafa1c879b..b9f90e19c035 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -32,6 +32,15 @@
- 		};
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		user {
-+			label = "a64-olinuxino:red:user";
-+			gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* PE17 */
-+		};
-+	};
-+
- 	reg_usb1_vbus: usb1-vbus {
- 		compatible = "regulator-fixed";
- 		regulator-name = "usb1-vbus";
+Rob, could you get back to it, so we could come up with a solution?
+
+Currently most of our team members are leaning towards "baikal,t1" = "vendor,chip"
+prefixes to all the SoC specific devices. So the Baikal-T1 I2C compatible string
+would be renamed to "baikal,t1-i2c". What do you think?
+
+Regards,
+-Sergey
