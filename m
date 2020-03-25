@@ -2,90 +2,58 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A65C54FCF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 05:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB5BC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 06:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4856520714
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 05:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E48A420777
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 06:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgCYFum (ORCPT
+        id S1725907AbgCYGRJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 01:50:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:43762 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbgCYFum (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 01:50:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCA76FEC;
-        Tue, 24 Mar 2020 22:50:41 -0700 (PDT)
-Received: from localhost.localdomain (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 22E943F792;
-        Tue, 24 Mar 2020 22:54:41 -0700 (PDT)
-From:   Hadar Gat <hadar.gat@arm.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
-Subject: [PATCH v6 3/3] MAINTAINERS: add HG as cctrng maintainer
-Date:   Wed, 25 Mar 2020 07:41:11 +0200
-Message-Id: <1585114871-6912-4-git-send-email-hadar.gat@arm.com>
+        Wed, 25 Mar 2020 02:17:09 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:26252 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725815AbgCYGRJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 02:17:09 -0400
+X-IronPort-AV: E=Sophos;i="5.72,303,1580742000"; 
+   d="scan'208";a="42785192"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 25 Mar 2020 15:17:07 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id DB91B4000FAF;
+        Wed, 25 Mar 2020 15:17:06 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/3] dt-bindings: usb: add r8a77961 support
+Date:   Wed, 25 Mar 2020 15:16:43 +0900
+Message-Id: <1585117006-8266-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585114871-6912-1-git-send-email-hadar.gat@arm.com>
-References: <1585114871-6912-1-git-send-email-hadar.gat@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-I work for Arm on maintaining the TrustZone CryptoCell TRNG driver.
+This patch adds USB 2.0/3.0 devices support for r8a77961
+(R-Car M3-W+).
 
-Signed-off-by: Hadar Gat <hadar.gat@arm.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Yoshihiro Shimoda (3):
+  dt-bindings: usb: usb-xhci: add r8a77961 support
+  dt-bindings: usb: renesas,usbhs: add r8a77961 support
+  dt-bindings: usb: renesas,usb3-peri: add r8a77961 support
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c312b65..3f27716 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3847,6 +3847,15 @@ S:	Supported
- F:	drivers/crypto/ccree/
- W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
- 
-+CCTRNG ARM TRUSTZONE CRYPTOCELL TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
-+M:	Hadar Gat <hadar.gat@arm.com>
-+L:	linux-crypto@vger.kernel.org
-+S:	Supported
-+F:	drivers/char/hw_random/cctrng.c
-+F:	drivers/char/hw_random/cctrng.h
-+F:	Documentation/devicetree/bindings/rng/arm-cctrng.txt
-+W:	https://developer.arm.com/products/system-ip/trustzone-cryptocell/cryptocell-700-family
-+
- CEC FRAMEWORK
- M:	Hans Verkuil <hverkuil-cisco@xs4all.nl>
- L:	linux-media@vger.kernel.org
+ Documentation/devicetree/bindings/usb/renesas,usb3-peri.yaml | 1 +
+ Documentation/devicetree/bindings/usb/renesas,usbhs.yaml     | 1 +
+ Documentation/devicetree/bindings/usb/usb-xhci.txt           | 1 +
+ 3 files changed, 3 insertions(+)
+
 -- 
 2.7.4
 
