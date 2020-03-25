@@ -2,121 +2,89 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE1AC54FD5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703EDC54FCF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7356920789
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E57E20775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:12:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="eEeJkPVL"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="NnAqzUAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgCYPLa (ORCPT
+        id S1727653AbgCYPMS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:11:30 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17854 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727319AbgCYPL3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:11:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585148957;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=UQjW8/R/isr4G+IcObaYVbHnSPnY0ohL2PN+TOGINxU=;
-        b=eEeJkPVLVJ+o14DGDqHn3Y4QG81zbhdA9Byd5TPzBuOYUQVir601pnFe1Y9xiBa/
-        XpbC7wQHEpzbnLWAR0pXp3pdNw69U9qxlsxrfN5ehRe/+Ka0T2IXkSKcXYy+mnKUHpC
-        AlmmvWmPtl3PERAnKEQmXWoA/zR1Vw4MJqMedAd8=
-Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
-        with SMTPS id 1585148954458715.120308966621; Wed, 25 Mar 2020 23:09:14 +0800 (CST)
-Date:   Wed, 25 Mar 2020 23:09:10 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200325150437.GA14217@alpha.franken.de>
-References: <20200325035537.156911-1-jiaxun.yang@flygoat.com> <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de> <a69f727d37daac6e20ac08de022245b1@kernel.org> <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com> <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org> <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com> <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org> <39CF835E-D1D9-4B52-ABDC-BDB17B650936@flygoat.com> <20200325150437.GA14217@alpha.franken.de>
+        Wed, 25 Mar 2020 11:12:18 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:48242 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726969AbgCYPMS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:12:18 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id D06294128F;
+        Wed, 25 Mar 2020 15:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1585149134; x=
+        1586963535; bh=K1b4noqzxR0721ZOx9cprXobYk/fimuFPsCLB6wXrms=; b=N
+        nAqzUAuqK7oygoYsjZch3fnDYGzi4cKUks+qUVXaIQ+XI8kbVdmJqoq70LNhpgUL
+        LhTqD/Daa4F8kVZokZUFRjjI0fCXl/gBcmOC6O4wtISAwArMqDlZSN+RpMQ0Xj1A
+        FEqyuNra2SSKYFgCWQNpHdJ5Qeq06pAsx5/gDgSLhY=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id MSQnhvCrTh2v; Wed, 25 Mar 2020 18:12:14 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 451AD41286;
+        Wed, 25 Mar 2020 18:12:14 +0300 (MSK)
+Received: from localhost.yadro.com (10.199.1.182) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 25
+ Mar 2020 18:12:14 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v2 0/2] iio: proximity: driver for vcnl3020
+Date:   Wed, 25 Mar 2020 18:12:09 +0300
+Message-ID: <20200325151211.19949-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Marc Zyngier <maz@kernel.org>, linux-mips@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <777D8DAA-F462-4E8D-9012-C114DE6D56DE@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.1.182]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add proximity sensor driver for Vishay vcnl3020. Only on-demand
+measurement is supported for now.
 
+Ivan Mikhaylov (2):
+  iio: proximity: provide device tree binding document
+  iio: proximity: Add driver support for vcnl3020 proximity sensor
 
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
-1:04:37, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=
-=88=B0:
->On Wed, Mar 25, 2020 at 10:31:21PM +0800, Jiaxun Yang wrote:
->>=20
->>=20
->> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=8810:15:16, Marc Zyngier <maz@kernel=2Eorg> =E5=86=99=E5=88=B0:
->> >On 2020-03-25 13:59, Jiaxun Yang wrote:
->> >
->> >[=2E=2E=2E]
->> >
->> >>>> So probably we can use legacy domain when  MIPS IRQ BASE is in
->the
->> >>>> range of legacy IRQ
->> >>>> and switch to simple domain when it's not in that range?
->> >>>=20
->> >>> No, see below=2E
->> >>>=20
->> >>>> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I did
->> >this
->> >>>> hack=2E
->> >>>=20
->> >>> Well, if you have to consider which Linux IRQ gets assigned,
->> >>> then your platform is definitely not ready for non-legacy
->> >>> irqdomains=2E Just stick to legacy for now until you have removed
->> >>> all the code that knows the hwirq mapping=2E
->> >>=20
->> >> Thanks=2E
->> >>=20
->> >> So I have to allocate irq_desc here in driver manually?
->> >
->> >No, you are probably better off just dropping this patch, as MIPS
->> >doesn't seem to be ready for a wholesale switch to virtual
->interrupts=2E
->>=20
->> It can't work without this patch=2E
->>=20
->> Legacy domain require IRQ number within 0-15=20
->> however it's already occupied by i8259 or "HTPIC" driver=2E
->
->what's the problem here ? AFAIK there could be more than one
->legacy domain, at least that's what at least IP22/SNI in MIPS world=20
->are doing=2E
+ .../bindings/iio/proximity/vcnl3020.yaml      |  47 ++++
+ drivers/iio/proximity/Kconfig                 |  10 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/vcnl3020.c              | 242 ++++++++++++++++++
+ 4 files changed, 300 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+ create mode 100644 drivers/iio/proximity/vcnl3020.c
 
-MIPS_IRQ_BASE must be higher than 15, otherwise it will conflict with i825=
-9=2E
+-- 
+2.21.1
 
-However we have only preallocated irq_desc for 0-15=2E
-And legacy domain require irq_desc being preallocated=2E
-
->
->Thomas=2E
-
---=20
-Jiaxun Yang
