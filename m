@@ -2,110 +2,115 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B04C54FD3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 11:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E553C54FD3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 11:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC8920714
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 11:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45EBF20714
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 11:09:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="tzGy0N9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbgCYLJY (ORCPT
+        id S1727430AbgCYLJr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 07:09:24 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:37656 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727253AbgCYLJO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 07:09:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 3DC47FB02;
-        Wed, 25 Mar 2020 12:09:11 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id K_x7j6K_rbDv; Wed, 25 Mar 2020 12:09:09 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 546CA401FD; Wed, 25 Mar 2020 12:09:08 +0100 (CET)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: [PATCH v3 0/4] iio: vcnl4000: Export near level property for proximity sensor
-Date:   Wed, 25 Mar 2020 12:09:04 +0100
-Message-Id: <cover.1585134362.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.23.0
+        Wed, 25 Mar 2020 07:09:47 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:43879 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726043AbgCYLJr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 07:09:47 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id H3umjbcsrfHuvH3upjwsDV; Wed, 25 Mar 2020 12:09:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1585134584; bh=aeOdGZ6OgFt69qgvqx7eLLn3NGTxKw+2xezfTroXWTA=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=tzGy0N9y8M4l52nouIG4+WU6Z4gkn/Mdp1HQBA9tAkgNVOaG8GPhh1aetpvt4kiks
+         /YQCaHbme2Sc6/8N+gXYTd3b0XVe6ZPOP3K7+71sUKaUGWlpAgg+6dL94jRqcBweed
+         Sq9ci3BsuGd3kycMJhAEuo3pxnjBGoXZ1RE/d0z/5Y9V4QFB7ywXSHKd+34alM31a2
+         dw7rWlK1pBcy8D2hsO+j+Gabu1ZZS60UJ+DPRCqLzIHk20AG9GlRbS+KJvUxMxyt82
+         mmfrNDYqpG3Jasx3wFv1sOJctAaKM5vitwzRNo8Uk41bieJCCmlmRf/E86bJlF+nDP
+         Ea9T3arrgpYsA==
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
+ <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <af710b95-55a5-8f20-6617-c1e6f9a3fe79@xs4all.nl>
+Date:   Wed, 25 Mar 2020 12:09:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfASr57v1HrYBEDdTrXofqBhy5OyWTJt9e1V2D9AsPGRLMdFLfrHk4JYIO/wJ8mCWc1kRrmVkRa3VMq/uRJjL99iLl7N3BQCHPjDmyAQvJl8GwbmviRpJ
+ 2kUGLaETo3kWiJv6ySSmQWBpkKYrmuwcB2EMoZ1mW0Qm292OoTclC422cdpsXmO/WqAkjyyS0k4XkBHIHL0HAip25nzPrTG0jiH+FxVB68S0kpJOKPet4AX4
+ cKqSYUcpP8ilU8Y6A+FI0PYh2Kfa2Rntk2bTiDE6vyD164N4lGNuSCoxAMD3m3aI2c0Y8yVM1DzRtpfaJZRdKVJpXnzGUWe8hxruHe3nC1G78tAB4xuyXFCs
+ LZEvgsPZFojuOcunPRJllbqYEwItiTzawgSVgy7f5W4JzIeI9hwNjCexX/E3bRrMAia56iDlLuWNvv3GdagGtJvjLr3cCaWJGyT7YK64pilWc8V8d9L8GTx0
+ XMEjizaV/E3frWDaNwoQVml+qXb9HziBMu4vg6K7qXG1i7HwcEFNO+MrZ4b+IBRCHv2lQWTR6xAoUmdTTWDWTZwki51tM9JQdsORcSH7huS5XfzcBKp5ZDnD
+ XGk=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-If an object can be considered close to the device that has the proximity
-sensor built in is hardware dependent. Allowing to configure the property via
-device tree allows to export this device specific value to userspace via
-ext_info. This is useful for e.g. iio-sensor-proxy.
+On 3/25/20 12:03 PM, Sakari Ailus wrote:
+> Hi Sowjanya,
+> 
+> Thanks for the patchset.
+> 
+> On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni wrote:
+>> Tegra210 contains a powerful Video Input (VI) hardware controller
+>> which can support up to 6 MIPI CSI camera sensors.
+>>
+>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+>> capture from an external camera sensor connected to CSI or from
+>> built-in test pattern generator.
+>>
+>> Tegra210 supports built-in test pattern generator from CSI to VI.
+>>
+>> This patch adds a V4L2 media controller and capture driver support
+>> for Tegra210 built-in CSI to VI test pattern generator.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  drivers/staging/media/Kconfig              |    2 +
+>>  drivers/staging/media/Makefile             |    1 +
+>>  drivers/staging/media/tegra/Kconfig        |   10 +
+>>  drivers/staging/media/tegra/Makefile       |    8 +
+>>  drivers/staging/media/tegra/TODO           |   10 +
+>>  drivers/staging/media/tegra/tegra-common.h |  263 +++++++
+>>  drivers/staging/media/tegra/tegra-csi.c    |  522 ++++++++++++++
+>>  drivers/staging/media/tegra/tegra-csi.h    |  118 ++++
+>>  drivers/staging/media/tegra/tegra-vi.c     | 1058 ++++++++++++++++++++++++++++
+>>  drivers/staging/media/tegra/tegra-vi.h     |   83 +++
+>>  drivers/staging/media/tegra/tegra-video.c  |  129 ++++
+>>  drivers/staging/media/tegra/tegra-video.h  |   32 +
+>>  drivers/staging/media/tegra/tegra210.c     |  754 ++++++++++++++++++++
+>>  drivers/staging/media/tegra/tegra210.h     |  192 +++++
+> 
+> Why staging? Are there reasons not to aim this to the kernel proper right
+> away? If you only support TPG, the driver may not have too many (if any)
+> real users anyway.
 
-This came up when adding proximity support to iio-sensor-proxy [1], [2], it is
-not meant as a vcnl4000 thing but rather as something useful for other proximity
-sensors too in the future.
+A TPG-only driver is not very useful, and I do not believe that belongs in
+the kernel proper. The next phase will add sensor support, and that's a good
+time to move it in the kernel itself.
 
-I've not converted the vcnl4000 binding docs to yaml but can do so as part of
-this series in a v2 if the approach makes sense.
+Regards,
 
-Changes from v2:
-- as per review comment by Lars-Peter Clausen
-  https://lore.kernel.org/linux-iio/c787921f-c412-4986-14ea-e31b531d3d5b@metafoo.de/
-  Switch sysfs name to `nearlevel`
-- as per review comment by Nishant Malpani
-  https://lore.kernel.org/linux-iio/f5ea512c-d427-94c7-cf5f-f1300cbd4aa3@gmail.com/
-  Add manufacturer do binding document name
-- as per review comments by Andy Shevchenko
-  - Drop superfluous blank line
-  - Check return value of device_property_read_u32 for '!= 0' instead of '< 0'
-
-Changes from v1:
-- as per review comments by Jonathan Cameron
-  https://lore.kernel.org/linux-iio/20200221120519.43b72007@archlinux/
-  Document new sysfs file in Documentation/ABI/testing/sysfs-bus-iio-proximity
-- convert bindings to yaml
-- bindings: fix typo in near-level property
-
-[1]: https://gitlab.freedesktop.org/hadess/iio-sensor-proxy/merge_requests/298
-[2]: https://lore.kernel.org/linux-iio/20200210154153.GA26903@bogon.m.sigxcpu.org/
-
-To: Tomas Novotny <tomas@novotny.cz>, Jonathan Cameron <jic23@kernel.org>,Hartmut Knaack <knaack.h@gmx.de>,Lars-Peter Clausen <lars@metafoo.de>,Peter Meerwald-Stadler <pmeerw@pmeerw.net>,"Angus Ainslie (Purism)" <angus@akkea.ca>,"Guido Günther" <agx@sigxcpu.org>,Marco Felsch <m.felsch@pengutronix.de>,Thomas Gleixner <tglx@linutronix.de>,linux-iio@vger.kernel.org,linux-kernel@vger.kernel.org,devicetree@vger.kernel.org,
-Andy Shevchenko <andy.shevchenko@gmail.com>,Nishant Malpani <nish.malpani25@gmail.com>
-
-
-Guido Günther (4):
-  dt-bindings: iio: vcnl4000: convert bindings to YAML format
-  dt-bindings: iio: light: vcnl4000: Add near-level
-  iio: vcnl4000: Export near level property for proximity sensor
-  Documentation: ABI: document IIO in_proximity_near_level file
-
- .../ABI/testing/sysfs-bus-iio-proximity       | 10 ++++
- .../bindings/iio/light/vcnl4000.txt           | 24 ---------
- .../bindings/iio/light/vishay,vcnl4000.yaml   | 53 +++++++++++++++++++
- drivers/iio/light/vcnl4000.c                  | 25 +++++++++
- 4 files changed, 88 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-proximity
- delete mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.txt
- create mode 100644 Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
-
--- 
-2.23.0
-
+	Hans
