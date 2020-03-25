@@ -2,240 +2,130 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC55C54FD5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 11:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5FBC54FD0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 11:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57D22077D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 11:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585136141;
-	bh=hDdH6NzW082kdtiNJh6NcBX/8zpFKDBtBCPyNFL3akc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=O0wvvh30In1NKlmf3TiON7W5S0qOUY5CUi2I/HUMO65AVo+FftvEirc1m3gVRR70E
-	 rm4cUTItoyytEXBeVmvQchBGW7ZRAumsfWgVogLiDtuw1KqaBQgW8ytMxC1X0XIK1u
-	 xAE+PYvtHUUc8xuaknnxQd3n6JpbXhfRNyIgTyno=
+	by mail.kernel.org (Postfix) with ESMTP id EEED720775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 11:36:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgCYLfi (ORCPT
+        id S1727279AbgCYLgz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 07:35:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbgCYLfh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 07:35:37 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA7AF20722;
-        Wed, 25 Mar 2020 11:35:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585136136;
-        bh=hDdH6NzW082kdtiNJh6NcBX/8zpFKDBtBCPyNFL3akc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Q7GoJqppdtvNHQJdM0XE9y8P+ki1AutLvirfSEQTn6FrAdVzJZHPIwqIDKhFlg2Q0
-         Tkrvk1QDhThLTbgftm+MddcYEzlZs3PpQ+Y2cnZ+0BK9mRoxAcy45dF3s/9fBv6nq4
-         7736pvMud3vI8wyuEoiF/EqEkM+W6ffESuahi3Lw=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jH4Jq-00FYG3-87; Wed, 25 Mar 2020 11:35:34 +0000
+        Wed, 25 Mar 2020 07:36:55 -0400
+Received: from mailgate1.rohmeurope.com ([87.129.152.131]:49370 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbgCYLgz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 07:36:55 -0400
+X-AuditID: c0a8fbf4-489ff70000004419-3a-5e7b4254a412
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id CE.D1.17433.4524B7E5; Wed, 25 Mar 2020 12:36:52 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0487.000; Wed, 25 Mar 2020 12:36:47 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "talgi@mellanox.com" <talgi@mellanox.com>,
+        "olteanv@gmail.com" <olteanv@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "brendanhiggins@google.com" <brendanhiggins@google.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davidgow@google.com" <davidgow@google.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "bp@suse.de" <bp@suse.de>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
+        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Thread-Topic: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Thread-Index: AQHWAbbAyLpT1a+wPEGvvo/J38Wk46hXbxYAgAAMuoCAAaNYgA==
+Date:   Wed, 25 Mar 2020 11:36:46 +0000
+Message-ID: <4d75bfeab55c04cc3ca751cf7c364c812848e9ed.camel@fi.rohmeurope.com>
+References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+         <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200324095024.GE1922688@smile.fi.intel.com>
+         <20200324103557.GH1922688@smile.fi.intel.com>
+In-Reply-To: <20200324103557.GH1922688@smile.fi.intel.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <85534FA46F1BC646A64DFADFA82589B4@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 25 Mar 2020 11:35:34 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        John Crispin <john@phrozen.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Yinglu Yang <yangyinglu@loongson.cn>,
-        Allison Randal <allison@lohutok.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Manuel Lauss <manuel.lauss@gmail.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-ide@vger.kernel.org
-Subject: Re: [PATCH v7 01/12] irqchip: Add driver for Loongson I/O Local
- Interrupt Controller
-In-Reply-To: <AFYQ7Q.2LEJN3L8ZS5J3@crapouillou.net>
-References: <20200325022916.106641-1-jiaxun.yang@flygoat.com>
- <20200325022916.106641-2-jiaxun.yang@flygoat.com>
- <AFYQ7Q.2LEJN3L8ZS5J3@crapouillou.net>
-Message-ID: <30bbde289a0cc4c1bfc0d3f6475f8f3e@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: paul@crapouillou.net, jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, chenhc@lemote.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, tsbogend@alpha.franken.de, corbet@lwn.net, john@phrozen.org, matthias.bgg@gmail.com, jdelvare@suse.com, davem@davemloft.net, mchehab+samsung@kernel.org, Jonathan.Cameron@huawei.com, gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com, geert+renesas@glider.be, krzk@kernel.org, miquel.raynal@bootlin.com, ak@linux.intel.com, hns@goldelico.com, ebiederm@xmission.com, yangtiezhu@loongson.cn, yangyinglu@loongson.cn, allison@lohutok.net, b.zolnierkie@samsung.com, paulburton@kernel.org, manuel.lauss@gmail.com, fancer.lancer@gmail.com, matt.redfearn@mips.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-ide@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wTZxzGfe+udwf29CiYvlbNQhdndBn+YJnvFuYYW5ZTl2XLssQsA3aO
+        kzYrLbm2DGGJDKebJWT8rl6KsLIKY43Q1qyoNGuwLjiTdjonSmCTSZyQDZmorLLp7rgp/HXP
+        vc/z+T73Jt+jcV2YMtBmq0MQrbzFSKYS0a65wDPv5FUWbPoyE3l6/CSqrXZjKHnnFkD1X6xH
+        F6404qh5bJxE7uYfAfIkPiXQYKCXQG2xuAbt7+ghUc3kapRI9FLo3qXPMdT0TyeGfjrlIdFM
+        bQwg39AFDHl8gwTq6HwK9YZmMfTniJtAByIxCkXcxzTo/GkHammNUCgUbMbR0O1hDEUeJAkU
+        +WUGoO//SoLcJzj/UT/gTnx9FeNOSqMU9210LdcedHKhrg1cR/8ExgW7D5FcwzGvhhu53E9y
+        U/E4xQ0eniO4Om8UcEfPvcV91+qnuBvuM9ib6e8uzdnNO8reNhdbN257f6nJ69WW3lteHg40
+        YFUgutwFUmjIPgt7mmcoF0ildezPAA5LMUJ9GQTwcPQk6QI0TbI50HWVUoAMdie8P3UFKBmc
+        bafh/m8a5oElbJSA07/XYkoqnd0Ou369qFGJHbDzYIRUdR5sDH02nyHYtbCrOoQrmmHfgL5e
+        P6FoHXsAg7fGtIpOYV+A16XEfDNg18BDVVPzLM7qYfDGrEa9Agu/6k/gql4BJ64/+P88E4Zn
+        jxPKBXB2Pew5tVFFc+Gky0eqOhM21YxR6iekwXNHxok6oJcWNUgLtLSIlhbR0iK6HWi6ASzh
+        zZZi3iFszhIFZ5ZoM5XIjw9sJUGgLuKdPvBwYPsAwGgwAFbSmHEF8+TWygLdst22or0m3m4q
+        FJ0WwT4AII0bM5iQUF6gY4r4vRWCaHtkraIJo55ZN1afr2OVrg8FoVQQH7mradoImb5ceWia
+        KBQL5XvMFseCjdEpyvBUQ4ZdsBYJIu90mAqVXSm0y8uiWFq5t2GbjDP2Ur5EPlXRH8DTdN1E
+        qxenY60+L64jrDarYNAzq16Wo6wSNTmtj4smgZ4GxnTm75dkVyv/jY/nTMoVmFxRLH2kVDj4
+        BctQBQy3LXfLspaYk1vrx+fWVESz/drAc3ePHxm+1hIPZ7+XjO+5ePNMX0t0aof/xP0XvbGH
+        iVfOj6y7nF3m//dSTsGW/vCuNi687/WWm92dNVV5nrSK55s+yW87PV05FMhpH82tG92UfXba
+        z3/86m+Ny6q35NsmYsxOxvDHtX27+s6unD34mpGwm/jNG3DRzv8HaiO7FEoEAAA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-03-25 11:25, Paul Cercueil wrote:
-> Hi Jiaxun,
-> 
-> 
-> Le mer. 25 mars 2020 à 10:28, Jiaxun Yang <jiaxun.yang@flygoat.com> a 
-> écrit :
->> This controller appeared on Loongson family of chips as the primary
->> package interrupt source.
->> 
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> Co-developed-by: Huacai Chen <chenhc@lemote.com>
->> Signed-off-by: Huacai Chen <chenhc@lemote.com>
->> Reviewed-by: Marc Zyngier <maz@kernel.org>
->> ---
->> v4-v5:
->> 	Resolve suggestions from maz:
->> 		- Remove DT validation
->> 		- Simplify unnucessary functions & variables
->> ---
->>  drivers/irqchip/Kconfig                |   9 +
->>  drivers/irqchip/Makefile               |   1 +
->>  drivers/irqchip/irq-loongson-liointc.c | 261 
->> +++++++++++++++++++++++++
->>  3 files changed, 271 insertions(+)
->>  create mode 100644 drivers/irqchip/irq-loongson-liointc.c
->> 
->> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->> index 6d397732138d..c609eaa319d2 100644
->> --- a/drivers/irqchip/Kconfig
->> +++ b/drivers/irqchip/Kconfig
->> @@ -513,4 +513,13 @@ config EXYNOS_IRQ_COMBINER
->>  	  Say yes here to add support for the IRQ combiner devices embedded
->>  	  in Samsung Exynos chips.
->> 
->> +config LOONGSON_LIOINTC
->> +	bool "Loongson Local I/O Interrupt Controller"
->> +	depends on MACH_LOONGSON64
->> +	default y
->> +	select IRQ_DOMAIN
->> +	select GENERIC_IRQ_CHIP
->> +	help
->> +	  Support for the Loongson Local I/O Interrupt Controller.
->> +
->>  endmenu
->> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->> index eae0d78cbf22..5e7678efdfe6 100644
->> --- a/drivers/irqchip/Makefile
->> +++ b/drivers/irqchip/Makefile
->> @@ -105,3 +105,4 @@ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
->>  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
->>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
->>  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
->> +obj-$(CONFIG_LOONGSON_LIOINTC)		+= irq-loongson-liointc.o
->> diff --git a/drivers/irqchip/irq-loongson-liointc.c 
->> b/drivers/irqchip/irq-loongson-liointc.c
->> new file mode 100644
->> index 000000000000..18de2c09ece4
->> --- /dev/null
->> +++ b/drivers/irqchip/irq-loongson-liointc.c
->> @@ -0,0 +1,261 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
->> + *  Loongson Local IO Interrupt Controller support
->> + */
->> +
->> +#include <linux/errno.h>
->> +#include <linux/init.h>
->> +#include <linux/types.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/ioport.h>
->> +#include <linux/irqchip.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/io.h>
->> +#include <linux/smp.h>
->> +#include <linux/irqchip/chained_irq.h>
->> +
->> +#include <boot_param.h>
->> +
->> +#define LIOINTC_CHIP_IRQ	32
->> +#define LIOINTC_NUM_PARENT 4
->> +
->> +#define LIOINTC_INTC_CHIP_START	0x20
->> +
->> +#define LIOINTC_REG_INTC_STATUS	(LIOINTC_INTC_CHIP_START + 0x20)
->> +#define LIOINTC_REG_INTC_EN_STATUS	(LIOINTC_INTC_CHIP_START + 0x04)
->> +#define LIOINTC_REG_INTC_ENABLE	(LIOINTC_INTC_CHIP_START + 0x08)
->> +#define LIOINTC_REG_INTC_DISABLE	(LIOINTC_INTC_CHIP_START + 0x0c)
->> +#define LIOINTC_REG_INTC_POL	(LIOINTC_INTC_CHIP_START + 0x10)
->> +#define LIOINTC_REG_INTC_EDGE	(LIOINTC_INTC_CHIP_START + 0x14)
->> +
->> +#define LIOINTC_SHIFT_INTx	4
->> +
->> +struct liointc_handler_data {
->> +	struct liointc_priv	*priv;
->> +	u32			parent_int_map;
->> +};
->> +
->> +struct liointc_priv {
->> +	struct irq_chip_generic		*gc;
->> +	struct liointc_handler_data	handler[LIOINTC_NUM_PARENT];
->> +	u8				map_cache[LIOINTC_CHIP_IRQ];
->> +};
->> +
->> +static void liointc_chained_handle_irq(struct irq_desc *desc)
->> +{
->> +	struct liointc_handler_data *handler = 
->> irq_desc_get_handler_data(desc);
->> +	struct irq_chip *chip = irq_desc_get_chip(desc);
->> +	struct irq_chip_generic *gc = handler->priv->gc;
->> +	u32 pending;
->> +
->> +	chained_irq_enter(chip, desc);
->> +
->> +	pending = readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
->> +
->> +	if (!pending)
->> +		spurious_interrupt();
->> +
->> +	while (pending) {
->> +		int bit = __ffs(pending);
->> +
->> +		generic_handle_irq(irq_find_mapping(gc->domain, bit));
->> +		pending &= ~BIT(bit);
->> +	}
-> 
-> Consider using the for_each_set_bit() macro from <linux/bitops.h>.
-> See drivers/irqchip/irq-ingenic-tcu.c for instance.
-
-which would require changing the pending type to be unsigned long.
-Open-coding these if fine if it helps keeping the type system 
-consistent.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+SGVsbG8gQW5keSwNCg0KT24gVHVlLCAyMDIwLTAzLTI0IGF0IDEyOjM1ICswMjAwLCBBbmR5IFNo
+ZXZjaGVua28gd3JvdGU6DQo+IE9uIFR1ZSwgTWFyIDI0LCAyMDIwIGF0IDExOjUwOjI0QU0gKzAy
+MDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4gPiBPbiBUdWUsIE1hciAyNCwgMjAyMCBhdCAx
+MDozMjoxOUFNICswMjAwLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+ID4gPiArI2luY2x1ZGUg
+PGxpbnV4L2FjcGkuaD4NCj4gPiA+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4gPiANCj4gPiBJ
+IGRpZG4ndCBmaW5kIGFueSBldmlkZW5jZSBvZiB1c2Ugb2YgdGhvc2UgdHdvLCBvdGhlcndpc2Us
+IG1pc3NlZA0KPiA+IHByb3BlcnR5LmgNCj4gPiBhbmQgcGVyaGFwcyBtb2RfZGV2aWNldGFibGUu
+aC4NCj4gDQo+IC4uLg0KPiANCj4gPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBiZDk5OTV4
+X29mX21hdGNoKTsNCj4gPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKGFjcGksIGJkOTk5NXhfYWNw
+aV9tYXRjaCk7DQo+IA0KPiBJIGhhdmUgdG8gYWRkIHNpbmNlIHlvdSBhcmUgdXNpbmcgdGhvc2Ug
+bWFjcm9zIHdpdGhvdXQgaWZkZWZmZXJ5LCB5b3UNCj4gc2hvdWxkDQo+IGdldCB3YXJuaW5nIGlu
+ICFBQ1BJIGFuZC9vciAhT0YgY2FzZXMuDQo+IA0KPiBTbywgZHJvcCB0aG9zZSBvZl9tYXRjaF9w
+dHIoKSAvIEFDUElfUFRSKCkgYW5kIHRodXMgYWJvdmUgaGVhZGVycy4NCg0KU29ycnkgYnV0IEkg
+ZG9uJ3QgZm9sbG93IDovIEkgZGlkIGRyb3Agd2hvbGUgQUNQSSB0YWJsZSBhcyB0aGUgYmF0dGVy
+eQ0KaW5mb3JtYXRpb24gaXMgbm90IGZldGNoZWQgZnJvbSBBQ1BJIGFueXdheXMuIEJ1dCBJIGRv
+bid0IGtub3cgd2hhdCB5b3UNCm1lYW4gYnkgZHJvcHBpbmcgdGhlIG9mX21hdGNoX3B0cj8gSSBm
+b3Igc3VyZSBuZWVkIHRoZSBvZl9kZXZpY2VfaWQgYXMNCmluIG1hbnkgY2FzZXMgYm90aCB0aGUg
+ZGV2aWNlIG1hdGNoaW5nIGFuZCBtb2R1bGUgbWF0Y2hpbmcgYXJlIGRvbmUNCmJhc2VkIG9uICBv
+Zl9tYXRjaF90YWJsZSBhbmQgb2ZfZGV2aWNlX2lkLg0KDQpJIGFkbWl0IEkgZGlkbid0IHRyeSBj
+b21waWxpbmcgdGhlICFPRiBjb25maWcuIEFyZSB5b3Ugc3VnZ2VzdGluZyBJDQpzaG91bGQgcHV0
+IHRoZSBvZl9kZXZpY2VfaWQgYXJyYXkgYW5kIHBvcHVsYXRpbmcgdGhlIG9mX21hdGNoX3RhYmxl
+IGluDQojaWZkZWYgQ09ORklHX09GPyBPciBtYXliZSB5b3Ugc3VnZ2VzdCB0aGF0IEkgd2lsbCBw
+dXQgb2ZfZGV2aWNlX2lkDQphcnJheSBpbiAjaWZkZWYgQ09ORklHX09GIGFuZCB1c2Ugb2ZfbWF0
+Y2hfcHRyKCkgd2hlbiBwb3B1bGF0aW5nIHRoZQ0Kb2ZfbWF0Y2hfdGFibGUgcG9pbnRlcj8gSSBn
+dWVzcyB0aGF0IHdvdWxkIG1ha2Ugc2Vuc2UuIEknbGwgZG8gdGhhdCAtDQpjYW4geW91IHBsZWFz
+ZSBleHBsYWluIGlmIHRoaXMgd2FzIG5vdCB3aGF0IHlvdSBtZWFudC4NCg0KQnIsDQogICAgTWF0
+dGkNCg==
