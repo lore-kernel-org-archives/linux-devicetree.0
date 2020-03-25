@@ -2,157 +2,84 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE97AC54FD0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 16:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B840C1975A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 17:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965D12073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 16:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBA420740
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 17:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="c63CxU8X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rRKgRr5J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgCYQnW (ORCPT
+        id S1727177AbgCYRIF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:43:22 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:39336 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727395AbgCYQnV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 12:43:21 -0400
-IronPort-SDR: sQZvq5uZVz/OoMHuLXf8Gpmq7Cr3qV41TCuQO7sMKN5j4lE8pVy45N94ddCXZzJjlJnkNc+VCF
- ae1I6Aod9594MUqQyS6nv5xhdyVLnR5Qq+NOnnFjuEwjMUXrY0fDwfJDKFgVnwM/VA0wHoGYGk
- S7R7VzrzOg6jmDZOA8M0ZR0pxXd0hWhTIgzMT5uhcIQNDH2zfzqRaAHiJVFmTaHhCmB/gkusaz
- M1EmtRhh8TeouIxUSdrQJzCRO/9MY238z+Szplh44mZcLkFf6F1od0vdVd8QcUpPriPDp7B931
- 3ZQ=
-X-IronPort-AV: E=Sophos;i="5.72,304,1580799600"; 
-   d="scan'208";a="70239578"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Mar 2020 09:42:43 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 25 Mar 2020 09:42:41 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 25 Mar 2020 09:42:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PO9ZqKF4KURE5zF6Bm2X5kn6rVKKI6tLM05dS/pBwTuIDwTdHXNQrde0XNxAt8oHU4ak9sJ4DFSk9ZmMy3nM6JbdtMfds26iJW3sfPn7g9hUEU2vBnsJ8+5asZXrMacYBMziIs7nzg6Ju79fMmiFQlfbNwByRSl4DcYaAkf4jXbIbOi8yRm7S0WCFS0PcG2Tyq958SYmukq4zvV3aVSxcrfPlIhx3LR3lyqLjwbj6YUS1Zl3MMQ5JxAxkNLDur1uq2L0gkTDhQbF4i76lZbzzxI7a9UufnniumOuVEL8fyrdwy2p5FW1np+nNji6VcNGH28+vI4CVSD8uEDOoEPkMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nT3CsVR4E9E+u/GrfhYjmpDfy8anWjoMFN9X0xSjmpg=;
- b=Y7kvRfRqj9XD6WamcO/BCkUY3myuwYV0+EcBDLg5OoKnVAoKrqswj/ELH4MiS5r44Uycsk8QFUlCXbctrSX1/9uaIxSVADeLRzi8p4y78FjNMDs84fHVVKB9YaisSKikX3hmZIuScoe9gfFS3riIEcoW3tvYmNpahWiuQNhRu0sYe6LWuIfw1FwsId+CGveTICufX525PD+TWX5QAaXuvWEjdAFki6L1sTr1K2Yj4Wu/B3OJ/x0/xwCi2RFI7iHTKTvRUnwNVJTybAPT/5HlkBFbr9Jt7rWemoDyDqrHwZdyvPnA7vZVwwlG36M5pNAhLcOAC2Y4RFtdQWtgAv+tbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Wed, 25 Mar 2020 13:08:05 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33541 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgCYRIE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 13:08:04 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f20so3351573ljm.0
+        for <devicetree@vger.kernel.org>; Wed, 25 Mar 2020 10:08:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nT3CsVR4E9E+u/GrfhYjmpDfy8anWjoMFN9X0xSjmpg=;
- b=c63CxU8XRUWLjAtBz9HpNdak1CtUKuBwtSOCGq2TcjVV/bwXtFyDkJCEK/3rb92nDiWBEOGKnh/kwN7AZ21ilJWrI6FECbcDJtuogRr01aGGBcM5lEz6Q79R6wJ+P+9vJF6LMliK/aufF3WSmedn0G/zZowlCb7xlvgGo77iask=
-Received: from BYAPR11MB3125.namprd11.prod.outlook.com (2603:10b6:a03:8e::32)
- by BYAPR11MB2597.namprd11.prod.outlook.com (2603:10b6:a02:c0::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Wed, 25 Mar
- 2020 16:42:39 +0000
-Received: from BYAPR11MB3125.namprd11.prod.outlook.com
- ([fe80::c27:87cf:ca4:d86e]) by BYAPR11MB3125.namprd11.prod.outlook.com
- ([fe80::c27:87cf:ca4:d86e%4]) with mapi id 15.20.2835.021; Wed, 25 Mar 2020
- 16:42:39 +0000
-From:   <Ajay.Kathat@microchip.com>
-To:     <linux-wireless@vger.kernel.org>
-CC:     <devel@driverdev.osuosl.org>, <devicetree@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <Adham.Abozaeid@microchip.com>,
-        <johannes@sipsolutions.net>, <robh@kernel.org>,
-        <Ajay.Kathat@microchip.com>
-Subject: [PATCH] staging: wilc1000: remove label from examples in DT binding
- documentation
-Thread-Topic: [PATCH] staging: wilc1000: remove label from examples in DT
- binding documentation
-Thread-Index: AQHWAsRltX69oPURgUSNLfUw6CPRaw==
-Date:   Wed, 25 Mar 2020 16:42:39 +0000
-Message-ID: <20200325164234.14146-1-ajay.kathat@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.17.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Ajay.Kathat@microchip.com; 
-x-originating-ip: [49.205.216.58]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9270d9d6-79c6-416c-c331-08d7d0db87d6
-x-ms-traffictypediagnostic: BYAPR11MB2597:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR11MB25972B9827CC12AD979C403DE3CE0@BYAPR11MB2597.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 0353563E2B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(366004)(39860400002)(136003)(8676002)(966005)(6486002)(6512007)(6506007)(6916009)(2616005)(54906003)(1076003)(86362001)(66446008)(91956017)(36756003)(66946007)(2906002)(5660300002)(4326008)(81156014)(4744005)(478600001)(66476007)(66556008)(76116006)(186003)(26005)(8936002)(81166006)(71200400001)(64756008)(316002)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB2597;H:BYAPR11MB3125.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: d0DNk+L/57aUVb0qT6WLgBblL1sbunZ3A9TIH9FrscSCP7Rlj/fldJqAOZ55a4/xL9iqLkijRN7cmAEYpHq7Vm52oytA0LGV8kwlx2WxuOwv7VNNt6oseG/GI5tlqfkNTdsO6tT8VI9qXEEXniIoegAMuxmKobsUtpXfv+SxNxVVLoSe18zZdUmPncsbcnos9uTOjM983lvHhNzvl/t2gP5gO/XSb1IB5bm/l0mx+k+Q95SdBSqa0dFFjE28MLpB5DuyB/2R1kTLNtQzcAnuX2E9QVWc/4cnlMRgUZRQjOOXiJbAqkkkS41t9Scj2F2rXZ2yBkhJuTysM974Q86e/uty5v16N5UVxLxAPNTRYeXBf+PDwQKY1Doc6nXWOa80BvNrHhKXknNumhuYENXwBykWlHeznhgvkZ5pW6xSEGkxbKmyqhkMbZyvA7t7+aLZQk8P3Dmz0xz6RCQmzJpOlZ5GzzRXH6FY4OtJOCsvoEb1CNzJlTLu9XHhfW7t1EL+8j2sCmF8Aa1VrVpkdkBgUw==
-x-ms-exchange-antispam-messagedata: NpNdNS91no4Qh1LfGSv+EgewYpLlWLrPjj9jwGJ5U7zt3i0TGwv2BWh07NBTza1KaGRjZaFrTjpT+/e0rJj/IS3lDGjNc3pLOHwPtCKJ+aKmLI2plO4T8B2S3wCev7PnNl0kojSqxM3zH79sriC/fA==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=600/ZX+MXM/TMsIs1XX7CkmCtp0K7z5KZXUXr8Gs7Hg=;
+        b=rRKgRr5Jnyl7HxB3olqq6jFXS0WdFWFQnInzVomqkuvmAaC5V2Vea6f2E/Sq65LWcj
+         uKGrcjI01BnHmCH3PusaCNieeBBsXSux6pmw/pSYGCjVvD5qHQi6tPyuqayvxygaAayW
+         sjUpf+/3frRBl2xnx3kb5brnXjrkkjQmga3z2TCGG64LryF7gUujp+vB+AbedXMaU+iH
+         ey+IXzbsz4tIvmEeTlzG4wo4dhC5JcTF5Cewo5i99AgXsPKECXmtYSqK3o5V/Odyho4T
+         NMk63S2XT52Qx+Y+WIEZ94ubqFsQq0bDPbdLj3YVf/sB037RjMxV5D5ZzppmV23zDfji
+         c6Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=600/ZX+MXM/TMsIs1XX7CkmCtp0K7z5KZXUXr8Gs7Hg=;
+        b=NjcZZClbBlJFnjGB9kLMkIxgVM4NtcJBVqiHfuSBswXHY8y+wk4YskxyAkq0hxDGw7
+         VKZTjR8X6xdGn0h4F/KUZtjSLaGNPkZDLqu7915jGI08wk7m4I0XmTcq0DojCyLRhOeW
+         D3vNZx7PnDv9y3uYnhClWEdLVXqIwaoR44kn/CRDsSrMRBf0ah3vtvOqMoONuHvdmWPv
+         dxoNNA+R7XArNAyusQ2T6Cs7dY2Vg+zZuBFT6H5cvM5l6DOd1Vgn62R6qS0AJkVeCgNe
+         2vx8nMFn9NQrh7ynu1/yLIZDKYuXtm2xAFKGKnW08jOq8EqXuLQqaKZoZ0FO1geDW1nE
+         oxFA==
+X-Gm-Message-State: AGi0PubNGbDvUiO61cr7xQpZNWb89sTepM6oUh1ssTX8ZUeG4pTX6Tno
+        Gy25lQFa8XairsF7W5Q/wNr6wAVxi6OliAlV5eY=
+X-Google-Smtp-Source: APiQypLgprDFyeg9zyYsI/utcFejWPg2CkEwryZZEk3z9PPhdmklTvXiftwi+mmWkXFKvkUs/UNHYJD+Fg/3B7VKg5g=
+X-Received: by 2002:a2e:9757:: with SMTP id f23mr2525601ljj.269.1585156082224;
+ Wed, 25 Mar 2020 10:08:02 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9270d9d6-79c6-416c-c331-08d7d0db87d6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 16:42:39.0319
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 392n9nzBZU/qFT9yYwE5qsHs5EoFPeD76mmsPR+8uvxZqNrWG0CtJSffd8AG9Qi8A6qGJvWRWc8eXUGe+CKXXzsggG4vN3ZRfdYHe59v398=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2597
+References: <1584651135-29266-1-git-send-email-tharvey@gateworks.com> <1585153582-21127-1-git-send-email-tharvey@gateworks.com>
+In-Reply-To: <1585153582-21127-1-git-send-email-tharvey@gateworks.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 25 Mar 2020 14:07:54 -0300
+Message-ID: <CAOMZO5DLLPtbVp=nZ9B6O78F8pSGH7Oj9bfmtSQ_MayGi2SyuQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: imx: fix audio SSI on GW551x
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+Hi Tim,
 
-Remove labels and not relevant property from DT binding documentation
-examples as suggested in [1].
+On Wed, Mar 25, 2020 at 1:26 PM Tim Harvey <tharvey@gateworks.com> wrote:
+>
+> The audio codec on the GW551x routes to ssi1
+>
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 
-1. https://patchwork.ozlabs.org/patch/1252837
-
-Signed-off-by: Ajay Singh <ajay.kathat@microchip.com>
----
- drivers/staging/wilc1000/microchip,wilc1000.yaml | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/staging/wilc1000/microchip,wilc1000.yaml b/drivers/sta=
-ging/wilc1000/microchip,wilc1000.yaml
-index bc6cc5d3f347..2c320eb2a8c4 100644
---- a/drivers/staging/wilc1000/microchip,wilc1000.yaml
-+++ b/drivers/staging/wilc1000/microchip,wilc1000.yaml
-@@ -36,10 +36,9 @@ required:
-=20
- examples:
-   - |
--    spi1: spi@fc018000 {
-+    spi {
-       #address-cells =3D <1>;
-       #size-cells =3D <0>;
--      cs-gpios =3D <&pioB 21 0>;
-       wifi@0 {
-         compatible =3D "microchip,wilc1000";
-         spi-max-frequency =3D <48000000>;
-@@ -52,7 +51,7 @@ examples:
-     };
-=20
-   - |
--    mmc1: mmc@fc000000 {
-+    mmc {
-       #address-cells =3D <1>;
-       #size-cells =3D <0>;
-       pinctrl-names =3D "default";
---=20
-2.24.0
+You could also add a Fixes tag so that this could be ported to stable kernels.
