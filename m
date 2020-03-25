@@ -2,105 +2,136 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1CBC54FCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 01:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9F6C54FCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 01:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7DE42074D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 01:15:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="baso6vXv"
+	by mail.kernel.org (Postfix) with ESMTP id 9B0E82073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 01:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgCYBPE (ORCPT
+        id S1727228AbgCYBpm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 21:15:04 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13029 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbgCYBPE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 21:15:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7ab03c0000>; Tue, 24 Mar 2020 18:13:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 24 Mar 2020 18:15:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 24 Mar 2020 18:15:03 -0700
-Received: from [10.2.160.81] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
- 2020 01:15:02 +0000
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
- <8f44e42d-2008-fe53-f4fb-b57502da91a8@gmail.com>
- <5695fc27-6839-dda3-9d06-77ef36ecfd43@nvidia.com>
-Message-ID: <f59eb7fa-5b26-60e4-771f-f6f9ecfa0b5f@nvidia.com>
-Date:   Tue, 24 Mar 2020 18:15:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 24 Mar 2020 21:45:42 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37014 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbgCYBpm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 21:45:42 -0400
+Received: by mail-il1-f193.google.com with SMTP id a6so441213ilr.4;
+        Tue, 24 Mar 2020 18:45:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f4D6B9MrkGLZB2AIEqGTRqzOxW30N5+6gdlWcIa45lc=;
+        b=J3uwS3Cec42SW6eWzYZzfp/8fGv/eaXm0osEKAnUNcgI2KvfNjbRRAI8V+foDst3sX
+         FTZ9zlvc/loEyxQWJQJm45lILHveMvIdsWVZ0xTlYOxmzYGkwwBo1XHiYv22cTBcryud
+         pKgZIOJC6evk7oxxK3EUJYqBtIWF5Nyjm+iCj5TgtlpWsDCE3kReQcEWpcGIFx/7r54L
+         uf7CSyZGWZpV9FInZPdmRhdCBAtTqxfUXrRaBmXSuzlZMmBzIHC1A3WxHmYuh4B0G28E
+         U11yg5DnBfUSkFyaJ0Mex/+gJdxuFFxsVy9FtlRxevE/XjRSlw3nCivA2kZRp3QY3zju
+         l69w==
+X-Gm-Message-State: ANhLgQ09t1mBmMTWuKgg8i6gM3ssaRGL7+8iHTuTOAdAGjdjiN6JSxMR
+        veKqC/P0ax8o68pVajnmgU5JpuLMzPRfuWKu5D0m2Eam
+X-Google-Smtp-Source: ADFU+vuSQONXJlK8DCLnl3/KGz7ZQKK5ZiNMyS2gUS4INYXRJmqEDqZCv0Gd42u4BjkIiTkvjaXHVHVh/8X3OVHllyM=
+X-Received: by 2002:a92:8510:: with SMTP id f16mr1332299ilh.208.1585100741368;
+ Tue, 24 Mar 2020 18:45:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5695fc27-6839-dda3-9d06-77ef36ecfd43@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585098812; bh=bU2HFAYyjlSHy3XCNC4Et16uw6jnRXPLo6YbsCijPUg=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=baso6vXvWWdYt8HlMNp87qBzGMKSRA7WE17d7TZx5MfKoYWkttsuOK36Eep8zaeiU
-         3yn4nNzyIub8gBdIgJa8pwZL/Cw66sTn1Mgly+KMhLfsMzoVeCOX+XgOrsbxtTsFxD
-         MFNxBDvEUZmWt3GYie1uWsCwuHp4GCGBkwxCanW6w05FbY6ldPS2VIGF1sJnFwK2+y
-         e+SIYGlBoBaTGfMNchwJMusvSOUNO6vQK5Oobjw+zXmCEmBvbC3Yo8MqfN5EjR1yEA
-         mTI8ZQE3e0mropzJJ5fPJQLkB8IZS1PsxKMl3afZeppilYCmlo/EZZGn6cW0i0VjCx
-         /eZdAC+VhgcIQ==
+References: <20200324153624.23109-1-jiaxun.yang@flygoat.com> <20200324153624.23109-3-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200324153624.23109-3-jiaxun.yang@flygoat.com>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Wed, 25 Mar 2020 09:52:26 +0800
+Message-ID: <CAAhV-H7__WmeWZ4w8Kc37WztRZ+-du9nKbVkRJeK7=ZhPaVY3g@mail.gmail.com>
+Subject: Re: [PATCH v6 02/11] irqchip: loongson-liointc: Workaround LPC IRQ Errata
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi, Jiaxun,
 
-On 3/24/20 6:08 PM, Sowjanya Komatineni wrote:
+On Tue, Mar 24, 2020 at 11:39 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 >
-> On 3/24/20 5:34 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 23.03.2020 20:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> +static void tegra_channel_vi_soft_reset(struct tegra_vi_channel *chan)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 /* disable clock gating to enable continuous =
-clock */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, 0)=
-;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Soft reset memory client interface, p=
-ixel format logic, sensor
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * control logic, and a shadow copy logi=
-c to bring VI to clean=20
->>> state.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0xf=
-);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 usleep_range(100, 200);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0x0=
-);
->> Is it safe to reset MCCIF without blocking and flushing memory requests
->> at first?
-> Yes to bring VI to clean state on errors its recommended by HW design=20
-> team.
-BTW, just to be clear this is Software reset.
+> The 1.0 version of that controller has a bug that status bit
+> of LPC IRQ sometimes doesn't get set correctly.
+>
+> So we can always blame LPC IRQ when spurious interrupt happens
+> at the parent interrupt line which LPC IRQ supposed to route
+> to.
+>
+> Co-developed-by: Huacai Chen <chenhc@lemote.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  drivers/irqchip/irq-loongson-liointc.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+> index 8b6d7b8ddaca..d5054e90eab8 100644
+> --- a/drivers/irqchip/irq-loongson-liointc.c
+> +++ b/drivers/irqchip/irq-loongson-liointc.c
+> @@ -32,6 +32,8 @@
+>
+>  #define LIOINTC_SHIFT_INTx     4
+>
+> +#define LIOINTC_ERRATA_IRQ     10
+> +
+>  struct liointc_handler_data {
+>         struct liointc_priv     *priv;
+>         u32                     parent_int_map;
+> @@ -41,6 +43,7 @@ struct liointc_priv {
+>         struct irq_chip_generic         *gc;
+>         struct liointc_handler_data     handler[LIOINTC_NUM_PARENT];
+>         u8                              map_cache[LIOINTC_CHIP_IRQ];
+> +       bool                            have_lpc_irq_errata;
+Maybe has_lpc_irq_errata?
+
+>  };
+>
+>  static void liointc_chained_handle_irq(struct irq_desc *desc)
+> @@ -54,8 +57,14 @@ static void liointc_chained_handle_irq(struct irq_desc *desc)
+>
+>         pending = readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
+>
+> -       if (!pending)
+> -               spurious_interrupt();
+> +       if (!pending) {
+> +               /* Always blame LPC IRQ if we have that bug and LPC IRQ is enabled */
+> +               if (handler->priv->have_lpc_irq_errata &&
+> +                       (handler->parent_int_map & ~gc->mask_cache & BIT(LIOINTC_ERRATA_IRQ)))
+> +                       pending = BIT(LIOINTC_ERRATA_IRQ);
+> +               else
+> +                       spurious_interrupt();
+> +       }
+>
+>         while (pending) {
+>                 int bit = __ffs(pending);
+> @@ -164,6 +173,9 @@ int __init liointc_of_init(struct device_node *node,
+>                 goto out_iounmap;
+>         }
+>
+> +       if (of_device_is_compatible(node, "loongson,liointc-1.0"))
+> +               priv->have_lpc_irq_errata = true;
+> +
+>         sz = of_property_read_variable_u32_array(node, "loongson,parent_int_map",
+>                                                 &of_parent_int_map[0], LIOINTC_NUM_PARENT,
+>                                                 LIOINTC_NUM_PARENT);
+> --
+> 2.26.0.rc2
+>
+>
+
+Regards,
+Huacai Chen
