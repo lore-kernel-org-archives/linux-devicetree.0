@@ -2,126 +2,114 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E55C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 01:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A75CC54FCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 437D22073E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 01:59:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="BkZ9AsjD"
+	by mail.kernel.org (Postfix) with ESMTP id 42AE82073E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 02:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585101812;
+	bh=a5sLoUg3Aive4Nmani892KB5AR+S11H+jgOesQ0f2Jk=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=jlU5G+JELyGrWNhVrVS0TQw6QDssh1iTSktC63JdVbbp+VAgVFZxVpd2c9lGF3m8V
+	 OK4m26uXM5sIofPKVqW8N3DzREBhvS0dl0pqzAr/HmgeTbs14gpK2/6rWSYM3WuIsG
+	 EoQ9DiPxPzUcz5lgScCWN1sE/ci7tALUggSTt64M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgCYB72 (ORCPT
+        id S1727253AbgCYCD3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 21:59:28 -0400
-Received: from ozlabs.org ([203.11.71.1]:34371 "EHLO ozlabs.org"
+        Tue, 24 Mar 2020 22:03:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727189AbgCYB72 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Mar 2020 21:59:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727228AbgCYCD3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Mar 2020 22:03:29 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nBBP1jKDz9sQt;
-        Wed, 25 Mar 2020 12:59:23 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1585101566;
-        bh=DbtFmqRT8V9GpajJ1kFCBoHEqZgLl/5/UANC/xKI3s0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=BkZ9AsjDqXY8v+ztK0YKORVmsZMcDINt9MZK0b/uxGLYdi9Coy+Bz+Ubi9x6rHiS4
-         YociJuOWuZmr41ZDgMWphIS2vP/JI2F4YWmAsGsE5KcLrK5EWamNPzxi3jg3eyhcP5
-         u4jS63ly4k/YU6faqB/XVJa9grwHX7l/mWZnnJkiDnlSoflH9NC3Y0tHf7CohJZ74m
-         nXrO5b8UBQg/7OPLaglOpfYQzhKQ7rVnA93tTMu9l0WywejpwoV/c2gnW/xB/G9P9S
-         jIXwkxXK+iaAlt3BJSj/IhLVWlmPWHeCLnalZ7f/MVJCXg2o2SMfqUPCdPGa85QI4u
-         QKJOerRLbJeag==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        robh+dt@kernel.org, mark.rutland@arm.com, paulus@samba.org,
-        benh@kernel.crashing.org
-Cc:     Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH] powerpc/fsl: Add cache properties for T2080/T2081
-In-Reply-To: <20200324213612.31614-1-chris.packham@alliedtelesis.co.nz>
-References: <20200324213612.31614-1-chris.packham@alliedtelesis.co.nz>
-Date:   Wed, 25 Mar 2020 12:59:28 +1100
-Message-ID: <877dz9xkhr.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id B06ED2072E;
+        Wed, 25 Mar 2020 02:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585101808;
+        bh=a5sLoUg3Aive4Nmani892KB5AR+S11H+jgOesQ0f2Jk=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=nXqYsA8gR4DGM8yJWM6Tcz5upFPlsg1rzKbvVHANs47RRcIIYvlNMeu8Jsfa9aWnD
+         H/GmgmUB/wJAzvWH++8eV5VxNo/lJOsMQn7ZYb8gQaJqhRXN1jHgzDSTZnmPzgd8Nn
+         nrLzr6CbX5YL94XD22HqWI795y2f7OzhXrSK0aic=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAAfSe-sQnZLn8J7Ct5OES=2PmT-nGT-_0zXxRaO=mcHVtgTcnQ@mail.gmail.com>
+References: <20200304072730.9193-1-zhang.lyra@gmail.com> <20200304072730.9193-4-zhang.lyra@gmail.com> <158475317083.125146.1467485980949213245@swboyd.mtv.corp.google.com> <CAAfSe-sQnZLn8J7Ct5OES=2PmT-nGT-_0zXxRaO=mcHVtgTcnQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/7] dt-bindings: clk: sprd: add bindings for sc9863a clock controller
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Tue, 24 Mar 2020 19:03:27 -0700
+Message-ID: <158510180797.125146.1966913179385526344@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Chris Packham <chris.packham@alliedtelesis.co.nz> writes:
-> Add the d-cache/i-cache properties for the T208x SoCs. The L1 cache on
-> these SoCs is 32KiB and is split into 64 byte blocks (lines).
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->  arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+Quoting Chunyan Zhang (2020-03-22 04:00:39)
+> Hi Stephen,
+>=20
+> On Sat, 21 Mar 2020 at 09:12, Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Chunyan Zhang (2020-03-03 23:27:26)
+> > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > >
+> > > add a new bindings to describe sc9863a clock compatible string.
+> > >
+> > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > [...]
+> > > +examples:
+> > > +  - |
+> > > +    ap_clk: clock-controller@21500000 {
+> > > +      compatible =3D "sprd,sc9863a-ap-clk";
+> > > +      reg =3D <0 0x21500000 0 0x1000>;
+> > > +      clocks =3D <&ext_26m>, <&ext_32k>;
+> > > +      clock-names =3D "ext-26m", "ext-32k";
+> > > +      #clock-cells =3D <1>;
+> > > +    };
+> > > +
+> > > +  - |
+> > > +    soc {
+> > > +      #address-cells =3D <2>;
+> > > +      #size-cells =3D <2>;
+> > > +
+> > > +      ap_ahb_regs: syscon@20e00000 {
+> > > +        compatible =3D "sprd,sc9863a-glbregs", "syscon", "simple-mfd=
+";
+> > > +        reg =3D <0 0x20e00000 0 0x4000>;
+> > > +        #address-cells =3D <1>;
+> > > +        #size-cells =3D <1>;
+> > > +        ranges =3D <0 0 0x20e00000 0x4000>;
+> > > +
+> > > +        apahb_gate: apahb-gate@0 {
+> >
+> > Why do we need a node per "clk type" in the simple-mfd syscon? Can't we
+> > register clks from the driver that matches the parent node and have that
+> > driver know what sorts of clks are where? Sorry I haven't read the rest
+> > of the patch series and I'm not aware if this came up before. If so,
+> > please put details about this in the commit text.
+>=20
+> Please see the change logs after v2 in cover-letter.
+>=20
+> Rob suggested us to put some clocks under syscon nodes, since these
+> clocks have the same
+> physical address base with the syscon;
 
-LGTM.
-
-I'll wait a few days to see if Scott wants to ack it.
-
-cheers
-
-
-> diff --git a/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi b/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
-> index 3f745de44284..2ad27e16ac16 100644
-> --- a/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
-> @@ -81,6 +81,10 @@ cpus {
->  		cpu0: PowerPC,e6500@0 {
->  			device_type = "cpu";
->  			reg = <0 1>;
-> +			d-cache-line-size = <64>;
-> +			i-cache-line-size = <64>;
-> +			d-cache-size = <32768>;
-> +			i-cache-size = <32768>;
->  			clocks = <&clockgen 1 0>;
->  			next-level-cache = <&L2_1>;
->  			fsl,portid-mapping = <0x80000000>;
-> @@ -88,6 +92,10 @@ cpu0: PowerPC,e6500@0 {
->  		cpu1: PowerPC,e6500@2 {
->  			device_type = "cpu";
->  			reg = <2 3>;
-> +			d-cache-line-size = <64>;
-> +			i-cache-line-size = <64>;
-> +			d-cache-size = <32768>;
-> +			i-cache-size = <32768>;
->  			clocks = <&clockgen 1 0>;
->  			next-level-cache = <&L2_1>;
->  			fsl,portid-mapping = <0x80000000>;
-> @@ -95,6 +103,10 @@ cpu1: PowerPC,e6500@2 {
->  		cpu2: PowerPC,e6500@4 {
->  			device_type = "cpu";
->  			reg = <4 5>;
-> +			d-cache-line-size = <64>;
-> +			i-cache-line-size = <64>;
-> +			d-cache-size = <32768>;
-> +			i-cache-size = <32768>;
->  			clocks = <&clockgen 1 0>;
->  			next-level-cache = <&L2_1>;
->  			fsl,portid-mapping = <0x80000000>;
-> @@ -102,6 +114,10 @@ cpu2: PowerPC,e6500@4 {
->  		cpu3: PowerPC,e6500@6 {
->  			device_type = "cpu";
->  			reg = <6 7>;
-> +			d-cache-line-size = <64>;
-> +			i-cache-line-size = <64>;
-> +			d-cache-size = <32768>;
-> +			i-cache-size = <32768>;
->  			clocks = <&clockgen 1 0>;
->  			next-level-cache = <&L2_1>;
->  			fsl,portid-mapping = <0x80000000>;
-> -- 
-> 2.25.1
+Ok. I'll apply the series to clk-next then.
