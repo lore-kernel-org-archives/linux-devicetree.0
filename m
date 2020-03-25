@@ -2,125 +2,97 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF30AC1975A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 12:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970CCC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 12:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E39A2078E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 12:50:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="VWDVw0jl"
+	by mail.kernel.org (Postfix) with ESMTP id 73BF32078A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 12:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgCYMuu (ORCPT
+        id S1727313AbgCYM6F (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:50:50 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17851 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726820AbgCYMuu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:50:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585140544;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=vqy9KgzyVYxmnrqFQc0i1Zu/TD9bYgtnU+TgEsbMRRo=;
-        b=VWDVw0jlewF6cYs4orJtnyyrFP4lXEoBwc3qWxgWugL6Qbe5rnNu8cQYlvTuA4Zs
-        GIStJDBaX9M0K3uYMcklLmRX8voyqvSfdxxSmwBsIWhTsTS9QXzABA4xO2dslNYWMvu
-        Jtk1j1/vyJijL2Sv/5B5q8zNdjNl5Pum0UfJ3N88=
-Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
-        with SMTPS id 1585140543288901.7885813665146; Wed, 25 Mar 2020 20:49:03 +0800 (CST)
-Date:   Wed, 25 Mar 2020 20:48:55 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200325123742.GA9911@alpha.franken.de>
-References: <20200325035537.156911-1-jiaxun.yang@flygoat.com> <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de>
+        Wed, 25 Mar 2020 08:58:05 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33135 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727298AbgCYM6F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 08:58:05 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 22so1811518otf.0;
+        Wed, 25 Mar 2020 05:58:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NZVt+NwwY0gDhq0kAajr/kEyB1TX6Ts1GTxN6FWpqYs=;
+        b=ScG2iSCndSjDX9cSwJzejn8aQ2bkP5IC+wxDy18ZAK2zTnCCdoEznNbi8DWL+iZhTB
+         IwDhdJ9+IP9Gy8aJwpq1XBC+7BBSBHG2jotVfoBbN5+iG4nkEbp1T6nC7upYKVvzkA9X
+         ttutcPjI4J7T7+XiBLtNchCU4XmZKOe+zKGMuNW59EKPaNlkBw3sHwZORJcqd50yVqLk
+         SMd2fzTWoNH8B0Hwj+jG+bOo1LnP1hEPdNHQySj0qEDPcuJbWyg/bgj/RIpHJXLD7qnX
+         DgoLH0yYBzYYG2zJ0ZySkjjCADbg3+coxKg6WOtUPcEdSV4yJ16IWweWHEft9TzVtLwB
+         PZhw==
+X-Gm-Message-State: ANhLgQ1z5NP4kNtm3FaJx1qLM1ZFFfmhFQW8i2e7W1aRqcUkWh/iIcdc
+        VexaRlqap31IlAXfPG+igl4kfQJoMjpPHbIaI1c2gPVf
+X-Google-Smtp-Source: ADFU+vtwED7M9Uto3cr43QiuLpBVfPOkL/EsUkYuzOFsEqfWKQULpOeGXJQtO3kMiGxnVJTTo8NX1+BPCCgnNMBZg3o=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr2317567otk.250.1585141085101;
+ Wed, 25 Mar 2020 05:58:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+References: <1585117006-8266-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1585117006-8266-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1585117006-8266-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 25 Mar 2020 13:57:53 +0100
+Message-ID: <CAMuHMdXxbzR=boveEoynjFwV8=KSkOzCTdQVmtN4Hh6PVMj-Bg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: usb: usb-xhci: add r8a77961 support
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <DC9062E8-42E3-4139-99F9-157DEAF5DB7B@flygoat.com>
-X-ZohoCNMailClient: External
+        USB list <linux-usb@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Shimoda-san,
 
-
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888=
-:37:42, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=
-=B0:
->On Wed, Mar 25, 2020 at 11:54:59AM +0800, Jiaxun Yang wrote:
->> The old code is using legacy domain to setup irq_domain for CPU
->interrupts
->> which requires irq_desc to be preallocated=2E
->>=20
->> However, when MIPS_CPU_IRQ_BASE >=3D 16, irq_desc for CPU IRQs may end
->up
->> unallocated and lead to incorrect behavior=2E
->>=20
->> Thus we convert the legacy domain to simple domain which can allocate
->> irq_desc during initialization=2E
->>=20
->> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> Co-developed-by: Huacai Chen <chenhc@lemote=2Ecom>
->> Signed-off-by: Huacai Chen <chenhc@lemote=2Ecom>
->> Reviewed-by: Marc Zyngier <maz@kernel=2Eorg>
->> ---
->>  drivers/irqchip/irq-mips-cpu=2Ec | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/irqchip/irq-mips-cpu=2Ec
->b/drivers/irqchip/irq-mips-cpu=2Ec
->> index 95d4fd8f7a96=2E=2Ec3cf7fa76424 100644
->> --- a/drivers/irqchip/irq-mips-cpu=2Ec
->> +++ b/drivers/irqchip/irq-mips-cpu=2Ec
->> @@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct
->device_node *of_node)
->>  	clear_c0_status(ST0_IM);
->>  	clear_c0_cause(CAUSEF_IP);
->> =20
->> -	irq_domain =3D irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE,
->0,
->> +	irq_domain =3D irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
->>  					   &mips_cpu_intc_irq_domain_ops,
->>  					   NULL);
+On Wed, Mar 25, 2020 at 7:17 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This patch adds support for r8a77961 (R-Car M3-W+).
 >
->this breaks at least IP30 and guess it will break every platform where
->MIPS_CPU_IRQ_BASE =3D=3D 0=2E add_legacy will always do
->irq_domain_associate_many(),
->while add_simple doesn't do it, if first_irq =3D=3D 0=2E
->
->Marc, what is the reason not doing it all the time ? What's the correct
->way here to work with irq_domain_add_simple() in this case ?
-=20
-I guess there is a inconsistent about whether IRQ 0 is a valid IRQ=2E
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-In many places we consider IRQ 0 is invalid but here it should be valid=2E
+Thanks for your patch!
 
-Thanks=2E
+> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> @@ -17,6 +17,7 @@ Required properties:
+>      - "renesas,xhci-r8a7793" for r8a7793 SoC
+>      - "renesas,xhci-r8a7795" for r8a7795 SoC
+>      - "renesas,xhci-r8a7796" for r8a7796 SoC
 
+While at it, you may want to update "r8a7796 SoC" to "r8a77960 SoC", to
+avoid confusion between R-Car M3-W (R8A77960) and M3-W+ (R8A77961).
 
->
->Thomas=2E
+> +    - "renesas,xhci-r8a77961" for r8a77961 SoC
+>      - "renesas,xhci-r8a77965" for r8a77965 SoC
+>      - "renesas,xhci-r8a77990" for r8a77990 SoC
+>      - "renesas,rcar-gen2-xhci" for a generic R-Car Gen2 or RZ/G1 compatible
 
---=20
-Jiaxun Yang
+With that fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
