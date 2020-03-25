@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E09CC54FCF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6818C54FD0
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB27020772
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE50820409
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWx3uxsI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsqRu3Vf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgCYPYJ (ORCPT
+        id S1727491AbgCYP2b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:24:09 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33557 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgCYPYJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 11:24:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w25so2383185wmi.0;
-        Wed, 25 Mar 2020 08:24:07 -0700 (PDT)
+        Wed, 25 Mar 2020 11:28:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40581 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbgCYP2b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 11:28:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id u10so3646333wro.7;
+        Wed, 25 Mar 2020 08:28:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZMzufbtndIxfQmBLHm23V9WfnXjvY8mO2yqPIZB5gDU=;
-        b=BWx3uxsIk3pmb2jYX66+b2iKsIcsASs+LIcGSs6TBhRMhO4d47dl5rADijn3UGRvhG
-         8SbW3uZcnKsVSII2ZWj3H0gpUbkVkXH5erKpe37NtGfwZgfStOHNHEfhnGACSkzQgyEz
-         +B0zcyCDoE2S2hxXdvLrgOFeE5LRidNP56uniTd4uImISpjt/58IUPOpu/uh6ENksJQg
-         Tl0ndJnxVQbDI4e1ab/e0zr7Y5Bx/dnfRn2UXDSjAbFh3DI1nmLWOsMA4t+ulkynzqRK
-         JR5qnSmRrbE+4C++d7xOu4FP/98FEZ3n24yXMUfIQFf+bL407buCybsBVsB33auHrnMn
-         jiHw==
+        bh=+TuwiFh6ptZG2bbIYvP+HL4r312J6Ae1r0580dUYeiw=;
+        b=SsqRu3VfcjXQUd9sQY1p9+YtlAipWWtLkXyxyN+z5kEmeY6VzKak39ao6cznTfg2NT
+         JGvYzxeRy82Skqt0L0EeJ7KyEtEAJa4GelLcPLwZBSfUIxv8GEsZ8y71GTFSz+6JYZc0
+         mbPMZscQZSFuAK4K9ov0Cg0S3QfQrec8EP2g8u26qflS20jrXCrfd10JfFWdIktqPBow
+         bq8CuQtwRSDDab3bGWNndTVDVDFa41Rzh0N2INsWTeH4TJh/LawHbmORV9q4nKu1eEOk
+         b1JumXhAYajXIY5ZDjfQy/g+N96lmcjadnjE07w4JCA++a0mStooP3PiMSZwDRR9yyLX
+         F4Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ZMzufbtndIxfQmBLHm23V9WfnXjvY8mO2yqPIZB5gDU=;
-        b=q3e7scXMd05fIngk1zLlrX1u5BJ4yJBrnLfZkAhOvdMsGcBelohGZuv/UGp+BhKwy4
-         ENcCIXQ1ZSm+vo114BWA7OIR7WyOolK85q4+Udy2555H8s62QSKfCSdFp+eHLzIZStTm
-         dF3M73MnotW0XInKVvWH57T+6HugUnGdeqkC2sEMX0g3+Svus31XkWsxyW/dKvKwUJv5
-         fNFcT/ZADaeYZLF3awsefIqiKAHIvhpuvdAVM71i9HjMHXxaxrsKOSbSo1mC4n/wC+0N
-         iK1y+vOEB1j3CPPRpOvFRY3/t6gH1VNyiwJKeDLoXdCOJ9/tvdRspUb1jeP6ajLH50+W
-         +fKA==
-X-Gm-Message-State: ANhLgQ1BbprszxZjM/uomUZFfryR7UZWAPMwRiVI55+ioxs5w2v0zIBs
-        PC7PLn2j62P+9udQjilCf24=
-X-Google-Smtp-Source: ADFU+vsWlzfyvxWYK0fqQ9xx/KR19mVEHdF1RmHNZrFAbD14EJSxOKx23xH5kcAD+ENM2oOknweSgw==
-X-Received: by 2002:a1c:4d7:: with SMTP id 206mr3847830wme.5.1585149847168;
-        Wed, 25 Mar 2020 08:24:07 -0700 (PDT)
+        bh=+TuwiFh6ptZG2bbIYvP+HL4r312J6Ae1r0580dUYeiw=;
+        b=S8QAMXCC7Yl3HIHqDRuoejOOR5Hqmvq+gBoIpZAa8772X9XvwohY+a7No3UDouL/9p
+         LfdiBehuW/oAQMWTiZyFIMhQeY46PVG350oS2H2/NT88I5gqRwmTV0/V/0RkIAeepkZ9
+         /FHh6c6pT36mqUjRFPqZ49f6PF6L5yzf3n5Yqpw+ony3bgcLCfQ5Q49pOu7vFTiRYzTH
+         VufRC3BsG4Da6vioSDe//UB1dwwG8kGwHrt2mT6y0fXM+KtCX4D0llPvVt3DJOWBvNLi
+         5YcHCSFZBhUocEXnW4W/qxddpNHTc8HOgeikFp106/vrYGkW8XGGdpJrW9Fl8eWLSMiU
+         88ug==
+X-Gm-Message-State: ANhLgQ3BiEHFQwFCCiekpErRGmFCh2Hg5lPO5ktnRAjcnZz8p202clLU
+        7HpG0d1Q/b/aZ1xkJYNY5tY=
+X-Google-Smtp-Source: ADFU+vv2WmXZviwL1prI7g4XxxAMgN1uOZn5i5kh4PmLtj27KlvZBV9mmlfSXaQ1afOTdfZN0W2zpA==
+X-Received: by 2002:adf:fdc6:: with SMTP id i6mr4134003wrs.252.1585150108315;
+        Wed, 25 Mar 2020 08:28:28 -0700 (PDT)
 Received: from ?IPv6:2003:ea:8f29:6000:f4a0:1b38:2faf:56e9? (p200300EA8F296000F4A01B382FAF56E9.dip0.t-ipconnect.de. [2003:ea:8f29:6000:f4a0:1b38:2faf:56e9])
-        by smtp.googlemail.com with ESMTPSA id o16sm35397700wrs.44.2020.03.25.08.24.06
+        by smtp.googlemail.com with ESMTPSA id b6sm18851817wrp.59.2020.03.25.08.28.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 08:24:06 -0700 (PDT)
+        Wed, 25 Mar 2020 08:28:27 -0700 (PDT)
 Subject: Re: [PATCH 1/2] net: phy: micrel.c: add rgmii interface delay
  possibility to ksz9131
 To:     Philippe Schenker <philippe.schenker@toradex.com>, andrew@lunn.ch,
@@ -69,8 +69,8 @@ Cc:     o.rempel@pengutronix.de, linux-kernel@vger.kernel.org,
         a.fatoum@pengutronix.de, "David S. Miller" <davem@davemloft.net>
 References: <20200325150329.228329-1-philippe.schenker@toradex.com>
 From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <d1067087-2cb8-f7c7-7929-2c4c9d2a4cb3@gmail.com>
-Date:   Wed, 25 Mar 2020 16:24:00 +0100
+Message-ID: <7948ffaa-e530-f82e-0f58-39fa7e8f082f@gmail.com>
+Date:   Wed, 25 Mar 2020 16:28:24 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
@@ -120,9 +120,6 @@ On 25.03.2020 16:03, Philippe Schenker wrote:
 > +	int ret;
 > +	u16 rxcdll_val, txcdll_val;
 > +
-
-Reverse xmas tree order please.
-
 > +	switch (phydev->interface) {
 > +	case PHY_INTERFACE_MODE_RGMII:
 > +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
@@ -145,18 +142,19 @@ Reverse xmas tree order please.
 > +	}
 > +
 > +	ret = phy_modify_mmd_changed(phydev, 2, KSZ9131RN_RXC_DLL_CTRL,
+
+Using a constant for the device address would be good.
+
+Last but not least your patch misses the net-next annotation
+(except you consider it a fix, then the net annotation and
+a Fixes tag would be needed).
+
 > +				     KSZ9131RN_DLL_CTRL_BYPASS, rxcdll_val);
 > +	if (ret < 0)
 > +		return ret;
 > +
 > +	return phy_modify_mmd_changed(phydev, 2, KSZ9131RN_TXC_DLL_CTRL,
 > +				     KSZ9131RN_DLL_CTRL_BYPASS, txcdll_val);
-
-phy_modify_mmd_changed() returns 1 if the register value was changed,
-and that's not what you want here. Simply use phy_modify_mmd() in both
-occurrences. And your function has a return value, but it's not used by
-the caller.
-
 > +}
 > +
 >  static int ksz9131_config_init(struct phy_device *phydev)
