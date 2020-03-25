@@ -2,148 +2,153 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE597C54FD3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 13:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C79C54FD5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 13:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCD120772
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 13:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1E82077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 13:09:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="NeBLHqiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbgCYNHM (ORCPT
+        id S1727129AbgCYNJR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:07:12 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:12000 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727553AbgCYNHM (ORCPT
+        Wed, 25 Mar 2020 09:09:17 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17812 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727046AbgCYNJQ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:07:12 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PD3IMW009232;
-        Wed, 25 Mar 2020 09:06:49 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs65mm4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Mar 2020 09:06:49 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02PD6mq7044118
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 25 Mar 2020 09:06:48 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 25 Mar 2020 09:06:47 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 25 Mar 2020 09:06:46 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 25 Mar 2020 09:06:46 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02PD6fxR027890;
-        Wed, 25 Mar 2020 09:06:44 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v2 2/2] dt-bindings: hwmon: Add bindings for ADM1266
-Date:   Wed, 25 Mar 2020 15:06:05 +0200
-Message-ID: <20200325130605.2420-3-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200325130605.2420-1-alexandru.tachici@analog.com>
-References: <20200325130605.2420-1-alexandru.tachici@analog.com>
+        Wed, 25 Mar 2020 09:09:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585141636;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=iuTIotTHRiD5t5xclM0klY4anxFqXzV0is5UKGCU0Kk=;
+        b=NeBLHqiI7qV0woiMnt3N1Yutj8NPaQCpNhLh+5yayjbVibXolp1EhBbIzZ/7q89n
+        mI53omrN4/iEoE+rBQqldx8ic9iLIurLQU/CE2WYC9RdvvnwteOvoOYxuPqFXj/RMtQ
+        Dia88FCxHspMUvKRM1RCRWXdl2Q5vANqogbdGlMM=
+Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
+        with SMTPS id 1585141633736867.4293564995277; Wed, 25 Mar 2020 21:07:13 +0800 (CST)
+Date:   Wed, 25 Mar 2020 21:07:04 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <a69f727d37daac6e20ac08de022245b1@kernel.org>
+References: <20200325035537.156911-1-jiaxun.yang@flygoat.com> <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de> <a69f727d37daac6e20ac08de022245b1@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-25_05:2020-03-24,2020-03-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003250109
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-Add bindings for the Analog Devices ADM1266 sequencer.
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- .../bindings/hwmon/adi,adm1266.yaml           | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=889=
+:00:01, Marc Zyngier <maz@kernel=2Eorg> =E5=86=99=E5=88=B0:
+>On 2020-03-25 12:37, Thomas Bogendoerfer wrote:
+>> On Wed, Mar 25, 2020 at 11:54:59AM +0800, Jiaxun Yang wrote:
+>>> The old code is using legacy domain to setup irq_domain for CPU=20
+>>> interrupts
+>>> which requires irq_desc to be preallocated=2E
+>>>=20
+>>> However, when MIPS_CPU_IRQ_BASE >=3D 16, irq_desc for CPU IRQs may end
+>
+>>> up
+>>> unallocated and lead to incorrect behavior=2E
+>>>=20
+>>> Thus we convert the legacy domain to simple domain which can
+>allocate
+>>> irq_desc during initialization=2E
+>>>=20
+>>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>>> Co-developed-by: Huacai Chen <chenhc@lemote=2Ecom>
+>>> Signed-off-by: Huacai Chen <chenhc@lemote=2Ecom>
+>>> Reviewed-by: Marc Zyngier <maz@kernel=2Eorg>
+>>> ---
+>>>  drivers/irqchip/irq-mips-cpu=2Ec | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>=20
+>>> diff --git a/drivers/irqchip/irq-mips-cpu=2Ec=20
+>>> b/drivers/irqchip/irq-mips-cpu=2Ec
+>>> index 95d4fd8f7a96=2E=2Ec3cf7fa76424 100644
+>>> --- a/drivers/irqchip/irq-mips-cpu=2Ec
+>>> +++ b/drivers/irqchip/irq-mips-cpu=2Ec
+>>> @@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct=20
+>>> device_node *of_node)
+>>>  	clear_c0_status(ST0_IM);
+>>>  	clear_c0_cause(CAUSEF_IP);
+>>>=20
+>>> -	irq_domain =3D irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE,
+>0,
+>>> +	irq_domain =3D irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
+>>>  					   &mips_cpu_intc_irq_domain_ops,
+>>>  					   NULL);
+>>=20
+>> this breaks at least IP30 and guess it will break every platform
+>where
+>> MIPS_CPU_IRQ_BASE =3D=3D 0=2E add_legacy will always do=20
+>> irq_domain_associate_many(),
+>> while add_simple doesn't do it, if first_irq =3D=3D 0=2E
+>>=20
+>> Marc, what is the reason not doing it all the time ? What's the
+>correct
+>> way here to work with irq_domain_add_simple() in this case ?
+>
+>On a fully DT-ified platform, using non-legacy irqdomains, virtual=20
+>interrupts
+>are allocated as a "random" number, depending on the order of=20
+>allocation,
+>and on demand=2E
+>
+>The first_irq hack in irq_domain_add_simple() is just a way to still=20
+>allocate
+>descriptors upfront (and I wish we could drop it=2E=2E=2E)=2E
+>
+>If you have legacy code that "knows" about the relationship between=20
+>Linux's
+>virtual interrupt and the hwirq (that is only meaningful to the=20
+>interrupt
+>controller), you're screwed, and need to stick to the legacy irqdomain=2E
+>
+>It feels like the MIPS code is squarely in the latter case, so I guess=20
+>this
+>patch is probably the wrong thing to do for this architecture=2E
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-new file mode 100644
-index 000000000000..157ec15ccfe1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/adi,adm1266.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADM1266 Cascadable Super Sequencer with Margin
-+  Control and Fault Recording
-+
-+maintainers:
-+  - Alexandru Tachici <alexandru.tachici@analog.com>
-+
-+description: |
-+  Analog Devices ADM1266 Cascadable Super Sequencer with Margin
-+  Control and Fault Recording.
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adm1266
-+
-+  reg:
-+    description: |
-+      I2C address of slave device.
-+    items:
-+      minimum: 0x40
-+      maximum: 0x4F
-+
-+  avcc-supply:
-+    description:
-+      Phandle to the Avcc power supply.
-+
-+  adi,connected-adm1266:
-+    description: |
-+      Represents other ADM1266 devices cascaded through the IDB. Can be
-+      cascaded with maximum 15 other adm1266s.
-+    $ref: "/schemas/types.yaml#/definitions/phandle"
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        adm1266@40 {
-+                compatible = "adi,adm1266";
-+                reg = <0x40>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+        };
-+    };
-+...
--- 
-2.20.1
+So probably we can use legacy domain when  MIPS IRQ BASE is in the range o=
+f legacy IRQ
+and switch to simple domain when it's not in that range?
 
+Here in Loongson systems IRQ 0-15 is occupied by I8259 so I did this hack=
+=2E
+
+Thanks=2E
+
+>
+>Thanks,
+>
+>         M=2E
+=20
+--=20
+Jiaxun Yang
