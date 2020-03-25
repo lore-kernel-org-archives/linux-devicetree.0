@@ -2,71 +2,69 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54A2C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0B1C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE46206F6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:11:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZqnvWDSr"
+	by mail.kernel.org (Postfix) with ESMTP id 576BC2077D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 10:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCYKLd (ORCPT
+        id S1726206AbgCYKVS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:11:33 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:54658 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgCYKLc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 06:11:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yV/yZP4Ds9lzjdf9Qgb31R1wrp8j5EQ/N+9DmWJ+ZOc=; b=ZqnvWDSriXdZUZ32jFaszejeV
-        xzr9I5/j9jWPmXfVjLh3uqfGy8CKLlpmtvr59qnOhyKe/gGhNVJLTW3iS5YkCfLjVGC/tocHedQ7U
-        LXpTB8GtaDeoDKbL0dYyG04XGizNBQggCbz7IlODgJDX0GsQrgXvX42yqej5EwtI5JY20wyaJr0LZ
-        QEFVzHE6wphwjfCrbaNOMlbhbCDHyqJiT05m7/MDnOoSeYGA76nFJAlYZ5R9OrmR/fHLvoB4RRDCs
-        JLG1CHWJeP5TtuF+S45tn3FVz3omKZr0CUQDZ55RJRQZOfMyAklUX5vevyfn5OHko1SjAMay9wLtd
-        qKYiJyRUw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41132)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jH30H-00055p-Ml; Wed, 25 Mar 2020 10:11:17 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jH30C-00029w-2B; Wed, 25 Mar 2020 10:11:12 +0000
-Date:   Wed, 25 Mar 2020 10:11:12 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     David Miller <davem@davemloft.net>, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, mark.rutland@arm.com,
-        robh+dt@kernel.org, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        marex@denx.de, david@protonic.nl, devicetree@vger.kernel.org,
-        olteanv@gmail.com
+        Wed, 25 Mar 2020 06:21:18 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:33664 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgCYKVS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 06:21:18 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48nPKQ3GY0z1qy4M;
+        Wed, 25 Mar 2020 11:21:14 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48nPKQ1HrGz1qqkK;
+        Wed, 25 Mar 2020 11:21:14 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id c9fCxwBNxHKC; Wed, 25 Mar 2020 11:21:10 +0100 (CET)
+X-Auth-Info: Jk8AWD3vuXK/N+e+qyBjxYOdVRAvzUbptF9rayGrzfo=
+Received: from [127.0.0.1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed, 25 Mar 2020 11:21:10 +0100 (CET)
 Subject: Re: user space interface for configuring T1 PHY management mode
  (master/slave)
-Message-ID: <20200325101111.GZ25745@shell.armlinux.org.uk>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        David Miller <davem@davemloft.net>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        david@protonic.nl, devicetree@vger.kernel.org,
+        linux@armlinux.org.uk, olteanv@gmail.com
 References: <20200325083449.GA8404@pengutronix.de>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <e2a1877c-1cb2-e047-38e0-e3b41d941b33@denx.de>
+Date:   Wed, 25 Mar 2020 11:21:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20200325083449.GA8404@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 09:34:49AM +0100, Oleksij Rempel wrote:
+On 3/25/20 9:34 AM, Oleksij Rempel wrote:
 > Hi all,
-> 
+
+Hi,
+
 > I'm working on mainlining of NXP1102 PHY (BroadR Reach/802.3bw) support.
 > 
 > Basic functionality is working and support with mainline kernel. Now it is time
@@ -84,35 +82,7 @@ On Wed, Mar 25, 2020 at 09:34:49AM +0100, Oleksij Rempel wrote:
 > until a management system (for example, processor/microcontroller) configures
 > it to be MASTER. MASTER-SLAVE assignment for each link configuration is
 > necessary for establishing the timing control of each PHY.
-> 
-> 6.2 PHY-Initialization
-> 
-> Both PHYs sharing a link segment are capable of being MASTER or SLAVE. In IEEE
-> 802.3-2012, MASTER-SLAVE resolution is attained during the Auto-Negotiation
-> process (see IEEE 802.3-2012 Clause 28). However, the latency for this process
-> is not acceptable for automotive application. A forced assignment scheme is
-> employed depending on the physical deployment of the PHY within the car. This
-> process is conducted at the power-up or reset condition. The station management
-> system manually configures the BroadR-Reach PHY to be MASTER (before the link
-> acquisition process starts) while the link partner defaults to SLAVE
-> (un-managed).
-> --------------------------------------------------------------------------------
-> 
-> Should phylink be involved in this configuration? What's the proper user
-> space interface to use for this kind of configuration?  ethtool or ip
-> comes into mind. Further having a Device Tree property to configure a
-> default mode to overwrite the boot strap pins would be nice to have.
 
-Well, the first question would be whether this is something that
-userspace needs to alter, or whether static configuration at boot
-time is what is necessary.
-
-Given what is in the description, it seems that the concern is with
-the latency it takes for the link to come up. I would suggest that
-the lowest latency would be achieved when using static configuration
-rather than waiting for the kernel to fully boot and userspace to
-start before configuring the PHY.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Thanks for reminding me of this. I sent out
+https://patchwork.ozlabs.org/project/netdev/list/?series=166575
+maybe it helps.
