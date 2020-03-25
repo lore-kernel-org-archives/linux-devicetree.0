@@ -2,160 +2,122 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234CAC54FCF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 16:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10050C1975A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 16:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0034420409
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 16:04:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="SSYChqb1"
+	by mail.kernel.org (Postfix) with ESMTP id E5F9B20870
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 16:14:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585152853;
+	bh=wVeCzzQOe5s2fJsmGoK1DwiiQhm+yokBIBkbN7cjDrM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hfIxfBhKZQGXXnl3rM06ssZzjQB/XapmTMkQwcS7WXo1I8NWRtUJr7RfwrXVeMy2+
+	 fY3Fwz7zucdAuWVGefR2jx1URA5yttwza2Dz9XBTDrTUgAKdMZ56gyb6xKGLDJso75
+	 UuNRZdu88gD/In/U0i1FTLHntChGiLRMryY99cYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgCYQEo (ORCPT
+        id S1728138AbgCYQOJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:04:44 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17805 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725812AbgCYQEo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:04:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585152166;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=CRLfE2jz7muXeJ6qeLvUrod4IRB84jHCPnWRdiwg/sA=;
-        b=SSYChqb1m1zrASxa3+5zJjrUtMKnv9+6kTT50o212WoZGJBKE+2duup3tWenPe99
-        EGwtRDYOrgwoJ8RtPYjwvnjMdGG7AM1H2zWyeo1d9z99Rt1kbP2qdd/KPHatUNPgUy0
-        d706UjL0F/enoxNjBmfFPAbALumoy1HCfJEvY/mE=
-Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
-        with SMTPS id 1585152161181504.9058622774445; Thu, 26 Mar 2020 00:02:41 +0800 (CST)
-Date:   Thu, 26 Mar 2020 00:02:28 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200325154600.GA14923@alpha.franken.de>
-References: <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de> <a69f727d37daac6e20ac08de022245b1@kernel.org> <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com> <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org> <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com> <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org> <39CF835E-D1D9-4B52-ABDC-BDB17B650936@flygoat.com> <20200325150437.GA14217@alpha.franken.de> <777D8DAA-F462-4E8D-9012-C114DE6D56DE@flygoat.com> <20200325154600.GA14923@alpha.franken.de>
+        Wed, 25 Mar 2020 12:14:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728132AbgCYQOI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 12:14:08 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A8A420836;
+        Wed, 25 Mar 2020 16:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585152847;
+        bh=wVeCzzQOe5s2fJsmGoK1DwiiQhm+yokBIBkbN7cjDrM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Jt+Nhvu8WR2HB5LMtLsy+AMnWzMEv6EzjEMwZuYpiXU2HNY24cKyilbtS7gsEo0Dl
+         p9IVkN8+X5tLMau7Si6f2OCiMpQEloPAdwIzCLi8GV2dTWmn9EiLWMRPYI6WaHiQMJ
+         UVoXm6rL2REa+wWrMiprolfN7XJt5C+XRUsgMQ0k=
+Received: by mail-qk1-f172.google.com with SMTP id c145so3090196qke.12;
+        Wed, 25 Mar 2020 09:14:07 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3jHmTjbPypnmDthRX2himDcnnDXq5gl9x9GbZo3fj/ytAyh9yG
+        l38cgXpE0LRIPS2cK8RgwvH6TIGejh0rHJy4JQ==
+X-Google-Smtp-Source: ADFU+vtZfZlg/qTdAzpY920OXOLDt+yCqLosSPRhFxeYgvrlPS+oV459gEy5edJtvAOkVIBuySDN240c6NQffSPyDT8=
+X-Received: by 2002:a37:4a85:: with SMTP id x127mr3744966qka.152.1585152846283;
+ Wed, 25 Mar 2020 09:14:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Marc Zyngier <maz@kernel.org>, linux-mips@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20200304094220.28156-1-benjamin.gaignard@st.com>
+ <20200310211849.GA13562@bogus> <20200325092004.GF442973@dell>
+In-Reply-To: <20200325092004.GF442973@dell>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 25 Mar 2020 10:13:54 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLW-5=T0p85M9ZurywdNj_nFwj0VJyxHSJGrdzZGkQcJQ@mail.gmail.com>
+Message-ID: <CAL_JsqLW-5=T0p85M9ZurywdNj_nFwj0VJyxHSJGrdzZGkQcJQ@mail.gmail.com>
+Subject: Re: [PATCH v5] dt-bindings: mfd: Convert stpmic1 bindings to json-schema
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <8F2B64C3-A887-4D4B-ABEA-4BE3D30F4632@flygoat.com>
-X-ZohoCNMailClient: External
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Pascal PAILLET-LME <p.paillet@st.com>,
+        Linux Input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
-1:46:00, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=
-=88=B0:
->On Wed, Mar 25, 2020 at 11:09:10PM +0800, Jiaxun Yang wrote:
->>=20
->>=20
->> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=8811:04:37, Thomas Bogendoerfer
-><tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=B0:
->> >On Wed, Mar 25, 2020 at 10:31:21PM +0800, Jiaxun Yang wrote:
->> >>=20
->> >>=20
->> >> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
-=8D=8810:15:16, Marc Zyngier <maz@kernel=2Eorg>
->=E5=86=99=E5=88=B0:
->> >> >On 2020-03-25 13:59, Jiaxun Yang wrote:
->> >> >
->> >> >[=2E=2E=2E]
->> >> >
->> >> >>>> So probably we can use legacy domain when  MIPS IRQ BASE is
->in
->> >the
->> >> >>>> range of legacy IRQ
->> >> >>>> and switch to simple domain when it's not in that range?
->> >> >>>=20
->> >> >>> No, see below=2E
->> >> >>>=20
->> >> >>>> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I
->did
->> >> >this
->> >> >>>> hack=2E
->> >> >>>=20
->> >> >>> Well, if you have to consider which Linux IRQ gets assigned,
->> >> >>> then your platform is definitely not ready for non-legacy
->> >> >>> irqdomains=2E Just stick to legacy for now until you have
->removed
->> >> >>> all the code that knows the hwirq mapping=2E
->> >> >>=20
->> >> >> Thanks=2E
->> >> >>=20
->> >> >> So I have to allocate irq_desc here in driver manually?
->> >> >
->> >> >No, you are probably better off just dropping this patch, as MIPS
->> >> >doesn't seem to be ready for a wholesale switch to virtual
->> >interrupts=2E
->> >>=20
->> >> It can't work without this patch=2E
->> >>=20
->> >> Legacy domain require IRQ number within 0-15=20
->> >> however it's already occupied by i8259 or "HTPIC" driver=2E
->> >
->> >what's the problem here ? AFAIK there could be more than one
->> >legacy domain, at least that's what at least IP22/SNI in MIPS world=20
->> >are doing=2E
->>=20
->> MIPS_IRQ_BASE must be higher than 15, otherwise it will conflict with
->i8259=2E
+On Wed, Mar 25, 2020 at 3:19 AM Lee Jones <lee.jones@linaro.org> wrote:
 >
->I still don't get it=2E
+> On Tue, 10 Mar 2020, Rob Herring wrote:
 >
->We have following in arch/mips/include/asm/mach-generic/irq=2Eh:
+> > On Wed, 4 Mar 2020 10:42:20 +0100, Benjamin Gaignard wrote:
+> > > Convert stpmic1 bindings to json-schema.
+> > >
+> > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > > ---
+> > > version 5:
+> > > - move $ref regulator.yaml under a patternProperties
+> > > - move remain fixed strings under properties field
+> > >
+> > > version 4:
+> > > - move on uppder node $ref: ../regulator/regulator.yaml
+> > > - move fixed strings under properties field
+> > > - remove unneeded () in patternProperties
+> > > - keep ldo3 separate from other ldo properties
+> > > Note:
+> > > - 'st,mask-reset' property stay in each subnode, I don't find
+> > >   the syntax to avoid dupliquate it.
+> > > - ldo6-supply and all possible *-supply are describe by this regular
+> > >   expression: ^(buck[1-4]|ldo[1-6]|boost|pwr_sw[1-2])-supply$":
+> > >
+> > > version 3:
+> > > - put $ref under allOf keyword
+> > > - for each regulator node add the list of supported regulator properties
+> > >
+> > >  .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 --
+> > >  .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ----
+> > >  .../devicetree/bindings/mfd/st,stpmic1.yaml        | 339 +++++++++++++++++++++
+> > >  .../bindings/regulator/st,stpmic1-regulator.txt    |  64 ----
+> > >  .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 -
+> > >  5 files changed, 339 insertions(+), 164 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+> > >  delete mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+> > >  delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
+> > >
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
 >
->#ifndef MIPS_CPU_IRQ_BASE
->#ifdef CONFIG_I8259
->#define MIPS_CPU_IRQ_BASE 16
->#else
->#define MIPS_CPU_IRQ_BASE 0
->#endif /* CONFIG_I8259 */
->#endif
->
->So every legacy platform with i8259 has MIPS_CPU_IRQ_BASE =3D 16=2E
->
->> However we have only preallocated irq_desc for 0-15=2E
->> And legacy domain require irq_desc being preallocated=2E
->
->maybe I'm too fast by judging the irq code, but without
->CONFIG_SPARSE_IRQ
->the whole irq_desc is pre-allocated=2E
+> Can you take this please Rob?
 
-Sorry=2E You're right=2E
-I found the problem is CONFIG_SPARSE_IRQ is accidentally enabled in my con=
-fig due to another out-of-tree patch
-during my initial test and I always consider it as a problem=2E
+Yes, done.
 
-So we can drop this patch safely for now=2E
-But just need to consider how to deal with it when we want to enable SPARS=
-E_IRQ=2E
-
-Thanks=2E
-
->
->Thomas=2E
-
---=20
-Jiaxun Yang
+Rob
