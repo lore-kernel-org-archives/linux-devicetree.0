@@ -4,267 +4,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B83C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 19:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4210FC2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 19:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D15A2076F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 19:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155F520714
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 19:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585163149;
-	bh=++J1l22iODPsdFUfxz8jQjkKIYHE5X8erMXa2/ilh3o=;
+	s=default; t=1585163280;
+	bh=26Uk9meXN96js/gICre78nVAjflPsXGx6aYynHLKmGM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XJIytSPfYLSDQLy99ioLGf+DUoE3BRCO8sv7/nZ2Ri9nE4+Kkjh+7AHhuqD/K8rAO
-	 sLk0/xg0vH+vZ5qWrc7x1tDTaUoSk2lE5Lwr+mlZSM+52rTVYNMMSPFwv1c0zf6JPC
-	 YixgYdrtRQuGvO+8O4DFNfREf0wUlac2LPjEeK2M=
+	b=uFWSEgnKO6PvvFyESlnbOK5fhB3PUEIgXrrt4yifLFVvE6aSNHhTZzo9ZQRYGXBeT
+	 QLTDI8ZMEAbc1jyQPrbd8MXyjq9S+yffXDvLosT64pkKwpR4dkgnaFvNQ6mPlLX/tQ
+	 gwS/+ld9IK2BFSU+J+mYq6v5y5kagWzOdfG7+ias=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgCYTFt (ORCPT
+        id S1727279AbgCYTH7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:05:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58046 "EHLO mail.kernel.org"
+        Wed, 25 Mar 2020 15:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbgCYTFs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:05:48 -0400
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+        id S1727027AbgCYTH7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:07:59 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C86522076F;
-        Wed, 25 Mar 2020 19:05:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E4D20714;
+        Wed, 25 Mar 2020 19:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585163147;
-        bh=++J1l22iODPsdFUfxz8jQjkKIYHE5X8erMXa2/ilh3o=;
+        s=default; t=1585163278;
+        bh=26Uk9meXN96js/gICre78nVAjflPsXGx6aYynHLKmGM=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kqV2+isT+3mowQAoVTiPQgQ2DjtFWvGZpTKQwUYikcmB/fWfPgUOzc28y2M7gktVI
-         w9tzmg7fhk5C331Kc/oMpWM1lLNsHzDQFQvRYDdyCdR87r7160m86Jcs369tMsYf4c
-         TwyDfgeNuVOacPiiJrzD7oOc/pPLFvQrdRNJADYU=
-Received: by mail-qv1-f51.google.com with SMTP id v38so1662572qvf.6;
-        Wed, 25 Mar 2020 12:05:47 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ16jCYPmu0lN2Sh5en7ug2ds8Z/wJC70bUK3PzGZpr0DsHAH57x
-        CM6D6q9a28uGAZBm6inuyhm68po2AR16OHyixg==
-X-Google-Smtp-Source: ADFU+vsyukn7zvIPawA++JIpoRR33DaG19B2BoYv9ZrgL4BE0crMXNzCbxcpYD7SVqS9OR2ZR0zCz4JJu7zGUp7IlWY=
-X-Received: by 2002:ad4:4bc3:: with SMTP id l3mr4462107qvw.79.1585163146836;
- Wed, 25 Mar 2020 12:05:46 -0700 (PDT)
+        b=AvNzVfwsdnqkrxQA3Q54688/DCKofvQC6qVJnKLKNUAHGTtn/glf39ws7XSzGyjyK
+         DHlQ9CRU1d5aMFU6cDgTsp/E+WIaxcwoZ7pSlyS+RsCa213Zyx80G7kxDYwrYSJpfw
+         fQ64BNPKo5N2iJxYJT6DPUH272YT//TfiC386tPY=
+Received: by mail-qt1-f181.google.com with SMTP id i3so3174372qtv.8;
+        Wed, 25 Mar 2020 12:07:58 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0gOoaNzaD+wq+W3uVDHpZb3ZuNBvRqe6DqZVI70un/tWt8YdWy
+        7vQ8GZEuaWQV0+WJd7ACm9Y7pJRRzrFSx0NOWw==
+X-Google-Smtp-Source: ADFU+vuTndY+wDPw79ZNIs5Xbyn1ONlKDN1cNv+Vsq80x/BVGrqoyD/vBaotVdkdCJ1DdFZbyMgkgqCGN7aXaoQEiro=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr4605237qtg.110.1585163272778;
+ Wed, 25 Mar 2020 12:07:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200324094506.55938-1-alexandru.tachici@analog.com> <20200324094506.55938-3-alexandru.tachici@analog.com>
-In-Reply-To: <20200324094506.55938-3-alexandru.tachici@analog.com>
+References: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
+ <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com> <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com>
+In-Reply-To: <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 25 Mar 2020 13:05:35 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKFdcACQtXd5h=4Pxbij+=uoHr2rLTFZMq4fVX8ph398g@mail.gmail.com>
-Message-ID: <CAL_JsqKFdcACQtXd5h=4Pxbij+=uoHr2rLTFZMq4fVX8ph398g@mail.gmail.com>
-Subject: Re: [RESEND PATCH 2/2] dt-bindings: iio: dac: AD5570R fix bindings errors
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+Date:   Wed, 25 Mar 2020 13:07:41 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLW+3aJrB2EOEU74o+aVO9yPG74xi=Eov5_6++NdnOBPg@mail.gmail.com>
+Message-ID: <CAL_JsqLW+3aJrB2EOEU74o+aVO9yPG74xi=Eov5_6++NdnOBPg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 3:45 AM <alexandru.tachici@analog.com> wrote:
+On Mon, Mar 2, 2020 at 9:56 PM Rayagonda Kokatanur
+<rayagonda.kokatanur@broadcom.com> wrote:
 >
-> From: Alexandru Tachici <alexandru.tachici@analog.com>
+> On Fri, Feb 28, 2020 at 7:20 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Fri, Feb 28, 2020 at 2:48 AM Rayagonda Kokatanur
+> > <rayagonda.kokatanur@broadcom.com> wrote:
+> > >
+> > > Generally i2c addr should not be greater than 10-bit. The highest 2 bits
+> > > are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
+> > > these flags if check slave addr valid.
+> > >
+> > > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> > > ---
+> > >  scripts/dtc/Makefile | 2 +-
+> > >  scripts/dtc/checks.c | 5 +++++
+> > >  2 files changed, 6 insertions(+), 1 deletion(-)
+> >
+> > dtc changes must be submitted against upstream dtc.
 >
-> Replaced num property with reg property, fixed errors
-> reported by dt-binding-check.
->
-> Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-> ---
->  .../bindings/iio/dac/adi,ad5770r.yaml         | 77 ++++++++++---------
->  1 file changed, 40 insertions(+), 37 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> index d9c25cf4b92f..d1755dbc1a41 100644
-> --- a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> @@ -2,7 +2,7 @@
->  # Copyright 2020 Analog Devices Inc.
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/iio/dac/adi,ad5770r.yaml#
-> +$id: http://devicetree.org/schemas/iio/dac/adi,ad5770r.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->
->  title: Analog Devices AD5770R DAC device driver
-> @@ -49,83 +49,84 @@ properties:
->        asserted during driver probe.
->      maxItems: 1
->
-> -  channel0:
-> +  channel@0:
->      description: Represents an external channel which are
->        connected to the DAC. Channel 0 can act both as a current
->        source and sink.
->      type: object
->
->      properties:
-> -      num:
-> +      reg:
->          description: This represents the channel number.
-> -        items:
-> -          const: 0
->
->        adi,range-microamp:
->            description: Output range of the channel.
->            oneOf:
-> -            - $ref: /schemas/types.yaml#/definitions/int32-array
->              - items:
-> -                - enum: [0 300000]
-> -                - enum: [-60000 0]
-> -                - enum: [-60000 300000]
-> +                - const: 0
-> +                - const: 300000
-> +            - items:
-> +                - const: -60000
-> +                - const: 0
-> +            - items:
-> +                - const: -60000
-> +                - const: 300000
->
-> -  channel1:
-> +  channel@1:
->      description: Represents an external channel which are
->        connected to the DAC.
->      type: object
->
->      properties:
-> -      num:
-> +      reg:
->          description: This represents the channel number.
-> -        items:
-> -          const: 1
+> Please let me know link to clone the upstream dtc branch.
+> >
+> >
+> > > diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> > > index 3acbb410904c..c5e8d6a9e73c 100644
+> > > --- a/scripts/dtc/Makefile
+> > > +++ b/scripts/dtc/Makefile
+> > > @@ -9,7 +9,7 @@ dtc-objs        := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
+> > >  dtc-objs       += dtc-lexer.lex.o dtc-parser.tab.o
+> > >
+> > >  # Source files need to get at the userspace version of libfdt_env.h to compile
+> > > -HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
+> > > +HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
+> > >
+> > >  ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
+> > >  ifneq ($(CHECK_DTBS),)
+> > > diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+> > > index 756f0fa9203f..17c9ed4137b5 100644
+> > > --- a/scripts/dtc/checks.c
+> > > +++ b/scripts/dtc/checks.c
+> > > @@ -3,6 +3,7 @@
+> > >   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
+> > >   */
+> > >
+> > > +#include <linux/bits.h>
+> >
+> > Not a UAPI header not that that would be much better as dtc also builds on Mac.
+> >
+> > >  #include "dtc.h"
+> > >  #include "srcpos.h"
+> > >
+> > > @@ -17,6 +18,9 @@
+> > >  #define TRACE(c, fmt, ...)     do { } while (0)
+> > >  #endif
+> > >
+> > > +#define I2C_TEN_BIT_ADDRESS    BIT(31)
+> > > +#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
+> > > +
+> > >  enum checkstatus {
+> > >         UNCHECKED = 0,
+> > >         PREREQ,
+> > > @@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+> > >
+> > >         for (len = prop->val.len; len > 0; len -= 4) {
+> > >                 reg = fdt32_to_cpu(*(cells++));
+> > > +               reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
+> >
+> > I'd just mask the top byte so we don't have to update on the next flag we add.
+> Do you mean something like this, shown below ?
+> reg &= 0xFFFF_FC000;
 
-This should be:
+Yes, but as I said, the 'top byte', so 0xFF000000.
 
-reg:
-  const: 1
-
->
->        adi,range-microamp:
->            description: Output range of the channel.
->            oneOf:
-> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
->              - items:
-> -                - enum: [0 140000]
-> -                - enum: [0 250000]
-> +                - const: 0
-> +                - const: 140000
-> +            - items:
-> +                - const: 0
-> +                - const: 250000
->
-> -  channel2:
-> +  channel@2:
->      description: Represents an external channel which are
->        connected to the DAC.
->      type: object
->
->      properties:
-> -      num:
-> +      reg:
->          description: This represents the channel number.
-> -        items:
-> -          const: 2
->
->        adi,range-microamp:
->            description: Output range of the channel.
->            oneOf:
-> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
->              - items:
-> -                - enum: [0 140000]
-> -                - enum: [0 250000]
-> +                - const: 0
-> +                - const: 55000
-> +            - items:
-> +                - const: 0
-> +                - const: 150000
->
->  patternProperties:
->    "^channel@([3-5])$":
->      type: object
->      description: Represents the external channels which are connected to the DAC.
->      properties:
-> -      num:
-> +      reg:
->          description: This represents the channel number.
-> -        items:
-> -          minimum: 3
-> -          maximum: 5
-
-reg:
-  minimum: 3
-  maximum: 5
-
->
->        adi,range-microamp:
->            description: Output range of the channel.
->            oneOf:
-> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
->              - items:
-> -                - enum: [0 45000]
-> -                - enum: [0 100000]
-> +                - const: 0
-> +                - const: 45000
-> +            - items:
-> +                - const: 0
-> +                - const: 100000
-
-This can be simplified to:
-
-items:
-  - const: 0
-  - enum: [ 45000, 100000 ]
-
->
->  required:
->  - reg
-> @@ -150,34 +151,36 @@ examples:
->                          vref-supply = <&vref>;
->                          adi,external-resistor;
->                          reset-gpios = <&gpio 22 0>;
-> +                        #address-cells = <1>;
-> +                        #size-cells = <0>;
->
->                          channel@0 {
-> -                                num = <0>;
-> -                                adi,range-microamp = <(-60000) 300000>;
-> +                                reg = <0>;
-> +                                adi,range-microamp = <0 300000>;
->                          };
->
->                          channel@1 {
-> -                                num = <1>;
-> +                                reg = <1>;
->                                  adi,range-microamp = <0 140000>;
->                          };
->
->                          channel@2 {
-> -                                num = <2>;
-> +                                reg = <2>;
->                                  adi,range-microamp = <0 55000>;
->                          };
->
->                          channel@3 {
-> -                                num = <3>;
-> +                                reg = <3>;
->                                  adi,range-microamp = <0 45000>;
->                          };
->
->                          channel@4 {
-> -                                num = <4>;
-> +                                reg = <4>;
->                                  adi,range-microamp = <0 45000>;
->                          };
->
->                          channel@5 {
-> -                                num = <5>;
-> +                                reg = <5>;
->                                  adi,range-microamp = <0 45000>;
->                          };
->                  };
-> --
-> 2.20.1
->
+Rob
