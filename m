@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF38C54FD6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171A8C54FD3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF1A20774
+	by mail.kernel.org (Postfix) with ESMTP id 0079F20774
 	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgCYPjp (ORCPT
+        id S1727909AbgCYPjb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:39:45 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:52892 "EHLO inva020.nxp.com"
+        Wed, 25 Mar 2020 11:39:31 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:53442 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727915AbgCYPjd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:39:33 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 04D271A04EA;
-        Wed, 25 Mar 2020 16:39:32 +0100 (CET)
+        id S1727881AbgCYPjb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:39:31 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A9CBD20056D;
+        Wed, 25 Mar 2020 16:39:28 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EB4781A00F9;
-        Wed, 25 Mar 2020 16:39:31 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9CC8120055D;
+        Wed, 25 Mar 2020 16:39:28 +0100 (CET)
 Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3928E203CE;
-        Wed, 25 Mar 2020 16:39:31 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E8CAF203CE;
+        Wed, 25 Mar 2020 16:39:27 +0100 (CET)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <kernel@pengutronix.de>,
@@ -44,9 +44,9 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v2 11/13] dt-bindings: reset: imx8mp: Add ids for audiomix reset
-Date:   Wed, 25 Mar 2020 17:38:49 +0200
-Message-Id: <1585150731-3354-12-git-send-email-abel.vesa@nxp.com>
+Subject: [PATCH v2 07/13] clk: imx: Add helpers for passing the device as argument
+Date:   Wed, 25 Mar 2020 17:38:45 +0200
+Message-Id: <1585150731-3354-8-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585150731-3354-1-git-send-email-abel.vesa@nxp.com>
 References: <1585150731-3354-1-git-send-email-abel.vesa@nxp.com>
@@ -56,35 +56,70 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add all the reset ids for the audiomix reset.
+All the imx clocks that need to be registered by the audiomix need to
+pass on the device so that the runtime PM support could work properly.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
 ---
- include/dt-bindings/reset/imx-audiomix-reset.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 include/dt-bindings/reset/imx-audiomix-reset.h
+ drivers/clk/imx/clk.h | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/include/dt-bindings/reset/imx-audiomix-reset.h b/include/dt-bindings/reset/imx-audiomix-reset.h
-new file mode 100644
-index 00000000..571cacf
---- /dev/null
-+++ b/include/dt-bindings/reset/imx-audiomix-reset.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright 2019 NXP.
-+ */
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index fcd9952a..b91b1b1 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -319,6 +319,13 @@ static inline struct clk_hw *imx_clk_hw_gate(const char *name, const char *paren
+ 				    shift, 0, &imx_ccm_lock);
+ }
+ 
++static inline struct clk_hw *imx_dev_clk_hw_gate(struct device *dev, const char *name,
++						const char *parent, void __iomem *reg, u8 shift)
++{
++	return clk_hw_register_gate(dev, name, parent, CLK_SET_RATE_PARENT, reg,
++				    shift, 0, &imx_ccm_lock);
++}
 +
-+#ifndef DT_BINDING_RESET_IMX_AUDIOMIX_H
-+#define DT_BINDING_RESET_IMX_AUDIOMIX_H
+ static inline struct clk_hw *imx_clk_hw_gate_dis(const char *name, const char *parent,
+ 		void __iomem *reg, u8 shift)
+ {
+@@ -431,6 +438,15 @@ static inline struct clk_hw *imx_clk_hw_mux(const char *name, void __iomem *reg,
+ 			width, 0, &imx_ccm_lock);
+ }
+ 
++static inline struct clk_hw *imx_dev_clk_hw_mux(struct device *dev,
++			const char *name, void __iomem *reg, u8 shift,
++			u8 width, const char * const *parents, int num_parents)
++{
++	return clk_hw_register_mux(dev, name, parents, num_parents,
++			CLK_SET_RATE_NO_REPARENT | CLK_SET_PARENT_GATE,
++			reg, shift, width, 0, &imx_ccm_lock);
++}
 +
-+#define IMX_AUDIOMIX_EARC_RESET		0x0
-+#define IMX_AUDIOMIX_EARC_PHY_RESET	0x1
+ static inline struct clk *imx_clk_mux2(const char *name, void __iomem *reg,
+ 			u8 shift, u8 width, const char * const *parents,
+ 			int num_parents)
+@@ -493,6 +509,19 @@ static inline struct clk_hw *imx_clk_hw_mux_flags(const char *name,
+ 				   reg, shift, width, 0, &imx_ccm_lock);
+ }
+ 
++static inline struct clk_hw *imx_dev_clk_hw_mux_flags(struct device *dev,
++						  const char *name,
++						  void __iomem *reg, u8 shift,
++						  u8 width,
++						  const char * const *parents,
++						  int num_parents,
++						  unsigned long flags)
++{
++	return clk_hw_register_mux(dev, name, parents, num_parents,
++				   flags | CLK_SET_RATE_NO_REPARENT,
++				   reg, shift, width, 0, &imx_ccm_lock);
++}
 +
-+#define IMX_AUDIOMIX_RESET_NUM		2
-+
-+#endif
-+
+ struct clk_hw *imx_clk_hw_cpu(const char *name, const char *parent_name,
+ 		struct clk *div, struct clk *mux, struct clk *pll,
+ 		struct clk *step);
 -- 
 2.7.4
 
