@@ -7,57 +7,56 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA33C54FCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 00:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567EDC54FCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 00:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA26E20724
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 00:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303D42073C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 00:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tzYV6AXB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aySC5VtF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgCYAXD (ORCPT
+        id S1727188AbgCYAeL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 20:23:03 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43261 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgCYAXD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 20:23:03 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g27so604580ljn.10;
-        Tue, 24 Mar 2020 17:23:00 -0700 (PDT)
+        Tue, 24 Mar 2020 20:34:11 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40620 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbgCYAeL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 20:34:11 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 19so646684ljj.7;
+        Tue, 24 Mar 2020 17:34:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ct/V5EnftFkGN3WYxrNnLQpcXQ4Aalb0V9/m+SiHKIE=;
-        b=tzYV6AXBdVjWcAGYDlnJbhS//oa5DHQFSKfMASl7NuXw4AodL//Be/sLiLinQD85bS
-         ahhnozUcmu+Nrq6aF8Tu0p/pQLjLRUJSabIldxD3GSQow9Dp7gypCVeF4c/ao9g9/eAp
-         wVrSanIWv8FY0fzHgb9P2L7cIBBG6rD+vzRR0TbLx+FPb92+rSXg+de/7fcSTuIoEMNS
-         TeQNWpUtHBRvwcCKVUsznod8o7S6/PUSGePKAm6tyDl05pFp5HYn52dlMmYJO/aNCuGN
-         xF46CZ2mdmP2nd7dN0xnga1k4FACvHm6+SF04shzuOqUyLZCC1ygbWpSWQ5gl9et0f21
-         DKOA==
+        bh=UmzJJ1sBsi/K93++MwxgB1lpuwtWNL5ZiLz4oULTYSU=;
+        b=aySC5VtF2Lpz1SCaOxutjcQeJM+oSmgXt7I3r3vBp9aMGjay3IP0ixSC6lKICaiU0K
+         Y4jhr8sB3x3mN9ZKHTg5M7dX/fMdjamkzJI7K8bF1W28Gd6JpfDwT3ISFra5loOE9KqE
+         9M6H1LOQQvYww1+V0mT641WwD+/pS4f2wSuoJn4XNkeCOLttqQXaTJKBvpLkXsCvvMxi
+         VqNdUxnbaI8L/5qp+hm43ww+ZLmqMy+gIlL7Dh7YZesT3e/9EofY0JF40mPn75zz5sBk
+         vwn7bPQv2Y/3SGXUNPAFUMv/dm68z3BvDK3erxKBwzm4pqo16CrW0W0CWi5lAfgF4h90
+         wdhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Ct/V5EnftFkGN3WYxrNnLQpcXQ4Aalb0V9/m+SiHKIE=;
-        b=tG5Cphfaa9MFI0maj3d2a5wz3eGqjEabV2EPMwrNx/n5mKfA3URpuvBkLleOiwOzbc
-         KA9xFixcAAkvtd1PRV2aOWi/UCmzsf8Xl9eyVEF440kLlKPq8BgJuW0+UolNrPh3cMak
-         XjS3viB8y4B7PHLa/k12OfgoJHSf55RBgweomvtejspsQ7k8Tzid8HKZCtFZBfE46RF0
-         SdVwipTOcNAeuR1VhIDLRJ/oFXGadAcQ+DKS/KzuxWFyrXW8grfaTvYWtSCE9p25suNj
-         EJask+kII4fUs/mSAi623IC2VQWEGxBbV03WRVDwanm4eRJrSANibIXvEAM7TViz7YQD
-         1/wA==
-X-Gm-Message-State: ANhLgQ0KSc1sfWe57fhsvMINFZ7lXNFksuH9vG6pHZTSsDXEbFWwWumj
-        UpoAHzFl7p1XbK1ni5X+MhWPo/e/
-X-Google-Smtp-Source: APiQypKH2RBu/eqHvdIujKLPytbWL/hPORDcJLKVesrNFS6S7uug4Yi0HP/L1SteXLoI4lcvrq4r6g==
-X-Received: by 2002:a2e:330e:: with SMTP id d14mr193463ljc.153.1585095779507;
-        Tue, 24 Mar 2020 17:22:59 -0700 (PDT)
+        bh=UmzJJ1sBsi/K93++MwxgB1lpuwtWNL5ZiLz4oULTYSU=;
+        b=H2C3Ja2df+eBq7l4Erx5QQ/52g7HoKz5e9LsMlMpH377dSh8YGHG6hWejbwGfgkGxc
+         ky4ugrNnRwMdQakvxM9wwb7MAqioQOExOjpJ/g4gaf6cANx9+76O/rBkQ8PSGkOsPYer
+         8tdSWFLYU/a9bE8REVjiq7uXGngQALtFQ/pffoY1qHSwfI6DQ9Nkq2gliaWpFsJJFv9r
+         q0oaGjdc5AHZ6XBFnEiGINkTrcS0yUJx3jj8EDUez7OZoduIsq513DOdvvW/X/2/6IP6
+         9YJ4m0/ktqMklVfGc/xkp8nLekt785JjUGFq6QMzlAZ9QMU+zjW1bjUhZthz4JbljV5N
+         twRA==
+X-Gm-Message-State: ANhLgQ2N1KUvj1s1gPskoGUvlXLGcdlKXF0Yz4KyqBS7aWBuQkF2+XP5
+        FlK4Q4JDDP87wTmQM83smFQPUMh9
+X-Google-Smtp-Source: ADFU+vuCxpuw4rfOM+Omo0XN30+J4cvPl2YMt0oWv/u/P6eoWP5wpufAJYEV92UIOYxtWfIn0YJCCw==
+X-Received: by 2002:a2e:90c4:: with SMTP id o4mr188845ljg.287.1585096448059;
+        Tue, 24 Mar 2020 17:34:08 -0700 (PDT)
 Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id k18sm10757172ljc.92.2020.03.24.17.22.57
+        by smtp.googlemail.com with ESMTPSA id x2sm10601960lfn.79.2020.03.24.17.34.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 17:22:58 -0700 (PDT)
-Subject: Re: [RFC PATCH v5 9/9] arm64: tegra: Add Tegra VI CSI support in
- device tree
+        Tue, 24 Mar 2020 17:34:07 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
         hverkuil@xs4all.nl, helen.koike@collabora.com
@@ -65,18 +64,14 @@ Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
         devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-10-git-send-email-skomatineni@nvidia.com>
- <672819ea-01d3-2eca-8bb7-84ffd64256d4@gmail.com>
- <a218142f-295e-6bd5-b1d7-47d9ab8eba3e@nvidia.com>
- <fee09e1e-48a3-e0a0-12dc-9aeeb3438ded@gmail.com>
- <7d7c982e-7755-5f3d-cb90-9622f87df283@nvidia.com>
+ <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b757b06f-3ee1-1c8b-ae47-38211da667bc@gmail.com>
-Date:   Wed, 25 Mar 2020 03:22:57 +0300
+Message-ID: <8f44e42d-2008-fe53-f4fb-b57502da91a8@gmail.com>
+Date:   Wed, 25 Mar 2020 03:34:06 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <7d7c982e-7755-5f3d-cb90-9622f87df283@nvidia.com>
+In-Reply-To: <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -85,28 +80,18 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-25.03.2020 03:01, Sowjanya Komatineni пишет:
-> 
-> On 3/24/20 3:48 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 25.03.2020 00:04, Sowjanya Komatineni пишет:
->>> On 3/24/20 12:19 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 23.03.2020 20:52, Sowjanya Komatineni пишет:
->>>> ...
->>>>> +                     pd_venc: venc {
->>>>> +                             clocks = <&tegra_car TEGRA210_CLK_VI>,
->>>>> +                                      <&tegra_car TEGRA210_CLK_CSI>;
->>>>> +                             resets = <&mc TEGRA210_MC_RESET_VI>,
->>>> The MC resetting should be needed only for a hardware hot-resetting. It
->>>> should be wrong to add it to the power domain.
->>> TRM recommends to do MC client hot-reset during VE power gate and
->>> ungate.
->> Could you please tell what TRM it is and what's the page#?
-> Tegra TX1 TRM Page 425, Section 12.2.7.14 Procedures for VE Power Domains
+23.03.2020 20:52, Sowjanya Komatineni пишет:
+> +static void tegra_channel_vi_soft_reset(struct tegra_vi_channel *chan)
+> +{
+> +	/* disable clock gating to enable continuous clock */
+> +	tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, 0);
+> +	/*
+> +	 * Soft reset memory client interface, pixel format logic, sensor
+> +	 * control logic, and a shadow copy logic to bring VI to clean state.
+> +	 */
+> +	vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0xf);
+> +	usleep_range(100, 200);
+> +	vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0x0);
 
-Okay, thanks.
+Is it safe to reset MCCIF without blocking and flushing memory requests
+at first?
