@@ -2,139 +2,269 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2A0C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 18:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B83C2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 19:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0632076F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 18:53:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRUs5gXj"
+	by mail.kernel.org (Postfix) with ESMTP id 8D15A2076F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 19:05:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585163149;
+	bh=++J1l22iODPsdFUfxz8jQjkKIYHE5X8erMXa2/ilh3o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XJIytSPfYLSDQLy99ioLGf+DUoE3BRCO8sv7/nZ2Ri9nE4+Kkjh+7AHhuqD/K8rAO
+	 sLk0/xg0vH+vZ5qWrc7x1tDTaUoSk2lE5Lwr+mlZSM+52rTVYNMMSPFwv1c0zf6JPC
+	 YixgYdrtRQuGvO+8O4DFNfREf0wUlac2LPjEeK2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgCYSxz (ORCPT
+        id S1727909AbgCYTFt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:53:55 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45814 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727275AbgCYSxz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 14:53:55 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o26so1577597pgc.12;
-        Wed, 25 Mar 2020 11:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0A8XwLK/VHei5BNSLIP6RyAAlYr0PTQ3mUKooO2YHBI=;
-        b=lRUs5gXjxEoqkj3/if5a2+eHB3Ind5z4U93waFxX6C2QEaho1OmHCbTn6w3kJqmrsf
-         zrDUxx73i5J8KwBO5S1V+hx9GySQTXzGAkJ3upVOVowTfBnu49udAiW/y844IdGedClK
-         loRaz52mO50+7BX5vqOf86CiRhXFAceiVCgzU+dOcR89dabpTMxLvslKANhq0WAxcZZg
-         45ve6G5zRJgMup1TmPq8jKMj3OdlJXKEOOBhKbr9Sjo/MCHm5x60TFVxK4281OPRHOwk
-         3KE1NAALBMq4ydP/SB1Gn/MKu8LbM6XLamBKfdq03weClINJIji8s8YHQbCDJFK+pFtS
-         +U3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0A8XwLK/VHei5BNSLIP6RyAAlYr0PTQ3mUKooO2YHBI=;
-        b=TosjpIzVAaeYKt72kBu+nI5nRxMr09HgGYrbm43h3BGcxwhMxA3koeDws8giKWQgQ/
-         8LpOttTzknZkeu9+CdKgOJFo0+TZj5Z+2x9eRJ1PVYJQnTiTueHe1IAkOxGQfjccNvEV
-         eAghES++wvjxVQwS+JD13ZqFWYbxz9F5jNJywIyecIs6AWxj6bb8eW3ynqygJJ0G8RvS
-         CblVVdjH+AtND5g852411g60kEnECCopHKAYyFranZ9IavUn2XMt/DztOmRU/bLi5mWN
-         KneICZQiNU2dp9KzJ7VtHeROE9dsQ04HMcfx9mz61+F8WZTmwHxBKfPqYF+4kLtDwoUf
-         C8zA==
-X-Gm-Message-State: ANhLgQ2zBx1ps2EQrWx5lHcbXHciM92R8oZ9gd619vU5/sd8r0rhRaZ1
-        4jcnWF4L0phERvXW1B7NJBFUgmDsNTqf2GfCxJY=
-X-Google-Smtp-Source: ADFU+vs5IGiqDBHOJuHFA5G0E6zEcgp/2GS7T1qnTQ7Iwf3xjKO0zWxnArLFNE7IurwGXRC7fD0ppU5owx2lakG1HzI=
-X-Received: by 2002:a63:5859:: with SMTP id i25mr4349929pgm.74.1585162433449;
- Wed, 25 Mar 2020 11:53:53 -0700 (PDT)
+        Wed, 25 Mar 2020 15:05:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727279AbgCYTFs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:05:48 -0400
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C86522076F;
+        Wed, 25 Mar 2020 19:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585163147;
+        bh=++J1l22iODPsdFUfxz8jQjkKIYHE5X8erMXa2/ilh3o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kqV2+isT+3mowQAoVTiPQgQ2DjtFWvGZpTKQwUYikcmB/fWfPgUOzc28y2M7gktVI
+         w9tzmg7fhk5C331Kc/oMpWM1lLNsHzDQFQvRYDdyCdR87r7160m86Jcs369tMsYf4c
+         TwyDfgeNuVOacPiiJrzD7oOc/pPLFvQrdRNJADYU=
+Received: by mail-qv1-f51.google.com with SMTP id v38so1662572qvf.6;
+        Wed, 25 Mar 2020 12:05:47 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ16jCYPmu0lN2Sh5en7ug2ds8Z/wJC70bUK3PzGZpr0DsHAH57x
+        CM6D6q9a28uGAZBm6inuyhm68po2AR16OHyixg==
+X-Google-Smtp-Source: ADFU+vsyukn7zvIPawA++JIpoRR33DaG19B2BoYv9ZrgL4BE0crMXNzCbxcpYD7SVqS9OR2ZR0zCz4JJu7zGUp7IlWY=
+X-Received: by 2002:ad4:4bc3:: with SMTP id l3mr4462107qvw.79.1585163146836;
+ Wed, 25 Mar 2020 12:05:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <1585161361-3408-1-git-send-email-alain.volmat@st.com> <1585161361-3408-3-git-send-email-alain.volmat@st.com>
-In-Reply-To: <1585161361-3408-3-git-send-email-alain.volmat@st.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 25 Mar 2020 20:53:45 +0200
-Message-ID: <CAHp75VdPCWdpGo=2n9g0ivti-g2m4jZ=cG4BKHBLk8BVDzaCyg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] i2c: i2c-stm32f7: allows for any bus frequency
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        pierre-yves.mordret@st.com,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        fabrice.gasnier@st.com
+References: <20200324094506.55938-1-alexandru.tachici@analog.com> <20200324094506.55938-3-alexandru.tachici@analog.com>
+In-Reply-To: <20200324094506.55938-3-alexandru.tachici@analog.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 25 Mar 2020 13:05:35 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKFdcACQtXd5h=4Pxbij+=uoHr2rLTFZMq4fVX8ph398g@mail.gmail.com>
+Message-ID: <CAL_JsqKFdcACQtXd5h=4Pxbij+=uoHr2rLTFZMq4fVX8ph398g@mail.gmail.com>
+Subject: Re: [RESEND PATCH 2/2] dt-bindings: iio: dac: AD5570R fix bindings errors
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 8:38 PM Alain Volmat <alain.volmat@st.com> wrote:
+On Tue, Mar 24, 2020 at 3:45 AM <alexandru.tachici@analog.com> wrote:
 >
-> Do not limitate to the 3 (100KHz, 400KHz, 1MHz) bus frequency but
-> instead allows any frequency (if it matches timing requirements).
-> Depending on the requested frequency, use the spec data from either
-> Standard, Fast or Fast Plus mode.
+> From: Alexandru Tachici <alexandru.tachici@analog.com>
 >
-> Hardcoding of min/max bus frequencies is removed and is instead computed.
+> Replaced num property with reg property, fixed errors
+> reported by dt-binding-check.
 >
-> The driver do not use anymore speed identifier but instead handle
-> directly the frequency and figure out the spec data (necessary
-> for the computation of the timing register) based on the frequency.
+> Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+> ---
+>  .../bindings/iio/dac/adi,ad5770r.yaml         | 77 ++++++++++---------
+>  1 file changed, 40 insertions(+), 37 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
+> index d9c25cf4b92f..d1755dbc1a41 100644
+> --- a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
+> +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
+> @@ -2,7 +2,7 @@
+>  # Copyright 2020 Analog Devices Inc.
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/bindings/iio/dac/adi,ad5770r.yaml#
+> +$id: http://devicetree.org/schemas/iio/dac/adi,ad5770r.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>
+>  title: Analog Devices AD5770R DAC device driver
+> @@ -49,83 +49,84 @@ properties:
+>        asserted during driver probe.
+>      maxItems: 1
+>
+> -  channel0:
+> +  channel@0:
+>      description: Represents an external channel which are
+>        connected to the DAC. Channel 0 can act both as a current
+>        source and sink.
+>      type: object
+>
+>      properties:
+> -      num:
+> +      reg:
+>          description: This represents the channel number.
+> -        items:
+> -          const: 0
+>
+>        adi,range-microamp:
+>            description: Output range of the channel.
+>            oneOf:
+> -            - $ref: /schemas/types.yaml#/definitions/int32-array
+>              - items:
+> -                - enum: [0 300000]
+> -                - enum: [-60000 0]
+> -                - enum: [-60000 300000]
+> +                - const: 0
+> +                - const: 300000
+> +            - items:
+> +                - const: -60000
+> +                - const: 0
+> +            - items:
+> +                - const: -60000
+> +                - const: 300000
+>
+> -  channel1:
+> +  channel@1:
+>      description: Represents an external channel which are
+>        connected to the DAC.
+>      type: object
+>
+>      properties:
+> -      num:
+> +      reg:
+>          description: This represents the channel number.
+> -        items:
+> -          const: 1
 
-...
+This should be:
 
-> +static struct stm32f7_i2c_spec *get_specs(u32 rate)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(i2c_specs); i++)
-> +               if (rate <= i2c_specs[i].rate)
-> +                       return &i2c_specs[i];
-> +
+reg:
+  const: 1
 
-> +       /* NOT REACHED */
-> +       return ERR_PTR(-EINVAL);
+>
+>        adi,range-microamp:
+>            description: Output range of the channel.
+>            oneOf:
+> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
+>              - items:
+> -                - enum: [0 140000]
+> -                - enum: [0 250000]
+> +                - const: 0
+> +                - const: 140000
+> +            - items:
+> +                - const: 0
+> +                - const: 250000
+>
+> -  channel2:
+> +  channel@2:
+>      description: Represents an external channel which are
+>        connected to the DAC.
+>      type: object
+>
+>      properties:
+> -      num:
+> +      reg:
+>          description: This represents the channel number.
+> -        items:
+> -          const: 2
+>
+>        adi,range-microamp:
+>            description: Output range of the channel.
+>            oneOf:
+> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
+>              - items:
+> -                - enum: [0 140000]
+> -                - enum: [0 250000]
+> +                - const: 0
+> +                - const: 55000
+> +            - items:
+> +                - const: 0
+> +                - const: 150000
+>
+>  patternProperties:
+>    "^channel@([3-5])$":
+>      type: object
+>      description: Represents the external channels which are connected to the DAC.
+>      properties:
+> -      num:
+> +      reg:
+>          description: This represents the channel number.
+> -        items:
+> -          minimum: 3
+> -          maximum: 5
 
-WARN_ONCE() ?
+reg:
+  minimum: 3
+  maximum: 5
 
-> +}
+>
+>        adi,range-microamp:
+>            description: Output range of the channel.
+>            oneOf:
+> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
+>              - items:
+> -                - enum: [0 45000]
+> -                - enum: [0 100000]
+> +                - const: 0
+> +                - const: 45000
+> +            - items:
+> +                - const: 0
+> +                - const: 100000
 
-...
+This can be simplified to:
 
-> -                       if ((tscl_l < i2c_specs[setup->speed].l_min) ||
-> +                       if ((tscl_l < specs->l_min) ||
+items:
+  - const: 0
+  - enum: [ 45000, 100000 ]
 
->                             (i2cclk >=
->                              ((tscl_l - af_delay_min - dnf_delay) / 4))) {
-
-Perhaps squash above two to one line at the same time?
-
-...
-
-> +       int i;
-> +
-> +       for (i = ARRAY_SIZE(i2c_specs) - 1; i >= 0; i--)
-
-
-Perhaps
-
-       int i = ARRAY_SIZE(i2c_specs);
-
-       while(i--)
-
-?
-
-> +               if (i2c_specs[i].rate < rate)
-> +                       return i2c_specs[i].rate;
-
--- 
-With Best Regards,
-Andy Shevchenko
+>
+>  required:
+>  - reg
+> @@ -150,34 +151,36 @@ examples:
+>                          vref-supply = <&vref>;
+>                          adi,external-resistor;
+>                          reset-gpios = <&gpio 22 0>;
+> +                        #address-cells = <1>;
+> +                        #size-cells = <0>;
+>
+>                          channel@0 {
+> -                                num = <0>;
+> -                                adi,range-microamp = <(-60000) 300000>;
+> +                                reg = <0>;
+> +                                adi,range-microamp = <0 300000>;
+>                          };
+>
+>                          channel@1 {
+> -                                num = <1>;
+> +                                reg = <1>;
+>                                  adi,range-microamp = <0 140000>;
+>                          };
+>
+>                          channel@2 {
+> -                                num = <2>;
+> +                                reg = <2>;
+>                                  adi,range-microamp = <0 55000>;
+>                          };
+>
+>                          channel@3 {
+> -                                num = <3>;
+> +                                reg = <3>;
+>                                  adi,range-microamp = <0 45000>;
+>                          };
+>
+>                          channel@4 {
+> -                                num = <4>;
+> +                                reg = <4>;
+>                                  adi,range-microamp = <0 45000>;
+>                          };
+>
+>                          channel@5 {
+> -                                num = <5>;
+> +                                reg = <5>;
+>                                  adi,range-microamp = <0 45000>;
+>                          };
+>                  };
+> --
+> 2.20.1
+>
