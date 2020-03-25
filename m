@@ -2,85 +2,107 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B09DC54FD8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 08:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0CBC54FD5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 08:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5BB820663
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 08:14:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="p1ccBwk/"
+	by mail.kernel.org (Postfix) with ESMTP id 685CC20714
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 08:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgCYIOK (ORCPT
+        id S1727527AbgCYIfC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:14:10 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:30461 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727383AbgCYIOK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 04:14:10 -0400
-X-UUID: d569855ced204cefb7cf9fcfaf31894d-20200325
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=0n+EUTSUdOSSkaTkHUmDbzhJFVoxjbBJTb+B0M4gX+k=;
-        b=p1ccBwk/gar46gDywu4I7HQ3ny8LuN9edXSd3hWIP5UV/G1XB7Zz6TuvpuW0Gq/RoM7fTkLuAmLLwxnLMXG/QTD7PN+OCSYNW7M99+Op+dwRrHD4AbCfRD8HaPqkLrNKQsBLFTJkQfGuzQlXnDWwPN7Sx5bes9w8N9e0/X6fugQ=;
-X-UUID: d569855ced204cefb7cf9fcfaf31894d-20200325
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 988951752; Wed, 25 Mar 2020 16:14:02 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 25 Mar 2020 16:13:27 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 25 Mar 2020 16:13:26 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>
-CC:     Andy Teng <andy.teng@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>,
-        Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH v4 5/6] pinctrl: mediatek: add mt6779 eint support
-Date:   Wed, 25 Mar 2020 16:12:43 +0800
-Message-ID: <1585123964-10791-6-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1585123964-10791-1-git-send-email-hanks.chen@mediatek.com>
-References: <1585123964-10791-1-git-send-email-hanks.chen@mediatek.com>
+        Wed, 25 Mar 2020 04:35:02 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55359 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727462AbgCYIfC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 04:35:02 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jH1Uy-0003At-S7; Wed, 25 Mar 2020 09:34:52 +0100
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jH1Uv-00047B-MV; Wed, 25 Mar 2020 09:34:49 +0100
+Date:   Wed, 25 Mar 2020 09:34:49 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     David Miller <davem@davemloft.net>
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        marex@denx.de, david@protonic.nl, devicetree@vger.kernel.org,
+        linux@armlinux.org.uk, olteanv@gmail.com
+Subject: user space interface for configuring T1 PHY management mode
+ (master/slave)
+Message-ID: <20200325083449.GA8404@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: FF973F850011CBAAEE0C21F1680A0D8197FD3BA48076E1571591A28544583C1E2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:27:16 up 195 days, 21:15, 449 users,  load average: 0.25, 0.32,
+ 0.69
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-YWRkIGRyaXZlciBzZXR0aW5nIHRvIHN1cHBvcnQgbXQ2Nzc5IGVpbnQNCg0KQ2hhbmdlLUlkOiBJ
-N2FhMWU2NDExMmNiMmU0MzgxMzMyOGQ5OTcxZmQ2NDQ2MjllZGYwYQ0KU2lnbmVkLW9mZi1ieTog
-SGFua3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBNYXJz
-IENoZW5nIDxtYXJzLmNoZW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvcGluY3RybC9t
-ZWRpYXRlay9waW5jdHJsLW10Njc3OS5jIHwgICAgOCArKysrKysrKw0KIDEgZmlsZSBjaGFuZ2Vk
-LCA4IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRl
-ay9waW5jdHJsLW10Njc3OS5jIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2
-Nzc5LmMNCmluZGV4IDE0NWJmMjIuLjMyODIyNjAgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BpbmN0
-cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NzkuYw0KKysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlh
-dGVrL3BpbmN0cmwtbXQ2Nzc5LmMNCkBAIC03MzEsMTEgKzczMSwxOSBAQA0KIAkiaW9jZmdfcnQi
-LCAiaW9jZmdfbHQiLCAiaW9jZmdfdGwiLA0KIH07DQogDQorc3RhdGljIGNvbnN0IHN0cnVjdCBt
-dGtfZWludF9odyBtdDY3NzlfZWludF9odyA9IHsNCisJLnBvcnRfbWFzayA9IDcsDQorCS5wb3J0
-cyAgICAgPSA2LA0KKwkuYXBfbnVtICAgID0gMTk1LA0KKwkuZGJfY250ICAgID0gMTMsDQorfTsN
-CisNCiBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19waW5fc29jIG10Njc3OV9kYXRhID0gew0KIAku
-cmVnX2NhbCA9IG10Njc3OV9yZWdfY2FscywNCiAJLnBpbnMgPSBtdGtfcGluc19tdDY3NzksDQog
-CS5ucGlucyA9IEFSUkFZX1NJWkUobXRrX3BpbnNfbXQ2Nzc5KSwNCiAJLm5ncnBzID0gQVJSQVlf
-U0laRShtdGtfcGluc19tdDY3NzkpLA0KKwkuZWludF9odyA9ICZtdDY3NzlfZWludF9odywNCiAJ
-LmdwaW9fbSA9IDAsDQogCS5pZXNfcHJlc2VudCA9IHRydWUsDQogCS5iYXNlX25hbWVzID0gbXQ2
-Nzc5X3BpbmN0cmxfcmVnaXN0ZXJfYmFzZV9uYW1lcywNCi0tIA0KMS43LjkuNQ0K
+Hi all,
 
+I'm working on mainlining of NXP1102 PHY (BroadR Reach/802.3bw) support.
+
+Basic functionality is working and support with mainline kernel. Now it is time
+to extend it. According to the specification, each PHY can be master or slave.
+
+The HW can be pre configured via bootstrap pins or fuses to have a default
+configuration. But in some cases we still need to be able to configure the PHY
+in a different mode: 
+--------------------------------------------------------------------------------
+http://www.ieee802.org/3/1TPCESG/public/BroadR_Reach_Automotive_Spec_V3.0.pdf
+
+6.1 MASTER-SLAVE configuration resolution
+
+All BroadR-Reach PHYs will default to configure as SLAVE upon power up or reset
+until a management system (for example, processor/microcontroller) configures
+it to be MASTER. MASTER-SLAVE assignment for each link configuration is
+necessary for establishing the timing control of each PHY.
+
+6.2 PHY-Initialization
+
+Both PHYs sharing a link segment are capable of being MASTER or SLAVE. In IEEE
+802.3-2012, MASTER-SLAVE resolution is attained during the Auto-Negotiation
+process (see IEEE 802.3-2012 Clause 28). However, the latency for this process
+is not acceptable for automotive application. A forced assignment scheme is
+employed depending on the physical deployment of the PHY within the car. This
+process is conducted at the power-up or reset condition. The station management
+system manually configures the BroadR-Reach PHY to be MASTER (before the link
+acquisition process starts) while the link partner defaults to SLAVE
+(un-managed).
+--------------------------------------------------------------------------------
+
+Should phylink be involved in this configuration? What's the proper user
+space interface to use for this kind of configuration?  ethtool or ip
+comes into mind. Further having a Device Tree property to configure a
+default mode to overwrite the boot strap pins would be nice to have.
+
+
+Regards,
+Oleksij
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
