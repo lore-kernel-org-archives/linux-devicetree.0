@@ -2,218 +2,66 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488B4C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 21:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E3AC2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 21:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B94E2070A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 21:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F422070A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 21:37:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbgCYVfg (ORCPT
+        id S1727550AbgCYVhz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:35:36 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39946 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgCYVfg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 17:35:36 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 0E687293EA8
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v3 7/7] dt-bindings: rockchip-vpu: Convert bindings to json-schema
-Date:   Wed, 25 Mar 2020 18:34:38 -0300
-Message-Id: <20200325213439.16509-8-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200325213439.16509-1-ezequiel@collabora.com>
-References: <20200325213439.16509-1-ezequiel@collabora.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 25 Mar 2020 17:37:55 -0400
+Received: from fgw20-4.mail.saunalahti.fi ([62.142.5.107]:46143 "EHLO
+        fgw20-4.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727508AbgCYVhy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 17:37:54 -0400
+Received: from localhost.localdomain (85-76-97-57-nat.elisa-mobile.fi [85.76.97.57])
+        by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+        id a3e2473a-6ede-11ea-826c-005056bd6ce9;
+        Wed, 25 Mar 2020 23:21:50 +0200 (EET)
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: DTS: OMAP3: disable RNG on N950/N9
+Date:   Wed, 25 Mar 2020 23:21:49 +0200
+Message-Id: <20200325212149.27547-1-aaro.koskinen@iki.fi>
+X-Mailer: git-send-email 2.17.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Rockchip VPU (Hantro IP block) codec driver documentation to
-json-schema.
+Like on N900, we cannot access RNG directly on N950/N9. Mark it disabled in
+the DTS to allow kernel to boot.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Fixes: 308607e5545f ("ARM: dts: Configure omap3 rng")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
 ---
- .../bindings/media/rockchip-vpu.txt           | 43 ----------
- .../bindings/media/rockchip-vpu.yaml          | 82 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 83 insertions(+), 44 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+ arch/arm/boot/dts/omap3-n950-n9.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.txt b/Documentation/devicetree/bindings/media/rockchip-vpu.txt
-deleted file mode 100644
-index 339252d9c515..000000000000
---- a/Documentation/devicetree/bindings/media/rockchip-vpu.txt
-+++ /dev/null
-@@ -1,43 +0,0 @@
--device-tree bindings for rockchip VPU codec
--
--Rockchip (Video Processing Unit) present in various Rockchip platforms,
--such as RK3288, RK3328 and RK3399.
--
--Required properties:
--- compatible: value should be one of the following
--		"rockchip,rk3288-vpu";
--		"rockchip,rk3328-vpu";
--		"rockchip,rk3399-vpu";
--- interrupts: encoding and decoding interrupt specifiers
--- interrupt-names: should be
--		"vepu", "vdpu" on RK3288 and RK3399,
--		"vdpu" on RK3328.
--- clocks: phandle to VPU aclk, hclk clocks
--- clock-names: should be "aclk" and "hclk"
--- power-domains: phandle to power domain node
--- iommus: phandle to a iommu node
--
--Example:
--SoC-specific DT entry:
--	vpu: video-codec@ff9a0000 {
--		compatible = "rockchip,rk3288-vpu";
--		reg = <0x0 0xff9a0000 0x0 0x800>;
--		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "vepu", "vdpu";
--		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
--		clock-names = "aclk", "hclk";
--		power-domains = <&power RK3288_PD_VIDEO>;
--		iommus = <&vpu_mmu>;
--	};
--
--	vpu: video-codec@ff350000 {
--		compatible = "rockchip,rk3328-vpu";
--		reg = <0x0 0xff350000 0x0 0x800>;
--		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "vdpu";
--		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
--		clock-names = "aclk", "hclk";
--		power-domains = <&power RK3328_PD_VPU>;
--		iommus = <&vpu_mmu>;
--	};
-diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-new file mode 100644
-index 000000000000..a0c45e05cf03
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-@@ -0,0 +1,82 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/media/rockchip-vpu.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Hantro G1 VPU codecs implemented on Rockchip SoCs
-+
-+maintainers:
-+  - Ezequiel Garcia <ezequiel@collabora.com>
-+
-+description:
-+  Hantro G1 video encode and decode accelerators present on Rockchip SoCs.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk3288-vpu
-+      - rockchip,rk3328-vpu
-+      - rockchip,rk3399-vpu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 2
-+
-+  interrupt-names:
-+    items:
-+      - const: vepu
-+      - const: vdpu
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: aclk
-+      - const: hclk
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  iommus:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+        #include <dt-bindings/clock/rk3288-cru.h>
-+        #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+        vpu: video-codec@ff9a0000 {
-+                compatible = "rockchip,rk3288-vpu";
-+                reg = <0x0 0xff9a0000 0x0 0x800>;
-+                interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+                             <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+                interrupt-names = "vepu", "vdpu";
-+                clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
-+                clock-names = "aclk", "hclk";
-+                power-domains = <&power RK3288_PD_VIDEO>;
-+                iommus = <&vpu_mmu>;
-+        };
-+
-+        vpu: video-codec@ff350000 {
-+                compatible = "rockchip,rk3328-vpu";
-+                reg = <0x0 0xff350000 0x0 0x800>;
-+                interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+                interrupt-names = "vdpu";
-+                clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
-+                clock-names = "aclk", "hclk";
-+                power-domains = <&power RK3328_PD_VPU>;
-+                iommus = <&vpu_mmu>;
-+        };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d66ac41ef587..2b8b3e7f3df3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14320,7 +14320,7 @@ L:	linux-rockchip@lists.infradead.org
- S:	Maintained
- F:	drivers/staging/media/hantro/
- F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
--F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
-+F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+index a075b63f3087..11d41e86f814 100644
+--- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
++++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+@@ -341,6 +341,11 @@
+ 	status = "disabled";
+ };
  
- ROCKER DRIVER
- M:	Jiri Pirko <jiri@resnulli.us>
++/* RNG not directly accessible on N950/N9. */
++&rng_target {
++	status = "disabled";
++};
++
+ &usb_otg_hs {
+ 	interface-type = <0>;
+ 	usb-phy = <&usb2_phy>;
 -- 
-2.26.0.rc2
+2.17.0
 
