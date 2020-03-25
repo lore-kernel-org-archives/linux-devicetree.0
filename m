@@ -2,98 +2,111 @@ Return-Path: <SRS0=vtFV=5K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36291C10DCE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 00:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA33C54FCE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 00:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9782073C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 00:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA26E20724
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Mar 2020 00:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rqWZy+mx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tzYV6AXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgCYABM (ORCPT
+        id S1727188AbgCYAXD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Mar 2020 20:01:12 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15473 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbgCYABM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 20:01:12 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7a9eec0000>; Tue, 24 Mar 2020 16:59:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 24 Mar 2020 17:01:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 24 Mar 2020 17:01:11 -0700
-Received: from [10.2.160.81] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
- 2020 00:01:10 +0000
+        Tue, 24 Mar 2020 20:23:03 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43261 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbgCYAXD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Mar 2020 20:23:03 -0400
+Received: by mail-lj1-f193.google.com with SMTP id g27so604580ljn.10;
+        Tue, 24 Mar 2020 17:23:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ct/V5EnftFkGN3WYxrNnLQpcXQ4Aalb0V9/m+SiHKIE=;
+        b=tzYV6AXBdVjWcAGYDlnJbhS//oa5DHQFSKfMASl7NuXw4AodL//Be/sLiLinQD85bS
+         ahhnozUcmu+Nrq6aF8Tu0p/pQLjLRUJSabIldxD3GSQow9Dp7gypCVeF4c/ao9g9/eAp
+         wVrSanIWv8FY0fzHgb9P2L7cIBBG6rD+vzRR0TbLx+FPb92+rSXg+de/7fcSTuIoEMNS
+         TeQNWpUtHBRvwcCKVUsznod8o7S6/PUSGePKAm6tyDl05pFp5HYn52dlMmYJO/aNCuGN
+         xF46CZ2mdmP2nd7dN0xnga1k4FACvHm6+SF04shzuOqUyLZCC1ygbWpSWQ5gl9et0f21
+         DKOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ct/V5EnftFkGN3WYxrNnLQpcXQ4Aalb0V9/m+SiHKIE=;
+        b=tG5Cphfaa9MFI0maj3d2a5wz3eGqjEabV2EPMwrNx/n5mKfA3URpuvBkLleOiwOzbc
+         KA9xFixcAAkvtd1PRV2aOWi/UCmzsf8Xl9eyVEF440kLlKPq8BgJuW0+UolNrPh3cMak
+         XjS3viB8y4B7PHLa/k12OfgoJHSf55RBgweomvtejspsQ7k8Tzid8HKZCtFZBfE46RF0
+         SdVwipTOcNAeuR1VhIDLRJ/oFXGadAcQ+DKS/KzuxWFyrXW8grfaTvYWtSCE9p25suNj
+         EJask+kII4fUs/mSAi623IC2VQWEGxBbV03WRVDwanm4eRJrSANibIXvEAM7TViz7YQD
+         1/wA==
+X-Gm-Message-State: ANhLgQ0KSc1sfWe57fhsvMINFZ7lXNFksuH9vG6pHZTSsDXEbFWwWumj
+        UpoAHzFl7p1XbK1ni5X+MhWPo/e/
+X-Google-Smtp-Source: APiQypKH2RBu/eqHvdIujKLPytbWL/hPORDcJLKVesrNFS6S7uug4Yi0HP/L1SteXLoI4lcvrq4r6g==
+X-Received: by 2002:a2e:330e:: with SMTP id d14mr193463ljc.153.1585095779507;
+        Tue, 24 Mar 2020 17:22:59 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id k18sm10757172ljc.92.2020.03.24.17.22.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 17:22:58 -0700 (PDT)
 Subject: Re: [RFC PATCH v5 9/9] arm64: tegra: Add Tegra VI CSI support in
  device tree
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
  <1584985955-19101-10-git-send-email-skomatineni@nvidia.com>
  <672819ea-01d3-2eca-8bb7-84ffd64256d4@gmail.com>
  <a218142f-295e-6bd5-b1d7-47d9ab8eba3e@nvidia.com>
  <fee09e1e-48a3-e0a0-12dc-9aeeb3438ded@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <7d7c982e-7755-5f3d-cb90-9622f87df283@nvidia.com>
-Date:   Tue, 24 Mar 2020 17:01:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ <7d7c982e-7755-5f3d-cb90-9622f87df283@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b757b06f-3ee1-1c8b-ae47-38211da667bc@gmail.com>
+Date:   Wed, 25 Mar 2020 03:22:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <fee09e1e-48a3-e0a0-12dc-9aeeb3438ded@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <7d7c982e-7755-5f3d-cb90-9622f87df283@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585094380; bh=UlxBKHdiYfVf84pWue7S26iqlGChyU/5RVRLZidgwwY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=rqWZy+mxTmPdOwYibjStZKZSubndUNS8+XhlzGnz5s3ZA4tZUoYEr+KvptK6GAJ3j
-         14LqB77/IfcA2rtKMXyg2Nqz14NIMP901W8KCMnYTotoYx4aHKQxUlxowFE2WQBxbG
-         l+dEM7XVgtK1PROmxIWXax9ZtjzWUVAdq8saJSs9QeN6se6VAFjALh9nXgEvB0FFW/
-         TMqVp9DsOuv8ML6ZpsYlCTw6tRwTfWmMPEjCRN9CBVHgv9Q5RuuDe/9ljx2/cKQL8S
-         oVdsIHp1lmY/f+YsU+eiUZ2k1Bnx+Isi8/wfeuQ+BloO/7BYBPgdUPCXms2YHlUnuJ
-         hL/lDjN/OPDjA==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+25.03.2020 03:01, Sowjanya Komatineni пишет:
+> 
+> On 3/24/20 3:48 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 25.03.2020 00:04, Sowjanya Komatineni пишет:
+>>> On 3/24/20 12:19 PM, Dmitry Osipenko wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> 23.03.2020 20:52, Sowjanya Komatineni пишет:
+>>>> ...
+>>>>> +                     pd_venc: venc {
+>>>>> +                             clocks = <&tegra_car TEGRA210_CLK_VI>,
+>>>>> +                                      <&tegra_car TEGRA210_CLK_CSI>;
+>>>>> +                             resets = <&mc TEGRA210_MC_RESET_VI>,
+>>>> The MC resetting should be needed only for a hardware hot-resetting. It
+>>>> should be wrong to add it to the power domain.
+>>> TRM recommends to do MC client hot-reset during VE power gate and
+>>> ungate.
+>> Could you please tell what TRM it is and what's the page#?
+> Tegra TX1 TRM Page 425, Section 12.2.7.14 Procedures for VE Power Domains
 
-On 3/24/20 3:48 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 25.03.2020 00:04, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 3/24/20 12:19 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 23.03.2020 20:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>> +                     pd_venc: venc {
->>>> +                             clocks =3D <&tegra_car TEGRA210_CLK_VI>,
->>>> +                                      <&tegra_car TEGRA210_CLK_CSI>;
->>>> +                             resets =3D <&mc TEGRA210_MC_RESET_VI>,
->>> The MC resetting should be needed only for a hardware hot-resetting. It
->>> should be wrong to add it to the power domain.
->> TRM recommends to do MC client hot-reset during VE power gate and ungate=
-.
-> Could you please tell what TRM it is and what's the page#?
-Tegra TX1 TRM Page 425, Section 12.2.7.14 Procedures for VE Power Domains
+Okay, thanks.
