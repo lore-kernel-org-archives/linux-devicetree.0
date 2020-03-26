@@ -2,158 +2,141 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BACC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A089BC2D0E9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67F120714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D572078C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LeCF+XZO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxH+GGmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgCZV2u (ORCPT
+        id S1726270AbgCZVdQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:28:50 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52480 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZV2u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 17:28:50 -0400
-Received: by mail-pj1-f65.google.com with SMTP id ng8so3008410pjb.2;
-        Thu, 26 Mar 2020 14:28:49 -0700 (PDT)
+        Thu, 26 Mar 2020 17:33:16 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40788 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZVdQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 17:33:16 -0400
+Received: by mail-qk1-f194.google.com with SMTP id l25so8688823qki.7;
+        Thu, 26 Mar 2020 14:33:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h9Np+N/jnv+SaunZ4Qzp2gD2QknFbGsdEeKP5pH/MNs=;
-        b=LeCF+XZOSJAf2r1mO82UXQ3kV+Djmm1D+LCHPYnmBkNkol7AAPjlCdJkkH6Cq8DtH/
-         r1VcaMs3iCtk8ToH74cNB/NDcVzD870+dQKYqlWI8xrNudIH5vGjOyqPjx9OCSlqDfsk
-         uIg2kHiXg7Ka5T1//zCwnSYw/+kX/Q6ST2AJ2QQyT4rCg2HIyg77gqa/7ytQkBuA8shj
-         awhMUPcAhZu+MvBND8COMPT6u+1fqj2duc89O/sNiC7RJ8khXqynAOBu1jOMZJwgLzId
-         pEulOCn2yPqTON+ODxrzYTP13Snp3hVVWCLtmomQRWfHR0yAbjxneMRy1z1g1/fr/gtE
-         yjjA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Ng6NKbIQ7UH3Fnc48aHdWJ3D471uKUieydIRfZ614w=;
+        b=lxH+GGmFX0wL7NEqN1O4gbB6ll8ceOy96u0EDOjFkzyYSPNSMooflVnL0LYq2eDdve
+         pIyAuRztz0hDq0jS+Dm5y+G4qqs+2YItdKIeGyeKDRQlKkkXLWqjmY2FN30LxaGExg2K
+         9HC/SRWABTzD3dwtho1G8lRmsgb0yucRK71Y+ud5Lw06G9rhInWiZxT5faln4HUYVaRJ
+         FfAAQ4RJb0NhamOtZ82R5NOpEseJP2QV5AA9QABLfdRmyN1aUCndkrCQbxbtqFTJqnm/
+         OIQtnlDR7vQ2WLCBtkhcMfSfmNKebDARjuVZ9h5n27fP+NIiiU7hNuadKjqGxdxRmVEV
+         Vk/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h9Np+N/jnv+SaunZ4Qzp2gD2QknFbGsdEeKP5pH/MNs=;
-        b=i6TVP136kVJvQxf6dx3fRbnlWY3Haq9HIR2gPP04Ge795Etr0BlQSE32lcOg+UHHWw
-         DT42HwRQr4NXSlWgP8u1v1tgYYsaRzSolxr1NQildhIRyTVeaIHPEh9g2YD+LDtMGu0s
-         6/VsMcvcPYva32FEiBAbB/L4r6NSwiG45tOusRi6KiT89JMLjbQGJ23HG33gkhIitkSe
-         yID3FGwOJHqr7IynrfWYM1o2+5DfBvTB6PQYZZQ6O18SvH1kBp/BVHVByM+V1kxfbfHw
-         44HXAvDB2T32fsm8YGhqxzafu2k6eEF9VySezGVeC42Xym1C1mdjNbjxRZZAc7idcc7q
-         MABg==
-X-Gm-Message-State: ANhLgQ3QU2xImVSBxnjRiDWXtwMssHI9FxoEcGwkX29D26zXhDbEzaCn
-        yRZPaTWLLgooJvUCFcuHYuk=
-X-Google-Smtp-Source: ADFU+vvyNXnWrvCL+9n2rHlpowRbPitq4eWcQo//8PEWZiBpq6/KhVBOM8BUmyt8aTIlLrtjKSMjxw==
-X-Received: by 2002:a17:90a:5d16:: with SMTP id s22mr2163862pji.184.1585258129014;
-        Thu, 26 Mar 2020 14:28:49 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id a24sm2445523pfl.115.2020.03.26.14.28.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+Ng6NKbIQ7UH3Fnc48aHdWJ3D471uKUieydIRfZ614w=;
+        b=iH9YMMAxn7G7ZIhNcExjvwzWg404CGkI21NpNsz/pyvVUQAD0uxjFV5mKpMFaQjeOV
+         qoPbE2VvJqWCn98NE7SGxC+frwYEJ7NkO2K3J6r3119bSqOJSlpdsF21VvflS4YJMTSy
+         l7SESeB2U4BO01sn+HiZaUg4rrR4sJ+cwT1ppktdu/fy6EFPJYaOde+PpVggkNq+B3iD
+         CIV59aaDlvHT7DV8aekfHoo07JmbtD4pp2TPh3bKnKhvhY2u7TpXLAoKlYo4dTB8LxOI
+         eS6NBMWlRnDAR16pJiyp4apwXvz/5LxD7zXGi1wh5kCNt/IxlhmoRTjSW6Vsp/cfGYyv
+         iP1g==
+X-Gm-Message-State: ANhLgQ22akVcn7NtSC3NpsTfSEoid2GVRU/Cy1KQ1WV0YUtB8p0hYaxn
+        /Tg6Kt3uKbapVWhPHAMwSai9DHL1pps=
+X-Google-Smtp-Source: ADFU+vvdIQ9lpvc4Gl+88YADLGqhvIcb51g8/gKUmpNuNw8n4MhXlTE/jl0iFENafg08bPhVeBD6Zg==
+X-Received: by 2002:a37:4902:: with SMTP id w2mr9908921qka.13.1585258393619;
+        Thu, 26 Mar 2020 14:33:13 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id a11sm2271488qto.57.2020.03.26.14.33.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 14:28:48 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 14:28:46 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     dtor@google.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, furquan@google.com,
-        dlaurie@google.com, bleung@google.com, zentaro@google.com,
-        dbehr@google.com, rajatxjain@gmail.com
-Subject: Re: [PATCH v2 5/5] dt-bindings: input/atkbd.txt: Add binding info
- for "keymap" property
-Message-ID: <20200326212846.GK75430@dtor-ws>
-References: <20200324123518.239768-1-rajatja@google.com>
- <20200324123518.239768-5-rajatja@google.com>
+        Thu, 26 Mar 2020 14:33:12 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     devicetree@vger.kernel.org
+Cc:     aford@beaconembedded.com, charles.stevens@logicpd.com,
+        Adam Ford <aford173@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC] clk: vc5: Add bindings for output configurations
+Date:   Thu, 26 Mar 2020 16:32:51 -0500
+Message-Id: <20200326213251.54457-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324123518.239768-5-rajatja@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:35:18AM -0700, Rajat Jain wrote:
-> Add the info for keymap property that allows firmware to specify the
-> mapping from physical code to linux keycode, that the kernel should use.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> v2: Remove the Change-Id from the commit log
-> 
->  .../devicetree/bindings/input/atkbd.txt       | 27 ++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
-> index 816653eb8e98d..0a0037d70adc8 100644
-> --- a/Documentation/devicetree/bindings/input/atkbd.txt
-> +++ b/Documentation/devicetree/bindings/input/atkbd.txt
-> @@ -6,9 +6,15 @@ Optional properties:
->  			An ordered array of the physical codes for the function
->  			row keys. Arranged in order from left to right.
->  
-> +	keymap:
+The Versaclock can be purchased in a non-programmed configuration.
+If that is the case, the driver needs to configure the chip to
+output the correct signal type, voltage and slew.
 
-This map will contain Linux specific values, so I would say
-"linux,keymap". Rob?
+This RFC is proposing an additional binding to allow non-programmed
+chips to be configured beyond their default configuration.
 
-> +			An array of the u32 entries to specify mapping from the
-> +			keyboard physcial codes to linux keycodes. The top 16
-> +			bits of each entry are the physical code, and bottom
-> +			16 bits are the	linux keycode.
-> +
->  Example:
->  
-> -	This is a sample ACPI _DSD node describing the property:
-> +	This is a sample ACPI _DSD node describing the properties:
->  
->          Name (_DSD, Package () {
->                  ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> @@ -29,6 +35,25 @@ Example:
->                                          0xAE, /* T12 VOL_DOWN */
->                                          0xB0, /* T13 VOL_UP */
->                                  }
-> +                        },
-> +                        Package () { "keymap",
-> +                                Package () {
-> +                                        0xEA009E, /* EA -> KEY_BACK */
-> +                                        0xE700AD, /* E7 -> KEY_REFRESH */
-> +                                        0x910174, /* 91 -> KEY_FULL_SCREEN */
-> +                                        0x920078, /* 92 -> KEY_SCALE */
-> +                                        0x930280, /* 93 -> 0x280 */
-> +                                        0x9400E0, /* 94 -> KEY_BRIGHTNESS_DOWN*/
-> +                                        0x9500E1, /* 95 -> KEY_BRIGHTNESS_UP */
-> +                                        0x960279, /* 96 -> KEY_PRIVACY_SCRN_TOGGLE*/
-> +                                        0x9700E5, /* 97 -> KEY_KBDILLUMDOWN */
-> +                                        0x9800E6, /* 98 -> KEY_KBDILLUMUP */
-> +                                        0xA00071, /* A0 -> KEY_MUTE */
-> +                                        0xAE0072, /* AE -> KEY_VOLUMEDOWN */
-> +                                        0xB00073, /* B0 -> KEY_VOLUMEUP */
-> +					...
-> +					<snip other entries>
-> +                                }
->                          }
->                  }
->          })
-> -- 
-> 2.25.1.696.g5e7596f4ac-goog
-> 
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Thanks.
-
+diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+index 05a245c9df08..4bc46ed9ba4a 100644
+--- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
++++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+@@ -30,6 +30,25 @@ Required properties:
+ 		- 5p49v5933 and
+ 		- 5p49v5935: (optional) property not present or "clkin".
+ 
++For all output ports, an option child node can be used to specify:
++
++- mode: can be one of
++		  - LVPECL: Low-voltage positive/psuedo emitter-coupled logic
++		  - CMOS
++		  - HCSL 
++		  - LVDS: Low voltage differential signal
++
++- voltage-level:  can be one of the following microvolts
++		  - 1800000
++		  - 2500000
++		  - 3300000
++-  slew: Percent of normal, can be one of 
++		  - P80 
++		  - P85
++		  - P90
++		  - P100 
++
++
+ ==Mapping between clock specifier and physical pins==
+ 
+ When referencing the provided clock in the DT using phandle and
+@@ -62,6 +81,8 @@ clock specifier, the following mapping applies:
+ 
+ ==Example==
+ 
++#include <dt-bindings/versaclock.h>
++
+ /* 25MHz reference crystal */
+ ref25: ref25m {
+ 	compatible = "fixed-clock";
+@@ -80,6 +101,13 @@ i2c-master-node {
+ 		/* Connect XIN input to 25MHz reference */
+ 		clocks = <&ref25m>;
+ 		clock-names = "xin";
++
++		ports@1 {
++			reg = <1>;
++			mode = <CMOS>;
++			pwr_sel = <1800000>;
++			slew = <P80>;
++		};
+ 	};
+ };
+ 
 -- 
-Dmitry
+2.25.1
+
