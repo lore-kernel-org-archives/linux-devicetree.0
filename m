@@ -2,76 +2,114 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C67C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271C9C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A257020719
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0FEB20658
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585249654;
+	bh=+w8GSzFR9yhWQ4R+Ybj2se4TpJ5km8uK237kL85tCe0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yaQ71eY+Fx+FuNH3E4kbiiN1ahf+73N60uLN9Q9My0s0sxSh8kyo0RjGCVsvpQ5U5
+	 ymqD9SiyyEnnmVDK5fMrx/vO2neyNcgiej3logMdI9C80lTcBbfJrdN7C0o1KjhacE
+	 pZepHpJCv3Q5H5tPjU1IWoH6kSD/D1QLLXEUCFGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCZTDx (ORCPT
+        id S1726363AbgCZTHe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:03:53 -0400
-Received: from smtprelay0247.hostedemail.com ([216.40.44.247]:56850 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726340AbgCZTDx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:03:53 -0400
-X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Mar 2020 15:03:52 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id B77BF18024AE8
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 18:57:12 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 4CDDD837F24D;
-        Thu, 26 Mar 2020 18:57:11 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: box88_4315bd86663d
-X-Filterd-Recvd-Size: 1839
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 26 Mar 2020 18:57:08 +0000 (UTC)
-Message-ID: <46bf05a81237ed716bf06b48891fcd7c129eae5d.camel@perches.com>
-Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
-From:   Joe Perches <joe@perches.com>
-To:     David Miller <davem@davemloft.net>, florinel.iordache@nxp.com
-Cc:     netdev@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
-        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
-        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 26 Mar 2020 11:55:17 -0700
-In-Reply-To: <20200326.115330.2250343131621391364.davem@davemloft.net>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
-         <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
-         <20200326.115330.2250343131621391364.davem@davemloft.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 26 Mar 2020 15:07:34 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45316 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgCZTHe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 15:07:34 -0400
+Received: by mail-io1-f66.google.com with SMTP id a24so6649801iol.12;
+        Thu, 26 Mar 2020 12:07:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XlPdXiaUcWF4l3W2QAopXp48lkN8VSOqX9NF2PO2ytM=;
+        b=BeTR7SO6oJCzMeERVN4bLoWaA2s7Bqure483ABH38I3y6Caktcldya5nNEwfNLKO0D
+         2P1Hvamj/hFISaI3UInq0hghsuUVUJsvFWF6pEO7OzCn/EFF4BVknSY702hTb9/KkDkv
+         0fVMjcppW2xnL2YoiP7M38SXAmpyK3iCssqso4/se21PizyXyoVuQYtqmMX+UKVeFx8a
+         Dw/UCZYQ0No0WdJRwiBOVYKrt84JuDxUMyZw7ZBQZUgwHHE92KtQe7aPkyQjQ7zZ7ggY
+         uJvgwHmv58WpL7k4q1GWPpnzYOOorXmuau3LWzXVYBzUvRnAYDXSB15C3SbnCWrhvaD2
+         fUTw==
+X-Gm-Message-State: ANhLgQ2Y9GbPKrIt68ObMBj0Icx5Z7LbrBrssnbw4d/uWyFiWxEY8lHg
+        s1A+mdsXC9JurlRZOx58AA==
+X-Google-Smtp-Source: ADFU+vu0u0z3TnGzqS0Nm32vixLhgoS0FjOXf+e8I7rjAAQMub6xibKWBxvPhpJxr4Ixt/oZcl0CkQ==
+X-Received: by 2002:a02:2a03:: with SMTP id w3mr9353295jaw.142.1585249653148;
+        Thu, 26 Mar 2020 12:07:33 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id p69sm625874ill.46.2020.03.26.12.07.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 12:07:32 -0700 (PDT)
+Received: (nullmailer pid 22609 invoked by uid 1000);
+        Thu, 26 Mar 2020 19:07:31 -0000
+Date:   Thu, 26 Mar 2020 13:07:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 1/3] dt-bindings: Add vendor prefix for ITE Tech. Inc.
+Message-ID: <20200326190731.GA15606@bogus>
+References: <1584941015-20541-1-git-send-email-allen.chen@ite.com.tw>
+ <1584941015-20541-2-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584941015-20541-2-git-send-email-allen.chen@ite.com.tw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 2020-03-26 at 11:53 -0700, David Miller wrote:
-> From: Florinel Iordache <florinel.iordache@nxp.com>
-> Date: Thu, 26 Mar 2020 15:51:19 +0200
+On Mon, Mar 23, 2020 at 01:21:52PM +0800, allen wrote:
+> ITE Tech. Inc. (abbreviated as ITE ) is a professional fabless IC
+> design house. ITE's core technology includes PC and NB Controller chips,
+> Super I/O, High Speed Serial Interface, Video Codec, Touch Sensing,
+> Surveillance, OFDM, Sensor Fusion, and so on.
+
+The commit message should explain why you are changing ',' to '.' 
+because you are no longer adding the vendor.
+
 > 
-> > +static void kr_reset_master_lane(struct kr_lane_info *krln)
-> > +{
-> > +     struct phy_device *bpphy = krln->bpphy;
-> > +     struct backplane_phy_info *bp_phy = bpphy->priv;
-> > +     const struct lane_io_ops *lane_ops = krln->bp_phy->bp_dev.lane_ops;
+> more information on: http://www.ite.com.tw/
 > 
-> Please use reverse christmas tree ordering for local variables.
-
-How (any why) do you suggest the first 2 entries here
-should be ordered?
-
-
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 4c8eaa1..49b7294 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -482,7 +482,7 @@ patternProperties:
+>    "^issi,.*":
+>      description: Integrated Silicon Solutions Inc.
+>    "^ite,.*":
+> -    description: ITE Tech, Inc.
+> +    description: ITE Tech. Inc.
+>    "^itead,.*":
+>      description: ITEAD Intelligent Systems Co.Ltd
+>    "^iwave,.*":
+> -- 
+> 1.9.1
+> 
