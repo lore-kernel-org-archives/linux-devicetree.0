@@ -2,142 +2,127 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF59C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 18:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B433C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 18:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9BD02076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 18:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF912070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 18:34:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oxTllWop"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D5KANnoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgCZSJx (ORCPT
+        id S1727541AbgCZSeV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:09:53 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40438 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgCZSJx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 14:09:53 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02QI9fkO005199;
-        Thu, 26 Mar 2020 13:09:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585246181;
-        bh=p3uCdd3lNgStEmVbRoGU3tYob5tHrXuUe3dGhywOrXc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=oxTllWopocVS+boJ3JwFLjfj7+B7KNkWnWw8YgaE1/SQv0c0QnjdnCkH705FazV7R
-         TzUrv+kqFB8IHVRP6nI68IeE5MeJJd5ArtvJbBzzK862KXr7G1Wgeo25yevhkuoeQP
-         UXyQy2H94/jn8WXIcWpg0S8Jz07hnbU0N1hAX+HQ=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02QI9fj9094474
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 26 Mar 2020 13:09:41 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 26
- Mar 2020 13:09:41 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 26 Mar 2020 13:09:41 -0500
-Received: from [10.250.86.212] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02QI9eb5072144;
-        Thu, 26 Mar 2020 13:09:41 -0500
-Subject: Re: [PATCH 3/7] dt-bindings: remoteproc: Add bindings for R5F
- subsystem on TI K3 SoCs
-To:     Rob Herring <robh@kernel.org>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200324201819.23095-1-s-anna@ti.com>
- <20200324201819.23095-4-s-anna@ti.com> <20200326162802.GA32328@bogus>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <90bae05e-dd47-5b71-07a7-5c3efd929143@ti.com>
-Date:   Thu, 26 Mar 2020 13:09:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 26 Mar 2020 14:34:21 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39734 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727192AbgCZSeV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 14:34:21 -0400
+Received: by mail-oi1-f195.google.com with SMTP id d63so6440197oig.6
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 11:34:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zvcRbO8JiiH8TflCF3JYY64FRuv850T5VBR+zKWVaAo=;
+        b=D5KANnoUgA813LQvHjIp5rAoPhY2gTJup4nP+xGLb5FNmM7+8RNwum/ue1O95T+xWb
+         5Ktbnl2iWEXVoCU3oOQg1rH6QozCfngfrmRO501JFNyUSHuo2dqvZagSkuCv/ZkCcdDy
+         9SNPpYOLAEHYsE4N1CYsv1lw2JsDmzr3bO5CAhprXa6CHmJ/wgf3TslEjhp5iWSPZbla
+         6EGwewp3bw3kVgK1ceZl6cCzyM58RIqxXE7Ece2gV1Bkyopg2Mdv5j42z6O1C0vGsEb+
+         xUlK8kqOpBq79qowMpVYE7dI2KBF+1Bmk+h2mEbeqaCTkXHdCSEol6R1AyJ6SpC3NLmt
+         slKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zvcRbO8JiiH8TflCF3JYY64FRuv850T5VBR+zKWVaAo=;
+        b=H9oHB10V/D0bmGcEt5BKx9Fgq+UaHNY5RX7Zl2YVfeUeF5ZRJBdPxBE8M4ku5jt3Er
+         5O7jyvzzAiYSxXX6K4v+pq7BBBUNCZHR2UQl7zP53zGzawea2MKnQuBBoN3wEg+78uko
+         2yZoPsLCLEw6U+2q/tmMMFN2bErkbi9RwF6pWjixARMomOq1Ay+opTenn7Zc42UZMuHC
+         +j7y2ttn9CBg6ghqW/Nqga0aQAlyJLOQvnhIBFeUiELvR6iNSQ01JKuUs1Ta8cpfBDje
+         fjdhzrceCpCOTWD8RMgmbqoFTrlKzb2oRLvxUi8rQ2MD/dV9SwiIMKqlQcGLuHyxTNEv
+         LcaQ==
+X-Gm-Message-State: ANhLgQ2hdf80CqLHyx8iLF8ZDrrANYVUTPyYNFZmPOwL9w3p0jwhCdfp
+        nE7MBY/aJ+NSx/Di8Y1mAQNQN+hFPm6BQVR1/veBVw==
+X-Google-Smtp-Source: ADFU+vuhr19j1Gh9BuMJvyrUH94cq/bHJXqm/DeIzQEZemccehjW6KDkcmRhHiQOfwXBWmMBVCeLo1LvtVagEPcJ2FU=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr1218807oih.172.1585247660202;
+ Thu, 26 Mar 2020 11:34:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200326162802.GA32328@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1584973502-14775-1-git-send-email-ppvk@codeaurora.org> <c17d8842-0e1d-0014-b909-3114952b350b@codeaurora.org>
+In-Reply-To: <c17d8842-0e1d-0014-b909-3114952b350b@codeaurora.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 26 Mar 2020 11:33:44 -0700
+Message-ID: <CAGETcx_GD4K9CKyUtJEHKtAjHFKdfrepT0ZdA9WfRoUCF+QKPg@mail.gmail.com>
+Subject: Re: [RFC v6 0/2] Add SDHC interconnect bandwidth scaling
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Pradeep P V K <ppvk@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        adrian.hunter@intel.com, Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, vbadigan@codeaurora.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>, mka@chromium.org,
+        linux-mmc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Andy Gross <agross@kernel.org>,
+        linux-mmc-owner@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Mar 26, 2020 at 2:22 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>
+> Adding Viresh and Saravana,
+>
+> On 3/23/2020 7:55 PM, Pradeep P V K wrote:
+> > Add interconnect bandwidths for SDHC driver using OPP framework that
+> > is required by SDHC driver based on the clock frequency and bus width
+> > of the card. Otherwise, the system clocks may run at minimum clock
+> > speed and thus affecting the performance.
+> >
+> > This change is based on
+> > [RFC] mmc: host: sdhci-msm: Use the interconnect API
+> > (https://lkml.org/lkml/2018/10/11/499) and
+> >
+> > [PATCH v6] Introduce Bandwidth OPPs for interconnects
+> > (https://lkml.org/lkml/2019/12/6/740)
+>
+> Pradeep, since your series seems to depend on the above proposed bw bindings,
+> can you post the DT changes for the platform that you are testing these
+> patches on?
+>
+> Please note that the above series is currently deadlocked [1][2] with no clear path
+> forward for now, so looking at how you plan to use this might throw some light onto
+> the requirements
+>
+> [1] https://lkml.org/lkml/2020/1/14/511
+> [2] https://lkml.org/lkml/2020/3/20/106
 
-On 3/26/20 11:28 AM, Rob Herring wrote:
-> On Tue, 24 Mar 2020 15:18:15 -0500, Suman Anna wrote:
->> The Texas Instruments K3 family of SoCs have one or more dual-core
->> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
->> can be split between multiple voltage domains as well. Add the device
->> tree bindings document for these R5F subsystem devices. These R5F
->> processors do not have an MMU, and so require fixed memory carveout
->> regions matching the firmware image addresses. The nodes require more
->> than one memory region, with the first memory region used for DMA
->> allocations at runtime. The remaining memory regions are reserved
->> and are used for the loading and running of the R5F remote processors.
->> The R5F processors can also optionally use any internal on-chip SRAM
->> memories either for executing code or using it as fast-access data.
->>
->> The added example illustrates the DT nodes for the single R5FSS device
->> present on K3 AM65x family of SoCs.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->> Hi Rob,
->>
->> The dt_bindings_check seems to throw couple of warnings around the
->> usage of ranges because the tooling is adding the #address-cells
->> and #size-cells of 1 by default, whereas our actual code uses 2.
->> No issues are found with dtbs_check.
->>
->> regards
->> Suman
->>
->>  .../bindings/remoteproc/ti,k3-r5f-rproc.yaml  | 338 ++++++++++++++++++
->>  1 file changed, 338 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dts:23.13-20: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #address-cells (2) differs from /example-0 (1)
-> Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dts:23.13-20: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #size-cells (2) differs from /example-0 (1)
-> Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dts:54.13-56.72: Warning (ranges_format): /example-0/interconnect@100000:ranges: "ranges" property has invalid length (72 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 2)
+Sorry, not deadlocked. Just kinda busy. For [1] I believe I agreed
+with Viresh later on. I'll respond to [2] soon.
 
-I only saw these, because the generated example dts is using cell values
-of 1. I tried adding them using 2 in my example, but then it complains
-about duplicate properties. I do not know how to fix these though. Same
-with the K3 DSP bindings patches as well.
+-Saravana
 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: interconnect@100000: $nodename:0: 'interconnect@100000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: interconnect@28380000: $nodename:0: 'interconnect@28380000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: mcu-ram@41c00000: 'r5f-sram@0' does not match any of the regexes: '^([a-z]*-)?sram(-section)?@[a-f0-9]+$', 'pinctrl-[0-9]+'
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: mcu-ram@41c00000: $nodename:0: 'mcu-ram@41c00000' does not match '^sram(@.*)?'
-
-These node names are already upstream. Do I just update the example or
-the upstream dts also needs fixing?
-
-> 
-> See https://patchwork.ozlabs.org/patch/1260966
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Thanks, will upgrade my dt-schema.
-
-regards
-Suman
+>
+> >
+> > Pradeep P V K (2):
+> >    mmc: sdhci-msm: Add interconnect bus bandwidth scaling support
+> >    dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
+> >
+> >   .../devicetree/bindings/mmc/sdhci-msm.txt          |  18 ++
+> >   drivers/mmc/host/sdhci-msm.c                       | 240 ++++++++++++++++++++-
+> >   2 files changed, 254 insertions(+), 4 deletions(-)
+> >
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
