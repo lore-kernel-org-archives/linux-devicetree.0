@@ -2,220 +2,76 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A14C2D0E9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C67C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54EA820719
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585249378;
-	bh=rYAQ+HW4T74iOdTru5WXcbN503PoZf8QI2YBXVH0f9M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v8ZN+CvGImZNsZziS3Ea5SzXtHVgBWJZjvyHNjK+dlvOqK7H4FHqMIFuPRtdBNAhU
-	 UFAvAe8R3owNvmPPxoSG1rIW0qEevK/O95jUwd8mpjVwtklhwvZdQV1BCBSJakAubz
-	 bPDR1z5K01JE86xiRR7iw8I6d94PU4K3etk5V6mQ=
+	by mail.kernel.org (Postfix) with ESMTP id A257020719
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:03:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbgCZTC5 (ORCPT
+        id S1726359AbgCZTDx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:02:57 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44828 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgCZTC5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 15:02:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id v3so7176758iot.11;
-        Thu, 26 Mar 2020 12:02:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=913nXdxioKFyBXx/HO1CiaF3q6eac3NnTWagXaXe9gM=;
-        b=snjMPj4R6k2v144tBuqVK7n2fbKtzR7C/CfEK1EnvNJ8Ue2ef4B4ggiazACpt8aRRc
-         v6BwZ0Bf+4z63kE70AFjVoez7RInkXLJcb7h0Ss2OWxizm59ZGvlkV/ybVVpaQodSB+t
-         kBZymOuowLGOoAKZO1r0IFo9jqemAM5xI5apSERiKHTMGACmcn4q8MS8gedUGSjJSf52
-         Il+g2Gmd8ge8iiKpbcFNegjQgTi67Sfw08M/0WxwfVJGzvpP1pC7Bsl64d1b31XMSQZ9
-         /E+xu0PyDAfSi9RDSJm6kEZh00su5oy371nnRoXrdv+cg9PHCNWfHPYNyYtQ4F+w4Rwg
-         ywlQ==
-X-Gm-Message-State: ANhLgQ2StMlbPnUT85JtDayCNu46N3vEt7Q3PBXULvkBZX6821KWCWyQ
-        lkjkAnojPiChzJ8uF5waWDcN480=
-X-Google-Smtp-Source: ADFU+vtcHtx/pWLZ5r+4OrJlDvMhktQM3VWwN1mtU/cnSTzgT5KMfVdBgp6bEq0yg6SjHaY9I5/E8g==
-X-Received: by 2002:a6b:e316:: with SMTP id u22mr9211014ioc.1.1585249374945;
-        Thu, 26 Mar 2020 12:02:54 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id c88sm1079423ill.15.2020.03.26.12.02.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 12:02:54 -0700 (PDT)
-Received: (nullmailer pid 15089 invoked by uid 1000);
-        Thu, 26 Mar 2020 19:02:53 -0000
-Date:   Thu, 26 Mar 2020 13:02:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        robdclark@gmail.com, seanpaul@chromium.org, sean@poorly.run
-Subject: Re: [PATCH v9 1/2] dt-bindings: display: add visionox rm69299 panel
- variant
-Message-ID: <20200326190253.GA5029@bogus>
-References: <20200323050316.32108-1-harigovi@codeaurora.org>
- <20200323050316.32108-2-harigovi@codeaurora.org>
+        Thu, 26 Mar 2020 15:03:53 -0400
+Received: from smtprelay0247.hostedemail.com ([216.40.44.247]:56850 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726340AbgCZTDx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:03:53 -0400
+X-Greylist: delayed 401 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Mar 2020 15:03:52 EDT
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave05.hostedemail.com (Postfix) with ESMTP id B77BF18024AE8
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 18:57:12 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 4CDDD837F24D;
+        Thu, 26 Mar 2020 18:57:11 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: box88_4315bd86663d
+X-Filterd-Recvd-Size: 1839
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 26 Mar 2020 18:57:08 +0000 (UTC)
+Message-ID: <46bf05a81237ed716bf06b48891fcd7c129eae5d.camel@perches.com>
+Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
+From:   Joe Perches <joe@perches.com>
+To:     David Miller <davem@davemloft.net>, florinel.iordache@nxp.com
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 26 Mar 2020 11:55:17 -0700
+In-Reply-To: <20200326.115330.2250343131621391364.davem@davemloft.net>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+         <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+         <20200326.115330.2250343131621391364.davem@davemloft.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323050316.32108-2-harigovi@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 10:33:15AM +0530, Harigovindan P wrote:
-> Add bindings for visionox rm69299 panel.
+On Thu, 2020-03-26 at 11:53 -0700, David Miller wrote:
+> From: Florinel Iordache <florinel.iordache@nxp.com>
+> Date: Thu, 26 Mar 2020 15:51:19 +0200
 > 
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
+> > +static void kr_reset_master_lane(struct kr_lane_info *krln)
+> > +{
+> > +     struct phy_device *bpphy = krln->bpphy;
+> > +     struct backplane_phy_info *bp_phy = bpphy->priv;
+> > +     const struct lane_io_ops *lane_ops = krln->bp_phy->bp_dev.lane_ops;
 > 
-> Changes in v2:
->     - Removed unwanted properties from description.
->     - Creating source files without execute permissions(Rob Herring).
-> Changes in v3:
->     - Changing txt file into yaml
-> Changes in v4:
->     - Updating license identifier.
->     - Moving yaml file inside panel directory.
->     - Removing pinctrl entries.
->     - Adding documentation for reset-gpios.
-> Changes in v5:
->     - No changes. Updated 2/2 Patch.
-> Changes in v6:
->     - Removing patternProperties.
->     - Added " |" after description.
->     - Setting port and reset-gpios to true.
->     - Removing @ae94000 for dsi node.
-> Changes in v7:
->     - Added reg property.
-> Changes in v8:
->     - Rearranged additionalProperties.
->     - Dropping improper reg property.
-> Changes in v9:
->     - Adding additionalProperties at the same level as
->       'properties'
->     - Adding properties for "ports" which includes:
->       -> #address-cells
->       -> #size-cells
->       -> port@0
-> 
->  .../display/panel/visionox,rm69299.yaml       | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100755 Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
+> Please use reverse christmas tree ordering for local variables.
 
-Wrong file mode.
+How (any why) do you suggest the first 2 entries here
+should be ordered?
 
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
-> new file mode 100755
-> index 000000000000..2dd4d9471fa8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/visionox,rm69299.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/visionox,rm69299.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Visionox model RM69299 Panels Device Tree Bindings.
-> +
-> +maintainers:
-> + - Harigovindan P <harigovi@codeaurora.org>
-> +
-> +description: |
-> + This binding is for display panels using a Visionox RM692999 panel.
-> +
-> +allOf:
-> + - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: visionox,rm69299-1080p-display
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vdda-supply:
-> +    description: |
-> +      Phandle of the regulator that provides the vdda supply voltage.
-> +
-> +  vdd3p3-supply:
-> +    description: |
-> +      Phandle of the regulator that provides the vdd3p3 supply voltage.
-> +
-> +  ports:
-> +    type: object
-> +    description: |
-> +      A ports node with endpoint definitions as defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
 
-As I said before, fix the example. You don't need 'ports' nor a unit 
-address as there is only 1 port.
-
-All you need instead of 'ports' is 'port: true' because 
-panel-common.yaml defines it.
-
-And 'port' should be required.
-
-> +        type: object
-> +        description: |
-> +          Input endpoints of the controller.
-> +
-> +  reset-gpios: true
-> +
-> +  additionalProperties: false
-
-You are defining a property called 'additionalProperties'. Remove the 
-indentation.
-
-> +
-> +required:
-> +  - compatible
-> +  - vdda-supply
-> +  - vdd3p3-supply
-> +  - reset-gpios
-> +
-> +examples:
-> +  - |
-> +    panel {
-> +        compatible = "visionox,rm69299-1080p-display";
-> +
-> +        vdda-supply = <&src_pp1800_l8c>;
-> +        vdd3p3-supply = <&src_pp2800_l18a>;
-> +
-> +        reset-gpios = <&pm6150l_gpio 3 0>;
-> +        ports {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            port@0 {
-> +                reg = <0>;
-> +                panel0_in: endpoint {
-> +                    remote-endpoint = <&dsi0_out>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +...
-> +
-> -- 
-> 2.25.1
-> 
