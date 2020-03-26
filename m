@@ -2,101 +2,122 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1D1C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E95BC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F88A206F6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1649F20722
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KIjfvbcc"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SqSLOyHX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgCZO6L (ORCPT
+        id S1726318AbgCZO7C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:58:11 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:46670 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726318AbgCZO6K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 10:58:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=mTjPEJu+QkU3fI0mJj42IMjiIlzgL6R60YMdQoKc3oc=; b=KIjfvbccPd2baQQYlJVF49MvG
-        g9s1orjCx5h/3/xipDgJJtLVOuqpcap6pyMWHLoUuVhKvcpIi3u38GZITMRx8Mf/7FezT6GCXnYCx
-        Xyl2JtXSsu87NBBjJrIRnEUWysSenbuiPkbX3OKU6U92BJxwuO+kpL70L4kJW2VlHRfrkN7PXtRmb
-        qEGiCA1wRmmmTnBO/6xQ8nxoU24GEiA5uw39wnArFcdzJTv7aae1h30QF/O00zKLio8oxWhKaTDK9
-        KMiz2vpoYrl3nHOj9v2ioAXz/eaD6rfMjZ+AO4Yj1RRE3h6/cp5r/yMqNr0V+7hbdjX4hgwyBE0zO
-        kz7Rmuhdg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41644)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jHTxI-0003zz-Ah; Thu, 26 Mar 2020 14:58:00 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jHTx8-0003Ih-PH; Thu, 26 Mar 2020 14:57:50 +0000
-Date:   Thu, 26 Mar 2020 14:57:50 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thu, 26 Mar 2020 10:59:02 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:4922 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727821AbgCZO7C (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 10:59:02 -0400
+X-UUID: 3b0233988805467bb0e81fa145363b3d-20200326
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Wz22YepjvknPTT9ZKt5FiQJcqf5sA/7i5zIs+ibGrZ4=;
+        b=SqSLOyHXrBpAitkBidGCJ+3b5YisFxhwgjBJdS8wNh0FkMflt3HKNZm8WQoYzI4/2sWCaj/ykWw3b9s8L2bqzC5aJ6HtbONsOdinWnxIOYeFN3FZWHg7c2Axf5XXzD/3bQPei6i8ua9kWNkr/t5bGVWIDnvEwX5Q8zfBa1hmE6Q=;
+X-UUID: 3b0233988805467bb0e81fa145363b3d-20200326
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1827274245; Thu, 26 Mar 2020 22:57:25 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 26 Mar 2020 22:57:23 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 26 Mar 2020 22:57:20 +0800
+Message-ID: <1585234641.12089.7.camel@mtksdaap41>
+Subject: Re: [RESEND PATCH v6 00/17] add drm support for MT8183
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [RFC net-next 0/2] split phylink PCS operations and add PCS
- support for dpaa2
-Message-ID: <20200326145750.GA25745@shell.armlinux.org.uk>
-References: <20200317144944.GP25745@shell.armlinux.org.uk>
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 26 Mar 2020 22:57:21 +0800
+In-Reply-To: <1578021148-32413-1-git-send-email-yongqiang.niu@mediatek.com>
+References: <1578021148-32413-1-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317144944.GP25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-SNTS-SMTP: 0F6801C5DB930AB9FF671AA0D74D3E125BF3CAC024BE411DDBC607B4DE40F1C22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+SGksIFlvbmdxaWFuZzoNCg0KSW4gWzFdLCBNYXR0aGlhcyBoYXMgYXBwbGllZCBiZWxvdyBzZXJp
+ZXMgdG8gZml4IG1tc3lzIGRyaXZlciBwcm9iZQ0KcHJvYmxlbS4gUGxlYXNlIGJhc2Ugb24gdGhh
+dCBzZXJpZXMgdG8gcmVzZW5kIHlvdXIgcGF0Y2hlcy4NCg0Kc29jIC8gZHJtOiBtZWRpYXRlazog
+Rml4IG1lZGlhdGVrLWRybSBkZXZpY2UgcHJvYmluZwlzb2MgLyBkcm06DQptZWRpYXRlazogTW92
+ZSByb3V0aW5nIGNvbnRyb2wgdG8gbW1zeXMgZGV2aWNlCWNsayAvIHNvYzogbWVkaWF0ZWs6IE1v
+dmUNCm10ODE3MyBNTVNZUyB0byBwbGF0Zm9ybSBkcml2ZXIJZHQtYmluZGluZ3M6IG1lZGlhdGVr
+OiBVcGRhdGUgbW1zeXMNCmJpbmRpbmcgdG8gcmVmbGVjdCBpdCBpcyBhIHN5c3RlbSBjb250cm9s
+bGVyCWRybS9tZWRpYXRlazogT21pdCB3YXJuaW5nDQpvbiBwcm9iZSBkZWZlcnMNCg0KWzFdDQpo
+dHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9tYXR0aGlhcy5i
+Z2cvbGludXguZ2l0L2xvZy8/aD1mb3ItbmV4dA0KDQpSZWdhcmRzLA0KQ0sNCg0KT24gRnJpLCAy
+MDIwLTAxLTAzIGF0IDExOjEyICswODAwLCBZb25ncWlhbmcgTml1IHdyb3RlOg0KPiBUaGlzIHNl
+cmllcyBhcmUgYmFzZWQgb24gNS41LXJjMSBhbmQgcHJvdmlkIDE3IHBhdGNoDQo+IHRvIHN1cHBv
+cnQgbWVkaWF0ZWsgU09DIE1UODE4Mw0KPiANCj4gQ2hhbmdlIHNpbmNlIHY1DQo+IC0gZml4IHJl
+dmlld2VkIGlzc3VlIGluIHY1DQo+IGJhc2UgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+cm9qZWN0L2xpbnV4LW1lZGlhdGVrL2xpc3QvP3Nlcmllcz0yMTMyMTkNCj4gDQo+IENoYW5nZSBz
+aW5jZSB2NA0KPiAtIGZpeCByZXZpZXdlZCBpc3N1ZSBpbiB2NA0KPiANCj4gQ2hhbmdlIHNpbmNl
+IHYzDQo+IC0gZml4IHJldmlld2VkIGlzc3VlIGluIHYzDQo+IC0gZml4IHR5cGUgZXJyb3IgaW4g
+djMNCj4gLSBmaXggY29uZmxpY3Qgd2l0aCBpb21tdSBwYXRjaA0KPiANCj4gQ2hhbmdlIHNpbmNl
+IHYyDQo+IC0gZml4IHJldmlld2VkIGlzc3VlIGluIHYyDQo+IC0gYWRkIG11dGV4IG5vZGUgaW50
+byBkdHMgZmlsZQ0KPiANCj4gQ2hhbmdlcyBzaW5jZSB2MToNCj4gLSBmaXggcmV2aWV3ZWQgaXNz
+dWUgaW4gdjENCj4gLSBhZGQgZHRzIGZvciBtdDgxODMgZGlzcGxheSBub2Rlcw0KPiAtIGFkanVz
+dCBkaXNwbGF5IGNsb2NrIGNvbnRyb2wgZmxvdyBpbiBwYXRjaCAyMg0KPiAtIGFkZCB2bWFwIHN1
+cHBvcnQgZm9yIG1lZGlhdGVrIGRybSBpbiBwYXRjaCAyMw0KPiAtIGZpeCBwYWdlIG9mZnNldCBp
+c3N1ZSBmb3IgbW1hcCBmdW5jdGlvbiBpbiBwYXRjaCAyNA0KPiAtIGVuYWJsZSBhbGxvd19mYl9t
+b2RpZmllcnMgZm9yIG1lZGlhdGVrIGRybSBpbiBwYXRjaCAyNQ0KPiANCj4gWW9uZ3FpYW5nIE5p
+dSAoMTcpOg0KPiAgIGR0LWJpbmRpbmdzOiBtZWRpYXRlazogYWRkIHJkbWFfZmlmb19zaXplIGRl
+c2NyaXB0aW9uIGZvciBtdDgxODMNCj4gICAgIGRpc3BsYXkNCj4gICBhcm02NDogZHRzOiBhZGQg
+ZGlzcGxheSBub2RlcyBmb3IgbXQ4MTgzDQo+ICAgZHJtL21lZGlhdGVrOiBtb3ZlIGRzaS9kcGkg
+c2VsZWN0IGlucHV0IGludG8gbXRrX2RkcF9zZWxfaW4NCj4gICBkcm0vbWVkaWF0ZWs6IG1ha2Ug
+c291dCBzZWxlY3QgZnVuY3Rpb24gZm9ybWF0IHNhbWUgd2l0aCBzZWxlY3QgaW5wdXQNCj4gICBk
+cm0vbWVkaWF0ZWs6IGFkZCBtbXN5cyBwcml2YXRlIGRhdGEgZm9yIGRkcCBwYXRoIGNvbmZpZw0K
+PiAgIGRybS9tZWRpYXRlazogYWRkIHByaXZhdGUgZGF0YSBmb3IgcmRtYTEgdG8gZHBpMCBjb25u
+ZWN0aW9uDQo+ICAgZHJtL21lZGlhdGVrOiBhZGQgcHJpdmF0ZSBkYXRhIGZvciByZG1hMSB0byBk
+c2kwIGNvbm5lY3Rpb24NCj4gICBkcm0vbWVkaWF0ZWs6IG1vdmUgcmRtYSBzb3V0IGZyb20gbXRr
+X2RkcF9tb3V0X2VuIGludG8NCj4gICAgIG10a19kZHBfc291dF9zZWwNCj4gICBkcm0vbWVkaWF0
+ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gT1ZMMCB0byBPVkxfMkwwDQo+ICAgZHJtL21lZGlhdGVr
+OiBhZGQgY29ubmVjdGlvbiBmcm9tIFJETUEwIHRvIENPTE9SMA0KPiAgIGRybS9tZWRpYXRlazog
+YWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEU0kwDQo+ICAgZHJtL21lZGlhdGVrOiBhZGQg
+Y29ubmVjdGlvbiBmcm9tIE9WTF8yTDAgdG8gUkRNQTANCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBj
+b25uZWN0aW9uIGZyb20gT1ZMXzJMMSB0byBSRE1BMQ0KPiAgIGRybS9tZWRpYXRlazogYWRkIGNv
+bm5lY3Rpb24gZnJvbSBESVRIRVIwIHRvIERTSTANCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25u
+ZWN0aW9uIGZyb20gUkRNQTAgdG8gRFNJMA0KPiAgIGRybS9tZWRpYXRlazogYWRkIGZpZm9fc2l6
+ZSBpbnRvIHJkbWEgcHJpdmF0ZSBkYXRhDQo+ICAgZHJtL21lZGlhdGVrOiBhZGQgc3VwcG9ydCBm
+b3IgbWVkaWF0ZWsgU09DIE1UODE4Mw0KPiANCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L21lZGlh
+dGVrL21lZGlhdGVrLGRpc3AudHh0ICAgIHwgIDEzICsNCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+bWVkaWF0ZWsvbXQ4MTgzLmR0c2kgICAgICAgICAgIHwgIDk4ICsrKysrKysNCj4gIGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgICAgICAgICAgIHwgIDE4ICsrDQo+ICBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jICAgICAgICAgICB8ICAyNSAr
+LQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jICAgICAgICAgICAg
+fCAgIDQgKw0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICAg
+ICAgICAgfCAyODggKysrKysrKysrKysrKysrKy0tLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kZHAuaCAgICAgICAgICAgICB8ICAgNyArDQo+ICBkcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgICAgICAgICAgICB8ICA0OSArKysrDQo+ICBkcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaCAgICAgICAgICAgICB8ICAgMyArDQo+
+ICA5IGZpbGVzIGNoYW5nZWQsIDQzNSBpbnNlcnRpb25zKCspLCA3MCBkZWxldGlvbnMoLSkNCj4g
+DQoNCg==
 
-Was there any conclusion on this 5 patch series, and whether I should
-submit it for net-next?
-
-The discussion around patch 2 seems to have tailed off, and no one
-seems to have replied to patches 3 to 5.
-
-Thanks.
-
-On Tue, Mar 17, 2020 at 02:49:44PM +0000, Russell King - ARM Linux admin wrote:
-> This series splits the phylink_mac_ops structure so that PCS can be
-> supported separately with their own PCS operations, and illustrates
-> the use of the helpers in the previous patch series (net: add phylink
-> support for PCS) in the DPAA2 driver.
-> 
-> This is prototype code, not intended to be merged yet, and is merely
-> being sent for illustrative purposes only.
-> 
->  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi   | 144 +++++++++++++++
->  drivers/net/ethernet/freescale/dpaa2/dpaa2-mac.c | 226 ++++++++++++++++++++++-
->  drivers/net/ethernet/freescale/dpaa2/dpaa2-mac.h |   1 +
->  drivers/net/phy/phylink.c                        | 102 ++++++----
->  include/linux/phylink.h                          |  11 ++
->  5 files changed, 446 insertions(+), 38 deletions(-)
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
