@@ -2,89 +2,86 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DA2C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7331FC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECA02076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40FDC2076A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:44:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="R90rYQ6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgCZMht (ORCPT
+        id S1728191AbgCZMot (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:37:49 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:57611 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgCZMht (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 08:37:49 -0400
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MkYoK-1jew1V3tGA-00m4bg; Thu, 26 Mar 2020 13:37:48 +0100
-Received: by mail-qk1-f171.google.com with SMTP id h14so6119127qke.5;
-        Thu, 26 Mar 2020 05:37:47 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1wVQBRyIT6VSGkaUf+e8UsHW4KXYjsvdskVE8Gf6weFgvwGP1B
-        NA83Z6HTtbM2KcK38Rvk74NaCWKxcfsnsE8lW5Y=
-X-Google-Smtp-Source: ADFU+vvb7BIXY+D9glCcU91L9kO0tyFWP+EOFEhwVrFka5N8pk0bXgtM967EIkNgE0o5eeGQr3N7S8aDV2fUMF6iRbU=
-X-Received: by 2002:a37:6455:: with SMTP id y82mr7866531qkb.286.1585226266623;
- Thu, 26 Mar 2020 05:37:46 -0700 (PDT)
+        Thu, 26 Mar 2020 08:44:49 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10484 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727841AbgCZMot (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Mar 2020 08:44:49 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QCcP4P019331;
+        Thu, 26 Mar 2020 13:44:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=D+ohMog7QnAtbmnqjRFJ0GxJ7rXuyTtsJyMA4a9kqvM=;
+ b=R90rYQ6bVoYY5AEf9v0VYmetKxb5EuGy0wPgsjbNWZxKDcw73aze4LJq4VqgO3rruyDI
+ RTOGrsGpb4Bzzj6dFvHQps/fFG/FqKzWgowrsH8AA6qC7tjMTgSJ9lEvIcDeVuYP38VA
+ qUum3Dku3mDeiqVNuOKQjqfRVlOjHCdqMVsIMZgqjDgCVrFawJPudkb+rcv7mXQQ8rT7
+ bIql6OVjdiWm17U8vZFFBtOXT22HwBUhtSPpbGIF3FnUJmDZAuS66T6rlSJEgZm6syK+
+ Kh3J3P/HCyQBdqx6EySixOyga6w7I/3DfcImcexfriOTCdS81cxdVgpt3vOB0ESEzS1E Ig== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw8xec2cj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 13:44:38 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 491A8100034;
+        Thu, 26 Mar 2020 13:44:38 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2FA0A2AC69C;
+        Thu, 26 Mar 2020 13:44:38 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 26 Mar 2020 13:44:37
+ +0100
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@the-dreams.de>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH v2 0/2] i2c: i2c-stm32f7: allow range of I2C bus frequency
+Date:   Thu, 26 Mar 2020 13:44:19 +0100
+Message-ID: <1585226661-26262-1-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1585205326-25326-1-git-send-email-srinath.mannam@broadcom.com> <1585205326-25326-2-git-send-email-srinath.mannam@broadcom.com>
-In-Reply-To: <1585205326-25326-2-git-send-email-srinath.mannam@broadcom.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 26 Mar 2020 13:37:30 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1qJv-Euvh06fqFxn4Cx-wkh4gCMOf29DAmQzWKZJji-A@mail.gmail.com>
-Message-ID: <CAK8P3a1qJv-Euvh06fqFxn4Cx-wkh4gCMOf29DAmQzWKZJji-A@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: pci: Update iProc PCI binding for
- INTx support
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ray Jui <ray.jui@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ot7xNvf642aE99y3X1D3Om+BI+axlz7Ao6JnAZUCUUpSgXuGiu0
- Eg/HMAr5dH3lXK+/GAe1sTRPlBFdoT5OPRPk+bJ9LzYRAMU0rRu5kRKv3SxyhnbBZANdnSO
- cQAF/rz8fn/SL9YjegTlznbHqLT7jEBSwRC6sLGwl57e4PTwCVCAOX5Hdn9GMdd1UDMuRoO
- PMum8CtdQkgvwRGmwAR/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2vmJUh2FWqI=:9dGAP2tgpAktcqDyIkVulo
- uVzX6Zt7+X3fi5UjijyMeapN3PjnBDos3V11g5CXLnnb64KGweykYT2LZC2OW/h0XlmGGn5fy
- PrTfvspkHknApt0EdA61C4K8K+g0TaBtrn+pK6Pd0dJ+AWHnIOlP7Gh8MHwl3aVjNlxJ2J74n
- h63PnAtXaPJbF1LPFBidMki8p9eKi4+noIZeCBCoHkhMXZ9yQjoOgj7EzSdxjgGa8FMDogWZC
- 7BWATFy6NVN+MbU8icySGFHzR29aIb0BQsQ5gbHRVkZy+tnoWeW5Ag8+Fr52WKTe64F/m6G6S
- JU2WR7pnYZzWc4UJaPFn7ZFGKjLYkJOb7aQO+ajpLLiSCSjPK+MDw81bcPq+dpdbKa6MXl7HO
- SHky5Fz7SW64mtiKkbLT86uZl3yxEFOCCZr7zh96YTjF6LYQ3rwB/wu2tDBVJkA0I9IX2Ni2u
- XaW2hX2YWXJYg5nPWoon1pm+hkY4LOUX95WEiBwlNgIZa10boeH2jtGe8mY/L5Q5kcssSZTan
- 0SxS5H9xndRIVWeEKJBFvBV2clNXeoZrr9e9OpWkBiDZtNQIWhPwSJ6wLxErYYtC080dRoIue
- zh7DwEQsg9fnZeoYD3RVnIIYJWVwvNCNNkqCIygGN4f2kbDfQsHqmu1nvp/tv2/tWpUdCc23H
- qoxNG8dr62N2A89rGWL5jrgVHD6u9bShx6E9LW5BfFecBBRAFbx64K8r8QzGhoI88i8kFbVeK
- 7qYT2jtTdnn6WFcV1OKaOKjgvecGfsQwUH1GwJlX/E/CdbixjHqfkZhGgV+ZJNfJpu2PitjlO
- gvQ0I+7TtYL4u7QRUsyIlJdAShYcmi+RsM0GemV7+0Xz08sEPE=
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-26_03:2020-03-26,2020-03-26 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 7:49 AM Srinath Mannam
-<srinath.mannam@broadcom.com> wrote:
->
-> From: Ray Jui <ray.jui@broadcom.com>
->
-> Update the iProc PCIe binding document for better modeling of the legacy
-> interrupt (INTx) support.
+This serie introduces the possibility to set bus frequency other
+than 100KHz, 400KHz and 1MHz.
 
-Could you describe in the changelog what happens when you get an old dtb
-with a new kernel or vice versa? If any combination won't work, please make
-that very clear, and give a reason why you consider this not to be a problem.
+Changelog:
+v2: fix i2c: i2c-stm32f7: allows for any bus frequency patch
 
-      Arnd
+Alain Volmat (2):
+  dt-bindings: i2c: i2c-stm32f7: allow clock-frequency range
+  i2c: i2c-stm32f7: allows for any bus frequency
+
+ .../devicetree/bindings/i2c/st,stm32-i2c.yaml |   8 +-
+ drivers/i2c/busses/i2c-stm32f7.c              | 116 +++++++++---------
+ 2 files changed, 65 insertions(+), 59 deletions(-)
+
