@@ -2,282 +2,124 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A217C2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 02:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C1DC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 02:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 480192076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 02:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82082073E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 02:19:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="roPXjhE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbgCZCQe (ORCPT
+        id S1727590AbgCZCT4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 22:16:34 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:52804 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727699AbgCZCQd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 22:16:33 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D3E3200791;
-        Thu, 26 Mar 2020 03:16:31 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3F2EF200775;
-        Thu, 26 Mar 2020 03:16:31 +0100 (CET)
-Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2FB26203CD;
-        Thu, 26 Mar 2020 03:16:30 +0100 (CET)
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Wed, 25 Mar 2020 22:19:56 -0400
+Received: from mail-eopbgr1410098.outbound.protection.outlook.com ([40.107.141.98]:7200
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727575AbgCZCTz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 22:19:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KIhZru63Cto2TuqdrPW+LZg6eCOdi8F93PThj/I23IuN/we/X/4QnEX8K6PpzWY/kIn4TODCYhGly1NTer8jXGvQ09pd1gYX85d8Y7ho7X99FU7tqiiFWt2HY7kQs9pyrqoehL9Rhnpl0Nj25ElBBx7Ic7fZS9ArXoXto/MdmAOBs2vVf7QMJpDksIm3jRUmyCggXlh49ONM+NMoJe9ws1onz0j6GJvbLA7Cd1XWJVwMjOsKHzOWKrFj+1gWKzvn/sPsv6lLbROuR4vnpEINWBzMeP/PP49XJXBcDzAinC8EghRxNbc+QZw34bhwU5zFqJnf7EB2LUj2cdecjsYDAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pNVn77IIxrHtQErk2aYorAbCbnjIyKOkJhpgqM9ieNU=;
+ b=ED7wk8zVoJfNUpTN/ZYwt2//ElU7dIkN1is8wrDK+taXS/gyFjQl7DYT/D9HCvNFdpGeBtEr7gyRVi+s1meI0ohbkdcGco7tShAgEtQbd7Zdmf7JEOmkeWqjn7UZwkApAKA3HcaNFQbbJ6+zQSx3xQBrD6qcJ+E7uYVuUHqgn0rRIEUoKUtiFoDTdYAQxm+zoiF7iJ7bQVJtqVl1Tj9jLlleR4q6NWpZmbWhdFOVdBDVFQ6pUjEgjdT520iimUz9iDvwvxMTsHE1CJHprVSMgKUL8LWZSZ6RG766gZC8gK42/6lNOzmy6w3H7jxjKJIH+19Xk5JrUN7r9gi3D7WCvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pNVn77IIxrHtQErk2aYorAbCbnjIyKOkJhpgqM9ieNU=;
+ b=roPXjhE9duZ3fxe/ymB9CJTxOvnVmyhhlq76lc9fHE1N9r9oLH+Uy3UIgJldBevfmalJE/dnvo6N51hZS6pKpa53E+1lAeMjTna9Y8tIuo0Za/+7zKqge4aAKkuv7ASWjdqDQF3XDeawHBEG+xW6D0aOPyGzSTZtdpGE5Oc943M=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB5232.jpnprd01.prod.outlook.com (20.179.174.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.19; Thu, 26 Mar 2020 02:19:52 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
+ 02:19:51 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Martin Kepplinger <martink@posteo.de>
-Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Silvano di Ninno <silvano.dininno@nxp.com>,
-        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 5/8] interconnect: imx: Add platform driver for imx8mm
-Date:   Thu, 26 Mar 2020 04:16:17 +0200
-Message-Id: <d3c016457f5bd5244284b53f7aa7316f6bfcbd35.1585188174.git.leonard.crestez@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1585188174.git.leonard.crestez@nxp.com>
-References: <cover.1585188174.git.leonard.crestez@nxp.com>
-In-Reply-To: <cover.1585188174.git.leonard.crestez@nxp.com>
-References: <cover.1585188174.git.leonard.crestez@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH 2/2] dt-bindings: phy: rcar-gen3-phy-usb3: add r8a77961
+ support
+Thread-Topic: [PATCH 2/2] dt-bindings: phy: rcar-gen3-phy-usb3: add r8a77961
+ support
+Thread-Index: AQHWAm01g/idEsDtZE+ykaC1jGkcE6hZSF0AgADckeA=
+Date:   Thu, 26 Mar 2020 02:19:51 +0000
+Message-ID: <TYAPR01MB4544559E62F9CE5826DD938CD8CF0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <1585117100-8359-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1585117100-8359-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdUu9KF8NU-4d+8xUF8_iqicHq1QOOhoqrvSCOrPLEwWEA@mail.gmail.com>
+In-Reply-To: <CAMuHMdUu9KF8NU-4d+8xUF8_iqicHq1QOOhoqrvSCOrPLEwWEA@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fbc27490-5c3e-47a5-f65a-08d7d12c2a9d
+x-ms-traffictypediagnostic: TYAPR01MB5232:
+x-microsoft-antispam-prvs: <TYAPR01MB5232ECB8A5D0C94BDEEFB789D8CF0@TYAPR01MB5232.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0354B4BED2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(366004)(39860400002)(346002)(396003)(316002)(4744005)(52536014)(64756008)(66476007)(5660300002)(66946007)(6916009)(66556008)(6506007)(76116006)(55236004)(7696005)(71200400001)(81156014)(8936002)(81166006)(33656002)(54906003)(66446008)(2906002)(478600001)(26005)(55016002)(9686003)(4326008)(86362001)(8676002)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB5232;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VNbPFNQglnlny3/d69rmih+12vpe53ZFwQ/nOFAwbStra32x5K+r1NhZ7WZ6Ni/4Vhyhsc5UNlH/rEDIqDxKWrcSsNfA3cGB9fdXz20hg376AZ4eVjMl8hHdia6Zz3bmLAQxNxLTDYwfZN6CqYHx19WI5N3HZBrrp+CuFVEPGi9oD/Vq46ub9zGe5Uoe6xWsHetDn/xozEp+fXvDjV3DsOZDF5JvkPchh01lbvgZR10HDSfOKrog6aEihEIpNroJA8M6T81KcV1S83IH20TNql1SwDy6Luy+hLDccKqSQ+lBFxUUXEAUCyd1voPkM2bjK3KlhCJxMKFdT54CAiDLv/QsYWHsaOYbUUqa8l387XBoxXz96DtLdMZoFYnoUClXKb4HMYE9+ECIAG1jHKhlh+4TK87WMOWKgxcDIWRNpP5zytYtIBPhs4/c/PzqC890KUaWburKLBxXOat1gG/Yeg+Wy1hJEKzTfgo/av+l5eQMR1Gf9YUN+U5K7KkdyHvHV6DF+pW6fKUN23ImepClCA==
+x-ms-exchange-antispam-messagedata: AnDMzqspFPMSKmyNtXvr2D7qzzewbbx5YenpdPVtu025TWM15cq8ZFrifAYcIeoxLbfRa6S9SBgFDlZndZkmYEcfClQHHh4rpYE9Cs1WEhDI+5IBMCz2sNkJ3Ptt4ORGeBf/LuGcbJ261jZFmmJPiA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbc27490-5c3e-47a5-f65a-08d7d12c2a9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 02:19:51.8876
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Tqfia0r9KrwIHyaf8KNFPwc49Kk6Xw+doyD0fv4yMkiJM6dCZZGOelzUq/G1oF7ZDO2grS10xFF7HcrRiDiyCenADQadOukBkZyQt+7mwoWzdwvlfR130b1VfOhStijy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5232
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a platform driver for the i.MX8MM SoC describing bus topology.
-
-Bandwidth adjustments is currently only supported on the DDRC and main
-NOC. Scaling for the vpu/gpu/display NICs could be added in the future.
-
-Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
----
- drivers/interconnect/imx/Kconfig          |   4 +
- drivers/interconnect/imx/Makefile         |   2 +
- drivers/interconnect/imx/imx8mm.c         | 108 ++++++++++++++++++++++
- include/dt-bindings/interconnect/imx8mm.h |  49 ++++++++++
- 4 files changed, 163 insertions(+)
- create mode 100644 drivers/interconnect/imx/imx8mm.c
- create mode 100644 include/dt-bindings/interconnect/imx8mm.h
-
-diff --git a/drivers/interconnect/imx/Kconfig b/drivers/interconnect/imx/Kconfig
-index f39336f8d603..2cd4fad4976a 100644
---- a/drivers/interconnect/imx/Kconfig
-+++ b/drivers/interconnect/imx/Kconfig
-@@ -1,5 +1,9 @@
- config INTERCONNECT_IMX
- 	tristate "i.MX interconnect drivers"
- 	depends on ARCH_MXC || COMPILE_TEST
- 	help
- 	  Generic interconnect drivers for i.MX SOCs
-+
-+config INTERCONNECT_IMX8MM
-+	tristate "i.MX8MM interconnect driver"
-+	depends on INTERCONNECT_IMX
-diff --git a/drivers/interconnect/imx/Makefile b/drivers/interconnect/imx/Makefile
-index 86ae0bd28d8c..c234e5d3dfd1 100644
---- a/drivers/interconnect/imx/Makefile
-+++ b/drivers/interconnect/imx/Makefile
-@@ -1,3 +1,5 @@
- imx-interconnect-objs			:= imx.o
-+imx8mm-interconnect-objs       		:= imx8mm.o
- 
- obj-$(CONFIG_INTERCONNECT_IMX)		+= imx-interconnect.o
-+obj-$(CONFIG_INTERCONNECT_IMX8MM)	+= imx8mm-interconnect.o
-diff --git a/drivers/interconnect/imx/imx8mm.c b/drivers/interconnect/imx/imx8mm.c
-new file mode 100644
-index 000000000000..ee3783a98c01
---- /dev/null
-+++ b/drivers/interconnect/imx/imx8mm.c
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Interconnect framework driver for i.MX SoC
-+ *
-+ * Copyright (c) 2019, BayLibre
-+ * Copyright (c) 2019, NXP
-+ * Author: Alexandre Bailon <abailon@baylibre.com>
-+ * Author: Leonard Crestez <leonard.crestez@nxp.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+
-+#include <dt-bindings/interconnect/imx8mm.h>
-+
-+#include "imx.h"
-+
-+static const struct imx_icc_node_adj_desc imx8mm_dram_adj = {
-+	.bw_mul = 1,
-+	.bw_div = 16,
-+	.phandle_name = "fsl,ddrc",
-+};
-+
-+static const struct imx_icc_node_adj_desc imx8mm_noc_adj = {
-+	.bw_mul = 1,
-+	.bw_div = 16,
-+	.main_noc = true,
-+};
-+
-+/*
-+ * Describe bus masters, slaves and connections between them
-+ *
-+ * This is a simplified subset of the bus diagram, there are several other
-+ * PL301 nics which are skipped/merged into PL301_MAIN
-+ */
-+static struct imx_icc_node_desc nodes[] = {
-+	DEFINE_BUS_INTERCONNECT("NOC", IMX8MM_ICN_NOC, &imx8mm_noc_adj,
-+			IMX8MM_ICS_DRAM, IMX8MM_ICN_MAIN),
-+
-+	DEFINE_BUS_SLAVE("DRAM", IMX8MM_ICS_DRAM, &imx8mm_dram_adj),
-+	DEFINE_BUS_SLAVE("OCRAM", IMX8MM_ICS_OCRAM, NULL),
-+	DEFINE_BUS_MASTER("A53", IMX8MM_ICM_A53, IMX8MM_ICN_NOC),
-+
-+	/* VPUMIX */
-+	DEFINE_BUS_MASTER("VPU H1", IMX8MM_ICM_VPU_H1, IMX8MM_ICN_VIDEO),
-+	DEFINE_BUS_MASTER("VPU G1", IMX8MM_ICM_VPU_G1, IMX8MM_ICN_VIDEO),
-+	DEFINE_BUS_MASTER("VPU G2", IMX8MM_ICM_VPU_G2, IMX8MM_ICN_VIDEO),
-+	DEFINE_BUS_INTERCONNECT("PL301_VIDEO", IMX8MM_ICN_VIDEO, NULL, IMX8MM_ICN_NOC),
-+
-+	/* GPUMIX */
-+	DEFINE_BUS_MASTER("GPU 2D", IMX8MM_ICM_GPU2D, IMX8MM_ICN_GPU),
-+	DEFINE_BUS_MASTER("GPU 3D", IMX8MM_ICM_GPU3D, IMX8MM_ICN_GPU),
-+	DEFINE_BUS_INTERCONNECT("PL301_GPU", IMX8MM_ICN_GPU, NULL, IMX8MM_ICN_NOC),
-+
-+	/* DISPLAYMIX */
-+	DEFINE_BUS_MASTER("CSI", IMX8MM_ICM_CSI, IMX8MM_ICN_MIPI),
-+	DEFINE_BUS_MASTER("LCDIF", IMX8MM_ICM_LCDIF, IMX8MM_ICN_MIPI),
-+	DEFINE_BUS_INTERCONNECT("PL301_MIPI", IMX8MM_ICN_MIPI, NULL, IMX8MM_ICN_NOC),
-+
-+	/* HSIO */
-+	DEFINE_BUS_MASTER("USB1", IMX8MM_ICM_USB1, IMX8MM_ICN_HSIO),
-+	DEFINE_BUS_MASTER("USB2", IMX8MM_ICM_USB2, IMX8MM_ICN_HSIO),
-+	DEFINE_BUS_MASTER("PCIE", IMX8MM_ICM_PCIE, IMX8MM_ICN_HSIO),
-+	DEFINE_BUS_INTERCONNECT("PL301_HSIO", IMX8MM_ICN_HSIO, NULL, IMX8MM_ICN_NOC),
-+
-+	/* Audio */
-+	DEFINE_BUS_MASTER("SDMA2", IMX8MM_ICM_SDMA2, IMX8MM_ICN_AUDIO),
-+	DEFINE_BUS_MASTER("SDMA3", IMX8MM_ICM_SDMA3, IMX8MM_ICN_AUDIO),
-+	DEFINE_BUS_INTERCONNECT("PL301_AUDIO", IMX8MM_ICN_AUDIO, NULL, IMX8MM_ICN_MAIN),
-+
-+	/* Ethernet */
-+	DEFINE_BUS_MASTER("ENET", IMX8MM_ICM_ENET, IMX8MM_ICN_ENET),
-+	DEFINE_BUS_INTERCONNECT("PL301_ENET", IMX8MM_ICN_ENET, NULL, IMX8MM_ICN_MAIN),
-+
-+	/* Other */
-+	DEFINE_BUS_MASTER("SDMA1", IMX8MM_ICM_SDMA1, IMX8MM_ICN_MAIN),
-+	DEFINE_BUS_MASTER("NAND", IMX8MM_ICM_NAND, IMX8MM_ICN_MAIN),
-+	DEFINE_BUS_MASTER("USDHC1", IMX8MM_ICM_USDHC1, IMX8MM_ICN_MAIN),
-+	DEFINE_BUS_MASTER("USDHC2", IMX8MM_ICM_USDHC2, IMX8MM_ICN_MAIN),
-+	DEFINE_BUS_MASTER("USDHC3", IMX8MM_ICM_USDHC3, IMX8MM_ICN_MAIN),
-+	DEFINE_BUS_INTERCONNECT("PL301_MAIN", IMX8MM_ICN_MAIN, NULL,
-+			IMX8MM_ICN_NOC, IMX8MM_ICS_OCRAM),
-+};
-+
-+static int imx8mm_icc_probe(struct platform_device *pdev)
-+{
-+	return imx_icc_register(pdev, nodes, ARRAY_SIZE(nodes));
-+}
-+
-+static int imx8mm_icc_remove(struct platform_device *pdev)
-+{
-+	return imx_icc_unregister(pdev);
-+}
-+
-+static struct platform_driver imx8mm_icc_driver = {
-+	.probe = imx8mm_icc_probe,
-+	.remove = imx8mm_icc_remove,
-+	.driver = {
-+		.name = "imx8mm-interconnect",
-+	},
-+};
-+
-+module_platform_driver(imx8mm_icc_driver);
-+MODULE_AUTHOR("Alexandre Bailon <abailon@baylibre.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:imx8mm-interconnect");
-diff --git a/include/dt-bindings/interconnect/imx8mm.h b/include/dt-bindings/interconnect/imx8mm.h
-new file mode 100644
-index 000000000000..5404f2af15c3
---- /dev/null
-+++ b/include/dt-bindings/interconnect/imx8mm.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Interconnect framework driver for i.MX SoC
-+ *
-+ * Copyright (c) 2019, BayLibre
-+ * Author: Alexandre Bailon <abailon@baylibre.com>
-+ */
-+
-+#ifndef __IMX8MM_ICM_INTERCONNECT_IDS_H
-+#define __IMX8MM_ICM_INTERCONNECT_IDS_H
-+
-+#define IMX8MM_ICN_NOC		1
-+#define IMX8MM_ICS_DRAM		2
-+#define IMX8MM_ICS_OCRAM	3
-+#define IMX8MM_ICM_A53		4
-+
-+#define IMX8MM_ICM_VPU_H1	5
-+#define IMX8MM_ICM_VPU_G1	6
-+#define IMX8MM_ICM_VPU_G2	7
-+#define IMX8MM_ICN_VIDEO	8
-+
-+#define IMX8MM_ICM_GPU2D	9
-+#define IMX8MM_ICM_GPU3D	10
-+#define IMX8MM_ICN_GPU		11
-+
-+#define IMX8MM_ICM_CSI		12
-+#define IMX8MM_ICM_LCDIF	13
-+#define IMX8MM_ICN_MIPI		14
-+
-+#define IMX8MM_ICM_USB1		15
-+#define IMX8MM_ICM_USB2		16
-+#define IMX8MM_ICM_PCIE		17
-+#define IMX8MM_ICN_HSIO		18
-+
-+#define IMX8MM_ICM_SDMA2	19
-+#define IMX8MM_ICM_SDMA3	20
-+#define IMX8MM_ICN_AUDIO	21
-+
-+#define IMX8MM_ICN_ENET		22
-+#define IMX8MM_ICM_ENET		23
-+
-+#define IMX8MM_ICN_MAIN		24
-+#define IMX8MM_ICM_NAND		25
-+#define IMX8MM_ICM_SDMA1	26
-+#define IMX8MM_ICM_USDHC1	27
-+#define IMX8MM_ICM_USDHC2	28
-+#define IMX8MM_ICM_USDHC3	29
-+
-+#endif /* __IMX8MM_ICM_INTERCONNECT_IDS_H */
--- 
-2.17.1
-
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3IQ0KDQo+IEZyb206IEdl
+ZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVzZGF5LCBNYXJjaCAyNSwgMjAyMCAxMDowOSBQ
+TQ0KPHNuaXA+DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bo
+eS9yY2FyLWdlbjMtcGh5LXVzYjMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3BoeS9yY2FyLWdlbjMtcGh5LXVzYjMudHh0DQo+ID4gQEAgLTE1LDYgKzE1
+LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgICAgICAgICAgICAgIFNvQy4NCj4gPiAg
+ICAgICAgICAgICAgICJyZW5lc2FzLHI4YTc3OTYtdXNiMy1waHkiIGlmIHRoZSBkZXZpY2UgaXMg
+YSBwYXJ0IG9mIGFuIFI4QTc3OTYNCj4gPiAgICAgICAgICAgICAgIFNvQy4NCj4gPiArICAgICAg
+ICAgICAgICJyZW5lc2FzLHI4YTc3OTYxLXVzYjMtcGh5IiBpZiB0aGUgZGV2aWNlIGlzIGEgcGFy
+dCBvZiBhbg0KPiA+ICsgICAgICAgICAgICAgUjhBNzc5NjEgU29DLg0KPiA+ICAgICAgICAgICAg
+ICAgInJlbmVzYXMscjhhNzc5NjUtdXNiMy1waHkiIGlmIHRoZSBkZXZpY2UgaXMgYSBwYXJ0IG9m
+IGFuDQo+ID4gICAgICAgICAgICAgICBSOEE3Nzk2NSBTb0MuDQo+ID4gICAgICAgICAgICAgICAi
+cmVuZXNhcyxyY2FyLWdlbjMtdXNiMy1waHkiIGZvciBhIGdlbmVyaWMgUi1DYXIgR2VuMyBvciBS
+Wi9HMg0KPiANCj4gUmV2aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNh
+c0BnbGlkZXIuYmU+DQo+IA0KPiBMaWtld2lzZSwgYSByZWJhc2Ugb24gdG9wIG9mICJbdjJdIGR0
+LWJpbmRpbmdzOiBwaHk6IHJlbmVzYXM6IHVzYjMtcGh5Og0KPiBjb252ZXJ0IGJpbmRpbmdzIHRv
+IGpzb24tc2NoZW1hIg0KPiAoaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtZGV2aWNldHJl
+ZS8xNTcyNTkyNzcxLTEyNDQ0LTEtZ2l0LXNlbmQtZW1haWwteW9zaGloaXJvLnNoaW1vZGEudWhA
+cmVuZXNhcy5jb20vKQ0KPiB3b3VsZCBiZSBuaWNlLg0KDQpJIGFncmVlZC4gSSdsbCByZWJhc2Ug
+aXQuDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCg==
