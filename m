@@ -2,183 +2,95 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6BCC2D0E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1386C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E8A20409
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF1220409
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:34:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgCZMag (ORCPT
+        id S1728140AbgCZMe6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:30:36 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:48680 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727781AbgCZMag (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:30:36 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0302F1A09B1;
-        Thu, 26 Mar 2020 13:30:34 +0100 (CET)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E970B1A090A;
-        Thu, 26 Mar 2020 13:30:33 +0100 (CET)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id CA67320564;
-        Thu, 26 Mar 2020 13:30:33 +0100 (CET)
-Date:   Thu, 26 Mar 2020 14:30:33 +0200
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org
-Subject: Re: [RFC 01/11] mfd: Add i.MX generic mix support
-Message-ID: <20200326123033.vi7l5mixgre2caon@fsr-ub1664-175>
-References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
- <1583226206-19758-2-git-send-email-abel.vesa@nxp.com>
- <20200326110306.GE603801@dell>
+        Thu, 26 Mar 2020 08:34:58 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:36769 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgCZMe5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 08:34:57 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M42b8-1jHRiq0SAa-0002fd; Thu, 26 Mar 2020 13:34:56 +0100
+Received: by mail-qk1-f177.google.com with SMTP id o10so6062795qki.10;
+        Thu, 26 Mar 2020 05:34:55 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ37zGZcl98Gc2SIQ6fkcbA/6mx4u9Zy3PjSLIeQ7kRPFF6IxiK1
+        ikAGpn1LEvgEl08ZEBnmv0ibLrICAyT9k+k6JoI=
+X-Google-Smtp-Source: ADFU+vtOuL2BPcbttit4yBDNaP/8ddvWjjqH2/iCEGaAFs+JlAfjGtlSfNwtuRaUS5t2LeQ5UcEPn2VK+SRr7Phk8Ls=
+X-Received: by 2002:a37:6455:: with SMTP id y82mr7853725qkb.286.1585226094723;
+ Thu, 26 Mar 2020 05:34:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200326110306.GE603801@dell>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <1585205326-25326-1-git-send-email-srinath.mannam@broadcom.com> <1585205326-25326-3-git-send-email-srinath.mannam@broadcom.com>
+In-Reply-To: <1585205326-25326-3-git-send-email-srinath.mannam@broadcom.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 26 Mar 2020 13:34:38 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0MP9xhmDgyN4TJ5_jzagVTO1hKVgNFs6R4NA6WoKBFJA@mail.gmail.com>
+Message-ID: <CAK8P3a0MP9xhmDgyN4TJ5_jzagVTO1hKVgNFs6R4NA6WoKBFJA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] PCI: iproc: Add INTx support with better modeling
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ray Jui <ray.jui@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:oYUCtX8DTgQxERAtlNDulhmkpSBttP5J1/eh+AMQi+rJfTPHmkw
+ cBGP/+l2RLTL/DTiQWJf8xGZasPqeCxGAdmVOSmDynykO8VEW/cszpYELRci8AebHTnIu0z
+ uROJf5qy2pdrhuZjKSxLvlzndJM+Nvf81xhwMfLHnswRDq1oTOUcVWlcApENXNtdWvWWi99
+ /tLAMz1ygq1C1rkPT+nyQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:InMNIBg92dc=:n4uoIGacY1pz95Nvg6mpdF
+ ly1ounx6BdQfgYCf9lNo+FzMNFv1VEBOrAH4OVRsqNZHjlbU3sqXW6SHiYj7nv6MuSQ7zTyV/
+ ZaUMIr6QTEaQsW8XsA6GYnEAEjmGPgcpXPqC4mIq7Tb1g8ca1CC1C56wEWqbvS24H1oMAKCj2
+ jpJJzfbry+anvQaHkEcNauGHs/7BIEDhxfYd9Vi+lTFiBybfsGo4OBoQWDjCUZTHq/LDd6hUw
+ 3Klovw/febGLo2wFs5aBKX+vTctr+pw+H1N3lvmv7/iClB0u4t2uQ2mxqUxRDMFfxpUGWpy4f
+ wznjZbSnUn3AYOB88n1lnvmhqC1VVQrx5annTrTYnBlB6tVlTzrhHW3ogeEJV1VarUG+V8bFQ
+ uaLu3VZLtaf2N8/wGapf6shWj88Bm+F7ymK2H4XBXUGITpx4guCGN2n1pmCk+EfobFgy86xcU
+ XDErhJAaFAvQu/KojJaCgoMB7Fh9zkzSR8666AVLI0v1pwpHjmm3txJWko21NgbIkPFi0YyyS
+ gJbgvpaYpNDRiUuNx+vMps2rdi4LHzWMabgpENr46PycHWIj7ewBF2YPho2rgza0UqEid0ZHj
+ YfwgI8a0WZME3bB86BsZBrTE/oGFnxGR4o2KtFB0Ir8x97HrO0+SSF31oFrrdlwkx7U1+xM32
+ EdVD9vrJphLcPgTUt0IXzvOCCyX/u+AfP5lYX+jUDojIxBvDV3r455/d+w6sF5ZbbII2+7fdG
+ yD9fjiKyOpU8JmWr3PPIxgZ6zDQT92Bo+wvM1VBFtusWx2/kUK+4vr869tzr9f9vbd52pbgef
+ wsHzHpFLW53D0my2EyFfRw7b/sFquBbKSw5WVguTkEz/jjYMME=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-03-26 11:03:06, Lee Jones wrote:
-> On Tue, 03 Mar 2020, Abel Vesa wrote:
-> 
-> > Some of the i.MX SoCs have a IP for interfacing the dedicated IPs with
-> > clocks, resets and interrupts, plus some other specific control registers.
-> > To allow the functionality to be split between drivers, this MFD driver is
-> > added that has only two purposes: register the devices and map the entire
-> > register addresses. Everything else is left to the dedicated drivers that will
-> > bind to the registered devices.
-> > 
-> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > ---
-> >  drivers/mfd/Kconfig   | 11 +++++++++++
-> >  drivers/mfd/Makefile  |  1 +
-> >  drivers/mfd/imx-mix.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 60 insertions(+)
-> >  create mode 100644 drivers/mfd/imx-mix.c
-> > 
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 3c547ed..3c89288 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -460,6 +460,17 @@ config MFD_MX25_TSADC
-> >  	  i.MX25 processors. They consist of a conversion queue for general
-> >  	  purpose ADC and a queue for Touchscreens.
-> >  
-> > +config MFD_IMX_MIX
-> > +	tristate "NXP i.MX Generic Mix Control Driver"
-> > +	depends on OF || COMPILE_TEST
-> > +	help
-> > +	  Enable generic mixes support. On some i.MX platforms, there are
-> > +	  devices that are a mix of multiple functionalities like reset
-> > +	  controllers, clock controllers and some others. In order to split
-> > +	  those functionalities between the right drivers, this MFD populates
-> > +	  with virtual devices based on what's found in the devicetree node,
-> > +	  leaving the rest of the behavior control to the dedicated driver.
-> > +
-> >  config MFD_HI6421_PMIC
-> >  	tristate "HiSilicon Hi6421 PMU/Codec IC"
-> >  	depends on OF
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index f935d10..5b2ae5d 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -113,6 +113,7 @@ obj-$(CONFIG_MFD_TWL4030_AUDIO)	+= twl4030-audio.o
-> >  obj-$(CONFIG_TWL6040_CORE)	+= twl6040.o
-> >  
-> >  obj-$(CONFIG_MFD_MX25_TSADC)	+= fsl-imx25-tsadc.o
-> > +obj-$(CONFIG_MFD_IMX_MIX)	+= imx-mix.o
-> >  
-> >  obj-$(CONFIG_MFD_MC13XXX)	+= mc13xxx-core.o
-> >  obj-$(CONFIG_MFD_MC13XXX_SPI)	+= mc13xxx-spi.o
-> > diff --git a/drivers/mfd/imx-mix.c b/drivers/mfd/imx-mix.c
-> > new file mode 100644
-> > index 00000000..d3f8c71
-> > --- /dev/null
-> > +++ b/drivers/mfd/imx-mix.c
-> > @@ -0,0 +1,48 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright 2019 NXP.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/clk-provider.h>
-> > +#include <linux/err.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/types.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/of_platform.h>
-> > +
-> > +#include <linux/mfd/core.h>
-> > +
-> > +static int imx_audiomix_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct resource *res;
-> > +	void __iomem *base;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	base = devm_ioremap_resource(dev, res);
-> > +	if (IS_ERR(base))
-> > +		return PTR_ERR(base);
-> > +
-> > +	dev_set_drvdata(dev, base);
-> > +
-> > +	return devm_of_platform_populate(dev);
-> > +}
-> > +
-> > +static const struct of_device_id imx_audiomix_of_match[] = {
-> > +	{ .compatible = "fsl,imx8mp-audiomix" },
-> > +	{ /* Sentinel */ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, imx_audiomix_of_match);
-> 
-> This needs DT binding documentation.
-> 
-> Do the sub-device memory ranges overlap?
-> 
+On Thu, Mar 26, 2020 at 7:49 AM Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
+> -static void iproc_pcie_enable(struct iproc_pcie *pcie)
+> +static void iproc_pcie_mask_irq(struct irq_data *d)
+>  {
+> +       struct iproc_pcie *pcie = irq_data_get_irq_chip_data(d);
+> +       u32 val;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&pcie->intx_lock, flags);
+> +       val =  iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_EN);
+> +       val &= ~(BIT(irqd_to_hwirq(d)));
+> +       iproc_pcie_write_reg(pcie, IPROC_PCIE_INTX_EN, val);
+> +       spin_unlock_irqrestore(&pcie->intx_lock, flags);
+> +}
 
-Yes, they do.
+I think these need to use a raw spinlock, or you get problems with
+PREEMPT_RT
 
-Resent another version of this series yesterday.
-
-> > +static struct platform_driver imx_audiomix_driver = {
-> > +	.probe = imx_audiomix_probe,
-> > +	.driver = {
-> > +		.name = "imx-audiomix",
-> > +		.of_match_table = of_match_ptr(imx_audiomix_of_match),
-> > +	},
-> > +};
-> > +module_platform_driver(imx_audiomix_driver);
-> 
-> -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+     Arnd
