@@ -2,112 +2,190 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B1FC2D0E7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 09:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B1EC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F074C207FC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 09:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0539A2070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:12:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NJYlOLGV"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ewiNc0NU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgCZJWe (ORCPT
+        id S1727661AbgCZKMt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:22:34 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:33178 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727743AbgCZJWe (ORCPT
+        Thu, 26 Mar 2020 06:12:49 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:7364 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726298AbgCZKMt (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:22:34 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585214553; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=+OwM0HqMP4AbODh5vasra9NtQ7vqt8/GPNduIzrrTlg=; b=NJYlOLGVg7eqmvWzJKmvgZb2t85grmoij27fNeTkuhWs4TfphXaWinfX86dlHFVXKwhaxbDM
- GRqn6F/GYSYksGIW1xy6q+9l5WciTl+77FiNy/DugpTJr1M4Fs/Y4aJX4yduwuHsXDZWf2y0
- 5u6pCR4JLZGH0lj98ZyylD709UY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7c7458.7fa94813c148-smtp-out-n02;
- Thu, 26 Mar 2020 09:22:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5A213C44788; Thu, 26 Mar 2020 09:22:32 +0000 (UTC)
-Received: from [192.168.0.103] (unknown [106.51.108.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61490C433BA;
-        Thu, 26 Mar 2020 09:22:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61490C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [RFC v6 0/2] Add SDHC interconnect bandwidth scaling
-To:     Pradeep P V K <ppvk@codeaurora.org>, bjorn.andersson@linaro.org,
-        adrian.hunter@intel.com, robh+dt@kernel.org,
-        ulf.hansson@linaro.org, asutoshd@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        rampraka@codeaurora.org, vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Saravana Kannan <saravanak@google.com>
-References: <1584973502-14775-1-git-send-email-ppvk@codeaurora.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <c17d8842-0e1d-0014-b909-3114952b350b@codeaurora.org>
-Date:   Thu, 26 Mar 2020 14:52:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 26 Mar 2020 06:12:49 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QACYnG032171;
+        Thu, 26 Mar 2020 11:12:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=L85rZOpZxg375px3mWAwS/C7vybF5ftzlf5QE8rNbBw=;
+ b=ewiNc0NURcooa2CNZCnpwJ2/qcd5H7zKOVLl+rUFPuFDTR/ypJAFyy+I1XdX1HLCWyCx
+ gChVcjirmE+eEojq7dsgc3wEhu6qfIF2pPYZFHXM2qFp6P1bBUQEf68mfx4q5Xdt8n2/
+ HnyEuYLZD3WPUI+OM9reFz4sCxi1swXLLmbXuQG+q19pU6sgyu6qwmgwR6nR3ajXZ9Ys
+ E8rdXmNrRMZqGwlzOvvxalTnRUATrsxBdfFqhY+q2Ma/c3ni8ln0L+jNxKX8tQmB7lhF
+ xDvbggUkFql0Iq/wGT1jMIUxn+05hkPYokR5JDtgxD0L2mdqtrK0ocbcQ65CSNKlbApw Pw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw8xeb99h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 11:12:35 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07635100034;
+        Thu, 26 Mar 2020 11:12:25 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C354B22228D;
+        Thu, 26 Mar 2020 11:12:25 +0100 (CET)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 26 Mar
+ 2020 11:12:25 +0100
+Date:   Thu, 26 Mar 2020 11:12:19 +0100
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 2/2] i2c: i2c-stm32f7: allows for any bus frequency
+Message-ID: <20200326101219.GA21190@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+References: <1585161361-3408-1-git-send-email-alain.volmat@st.com>
+ <1585161361-3408-3-git-send-email-alain.volmat@st.com>
+ <CAHp75VdPCWdpGo=2n9g0ivti-g2m4jZ=cG4BKHBLk8BVDzaCyg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1584973502-14775-1-git-send-email-ppvk@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdPCWdpGo=2n9g0ivti-g2m4jZ=cG4BKHBLk8BVDzaCyg@mail.gmail.com>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-26_02:2020-03-24,2020-03-26 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adding Viresh and Saravana,
+Hi Andy,
 
-On 3/23/2020 7:55 PM, Pradeep P V K wrote:
-> Add interconnect bandwidths for SDHC driver using OPP framework that
-> is required by SDHC driver based on the clock frequency and bus width
-> of the card. Otherwise, the system clocks may run at minimum clock
-> speed and thus affecting the performance.
+Thanks for the review.
+
+On Wed, Mar 25, 2020 at 06:53:45PM +0000, Andy Shevchenko wrote:
+> On Wed, Mar 25, 2020 at 8:38 PM Alain Volmat <alain.volmat@st.com> wrote:
+> >
+> > Do not limitate to the 3 (100KHz, 400KHz, 1MHz) bus frequency but
+> > instead allows any frequency (if it matches timing requirements).
+> > Depending on the requested frequency, use the spec data from either
+> > Standard, Fast or Fast Plus mode.
+> >
+> > Hardcoding of min/max bus frequencies is removed and is instead computed.
+> >
+> > The driver do not use anymore speed identifier but instead handle
+> > directly the frequency and figure out the spec data (necessary
+> > for the computation of the timing register) based on the frequency.
 > 
-> This change is based on
-> [RFC] mmc: host: sdhci-msm: Use the interconnect API
-> (https://lkml.org/lkml/2018/10/11/499) and
+> ...
 > 
-> [PATCH v6] Introduce Bandwidth OPPs for interconnects
-> (https://lkml.org/lkml/2019/12/6/740)
+> > +static struct stm32f7_i2c_spec *get_specs(u32 rate)
+> > +{
+> > +       int i;
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(i2c_specs); i++)
+> > +               if (rate <= i2c_specs[i].rate)
+> > +                       return &i2c_specs[i];
+> > +
+> 
+> > +       /* NOT REACHED */
+> > +       return ERR_PTR(-EINVAL);
+> 
+> WARN_ONCE() ?
 
-Pradeep, since your series seems to depend on the above proposed bw bindings,
-can you post the DT changes for the platform that you are testing these
-patches on?
-
-Please note that the above series is currently deadlocked [1][2] with no clear path
-forward for now, so looking at how you plan to use this might throw some light onto
-the requirements
-
-[1] https://lkml.org/lkml/2020/1/14/511
-[2] https://lkml.org/lkml/2020/3/20/106
+The comment should actually be removed. get_specs return value is
+properly checked in stm32f7_i2c_compute_timing and an error message
+is displayed in case of an error.
 
 > 
-> Pradeep P V K (2):
->    mmc: sdhci-msm: Add interconnect bus bandwidth scaling support
->    dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
+> > +}
 > 
->   .../devicetree/bindings/mmc/sdhci-msm.txt          |  18 ++
->   drivers/mmc/host/sdhci-msm.c                       | 240 ++++++++++++++++++++-
->   2 files changed, 254 insertions(+), 4 deletions(-)
+> ...
 > 
+> > -                       if ((tscl_l < i2c_specs[setup->speed].l_min) ||
+> > +                       if ((tscl_l < specs->l_min) ||
+> 
+> >                             (i2cclk >=
+> >                              ((tscl_l - af_delay_min - dnf_delay) / 4))) {
+> 
+> Perhaps squash above two to one line at the same time?
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+I agree that this is not very pretty to read now but that would lead to
+a line exceeding 80 characters. To fix that it'd be better to rework the code
+but in such case that should be done at a separate time to keep this commit
+as small / simpler to understand as possible. So I'd prefer leave this code
+for the time being.
+
+> 
+> ...
+> 
+> > +       int i;
+> > +
+> > +       for (i = ARRAY_SIZE(i2c_specs) - 1; i >= 0; i--)
+> 
+> 
+> Perhaps
+> 
+>        int i = ARRAY_SIZE(i2c_specs);
+> 
+>        while(i--)
+> 
+> ?
+
+I propose the following code to make it a bit easier to read/understand:
+
+static u32 get_lower_rate(u32 rate)
+{
+        int i = ARRAY_SIZE(i2c_specs);
+
+        while (i--)
+                if (i2c_specs[i].rate < rate)
+                        break;
+
+        return i2c_specs[i].rate;
+}
+
+If you agree with that I'll push a v2.
+
+> 
+> > +               if (i2c_specs[i].rate < rate)
+> > +                       return i2c_specs[i].rate;
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
