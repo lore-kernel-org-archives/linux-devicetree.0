@@ -2,300 +2,251 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35179C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 22:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B657C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 22:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05BA020714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 22:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404A820658
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 22:19:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AXzJu9Ix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbgCZWC7 (ORCPT
+        id S1726296AbgCZWTY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:02:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43205 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727607AbgCZWC5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 18:02:57 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1jHaaR-0006GJ-WE; Thu, 26 Mar 2020 23:02:52 +0100
-Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <afa@pengutronix.de>)
-        id 1jHaaR-0008Ff-LJ; Thu, 26 Mar 2020 23:02:51 +0100
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     kernel@pengutronix.de, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/8] ARM: dts: stm32: use uniform node names for sleep pinctrl groups
-Date:   Thu, 26 Mar 2020 23:02:09 +0100
-Message-Id: <20200326220213.28632-5-a.fatoum@pengutronix.de>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200326220213.28632-1-a.fatoum@pengutronix.de>
-References: <20200326220213.28632-1-a.fatoum@pengutronix.de>
+        Thu, 26 Mar 2020 18:19:24 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45216 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZWTY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 18:19:24 -0400
+Received: by mail-lf1-f67.google.com with SMTP id v4so6213851lfo.12
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 15:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CIoH3SmsQ7nGOOfNTsuHeNTN5cO4yk0Di3dRnzAJK7A=;
+        b=AXzJu9IxpJljzJbQlHTPdszDNOBOA+sQRWXpigIygcCpCeVsYhlqN9V95u6xLdZWoY
+         iKAPFqN+mAcvmtONuu8tyHgt+vY+j84Lkx33fY3OPYVrx4Kt0fXMtwDI7/YhF0jyHbmG
+         i41jxWqgJj06n2sggMNwW0ZI6BheY7Fq9gHwm7eC/1GdgpmLZF9TpxHrBz08fOMwPI0/
+         M9UOaLkrzeh92kL2+sMxs9tctlIOxaDJCjSlQDGXX1ToMldg41ZCAZZqDsl4PYJKDmaE
+         o/I6OVhtUOVS0xyCM2UiuMKlidPO1sbXyD1+s6rRCbhq0z87er+ZaQ3IFYjKiUxNG0py
+         6Hwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CIoH3SmsQ7nGOOfNTsuHeNTN5cO4yk0Di3dRnzAJK7A=;
+        b=fpTyV4mEhsjkvzMxQbGDOk/RYdwSBgAik0rXuC1HaoPBEWvC2+Ytf5k7Ql9wYXoU5h
+         1997Jbv6q8yWANNEGrTmiEhn2IrReBQHUw8Qx/P2xl9jWkleUVVb08GjWZm0wqDjqCb5
+         1dqxdK8EZjY69bddGQN6w5nnRagBkaw1ZfwmYIqQL51a42bhhp4Vj082Tvgx+alGIs7i
+         SrCnSK4rq8R0JnZWQrZFIw+LJYOuusoV1/lcv0gxo0gODNsG/Jwg0A27Jd3wl8UQxQXa
+         ZittJCfJWokhHTrQdqir0RVH2b31+EwO4HjjoNgihzttMdp6EikneR6hDW45IQ9A03nw
+         DdgQ==
+X-Gm-Message-State: ANhLgQ1q0yASaICILVBx4T8IcU6UKj8w4RCSRCU/RT5vOD8nDgl7hluX
+        fABoakDLwmhJUzRBpEXqUndtKencFH0oiD+RmQQLFQ==
+X-Google-Smtp-Source: ADFU+vuQmAzxyfH4Ajl0jdcKK+5TCLq83Clu8vK67+AlQ0x3/85aJ/skkK2MKYvSRyOS1THAw/mA5OTaPw2jqfcxxXA=
+X-Received: by 2002:ac2:5599:: with SMTP id v25mr7215940lfg.40.1585261161793;
+ Thu, 26 Mar 2020 15:19:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: afa@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200324123518.239768-1-rajatja@google.com> <20200324123518.239768-2-rajatja@google.com>
+ <20200326212705.GJ75430@dtor-ws>
+In-Reply-To: <20200326212705.GJ75430@dtor-ws>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Thu, 26 Mar 2020 15:18:45 -0700
+Message-ID: <CACK8Z6HQUkZzD7=ENhYH+zozBdefWt+bYuE=n-pY3b+P8RpXxA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] Input: atkbd: Expose function row physical map to userspace
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Dmitry Torokhov <dtor@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Furquan Shaikh <furquan@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Benson Leung <bleung@google.com>,
+        Zentaro Kavanagh <zentaro@google.com>,
+        Dominik Behr <dbehr@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-While all sleep pinctrl group labels now follow a fixed naming scheme,
-node _names_ for these groups don't:
+On Thu, Mar 26, 2020 at 2:27 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> On Tue, Mar 24, 2020 at 05:35:15AM -0700, Rajat Jain wrote:
+> > Certain keyboards have their top-row keys intended
+> > for actions such as "Browser back", "Browser Refresh", "Fullscreen"
+> > etc as their primary mode, thus they will send physical codes for those
+> > actions. Further, they don't have a dedicated "Fn" key so don't have
+> > the capability to generate function key codes (e.g. F1, F2 etc..).
+> > However in this case, if userspace still wants to "synthesize" those
+> > function keys using the top row action keys, it needs to know the
+> > physical position of the top row keys. (Essentially a mapping between
+> > usage codes and a physical location in the top row).
+> >
+> > This patch enhances the atkbd driver to receive such a mapping from the
+> > firmware / device tree, and expose it to userspace in the form of
+> > a function-row-physmap attribute. The attribute would be a space
+> > separated ordered list of physical codes, for the keys in the function
+> > row, in left-to-right order.
+> >
+> > The attribute will only be present if the kernel knows about such
+> > mapping, otherwise the attribute shall not be visible.
+> >
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > ---
+> > v2: Remove the Change-Id from the commit log
+> >
+> >  drivers/input/keyboard/atkbd.c | 59 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 59 insertions(+)
+> >
+> > diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
+> > index 7e3eae54c1926..7623eebef2593 100644
+> > --- a/drivers/input/keyboard/atkbd.c
+> > +++ b/drivers/input/keyboard/atkbd.c
+> > @@ -24,6 +24,7 @@
+> >  #include <linux/libps2.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/dmi.h>
+> > +#include <linux/property.h>
+> >
+> >  #define DRIVER_DESC  "AT and PS/2 keyboard driver"
+> >
+> > @@ -63,6 +64,8 @@ static bool atkbd_terminal;
+> >  module_param_named(terminal, atkbd_terminal, bool, 0);
+> >  MODULE_PARM_DESC(terminal, "Enable break codes on an IBM Terminal keyboard connected via AT/PS2");
+> >
+> > +#define MAX_FUNCTION_ROW_KEYS        24
+> > +
+> >  /*
+> >   * Scancode to keycode tables. These are just the default setting, and
+> >   * are loadable via a userland utility.
+> > @@ -230,6 +233,9 @@ struct atkbd {
+> >
+> >       /* Serializes reconnect(), attr->set() and event work */
+> >       struct mutex mutex;
+> > +
+> > +     u16 function_row_physmap[MAX_FUNCTION_ROW_KEYS];
+> > +     int num_function_row_keys;
+> >  };
+> >
+> >  /*
+> > @@ -283,6 +289,7 @@ static struct device_attribute atkbd_attr_##_name =                               \
+> >       __ATTR(_name, S_IRUGO, atkbd_do_show_##_name, NULL);
+> >
+> >  ATKBD_DEFINE_RO_ATTR(err_count);
+> > +ATKBD_DEFINE_RO_ATTR(function_row_physmap);
+> >
+> >  static struct attribute *atkbd_attributes[] = {
+> >       &atkbd_attr_extra.attr,
+> > @@ -292,11 +299,42 @@ static struct attribute *atkbd_attributes[] = {
+> >       &atkbd_attr_softrepeat.attr,
+> >       &atkbd_attr_softraw.attr,
+> >       &atkbd_attr_err_count.attr,
+> > +     &atkbd_attr_function_row_physmap.attr,
+> >       NULL
+> >  };
+> >
+> > +static ssize_t atkbd_show_function_row_physmap(struct atkbd *atkbd, char *buf)
+> > +{
+> > +     ssize_t size = 0;
+> > +     int i;
+> > +
+> > +     if (!atkbd->num_function_row_keys)
+> > +             return 0;
+> > +
+> > +     for (i = 0; i < atkbd->num_function_row_keys; i++)
+> > +             size += sprintf(buf + size, "%02X ",
+> > +                             atkbd->function_row_physmap[i]);
+> > +     size += sprintf(buf + size, "\n");
+> > +     return size;
+> > +}
+> > +
+> > +static umode_t atkbd_attr_is_visible(struct kobject *kobj,
+> > +                             struct attribute *attr, int i)
+> > +{
+> > +     struct device *dev = container_of(kobj, struct device, kobj);
+> > +     struct serio *serio = to_serio_port(dev);
+> > +     struct atkbd *atkbd = serio_get_drvdata(serio);
+> > +
+> > +     if (attr == &atkbd_attr_function_row_physmap.attr &&
+> > +         !atkbd->num_function_row_keys)
+> > +             return 0;
+> > +
+> > +     return attr->mode;
+> > +}
+> > +
+> >  static struct attribute_group atkbd_attribute_group = {
+> >       .attrs  = atkbd_attributes,
+> > +     .is_visible = atkbd_attr_is_visible,
+> >  };
+> >
+> >  static const unsigned int xl_table[] = {
+> > @@ -1121,6 +1159,25 @@ static void atkbd_set_device_attrs(struct atkbd *atkbd)
+> >       }
+> >  }
+> >
+> > +static void atkbd_parse_fwnode_data(struct serio *serio)
+> > +{
+> > +     struct atkbd *atkbd = serio_get_drvdata(serio);
+> > +     struct device *dev = &serio->dev;
+> > +     int n;
+> > +
+> > +     if (!dev_fwnode(dev))
+> > +             return;
+>
+> I do not think we need this guard.
 
-- Some use ${dev}-[0-9], where the suffix is the normal group suffix + 1
-- Some use ${dev}-sleep-[0-9], where suffix is the normal group suffix
-- The &ltdc node uses ${dev}-[a-z]-[0-9], where the letter matches the
-  phandle and the number suffix is the normal group's suffix + 1
+Done.
 
-For uniformity, standardize on using ${dev}-[0-9]+ for all normal
-pinctrl groups and ${dev}-sleep-[0-9]+ for all sleep pinctrl groups.
+>
+> > +
+> > +     /* Parse "function-row-physmap" property */
+> > +     n = device_property_count_u16(dev, "function-row-physmap");
+> > +     if (n > 0 && n <= MAX_FUNCTION_ROW_KEYS &&
+> > +         !device_property_read_u16_array(dev, "function-row-physmap",
+> > +                                         atkbd->function_row_physmap, n)) {
+> > +             atkbd->num_function_row_keys = n;
+> > +             dev_info(dev, "FW reported %d function-row key locations\n", n);
+>
+> dev_dbg().
 
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
----
-v1 -> v2:
-  - New Patch
----
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 50 ++++++++++++------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+Done.
 
-diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 1971a9603ba6..377a8b2b3a3a 100644
---- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -6,7 +6,7 @@
- #include <dt-bindings/pinctrl/stm32-pinfunc.h>
- 
- &pinctrl {
--	adc1_in6_pins_a: adc1-in6 {
-+	adc1_in6_pins_a: adc1-in6-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('F', 12, ANALOG)>;
- 		};
-@@ -58,13 +58,13 @@ pins {
- 		};
- 	};
- 
--	dac_ch1_pins_a: dac-ch1 {
-+	dac_ch1_pins_a: dac-ch1-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('A', 4, ANALOG)>;
- 		};
- 	};
- 
--	dac_ch2_pins_a: dac-ch2 {
-+	dac_ch2_pins_a: dac-ch2-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('A', 5, ANALOG)>;
- 		};
-@@ -250,14 +250,14 @@ pins {
- 		};
- 	};
- 
--	i2c1_sleep_pins_a: i2c1-1 {
-+	i2c1_sleep_pins_a: i2c1-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('D', 12, ANALOG)>, /* I2C1_SCL */
- 				 <STM32_PINMUX('F', 15, ANALOG)>; /* I2C1_SDA */
- 		};
- 	};
- 
--	i2c1_pins_b: i2c1-2 {
-+	i2c1_pins_b: i2c1-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('F', 14, AF5)>, /* I2C1_SCL */
- 				 <STM32_PINMUX('F', 15, AF5)>; /* I2C1_SDA */
-@@ -267,7 +267,7 @@ pins {
- 		};
- 	};
- 
--	i2c1_sleep_pins_b: i2c1-3 {
-+	i2c1_sleep_pins_b: i2c1-sleep-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('F', 14, ANALOG)>, /* I2C1_SCL */
- 				 <STM32_PINMUX('F', 15, ANALOG)>; /* I2C1_SDA */
-@@ -284,14 +284,14 @@ pins {
- 		};
- 	};
- 
--	i2c2_sleep_pins_a: i2c2-1 {
-+	i2c2_sleep_pins_a: i2c2-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('H', 4, ANALOG)>, /* I2C2_SCL */
- 				 <STM32_PINMUX('H', 5, ANALOG)>; /* I2C2_SDA */
- 		};
- 	};
- 
--	i2c2_pins_b1: i2c2-2 {
-+	i2c2_pins_b1: i2c2-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('H', 5, AF4)>; /* I2C2_SDA */
- 			bias-disable;
-@@ -300,7 +300,7 @@ pins {
- 		};
- 	};
- 
--	i2c2_sleep_pins_b1: i2c2-3 {
-+	i2c2_sleep_pins_b1: i2c2-sleep-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('H', 5, ANALOG)>; /* I2C2_SDA */
- 		};
-@@ -316,7 +316,7 @@ pins {
- 		};
- 	};
- 
--	i2c5_sleep_pins_a: i2c5-1 {
-+	i2c5_sleep_pins_a: i2c5-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('A', 11, ANALOG)>, /* I2C5_SCL */
- 				 <STM32_PINMUX('A', 12, ANALOG)>; /* I2C5_SDA */
-@@ -335,7 +335,7 @@ pins {
- 		};
- 	};
- 
--	i2s2_sleep_pins_a: i2s2-1 {
-+	i2s2_sleep_pins_a: i2s2-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('I', 3, ANALOG)>, /* I2S2_SDO */
- 				 <STM32_PINMUX('B', 9, ANALOG)>, /* I2S2_WS */
-@@ -343,7 +343,7 @@ pins {
- 		};
- 	};
- 
--	ltdc_pins_a: ltdc-a-0 {
-+	ltdc_pins_a: ltdc-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('G',  7, AF14)>, /* LCD_CLK */
- 				 <STM32_PINMUX('I', 10, AF14)>, /* LCD_HSYNC */
-@@ -379,7 +379,7 @@ pins {
- 		};
- 	};
- 
--	ltdc_sleep_pins_a: ltdc-a-1 {
-+	ltdc_sleep_pins_a: ltdc-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('G',  7, ANALOG)>, /* LCD_CLK */
- 				 <STM32_PINMUX('I', 10, ANALOG)>, /* LCD_HSYNC */
-@@ -412,7 +412,7 @@ pins {
- 		};
- 	};
- 
--	ltdc_pins_b: ltdc-b-0 {
-+	ltdc_pins_b: ltdc-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('I', 14, AF14)>, /* LCD_CLK */
- 				 <STM32_PINMUX('I', 12, AF14)>, /* LCD_HSYNC */
-@@ -448,7 +448,7 @@ pins {
- 		};
- 	};
- 
--	ltdc_sleep_pins_b: ltdc-b-1 {
-+	ltdc_sleep_pins_b: ltdc-sleep-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('I', 14, ANALOG)>, /* LCD_CLK */
- 				 <STM32_PINMUX('I', 12, ANALOG)>, /* LCD_HSYNC */
-@@ -710,7 +710,7 @@ pins {
- 		};
- 	};
- 
--	sai2a_sleep_pins_a: sai2a-1 {
-+	sai2a_sleep_pins_a: sai2a-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('I', 5, ANALOG)>, /* SAI2_SCK_A */
- 				 <STM32_PINMUX('I', 6, ANALOG)>, /* SAI2_SD_A */
-@@ -720,7 +720,7 @@ pins {
- 	};
- 
- 
--	sai2a_pins_b: sai2a-2 {
-+	sai2a_pins_b: sai2a-1 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('I', 6, AF10)>,	/* SAI2_SD_A */
- 				 <STM32_PINMUX('I', 7, AF10)>,	/* SAI2_FS_A */
-@@ -731,7 +731,7 @@ pins1 {
- 		};
- 	};
- 
--	sai2a_sleep_pins_b: sai2a-sleep-3 {
-+	sai2a_sleep_pins_b: sai2a-sleep-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('I', 6, ANALOG)>,  /* SAI2_SD_A */
- 				 <STM32_PINMUX('I', 7, ANALOG)>,  /* SAI2_FS_A */
-@@ -754,7 +754,7 @@ pins2 {
- 		};
- 	};
- 
--	sai2b_sleep_pins_a: sai2b-1 {
-+	sai2b_sleep_pins_a: sai2b-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('F', 11, ANALOG)>, /* SAI2_SD_B */
- 				 <STM32_PINMUX('E', 12, ANALOG)>, /* SAI2_SCK_B */
-@@ -763,14 +763,14 @@ pins {
- 		};
- 	};
- 
--	sai2b_pins_b: sai2b-2 {
-+	sai2b_pins_b: sai2b-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('F', 11, AF10)>; /* SAI2_SD_B */
- 			bias-disable;
- 		};
- 	};
- 
--	sai2b_sleep_pins_b: sai2b-3 {
-+	sai2b_sleep_pins_b: sai2b-sleep-1 {
- 		pins {
- 			pinmux = <STM32_PINMUX('F', 11, ANALOG)>; /* SAI2_SD_B */
- 		};
-@@ -785,7 +785,7 @@ pins {
- 		};
- 	};
- 
--	sai4a_sleep_pins_a: sai4a-1 {
-+	sai4a_sleep_pins_a: sai4a-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('B', 5, ANALOG)>; /* SAI4_SD_A */
- 		};
-@@ -1048,7 +1048,7 @@ pins {
- 		};
- 	};
- 
--	spdifrx_sleep_pins_a: spdifrx-1 {
-+	spdifrx_sleep_pins_a: spdifrx-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('G', 12, ANALOG)>; /* SPDIF_IN1 */
- 		};
-@@ -1145,7 +1145,7 @@ pins {
- 		};
- 	};
- 
--	i2c2_sleep_pins_b2: i2c2-1 {
-+	i2c2_sleep_pins_b2: i2c2-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('Z', 0, ANALOG)>; /* I2C2_SCL */
- 		};
-@@ -1161,7 +1161,7 @@ pins {
- 		};
- 	};
- 
--	i2c4_sleep_pins_a: i2c4-1 {
-+	i2c4_sleep_pins_a: i2c4-sleep-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('Z', 4, ANALOG)>, /* I2C4_SCL */
- 				 <STM32_PINMUX('Z', 5, ANALOG)>; /* I2C4_SDA */
--- 
-2.26.0.rc2
-
+>
+> > +     }
+> > +}
+> > +
+> >  /*
+> >   * atkbd_connect() is called when the serio module finds an interface
+> >   * that isn't handled yet by an appropriate device driver. We check if
+> > @@ -1184,6 +1241,8 @@ static int atkbd_connect(struct serio *serio, struct serio_driver *drv)
+> >               atkbd->id = 0xab00;
+> >       }
+> >
+> > +     atkbd_parse_fwnode_data(serio);
+> > +
+> >       atkbd_set_keycode_table(atkbd);
+> >       atkbd_set_device_attrs(atkbd);
+> >
+> > --
+> > 2.25.1.696.g5e7596f4ac-goog
+> >
+>
+> --
+> Dmitry
