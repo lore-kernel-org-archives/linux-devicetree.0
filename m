@@ -2,127 +2,131 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AEAC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627A7C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32852076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:56:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I14sWrr1"
+	by mail.kernel.org (Postfix) with ESMTP id 403EA2070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgCZK4j (ORCPT
+        id S1727841AbgCZK6e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:56:39 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41212 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgCZK4j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 06:56:39 -0400
-Received: by mail-lj1-f196.google.com with SMTP id n17so5878552lji.8
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 03:56:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zynm4D4OhVzqu5xzlg0LOQ/tgbbw9PIYyorUbwLadTE=;
-        b=I14sWrr1bBJtFvP4lIZjyDGCEseVkJH/gEWVc8y7qx0eryItq/r1uhn+cbfmhvtpUr
-         HdWyQQO7UZVcpRWTpUOOk1lM1NeZo0sFP6VTJkkk0NDP+7UbV6PbKSoNdtcZvZ2ALwaL
-         4rqUnZxXUa2Jn1vLJ6/eomFnizUpThfEDhyrILxDJWfBw74jrO23CMOk0EYEh5mxYwOr
-         /vfLsBwYaopOhEuBj9CRzp3zzPpVNyXPVRmXWK9QZVSGup3DSBODGsETnYaP0knbSUh3
-         Eq3I1bxdwj7bycZOwd+Vkiakl1/x8reyl9XUc2YqEGlNvs+TRrXA2/9rG8aKIsGHgoC5
-         BcYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zynm4D4OhVzqu5xzlg0LOQ/tgbbw9PIYyorUbwLadTE=;
-        b=kesUbuAvr27w3tpL0D7dk+2Gxckq6jQrtcPoWZFuwUPuWB8kGgG8C3r9UDUv8u2b3S
-         6sHZS1J5heSsCy/+qyYHRy+CssiHsw8DLBLNxI3D4PfBOZNIT4Eo0WPFqvAi167NijvN
-         wQza4Tcbsk5YyIXGfVHvNbtwlvnSr0bYeL6cZ5+PkRN8xPxfpsMvIbDFB+DuQPAMCjib
-         HTH75efEtsZFMtqg9R1SoTCtZCpQdQrYekbw+sSHzUPypByeJavqHQvbkDPyCxuxqagl
-         CnKxzIpAm1e7lYP+5C34vmXdxJHbPuQ7TAMgwQ0lLgDg2O2sAn2yC9QLTrFrknHJTkon
-         9/Pw==
-X-Gm-Message-State: ANhLgQ2FvoYhCOwkW29SHdsIV7hIJ7lwtyPGoQHKTzP5Sk1kT5hrBysZ
-        R40VFE4dOrWYrWUT/B2gp/mhwA==
-X-Google-Smtp-Source: ADFU+vt/lXP4078IY8NgCcD2BqnTqfFJuO8JESvRGr9AomT5a/4ZEG2Qu0qn9it+6RpSJatr7K9XbQ==
-X-Received: by 2002:a2e:3211:: with SMTP id y17mr4792582ljy.23.1585220197358;
-        Thu, 26 Mar 2020 03:56:37 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id z17sm1214653ljm.19.2020.03.26.03.56.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 03:56:36 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: power: Fix example for power-domain
-Date:   Thu, 26 Mar 2020 11:56:26 +0100
-Message-Id: <20200326105626.6369-3-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326105626.6369-1-ulf.hansson@linaro.org>
-References: <20200326105626.6369-1-ulf.hansson@linaro.org>
+        Thu, 26 Mar 2020 06:58:34 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:40719 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbgCZK6e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 06:58:34 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MxUfh-1jSdVI0Ysz-00xwIw for <devicetree@vger.kernel.org>; Thu, 26 Mar
+ 2020 11:58:33 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id E4F256502CC
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 10:58:32 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id l4pMVAJoz0qN for <devicetree@vger.kernel.org>;
+        Thu, 26 Mar 2020 11:58:32 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id A6BA2650227
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 11:58:32 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.79) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 26 Mar 2020 11:58:32 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id DD5CD80504; Thu, 26 Mar 2020 11:35:42 +0100 (CET)
+Date:   Thu, 26 Mar 2020 11:35:42 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v4 7/9] media: adv748x: only activate DAI if it is described
+ in device tree
+Message-ID: <a7112a71e23d63cb6d19188e59252689e4900c70.1585218857.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1585218857.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <cover.1585218857.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.79]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7C67
+X-Provags-ID: V03:K1:8yHLjZKnxmLfjevVBzoLZrR+wTcM8mh4uH6Cgux8g4ylBd+tLbN
+ GyTOpovqqsA9tXef8QwgKb1bbU2LIQioRg77hoiF+BqwsSxYLY44pPUfAY4/I/Amql21nm0
+ oLLkYIBwSQy6AFYWBERnqmY/ztPhT/ABk/7fJOD2VC6N8Q9XZZroUE35SWyCn1DcQ0e1YJL
+ I0zGfRdPfzzNnbXkr8jZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WqSgTCOyS5c=:srOcEbslKYe1gz4M7qQL3i
+ 9IGYiblM3rYL3CQCQ5HqaLhGpSzOhAbrStsqPfG4DziE2upCDUo/SrnCwA8G0YEyFRmRFa5RW
+ VhMi95V9JjF0JioXuahV0gMvNb5KsSnlRXYOFO+zzLCZNhbUQtrMws2RsUowyx3UQDJEpUwon
+ d/t4wpqo137PTnoAxx4Eqh32jgYC32KVsi2AxA0hWYQOU9CF5yoT+MsEXrHTH8u0t7NbtDCtJ
+ SeLrE7mCQd2YQrFsNsyPpL8+wuPfgRHFb2R7fCfinpmgaRSybp4QWm/N3NNKf5JMru5uZcAQB
+ ZRPx05NvUjdMVJeoQO1TtEDjPyuNtH2t034kGQ9RUzGw28mpPzH/dK3Ta9jsOdJU6DDAYdOwa
+ 0Nh6fAwrugjApdJKfGRp7XIqRVTuqsn9D210ZEdxMcaJ4/vpAsA0x32/4uo/nUv0TGYMatgU6
+ mKOa0efKucCJCoogR4qDXXbTbXrloLdmW1wd5wnA+VxIGAUim1IeDKFS4GpAXr0GgTeo1nVca
+ EiiUDyo2nBIyUzk8NMS/4r3jypV1r/WSOjFYI3ILIejk97WR61bEcabCtZLCfoXkn3QGcSO9a
+ LTdkqVh6VVfkhRcYmhCZX7WQYgu0WMNLjwdajePRcHGpu80BBmhinrG/q3xJ0jUBoHdkmJ/ov
+ R2P8iCbgqn1eRcPOHijcQ4M6+dwVL5+OiS/RmcWaSP1+A66pREXjc9ShbvJ9kTzpsA13qYdlf
+ Wa1Uo1ANkNM9atR1R3ZihD0vQNnZfLOPAgtnhflqlJg36gEy1PXHZkT2c4i9M8hYMnWuEHhAJ
+ 5gErqZmUmG56aaDUsi3qHIfanOlX0HioMe0H25kJt2DyJHNbPciRQPctaI8jS8RqEkCre14
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The change that converted the domain-idle-states DT bindings to the
-json-schema, forgot to update the corresponding example for the
-power-domain binding. Let's fix it.
+To avoid setting it up even if the hardware is not actually connected
+to anything physically.
 
-Fixes: 3261227d136d ("dt-bindings: power: Convert domain-idle-states bindings to json-schema")
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Besides, the bindings explicitly notes that port definitions are
+"optional if they are not connected to anything at the hardware level".
+
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
 ---
- .../bindings/power/power-domain.yaml          | 28 +++++++++----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/media/i2c/adv748x/adv748x-dai.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/power-domain.yaml b/Documentation/devicetree/bindings/power/power-domain.yaml
-index 6047aacd7766..ff5936e4a215 100644
---- a/Documentation/devicetree/bindings/power/power-domain.yaml
-+++ b/Documentation/devicetree/bindings/power/power-domain.yaml
-@@ -114,18 +114,18 @@ examples:
-         domain-idle-states = <&DOMAIN_PWR_DN>;
-     };
+diff --git a/drivers/media/i2c/adv748x/adv748x-dai.c b/drivers/media/i2c/adv748x/adv748x-dai.c
+index 185f78023e91..f9cc47fa9ad1 100644
+--- a/drivers/media/i2c/adv748x/adv748x-dai.c
++++ b/drivers/media/i2c/adv748x/adv748x-dai.c
+@@ -216,6 +216,11 @@ int adv748x_dai_init(struct adv748x_dai *dai)
+ 	int ret;
+ 	struct adv748x_state *state = adv748x_dai_to_state(dai);
  
--    DOMAIN_RET: state@0 {
--        compatible = "domain-idle-state";
--        reg = <0x0 0x0>;
--        entry-latency-us = <1000>;
--        exit-latency-us = <2000>;
--        min-residency-us = <10000>;
--    };
--
--    DOMAIN_PWR_DN: state@1 {
--        compatible = "domain-idle-state";
--        reg = <0x1 0x0>;
--        entry-latency-us = <5000>;
--        exit-latency-us = <8000>;
--        min-residency-us = <7000>;
-+    domain-idle-states {
-+        DOMAIN_RET: domain-retention {
-+            compatible = "domain-idle-state";
-+            entry-latency-us = <1000>;
-+            exit-latency-us = <2000>;
-+            min-residency-us = <10000>;
-+        };
-+
-+        DOMAIN_PWR_DN: domain-pwr-dn {
-+            compatible = "domain-idle-state";
-+            entry-latency-us = <5000>;
-+            exit-latency-us = <8000>;
-+            min-residency-us = <7000>;
-+        };
-     };
++	if (!state->endpoints[ADV748X_PORT_I2S]) {
++		adv_info(state, "no I2S port, DAI disabled\n");
++		ret = 0;
++		goto fail;
++	}
+ 	dai->mclk_name = kasprintf(GFP_KERNEL, "%s.%s-i2s-mclk",
+ 				   state->dev->driver->name,
+ 				   dev_name(state->dev));
 -- 
-2.20.1
+2.25.1.25.g9ecbe7eb18
+
 
