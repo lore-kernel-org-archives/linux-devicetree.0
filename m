@@ -2,379 +2,93 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228A0C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 11:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F24EC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C7C20409
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 11:56:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJrM2iNZ"
+	by mail.kernel.org (Postfix) with ESMTP id D8B242070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgCZL4u (ORCPT
+        id S1728130AbgCZMYn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:56:50 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34273 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgCZL4u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 07:56:50 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j16so5502345otl.1
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 04:56:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=08y2skilNEOT4bzHTJTKfLYQDttNHHaXwzBrM3l9i0Q=;
-        b=dJrM2iNZtLM4xzUOQakfgBH6BrslLPki7yCI/zmRJk81wY3whBCrNIp/Cv2T1KeTyV
-         Dipghi72ID6l2DkfHcuD5kCRDJ3AGrQMI9IhEmSuTwDkFtii8SMoTF17vwVCGDL4XeI7
-         p+FZFAMs8o8vxi+DUwzHMdRhOvOhlRsHpPtj8zhSJ69Tpsz/tuyMjlTgCdUh2nBTsCbJ
-         lKS4FyKi61ZLVQp0Ng0xb+2Zixj6S+jemGJ58hkj7Q/6kHOKeiH8TvRpfjPPaRP7ypCP
-         KO9N6EBS6M8kankO8Xzfl6a0HD3gEKAJhkytOe7YSo5CxXmu0XiQEuuCZdSqQKJdLQ1+
-         5ynQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=08y2skilNEOT4bzHTJTKfLYQDttNHHaXwzBrM3l9i0Q=;
-        b=X13p/kxzHBio9lLMi4kfU66cV1nGrsCH2pXh18POWeNJCqTcFE2NJHKcsXpvUi4Gu+
-         A1ZGO30hpF3w2fqYpXDPBLfJIuODnIhh3VZarNd5vCw22g/JureVYTFlMBTwat4ZGlhM
-         4jC2tW/3JiYM6MU5W2lS8gtKHrOiTTwo5+3+I7JjyuavVN6qmWMZtLs0jN7Zn7ZW5s42
-         LD6+TPChna2wq9Bfuxh1eoV7OoXGMzNJeZ2ObHgwZcTZxLGHOFQ28vI8nyL4iptDKuMA
-         ccVCzMm1wkJEFSKgF0FYmGNNvZSjrlOJ5RMRzuo91o9jmdnfIT+KB/jLli1edffhrl++
-         stNA==
-X-Gm-Message-State: ANhLgQ2qLiIqk/b/jib9tfGKNhCvCSvVnnUqx8QML6ban9z/zntZkTQ/
-        iY+mTd9TZrBj3MiWhm2YT/wzb2XlSsf0iI52FPr3Mg==
-X-Google-Smtp-Source: ADFU+vtZ951rF9Pe1PQCmPcRvBusAbZvzsIhMkHMSpSrFf3GcmrMJYTcDuOyMXRjXOrOY86o2HZAMZ5iB1cF/I0Vr0o=
-X-Received: by 2002:a9d:6c88:: with SMTP id c8mr5616850otr.272.1585223808543;
- Thu, 26 Mar 2020 04:56:48 -0700 (PDT)
+        Thu, 26 Mar 2020 08:24:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58638 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727990AbgCZMYn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Mar 2020 08:24:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 91F3CB153;
+        Thu, 26 Mar 2020 12:24:41 +0000 (UTC)
+Message-ID: <24f850f64b5c71c71938110775e16caaec2811cc.camel@suse.de>
+Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Eric Anholt <eric@anholt.net>
+Cc:     wahrenst@gmx.net, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+Date:   Thu, 26 Mar 2020 13:24:39 +0100
+In-Reply-To: <20200303173217.3987-1-nsaenzjulienne@suse.de>
+References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-d7LQKba6+yuwYb7BdPgp"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-References: <20200313110350.10864-1-robert.foss@linaro.org>
- <20200313110350.10864-3-robert.foss@linaro.org> <20200313121746.GC5730@valkosipuli.retiisi.org.uk>
-In-Reply-To: <20200313121746.GC5730@valkosipuli.retiisi.org.uk>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Thu, 26 Mar 2020 12:56:37 +0100
-Message-ID: <CAG3jFytpx8_+DKhUVZnUFeMYK82Z1hFWcEnbyD0=4a8p3ojteg@mail.gmail.com>
-Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Sakari,
 
-On Fri, 13 Mar 2020 at 13:18, Sakari Ailus <sakari.ailus@iki.fi> wrote:
->
-> Hi Robert,
->
-> On Fri, Mar 13, 2020 at 12:03:49PM +0100, Robert Foss wrote:
-> > Add devicetree match table, and enable ov8856_probe()
-> > to initialize power, clocks and reset pins.
-> >
-> > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > ---
-> >
-> > - Changes since v1:
-> >   * Fabio: Change n_shutdown_gpio name to reset_gpio
-> >   * Fabio: Invert reset_gpio due to GPIO_ACTIVE_HIGH -> GPIO_ACTIVE_LOW change
-> >   * Fabio: Remove empty line
-> >   * Fabio: Remove real error from devm_gpiod_get() failures
-> >   * Andy & Sakari: Make XVCLK optional since to not break ACPI
-> >   * Sakari: ARRAY_SIZE() directly instead of through OV8856_NUM_SUPPLIES
-> >   * Sakari: Use XVCLK rate as provided by DT
-> >
-> >  drivers/media/i2c/ov8856.c | 109 ++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 107 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
-> > index 8655842af275..db61eed223e8 100644
-> > --- a/drivers/media/i2c/ov8856.c
-> > +++ b/drivers/media/i2c/ov8856.c
-> > @@ -3,10 +3,13 @@
-> >
-> >  #include <asm/unaligned.h>
-> >  #include <linux/acpi.h>
-> > +#include <linux/clk.h>
-> >  #include <linux/delay.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pm_runtime.h>
-> > +#include <linux/regulator/consumer.h>
-> >  #include <media/v4l2-ctrls.h>
-> >  #include <media/v4l2-device.h>
-> >  #include <media/v4l2-fwnode.h>
-> > @@ -19,6 +22,8 @@
-> >  #define OV8856_LINK_FREQ_180MHZ              180000000ULL
-> >  #define OV8856_SCLK                  144000000ULL
-> >  #define OV8856_MCLK                  19200000
-> > +#define OV8856_XVCLK_19_2            19200000
->
-> Please use a single macro to refer to 19,2 MHz clock.
+--=-d7LQKba6+yuwYb7BdPgp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Alright, I'll combine the two into a macro for both.
+Hi Stefan and Florian,
 
->
-> > +#define OV8856_XVCLK_24                      24000000
->
-> This doesn't seem to be needed
+On Tue, 2020-03-03 at 18:32 +0100, Nicolas Saenz Julienne wrote:
+> The register based driver turned out to be unstable, specially on RPi3a+
+> but not limited to it. While a fix is being worked on, we roll back to
+> using firmware based scheme.
+>=20
+> Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM drive=
+r
+> instead of firmware")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
 
-As long as we don't set the clock to 24Mhz we don't.
-I'm assuming that you're saying that the 24Mhz clock rate isn't needed
-for the modes used currently.
+now that the problem Stefan was seeing is being taken care of, I think it's
+fair to reconsider taking this patch. Maybe even adding a Tested-by by Stef=
+an?
 
-Removing this macro in v3.
+Regards,
+Nicolas
 
->
-> >  #define OV8856_DATA_LANES            4
-> >  #define OV8856_RGB_DEPTH             10
-> >
-> > @@ -64,6 +69,12 @@
-> >
-> >  #define to_ov8856(_sd)                       container_of(_sd, struct ov8856, sd)
-> >
-> > +static const char * const ov8856_supply_names[] = {
-> > +     "dovdd",        /* Digital I/O power */
-> > +     "avdd",         /* Analog power */
-> > +     "dvdd",         /* Digital core power */
-> > +};
-> > +
-> >  enum {
-> >       OV8856_LINK_FREQ_720MBPS,
-> >       OV8856_LINK_FREQ_360MBPS,
-> > @@ -566,6 +577,10 @@ struct ov8856 {
-> >       struct media_pad pad;
-> >       struct v4l2_ctrl_handler ctrl_handler;
-> >
-> > +     struct clk              *xvclk;
-> > +     struct gpio_desc        *reset_gpio;
-> > +     struct regulator_bulk_data supplies[ARRAY_SIZE(ov8856_supply_names)];
-> > +
-> >       /* V4L2 Controls */
-> >       struct v4l2_ctrl *link_freq;
-> >       struct v4l2_ctrl *pixel_rate;
-> > @@ -908,6 +923,46 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
-> >       return ret;
-> >  }
-> >
-> > +static int __ov8856_power_on(struct ov8856 *ov8856)
-> > +{
-> > +     struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> > +     int ret;
-> > +
-> > +     ret = clk_prepare_enable(ov8856->xvclk);
-> > +     if (ret < 0) {
-> > +             dev_err(&client->dev, "failed to enable xvclk\n");
-> > +             return ret;
-> > +     }
-> > +
-> > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
-> > +
-> > +     ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
-> > +                                 ov8856->supplies);
-> > +     if (ret < 0) {
-> > +             dev_err(&client->dev, "failed to enable regulators\n");
-> > +             goto disable_clk;
-> > +     }
-> > +
-> > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_LOW);
-> > +
-> > +     usleep_range(1500, 1800);
->
-> I think you could omit the delay on ACPI based systems. Or just bail out
-> early in that case.
 
-I'll add a check for reset_gpio being NULL, and skip the sleep for that case.
+--=-d7LQKba6+yuwYb7BdPgp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
->
-> > +
-> > +     return 0;
-> > +
-> > +disable_clk:
->
-> How about the GPIO here?
+-----BEGIN PGP SIGNATURE-----
 
-Ack
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl58nwcACgkQlfZmHno8
+x/5rvAf+LW4zqdNAw+skEf7gLWSz8i+ghmc3P0YNFupl4fEuGA62RCruBfIx7zSM
+YKS3V9/dAqd4on3dweqB/7/mixPvF/lLbLDpF0AvDySg+dkItI6QhXIcfKCiFWzP
+Dyd2w32POGUKljy0gsgRBgxebQ4+bPaDgyTlMnaSnlux7+IDOH9Vr1v4YamYE7N7
+9EdGV6fTuib7iOWvkfXmWQoE9Gj0RCoJQ+dGbopRkuAJ9Jng4tqrRy5hHh7Us+2P
+u1IpuzS9e2xHRaVSanhkzHqQv9s9Kd0Q0+pqnXwa5//nvuaz8kxWotQl7MMEQ0nV
+IaL3nI09Wexdg+FaH1f9grkdodD8pQ==
+=TDc9
+-----END PGP SIGNATURE-----
 
->
-> > +     clk_disable_unprepare(ov8856->xvclk);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static void __ov8856_power_off(struct ov8856 *ov8856)
-> > +{
-> > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
-> > +     regulator_bulk_disable(ARRAY_SIZE(ov8856_supply_names),
-> > +                            ov8856->supplies);
-> > +     clk_disable_unprepare(ov8856->xvclk);
-> > +}
->
-> You'll need to call the two in the driver's suspend and resume functions.
+--=-d7LQKba6+yuwYb7BdPgp--
 
-Ack
-
->
-> > +
-> >  static int __maybe_unused ov8856_suspend(struct device *dev)
-> >  {
-> >       struct i2c_client *client = to_i2c_client(dev);
-> > @@ -1175,7 +1230,7 @@ static int ov8856_remove(struct i2c_client *client)
-> >  static int ov8856_probe(struct i2c_client *client)
-> >  {
-> >       struct ov8856 *ov8856;
-> > -     int ret;
-> > +     int i, ret;
->
-> unsigned int?
-
-Ack
-
->
-> >
-> >       ret = ov8856_check_hwcfg(&client->dev);
-> >       if (ret) {
-> > @@ -1189,10 +1244,50 @@ static int ov8856_probe(struct i2c_client *client)
-> >               return -ENOMEM;
-> >
-> >       v4l2_i2c_subdev_init(&ov8856->sd, client, &ov8856_subdev_ops);
-> > +     ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
-> > +     if (PTR_ERR(ov8856->xvclk) == -ENOENT) {
-> > +             dev_info(&client->dev, "xvclk clock not defined, continuing...\n");
->
-> How about dev_dbg()?
-
-Ack.
-
->
-> > +             ov8856->xvclk = NULL;
-> > +     } else if (IS_ERR(ov8856->xvclk)) {
-> > +             dev_err(&client->dev, "could not get xvclk clock (%ld)\n",
-> > +                     PTR_ERR(ov8856->xvclk));
-> > +             return PTR_ERR(ov8856->xvclk);
-> > +     }
-> > +
-> > +     ret = clk_set_rate(ov8856->xvclk, OV8856_XVCLK_24);
->
-> This should either come from platform data, or perhaps it'd be even better
-> to get the clock rate and use assigned-clock-rates. I guess that's
-> preferred nowadays.
-
-I'm a bit unsure about what this would look like.
-
-Are you thinking something like the way ext_clk is used in smiapp_core.c?
-I went ahead and implemented support for retrieving and storing
-'clock-rates' during the ov8856_check_hwcfg() call, and then setting
-the rate to the configured rate during probing.
-
->
-> > +     if (ret < 0) {
-> > +             dev_err(&client->dev, "failed to set xvclk rate (24MHz)\n");
-> > +             return ret;
-> > +     }
-> > +
-> > +     ov8856->reset_gpio = devm_gpiod_get(&client->dev, "reset",
-> > +                                            GPIOD_OUT_HIGH);
->
-> Indentation.
-
-Ack.
-
->
-> What if no gpio is defined?
-
-As per Andys comments, I'll switch to the optional version of devm_gpiod_get().
-
->
-> > +     if (IS_ERR(ov8856->reset_gpio)) {
-> > +             dev_err(&client->dev, "failed to get reset-gpios\n");
-> > +             return PTR_ERR(ov8856->reset_gpio);
-> > +     }
-> > +
-> > +     for (i = 0; i < ARRAY_SIZE(ov8856_supply_names); i++)
-> > +             ov8856->supplies[i].supply = ov8856_supply_names[i];
-> > +
-> > +     ret = devm_regulator_bulk_get(&client->dev,
-> > +                                   ARRAY_SIZE(ov8856_supply_names),
-> > +                                   ov8856->supplies);
->
-> What happens if there are no regulators?
-
-Like Andy mentioned, we should be alright, since
-devm_regulator_bulk_get() creates dummy regulators if one isn't found.
-
->
-> > +     if (ret) {
-> > +             dev_warn(&client->dev, "failed to get regulators\n");
-> > +             return ret;
-> > +     }
-> > +
-> > +     ret = __ov8856_power_on(ov8856);
-> > +     if (ret) {
-> > +             dev_warn(&client->dev, "failed to power on\n");
-> > +             return ret;
-> > +     }
-> > +
-> >       ret = ov8856_identify_module(ov8856);
-> >       if (ret) {
-> >               dev_err(&client->dev, "failed to find sensor: %d", ret);
-> > -             return ret;
-> > +             goto probe_power_off;
-> >       }
-> >
-> >       mutex_init(&ov8856->mutex);
-> > @@ -1238,6 +1333,9 @@ static int ov8856_probe(struct i2c_client *client)
-> >       v4l2_ctrl_handler_free(ov8856->sd.ctrl_handler);
-> >       mutex_destroy(&ov8856->mutex);
-> >
-> > +probe_power_off:
-> > +     __ov8856_power_off(ov8856);
-> > +
->
-> Also remember to power off the device in remove().
->
-
-Ack
-
-> >       return ret;
-> >  }
-> >
-> > @@ -1254,11 +1352,18 @@ static const struct acpi_device_id ov8856_acpi_ids[] = {
-> >  MODULE_DEVICE_TABLE(acpi, ov8856_acpi_ids);
-> >  #endif
-> >
-> > +static const struct of_device_id ov8856_of_match[] = {
-> > +     { .compatible = "ovti,ov8856" },
-> > +     { /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ov8856_of_match);
-> > +
-> >  static struct i2c_driver ov8856_i2c_driver = {
-> >       .driver = {
-> >               .name = "ov8856",
-> >               .pm = &ov8856_pm_ops,
-> >               .acpi_match_table = ACPI_PTR(ov8856_acpi_ids),
-> > +             .of_match_table = ov8856_of_match,
-> >       },
-> >       .probe_new = ov8856_probe,
-> >       .remove = ov8856_remove,
->
-> --
-> Regards,
->
-> Sakari Ailus
