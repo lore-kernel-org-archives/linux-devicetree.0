@@ -2,44 +2,44 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57007C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B42C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4A020714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE3E2070A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgCZKmK (ORCPT
+        id S1727976AbgCZKp3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:42:10 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:39881 "EHLO
+        Thu, 26 Mar 2020 06:45:29 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:41623 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbgCZKmK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 06:42:10 -0400
+        with ESMTP id S1727688AbgCZKp3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 06:45:29 -0400
 Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MIMXE-1j3AMW2XBM-00EJil for <devicetree@vger.kernel.org>; Thu, 26 Mar
- 2020 11:42:08 +0100
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1N3Gok-1jQjMz39Jy-010Oar for <devicetree@vger.kernel.org>; Thu, 26 Mar
+ 2020 11:45:27 +0100
 Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 5F3A6650487
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 10:42:08 +0000 (UTC)
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 8C51C65047A
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 10:45:27 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at cetitec.com
 Received: from mail.cetitecgmbh.com ([127.0.0.1])
         by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id kxfwaLay3IXT for <devicetree@vger.kernel.org>;
-        Thu, 26 Mar 2020 11:42:07 +0100 (CET)
+        with ESMTP id qeKAnpoR9YVv for <devicetree@vger.kernel.org>;
+        Thu, 26 Mar 2020 11:45:27 +0100 (CET)
 Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id D341464FF7D
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 11:42:07 +0100 (CET)
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 26CA564E08F
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 11:45:27 +0100 (CET)
 Received: from pflmari.corp.cetitec.com (10.8.5.79) by
  PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 26 Mar 2020 11:42:07 +0100
+ id 15.0.1497.2; Thu, 26 Mar 2020 11:45:26 +0100
 Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 4A517804FE; Thu, 26 Mar 2020 11:34:59 +0100 (CET)
-Date:   Thu, 26 Mar 2020 11:34:59 +0100
+        id 5049380500; Thu, 26 Mar 2020 11:35:23 +0100 (CET)
+Date:   Thu, 26 Mar 2020 11:35:23 +0100
 From:   Alex Riesen <alexander.riesen@cetitec.com>
 To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
 CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -52,9 +52,9 @@ CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
         <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v4 2/9] media: adv748x: include everything adv748x.h needs
- into the file
-Message-ID: <e37abb9c66571ad02a7d0c7903d1889d7d52ed46.1585218857.git.alexander.riesen@cetitec.com>
+Subject: [PATCH v4 3/9] media: adv748x: reduce amount of code for bitwise
+ modifications of device registers
+Message-ID: <88950969b1d16ff5fcd1b3458356c4cf5a9e6cff.1585218857.git.alexander.riesen@cetitec.com>
 Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -77,154 +77,100 @@ X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
  PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
 X-EsetResult: clean, is OK
 X-EsetId: 37303A290D7F536A6D7C67
-X-Provags-ID: V03:K1:K5eB96r3BRoPBN8zR0Zj6koBOdFLcKj4enMWxBAY8TSBhtmIDMo
- eNzWd0yLz5fZ5xXrX2eL6Vd0PZlFOLPrLR3hmanwjMsKfkT7cYByJaeOHRMOGIdqnhxVj0P
- 6+OMwNWnLENvFwZvUzby/q5LIRtfMjcPqAPuBF2JWyYaaNfieCojJ8SOP66xLji75CIzncJ
- 83jnzfI1gLBkmkstrrRfg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MUFCWE6xfFM=:pRUtv5JfuoeVblj2iOfGtS
- MQmGuIbaZWU/g6I43l4RgRvzGVeFU4NT9PItToRYkMnIbFBN1m2lZZ7ACTADZlr5kdrbVpUOh
- CXm8EuAeWVXfJEcqbEOjz+11YH82A/xg93qdfk4u7d8Mwj8zRythRX7qyJw2N0SiHYYkhn4ZV
- L3HRCbQd+9x69luVqc7oDhMnMAucXss/VFZhIYXunK5ZBhkMpbf3IO0qYC1UOGn9JP1iNqTtL
- XodR5yDLBE15BnRxxOdL/0uhaf4uqngz9x592OUNXlB2SIMTMPsVTjfe+o7S8P8VxDMCMU5m4
- AaT9gCcWG9cPY9sqgVTXMa4cyuzuF52uUULZLXhlGxFzMKsiBb/Z07Ow4G4YEUm+Hms4Dz2DA
- uF8joVrKwpJ0K73UnNMTRhs4vUhB/br8L4IgpKoZrUmew0CUfQRyeNAdizYVwL06Y/jqleiSW
- MH6aMXReJpCYBz1bdEvx5SV7q4E38Dm+pzIwwJuG9JdoGivVWsaikIOEEvykUkOcwa4WT/d+e
- GaseTPBgJakTHv09QJCzZZF1L6tPz9U42XfOFJwKFqPKZLvfYoCmF92Cvv/sYOOwxgYmWg0B2
- CttAogjJ4RqkbkGvkmQd4WteIkuogMNvK+kPBSl+a8AcLJf8KHfu8wugWccce7lVAOsAr137J
- 9c6QsQyBK/Bh+INUaKWwxQW0oYBNSZPm5JOrjVYNYfUfwY0gKbSLK9VWPIivXyBNIfNNyCAE+
- 0AXNb3oZPCIhKrHJ2AAIGTvS+UhBINnGd3c77xEdVTDxBmHqAXOAF9WCU7Sr5f6V4nOuTYrks
- fO5eVnhyDxa7svU6DFIOMHOsD3U4gLnB5FvHkqkXhH1Y5u/NM7Y7ViW9vA/SGdQfu8VBh6n
+X-Provags-ID: V03:K1:NxFS4oiz0QJPPpeHO9TwHJxHhvPbb5uvY3GRyLE5dB9nQBB8QNz
+ FYmA0E6Tx+m8g7IylrGlcD8g3tUfNdgnRhhe9nSL9b/V1lFf404VyMjSwg4r1YCosF3qLiu
+ yj3lXgOJZTDq61+etApkAjquP/4862GJ7AjIGp9tBYDZIp30Ek1bVMctJqCR5lscZDvKUxz
+ gEFn4j+WQz5oapVBlPs/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:g0ig+VgfAB0=:ZkWHx4zndUJrCnJj0gL2G1
+ vAr015cOUu67cVK/m64UZy3M1BdlyBpLGFlHRtAAWA89fRt3FTwLLTSBzTUoPguBsPePiyNXB
+ jklg317SmgK1cnbHGm4WNzJWObRyit7yVUcnnomp9NA+BkUWxT/BW2iRC/amDr3mF9s/E2oHW
+ 9tzJV5Eb7py6qXqlNcF3vm1PcGQLpRlJJ7ZehzkTMvpldJmJTRm+P3+C2FRVGxQ+HgSc/Wf1O
+ VAJtIkNzpSol8tygOJYRjzwU7BaQjH1+mH9Z3GlTPF9IW0bYess7uL8zJXANtOF0Xq0qhQzVr
+ E/KNQMns+XnaUfpdLKIPAyJeGrxpdgggqOzSHUge2PZCUAs1VJTE76k8PsyEUrxMnMWiwVYYQ
+ zZI6ox96EuEX1EeTiNVELqdV+XRUBCrVRyoaH43L4BNTf8RQvke4xgE8VG2r6lxNNsuxXrFnd
+ w5vjpSha3ZYGVLvTmD6fsYD6QOLKCyQ2SrbH0HCIdyxk4KjHDG1MMPCtp/9c9QECyLlaGfiIu
+ mrRezfux8VZy1OUzVelFXqxKIqBqas8u+eZYLAwA8fsQB9C2KH3a8A8G6wsaXKBAEWKd/bZog
+ wW5k7NfeUHH4cHLvC4g4hTnxRl9kw64+d27h4t7CO5M77cWGnNp/ODXRisaSgespzdCtV57yS
+ 6qf5Nehpvv/zIPLKkXYw4oroQ/wKgbdJjDaq29/EWKqVaja2pSn3k3BZAjipVVk57Kheuy0OB
+ wLWodoNT/4GTFCPNJwN8O5Jg4UsZIeu9VapxU9P8LPTYE70h+FUh5BgnKNOdjwkmw4aWaOkgY
+ NgdJ/y+emMh84Yxa0zSkKOxjvnROMw/Oh8ZQiBgcwyC302WJtW4l/Et4VZqHeii/UBy3TUR
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-To follow the established practice of not depending on others to
-pull everything in. While at it, make sure it stays like this.
+The regmap provides a convenient utility for this.
+The hdmi_* and dpll_* register modification macros added for symmetry
+with the existing operations (io_*, sdp_*).
 
 Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/media/i2c/adv748x/adv748x-afe.c  | 6 ++----
- drivers/media/i2c/adv748x/adv748x-core.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x-csi2.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x-hdmi.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x.h      | 2 ++
- 5 files changed, 10 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-afe.c b/drivers/media/i2c/adv748x/adv748x-afe.c
-index dbbb1e4d6363..5a25d1fbe25f 100644
---- a/drivers/media/i2c/adv748x/adv748x-afe.c
-+++ b/drivers/media/i2c/adv748x/adv748x-afe.c
-@@ -6,18 +6,16 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/delay.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/v4l2-dv-timings.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * SDP
-  */
+--
+v3: remove _update name in favor of existing _clrset
+---
+ drivers/media/i2c/adv748x/adv748x-core.c |  6 ++++++
+ drivers/media/i2c/adv748x/adv748x.h      | 14 +++++++++++---
+ 2 files changed, 17 insertions(+), 3 deletions(-)
+
 diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index c3fb113cef62..5c59aad319d1 100644
+index 5c59aad319d1..8580e6624276 100644
 --- a/drivers/media/i2c/adv748x/adv748x-core.c
 +++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -10,6 +10,8 @@
-  *	Kieran Bingham <kieran.bingham@ideasonboard.com>
-  */
+@@ -133,6 +133,12 @@ static int adv748x_write_check(struct adv748x_state *state, u8 page, u8 reg,
+ 	return *error;
+ }
  
-+#include "adv748x.h"
++int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg, u8 mask,
++			u8 value)
++{
++	return regmap_update_bits(state->regmap[page], reg, mask, value);
++}
 +
- #include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/i2c.h>
-@@ -20,14 +22,10 @@
- #include <linux/slab.h>
- #include <linux/v4l2-dv-timings.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * Register manipulation
-  */
-diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
-index c43ce5d78723..c00d4f347d95 100644
---- a/drivers/media/i2c/adv748x/adv748x-csi2.c
-+++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
-@@ -5,15 +5,13 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/module.h>
- #include <linux/mutex.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- static int adv748x_csi2_set_virtual_channel(struct adv748x_csi2 *tx,
- 					    unsigned int vc)
- {
-diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-index c557f8fdf11a..f598acec3b5c 100644
---- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
-+++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-@@ -5,18 +5,16 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/module.h>
- #include <linux/mutex.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-ioctl.h>
- 
- #include <uapi/linux/v4l2-dv-timings.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * HDMI and CP
-  */
+ /* adv748x_write_block(): Write raw data with a maximum of I2C_SMBUS_BLOCK_MAX
+  * size to one or more registers.
+  *
 diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-index fccb388ce179..09aab4138c3f 100644
+index 09aab4138c3f..0a9d78c2870b 100644
 --- a/drivers/media/i2c/adv748x/adv748x.h
 +++ b/drivers/media/i2c/adv748x/adv748x.h
-@@ -19,6 +19,8 @@
-  */
+@@ -393,25 +393,33 @@ int adv748x_write(struct adv748x_state *state, u8 page, u8 reg, u8 value);
+ int adv748x_write_block(struct adv748x_state *state, int client_page,
+ 			unsigned int init_reg, const void *val,
+ 			size_t val_len);
++int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg,
++			u8 mask, u8 value);
  
- #include <linux/i2c.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
+ #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
+ #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
+-#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~(m)) | (v))
++#define io_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_IO, r, m, v)
  
- #ifndef _ADV748X_H_
- #define _ADV748X_H_
+ #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
+ #define hdmi_read16(s, r, m) (((hdmi_read(s, r) << 8) | hdmi_read(s, (r)+1)) & (m))
+ #define hdmi_write(s, r, v) adv748x_write(s, ADV748X_PAGE_HDMI, r, v)
++#define hdmi_clrset(s, r, m, v) \
++	adv748x_update_bits(s, ADV748X_PAGE_HDMI, r, m, v)
++
++#define dpll_read(s, r) adv748x_read(s, ADV748X_PAGE_DPLL, r)
++#define dpll_clrset(s, r, m, v) \
++	adv748x_update_bits(s, ADV748X_PAGE_DPLL, r, m, v)
+ 
+ #define repeater_read(s, r) adv748x_read(s, ADV748X_PAGE_REPEATER, r)
+ #define repeater_write(s, r, v) adv748x_write(s, ADV748X_PAGE_REPEATER, r, v)
+ 
+ #define sdp_read(s, r) adv748x_read(s, ADV748X_PAGE_SDP, r)
+ #define sdp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_SDP, r, v)
+-#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~(m)) | (v))
++#define sdp_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_SDP, r, m, v)
+ 
+ #define cp_read(s, r) adv748x_read(s, ADV748X_PAGE_CP, r)
+ #define cp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_CP, r, v)
+-#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~(m)) | (v))
++#define cp_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_CP, r, m, v)
+ 
+ #define tx_read(t, r) adv748x_read(t->state, t->page, r)
+ #define tx_write(t, r, v) adv748x_write(t->state, t->page, r, v)
 -- 
 2.25.1.25.g9ecbe7eb18
 
