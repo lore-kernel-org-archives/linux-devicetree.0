@@ -2,183 +2,210 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFF2C2D0E7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 00:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6148DC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 00:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E125320714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 00:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30EEB20714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 00:10:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SBVg/zWs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mcg2Bs1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbgCZAIE (ORCPT
+        id S1727536AbgCZAKa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 20:08:04 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43814 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbgCZAID (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 20:08:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id f206so1870734pfa.10
-        for <devicetree@vger.kernel.org>; Wed, 25 Mar 2020 17:08:01 -0700 (PDT)
+        Wed, 25 Mar 2020 20:10:30 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43410 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727525AbgCZAKa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 20:10:30 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u12so1966583pgb.10
+        for <devicetree@vger.kernel.org>; Wed, 25 Mar 2020 17:10:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=D0CV0Uku18oFuW+TPNfaEyxgPkTMYFP8ObQ3tAgtOsc=;
-        b=SBVg/zWsk52JKcc+nEzqXNzg7w+HdPM+lrL+HI2UtDuTis6PRGJW94M/+n13O7YFJ6
-         MkyiHnm+qz/wx068nDs7rRLD8Mxv0/d1wvd4ydeatxtcR8oeIo1jgdzPJWoBiWLOMy5D
-         Sr7aD48oUo1BGco1e4RkKs/cV4d8PChb5tGcmIVWLw4+gCx6zjSNiIkgcushvn7efvzG
-         2NB35CZPdE1L9jj/4rXITMdF2rI03jjFSk5pQtNPgT9t6zFYfBB69DlnPNvdf0FaIVyh
-         RdJT+9KPjhHtw68UyMFICMBQNtihr9TcRKOx34/0Fr0tHKLMzLfslUmpoZ/zH8vX9jx/
-         Av0w==
+         :content-disposition:in-reply-to:user-agent;
+        bh=2TLCIayFIh5w2c05KwNKqvVja8wF1oXdMguuXxf6c88=;
+        b=mcg2Bs1/Nwi+ze10ARXtbL5aZ4s3WkjaFpQCuZL22Sr/57of9GKPV43s2w4UxOMBdI
+         xWKBa9Z9Vx/ggJSwC+dcyIrGg39sNINmAfJTqyVRnZhzCQJD6Q9VR21Jq17cP6OtbLaZ
+         Xi72XGXyLAKrT/95E43XifM36FwZ6b6OcD9gIVH/QAB5/U1l8gdJ1fl4nenE2jF6biNN
+         Ko3yvp7K8DjUXwpIcI83p6TQjkVEheeVEN9r7CO5l2vx0x+2ZkgZwneMoFi2nBQViN3Z
+         E48INybmpXNJi12nbXTBNHHZYxjN2K/0cmMNN2MMbq3GWdzT6aRVeqMgoFT1xh/lHyKP
+         NbPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D0CV0Uku18oFuW+TPNfaEyxgPkTMYFP8ObQ3tAgtOsc=;
-        b=BWhblVWqBH2YWikQk/Ns5vpMHow1bgJ9juvtAXQY1UG9ucIanUgaJbpRUDhlqw0MMP
-         kXB8MtjGqfa5NIVLNVrtYvxlL+3QvjOrh1RjRY1LevfPi/cdHPyaMJNzFQY7iWGKopet
-         5weqfr/TKbtZWXvpOCC36KCt+q6iLUPmhoy7LkfL0mYDsHV4X5NaRSzsu3I6q/AvFV6z
-         GcrIOIxJhOXizZ/VYj7BmWg0UrFVR3fEo0HsKtetGyuuPeWgoHchThyFi2GvUnXcv2Jx
-         1GAqDTJ+F2nR33xckO2HcpzblLQvesLbHI6YT7na7ci5fQIbI2+MhCetJUEf/gpYaAXc
-         3PNA==
-X-Gm-Message-State: ANhLgQ0AI7tNtmC1MWWWwodK6juB7ba7VSSWYQvuvTzxte9uee64B4KM
-        A6XLDbf4eK1FXJCPDRt+8EbOWA5uxQQ=
-X-Google-Smtp-Source: ADFU+vuIfUjtKDwe+/9IZoHaEyu52b65Fllav4Sg62s59kUgWWdWFkYrl4HvkTVxCVFhPIOx9IDLGA==
-X-Received: by 2002:a62:2e42:: with SMTP id u63mr6197087pfu.69.1585181280449;
-        Wed, 25 Mar 2020 17:08:00 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u12sm227537pfm.165.2020.03.25.17.07.59
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2TLCIayFIh5w2c05KwNKqvVja8wF1oXdMguuXxf6c88=;
+        b=QHKF91IhxmUJg0Z5muxj7AOnMJPPDwREOkIIZICva2mmHD1Mqcb4Fr+jJUc6LNDHtc
+         nwsrVyCBByxkGGTt1KkXBHFw5iQcQ0WdxYl1DtsJbfk4Zs3vR9ujZY/eDlf1uXHr1lU3
+         pswOaoBB2LQ12f2M/eGOBMBGazfZOpG88d1/w1/G1gde1hU9n5Pi0d6YJ93rsxyvrRsl
+         54TI4T+EdFJtzU0Ql7ARkokvJOfWUzbd5gQrxj2X+olBCB7qkx+65JCD+vTTK5bQjBdo
+         QXxIFREjj1MW/b9JM9f1L/nfsIBWF4HE2dqteKRXb9hnWg/sv7t0Vqf0uVQhwdwG8s89
+         Thwg==
+X-Gm-Message-State: ANhLgQ14zncVQefvCoiqkfMUx/MBRGU/3Fes+jTUnJjEPy5F4pfQsdIT
+        VNN/mq2oXTxTMPugwXQp0ttmog==
+X-Google-Smtp-Source: ADFU+vueD5HKQNt112j2D/SR5oowg3NH7+PyYA8C/vR8DYdfCLRQnjxh6OczgKVDVdPopQiCWqM/jQ==
+X-Received: by 2002:a63:6944:: with SMTP id e65mr5977248pgc.406.1585181428497;
+        Wed, 25 Mar 2020 17:10:28 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
+        by smtp.gmail.com with ESMTPSA id d206sm229190pfd.160.2020.03.25.17.10.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 17:07:59 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 17:07:57 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc
- firmware
-Message-ID: <20200326000757.GF119913@minitux>
-References: <20200302020757.551483-1-bjorn.andersson@linaro.org>
- <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
+        Wed, 25 Mar 2020 17:10:27 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 17:10:22 -0700
+From:   Benson Leung <bleung@google.com>
+To:     Prashant Malani <pmalani@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v5 1/4] dt-bindings: Add cros-ec Type C port driver
+Message-ID: <20200326001022.GA117276@google.com>
+References: <20200316090021.52148-1-pmalani@chromium.org>
+ <20200316090021.52148-2-pmalani@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
+In-Reply-To: <20200316090021.52148-2-pmalani@chromium.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 25 Mar 14:13 PDT 2020, Arnd Bergmann wrote:
 
-> On Mon, Mar 2, 2020 at 3:09 AM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > Update the firmware-name of the remoteproc nodes to mimic the firmware
-> > structure on other 845 devices.
-> >
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> 
-> Hi Bjorn,
-> 
-> Sorry for the late reply, I only came across this one while going
-> through the pull requests
-> that we had failed to pick up earlier.
-> 
-> I really dislike the idea of hardcoding a firmware name in the
-> devicetree, we had long
-> discussions about this a few years ago and basically concluded that the firmware
-> name needs to be generated by the driver after identifying the hardware itself.
-> 
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I remember this discussion and generally I share your view, but after
-postponing this problem for years we've not managed to come up with a
-solution for our problem.
+Hi Prashant,
 
-> The problem is that the firmware generally needs to match both the device driver
-> and the hardware, so when there is a firmware update that changes the behavior
-> (intentionally or not) in a way the driver needs to know about, then
-> the driver should
-> be able to request a particular firmware file based on information
-> that the owner
-> of the dtb may not have.
-> 
+On Mon, Mar 16, 2020 at 02:00:15AM -0700, Prashant Malani wrote:
+> Some Chrome OS devices with Embedded Controllers (EC) can read and
+> modify Type C port state.
+>=20
+> Add an entry in the DT Bindings documentation that lists out the logical
+> device and describes the relevant port information, to be used by the
+> corresponding driver.
+>=20
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
 
-There are three variables in play here:
+Reviewed-by: Benson Leung <bleung@chromium.org>
 
-1) Large feature differences, e.g. does your modem Hexagon have
-associated RF hardware, or is it WiFi only. Or other similar things,
-which does affect DeviceTree anyways (memory maps, audio routing etc)
+Hi Rob,
 
-2) Purely software versions of the firmware. Generally no impact on
-remoteproc level or the immediate layers above, bug fixes etc.
+Will you go ahead and merge this through your tree for v5.7?
 
-3) Vendor specific signatures. All these files are signed with vendor
-specific private keys.
+Thanks,
+Benson
 
+> ---
+>=20
+> Changes in v5:
+> - Updated License identifier.
+> - Updated DT example to be a full example.
+>=20
+> Changes in v4:
+> - Rebased on top of usb-connector.yaml, so the connector property now
+>   directly references the usb-connector DT binding.
+>=20
+>  .../bindings/chrome/google,cros-ec-typec.yaml | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-=
+ec-typec.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-type=
+c.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> new file mode 100644
+> index 0000000000000..6d7396ab8beec
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Google Chrome OS EC(Embedded Controller) Type C port driver.
+> +
+> +maintainers:
+> +  - Benson Leung <bleung@chromium.org>
+> +  - Prashant Malani <pmalani@chromium.org>
+> +
+> +description:
+> +  Chrome OS devices have an Embedded Controller(EC) which has access to
+> +  Type C port state. This node is intended to allow the host to read and
+> +  control the Type C ports. The node for this device should be under a
+> +  cros-ec node like google,cros-ec-spi.
+> +
+> +properties:
+> +  compatible:
+> +    const: google,cros-ec-typec
+> +
+> +  connector:
+> +    $ref: /schemas/connector/usb-connector.yaml#
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |+
+> +    spi0 {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      cros_ec: ec@0 {
+> +        compatible =3D "google,cros-ec-spi";
+> +        reg =3D <0>;
+> +
+> +        typec {
+> +          compatible =3D "google,cros-ec-typec";
+> +
+> +          #address-cells =3D <1>;
+> +          #size-cells =3D <0>;
+> +
+> +          connector@0 {
+> +            compatible =3D "usb-c-connector";
+> +            reg =3D <0>;
+> +            power-role =3D "dual";
+> +            data-role =3D "dual";
+> +            try-power-role =3D "source";
+> +          };
+> +        };
+> +      };
+> +    };
+> --=20
+> 2.25.1.481.gfbce0eb801-goog
+>=20
 
-None of these affects how we describe the hardware, so we did choose to
-use a compatible per platform and remoteproc, e.g. qcom,sdm845-mss-pil
-will handle the modem core on all SDM845 devices, regardless of the
-firmware implementing WiFi only or it's a devboard or a product with
-strict signature validation.
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
 
-We could add another property in the DT node to denote if the modem RF
-hardware is present and have the sdm845-mss-pil compatible result in a
-selection of qcom/sdm845/modem.mbn vs qcom/sdm845/modem_nm.mbn. This
-would handle 1) above.
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-But this doesn't solve 3) and my Lenovo Yoga C630 will refuse to load
-these files, as they are not signed by Lenovo.
+iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXnvy7gAKCRBzbaomhzOw
+wlL5AQCe/VHDNM66dRaoDQSNG5IZBjItx7VRHnBWlduXpWT1SwD/XH6Abd9zP4vz
+zJvWwtwdlOCA4OtCkTb3NrcwSyvQowA=
+=tVxd
+-----END PGP SIGNATURE-----
 
-For years we've toyed with the idea of building the necessary firmware
-path based on e.g. information from DMI (which not all boards has) or
-somehow tokenizing the machine compatible. But nothing sane has come out
-of these attempts/ideas.
-
-So after years of not being able to send these files to linux-firmware,
-without breaking some other board we decided to just describe these
-variations using firmware-name.
-
-So this solves 1) and 3) in a straight forward way, and so far in all
-cases we've handled 2) by upgrading (until now, our fork of)
-linux-firmware.
-
-But I don't have any suggestions for how to solve the case where kernel
-version X and X+1 _needs_ different versions of the firmware.
-
-
-Lastly, most variations in firmware features are discoverable by the
-higher layers, but for the cases where the remoteproc driver itself is
-affected we're looking at changes to the memory map, clocks, regulators,
-power domains - problems that has to be resolved in DT anyways. 
-
-Which is the reason why several companies are looking at passing
-dynamically loaded DT snippets with their remoteproc firmware.
-
-> I'm holding off on the pull request for today, maybe there is something we can
-> still do about it before the merge window.
-> 
-
-The binding addition was merged in 5.1, with Rob's r-b, in 5.5 we used
-these properties for the Lenovo Yoga C630 and in 5.6 we merged the
-equivalent change for the Dragonboard 845c.
-
-If there is a solution that allow us to move away from firmware-name in
-DT I'm interested and would like to see us migrate towards it, but the
-only thing this particular change does is to make the SDM845 MTP find
-the right files in linux-firmware, using the already existing binding
-and implementation.
-
-Regards,
-Bjorn
+--tThc/1wpZn/ma/RB--
