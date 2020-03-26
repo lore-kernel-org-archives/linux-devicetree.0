@@ -2,177 +2,91 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF52C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 00:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8E1C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 01:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4352076A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 00:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB2320714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 01:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ac9RTNti"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltqiGJtx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgCZAgs (ORCPT
+        id S1727574AbgCZBrN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 20:36:48 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41561 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbgCZAgr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 20:36:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z65so1905509pfz.8
-        for <devicetree@vger.kernel.org>; Wed, 25 Mar 2020 17:36:44 -0700 (PDT)
+        Wed, 25 Mar 2020 21:47:13 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45519 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbgCZBrN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Mar 2020 21:47:13 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t17so4013179qtn.12;
+        Wed, 25 Mar 2020 18:47:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ru7Xg8oyZNAOPgD4TDit2eFp41YNY/vd+RoiLDWH7AM=;
-        b=Ac9RTNtiGmUz73N34b35nfes/bBdr3vlwfZxKjhL95F8rCEqK8UT3pzhYn9RASR30g
-         hW3hIeZMy9TuCGS3K7ooXw5ZzbKirrmDoqKSsZKMpeA/kA1U/o13cvhtgO38tLz/uCJx
-         15aUZmVzwF3l44aKu5/jg76hOlzcanvSnBSkWW73wY0viiHTKRty+6W4DBvqsl+BO0og
-         MVcWXPUoGkRecR2d4c1Mi+68SYFg9qf6u0Muz1xqZ2zwve4aJhS4Mnew8lcRznl/6YUo
-         7BRxb6zFXP71xEt5JQnf7AAg7wK0gqargU6q4dXY7zeiUEa5Yg9qIzH2FXWTDXpZvACN
-         J9NQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MGtWCUE+uLFl5+4WGJ6FqY8rhfqoAZ5ZAEsAc4trkZs=;
+        b=ltqiGJtxYKfKmBd2X3uQeeC1CB7LoxZAoGGHqnmmcWQe3jdwrVNbvwFGZdBolLPMXO
+         DPq/Ns0wEwrdp6+KCfzekylFb7yKyV97QkUigEHc2S05USUlgcs+qTeLi4xY1rBad/Nl
+         8hNAk0seTOtm0wgE8ucdH+XVvleMD/hX2ORbldQsoWJKHzv3VVWO8DZAjG/QDPkAr1fl
+         PhBoth93LhMh/NvgvBA40iCEM7R/2oQ497BQ1zE6iu2cElbILGk4od8lwj7wSivL07fQ
+         /VHovnLi7Ry1HIeVg+qXZQVNZe7Dy4Ix8v7eOkyB54xm2JwNbHHdAbq77JgAeMl8DcjF
+         WmOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ru7Xg8oyZNAOPgD4TDit2eFp41YNY/vd+RoiLDWH7AM=;
-        b=L1Cd2FFwb5ii89v1BS2512b9SdMMCrHueW+cXwnpibJnbmVt58ugBmHiaYk3SrgmRs
-         upWAyYNhvqPeal3ofOAYLBQgnjB+SwRgeadlnXAAvvskQQKWgpPn8BngmYtp6f9fg+/r
-         rXHIPPafo2dybik3gTyfayvtHnxuRL0MeYRIxjHFEBOyWnDdX75ODwXqttqyf0KqHmIE
-         TGpI+8u5zPpDKSILy4YndTWplfx92QJtHlU6ORxFp47QaVHFLXGq9GpnuIEozKcuKoaD
-         h5tatHvGa3yshmxWfYVzhfFDVLBDiQyC2DB9AvzlVzmGXWeDCk31uPM+nW0Fx5E0g/xF
-         Vvjg==
-X-Gm-Message-State: ANhLgQ30QLpuOa6wrgB3P6Nzg/k2V0qXL75lbTfo768iSlQjU+xS3W5O
-        pLLjVIP6E3AaGIL+TNsYc9NbO8p5exI=
-X-Google-Smtp-Source: ADFU+vuQ00w/IlwtTGRW/NqKJ7itCRhCZTwZmHq9FxET/6XEhNyLBVYxZZmcySH+nXeOAmRDGbAj7w==
-X-Received: by 2002:a63:68f:: with SMTP id 137mr5929568pgg.348.1585183003888;
-        Wed, 25 Mar 2020 17:36:43 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g7sm338358pjl.17.2020.03.25.17.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 17:36:43 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 17:36:40 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc
- firmware
-Message-ID: <20200326003640.GG119913@minitux>
-References: <20200302020757.551483-1-bjorn.andersson@linaro.org>
- <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
- <CAOCk7NpuC3J2EoOrkYQjjqc-DpTgYBdEwQk762v-7L7eki3RPg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOCk7NpuC3J2EoOrkYQjjqc-DpTgYBdEwQk762v-7L7eki3RPg@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MGtWCUE+uLFl5+4WGJ6FqY8rhfqoAZ5ZAEsAc4trkZs=;
+        b=N4ZDIH9CbXyjHmC4UFBLk9S6gfbDVYOn5Ay3htQ0nDa7oTdOL1n2G8aWEg5MRjBtqE
+         AAQ0RfiWDNmj+5QCa18JceVST5PNmbLYg2XsV+oSwqtdTpqr8RlFVQHVYc4bg6w1/9oU
+         MFTa8fA+f7/2bpeA2UDfO3EDMohKbox9VSdS+kyY+gyVM2oRptmzhNM7NenInGFwgOsO
+         OboKdGOyJveXnMbLC0MzMUzcRdBzqNyXFwIUmxwmPGvhcZjbQYo6Zr0MVOpLwmCif2Ge
+         T8z9m9//7i3w4aWdhV4HzQJdSW40fQMart1oA/kBVFG4BvRwU5AUVqcV92oRfMpKqEyD
+         M2Rw==
+X-Gm-Message-State: ANhLgQ22grTJIfev5OdVKFHcd8TIx8Sp1kxZDmjrkhZpFrcZI9+OtEtW
+        Yf8cR4FG0fnFDmTqtTyIVh4lN4zs
+X-Google-Smtp-Source: ADFU+vtytdWCaVsgkuuzqgdL1SaQsMSfBx3mJkY2Um7hkLzrVcoaW7DF+RGEQryoI5ARhhibaZ8SyA==
+X-Received: by 2002:ac8:554f:: with SMTP id o15mr5922854qtr.154.1585187231831;
+        Wed, 25 Mar 2020 18:47:11 -0700 (PDT)
+Received: from localhost.localdomain (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id h129sm463552qkf.54.2020.03.25.18.47.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 25 Mar 2020 18:47:11 -0700 (PDT)
+From:   frowand.list@gmail.com
+To:     Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alan Tull <atull@kernel.org>
+Subject: [PATCH 0/2] of: unittest gpio unittest error exposes tracking error
+Date:   Wed, 25 Mar 2020 20:45:29 -0500
+Message-Id: <1585187131-21642-1-git-send-email-frowand.list@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 25 Mar 14:54 PDT 2020, Jeffrey Hugo wrote:
+From: Frank Rowand <frank.rowand@sony.com>
 
-> On Wed, Mar 25, 2020 at 3:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Mon, Mar 2, 2020 at 3:09 AM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> > >
-> > > Update the firmware-name of the remoteproc nodes to mimic the firmware
-> > > structure on other 845 devices.
-> > >
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> >
-> > Hi Bjorn,
-> >
-> > Sorry for the late reply, I only came across this one while going
-> > through the pull requests
-> > that we had failed to pick up earlier.
-> >
-> > I really dislike the idea of hardcoding a firmware name in the
-> > devicetree, we had long
-> > discussions about this a few years ago and basically concluded that the firmware
-> > name needs to be generated by the driver after identifying the hardware itself.
-> >
-> > The problem is that the firmware generally needs to match both the device driver
-> > and the hardware, so when there is a firmware update that changes the behavior
-> > (intentionally or not) in a way the driver needs to know about, then
-> > the driver should
-> > be able to request a particular firmware file based on information
-> > that the owner
-> > of the dtb may not have.
-> 
-> Interesting, this intersects some work I plan on doing.
-> 
-> What level information did this discussion assume that the device
-> driver had?  Do you have a reference to the discussion handy?
-> 
-> Please correct me if I am wrong, but this seems to assume that for
-> device X, there is one firmware at a specific version that the driver
-> is then knowledgeable about, and the driver can query the device
-> hardware in some way to determine what is appropriate.  It seems like
-> this assumption is believed to hold true, no matter what system X is
-> included in.
-> 
-> I think we have the problem where likely impossible that the driver
-> will know what firmware is valid.
-> 
-> Qualcomm, for better or worse, has a signing process for their images.
-> This establishes a root a trust which is enforced by hardware.  For
-> example, the Modem subsystem (the part of the SoC that talks to cell
-> towers and such) will not run an image which is not properly signed.
-> The valid signature is burned into the chip.
-> 
-> "Surely there is one signed image for a particular modem on a specific SoC?"
-> Sadly, no.  The OEM is allowed to provide their own key.  This may be
-> a key which is specific to the device (Ie the Brand XYZ Model 123
-> phone).  Therefore, that device will only run the firmware that
-> contains that OEM's signature, even if the actual code happens to be
-> identical to what every other OEM has.
-> 
+kernel test robot reported "WARNING: held lock freed!" triggered by
+unittest_gpio_remove().
 
-And generally your XYZ 123 might come in different SKUs that might or
-might not vary in software and hardware features; so for some products
-the driver should know that it can use the "generic" XYZ 123 firmware
-and in others it needs to know that it should be looking for the XYZ 123
-firmware for, say, the Japanese market (different hardware).
+This warning is from a bad kfree() call from an unexpected call to
+unittest_gpio_remove().  The unexpected call is due to an error
+with unittest overlay tracking.
 
-> For some SoCs which go into multiple products, there seem to be
-> several OEMs which are willing to allow the firmware to be included in
-> the linux-firmware project.  Therefore, it is likely that there will
-> be multiple copies of the Modem image for the 845 SoC (for example) in
-> /lib/firmware.  In this case, it seems like your recommendation is
-> that the driver should somehow detect that it is running on device 123
-> and not device 456, and therefore be able to request the device 123
-> specific firmware.
-> 
+Patch 1/2 fixes the kfree bug.
 
-And in the past I've worked on products where product 123, 456 and 789
-had the same firmware, but on some particular market all three used a
-market-specific firmware and in some cases two of them existed in a WiFi
-only variant.
+Patch 2/2 fixes the unittest overlay tracking bug.
 
-> I don't know how the device driver is supposed to make that
-> determination, and its my opinion that the driver shouldn't be.  Other
-> than the need to have the correct firmware, which is tied to the
-> specific device, I'm not aware of an instance where a driver cares
-> about anything more than the hardware revision of the block it drives.
+Frank Rowand (2):
+  of: gpio unittest kfree() wrong object
+  of: some unittest overlays not untracked
 
-Looking at the particular problem it's not the revision of the hardware
-block(s) that the remoteproc interacts with that determines any of this.
+ drivers/of/unittest.c | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
-E.g. the modem subsystem is the same on Dragonboard845c with WiFi-only
-as it is on the Lenovo Yoga C630 with or without LTE - but we still need
-some mechanism to determine which of the 3 firmware files to pick.
+-- 
+Frank Rowand <frank.rowand@sony.com>
 
-Regards,
-Bjorn
