@@ -2,93 +2,183 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F24EC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6BCC2D0E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B242070A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E8A20409
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 12:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgCZMYn (ORCPT
+        id S1727998AbgCZMag (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:24:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58638 "EHLO mx2.suse.de"
+        Thu, 26 Mar 2020 08:30:36 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:48680 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbgCZMYn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:24:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 91F3CB153;
-        Thu, 26 Mar 2020 12:24:41 +0000 (UTC)
-Message-ID: <24f850f64b5c71c71938110775e16caaec2811cc.camel@suse.de>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     wahrenst@gmx.net, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
-Date:   Thu, 26 Mar 2020 13:24:39 +0100
-In-Reply-To: <20200303173217.3987-1-nsaenzjulienne@suse.de>
-References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-d7LQKba6+yuwYb7BdPgp"
-User-Agent: Evolution 3.34.4 
+        id S1727781AbgCZMag (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Mar 2020 08:30:36 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0302F1A09B1;
+        Thu, 26 Mar 2020 13:30:34 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E970B1A090A;
+        Thu, 26 Mar 2020 13:30:33 +0100 (CET)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id CA67320564;
+        Thu, 26 Mar 2020 13:30:33 +0100 (CET)
+Date:   Thu, 26 Mar 2020 14:30:33 +0200
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org
+Subject: Re: [RFC 01/11] mfd: Add i.MX generic mix support
+Message-ID: <20200326123033.vi7l5mixgre2caon@fsr-ub1664-175>
+References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+ <1583226206-19758-2-git-send-email-abel.vesa@nxp.com>
+ <20200326110306.GE603801@dell>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200326110306.GE603801@dell>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 20-03-26 11:03:06, Lee Jones wrote:
+> On Tue, 03 Mar 2020, Abel Vesa wrote:
+> 
+> > Some of the i.MX SoCs have a IP for interfacing the dedicated IPs with
+> > clocks, resets and interrupts, plus some other specific control registers.
+> > To allow the functionality to be split between drivers, this MFD driver is
+> > added that has only two purposes: register the devices and map the entire
+> > register addresses. Everything else is left to the dedicated drivers that will
+> > bind to the registered devices.
+> > 
+> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > ---
+> >  drivers/mfd/Kconfig   | 11 +++++++++++
+> >  drivers/mfd/Makefile  |  1 +
+> >  drivers/mfd/imx-mix.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 60 insertions(+)
+> >  create mode 100644 drivers/mfd/imx-mix.c
+> > 
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index 3c547ed..3c89288 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -460,6 +460,17 @@ config MFD_MX25_TSADC
+> >  	  i.MX25 processors. They consist of a conversion queue for general
+> >  	  purpose ADC and a queue for Touchscreens.
+> >  
+> > +config MFD_IMX_MIX
+> > +	tristate "NXP i.MX Generic Mix Control Driver"
+> > +	depends on OF || COMPILE_TEST
+> > +	help
+> > +	  Enable generic mixes support. On some i.MX platforms, there are
+> > +	  devices that are a mix of multiple functionalities like reset
+> > +	  controllers, clock controllers and some others. In order to split
+> > +	  those functionalities between the right drivers, this MFD populates
+> > +	  with virtual devices based on what's found in the devicetree node,
+> > +	  leaving the rest of the behavior control to the dedicated driver.
+> > +
+> >  config MFD_HI6421_PMIC
+> >  	tristate "HiSilicon Hi6421 PMU/Codec IC"
+> >  	depends on OF
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index f935d10..5b2ae5d 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -113,6 +113,7 @@ obj-$(CONFIG_MFD_TWL4030_AUDIO)	+= twl4030-audio.o
+> >  obj-$(CONFIG_TWL6040_CORE)	+= twl6040.o
+> >  
+> >  obj-$(CONFIG_MFD_MX25_TSADC)	+= fsl-imx25-tsadc.o
+> > +obj-$(CONFIG_MFD_IMX_MIX)	+= imx-mix.o
+> >  
+> >  obj-$(CONFIG_MFD_MC13XXX)	+= mc13xxx-core.o
+> >  obj-$(CONFIG_MFD_MC13XXX_SPI)	+= mc13xxx-spi.o
+> > diff --git a/drivers/mfd/imx-mix.c b/drivers/mfd/imx-mix.c
+> > new file mode 100644
+> > index 00000000..d3f8c71
+> > --- /dev/null
+> > +++ b/drivers/mfd/imx-mix.c
+> > @@ -0,0 +1,48 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright 2019 NXP.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/err.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/spinlock.h>
+> > +#include <linux/types.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/of_platform.h>
+> > +
+> > +#include <linux/mfd/core.h>
+> > +
+> > +static int imx_audiomix_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct resource *res;
+> > +	void __iomem *base;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	base = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(base))
+> > +		return PTR_ERR(base);
+> > +
+> > +	dev_set_drvdata(dev, base);
+> > +
+> > +	return devm_of_platform_populate(dev);
+> > +}
+> > +
+> > +static const struct of_device_id imx_audiomix_of_match[] = {
+> > +	{ .compatible = "fsl,imx8mp-audiomix" },
+> > +	{ /* Sentinel */ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, imx_audiomix_of_match);
+> 
+> This needs DT binding documentation.
+> 
+> Do the sub-device memory ranges overlap?
+> 
 
---=-d7LQKba6+yuwYb7BdPgp
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Yes, they do.
 
-Hi Stefan and Florian,
+Resent another version of this series yesterday.
 
-On Tue, 2020-03-03 at 18:32 +0100, Nicolas Saenz Julienne wrote:
-> The register based driver turned out to be unstable, specially on RPi3a+
-> but not limited to it. While a fix is being worked on, we roll back to
-> using firmware based scheme.
->=20
-> Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM drive=
-r
-> instead of firmware")
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
-
-now that the problem Stefan was seeing is being taken care of, I think it's
-fair to reconsider taking this patch. Maybe even adding a Tested-by by Stef=
-an?
-
-Regards,
-Nicolas
-
-
---=-d7LQKba6+yuwYb7BdPgp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl58nwcACgkQlfZmHno8
-x/5rvAf+LW4zqdNAw+skEf7gLWSz8i+ghmc3P0YNFupl4fEuGA62RCruBfIx7zSM
-YKS3V9/dAqd4on3dweqB/7/mixPvF/lLbLDpF0AvDySg+dkItI6QhXIcfKCiFWzP
-Dyd2w32POGUKljy0gsgRBgxebQ4+bPaDgyTlMnaSnlux7+IDOH9Vr1v4YamYE7N7
-9EdGV6fTuib7iOWvkfXmWQoE9Gj0RCoJQ+dGbopRkuAJ9Jng4tqrRy5hHh7Us+2P
-u1IpuzS9e2xHRaVSanhkzHqQv9s9Kd0Q0+pqnXwa5//nvuaz8kxWotQl7MMEQ0nV
-IaL3nI09Wexdg+FaH1f9grkdodD8pQ==
-=TDc9
------END PGP SIGNATURE-----
-
---=-d7LQKba6+yuwYb7BdPgp--
-
+> > +static struct platform_driver imx_audiomix_driver = {
+> > +	.probe = imx_audiomix_probe,
+> > +	.driver = {
+> > +		.name = "imx-audiomix",
+> > +		.of_match_table = of_match_ptr(imx_audiomix_of_match),
+> > +	},
+> > +};
+> > +module_platform_driver(imx_audiomix_driver);
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
