@@ -2,141 +2,243 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A089BC2D0E9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D89C2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D572078C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF1120719
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxH+GGmF"
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="oUaa4kKp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgCZVdQ (ORCPT
+        id S1726496AbgCZV4I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:33:16 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40788 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZVdQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 17:33:16 -0400
-Received: by mail-qk1-f194.google.com with SMTP id l25so8688823qki.7;
-        Thu, 26 Mar 2020 14:33:14 -0700 (PDT)
+        Thu, 26 Mar 2020 17:56:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34025 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgCZV4I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 17:56:08 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j16so7689660otl.1
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 14:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+Ng6NKbIQ7UH3Fnc48aHdWJ3D471uKUieydIRfZ614w=;
-        b=lxH+GGmFX0wL7NEqN1O4gbB6ll8ceOy96u0EDOjFkzyYSPNSMooflVnL0LYq2eDdve
-         pIyAuRztz0hDq0jS+Dm5y+G4qqs+2YItdKIeGyeKDRQlKkkXLWqjmY2FN30LxaGExg2K
-         9HC/SRWABTzD3dwtho1G8lRmsgb0yucRK71Y+ud5Lw06G9rhInWiZxT5faln4HUYVaRJ
-         FfAAQ4RJb0NhamOtZ82R5NOpEseJP2QV5AA9QABLfdRmyN1aUCndkrCQbxbtqFTJqnm/
-         OIQtnlDR7vQ2WLCBtkhcMfSfmNKebDARjuVZ9h5n27fP+NIiiU7hNuadKjqGxdxRmVEV
-         Vk/A==
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fVDzJ6BDEWFzO6Zb5IeGhEXG4L3sc+hrhgcx0i0PDMc=;
+        b=oUaa4kKpgOh9V1+IpaniVvK9yJzz4NLG4abJw0B5W05RL5HKAw+RPj9HZSG1LDDo7o
+         xNSfpAIETfqMHJZJ2kZ/CmDopIiWyBUGKtHgBR63U8l1FoAD3J+z3ai7krCy1xFwnqZF
+         CLk6cnqkm4ZR9MJyLruD+dTTeGerXRh1epfU1aiZfPAKyrb8jv3L+db6Amf+rr5PN0vO
+         KSkimNNpjs/31eJL7+EnW1Si+tG3DjjkCWr5pJz19L2h5DjrQPVdLqeoYNE4ZI4pYkwe
+         g04owtoGOG/7cEjU64xMJgZ0jh9+MNk5YnHf30L3vzEZ0zedjjMiIGHAY+bubla2n5sU
+         5zvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+Ng6NKbIQ7UH3Fnc48aHdWJ3D471uKUieydIRfZ614w=;
-        b=iH9YMMAxn7G7ZIhNcExjvwzWg404CGkI21NpNsz/pyvVUQAD0uxjFV5mKpMFaQjeOV
-         qoPbE2VvJqWCn98NE7SGxC+frwYEJ7NkO2K3J6r3119bSqOJSlpdsF21VvflS4YJMTSy
-         l7SESeB2U4BO01sn+HiZaUg4rrR4sJ+cwT1ppktdu/fy6EFPJYaOde+PpVggkNq+B3iD
-         CIV59aaDlvHT7DV8aekfHoo07JmbtD4pp2TPh3bKnKhvhY2u7TpXLAoKlYo4dTB8LxOI
-         eS6NBMWlRnDAR16pJiyp4apwXvz/5LxD7zXGi1wh5kCNt/IxlhmoRTjSW6Vsp/cfGYyv
-         iP1g==
-X-Gm-Message-State: ANhLgQ22akVcn7NtSC3NpsTfSEoid2GVRU/Cy1KQ1WV0YUtB8p0hYaxn
-        /Tg6Kt3uKbapVWhPHAMwSai9DHL1pps=
-X-Google-Smtp-Source: ADFU+vvdIQ9lpvc4Gl+88YADLGqhvIcb51g8/gKUmpNuNw8n4MhXlTE/jl0iFENafg08bPhVeBD6Zg==
-X-Received: by 2002:a37:4902:: with SMTP id w2mr9908921qka.13.1585258393619;
-        Thu, 26 Mar 2020 14:33:13 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id a11sm2271488qto.57.2020.03.26.14.33.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 14:33:12 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     devicetree@vger.kernel.org
-Cc:     aford@beaconembedded.com, charles.stevens@logicpd.com,
-        Adam Ford <aford173@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC] clk: vc5: Add bindings for output configurations
-Date:   Thu, 26 Mar 2020 16:32:51 -0500
-Message-Id: <20200326213251.54457-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fVDzJ6BDEWFzO6Zb5IeGhEXG4L3sc+hrhgcx0i0PDMc=;
+        b=DH1qWtL9YK9CRSb2qTGAbTcethaY8zabvqu12Fmio4UUS8PtuhyPv4yvUQe7iG1IBh
+         nJkx/nQ0y9d8uOejdLi3DpimwTAfHKDRLWD8RmFJqHNCph7is+VqACcD6pAIc38mmSTz
+         IMK5r7Az/BzStIGEKq7d0cdvpX6zPEbSMyAklJXFCgGTtBext0+ENU9jPpVnZAyrt649
+         RbeIrJYQsJPy/x+/d8sn7IDKVBm6G9dMB4amooZgBzAstkcSBI5FK8sRkwr4fgvFmz8C
+         w/a55Cc8BBSqEQvQHIMM6UYB6tw4PDtxlag7mNIWu+bAwXsJr5/9/TtMuM6r8CcyTTRB
+         S/eQ==
+X-Gm-Message-State: ANhLgQ261NXmzb+tvnGQBwbzEicwOLCg6KSJoFYnlmfeNE5r8y0v9ArI
+        Gi6BjqPUgtC7BeppMBxYoU85wS6Q4ZrcfkvKlHOTEg==
+X-Google-Smtp-Source: ADFU+vsWTvLX1x18YifbVlDZbfMowYVSThseSulGrqAUkQatpGn5d7UzcL2X3gq8FAmUJ8EfBv414sF7tqsi/FUvBUc=
+X-Received: by 2002:a4a:c184:: with SMTP id w4mr6815873oop.39.1585259766176;
+ Thu, 26 Mar 2020 14:56:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1584736550-7520-1-git-send-email-tharvey@gateworks.com>
+ <1584736550-7520-3-git-send-email-tharvey@gateworks.com> <20200326101702.GD603801@dell>
+In-Reply-To: <20200326101702.GD603801@dell>
+From:   Tim Harvey <tharvey@gateworks.com>
+Date:   Thu, 26 Mar 2020 14:55:54 -0700
+Message-ID: <CAJ+vNU0pPW3n6dnUH4n_3ZtmwGYdtc6gwUkg+aWJYPF7bFUXzQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] mfd: add Gateworks System Controller core driver
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Robert Jones <rjones@gateworks.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Versaclock can be purchased in a non-programmed configuration.
-If that is the case, the driver needs to configure the chip to
-output the correct signal type, voltage and slew.
+On Thu, Mar 26, 2020 at 3:16 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Fri, 20 Mar 2020, Tim Harvey wrote:
+>
+> > The Gateworks System Controller (GSC) is an I2C slave controller
+> > implemented with an MSP430 micro-controller whose firmware embeds the
+> > following features:
+> >  - I/O expander (16 GPIO's) using PCA955x protocol
+> >  - Real Time Clock using DS1672 protocol
+> >  - User EEPROM using AT24 protocol
+> >  - HWMON using custom protocol
+> >  - Interrupt controller with tamper detect, user pushbotton
+> >  - Watchdog controller capable of full board power-cycle
+> >  - Power Control capable of full board power-cycle
+> >
+<snip>
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index 4209008..d84725a 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -407,6 +407,16 @@ config MFD_EXYNOS_LPASS
+> >         Select this option to enable support for Samsung Exynos Low Power
+> >         Audio Subsystem.
+> >
+> > +config MFD_GATEWORKS_GSC
+> > +     tristate "Gateworks System Controller"
+> > +     depends on (I2C && OF)
+> > +     select MFD_CORE
+> > +     select REGMAP_I2C
+> > +     select REGMAP_IRQ
+> > +     help
+> > +       Enable support for the Gateworks System Controller found
+> > +       on Gateworks Single Board Computers.
+>
+> Please describe which sub-devices are attached.
 
-This RFC is proposing an additional binding to allow non-programmed
-chips to be configured beyond their default configuration.
+Hi Lee, thanks for the review!
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+I will add more description for v8:
 
-diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-index 05a245c9df08..4bc46ed9ba4a 100644
---- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-+++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-@@ -30,6 +30,25 @@ Required properties:
- 		- 5p49v5933 and
- 		- 5p49v5935: (optional) property not present or "clkin".
- 
-+For all output ports, an option child node can be used to specify:
-+
-+- mode: can be one of
-+		  - LVPECL: Low-voltage positive/psuedo emitter-coupled logic
-+		  - CMOS
-+		  - HCSL 
-+		  - LVDS: Low voltage differential signal
-+
-+- voltage-level:  can be one of the following microvolts
-+		  - 1800000
-+		  - 2500000
-+		  - 3300000
-+-  slew: Percent of normal, can be one of 
-+		  - P80 
-+		  - P85
-+		  - P90
-+		  - P100 
-+
-+
- ==Mapping between clock specifier and physical pins==
- 
- When referencing the provided clock in the DT using phandle and
-@@ -62,6 +81,8 @@ clock specifier, the following mapping applies:
- 
- ==Example==
- 
-+#include <dt-bindings/versaclock.h>
-+
- /* 25MHz reference crystal */
- ref25: ref25m {
- 	compatible = "fixed-clock";
-@@ -80,6 +101,13 @@ i2c-master-node {
- 		/* Connect XIN input to 25MHz reference */
- 		clocks = <&ref25m>;
- 		clock-names = "xin";
-+
-+		ports@1 {
-+			reg = <1>;
-+			mode = <CMOS>;
-+			pwr_sel = <1800000>;
-+			slew = <P80>;
-+		};
- 	};
- };
- 
--- 
-2.25.1
+Enable common support for the Gateworks System Controller
+found on Gateworks Single Board Computers. This device supports
+an interrupt controller providing interrupts for pushbutton
+events and a sub-device for HWMON and FAN controller via the
+gsc-hwmon driver.
 
+>
+> >  config MFD_MC13XXX
+> >       tristate
+> >       depends on (SPI_MASTER || I2C)
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index aed99f0..c82b442 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -15,6 +15,7 @@ obj-$(CONFIG_MFD_BCM590XX)  += bcm590xx.o
+> >  obj-$(CONFIG_MFD_BD9571MWV)  += bd9571mwv.o
+> >  obj-$(CONFIG_MFD_CROS_EC_DEV)        += cros_ec_dev.o
+> >  obj-$(CONFIG_MFD_EXYNOS_LPASS)       += exynos-lpass.o
+> > +obj-$(CONFIG_MFD_GATEWORKS_GSC)      += gateworks-gsc.o
+> >
+> >  obj-$(CONFIG_HTC_PASIC3)     += htc-pasic3.o
+> >  obj-$(CONFIG_HTC_I2CPLD)     += htc-i2cpld.o
+> > diff --git a/drivers/mfd/gateworks-gsc.c b/drivers/mfd/gateworks-gsc.c
+> > new file mode 100644
+> > index 00000000..8566123
+> > --- /dev/null
+> > +++ b/drivers/mfd/gateworks-gsc.c
+> > @@ -0,0 +1,291 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * The Gateworks System Controller (GSC) is a multi-function
+> > + * device designed for use in Gateworks Single Board Computers.
+> > + * The control interface is I2C, with an interrupt. The device supports
+> > + * system functions such as pushbutton monitoring, multiple ADC's for
+> > + * voltage and temperature, fan controller, and watchdog monitor.
+>
+> When are you planning on adding support for the other devices?
+
+The pushbutton monitoring is supported via interrupts and the ADC's
+and fan controller are supported via the gsc-hwmon driver in this
+series. The watchdog is not yet supported via a driver and I'm not
+sure if/when I will submit one as the API is rather strange.
+
+>
+<snip>
+> > +/*
+> > + * gsc_powerdown - API to use GSC to power down board for a specific time
+> > + *
+> > + * secs - number of seconds to remain powered off
+> > + */
+> > +static int gsc_powerdown(struct gsc_dev *gsc, unsigned long secs)
+> > +{
+> > +     int ret;
+> > +     unsigned char regs[4];
+>
+> No error checking?  Could be down for a very long time.
+
+understood, but I'm not sure I want to dictate what the max amount of
+time to power-down should be. Some remote-sensing use cases may want
+to power-down for days, or weeks. I agree powering down for years
+seems strange but again, I don't want to dictate usage. If they
+accidently power down for a length of time they did not mean to they
+still have to remove power, battery, or press a button to power back
+on.
+
+>
+<snip>
+>
+> > +gsc_probe(struct i2c_client *client, const struct i2c_device_id *id)
+> > +{
+> > +     struct device *dev = &client->dev;
+> > +     struct gsc_dev *gsc;
+> > +     int ret;
+> > +     unsigned int reg;
+> > +
+> > +     gsc = devm_kzalloc(dev, sizeof(*gsc), GFP_KERNEL);
+> > +     if (!gsc)
+> > +             return -ENOMEM;
+> > +
+> > +     gsc->dev = &client->dev;
+> > +     gsc->i2c = client;
+> > +     i2c_set_clientdata(client, gsc);
+> > +
+> > +     gsc->regmap = devm_regmap_init(dev, &regmap_gsc, client,
+> > +                                    &gsc_regmap_config);
+> > +     if (IS_ERR(gsc->regmap))
+> > +             return PTR_ERR(gsc->regmap);
+> > +
+> > +     if (regmap_read(gsc->regmap, GSC_FW_VER, &reg))
+> > +             return -EIO;
+> > +     gsc->fwver = reg;
+>
+> You not checking this for a valid value?
+
+it's a single byte unsigned char, there really isn't an invalid value.
+
+>
+> > +     regmap_read(gsc->regmap, GSC_FW_CRC, &reg);
+> > +     gsc->fwcrc = reg;
+> > +     regmap_read(gsc->regmap, GSC_FW_CRC + 1, &reg);
+> > +     gsc->fwcrc |= reg << 8;
+> > +
+> > +     gsc->i2c_hwmon = i2c_new_dummy_device(client->adapter, GSC_HWMON);
+> > +     if (!gsc->i2c_hwmon) {
+> > +             dev_err(dev, "Failed to allocate I2C device for HWMON\n");
+> > +             return -ENODEV;
+> > +     }
+> > +     i2c_set_clientdata(gsc->i2c_hwmon, gsc);
+> > +
+> > +     gsc->regmap_hwmon = devm_regmap_init(dev, &regmap_gsc, gsc->i2c_hwmon,
+> > +                                          &gsc_regmap_hwmon_config);
+> > +     if (IS_ERR(gsc->regmap_hwmon)) {
+> > +             ret = PTR_ERR(gsc->regmap_hwmon);
+> > +             dev_err(dev, "failed to allocate register map: %d\n", ret);
+> > +             goto err_regmap;
+> > +     }
+>
+> Why can't the HWMON driver fetch its own Regmap?
+
+I can move this to hwmon. It means I have to share the regmap_bus in
+struct gsc_dev instead of sharing the regmap but I suppose it makes
+more sense to have hwmon register it's own.
+
+Everything else you suggest makes complete sense and I will put into v8.
+
+Best Regards,
+
+Tim
