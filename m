@@ -2,147 +2,298 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7CAC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389F2C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD5B02073E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4C320714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pNXo66Ii"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="csSahE5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbgCZVZK (ORCPT
+        id S1727347AbgCZV0v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:25:10 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42998 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZVZJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 17:25:09 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e1so2641115plt.9;
-        Thu, 26 Mar 2020 14:25:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EBWQLMhBWW9tUXFqRtN+54ezrMGzdq5O+dIYEBDryGo=;
-        b=pNXo66Iib9dd51AfI5Kn4XmPlsuG+DRgfO1pjoxT4heP/wOCW7mxQTZC1t3rfCPH6H
-         ZPn3zDNE7oKFFDxenXlJcJR80p2r6GK5sCHHDoZ3ySW1D1qG2ktEN15caUI22xpp2sM6
-         mW396gjndbFQxz1SSdNnhYN2A9iQYRRWo9jFQHmFWnSlikmitltJJmNn/WERBMcOjZwK
-         62IAGF1BBNH81+9x0ai/nqraL9/CcX+M2s24mLpp0MC9MCHzAqTO7KHFbSi3sNiaAAqG
-         ivimQr5jFdzihlMrpQmqIoyoPgAi/2GUrYtG406ApmsRrjtPdkklkY2zPuofa0A+qrlO
-         mUJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EBWQLMhBWW9tUXFqRtN+54ezrMGzdq5O+dIYEBDryGo=;
-        b=a9s1aSpsZGLtYSetQTIFHllFhzCq5hbgwCmUHJUS2HE7ZhLh4WReXahsbkHylIQwcz
-         lmKkkjMNC4OX/kSSCq4UOr/CKVtvKUp6q1Buk3999CrmuHdR10RN+8/DVBJnwBC/LDS5
-         48OqWumvfrJhpKquIiI26qPUA9TMrgziUEdbCJ5BfR3yOQYRm74LRGrARWzRyD2S9D/S
-         gKZ8xKOtv8LoHl4NBLnqQ2b2NYbVUMJSju0B9Jqj+rn8nk4fExxy7N/NkPDro66ccYnm
-         YhoBMOFl1+4QApO7yFBd6p3I8VqlTL1rxWAR72o6FHNb4Lcy4hzpq+VgEzhOlM3AQLLm
-         3qKA==
-X-Gm-Message-State: ANhLgQ1V8eoFdJ+P+oLvpDsz2MP43h6YrLFtQ2eCOl4M+82e4HkBMfBE
-        lJdHin3x89bFcFh+Bt3v4TY=
-X-Google-Smtp-Source: ADFU+vs0BBrk9+I2ddFEda+vQXmS5Jnv3BmW48JpttlOLT46IZkR0GLF9ueX6C/NeKude51qt3Se2g==
-X-Received: by 2002:a17:90a:1910:: with SMTP id 16mr2172311pjg.119.1585257908641;
-        Thu, 26 Mar 2020 14:25:08 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id nk12sm2354537pjb.41.2020.03.26.14.25.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 14:25:08 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 14:25:05 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     dtor@google.com, Rob Herring <robh+dt@kernel.org>,
+        Thu, 26 Mar 2020 17:26:51 -0400
+Received: from mail-eopbgr20057.outbound.protection.outlook.com ([40.107.2.57]:42117
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726067AbgCZV0v (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Mar 2020 17:26:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bdw7pJ6rIhCAOgdPt4aQftetcoNaipCfe22jV/vSpvc8puzAsdkn6Jdnd7ctdiK15+0fprgxx+p/AUI7rERqDPIEr8AgyJ0V7DXEKcVUBOWGEjEO8Piayp67cGogmIuxNY1QNFNYlQqF16pjM1AZf84oyqf0HSm9cQcp1uiYNJFssj4IuLkprLUVXuaG1FtlzX3jl5sTbQuVFiQjRm+30HF+hPvmls+RBa80iA1TlH43gRnF0YkLCFBuN2u+XUMv6bUePt4G8jqw7j6vxFOhK/5jC+e32NanAjFSK1PHcmZOQf07n1P5a8d0xRvu0qpO6l01KwxjlMBlN10HEkQ2UA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i+0nIhiDG3AuNsEk0ZFs7ErobUsZ3IMmeC1mSGa262w=;
+ b=gxPEkiZ01L+kIBobgVJ/BzuJ9dNZEDE/Pa55LH3NTdEFmSx6JHhAUTCv4Ooov/TSkACtfbI5uIC1vcIZgDvvCgqqcw87Jx1QOO9QlITMPUYZjnjd1EQytFLBPo3bEDfTS6qbX37Pt8nTIO/hfeDqA+tSd6JFA89au12iSNd00IJufRzoELSA++oXbQTZl44OF3P8WIIr5vFvaiT2dnfPZrc+5YpagNWU4Qz3A8FRu0zJUbmM795TOO+Fml/saU8DI1fHW2qDps7rCP9ikVVl5p0/J3D2MNgBGX4m3MZlEcqr/wX5eZNWmeueEdMltFFvtXboJZiUMkz/gDUxFRVfQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i+0nIhiDG3AuNsEk0ZFs7ErobUsZ3IMmeC1mSGa262w=;
+ b=csSahE5RYqbfIgRZ8UvXOkCfI4tVR4uoeSGbCZYwMWQTKdd2oyJuqt/daa5+gWoFXNhlcH+gkpmCgU5KSKBuw6qGx5DVNJM+rlPM82GURu9D3LwFfpcp5x+VtYIvQJ2G90gK+6EwjAoxqqWs32bZ6XqjmWYigutD5WNRKbdFv34=
+Received: from DB8PR04MB6828.eurprd04.prod.outlook.com (52.133.240.149) by
+ DB8PR04MB7097.eurprd04.prod.outlook.com (52.135.62.75) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.19; Thu, 26 Mar 2020 21:26:46 +0000
+Received: from DB8PR04MB6828.eurprd04.prod.outlook.com
+ ([fe80::e44e:f867:d67:e901]) by DB8PR04MB6828.eurprd04.prod.outlook.com
+ ([fe80::e44e:f867:d67:e901%2]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
+ 21:26:46 +0000
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, furquan@google.com,
-        dlaurie@google.com, bleung@google.com, zentaro@google.com,
-        dbehr@google.com, rajatxjain@gmail.com,
-        Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH v2 1/5] input/serio/i8042: Attach fwnode to serio i8042
- kbd device
-Message-ID: <20200326212505.GI75430@dtor-ws>
-References: <20200324123518.239768-1-rajatja@google.com>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [RFC net-next 3/5] arm64: dts: lx2160a: add PCS MDIO nodes
+Thread-Topic: [RFC net-next 3/5] arm64: dts: lx2160a: add PCS MDIO nodes
+Thread-Index: AQHV/GvPzUWzrwiI5Eyn+VTY72VeyKhbbKRggAADbQCAAABWYA==
+Date:   Thu, 26 Mar 2020 21:26:46 +0000
+Message-ID: <DB8PR04MB682817485CBD1EFA1AA179F1E0CF0@DB8PR04MB6828.eurprd04.prod.outlook.com>
+References: <20200317144944.GP25745@shell.armlinux.org.uk>
+ <E1jEDaS-0008JO-Po@rmk-PC.armlinux.org.uk>
+ <DB8PR04MB6828FA55AA75B710BDB53BC8E0CF0@DB8PR04MB6828.eurprd04.prod.outlook.com>
+ <20200326212104.GE25745@shell.armlinux.org.uk>
+In-Reply-To: <20200326212104.GE25745@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ioana.ciornei@nxp.com; 
+x-originating-ip: [79.115.60.40]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8ba33cc8-b9fc-43fe-382c-08d7d1cc630d
+x-ms-traffictypediagnostic: DB8PR04MB7097:|DB8PR04MB7097:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB70971C0CE9B3204E956964E4E0CF0@DB8PR04MB7097.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0354B4BED2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(66446008)(66556008)(186003)(66946007)(66476007)(26005)(8936002)(2906002)(7696005)(6506007)(64756008)(6916009)(7416002)(52536014)(9686003)(316002)(8676002)(478600001)(44832011)(54906003)(33656002)(5660300002)(71200400001)(81156014)(86362001)(81166006)(76116006)(4326008)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7097;H:DB8PR04MB6828.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Vc04jNlYXVq7GBsfTCl7B5/qGcSbAYxk2SBUiHbZxsjWDU6Vcwl5CLHTPX6E/mIxrY8To+KYs3q2d67t6rpzU0lCvJweJuBpLZ5xxK0S6u1xQXQzQ6CmU+OjxwHTDaHcslg2MBdZ9mqbUoWKT+oR7SB9EX2sBMZv/mlMaYGaCOeqXxsWHWMxv8a8KA9keaODTp+8BNjXt+IEJelbwMRCg+Gob97m3a01pZXl0BVP0MCi8+Wcnr3TaO1bj/Uc9MC6HbOCKmCKfDs8j3FCjsqcWvxWb/vAtuYOwfn7Uh0mjXwR3zO9qLB0ge1puqQl96LEFQpbI+TFXgsuTvCuCGh2qinQUkieg0icZ5AdOp4pHJaq2fvAZvzu7ahJ5K5qIiDiGaGw1nOsYHrdolvlBRRPHM1YhhlZMOR+VhUid00NK7LK8n8akTjbBWev5P8ZE5se
+x-ms-exchange-antispam-messagedata: B9nFNMhH1JrWkdfJ2oX5kBxjcvpMR/5D++EAVMNomWJxLYm5Uk0Uqunjrftcw3D+nQzbS0pl9dXRhTlWWYqZ8MzeZ9USkiv85Z6hj+DinR1V/cFAl6zcWuQc73s5xnL3RuNLPK4UdNv+Rsxv9GS7kQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324123518.239768-1-rajatja@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ba33cc8-b9fc-43fe-382c-08d7d1cc630d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 21:26:46.0941
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KYYGgAWo8zHefdYZcntW3pqWBlaYkaEnuv9lm11cslA3ThvmE0F/WZF4Q1Kb7Ha0pTbHT6Rb7O5kMinyiIUpnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7097
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:35:14AM -0700, Rajat Jain wrote:
-> Attach the firmware node to the serio i8042 kbd device so that device
-> properties can be passed from the firmware.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> v2: Remove the Change-Id from the commit log
-> 
->  drivers/input/serio/i8042-x86ia64io.h | 1 +
->  drivers/input/serio/i8042.c           | 3 +++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
-> index dc974c288e880..ed9ec4310d976 100644
-> --- a/drivers/input/serio/i8042-x86ia64io.h
-> +++ b/drivers/input/serio/i8042-x86ia64io.h
-> @@ -927,6 +927,7 @@ static int i8042_pnp_kbd_probe(struct pnp_dev *dev, const struct pnp_device_id *
->  	}
->  	i8042_pnp_id_to_string(dev->id, i8042_kbd_firmware_id,
->  			       sizeof(i8042_kbd_firmware_id));
-> +	i8042_kbd_fwnode = dev_fwnode(&dev->dev);
->  
->  	/* Keyboard ports are always supposed to be wakeup-enabled */
->  	device_set_wakeup_enable(&dev->dev, true);
-> diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-> index 20ff2bed3917a..0dddf273afd94 100644
-> --- a/drivers/input/serio/i8042.c
-> +++ b/drivers/input/serio/i8042.c
-> @@ -21,6 +21,7 @@
->  #include <linux/i8042.h>
->  #include <linux/slab.h>
->  #include <linux/suspend.h>
-> +#include <linux/property.h>
->  
->  #include <asm/io.h>
->  
-> @@ -124,6 +125,7 @@ MODULE_PARM_DESC(unmask_kbd_data, "Unconditional enable (may reveal sensitive da
->  static bool i8042_bypass_aux_irq_test;
->  static char i8042_kbd_firmware_id[128];
->  static char i8042_aux_firmware_id[128];
-> +static struct fwnode_handle *i8042_kbd_fwnode;
->  
->  #include "i8042.h"
->  
-> @@ -1335,6 +1337,7 @@ static int __init i8042_create_kbd_port(void)
->  	strlcpy(serio->phys, I8042_KBD_PHYS_DESC, sizeof(serio->phys));
->  	strlcpy(serio->firmware_id, i8042_kbd_firmware_id,
->  		sizeof(serio->firmware_id));
-> +	set_primary_fwnode(&serio->dev, i8042_kbd_fwnode);
 
-Rafael, do you have any concerns here? We want to be able to access
-properties assigned to KBC or similar device in ACPI. Serio port devices
-in i8042 essentially mirror the 2 PNP (typically called KBC, PS2K or
-PS2M) devices in ACPI.
+> Subject: Re: [RFC net-next 3/5] arm64: dts: lx2160a: add PCS MDIO nodes
+>=20
+> On Thu, Mar 26, 2020 at 09:14:13PM +0000, Ioana Ciornei wrote:
+> > > Subject: [RFC net-next 3/5] arm64: dts: lx2160a: add PCS MDIO nodes
+> > >
+> > > *NOT FOR MERGING*
+> > >
+> > > Add PCS MDIO nodes for the LX2160A, which will be used when the MAC
+> > > is in PHY mode and is using in-band negotiation.
+> > >
+> > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> > > ---
+> > >  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 144
+> > > ++++++++++++++++++
+> > >  1 file changed, 144 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> > > b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> > > index e5ee5591e52b..732af33eec18 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> > > @@ -960,6 +960,132 @@
+> > >  			status =3D "disabled";
+> > >  		};
+> > >
+> > > +		pcs_mdio1: mdio@8c07000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c07000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> >
+> > Are the PCS MDIO buses shareable? I am asking this because in case of Q=
+SGMII
+> our structure is a little bit quirky.
+> > There are 4 MACs but all PCSs sit on the first MACs internal MDIO bus o=
+nly. The
+> other 3 internal MDIO buses are empty.
+>=20
+> I haven't looked at QSGMII yet, I've only considered single-lane setups a=
+nd only
+> implemented that. For _this_ part, it doesn't matter as this is just decl=
+aring
+> where the hardware is.  I think that matters more for the dpmac nodes.
 
-Thanks.
+Sorry for misplacing the comment.
 
--- 
-Dmitry
+I am going to take a look tomorrow and see how workable this approach is go=
+ing to be in the long term since I have a board with QSGMII handy.
+
+
+>=20
+> > > +
+> > > +		pcs_mdio2: mdio@8c0b000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c0b000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio3: mdio@8c0f000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c0f000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio4: mdio@8c13000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c13000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio5: mdio@8c17000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c17000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio6: mdio@8c1b000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c1b000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio7: mdio@8c1f000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c1f000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio8: mdio@8c23000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c23000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio9: mdio@8c27000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c27000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio10: mdio@8c2b000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c2b000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio11: mdio@8c2f000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c2f000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio12: mdio@8c33000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c33000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio13: mdio@8c37000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c37000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio14: mdio@8c3b000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c3b000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio15: mdio@8c3f000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c3f000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio16: mdio@8c43000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c43000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio17: mdio@8c47000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c47000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> > > +		pcs_mdio18: mdio@8c4b000 {
+> > > +			compatible =3D "fsl,fman-memac-mdio";
+> > > +			reg =3D <0x0 0x8c4b000 0x0 0x1000>;
+> > > +			little-endian;
+> > > +			status =3D "disabled";
+> > > +		};
+> > > +
+> >
+> > Please sort the nodes alphabetically.
+>=20
+> Huh?  The nodes in this file are already sorted according to address, and=
+ this
+> patch preserves that sorting.  The hex address field also happens to be
+> alphabetical.
+>=20
+> Or do you mean the label for these modes - I've never heard of sorting by=
+ label
+> for a SoC file.
+
+Uhh, I remember now. For some reason I thought this was a board file.
+
+Ioana
+
+[snip]
