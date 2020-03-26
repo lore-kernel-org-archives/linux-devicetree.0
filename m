@@ -2,168 +2,112 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A06BC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF7CC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8B62073E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vJ4vyijK"
+	by mail.kernel.org (Postfix) with ESMTP id 3E29F206F6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:13:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbgCZOBn (ORCPT
+        id S1727792AbgCZONG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:01:43 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39262 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727719AbgCZOBn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 10:01:43 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02QE1ZnH081454;
-        Thu, 26 Mar 2020 09:01:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585231295;
-        bh=zYArPMmVw6lKGB9faTlm/kbugEnXXS+Ts1oLp9FmQFE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vJ4vyijKkiE5LXCT8trbn0i+6MUcSGmcRJFPXmQrmhG/c9PYzUi571SU8vAHqK1Sm
-         baxE7yBoC5KL5caR+IrSEytt+QpFsRjmErivsFChO01QSV+SaiDuhj9eXrKJSdfPZC
-         PSEDMhGovS73cq5VsSRR3xN5cICyoTiKulBjdW84=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02QE1Zfn120305
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 26 Mar 2020 09:01:35 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 26
- Mar 2020 09:01:35 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 26 Mar 2020 09:01:35 -0500
-Received: from [10.250.86.212] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02QE1YQA035082;
-        Thu, 26 Mar 2020 09:01:34 -0500
-Subject: Re: [PATCH 2/7] remoteproc: use a local copy for the name field
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200324201819.23095-1-s-anna@ti.com>
- <20200324201819.23095-3-s-anna@ti.com> <20200326054234.GA59436@builder>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <2089a4a8-d5e4-e4f5-e7bc-7d053f654204@ti.com>
-Date:   Thu, 26 Mar 2020 09:01:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 26 Mar 2020 10:13:06 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:48581 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgCZONG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 10:13:06 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MRCFw-1iuQaa14gW-00NDbH; Thu, 26 Mar 2020 15:13:04 +0100
+Received: by mail-qk1-f177.google.com with SMTP id c145so6457126qke.12;
+        Thu, 26 Mar 2020 07:13:04 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0eyy0uai5lL1l/i5q18Ill0sVn5kBKAXaLxZuPBzFWz+BPQrf8
+        Rli2QQdic93jTtnQpoGEAbPkxQRx/I/87lBesiU=
+X-Google-Smtp-Source: ADFU+vucsMd+oZ2pYuI+xXVs5Rm+lhEKKuWhmVOOyPIrD9S5kaedqvp5TnV/CLaRXxU7UVw6MVYWr8UxvWXNXJTBF4I=
+X-Received: by 2002:a37:8707:: with SMTP id j7mr8352402qkd.394.1585231982997;
+ Thu, 26 Mar 2020 07:13:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200326054234.GA59436@builder>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200306130731.938808030702@mail.baikalelectronics.ru> <CAK8P3a0PjNS9+sAiPnDgkmLsnJ6=hR_Vk8oqe493t-Ad_mGa9w@mail.gmail.com>
+In-Reply-To: <CAK8P3a0PjNS9+sAiPnDgkmLsnJ6=hR_Vk8oqe493t-Ad_mGa9w@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 26 Mar 2020 15:12:46 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3ztmzeDBET=jgX=LDCBVg8FKkQrcBOLzaStgUXRyG3jQ@mail.gmail.com>
+Message-ID: <CAK8P3a3ztmzeDBET=jgX=LDCBVg8FKkQrcBOLzaStgUXRyG3jQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] soc: Add Baikal-T1 SoC APB/AXI EHB and L2-cache drivers
+To:     Sergey.Semin@baikalelectronics.ru
+List-Id: <soc.lore.kernel.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:lBHbv8X13SIrfsQXRLdqag2U0ga2z3euGWwy4OFsy5SDNFreYHf
+ 3E+RalIE+l9WRwE3m0KGP8rDsG1WtnfXBjgVozQT7QQrDByK549DKjTJ2meaDlcIHOB3aD4
+ kYiXY5cJSlDEZef9XR6H0wC8QjifOkUJEE8pDJHUeyARIkyzsOTdDHtwjWx7v4s6yO0vI1V
+ CqQWzyOohKy12uwrB1XGQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LIuZfejFZpM=:IB5S4fR8T+x+CNJK4u74ss
+ 4sXOiz8conB4+nuatX1mwdi60QKXdP2FG7v9sFoysQwUAkYwxSQKZjH/rwXFhULRH5gZ+1Lk6
+ 8sqW6ZjV3FkLbeJEU/9o6fV0IzuREKroD6MKRP72bGMo8BJJMR/+hThdkRdSWUVNBlHSfD0Ym
+ gw07jBzmv+3QKeaRL3j4lzCEuoz+HxikwYL/IWzhvVHk4HZgFDr5LQWg0+3lkrUjxGTEFfJB4
+ 1CxdVb9pMpfSBxnJDO1RSDCJnWHBXgCXIZ6wVmqrVFHAYFbUkPnVn9iFNHNINMh/YBkl9MRI1
+ y2Ld3IL7FqQuR9RnGrSV7sXIKVGzs95VEzFKZZpQ3o+z1gEDcjylF8dQZIhaiJHxh5qQ5q35V
+ nUdChfktzy4e0XAoLTlLPFDZcxNplSHjvAR+j03aJlhzbhx+tEXDNauqS10vbUTMKE25PUTWp
+ yJ4mXSL+uwYlyQllw/d/PdUPiVjSpeZF3oiilACpAIv9VT8XjCfQvqjflD/CuCtqQ6/zphrUi
+ HoB5G0c4rV3FWLV78zAsCH6iV5DIvPOqFU0L35QIsJhjgiu/BVCVW5yI/OKGGZTNngeLHRM6m
+ yLtS7rFE++TfTnDjpjtz3fIkhPGoODJ95vDGj9H4HnwCzE8VQXSzxfbIHDCs4YWcA3YocXV1u
+ wYnUpFdoDN0oj247IvV/0TENcizEoICJOXLi8BqW4Fgqpr81YZm5vreO7ob+x1WOxAU6UJewD
+ FmvERxFoAlYGJ77pYXoTkYrgUw9nFNtifLWUtnN0IGbiyPeffVRmIYUDBv8diR0M8z1Fselxx
+ cQIeHEQ62BOe+/Vt8wyY2mpqiuupi60OluGi74hSOVRCv5Wz/I=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Fri, Mar 6, 2020 at 4:19 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Fri, Mar 6, 2020 at 2:07 PM <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > From: Serge Semin <fancer.lancer@gmail.com>
+> >
+> > Aside from PCIe/SATA/DDR/I2C/CPU-reboot specific settings the Baikal-T1
+> > system controller provides three vendor-specific blocks. In particular
+> > there are two Errors Handler Blocks to detect and report an info regarding
+> > any problems discovered on the AXI and APB buses. These are the main buses
+> > utilized by the SoC devices to interact with each other. In addition there
+> > is a way to tune the MIPS P5600 CM2 L2-cache up by setting the Tag/Data/WS
+> > L2-to-RAM latencies. All of this functionality is implemented in the
+> > APB/AXI EHB and L2-cache control block drivers to be a part of the kernel soc
+> > subsystem (as being specific to the Baikal-T1 SoC) and introduced in the
+> > framework of this patchset.
+> >
+> > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> > commit 98d54f81e36b ("Linux 5.6-rc4").
+>
+> I have no objection to the drivers, but I wonder if these should be
+> in drivers/bus and drivers/memory instead of drivers/soc, which have
+> similar drivers already. The driver for the L2 cache is not really a
+> memory controller driver, but it may be close enough, and we
+> already have a couple of different things in there.
 
-On 3/26/20 12:42 AM, Bjorn Andersson wrote:
-> On Tue 24 Mar 13:18 PDT 2020, Suman Anna wrote:
-> 
->> The current name field used in the remoteproc structure is simply
->> a pointer to a name field supplied during the rproc_alloc() call.
->> The pointer passed in by remoteproc drivers during registration is
->> typically a dev_name pointer, but it is possible that the pointer
->> will no longer remain valid if the devices themselves were created
->> at runtime like in the case of of_platform_populate(), and were
->> deleted upon any failures within the respective remoteproc driver
->> probe function.
->>
->> So, allocate and maintain a local copy for this name field to
->> keep it agnostic of the logic used in the remoteproc drivers.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->>  drivers/remoteproc/remoteproc_core.c | 9 ++++++++-
->>  include/linux/remoteproc.h           | 2 +-
->>  2 files changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->> index aca6d022901a..6e0b91fa6f11 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -1989,6 +1989,7 @@ static void rproc_type_release(struct device *dev)
->>  
->>  	kfree(rproc->firmware);
->>  	kfree(rproc->ops);
->> +	kfree(rproc->name);
->>  	kfree(rproc);
->>  }
->>  
->> @@ -2061,7 +2062,13 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->>  	}
->>  
->>  	rproc->firmware = p;
->> -	rproc->name = name;
->> +	rproc->name = kstrdup(name, GFP_KERNEL);
-> 
-> Let's use kstrdup_const() instead here (and kfree_const() instead of
-> kfree()), so that the cases where we are passed a constant we won't
-> create a duplicate on the heap.
-> 
-> And the "name" in struct rproc can remain const.
+I don't see a reply to Rob's or my comments, so I assume you are not currently
+updating them and I will wait for a new version after the v5.7 merge window.
 
-Agreed, that's better functions to use for this.
+Dropping the series from patchwork for now, see [1].
 
-> 
->> +	if (!rproc->name) {
->> +		kfree(p);
->> +		kfree(rproc->ops);
->> +		kfree(rproc);
->> +		return NULL;
-> 
-> Perhaps we can rearrange the hunks here slightly and get to a point
-> where we can rely on the release function earlier?
+       Arnd
 
-Not sure I understand. I don't see any release function, all failure
-paths in rproc_alloc() directly unwind the previous operations. You mean
-move this to before the alloc for rproc structure, something similar to
-what we are doing with firmware?
-
-regards
-Suman
-
-
-> 
-> Regards,
-> Bjorn
-> 
->> +	}
->>  	rproc->priv = &rproc[1];
->>  	rproc->auto_boot = true;
->>  	rproc->elf_class = ELFCLASS32;
->> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> index ddce7a7775d1..77788a4bb94e 100644
->> --- a/include/linux/remoteproc.h
->> +++ b/include/linux/remoteproc.h
->> @@ -490,7 +490,7 @@ struct rproc_dump_segment {
->>  struct rproc {
->>  	struct list_head node;
->>  	struct iommu_domain *domain;
->> -	const char *name;
->> +	char *name;
->>  	char *firmware;
->>  	void *priv;
->>  	struct rproc_ops *ops;
->> -- 
->> 2.23.0
->>
-
+[1] https://patchwork.kernel.org/project/linux-soc/list/
