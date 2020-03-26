@@ -2,364 +2,147 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B92C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7CAC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AADF520714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5B02073E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:25:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="gQYyIFUd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pNXo66Ii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgCZVV0 (ORCPT
+        id S1727670AbgCZVZK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:21:26 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:51180 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbgCZVV0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 17:21:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=b7jMbEyQgBchxaYjnbMWehFvMY/YBtuPrMn94qG6tQk=; b=gQYyIFUdaqkeFxtOuw5YOVSw4
-        EYRnbTd2281MagMR2RbxpOqSABlL5dEAm7nP9sGfwl5UqKeuR5bzEVyd4ZYxJMDlJuu/9i6xNV0E9
-        /r93HysVOAuRlo31GFTKmnssGxwOXE8avmdv6ggcQXwJKx/0GXbSzGICtTq7hIz0yrQ/Ns1n9paxc
-        /aGq0m+H0iGMiGoUfNjXQ1EnU2BHwbR058zWgZ0lcBwOs36l0bmAiB5AiEuc0cyAKjo1xT1QmYI4b
-        LeJV8Xfl+goiQ2K7XdG5MtmJ5jxm+wf8fx5/h+OX+stWTQQzTGEU7gXzROR7yOahHRH7pAVtjf5lY
-        K/kg0dzvQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41760)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jHZw3-0005cQ-FQ; Thu, 26 Mar 2020 21:21:07 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jHZw0-0003Y9-9h; Thu, 26 Mar 2020 21:21:04 +0000
-Date:   Thu, 26 Mar 2020 21:21:04 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
+        Thu, 26 Mar 2020 17:25:10 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42998 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgCZVZJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 17:25:09 -0400
+Received: by mail-pl1-f194.google.com with SMTP id e1so2641115plt.9;
+        Thu, 26 Mar 2020 14:25:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EBWQLMhBWW9tUXFqRtN+54ezrMGzdq5O+dIYEBDryGo=;
+        b=pNXo66Iib9dd51AfI5Kn4XmPlsuG+DRgfO1pjoxT4heP/wOCW7mxQTZC1t3rfCPH6H
+         ZPn3zDNE7oKFFDxenXlJcJR80p2r6GK5sCHHDoZ3ySW1D1qG2ktEN15caUI22xpp2sM6
+         mW396gjndbFQxz1SSdNnhYN2A9iQYRRWo9jFQHmFWnSlikmitltJJmNn/WERBMcOjZwK
+         62IAGF1BBNH81+9x0ai/nqraL9/CcX+M2s24mLpp0MC9MCHzAqTO7KHFbSi3sNiaAAqG
+         ivimQr5jFdzihlMrpQmqIoyoPgAi/2GUrYtG406ApmsRrjtPdkklkY2zPuofa0A+qrlO
+         mUJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EBWQLMhBWW9tUXFqRtN+54ezrMGzdq5O+dIYEBDryGo=;
+        b=a9s1aSpsZGLtYSetQTIFHllFhzCq5hbgwCmUHJUS2HE7ZhLh4WReXahsbkHylIQwcz
+         lmKkkjMNC4OX/kSSCq4UOr/CKVtvKUp6q1Buk3999CrmuHdR10RN+8/DVBJnwBC/LDS5
+         48OqWumvfrJhpKquIiI26qPUA9TMrgziUEdbCJ5BfR3yOQYRm74LRGrARWzRyD2S9D/S
+         gKZ8xKOtv8LoHl4NBLnqQ2b2NYbVUMJSju0B9Jqj+rn8nk4fExxy7N/NkPDro66ccYnm
+         YhoBMOFl1+4QApO7yFBd6p3I8VqlTL1rxWAR72o6FHNb4Lcy4hzpq+VgEzhOlM3AQLLm
+         3qKA==
+X-Gm-Message-State: ANhLgQ1V8eoFdJ+P+oLvpDsz2MP43h6YrLFtQ2eCOl4M+82e4HkBMfBE
+        lJdHin3x89bFcFh+Bt3v4TY=
+X-Google-Smtp-Source: ADFU+vs0BBrk9+I2ddFEda+vQXmS5Jnv3BmW48JpttlOLT46IZkR0GLF9ueX6C/NeKude51qt3Se2g==
+X-Received: by 2002:a17:90a:1910:: with SMTP id 16mr2172311pjg.119.1585257908641;
+        Thu, 26 Mar 2020 14:25:08 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id nk12sm2354537pjb.41.2020.03.26.14.25.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 14:25:08 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 14:25:05 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     dtor@google.com, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC net-next 3/5] arm64: dts: lx2160a: add PCS MDIO nodes
-Message-ID: <20200326212104.GE25745@shell.armlinux.org.uk>
-References: <20200317144944.GP25745@shell.armlinux.org.uk>
- <E1jEDaS-0008JO-Po@rmk-PC.armlinux.org.uk>
- <DB8PR04MB6828FA55AA75B710BDB53BC8E0CF0@DB8PR04MB6828.eurprd04.prod.outlook.com>
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, furquan@google.com,
+        dlaurie@google.com, bleung@google.com, zentaro@google.com,
+        dbehr@google.com, rajatxjain@gmail.com,
+        Rajat Jain <rajatja@google.com>
+Subject: Re: [PATCH v2 1/5] input/serio/i8042: Attach fwnode to serio i8042
+ kbd device
+Message-ID: <20200326212505.GI75430@dtor-ws>
+References: <20200324123518.239768-1-rajatja@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DB8PR04MB6828FA55AA75B710BDB53BC8E0CF0@DB8PR04MB6828.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200324123518.239768-1-rajatja@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 09:14:13PM +0000, Ioana Ciornei wrote:
-> > Subject: [RFC net-next 3/5] arm64: dts: lx2160a: add PCS MDIO nodes
-> > 
-> > *NOT FOR MERGING*
-> > 
-> > Add PCS MDIO nodes for the LX2160A, which will be used when the MAC is in
-> > PHY mode and is using in-band negotiation.
-> > 
-> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > ---
-> >  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 144 ++++++++++++++++++
-> >  1 file changed, 144 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > index e5ee5591e52b..732af33eec18 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> > @@ -960,6 +960,132 @@
-> >  			status = "disabled";
-> >  		};
-> > 
-> > +		pcs_mdio1: mdio@8c07000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c07000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
+On Tue, Mar 24, 2020 at 05:35:14AM -0700, Rajat Jain wrote:
+> Attach the firmware node to the serio i8042 kbd device so that device
+> properties can be passed from the firmware.
 > 
-> Are the PCS MDIO buses shareable? I am asking this because in case of QSGMII our structure is a little bit quirky.
-> There are 4 MACs but all PCSs sit on the first MACs internal MDIO bus only. The other 3 internal MDIO buses are empty.
-
-I haven't looked at QSGMII yet, I've only considered single-lane setups
-and only implemented that. For _this_ part, it doesn't matter as this
-is just declaring where the hardware is.  I think that matters more for
-the dpmac nodes.
-
-> > +
-> > +		pcs_mdio2: mdio@8c0b000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c0b000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio3: mdio@8c0f000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c0f000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio4: mdio@8c13000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c13000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio5: mdio@8c17000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c17000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio6: mdio@8c1b000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c1b000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio7: mdio@8c1f000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c1f000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio8: mdio@8c23000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c23000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio9: mdio@8c27000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c27000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio10: mdio@8c2b000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c2b000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio11: mdio@8c2f000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c2f000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio12: mdio@8c33000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c33000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio13: mdio@8c37000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c37000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio14: mdio@8c3b000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c3b000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio15: mdio@8c3f000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c3f000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio16: mdio@8c43000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c43000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio17: mdio@8c47000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c47000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		pcs_mdio18: mdio@8c4b000 {
-> > +			compatible = "fsl,fman-memac-mdio";
-> > +			reg = <0x0 0x8c4b000 0x0 0x1000>;
-> > +			little-endian;
-> > +			status = "disabled";
-> > +		};
-> > +
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> ---
+> v2: Remove the Change-Id from the commit log
 > 
-> Please sort the nodes alphabetically.
-
-Huh?  The nodes in this file are already sorted according to address,
-and this patch preserves that sorting.  The hex address field also
-happens to be alphabetical.
-
-Or do you mean the label for these modes - I've never heard of sorting
-by label for a SoC file.
-
-> >  		fsl_mc: fsl-mc@80c000000 {
-> >  			compatible = "fsl,qoriq-mc";
-> >  			reg = <0x00000008 0x0c000000 0 0x40>, @@ -988,91
-> > +1114,109 @@
-> >  				dpmac1: dpmac@1 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x1>;
-> > +					pcs-mdio = <&pcs_mdio1>;
-> >  				};
-> > 
-> >  				dpmac2: dpmac@2 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x2>;
-> > +					pcs-mdio = <&pcs_mdio2>;
-> >  				};
-> > 
-> >  				dpmac3: dpmac@3 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x3>;
-> > +					pcs-mdio = <&pcs_mdio3>;
-> >  				};
-> > 
-> >  				dpmac4: dpmac@4 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x4>;
-> > +					pcs-mdio = <&pcs_mdio4>;
-> >  				};
-> > 
-> >  				dpmac5: dpmac@5 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x5>;
-> > +					pcs-mdio = <&pcs_mdio5>;
-> >  				};
-> > 
-> >  				dpmac6: dpmac@6 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x6>;
-> > +					pcs-mdio = <&pcs_mdio6>;
-> >  				};
-> > 
-> >  				dpmac7: dpmac@7 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x7>;
-> > +					pcs-mdio = <&pcs_mdio7>;
-> >  				};
-> > 
-> >  				dpmac8: dpmac@8 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x8>;
-> > +					pcs-mdio = <&pcs_mdio8>;
-> >  				};
-> > 
-> >  				dpmac9: dpmac@9 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x9>;
-> > +					pcs-mdio = <&pcs_mdio9>;
-> >  				};
-> > 
-> >  				dpmac10: dpmac@a {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0xa>;
-> > +					pcs-mdio = <&pcs_mdio10>;
-> >  				};
-> > 
-> >  				dpmac11: dpmac@b {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0xb>;
-> > +					pcs-mdio = <&pcs_mdio11>;
-> >  				};
-> > 
-> >  				dpmac12: dpmac@c {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0xc>;
-> > +					pcs-mdio = <&pcs_mdio12>;
-> >  				};
-> > 
-> >  				dpmac13: dpmac@d {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0xd>;
-> > +					pcs-mdio = <&pcs_mdio13>;
-> >  				};
-> > 
-> >  				dpmac14: dpmac@e {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0xe>;
-> > +					pcs-mdio = <&pcs_mdio14>;
-> >  				};
-> > 
-> >  				dpmac15: dpmac@f {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0xf>;
-> > +					pcs-mdio = <&pcs_mdio15>;
-> >  				};
-> > 
-> >  				dpmac16: dpmac@10 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x10>;
-> > +					pcs-mdio = <&pcs_mdio16>;
-> >  				};
-> > 
-> >  				dpmac17: dpmac@11 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x11>;
-> > +					pcs-mdio = <&pcs_mdio17>;
-> >  				};
-> > 
-> >  				dpmac18: dpmac@12 {
-> >  					compatible = "fsl,qoriq-mc-dpmac";
-> >  					reg = <0x12>;
-> > +					pcs-mdio = <&pcs_mdio18>;
-> >  				};
-> >  			};
-> >  		};
-> > --
-> > 2.20.1
+>  drivers/input/serio/i8042-x86ia64io.h | 1 +
+>  drivers/input/serio/i8042.c           | 3 +++
+>  2 files changed, 4 insertions(+)
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+> diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
+> index dc974c288e880..ed9ec4310d976 100644
+> --- a/drivers/input/serio/i8042-x86ia64io.h
+> +++ b/drivers/input/serio/i8042-x86ia64io.h
+> @@ -927,6 +927,7 @@ static int i8042_pnp_kbd_probe(struct pnp_dev *dev, const struct pnp_device_id *
+>  	}
+>  	i8042_pnp_id_to_string(dev->id, i8042_kbd_firmware_id,
+>  			       sizeof(i8042_kbd_firmware_id));
+> +	i8042_kbd_fwnode = dev_fwnode(&dev->dev);
+>  
+>  	/* Keyboard ports are always supposed to be wakeup-enabled */
+>  	device_set_wakeup_enable(&dev->dev, true);
+> diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
+> index 20ff2bed3917a..0dddf273afd94 100644
+> --- a/drivers/input/serio/i8042.c
+> +++ b/drivers/input/serio/i8042.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/i8042.h>
+>  #include <linux/slab.h>
+>  #include <linux/suspend.h>
+> +#include <linux/property.h>
+>  
+>  #include <asm/io.h>
+>  
+> @@ -124,6 +125,7 @@ MODULE_PARM_DESC(unmask_kbd_data, "Unconditional enable (may reveal sensitive da
+>  static bool i8042_bypass_aux_irq_test;
+>  static char i8042_kbd_firmware_id[128];
+>  static char i8042_aux_firmware_id[128];
+> +static struct fwnode_handle *i8042_kbd_fwnode;
+>  
+>  #include "i8042.h"
+>  
+> @@ -1335,6 +1337,7 @@ static int __init i8042_create_kbd_port(void)
+>  	strlcpy(serio->phys, I8042_KBD_PHYS_DESC, sizeof(serio->phys));
+>  	strlcpy(serio->firmware_id, i8042_kbd_firmware_id,
+>  		sizeof(serio->firmware_id));
+> +	set_primary_fwnode(&serio->dev, i8042_kbd_fwnode);
+
+Rafael, do you have any concerns here? We want to be able to access
+properties assigned to KBC or similar device in ACPI. Serio port devices
+in i8042 essentially mirror the 2 PNP (typically called KBC, PS2K or
+PS2M) devices in ACPI.
+
+Thanks.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Dmitry
