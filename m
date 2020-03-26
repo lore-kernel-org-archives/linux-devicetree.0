@@ -4,112 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC37C2D0E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96251C2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E24207FF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9A7207FF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A5cZNsK5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d0Gbhldy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgCZO2q (ORCPT
+        id S1728336AbgCZO25 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:28:46 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:36639 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbgCZO2q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 10:28:46 -0400
-Received: by mail-ua1-f65.google.com with SMTP id o15so2183018ual.3
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 07:28:45 -0700 (PDT)
+        Thu, 26 Mar 2020 10:28:57 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:40760 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728304AbgCZO2y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 10:28:54 -0400
+Received: by mail-vs1-f65.google.com with SMTP id r7so1048995vsg.7
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 07:28:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dpR7Oxz1qNUziJu9EkZNTQU3ukjyRpCe41037a5byCM=;
-        b=A5cZNsK5c5uZutnm0OIXGS+KX7eNfN7wqt28zszCZAhqy6YCJE5AXwTRTNuYDXqs6O
-         kVy906+0sjz7Ea81h3wXaysYdR1rk2YkZaFasf8szBzhyoNf2RhFmIDZJ7itRAwGsL6p
-         WNZ1EWZMpmNa1RW0Y3ztF9PD6W/8Tg1LWwKb/Dsx6bkaaASYPLcIsKa1lSndDFWS+ybG
-         vY5Q33UTJBetKrYcvjeakGfoc+euPMjtKyS/THQ2N6reNORXrSfKGjJesQFgGTNoI4U1
-         wHF6ka30AIQAMrzkrofwUZOiYP3y0tSwom2KGfmjP0/uZtxcc0DRdQQw0w++JfPFBHFp
-         PX6A==
+        bh=m96cR6V03dd7lbjAOl6gquDvXkdRzHGRSDXkk0VydMg=;
+        b=d0GbhldybAe0gmG8ZlfyrlQwNBKzrfy5JDwFDaOsHBBgGdMkw0TJb3XjhMtRqSbv7U
+         raadlG2wUvxjwaK8JQEXjXpEDrxdok4PtGhzk8vlvcx6tqX50JoBJjW9oeCcSufljH6d
+         zXUOtYr9xOurSTFj6t0Jo5XxpR4v0b0dQlHfJkM50DxfClQkvWEwr0+ZVMW14u+Ih3zr
+         bXT7WivtSYOhdHJnSZYPl0aXpH0+RKcAZCDkMR+fTMFW7uZMY/N5YrpJM+980D1BsBA0
+         B429AUyrl4jmmVgGSaDLzpQR41VY8fCcxS1hN7EuVUp7OYsa1cZg42gDGUtJY7L1P3No
+         T3ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dpR7Oxz1qNUziJu9EkZNTQU3ukjyRpCe41037a5byCM=;
-        b=e7hOoO4wmRFx5xXM8XFDA/M8m3HlDCEqU2qVagkxi8/oIkg5p4zPX8lNnFBsO+f+HX
-         UDhgVjSkypTb8oEPLNki0jw/6417DZ8TR+ZjTkAlrpaiIx+lE/LFZ67qBv8y/HUavHkT
-         xEjLt4S41xXYFM60OvD3B6dZUlvPLM1t7pjxmmgjmAujweB/k5vDs33SU4fMoADlIJfm
-         BbHHo1Kaf4hL75gYPf2wzziZDZlo73CxAf7RxLafauZtRKiFgVS9iAodN1YwJk69/ACJ
-         1YRhVlXuQ7TK22Dn8hYPR9f9PBQVJUU3jDDd4lsfTaXn7au2neG+oLKGvTXVxrpPqKFy
-         u+Jg==
-X-Gm-Message-State: ANhLgQ3+rEp2OK+ZNq9UlgRqBGGL2caA2lK0I7J/+pAxYYucMZcN92iV
-        OVwmroXGfhBin/1DAxyfDS2Eff7CjO+zaZZO9zd5jQ==
-X-Google-Smtp-Source: ADFU+vtSP1ZWeFS0v/IYE0yhokN9YWSHWu7abe9/C6yo19lM7d8FYypGhqrHHkutkPFQ/tySL6jnvOiMocB0QKtvN6g=
-X-Received: by 2002:ab0:6204:: with SMTP id m4mr6628927uao.15.1585232925473;
- Thu, 26 Mar 2020 07:28:45 -0700 (PDT)
+        bh=m96cR6V03dd7lbjAOl6gquDvXkdRzHGRSDXkk0VydMg=;
+        b=gl0e4203d2KsciyIH0KTQ0md95/TIhIsuXJCilw0tdPJQ5CMibZ1Wx8GvzK3yqakrH
+         DfPFv49m1qe0oka7udrKq1MQL6EH9GppOvtyadgL3HyQhRneLSiiy7KEbJiit7z3N/ji
+         Z7qs5pk8keiggr+CpCijv8p6ZMaKugZdvqLG2o8esz4hW+2M81ijxBpRG4orgd/SgYZj
+         72/EtD2yIsa69CZVdvAZSAUuuP4FG3CoBYGY5V2UENQNUDdHqKH4zpeA6gCPTiAXBYJ3
+         J88nZLPNLNJh3PGDXnOg8GyIjDY2ua6ZxE4d7Adje8liokSarWp92/uz9OLVNkGWuNZd
+         7bdQ==
+X-Gm-Message-State: ANhLgQ1T6pmKSRYbOxfHhFK3YWYO0otAEQ1OJmhNnrhhNl1eMkX7Oif3
+        ukX9DHoCWTI+MwPyVeuw2U8/r34WGcRrJpCXjQDOVg==
+X-Google-Smtp-Source: ADFU+vuWH5zQui20lK3L0xhEESoh9O6oNICswpYudGihwgeVkXw9INd4a0Qcv2xNvGUAEUT8yqdnif+9yZAdCYPExLo=
+X-Received: by 2002:a67:646:: with SMTP id 67mr6606515vsg.34.1585232933632;
+ Thu, 26 Mar 2020 07:28:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200325143409.13005-1-ludovic.barre@st.com> <20200325143409.13005-2-ludovic.barre@st.com>
-In-Reply-To: <20200325143409.13005-2-ludovic.barre@st.com>
+References: <20200317093922.20785-1-lkundrak@v3.sk> <20200317093922.20785-19-lkundrak@v3.sk>
+In-Reply-To: <20200317093922.20785-19-lkundrak@v3.sk>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 26 Mar 2020 15:28:09 +0100
-Message-ID: <CAPDyKFo-Lgikwf=PUAd1naXxiyn=z425sTXX9O39__Xi39oUYQ@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] mmc: mmci_sdmmc: fix clear busyd0end irq flag
-To:     Ludovic Barre <ludovic.barre@st.com>
+Date:   Thu, 26 Mar 2020 15:28:17 +0100
+Message-ID: <CAPDyKFrcrgMrd9Nv425XuzssBhd+GvSUu29hXoVShwS0GNyjtQ@mail.gmail.com>
+Subject: Re: [PATCH 18/28] dt-bindings: mmc: Fix node name in an example
+To:     Lubomir Rintel <lkundrak@v3.sk>
 Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
         DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c@vger.kernel.org, linux-media@vger.kernel.org,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        Linux USB List <linux-usb@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 25 Mar 2020 at 15:34, Ludovic Barre <ludovic.barre@st.com> wrote:
+On Tue, 17 Mar 2020 at 10:40, Lubomir Rintel <lkundrak@v3.sk> wrote:
 >
-> The busyd0 line transition can be very fast. The busy request
-> may be completed by busy_d0end without wait the busy_d0 steps.
-> The busyd0end irq flag must be cleared even if no busy_status.
+> The $nodename allows only "mmc@*" whereas the example node is named
+> "sdhci".
 >
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Applied for next, by adding a fixes+stable tag, thanks!
+Applied for next, thanks!
 
 Kind regards
 Uffe
 
 
 > ---
->  drivers/mmc/host/mmci_stm32_sdmmc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-> index f76e82f8f12f..d33e62bd6153 100644
-> --- a/drivers/mmc/host/mmci_stm32_sdmmc.c
-> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-> @@ -358,11 +358,11 @@ static bool sdmmc_busy_complete(struct mmci_host *host, u32 status, u32 err_msk)
->         if (host->busy_status) {
->                 writel_relaxed(mask & ~host->variant->busy_detect_mask,
->                                base + MMCIMASK0);
-> -               writel_relaxed(host->variant->busy_detect_mask,
-> -                              base + MMCICLEAR);
->                 host->busy_status = 0;
->         }
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> index c9384ed685b8f..c03fe268c29a0 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> @@ -351,7 +351,7 @@ dependencies:
 >
-> +       writel_relaxed(host->variant->busy_detect_mask, base + MMCICLEAR);
-> +
->         return true;
->  }
->
+>  examples:
+>    - |
+> -    sdhci@ab000000 {
+> +    mmc@ab000000 {
+>          compatible = "sdhci";
+>          reg = <0xab000000 0x200>;
+>          interrupts = <23>;
 > --
-> 2.17.1
+> 2.25.1
 >
