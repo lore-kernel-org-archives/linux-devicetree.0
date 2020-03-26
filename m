@@ -2,110 +2,80 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248C6C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 16:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A846C2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 16:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFF3420787
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 16:28:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585240124;
-	bh=HyCcTeKZjpOHL4u7VdwAUC4Mmt1TEUG129zZgdDHfCE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zKQnX0iWFVpZ5wKdCvlkLlpxHiUZWRWQzQAc7lot74ariLUqo+t5fQC8adFcc6Zrl
-	 Rn35fos/O9CYzvM6EZNIzXr+D27y+Dl3hqg+OPw0YoL17JgXbG8bSWvBraXX2puCOY
-	 W/EWbVbJuCPM8dUS/VNjJ/8oYtGpyk0fiCCJ87qU=
+	by mail.kernel.org (Postfix) with ESMTP id E17C32078E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 16:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgCZQ2m (ORCPT
+        id S1728543AbgCZQiP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:28:42 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:45096 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgCZQ2m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 12:28:42 -0400
-Received: by mail-il1-f194.google.com with SMTP id x16so5902881ilp.12;
-        Thu, 26 Mar 2020 09:28:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bVlPuJGOkEhy8wUjtWWTKaIM8+WWF/4LOBG59hrlu0Q=;
-        b=YHGmx2Z0aYlvGhVyrXmj+IG0+9n4VfZ3FuCiV8NydVIpIqlWUIDtPiSSEngYHRKuBN
-         YX21b6DuEmqWcPebqyMREAQx8gfMPbK+nOi+mEXWJBKOlEx1CmMTXLQk3Yms5vE4whOz
-         m4ALq9ItrGwFQH3vgNxZIUmvUgX139ExZt7LL8XnjYiLTSx+Q0Fzf3DjqmPAMr8/NNNY
-         qMch2paBiEpnCSwYgHn6OTXWxi5xLgdBdx7SIpjrj3ZwK/YOtBYdfUbnFKkw1jdpqvYs
-         VS+JQ9pS46ptMlHjPsnPVRgWFoXhUZsTDTzeTGHBKKpIdlhZ3SIBuvZ/U1iglSWblxc3
-         atAA==
-X-Gm-Message-State: ANhLgQ2olep/+ZekO9xuRHNSw8Ve9/D8sPCRfQZ459sFn6XQGCtbs7Kc
-        6lbMMLlBUzzLFOLXGQehRQ==
-X-Google-Smtp-Source: ADFU+vv9v63mvl8nbL3d+kPz17rDcePdFHGMay9b2YDWdFNR1yprO8F2JIv29ubqXRzM95IVux8Eig==
-X-Received: by 2002:a92:8fcd:: with SMTP id r74mr9905848ilk.39.1585240118456;
-        Thu, 26 Mar 2020 09:28:38 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id o23sm972322ild.33.2020.03.26.09.28.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 09:28:36 -0700 (PDT)
-Received: (nullmailer pid 2135 invoked by uid 1000);
-        Thu, 26 Mar 2020 16:28:35 -0000
-Date:   Thu, 26 Mar 2020 10:28:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hanks Chen <hanks.chen@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH v5 1/6] dt-bindings: pinctrl: add bindings for MediaTek
- MT6779 SoC
-Message-ID: <20200326162835.GA1429@bogus>
-References: <1585128694-13881-1-git-send-email-hanks.chen@mediatek.com>
- <1585128694-13881-2-git-send-email-hanks.chen@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585128694-13881-2-git-send-email-hanks.chen@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 26 Mar 2020 12:38:15 -0400
+Received: from michel.telenet-ops.be ([195.130.137.88]:37048 "EHLO
+        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728590AbgCZQiN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 12:38:13 -0400
+Received: from ramsan ([84.195.182.253])
+        by michel.telenet-ops.be with bizsmtp
+        id K4eA2200W5USYZQ064eAGw; Thu, 26 Mar 2020 17:38:11 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jHVWE-0002rH-TB; Thu, 26 Mar 2020 17:38:10 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jHVWE-00064m-S1; Thu, 26 Mar 2020 17:38:10 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 2/2] dt-bindings: usb: generic-ohci: Document power-domains property
+Date:   Thu, 26 Mar 2020 17:38:06 +0100
+Message-Id: <20200326163807.23216-3-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200326163807.23216-1-geert+renesas@glider.be>
+References: <20200326163807.23216-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 25 Mar 2020 17:31:29 +0800, Hanks Chen wrote:
-> From: Andy Teng <andy.teng@mediatek.com>
-> 
-> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
-> 
-> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-> ---
->  .../bindings/pinctrl/mediatek,mt6779-pinctrl.yaml  |  208 ++++++++++++++++++++
->  1 file changed, 208 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
-> 
+It is quite common for a generic OHCI block to be embedded in an SoC in
+its own power domain.  Hence allow the DTS writer to describe the
+controller's position in the power hierarchy, by documenting the
+optional presence of a "power-domains" property.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+This gets rid of "make dtbs_check" warnings like:
 
-Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dts:19:18: fatal error: dt-bindings/pinctrl/mt6779-pinfunc.h: No such file or directory
-         #include <dt-bindings/pinctrl/mt6779-pinfunc.h>
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+    arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dt.yaml: usb@ee080000: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-See https://patchwork.ozlabs.org/patch/1261248
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/usb/generic-ohci.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+diff --git a/Documentation/devicetree/bindings/usb/generic-ohci.yaml b/Documentation/devicetree/bindings/usb/generic-ohci.yaml
+index bcffec1f1341e502..d7efddf27b22e264 100644
+--- a/Documentation/devicetree/bindings/usb/generic-ohci.yaml
++++ b/Documentation/devicetree/bindings/usb/generic-ohci.yaml
+@@ -36,6 +36,9 @@ properties:
+         - if a USB DRD channel: first clock should be host and second
+           one should be peripheral
+ 
++  power-domains:
++    maxItems: 1
++
+   big-endian:
+     $ref: /schemas/types.yaml#/definitions/flag
+     description:
+-- 
+2.17.1
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
