@@ -2,1234 +2,300 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C77C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 13:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F35C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 13:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6705720748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 13:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEE5206E6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 13:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="V+Y/bh8+"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="AbZ/DUJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgCZNwr (ORCPT
+        id S1727737AbgCZNzg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 09:52:47 -0400
-Received: from mail-eopbgr60089.outbound.protection.outlook.com ([40.107.6.89]:57111
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727707AbgCZNwr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Mar 2020 09:52:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TM/6CMcYDHZrSA8ACkRdu4Mce8OORFb+0deNIL/6c9+CikKna2uKa2pE9y3Y1Qp2kCsOIxLumZUvccoKTQlTmAZiVeTbGWPwwa7r4iNiiIiikWPFp5rHdI9zZ/D0pBjse/VPs1nEcNF+QysNAp4omkBVTSE2yEE1EmvjdfLwA9K5Jo5J0Ql/MJMKCSdPQX2Wl/8lRXQwF3hndEu8sn96NJiSdpaHZAlUPz2nfLMollRbfsQ9J7soRekFfOVECHmsCqJa6jEuARSjpy6JbGtDK4RYiH49GnA59AvoIu1hOV4Zs4z+1N1KxV2cxibRBz93+LM6n01Pd1Pb9IBnSoYHmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P0wOW7awuHLwlx8uSLjJCqcIhR8hxr2Npy0wqXk/P7s=;
- b=NvQVgGiItra5PCFqUazxFhzRxa4Gdu3q6nRQvM4c7Oo1seve9Rx6RDfFpnG/356PiozJQ6QtWGTqCarP4rVl0r62ZjH3dcyRVffncQK7XuxfrZZDETnRa3VPeAkGh+AJrnumj9Clrioaoz0i/O7Od5NRcE2Dg9GnMAgxe5Rvle0GXoCAEXvTunPTcI071dA6LMCEOpQL6zlPQZwrIeoQVJs7Uz8wR/sShzJvQ9pr41/Yl9aOUM69iB5b/yNFYXqpMqjam2aQPFg6bHrIIsy7MaltvjNp0mcPlRbIRlcVVJDDGAYWuVxsc0zz0kCmqxCHt/oqNYc+dEFtuQqeNQrqzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P0wOW7awuHLwlx8uSLjJCqcIhR8hxr2Npy0wqXk/P7s=;
- b=V+Y/bh8+Wq7u8htoQnE7OyfLLKs5hMI3CKNOcwFvQY/7dzUL9J2RkUHla913gebH2Y3CVSFjY04373ypojeg63x6Hxc0JNRGR5Nu16f1dWjNdYWK7FyiGvCIV0TjnS8AQG9X3gQlU8EpPqWdEwd2bTB0NXEzle44kv6UCH/MBzc=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=florinel.iordache@nxp.com; 
-Received: from VI1PR04MB5454.eurprd04.prod.outlook.com (20.178.122.87) by
- VI1PR04MB4272.eurprd04.prod.outlook.com (10.171.182.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.20; Thu, 26 Mar 2020 13:52:19 +0000
-Received: from VI1PR04MB5454.eurprd04.prod.outlook.com
- ([fe80::69f6:5d59:b505:a6c8]) by VI1PR04MB5454.eurprd04.prod.outlook.com
- ([fe80::69f6:5d59:b505:a6c8%3]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
- 13:52:19 +0000
-From:   Florinel Iordache <florinel.iordache@nxp.com>
-To:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk
-Cc:     devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
-        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
-        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org,
-        Florinel Iordache <florinel.iordache@nxp.com>
-Subject: [PATCH net-next 8/9] net: phy: add bee algorithm for kr training
-Date:   Thu, 26 Mar 2020 15:51:21 +0200
-Message-Id: <1585230682-24417-9-git-send-email-florinel.iordache@nxp.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
-Reply-to: florinel.iordache@nxp.com
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR01CA0142.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:168::47) To VI1PR04MB5454.eurprd04.prod.outlook.com
- (2603:10a6:803:d1::23)
+        Thu, 26 Mar 2020 09:55:36 -0400
+Received: from mout01.posteo.de ([185.67.36.65]:47030 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726359AbgCZNzg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Mar 2020 09:55:36 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 0D1F6160062
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 14:55:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1585230934; bh=x4jYAka8aP1YBwXjiPv/wSh1i4s7WuNfZrX9rKaquus=;
+        h=Subject:To:Cc:From:Autocrypt:Date:From;
+        b=AbZ/DUJ+Iv0L+PCRC/xeSKj3Z6aD3uvlpRO+PJnihvRIWEqPkd9aBxlZ/YqjptG1H
+         FX888uu17aUZdMH8uMyaXJaIGF8tHf78pPUV0BGAhmeDIM8gg+72vWVI3Z8hOtFiCS
+         a8Ki1YmWdxCdhyI/xttD/PYtS9MJ5+qzoVex0C0lgveLm0eFXGj+aULosuLJRUJxYD
+         kxD1ILPtQ1MD/j7tVJ21N+WWFpJMK+N8oz8bslIrCdGC53sFXBGifENvByQNUlN/NR
+         3B12fznr6NqkHfahtTYmLk4ss7Uip2m0Yh4knevVX0qMOBI8UvLCLTcruvCzV01qRy
+         LB3GbYldQMHjg==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 48p62921xjz6tm9;
+        Thu, 26 Mar 2020 14:55:28 +0100 (CET)
+Subject: Re: [PATCH 0/8] interconnect: Add imx support via devfreq
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
+        Alexandre Bailon <abailon@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Angus Ainslie <angus@akkea.ca>,
+        Silvano di Ninno <silvano.dininno@nxp.com>,
+        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <cover.1585188174.git.leonard.crestez@nxp.com>
+From:   Martin Kepplinger <martink@posteo.de>
+Autocrypt: addr=martink@posteo.de; keydata=
+ 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
+Message-ID: <1ae21355-df95-44e5-b8f6-14af7aa4fcc3@posteo.de>
+Date:   Thu, 26 Mar 2020 14:55:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1464-128.ea.freescale.net (89.37.124.34) by AM0PR01CA0142.eurprd01.prod.exchangelabs.com (2603:10a6:208:168::47) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2835.20 via Frontend Transport; Thu, 26 Mar 2020 13:52:17 +0000
-X-Mailer: git-send-email 1.9.1
-X-Originating-IP: [89.37.124.34]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 589b2268-cbe1-4efe-3ec9-08d7d18ce6b8
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4272:|VI1PR04MB4272:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB4272160F8D322547A403EEC0FBCF0@VI1PR04MB4272.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:299;
-X-Forefront-PRVS: 0354B4BED2
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(136003)(366004)(396003)(26005)(478600001)(186003)(16526019)(956004)(81166006)(3450700001)(36756003)(81156014)(8936002)(44832011)(4326008)(8676002)(5660300002)(2616005)(7416002)(2906002)(66946007)(86362001)(6486002)(30864003)(66556008)(316002)(6506007)(6512007)(6666004)(66476007)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4272;H:VI1PR04MB5454.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mUxlXsEvayJCzjDF1ud5BmHGt0437xk+0tACO2g678UiA/R0MVC5aNcbcefSFltBWCDxCVFDycIanyIMWPcZQ38h2XeAqmbtakkzktkdMpeP9/PR/CUXGm5Sd7Br96kmlpfu1DG3iZ0qorgi0fIB/8WHy9GvUT+o+fWddhp60uVwcYjCOCGdbaqxvaJqSGELqEAsBM7dY9si/P+Mq5NASlEdseeQgkXOg8E3kkNfJMH4K6J10GHDhZkZ9sZhx8ZI38sswkTyZIXoHnKyDggFOst+s5VO1Xya1xP4ZtMc/q2UdObuicHHL5VWTeKG5ZGcJh6GSHPJGwWNXCR5dlCjm/qdGQ9fs0eeIAwAP6cPneVynkgHvUV3GAQjNzUdzL5wNdoOpgDSuPcKLMUwiinEQO7cSPDP/NsF4EHDgZHGpdyL7Y13gBEmTaXf/zmhvuk5
-X-MS-Exchange-AntiSpam-MessageData: bTIWg3mLoc5rXudKXMvFQlEQbnyMjDXoQqCy7E+lm1uSdew+iIx+JXxisyGSPTa05GI54kMX4ZOlO8ysqgasE/lhCbo9lAjKmp34Y0ImY+EzRvaBiZYGO4mwEFISCqVfesuGv+4BUSelRACjuNSulA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 589b2268-cbe1-4efe-3ec9-08d7d18ce6b8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2020 13:52:19.4314
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: I6iFsFmNe17qqQN/hGPECRE4mTd23sOprMRtnJ+/gYFWsOgpMia8dVeTG6a0PgCBCLGDf0KArZ2MXE0A+yOvEsHdU8M6ldG1LkDocJ+znkw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4272
+In-Reply-To: <cover.1585188174.git.leonard.crestez@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for bee equalization algorithm used by kr training:
-3-Taps Bit Edge Equalization (BEE) algorithm
+On 26.03.20 03:16, Leonard Crestez wrote:
+> This series adds interconnect scaling support for imx8m series chips. It uses a
+> per-SOC interconnect provider layered on top of multiple instances of devfreq
+> for scalable nodes along the interconnect.
+> 
+> Existing qcom interconnect providers mostly translate bandwidth requests into
+> firmware calls but equivalent firmware on imx8m is much thinner. Scaling
+> support for individual nodes is implemented as distinct devfreq drivers
+> instead.
+> 
+> The imx interconnect provider doesn't communicate with devfreq directly
+> but rather computes "minimum frequencies" for nodes along the path and
+> creates dev_pm_qos requests.
+> 
+> Since there is no single devicetree node that can represent the
+> "interconnect" the main NOC is picked as the "interconnect provider" and
+> will probe the interconnect platform device if #interconnect-cells is
+> present. This avoids introducing "virtual" devices but it means that DT
+> bindings of main NOC includes properties for both devfreq and
+> interconnect.
+> 
+> Only the ddrc and main noc are scalable right now but more can be added.
+> 
+> Also available on a github branch (with various unrelated changes):
+> 	https://github.com/cdleonard/linux/tree/next
+> Testing currently requires NXP branch of atf+uboot
+> 
+> Martin: I believe you should be able to use this to control DRAM
+> frequency from video by just adding interconnect consumer code to
+> nwl-dsi. Sample code:
+> 	https://github.com/cdleonard/linux/commit/43772762aa5045f1ce5623740f9a4baef988d083
+> 	https://github.com/cdleonard/linux/commit/7b601e981b1f517b5d98b43bde292972ded13086
+> 
 
-Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
----
- drivers/net/phy/backplane/Kconfig  |   11 +
- drivers/net/phy/backplane/Makefile |    1 +
- drivers/net/phy/backplane/eq_bee.c | 1078 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 1090 insertions(+)
- create mode 100644 drivers/net/phy/backplane/eq_bee.c
+Thanks for updating this series Leonard! A few questions for my
+understanding before trying to test:
 
-diff --git a/drivers/net/phy/backplane/Kconfig b/drivers/net/phy/backplane/Kconfig
-index 3e20a78..ee5cf1c 100644
---- a/drivers/net/phy/backplane/Kconfig
-+++ b/drivers/net/phy/backplane/Kconfig
-@@ -19,6 +19,17 @@ config ETH_BACKPLANE_FIXED
- 	  No Equalization algorithm is used to adapt the initial coefficients
- 	  initially set by the user.
- 
-+config ETH_BACKPLANE_BEE
-+	tristate "3-Taps Bit Edge Equalization (BEE) algorithm"
-+	depends on ETH_BACKPLANE
-+	help
-+	  This module provides a driver for BEE algorithm: 3-Taps
-+	  Bit Edge Equalization. This algorithm is using a method
-+	  based on 3-taps coefficients for mitigating intersymbol
-+	  interference (ISI) in high-speed backplane applications.
-+	  The initial values for algorithm coefficient values are
-+	  user configurable and used as a starting point of the algorithm.
-+
- config ETH_BACKPLANE_QORIQ
- 	tristate "QorIQ Ethernet Backplane driver"
- 	depends on ETH_BACKPLANE
-diff --git a/drivers/net/phy/backplane/Makefile b/drivers/net/phy/backplane/Makefile
-index d8f95ac..242e938 100644
---- a/drivers/net/phy/backplane/Makefile
-+++ b/drivers/net/phy/backplane/Makefile
-@@ -5,6 +5,7 @@
- 
- obj-$(CONFIG_ETH_BACKPLANE) += eth_backplane.o
- obj-$(CONFIG_ETH_BACKPLANE_FIXED) += eq_fixed.o
-+obj-$(CONFIG_ETH_BACKPLANE_BEE) += eq_bee.o
- obj-$(CONFIG_ETH_BACKPLANE_QORIQ) += eth_backplane_qoriq.o
- 
- eth_backplane-objs	:= backplane.o link_training.o
-diff --git a/drivers/net/phy/backplane/eq_bee.c b/drivers/net/phy/backplane/eq_bee.c
-new file mode 100644
-index 0000000..f62b777
---- /dev/null
-+++ b/drivers/net/phy/backplane/eq_bee.c
-@@ -0,0 +1,1078 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/* 3-Taps Bit Edge Equalization (BEE) algorithm
-+ *
-+ * Copyright 2019-2020 NXP
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+
-+#include "equalization.h"
-+
-+#define ALGORITHM_NAME		"backplane_bee_3tap"
-+#define ALGORITHM_DESCR		"3-Taps Bit Edge Equalization"
-+#define ALGORITHM_VERSION	"1.5.5"
-+
-+/* BEE algorithm timeouts */
-+#define TIMEOUT_LONG				3
-+#define TIMEOUT_M1				3
-+
-+/* Size of equalization snapshots data collection */
-+#define EQ_SNAPSHOTS_SIZE			10
-+
-+/* Rx link quality conditions:
-+ * The following macros are used to determine the Rx link quality
-+ * which is used to decide if/when to proceed with BinLong/BinM1 modules.
-+ * The code that considers Rx in good quality is always in place:
-+ * Rx link is in 'good quality' if:
-+ * Bin1, Bin2 and Bin3 are toggling
-+ *
-+ * These macros are used to enable less quality link conditions.
-+ * If Rx link quality is considered good enough then proceed to BinLong/BinM1
-+ */
-+
-+/* Rx is 'less quality' if:
-+ * Bin1 is toggling
-+ * AND
-+ *   Bin2 is Early, GainMF stuck at max_eq_gain and Bin3 is Late
-+ *   OR
-+ *   Bin2 is Late, GainMF stuck at min_eq_gain and Bin3 is Early
-+ */
-+#define ENABLE_LESS_QUALITY_CONDITION
-+
-+/* Rx is 'even less quality' if:
-+ * Bin1 is Early AND GainHF stuck at max_eq_gain and Bin2 is Late AND
-+ *     GainMF stuck at min_eq_gain
-+ * OR
-+ * Bin1 is Late AND GainHF stuck at min_eq_gain AND
-+ *     Bin2 is Early, GainMF stuck at max_eq_gain
-+ */
-+#define ENABLE_EVEN_LESS_QUALITY_CONDITION
-+
-+/* Rx is 'seemingly quality' if:
-+ * Bin1 is always Late for all snapshots AND
-+ *     GainHF is stuck at min_eq_gain
-+ * AND
-+ * Bin2 and Bin3 are both Toggling
-+ */
-+#define ENABLE_SEEMINGLY_QUALITY_CONDITION
-+
-+enum bin_state {
-+	BIN_INVALID,
-+	BIN_EARLY,
-+	BIN_TOGGLE,
-+	BIN_LATE
-+};
-+
-+struct eq_data_priv {
-+	/* Equalization Algorithm setup data */
-+	struct eq_setup_info eq_setup;
-+
-+	/* Bin state */
-+	enum bin_state bin_m1_state;
-+	enum bin_state bin_long_state;
-+	enum bin_state prev_bin_m1_state;
-+	enum bin_state prev_bin_long_state;
-+
-+	/* Bin training status */
-+	bool bin_m1_stop;
-+	bool bin_long_stop;
-+	int m1_min_max_cnt;
-+	int long_min_max_cnt;
-+
-+	/* Algorithm controlled value */
-+	u32 ld_update;
-+
-+	/* Bit edge statistics: Bin snapshots */
-+	s16 bin1_snapshot[EQ_SNAPSHOTS_SIZE];
-+	s16 bin2_snapshot[EQ_SNAPSHOTS_SIZE];
-+	s16 bin3_snapshot[EQ_SNAPSHOTS_SIZE];
-+	s16 bin_long_snapshot[EQ_SNAPSHOTS_SIZE];
-+	s16 bin_m1_snapshot[EQ_SNAPSHOTS_SIZE];
-+	s16 bin_offset_snapshot[EQ_SNAPSHOTS_SIZE];
-+
-+	/* Gain snapshots */
-+	u8 gain_hf_snapshot[EQ_SNAPSHOTS_SIZE];
-+	u8 gain_mf_snapshot[EQ_SNAPSHOTS_SIZE];
-+
-+	/* Offset status snapshot */
-+	u8 osestat_snapshot[EQ_SNAPSHOTS_SIZE];
-+};
-+
-+static enum bin_state get_bin_snapshots_state(struct eq_data_priv *priv,
-+					      enum eqc_type type)
-+{
-+	s16 bin_snp_av_thr_low, bin_snp_av_thr_high;
-+	s16 snapshot_average, snapshot_sum = 0;
-+	s16 *bin_snapshot;
-+	struct eqc_range *bin_range;
-+	int i;
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return BIN_INVALID;
-+	}
-+
-+	switch (type) {
-+	case EQC_BIN_1:
-+		bin_snapshot = priv->bin1_snapshot;
-+		break;
-+	case EQC_BIN_2:
-+		bin_snapshot = priv->bin2_snapshot;
-+		break;
-+	case EQC_BIN_3:
-+		bin_snapshot = priv->bin3_snapshot;
-+		break;
-+	case EQC_BIN_LONG:
-+		bin_snapshot = priv->bin_long_snapshot;
-+		break;
-+	case EQC_BIN_OFFSET:
-+		bin_snapshot = priv->bin_offset_snapshot;
-+		break;
-+	case EQC_BIN_M1:
-+		bin_snapshot = priv->bin_m1_snapshot;
-+		break;
-+	default:
-+		/* invalid bin type */
-+		return BIN_INVALID;
-+	}
-+	if (!bin_snapshot)
-+		return BIN_INVALID;
-+
-+	bin_range = priv->eq_setup.equalizer.ops.get_counter_range(type);
-+	if (!bin_range)
-+		return BIN_INVALID;
-+
-+	bin_snp_av_thr_low = bin_range->mid_low;
-+	bin_snp_av_thr_high = bin_range->mid_high;
-+
-+	for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++)
-+		snapshot_sum += bin_snapshot[i];
-+
-+	snapshot_average = (s16)(snapshot_sum / EQ_SNAPSHOTS_SIZE);
-+
-+	if (snapshot_average >= -256 && snapshot_average < bin_snp_av_thr_low)
-+		return BIN_EARLY;
-+	else if (snapshot_average >= bin_snp_av_thr_low &&
-+		 snapshot_average < bin_snp_av_thr_high)
-+		return BIN_TOGGLE;
-+	else if (snapshot_average >= bin_snp_av_thr_high &&
-+		 snapshot_average <= 255)
-+		return BIN_LATE;
-+
-+	return BIN_INVALID;
-+}
-+
-+static u32 process_bin_m1_toggle(struct eq_data_priv *priv)
-+{
-+	enum req_type prev_req_cm1;
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return update;
-+	}
-+
-+	prev_req_cm1 = lt_decode_coef_update(priv->ld_update, C_M1);
-+
-+	/* Toggle path */
-+	if (priv->prev_bin_m1_state == priv->bin_m1_state) {
-+		/* Hold C- */
-+		update = lt_encode_startup_request(REQ_HOLD);
-+	} else {
-+		update = lt_encode_startup_request(REQ_HOLD);
-+		/* If previous step moved C- repeat C- move */
-+		if (prev_req_cm1 == REQ_INC ||
-+		    prev_req_cm1 == REQ_DEC)
-+			update = lt_encode_request(update, prev_req_cm1, C_M1);
-+	}
-+
-+	return update;
-+}
-+
-+static u32 process_bin_m1_prev_toggle(struct eq_data_priv *priv)
-+{
-+	enum req_type prev_req_cm1;
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return update;
-+	}
-+
-+	prev_req_cm1 = lt_decode_coef_update(priv->ld_update, C_M1);
-+
-+	update = lt_encode_startup_request(REQ_HOLD);
-+	/* If previous step moved C- go back on C- */
-+	if (prev_req_cm1 == REQ_INC)
-+		update = lt_encode_request(update, REQ_DEC, C_M1);
-+	if (prev_req_cm1 == REQ_DEC)
-+		update = lt_encode_request(update, REQ_INC, C_M1);
-+
-+	return update;
-+}
-+
-+static u32 process_bin_m1_early(struct eq_data_priv *priv)
-+{
-+	enum coef_status lpst_cm1;
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return update;
-+	}
-+
-+	/* Get LP coefficient status to determine
-+	 * if coefficient is in range or reached the limit thresholds
-+	 * IF the coefficient is at MIN/MAX and still want to INC/DEC
-+	 * THEN do we are done with this module
-+	 */
-+	lpst_cm1 = lt_get_lp_coef_status(priv->eq_setup.krlane, C_M1);
-+
-+	/* Early path */
-+	if (lpst_cm1 == COEF_MAX) {
-+		/* Hold C- */
-+		update = lt_encode_startup_request(REQ_HOLD);
-+	} else {
-+		/* request Increment C- */
-+		update = lt_encode_request(update, REQ_INC, C_M1);
-+	}
-+
-+	return update;
-+}
-+
-+static u32 process_bin_m1_late(struct eq_data_priv *priv)
-+{
-+	enum coef_status lpst_cm1;
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return update;
-+	}
-+
-+	/* Get LP coefficient status to determine
-+	 * if coefficient is in range or reached the limit thresholds
-+	 * IF the coefficient is at MIN/MAX and still want to INC/DEC
-+	 * THEN do we are done with this module
-+	 */
-+	lpst_cm1 = lt_get_lp_coef_status(priv->eq_setup.krlane, C_M1);
-+
-+	/* Late path */
-+	if (lpst_cm1 == COEF_MIN) {
-+		/* Hold C- */
-+		update = lt_encode_startup_request(REQ_HOLD);
-+	} else {
-+		/* request Decrement C- */
-+		update = lt_encode_request(update, REQ_DEC, C_M1);
-+	}
-+
-+	return update;
-+}
-+
-+static u32 process_bin_m1_antipodal(struct eq_data_priv *priv)
-+{
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return update;
-+	}
-+
-+	if (priv->bin_m1_state == BIN_LATE) {
-+		/* request Decrement C- */
-+		update = lt_encode_request(update, REQ_DEC, C_M1);
-+	} else {
-+		/* Hold C- */
-+		update = lt_encode_startup_request(REQ_HOLD);
-+	}
-+
-+	return update;
-+}
-+
-+/* process_bin_m1
-+ *
-+ * Bin_M1:
-+ *   contains the scoring of initial edges on pulses that are 1UI long
-+ *      following non-single bits
-+ *   used to adjust LP coefficient: C_M1
-+ */
-+static void process_bin_m1(struct eq_data_priv *priv)
-+{
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return;
-+	}
-+
-+	if (priv->bin_m1_state == BIN_INVALID) {
-+		bpdev_err(priv->eq_setup.bpphy, "Invalid Bin_M1 state\n");
-+		return;
-+	}
-+
-+	if (priv->bin_m1_state == BIN_TOGGLE) {
-+		update = process_bin_m1_toggle(priv);
-+	} else {
-+		if (priv->prev_bin_m1_state == BIN_TOGGLE) {
-+			update = process_bin_m1_prev_toggle(priv);
-+		} else {
-+			if (priv->prev_bin_m1_state == priv->bin_m1_state) {
-+				if (priv->bin_m1_state == BIN_LATE)
-+					update = process_bin_m1_late(priv);
-+				else
-+					update = process_bin_m1_early(priv);
-+			} else {
-+				update = process_bin_m1_antipodal(priv);
-+			}
-+		}
-+	}
-+
-+	/* Store current algorithm decision
-+	 * as previous algorithm ld_update for next step
-+	 */
-+	priv->ld_update = update;
-+}
-+
-+static u32 process_bin_long_toggle(struct eq_data_priv *priv)
-+{
-+	enum req_type prev_req_cp1, prev_req_cz0;
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return update;
-+	}
-+
-+	prev_req_cp1 = lt_decode_coef_update(priv->ld_update, C_P1);
-+	prev_req_cz0 = lt_decode_coef_update(priv->ld_update, C_Z0);
-+
-+	/* Toggle path */
-+	if (priv->prev_bin_long_state == priv->bin_long_state) {
-+		/* Hold C+ and C0 */
-+		update = lt_encode_startup_request(REQ_HOLD);
-+	} else {
-+		update = lt_encode_startup_request(REQ_HOLD);
-+		/* If previous step moved C+/C0 repeat C+/C0 move */
-+		if (prev_req_cp1 == REQ_INC ||
-+		    prev_req_cp1 == REQ_DEC ||
-+		    prev_req_cz0 == REQ_INC ||
-+		    prev_req_cz0 == REQ_DEC) {
-+			update = lt_encode_request(update, prev_req_cp1, C_P1);
-+			update = lt_encode_request(update, prev_req_cz0, C_Z0);
-+		}
-+	}
-+
-+	return update;
-+}
-+
-+static u32 process_bin_long_prev_toggle(struct eq_data_priv *priv)
-+{
-+	enum req_type prev_req_cp1, prev_req_cz0;
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return update;
-+	}
-+
-+	prev_req_cp1 = lt_decode_coef_update(priv->ld_update, C_P1);
-+	prev_req_cz0 = lt_decode_coef_update(priv->ld_update, C_Z0);
-+
-+	/* If previous step moved C+/C0 then go back on C+/C0 */
-+	if (prev_req_cp1 == REQ_INC)
-+		update = lt_encode_request(update, REQ_DEC, C_P1);
-+	if (prev_req_cp1 == REQ_DEC)
-+		update = lt_encode_request(update, REQ_INC, C_P1);
-+	if (prev_req_cz0 == REQ_INC)
-+		update = lt_encode_request(update, REQ_DEC, C_Z0);
-+	if (prev_req_cz0 == REQ_DEC)
-+		update = lt_encode_request(update, REQ_INC, C_Z0);
-+
-+	return update;
-+}
-+
-+static u32 process_bin_long_early(struct eq_data_priv *priv)
-+{
-+	enum coef_status lpst_cp1, lpst_cz0;
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return update;
-+	}
-+
-+	/* Get LP coefficient status to determine
-+	 * if coefficient is in range or reached the limit thresholds
-+	 * IF the coefficient is at MIN/MAX and still want to INC/DEC
-+	 * THEN do we are done with this module
-+	 */
-+	lpst_cp1 = lt_get_lp_coef_status(priv->eq_setup.krlane, C_P1);
-+	lpst_cz0 = lt_get_lp_coef_status(priv->eq_setup.krlane, C_Z0);
-+
-+	/* Early path (make edge later) */
-+	if (lpst_cp1 == COEF_MAX) {
-+		if (lpst_cz0 == COEF_MAX) {
-+			/* Hold C+, C0 */
-+			update = lt_encode_startup_request(REQ_HOLD);
-+		} else {
-+			/* request Increment C0 and
-+			 * Decrement C+
-+			 */
-+			update = lt_encode_request(update, REQ_INC, C_Z0);
-+			update = lt_encode_request(update, REQ_DEC, C_P1);
-+		}
-+	} else {
-+		/* request Increment C+ */
-+		update = lt_encode_request(update, REQ_INC, C_P1);
-+	}
-+
-+	return update;
-+}
-+
-+static u32 process_bin_long_late(struct eq_data_priv *priv)
-+{
-+	enum coef_status lpst_cp1, lpst_cz0;
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return update;
-+	}
-+
-+	/* Get LP coefficient status to determine
-+	 * if coefficient is in range or reached the limit thresholds
-+	 * IF the coefficient is at MIN/MAX and still want to INC/DEC
-+	 * THEN do we are done with this module
-+	 */
-+	lpst_cp1 = lt_get_lp_coef_status(priv->eq_setup.krlane, C_P1);
-+	lpst_cz0 = lt_get_lp_coef_status(priv->eq_setup.krlane, C_Z0);
-+
-+	/* Late path (make edge earlier) */
-+	if (lpst_cp1 == COEF_MIN) {
-+		if (lpst_cz0 == COEF_MIN) {
-+			/* Hold C0 */
-+			update = lt_encode_startup_request(REQ_HOLD);
-+		} else {
-+			/* request Decrement C0 */
-+			update = lt_encode_request(update, REQ_DEC, C_Z0);
-+		}
-+	} else {
-+		/* request Decrement C+ */
-+		update = lt_encode_request(update, REQ_DEC, C_P1);
-+	}
-+
-+	return update;
-+}
-+
-+static u32 process_bin_long_antipodal(struct eq_data_priv *priv)
-+{
-+	enum req_type prev_req_cp1;
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return update;
-+	}
-+
-+	prev_req_cp1 = lt_decode_coef_update(priv->ld_update, C_P1);
-+
-+	/* Request move on C+ and C0 */
-+	/* If previous step moved C+ then go back on C+ */
-+	if (prev_req_cp1 == REQ_INC)
-+		update = lt_encode_request(update, REQ_DEC, C_P1);
-+	if (prev_req_cp1 == REQ_DEC)
-+		update = lt_encode_request(update, REQ_INC, C_P1);
-+
-+	if (priv->bin_long_state == BIN_LATE) {
-+		/* request Decrement C0 */
-+		update = lt_encode_request(update, REQ_DEC, C_Z0);
-+	} else {
-+		/* request Increment C0 */
-+		update = lt_encode_request(update, REQ_INC, C_Z0);
-+	}
-+
-+	return update;
-+}
-+
-+/* process_bin_long
-+ *
-+ * Bin_Long:
-+ *   contains the scoring of final edges on pulses longer than 7UI long
-+ *   used to adjust LP coefficients: C_P1 and C_Z0
-+ */
-+static void process_bin_long(struct eq_data_priv *priv)
-+{
-+	u32 update = lt_encode_startup_request(REQ_HOLD);
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return;
-+	}
-+
-+	if (priv->bin_long_state == BIN_INVALID) {
-+		bpdev_err(priv->eq_setup.bpphy, "Invalid Bin_Long state\n");
-+		return;
-+	}
-+
-+	if (priv->bin_long_state == BIN_TOGGLE) {
-+		update = process_bin_long_toggle(priv);
-+	} else {
-+		if (priv->prev_bin_long_state == BIN_TOGGLE) {
-+			update = process_bin_long_prev_toggle(priv);
-+		} else {
-+			if (priv->prev_bin_long_state == priv->bin_long_state) {
-+				if (priv->bin_long_state == BIN_LATE)
-+					update = process_bin_long_late(priv);
-+				else
-+					update = process_bin_long_early(priv);
-+			} else {
-+				update = process_bin_long_antipodal(priv);
-+			}
-+		}
-+	}
-+
-+	/* Store current algorithm decision
-+	 * as previous algorithm ld_update for next step
-+	 */
-+	priv->ld_update = update;
-+}
-+
-+/* Callbacks:
-+ * required by generic equalization_algorithm
-+ */
-+static void process_bad_state(struct eq_data_priv *priv)
-+{
-+	bool lp_at_init, lp_at_preset;
-+	u32 req;
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return;
-+	}
-+
-+	lp_at_init = lt_is_lp_at_startup(priv->eq_setup.krlane, REQ_INIT);
-+	lp_at_preset = lt_is_lp_at_startup(priv->eq_setup.krlane, REQ_PRESET);
-+
-+	if (lp_at_init) {
-+		/* Try Request Preset */
-+		req = lt_encode_startup_request(REQ_PRESET);
-+		lt_lp_update(priv->eq_setup.krlane, req);
-+	} else if (lp_at_preset) {
-+		/* LT ERROR
-+		 * set lt_error flag to prevent reaching
-+		 * training state = TRAINED
-+		 * and resume training in case of LT error
-+		 */
-+		lt_set_error(priv->eq_setup.krlane, true);
-+		bpdev_err(priv->eq_setup.bpphy,
-+			  "LT Error: CDR_LOCK is zero on Preset\n");
-+	} else {
-+		/* Move LP back to previous C-, C0, C+ and HOLD */
-+		lt_move_lp_back(priv->eq_setup.krlane);
-+	}
-+}
-+
-+static bool collect_bin_counters(struct eq_data_priv *priv,
-+				 enum eqc_type type)
-+{
-+	struct equalizer_ops *eqops;
-+	s16 *bin_snapshot = NULL;
-+	int snp_size;
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return false;
-+	}
-+
-+	/* collect Bin snapshots */
-+	switch (type) {
-+	case EQC_BIN_1:
-+		bin_snapshot = priv->bin1_snapshot;
-+		break;
-+	case EQC_BIN_2:
-+		bin_snapshot = priv->bin2_snapshot;
-+		break;
-+	case EQC_BIN_3:
-+		bin_snapshot = priv->bin3_snapshot;
-+		break;
-+	case EQC_BIN_LONG:
-+		bin_snapshot = priv->bin_long_snapshot;
-+		break;
-+	case EQC_BIN_OFFSET:
-+		bin_snapshot = priv->bin_offset_snapshot;
-+		break;
-+	case EQC_BIN_M1:
-+		bin_snapshot = priv->bin_m1_snapshot;
-+		break;
-+	default:
-+		/* invalid bin type */
-+		return false;
-+	}
-+	if (!bin_snapshot)
-+		return false;
-+
-+	eqops = &priv->eq_setup.equalizer.ops;
-+	if (!eqops) {
-+		bpdev_err(priv->eq_setup.bpphy,
-+			  "No operations for equalizer %s %s\n",
-+			  priv->eq_setup.equalizer.name,
-+			  priv->eq_setup.equalizer.version);
-+		return false;
-+	}
-+	snp_size = eqops->collect_counters(priv->eq_setup.reg_base, type,
-+					   bin_snapshot, EQ_SNAPSHOTS_SIZE);
-+	/* Check if snapshots collection failed */
-+	if (snp_size < EQ_SNAPSHOTS_SIZE) {
-+		bpdev_err(priv->eq_setup.bpphy,
-+			  "Counters collection failed for equalizer %s %s\n",
-+			  priv->eq_setup.equalizer.name,
-+			  priv->eq_setup.equalizer.version);
-+		return false;
-+	}
-+
-+	/* if CDR_LOCK = 0: Statistics are invalid */
-+	if (!backplane_is_cdr_lock(priv->eq_setup.krlane, true)) {
-+		process_bad_state(priv);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
-+static bool collect_bit_edge_statistics(struct eq_data_priv *priv)
-+{
-+	struct equalizer_ops *eqops;
-+	enum eqc_type status_types[] = {
-+		EQC_GAIN_HF, EQC_GAIN_MF, EQC_EQOFFSET
-+	};
-+	s16 status_counters[ARRAY_SIZE(status_types)][EQ_SNAPSHOTS_SIZE];
-+	int i, snp_size;
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return false;
-+	}
-+
-+	/* collect Bin snapshots */
-+	if (!collect_bin_counters(priv, EQC_BIN_1))
-+		return false;
-+	if (!collect_bin_counters(priv, EQC_BIN_2))
-+		return false;
-+	if (!collect_bin_counters(priv, EQC_BIN_3))
-+		return false;
-+	if (!collect_bin_counters(priv, EQC_BIN_LONG))
-+		return false;
-+	if (!collect_bin_counters(priv, EQC_BIN_OFFSET))
-+		return false;
-+	if (!collect_bin_counters(priv, EQC_BIN_M1))
-+		return false;
-+
-+	/* collect Gains */
-+	eqops = &priv->eq_setup.equalizer.ops;
-+	if (!eqops) {
-+		bpdev_err(priv->eq_setup.bpphy,
-+			  "No operations for equalizer %s %s\n",
-+			  priv->eq_setup.equalizer.name,
-+			  priv->eq_setup.equalizer.version);
-+		return false;
-+	}
-+	snp_size = eqops->collect_multiple_counters(priv->eq_setup.reg_base,
-+						    status_types,
-+						    ARRAY_SIZE(status_types),
-+						    (s16 *)status_counters,
-+						    EQ_SNAPSHOTS_SIZE);
-+	/* Check if snapshots collection failed */
-+	if (snp_size < EQ_SNAPSHOTS_SIZE) {
-+		bpdev_err(priv->eq_setup.bpphy,
-+			  "Counters collection failed for equalizer %s %s\n",
-+			  priv->eq_setup.equalizer.name,
-+			  priv->eq_setup.equalizer.version);
-+		return false;
-+	}
-+
-+	for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++) {
-+		priv->gain_hf_snapshot[i] = (u8)status_counters[0][i];
-+		priv->gain_mf_snapshot[i] = (u8)status_counters[1][i];
-+		priv->osestat_snapshot[i] = (u8)status_counters[2][i];
-+	}
-+
-+	return true;
-+}
-+
-+static void generate_3taps_request(struct eq_data_priv *priv)
-+{
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return;
-+	}
-+
-+	/* Store current state as previous state */
-+	priv->prev_bin_m1_state = priv->bin_m1_state;
-+	priv->prev_bin_long_state = priv->bin_long_state;
-+
-+	priv->bin_m1_state = get_bin_snapshots_state(priv, EQC_BIN_M1);
-+	if (priv->bin_m1_state == BIN_INVALID) {
-+		/* invalid state: should never happen */
-+		return;
-+	}
-+
-+	priv->bin_long_state = get_bin_snapshots_state(priv, EQC_BIN_LONG);
-+	if (priv->bin_long_state == BIN_INVALID) {
-+		/* invalid state: should never happen */
-+		return;
-+	}
-+
-+	/* Move to BinLong/BinM1 modules:
-+	 * Bin Modules order: BinLong before BinM1
-+	 * We try to finish BinLong before we do BinM1
-+	 */
-+
-+	/* Process BinLong module
-+	 * decide and ask for movement of C+/C0
-+	 */
-+	if (!priv->bin_long_stop) {
-+		process_bin_long(priv);
-+		lt_lp_update(priv->eq_setup.krlane, priv->ld_update);
-+		if (lt_is_update_of_type(priv->ld_update, REQ_HOLD)) {
-+			/* Sent All Hold request */
-+			priv->long_min_max_cnt++;
-+			if (priv->long_min_max_cnt >= TIMEOUT_LONG)
-+				priv->bin_long_stop = true;
-+		} else {
-+			/* Sent C Inc/Dec request */
-+			priv->long_min_max_cnt = 0;
-+		}
-+		return;
-+	}
-+
-+	/* Process BinM1 module
-+	 * decide and ask for movement of C-
-+	 */
-+	if (!priv->bin_m1_stop) {
-+		process_bin_m1(priv);
-+		lt_lp_update(priv->eq_setup.krlane, priv->ld_update);
-+		if (lt_is_update_of_type(priv->ld_update, REQ_HOLD)) {
-+			/* Sent All Hold request */
-+			priv->m1_min_max_cnt++;
-+			if (priv->m1_min_max_cnt >= TIMEOUT_M1)
-+				priv->bin_m1_stop = true;
-+		} else {
-+			/* Sent C Inc/Dec request */
-+			priv->m1_min_max_cnt = 0;
-+		}
-+		return;
-+	}
-+}
-+
-+static bool is_rx_ok(struct eq_data_priv *priv)
-+{
-+	enum bin_state bin1_snapshot_state;
-+	enum bin_state bin2_snapshot_state;
-+	enum bin_state bin3_snapshot_state;
-+	struct eqc_range *gain_range, *osestat_range;
-+	struct equalizer_ops *eqops;
-+	bool rx_quality_1, rx_quality_2;
-+	bool is_ok, rx_good_quality;
-+	u8 min_eq_gain, max_eq_gain;
-+	u8 osestat_mid_low, osestat_mid_high;
-+	u8 min_snp, max_snp;
-+	s16 snapshot;
-+	int i;
-+
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return false;
-+	}
-+
-+	/* Checking Bins/Gains after LP has updated its TX */
-+	eqops = &priv->eq_setup.equalizer.ops;
-+	if (!eqops)
-+		return false;
-+	gain_range = eqops->get_counter_range(EQC_GAIN_HF);
-+	if (!gain_range)
-+		return false;
-+	osestat_range = eqops->get_counter_range(EQC_EQOFFSET);
-+	if (!osestat_range)
-+		return false;
-+
-+	min_eq_gain = (u8)gain_range->min;
-+	max_eq_gain = (u8)gain_range->max;
-+	osestat_mid_low = (u8)osestat_range->mid_low;
-+	osestat_mid_high = (u8)osestat_range->mid_high;
-+
-+	/* CDR_LOCK must be 1 */
-+	if (!backplane_is_cdr_lock(priv->eq_setup.krlane, true))
-+		return false;
-+
-+	/* Offset Bin must NOT be 10 of the same value */
-+	rx_good_quality = false;
-+	snapshot = priv->bin_offset_snapshot[0];
-+	for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++) {
-+		if (snapshot != priv->bin_offset_snapshot[i]) {
-+			rx_good_quality = true;
-+			break;
-+		}
-+	}
-+	if (!rx_good_quality)
-+		return false;
-+
-+	/* Offset status must dither (+/-2) around MidRange value
-+	 * What we want to see is that the Offset has settled to a value
-+	 * somewhere between: mid-range low and mid-range high and that
-+	 * the series of snapshot values are +/-2 of the settled value.
-+	 */
-+	rx_good_quality = true;
-+	min_snp = priv->osestat_snapshot[0];
-+	max_snp = priv->osestat_snapshot[0];
-+	for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++) {
-+		if (priv->osestat_snapshot[i] < osestat_mid_low ||
-+		    priv->osestat_snapshot[i] > osestat_mid_high) {
-+			rx_good_quality = false;
-+			break;
-+		}
-+		if (priv->osestat_snapshot[i] < min_snp)
-+			min_snp = priv->osestat_snapshot[i];
-+		if (priv->osestat_snapshot[i] > max_snp)
-+			max_snp = priv->osestat_snapshot[i];
-+	}
-+	if (max_snp - min_snp > 4)
-+		rx_good_quality = false;
-+	if (!rx_good_quality)
-+		return false;
-+
-+	/* The Rx is in good quality if:
-+	 * Bin1, Bin2, and Bin3 are toggling
-+	 * Proceed to BinLong/BinM1 modules
-+	 */
-+	bin1_snapshot_state = get_bin_snapshots_state(priv, EQC_BIN_1);
-+	bin2_snapshot_state = get_bin_snapshots_state(priv, EQC_BIN_2);
-+	bin3_snapshot_state = get_bin_snapshots_state(priv, EQC_BIN_3);
-+
-+	rx_good_quality = (bin1_snapshot_state == BIN_TOGGLE &&
-+			   bin2_snapshot_state == BIN_TOGGLE &&
-+			   bin3_snapshot_state == BIN_TOGGLE);
-+
-+	/* If Rx is in good quality then proceed to BinLong/BinM1 */
-+	if (rx_good_quality)
-+		return true;
-+
-+#ifdef ENABLE_LESS_QUALITY_CONDITION
-+	rx_quality_1 = false;
-+	rx_quality_2 = false;
-+	if (bin1_snapshot_state == BIN_TOGGLE) {
-+		if (bin2_snapshot_state == BIN_EARLY &&
-+		    bin3_snapshot_state == BIN_LATE) {
-+			/* check if GainMF is stuck at max_eq_gain */
-+			rx_quality_1 = true;
-+			for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++) {
-+				if (priv->gain_mf_snapshot[i] != max_eq_gain) {
-+					rx_quality_1 = false;
-+					break;
-+				}
-+			}
-+		}
-+		if (bin2_snapshot_state == BIN_LATE &&
-+		    bin3_snapshot_state == BIN_EARLY) {
-+			/* check if GainMF is stuck at min_eq_gain */
-+			rx_quality_2 = true;
-+			for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++) {
-+				if (priv->gain_mf_snapshot[i] != min_eq_gain) {
-+					rx_quality_2 = false;
-+					break;
-+				}
-+			}
-+		}
-+	}
-+
-+	/* If Rx is less quality then proceed to BinLong/BinM1 */
-+	if (rx_quality_1 || rx_quality_2)
-+		return true;
-+#endif
-+
-+#ifdef ENABLE_EVEN_LESS_QUALITY_CONDITION
-+	rx_quality_1 = false;
-+	rx_quality_2 = false;
-+	if (bin1_snapshot_state == BIN_EARLY &&
-+	    bin2_snapshot_state == BIN_LATE) {
-+		/* check if GainHF is stuck at max_eq_gain */
-+		is_ok = true;
-+		for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++) {
-+			if (priv->gain_hf_snapshot[i] != max_eq_gain) {
-+				is_ok = false;
-+				break;
-+			}
-+		}
-+		if (is_ok) {
-+			/* check if GainMF is stuck at min_eq_gain */
-+			is_ok = true;
-+			for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++) {
-+				if (priv->gain_mf_snapshot[i] != min_eq_gain) {
-+					is_ok = false;
-+					break;
-+				}
-+			}
-+			if (is_ok)
-+				rx_quality_1 = true;
-+		}
-+	}
-+	if (bin1_snapshot_state == BIN_LATE &&
-+	    bin2_snapshot_state == BIN_EARLY) {
-+		/* check if GainHF is stuck at min_eq_gain */
-+		is_ok = true;
-+		for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++) {
-+			if (priv->gain_hf_snapshot[i] != min_eq_gain) {
-+				is_ok = false;
-+				break;
-+			}
-+		}
-+		if (is_ok) {
-+			/* check if GainMF is stuck at max_eq_gain */
-+			is_ok = true;
-+			for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++) {
-+				if (priv->gain_mf_snapshot[i] != max_eq_gain) {
-+					is_ok = false;
-+					break;
-+				}
-+			}
-+			if (is_ok)
-+				rx_quality_2 = true;
-+		}
-+	}
-+
-+	/* If Rx is in good quality then proceed to BinLong/BinM1 */
-+	if (rx_quality_1 || rx_quality_2)
-+		return true;
-+#endif
-+
-+#ifdef ENABLE_SEEMINGLY_QUALITY_CONDITION
-+	rx_quality_1 = false;
-+	if (bin1_snapshot_state == BIN_LATE &&
-+	    bin2_snapshot_state == BIN_TOGGLE &&
-+	    bin3_snapshot_state == BIN_TOGGLE) {
-+		/* check if GainHF is stuck at min_eq_gain */
-+		rx_quality_1 = true;
-+		for (i = 0; i < EQ_SNAPSHOTS_SIZE; i++) {
-+			if (priv->gain_hf_snapshot[i] != min_eq_gain) {
-+				rx_quality_1 = false;
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (rx_quality_1)
-+		return true;
-+#endif
-+
-+	return false;
-+}
-+
-+static bool is_eq_done(struct eq_data_priv *priv)
-+{
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return false;
-+	}
-+
-+	return (priv->bin_m1_stop && priv->bin_long_stop);
-+}
-+
-+/* BEE 3 TAP Algorithm API */
-+
-+/* Create BEE 3-TAP Equalization Algorithm */
-+static struct eq_data_priv *create(struct eq_setup_info setup)
-+{
-+	struct eq_data_priv *bee_data;
-+
-+	bee_data = devm_kzalloc(&setup.bpphy->mdio.dev,
-+				sizeof(*bee_data), GFP_KERNEL);
-+	if (!bee_data)
-+		return NULL;
-+
-+	/* initialize algorithm setup data */
-+	bee_data->eq_setup = setup;
-+
-+	/* initialize specific BEE algorithm data */
-+	bee_data->bin_m1_state = BIN_INVALID;
-+	bee_data->bin_long_state = BIN_INVALID;
-+	bee_data->prev_bin_m1_state = BIN_INVALID;
-+	bee_data->prev_bin_long_state = BIN_INVALID;
-+	bee_data->m1_min_max_cnt = 0;
-+	bee_data->long_min_max_cnt = 0;
-+	bee_data->bin_m1_stop = false;
-+	bee_data->bin_long_stop = false;
-+	bee_data->ld_update = 0;
-+
-+	return bee_data;
-+}
-+
-+static void destroy(struct eq_data_priv *priv)
-+{
-+	if (!priv) {
-+		pr_err("%s: NULL private data\n", ALGORITHM_NAME);
-+		return;
-+	}
-+
-+	kfree(priv);
-+}
-+
-+static const struct equalization_algorithm eq_alg = {
-+	.name = ALGORITHM_NAME,
-+	.descr = ALGORITHM_DESCR,
-+	.version = ALGORITHM_VERSION,
-+	.use_local_tx_training = true,
-+	.use_remote_tx_training = true,
-+	.ops = {
-+		.create = create,
-+		.destroy = destroy,
-+		.is_rx_ok = is_rx_ok,
-+		.is_eq_done = is_eq_done,
-+		.collect_statistics = collect_bit_edge_statistics,
-+		.generate_request = generate_3taps_request,
-+		.process_bad_state = process_bad_state,
-+		.dump_algorithm_context = NULL,
-+	}
-+};
-+
-+static const char * const alg_keys[] = {
-+	"bee",
-+	"BEE",
-+};
-+
-+static int __init bee_init(void)
-+{
-+	int i, err;
-+
-+	pr_info("%s: %s algorithm version %s\n",
-+		ALGORITHM_NAME, ALGORITHM_DESCR, ALGORITHM_VERSION);
-+
-+	/* register BEE algorithm: */
-+	for (i = 0; i < ARRAY_SIZE(alg_keys); i++) {
-+		err = backplane_eq_register(alg_keys[i], &eq_alg);
-+		if (err) {
-+			pr_err("%s: '%s' equalization algorithm registration failed\n",
-+			       ALGORITHM_NAME, alg_keys[i]);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit bee_exit(void)
-+{
-+	int i;
-+
-+	/* unregister BEE algorithm: */
-+	for (i = 0; i < ARRAY_SIZE(alg_keys); i++)
-+		backplane_eq_unregister(alg_keys[i]);
-+
-+	pr_info("%s: %s algorithm version %s unloaded\n",
-+		ALGORITHM_NAME, ALGORITHM_DESCR, ALGORITHM_VERSION);
-+}
-+
-+module_init(bee_init);
-+module_exit(bee_exit);
-+
-+MODULE_DESCRIPTION("Bit Edge Equalization Algorithm");
-+MODULE_AUTHOR("Florinel Iordache <florinel.iordache@nxp.com>");
-+MODULE_LICENSE("Dual BSD/GPL");
--- 
-1.9.1
+Isn't the ddrc_opp_table missing in these additions to the DT? That's
+what I want to scale after all.
 
+If I want to keep calling the "request", now icc_set_bw(), in nwl-dsi:
+I'd add an "interconnects" property to the node, but what would be my
+interconnect master? i.e.: interconnects = <&noc master? &noc
+IMX8MQ_ICS_DRAM>; At least it's not obvious to me from
+interconnect/imx/imx8mq.c
+
+the interconnect framework seems to be powerful indeed, but I still need
+to fully wrap my head around it.
+
+thanks for the help so far,
+
+                               martin
+
+
+> Changes since RFCv6:
+> * Replace scalable-nodes stuff with just a fsl,ddrc property. Future
+> scalable nodes can be added as additional phandles on the NOC
+> * Allow building interconnect drivers as modules
+> * Handle icc_provider_del errors in imx_icc_unregister (like EBUSY).
+> * Rename imx-devfreq to imx-bus, similar to exynos-bus
+> * Explain why imx bus clock enabling is not required
+> * All dependencies accepted (some time ago).
+> Link: https://patchwork.kernel.org/cover/11244421/
+> 
+> Changes since RFCv5:
+> * Replace scanning for interconnect-node-id with explicit
+> scalable-nodes/scalable-node-ids property on NoC.
+> * Now passes make `dtbs_check`
+> * Remove struct imx_icc_provider
+> * Switch to of_icc_xlate_onecell
+> * Use of_find_device_by_node to fetch QoS target, this causes fewer probe
+> deferrals, removes dependency on devfreq API and even allows reloading ddrc
+> module at runtime
+> * Add imx_icc_node_destroy helper
+> * Remove 0/1 on DEFINE_BUS_SLAVE/MASTER which created spurious links
+> Link: https://patchwork.kernel.org/cover/11222015/
+> 
+> Changes since RFCv4:
+> * Drop icc proxy nonsense
+> * Make devfreq driver for NOC probe the ICC driver if
+> #interconnect-cells is present
+> * Move NOC support to interconnect series and rename the node in DT
+> * Add support for all chips at once, differences are not intereseting
+> and there is more community interest for 8mq than 8mm.
+> Link: https://patchwork.kernel.org/cover/11111865/
+> 
+> Changes since RFCv3:
+> * Remove the virtual "icc" node and add devfreq nodes as proxy providers
+> * Fix build on 32-bit arm (reported by kbuilt test robot)
+> * Remove ARCH_MXC_ARM64 (never existed in upstream)
+> * Remove _numlinks, calculate instead
+> * Replace __BUSFREQ_H header guard
+> * Improve commit message and comment spelling
+> * Fix checkpatch issues
+> Link to RFCv3: https://patchwork.kernel.org/cover/11078671/
+> 
+> Changes since RFCv2 and initial work by Alexandre Bailon:
+> * Relying on devfreq and dev_pm_qos instead of CLK
+> * No more "platform opp" stuff
+> * No more special suspend handling: use suspend-opp on devfreq instead
+> * Replace all mentions of "busfreq" with "interconnect"
+> Link to v2: https://patchwork.kernel.org/cover/11021563/
+> 
+> Leonard Crestez (8):
+>   dt-bindings: interconnect: Add bindings for imx8m noc
+>   PM / devfreq: Add generic imx bus scaling driver
+>   PM / devfreq: imx: Register interconnect device
+>   interconnect: Add imx core driver
+>   interconnect: imx: Add platform driver for imx8mm
+>   interconnect: imx: Add platform driver for imx8mq
+>   interconnect: imx: Add platform driver for imx8mn
+>   arm64: dts: imx8m: Add NOC nodes
+> 
+>  .../bindings/interconnect/fsl,imx8m-noc.yaml  | 138 ++++++++
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi     |  24 ++
+>  arch/arm64/boot/dts/freescale/imx8mn.dtsi     |  24 ++
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  24 ++
+>  drivers/devfreq/Kconfig                       |   9 +
+>  drivers/devfreq/Makefile                      |   1 +
+>  drivers/devfreq/imx-bus.c                     | 181 +++++++++++
+>  drivers/interconnect/Kconfig                  |   1 +
+>  drivers/interconnect/Makefile                 |   1 +
+>  drivers/interconnect/imx/Kconfig              |  17 +
+>  drivers/interconnect/imx/Makefile             |   9 +
+>  drivers/interconnect/imx/imx.c                | 298 ++++++++++++++++++
+>  drivers/interconnect/imx/imx.h                |  62 ++++
+>  drivers/interconnect/imx/imx8mm.c             | 108 +++++++
+>  drivers/interconnect/imx/imx8mn.c             |  97 ++++++
+>  drivers/interconnect/imx/imx8mq.c             | 106 +++++++
+>  include/dt-bindings/interconnect/imx8mm.h     |  49 +++
+>  include/dt-bindings/interconnect/imx8mn.h     |  41 +++
+>  include/dt-bindings/interconnect/imx8mq.h     |  48 +++
+>  19 files changed, 1238 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.yaml
+>  create mode 100644 drivers/devfreq/imx-bus.c
+>  create mode 100644 drivers/interconnect/imx/Kconfig
+>  create mode 100644 drivers/interconnect/imx/Makefile
+>  create mode 100644 drivers/interconnect/imx/imx.c
+>  create mode 100644 drivers/interconnect/imx/imx.h
+>  create mode 100644 drivers/interconnect/imx/imx8mm.c
+>  create mode 100644 drivers/interconnect/imx/imx8mn.c
+>  create mode 100644 drivers/interconnect/imx/imx8mq.c
+>  create mode 100644 include/dt-bindings/interconnect/imx8mm.h
+>  create mode 100644 include/dt-bindings/interconnect/imx8mn.h
+>  create mode 100644 include/dt-bindings/interconnect/imx8mq.h
+> 
