@@ -6,40 +6,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7698C2D0ED
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBFEC2D0E8
 	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 22:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB9BA20838
+	by mail.kernel.org (Postfix) with ESMTP id 7F3D520838
 	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 22:03:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgCZWDS (ORCPT
+        id S1727689AbgCZWDR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:03:18 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41261 "EHLO
+        Thu, 26 Mar 2020 18:03:17 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39323 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbgCZWDA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 18:03:00 -0400
+        with ESMTP id S1727685AbgCZWDB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 18:03:01 -0400
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <afa@pengutronix.de>)
-        id 1jHaaU-0006I6-G6; Thu, 26 Mar 2020 23:02:54 +0100
+        id 1jHaaP-0006Di-MO; Thu, 26 Mar 2020 23:02:49 +0100
 Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <afa@pengutronix.de>)
-        id 1jHaaU-0008VT-3T; Thu, 26 Mar 2020 23:02:54 +0100
+        id 1jHaaO-000897-RI; Thu, 26 Mar 2020 23:02:48 +0100
 From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
 To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     kernel@pengutronix.de, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     kernel@pengutronix.de, Ahmad Fatoum <a.fatoum@pengutronix.de>,
         linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/8] dt-bindings: arm: stm32: document lxa,stm32mp157c-mc1 compatible
-Date:   Thu, 26 Mar 2020 23:02:12 +0100
-Message-Id: <20200326220213.28632-8-a.fatoum@pengutronix.de>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/8] ARM: dts: stm32: preset stm32mp15x video #address- and #size-cells
+Date:   Thu, 26 Mar 2020 23:02:06 +0100
+Message-Id: <20200326220213.28632-2-a.fatoum@pengutronix.de>
 X-Mailer: git-send-email 2.26.0.rc2
 In-Reply-To: <20200326220213.28632-1-a.fatoum@pengutronix.de>
 References: <20200326220213.28632-1-a.fatoum@pengutronix.de>
@@ -54,30 +53,54 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the STM32MP157 based Linux Automation MC-1 device tree
-compatible.
+The cell count for address and size is defined by the binding and not
+something a board would change. Avoid each board adding this
+boilerplate by having the cell size specification in the SoC DTSI.
 
-Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 ---
- v1 -> v2:
- - Added Rob's Ack
+v1 -> v2:
+  - New Patch
 ---
- Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/stm32mp151.dtsi | 5 +++++
+ arch/arm/boot/dts/stm32mp157.dtsi | 7 +++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-index 1fcf306bd2d1..71ea3f04ab9c 100644
---- a/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-+++ b/Documentation/devicetree/bindings/arm/stm32/stm32.yaml
-@@ -38,6 +38,7 @@ properties:
-       - items:
-           - enum:
-               - arrow,stm32mp157a-avenger96 # Avenger96
-+              - lxa,stm32mp157c-mc1
-               - st,stm32mp157c-ed1
-               - st,stm32mp157a-dk1
-               - st,stm32mp157c-dk2
+diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
+index 3ea05ba48215..e5709136a4ca 100644
+--- a/arch/arm/boot/dts/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -1423,6 +1423,11 @@ ltdc: display-controller@5a001000 {
+ 			clock-names = "lcd";
+ 			resets = <&rcc LTDC_R>;
+ 			status = "disabled";
++
++			port {
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
+ 		};
+ 
+ 		iwdg2: watchdog@5a002000 {
+diff --git a/arch/arm/boot/dts/stm32mp157.dtsi b/arch/arm/boot/dts/stm32mp157.dtsi
+index 5e733cd16ff9..54e73ccea446 100644
+--- a/arch/arm/boot/dts/stm32mp157.dtsi
++++ b/arch/arm/boot/dts/stm32mp157.dtsi
+@@ -24,7 +24,14 @@ dsi: dsi@5a000000 {
+ 			clock-names = "pclk", "ref", "px_clk";
+ 			resets = <&rcc DSI_R>;
+ 			reset-names = "apb";
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
+ 		};
+ 	};
+ };
 -- 
 2.26.0.rc2
 
