@@ -2,171 +2,188 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE056C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78965C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9487820714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585251672;
-	bh=Ess4P7rTXsdNg1EcCIx+Mxp+xHNnRi779J8+YVPtKj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dNI6X1nj/lgLUZGJABEAt7RLc4RLaLFjnQ5DIM8LvdqggWgkwOCwpvtE3ALsCDxh3
-	 +zyMNRzW/MPQBj+xVJ5k/G04dm/X61oCNXqSFtibR3iBIk2fHfq0NYzhgGge/1eCxv
-	 br9HPgH6gCO1cv+GzR9yoMNw445vuZcREhk76qFA=
+	by mail.kernel.org (Postfix) with ESMTP id 4A30C20714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:43:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KguwooGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCZTlJ (ORCPT
+        id S1727541AbgCZTnI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:41:09 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34820 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZTlI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 15:41:08 -0400
-Received: by mail-io1-f68.google.com with SMTP id o3so1806148ioh.2;
-        Thu, 26 Mar 2020 12:41:07 -0700 (PDT)
+        Thu, 26 Mar 2020 15:43:08 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38627 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgCZTnI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 15:43:08 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c21so2659974pfo.5
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 12:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UGAInaue7GSFpt799maDJX4PnvgR4YSaBrw6mv4yOuk=;
+        b=KguwooGsTz40f9cvcDxM2GNej0d6GxRAuvL6H5rS2U2v7SuftTKbyWwCoyrbVU3Ran
+         VyD2YsLLg4xfZTRozdTd/JY90atjqoOpyPsEJjDzEgufF+wEMTpcE9MagelT/9cM8rva
+         QrE54uxvU0eXm4LkVkrQl5WgpIwRwN69ZnuS/VeB9cIZ12+TL/6uHMUaz5OfwZH7g6gX
+         YxxUMnphBeI2VAuIg77Dt7Xx2x+goewYVKpeBqxiX70yfRkUTuFEx1Bkcvfl4H8KhpYo
+         8xpDJePD6vF39IcomlmlCm4/vnfi0aW9XyeDzV0/RiS+yCNpFXy9NGbVAaLleQ8A+QFj
+         zhbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Z5GoQwOlXq34jMbrNfddtNsm4YbfUIB3Klcgi2n0p8=;
-        b=Zaa5swK5BdP+vNYvnOClHhS8yoFBYx8uJQ1uH/dQdCLYouS7dm1mkZ+pYE5sv7FmrX
-         8YdYDCKUOTuf+q0cJH7abTPaMCdg0UMTAj1/5YgQfaNhIFVaMCDv6L5mX547JvjDnfkq
-         IY65viHf+SpLVETQWVMdDHHdYs3JlYa7oZWIuCBVO+R1ZQkBDSb/tQykrm+mVxj6HO+Z
-         uY9SyBYbZGuScWtzJ1G6LwWjWvPyPBVgm+a/Ui+MIwcsKDmXZcoBiLxDzjgo7CmWgU26
-         MtHEQ74RmA5QU2rHAlkeUdJPOL99kIjNnCrGPS+d15UdcMMywVIQmG4sHBLT2YgL+Oj/
-         Tzvw==
-X-Gm-Message-State: ANhLgQ3uQRBN4OhlmgdSwqaLACzlnG2GX+Sccbt+cGzjDvTo1WlvmrUp
-        co4GWSewtG/IeTNL0+1dKw==
-X-Google-Smtp-Source: ADFU+vtj8JYvbn4eVg+I4HxwGh9ItJrI3wS4cOSL0jWkNvzGNgqbXajFrLmp6mGnIiVyKBZuytot6A==
-X-Received: by 2002:a02:40c9:: with SMTP id n192mr7472911jaa.91.1585251666531;
-        Thu, 26 Mar 2020 12:41:06 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id j84sm1106640ili.65.2020.03.26.12.41.04
+        bh=UGAInaue7GSFpt799maDJX4PnvgR4YSaBrw6mv4yOuk=;
+        b=Fi/44PNrI1ndhJSskRfCNQ+Jg/NdSdTXxEDn+B+9stO/3TtY4+XWpvcyq16X2mOLIu
+         hXzyzI/BehcxCjdqTdg84vAZ5euS50yIeKbxYPPznBP4zx+UoC1PPAc0F0WrgEsII1TD
+         aX8QH600ehfJrdni3VHI7WQk8x7Yo2IiMCP6KQQIyEQe0nP/pA9x8MTEAnKgr0J8BpGL
+         VNMcOW6OtWhtZPJHvOxJ1np22JJMLEwmUXKQGm7Z4cMIQmqvwetV8CdubF4EzfAdVTDh
+         Aeh50CdWYuwSxaJre+I6L6MOtZZebYBCoAxmsyHup0SK2YLtf0VdEBrKQSdMvVREPYTM
+         go0g==
+X-Gm-Message-State: ANhLgQ3BvrSS4NDm+IsI+U7d/09KJiMMXwueJfGxnfYtBkyAkZBmbs2K
+        C/vylJH9npxrImvmGSmFHVFO0Q==
+X-Google-Smtp-Source: ADFU+vv9sWxbnpeMRWqiM+cTYJKGzMXvNJsp7SDb2PVAVwCDDAyVZTC6Mxm+NU97kEdmTimNfqkYPw==
+X-Received: by 2002:a63:2e03:: with SMTP id u3mr9972910pgu.205.1585251787183;
+        Thu, 26 Mar 2020 12:43:07 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 132sm2321984pfc.183.2020.03.26.12.43.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 12:41:05 -0700 (PDT)
-Received: (nullmailer pid 12454 invoked by uid 1000);
-        Thu, 26 Mar 2020 19:41:04 -0000
-Date:   Thu, 26 Mar 2020 13:41:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: add device tree binding for Arm
- CryptoCell trng engine
-Message-ID: <20200326194104.GA4118@bogus>
-References: <1585114871-6912-1-git-send-email-hadar.gat@arm.com>
- <1585114871-6912-2-git-send-email-hadar.gat@arm.com>
+        Thu, 26 Mar 2020 12:43:06 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 12:43:04 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] remoteproc: use a local copy for the name field
+Message-ID: <20200326194304.GB59436@builder>
+References: <20200324201819.23095-1-s-anna@ti.com>
+ <20200324201819.23095-3-s-anna@ti.com>
+ <20200326054234.GA59436@builder>
+ <2089a4a8-d5e4-e4f5-e7bc-7d053f654204@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585114871-6912-2-git-send-email-hadar.gat@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2089a4a8-d5e4-e4f5-e7bc-7d053f654204@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 07:41:09AM +0200, Hadar Gat wrote:
-> The Arm CryptoCell is a hardware security engine. This patch adds DT
-> bindings for its TRNG (True Random Number Generator) engine.
+On Thu 26 Mar 07:01 PDT 2020, Suman Anna wrote:
+
+> Hi Bjorn,
 > 
-> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
-> ---
->  .../devicetree/bindings/rng/arm-cctrng.yaml        | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> On 3/26/20 12:42 AM, Bjorn Andersson wrote:
+> > On Tue 24 Mar 13:18 PDT 2020, Suman Anna wrote:
+> > 
+> >> The current name field used in the remoteproc structure is simply
+> >> a pointer to a name field supplied during the rproc_alloc() call.
+> >> The pointer passed in by remoteproc drivers during registration is
+> >> typically a dev_name pointer, but it is possible that the pointer
+> >> will no longer remain valid if the devices themselves were created
+> >> at runtime like in the case of of_platform_populate(), and were
+> >> deleted upon any failures within the respective remoteproc driver
+> >> probe function.
+> >>
+> >> So, allocate and maintain a local copy for this name field to
+> >> keep it agnostic of the logic used in the remoteproc drivers.
+> >>
+> >> Signed-off-by: Suman Anna <s-anna@ti.com>
+> >> ---
+> >>  drivers/remoteproc/remoteproc_core.c | 9 ++++++++-
+> >>  include/linux/remoteproc.h           | 2 +-
+> >>  2 files changed, 9 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> >> index aca6d022901a..6e0b91fa6f11 100644
+> >> --- a/drivers/remoteproc/remoteproc_core.c
+> >> +++ b/drivers/remoteproc/remoteproc_core.c
+> >> @@ -1989,6 +1989,7 @@ static void rproc_type_release(struct device *dev)
+> >>  
+> >>  	kfree(rproc->firmware);
+> >>  	kfree(rproc->ops);
+> >> +	kfree(rproc->name);
+> >>  	kfree(rproc);
+> >>  }
+> >>  
+> >> @@ -2061,7 +2062,13 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+> >>  	}
+> >>  
+> >>  	rproc->firmware = p;
+> >> -	rproc->name = name;
+> >> +	rproc->name = kstrdup(name, GFP_KERNEL);
+> > 
+> > Let's use kstrdup_const() instead here (and kfree_const() instead of
+> > kfree()), so that the cases where we are passed a constant we won't
+> > create a duplicate on the heap.
+> > 
+> > And the "name" in struct rproc can remain const.
 > 
-> diff --git a/Documentation/devicetree/bindings/rng/arm-cctrng.yaml b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> new file mode 100644
-> index 0000000..7f70e4b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rng/arm-cctrng.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Arm TrustZone CryptoCell TRNG engine
-> +
-> +maintainers:
-> +  - Hadar Gat <hadar.gat@arm.com>
-> +
-> +description: |+
-> +  Arm TrustZone CryptoCell TRNG (True Random Number Generator) engine.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - arm,cryptocell-713-trng
-> +      - arm,cryptocell-703-trng
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  arm,rosc-ratio:
-> +    description:
-> +      Arm TrustZone CryptoCell TRNG engine has 4 ring oscillators.
-> +      Sampling ratio values for these 4 ring oscillators. (from calibration)
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - items:
-> +          minItems: 4
-> +          maxItems: 4
+> Agreed, that's better functions to use for this.
+> 
+> > 
+> >> +	if (!rproc->name) {
+> >> +		kfree(p);
+> >> +		kfree(rproc->ops);
+> >> +		kfree(rproc);
+> >> +		return NULL;
+> > 
+> > Perhaps we can rearrange the hunks here slightly and get to a point
+> > where we can rely on the release function earlier?
+> 
+> Not sure I understand. I don't see any release function, all failure
+> paths in rproc_alloc() directly unwind the previous operations. You mean
+> move this to before the alloc for rproc structure, something similar to
+> what we are doing with firmware?
+> 
 
-Aren't there some constraints on the values?
+Look at the failure for ida_simple_get(), there we're past the setup of
+rproc->dev.type, so the rproc_type->release function will be invoked as
+we call put_device().
 
-If not, then just this is enough:
+So if you move the initialization of rproc->dev up right after the
+allocation of rproc we should be able to rely on that to clean up all
+these for us.
 
-- maxItems: 4
+Regards,
+Bjorn
 
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - reg
-> +  - arm,rosc-ratio
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    arm_cctrng: rng@60000000 {
-> +        compatible = "arm,cryptocell-713-trng";
-> +        interrupts = <0 29 4>;
-> +        reg = <0x60000000 0x10000>;
-> +        arm,rosc-ratio = <5000 1000 500 0>;
-> +    };
-> -- 
-> 2.7.4
+> regards
+> Suman
+> 
+> 
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> >> +	}
+> >>  	rproc->priv = &rproc[1];
+> >>  	rproc->auto_boot = true;
+> >>  	rproc->elf_class = ELFCLASS32;
+> >> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> >> index ddce7a7775d1..77788a4bb94e 100644
+> >> --- a/include/linux/remoteproc.h
+> >> +++ b/include/linux/remoteproc.h
+> >> @@ -490,7 +490,7 @@ struct rproc_dump_segment {
+> >>  struct rproc {
+> >>  	struct list_head node;
+> >>  	struct iommu_domain *domain;
+> >> -	const char *name;
+> >> +	char *name;
+> >>  	char *firmware;
+> >>  	void *priv;
+> >>  	struct rproc_ops *ops;
+> >> -- 
+> >> 2.23.0
+> >>
 > 
