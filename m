@@ -2,243 +2,341 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D89C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2C2C2D0E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 22:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF1120719
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 21:56:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="oUaa4kKp"
+	by mail.kernel.org (Postfix) with ESMTP id AA19B2078C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 22:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgCZV4I (ORCPT
+        id S1727652AbgCZWC4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:56:08 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34025 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgCZV4I (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 17:56:08 -0400
-Received: by mail-ot1-f67.google.com with SMTP id j16so7689660otl.1
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 14:56:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fVDzJ6BDEWFzO6Zb5IeGhEXG4L3sc+hrhgcx0i0PDMc=;
-        b=oUaa4kKpgOh9V1+IpaniVvK9yJzz4NLG4abJw0B5W05RL5HKAw+RPj9HZSG1LDDo7o
-         xNSfpAIETfqMHJZJ2kZ/CmDopIiWyBUGKtHgBR63U8l1FoAD3J+z3ai7krCy1xFwnqZF
-         CLk6cnqkm4ZR9MJyLruD+dTTeGerXRh1epfU1aiZfPAKyrb8jv3L+db6Amf+rr5PN0vO
-         KSkimNNpjs/31eJL7+EnW1Si+tG3DjjkCWr5pJz19L2h5DjrQPVdLqeoYNE4ZI4pYkwe
-         g04owtoGOG/7cEjU64xMJgZ0jh9+MNk5YnHf30L3vzEZ0zedjjMiIGHAY+bubla2n5sU
-         5zvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fVDzJ6BDEWFzO6Zb5IeGhEXG4L3sc+hrhgcx0i0PDMc=;
-        b=DH1qWtL9YK9CRSb2qTGAbTcethaY8zabvqu12Fmio4UUS8PtuhyPv4yvUQe7iG1IBh
-         nJkx/nQ0y9d8uOejdLi3DpimwTAfHKDRLWD8RmFJqHNCph7is+VqACcD6pAIc38mmSTz
-         IMK5r7Az/BzStIGEKq7d0cdvpX6zPEbSMyAklJXFCgGTtBext0+ENU9jPpVnZAyrt649
-         RbeIrJYQsJPy/x+/d8sn7IDKVBm6G9dMB4amooZgBzAstkcSBI5FK8sRkwr4fgvFmz8C
-         w/a55Cc8BBSqEQvQHIMM6UYB6tw4PDtxlag7mNIWu+bAwXsJr5/9/TtMuM6r8CcyTTRB
-         S/eQ==
-X-Gm-Message-State: ANhLgQ261NXmzb+tvnGQBwbzEicwOLCg6KSJoFYnlmfeNE5r8y0v9ArI
-        Gi6BjqPUgtC7BeppMBxYoU85wS6Q4ZrcfkvKlHOTEg==
-X-Google-Smtp-Source: ADFU+vsWTvLX1x18YifbVlDZbfMowYVSThseSulGrqAUkQatpGn5d7UzcL2X3gq8FAmUJ8EfBv414sF7tqsi/FUvBUc=
-X-Received: by 2002:a4a:c184:: with SMTP id w4mr6815873oop.39.1585259766176;
- Thu, 26 Mar 2020 14:56:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584736550-7520-1-git-send-email-tharvey@gateworks.com>
- <1584736550-7520-3-git-send-email-tharvey@gateworks.com> <20200326101702.GD603801@dell>
-In-Reply-To: <20200326101702.GD603801@dell>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Thu, 26 Mar 2020 14:55:54 -0700
-Message-ID: <CAJ+vNU0pPW3n6dnUH4n_3ZtmwGYdtc6gwUkg+aWJYPF7bFUXzQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] mfd: add Gateworks System Controller core driver
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
+        Thu, 26 Mar 2020 18:02:56 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46441 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727606AbgCZWC4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 18:02:56 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1jHaaR-0006Em-DN; Thu, 26 Mar 2020 23:02:51 +0100
+Received: from afa by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <afa@pengutronix.de>)
+        id 1jHaaR-0008BD-2W; Thu, 26 Mar 2020 23:02:51 +0100
+From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Robert Jones <rjones@gateworks.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     kernel@pengutronix.de, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 4/8] ARM: dts: stm32: use uniform label names for sleep pinctrl phandles
+Date:   Thu, 26 Mar 2020 23:02:08 +0100
+Message-Id: <20200326220213.28632-4-a.fatoum@pengutronix.de>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200326220213.28632-1-a.fatoum@pengutronix.de>
+References: <20200326220213.28632-1-a.fatoum@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: afa@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 3:16 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Fri, 20 Mar 2020, Tim Harvey wrote:
->
-> > The Gateworks System Controller (GSC) is an I2C slave controller
-> > implemented with an MSP430 micro-controller whose firmware embeds the
-> > following features:
-> >  - I/O expander (16 GPIO's) using PCA955x protocol
-> >  - Real Time Clock using DS1672 protocol
-> >  - User EEPROM using AT24 protocol
-> >  - HWMON using custom protocol
-> >  - Interrupt controller with tamper detect, user pushbotton
-> >  - Watchdog controller capable of full board power-cycle
-> >  - Power Control capable of full board power-cycle
-> >
-<snip>
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 4209008..d84725a 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -407,6 +407,16 @@ config MFD_EXYNOS_LPASS
-> >         Select this option to enable support for Samsung Exynos Low Power
-> >         Audio Subsystem.
-> >
-> > +config MFD_GATEWORKS_GSC
-> > +     tristate "Gateworks System Controller"
-> > +     depends on (I2C && OF)
-> > +     select MFD_CORE
-> > +     select REGMAP_I2C
-> > +     select REGMAP_IRQ
-> > +     help
-> > +       Enable support for the Gateworks System Controller found
-> > +       on Gateworks Single Board Computers.
->
-> Please describe which sub-devices are attached.
+Some labels follow the *_sleep_pins_* naming scheme, but some also use
+*_pins_sleep_*. Because most labels use the former and for uniformity
+with variants like sdmmc1_b4_pins_a and sdmmc1_dir_pins_a, adopt the
+*_sleep_pins_* scheme throughout.
 
-Hi Lee, thanks for the review!
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+---
+v1 -> v2:
+  - New Patch
+---
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi     | 28 ++++++++++----------
+ arch/arm/boot/dts/stm32mp157a-avenger96.dts  |  2 +-
+ arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts |  4 +--
+ arch/arm/boot/dts/stm32mp157c-ed1.dts        |  2 +-
+ arch/arm/boot/dts/stm32mp157c-ev1.dts        |  6 ++---
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi       | 12 ++++-----
+ 6 files changed, 27 insertions(+), 27 deletions(-)
 
-I will add more description for v8:
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 73c07f0dfad2..1971a9603ba6 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -37,7 +37,7 @@ pins {
+ 		};
+ 	};
+ 
+-	cec_pins_sleep_a: cec-sleep-0 {
++	cec_sleep_pins_a: cec-sleep-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('A', 15, ANALOG)>; /* HDMI_CEC */
+ 		};
+@@ -52,7 +52,7 @@ pins {
+ 		};
+ 	};
+ 
+-	cec_pins_sleep_b: cec-sleep-1 {
++	cec_sleep_pins_b: cec-sleep-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('B', 6, ANALOG)>; /* HDMI_CEC */
+ 		};
+@@ -142,7 +142,7 @@ pins3 {
+ 		};
+ 	};
+ 
+-	ethernet0_rgmii_pins_sleep_a: rgmii-sleep-0 {
++	ethernet0_rgmii_sleep_pins_a: rgmii-sleep-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('G', 5, ANALOG)>, /* ETH_RGMII_CLK125 */
+ 				 <STM32_PINMUX('G', 4, ANALOG)>, /* ETH_RGMII_GTX_CLK */
+@@ -182,7 +182,7 @@ pins2 {
+ 		};
+ 	};
+ 
+-	ethernet0_rmii_pins_sleep_a: rmii-sleep-0 {
++	ethernet0_rmii_sleep_pins_a: rmii-sleep-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('G', 13, ANALOG)>, /* ETH1_RMII_TXD0 */
+ 				 <STM32_PINMUX('G', 14, ANALOG)>, /* ETH1_RMII_TXD1 */
+@@ -250,7 +250,7 @@ pins {
+ 		};
+ 	};
+ 
+-	i2c1_pins_sleep_a: i2c1-1 {
++	i2c1_sleep_pins_a: i2c1-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('D', 12, ANALOG)>, /* I2C1_SCL */
+ 				 <STM32_PINMUX('F', 15, ANALOG)>; /* I2C1_SDA */
+@@ -267,7 +267,7 @@ pins {
+ 		};
+ 	};
+ 
+-	i2c1_pins_sleep_b: i2c1-3 {
++	i2c1_sleep_pins_b: i2c1-3 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('F', 14, ANALOG)>, /* I2C1_SCL */
+ 				 <STM32_PINMUX('F', 15, ANALOG)>; /* I2C1_SDA */
+@@ -284,7 +284,7 @@ pins {
+ 		};
+ 	};
+ 
+-	i2c2_pins_sleep_a: i2c2-1 {
++	i2c2_sleep_pins_a: i2c2-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('H', 4, ANALOG)>, /* I2C2_SCL */
+ 				 <STM32_PINMUX('H', 5, ANALOG)>; /* I2C2_SDA */
+@@ -300,7 +300,7 @@ pins {
+ 		};
+ 	};
+ 
+-	i2c2_pins_sleep_b1: i2c2-3 {
++	i2c2_sleep_pins_b1: i2c2-3 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('H', 5, ANALOG)>; /* I2C2_SDA */
+ 		};
+@@ -316,7 +316,7 @@ pins {
+ 		};
+ 	};
+ 
+-	i2c5_pins_sleep_a: i2c5-1 {
++	i2c5_sleep_pins_a: i2c5-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('A', 11, ANALOG)>, /* I2C5_SCL */
+ 				 <STM32_PINMUX('A', 12, ANALOG)>; /* I2C5_SDA */
+@@ -335,7 +335,7 @@ pins {
+ 		};
+ 	};
+ 
+-	i2s2_pins_sleep_a: i2s2-1 {
++	i2s2_sleep_pins_a: i2s2-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('I', 3, ANALOG)>, /* I2S2_SDO */
+ 				 <STM32_PINMUX('B', 9, ANALOG)>, /* I2S2_WS */
+@@ -379,7 +379,7 @@ pins {
+ 		};
+ 	};
+ 
+-	ltdc_pins_sleep_a: ltdc-a-1 {
++	ltdc_sleep_pins_a: ltdc-a-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('G',  7, ANALOG)>, /* LCD_CLK */
+ 				 <STM32_PINMUX('I', 10, ANALOG)>, /* LCD_HSYNC */
+@@ -448,7 +448,7 @@ pins {
+ 		};
+ 	};
+ 
+-	ltdc_pins_sleep_b: ltdc-b-1 {
++	ltdc_sleep_pins_b: ltdc-b-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('I', 14, ANALOG)>, /* LCD_CLK */
+ 				 <STM32_PINMUX('I', 12, ANALOG)>, /* LCD_HSYNC */
+@@ -1145,7 +1145,7 @@ pins {
+ 		};
+ 	};
+ 
+-	i2c2_pins_sleep_b2: i2c2-1 {
++	i2c2_sleep_pins_b2: i2c2-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('Z', 0, ANALOG)>; /* I2C2_SCL */
+ 		};
+@@ -1161,7 +1161,7 @@ pins {
+ 		};
+ 	};
+ 
+-	i2c4_pins_sleep_a: i2c4-1 {
++	i2c4_sleep_pins_a: i2c4-1 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('Z', 4, ANALOG)>, /* I2C4_SCL */
+ 				 <STM32_PINMUX('Z', 5, ANALOG)>; /* I2C4_SDA */
+diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+index 425175f7d83c..aba38950f2e9 100644
+--- a/arch/arm/boot/dts/stm32mp157a-avenger96.dts
++++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
+@@ -82,7 +82,7 @@ led6 {
+ &ethernet0 {
+ 	status = "okay";
+ 	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
+-	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
++	pinctrl-1 = <&ethernet0_rgmii_sleep_pins_a>;
+ 	pinctrl-names = "default", "sleep";
+ 	phy-mode = "rgmii";
+ 	max-speed = <1000>;
+diff --git a/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts b/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts
+index af99e132e1b1..06ea8c1a7c56 100644
+--- a/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts
++++ b/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts
+@@ -77,7 +77,7 @@ &cec {
+ &ethernet0 {
+ 	status = "okay";
+ 	pinctrl-0 = <&ethernet0_rmii_pins_a>;
+-	pinctrl-1 = <&ethernet0_rmii_pins_sleep_a>;
++	pinctrl-1 = <&ethernet0_rmii_sleep_pins_a>;
+ 	pinctrl-names = "default", "sleep";
+ 	phy-mode = "rmii";
+ 	max-speed = <100>;
+@@ -147,7 +147,7 @@ polytouch@38 {
+ &ltdc {
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&ltdc_pins_b>;
+-	pinctrl-1 = <&ltdc_pins_sleep_b>;
++	pinctrl-1 = <&ltdc_sleep_pins_b>;
+ 	status = "okay";
+ 
+ 	port {
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index e9aad3e101ac..0aaae0df5b07 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -131,7 +131,7 @@ &gpu {
+ &i2c4 {
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&i2c4_pins_a>;
+-	pinctrl-1 = <&i2c4_pins_sleep_a>;
++	pinctrl-1 = <&i2c4_sleep_pins_a>;
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
+ 	clock-frequency = <400000>;
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index 26db0fe93a98..b19056557ef0 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -136,7 +136,7 @@ dsi_panel_in: endpoint {
+ &ethernet0 {
+ 	status = "okay";
+ 	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
+-	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
++	pinctrl-1 = <&ethernet0_rgmii_sleep_pins_a>;
+ 	pinctrl-names = "default", "sleep";
+ 	phy-mode = "rgmii-id";
+ 	max-speed = <1000>;
+@@ -171,7 +171,7 @@ nand@0 {
+ &i2c2 {
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&i2c2_pins_a>;
+-	pinctrl-1 = <&i2c2_pins_sleep_a>;
++	pinctrl-1 = <&i2c2_sleep_pins_a>;
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
+ 	status = "okay";
+@@ -225,7 +225,7 @@ joystick_pins: joystick-pins {
+ &i2c5 {
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&i2c5_pins_a>;
+-	pinctrl-1 = <&i2c5_pins_sleep_a>;
++	pinctrl-1 = <&i2c5_sleep_pins_a>;
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+index f964e2ae7d60..fcf50131e5fe 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+@@ -112,14 +112,14 @@ adc2: adc@100 {
+ &cec {
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&cec_pins_b>;
+-	pinctrl-1 = <&cec_pins_sleep_b>;
++	pinctrl-1 = <&cec_sleep_pins_b>;
+ 	status = "okay";
+ };
+ 
+ &ethernet0 {
+ 	status = "okay";
+ 	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
+-	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
++	pinctrl-1 = <&ethernet0_rgmii_sleep_pins_a>;
+ 	pinctrl-names = "default", "sleep";
+ 	phy-mode = "rgmii-id";
+ 	max-speed = <1000>;
+@@ -142,7 +142,7 @@ &gpu {
+ &i2c1 {
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&i2c1_pins_a>;
+-	pinctrl-1 = <&i2c1_pins_sleep_a>;
++	pinctrl-1 = <&i2c1_sleep_pins_a>;
+ 	i2c-scl-rising-time-ns = <100>;
+ 	i2c-scl-falling-time-ns = <7>;
+ 	status = "okay";
+@@ -217,7 +217,7 @@ cs42l51_rx_endpoint: endpoint@1 {
+ &i2c4 {
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&i2c4_pins_a>;
+-	pinctrl-1 = <&i2c4_pins_sleep_a>;
++	pinctrl-1 = <&i2c4_sleep_pins_a>;
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
+ 	clock-frequency = <400000>;
+@@ -366,7 +366,7 @@ &i2s2 {
+ 	clock-names = "pclk", "i2sclk", "x8k", "x11k";
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&i2s2_pins_a>;
+-	pinctrl-1 = <&i2s2_pins_sleep_a>;
++	pinctrl-1 = <&i2s2_sleep_pins_a>;
+ 	status = "okay";
+ 
+ 	i2s2_port: port {
+@@ -390,7 +390,7 @@ &iwdg2 {
+ &ltdc {
+ 	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&ltdc_pins_a>;
+-	pinctrl-1 = <&ltdc_pins_sleep_a>;
++	pinctrl-1 = <&ltdc_sleep_pins_a>;
+ 	status = "okay";
+ 
+ 	port {
+-- 
+2.26.0.rc2
 
-Enable common support for the Gateworks System Controller
-found on Gateworks Single Board Computers. This device supports
-an interrupt controller providing interrupts for pushbutton
-events and a sub-device for HWMON and FAN controller via the
-gsc-hwmon driver.
-
->
-> >  config MFD_MC13XXX
-> >       tristate
-> >       depends on (SPI_MASTER || I2C)
-> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > index aed99f0..c82b442 100644
-> > --- a/drivers/mfd/Makefile
-> > +++ b/drivers/mfd/Makefile
-> > @@ -15,6 +15,7 @@ obj-$(CONFIG_MFD_BCM590XX)  += bcm590xx.o
-> >  obj-$(CONFIG_MFD_BD9571MWV)  += bd9571mwv.o
-> >  obj-$(CONFIG_MFD_CROS_EC_DEV)        += cros_ec_dev.o
-> >  obj-$(CONFIG_MFD_EXYNOS_LPASS)       += exynos-lpass.o
-> > +obj-$(CONFIG_MFD_GATEWORKS_GSC)      += gateworks-gsc.o
-> >
-> >  obj-$(CONFIG_HTC_PASIC3)     += htc-pasic3.o
-> >  obj-$(CONFIG_HTC_I2CPLD)     += htc-i2cpld.o
-> > diff --git a/drivers/mfd/gateworks-gsc.c b/drivers/mfd/gateworks-gsc.c
-> > new file mode 100644
-> > index 00000000..8566123
-> > --- /dev/null
-> > +++ b/drivers/mfd/gateworks-gsc.c
-> > @@ -0,0 +1,291 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * The Gateworks System Controller (GSC) is a multi-function
-> > + * device designed for use in Gateworks Single Board Computers.
-> > + * The control interface is I2C, with an interrupt. The device supports
-> > + * system functions such as pushbutton monitoring, multiple ADC's for
-> > + * voltage and temperature, fan controller, and watchdog monitor.
->
-> When are you planning on adding support for the other devices?
-
-The pushbutton monitoring is supported via interrupts and the ADC's
-and fan controller are supported via the gsc-hwmon driver in this
-series. The watchdog is not yet supported via a driver and I'm not
-sure if/when I will submit one as the API is rather strange.
-
->
-<snip>
-> > +/*
-> > + * gsc_powerdown - API to use GSC to power down board for a specific time
-> > + *
-> > + * secs - number of seconds to remain powered off
-> > + */
-> > +static int gsc_powerdown(struct gsc_dev *gsc, unsigned long secs)
-> > +{
-> > +     int ret;
-> > +     unsigned char regs[4];
->
-> No error checking?  Could be down for a very long time.
-
-understood, but I'm not sure I want to dictate what the max amount of
-time to power-down should be. Some remote-sensing use cases may want
-to power-down for days, or weeks. I agree powering down for years
-seems strange but again, I don't want to dictate usage. If they
-accidently power down for a length of time they did not mean to they
-still have to remove power, battery, or press a button to power back
-on.
-
->
-<snip>
->
-> > +gsc_probe(struct i2c_client *client, const struct i2c_device_id *id)
-> > +{
-> > +     struct device *dev = &client->dev;
-> > +     struct gsc_dev *gsc;
-> > +     int ret;
-> > +     unsigned int reg;
-> > +
-> > +     gsc = devm_kzalloc(dev, sizeof(*gsc), GFP_KERNEL);
-> > +     if (!gsc)
-> > +             return -ENOMEM;
-> > +
-> > +     gsc->dev = &client->dev;
-> > +     gsc->i2c = client;
-> > +     i2c_set_clientdata(client, gsc);
-> > +
-> > +     gsc->regmap = devm_regmap_init(dev, &regmap_gsc, client,
-> > +                                    &gsc_regmap_config);
-> > +     if (IS_ERR(gsc->regmap))
-> > +             return PTR_ERR(gsc->regmap);
-> > +
-> > +     if (regmap_read(gsc->regmap, GSC_FW_VER, &reg))
-> > +             return -EIO;
-> > +     gsc->fwver = reg;
->
-> You not checking this for a valid value?
-
-it's a single byte unsigned char, there really isn't an invalid value.
-
->
-> > +     regmap_read(gsc->regmap, GSC_FW_CRC, &reg);
-> > +     gsc->fwcrc = reg;
-> > +     regmap_read(gsc->regmap, GSC_FW_CRC + 1, &reg);
-> > +     gsc->fwcrc |= reg << 8;
-> > +
-> > +     gsc->i2c_hwmon = i2c_new_dummy_device(client->adapter, GSC_HWMON);
-> > +     if (!gsc->i2c_hwmon) {
-> > +             dev_err(dev, "Failed to allocate I2C device for HWMON\n");
-> > +             return -ENODEV;
-> > +     }
-> > +     i2c_set_clientdata(gsc->i2c_hwmon, gsc);
-> > +
-> > +     gsc->regmap_hwmon = devm_regmap_init(dev, &regmap_gsc, gsc->i2c_hwmon,
-> > +                                          &gsc_regmap_hwmon_config);
-> > +     if (IS_ERR(gsc->regmap_hwmon)) {
-> > +             ret = PTR_ERR(gsc->regmap_hwmon);
-> > +             dev_err(dev, "failed to allocate register map: %d\n", ret);
-> > +             goto err_regmap;
-> > +     }
->
-> Why can't the HWMON driver fetch its own Regmap?
-
-I can move this to hwmon. It means I have to share the regmap_bus in
-struct gsc_dev instead of sharing the regmap but I suppose it makes
-more sense to have hwmon register it's own.
-
-Everything else you suggest makes complete sense and I will put into v8.
-
-Best Regards,
-
-Tim
