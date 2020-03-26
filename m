@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB85FC18E5B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 02:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A217C2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 02:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A886020719
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 02:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 480192076A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 02:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgCZCQh (ORCPT
+        id S1727718AbgCZCQe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Mar 2020 22:16:37 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:37834 "EHLO inva020.nxp.com"
+        Wed, 25 Mar 2020 22:16:34 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:52804 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727699AbgCZCQg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 25 Mar 2020 22:16:36 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BC0D01A07AC;
-        Thu, 26 Mar 2020 03:16:34 +0100 (CET)
+        id S1727699AbgCZCQd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Mar 2020 22:16:33 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4D3E3200791;
+        Thu, 26 Mar 2020 03:16:31 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A4CBC1A078A;
-        Thu, 26 Mar 2020 03:16:34 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3F2EF200775;
+        Thu, 26 Mar 2020 03:16:31 +0100 (CET)
 Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 956BC203CD;
-        Thu, 26 Mar 2020 03:16:33 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2FB26203CD;
+        Thu, 26 Mar 2020 03:16:30 +0100 (CET)
 From:   Leonard Crestez <leonard.crestez@nxp.com>
 To:     Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -55,9 +55,9 @@ Cc:     =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@partner.samsung.com>,
         Silvano di Ninno <silvano.dininno@nxp.com>,
         linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 8/8] arm64: dts: imx8m: Add NOC nodes
-Date:   Thu, 26 Mar 2020 04:16:20 +0200
-Message-Id: <ae34326e03926a5ce2ec458d6acbc2953694cfd5.1585188175.git.leonard.crestez@nxp.com>
+Subject: [PATCH 5/8] interconnect: imx: Add platform driver for imx8mm
+Date:   Thu, 26 Mar 2020 04:16:17 +0200
+Message-Id: <d3c016457f5bd5244284b53f7aa7316f6bfcbd35.1585188174.git.leonard.crestez@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1585188174.git.leonard.crestez@nxp.com>
 References: <cover.1585188174.git.leonard.crestez@nxp.com>
@@ -69,167 +69,215 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add nodes for the main interconnect of the imx8m series chips.
+Add a platform driver for the i.MX8MM SoC describing bus topology.
 
-These nodes are bound to by devfreq and interconnect drivers.
+Bandwidth adjustments is currently only supported on the DDRC and main
+NOC. Scaling for the vpu/gpu/display NICs could be added in the future.
 
+Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
 Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 24 +++++++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 24 +++++++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 24 +++++++++++++++++++++++
- 3 files changed, 72 insertions(+)
+ drivers/interconnect/imx/Kconfig          |   4 +
+ drivers/interconnect/imx/Makefile         |   2 +
+ drivers/interconnect/imx/imx8mm.c         | 108 ++++++++++++++++++++++
+ include/dt-bindings/interconnect/imx8mm.h |  49 ++++++++++
+ 4 files changed, 163 insertions(+)
+ create mode 100644 drivers/interconnect/imx/imx8mm.c
+ create mode 100644 include/dt-bindings/interconnect/imx8mm.h
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 175c28ae10cf..41047b6709b6 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -6,10 +6,11 @@
- #include <dt-bindings/clock/imx8mm-clock.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/thermal.h>
+diff --git a/drivers/interconnect/imx/Kconfig b/drivers/interconnect/imx/Kconfig
+index f39336f8d603..2cd4fad4976a 100644
+--- a/drivers/interconnect/imx/Kconfig
++++ b/drivers/interconnect/imx/Kconfig
+@@ -1,5 +1,9 @@
+ config INTERCONNECT_IMX
+ 	tristate "i.MX interconnect drivers"
+ 	depends on ARCH_MXC || COMPILE_TEST
+ 	help
+ 	  Generic interconnect drivers for i.MX SOCs
++
++config INTERCONNECT_IMX8MM
++	tristate "i.MX8MM interconnect driver"
++	depends on INTERCONNECT_IMX
+diff --git a/drivers/interconnect/imx/Makefile b/drivers/interconnect/imx/Makefile
+index 86ae0bd28d8c..c234e5d3dfd1 100644
+--- a/drivers/interconnect/imx/Makefile
++++ b/drivers/interconnect/imx/Makefile
+@@ -1,3 +1,5 @@
+ imx-interconnect-objs			:= imx.o
++imx8mm-interconnect-objs       		:= imx8mm.o
+ 
+ obj-$(CONFIG_INTERCONNECT_IMX)		+= imx-interconnect.o
++obj-$(CONFIG_INTERCONNECT_IMX8MM)	+= imx8mm-interconnect.o
+diff --git a/drivers/interconnect/imx/imx8mm.c b/drivers/interconnect/imx/imx8mm.c
+new file mode 100644
+index 000000000000..ee3783a98c01
+--- /dev/null
++++ b/drivers/interconnect/imx/imx8mm.c
+@@ -0,0 +1,108 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Interconnect framework driver for i.MX SoC
++ *
++ * Copyright (c) 2019, BayLibre
++ * Copyright (c) 2019, NXP
++ * Author: Alexandre Bailon <abailon@baylibre.com>
++ * Author: Leonard Crestez <leonard.crestez@nxp.com>
++ */
++
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++
 +#include <dt-bindings/interconnect/imx8mm.h>
- 
- #include "imx8mm-pinfunc.h"
- 
- / {
- 	interrupt-parent = <&gic>;
-@@ -860,10 +861,33 @@
- 				status = "disabled";
- 			};
- 
- 		};
- 
-+		noc: interconnect@32700000 {
-+			compatible = "fsl,imx8mm-noc", "fsl,imx8m-noc";
-+			reg = <0x32700000 0x100000>;
-+			clocks = <&clk IMX8MM_CLK_NOC>;
-+			fsl,ddrc = <&ddrc>;
-+			#interconnect-cells = <1>;
-+			operating-points-v2 = <&noc_opp_table>;
 +
-+			noc_opp_table: opp-table {
-+				compatible = "operating-points-v2";
++#include "imx.h"
 +
-+				opp-150M {
-+					opp-hz = /bits/ 64 <150000000>;
-+				};
-+				opp-375M {
-+					opp-hz = /bits/ 64 <375000000>;
-+				};
-+				opp-750M {
-+					opp-hz = /bits/ 64 <750000000>;
-+				};
-+			};
-+		};
++static const struct imx_icc_node_adj_desc imx8mm_dram_adj = {
++	.bw_mul = 1,
++	.bw_div = 16,
++	.phandle_name = "fsl,ddrc",
++};
 +
- 		aips4: bus@32c00000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			reg = <0x32df0000 0x10000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index 88e7d74e077f..e8a55956813f 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -6,10 +6,11 @@
- #include <dt-bindings/clock/imx8mn-clock.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/interconnect/imx8mn.h>
- 
- #include "imx8mn-pinfunc.h"
- 
- / {
- 	interrupt-parent = <&gic>;
-@@ -751,10 +752,33 @@
- 				status = "disabled";
- 			};
- 
- 		};
- 
-+		noc: interconnect@32700000 {
-+			compatible = "fsl,imx8mn-noc", "fsl,imx8m-noc";
-+			reg = <0x32700000 0x100000>;
-+			clocks = <&clk IMX8MN_CLK_NOC>;
-+			fsl,ddrc = <&ddrc>;
-+			#interconnect-cells = <1>;
-+			operating-points-v2 = <&noc_opp_table>;
++static const struct imx_icc_node_adj_desc imx8mm_noc_adj = {
++	.bw_mul = 1,
++	.bw_div = 16,
++	.main_noc = true,
++};
 +
-+			noc_opp_table: opp-table {
-+				compatible = "operating-points-v2";
++/*
++ * Describe bus masters, slaves and connections between them
++ *
++ * This is a simplified subset of the bus diagram, there are several other
++ * PL301 nics which are skipped/merged into PL301_MAIN
++ */
++static struct imx_icc_node_desc nodes[] = {
++	DEFINE_BUS_INTERCONNECT("NOC", IMX8MM_ICN_NOC, &imx8mm_noc_adj,
++			IMX8MM_ICS_DRAM, IMX8MM_ICN_MAIN),
 +
-+				opp-100M {
-+					opp-hz = /bits/ 64 <100000000>;
-+				};
-+				opp-600M {
-+					opp-hz = /bits/ 64 <600000000>;
-+				};
-+				opp-800M {
-+					opp-hz = /bits/ 64 <800000000>;
-+				};
-+			};
-+		};
++	DEFINE_BUS_SLAVE("DRAM", IMX8MM_ICS_DRAM, &imx8mm_dram_adj),
++	DEFINE_BUS_SLAVE("OCRAM", IMX8MM_ICS_OCRAM, NULL),
++	DEFINE_BUS_MASTER("A53", IMX8MM_ICM_A53, IMX8MM_ICN_NOC),
 +
- 		aips4: bus@32c00000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			reg = <0x32df0000 0x10000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index ea93bc4b7d7e..3a208feec74c 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -9,10 +9,11 @@
- #include <dt-bindings/reset/imx8mq-reset.h>
- #include <dt-bindings/gpio/gpio.h>
- #include "dt-bindings/input/input.h"
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/interconnect/imx8mq.h>
- #include "imx8mq-pinfunc.h"
- 
- / {
- 	interrupt-parent = <&gpc>;
- 
-@@ -1026,10 +1027,33 @@
- 				fsl,num-rx-queues = <3>;
- 				status = "disabled";
- 			};
- 		};
- 
-+		noc: interconnect@32700000 {
-+			compatible = "fsl,imx8mq-noc", "fsl,imx8m-noc";
-+			reg = <0x32700000 0x100000>;
-+			clocks = <&clk IMX8MQ_CLK_NOC>;
-+			fsl,ddrc = <&ddrc>;
-+			#interconnect-cells = <1>;
-+			operating-points-v2 = <&noc_opp_table>;
++	/* VPUMIX */
++	DEFINE_BUS_MASTER("VPU H1", IMX8MM_ICM_VPU_H1, IMX8MM_ICN_VIDEO),
++	DEFINE_BUS_MASTER("VPU G1", IMX8MM_ICM_VPU_G1, IMX8MM_ICN_VIDEO),
++	DEFINE_BUS_MASTER("VPU G2", IMX8MM_ICM_VPU_G2, IMX8MM_ICN_VIDEO),
++	DEFINE_BUS_INTERCONNECT("PL301_VIDEO", IMX8MM_ICN_VIDEO, NULL, IMX8MM_ICN_NOC),
 +
-+			noc_opp_table: opp-table {
-+				compatible = "operating-points-v2";
++	/* GPUMIX */
++	DEFINE_BUS_MASTER("GPU 2D", IMX8MM_ICM_GPU2D, IMX8MM_ICN_GPU),
++	DEFINE_BUS_MASTER("GPU 3D", IMX8MM_ICM_GPU3D, IMX8MM_ICN_GPU),
++	DEFINE_BUS_INTERCONNECT("PL301_GPU", IMX8MM_ICN_GPU, NULL, IMX8MM_ICN_NOC),
 +
-+				opp-133M {
-+					opp-hz = /bits/ 64 <133333333>;
-+				};
-+				opp-400M {
-+					opp-hz = /bits/ 64 <400000000>;
-+				};
-+				opp-800M {
-+					opp-hz = /bits/ 64 <800000000>;
-+				};
-+			};
-+		};
++	/* DISPLAYMIX */
++	DEFINE_BUS_MASTER("CSI", IMX8MM_ICM_CSI, IMX8MM_ICN_MIPI),
++	DEFINE_BUS_MASTER("LCDIF", IMX8MM_ICM_LCDIF, IMX8MM_ICN_MIPI),
++	DEFINE_BUS_INTERCONNECT("PL301_MIPI", IMX8MM_ICN_MIPI, NULL, IMX8MM_ICN_NOC),
 +
- 		bus@32c00000 { /* AIPS4 */
- 			compatible = "fsl,aips-bus", "simple-bus";
- 			reg = <0x32df0000 0x10000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
++	/* HSIO */
++	DEFINE_BUS_MASTER("USB1", IMX8MM_ICM_USB1, IMX8MM_ICN_HSIO),
++	DEFINE_BUS_MASTER("USB2", IMX8MM_ICM_USB2, IMX8MM_ICN_HSIO),
++	DEFINE_BUS_MASTER("PCIE", IMX8MM_ICM_PCIE, IMX8MM_ICN_HSIO),
++	DEFINE_BUS_INTERCONNECT("PL301_HSIO", IMX8MM_ICN_HSIO, NULL, IMX8MM_ICN_NOC),
++
++	/* Audio */
++	DEFINE_BUS_MASTER("SDMA2", IMX8MM_ICM_SDMA2, IMX8MM_ICN_AUDIO),
++	DEFINE_BUS_MASTER("SDMA3", IMX8MM_ICM_SDMA3, IMX8MM_ICN_AUDIO),
++	DEFINE_BUS_INTERCONNECT("PL301_AUDIO", IMX8MM_ICN_AUDIO, NULL, IMX8MM_ICN_MAIN),
++
++	/* Ethernet */
++	DEFINE_BUS_MASTER("ENET", IMX8MM_ICM_ENET, IMX8MM_ICN_ENET),
++	DEFINE_BUS_INTERCONNECT("PL301_ENET", IMX8MM_ICN_ENET, NULL, IMX8MM_ICN_MAIN),
++
++	/* Other */
++	DEFINE_BUS_MASTER("SDMA1", IMX8MM_ICM_SDMA1, IMX8MM_ICN_MAIN),
++	DEFINE_BUS_MASTER("NAND", IMX8MM_ICM_NAND, IMX8MM_ICN_MAIN),
++	DEFINE_BUS_MASTER("USDHC1", IMX8MM_ICM_USDHC1, IMX8MM_ICN_MAIN),
++	DEFINE_BUS_MASTER("USDHC2", IMX8MM_ICM_USDHC2, IMX8MM_ICN_MAIN),
++	DEFINE_BUS_MASTER("USDHC3", IMX8MM_ICM_USDHC3, IMX8MM_ICN_MAIN),
++	DEFINE_BUS_INTERCONNECT("PL301_MAIN", IMX8MM_ICN_MAIN, NULL,
++			IMX8MM_ICN_NOC, IMX8MM_ICS_OCRAM),
++};
++
++static int imx8mm_icc_probe(struct platform_device *pdev)
++{
++	return imx_icc_register(pdev, nodes, ARRAY_SIZE(nodes));
++}
++
++static int imx8mm_icc_remove(struct platform_device *pdev)
++{
++	return imx_icc_unregister(pdev);
++}
++
++static struct platform_driver imx8mm_icc_driver = {
++	.probe = imx8mm_icc_probe,
++	.remove = imx8mm_icc_remove,
++	.driver = {
++		.name = "imx8mm-interconnect",
++	},
++};
++
++module_platform_driver(imx8mm_icc_driver);
++MODULE_AUTHOR("Alexandre Bailon <abailon@baylibre.com>");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:imx8mm-interconnect");
+diff --git a/include/dt-bindings/interconnect/imx8mm.h b/include/dt-bindings/interconnect/imx8mm.h
+new file mode 100644
+index 000000000000..5404f2af15c3
+--- /dev/null
++++ b/include/dt-bindings/interconnect/imx8mm.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Interconnect framework driver for i.MX SoC
++ *
++ * Copyright (c) 2019, BayLibre
++ * Author: Alexandre Bailon <abailon@baylibre.com>
++ */
++
++#ifndef __IMX8MM_ICM_INTERCONNECT_IDS_H
++#define __IMX8MM_ICM_INTERCONNECT_IDS_H
++
++#define IMX8MM_ICN_NOC		1
++#define IMX8MM_ICS_DRAM		2
++#define IMX8MM_ICS_OCRAM	3
++#define IMX8MM_ICM_A53		4
++
++#define IMX8MM_ICM_VPU_H1	5
++#define IMX8MM_ICM_VPU_G1	6
++#define IMX8MM_ICM_VPU_G2	7
++#define IMX8MM_ICN_VIDEO	8
++
++#define IMX8MM_ICM_GPU2D	9
++#define IMX8MM_ICM_GPU3D	10
++#define IMX8MM_ICN_GPU		11
++
++#define IMX8MM_ICM_CSI		12
++#define IMX8MM_ICM_LCDIF	13
++#define IMX8MM_ICN_MIPI		14
++
++#define IMX8MM_ICM_USB1		15
++#define IMX8MM_ICM_USB2		16
++#define IMX8MM_ICM_PCIE		17
++#define IMX8MM_ICN_HSIO		18
++
++#define IMX8MM_ICM_SDMA2	19
++#define IMX8MM_ICM_SDMA3	20
++#define IMX8MM_ICN_AUDIO	21
++
++#define IMX8MM_ICN_ENET		22
++#define IMX8MM_ICM_ENET		23
++
++#define IMX8MM_ICN_MAIN		24
++#define IMX8MM_ICM_NAND		25
++#define IMX8MM_ICM_SDMA1	26
++#define IMX8MM_ICM_USDHC1	27
++#define IMX8MM_ICM_USDHC2	28
++#define IMX8MM_ICM_USDHC3	29
++
++#endif /* __IMX8MM_ICM_INTERCONNECT_IDS_H */
 -- 
 2.17.1
 
