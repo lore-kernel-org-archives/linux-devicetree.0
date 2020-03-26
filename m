@@ -2,58 +2,59 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764A5C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44505C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA1920748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C3920714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uLZoHBJE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gNM9owfX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgCZKjj (ORCPT
+        id S1727773AbgCZKjv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:39:39 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35658 "EHLO
+        Thu, 26 Mar 2020 06:39:51 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44872 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbgCZKjj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 06:39:39 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k21so5856919ljh.2
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 03:39:37 -0700 (PDT)
+        with ESMTP id S1727560AbgCZKjm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 06:39:42 -0400
+Received: by mail-lj1-f195.google.com with SMTP id p14so5803292lji.11
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 03:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Nm7daEZmRCQGmg/oeW9vSEkTDhWhC4wvKQ8H8nvYJtM=;
-        b=uLZoHBJEdtCKbN/cWMQfWVW6g7VVQmFbA9BxpfTJC7cp+MOqzvZrVFfgDeyxQk+57Y
-         4WbA08qgC5ei/09QJVDsr4EZguqAkujA6xwZ8S9wOb8KNWCFtRIllODAqTj4DWEiiTsX
-         qDydMS8vylDi8g/R3tfS1llR+urMeF4kKg/9i0UnxeqMfJBOdf7GZ+zEWOBzNFr4wfeO
-         O4DcQdustyzR8jZ1MeHZKOfDKn0y46nufGHK1V/lertkMrPKavB7nuZiLbesId/A3UGO
-         S1alPWvAOgFgldImIijjrtmS/IDo3h8V+OwyBWBk4YzB/WyDfeJc4aVeK1FkOMJrH+Sg
-         pn5g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ltvILhWw+Z8JxlENYP0mAF8OSEMClYvL/9bIL1S5Kpk=;
+        b=gNM9owfXJa+dSlXbbxty1r7WYn0Vre4U4J5MDJuANbo/DqAdHjITFd0aXd250+kgZa
+         BBoWO6/eWsDTVUFSP/CbYcRysEhMRxz+SAH34DXnYRURMBuwtmqslM1+6iePBLm+NnpI
+         VMk/rKREhpC+5kGl6T6i0CFgULvqeuk3T8xWx6XudqaneIM7NqJ3QFRVtsom69i88Lrf
+         c+x/xZgFY6N2mSJbbFKPevX3hfN9H6HOHOS/yKCBYszcI2M9HrfHyBlZo8vNeKDzWlIP
+         WurHB5jS3OKWqbRob4xVgl0PI2SCVzFfF5V+fZGxrn7geaztCIDWxd+6rHQk+THCqPv/
+         6hIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Nm7daEZmRCQGmg/oeW9vSEkTDhWhC4wvKQ8H8nvYJtM=;
-        b=ewWVaUFew9iwV6zmZcah55iYJDre61KiYTKmSEOC9ybVNqOCPDbwMo0chq+wx3AHgc
-         nubFQgd/kJqqqBvo4VFxiXU6HWyU47sZ7dbZO4odXOwU1ALNajQQ1X4DDXcD+5RmzZg+
-         4qem+kSiW/ANkBhzcZCeeet0vhj9S3pWvXWGpOV9+fxEFiX/TPbjCN2CJittik8kz6y9
-         YyvoMqfoEFjGxL+NbzecXPFd+muFpGZ0l/VNRmmRguFjYD/e7rpomRcsQYCNIdBL1V6t
-         SbDmzuJePnVuia+85c2nMW4HfUM9WhxWad8cmKomdwOk6VqoWbt1ociPN0p/r8iJrWFQ
-         HX9g==
-X-Gm-Message-State: AGi0PuYxyba9crj4uvDpzIRLcXjNOEsqAWiSMD3oeWRS4l8/37WLZEim
-        guGFzKMcjgZiOhP6QhiohmJuiOAGw3U=
-X-Google-Smtp-Source: APiQypIGUavt2IrOB7A4U98tlaEHV4jg99sIklKUxPb5m6wVRKOPaVtVY3T6r1VJhKDcNeEFtQH5Ww==
-X-Received: by 2002:a2e:8109:: with SMTP id d9mr4398900ljg.31.1585219177107;
-        Thu, 26 Mar 2020 03:39:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ltvILhWw+Z8JxlENYP0mAF8OSEMClYvL/9bIL1S5Kpk=;
+        b=OvB0KxQPOslvRr5emfLZiu/LOaq9S5vdChCBWKyWXd5l1qJUy5xm89KLbfOTXYeDL1
+         +AzFZNAfE+bE6BglqmFRv24I5ZJQKn6U7xgxrJSITkDSEUpHK93YSDTThF+Aiz26Awyk
+         OD6YFmUpMhmZwJl67ErlWeGVt7aChw8LF0qbjFJItc7AsWHbly0e9Zih9TJWhlyPmjCg
+         YtOMMJ2q2vOM4mSFyDsGfzb6lmAbo3hfegVKHGUSGeY43n/auH+ri3kjxfxGI45Ap1L+
+         se+joIpuhxQbLaehCHagw+jmqs/evZWK+m8C9/dEsqkn2CTpe5BfeuFyiQyKKtmf3+Ys
+         fOvw==
+X-Gm-Message-State: ANhLgQ3gpXTFPpV3IsEO9sLq2vH4HRZUEIqOY2wdto2Pi4C6coPYV/Lz
+        6AlYA0eKZW47gHJeD+7FSp8cyA==
+X-Google-Smtp-Source: ADFU+vsLtdkgRectxhYOVDyCqiOqGpq4Xqt+Wl7DV1FV/CF1VdSJqutewgZkRdbbmLZjLm73f0qT9A==
+X-Received: by 2002:a2e:99c9:: with SMTP id l9mr5092848ljj.79.1585219179500;
+        Thu, 26 Mar 2020 03:39:39 -0700 (PDT)
 Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id h3sm1304008lfk.30.2020.03.26.03.39.35
+        by smtp.gmail.com with ESMTPSA id h3sm1304008lfk.30.2020.03.26.03.39.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 03:39:36 -0700 (PDT)
+        Thu, 26 Mar 2020 03:39:38 -0700 (PDT)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -61,10 +62,12 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH 0/2] arm64: dts: msm8916: Conform to updated PSCI bindings
-Date:   Thu, 26 Mar 2020 11:39:30 +0100
-Message-Id: <20200326103932.5809-1-ulf.hansson@linaro.org>
+Subject: [PATCH 2/2] arm64: dts: msm8916: Conform to the nodename pattern PSCI subnodes
+Date:   Thu, 26 Mar 2020 11:39:32 +0100
+Message-Id: <20200326103932.5809-3-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200326103932.5809-1-ulf.hansson@linaro.org>
+References: <20200326103932.5809-1-ulf.hansson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -72,17 +75,55 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The PSCI DT binding was recently updated to fix some errors and so was also the
-related domain-idle-state DT binding. Therefore, this series updates the
-msm8916 to conform to these updates.
+Subnodes for PSCI should start with "power-domain-", so let's adopt to
+this.
 
-Ulf Hansson (2):
-  arm64: dts: msm8916: Conform to the domain-idle-state binding
-  arm64: dts: msm8916: Conform to the nodename pattern PSCI subnodes
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index e7ff8701eed3..2fdc6aa61b83 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -191,31 +191,31 @@
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
+ 
+-		CPU_PD0: cpu-pd0 {
++		CPU_PD0: power-domain-cpu0 {
+ 			#power-domain-cells = <0>;
+ 			power-domains = <&CLUSTER_PD>;
+ 			domain-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+-		CPU_PD1: cpu-pd1 {
++		CPU_PD1: power-domain-cpu1 {
+ 			#power-domain-cells = <0>;
+ 			power-domains = <&CLUSTER_PD>;
+ 			domain-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+-		CPU_PD2: cpu-pd2 {
++		CPU_PD2: power-domain-cpu2 {
+ 			#power-domain-cells = <0>;
+ 			power-domains = <&CLUSTER_PD>;
+ 			domain-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+-		CPU_PD3: cpu-pd3 {
++		CPU_PD3: power-domain-cpu3 {
+ 			#power-domain-cells = <0>;
+ 			power-domains = <&CLUSTER_PD>;
+ 			domain-idle-states = <&CPU_SLEEP_0>;
+ 		};
+ 
+-		CLUSTER_PD: cluster-pd {
++		CLUSTER_PD: power-domain-cluster {
+ 			#power-domain-cells = <0>;
+ 			domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWRDN>;
+ 		};
 -- 
 2.20.1
 
