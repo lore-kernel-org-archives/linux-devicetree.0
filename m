@@ -2,173 +2,201 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F2FC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 11:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD686C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 11:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A48D20409
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 11:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9542520409
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 11:02:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LPWfvfHr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgCZLB5 (ORCPT
+        id S1728080AbgCZLCV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:01:57 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:39583 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgCZLB5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 07:01:57 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MWzXj-1ikoKA0T8L-00XKog for <devicetree@vger.kernel.org>; Thu, 26 Mar
- 2020 12:01:55 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id E289164FC1C
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 11:01:54 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id HSxGjnNmGWZc for <devicetree@vger.kernel.org>;
-        Thu, 26 Mar 2020 12:01:54 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 8060664C9BD
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 12:01:54 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.79) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 26 Mar 2020 12:01:54 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id A12B180505; Thu, 26 Mar 2020 11:35:43 +0100 (CET)
-Date:   Thu, 26 Mar 2020 11:35:43 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v4 8/9] dt-bindings: adv748x: add information about serial
- audio interface (I2S/TDM)
-Message-ID: <37482bdfc6d6c6e231c58550b6bc4582aa29dde0.1585218857.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1585218857.git.alexander.riesen@cetitec.com>
+        Thu, 26 Mar 2020 07:02:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38056 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727910AbgCZLCU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 07:02:20 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s1so7200003wrv.5
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 04:02:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Wfr3mshtBQnM/CRVPTN/PuNLxJ6J3zVmMT5YCluRUKU=;
+        b=LPWfvfHrcNCXNtsq0QjG6Fb5PLQf4zqNS1I4yiE3WrjMnjE7ONt6PJNZuIBHd7czBa
+         ZAE9OR0Ni4Y382HuAXc0eLi78Wu5B6h12fuJFS/ys8K5tCnKPe+Svr0E6r9lwvBYUuql
+         U8XsxbSR5PkoccOpge2YO/OuCK7aNjH41yqqHiRdhz0Vb2TqQsIqAgLaTFK31FiVgOIQ
+         WDmw0hEC84w3vcNOJI3T20VD9K0Lmun6FvApLjBc+lpUuXQ+e1j8QGb9f4HaAahYm796
+         RaF8cKKeNxOX60QSQcioWxnQoBCWHEvLt5WD6VXl5TvKxBNiFakzqkIAfTGFtE2stLNd
+         L8nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Wfr3mshtBQnM/CRVPTN/PuNLxJ6J3zVmMT5YCluRUKU=;
+        b=XEoJ7hqf1CvKoCCWR+Pd/jY3qTO1au+c4c2p1M6nG1C/8RGDBFPAILqU2SQhrpIJBi
+         uHGs+2YEAQJVE5tXlVN4MxgUzinFCQaXDxx43xbvELgv+HQYwpE1qoJxUTdULYPoP/9+
+         hif3hEmWuSSdYrTFVdSwUtgjowSBnQE82yl1rJbxTKcvLvBrhbD5Yislcxb7xo5GrdSz
+         ms44sOBWTG6yG26XrVNIa+JzjDpZlcTJYCBq98K57odfP7SWXyojI4T8o1tinVjmT+ys
+         BGnwVH+pWyMtNvh688IOYBSB/yW/lsJaJ1JcAEEmO8xivHukM64sPJ8JlVQDL8QhiKBz
+         S8CA==
+X-Gm-Message-State: ANhLgQ0EDAeQ08XIcdOZN8jLvG2tDIjkyfU3fGl3fu65HdAVllzDO/bG
+        wtvQVOJnJFMeFjxCB77HMRVxEA==
+X-Google-Smtp-Source: ADFU+vtJM2ifjt4NqZRCHSSMScdSfbUzWRVkLXVDgI6yZyq4thQ1DCTSR0RTMYpBX4xGlbTd9gzoTg==
+X-Received: by 2002:adf:a348:: with SMTP id d8mr8696704wrb.83.1585220537040;
+        Thu, 26 Mar 2020 04:02:17 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id o67sm3063824wmo.5.2020.03.26.04.02.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 04:02:16 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 11:03:06 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org
+Subject: Re: [RFC 01/11] mfd: Add i.MX generic mix support
+Message-ID: <20200326110306.GE603801@dell>
+References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+ <1583226206-19758-2-git-send-email-abel.vesa@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1585218857.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.79]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7C67
-X-Provags-ID: V03:K1:UFXMbwYvvkt6Sc11eAf7K2C0mOiAZnBfufTMgEJj4fnp9/oF7P3
- fMPPd+TJvsAZ1HKuiUY04n0azRjaMG00uvum4/ogHglmF2k72eOMuzZ1ORZGOTDDbqNC9wN
- 4FsuK2hXkBIrZzb2zOkbW0dHBXCrJi9q196Dr9pvfLOGRGS8nLnHPpRewG4SxjJmehDpcxY
- z9de0KSbbbWpWJaO3ZlRw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jYKjvxm0w1k=:jT1pFitG14+bdhGJn5aD3g
- ee9VtMXSrmQ+0bo23Z3CvF4l/RfehTSkwH1az1Wur3Duw5LwS6sSwV+dBUe0LvmVtVp2TVBAY
- CMhn22m7qSMTRRtv6OTiVuH1mYKij8LmM3bYjkLJ8UHthZAHsISe8aUBocVVg/sLntc5T/Zs9
- w03OeOpGfz06ng8ZyF2+0WFaq3TAEKao3XLK4SwKvRHAWeTKy1b75JZylKfY0T0D6Ot/Vq1SP
- LyueG2fo4OzwfWrguL7xcmaxzUwsqEq2d2nBDsjDVru7VNvVWFGHNmga35Xrd5UcPWa1gem+z
- fbYixj7o+OT0zPQqAonY4f06lAKYrnNoug/quKEv+X2RzBXIZs4zcbGrqgVgacOVfogMjCj8p
- wT2TsTR01PgXZNqauzpboIzP6/6v2N7Tj9QM6uzv98xDUIldUW9lUZg/U18M6qOUGqMm6VsPs
- Rf2SKOlBhU3/QtCF+rxGPn1QCo0t8+RHTpb4zDnBfhLfgg3rEA3JbSVJihe6V5tRRibsDL0Mj
- xDO/rxFwpM+J8f2MtCm4GIH1Qny6FezyhjZsZmIpq/dWRbwEllwoTDYAUmz6CtTdupKeXf8WI
- +qGlHBiXAaHtFG3ZEGDj9MjOGWyOa/EUya6te2Mq3qXJ3rQjLxFOlwJsiEYb4KlQ81hZwKxrP
- n2eC21yoq10XpGURmDec5k4bjBL2lbZL6gDbIfM6TGeycTKur+IVYwkHyDRHekA4yeY+AOR3r
- +LsKSUJBRJ2io06U7meHC6Sgx71UORk6qeG5r1cvWvijVju7/EDY5KjHsFsRn9CxfI4wheMSW
- LWkoj7zz+1Age0C7kOvQcY/ym4/yIarP/PyeXykXzpF64tdwk+s5VyWvJiExuBeVkxxaYJS
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1583226206-19758-2-git-send-email-abel.vesa@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As the driver has some support for the audio interface of the device,
-the bindings file should mention it.
+On Tue, 03 Mar 2020, Abel Vesa wrote:
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Some of the i.MX SoCs have a IP for interfacing the dedicated IPs with
+> clocks, resets and interrupts, plus some other specific control registers.
+> To allow the functionality to be split between drivers, this MFD driver is
+> added that has only two purposes: register the devices and map the entire
+> register addresses. Everything else is left to the dedicated drivers that will
+> bind to the registered devices.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> ---
+>  drivers/mfd/Kconfig   | 11 +++++++++++
+>  drivers/mfd/Makefile  |  1 +
+>  drivers/mfd/imx-mix.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 60 insertions(+)
+>  create mode 100644 drivers/mfd/imx-mix.c
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 3c547ed..3c89288 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -460,6 +460,17 @@ config MFD_MX25_TSADC
+>  	  i.MX25 processors. They consist of a conversion queue for general
+>  	  purpose ADC and a queue for Touchscreens.
+>  
+> +config MFD_IMX_MIX
+> +	tristate "NXP i.MX Generic Mix Control Driver"
+> +	depends on OF || COMPILE_TEST
+> +	help
+> +	  Enable generic mixes support. On some i.MX platforms, there are
+> +	  devices that are a mix of multiple functionalities like reset
+> +	  controllers, clock controllers and some others. In order to split
+> +	  those functionalities between the right drivers, this MFD populates
+> +	  with virtual devices based on what's found in the devicetree node,
+> +	  leaving the rest of the behavior control to the dedicated driver.
+> +
+>  config MFD_HI6421_PMIC
+>  	tristate "HiSilicon Hi6421 PMU/Codec IC"
+>  	depends on OF
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index f935d10..5b2ae5d 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -113,6 +113,7 @@ obj-$(CONFIG_MFD_TWL4030_AUDIO)	+= twl4030-audio.o
+>  obj-$(CONFIG_TWL6040_CORE)	+= twl6040.o
+>  
+>  obj-$(CONFIG_MFD_MX25_TSADC)	+= fsl-imx25-tsadc.o
+> +obj-$(CONFIG_MFD_IMX_MIX)	+= imx-mix.o
+>  
+>  obj-$(CONFIG_MFD_MC13XXX)	+= mc13xxx-core.o
+>  obj-$(CONFIG_MFD_MC13XXX_SPI)	+= mc13xxx-spi.o
+> diff --git a/drivers/mfd/imx-mix.c b/drivers/mfd/imx-mix.c
+> new file mode 100644
+> index 00000000..d3f8c71
+> --- /dev/null
+> +++ b/drivers/mfd/imx-mix.c
+> @@ -0,0 +1,48 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/types.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_platform.h>
+> +
+> +#include <linux/mfd/core.h>
+> +
+> +static int imx_audiomix_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	dev_set_drvdata(dev, base);
+> +
+> +	return devm_of_platform_populate(dev);
+> +}
+> +
+> +static const struct of_device_id imx_audiomix_of_match[] = {
+> +	{ .compatible = "fsl,imx8mp-audiomix" },
+> +	{ /* Sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_audiomix_of_match);
 
---
+This needs DT binding documentation.
 
-v3: remove optionality off MCLK clock cell to ensure the description
-    matches the hardware no matter if the line is connected.
-    Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- .../devicetree/bindings/media/i2c/adv748x.txt    | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+Do the sub-device memory ranges overlap?
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-index 4f91686e54a6..50a753189b81 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -2,7 +2,9 @@
- 
- The ADV7481 and ADV7482 are multi format video decoders with an integrated
- HDMI receiver. They can output CSI-2 on two independent outputs TXA and TXB
--from three input sources HDMI, analog and TTL.
-+from three input sources HDMI, analog and TTL. There is also support for an
-+I2S-compatible interface connected to the audio processor of the HDMI decoder.
-+The interface has TDM capability (8 slots, 32 bits, left or right justified).
- 
- Required Properties:
- 
-@@ -16,6 +18,8 @@ Required Properties:
-     slave device on the I2C bus. The main address is mandatory, others are
-     optional and remain at default values if not specified.
- 
-+  - #clock-cells: must be <0>
-+
- Optional Properties:
- 
-   - interrupt-names: Should specify the interrupts as "intrq1", "intrq2" and/or
-@@ -47,6 +51,7 @@ are numbered as follows.
- 	  TTL		sink		9
- 	  TXA		source		10
- 	  TXB		source		11
-+	  I2S		source		12
- 
- The digital output port nodes, when present, shall contain at least one
- endpoint. Each of those endpoints shall contain the data-lanes property as
-@@ -72,6 +77,7 @@ Example:
- 
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		#clock-cells = <0>;
- 
- 		interrupt-parent = <&gpio6>;
- 		interrupt-names = "intrq1", "intrq2";
-@@ -113,4 +119,12 @@ Example:
- 				remote-endpoint = <&csi20_in>;
- 			};
- 		};
-+
-+		port@c {
-+			reg = <12>;
-+
-+			adv7482_i2s: endpoint {
-+				remote-endpoint = <&i2s_in>;
-+			};
-+		};
- 	};
+> +static struct platform_driver imx_audiomix_driver = {
+> +	.probe = imx_audiomix_probe,
+> +	.driver = {
+> +		.name = "imx-audiomix",
+> +		.of_match_table = of_match_ptr(imx_audiomix_of_match),
+> +	},
+> +};
+> +module_platform_driver(imx_audiomix_driver);
+
 -- 
-2.25.1.25.g9ecbe7eb18
-
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
