@@ -2,85 +2,130 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8D9C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 858E6C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F820206F8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585232545;
-	bh=YlsR+y4MevduxIpBHtlSqX0E4PR8rEoNyXJuFhZpfCs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=HxI4nqfo1OwMh1czOqW5FN6J9cD2qLn9H/n0wsMmyPnfnS6mxlJjbkvKFfHqmwuyd
-	 SVkrfZJ7mqheEgJ87CZvmBNAnskHrsv3aGOMl69fkQLSC/KNxaEYuqUh7PVSPNa2yy
-	 lncAsauQeVc77fQOc/KqiHmiIZMd1DsSgsHPIpFY=
+	by mail.kernel.org (Postfix) with ESMTP id 5EED42077D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:28:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s0AYeRSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgCZOWV (ORCPT
+        id S1727984AbgCZO2G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:22:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727695AbgCZOWV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:22:21 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD322206F8;
-        Thu, 26 Mar 2020 14:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585232541;
-        bh=YlsR+y4MevduxIpBHtlSqX0E4PR8rEoNyXJuFhZpfCs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aUzqJqzYSCnTgPyA/P32W4O9j/LzdzCb6cnGRFJy0Cwv8RSWlx1+hK3ZUovfKdEtI
-         tvJHNho2Hbq8acMNBk8LnaocRhllSCzcGoE/b6S8E7jLJ4VgMCZdp/FAj24UGX+eaI
-         onNUYLGqPj9hTNVjVXaO6egDdALibnysCDzybkNY=
-Date:   Thu, 26 Mar 2020 09:22:18 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: pci: Update iProc PCI binding for
- INTx support
-Message-ID: <20200326142218.GA259277@google.com>
+        Thu, 26 Mar 2020 10:28:06 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:44292 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727695AbgCZO2G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 10:28:06 -0400
+Received: by mail-vs1-f67.google.com with SMTP id e138so3914984vsc.11
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 07:28:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nwrqr8fUwcczi1tkKbhoCAaTj0Lz9vANHD/lv6450Ik=;
+        b=s0AYeRSme5ZYMG5Hj00MtSphy+ZF1hJEIT/x2laNKAPH6uwyawibNxjdwbP2n3VcAz
+         csHlsS0gxGoa5DicQVyRyza5fvlnbU7gXob7YwmrF1iP6Arowk1BTPlr0kz4O3XeecgF
+         1zk9ZTQ+jv4zeHagRLkhqZrvKEFdH+oNeK135nUnNRS91hY2ue714O+FEjcV14/4YNSF
+         LfEKcr0FypAkSBknWreQBXQ7JbSB7qSlCdDz+6IHoDYmn4ebQwicF5K71DOR0GD0cCFh
+         bCHWHd0BIGOXrsyTGs9lNM+SLJBnuSpHOhufi/2mLRvJCbJQ5z5/y/CztJiv8Q92tTQi
+         xs6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nwrqr8fUwcczi1tkKbhoCAaTj0Lz9vANHD/lv6450Ik=;
+        b=hzWlwpxHw8hWZqJKn6DNnsG+wiI7CSnRlmyygUV6/CBrh6ToZaDTLhfJzxhiBmlEaX
+         zHRkDiROP06eK8LLOOiFrFXi3/jVPzI0ir6kErHU4qnsF27Bm5HAs1Fo7RSdXou31cSi
+         3FCZJw9cPmNkOBAH+q8XWXFliPpLs6QGogyxKehRL9YwIgiURKMWeScD5iSEnRpTN5jd
+         r4hnYUvEFThrdm0KcL0Vu6RMaK0H1bcpX8ijPIs0G2l8qCDkoln4OC6VJSqE81pjhjYX
+         wgt+joRPEthxT8PTlcM1hE7f5Yi+O8cO1DNpxMkR0YsoZRH7bOob+ShiLrlJSE1T84hm
+         m7VA==
+X-Gm-Message-State: ANhLgQ2Wl9xiRK8gr71fvIJ8vQfGQNJD+ZeO6AQcLj4egPzV23vCXSf9
+        a1WvT1lA23upmL681W3B30xgN56U/5io/7SGPiZEAQ==
+X-Google-Smtp-Source: ADFU+vsDl0E1ShxlqFNIKGgRphr3dXzKQ2BouqsiqJSyqwn2BTjEQZNw7vYZJmX1XaoteUXkIePuQWywtUNQtEW50KM=
+X-Received: by 2002:a67:2ec6:: with SMTP id u189mr7072856vsu.200.1585232883289;
+ Thu, 26 Mar 2020 07:28:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585205326-25326-2-git-send-email-srinath.mannam@broadcom.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200325143409.13005-1-ludovic.barre@st.com> <20200325143409.13005-3-ludovic.barre@st.com>
+In-Reply-To: <20200325143409.13005-3-ludovic.barre@st.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 26 Mar 2020 15:27:27 +0100
+Message-ID: <CAPDyKFpO40Ois8pNwYOeqZrJbV9UeCLok=i8z4GWML+A7TP2-w@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] mmc: mmci: initialize pwr|clk|datactrl_reg with
+ their hardware values
+To:     Ludovic Barre <ludovic.barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-  $ git log --oneline Documentation/devicetree/bindings/pci/
+On Wed, 25 Mar 2020 at 15:34, Ludovic Barre <ludovic.barre@st.com> wrote:
+>
+> In mmci_write_pwr|clk|datactrlreg functions, if the desired value
+> is equal to corresponding variable (pwr_reg|clk_reg|datactrl_reg),
+> the value is not written in the register.
+>
+> At probe pwr|clk|datactrl_reg of mmci_host structure are initialized
+> to 0 (kzalloc of mmc_alloc_host). But they does not necessarily reflect
+> hardware value of these registers, if they are used while boot level.
+> This is problematic, if we want to write 0 in these registers.
 
-  34129bb831cc ("dt-bindings: PCI: intel: Fix dt_binding_check compilation failure")
-  e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to DT schema")
-  919ba6e739eb ("dt-bindings: PCI: Convert Arm Versatile binding to DT schema")
-  0956dcb853dc ("dt-bindings: PCI: Add bindings for brcmstb's PCIe device")
-  5d28bee7c91e ("dt-bindings: PCI: qcom: Add support for SDM845 PCIe")
-  e54ea45a4955 ("dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller")
-  d8725e38dd9f ("dt-bindings: pci: layerscape-pci: add compatible strings "fsl, ls1028a-pcie"")
+It could be, but I don't see that we ever needs to do that - at least
+not before we have written some other non-zero values to them (through
+the helper functions).
 
-Capitalize yours match and put the useful information at the
-beginning; maybe something like this:
+>
+> This patch initializes pwr|clk|datactrl_reg variables with their
+> hardware values while probing.
 
-  dt-bindings: PCI: iproc: Improve INTx modeling
+Hmm, so in principle this change seems quite okay, but I am hesitant
+to pick it up - unless it really addresses a problem that you have
+observed.
 
-On Thu, Mar 26, 2020 at 12:18:41PM +0530, Srinath Mannam wrote:
-> From: Ray Jui <ray.jui@broadcom.com>
-> 
-> Update the iProc PCIe binding document for better modeling of the legacy
-> interrupt (INTx) support.
+The reason is, this change may lead to avoiding to re-write the
+register with the same value it got during boot - and who knows what
+is best here.
+
+Kind regards
+Uffe
+
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 647567def612..f378ae18d5dc 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -2085,6 +2085,10 @@ static int mmci_probe(struct amba_device *dev,
+>         else if (plat->ocr_mask)
+>                 dev_warn(mmc_dev(mmc), "Platform OCR mask is ignored\n");
+>
+> +       host->pwr_reg = readl_relaxed(host->base + MMCIPOWER);
+> +       host->clk_reg = readl_relaxed(host->base + MMCICLOCK);
+> +       host->datactrl_reg = readl_relaxed(host->base + MMCIDATACTRL);
+> +
+>         /* We support these capabilities. */
+>         mmc->caps |= MMC_CAP_CMD23;
+>
+> --
+> 2.17.1
+>
