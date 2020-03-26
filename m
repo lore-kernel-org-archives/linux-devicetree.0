@@ -2,146 +2,127 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC62FC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21905C2D0E8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F82206F8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:37:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hj+GXptt"
+	by mail.kernel.org (Postfix) with ESMTP id 036B6206F6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgCZOhY (ORCPT
+        id S1727792AbgCZOrq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:37:24 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33179 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgCZOhY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 10:37:24 -0400
-Received: by mail-pf1-f196.google.com with SMTP id j1so2880714pfe.0;
-        Thu, 26 Mar 2020 07:37:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xcJ9A36qE7fmwILM0GIjQcoBryZ8cQtpU3R/gSX0bfw=;
-        b=Hj+GXpttQEF8xznQ2rVTuxma2i7jZmuN8GRAQn6sIWhgC4o4xDnW7wFusMuV8o2LbI
-         bay9pVfypJf/YhGlOzXqqT5xjCRnkIuIUkIZnegDauwEobqVXXbuuS6POybxMyvZl4be
-         ScLmbSsGBuJNWfiM60rxOUXURna7W/yXDmnthc8oqsqvzSiMWXGv5fUcrpvpz4bC+Oev
-         oLhZEwB8u4qNCz/t8D0bfjrMv3fhzNvzjiAwry9NZO8dtYlB/srOL0h6f9GJB6O/d1jZ
-         3OQ77yfP4NQ6Z7AlwktCS3ZTyeQpDKHnMBqewIgpL00cuSh78Ut0k9iYl0hOdolwR6P2
-         xZdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xcJ9A36qE7fmwILM0GIjQcoBryZ8cQtpU3R/gSX0bfw=;
-        b=d88pJOOfcCfvIuQNqp/3JuPV7vJgkxEzbvtJ9fiWMi9bPBYybTN47l2P3+/pgMrysG
-         zjTMdhCDb/NT12iwadTOzoOYqwYQud4fipuyViRIfxYcDawBTEkrWsWlnEeQS2631glb
-         MbG63iaTt4VU38zwI2FUxasN/fTYW1S6uL7elyIYrrkRN3vW/3/xNhT4yulqdvgQMPjb
-         PNpP/aK1dqqCE7lgr7+yj6zC+ztuV49ZYtY614iabZjqxcbo75q9zYRnICYpBql94FH5
-         erVjcb1Pouh+L2rcDGUJvf4RoXQyppUZLSxUdpiO2+X8Yqeru82RmG/rXWcPKNOQX0k6
-         XGtw==
-X-Gm-Message-State: ANhLgQ2lfDYYciacU0YJ+6y+kB6FOCeBhlSGA8/2PakTCiWnhBvfF1ca
-        ROBa9h41SKXd9K9tlm6n8GiOAHdmIlcfHALUxwM=
-X-Google-Smtp-Source: ADFU+vsONeD2TN2CDHUgnVhWVwIcnrhd9OmNhte1Zfml9aKMC9gE+W9zgd27TYvKJYDgdxOIM0foGkFZx1J2fO3yIo0=
-X-Received: by 2002:aa7:8149:: with SMTP id d9mr9058526pfn.170.1585233442792;
- Thu, 26 Mar 2020 07:37:22 -0700 (PDT)
+        Thu, 26 Mar 2020 10:47:46 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:35046 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727547AbgCZOrq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:47:46 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id EA1C4634C90;
+        Thu, 26 Mar 2020 16:47:26 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jHTn4-0000iB-0A; Thu, 26 Mar 2020 16:47:26 +0200
+Date:   Thu, 26 Mar 2020 16:47:25 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200326144725.GA2394@valkosipuli.retiisi.org.uk>
+References: <20200313110350.10864-1-robert.foss@linaro.org>
+ <20200313110350.10864-3-robert.foss@linaro.org>
+ <20200313121746.GC5730@valkosipuli.retiisi.org.uk>
+ <CAG3jFytpx8_+DKhUVZnUFeMYK82Z1hFWcEnbyD0=4a8p3ojteg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1585205326-25326-1-git-send-email-srinath.mannam@broadcom.com> <1585205326-25326-3-git-send-email-srinath.mannam@broadcom.com>
-In-Reply-To: <1585205326-25326-3-git-send-email-srinath.mannam@broadcom.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 26 Mar 2020 16:37:15 +0200
-Message-ID: <CAHp75VfUCwcXN_OF-tq1wuiCFdicMMEpJpWNccQT=6cv0DNnWQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/6] PCI: iproc: Add INTx support with better modeling
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ray Jui <ray.jui@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG3jFytpx8_+DKhUVZnUFeMYK82Z1hFWcEnbyD0=4a8p3ojteg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 8:49 AM Srinath Mannam
-<srinath.mannam@broadcom.com> wrote:
->
-> From: Ray Jui <ray.jui@broadcom.com>
->
-> Add PCIe legacy interrupt INTx support to the iProc PCIe driver by
-> modeling it with its own IRQ domain. All 4 interrupts INTA, INTB, INTC,
-> INTD share the same interrupt line connected to the GIC in the system,
-> while the status of each INTx can be obtained through the INTX CSR
-> register.
+Hi Robert,
 
+On Thu, Mar 26, 2020 at 12:56:37PM +0100, Robert Foss wrote:
 ...
-> +       val &= ~(BIT(irqd_to_hwirq(d)));
+> > > +static int __ov8856_power_on(struct ov8856 *ov8856)
+> > > +{
+> > > +     struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
+> > > +     int ret;
+> > > +
+> > > +     ret = clk_prepare_enable(ov8856->xvclk);
+> > > +     if (ret < 0) {
+> > > +             dev_err(&client->dev, "failed to enable xvclk\n");
+> > > +             return ret;
+> > > +     }
+> > > +
+> > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
+> > > +
+> > > +     ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
+> > > +                                 ov8856->supplies);
+> > > +     if (ret < 0) {
+> > > +             dev_err(&client->dev, "failed to enable regulators\n");
+> > > +             goto disable_clk;
+> > > +     }
+> > > +
+> > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_LOW);
+> > > +
+> > > +     usleep_range(1500, 1800);
+> >
+> > I think you could omit the delay on ACPI based systems. Or just bail out
+> > early in that case.
+> 
+> I'll add a check for reset_gpio being NULL, and skip the sleep for that case.
 
-Too many parentheses.
+There could also be a regulator but no GPIO.
 
-...
-
-> +       val |= (BIT(irqd_to_hwirq(d)));
-
-Ditto.
-
-...
-
-> +       /* go through INTx A, B, C, D until all interrupts are handled */
-> +       do {
-> +               status = iproc_pcie_read_reg(pcie, IPROC_PCIE_INTX_CSR);
-> +               for_each_set_bit(bit, &status, PCI_NUM_INTX) {
-> +                       virq = irq_find_mapping(pcie->irq_domain, bit);
-> +                       if (virq)
-> +                               generic_handle_irq(virq);
-
-> +                       else
-> +                               dev_err(dev, "unexpected INTx%u\n", bit);
-
-Any guarantee it will be no storm of undesired messages here?
-
-> +               }
-
-> +       } while ((status & SYS_RC_INTX_MASK) != 0);
-
-' != 0' part is not needed.
-
-If there an interrupt storm the handler will never end, right?
-Is it the idea by design?
+I think if you don't have either, then certainly there's no need for a
+delay.
 
 ...
 
-> +       node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
-> +       if (node)
-> +               pcie->irq = of_irq_get(node, 0);
-> +
-> +       if (!node || pcie->irq <= 0)
-> +               return 0;
+> > > +             ov8856->xvclk = NULL;
+> > > +     } else if (IS_ERR(ov8856->xvclk)) {
+> > > +             dev_err(&client->dev, "could not get xvclk clock (%ld)\n",
+> > > +                     PTR_ERR(ov8856->xvclk));
+> > > +             return PTR_ERR(ov8856->xvclk);
+> > > +     }
+> > > +
+> > > +     ret = clk_set_rate(ov8856->xvclk, OV8856_XVCLK_24);
+> >
+> > This should either come from platform data, or perhaps it'd be even better
+> > to get the clock rate and use assigned-clock-rates. I guess that's
+> > preferred nowadays.
+> 
+> I'm a bit unsure about what this would look like.
+> 
+> Are you thinking something like the way ext_clk is used in smiapp_core.c?
+> I went ahead and implemented support for retrieving and storing
+> 'clock-rates' during the ov8856_check_hwcfg() call, and then setting
+> the rate to the configured rate during probing.
 
-Perhaps
-       node = of_get_compatible_child(dev->of_node, "brcm,iproc-intc");
-       if (!node)
-               return 0;
+With assigned-clock-rates, you can simply use clk_get_rate().
 
-       pcie->irq = of_irq_get(node, 0);
-       if (pcie->irq <= 0)
-              return 0;
-?
+As you get the actual rate, it could be somewhat off of the intended one.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Kind regards,
+
+Sakari Ailus
