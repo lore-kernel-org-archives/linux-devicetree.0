@@ -2,112 +2,85 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF7CC43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8D9C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E29F206F6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F820206F8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 14:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585232545;
+	bh=YlsR+y4MevduxIpBHtlSqX0E4PR8rEoNyXJuFhZpfCs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=HxI4nqfo1OwMh1czOqW5FN6J9cD2qLn9H/n0wsMmyPnfnS6mxlJjbkvKFfHqmwuyd
+	 SVkrfZJ7mqheEgJ87CZvmBNAnskHrsv3aGOMl69fkQLSC/KNxaEYuqUh7PVSPNa2yy
+	 lncAsauQeVc77fQOc/KqiHmiIZMd1DsSgsHPIpFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgCZONG (ORCPT
+        id S1727913AbgCZOWV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:13:06 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:48581 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgCZONG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 10:13:06 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MRCFw-1iuQaa14gW-00NDbH; Thu, 26 Mar 2020 15:13:04 +0100
-Received: by mail-qk1-f177.google.com with SMTP id c145so6457126qke.12;
-        Thu, 26 Mar 2020 07:13:04 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0eyy0uai5lL1l/i5q18Ill0sVn5kBKAXaLxZuPBzFWz+BPQrf8
-        Rli2QQdic93jTtnQpoGEAbPkxQRx/I/87lBesiU=
-X-Google-Smtp-Source: ADFU+vucsMd+oZ2pYuI+xXVs5Rm+lhEKKuWhmVOOyPIrD9S5kaedqvp5TnV/CLaRXxU7UVw6MVYWr8UxvWXNXJTBF4I=
-X-Received: by 2002:a37:8707:: with SMTP id j7mr8352402qkd.394.1585231982997;
- Thu, 26 Mar 2020 07:13:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306130731.938808030702@mail.baikalelectronics.ru> <CAK8P3a0PjNS9+sAiPnDgkmLsnJ6=hR_Vk8oqe493t-Ad_mGa9w@mail.gmail.com>
-In-Reply-To: <CAK8P3a0PjNS9+sAiPnDgkmLsnJ6=hR_Vk8oqe493t-Ad_mGa9w@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 26 Mar 2020 15:12:46 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3ztmzeDBET=jgX=LDCBVg8FKkQrcBOLzaStgUXRyG3jQ@mail.gmail.com>
-Message-ID: <CAK8P3a3ztmzeDBET=jgX=LDCBVg8FKkQrcBOLzaStgUXRyG3jQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] soc: Add Baikal-T1 SoC APB/AXI EHB and L2-cache drivers
-To:     Sergey.Semin@baikalelectronics.ru
-List-Id: <soc.lore.kernel.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 26 Mar 2020 10:22:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727695AbgCZOWV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:22:21 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD322206F8;
+        Thu, 26 Mar 2020 14:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585232541;
+        bh=YlsR+y4MevduxIpBHtlSqX0E4PR8rEoNyXJuFhZpfCs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=aUzqJqzYSCnTgPyA/P32W4O9j/LzdzCb6cnGRFJy0Cwv8RSWlx1+hK3ZUovfKdEtI
+         tvJHNho2Hbq8acMNBk8LnaocRhllSCzcGoE/b6S8E7jLJ4VgMCZdp/FAj24UGX+eaI
+         onNUYLGqPj9hTNVjVXaO6egDdALibnysCDzybkNY=
+Date:   Thu, 26 Mar 2020 09:22:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <andrew.murray@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:lBHbv8X13SIrfsQXRLdqag2U0ga2z3euGWwy4OFsy5SDNFreYHf
- 3E+RalIE+l9WRwE3m0KGP8rDsG1WtnfXBjgVozQT7QQrDByK549DKjTJ2meaDlcIHOB3aD4
- kYiXY5cJSlDEZef9XR6H0wC8QjifOkUJEE8pDJHUeyARIkyzsOTdDHtwjWx7v4s6yO0vI1V
- CqQWzyOohKy12uwrB1XGQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LIuZfejFZpM=:IB5S4fR8T+x+CNJK4u74ss
- 4sXOiz8conB4+nuatX1mwdi60QKXdP2FG7v9sFoysQwUAkYwxSQKZjH/rwXFhULRH5gZ+1Lk6
- 8sqW6ZjV3FkLbeJEU/9o6fV0IzuREKroD6MKRP72bGMo8BJJMR/+hThdkRdSWUVNBlHSfD0Ym
- gw07jBzmv+3QKeaRL3j4lzCEuoz+HxikwYL/IWzhvVHk4HZgFDr5LQWg0+3lkrUjxGTEFfJB4
- 1CxdVb9pMpfSBxnJDO1RSDCJnWHBXgCXIZ6wVmqrVFHAYFbUkPnVn9iFNHNINMh/YBkl9MRI1
- y2Ld3IL7FqQuR9RnGrSV7sXIKVGzs95VEzFKZZpQ3o+z1gEDcjylF8dQZIhaiJHxh5qQ5q35V
- nUdChfktzy4e0XAoLTlLPFDZcxNplSHjvAR+j03aJlhzbhx+tEXDNauqS10vbUTMKE25PUTWp
- yJ4mXSL+uwYlyQllw/d/PdUPiVjSpeZF3oiilACpAIv9VT8XjCfQvqjflD/CuCtqQ6/zphrUi
- HoB5G0c4rV3FWLV78zAsCH6iV5DIvPOqFU0L35QIsJhjgiu/BVCVW5yI/OKGGZTNngeLHRM6m
- yLtS7rFE++TfTnDjpjtz3fIkhPGoODJ95vDGj9H4HnwCzE8VQXSzxfbIHDCs4YWcA3YocXV1u
- wYnUpFdoDN0oj247IvV/0TENcizEoICJOXLi8BqW4Fgqpr81YZm5vreO7ob+x1WOxAU6UJewD
- FmvERxFoAlYGJ77pYXoTkYrgUw9nFNtifLWUtnN0IGbiyPeffVRmIYUDBv8diR0M8z1Fselxx
- cQIeHEQ62BOe+/Vt8wyY2mpqiuupi60OluGi74hSOVRCv5Wz/I=
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v5 1/6] dt-bindings: pci: Update iProc PCI binding for
+ INTx support
+Message-ID: <20200326142218.GA259277@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585205326-25326-2-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 6, 2020 at 4:19 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, Mar 6, 2020 at 2:07 PM <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > From: Serge Semin <fancer.lancer@gmail.com>
-> >
-> > Aside from PCIe/SATA/DDR/I2C/CPU-reboot specific settings the Baikal-T1
-> > system controller provides three vendor-specific blocks. In particular
-> > there are two Errors Handler Blocks to detect and report an info regarding
-> > any problems discovered on the AXI and APB buses. These are the main buses
-> > utilized by the SoC devices to interact with each other. In addition there
-> > is a way to tune the MIPS P5600 CM2 L2-cache up by setting the Tag/Data/WS
-> > L2-to-RAM latencies. All of this functionality is implemented in the
-> > APB/AXI EHB and L2-cache control block drivers to be a part of the kernel soc
-> > subsystem (as being specific to the Baikal-T1 SoC) and introduced in the
-> > framework of this patchset.
-> >
-> > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > commit 98d54f81e36b ("Linux 5.6-rc4").
->
-> I have no objection to the drivers, but I wonder if these should be
-> in drivers/bus and drivers/memory instead of drivers/soc, which have
-> similar drivers already. The driver for the L2 cache is not really a
-> memory controller driver, but it may be close enough, and we
-> already have a couple of different things in there.
+  $ git log --oneline Documentation/devicetree/bindings/pci/
 
-I don't see a reply to Rob's or my comments, so I assume you are not currently
-updating them and I will wait for a new version after the v5.7 merge window.
+  34129bb831cc ("dt-bindings: PCI: intel: Fix dt_binding_check compilation failure")
+  e1ac611f57c9 ("dt-bindings: PCI: Convert generic host binding to DT schema")
+  919ba6e739eb ("dt-bindings: PCI: Convert Arm Versatile binding to DT schema")
+  0956dcb853dc ("dt-bindings: PCI: Add bindings for brcmstb's PCIe device")
+  5d28bee7c91e ("dt-bindings: PCI: qcom: Add support for SDM845 PCIe")
+  e54ea45a4955 ("dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller")
+  d8725e38dd9f ("dt-bindings: pci: layerscape-pci: add compatible strings "fsl, ls1028a-pcie"")
 
-Dropping the series from patchwork for now, see [1].
+Capitalize yours match and put the useful information at the
+beginning; maybe something like this:
 
-       Arnd
+  dt-bindings: PCI: iproc: Improve INTx modeling
 
-[1] https://patchwork.kernel.org/project/linux-soc/list/
+On Thu, Mar 26, 2020 at 12:18:41PM +0530, Srinath Mannam wrote:
+> From: Ray Jui <ray.jui@broadcom.com>
+> 
+> Update the iProc PCIe binding document for better modeling of the legacy
+> interrupt (INTx) support.
