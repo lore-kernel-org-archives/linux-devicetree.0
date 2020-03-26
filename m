@@ -2,147 +2,127 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D95C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 17:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22D4C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 17:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F582073E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 17:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A15D2073E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 17:04:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="E0Av0gMB"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gs3bJfO5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgCZRA0 (ORCPT
+        id S1727611AbgCZREF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:00:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33536 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbgCZRAH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 13:00:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a25so8773321wrd.0
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 10:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=C9+ngUpmkFwCrrCCNM5K1pYaDR7H/QYUrPj981ohJpA=;
-        b=E0Av0gMBUOqV1dPvKF2FITdx8Rf0uAaobKa9Ln4rw+eC7JsGjCT057RazyNLToqdYH
-         uDM362SfMEaE7zSr81m7UtJQ2xDDpsqsxmUGaVfeKZBeqvv/vEe2gsnqwKSv4np35TFW
-         8EFA1KJB9qJxQUbzq/UzRCCRMY4nBGQUaajRFRG9MMBwrp1LPEaDjWccAoThyaXXPfm+
-         ZHpQR74vp4XXkR1gbn4lyQYMaZUHpO68kkbt/0dLeH/z8KMmdSSWBl/m09gMcbefsYKq
-         4hjpimLD5O3WfuEsmeJvI1MXq8AvpVQ8HKEBwpsxvofC/mt+BL9LfjlSdxxwVGPvaGpo
-         qdVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=C9+ngUpmkFwCrrCCNM5K1pYaDR7H/QYUrPj981ohJpA=;
-        b=ZNoMbkrTiaEvFr1VgQAsHIzrso1yBRNv6bs9fnsxkkjZ+Xc4VSVx1aH/762Y2v/HUn
-         7S8ffUBlIIWToognh+31U8UyT3p/c20hoZhEhV8tN1wSj28v0I5PD2SImbZwfLiEtcHm
-         DbNBGLZv453FntMkRR/OPH317LCsJvafzwCitA8qpTgm+GcTgRvLP5rS/LxS4abbqez4
-         P2TKvFfvPd5//KqJS7/ovG7MC+6GzxeJldGGcZHQFz71fzWc+1O41gPOnwU2J6Jc7nkF
-         Mj1znkSxLH5+mpcSyV8NEn9vgfrUrUE6NnNHqiccLv9jAVEyBDEr4j/kWKtSPpsZXsZh
-         5A5w==
-X-Gm-Message-State: ANhLgQ1rgRMwqNNbsEHdxMhgPbN0fnygeyUcsVqLH93nJFkqWTzXmhAZ
-        JA9Wjid+p9jsUuXcmEFutbo+Yg==
-X-Google-Smtp-Source: ADFU+vseedUJg+qIi0p0xgZxO6cJSY/Je6ly7V3VTm6ALURObymwtKpKsQpPYy2rJDKVcOfhXF3N0A==
-X-Received: by 2002:adf:82b0:: with SMTP id 45mr10206215wrc.120.1585242006281;
-        Thu, 26 Mar 2020 10:00:06 -0700 (PDT)
-Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id r15sm4609823wra.19.2020.03.26.10.00.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 10:00:05 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com, devicetree@vger.kernel.org
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/5] arm64: dts: meson: fixup SCP sram nodes
-Date:   Thu, 26 Mar 2020 17:59:55 +0100
-Message-Id: <20200326165958.19274-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200326165958.19274-1-narmstrong@baylibre.com>
-References: <20200326165958.19274-1-narmstrong@baylibre.com>
+        Thu, 26 Mar 2020 13:04:05 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8681 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgCZREF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 13:04:05 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7ce0760004>; Thu, 26 Mar 2020 10:03:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 26 Mar 2020 10:04:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 26 Mar 2020 10:04:04 -0700
+Received: from [10.2.160.81] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 26 Mar
+ 2020 17:04:03 +0000
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <helen.koike@collabora.com>, <digetx@gmail.com>,
+        <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
+ <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+ <a219aeb2-3d00-016e-eed9-503a9fbd0d13@nvidia.com>
+ <20200326144820.GB2394@valkosipuli.retiisi.org.uk>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <927e0263-38b4-4502-f2ad-ab76f31412e4@nvidia.com>
+Date:   Thu, 26 Mar 2020 10:04:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200326144820.GB2394@valkosipuli.retiisi.org.uk>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585242231; bh=ArIq0uQfFAe5fhuSNbr2KiN+eIVzFbu+br9BrixrP1c=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=gs3bJfO5d/ogtrFvlXEV5q+y4otlWnnyxl0dWXESAteNwOC1RBhxufltT7vcZEN88
+         80RtkFvKzwrl2YYayEd0D6EccKh0YhjMphzjaETqAaXH4iBuC4H5rmJu9Y1WXbT2E1
+         VH0axj8t8rrswd7X8q3qN+QbEp9YgSGZxQsDSJ5s62UkdZnRPvgwsfnZUon4bXMU1o
+         uu1Uv2FbYosRYtDrIJs3LMWZoOQ8Fi+gEyajt/ilcvPexEItxvyrPK1Ukat6R9x2EJ
+         YZVIT6o4YaWC1MSaP+OFaK+vlARoy27UaqhUpBAymErZGk1rPreU8a5EJvHu886Qks
+         L+R7mhOHtQojQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The GX and AXG SCP sram nodes were using invalid compatible and
-node names for the sram entries.
 
-Fixup the sram entries node names, and use proper compatible for them.
+On 3/26/20 7:48 AM, Sakari Ailus wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> Hi Sowjanya,
+>
+> On Wed, Mar 25, 2020 at 11:30:18PM -0700, Sowjanya Komatineni wrote:
+>> On 3/25/20 4:03 AM, Sakari Ailus wrote:
+>>>> +static int tegra_channel_enum_input(struct file *file, void *fh,
+>>>> +                                 struct v4l2_input *inp)
+>>>> +{
+>>>> +     /* currently driver supports internal TPG only */
+>>>> +     if (inp->index)
+>>>> +             return -EINVAL;
+>>>> +
+>>>> +     inp->type = V4L2_INPUT_TYPE_CAMERA;
+>>>> +     strscpy(inp->name, "Tegra TPG", sizeof(inp->name));
+>>>> +
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>> +static int tegra_channel_g_input(struct file *file, void *priv,
+>>>> +                              unsigned int *i)
+>>>> +{
+>>>> +     *i = 0;
+>>>> +     return 0;
+>>>> +}
+>>>> +
+>>>> +static int tegra_channel_s_input(struct file *file, void *priv,
+>>>> +                              unsigned int input)
+>>>> +{
+>>>> +     if (input > 0)
+>>>> +             return -EINVAL;
+>>>> +
+>>>> +     return 0;
+>>>> +}
+>>> Please see patchset on topic "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on
+>>> linux-media; it's relevant here, too.
+>> Can update in v6 to add device caps V4L2_CAP_IO_MC and remove enum/g/s_input
+>> ioctls.
+>>
+>> But, I don't see this patch "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on latest
+>> linux-next
+> It's not merged yet but likely will be very soon.
+>
+> --
+> Sakari Ailus
 
-It notably fixes:
-sram@c8000000: 'scp-shmem@0', 'scp-shmem@200' do not match any of the regexes: '^([a-z]*-)?sram(-section)?@[a-f0-9]+$', 'pinctrl-[0-9]+'
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi |  6 +++---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 10 +++++-----
- 2 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index aace3d32a3df..8e6281c685fa 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -1735,18 +1735,18 @@
- 		};
- 
- 		sram: sram@fffc0000 {
--			compatible = "amlogic,meson-axg-sram", "mmio-sram";
-+			compatible = "mmio-sram";
- 			reg = <0x0 0xfffc0000 0x0 0x20000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0 0x0 0xfffc0000 0x20000>;
- 
--			cpu_scp_lpri: scp-shmem@13000 {
-+			cpu_scp_lpri: scp-sram@13000 {
- 				compatible = "amlogic,meson-axg-scp-shmem";
- 				reg = <0x13000 0x400>;
- 			};
- 
--			cpu_scp_hpri: scp-shmem@13400 {
-+			cpu_scp_hpri: scp-sram@13400 {
- 				compatible = "amlogic,meson-axg-scp-shmem";
- 				reg = <0x13400 0x400>;
- 			};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 03f79fe045b7..e2bb68ec8502 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -398,20 +398,20 @@
- 		};
- 
- 		sram: sram@c8000000 {
--			compatible = "amlogic,meson-gx-sram", "amlogic,meson-gxbb-sram", "mmio-sram";
-+			compatible = "mmio-sram";
- 			reg = <0x0 0xc8000000 0x0 0x14000>;
- 
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0 0x0 0xc8000000 0x14000>;
- 
--			cpu_scp_lpri: scp-shmem@0 {
--				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
-+			cpu_scp_lpri: scp-sram@0 {
-+				compatible = "amlogic,meson-gxbb-scp-shmem";
- 				reg = <0x13000 0x400>;
- 			};
- 
--			cpu_scp_hpri: scp-shmem@200 {
--				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
-+			cpu_scp_hpri: scp-sram@200 {
-+				compatible = "amlogic,meson-gxbb-scp-shmem";
- 				reg = <0x13400 0x400>;
- 			};
- 		};
--- 
-2.22.0
+OK, Will wait and send v6 once I see that patch merged. Thanks Sakari.
 
