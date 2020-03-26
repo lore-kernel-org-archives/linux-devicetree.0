@@ -2,617 +2,224 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7158C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C4EC2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6409F20748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9236C2077D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 10:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mx/bBt+B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKvCh9At"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgCZKQQ (ORCPT
+        id S1726298AbgCZKUa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:16:16 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45543 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgCZKQQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 06:16:16 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t7so6946457wrw.12
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 03:16:14 -0700 (PDT)
+        Thu, 26 Mar 2020 06:20:30 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:38330 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgCZKU3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 06:20:29 -0400
+Received: by mail-qv1-f68.google.com with SMTP id p60so2604271qva.5;
+        Thu, 26 Mar 2020 03:20:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=0jv7aTAQt4PtlIzMdsxP/46wwXr8QNQT/7lw7aX9Xgo=;
-        b=mx/bBt+B3myaRbIL/NgUzsfyjQXBQQU1bNVAFaQWleq6IYuny40MQufhDZf3jsUvSH
-         wMnOmTCazwHuhXBEUGeHoHCipVXJaY56sMYZuWGigSL8gF2O6QJC5JdQeG4pAtlisbgc
-         sbcEPA53kg+Ih4aC4I2SH2CA21Vr94p7ZAiG3yzHXXvmmtnA3/hT0vWUIN9yWFaBjldW
-         FPGNij2fqvflOW5tM6xFtN5qfnAQLTKbB8L/9mLyFRIV9LpdiIXep4MGeSgoEWFw1r0u
-         NpA3QCgPsLgIV/4NTB7LB0MZiyNizMrJfl93ckvkFUnbLpaisK6cGoHCHBIJ7MTPB2C7
-         JQqw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AO1+kLNJMIFIpXSKsYT0LBsgxe58i/XAiEepkW6Sx0w=;
+        b=BKvCh9AtaNfMMgTpt8Ez8PpkWAbj+U1VYKEGO+xJv1hXyZpwI4CjCDIbn34nnAdyOu
+         85+SRsrfQucAUDlfxWxh61QuUYgO37Lb4DPwFtzPIZCJ0WXfZB7uYPPVL5uiAisMPevw
+         GUu8fgd8g/1YlVrUrflHRoSGY+GA48lIn53vkKW5VVvSOZiSF5b5vQXkCC55FEazKl7a
+         ex05FJ8T/nB/671yzEc78WAggpP/mjb4OETS8Mas+NbOYQaURL3Q3a7fVMs4wYQKxw6M
+         q165BbKQOQR2DfA7CxyqM0IywlBOqQQt7HkyC/O9eR2qKBt393YyiZqGjmieJk80a7oa
+         puJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=0jv7aTAQt4PtlIzMdsxP/46wwXr8QNQT/7lw7aX9Xgo=;
-        b=YcpZngtQLF0wqktiwtrAzd7107ILFFYGtrAlncdzS8u0c01G6FbjI10DPhHOWAJMEM
-         oeecDt4EZ5oOdICcfTaLPL82WE2TWAtnPWfFWI1kbHqpGjyv+g5yUTG1LZE/THHO6FVh
-         R9rJXs64CWPOoR4gIU+2xl5d82hEslrtlm64w3TPoEmFriXTBuODBcCCFeQ0I/M4EAAy
-         NZM00Q6ae5/Ws8BaTDmZaeV8L/F5pcw6jvbI0sgK0qk90KcqwAVAZP9fmmU9rYJLRBcB
-         EvkZBOUdXGHAMY9LYw9F3SohnxU3vPoDLHGUjpT8ctNuErV5osMnaSuBUcKjrxFF5zAR
-         +uuQ==
-X-Gm-Message-State: ANhLgQ1ptctLISjPAk84lw5aLkmv+2lLW3EJROOxvfhlPjqmfHtnD6e9
-        0x1kbX0g8YAgiu+SCPFNdcZvqA==
-X-Google-Smtp-Source: ADFU+vtqzxwwJ06lGVwTKd7nfcAtX+3y4FhBLYHXAU0fnj+sVSvjhv31D1NPuJhLDxpAaazaysuI0g==
-X-Received: by 2002:a5d:4cc5:: with SMTP id c5mr8108919wrt.136.1585217773352;
-        Thu, 26 Mar 2020 03:16:13 -0700 (PDT)
-Received: from dell ([2.27.35.213])
-        by smtp.gmail.com with ESMTPSA id n2sm3183524wro.25.2020.03.26.03.16.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 03:16:12 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 10:17:02 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Jones <rjones@gateworks.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v7 2/3] mfd: add Gateworks System Controller core driver
-Message-ID: <20200326101702.GD603801@dell>
-References: <1584736550-7520-1-git-send-email-tharvey@gateworks.com>
- <1584736550-7520-3-git-send-email-tharvey@gateworks.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AO1+kLNJMIFIpXSKsYT0LBsgxe58i/XAiEepkW6Sx0w=;
+        b=UUTmva0xL7IlxRaOIHds7UgPGEgAuAEn8dKNoK6legkTyrV2oL8bF9GwuVhRBHde6D
+         7ulf6tvBA1E+D9TE3E3691cJUnqad7eo3iM/BM6gjzoaJp2mNr79RZ4kt8qS+Y4J58Qw
+         hI0S1zfsHLhft+vf+6w6vDDYTIiWbWxxH6ZF/+MndaA865O5Vtb+sdf795DaGbcmnE5W
+         zeLWDgu1WBu5juWEONifX59FsKhFv8juR3hggRB6rxU7eIXGcNR8sCLgvLzhHUQaW5Pw
+         zzOYT+2eEQApHrjOxCzTZUK16N5ichYc6UEPkKY74IiyCXg3LWxLbZnF0RGAySp/oIeB
+         apow==
+X-Gm-Message-State: ANhLgQ02oGWTJJaQ5VvZzkQ+pXJvA7oEvvf0N/8X8ebMTcX5drOwyqWP
+        V0UGnXKuRMwgBqeOcHTDp0ITk/rK
+X-Google-Smtp-Source: ADFU+vuscYuwV4iW9IijORpo2EgGQA4Xn/uP+p6DYZt5WvK4rhT1BDT8FxqY47IRf0X5w+eGJZZWtg==
+X-Received: by 2002:a05:6214:72f:: with SMTP id c15mr7069507qvz.3.1585218028218;
+        Thu, 26 Mar 2020 03:20:28 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id d24sm1096242qkl.8.2020.03.26.03.20.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 26 Mar 2020 03:20:27 -0700 (PDT)
+Subject: Re: [PATCH 2/2] of: some unittest overlays not untracked
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Tull <atull@kernel.org>
+References: <1585187131-21642-1-git-send-email-frowand.list@gmail.com>
+ <1585187131-21642-3-git-send-email-frowand.list@gmail.com>
+ <CAMuHMdXnQ2Tcbac4OoWuSDO9KK0zMLt7ZbMdF79sCj-Yf78Bgg@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <ddde9dca-6333-ba16-e97d-299fde06aaab@gmail.com>
+Date:   Thu, 26 Mar 2020 05:20:25 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <CAMuHMdXnQ2Tcbac4OoWuSDO9KK0zMLt7ZbMdF79sCj-Yf78Bgg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1584736550-7520-3-git-send-email-tharvey@gateworks.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 20 Mar 2020, Tim Harvey wrote:
-
-> The Gateworks System Controller (GSC) is an I2C slave controller
-> implemented with an MSP430 micro-controller whose firmware embeds the
-> following features:
->  - I/O expander (16 GPIO's) using PCA955x protocol
->  - Real Time Clock using DS1672 protocol
->  - User EEPROM using AT24 protocol
->  - HWMON using custom protocol
->  - Interrupt controller with tamper detect, user pushbotton
->  - Watchdog controller capable of full board power-cycle
->  - Power Control capable of full board power-cycle
+On 3/26/20 3:21 AM, Geert Uytterhoeven wrote:
+> Hi Frank,
 > 
-> see http://trac.gateworks.com/wiki/gsc for more details
+> On Thu, Mar 26, 2020 at 2:47 AM <frowand.list@gmail.com> wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> kernel test robot reported "WARNING: held lock freed!" triggered by
+>> unittest_gpio_remove(), which should not have been called because
+>> the related gpio overlay was not tracked.  Another overlay that
+>> was tracked had previously used the same id as the gpio overlay
+>> but had not been untracked when the overlay was removed.  Thus the
+>> clean up function of_unittest_destroy_tracked_overlays() incorrectly
+>> attempted to remove the reused overlay id.
+>>
+>> Patch contents:
+>>
+>>   - Create tracking related helper functions
+>>   - Change BUG() to WARN_ON() for overlay id related issues
+>>   - Add some additional error checking for valid overlay id values
+>>   - Add the missing overlay untrack
+>>   - update comment on expectation that overlay ids are assigned in
+>>     sequence
+>>
+>> Fixes: 492a22aceb75 ("of: unittest: overlay: Keep track of created overlays")
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 > 
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
-> v7:
-> - remove irq from private data struct
+> Looks good to me, so:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > 
-> v6:
-> - remove duplicate signature and fix commit log
+> Still, a few suggestions for future improvement below...
 > 
-> v5:
-> - simplify powerdown function
+>> --- a/drivers/of/unittest.c
+>> +++ b/drivers/of/unittest.c
+>> @@ -1689,19 +1689,27 @@ static const char *overlay_name_from_nr(int nr)
+>>
+>>  static const char *bus_path = "/testcase-data/overlay-node/test-bus";
+>>
+>> -/* it is guaranteed that overlay ids are assigned in sequence */
+>> +/* FIXME: it is NOT guaranteed that overlay ids are assigned in sequence */
+>> +
+>>  #define MAX_UNITTEST_OVERLAYS  256
+>>  static unsigned long overlay_id_bits[BITS_TO_LONGS(MAX_UNITTEST_OVERLAYS)];
 > 
-> v4:
-> - remove hwmon max reg check/define
-> - fix powerdown function
+> Obviously this should have used DECLARE_BITMAP() ;-)
 > 
-> v3:
-> - rename gsc->gateworks-gsc
-> - remove uncecessary include for linux/mfd/core.h
-> - upercase I2C in comments
-> - remove i2c debug
-> - remove uncecessary comments
-> - don't use KBUILD_MODNAME for name
-> - remove unnecessary v1/v2/v3 tracking
-> - unregister hwmon i2c adapter on remove
+>>  static int overlay_first_id = -1;
+>>
+>> +static long of_unittest_overlay_tracked(int id)
+>> +{
+>> +       if (WARN_ON(id >= MAX_UNITTEST_OVERLAYS))
+>> +               return 0;
 > 
-> v2:
-> - change license comment block style
-> - remove COMPILE_TEST (Randy)
-> - fixed whitespace issues
-> - replaced a printk with dev_err
-> ---
->  MAINTAINERS                 |   8 ++
->  drivers/mfd/Kconfig         |  10 ++
->  drivers/mfd/Makefile        |   1 +
->  drivers/mfd/gateworks-gsc.c | 291 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/gsc.h     |  71 +++++++++++
->  5 files changed, 381 insertions(+)
->  create mode 100644 drivers/mfd/gateworks-gsc.c
->  create mode 100644 include/linux/mfd/gsc.h
+> Do we need all these checks on id? Can this really happen?
+> I guess doing it once in of_unittest_track_overlay(), and aborting all
+> of_unittests if it triggers should be sufficient?
+
+Yes, that would be a better location to validate the id.  All of these
+checks will go away when I get rid of the bitmap (see below).
+
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 56765f5..bb79b60 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6839,6 +6839,14 @@ F:	tools/testing/selftests/futex/
->  F:	tools/perf/bench/futex*
->  F:	Documentation/*futex*
->  
-> +GATEWORKS SYSTEM CONTROLLER (GSC) DRIVER
-> +M:	Tim Harvey <tharvey@gateworks.com>
-> +M:	Robert Jones <rjones@gateworks.com>
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
-> +F:	drivers/mfd/gateworks-gsc.c
-> +F:	include/linux/mfd/gsc.h
-> +
->  GCC PLUGINS
->  M:	Kees Cook <keescook@chromium.org>
->  R:	Emese Revfy <re.emese@gmail.com>
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 4209008..d84725a 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -407,6 +407,16 @@ config MFD_EXYNOS_LPASS
->  	  Select this option to enable support for Samsung Exynos Low Power
->  	  Audio Subsystem.
->  
-> +config MFD_GATEWORKS_GSC
-> +	tristate "Gateworks System Controller"
-> +	depends on (I2C && OF)
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	select REGMAP_IRQ
-> +	help
-> +	  Enable support for the Gateworks System Controller found
-> +	  on Gateworks Single Board Computers.
+>> +       return overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id);
+> 
+> No need for BIT_{WORD,MASK}() calculations if you would use test_bit().
 
-Please describe which sub-devices are attached.
+I was trying to not get too carried away with cleaning up the tracking
+code data structure in this patch.  In general, I would say that using
+a bitmap is an over optimization given the very small number of overlays
+that are tracked.  Long term I want to change it to a simpler form.
 
->  config MFD_MC13XXX
->  	tristate
->  	depends on (SPI_MASTER || I2C)
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index aed99f0..c82b442 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
->  obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
->  obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
->  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
-> +obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
->  
->  obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
->  obj-$(CONFIG_HTC_I2CPLD)	+= htc-i2cpld.o
-> diff --git a/drivers/mfd/gateworks-gsc.c b/drivers/mfd/gateworks-gsc.c
-> new file mode 100644
-> index 00000000..8566123
-> --- /dev/null
-> +++ b/drivers/mfd/gateworks-gsc.c
-> @@ -0,0 +1,291 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * The Gateworks System Controller (GSC) is a multi-function
-> + * device designed for use in Gateworks Single Board Computers.
-> + * The control interface is I2C, with an interrupt. The device supports
-> + * system functions such as pushbutton monitoring, multiple ADC's for
-> + * voltage and temperature, fan controller, and watchdog monitor.
+> 
+>> +}
+>> +
+>>  static void of_unittest_track_overlay(int id)
+>>  {
+>>         if (overlay_first_id < 0)
+>>                 overlay_first_id = id;
+>>         id -= overlay_first_id;
+>>
+>> -       /* we shouldn't need that many */
+>> -       BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
+>> +       if (WARN_ON(id >= MAX_UNITTEST_OVERLAYS))
+>> +               return;
+>>         overlay_id_bits[BIT_WORD(id)] |= BIT_MASK(id);
+> 
+> set_bit()
+> 
+>>  }
+>>
+>> @@ -1710,7 +1718,8 @@ static void of_unittest_untrack_overlay(int id)
+>>         if (overlay_first_id < 0)
+>>                 return;
+>>         id -= overlay_first_id;
+>> -       BUG_ON(id >= MAX_UNITTEST_OVERLAYS);
+>> +       if (WARN_ON(id >= MAX_UNITTEST_OVERLAYS))
+>> +               return;
+>>         overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
+> 
+> clear_bit()
+> 
+>>  }
+>>
+>> @@ -1726,7 +1735,7 @@ static void of_unittest_destroy_tracked_overlays(void)
+>>                 defers = 0;
+>>                 /* remove in reverse order */
+> 
+> If it is not guaranteed that overlay ids are assigned in sequence, the
+> reverse order is not really needed, so you could replace the bitmap and
+> your own tracking mechanism by DEFINE_IDR() and idr_for_each()?
+> And as IDRs are flexible, MAX_UNITTEST_OVERLAYS and all checks
+> could be removed, too.
 
-When are you planning on adding support for the other devices?
+The id is actually allocted in the drivers/of/overlay.c via idr.
 
-> + * Copyright (C) 2020 Gateworks Corporation
-> + *
+Thanks for the thougthful review.
 
-Superfluous '\n'.
+-Frank
 
-> + */
-> +#include <linux/device.h>
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/gsc.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +/*
-> + * The GSC suffers from an errata where occasionally during
-> + * ADC cycles the chip can NAK I2C transactions. To ensure we have reliable
-> + * register access we place retries around register access.
-> + */
-> +#define I2C_RETRIES	3
-> +
-> +static int gsc_regmap_regwrite(void *context, unsigned int reg,
-> +			       unsigned int val)
-> +{
-> +	struct i2c_client *client = context;
-> +	int retry, ret;
-> +
-> +	for (retry = 0; retry < I2C_RETRIES; retry++) {
-> +		ret = i2c_smbus_write_byte_data(client, reg, val);
-> +		/*
-> +		 * -EAGAIN returned when the i2c host controller is busy
-> +		 * -EIO returned when i2c device is busy
-> +		 */
-> +		if (ret != -EAGAIN && ret != -EIO)
-> +			break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int gsc_regmap_regread(void *context, unsigned int reg,
-> +			      unsigned int *val)
-> +{
-> +	struct i2c_client *client = context;
-> +	int retry, ret;
-> +
-> +	for (retry = 0; retry < I2C_RETRIES; retry++) {
-> +		ret = i2c_smbus_read_byte_data(client, reg);
-> +		/*
-> +		 * -EAGAIN returned when the i2c host controller is busy
-> +		 * -EIO returned when i2c device is busy
-> +		 */
-> +		if (ret != -EAGAIN && ret != -EIO)
-> +			break;
-> +	}
-> +	*val = ret & 0xff;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct regmap_bus regmap_gsc = {
-> +	.reg_write = gsc_regmap_regwrite,
-> +	.reg_read = gsc_regmap_regread,
-> +};
-> +
-> +/*
-> + * gsc_powerdown - API to use GSC to power down board for a specific time
-> + *
-> + * secs - number of seconds to remain powered off
-> + */
-> +static int gsc_powerdown(struct gsc_dev *gsc, unsigned long secs)
-> +{
-> +	int ret;
-> +	unsigned char regs[4];
+> 
+>>                 for (id = MAX_UNITTEST_OVERLAYS - 1; id >= 0; id--) {
+>> -                       if (!(overlay_id_bits[BIT_WORD(id)] & BIT_MASK(id)))
+>> +                       if (!of_unittest_overlay_tracked(id))
+>>                                 continue;
+>>
+>>                         ovcs_id = id + overlay_first_id;
+>> @@ -1743,7 +1752,7 @@ static void of_unittest_destroy_tracked_overlays(void)
+>>                                 continue;
+>>                         }
+>>
+>> -                       overlay_id_bits[BIT_WORD(id)] &= ~BIT_MASK(id);
+>> +                       of_unittest_untrack_overlay(id);
+>>                 }
+>>         } while (defers > 0);
+>>  }
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
-No error checking?  Could be down for a very long time.
-
-> +	dev_info(&gsc->i2c->dev, "GSC powerdown for %ld seconds\n",
-> +		 secs);
-
-Nit: '\n' here.
-
-> +	regs[0] = secs & 0xff;
-> +	regs[1] = (secs >> 8) & 0xff;
-> +	regs[2] = (secs >> 16) & 0xff;
-> +	regs[3] = (secs >> 24) & 0xff;
-
-Nit: '\n' here.
-
-> +	ret = regmap_bulk_write(gsc->regmap, GSC_TIME_ADD, regs, 4);
-> +	if (ret)
-> +		return ret;
-
-Nit: '\n' here.
-
-> +	regs[0] = 1 << GSC_CTRL_1_LATCH_SLEEP_ADD;
-
-Nit: '\n' here.
-
-> +	ret = regmap_update_bits(gsc->regmap, GSC_CTRL_1, regs[0], regs[0]);
-> +	if (ret)
-> +		return ret;
-
-Nit: '\n' here.
-
-> +	regs[0] = (1 << GSC_CTRL_1_ACTIVATE_SLEEP) |
-> +		(1 << GSC_CTRL_1_SLEEP_ENABLE);
-
-Nit: '\n' here.
-
-> +	ret = regmap_update_bits(gsc->regmap, GSC_CTRL_1, regs[0], regs[0]);
-> +
-> +	return ret;
-> +}
-> +
-> +static ssize_t gsc_show(struct device *dev, struct device_attribute *attr,
-> +			char *buf)
-> +{
-> +	struct gsc_dev *gsc = dev_get_drvdata(dev);
-> +	const char *name = attr->attr.name;
-> +	int rz = 0;
-> +
-> +	if (strcasecmp(name, "fw_version") == 0)
-> +		rz = sprintf(buf, "%d\n", gsc->fwver);
-> +	else if (strcasecmp(name, "fw_crc") == 0)
-> +		rz = sprintf(buf, "0x%04x\n", gsc->fwcrc);
-
-No error message for non-matched commands?
-
-> +	return rz;
-> +}
-> +
-> +static ssize_t gsc_store(struct device *dev, struct device_attribute *attr,
-> +			 const char *buf, size_t count)
-> +{
-> +	struct gsc_dev *gsc = dev_get_drvdata(dev);
-> +	const char *name = attr->attr.name;
-> +	long value;
-> +
-> +	if (strcasecmp(name, "powerdown") == 0) {
-> +		if (kstrtol(buf, 0, &value) == 0)
-> +			gsc_powerdown(gsc, value);
-> +	} else {
-> +		dev_err(dev, "invalid name '%s\n", name);
-> +	}
-
-Name?  Isn't it more of a command?
-
-> +	return count;
-> +}
-> +
-> +static struct device_attribute attr_fwver =
-> +	__ATTR(fw_version, 0440, gsc_show, NULL);
-> +static struct device_attribute attr_fwcrc =
-> +	__ATTR(fw_crc, 0440, gsc_show, NULL);
-> +static struct device_attribute attr_pwrdown =
-> +	__ATTR(powerdown, 0220, NULL, gsc_store);
-> +
-> +static struct attribute *gsc_attrs[] = {
-> +	&attr_fwver.attr,
-> +	&attr_fwcrc.attr,
-> +	&attr_pwrdown.attr,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group attr_group = {
-> +	.attrs = gsc_attrs,
-> +};
-> +
-> +static const struct of_device_id gsc_of_match[] = {
-> +	{ .compatible = "gw,gsc", },
-> +	{ }
-> +};
-> +
-> +static const struct regmap_config gsc_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.cache_type = REGCACHE_NONE,
-> +	.max_register = 0xf,
-> +};
-> +
-> +static const struct regmap_config gsc_regmap_hwmon_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.cache_type = REGCACHE_NONE,
-> +};
-> +
-> +static const struct regmap_irq gsc_irqs[] = {
-> +	REGMAP_IRQ_REG(GSC_IRQ_PB, 0, BIT(GSC_IRQ_PB)),
-> +	REGMAP_IRQ_REG(GSC_IRQ_KEY_ERASED, 0, BIT(GSC_IRQ_KEY_ERASED)),
-> +	REGMAP_IRQ_REG(GSC_IRQ_EEPROM_WP, 0, BIT(GSC_IRQ_EEPROM_WP)),
-> +	REGMAP_IRQ_REG(GSC_IRQ_RESV, 0, BIT(GSC_IRQ_RESV)),
-> +	REGMAP_IRQ_REG(GSC_IRQ_GPIO, 0, BIT(GSC_IRQ_GPIO)),
-> +	REGMAP_IRQ_REG(GSC_IRQ_TAMPER, 0, BIT(GSC_IRQ_TAMPER)),
-> +	REGMAP_IRQ_REG(GSC_IRQ_WDT_TIMEOUT, 0, BIT(GSC_IRQ_WDT_TIMEOUT)),
-> +	REGMAP_IRQ_REG(GSC_IRQ_SWITCH_HOLD, 0, BIT(GSC_IRQ_SWITCH_HOLD)),
-> +};
-> +
-> +static const struct regmap_irq_chip gsc_irq_chip = {
-> +	.name = "gateworks-gsc",
-> +	.irqs = gsc_irqs,
-> +	.num_irqs = ARRAY_SIZE(gsc_irqs),
-> +	.num_regs = 1,
-> +	.status_base = GSC_IRQ_STATUS,
-> +	.mask_base = GSC_IRQ_ENABLE,
-> +	.mask_invert = true,
-> +	.ack_base = GSC_IRQ_STATUS,
-> +	.ack_invert = true,
-> +};
-> +
-> +static int
-
-Break the arguments instead.
-
-> +gsc_probe(struct i2c_client *client, const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct gsc_dev *gsc;
-> +	int ret;
-> +	unsigned int reg;
-> +
-> +	gsc = devm_kzalloc(dev, sizeof(*gsc), GFP_KERNEL);
-> +	if (!gsc)
-> +		return -ENOMEM;
-> +
-> +	gsc->dev = &client->dev;
-> +	gsc->i2c = client;
-> +	i2c_set_clientdata(client, gsc);
-> +
-> +	gsc->regmap = devm_regmap_init(dev, &regmap_gsc, client,
-> +				       &gsc_regmap_config);
-> +	if (IS_ERR(gsc->regmap))
-> +		return PTR_ERR(gsc->regmap);
-> +
-> +	if (regmap_read(gsc->regmap, GSC_FW_VER, &reg))
-> +		return -EIO;
-> +	gsc->fwver = reg;
-
-You not checking this for a valid value?
-
-> +	regmap_read(gsc->regmap, GSC_FW_CRC, &reg);
-> +	gsc->fwcrc = reg;
-> +	regmap_read(gsc->regmap, GSC_FW_CRC + 1, &reg);
-> +	gsc->fwcrc |= reg << 8;
-> +
-> +	gsc->i2c_hwmon = i2c_new_dummy_device(client->adapter, GSC_HWMON);
-> +	if (!gsc->i2c_hwmon) {
-> +		dev_err(dev, "Failed to allocate I2C device for HWMON\n");
-> +		return -ENODEV;
-> +	}
-> +	i2c_set_clientdata(gsc->i2c_hwmon, gsc);
-> +
-> +	gsc->regmap_hwmon = devm_regmap_init(dev, &regmap_gsc, gsc->i2c_hwmon,
-> +					     &gsc_regmap_hwmon_config);
-> +	if (IS_ERR(gsc->regmap_hwmon)) {
-> +		ret = PTR_ERR(gsc->regmap_hwmon);
-> +		dev_err(dev, "failed to allocate register map: %d\n", ret);
-> +		goto err_regmap;
-> +	}
-
-Why can't the HWMON driver fetch its own Regmap?
-
-> +	ret = devm_regmap_add_irq_chip(dev, gsc->regmap, client->irq,
-> +				       IRQF_ONESHOT | IRQF_SHARED |
-> +				       IRQF_TRIGGER_FALLING, 0,
-> +				       &gsc_irq_chip, &gsc->irq_chip_data);
-> +	if (ret)
-> +		goto err_regmap;
-> +
-> +	dev_info(dev, "Gateworks System Controller v%d: fw 0x%04x\n",
-> +		 gsc->fwver, gsc->fwcrc);
-> +
-> +	ret = sysfs_create_group(&dev->kobj, &attr_group);
-> +	if (ret)
-> +		dev_err(dev, "failed to create sysfs attrs\n");
-> +
-> +	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
-
-devm_*?
-
-> +	if (ret)
-> +		goto err_sysfs;
-> +
-> +	return 0;
-> +
-> +err_sysfs:
-> +	sysfs_remove_group(&dev->kobj, &attr_group);
-> +err_regmap:
-> +	i2c_unregister_device(gsc->i2c_hwmon);
-> +
-> +	return ret;
-> +}
-> +
-> +static int gsc_remove(struct i2c_client *client)
-> +{
-> +	struct gsc_dev *gsc = i2c_get_clientdata(client);
-> +
-> +	sysfs_remove_group(&client->dev.kobj, &attr_group);
-> +	i2c_unregister_device(gsc->i2c_hwmon);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct i2c_driver gsc_driver = {
-> +	.driver = {
-> +		.name	= "gateworks-gsc",
-> +		.of_match_table = of_match_ptr(gsc_of_match),
-> +	},
-> +	.probe		= gsc_probe,
-
-I think you need to use .probe_new OR supply an I2C device table.  Not
-sure why/how this is working for you currently.
-
-> +	.remove		= gsc_remove,
-> +};
-> +
-> +module_i2c_driver(gsc_driver);
-> +
-> +MODULE_AUTHOR("Tim Harvey <tharvey@gateworks.com>");
-> +MODULE_DESCRIPTION("I2C Core interface for GSC");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/mfd/gsc.h b/include/linux/mfd/gsc.h
-> new file mode 100644
-> index 00000000..a04e613
-> --- /dev/null
-> +++ b/include/linux/mfd/gsc.h
-> @@ -0,0 +1,71 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * Copyright (C) 2018 Gateworks Corporation
-
-This is out of date.
-
-> + */
-> +#ifndef __LINUX_MFD_GSC_H_
-> +#define __LINUX_MFD_GSC_H_
-> +
-> +/* Device Addresses */
-> +#define GSC_MISC	0x20
-> +#define GSC_UPDATE	0x21
-> +#define GSC_GPIO	0x23
-> +#define GSC_HWMON	0x29
-> +#define GSC_EEPROM0	0x50
-> +#define GSC_EEPROM1	0x51
-> +#define GSC_EEPROM2	0x52
-> +#define GSC_EEPROM3	0x53
-> +#define GSC_RTC		0x68
-> +
-> +/* Register offsets */
-> +#define GSC_CTRL_0	0x00
-> +#define GSC_CTRL_1	0x01
-> +#define GSC_TIME	0x02
-> +#define GSC_TIME_ADD	0x06
-> +#define GSC_IRQ_STATUS	0x0A
-> +#define GSC_IRQ_ENABLE	0x0B
-> +#define GSC_FW_CRC	0x0C
-> +#define GSC_FW_VER	0x0E
-> +#define GSC_WP		0x0F
-> +
-> +/* Bit definitions */
-> +#define GSC_CTRL_0_PB_HARD_RESET	0
-> +#define GSC_CTRL_0_PB_CLEAR_SECURE_KEY	1
-> +#define GSC_CTRL_0_PB_SOFT_POWER_DOWN	2
-> +#define GSC_CTRL_0_PB_BOOT_ALTERNATE	3
-> +#define GSC_CTRL_0_PERFORM_CRC		4
-> +#define GSC_CTRL_0_TAMPER_DETECT	5
-> +#define GSC_CTRL_0_SWITCH_HOLD		6
-> +
-> +#define GSC_CTRL_1_SLEEP_ENABLE		0
-> +#define GSC_CTRL_1_ACTIVATE_SLEEP	1
-> +#define GSC_CTRL_1_LATCH_SLEEP_ADD	2
-> +#define GSC_CTRL_1_SLEEP_NOWAKEPB	3
-> +#define GSC_CTRL_1_WDT_TIME		4
-> +#define GSC_CTRL_1_WDT_ENABLE		5
-> +#define GSC_CTRL_1_SWITCH_BOOT_ENABLE	6
-> +#define GSC_CTRL_1_SWITCH_BOOT_CLEAR	7
-> +
-> +#define GSC_IRQ_PB			0
-> +#define GSC_IRQ_KEY_ERASED		1
-> +#define GSC_IRQ_EEPROM_WP		2
-> +#define GSC_IRQ_RESV			3
-> +#define GSC_IRQ_GPIO			4
-> +#define GSC_IRQ_TAMPER			5
-> +#define GSC_IRQ_WDT_TIMEOUT		6
-> +#define GSC_IRQ_SWITCH_HOLD		7
-> +
-> +struct gsc_dev {
-> +	struct device *dev;
-> +
-> +	struct i2c_client *i2c;		/* 0x20: interrupt controller, WDT */
-> +	struct i2c_client *i2c_hwmon;	/* 0x29: hwmon, fan controller */
-> +
-> +	struct regmap *regmap;
-> +	struct regmap *regmap_hwmon;
-> +	struct regmap_irq_chip_data *irq_chip_data;
-> +
-> +	unsigned int fwver;
-> +	unsigned short fwcrc;
-> +};
-> +
-> +#endif /* __LINUX_MFD_GSC_H_ */
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
