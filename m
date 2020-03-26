@@ -2,111 +2,119 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD76C2D0E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 11:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9909FC43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 11:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEC82073E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 11:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616B720748
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 11:38:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jAQTIHpR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQZmDaLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgCZLXV (ORCPT
+        id S1727948AbgCZLir (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:23:21 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:59215 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727590AbgCZLXV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:23:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585221801; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=V7U5JvFT204MJ8+8hEWOkXRat6eH6xB2Y/6EMB2A6vY=; b=jAQTIHpRbq//KfGSfkOz6iiVbcaQgb+rqtO5bioORCeD0QyzBNw+B5B5M0ou4pVALLng8vaU
- U1drMm0+CxCrGS9Vys417ucMvQs3Prn1grbQVDZaG8ZwGOMCaVRfI7YX9QM4KU9SIKUYkTll
- jeE2FiKCs3c++bGSWQm+h2PFhTw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7c909f.7f655da0d260-smtp-out-n01;
- Thu, 26 Mar 2020 11:23:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CE755C433BA; Thu, 26 Mar 2020 11:23:11 +0000 (UTC)
-Received: from Pillair (unknown [183.83.66.17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6C65AC433D2;
-        Thu, 26 Mar 2020 11:23:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6C65AC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   <pillair@codeaurora.org>
-To:     "'Evan Green'" <evgreen@chromium.org>
-Cc:     "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
-        <devicetree@vger.kernel.org>,
-        "'linux-arm Mailing List'" <linux-arm-kernel@lists.infradead.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>
-References: <1580822300-4491-1-git-send-email-pillair@codeaurora.org> <CAE=gft7EOALEMUWzoR3+pjoxCUTYWbiXoXY=dXH1BDhS3KwBzg@mail.gmail.com> <000901d60295$3acc79b0$b0656d10$@codeaurora.org> <CAE=gft7zqbUnx+BULDD+35z2p1=545=jF0=n6kFXZgo3ZTdCHQ@mail.gmail.com>
-In-Reply-To: <CAE=gft7zqbUnx+BULDD+35z2p1=545=jF0=n6kFXZgo3ZTdCHQ@mail.gmail.com>
-Subject: RE: [PATCH v6] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
-Date:   Thu, 26 Mar 2020 16:53:05 +0530
-Message-ID: <000c01d60360$eea25c90$cbe715b0$@codeaurora.org>
+        Thu, 26 Mar 2020 07:38:47 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46366 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgCZLir (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 07:38:47 -0400
+Received: by mail-pl1-f195.google.com with SMTP id s23so2001509plq.13;
+        Thu, 26 Mar 2020 04:38:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=R0qU1vfFJtq/8uG9IZGBPMdQ0ZUew1mrKKw6hutamAQ=;
+        b=DQZmDaLxybbCIR7OhJBlYkbfh0VC2lyHZ20SSGUBLSGqUYDxLQ8242wwrhvmMIkb+S
+         kauniwR17uUed8TQ9jHasiNY9F0hFIQ+iOXlw+Z3KaBoTjCoZBiR8qmIhLhgn0N/zuzM
+         22Gb5fG2swp7zD4zWaEa3wgW3PwSj369qegoLcBMjvsICPfjheRv0y8uxvwVUSBIG5Bg
+         +OF0emN61e/tbswYEZI3gzkS/0ortnuXK/NQ29CCygBvb3JByEMDtFdtk+d7akr6J7KW
+         7kSiz9I257CjR4R0WzKrrxKa8jSsmeOkN6bk6alieSvYuWHfQGIt4IjoxeM4+Q3z0DVJ
+         WLlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=R0qU1vfFJtq/8uG9IZGBPMdQ0ZUew1mrKKw6hutamAQ=;
+        b=TG35DA6Wx5F5ZDnGSnHiyIHmAe6axhVHm4TejRPLdvSt0tcrhp07F2Cfpr1zmZB2FH
+         Kdk/2XM1nL8hQp8cAL5YRNumKmBHcZuEu8Zf7Cy5+6OAWCRNCrHe1ToyJ2qBkXca1Gzj
+         EtX6nzLepdy1cshC1yK8T3sD9lfvCtXq832SGx1JXCbofXyEHtNTgEOIO1yHVwJiaSGJ
+         DSiF6WI4Ni0vIVS7cBrupayecRK1VecImxJt7l/i3PgKCeiNAyfEidislz343s1Wo0Bh
+         VFy+jF4dBAVI+omT0Ba2EDQ8ApOlS4SZADJbd7XSgQboC3pbkrBKFxc56f9p/9TN0OTM
+         6Rgg==
+X-Gm-Message-State: ANhLgQ2iXmVKSyzbbp0TT14nu1JJsl5Wqmz8uBv9tR4yeiRiMuD1y5l/
+        iRex1yXMl3NwXZvJoBZ6ZldW3jol22FS+1kBz9o=
+X-Google-Smtp-Source: ADFU+vvCH5BmVxfLH5Lsgo06YaFz8cXJ4Ew5KtuIz1eSdJLbu86yn4cADJqPrChVHtpWYi3ypBWuWoz1w1lJOmB4knk=
+X-Received: by 2002:a17:902:5acb:: with SMTP id g11mr317572plm.18.1585222725777;
+ Thu, 26 Mar 2020 04:38:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIr1eNiqDxek+JigOIeIUW3T4FxSwDFrKGDAq7vyx4BaNAawqeIIUVw
-Content-Language: en-us
+References: <1585161361-3408-1-git-send-email-alain.volmat@st.com>
+ <1585161361-3408-3-git-send-email-alain.volmat@st.com> <CAHp75VdPCWdpGo=2n9g0ivti-g2m4jZ=cG4BKHBLk8BVDzaCyg@mail.gmail.com>
+ <20200326101219.GA21190@gnbcxd0016.gnb.st.com>
+In-Reply-To: <20200326101219.GA21190@gnbcxd0016.gnb.st.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 26 Mar 2020 13:38:38 +0200
+Message-ID: <CAHp75Vc896RpnrX6+yb0LfXVroLJO5XX6Gt5V4BJZjdFYOXYnQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] i2c: i2c-stm32f7: allows for any bus frequency
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Evan,
+On Thu, Mar 26, 2020 at 12:12 PM Alain Volmat <alain.volmat@st.com> wrote:
+> On Wed, Mar 25, 2020 at 06:53:45PM +0000, Andy Shevchenko wrote:
+> > On Wed, Mar 25, 2020 at 8:38 PM Alain Volmat <alain.volmat@st.com> wrote:
 
-I have sent out the v7 patch by marking a dependency on the below =
-mentioned series
-https://patchwork.kernel.org/project/linux-wireless/list/?series=3D261367=
-=20
+...
 
-> The clocks are missing:
-> clocks =3D <&rpmhcc RPMH_RF_CLK2>;
-> clock-names =3D "cxo_ref_clk_pin";
-These clocks are optional and were required for older firmware.
-It's not needed now.
-
-Thanks,
-Rakesh Pillai
-
-> -----Original Message-----
-> From: Evan Green <evgreen@chromium.org>
-> Sent: Wednesday, March 25, 2020 9:34 PM
-> To: pillair@codeaurora.org
-> Cc: open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> <devicetree@vger.kernel.org>; linux-arm Mailing List <linux-arm-
-> kernel@lists.infradead.org>; LKML <linux-kernel@vger.kernel.org>; =
-linux-
-> arm-msm <linux-arm-msm@vger.kernel.org>
-> Subject: Re: [PATCH v6] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
-> module device node
->=20
-> On Wed, Mar 25, 2020 at 4:05 AM <pillair@codeaurora.org> wrote:
+> > > +       int i;
+> > > +
+> > > +       for (i = ARRAY_SIZE(i2c_specs) - 1; i >= 0; i--)
 > >
-> > Hi Evan,
 > >
-> > I will send out a v7 for this patchset.
-> > Since I have to configure the S2 SIDs, it is dependent on below =
-ath10k
-> patchset.
-> > =
-https://patchwork.kernel.org/project/linux-wireless/list/?series=3D261367=
+> > Perhaps
+> >
+> >        int i = ARRAY_SIZE(i2c_specs);
+> >
+> >        while(i--)
+> >
+> > ?
+>
+> I propose the following code to make it a bit easier to read/understand:
+>
+> static u32 get_lower_rate(u32 rate)
+> {
+>         int i = ARRAY_SIZE(i2c_specs);
+>
+>         while (i--)
+>                 if (i2c_specs[i].rate < rate)
+>                         break;
+>
+>         return i2c_specs[i].rate;
+> }
+>
+> If you agree with that I'll push a v2.
 
->=20
-> Ah, right. Thanks for the info, I'll check out that series as well.
-> -Evan
+No objections.
+
+-- 
+With Best Regards,
+Andy Shevchenko
