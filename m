@@ -2,141 +2,176 @@ Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89145C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21273C2D0E9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 552D1206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6856206E6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="hi0Cw4df"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ku00JDgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgCZTpr (ORCPT
+        id S1726067AbgCZTvD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:45:47 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:47058 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727026AbgCZTpq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:45:46 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QJYwHT017831;
-        Thu, 26 Mar 2020 15:45:42 -0400
-Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2054.outbound.protection.outlook.com [104.47.45.54])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2ywfj7078h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 15:45:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ejS/SJuKLxLC25ewernaSSgrziFazF+mw5cIYkrxvE/55KZvMA5VqXo0k++x9dRq1Bu7cA1Y913uxs5pFJzhY3Y1ZDnaDlZLTeL+/K2c9nbGi1t1ocRJMvNt1TvFGRpotNOKX2DmJvmHZsxKuWjO8/1edi/xndIjpo530P+xWx8ZA0Ba7GMYYLKNJB3pxYjb/o5ybd275sIekx9GsjW2zDurdEA70XJz7KXHTEGJlA78Ha9OW+pytoyAOP7bcB8pauhKd+4MYowGU+D7dUb5I9TLOaVNroSciZcGOKLfxrHspXMgeXBrtRwIbqIA01hB32CXuCHWfsoMmc6lak35yg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9YerV7I3/3mc4xbkXspC2GQJzEh9o9FBzljpVCgJ5oo=;
- b=Tdomxb6cW8nq1BaEKmNtHUXyBoLpqS/wkdc1igIQ42eotksxqBO42SJpNmIaSudcBMJ7bJNzfmG7C3k7rI5eHaq8hCpXE8yCkX2HKQ+JXWZSTS4QflsPYJtIEeI/6T/wTkLWb5tTpZoQ0hNp/0vXm79AZwXbUslxeSLnGOTPDNW7X6wgo+sK10DbCP7u/ug+OLdl1KJ6IiMiaNePzLCKlAzNTfcgvGfk63rXUFynI3Z1gxTDLYO+ewCU/Y+7SK2Lg6kBTTJs9CI/mn6oDrvFTVPMpfBRcKG/c6mzDd+rpYdzzIGTXwCx/wDwSxMZ+jz5cjym9092br/0di8C7F0wIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
+        Thu, 26 Mar 2020 15:51:03 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37182 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgCZTvC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 15:51:02 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a32so3433199pga.4
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 12:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9YerV7I3/3mc4xbkXspC2GQJzEh9o9FBzljpVCgJ5oo=;
- b=hi0Cw4dfBcj2i2Gpfo19VC10RtF3u6QhL2tP8R0RzZxAj8vahrezDnSsFvialW25QGMBmVsnIjzsryr3p71Ss6YkCHpNZ96C5tCa2qlW3EX5fzXspcRzvchAQwhP4ttxBFPzxX9Oh/2lPpN3RzSf6eFFQxZ/EJ3MqbQNscdX+7c=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB4649.namprd03.prod.outlook.com (2603:10b6:5:18c::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Thu, 26 Mar
- 2020 19:45:40 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2856.019; Thu, 26 Mar 2020
- 19:45:40 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
-        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "Costina, Adrian" <Adrian.Costina@analog.com>
-Subject: Re: [PATCH v13 8/8] dt-bindings: iio: adc: add bindings doc for
- AD9467 ADC
-Thread-Topic: [PATCH v13 8/8] dt-bindings: iio: adc: add bindings doc for
- AD9467 ADC
-Thread-Index: AQHWAeLaFJHA9/JyBEWQMKe2keio2KhbPK4AgAANywA=
-Date:   Thu, 26 Mar 2020 19:45:39 +0000
-Message-ID: <17a99874285734496a97d271dda7368b40e88255.camel@analog.com>
-References: <20200324134636.64643-1-alexandru.ardelean@analog.com>
-         <20200324134636.64643-9-alexandru.ardelean@analog.com>
-         <20200326185616.GA2673@bogus>
-In-Reply-To: <20200326185616.GA2673@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [188.26.73.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 91392951-fa6d-4473-73db-08d7d1be4365
-x-ms-traffictypediagnostic: DM6PR03MB4649:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR03MB46499EBBF897097904C6D6F4F9CF0@DM6PR03MB4649.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0354B4BED2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(366004)(346002)(39860400002)(4744005)(26005)(186003)(316002)(2906002)(54906003)(86362001)(66446008)(66476007)(66946007)(66556008)(64756008)(4326008)(5660300002)(2616005)(107886003)(76116006)(91956017)(71200400001)(8936002)(81166006)(81156014)(8676002)(6512007)(478600001)(6916009)(36756003)(6486002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4649;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 65Zqkc4T+n6Fxqk3wPjkjpyGkFC+TtBsFjRbVF8s6CvyL/f1Wdz7/nwj95ZOjyvMd6NDX5OtHK2i0zCBHbJCo28PAsak7bcUoc2U9GJsJc4suC43DIqvAxwtgl+c8h1GHx72q9B77VhZQLkTfndMaAP8grf8UxpMoc5MYuyhhd4aHcU628Q7b+fGv2kgfbGyg/eSgIXF4WjtziJMNW+AGhxpG3y0uy+4knlgeaIvoL3o0xaNUqAepa1ZPtWiMeW5EGTkzXN63Uqflfy/GvpEcWc60zeSCGGr+JvQBN2xxHTC/0o3TPv3arcIsdP3wdCFyWavj/OHgVHlyzpKGe0Q8S31i3VriwCHspBLCGeh9tmVdFcjU317l5qjHeZyXCazpxlZPB+RD3U/bH5QVdJr30o0CpHxrO8PpBKv8pGqJeJXyTN90LcCk/jQQyo66nrH
-x-ms-exchange-antispam-messagedata: yY0KgGqxHwRma+Rauc7NDKYHk6zicj3rCoodF9eL6xRnXXhOalUU5sEbPWRLy/r7xT0MAW3J5S/9Rdv8lKBg93nxlP5sgO2AxX7tD20ZsxOtgD6QfNAhu6S+9mPlnaZo6AuXUjNvNli9CrhrOK3IcA==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8FAEDEEFC37F98468B2C2222A2AAD212@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WNlM17wU13V4C2Q82cbPsO90RUOYDip+1HB0oBZcydk=;
+        b=Ku00JDgAcccYNbI1uZUctsOQld+eet5Omx+ff0Cvy3YjfYUgT8Ul9wVIslnrn03YMh
+         4zePPAIWKAGJsJ2snn8TFLwVN1+6R5VTe0MJT0CV09SzOOZjeXDy2wuYiSvVGWo5yBHG
+         +0kqWcHWvgrFziwr3K07NdsRNIT8IsX9fz7K3IQggjJML5zHKGawVHWcvrLttDSmQG+K
+         lNWvIIaE4Ko8i76CPIKmW4hHLOw8UlXKx+SvHG2UWMD4BhfECGZEU5+lxZgR35HyuLXY
+         WL5bkoNGSnDUYxtQ999hS4mvdUXqcDnoLXr9WnNKAyIf+ZSQk3wPz43if7ri/zhClL+z
+         mx3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WNlM17wU13V4C2Q82cbPsO90RUOYDip+1HB0oBZcydk=;
+        b=NTqvvDVuTFIU6kKAICHZdRdq3w9U+3oc95kMqT7r4aIIG4gRiKA6+U45wHG2Ca73i8
+         iekDVJ3reTWLL7GkZSwwep+fcSkiBVti+r/zrv1eGcXHWo1S/58f18NZVz825mu0M9oV
+         bt4JPFXGag6oe7//BGa3rzgvSvBW4Ag28FRNDWRrV7ua2TNbCBkGjXp85NY6mcToY4Z5
+         imIQXwl/IBEO+XU0MeuYndKIuXTQY6OXXv0UkwdSYysBZ3TGBni5XikbSu/xtIB/kaQc
+         b0xU2Qv4XLkIikq9Iu1xSM+zDAmNL9C+lSdThnBUs83ZwI2jz0r6Qg8gzNcXt1v5R5GA
+         jksQ==
+X-Gm-Message-State: ANhLgQ1ymQgjI51j0anHW4fRnq9bV8eZFyBmiMG4qAK8iqtSJo3Wjq1/
+        m1BkXl0xcAXLc88Z0QXtppIVpg==
+X-Google-Smtp-Source: ADFU+vtzP9lVP4j9byE0r6N4bVzAiTyE4ric+6ZCDq/jLYLVUz8dO/kaQvref43Lu+xQ9E7J1QiiqQ==
+X-Received: by 2002:a62:fc12:: with SMTP id e18mr11054224pfh.45.1585252260035;
+        Thu, 26 Mar 2020 12:51:00 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m14sm2252235pje.19.2020.03.26.12.50.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 12:50:59 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 12:50:57 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Loic Pallardy <loic.pallardy@st.com>
+Subject: Re: [PATCH 1/7] remoteproc: add prepare and unprepare ops
+Message-ID: <20200326195057.GC59436@builder>
+References: <20200324201819.23095-1-s-anna@ti.com>
+ <20200324201819.23095-2-s-anna@ti.com>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91392951-fa6d-4473-73db-08d7d1be4365
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 19:45:39.9359
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zxuYDeulebb12+I2aXCjC1ghVGdua6K0XaI9xtT5hLigLi5DwXjGZe0CCnH+c539UgwJiqhApRR8AMHKrw3TOf+WJK1JA+I7Mri7+HSfVTU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4649
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-26_12:2020-03-26,2020-03-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 malwarescore=0 clxscore=1015 phishscore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 adultscore=0 spamscore=0
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260144
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324201819.23095-2-s-anna@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAzLTI2IGF0IDEyOjU2IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVHVlLCAyNCBNYXIgMjAyMCAxNTo0NjozNiArMDIwMCwgQWxleGFuZHJ1IEFyZGVsZWFuIHdy
-b3RlOg0KPiA+IFRoaXMgY2hhbmdlIGFkZHMgdGhlIGJpbmRpbmcgZG9jIGZvciB0aGUgQUQ5NDY3
-IEFEQy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhh
-bmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvaWlv
-L2FkYy9hZGksYWQ5NDY3LnlhbWwgICAgICAgICAgfCA2NSArKysrKysrKysrKysrKysrKysrDQo+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCA2NSBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2FkaSxh
-ZDk0NjcueWFtbA0KPiA+IA0KPiANCj4gUGxlYXNlIGFkZCBBY2tlZC1ieS9SZXZpZXdlZC1ieSB0
-YWdzIHdoZW4gcG9zdGluZyBuZXcgdmVyc2lvbnMuIEhvd2V2ZXIsDQo+IHRoZXJlJ3Mgbm8gbmVl
-ZCB0byByZXBvc3QgcGF0Y2hlcyAqb25seSogdG8gYWRkIHRoZSB0YWdzLiBUaGUgdXBzdHJlYW0N
-Cj4gbWFpbnRhaW5lciB3aWxsIGRvIHRoYXQgZm9yIGFja3MgcmVjZWl2ZWQgb24gdGhlIHZlcnNp
-b24gdGhleSBhcHBseS4NCj4gDQo+IElmIGEgdGFnIHdhcyBub3QgYWRkZWQgb24gcHVycG9zZSwg
-cGxlYXNlIHN0YXRlIHdoeSBhbmQgd2hhdCBjaGFuZ2VkLg0KDQpNeSBiYWQuIEFwb2xvZ2llcyBm
-b3IgdGhhdC4NCk5vIGlkZWEgaG93IEkgbWlzc2VkIGFkZGluZyB0aGlzLiBFc3BlY2lhbGx5IHNp
-bmNlIEkgYWxyZWFkeSBrbm93IHRoYXQgSSBzaG91bGQNCmFkZCBpdC4NCg0KSSBndWVzcyBJIGdv
-dCBtaXhlZCB1cCB3aXRoIHRvbyBtYW55IGJyYW5jaGVzIGFuZCBub3QgcGF5aW5nIGF0dGVudGlv
-bi4NCg==
+On Tue 24 Mar 13:18 PDT 2020, Suman Anna wrote:
+
+> From: Loic Pallardy <loic.pallardy@st.com>
+> 
+> On some SoC architecture, it is needed to enable HW like
+> clock, bus, regulator, memory region... before loading
+> co-processor firmware.
+> 
+> This patch introduces prepare and unprepare ops to execute
+> platform specific function before firmware loading and after
+> stop execution.
+> 
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+>  drivers/remoteproc/remoteproc_core.c | 20 +++++++++++++++++++-
+>  include/linux/remoteproc.h           |  4 ++++
+>  2 files changed, 23 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 26f6947267d2..aca6d022901a 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1394,12 +1394,22 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>  		return ret;
+>  	}
+>  
+> +	/* Prepare rproc for firmware loading if needed */
+> +	if (rproc->ops->prepare) {
+> +		ret = rproc->ops->prepare(rproc);
+> +		if (ret) {
+> +			dev_err(dev, "can't prepare rproc %s: %d\n",
+> +				rproc->name, ret);
+> +			goto disable_iommu;
+> +		}
+> +	}
+> +
+>  	rproc->bootaddr = rproc_get_boot_addr(rproc, fw);
+>  
+>  	/* Load resource table, core dump segment list etc from the firmware */
+>  	ret = rproc_parse_fw(rproc, fw);
+>  	if (ret)
+> -		goto disable_iommu;
+> +		goto unprepare_rproc;
+>  
+>  	/* reset max_notifyid */
+>  	rproc->max_notifyid = -1;
+> @@ -1433,6 +1443,10 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>  	kfree(rproc->cached_table);
+>  	rproc->cached_table = NULL;
+>  	rproc->table_ptr = NULL;
+> +unprepare_rproc:
+> +	/* release HW resources if needed */
+> +	if (rproc->ops->unprepare)
+> +		rproc->ops->unprepare(rproc);
+>  disable_iommu:
+>  	rproc_disable_iommu(rproc);
+>  	return ret;
+> @@ -1838,6 +1852,10 @@ void rproc_shutdown(struct rproc *rproc)
+>  	/* clean up all acquired resources */
+>  	rproc_resource_cleanup(rproc);
+>  
+> +	/* release HW resources if needed */
+> +	if (rproc->ops->unprepare)
+> +		rproc->ops->unprepare(rproc);
+> +
+>  	rproc_disable_iommu(rproc);
+>  
+>  	/* Free the copy of the resource table */
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 07bd73a6d72a..ddce7a7775d1 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -355,6 +355,8 @@ enum rsc_handling_status {
+>  
+>  /**
+>   * struct rproc_ops - platform-specific device handlers
+> + * @prepare:	prepare device for code loading
+> + * @unprepare:	unprepare device after stop
+>   * @start:	power on the device and boot it
+>   * @stop:	power off the device
+>   * @kick:	kick a virtqueue (virtqueue id given as a parameter)
+> @@ -371,6 +373,8 @@ enum rsc_handling_status {
+>   * @get_boot_addr:	get boot address to entry point specified in firmware
+>   */
+>  struct rproc_ops {
+> +	int (*prepare)(struct rproc *rproc);
+> +	int (*unprepare)(struct rproc *rproc);
+>  	int (*start)(struct rproc *rproc);
+>  	int (*stop)(struct rproc *rproc);
+>  	void (*kick)(struct rproc *rproc, int vqid);
+> -- 
+> 2.23.0
+> 
