@@ -7,195 +7,303 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37137C43331
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E95C43331
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A649206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4DF206E6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 19:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585249897;
-	bh=A0kR+4KEbyMMx81BTTzMjv1bC45dn+Cea1MQ66CGmSU=;
+	s=default; t=1585250014;
+	bh=AJx2DoDzBAsnZsa5HGaQbr8zhKzSabXNRj/J1Xlod0s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Uf8nnHB08ePQRsekvT1MsUYYTxIqFo9Ti0ts00OaVy2f84G4H0TEOB6GHt8B2ny2x
-	 kzg2gNgxRSj0O86JQ3DOqOyOAnInjnBczvBczcH1RM2b2ECQRdNGleElErg6Uc2XOH
-	 jx8zQA9EcD17BfxhJb3WAwY99HC13+t+lW5k5jbU=
+	b=rjcX0tXF4y1XgiElLDtRKGR8nAW3VUAnLl7Xnpv3Ny0RU8qylE36+VL298s5W+nq4
+	 MDVGgzBCwMpYj+yQHVG0Di+6dbivQGmQhUG8K0xzET0tIzWU4nSjnGhHKerw1/xQUb
+	 d1vjNhz7+RS5OlGIrhhNCpJxGHBfN+a4yIYvaXS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgCZTLg (ORCPT
+        id S1727446AbgCZTNc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:11:36 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45686 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgCZTKP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 15:10:15 -0400
-Received: by mail-io1-f67.google.com with SMTP id a24so6659068iol.12;
-        Thu, 26 Mar 2020 12:10:15 -0700 (PDT)
+        Thu, 26 Mar 2020 15:13:32 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34322 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZTNb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 15:13:31 -0400
+Received: by mail-io1-f65.google.com with SMTP id h131so7319362iof.1;
+        Thu, 26 Mar 2020 12:13:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mqe+qvLDL0F5QFPzzY/Qw513N/CcmkZu3+KJVjBKe00=;
-        b=TKQMGNlcGUmczbnWf3iALBgfQHR9Qt0mozA1qaiWHLIh7Ub7FQldKLdzZP00bbDjPT
-         3kEfm5goifhuwEIZz00TxBYZbJ3z5Qk1ajza5sA1kkJq8xr3DK7RvTETGvot+5QOez+9
-         OPxmxkNExIoH0Jds4jB8nYG+ywvVtOivi6gTLIO54rBkANPkzqolfz10D6DllXlN5vxo
-         J4ECGEz5OdMvZ/ddDJOQ4FTgThJ+UgZOymMnmrz1KfiTHA1X3DG3TdfUMB0IGu8ZMF96
-         YLy2azx42h4SPH3xWbuBgPS4UA72hVa8irglo0qcwKSqxDiDcRYVt5gD/TG9dvLE6OSd
-         3NCw==
-X-Gm-Message-State: ANhLgQ2sWOWL4bY6aktlNnjil1craifeUjGRNIx8rUjGTKAg28kmyVAy
-        sVXYkNCNZX9tcIQbCMfmMA==
-X-Google-Smtp-Source: ADFU+vvEhHo6vdvVrVDVz6G66I3+pxBn28EjTel9PRtmA3bkLU64mCh8uH8O0U//+UVR8Wkx0lqxpA==
-X-Received: by 2002:a02:94cb:: with SMTP id x69mr8851315jah.19.1585249813647;
-        Thu, 26 Mar 2020 12:10:13 -0700 (PDT)
+        bh=lV2UHAI4DrIYW6rSj3tPA5hIszzj928pZD3nBI8/xbM=;
+        b=JXIB1gFjcX/3TDOnLuf+TAXf9iUCxsGcSZUxKJlxEqhZcJ35GS+6U/dw4W44+pyKii
+         YGzGi9swrRcv8RtqbWnWjlHzY4pq0Y5cAj2nzxd/4s85CR8DjHI6CMX1CIkZXcrTFqRH
+         8KWkIkyCN8EhOJjyjsbodkW3ftC1kkR4BrR8Ksn9oUq4yf95gddpNnlO0O5XH8psTNki
+         CekaHCt75Fn5g8LR798uJ79f0wT5HL9UAX2vS8NeA9Q+6/Tdh33qhO9PKuhEqoM7nKWZ
+         QjhP++v/L6vjCw/8TojBtnvldCam/uL8dfnna4QEzDL6yNqBWX7ch++zvizosZpeZhoM
+         Gz6g==
+X-Gm-Message-State: ANhLgQ2TK32TFeoDMe+UyBQAAxWMHBhhGjM8GY1I4EutNe1gh1y6dElq
+        sfeq94jeK6/pX7M4XzpAyg==
+X-Google-Smtp-Source: ADFU+vvkD0gqxwTSZI44S2pcrAYhpd2eOloQseFzMmG2iAWcgTbVvbdJz8EX+48uyueBiyEvk9OHrQ==
+X-Received: by 2002:a5d:84d0:: with SMTP id z16mr8987488ior.88.1585250010123;
+        Thu, 26 Mar 2020 12:13:30 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id c88sm1084825ill.15.2020.03.26.12.10.12
+        by smtp.gmail.com with ESMTPSA id j18sm1091552ila.56.2020.03.26.12.13.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 12:10:13 -0700 (PDT)
-Received: (nullmailer pid 26827 invoked by uid 1000);
-        Thu, 26 Mar 2020 19:10:12 -0000
-Date:   Thu, 26 Mar 2020 13:10:12 -0600
+        Thu, 26 Mar 2020 12:13:28 -0700 (PDT)
+Received: (nullmailer pid 32104 invoked by uid 1000);
+        Thu, 26 Mar 2020 19:13:27 -0000
+Date:   Thu, 26 Mar 2020 13:13:27 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 2/3] dt-bindings: Add binding for IT6505.
-Message-ID: <20200326191012.GB15606@bogus>
-References: <1584941015-20541-1-git-send-email-allen.chen@ite.com.tw>
- <1584941015-20541-3-git-send-email-allen.chen@ite.com.tw>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Subject: Re: [PATCH v7 1/3] dt-bindings: mfd: Add Gateworks System Controller
+ bindings
+Message-ID: <20200326191327.GA27256@bogus>
+References: <1584736550-7520-1-git-send-email-tharvey@gateworks.com>
+ <1584736550-7520-2-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584941015-20541-3-git-send-email-allen.chen@ite.com.tw>
+In-Reply-To: <1584736550-7520-2-git-send-email-tharvey@gateworks.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 01:21:53PM +0800, allen wrote:
-> Add a DT binding documentation for IT6505.
+On Fri, Mar 20, 2020 at 01:35:48PM -0700, Tim Harvey wrote:
+> This patch adds documentation of device-tree bindings for the
+> Gateworks System Controller (GSC).
 > 
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 > ---
-> cros-ec does not have an associated driver that uses the standard Linux USB-C driver class.
-> extcon is used to model the Type-C connector.(crbug.com/982932)
-
-That's nice, but doesn't matter for upstream. And sounds like a driver 
-problem, not a binding issue.
-
-> ---
->  .../bindings/display/bridge/ite,it6505.yaml        | 91 ++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> v7:
+>  - change divider from mili-ohms to ohms
+>  - add constraints for voltage divider and offset
+>  - remove unnecessary ref for offset
+>  - renamed fan to fan-controller and changed base prop to reg
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> v6:
+>  - fix typo
+>  - drop invalid description from #interrupt-cells property
+>  - fix adc pattern property
+>  - add unit suffix
+>  - replace hwmon/adc with adc/channel
+>  - changed adc type to mode and enum int
+>  - add unit suffix and drop ref for voltage-divider
+>  - moved fan to its own subnode with base register
+> 
+> v5:
+>  - resolve dt_binding_check issues
+> 
+> v4:
+>  - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+>  - remove unncessary resolution/scaling properties for ADCs
+>  - update to yaml
+>  - remove watchdog
+> 
+> v3:
+>  - replaced _ with -
+>  - remove input bindings
+>  - added full description of hwmon
+>  - fix unit address of hwmon child nodes
+> ---
+>  .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 173 +++++++++++++++++++++
+>  1 file changed, 173 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
 > new file mode 100644
-> index 00000000..13feeef
+> index 00000000..0457137
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+> @@ -0,0 +1,173 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/display/bridge/ite,it6505.yaml#
+> +$id: http://devicetree.org/schemas/mfd/gateworks-gsc.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: ITE it6505 Device Tree Bindings
-> +
-> +maintainers:
-> +  - Allen Chen <allen.chen@ite.com.tw>
+> +title: Gateworks System Controller multi-function device
 > +
 > +description: |
-> +  The IT6505 is a high-performance DisplayPort 1.1a transmitter,
-> +  fully compliant with DisplayPort 1.1a, HDCP 1.3 specifications.
-> +  The IT6505 supports color depth of up to 36 bits (12 bits/color)
-> +  and ensures robust transmission of high-quality uncompressed video
-> +  content, along with uncompressed and compressed digital audio content.
+> +  The GSC is a Multifunction I2C slave device with the following submodules:
+> +   - Watchdog Timer
+> +   - GPIO
+> +   - Pushbutton controller
+> +   - Hardware Monitor with ADC's for temperature and voltage rails and
+> +     fan controller
 > +
-> +  Aside from the various video output formats supported, the IT6505
-> +  also encodes and transmits up to 8 channels of I2S digital audio,
-> +  with sampling rate up to 192kHz and sample size up to 24 bits.
-> +  In addition, an S/PDIF input port takes in compressed audio of up to
-> +  192kHz frame rate.
-> +
-> +  Each IT6505 chip comes preprogrammed with an unique HDCP key,
-> +  in compliance with the HDCP 1.3 standard so as to provide secure
-> +  transmission of high-definition content. Users of the IT6505 need not
-> +  purchase any HDCP keys or ROMs.
+> +maintainers:
+> +  - Tim Harvey <tharvey@gateworks.com>
+> +  - Robert Jones <rjones@gateworks.com>
 > +
 > +properties:
+> +  $nodename:
+> +    pattern: "gsc@[0-9a-f]{1,2}"
 > +  compatible:
-> +    const: ite,it6505
+> +    const: gw,gsc
 > +
-> +  ovdd-supply:
+> +  reg:
+> +    description: I2C device address
 > +    maxItems: 1
-> +    description: I/O voltage
-> +
-> +  pwr18-supply:
-> +    maxItems: 1
-> +    description: core voltage
 > +
 > +  interrupts:
 > +    maxItems: 1
-> +    description: interrupt specifier of INT pin
 > +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: gpio specifier of RESET pin
+> +  interrupt-controller: true
 > +
-> +  extcon:
-
-Think I said this already, but don't use extcon and define an output 
-port to a DP or USB connector.
-
-> +    maxItems: 1
-> +    description: extcon specifier for the Power Delivery
+> +  "#interrupt-cells":
+> +    const: 1
 > +
-> +  port:
+> +  adc:
 > +    type: object
-> +    description: A port node pointing to DPI host port node
+> +    description: Optional Hardware Monitoring module
+> +
+> +    properties:
+> +      compatible:
+> +        const: gw,gsc-adc
+> +
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +    patternProperties:
+> +      "^channel@[0-9]+$":
+> +        type: object
+> +        description: |
+> +          Properties for a single ADC which can report cooked values
+> +          (ie temperature sensor based on thermister), raw values
+> +          (ie voltage rail with a pre-scaling resistor divider).
+> +
+> +        properties:
+> +          reg:
+> +            description: Register of the ADC
+> +            maxItems: 1
+> +
+> +          label:
+> +            description: Name of the ADC input
+> +
+> +          gw,mode:
+> +            description: |
+> +              conversion mode:
+> +                0 - temperature, in C*10
+> +                1 - pre-scaled voltage value
+> +                2 - scaled voltage based on an optional resistor divider
+> +                    and optional offset
+> +            allOf:
+> +              - $ref: /schemas/types.yaml#/definitions/uint32
+> +            enum: [0, 1, 2]
+> +
+> +          gw,voltage-divider-ohms:
+> +            description: values of resistors for divider on raw ADC input
+> +            maxItems: 2
+> +            items:
+> +             minimum: 1000
+> +             maximum: 1000000
+> +
+> +          gw,voltage-offset-microvolt:
+> +            description: |
+> +              A positive voltage offset to apply to a raw ADC
+> +              (ie to compensate for a diode drop).
+> +            minimum: 0
+> +            maximum: 1000000
+> +
+> +        required:
+> +          - gw,mode
+> +          - reg
+> +          - label
+> +
+> +    required:
+> +      - compatible
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +
+> +  fan-controller:
+> +    type: object
+> +    description: Optional FAN controller
+> +
+> +    properties:
+> +      compatible:
+> +        const: gw,gsc-fan
+> +
+> +      reg:
+> +        description: The fan controller base address
+> +        maxItems: 1
+> +
+> +    required:
+> +      - compatible
+> +      - reg
 > +
 > +required:
 > +  - compatible
-> +  - ovdd-supply
-> +  - pwr18-supply
+> +  - reg
 > +  - interrupts
-> +  - reset-gpios
-> +  - extcon
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
 > +
 > +examples:
 > +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c3 {
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    i2c {
 > +        #address-cells = <1>;
 > +        #size-cells = <0>;
 > +
-> +        dp-bridge@5c {
-> +            compatible = "ite,it6505";
-> +            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
-> +            reg = <0x5c>;
-> +            pinctrl-names = "default";
-> +            pinctrl-0 = <&it6505_pins>;
-> +            ovdd-supply = <&mt6358_vsim1_reg>;
-> +            pwr18-supply = <&it6505_pp18_reg>;
-> +            reset-gpios = <&pio 179 1>;
-> +            extcon = <&usbc_extcon>;
+> +        gsc@20 {
+> +            compatible = "gw,gsc";
+> +            reg = <0x20>;
+> +            interrupt-parent = <&gpio1>;
+> +            interrupts = <4 GPIO_ACTIVE_LOW>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <1>;
 > +
-> +            port {
-> +                it6505_in: endpoint {
-> +                    remote-endpoint = <&dpi_out>;
+> +            adc {
+> +                compatible = "gw,gsc-adc";
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                channel@0 { /* A0: Board Temperature */
+> +                    reg = <0x00>;
+> +                    label = "temp";
+> +                    gw,mode = <0>;
 > +                };
+> +
+> +                channel@2 { /* A1: Input Voltage (raw ADC) */
+> +                    reg = <0x02>;
+> +                    label = "vdd_vin";
+> +                    gw,mode = <1>;
+> +                    gw,voltage-divider-ohms = <22100 1000>;
+> +                    gw,voltage-offset-microvolt = <800000>;
+> +                };
+> +
+> +                channel@b { /* A2: Battery voltage */
+> +                    reg = <0x0b>;
+> +                    label = "vdd_bat";
+> +                    gw,mode = <1>;
+> +                };
+> +            };
+> +
+> +            fan-controller {
+
+fan-controller@2c
+
+(and the schema will need to be changed either to the above or a 
+pattern)
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +                compatible = "gw,gsc-fan";
+> +                reg = <0x2c>;
 > +            };
 > +        };
 > +    };
 > -- 
-> 1.9.1
+> 2.7.4
 > 
