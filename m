@@ -2,125 +2,182 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A16C2D0E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645C5C2D0E8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD5420705
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:24:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585304657;
-	bh=lF/JY9ZVPOd2GvsK5POWvp9v/fpJ4aUeUUUE0LLiT5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EcsK97HpLULVHQJxALJKEPNYAw54CMoCfUnGNoqFnydLGor2HgFraIcXCPNOdk/A7
-	 rpLoJs9g2ZcLjHy/RNZ3/J6SW1YSJjYcqJjJoSzlWYCE6ImSo4cBg7sl9BAXrxlXMT
-	 wNhIRZOVSt3rJamSAHp7cdZ1WDIrH+UalFuN3DDI=
+	by mail.kernel.org (Postfix) with ESMTP id 316272072F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:25:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ehm/OV7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgC0KYO (ORCPT
+        id S1726400AbgC0KZ4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:24:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgC0KYN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:24:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9319A20705;
-        Fri, 27 Mar 2020 10:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585304653;
-        bh=lF/JY9ZVPOd2GvsK5POWvp9v/fpJ4aUeUUUE0LLiT5Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cGsbdW4AfZk74llKktuJuBgvMAnTth5VSaNK32PplZn/Un0/A8h1qEA20gOXHdeHy
-         PV2+veX+oDFxPV3TmzxPLiYDzrzmjdIJ7oFCXg0e20Ivf/L/txU1h2DEv8ZobLSBcf
-         CHvzxL+4ZBTPq/78Dk+qC2TW9Onu4EUUKVCpUFQg=
-Date:   Fri, 27 Mar 2020 11:24:09 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Youn <John.Youn@synopsys.com>
-Subject: Re: [RESENDING RFC PATCH 1/4] dt-bindings: usb: Add
- snps,consolidate-sgl & consolidate-sgl
-Message-ID: <20200327102409.GB1700570@kroah.com>
-References: <cover.1585297723.git.joglekar@synopsys.com>
- <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com>
- <20200327095447.GA1698181@kroah.com>
- <11a058bc-a947-a763-680f-a11fd454925a@synopsys.com>
+        Fri, 27 Mar 2020 06:25:56 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:42812 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgC0KZ4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 06:25:56 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200327102554euoutp02522a38330d42c3b6e46060a8700451f6~AIkZ1qIyQ1916619166euoutp02h
+        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 10:25:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200327102554euoutp02522a38330d42c3b6e46060a8700451f6~AIkZ1qIyQ1916619166euoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585304754;
+        bh=Q7T4AyrE0AJN/v8GqKhjMNo1UHbMdedXuiUU90yqFWY=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Ehm/OV7hCtoXv38UlNkzEAwS2s56G6KUhp0fC+fFxIY4G8R+DsSM1m3627LGQuF6f
+         inRXxG24N1V+vkZOteo/C9Rgd/4WBUkz+f0GcqedpLL8rrAqOd3+wWQ+vIsJdMxzo9
+         AXT6wTW1XmjHyIiEv/xeBnQRSpJOoEtM7P5vBxn8=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200327102554eucas1p1001d761387dacfcd0e19f761872b0e60~AIkZkNxw81375613756eucas1p1E;
+        Fri, 27 Mar 2020 10:25:54 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 78.3A.61286.2B4DD7E5; Fri, 27
+        Mar 2020 10:25:54 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200327102554eucas1p1f848633a39f8e158472506b84877f98c~AIkZN-Tsz1352813528eucas1p1D;
+        Fri, 27 Mar 2020 10:25:54 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200327102554eusmtrp1a5e09948fd42ecfa61afc7f3b3726a35~AIkZNTw8T1114511145eusmtrp1_;
+        Fri, 27 Mar 2020 10:25:54 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-66-5e7dd4b24fbf
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 22.4D.07950.2B4DD7E5; Fri, 27
+        Mar 2020 10:25:54 +0000 (GMT)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200327102553eusmtip26fe13a9353677c4a19d04ae8aa4aebe4~AIkYlqzJb2542525425eusmtip2E;
+        Fri, 27 Mar 2020 10:25:53 +0000 (GMT)
+Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
+ behavior by default
+To:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
+Date:   Fri, 27 Mar 2020 11:25:48 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11a058bc-a947-a763-680f-a11fd454925a@synopsys.com>
+In-Reply-To: <20200321210305.28937-1-saravanak@google.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRmVeSWpSXmKPExsWy7djP87qbrtTGGSy9JWsx/8g5VouZb/6z
+        WTQvXs9msWO7iMXlXXPYLOZ+mcps0br3CLtF16G/bA4cHtt2b2P12DnrLrvHgk2lHptWdbJ5
+        7J+7ht3j8ya5ALYoLpuU1JzMstQifbsErox1ZzezFrwSqtjw+Rh7A+ME/i5GTg4JAROJPztb
+        mboYuTiEBFYwSszsPsUC4XxhlDiy9wA7hPOZUaL/SDsrTMujo40sILaQwHJGiVs/7SGK3jNK
+        rJi4HaxIWCBWYtO+o2DdIgJtjBIP9/0Em8sssIhR4tmSrewgVWwChhJdb7vYQGxeATuJFc8b
+        mUFsFgFViU2fVoJNEhWIkbh4uJ8VokZQ4uTMJ2CrOQWsJE4v/QlWzywgL9G8dTaULS5x68l8
+        JohT97FL3L0TBGG7SCx418ICYQtLvDq+hR3ClpE4PbkH7DgJgWagS8+tZYdwehglLjfNYISo
+        spa4c+4X0KUcQBs0Jdbv0gcxJQQcJb7u14Yw+SRuvBWEOIFPYtK26cwQYV6JjjYhiBlqErOO
+        r4PbevDCJeYJjEqzkDw2C8kzs5A8Mwth7QJGllWM4qmlxbnpqcWGeanlesWJucWleel6yfm5
+        mxiBSen0v+OfdjB+vZR0iFGAg1GJh1ejpSZOiDWxrLgy9xCjBAezkgjv00igEG9KYmVValF+
+        fFFpTmrxIUZpDhYlcV7jRS9jhQTSE0tSs1NTC1KLYLJMHJxSDYxJBh+tQqSdivVmMh47p365
+        /ZvbQ+HXAexxGlu3la72m6Bc03Bk11HvT68CNptmmy8Q+bJB1mzS0s1Zp5aoOu18nyHWL8K4
+        9Xr2tO/ygdzBLyOVNiyZ6GvcvGvNqjUL3mqe76rY3GbKkbD1lH5c8W2biJ5lk27MmTh3Gr9w
+        wVTRuQd89zD8Er6lxFKckWioxVxUnAgAlwLcAUYDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOIsWRmVeSWpSXmKPExsVy+t/xe7qbrtTGGUydxGIx/8g5VouZb/6z
+        WTQvXs9msWO7iMXlXXPYLOZ+mcps0br3CLtF16G/bA4cHtt2b2P12DnrLrvHgk2lHptWdbJ5
+        7J+7ht3j8ya5ALYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzM
+        stQifbsEvYx1ZzezFrwSqtjw+Rh7A+ME/i5GTg4JAROJR0cbWboYuTiEBJYySrx9/owFIiEj
+        cXJaAyuELSzx51oXG0TRW0aJ/o3rGEESwgKxEpv2HWUHSYgIdDBKfLt6HayKWWARo8Sse5PA
+        qoQELCVmz+piBrHZBAwlut6CjOLk4BWwk1jxvBEsziKgKrHp00qwdaICMRI/93SxQNQISpyc
+        +QTM5hSwkji99CdYPbOAmcS8zQ+hbHmJ5q2zoWxxiVtP5jNNYBSahaR9FpKWWUhaZiFpWcDI
+        sopRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwErcd+7llB2PXu+BDjAIcjEo8vBotNXFCrIll
+        xZW5hxglOJiVRHifRgKFeFMSK6tSi/Lji0pzUosPMZoCPTeRWUo0OR+YJPJK4g1NDc0tLA3N
+        jc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTD2F7LtPrnZZfpvxddxZ/9IW8w5MTFi
+        3rJ26Rr5Fz593KrLZiy8LeSepH3Q63XUsifTJC3YS2/a91bLBF9eVlhq/+3Htw+X3n1f9yur
+        fNfZZY9eliQysOytDv5nc6XHefI044T3YiEPE2N8y350Lnj1yuXjw0nfzO7OdjwZXWzTNOfv
+        yjy9g6d1lViKMxINtZiLihMBlVPOA9oCAAA=
+X-CMS-MailID: 20200327102554eucas1p1f848633a39f8e158472506b84877f98c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200327102554eucas1p1f848633a39f8e158472506b84877f98c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200327102554eucas1p1f848633a39f8e158472506b84877f98c
+References: <20200321210305.28937-1-saravanak@google.com>
+        <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 10:11:59AM +0000, Tejas Joglekar wrote:
-> Hi,
-> On 3/27/2020 3:24 PM, Greg KH wrote:
-> > On Fri, Mar 27, 2020 at 03:11:56PM +0530, Tejas Joglekar wrote:
-> >> This commit adds the documentation for consolidate-sgl, and
-> >> snps,consolidate-sgl property. These when set enables the quirk for
-> >> XHCI driver for consolidation of sg list into a temporary buffer when small
-> >> buffer sizes are scattered over the sg list not making up to MPS or total
-> >> transfer size within TRB cache size with Synopsys xHC.
-> >>
-> >> Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/usb/dwc3.txt     | 3 +++
-> >>  Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
-> >>  2 files changed, 6 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> >> index 9946ff9ba735..292d1f7969e4 100644
-> >> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> >> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> >> @@ -104,6 +104,9 @@ Optional properties:
-> >>  			this and tx-thr-num-pkt-prd to a valid, non-zero value
-> >>  			1-16 (DWC_usb31 programming guide section 1.2.3) to
-> >>  			enable periodic ESS TX threshold.
-> >> + - snps,consolidate-sgl: enable sg list consolidation - host mode only. Set to use
-> >> +			SG buffers of at least MPS size by consolidating smaller SG
-> >> +			buffers list into a single buffer.
-> >>  
-> >>   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-> >>   - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-> >> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> >> index 3f378951d624..a90d853557ee 100644
-> >> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> >> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> >> @@ -43,6 +43,9 @@ Optional properties:
-> >>    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-> >>    - imod-interval-ns: default interrupt moderation interval is 5000ns
-> >>    - phys : see usb-hcd.yaml in the current directory
-> >> +  - consolidate-sgl: indicate if you need to consolidate sg list into a
-> >> +    temporary buffer when small SG buffer sizes does not make upto MPS
-> >> +    size or total transfer size across the TRB cache size.
-> > 
-> > Shouldn't this refer to the fact that the hardware is broken?  Otherwise
-> > why would anyone know if they should, or should not, enable this option?
-> >
-> We have not seen issue with Linux environment for now. But with other OS with
-> SG list with very small buffer sizes the xHC controller hang was seen. So 
-> currently introducing the binding as optional one. One could enable this 
-> option when xHC halt happens due to small SG list sizes.  
+Hi,
 
-What I mean is this should be something like,
-"quirk-broken-sg-list-handler" or something like that.  Otherwise how
-does anyone know if this really is needed or not.  Reading this would
-seem like everyone would like to do this, as consolidating links
-sounds like a good optimization, when instead this really cause more
-memory allocations, making this possibly worse performance.
+On 2020-03-21 22:03, Saravana Kannan wrote:
+> Set fw_devlink to "permissive" behavior by default so that device links
+> are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
+> firmware.
+>
+> This ensures suppliers get their sync_state() calls only after all their
+> consumers have probed successfully. Without this, suppliers will get
+> their sync_state() calls at late_initcall_sync() even if their consuer
+>
+> Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
+> that needs more testing as it's known to break some corner case
+> drivers/platforms.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
 
-thanks,
+This patch has just landed in linux-next 20200326. Sadly it breaks 
+booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit 
+mode. There is no warning nor panic message, just a silent freeze. The 
+last message shown on the earlycon is:
 
-greg k-h
+[    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
+
+> ---
+>
+> I think it's time to soak test this and see if anything fails or if
+> anyone complains. Definitely not ready for 5.6. But pulling it in for
+> 5.7 and having it go through all the rc testing would be helpful.
+>
+> I'm sure there'll be reports where some DT properties are ambiguously
+> names and is breaking downstream or even some upstream platform. For
+> example, a DT property like "nr-gpios" would have a dmesg log about
+> parsing error because it looks like a valid "-gpios" DT binding. It'll
+> be good to catch those case and fix them.
+>
+> Also, is there no way to look up current value of early_params? It'd be
+> nice if there was a way to do that.
+>
+> -Saravana
+>
+>   drivers/base/core.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 5e3cc1651c78..9fabf9749a06 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -2345,7 +2345,7 @@ static int device_private_init(struct device *dev)
+>   	return 0;
+>   }
+>   
+> -static u32 fw_devlink_flags;
+> +static u32 fw_devlink_flags = DL_FLAG_SYNC_STATE_ONLY;
+>   static int __init fw_devlink_setup(char *arg)
+>   {
+>   	if (!arg)
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
