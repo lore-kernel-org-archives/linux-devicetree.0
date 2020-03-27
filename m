@@ -2,97 +2,62 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFEAC43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DD6C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9219220838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585316091;
-	bh=50d7atbbqCu8sVfTjeDFx1DNlGegS0O1DKeZQZ52JP8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=XhXHNcYmuY3JxxEECdzqiqPTWgVPm8RCzojQeQGVxbPYGZT0/5NB8UncKK2R6H2qo
-	 VomPDyyDWWkw7/q7d2GYnKjr8uQYV/hqPYuC88/gPvgGR8UxRC+r2e8eEMhsO+wqXs
-	 Hxj1CjP58FkIjnTnrnf65gQSolBqwv0/Vt2PEjG4=
+	by mail.kernel.org (Postfix) with ESMTP id EEAEC20838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="RbnVNUsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgC0Nev (ORCPT
+        id S1727505AbgC0NfL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:34:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgC0Nev (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:34:51 -0400
-Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28EF120658;
-        Fri, 27 Mar 2020 13:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585316090;
-        bh=50d7atbbqCu8sVfTjeDFx1DNlGegS0O1DKeZQZ52JP8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WBUFkK5g/Fd0EJOxssi6MUZ8HPDTne7wpMIkbWcxTeqKQxpHTFrdDUGhYKsfAiNsr
-         DUQJCsqXySsHXU3oZs7SEwrbj4VOHzh+wky1vfgBqQNR+bklIcYFGZZaQRh0o6yd4W
-         xRJC502G1n6dGOTlOIc6cmGye2/plnCxTk7nVWFw=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1jHp8J-0049th-V8; Fri, 27 Mar 2020 14:34:47 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Simon Horman <simon.horman@netronome.com>,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH] docs: dt: fix a broken reference for a file converted to json
-Date:   Fri, 27 Mar 2020 14:34:47 +0100
-Message-Id: <33fa622c263ad40a129dc2b8dd0111b40016bc17.1585316085.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        Fri, 27 Mar 2020 09:35:11 -0400
+Received: from mx-out2.startmail.com ([145.131.90.155]:52786 "EHLO
+        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgC0NfL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 09:35:11 -0400
+Date:   Fri, 27 Mar 2020 15:40:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
+        s=2017-11; t=1585316109;
+        bh=B3ie8oOubwFY+Sys4enBz3aY1yXLgBVZ+ICV7cbZufE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RbnVNUsHqnHzmbFqLprNCURsMkAp3asSeklKqz3MVhKvgic9iSPYoGaGwL0nL9FFM
+         2BxbBPAvBSSeD+tsHJyf7KOnYi1Nqi0E1lBt/yv5pfLMUysW2sREiue5ewWeczO58D
+         D3i0EjTmfTgex4KbLpJG1+z03ekom78WHdhGGaeK6bTnpwUw6xUSxdhSL+ESPkIvL+
+         7Lw9If6DlEoplVNq3ILofAhwFxDUuPKgT/+VDf/dtysfuVt0nzELFsoOPSBpDTYDsq
+         2vse9fjCHuhst2ojEzZkBTOZ9ZGPzCnjLwjO5pSsXUb09NVhFGjiBrBUhqU4DFFa0v
+         eGWh4oFNMFXRg==
+From:   Alexandru Lazar <alazar@startmail.com>
+To:     linux-iio@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v5 0/2] Maxim MAX1241 driver
+Message-ID: <20200327134000.GA3579@leena.republic>
+References: <20200322140237.211347-1-alazar@startmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200322140237.211347-1-alazar@startmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Changeset 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-moved a binding to json and updated the links. Yet, one link
-was forgotten.
+On Sun, Mar 22, 2020 at 04:02:35PM +0200, Alexandru Lazar wrote:
+> Hello again,
+> 
+> Here's version 5 of a patch series which adds support for the Maxim
+> MAX1241, a 12-bit, single-channel, SPI-connected ADC.
 
-Update this one too.
+*poke*
 
-Fixes: 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No rush here, just wanna make sure this doesn't go off-radar.
 
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index beca6466d59a..d2202791c1d4 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -29,7 +29,7 @@ Required properties for compatible string qcom,wcn399x-bt:
- 
- Optional properties for compatible string qcom,wcn399x-bt:
- 
-- - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-+ - max-speed: see Documentation/devicetree/bindings/serial/serial.yaml
-  - firmware-name: specify the name of nvm firmware to load
-  - clocks: clock provided to the controller
- 
--- 
-2.25.1
-
+Thanks,
+Alex
