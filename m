@@ -2,207 +2,137 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9EEC43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 05:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C84C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 05:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A46620663
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 05:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA7A20663
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 05:07:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B4ufnI/5"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="DTsT9tZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbgC0FEy (ORCPT
+        id S1726071AbgC0FHu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 01:04:54 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:56509 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725956AbgC0FEy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 01:04:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585285493; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=SG6WaenvHTcDY9BCxDftkj4em5j0Ob7ZRiq3kSRzIPs=; b=B4ufnI/5rBgojGW6LW2Ds0nDEfWX+DaCDswKzVEb09+NCHaB4pcn+kTWicvHylWXs6z+SQ5B
- 80GJKkMdwKT4IodR1MwWrlQhqXZXarNT3PTvLeO1snodjmgKDM6wzpKuhUsbgA6kJk/sQVYn
- JaXcM96x8iXn4yKx9Aqfw1bZZsQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7d8975.7f655f3e0b58-smtp-out-n01;
- Fri, 27 Mar 2020 05:04:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F1C97C43636; Fri, 27 Mar 2020 05:04:52 +0000 (UTC)
-Received: from [192.168.0.13] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD584C433F2;
-        Fri, 27 Mar 2020 05:04:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD584C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V2 3/8] soc: qcom-geni-se: Add interconnect support to fix
- earlycon crash
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wsa@the-dreams.de, Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, Doug Anderson <dianders@chromium.org>
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-4-git-send-email-akashast@codeaurora.org>
- <20200313204441.GJ144492@google.com>
- <1f86fdf0-df7c-4e4a-d4d8-8b0162e52cb4@codeaurora.org>
- <20200317182910.GR144492@google.com>
- <3831b33c-93ee-e5e0-fcfb-530b4738f930@codeaurora.org>
- <20200319194332.GA60149@google.com>
- <a7227a1f-00a1-0818-80f3-904fe264f864@codeaurora.org>
- <CAE=gft6AGkcdUAkoyevZgmtBgaiEkoQzzJcg7sYjbpy5Kh2fyA@mail.gmail.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <08717de4-cfeb-4049-ebbf-aa2c1c6989c7@codeaurora.org>
-Date:   Fri, 27 Mar 2020 10:34:43 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 27 Mar 2020 01:07:50 -0400
+Received: from mail-eopbgr1410109.outbound.protection.outlook.com ([40.107.141.109]:65280
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725857AbgC0FHt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 01:07:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X2EoXeSzTDPUmdfok449rzLvTmX3nrB8YU/DwQdxu6bSXbFgQF50pHj/f7jYkH5Pufe2XUQ4tlwu03R7DUuicWfCbio9ihNx5rEBkAflEIi6O9mxaJU265k/samtiz/IsXjacg0tuIsweK+Bazc80VnDoE4uc5zRyyFpBA8IjFPKudb40gf0TlZZOTUmhhv624vlJ5UPaHm2VGosIMtGBncwpwCOvN5C2c/Tz2GtI74GfgL3/05PGfUU9oB8e3Cnp+uhPjso72gUTM2ji+FdrMKT8YDkSsZuH1EyEnaGDWLXyxdUd3tKRv5w1bYwz1X6zo506YzOD20aGJlz8nsIkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pQYdIgGroBz4xTBQ5kqAHfAV7KNZojVRQjbYBg8b0JM=;
+ b=SCxqn6FKCTvIgEh7mjlFIrqvOo4KQnnF6EYGv6G0iGp0IO+4WZ7TwTWQl1/Ca8+Oc7GfmyPvVv9L+TxO4Hp0OqgB/Ws8bpgWxfrBpTxsTPguwEGniuVZ2FyylSyGod4Dpfbj2q2M8ytL29dGnZ+iTFOP/9wDLUivosecnStIAHxwKhK8dP89pNQsdy16fKrnNq/R/xrkopTij0R1dJ+MJmzVQ+JXCiHy8h0cvRmYW7BO36vbuV8GlTESpEx5RE4P0Fg+UgSLemuMqbjdX/6xzoBsgaG9hmmvSyJCp16juk1CO81ZaqxGa6XUDtWXA1RXf0aGh+HLcZXN3auPGjTu3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pQYdIgGroBz4xTBQ5kqAHfAV7KNZojVRQjbYBg8b0JM=;
+ b=DTsT9tZcxKh8HSpasysOLOJua+ftdIGS+CEeClJM7kS+ByfzSCb2udZ9Y7hRF4Qic/tY+H7+VSmD8heqNtnh3l6zf5FvQuB9TzCjQThN83eF/6XF/zpoym0p5ozzDNxyMFDGqdFapB8CdHYuxN7xF/hs2EIjDVsiJaU/dIrRVkc=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB4496.jpnprd01.prod.outlook.com (20.179.187.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.22; Fri, 27 Mar 2020 05:07:45 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
+ 05:07:45 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/2] dt-bindings: usb: generic-ehci/ohci: Document
+ power-domains property
+Thread-Topic: [PATCH 0/2] dt-bindings: usb: generic-ehci/ohci: Document
+ power-domains property
+Thread-Index: AQHWA4z554OB0l2bAUaJVd29DMFcUqhb4/DA
+Date:   Fri, 27 Mar 2020 05:07:43 +0000
+Message-ID: <TYAPR01MB4544C0AD1F363CD0B5D8F43AD8CC0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20200326163807.23216-1-geert+renesas@glider.be>
+In-Reply-To: <20200326163807.23216-1-geert+renesas@glider.be>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [211.11.155.148]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5918fa8c-4746-411e-4b16-08d7d20cc903
+x-ms-traffictypediagnostic: TYAPR01MB4496:
+x-microsoft-antispam-prvs: <TYAPR01MB449616195A4F745D1CE6DCBFD8CC0@TYAPR01MB4496.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0355F3A3AE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(376002)(366004)(39860400002)(396003)(33656002)(86362001)(5660300002)(55016002)(7696005)(71200400001)(110136005)(8676002)(8936002)(81166006)(81156014)(66476007)(26005)(186003)(6506007)(66946007)(76116006)(66446008)(66556008)(4326008)(52536014)(64756008)(478600001)(9686003)(316002)(2906002)(54906003)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4496;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HuXiDEX6KdGXBDyVRlD4r/xb1fdQiaUGOEyzOl/2mwiPMDtBVt76XhGOznW1k7f5wJXr7wyB4GnX2lxfoOeh6mbnyDrDX+GvaANagC3w0o20IxbLoGaaFYtDD5uucmW1QCQBNQJx9IgPQZ9eHv6qdYEVmleRGkkfZvD4zJLSl9reIlyOYMK7Tt6dLAvtrxHC3jL5tOBUcF5g+6/WBAo8Bf8MK3iRATsk7lDphBe9sjFw1WouWpTe06jkB/Od5aZw4oX2ofTOD+lb+jeaD9yQkDUTKQO/ynsPmu2o+yQpuNiMPqJnMyf23hzWTlsMCS0PihjhEGrwkKb/vCOzzlM6Pske4+w8dGP2iMnUMR/v52UIGyzuWRxyt3VegQveXHDYJIkDQegvdAc8UX1oVEOa9Ij6dwOLw3nN3Mc4Jt8ShzpepsoPSFKP3GMJg7n8+oegkmrQsVwNhxiZO+J1M7ppyBOm0EH2l6hKOPF1EovTsF07E87CNo+IDxnd9YVGMot+
+x-ms-exchange-antispam-messagedata: k4SjqomiKjmtclIK2FAEMM9Or03vLtRpL/WVJsmFiCTVq9f49mAS92JlV5rDYWOre2GTOQvt6SJNvfhsMAc5Uqgh7AzZ7teoH8ctEi8t6XPxOljdf7ejhGhqGY9bWd0s8KHlrn79J3e1FlPVxvwUOA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft6AGkcdUAkoyevZgmtBgaiEkoQzzJcg7sYjbpy5Kh2fyA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5918fa8c-4746-411e-4b16-08d7d20cc903
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 05:07:44.6483
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1wCuIXlRyJl/uor2wwRHj7iTtttPQiPpwvcqU2IYdnrgNphNRo5oXZjlFKbA0w7ahBAyEDK3U72Cq2f8lzC5jVGT+ABrvFjdqN4u5WotXDhr35ppC0zN3iAh1coJf9sb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4496
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Evan,
+Hi Geert-san,
 
-On 3/20/2020 10:00 PM, Evan Green wrote:
-> On Fri, Mar 20, 2020 at 3:22 AM Akash Asthana <akashast@codeaurora.org> wrote:
->> Hi Evan, Matthias,
->>
->> On 3/20/2020 1:13 AM, Matthias Kaehlcke wrote:
->>> On Wed, Mar 18, 2020 at 02:24:35PM +0530, Akash Asthana wrote:
->>>> Hi Matthias,
->>>>
->>>> On 3/17/2020 11:59 PM, Matthias Kaehlcke wrote:
->>>>> Hi Akash,
->>>>>
->>>>> On Tue, Mar 17, 2020 at 04:27:47PM +0530, Akash Asthana wrote:
->>>>>> Hi Matthias,
->>>>>>
->>>>>> On 3/14/2020 2:14 AM, Matthias Kaehlcke wrote:
->>>>>>> Hi Akash,
->>>>>>>
->>>>>>> On Fri, Mar 13, 2020 at 06:42:09PM +0530, Akash Asthana wrote:
->>>>>>>> V1 patch@https://patchwork.kernel.org/patch/11386469/ caused SC7180 system
->>>>>>>> to reset at boot time.
->>>>>>> The v1 patch isn't relevant in the commit message, please just describe the
->>>>>>> problem. Also the crash only occurs when earlycon is used.
->>>>>> ok
->>>>>>>> As QUP core clock is shared among all the SE drivers present on particular
->>>>>>>> QUP wrapper, the reset seen is due to earlycon usage after QUP core clock
->>>>>>>> is put to 0 from other SE drivers before real console comes up.
->>>>>>>>
->>>>>>>> As earlycon can't vote for it's QUP core need, to fix this add ICC
->>>>>>>> support to common/QUP wrapper driver and put vote for QUP core from
->>>>>>>> probe on behalf of earlycon and remove vote during sys suspend.
->>>>>>> Only removing the vote on suspend isn't ideal, the system might never get
->>>>>>> suspended. That said I don't have a really good alternative suggestion.
->>>>>>>
->>>>>>> One thing you could possibly do is to launch a delayed work, check
->>>>>>> console_device() every second or so and remove the vote when it returns
->>>>>>> non-NULL. Not claiming this would be a great solution ...
->>>>>>>
->>>>>>> The cleanest solution might be a notifier when the early console is
->>>>>>> unregistered, it seems somewhat over-engineered though ... Then again
->>>>>>> other (future) uart drivers with interconnect support might run into
->>>>>>> the same problem.
->>>>>> We are hitting this problem because QUP core clocks are shared among all the
->>>>>> SE driver present in particular QUP wrapper, if other HW controllers has
->>>>>> similar architecture we will hit this issue.
->>>>>>
->>>>>> How about if we expose an API from common driver(geni-se) for putting QUP
->>>>>> core BW vote to 0.
->>>>>>
->>>>>> We call this from console probe just after uart_add_one_port call (console
->>>>>> resources are enabled as part of this call) to put core quota to 0 on behalf
->>>>>> of earlyconsole?
->>>>>    From my notes from earlier debugging I have doubts this would work:
->>>>>
->>>>>      There is a short window where the early console and the 'real' console coexist:
->>>>>
->>>>>      [    3.858122] printk: console [ttyMSM0] enabled
->>>>>      [    3.875692] printk: bootconsole [qcom_geni0] disabled
->>>>>
->>>>>      The reset probably occurs when the early console tries to write, but the ICC
->>>>>      is effectively disabled because ttyMSM0 and the other geni ports are runtime
->>>>>      suspended.
->>>> Code flow from console driver probe(qcom_geni_serial.c)
->>>>
->>>> uart_add_one_port--->uart_configure_port--->{ 1) uart_change_pm(enable
->>>> console resources)  2)register_console(boot to real console switch happens
->>>> here)}
->>>>
->>>> Console resources are not disabled from anywhere before the switch happens
->>>> completely. I meant to say until we saw below logs.
->>>>
->>>> [    3.875692] printk: bootconsole [qcom_geni0] disabled
->>>>
->>>> I think the board reset issue cannot occur during the window where early
->>>> console and 'real' console coexist.
->>> Thanks for the clarification! Indeed my notes were only a hypothesis, I
->>> don't see evidence that there is an actual downvote shortly after console
->>> registration.
->>>
->>>> I have validated proposed solution by me, it is working fine.
->>>>
->>>> Currently voting is done for every QUP and not only to which earlycon is
->>>> connect, with the above approach we can't remove vote from other QUPs.
->>>>
->>>> However we can limit voting only to earlycon QUP by removing interconnect
->>>> from DT node of other QUPs.
->>>>
->>>> I am not sure how clean is this solution.
->>> I'm more inclined towards a solution along the lines of what Evan
->>> proposed, i.e. delaying the votes (either in geni or ICC) until we
->>> are ready.
->> Based on discussion I think the delayed solution is most suited if
->> implemented in ICC core because other ICC client might face the similar
->> problem.
->>
->> However for geni case I am more inclined towards below proposed solution.
->>
->> -----------------------------------------------------------------------------------------------------
->>
->> How about if we expose an API from common driver(geni-se) for putting QUP
->> core BW vote to 0.
->>
->> We call this from console probe just after uart_add_one_port call (console
->> resources are enabled as part of this call) to put core quota to 0 on behalf
->> of earlyconsole?
-> This seems ok to me. Earlycon sets up a vote, and then real probe
-> tears it down. As long as in the shuffle of all of these things into
-> SE library helpers you still have a way of differentiating the
-> earlycon vote from the real vote. In other words, don't reuse this
-> early icc_path for the real UART vote. You should probably also
-> destroy the path once you've voted zero on it.
-> -Evan
+> From: Geert Uytterhoeven, Sent: Friday, March 27, 2020 1:38 AM
+>=20
+> 	Hi Greg, Rob,
+>=20
+> It is quite common for a generic EHCI or OHCI block to be embedded in an
+> SoC in its own power domain.  However, the current DT bindings do not
+> cover this yet, leading to "make dtbs_check" warnings like:
+>=20
+>     arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dt.yaml: usb@ee0800=
+00: 'power-domains' does not match any of the
+> regexes: 'pinctrl-[0-9]+'
+>     arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m.dt.yaml: usb@ee0801=
+00: 'power-domains' does not match any of the
+> regexes: 'pinctrl-[0-9]+'
+>=20
+> This patch series documents the optional presence of "power-domains"
+> properties in the EHCI and OHCI devices nodes, allowing the DTS writer
+> to describe the controllers' positions in the power hierarchy.
+>=20
+> Thanks!
+>=20
+> Geert Uytterhoeven (2):
+>   dt-bindings: usb: generic-ehci: Document power-domains property
+>   dt-bindings: usb: generic-ohci: Document power-domains property
 
-Thanks for confirming, I will not use early icc_path for real console 
-and I will destroy it once voted to 0 from real console probe.
+Thank you for the patches!
 
-Regards,
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Akash
+Best regards,
+Yoshihiro Shimoda
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
