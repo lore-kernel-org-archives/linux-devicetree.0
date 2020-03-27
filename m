@@ -2,157 +2,666 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58C4C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 12:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D4EC2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 12:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17792074F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 12:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAD92207FF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 12:09:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="IvJNgdxP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="N+jdtrAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgC0MH6 (ORCPT
+        id S1727173AbgC0MJt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:07:58 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:22904 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgC0MH6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 08:07:58 -0400
-IronPort-SDR: d5TM3En95bxZeDD/XCW+4LMUcCvIfFjJ/jh+jHZzKsv6Y5Jkn1tcTbbCEiTPt3O8u82Rl3w2uC
- Fx2HZsbKMa9FAmhwQ6kBRkAopqvI2qLu9xs8z1Z+hfRYOcvKpFweV4BValcQBlyYo0MReUtgrp
- FD6DgIUnom2uAWbgKq01TDBcawmyoFIkZ5dS48/q7UuEUugzrDp6n4J7iLhyrXWwho3jBGt/gt
- xN2H5Rahsah/KcE/XF1JIFPwOHwHzFBglaMRF96o+2dDVV6jH2x+gUqoIZUcCa2i+G90clbfUm
- Idc=
-X-IronPort-AV: E=Sophos;i="5.72,312,1580799600"; 
-   d="scan'208";a="73746130"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Mar 2020 05:07:56 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 27 Mar 2020 05:07:56 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 27 Mar 2020 05:07:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M14/puVmX65ES3RSKGQ8arFqyUAmsEIbq5L74RqDTIFh04Ig+pbky3z+DTgdIy1NxSj3PoRvuZ1DOdUWnqOG/F5o3WXVZVRXZ/XXesqDSF7FOgEXMZxsP7aZrBI7En+957bpUKqqVfF79w7ermp+oCBDfEBbdSKv1+3VomorgGFN0sqTdO2+U5kci+OHhV1/aoEwioeZxqP1ojVTB/hyMZNBc66zXYvYkf5rarIi7wtQGWJMbw7cm0PjuPwaILR4LrBxQSjliICEW4ym+lfgubjzaJAqhNUQiIujRpZsNwWRB9WlXvkxUi5OXuSDHZuZES3BYxUMgmymdI7CMjDU+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ftr3BOp1RQ5aAzQd3c1l6l6UQv/25lYrJWUSJcp5fvc=;
- b=eaphNjjWqn0eOd1YBBOQxdo54/0MIS5HdOsbcaPzkBKKoMUhRFoH3hcAbvrisnuw4yWQJBlemYIBv39ueF03hsyUL3tklsM9D6tDVwOF4p4yGpUv0+0Z0SwHZigO60OVPxZZ1YgR02j7zYakDcVf5+pde+M1LaoMDWqQYlYPPUF47VPSEgmrNDeYqgpQQJKO8vhA/DZYzUR4lE3J0/wflA4otsfV6ZKnNB6G6eidbKbF7021z8LpuPgqdBC+jLYGyTMI5WDXJW4Tm1J/qHDSwaN3bqCoeyEToYEhc3Rm3MV179LhzXm2qRAN7MBktYsQGIfNmjX5+dV4bXUWIIYpaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ftr3BOp1RQ5aAzQd3c1l6l6UQv/25lYrJWUSJcp5fvc=;
- b=IvJNgdxPdXuNMEr7mmn/zu78bkqt9IYRQZfQH9q7PjDdghksdbceGa0t7w2l4vmaSq/ckTbntyw3JyjAIUJazaQZfraa2mJMQNWq0tbWc9XfzZSMOkJ55CS9Bcst2ddqkfkGmpai6vq82+rr4rMkDGqxWmAzDYQOd4Ig3KSrs1U=
-Received: from BYAPR11MB3125.namprd11.prod.outlook.com (2603:10b6:a03:8e::32)
- by BYAPR11MB3109.namprd11.prod.outlook.com (2603:10b6:a03:8c::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Fri, 27 Mar
- 2020 12:07:54 +0000
-Received: from BYAPR11MB3125.namprd11.prod.outlook.com
- ([fe80::c27:87cf:ca4:d86e]) by BYAPR11MB3125.namprd11.prod.outlook.com
- ([fe80::c27:87cf:ca4:d86e%4]) with mapi id 15.20.2835.021; Fri, 27 Mar 2020
- 12:07:54 +0000
-From:   <Ajay.Kathat@microchip.com>
-To:     <kvalo@codeaurora.org>
-CC:     <linux-wireless@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <devicetree@vger.kernel.org>, <gregkh@linuxfoundation.org>,
-        <johannes@sipsolutions.net>, <Adham.Abozaeid@microchip.com>,
-        <Nicolas.Ferre@microchip.com>, <Claudiu.Beznea@microchip.com>,
-        <Venkateswara.Kaja@microchip.com>
-Subject: Re: [PATCH v6 00/17] wilc1000: move out of staging
-Thread-Topic: [PATCH v6 00/17] wilc1000: move out of staging
-Thread-Index: AQHWBAGTqEr82liQgUqCj/rX8Gwo4KhcSlDCgAAOWwA=
-Date:   Fri, 27 Mar 2020 12:07:54 +0000
-Message-ID: <438b865a-842a-f7d6-f57e-f7b1614ff17d@microchip.com>
-References: <20200327063302.20511-1-ajay.kathat@microchip.com>
- <87ftduoxou.fsf@tynnyri.adurom.net>
-In-Reply-To: <87ftduoxou.fsf@tynnyri.adurom.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Ajay.Kathat@microchip.com; 
-x-originating-ip: [183.82.22.58]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 11adb2af-c222-4500-0fc2-08d7d2477b22
-x-ms-traffictypediagnostic: BYAPR11MB3109:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR11MB31096704B5C43727BAF68765E3CC0@BYAPR11MB3109.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0355F3A3AE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(396003)(136003)(366004)(81156014)(8936002)(36756003)(31686004)(71200400001)(478600001)(6486002)(6512007)(6506007)(53546011)(6916009)(966005)(91956017)(54906003)(26005)(31696002)(86362001)(8676002)(81166006)(186003)(2906002)(2616005)(66446008)(107886003)(5660300002)(76116006)(64756008)(4326008)(66556008)(66946007)(316002)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB3109;H:BYAPR11MB3125.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xjb7s1Z0pMzPpI33qsEcNS/9VXyszGgBfrLpDzLSfY0qWXiXXoOJBJxnsvIJP0jVzBLuqa/9/faidCU1U9D02e3WnFlUTQxLrcC4MbGNiqW/siwgsolFzUxyzC7QSNh2wkCH8h1+MmK5jfUhPKG1F4EJ5ifc6dOv5szIczQSJvNnhrKHkXuBAqImdycRtJ71rWw4LiCSUCZpd8ul+3gqbMPAevTSdMjMk4C8pmvrwoFqlgEb0qObU+aAL3q2JxUbqhqIPq94U6EJe6L0IHL6qCzyBWZrceATvkiAzyUweAPLxCOvuA6VPq58rWkDIVvTsVsttEDiumMjCF2ql+k9vyCXz6MG5mcJ8ftP/Xp1+4l8jfn87rtyvjgh9QRJ0o1vOvX+P9TMyoH2C/IOoPVACkqto5gwViutlzxaZo4fYBJuZRRdIrKeejc4FNp2v6fHs6QXKrQJLAinC6Q2GjMKygGgx31c1pYBr8WXQ5L+Vbd5Ob1+XvU+SwARamOeQh92puGCj+pI+NpQ1OaHfkDg5Q==
-x-ms-exchange-antispam-messagedata: wET2jUVMtlneu16kgNDtzMlaKB+9X5EhpxvmsrZ9BWP8hpyQonnXIUBqD8b2aNR0dK4Nwk+AZzVEKHB3HHNbWnNy3O3h8RcqqSlJXC52KHNsC7jGSbeJq8VXUyPCdFKuRsOC2qHAR8QiL3O5a3QE2g==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <63DEC88A8E17344D9A0E2C97E8993154@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 27 Mar 2020 08:09:49 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:33188 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbgC0MJt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 08:09:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=o9B1rFQ4v0sXVcXWC4TqFJTLVIwnn8Q7w9fjLLJ4hrU=; b=N+jdtrADNN07k3r5HhGtyqzem
+        WiAXI5pzgpoSoL4dqV7wTU9wxnbcSQ0w3zFfjkYhyo9dy830AAiG0ytPf2aqYEIP1NDqZfKFuJaPE
+        TS0kb2/4QRoxCt8zG6zeauCWkMFGjrDN5oO24n1AClWepQ3i3frj1dw0noSh6EQ49dg0b2LLS35QV
+        qlzzTn0lgCavFZcDAGjDzn3PZv4chd/fbNLnldL5IaYcO7b/NXK5m4n7ROEQPhXOtknDhrXhCM4BE
+        wMjG1oABE0T0ctzV5iIvZUWJ3exxm7XT8s41SxHrEOT1nypcPQrVmI1J8uoJcSPyFc+ZBikv3JYdk
+        t3PO9yssQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58606)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jHnnz-0000wD-CV; Fri, 27 Mar 2020 12:09:43 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jHnny-0004Cp-5K; Fri, 27 Mar 2020 12:09:42 +0000
+Date:   Fri, 27 Mar 2020 12:09:42 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 9/9] arm64: dts: add serdes and mdio description
+Message-ID: <20200327120942.GI25745@shell.armlinux.org.uk>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-10-git-send-email-florinel.iordache@nxp.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11adb2af-c222-4500-0fc2-08d7d2477b22
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 12:07:54.4496
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: b35kcZVG7kVwNkd5k+yHwi/J8uBeJbsyT52AnVv68ehE4AVxyK/jsvJOZ2/WYrDXoVKUzTr4OnvBed5+eDmmXtIloubkOQT38Rruve7tBHE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3109
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585230682-24417-10-git-send-email-florinel.iordache@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgS2FsbGUsDQoNCk9uIDI3LzAzLzIwIDQ6NDYgcG0sIEthbGxlIFZhbG8gd3JvdGU6DQo+IA0K
-PiA8QWpheS5LYXRoYXRAbWljcm9jaGlwLmNvbT4gd3JpdGVzOg0KPiANCj4+IEZyb206IEFqYXkg
-U2luZ2ggPGFqYXkua2F0aGF0QG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4gVGhpcyBwYXRjaCBzZXJp
-ZXMgaXMgdG8gcmV2aWV3IGFuZCBtb3ZlIHdpbGMxMDAwIGRyaXZlciBvdXQgb2Ygc3RhZ2luZy4N
-Cj4+IE1vc3Qgb2YgdGhlIHJldmlldyBjb21tZW50cyByZWNlaXZlZCBpbiBbMV0gJiBbMl0gYXJl
-IGFkZHJlc3NlZCBpbiB0aGUNCj4+IGxhdGVzdCBjb2RlLiBQbGVhc2UgcmV2aWV3IGFuZCBwcm92
-aWRlIHlvdXIgaW5wdXRzLg0KPj4NCj4+IFsxXS4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGlu
-dXgtd2lyZWxlc3MvMTUzNzk1NzUyNS0xMTQ2Ny0xLWdpdC1zZW5kLWVtYWlsLWFqYXkua2F0aGF0
-QG1pY3JvY2hpcC5jb20vDQo+PiBbMl0uIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXdp
-cmVsZXNzLzE1NjI4OTY2OTctODAwMi0xLWdpdC1zZW5kLWVtYWlsLWFqYXkua2F0aGF0QG1pY3Jv
-Y2hpcC5jb20vDQo+Pg0KPj4gQ2hhbmdlcyBzaW5jZSB2NToNCj4+ICAtIGhhbmRsZSBEVCBiaW5k
-aW5nIHJldmlldyBjb21tZW50cyBzdWdnZXN0ZWQgaW4gYmVsb3cgbGluazoNCj4+ICAgKiBodHRw
-czovL2xvcmUua2VybmVsLm9yZy9kcml2ZXJkZXYtZGV2ZWwvMjAyMDAzMjAxNzU5MjAuR0EzMTY0
-MUBib2d1cw0KPj4gIC0gbWVyZ2VkIGxhdGVzdCBkcml2ZXIgZnJvbSBzdGFnaW5nIHdoaWNoIGNv
-bnRhaW5zIGZldyBjbGVhbnVwIHBhdGNoZXMNCj4+ICAgIGFuZCBjaGFuZ2VzIHRvIHVzZSBjcmM3
-IGZyb20gZXhpc3RpbmcgbGlicmFyeSBpbnN0ZWFkIG9mIGhhdmluZw0KPj4gICAgcHJpdmF0ZSBp
-bXBsZW1lbnRhdGlvbi4NCj4gDQo+IFRoaXMgaXMgYWxyZWFkeSB0aGUgdGhpcmQgdmVyc2lvbiB0
-aGlzIG1vbnRoLCBwbGVhc2UgYXZvaWQgc3BhbW1pbmcgdGhlDQo+IGxpc3QgdW5uZWNlc3Nhcmls
-eS4gV2hhdCB5b3UgY2FuIGRvIHRvIHNwZWVkIHVwIHRoZSBhY2NlcHRhbmNlIGlzIHRvIGdldA0K
-PiBSZXZpZXdlZC1ieSB0YWdzIGZyb20gcGVvcGxlLCB0aGUgbW9yZSBJIHNlZSB0aG9zZSB0aGUg
-bW9yZSBjb25maWRlbnQgSQ0KPiBnZXQgYWJvdXQgdGhlIGRyaXZlci4gSSB3aWxsIGFsc28gcmV2
-aWV3IHRoaXMgYWdhaW4gb25jZSBJIGZpbmQgc29tZQ0KPiBmcmVlIHRpbWUsIGJ1dCBkb24ndCBr
-bm93IHdoZW4gdGhhdCB3aWxsIGhhcHBlbi4NCj4gDQoNCkFwb2xvZ3kgZm9yIHNlbmRpbmcgdGhl
-IHBhdGNoIHNlcmllcyBtdWx0aXBsZSB0aW1lcy4gVGhpcyBzZXJpZXMgYWxzbw0KY29udGFpbnMg
-dGhlIERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBwYXRjaC4gV2UgaGF2ZSByZWNlaXZlZCBjb3Vw
-bGUgb2YNCnJldmlldyBjb21tZW50cyBmb3IgdGhlIGZpbGUuIEluIHRoZSBsYXRlc3Qgc2VyaWVz
-IGFsbCB0aG9zZSBjb21tZW50cw0KYXJlIHRha2VuIGNhcmUgYW5kIGhvcGUgaXQgY292ZXIgYWxs
-IHBvaW50cy4gSSB3YW50ZWQgdG8gYXRsZWFzdCBjbG9zZQ0KdGhpcyBhbmQgZ2V0IFJldmlld2Vk
-LWJ5IHRhZyBmb3IgdGhlIGZpbGUuDQpBbnkgc3VnZ2VzdGlvbiBvbiBob3cgdG8gZ2V0IG9ubHkg
-c2luZ2xlIGZpbGUgcmV2aWV3ZWQgb3V0IG9mIHRoaXMNCnNlcmllcyBpbiBjYXNlIGZ1cnRoZXIg
-Y29tbWVudHMgYXJlIHJlY2VpdmVkLg0KDQo+IEJ1dCBpdCB3b3VsZCBiZSBnb29kIHRvIGRvY3Vt
-ZW50IGluIHRoZSBjb3ZlciBsZXR0ZXIgd2hhdCBjb21taXQgaWQgYXJlDQo+IHlvdSB1c2luZyBh
-cyB0aGUgYmFzZWxpbmUuIFRoYXQgd2F5IGl0J3MgZWFzeSB0byByZXZpZXcgcmVzdCBvZiB0aGUN
-Cj4gY2hhbmdlcyBHcmVnIGhhcyBhcHBsaWVkIHNlcGFyYXRlbHkgYW5kIHlvdSBkb24ndCBuZWVk
-IHRvIHJlc2VuZCB0aGUNCj4gd2hvbGUgZHJpdmVyIGV2ZXJ5dGltZS4NCj4gDQoNClN1cmUsIHdp
-bGwgY2FwdHVyZSB0aGUgY29tbWl0IGlkIGRldGFpbHMgaW4gdGhlIHNlcmllcyBjb3ZlciBsZXR0
-ZXIuDQoNClJlZ2FyZHMNCkFqYXk=
+On Thu, Mar 26, 2020 at 03:51:22PM +0200, Florinel Iordache wrote:
+> Add dt nodes with serdes, lanes, mdio generic description for supported
+> platforms: ls1046, ls1088, ls2088, lx2160. This is a prerequisite to
+> enable backplane on device tree for these platforms.
+> 
+> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     |  33 ++++-
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |  97 ++++++++++++-
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     | 160 ++++++++++++++++++++-
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     | 128 ++++++++++++++++-
+>  .../boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi    |   5 +-
+>  .../boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi    |   5 +-
+>  6 files changed, 418 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index d4c1da3..c7d845f 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -3,7 +3,7 @@
+>   * Device Tree Include file for Freescale Layerscape-1046A family SoC.
+>   *
+>   * Copyright 2016 Freescale Semiconductor, Inc.
+> - * Copyright 2018 NXP
+> + * Copyright 2018, 2020 NXP
+>   *
+>   * Mingkai Hu <mingkai.hu@nxp.com>
+>   */
+> @@ -735,6 +735,37 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		serdes1: serdes@1ea0000 {
+> +			compatible = "serdes-10g";
+> +			reg = <0x0 0x1ea0000 0 0x00002000>;
+> +			reg-names = "serdes", "serdes-10g";
+> +			big-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0x0 0x00 0x1ea0000 0x00002000>;
+> +			lane_a: lane@800 {
+> +				compatible = "lane-10g";
+> +				reg = <0x800 0x40>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +			lane_b: lane@840 {
+> +				compatible = "lane-10g";
+> +				reg = <0x840 0x40>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +			lane_c: lane@880 {
+> +				compatible = "lane-10g";
+> +				reg = <0x880 0x40>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +			lane_d: lane@8c0 {
+> +				compatible = "lane-10g";
+> +				reg = <0x8c0 0x40>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +		};
+> +
+>  		pcie_ep@3600000 {
+>  			compatible = "fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep";
+>  			reg = <0x00 0x03600000 0x0 0x00100000
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index 5945662..474464e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Device Tree Include file for NXP Layerscape-1088A family SoC.
+>   *
+> - * Copyright 2017 NXP
+> + * Copyright 2017, 2020 NXP
+>   *
+>   * Harninder Rai <harninder.rai@nxp.com>
+>   *
+> @@ -325,6 +325,69 @@
+>  			#interrupt-cells = <2>;
+>  		};
+>  
+> +		/* WRIOP0: 0x8B8_0000, E-MDIO1: 0x1_6000 */
+> +		emdio1: mdio@8B96000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8B96000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;	/* force the driver in LE mode */
+> +
+> +			/* Not necessary on the QDS, but needed on the RDB */
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		/* WRIOP0: 0x8B8_0000, E-MDIO2: 0x1_7000 */
+> +		emdio2: mdio@8B97000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8B97000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;	/* force the driver in LE mode */
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio1: mdio@0x8c07000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c07000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio2: mdio@0x8c0b000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c0b000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio3: mdio@0x8c0f000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c0f000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio4: mdio@0x8c13000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c13000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+>  		ifc: ifc@2240000 {
+>  			compatible = "fsl,ifc", "simple-bus";
+>  			reg = <0x0 0x2240000 0x0 0x20000>;
+> @@ -777,6 +840,38 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		serdes1: serdes@1ea0000 {
+> +				compatible = "serdes-10g";
+> +				reg = <0x0 0x1ea0000 0 0x00002000>;
+> +				reg-names = "serdes", "serdes-10g";
+> +				little-endian;
+> +
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				ranges = <0x0 0x00 0x1ea0000 0x00002000>;
+> +				lane_a: lane@800 {
+> +					compatible = "lane-10g";
+> +					reg = <0x800 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +				lane_b: lane@840 {
+> +					compatible = "lane-10g";
+> +					reg = <0x840 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +				lane_c: lane@880 {
+> +					compatible = "lane-10g";
+> +					reg = <0x880 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +				lane_d: lane@8c0 {
+> +					compatible = "lane-10g";
+> +					reg = <0x8c0 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +		};
+> +
+>  	};
+>  
+>  	firmware {
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> index f96d06d..e8f3026 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> @@ -3,7 +3,7 @@
+>   * Device Tree Include file for Freescale Layerscape-2080A family SoC.
+>   *
+>   * Copyright 2016 Freescale Semiconductor, Inc.
+> - * Copyright 2017 NXP
+> + * Copyright 2017, 2020 NXP
+>   *
+>   * Abhimanyu Saini <abhimanyu.saini@nxp.com>
+>   *
+> @@ -560,6 +560,113 @@
+>  			#interrupt-cells = <2>;
+>  		};
+>  
+> +		/* WRIOP0: 0x8B8_0000, E-MDIO1: 0x1_6000 */
+> +		emdio1: mdio@8B96000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8B96000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;	/* force the driver in LE mode */
+> +
+> +			/* Not necessary on the QDS, but needed on the RDB */
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		/* WRIOP0: 0x8B8_0000, E-MDIO2: 0x1_7000 */
+> +		emdio2: mdio@8B97000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8B97000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;	/* force the driver in LE mode */
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio1: mdio@0x8c07000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c07000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio2: mdio@0x8c0b000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c0b000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio3: mdio@0x8c0f000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c0f000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio4: mdio@0x8c13000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c13000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio5: mdio@0x8c17000 {
+> +			status = "disabled";
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c17000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio6: mdio@0x8c1b000 {
+> +			status = "disabled";
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c1b000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio7: mdio@0x8c1f000 {
+> +			status = "disabled";
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c1f000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio8: mdio@0x8c23000 {
+> +			status = "disabled";
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c23000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+>  		i2c0: i2c@2000000 {
+>  			status = "disabled";
+>  			compatible = "fsl,vf610-i2c";
+> @@ -754,6 +861,57 @@
+>  			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+>  		};
+>  
+> +		serdes1: serdes@1ea0000 {
+> +				compatible = "serdes-10g";
+> +				reg = <0x0 0x1ea0000 0 0x00002000>;
+> +				reg-names = "serdes", "serdes-10g";
+> +				little-endian;
+> +
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				ranges = <0x0 0x00 0x1ea0000 0x00002000>;
+> +				lane_a: lane@800 {
+> +					compatible = "lane-10g";
+> +					reg = <0x800 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +				lane_b: lane@840 {
+> +					compatible = "lane-10g";
+> +					reg = <0x840 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +				lane_c: lane@880 {
+> +					compatible = "lane-10g";
+> +					reg = <0x880 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +				lane_d: lane@8c0 {
+> +					compatible = "lane-10g";
+> +					reg = <0x8c0 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +				lane_e: lane@900 {
+> +					compatible = "lane-10g";
+> +					reg = <0x900 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +				lane_f: lane@940 {
+> +					compatible = "lane-10g";
+> +					reg = <0x940 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +				lane_g: lane@980 {
+> +					compatible = "lane-10g";
+> +					reg = <0x980 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +				lane_h: lane@9c0 {
+> +					compatible = "lane-10g";
+> +					reg = <0x9c0 0x40>;
+> +					reg-names = "lane", "serdes-lane";
+> +				};
+> +		};
+> +
+>  		ccn@4000000 {
+>  			compatible = "arm,ccn-504";
+>  			reg = <0x0 0x04000000 0x0 0x01000000>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> index e5ee559..2815908 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> @@ -2,7 +2,7 @@
+>  //
+>  // Device Tree Include file for Layerscape-LX2160A family SoC.
+>  //
+> -// Copyright 2018 NXP
+> +// Copyright 2018, 2020 NXP
+>  
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> @@ -947,9 +947,9 @@
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			little-endian;
+> -			status = "disabled";
+>  		};
+>  
+> +		/* WRIOP0: 0x8b8_0000, E-MDIO2: 0x1_7000 */
+>  		emdio2: mdio@8b97000 {
+>  			compatible = "fsl,fman-memac-mdio";
+>  			reg = <0x0 0x8b97000 0x0 0x1000>;
+> @@ -957,7 +957,129 @@
+>  			little-endian;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> -			status = "disabled";
+> +		};
+> +
+> +		pcs_mdio1: mdio@0x8c07000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c07000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio2: mdio@0x8c0b000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c0b000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio3: mdio@0x8c0f000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c0f000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio4: mdio@0x8c13000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c13000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio5: mdio@0x8c17000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c17000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio6: mdio@0x8c1b000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c1b000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio7: mdio@0x8c1f000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c1f000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+> +
+> +		pcs_mdio8: mdio@0x8c23000 {
+> +			compatible = "fsl,fman-memac-mdio";
+> +			reg = <0x0 0x8c23000 0x0 0x1000>;
+> +			device_type = "mdio";
+> +			little-endian;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +		};
+
+This is a subset of the entries I've posted in my PCS series...
+
+> +
+> +		serdes1: serdes@1ea0000 {
+> +			compatible = "serdes-28g";
+> +			reg = <0x0 0x1ea0000 0 0x00002000>;
+> +			reg-names = "serdes", "serdes-28g";
+> +			little-endian;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0x0 0x00 0x1ea0000 0x00002000>;
+> +			lane_a: lane@800 {
+> +				compatible = "lane-28g";
+> +				reg = <0x800 0x100>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +			lane_b: lane@900 {
+> +				compatible = "lane-28g";
+> +				reg = <0x900 0x100>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +			lane_c: lane@a00 {
+> +				compatible = "lane-28g";
+> +				reg = <0xa00 0x100>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +			lane_d: lane@b00 {
+> +				compatible = "lane-28g";
+> +				reg = <0xb00 0x100>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +			lane_e: lane@c00 {
+> +				compatible = "lane-28g";
+> +				reg = <0xc00 0x100>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +			lane_f: lane@d00 {
+> +				compatible = "lane-28g";
+> +				reg = <0xd00 0x100>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +			lane_g: lane@e00 {
+> +				compatible = "lane-28g";
+> +				reg = <0xe00 0x100>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+> +			lane_h: lane@f00 {
+> +				compatible = "lane-28g";
+> +				reg = <0xf00 0x100>;
+> +				reg-names = "lane", "serdes-lane";
+> +			};
+>  		};
+>  
+>  		fsl_mc: fsl-mc@80c000000 {
+> diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
+> index dbd2fc3..d6191f1 100644
+> --- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
+> @@ -3,6 +3,7 @@
+>   * QorIQ FMan v3 10g port #0 device tree
+>   *
+>   * Copyright 2012-2015 Freescale Semiconductor Inc.
+> + * Copyright 2020 NXP
+>   *
+>   */
+>  
+> @@ -21,7 +22,7 @@ fman@1a00000 {
+>  		fsl,fman-10g-port;
+>  	};
+>  
+> -	ethernet@f0000 {
+> +	mac9: ethernet@f0000 {
+>  		cell-index = <0x8>;
+>  		compatible = "fsl,fman-memac";
+>  		reg = <0xf0000 0x1000>;
+> @@ -29,7 +30,7 @@ fman@1a00000 {
+>  		pcsphy-handle = <&pcsphy6>;
+>  	};
+>  
+> -	mdio@f1000 {
+> +	mdio9: mdio@f1000 {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+> diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
+> index 6fc5d25..1f6f28f 100644
+> --- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
+> @@ -3,6 +3,7 @@
+>   * QorIQ FMan v3 10g port #1 device tree
+>   *
+>   * Copyright 2012-2015 Freescale Semiconductor Inc.
+> + * Copyright 2020 NXP
+>   *
+>   */
+>  
+> @@ -21,7 +22,7 @@ fman@1a00000 {
+>  		fsl,fman-10g-port;
+>  	};
+>  
+> -	ethernet@f2000 {
+> +	mac10: ethernet@f2000 {
+>  		cell-index = <0x9>;
+>  		compatible = "fsl,fman-memac";
+>  		reg = <0xf2000 0x1000>;
+> @@ -29,7 +30,7 @@ fman@1a00000 {
+>  		pcsphy-handle = <&pcsphy7>;
+>  	};
+>  
+> -	mdio@f3000 {
+> +	mdio10: mdio@f3000 {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  		compatible = "fsl,fman-memac-mdio", "fsl,fman-xmdio";
+> -- 
+> 1.9.1
+> 
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
