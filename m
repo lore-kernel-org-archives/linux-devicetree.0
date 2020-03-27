@@ -2,69 +2,75 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90930C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 18:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27421C2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 18:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D96620737
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 18:25:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585333517;
-	bh=kphzszlwm1La47MdscXO3TtRShKr08jrCtW7lu0cN2w=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=wFBwv52kmJc4bVd2dmpogkzikO/pXUGd5VmYnJmcSEeYmsC5uZR1PsWzj72UJSPVZ
-	 rIaWkEAzMdM1GzMRH1qlm6pNxO4i6LZPCA5V6XhwOg/bGFtT/MktJElIonKyoTTya8
-	 yrxT/+p5AIceGaHZ+YyjNKM8WKB/XUjrqA5jyrvQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0535E2072F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 18:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgC0SZK (ORCPT
+        id S1727287AbgC0S10 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgC0SZI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 14:25:08 -0400
-Subject: Re: [GIT PULL] Devicetree fix for v5.6, take 4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585333508;
-        bh=kphzszlwm1La47MdscXO3TtRShKr08jrCtW7lu0cN2w=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Dl64cjkmOaBOAkav8OTe3XU5I43HQLRNwNKDo+t2tbMMYC0t9iZr5cPa/p9F5m55d
-         gxNA6MhS4o04o3ZHtJNUP8KT4N6HzwqKn/ZONVdu4Q7La1AyHwbvT1ffmM6OszLxiA
-         rlr9IvDT+iQaIVtnqXra3jdl8NQEaNR+TNCWYT5M=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200327143756.GA32333@bogus>
-References: <20200327143756.GA32333@bogus>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200327143756.GA32333@bogus>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
- tags/devicetree-fixes-for-5.6-4
-X-PR-Tracked-Commit-Id: e33a814e772cdc36436c8c188d8c42d019fda639
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bb36d37e29d4e355fdffb4cd932cbb60e25e7e02
-Message-Id: <158533350842.5176.13671252955461676794.pr-tracker-bot@kernel.org>
-Date:   Fri, 27 Mar 2020 18:25:08 +0000
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
+        Fri, 27 Mar 2020 14:27:26 -0400
+Received: from smtprelay0016.hostedemail.com ([216.40.44.16]:52816 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726275AbgC0S10 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 14:27:26 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id DC564181D330D;
+        Fri, 27 Mar 2020 18:27:24 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: comb05_5cf10df77e138
+X-Filterd-Recvd-Size: 1870
+Received: from XPS-9350 (unknown [172.58.92.163])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 27 Mar 2020 18:27:18 +0000 (UTC)
+Message-ID: <32d1dee7e9c7dd104cd7405a22fb5d5e3ef61303.camel@perches.com>
+Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 27 Mar 2020 11:25:26 -0700
+In-Reply-To: <20200327142245.GF11004@lunn.ch>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+         <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+         <20200327142245.GF11004@lunn.ch>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The pull request you sent on Fri, 27 Mar 2020 08:37:56 -0600:
+On Fri, 2020-03-27 at 15:22 +0100, Andrew Lunn wrote:
+> > +/* Backplane custom logging */
+> > +#define BPDEV_LOG(name) \
+> > +	char log_buffer[LOG_BUFFER_SIZE]; \
+> > +	va_list args; va_start(args, msg); \
+> > +	vsnprintf(log_buffer, LOG_BUFFER_SIZE - 1, msg, args); \
+> > +	if (!bpphy->attached_dev) \
+> > +		dev_##name(&bpphy->mdio.dev, log_buffer); \
+> > +	else \
+> > +		dev_##name(&bpphy->mdio.dev, "%s: %s", \
+> > +			netdev_name(bpphy->attached_dev), log_buffer); \
+> > +	va_end(args)
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.6-4
+This could also use %pV instead of an intermediate buffer.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bb36d37e29d4e355fdffb4cd932cbb60e25e7e02
+It's also bad form to use macros with required
+external variables.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
