@@ -2,69 +2,117 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F06C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EEDC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290CD2073B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:38:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fBPw7b3+"
+	by mail.kernel.org (Postfix) with ESMTP id 1C16920748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:52:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585320735;
+	bh=2ShgrdvsL+rAfA5d6A+vg33qHtqsZp31UtCfbY/XKmk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=2S6jdUGKD4Oa+R1wCSc7vpzqviJZNq97a7SgSJ1bVZcLSrizUcoMPMwmJ8j4XyKRk
+	 fsdfs0PqrdNjiFuVn6sXX8wj9oB+ZhTVDDLi2KpubVEbb0aa6KkG80HyL/xDpWJpyr
+	 8ry91UI/L75d2eKX2dGbJq0K++muBNOyUmCybqCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgC0OiL (ORCPT
+        id S1726518AbgC0OwO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:38:11 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34146 "EHLO vps0.lunn.ch"
+        Fri, 27 Mar 2020 10:52:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgC0OiL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:38:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4vL5BHC9tC2x6/2ekEAI8ZRp9HpEd17O+2m+jI61aDI=; b=fBPw7b3+lnB8otFW4ewUOD3tus
-        lpFSdV0OjkPSDOqRoli10CXwobmJAKFjWzS4wUXBoTfpU+ZLIecKyJLsr7KHKUM/cR92kpUNlMB95
-        P2R1bW5RquxJS+iibX57e69uM0ukZUZ5UWx93p6ZVhGcAtVpGy60fojtXhXzGOOnDoqc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jHq7V-0002Lf-QV; Fri, 27 Mar 2020 15:38:01 +0100
-Date:   Fri, 27 Mar 2020 15:38:01 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
-        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
-        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
-Message-ID: <20200327143801.GI11004@lunn.ch>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
- <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+        id S1726515AbgC0OwO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:52:14 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55483206F1;
+        Fri, 27 Mar 2020 14:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585320733;
+        bh=2ShgrdvsL+rAfA5d6A+vg33qHtqsZp31UtCfbY/XKmk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jOIZSsD4M8N/LW4RTzouiPKpjD1ZpgYPuAErp0ovpnrp9/P1/rUNEdw4acVqST7+3
+         OCX/AQ1JUPwEWeOcckH0P9DY3IPVX75NU/GYfnIDqTqN7ZqFIK0P0g818aKp1S7WoX
+         T8cyEXMKtliNyC33jatQkvUIvNL+27ihEI2gUqNg=
+Date:   Fri, 27 Mar 2020 09:52:11 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] PCI: cadence: Use "dma-ranges" instead of
+ "cdns,no-bar-match-nbits" property
+Message-ID: <20200327145211.GA30095@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+In-Reply-To: <20200327104727.4708-3-kishon@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 03:51:19PM +0200, Florinel Iordache wrote:
-> +static void setup_supported_linkmode(struct phy_device *bpphy)
-> +{
-> +	struct backplane_phy_info *bp_phy = bpphy->priv;
+On Fri, Mar 27, 2020 at 04:17:26PM +0530, Kishon Vijay Abraham I wrote:
+> Cadence PCIe core dirver (host mode) uses "cdns,no-bar-match-nbits"
+> property to configure the number of bits passed through from PCIe
+> address to internal address in Inbound Address Translation register.
 
-I'm not sure it is a good idea to completely take over phydev->priv
-like this, in what is just helper code. What if the PHY driver needs
-memory of its own? There are a few examples of this already in other
-PHY drivers. Could a KR PHY contain a temperature sensor? Could it
-contain statistics counters which need accumulating?
+s/dirver/driver/
 
-	Andrew
+I love this series, thanks a lot for doing this!
+
+> However standard PCI dt-binding already defines "dma-ranges" to
+> describe the address range accessible by PCIe controller. Parse
+> "dma-ranges" property to configure the number of bits passed
+> through from PCIe address to internal address in Inbound Address
+> Translation register.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 9b1c3966414b..60f912a657b9 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -206,8 +206,10 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	struct device *dev = rc->pcie.dev;
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct device_node *np = dev->of_node;
+> +	struct of_pci_range_parser parser;
+>  	struct pci_host_bridge *bridge;
+>  	struct list_head resources;
+> +	struct of_pci_range range;
+>  	struct cdns_pcie *pcie;
+>  	struct resource *res;
+>  	int ret;
+> @@ -222,8 +224,15 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  	rc->max_regions = 32;
+>  	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
+>  
+> -	rc->no_bar_nbits = 32;
+> -	of_property_read_u32(np, "cdns,no-bar-match-nbits", &rc->no_bar_nbits);
+> +	if (!of_pci_dma_range_parser_init(&parser, np))
+> +		if (of_pci_range_parser_one(&parser, &range))
+> +			rc->no_bar_nbits = ilog2(range.size);
+> +
+> +	if (!rc->no_bar_nbits) {
+> +		rc->no_bar_nbits = 32;
+> +		of_property_read_u32(np, "cdns,no-bar-match-nbits",
+> +				     &rc->no_bar_nbits);
+> +	}
+>  
+>  	rc->vendor_id = 0xffff;
+>  	of_property_read_u16(np, "vendor-id", &rc->vendor_id);
+> -- 
+> 2.17.1
+> 
