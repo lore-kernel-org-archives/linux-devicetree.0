@@ -2,94 +2,98 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963D8C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25183C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664382073B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CD320705
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585308316;
-	bh=nYLHHHRgW7KyhXgGAfcT0pygfJkAcJNPNdQChIW8IzE=;
+	s=default; t=1585308646;
+	bh=vba1+ff8GL/oR+HlvxVDHtEKjYfF8hxoXUDYxy50Jkc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xg5x5Uuv1kdlLHQqQvV7IkKwf0rIzb0u5u6eAHflOseJX5hqijqKcI13G5Yz+GIPJ
-	 UcRuBOh7AsgFflpNwhgiHUHlv50eBtzZFKl/Qro3pj3FC/aTfRuGQx5Mn887qe4Vnu
-	 rSyHC1AgZhg9hKJpkJVs44BIW6FRPM8d+cKx11+k=
+	b=psp2C7ymw2FZNEM849Lu5ZO8hWMI8h+QzrU2AD6c+4zcJ+B6fqHzVMNXpvQQEPqrc
+	 tmvTrLvPirmAe96qJAzsw2g3vHDGmIHINfFBoLjmqVtneB6WEG7wi1th+YLbdezNvm
+	 +s4gRmweY7rijesKn+NYPchDcCdAsmxHo3x4F5WE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbgC0LZP (ORCPT
+        id S1726360AbgC0Lap (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:25:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39032 "EHLO mail.kernel.org"
+        Fri, 27 Mar 2020 07:30:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727263AbgC0LZP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:25:15 -0400
+        id S1726165AbgC0Lap (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 07:30:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EDC5206F8;
-        Fri, 27 Mar 2020 11:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E53C206F1;
+        Fri, 27 Mar 2020 11:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585308314;
-        bh=nYLHHHRgW7KyhXgGAfcT0pygfJkAcJNPNdQChIW8IzE=;
+        s=default; t=1585308644;
+        bh=vba1+ff8GL/oR+HlvxVDHtEKjYfF8hxoXUDYxy50Jkc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=18dP0C8Mb7gJckrnRxRLPL+nbNHpzhZUFKEJGWDnCbTz27iZ61uQ1UzoML5cqpwjZ
-         OnMES3/9QvzfhK6otlnz7npww5X9/VLU5sDKzxloN3NhcbnzffEaCd8pBwM/aSppbp
-         q/SogzJO2Od4oA1on+He3NN2cgG9I3jI1cN7hBEc=
-Date:   Fri, 27 Mar 2020 12:25:11 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Ajay.Kathat@microchip.com, devel@driverdev.osuosl.org,
-        devicetree@vger.kernel.org, Venkateswara.Kaja@microchip.com,
-        linux-wireless@vger.kernel.org, Nicolas.Ferre@microchip.com,
-        Adham.Abozaeid@microchip.com, johannes@sipsolutions.net
-Subject: Re: [PATCH v6 00/17] wilc1000: move out of staging
-Message-ID: <20200327112511.GA1708276@kroah.com>
-References: <20200327063302.20511-1-ajay.kathat@microchip.com>
- <87ftduoxou.fsf@tynnyri.adurom.net>
+        b=iUcEMILWrBSrbYydPksBHKHAgTNmurDKsRwoO5NuElUD/R+/0tno/6tkVcXCaxyZr
+         veUjBr2R1ZIkwJhtbcxuuJjILJD9M7rYrzOMlYThTJc+Iou6qAYMRZdHPjxm+ZoeSx
+         A3PXxCwLfXvJNR/ovfD749uREg4ilPMnziqKW/ls=
+Date:   Fri, 27 Mar 2020 12:30:41 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
+ behavior by default
+Message-ID: <20200327113041.GA1708599@kroah.com>
+References: <20200321210305.28937-1-saravanak@google.com>
+ <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
+ <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <87ftduoxou.fsf@tynnyri.adurom.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 01:16:01PM +0200, Kalle Valo wrote:
-> <Ajay.Kathat@microchip.com> writes:
+On Fri, Mar 27, 2020 at 11:25:48AM +0100, Marek Szyprowski wrote:
+> Hi,
 > 
-> > From: Ajay Singh <ajay.kathat@microchip.com>
+> On 2020-03-21 22:03, Saravana Kannan wrote:
+> > Set fw_devlink to "permissive" behavior by default so that device links
+> > are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
+> > firmware.
 > >
-> > This patch series is to review and move wilc1000 driver out of staging.
-> > Most of the review comments received in [1] & [2] are addressed in the
-> > latest code. Please review and provide your inputs.
+> > This ensures suppliers get their sync_state() calls only after all their
+> > consumers have probed successfully. Without this, suppliers will get
+> > their sync_state() calls at late_initcall_sync() even if their consuer
 > >
-> > [1]. https://lore.kernel.org/linux-wireless/1537957525-11467-1-git-send-email-ajay.kathat@microchip.com/
-> > [2]. https://lore.kernel.org/linux-wireless/1562896697-8002-1-git-send-email-ajay.kathat@microchip.com/
+> > Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
+> > that needs more testing as it's known to break some corner case
+> > drivers/platforms.
 > >
-> > Changes since v5:
-> >  - handle DT binding review comments suggested in below link:
-> >   * https://lore.kernel.org/driverdev-devel/20200320175920.GA31641@bogus
-> >  - merged latest driver from staging which contains few cleanup patches
-> >    and changes to use crc7 from existing library instead of having
-> >    private implementation.
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
 > 
-> This is already the third version this month, please avoid spamming the
-> list unnecessarily. What you can do to speed up the acceptance is to get
-> Reviewed-by tags from people, the more I see those the more confident I
-> get about the driver. I will also review this again once I find some
-> free time, but don't know when that will happen.
+> This patch has just landed in linux-next 20200326. Sadly it breaks 
+> booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit 
+> mode. There is no warning nor panic message, just a silent freeze. The 
+> last message shown on the earlycon is:
 > 
-> But it would be good to document in the cover letter what commit id are
-> you using as the baseline. That way it's easy to review rest of the
-> changes Greg has applied separately and you don't need to resend the
-> whole driver everytime.
+> [    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
 
-Using the --base= flag in git format-patch is helpful in automating that
-:)
+Ugh, not good.
+
+Saravana, mind if I revert this?
 
 thanks,
 
