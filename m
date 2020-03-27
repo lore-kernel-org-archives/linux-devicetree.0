@@ -2,98 +2,96 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46D1C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2811C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F7920848
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585323917;
-	bh=6hwNDonjZflZ7zKTp0aKhEn1t1a6nz/99BhAyhcIGqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PS+SXo1JjDvh4LSPKnbD8lhm1zo22nNjBR0ijc/O6GomRl0pCdA1PKXrxmhuxs/5v
-	 /jwcC3ClbyvK1hm73c/DcJEOM8uNXLO6B4Sw0tJ238Ulq1ByF0GhNmE61wYuBUm0iP
-	 dxJTbchMP9EaMzl+IHE4HiK1f7U8s+qO+1QQ7gM8=
+	by mail.kernel.org (Postfix) with ESMTP id 9DD912072F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:57:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOtF8cOt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgC0PpJ (ORCPT
+        id S1727443AbgC0P5a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:45:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:47480 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgC0PpJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:45:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4A341FB;
-        Fri, 27 Mar 2020 08:45:08 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3402E3F71F;
-        Fri, 27 Mar 2020 08:45:08 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 15:45:06 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        jonathanh@nvidia.com, perex@perex.cz, tiwai@suse.com,
-        digetx@gmail.com, mperttunen@nvidia.com,
-        gregkh@linuxfoundation.org, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        spujar@nvidia.com, josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 00/22] Move PMC clocks into Tegra PMC driver
-Message-ID: <20200327154506.GF4437@sirena.org.uk>
-References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
- <20200325212708.GA836215@ulmo>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6v9BRtpmy+umdQlo"
-Content-Disposition: inline
-In-Reply-To: <20200325212708.GA836215@ulmo>
-X-Cookie: Drop in any mailbox.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 27 Mar 2020 11:57:30 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35760 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbgC0P5a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 11:57:30 -0400
+Received: by mail-qt1-f193.google.com with SMTP id e14so8971775qts.2
+        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 08:57:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MJgmzrT3mOT+iy0/6QFgsKv2QDxpME0Uv8zYggJWeY8=;
+        b=gOtF8cOtFG7EY31dkW2qu/WHXxMr29zCI0j8gDupt6lJykRlih49OGKaLo2ZnkORFG
+         acneG8dOHa4CKURbTpsGzRIJC7vN+9g1z6ymWgGTrOMSc8ThhVuEKRYyIBFob6OrtBSD
+         4c+UicmKBzM7uKnpR9JMR2w1XUZo0JbfAbntWMqBuZ7bkV7aoNLxUiCtGvOUGmJ/BlXh
+         BLm1kKuCm4uPCQTYuz0mfPOSyhDvCB4F4hGI+PIw2AnSfgrBpgAWQw/ZEqUX8zcizldu
+         4EDxknHdqnOQsl1/aeHmrv1vDtW0AhNhPskZR0dFRpbacuBQArZ72dZfe5na7epIii0F
+         AP2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MJgmzrT3mOT+iy0/6QFgsKv2QDxpME0Uv8zYggJWeY8=;
+        b=mYhNpU6oQ9q2iWqNbRnAepZG7KIoFOLbZwiJKMc40xdrSzaH+VMHBAwSGAboXUYM+d
+         ICIX4Kjz8to5+tEfyj++OaDVRvtQokFhmFdd4T1JtIPEX3mctvusJiBEMxpssocPcHLc
+         nvYTEyW1AhPkAeLTlJEv1dRhiCnwoq16ous3OwOIp/clAWU+FO1LrDM5sThwfsGsZmyp
+         eBO1JftJ1uwLR9QvYgULUE0ESde2bZ9EvBNkpQlLTlEIoGqf4szZXz1AVK5i9MJ7+vPf
+         oiL2K98MH43BIsfxRRb3kjl6TYxs1rtnLHtP+lLsiZsWdpGDxws0wUBOVbUX4Fiu0BB4
+         +eig==
+X-Gm-Message-State: ANhLgQ0bIoeWpkZEjW1MzlCphwNaNx5Yc+kNgyR4PkZ6+7PbSG9NMduJ
+        Wd2knRhdwtLiG7S9qub5dzM=
+X-Google-Smtp-Source: ADFU+vtrmn9ruMwW6MFirU7I7rcRKH43s6n+pJouD0/cFjfZ4bhBpyGa2v3QZVHYtIj4fqLNCGkq9A==
+X-Received: by 2002:ac8:7a63:: with SMTP id w3mr14431356qtt.352.1585324648736;
+        Fri, 27 Mar 2020 08:57:28 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14c:482:5bb::4])
+        by smtp.gmail.com with ESMTPSA id 31sm4090023qta.56.2020.03.27.08.57.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2020 08:57:28 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     broonie@kernel.org
+Cc:     robh+dt@kernel.org, benjamin.gaignard@st.com,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] dt-bindings: sound: cs42l51: Remove unneeded I2C unit name
+Date:   Fri, 27 Mar 2020 12:57:21 -0300
+Message-Id: <20200327155721.7596-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The following warning is seen with 'make dt_binding_check':
 
---6v9BRtpmy+umdQlo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Documentation/devicetree/bindings/sound/cirrus,cs42l51.example.dts:18.15-34.11: Warning (unit_address_vs_reg): /example-0/i2c@0: node has a unit name, but no reg or ranges property
 
-On Wed, Mar 25, 2020 at 10:27:08PM +0100, Thierry Reding wrote:
+Fix it by removing the unneeded i2c unit name.
 
-> there's a few runtime dependencies between the various patches in this
-> series, so I think it'd probably be best if I picked up the ASoC patches
-> into the Tegra tree and let them soak for a day or two in linux-next to
-> make sure everything is there and in the right order.
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Do you mind if I pick them up and send to you as a pull request in the
-> next few days?
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml b/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
+index efce847a3408..83f44f07ac3f 100644
+--- a/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
++++ b/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
+@@ -49,7 +49,7 @@ required:
+ examples:
+   - |
+     #include <dt-bindings/gpio/gpio.h>
+-    i2c@0 {
++    i2c {
+       #address-cells = <1>;
+       #size-cells = <0>;
+ 
+-- 
+2.17.1
 
-I guess, I think I lost track of what was going on with this as it
-seemed to continually be getting lots of discussions:
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---6v9BRtpmy+umdQlo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5+H4IACgkQJNaLcl1U
-h9CSOAf/QSUkbVkzKfzHrLVi8t1LfFrrL8b00ZDF6zpPcKZ7xMhrTbzFDBQfh1/N
-OMocm4O6vBAKX9nnnW5nQrm0DwtDgBaCdw2LZ2vMHmjj+djIxeLUblO495rjKoSy
-eTMOEpejXV4hKE/XEiTeFyF/3xAzWaTwGFU5lnbm6gBGGo7FWHTjAikYvMCxfm85
-BFFGdkWccrl+RhvRPqlLqHLh4eLBXkHh6O88XXSkAd1uA74Ajm6KgnngXkowX40d
-NkkBVV9/AsRGicERL8Fl35btPAXe07mQNRC7cPcTlqbXOKr+ACnqdmAvPrj67gSd
-HfNd9wiUiT5pRu1Vm2vM93ZG0P3vzA==
-=JK9F
------END PGP SIGNATURE-----
-
---6v9BRtpmy+umdQlo--
