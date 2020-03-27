@@ -2,199 +2,166 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E39C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 22:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3B2C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 22:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99B720717
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 22:33:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MWJ1hSHB"
+	by mail.kernel.org (Postfix) with ESMTP id 5F7172073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 22:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585349108;
+	bh=7Zs/b+96WvUw27So2YKcRcWhDyAPTdzX/ZNYwXeNrqM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=smaizznvSoegWqcdFC+wn7UzADscXxcHgN+kJF5C2BZW1ohCDRYDiomIIaR4NEW34
+	 sgRceeiWxhjKBcB00UJzy1PQ7hw9Ry2NF1QB7EFAIf/3vciysIBzTczQVIhzEuf4ZL
+	 7/zI8BZ0jsUFMoKy4R2H/f8G7wC3fNrgV2VY5Y2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbgC0Wd1 (ORCPT
+        id S1727639AbgC0WpE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:33:27 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36489 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727714AbgC0Wd1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 18:33:27 -0400
-Received: by mail-pj1-f66.google.com with SMTP id nu11so4342353pjb.1
-        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 15:33:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=d/KauctItzFcz4MTqqd1vUXD0AkHqsSbhj7pDruk56s=;
-        b=MWJ1hSHBbc9XdAiP8isr7WdcCfHrTAeSAsfLsPttskj8ru14jpS6XSJExEd+D7+x4n
-         4OHW2Cs8ZTnFhZHBE2sVlbg2ZypZVkj4l/D59p5XFsqhZYu3WD2zx2F7zy2h5dX/Ug6u
-         yNX6pRubA0w24iXYco8yZAHRcurEHhYjqV2aH/zKx0uxz5fXGBddmYF0NAkVL10Q95AA
-         sp26mugVpC/waCWnzEzrhSSABUDGc3ZoS3JoFYu/kWGJruy2KDEB9+8dD7VCQbG7Ybz8
-         7bUrhQUowP+5vlnF03HfBpMlnoh9Zp7Zp6/T3laPaky46OLqvH2R5fy4I9UWglSN9dZf
-         0TOQ==
+        Fri, 27 Mar 2020 18:45:04 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45434 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbgC0WpE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 18:45:04 -0400
+Received: by mail-io1-f67.google.com with SMTP id a24so10928117iol.12;
+        Fri, 27 Mar 2020 15:45:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d/KauctItzFcz4MTqqd1vUXD0AkHqsSbhj7pDruk56s=;
-        b=sly2jCBxC0WqAHRqcM0Bv1dc4ilqBxj3jCgF858884nPf5TU1iTJvU/H7B+a7eNlJg
-         trQu76pweoVhHE2+yAgiIxYKJigfCOLaLNki8sWKyS06im/wZyvWcALlXxYtvkVxUGXY
-         nVqr1ptsvTThaV4ZDGbxlhxSQuXUZIN6Ym33Y4fcnWxieimKixtd/ZUtv2dLTFa3cock
-         2Ky53mXSaWo2hPlCQ1IUqWqGafNWbuHwqIUod3eok3lKqaY2bcekfbdZXrN5D1efpPdZ
-         ChH5deCw4VqDFax0agUq0/5NZN4HXjNOoYvq85DqM1TJhXV8AgNoBc1JDQufGXgBkyDJ
-         P5nQ==
-X-Gm-Message-State: ANhLgQ3FCa6MartmhguhqzIaoe9awnv3vQ/4r+LJla4hQl2FBmcJI580
-        Xwy/igftsHPjxemSHb5ajB2ImQ==
-X-Google-Smtp-Source: ADFU+vssCeEO2fNVLOHh9lVPMb7g8Vyce8f9YZ3fpI0mEUsCWO+pn45g3L8i2nWBTgIMNEM/YhFfUg==
-X-Received: by 2002:a17:90a:1b4f:: with SMTP id q73mr1577559pjq.188.1585348405138;
-        Fri, 27 Mar 2020 15:33:25 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c9sm4451481pjr.47.2020.03.27.15.33.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u4k13uf5713DqF6VnWYY7OaKrDxuIhG+KLjykTCZmLE=;
+        b=Gv/I3R7+nOm+zatwFGKaLrr2HO4RHpM6Wiywg6KtnKTZacBCH/iLnHXPrVtmtU7U5R
+         fRMHJNwxU/jxQEYWXRPYwDdfk4SmpRIY4RrNXxfIxEv59Y/sAGxWJg5OGo3vl5gX722n
+         R6cKMvdscNifJPGOiQgDSfKP8U7oX6QB8PdhQeU/Fn80Pzcp2GAjphFe+aAjnnLsDss2
+         NYxpyvMbfS9mBpU3R1WEjTB07ymrXS+dfVUAq2x1W5cHXUfypR34+iORfI2A5XsfJEib
+         5Y1bNS9hclBlv/aSkn6OXx65/TU1lD0QaO5zPmUSpQqNiA9j9Ck3d1s6jvST9Tk1Fb8T
+         ePjQ==
+X-Gm-Message-State: ANhLgQ0NxNnuVl10UUWDG/OARaPvajEC8t/cZx1nbKfHmV7Dy5sCBO07
+        bDnIU5eTGVq5cgF1ygBwKmyLhpc=
+X-Google-Smtp-Source: ADFU+vsAE04nea1pFbNgX10KkqsBq3CtTvHBC//maalfcP/HRR+gaN6juo2FWt0zeUBHYvmVpvNbkQ==
+X-Received: by 2002:a6b:ed17:: with SMTP id n23mr871676iog.165.1585349103124;
+        Fri, 27 Mar 2020 15:45:03 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.250])
+        by smtp.googlemail.com with ESMTPSA id u125sm1838651ioe.24.2020.03.27.15.45.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 15:33:24 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 15:33:22 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, agross@kernel.org, robh@kernel.org,
-        amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v5 1/6] PM/Domains: Add support for retrieving genpd
- performance states information
-Message-ID: <20200327223322.GG5063@builder>
-References: <20200320014107.26087-1-thara.gopinath@linaro.org>
- <20200320014107.26087-2-thara.gopinath@linaro.org>
+        Fri, 27 Mar 2020 15:45:02 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: [PATCH] dt-bindings: iio: Fix adi,ltc2983 uint64-matrix schema constraints
+Date:   Fri, 27 Mar 2020 16:45:01 -0600
+Message-Id: <20200327224501.18590-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320014107.26087-2-thara.gopinath@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 19 Mar 18:41 PDT 2020, Thara Gopinath wrote:
+'minItems' and 'maxItems' apply at the same level as 'items' schemas as
+the keywords apply to arrays. What's currently defined is a 3
+dimensional matrix with the outer size being undefined. To fix this,
+minItems/maxItems needs to be moved up a level.
 
-> Add two new APIs in the genpd framework, dev_pm_genpd_get_performance_state
-> to return the current performance state of a power domain and
-> dev_pm_genpd_performance_state_count to return the total number of
-> performance states supported by a power domain. Since the genpd framework
-> does not maintain a count of number of performance states supported by a
-> power domain, introduce a new callback(.get_performance_state_count) that
-> can be used to retrieve this information from power domain drivers.
-> 
-> These APIs are added to aid the implementation of a power domain as a
-> warming device. Linux kernel cooling device framework(into which warming
-> device can be plugged in) requires during initialization to be provided
-> with the maximum number of states that can be supported. When a power
-> domain acts as a warming device, the max state is the max number of
-> perfomrance states supported by the power domain. The cooling device
-> framework implements API to retrieve the current state of the cooling
-> device. This in turn translates to the current performance state of the
-> power domain.
-> 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+With this fixed, the example fails validation. For matrix types, the dts
+syntax must use brackets (<>) matching the schema definition. In this
+case, the inner array size is 2 elements, so let's add the correct
+bracketing.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 3986a14870cb ("dt-bindings: iio: Add ltc2983 documentation")
+Cc: "Nuno Sá" <nuno.sa@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: linux-iio@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+I'll take this via the DT tree as I have another change this will 
+conflict.
 
-> ---
->  drivers/base/power/domain.c | 37 +++++++++++++++++++++++++++++++++++++
->  include/linux/pm_domain.h   | 13 +++++++++++++
->  2 files changed, 50 insertions(+)
-> 
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index 959d6d5eb000..d0297c48fa79 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -408,6 +408,43 @@ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_genpd_set_performance_state);
->  
-> +int dev_pm_genpd_get_performance_state(struct device *dev)
-> +{
-> +	struct generic_pm_domain *genpd;
-> +	unsigned int state;
-> +
-> +	genpd = dev_to_genpd_safe(dev);
-> +	if (IS_ERR(genpd))
-> +		return -ENODEV;
-> +
-> +	genpd_lock(genpd);
-> +	state = genpd->performance_state;
-> +	genpd_unlock(genpd);
-> +
-> +	return state;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_genpd_get_performance_state);
-> +
-> +int dev_pm_genpd_performance_state_count(struct device *dev)
-> +{
-> +	struct generic_pm_domain *genpd;
-> +	int count;
-> +
-> +	genpd = dev_to_genpd_safe(dev);
-> +	if (IS_ERR(genpd))
-> +		return -ENODEV;
-> +
-> +	if (unlikely(!genpd->get_performance_state_count))
-> +		return -EINVAL;
-> +
-> +	genpd_lock(genpd);
-> +	count = genpd->get_performance_state_count(genpd);
-> +	genpd_unlock(genpd);
-> +
-> +	return count;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_genpd_performance_state_count);
-> +
->  static int _genpd_power_on(struct generic_pm_domain *genpd, bool timed)
->  {
->  	unsigned int state_idx = genpd->state_idx;
-> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-> index 9ec78ee53652..7d415350380f 100644
-> --- a/include/linux/pm_domain.h
-> +++ b/include/linux/pm_domain.h
-> @@ -117,6 +117,7 @@ struct generic_pm_domain {
->  						 struct dev_pm_opp *opp);
->  	int (*set_performance_state)(struct generic_pm_domain *genpd,
->  				     unsigned int state);
-> +	int (*get_performance_state_count)(struct generic_pm_domain *genpd);
->  	struct gpd_dev_ops dev_ops;
->  	s64 max_off_time_ns;	/* Maximum allowed "suspended" time. */
->  	bool max_off_time_changed;
-> @@ -204,6 +205,8 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
->  		  struct dev_power_governor *gov, bool is_off);
->  int pm_genpd_remove(struct generic_pm_domain *genpd);
->  int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
-> +int dev_pm_genpd_get_performance_state(struct device *dev);
-> +int dev_pm_genpd_performance_state_count(struct device *dev);
->  
->  extern struct dev_power_governor simple_qos_governor;
->  extern struct dev_power_governor pm_domain_always_on_gov;
-> @@ -251,6 +254,16 @@ static inline int dev_pm_genpd_set_performance_state(struct device *dev,
->  	return -ENOTSUPP;
->  }
->  
-> +static inline int dev_pm_genpd_get_performance_state(struct device *dev)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
-> +static inline int dev_pm_genpd_performance_state_count(struct device *dev)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
->  #define simple_qos_governor		(*(struct dev_power_governor *)(NULL))
->  #define pm_domain_always_on_gov		(*(struct dev_power_governor *)(NULL))
->  #endif
-> -- 
-> 2.20.1
-> 
+Rob
+
+ .../bindings/iio/temperature/adi,ltc2983.yaml | 38 +++++++++----------
+ 1 file changed, 18 insertions(+), 20 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+index acc030c1b20e..8fb46de6641d 100644
+--- a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
++++ b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+@@ -123,12 +123,11 @@ patternProperties:
+           sign.
+         allOf:
+           - $ref: /schemas/types.yaml#/definitions/uint64-matrix
++        minItems: 3
++        maxItems: 64
+         items:
+-          minItems: 3
+-          maxItems: 64
+-          items:
+-            minItems: 2
+-            maxItems: 2
++          minItems: 2
++          maxItems: 2
+ 
+   "^diode@":
+     type: object
+@@ -328,12 +327,11 @@ patternProperties:
+           78 and 79.
+         allOf:
+           - $ref: /schemas/types.yaml#/definitions/uint64-matrix
++        minItems: 3
++        maxItems: 64
+         items:
+-          minItems: 3
+-          maxItems: 64
+-          items:
+-            minItems: 2
+-            maxItems: 2
++          minItems: 2
++          maxItems: 2
+ 
+       adi,custom-steinhart:
+         description:
+@@ -465,16 +463,16 @@ examples:
+                         adi,sensor-type = <9>; //custom thermocouple
+                         adi,single-ended;
+                         adi,custom-thermocouple = /bits/ 64
+-                                 <(-50220000) 0
+-                                  (-30200000) 99100000
+-                                  (-5300000) 135400000
+-                                  0 273150000
+-                                  40200000 361200000
+-                                  55300000 522100000
+-                                  88300000 720300000
+-                                  132200000 811200000
+-                                  188700000 922500000
+-                                  460400000 1000000000>; //10 pairs
++                                 <(-50220000) 0>,
++                                 <(-30200000) 99100000>,
++                                 <(-5300000) 135400000>,
++                                 <0 273150000>,
++                                 <40200000 361200000>,
++                                 <55300000 522100000>,
++                                 <88300000 720300000>,
++                                 <132200000 811200000>,
++                                 <188700000 922500000>,
++                                 <460400000 1000000000>; //10 pairs
+                };
+ 
+         };
+-- 
+2.20.1
+
