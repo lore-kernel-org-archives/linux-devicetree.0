@@ -2,96 +2,197 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2811C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F162C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 16:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD912072F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB50720658
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 16:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOtF8cOt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sDuleZx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgC0P5a (ORCPT
+        id S1727736AbgC0QP6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:57:30 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35760 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgC0P5a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 11:57:30 -0400
-Received: by mail-qt1-f193.google.com with SMTP id e14so8971775qts.2
-        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 08:57:29 -0700 (PDT)
+        Fri, 27 Mar 2020 12:15:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33427 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727720AbgC0QP5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 12:15:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id a25so12125444wrd.0;
+        Fri, 27 Mar 2020 09:15:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MJgmzrT3mOT+iy0/6QFgsKv2QDxpME0Uv8zYggJWeY8=;
-        b=gOtF8cOtFG7EY31dkW2qu/WHXxMr29zCI0j8gDupt6lJykRlih49OGKaLo2ZnkORFG
-         acneG8dOHa4CKURbTpsGzRIJC7vN+9g1z6ymWgGTrOMSc8ThhVuEKRYyIBFob6OrtBSD
-         4c+UicmKBzM7uKnpR9JMR2w1XUZo0JbfAbntWMqBuZ7bkV7aoNLxUiCtGvOUGmJ/BlXh
-         BLm1kKuCm4uPCQTYuz0mfPOSyhDvCB4F4hGI+PIw2AnSfgrBpgAWQw/ZEqUX8zcizldu
-         4EDxknHdqnOQsl1/aeHmrv1vDtW0AhNhPskZR0dFRpbacuBQArZ72dZfe5na7epIii0F
-         AP2w==
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EZtaXiF2GQULLM/5NSLzOUsGO0dis3y1wHF51cfVU3s=;
+        b=sDuleZx0PgX+wPtDnsY/tjTHrrUyKmfrJa7HULhFwZnOWbsf1hGStfExSHlGqPN71P
+         R9RwXaiRn2iAgMnuVTbt106KveHHmFWMaNNrkTBVwkYqBrBgsweELIcqyynT/q6LTcLF
+         0vhnuRdLp5Qkx/M7dPrkTJg8d/HwyPGaKpSUSTT2RSw41Z7H3HFL5I2ZsP3jFhwq9GuB
+         ia3vvXO/RfG2eq0AWmAWR/GgPh2L2TTkUJudY9LMFMJoBI11eRGFwvabV3/DvphkUpBg
+         qx2Hg3OKwFJQ5OSsU8KbEsa4wuCwtVBoTrNu4Jn3xWO7Y4qQ8QCb5zEd3Dgb5Jm+pyET
+         d5lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MJgmzrT3mOT+iy0/6QFgsKv2QDxpME0Uv8zYggJWeY8=;
-        b=mYhNpU6oQ9q2iWqNbRnAepZG7KIoFOLbZwiJKMc40xdrSzaH+VMHBAwSGAboXUYM+d
-         ICIX4Kjz8to5+tEfyj++OaDVRvtQokFhmFdd4T1JtIPEX3mctvusJiBEMxpssocPcHLc
-         nvYTEyW1AhPkAeLTlJEv1dRhiCnwoq16ous3OwOIp/clAWU+FO1LrDM5sThwfsGsZmyp
-         eBO1JftJ1uwLR9QvYgULUE0ESde2bZ9EvBNkpQlLTlEIoGqf4szZXz1AVK5i9MJ7+vPf
-         oiL2K98MH43BIsfxRRb3kjl6TYxs1rtnLHtP+lLsiZsWdpGDxws0wUBOVbUX4Fiu0BB4
-         +eig==
-X-Gm-Message-State: ANhLgQ0bIoeWpkZEjW1MzlCphwNaNx5Yc+kNgyR4PkZ6+7PbSG9NMduJ
-        Wd2knRhdwtLiG7S9qub5dzM=
-X-Google-Smtp-Source: ADFU+vtrmn9ruMwW6MFirU7I7rcRKH43s6n+pJouD0/cFjfZ4bhBpyGa2v3QZVHYtIj4fqLNCGkq9A==
-X-Received: by 2002:ac8:7a63:: with SMTP id w3mr14431356qtt.352.1585324648736;
-        Fri, 27 Mar 2020 08:57:28 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:482:5bb::4])
-        by smtp.gmail.com with ESMTPSA id 31sm4090023qta.56.2020.03.27.08.57.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 08:57:28 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     broonie@kernel.org
-Cc:     robh+dt@kernel.org, benjamin.gaignard@st.com,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] dt-bindings: sound: cs42l51: Remove unneeded I2C unit name
-Date:   Fri, 27 Mar 2020 12:57:21 -0300
-Message-Id: <20200327155721.7596-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=EZtaXiF2GQULLM/5NSLzOUsGO0dis3y1wHF51cfVU3s=;
+        b=SQsNCBq1hydC4ClzElG6PipglwfNC5Gp9D32NxAB+nnxtULFzpYIVnGqywUv7WDsWP
+         c/yDjDg+OJBBFm/roUNs1Tq3RTVHh/SoKa3Wm49pLz3aRNHrW4gnwh+fxJQu6Dxf0bYH
+         G+m8qkk9vRkQKgTlFORuOl7fLWtrmmel35m22dag5uMC6wR9z+si2/EwjsFlD6hXmJ3a
+         hzdo8l4dFt7ar6uy8Y4VwSz+C8lPef1fRdLthkDJo5wvKdSXIsezV2+/8pijnzR2HCSx
+         A91EZqZoc9dodC5Vv62cOseZXhO2WBE3+6du2l92MK8T6w7QSvJAgA2UiBSeZgSazwPv
+         A6BA==
+X-Gm-Message-State: ANhLgQ2rJS3+5WiQOm2SKdx9Dkh3QDwEenS4FxOhqi9cJuRVfRPb9DUY
+        BtzhLlEkvjcI+15q4cIfPRlBSZX0zzU=
+X-Google-Smtp-Source: ADFU+vus0oeZC93pBObbGRDABqYoZfO+bMXmo9EA8LW0rc3W7TM7hTRdJe0FzPFcV/6m5HMp2XMLnQ==
+X-Received: by 2002:adf:f58c:: with SMTP id f12mr153746wro.207.1585325755799;
+        Fri, 27 Mar 2020 09:15:55 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.113.243])
+        by smtp.gmail.com with ESMTPSA id p13sm9121613wru.3.2020.03.27.09.15.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Mar 2020 09:15:54 -0700 (PDT)
+Subject: Re: [PATCH] ARM: dts: bcm283x: Add cells encoding format to firmware
+ bus
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200326134413.12298-1-nsaenzjulienne@suse.de>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <015ad553-86a2-c6ac-e515-f14df83cec26@gmail.com>
+Date:   Fri, 27 Mar 2020 17:15:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200326134413.12298-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The following warning is seen with 'make dt_binding_check':
 
-Documentation/devicetree/bindings/sound/cirrus,cs42l51.example.dts:18.15-34.11: Warning (unit_address_vs_reg): /example-0/i2c@0: node has a unit name, but no reg or ranges property
 
-Fix it by removing the unneeded i2c unit name.
+On 26/03/2020 14:44, Nicolas Saenz Julienne wrote:
+> With the introduction of 55c7c0621078 ("ARM: dts: bcm283x: Fix vc4's
+> firmware bus DMA limitations") the firmware bus has to comply with
+> /soc's DMA limitations. Ultimately linking both buses to a same
+> dma-ranges property. The patch (and author) missed the fact that a bus'
+> #address-cells and #size-cells properties are not inherited, but set to
+> a fixed value which, in this case, doesn't match /soc's. This, although
+> not breaking Linux's DMA mapping functionality, generates ugly dtc
+> warnings.
+> 
+> Fix the issue by adding the correct address and size cells properties
+> under the firmware bus.
+> 
+> Fixes: 55c7c0621078 ("ARM: dts: bcm283x: Fix vc4's firmware bus DMA limitations")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Matthias Brugger <mbrugger@suse.com>
 
-diff --git a/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml b/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
-index efce847a3408..83f44f07ac3f 100644
---- a/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
-+++ b/Documentation/devicetree/bindings/sound/cirrus,cs42l51.yaml
-@@ -49,7 +49,7 @@ required:
- examples:
-   - |
-     #include <dt-bindings/gpio/gpio.h>
--    i2c@0 {
-+    i2c {
-       #address-cells = <1>;
-       #size-cells = <0>;
- 
--- 
-2.17.1
-
+> ---
+>  arch/arm/boot/dts/bcm2835-rpi.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> index fd2c766e0f71..f7ae5a4530b8 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> @@ -14,6 +14,9 @@ act {
+>  	soc {
+>  		firmware: firmware {
+>  			compatible = "raspberrypi,bcm2835-firmware", "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+>  			mboxes = <&mailbox>;
+>  			dma-ranges;
+>  		};
+> 
