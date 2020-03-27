@@ -2,123 +2,97 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B239C2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFEAC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3EB32082E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:23:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="B3p2FW7y"
+	by mail.kernel.org (Postfix) with ESMTP id 9219220838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585316091;
+	bh=50d7atbbqCu8sVfTjeDFx1DNlGegS0O1DKeZQZ52JP8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XhXHNcYmuY3JxxEECdzqiqPTWgVPm8RCzojQeQGVxbPYGZT0/5NB8UncKK2R6H2qo
+	 VomPDyyDWWkw7/q7d2GYnKjr8uQYV/hqPYuC88/gPvgGR8UxRC+r2e8eEMhsO+wqXs
+	 Hxj1CjP58FkIjnTnrnf65gQSolBqwv0/Vt2PEjG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgC0NX3 (ORCPT
+        id S1726959AbgC0Nev (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:23:29 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33784 "EHLO vps0.lunn.ch"
+        Fri, 27 Mar 2020 09:34:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgC0NX3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 09:23:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=KxLAqRWANV+lRpwj2JfW/z28qcDsnVnMDHMTtllBTdU=; b=B3p2FW7y41USJyD7JbgxxGzYae
-        2wnaFlA/0Ag++03oLARlmo19xECQB4FkGAuOn+ffFTxdNCfMEOFQ0hgilpPt7ye/3abHiSHLT+jfV
-        DJGuWVZm+teNrbR0MpvqUUrFGFGkyvA/AANfjGHsyhLkIEg6hPn9bkoUfxbEwuPBtEJ8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jHox7-0001ab-P3; Fri, 27 Mar 2020 14:23:13 +0100
-Date:   Fri, 27 Mar 2020 14:23:13 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH net-next 6/9] net: phy: add backplane kr driver
- support
-Message-ID: <20200327132313.GO3819@lunn.ch>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
- <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
- <20200327010706.GN3819@lunn.ch>
- <AM0PR04MB5443C1142ABE578ACC641FC5FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+        id S1726275AbgC0Nev (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 09:34:51 -0400
+Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28EF120658;
+        Fri, 27 Mar 2020 13:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585316090;
+        bh=50d7atbbqCu8sVfTjeDFx1DNlGegS0O1DKeZQZ52JP8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WBUFkK5g/Fd0EJOxssi6MUZ8HPDTne7wpMIkbWcxTeqKQxpHTFrdDUGhYKsfAiNsr
+         DUQJCsqXySsHXU3oZs7SEwrbj4VOHzh+wky1vfgBqQNR+bklIcYFGZZaQRh0o6yd4W
+         xRJC502G1n6dGOTlOIc6cmGye2/plnCxTk7nVWFw=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jHp8J-0049th-V8; Fri, 27 Mar 2020 14:34:47 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Simon Horman <simon.horman@netronome.com>,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH] docs: dt: fix a broken reference for a file converted to json
+Date:   Fri, 27 Mar 2020 14:34:47 +0100
+Message-Id: <33fa622c263ad40a129dc2b8dd0111b40016bc17.1585316085.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR04MB5443C1142ABE578ACC641FC5FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 01:02:17PM +0000, Florinel Iordache wrote:
-> > > +static u32 le_ioread32(void __iomem *reg) {
-> > > +     return ioread32(reg);
-> > > +}
-> > > +
-> > > +static void le_iowrite32(u32 value, void __iomem *reg) {
-> > > +     iowrite32(value, reg);
-> > > +}
-> > > +
-> > > +static u32 be_ioread32(void __iomem *reg) {
-> > > +     return ioread32be(reg);
-> > > +}
-> > > +
-> > > +static void be_iowrite32(u32 value, void __iomem *reg) {
-> > > +     iowrite32be(value, reg);
-> > > +}
-> > 
-> > This is very surprising to me. I've not got my head around the structure of this
-> > code yet, but i'm surprised to see memory mapped access functions in generic
-> > code.
-> > 
-> >        Andrew
-> 
-> Hi Andrew,
-> 
-> This is part of the framework used to automatically setup desired I/O 
-> callbacks for memory access according to device specific endianness 
-> which is specified in the specific device tree (DTS).
-> This approach (explained below) was used to avoid the potential 
-> redundant code related to memory access LE/BE which should be 
-> similar for all devices. 
+Changeset 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
+moved a binding to json and updated the links. Yet, one link
+was forgotten.
 
-All devices which are using mmio. I assume the standard does not say
-anything about memory mapped IO. It talks just about MDIO registers.
+Update this one too.
 
-I would expect the generic code to just have generic accessors, which
-could work for MMIO, yet more MDIO registers, i2c, spi, etc.
+Fixes: 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So add another support file which adds an MMIO implementation of these
-generic access functions. Any driver which uses MMIO can pull it in.
-The same should be true for the DT binding. Don't assume MMIO in the
-generic binding.
+diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+index beca6466d59a..d2202791c1d4 100644
+--- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+@@ -29,7 +29,7 @@ Required properties for compatible string qcom,wcn399x-bt:
+ 
+ Optional properties for compatible string qcom,wcn399x-bt:
+ 
+- - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
++ - max-speed: see Documentation/devicetree/bindings/serial/serial.yaml
+  - firmware-name: specify the name of nvm firmware to load
+  - clocks: clock provided to the controller
+ 
+-- 
+2.25.1
 
-> This portion of code is just preparing these four static IO routines 
-> for specific endianness access LE/BE
-
-Linux has a lot of MMIO accessors. Are you sure there is not one which
-will do the right thing, making use of cpu_le32() or cpu_be32()
-etc. Or are there different variants of the hardware, with some using
-BE registers and some using LE registers? Note, this is all about the
-endianness of the register, not the endianness of the cpu. cpu_le32()
-will be a NOP when the CPU is running LE.
-
-     Andrew
