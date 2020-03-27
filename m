@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB81C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1630BC2D0E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39C720716
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C3E206F2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgC0JoY (ORCPT
+        id S1726002AbgC0JoV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:44:24 -0400
+        Fri, 27 Mar 2020 05:44:21 -0400
 Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:55212 "EHLO
         alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726379AbgC0JoY (ORCPT
+        by vger.kernel.org with ESMTP id S1725956AbgC0JoV (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:44:24 -0400
+        Fri, 27 Mar 2020 05:44:21 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 27 Mar 2020 15:14:18 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 27 Mar 2020 15:13:55 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 27 Mar 2020 15:13:53 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 703362223; Fri, 27 Mar 2020 15:13:54 +0530 (IST)
+        id 28A9B2289; Fri, 27 Mar 2020 15:13:52 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -42,9 +42,9 @@ Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         Manu Gautam <mgautam@codeaurora.org>,
         Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v6 3/4] arm64: dts: qcom: sdm845: Add interconnect properties for USB
-Date:   Fri, 27 Mar 2020 15:13:22 +0530
-Message-Id: <1585302203-11008-4-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v6 1/4] dt-bindings: usb: qcom,dwc3: Introduce interconnect properties for Qualcomm DWC3 driver
+Date:   Fri, 27 Mar 2020 15:13:20 +0530
+Message-Id: <1585302203-11008-2-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
 References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
@@ -53,39 +53,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Populate USB DT nodes with interconnect properties.
+Add documentation for the interconnects and interconnect-names
+properties for USB.
 
 Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++++
+ Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 8f926b5..860d5c2 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3097,6 +3097,10 @@
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+index 17e22ff..ec1ec47 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+@@ -70,6 +70,14 @@ properties:
+   resets:
+     maxItems: 1
  
- 			resets = <&gcc GCC_USB30_PRIM_BCR>;
- 
-+			interconnects = <&aggre2_noc MASTER_USB3_0 &mem_noc SLAVE_EBI1>,
-+					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_USB3_0>;
-+			interconnect-names = "usb-ddr", "apps-usb";
++  interconnects:
++    maxItems: 2
 +
- 			usb_1_dwc3: dwc3@a600000 {
- 				compatible = "snps,dwc3";
- 				reg = <0 0x0a600000 0 0xcd00>;
-@@ -3141,6 +3145,10 @@
- 
- 			resets = <&gcc GCC_USB30_SEC_BCR>;
- 
-+			interconnects = <&aggre2_noc MASTER_USB3_1 &mem_noc SLAVE_EBI1>,
-+					<&gladiator_noc MASTER_APPSS_PROC &config_noc SLAVE_USB3_1>;
-+			interconnect-names = "usb-ddr", "apps-usb";
++  interconnect-names:
++    items:
++      - const: usb-ddr
++      - const: apps-usb
 +
- 			usb_2_dwc3: dwc3@a800000 {
- 				compatible = "snps,dwc3";
- 				reg = <0 0x0a800000 0 0xcd00>;
+   interrupts:
+     items:
+       - description: The interrupt that is asserted
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
