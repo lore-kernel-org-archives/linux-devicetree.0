@@ -2,259 +2,145 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2432EC2D0F2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14EDC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 061A520717
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E60A20717
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgC0JeH (ORCPT
+        id S1726217AbgC0Jlg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:34:07 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:25118 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726002AbgC0JeG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:34:06 -0400
-X-IronPort-AV: E=Sophos;i="5.72,311,1580742000"; 
-   d="scan'208";a="42803707"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 27 Mar 2020 18:34:05 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 20137420E7D9;
-        Fri, 27 Mar 2020 18:34:05 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     kishon@ti.com, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 1/4] dt-bindings: phy: renesas: usb2-phy: convert bindings to json-schema
-Date:   Fri, 27 Mar 2020 18:33:53 +0900
-Message-Id: <1585301636-24399-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585301636-24399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1585301636-24399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        Fri, 27 Mar 2020 05:41:36 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33500 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbgC0Jlg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 05:41:36 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 22so9085853otf.0;
+        Fri, 27 Mar 2020 02:41:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6pRUyDjYyeIGWdFrrBAFuClW27244MF+xsnVK2iYKKw=;
+        b=JtvLTC1dJepj94IrM9mRIOFlCv5IGBl8dIKXWJzEsBdy6OD6CjBxW/uu/mJPRtTKjH
+         HPbDUgBPAj+7eHX4W/a/oYFK8p5PY8zwrYQtDiiKKzQSO7/H2VXK/2/giI+KekeCDqJS
+         imUf/LSFaIRsMeAxfhoqoTzz6zRSg7bZ5n0sLJhQzqOSOW71K93sLhi1S+lso7j8oEx9
+         zhkUutvNapLDztz3SwByhEMGmGQ5lbyz8CGIMv1OxU7SnC+HVNr1c1v9pKjGMNKvxCqt
+         YZBWpO6TzRot91MRYfGBQCDgDuJZY+0G3gTlKhtr/spHClJ1cnB1JADNLVXoT2ZLQOAN
+         PLqQ==
+X-Gm-Message-State: ANhLgQ3Zw4RXGTPSexysYAQtDtpcmUfqdkhP8Y8CZqbZPF4HJJKocuDv
+        ZPkaXLa0fi1oQknc4qeGUhErGJAQNSSQMsKgUCM=
+X-Google-Smtp-Source: ADFU+vvXqH472B9jWUmfNhyz4EIDwEKYs/4rmy+cd5SzmFWSSSyhFlwsJmbrkB+/4h/Be4mguI+O5+StgQHvMsH7grI=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr9517019otk.250.1585302095432;
+ Fri, 27 Mar 2020 02:41:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200326213251.54457-1-aford173@gmail.com>
+In-Reply-To: <20200326213251.54457-1-aford173@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 27 Mar 2020 10:41:24 +0100
+Message-ID: <CAMuHMdU9tQwQHkX0MdQLkMfz-2ymDzfNTFGnzPoq=JQF+28HOg@mail.gmail.com>
+Subject: Re: [RFC] clk: vc5: Add bindings for output configurations
+To:     Adam Ford <aford173@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, aford@beaconembedded.com,
+        charles.stevens@logicpd.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Renesas R-Car generation 3 USB 2.0 PHY bindings documentation
-to json-schema.
+Hi Adam,
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 -------------
- .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 116 +++++++++++++++++++++
- 2 files changed, 116 insertions(+), 70 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
- create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+CC Marek
 
-diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-deleted file mode 100644
-index 7734b21..00000000
---- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-+++ /dev/null
-@@ -1,70 +0,0 @@
--* Renesas R-Car generation 3 USB 2.0 PHY
--
--This file provides information on what the device node for the R-Car generation
--3, RZ/G1C, RZ/G2 and RZ/A2 USB 2.0 PHY contain.
--
--Required properties:
--- compatible: "renesas,usb2-phy-r7s9210" if the device is a part of an R7S9210
--	      SoC.
--	      "renesas,usb2-phy-r8a77470" if the device is a part of an R8A77470
--	      SoC.
--	      "renesas,usb2-phy-r8a774a1" if the device is a part of an R8A774A1
--	      SoC.
--	      "renesas,usb2-phy-r8a774b1" if the device is a part of an R8A774B1
--	      SoC.
--	      "renesas,usb2-phy-r8a774c0" if the device is a part of an R8A774C0
--	      SoC.
--	      "renesas,usb2-phy-r8a7795" if the device is a part of an R8A7795
--	      SoC.
--	      "renesas,usb2-phy-r8a7796" if the device is a part of an R8A7796
--	      SoC.
--	      "renesas,usb2-phy-r8a77965" if the device is a part of an
--	      R8A77965 SoC.
--	      "renesas,usb2-phy-r8a77990" if the device is a part of an
--	      R8A77990 SoC.
--	      "renesas,usb2-phy-r8a77995" if the device is a part of an
--	      R8A77995 SoC.
--	      "renesas,rcar-gen3-usb2-phy" for a generic R-Car Gen3, RZ/G2 or
--	      RZ/A2 compatible device.
--
--	      When compatible with the generic version, nodes must list the
--	      SoC-specific version corresponding to the platform first
--	      followed by the generic version.
--
--- reg: offset and length of the partial USB 2.0 Host register block.
--- clocks: clock phandle and specifier pair(s).
--- #phy-cells: see phy-bindings.txt in the same directory, must be <1> (and
--	      using <0> is deprecated).
--
--The phandle's argument in the PHY specifier is the INT_STATUS bit of controller:
--- 1 = USBH_INTA (OHCI)
--- 2 = USBH_INTB (EHCI)
--- 3 = UCOM_INT (OTG and BC)
--
--Optional properties:
--To use a USB channel where USB 2.0 Host and HSUSB (USB 2.0 Peripheral) are
--combined, the device tree node should set interrupt properties to use the
--channel as USB OTG:
--- interrupts: interrupt specifier for the PHY.
--- vbus-supply: Phandle to a regulator that provides power to the VBUS. This
--	       regulator will be managed during the PHY power on/off sequence.
--- renesas,no-otg-pins: boolean, specify when a board does not provide proper
--		       otg pins.
--- dr_mode: string, indicates the working mode for the PHY. Can be "host",
--           "peripheral", or "otg". Should be set if otg controller is not used.
--
--
--Example (R-Car H3):
--
--	usb-phy@ee080200 {
--		compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
--		reg = <0 0xee080200 0 0x700>;
--		interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cpg CPG_MOD 703>;
--	};
--
--	usb-phy@ee0a0200 {
--		compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
--		reg = <0 0xee0a0200 0 0x700>;
--		clocks = <&cpg CPG_MOD 702>;
--	};
-diff --git a/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-new file mode 100644
-index 00000000..7681e47
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
-@@ -0,0 +1,116 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/renesas,usb2-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas R-Car generation 3 USB 2.0 PHY
-+
-+maintainers:
-+  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - const: renesas,usb2-phy-r8a77470 # RZ/G1C
-+
-+      - items:
-+          - enum:
-+              - renesas,usb2-phy-r7s9210  # RZ/A2
-+              - renesas,usb2-phy-r8a774a1 # RZ/G2M
-+              - renesas,usb2-phy-r8a774b1 # RZ/G2N
-+              - renesas,usb2-phy-r8a774c0 # RZ/G2E
-+              - renesas,usb2-phy-r8a7795  # R-Car H3
-+              - renesas,usb2-phy-r8a7796  # R-Car M3-W
-+              - renesas,usb2-phy-r8a77965 # R-Car M3-N
-+              - renesas,usb2-phy-r8a77990 # R-Car E3
-+              - renesas,usb2-phy-r8a77995 # R-Car D3
-+          - const: renesas,rcar-gen3-usb2-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: fck
-+      - const: usb_x1
-+
-+  '#phy-cells':
-+    enum: [0, 1]  # and 0 is deprecated.
-+    description: |
-+      The phandle's argument in the PHY specifier is the INT_STATUS bit of
-+      controller.
-+      - 1 = USBH_INTA (OHCI)
-+      - 2 = USBH_INTB (EHCI)
-+      - 3 = UCOM_INT (OTG and BC)
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: reset of USB 2.0 host side
-+      - description: reset of USB 2.0 peripheral side
-+
-+  vbus-supply:
-+    description: |
-+      Phandle to a regulator that provides power to the VBUS. This regulator
-+      will be managed during the PHY power on/off sequence.
-+
-+  renesas,no-otg-pins:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: |
-+      specify when a board does not provide proper otg pins.
-+
-+  dr_mode: true
-+
-+if:
-+  properties:
-+    compatible:
-+      items:
-+        enum:
-+          - renesas,usb2-phy-r7s9210
-+then:
-+  required:
-+    - clock-names
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#phy-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7795-sysc.h>
-+
-+    usb-phy@ee080200 {
-+        compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
-+        reg = <0xee080200 0x700>;
-+        interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&cpg CPG_MOD 703>;
-+        #phy-cells = <1>;
-+    };
-+
-+    usb-phy@ee0a0200 {
-+        compatible = "renesas,usb2-phy-r8a7795", "renesas,rcar-gen3-usb2-phy";
-+        reg = <0xee0a0200 0x700>;
-+        clocks = <&cpg CPG_MOD 702>;
-+        #phy-cells = <1>;
-+    };
+On Thu, Mar 26, 2020 at 10:33 PM Adam Ford <aford173@gmail.com> wrote:
+> The Versaclock can be purchased in a non-programmed configuration.
+> If that is the case, the driver needs to configure the chip to
+> output the correct signal type, voltage and slew.
+>
+> This RFC is proposing an additional binding to allow non-programmed
+> chips to be configured beyond their default configuration.
+>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+>
+> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> index 05a245c9df08..4bc46ed9ba4a 100644
+> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> @@ -30,6 +30,25 @@ Required properties:
+>                 - 5p49v5933 and
+>                 - 5p49v5935: (optional) property not present or "clkin".
+>
+> +For all output ports, an option child node can be used to specify:
+> +
+> +- mode: can be one of
+> +                 - LVPECL: Low-voltage positive/psuedo emitter-coupled logic
+> +                 - CMOS
+> +                 - HCSL
+> +                 - LVDS: Low voltage differential signal
+> +
+> +- voltage-level:  can be one of the following microvolts
+> +                 - 1800000
+> +                 - 2500000
+> +                 - 3300000
+> +-  slew: Percent of normal, can be one of
+> +                 - P80
+> +                 - P85
+> +                 - P90
+> +                 - P100
+
+Why the P prefixes? Can't you just use integer values?
+After the conversion to json-schema, these values can be validated, too.
+
+> +
+> +
+>  ==Mapping between clock specifier and physical pins==
+>
+>  When referencing the provided clock in the DT using phandle and
+> @@ -62,6 +81,8 @@ clock specifier, the following mapping applies:
+>
+>  ==Example==
+>
+> +#include <dt-bindings/versaclock.h>
+
+Does not exist?
+
+> +
+>  /* 25MHz reference crystal */
+>  ref25: ref25m {
+>         compatible = "fixed-clock";
+> @@ -80,6 +101,13 @@ i2c-master-node {
+>                 /* Connect XIN input to 25MHz reference */
+>                 clocks = <&ref25m>;
+>                 clock-names = "xin";
+> +
+> +               ports@1 {
+> +                       reg = <1>;
+> +                       mode = <CMOS>;
+> +                       pwr_sel = <1800000>;
+> +                       slew = <P80>;
+> +               };
+>         };
+>  };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
