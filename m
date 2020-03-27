@@ -7,159 +7,156 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A16C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 23:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111A7C2D0E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 23:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13AE820717
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 23:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0CD12073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 23:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mb55dYBP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wDv27M1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbgC0XAd (ORCPT
+        id S1727620AbgC0XC0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 19:00:33 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33521 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727585AbgC0XAb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 19:00:31 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d17so5314135pgo.0
-        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 16:00:29 -0700 (PDT)
+        Fri, 27 Mar 2020 19:02:26 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39360 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727719AbgC0XC0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 19:02:26 -0400
+Received: by mail-pg1-f195.google.com with SMTP id b22so5303461pgb.6
+        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 16:02:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=JqIenWZwZuZZwflrKOCXfVDSGSS9yHIiXPKhRDM0rfQ=;
-        b=mb55dYBPoAEXndrnw3TFFXmQdpaONNEY0CTwf+ofOSZLOYI3t8q0fJSTRQvNHhrFPF
-         VFal9j5aj/Kdk1/7t20ftZGZTGKK/RH9u5mAVruZGe3lwx+LK+unHW5qyNUkL31YMwuR
-         3Pvz+SOf8BOMkjM5+JGE1CtZHVNUwroi01M/5qLddUPeyiKWNWp/DI2Dj1jdLLYisRqm
-         Far7EiRWmErWyTiiPJchgvc+qJoxX+RMwYQ4q9XXpozlloKysBoK7S/Preg9Bbr4/Q+z
-         uNK8Lc+EojNptOWgffWP8RxWA0SXCH27LBT50EUN6pCMyWC5RNAF+Mo8j55bm3Uc8sMz
-         3IEg==
+        bh=pko9nAhDt6mwlgRfyc6XKtINQbmF/ebYK6c/ZMMljOI=;
+        b=wDv27M1cr1T04ee69Hy1SrhA+XbdaY3eDftXg2xB8lJQ8inMOhdeEXNJXrEo7q7t3t
+         6eB9zC8/Bv9mLJ2bOewXKTZ2FkwX64sHSQPnYtvFoLj3WC2vPLJHxv4pPOXi3nodaSqs
+         A94S3RD7J4kxfu7L3w+pl6x+HKDrV2M6vOWGZjfiXENOjFzAN/7ncjOC36Y72p99DEF7
+         QZXYRKrTMl7vlATbTTVdSjSNYb76CqTou39S/h0lGX8LIJGloZ4sglWuDm32ljv0HURf
+         IIVnTU0FzO+NSXPtkboaIM7yz80aPuDUQD424YANs9bLogatUBmIYjXG/XZ0fRlPvmfB
+         xRXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JqIenWZwZuZZwflrKOCXfVDSGSS9yHIiXPKhRDM0rfQ=;
-        b=lUU5SfZKLsv/nfI7Y/WmBpzvWBLKYHF/61OULqeoGdFK9R7pBaCw5STTFuTYSv5fRT
-         oTHayHeHu7/4JEMgCvcLE0bF4ZfWn674EGkK/1O05fA2ORePxAAwohhsHkK+6gN6j6RK
-         krtafjw/WWnheakaTCrBgxdHvVTN72DmUzDVIJradvAm1pqPWCwfcXoVX9CSjVT146Ut
-         iQugpgbDF5C9RwIOqlYxNrd4Xlu9/aS+0Iva02fCmv4aph/iNfz8BqHun5Dj/Hef6GLe
-         hdlakdN8Dxce/oFa5hRV2JgXE3GEpGUo8gqVWXaWFeJ25Q9WDSvkGk8OUjjJxMVdI9LT
-         8IyQ==
-X-Gm-Message-State: ANhLgQ2Rg23bOOfJpIhB8cnAEyQz6eJwRIY9b6cZV73SIgXW0gMQUnxe
-        SqbBf/ngwU2ljXy8Ge9uhTEa7Q==
-X-Google-Smtp-Source: ADFU+vsHwqLL5TtFqgU4KcqOiYr0XygvoaMkIOSpnKmIG6QUfqJWOKbXb+1ATrf6wNyFpl4jFtlJ2w==
-X-Received: by 2002:a62:a512:: with SMTP id v18mr1478997pfm.306.1585350028760;
-        Fri, 27 Mar 2020 16:00:28 -0700 (PDT)
+        bh=pko9nAhDt6mwlgRfyc6XKtINQbmF/ebYK6c/ZMMljOI=;
+        b=VgLqGeJazqtKm+bYdzxUWFMtCmp+Yrnslt0Q6L25bEieYaMyKk/4b8qkNc2dpEWJDS
+         L4LJ6JOmLXYLbhQfBwhaufkh8TI63k4XwSmABGw3BeKpUjdEuY2wOzSXj0oUBl9xmcf6
+         q6ZiFMqgyYprwJfebe7ZXRwqo8RMoIxfbm7I1Q1iDxsn4SqxyjXcm3ewSyfx7/Aoa1zI
+         PQRWFp0Oy/WyhvsE99TLw1iR37ioW1q5HoO2mEWsO/XkqcM1pclbvv2XIqYpmWU3WZeL
+         rUqLdlWw2M87peZLT1A3kGHom8KejOkVyAtdhPyWewcVhyOfub9hr+22teaYJsGw23dE
+         +GXg==
+X-Gm-Message-State: ANhLgQ0bCECSwt59u8Xz2uHgpRMCzDKq/JOkEeVNcX2RPCjd+sU7ZGNN
+        kltxzeZlM0zZ1hAAj4bhRf/AiA==
+X-Google-Smtp-Source: ADFU+vsjmqswulmh3XPk28yPydYs/4jXf/b13hstJ4o6GS/qxxeJWxQ8s40fIIu+VnhFkLkIkKOoHg==
+X-Received: by 2002:a63:161e:: with SMTP id w30mr1655585pgl.110.1585350144395;
+        Fri, 27 Mar 2020 16:02:24 -0700 (PDT)
 Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b25sm4862093pfp.201.2020.03.27.16.00.27
+        by smtp.gmail.com with ESMTPSA id y142sm4983301pfc.53.2020.03.27.16.02.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 16:00:27 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 16:00:25 -0700
+        Fri, 27 Mar 2020 16:02:23 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 16:02:21 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-Message-ID: <20200327230025.GJ5063@builder>
-References: <1585219723-28323-1-git-send-email-pillair@codeaurora.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org, wsa@the-dreams.de,
+        broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org
+Subject: Re: [PATCH V2 1/8] interconnect: Add devm_of_icc_get() as exported
+ API for users
+Message-ID: <20200327230221.GK5063@builder>
+References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
+ <1584105134-13583-2-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585219723-28323-1-git-send-email-pillair@codeaurora.org>
+In-Reply-To: <1584105134-13583-2-git-send-email-akashast@codeaurora.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 26 Mar 03:48 PDT 2020, Rakesh Pillai wrote:
+On Fri 13 Mar 06:12 PDT 2020, Akash Asthana wrote:
 
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on sc7180 soc.
+> Users can use devm version of of_icc_get() to benefit from automatic
+> resource release.
 > 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
-> 
-> Depends on https://patchwork.kernel.org/patch/11455345/
-> The above patch adds the dt-bindings for wifi-firmware
-> subnode
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  8 ++++++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 +++++++++++++++++++++++++++
->  2 files changed, 35 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 043c9b9..a6168a4 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -327,6 +327,14 @@
->  	};
->  };
->  
-> +&wifi {
-> +	status = "okay";
-> +	qcom,msa-fixed-perm;
-> +	wifi-firmware {
-> +		iommus = <&apps_smmu 0xc2 0x1>;
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
 
-How is sc7180 different from sdm845, where the iommus property goes
-directly in the &wifi node?
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
 
-> +	};
-> +};
-> +
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> ---
+>  drivers/interconnect/core.c  | 25 +++++++++++++++++++++++++
+>  include/linux/interconnect.h |  7 +++++++
+>  2 files changed, 32 insertions(+)
+> 
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 2c6515e..f5699ed 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -350,6 +350,31 @@ static struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
+>  	return node;
+>  }
 >  
->  &qspi_clk {
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 998f101..2745128 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -83,6 +83,11 @@
->  			reg = <0 0x8f600000 0 0x500000>;
->  			no-map;
->  		};
+> +static void devm_icc_release(struct device *dev, void *res)
+> +{
+> +	icc_put(*(struct icc_path **)res);
+> +}
 > +
-> +		wlan_fw_mem: memory@94104000 {
-> +			reg = <0 0x94104000 0 0x200000>;
-> +			no-map;
-> +		};
->  	};
->  
->  	cpus {
-> @@ -835,6 +840,28 @@
->  			};
->  		};
->  
-> +		wifi: wifi@18800000 {
-> +			compatible = "qcom,wcn3990-wifi";
-> +			reg = <0 0x18800000 0 0x800000>;
-> +			reg-names = "membase";
-> +			iommus = <&apps_smmu 0xc0 0x1>;
-> +			interrupts =
-> +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-> +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-> +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-> +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-> +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-> +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-> +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-> +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-> +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-> +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-> +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-> +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-> +			memory-region = <&wlan_fw_mem>;
-> +			status = "disabled";
-> +		};
+> +struct icc_path *devm_of_icc_get(struct device *dev, const char *name)
+> +{
+> +	struct icc_path **ptr, *path;
 > +
->  		config_noc: interconnect@1500000 {
->  			compatible = "qcom,sc7180-config-noc";
->  			reg = <0 0x01500000 0 0x28000>;
+> +	ptr = devres_alloc(devm_icc_release, sizeof(**ptr), GFP_KERNEL);
+> +	if (!ptr)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	path = of_icc_get(dev, name);
+> +	if (!IS_ERR(path)) {
+> +		*ptr = path;
+> +		devres_add(dev, ptr);
+> +	} else {
+> +		devres_free(ptr);
+> +	}
+> +
+> +	return path;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_of_icc_get);
+> +
+>  /**
+>   * of_icc_get() - get a path handle from a DT node based on name
+>   * @dev: device pointer for the consumer device
+> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+> index d70a914..7706924 100644
+> --- a/include/linux/interconnect.h
+> +++ b/include/linux/interconnect.h
+> @@ -28,6 +28,7 @@ struct device;
+>  struct icc_path *icc_get(struct device *dev, const int src_id,
+>  			 const int dst_id);
+>  struct icc_path *of_icc_get(struct device *dev, const char *name);
+> +struct icc_path *devm_of_icc_get(struct device *dev, const char *name);
+>  void icc_put(struct icc_path *path);
+>  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+>  void icc_set_tag(struct icc_path *path, u32 tag);
+> @@ -46,6 +47,12 @@ static inline struct icc_path *of_icc_get(struct device *dev,
+>  	return NULL;
+>  }
+>  
+> +static inline struct icc_path *devm_of_icc_get(struct device *dev,
+> +						const char *name)
+> +{
+> +	return NULL;
+> +}
+> +
+>  static inline void icc_put(struct icc_path *path)
+>  {
+>  }
 > -- 
-> 2.7.4
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
