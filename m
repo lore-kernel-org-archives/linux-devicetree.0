@@ -2,85 +2,97 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9F8C2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A49C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FE020774
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:17:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VQGz0166"
+	by mail.kernel.org (Postfix) with ESMTP id C387A2072F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:21:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585322507;
+	bh=bMKA/njcNLdYnsV0HkVziUEuigOUwS1wO51wrpw/0+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AzYb3oz7/gU9IZjMJmTf8Fec11Jdw2LbKfaCEFG/eTPyMUrLk78Mlano2gMyMR04Y
+	 ccP89UbQ0ldPljeddvGC7wQzTtTX8uANCKXlUwkBOFsXxZ5eSwhXHqZ6E48OHRGG9R
+	 eo2fZbKeccnnGcO6+48p67wxL55lx/HPySaM0xy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgC0PRT (ORCPT
+        id S1726900AbgC0PVr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:17:19 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:35668 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgC0PRS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 11:17:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=i49b05giKAvuJdsFix/RQTI/KizwQbObzGwBctGXmQk=; b=VQGz0166n3sa4P4ziV7OV9IA/
-        SuBxjVAQP79YeJkm6/8nwjnOBLBfRbUCMxBfkssnWPUIN32B3Ea7Y61Wa2NnY54O+gXIlvh7HkqaT
-        8WP9O1dQcrj3L6ctDxQbLr/+gM64zTpxrSFMFBMBLYqnKvcSxWYzbDIYHwWyLPIcrx7kB13y0RdtN
-        eEmnQU7bdTwW127Tysj6BJH7GgvWlOb9l0yjp6BlgRDXj1j9IHjip+unGAGhW8ER5k1dO571SL0uo
-        Py1ecgiyVI26z7ZiwsavuroSBzm55LNQPm0GZT+CBdFSFcQJXBo5JmubEBldoP0qr0yhytAWr1TNk
-        sIne2wZKA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42100)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jHqjR-0001nO-2g; Fri, 27 Mar 2020 15:17:13 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jHqjO-0004KV-0x; Fri, 27 Mar 2020 15:17:10 +0000
-Date:   Fri, 27 Mar 2020 15:17:09 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
+        Fri, 27 Mar 2020 11:21:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbgC0PVr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 11:21:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8090206F2;
+        Fri, 27 Mar 2020 15:21:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585322506;
+        bh=bMKA/njcNLdYnsV0HkVziUEuigOUwS1wO51wrpw/0+k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=E7lUXgm0yW97YRmqowZ6P+3l/BUBtb8fmq9MY8/8zcXePhELjO5WQ/89FEwb7pxV/
+         6QEjgBRGkMSf5l+9I+/VUX9Qvd43/faWjuo+0g4UXTGwO8TZjRaFKfSeewRD2geCpJ
+         36tpGiHo3dmHrn+naSiZkqUUvmAZj5A2SRZ+pWSI=
+Date:   Fri, 27 Mar 2020 16:21:44 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH] arm64: dts: update SolidRun Armada 8040 phy interface
- types
-Message-ID: <20200327151709.GO25745@shell.armlinux.org.uk>
-References: <E1jHoHy-0002Ep-IY@rmk-PC.armlinux.org.uk>
- <20200327134319.GD11004@lunn.ch>
- <20200327134651.GM25745@shell.armlinux.org.uk>
- <20200327135046.GN25745@shell.armlinux.org.uk>
- <20200327141538.GE11004@lunn.ch>
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
+ behavior by default
+Message-ID: <20200327152144.GA2996253@kroah.com>
+References: <20200321210305.28937-1-saravanak@google.com>
+ <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
+ <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200327141538.GE11004@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 03:15:38PM +0100, Andrew Lunn wrote:
-> > ... and actually there is no point.
+On Fri, Mar 27, 2020 at 11:25:48AM +0100, Marek Szyprowski wrote:
+> Hi,
 > 
-> O.K. lets merge these as normal, not as fixes.  It is probably too
-> late for ARM SoC, so i guess they will get merged next cycle.
+> On 2020-03-21 22:03, Saravana Kannan wrote:
+> > Set fw_devlink to "permissive" behavior by default so that device links
+> > are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
+> > firmware.
+> >
+> > This ensures suppliers get their sync_state() calls only after all their
+> > consumers have probed successfully. Without this, suppliers will get
+> > their sync_state() calls at late_initcall_sync() even if their consuer
+> >
+> > Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
+> > that needs more testing as it's known to break some corner case
+> > drivers/platforms.
+> >
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> 
+> This patch has just landed in linux-next 20200326. Sadly it breaks 
+> booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit 
+> mode. There is no warning nor panic message, just a silent freeze. The 
+> last message shown on the earlycon is:
+> 
+> [    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
 
-Yep, which means that the backplane patches from NXP will have to be
-delayed about 20 weeks (about 10 weeks in the arm64 tree before being
-merged into 5.8-rc1, and then another 10 weeks before 5.8 is released.)
-That's probably not a bad thing, as it'll let us hash out the conflicts
-between my PCS patch set and their backplane patches.
+I've just reverted this for now.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+thanks,
+
+greg k-h
