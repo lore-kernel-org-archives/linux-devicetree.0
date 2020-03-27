@@ -2,145 +2,105 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14EDC43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8300C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E60A20717
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD7820714
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:42:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="B1wZOt6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgC0Jlg (ORCPT
+        id S1726217AbgC0JmD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:41:36 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33500 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbgC0Jlg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 05:41:36 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 22so9085853otf.0;
-        Fri, 27 Mar 2020 02:41:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6pRUyDjYyeIGWdFrrBAFuClW27244MF+xsnVK2iYKKw=;
-        b=JtvLTC1dJepj94IrM9mRIOFlCv5IGBl8dIKXWJzEsBdy6OD6CjBxW/uu/mJPRtTKjH
-         HPbDUgBPAj+7eHX4W/a/oYFK8p5PY8zwrYQtDiiKKzQSO7/H2VXK/2/giI+KekeCDqJS
-         imUf/LSFaIRsMeAxfhoqoTzz6zRSg7bZ5n0sLJhQzqOSOW71K93sLhi1S+lso7j8oEx9
-         zhkUutvNapLDztz3SwByhEMGmGQ5lbyz8CGIMv1OxU7SnC+HVNr1c1v9pKjGMNKvxCqt
-         YZBWpO6TzRot91MRYfGBQCDgDuJZY+0G3gTlKhtr/spHClJ1cnB1JADNLVXoT2ZLQOAN
-         PLqQ==
-X-Gm-Message-State: ANhLgQ3Zw4RXGTPSexysYAQtDtpcmUfqdkhP8Y8CZqbZPF4HJJKocuDv
-        ZPkaXLa0fi1oQknc4qeGUhErGJAQNSSQMsKgUCM=
-X-Google-Smtp-Source: ADFU+vvXqH472B9jWUmfNhyz4EIDwEKYs/4rmy+cd5SzmFWSSSyhFlwsJmbrkB+/4h/Be4mguI+O5+StgQHvMsH7grI=
-X-Received: by 2002:a9d:7590:: with SMTP id s16mr9517019otk.250.1585302095432;
- Fri, 27 Mar 2020 02:41:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200326213251.54457-1-aford173@gmail.com>
-In-Reply-To: <20200326213251.54457-1-aford173@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 27 Mar 2020 10:41:24 +0100
-Message-ID: <CAMuHMdU9tQwQHkX0MdQLkMfz-2ymDzfNTFGnzPoq=JQF+28HOg@mail.gmail.com>
-Subject: Re: [RFC] clk: vc5: Add bindings for output configurations
-To:     Adam Ford <aford173@gmail.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, aford@beaconembedded.com,
-        charles.stevens@logicpd.com,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 27 Mar 2020 05:42:03 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:36342 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbgC0JmD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 05:42:03 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 18BB64068F;
+        Fri, 27 Mar 2020 09:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1585302122; bh=5lvr85wmUB+ig2sjTf8GoiI7NOjmJtqmkcAiDXQQ+iE=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=B1wZOt6pr1GmQZBOfYyL6GDT84QfA2uWCxy6qb5oiHj5dWC4VVSITpzUIz47GmbE6
+         RNhcBq94gwBo7de+qS8l2YqD5NzZ2hQlRjxe3LaUZXXwhhPmWjwNyHX/1dF5g3dq6Z
+         bq3oIFGNv/oJTMQQ6pBkDWK+wHFzfbmnBtM0OYscfMKoDOp2j/UQq2pOdtU2JCnxUD
+         yCS7f+Mm73Ds+npbdbuKYNLPIJBl7onyH7S18AkRqP2PSS4dN9KCk7VUiZKmGpkIdO
+         CoAukWT0VIbpsx4Sw/Ag611E1o0aoJ3G19F1aAht1W2YmMQzYlaLymxXiEV65ULe2l
+         6MnBefEg3GaIw==
+Received: from tejas-VirtualBox (joglekar-e7480.internal.synopsys.com [10.146.16.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPSA id 446CFA005B;
+        Fri, 27 Mar 2020 09:41:58 +0000 (UTC)
+Received: by tejas-VirtualBox (sSMTP sendmail emulation); Fri, 27 Mar 2020 15:11:56 +0530
+Date:   Fri, 27 Mar 2020 15:11:56 +0530
+Message-Id:
+ <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com>
+In-Reply-To: <cover.1585297723.git.joglekar@synopsys.com>
+References: <cover.1585297723.git.joglekar@synopsys.com>
+From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+Subject: [RESENDING RFC PATCH 1/4] dt-bindings: usb: Add snps,consolidate-sgl & consolidate-sgl
+To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     John Youn <John.Youn@synopsys.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
+Message-ID: <20200327094156.O0k5dCODaXojnux46zlda1QhMuSpfqOP7qb7Vd0FWw8@z>
 
-Hi Adam,
+This commit adds the documentation for consolidate-sgl, and
+snps,consolidate-sgl property. These when set enables the quirk for
+XHCI driver for consolidation of sg list into a temporary buffer when small
+buffer sizes are scattered over the sg list not making up to MPS or total
+transfer size within TRB cache size with Synopsys xHC.
 
-CC Marek
+Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt     | 3 +++
+ Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
+ 2 files changed, 6 insertions(+)
 
-On Thu, Mar 26, 2020 at 10:33 PM Adam Ford <aford173@gmail.com> wrote:
-> The Versaclock can be purchased in a non-programmed configuration.
-> If that is the case, the driver needs to configure the chip to
-> output the correct signal type, voltage and slew.
->
-> This RFC is proposing an additional binding to allow non-programmed
-> chips to be configured beyond their default configuration.
->
-> Signed-off-by: Adam Ford <aford173@gmail.com>
->
-> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> index 05a245c9df08..4bc46ed9ba4a 100644
-> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> @@ -30,6 +30,25 @@ Required properties:
->                 - 5p49v5933 and
->                 - 5p49v5935: (optional) property not present or "clkin".
->
-> +For all output ports, an option child node can be used to specify:
-> +
-> +- mode: can be one of
-> +                 - LVPECL: Low-voltage positive/psuedo emitter-coupled logic
-> +                 - CMOS
-> +                 - HCSL
-> +                 - LVDS: Low voltage differential signal
-> +
-> +- voltage-level:  can be one of the following microvolts
-> +                 - 1800000
-> +                 - 2500000
-> +                 - 3300000
-> +-  slew: Percent of normal, can be one of
-> +                 - P80
-> +                 - P85
-> +                 - P90
-> +                 - P100
-
-Why the P prefixes? Can't you just use integer values?
-After the conversion to json-schema, these values can be validated, too.
-
-> +
-> +
->  ==Mapping between clock specifier and physical pins==
->
->  When referencing the provided clock in the DT using phandle and
-> @@ -62,6 +81,8 @@ clock specifier, the following mapping applies:
->
->  ==Example==
->
-> +#include <dt-bindings/versaclock.h>
-
-Does not exist?
-
-> +
->  /* 25MHz reference crystal */
->  ref25: ref25m {
->         compatible = "fixed-clock";
-> @@ -80,6 +101,13 @@ i2c-master-node {
->                 /* Connect XIN input to 25MHz reference */
->                 clocks = <&ref25m>;
->                 clock-names = "xin";
-> +
-> +               ports@1 {
-> +                       reg = <1>;
-> +                       mode = <CMOS>;
-> +                       pwr_sel = <1800000>;
-> +                       slew = <P80>;
-> +               };
->         };
->  };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 9946ff9ba735..292d1f7969e4 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -104,6 +104,9 @@ Optional properties:
+ 			this and tx-thr-num-pkt-prd to a valid, non-zero value
+ 			1-16 (DWC_usb31 programming guide section 1.2.3) to
+ 			enable periodic ESS TX threshold.
++ - snps,consolidate-sgl: enable sg list consolidation - host mode only. Set to use
++			SG buffers of at least MPS size by consolidating smaller SG
++			buffers list into a single buffer.
+ 
+  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+  - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 3f378951d624..a90d853557ee 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -43,6 +43,9 @@ Optional properties:
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+   - imod-interval-ns: default interrupt moderation interval is 5000ns
+   - phys : see usb-hcd.yaml in the current directory
++  - consolidate-sgl: indicate if you need to consolidate sg list into a
++    temporary buffer when small SG buffer sizes does not make upto MPS
++    size or total transfer size across the TRB cache size.
+ 
+ additionally the properties from usb-hcd.yaml (in the current directory) are
+ supported.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.11.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
