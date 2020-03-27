@@ -2,158 +2,104 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31538C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 12:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41E4C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 12:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E1C20838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 12:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70EF206F2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 12:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="DWz54k89"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoO6ypzN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbgC0MqE (ORCPT
+        id S1727242AbgC0M4w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 08:46:04 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33770 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727336AbgC0MqE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 08:46:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JmG3WZJDcGCwktscCEiZxzaRHTNMSk7OqWqcb9CklMU=; b=DWz54k89BzS61Gaj5ZJHumDZX
-        A9o+tS6Qwk8axxNgL9dRnmwHjd28UR22jF3LCFXrrymwxj9w0XXBk68sfUJfOSWzl5iHozJ68yimP
-        +GEcJv1uvGOlnsPFEPA5rs5yMwQUAwmCe9jsVuNi00LGzaAkvOxFm6dRpyjRSLvvABfXd95UQS+Tf
-        6/EzYQl4S5bd37TxwTG7IauMWF3PiZdabuFbAspX3OC13squhg3b1IIi0QcDx/xLGNatWa0QSJAcU
-        6tLNLOpNKEJAG54OESpBlSZK1yMLaK+OiUJXNyQSg/MNoACzdIslqnVwYxmMCKWLskf+Ra7hmEXea
-        IBGnmkR3g==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:37908)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jHoMs-00016y-C2; Fri, 27 Mar 2020 12:45:46 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jHoMq-0004EP-KG; Fri, 27 Mar 2020 12:45:44 +0000
-Date:   Fri, 27 Mar 2020 12:45:44 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Gregory Clement <gregory.clement@bootlin.com>
-Cc:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: update SolidRun Armada 8040 phy interface
- types
-Message-ID: <20200327124544.GK25745@shell.armlinux.org.uk>
-References: <E1jHoHy-0002Ep-IY@rmk-PC.armlinux.org.uk>
+        Fri, 27 Mar 2020 08:56:52 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40048 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgC0M4w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 08:56:52 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c20so1919450pfi.7;
+        Fri, 27 Mar 2020 05:56:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JCESKrrWnEcLImLZvJm5tR1fjZbwCGME3IqndlFgAd8=;
+        b=CoO6ypzNkOmyFHnruT4hQazdZeYV0ej95HEw1xMXx7JHlJ4uiKMUqOfarbksTb9Wok
+         458GeF0mY3hW10GFyr0UvYzVY8HIXdfia1EtudKJut1U1SQ1ohhpbYHtn3pC2KbaNM0D
+         A5lBJojF4CREWm7yNAO7fN2jxnB1qpbLHOYv6a8nsiwEilysWuWVFffZ5qi3C3kK/v87
+         Opq3/TjcWGYtWuoAvMmQvYSh2bEhQR7enzal9/T/4/4/N+9S9oKo78qT7Lbawcg9fn1r
+         0h8AGbXDP6L4nB2gu8BUnKK3vit+Gp6qKeiiNEXz0kTmqYXxWa+jXSa1p53IYv6hi/gd
+         9X2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JCESKrrWnEcLImLZvJm5tR1fjZbwCGME3IqndlFgAd8=;
+        b=THV0TwWruytPjbg8aAt1DUT3yAdgKzTH+B8lRvfMySWw6z+KEDAgNx/NNpmd5UqWjQ
+         pkyf9cYdCqg9p+Q5VUj9ZWpTGqAv4CfHQzGFDJM0uXHNNq737+dSUcaVdXHdtcZdA7B7
+         eeVR8ZqFwnjzhsgxa0oRdYF3pEXMcOISZ7XO6VfSvJWScOSSEVhP83lyM6NKElATpNS1
+         yoWNK6Z+3+clryWMfj6zCowq6lSRwWIOjJfWzw5kIFRNq1dDykJslcR9mrPg06GarEsg
+         +trdXuER5eP2/AmQ+i/RsRMllTS/dQ69P4xZVS24W7q611EcacUB+PLVyVVtN30Djb1l
+         I0pA==
+X-Gm-Message-State: ANhLgQ1iABUOykD1G1Q/i2+nt6dyeik47V8UJG14EOcq8Zo3umuWrelc
+        d5pEa3JwSfqo7hzCIYyCHCCB/TnHesFcNLZvJg4=
+X-Google-Smtp-Source: ADFU+vuBprMuWtXdm/FnbYNvjG3ofuWuI6NnR5OtgHiNk04Q2OWyrABc5FzEbeSm7D7BlNrC+5ZwVRZa86bjZgeuRVg=
+X-Received: by 2002:a63:798a:: with SMTP id u132mr14441551pgc.203.1585313810224;
+ Fri, 27 Mar 2020 05:56:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E1jHoHy-0002Ep-IY@rmk-PC.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200322224626.13160-1-sravanhome@gmail.com> <20200322224626.13160-3-sravanhome@gmail.com>
+ <20200327075541.GF603801@dell> <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com>
+ <20200327102221.GA3383@dell> <a679aba5-4cfb-1b6c-8cb0-dab3a644f3e7@gmail.com>
+ <20200327112523.GC3383@dell> <45f68c40-8e50-e0a2-a89a-b5a164d6b75c@gmail.com>
+In-Reply-To: <45f68c40-8e50-e0a2-a89a-b5a164d6b75c@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 27 Mar 2020 14:56:43 +0200
+Message-ID: <CAHp75VcAq-CwsXccbLVxEwGjZjNhdcbMyM-Y-=SEbmexBidCHw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] mfd: mp2629: Add support for mps battery charger
+To:     saravanan sekar <sravanhome@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A note for Gregorii / bootlin people:
+On Fri, Mar 27, 2020 at 2:41 PM saravanan sekar <sravanhome@gmail.com> wrote:
+> On 27/03/20 12:25 pm, Lee Jones wrote:
+> > On Fri, 27 Mar 2020, saravanan sekar wrote:
+> >> On 27/03/20 11:22 am, Lee Jones wrote:
 
-After this patch, these still remain:
+> > So Andy has reviewed, but you still don't have him on Cc?
+> Sorry one of his hint made me removed him in CC unknowingly.
+>
+> "For the future, hint:
+>          scripts/get_maintainer.pl --git --git-min-percent=67 ..."
+>
 
-arch/arm64/boot/dts/marvell/cn9131-db.dts:      phy-mode = "10gbase-kr";
-arch/arm64/boot/dts/marvell/armada-7040-db.dts: phy-mode = "10gbase-kr";
-arch/arm64/boot/dts/marvell/armada-8040-db.dts: phy-mode = "10gbase-kr";
-arch/arm64/boot/dts/marvell/armada-8040-db.dts: phy-mode = "10gbase-kr";
-arch/arm64/boot/dts/marvell/cn9132-db.dts:      phy-mode = "10gbase-kr";
-arch/arm64/boot/dts/marvell/cn9130-db.dts:      phy-mode = "10gbase-kr";
+Perhaps I have to elaborate. The above hint for the initial submit.
+Then the rule of thumb: Include reviewers into Cc (to the patches they
+have reviewed), because you can't know their intention and maybe they
+want to follow a development.
 
-Please can you check whether these should be updated, and if so also
-update them?  10GBASE-KR is the backplane variant of 10GBASE-R which
-involves some negotiation.
+> My fault, added him in CC
 
-Thanks.
+No problem.
 
-On Fri, Mar 27, 2020 at 12:40:42PM +0000, Russell King wrote:
-> Update the SolidRun Armada 8040 platforms phy interface types from the
-> old 10gbase-kr to the newer and more correct 10gbase-r.
-> 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> ---
->  arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts   | 2 +-
->  arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts | 4 ++--
->  arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts            | 4 ++--
->  3 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-> index 1e7b47affe26..006666272489 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts
-> @@ -401,7 +401,7 @@
->  /* SFP */
->  &cp0_eth0 {
->  	status = "okay";
-> -	phy-mode = "10gbase-kr";
-> +	phy-mode = "10gbase-r";
->  	managed = "in-band-status";
->  	phys = <&cp0_comphy2 0>;
->  	sfp = <&sfp_cp0_eth0>;
-> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts b/arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts
-> index 26114d96d637..b44f4c029b78 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts
-> @@ -16,14 +16,14 @@
->  
->  &cp0_eth0 {
->  	status = "okay";
-> -	phy-mode = "10gbase-kr";
-> +	phy-mode = "10gbase-r";
->  	managed = "in-band-status";
->  	sfp = <&sfp_eth0>;
->  };
->  
->  &cp1_eth0 {
->  	status = "okay";
-> -	phy-mode = "10gbase-kr";
-> +	phy-mode = "10gbase-r";
->  	managed = "in-band-status";
->  	sfp = <&sfp_eth1>;
->  };
-> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-> index 087a5502631e..42741adf867b 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-> @@ -63,14 +63,14 @@
->  	status = "okay";
->  	/* Network PHY */
->  	phy = <&phy0>;
-> -	phy-mode = "10gbase-kr";
-> +	phy-mode = "10gbase-r";
->  };
->  
->  &cp1_eth0 {
->  	status = "okay";
->  	/* Network PHY */
->  	phy = <&phy8>;
-> -	phy-mode = "10gbase-kr";
-> +	phy-mode = "10gbase-r";
->  };
->  
->  &cp1_pinctrl {
-> -- 
-> 2.20.1
-> 
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+--
+With Best Regards,
+Andy Shevchenko
