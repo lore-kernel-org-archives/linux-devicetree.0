@@ -2,166 +2,198 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3B2C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 22:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6F2C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 22:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7172073B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 22:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585349108;
-	bh=7Zs/b+96WvUw27So2YKcRcWhDyAPTdzX/ZNYwXeNrqM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=smaizznvSoegWqcdFC+wn7UzADscXxcHgN+kJF5C2BZW1ohCDRYDiomIIaR4NEW34
-	 sgRceeiWxhjKBcB00UJzy1PQ7hw9Ry2NF1QB7EFAIf/3vciysIBzTczQVIhzEuf4ZL
-	 7/zI8BZ0jsUFMoKy4R2H/f8G7wC3fNrgV2VY5Y2s=
+	by mail.kernel.org (Postfix) with ESMTP id 7185320748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 22:53:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sCLGEAWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgC0WpE (ORCPT
+        id S1727585AbgC0Wxu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:45:04 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45434 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727620AbgC0WpE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 18:45:04 -0400
-Received: by mail-io1-f67.google.com with SMTP id a24so10928117iol.12;
-        Fri, 27 Mar 2020 15:45:03 -0700 (PDT)
+        Fri, 27 Mar 2020 18:53:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36706 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbgC0Wxt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 18:53:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i13so5211146pfe.3
+        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 15:53:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=u//RFRwBb0m9lwVRnZnuN1wIsLwSxdDr93Wv4WL3gak=;
+        b=sCLGEAWMh1HSvJ+QM8j2lloft3uPeNHMcMj6BmwhaTwvSP2P4K8TyvIbsSpX+ZbSQ6
+         HERLK4yeWKux2ZLUriBsIVL77UetK/CkpdZTTh748tOxtGhooB5gcjlwQCggun6xvHX9
+         d4EVzFEPqcWxprhJvN3A9oBIXMUz+cHkaovqJfucawus4FjC9X5GjfdcjR2J4hVl8ezd
+         x/VGVaKjmWaXnxY6KQTQlBJgaxf1T3GqonDTIimI9rPYb6rHAPFd5J7IAIvTwVsZp0Tg
+         YnEEmvMPcyGK9b+ts9frgqH2YOGDrb5VHekmJ1I5ZXzmQTmvnNwtxsnNi9iiosGJ63qm
+         iSUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u4k13uf5713DqF6VnWYY7OaKrDxuIhG+KLjykTCZmLE=;
-        b=Gv/I3R7+nOm+zatwFGKaLrr2HO4RHpM6Wiywg6KtnKTZacBCH/iLnHXPrVtmtU7U5R
-         fRMHJNwxU/jxQEYWXRPYwDdfk4SmpRIY4RrNXxfIxEv59Y/sAGxWJg5OGo3vl5gX722n
-         R6cKMvdscNifJPGOiQgDSfKP8U7oX6QB8PdhQeU/Fn80Pzcp2GAjphFe+aAjnnLsDss2
-         NYxpyvMbfS9mBpU3R1WEjTB07ymrXS+dfVUAq2x1W5cHXUfypR34+iORfI2A5XsfJEib
-         5Y1bNS9hclBlv/aSkn6OXx65/TU1lD0QaO5zPmUSpQqNiA9j9Ck3d1s6jvST9Tk1Fb8T
-         ePjQ==
-X-Gm-Message-State: ANhLgQ0NxNnuVl10UUWDG/OARaPvajEC8t/cZx1nbKfHmV7Dy5sCBO07
-        bDnIU5eTGVq5cgF1ygBwKmyLhpc=
-X-Google-Smtp-Source: ADFU+vsAE04nea1pFbNgX10KkqsBq3CtTvHBC//maalfcP/HRR+gaN6juo2FWt0zeUBHYvmVpvNbkQ==
-X-Received: by 2002:a6b:ed17:: with SMTP id n23mr871676iog.165.1585349103124;
-        Fri, 27 Mar 2020 15:45:03 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.250])
-        by smtp.googlemail.com with ESMTPSA id u125sm1838651ioe.24.2020.03.27.15.45.01
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=u//RFRwBb0m9lwVRnZnuN1wIsLwSxdDr93Wv4WL3gak=;
+        b=mk1YGkvTSaNHIpZyfMbZMiJhV3ic+TEHahucQThfTXACp9GAEIqtLvyGc+95QH3HqK
+         rwOVUMu910aYuM5tLFV2pc6qoJlQ9XpfdbCTVcB+o8Et2pI2bjf12zX2exwrLnC/sJVK
+         qxPQb6DO86oV5Z+05SMXBSqq9vCMv9hRu6eBflceQXk/xkSJj5kS2lYiIV2Qz7zB3jwA
+         bOiWDWqTSZNpQ83deAjyJfBeI7vQrEyqWIaCfNfG8FZgLApL/c+2IDCOdq/XagdQT/RX
+         9xZwHMXRA7eFfINq9YW9jdjV/x2H7j/1JWuz78wRiAHh4Bp/N/WpL4v5IwUcOd7//D9H
+         Ru9g==
+X-Gm-Message-State: ANhLgQ1aZ4K/LFAtxAMB164jgSy+hEt6/Ryl28S9Lx0/6Uie7Ktz/Zd1
+        Cgdbdo1xf/N7o37GMPCWZAhL6g==
+X-Google-Smtp-Source: ADFU+vvmOFrFFFf0Ylaxpwo5cZwgZFAq0POqcMDvAU5keyfbpNREBBtPuvkrV6yluD9CWYp3jhMddA==
+X-Received: by 2002:a63:78e:: with SMTP id 136mr1551884pgh.181.1585349628346;
+        Fri, 27 Mar 2020 15:53:48 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id t1sm4590766pgh.88.2020.03.27.15.53.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 15:45:02 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: [PATCH] dt-bindings: iio: Fix adi,ltc2983 uint64-matrix schema constraints
-Date:   Fri, 27 Mar 2020 16:45:01 -0600
-Message-Id: <20200327224501.18590-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Fri, 27 Mar 2020 15:53:47 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 15:53:45 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
+        daniel.lezcano@linaro.org, agross@kernel.org, robh@kernel.org,
+        amit.kucheria@verdurent.com, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Patch v5 4/6] soc: qcom: Extend RPMh power controller driver to
+ register warming devices.
+Message-ID: <20200327225345.GH5063@builder>
+References: <20200320014107.26087-1-thara.gopinath@linaro.org>
+ <20200320014107.26087-5-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320014107.26087-5-thara.gopinath@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-'minItems' and 'maxItems' apply at the same level as 'items' schemas as
-the keywords apply to arrays. What's currently defined is a 3
-dimensional matrix with the outer size being undefined. To fix this,
-minItems/maxItems needs to be moved up a level.
+On Thu 19 Mar 18:41 PDT 2020, Thara Gopinath wrote:
 
-With this fixed, the example fails validation. For matrix types, the dts
-syntax must use brackets (<>) matching the schema definition. In this
-case, the inner array size is 2 elements, so let's add the correct
-bracketing.
+> RPMh power control hosts power domains that can be used as
+> thermal warming devices. Register these power domains
+> with the generic power domain warming device thermal framework.
+> 
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+> 
+> v3->v4:
+> 	- Introduce a boolean value is_warming_dev in rpmhpd structure to
+> 	  indicate if a generic power domain can be used as a warming
+> 	  device or not.With this change, device tree no longer has to
+> 	  specify which power domain inside the rpmh power domain provider
+> 	  is a warming device.
+> 	- Move registering of warming devices into a late initcall to
+> 	  ensure that warming devices are registered after thermal
+> 	  framework is initialized.
 
-Fixes: 3986a14870cb ("dt-bindings: iio: Add ltc2983 documentation")
-Cc: "Nuno Sá" <nuno.sa@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc: linux-iio@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-I'll take this via the DT tree as I have another change this will 
-conflict.
+This information is lost when we merge patches, as such I would like
+such design decisions to be described in the commit message itself.
+But...
 
-Rob
+> 
+>  drivers/soc/qcom/rpmhpd.c | 37 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 36 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+> index 7142409a3b77..4e9c0bbb8826 100644
+> --- a/drivers/soc/qcom/rpmhpd.c
+> +++ b/drivers/soc/qcom/rpmhpd.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_opp.h>
+> +#include <linux/pd_warming.h>
+>  #include <soc/qcom/cmd-db.h>
+>  #include <soc/qcom/rpmh.h>
+>  #include <dt-bindings/power/qcom-rpmpd.h>
+> @@ -48,6 +49,7 @@ struct rpmhpd {
+>  	bool		enabled;
+>  	const char	*res_name;
+>  	u32		addr;
+> +	bool		is_warming_dev;
+>  };
+>  
+>  struct rpmhpd_desc {
+> @@ -55,6 +57,8 @@ struct rpmhpd_desc {
+>  	size_t num_pds;
+>  };
+>  
+> +const struct rpmhpd_desc *global_desc;
+> +
+>  static DEFINE_MUTEX(rpmhpd_lock);
+>  
+>  /* SDM845 RPMH powerdomains */
+> @@ -89,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
+>  	.pd = { .name = "mx", },
+>  	.peer = &sdm845_mx_ao,
+>  	.res_name = "mx.lvl",
+> +	.is_warming_dev = true,
+>  };
+>  
+>  static struct rpmhpd sdm845_mx_ao = {
+> @@ -452,7 +457,14 @@ static int rpmhpd_probe(struct platform_device *pdev)
+>  					       &rpmhpds[i]->pd);
+>  	}
+>  
+> -	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
+> +	ret = of_genpd_add_provider_onecell(pdev->dev.of_node, data);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	global_desc = desc;
+> +
+> +	return 0;
+>  }
+>  
+>  static struct platform_driver rpmhpd_driver = {
+> @@ -469,3 +481,26 @@ static int __init rpmhpd_init(void)
+>  	return platform_driver_register(&rpmhpd_driver);
+>  }
+>  core_initcall(rpmhpd_init);
+> +
+> +static int __init rpmhpd_init_warming_device(void)
+> +{
+> +	size_t num_pds;
+> +	struct rpmhpd **rpmhpds;
+> +	int i;
+> +
+> +	if (!global_desc)
+> +		return -EINVAL;
+> +
+> +	rpmhpds = global_desc->rpmhpds;
+> +	num_pds = global_desc->num_pds;
+> +
+> +	if (!of_find_property(rpmhpds[0]->dev->of_node, "#cooling-cells", NULL))
+> +		return 0;
+> +
+> +	for (i = 0; i < num_pds; i++)
+> +		if (rpmhpds[i]->is_warming_dev)
+> +			of_pd_warming_register(rpmhpds[i]->dev, i);
+> +
+> +	return 0;
+> +}
+> +late_initcall(rpmhpd_init_warming_device);
 
- .../bindings/iio/temperature/adi,ltc2983.yaml | 38 +++++++++----------
- 1 file changed, 18 insertions(+), 20 deletions(-)
+...why can't this be done in rpmhpd_probe()?
 
-diff --git a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
-index acc030c1b20e..8fb46de6641d 100644
---- a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
-+++ b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
-@@ -123,12 +123,11 @@ patternProperties:
-           sign.
-         allOf:
-           - $ref: /schemas/types.yaml#/definitions/uint64-matrix
-+        minItems: 3
-+        maxItems: 64
-         items:
--          minItems: 3
--          maxItems: 64
--          items:
--            minItems: 2
--            maxItems: 2
-+          minItems: 2
-+          maxItems: 2
- 
-   "^diode@":
-     type: object
-@@ -328,12 +327,11 @@ patternProperties:
-           78 and 79.
-         allOf:
-           - $ref: /schemas/types.yaml#/definitions/uint64-matrix
-+        minItems: 3
-+        maxItems: 64
-         items:
--          minItems: 3
--          maxItems: 64
--          items:
--            minItems: 2
--            maxItems: 2
-+          minItems: 2
-+          maxItems: 2
- 
-       adi,custom-steinhart:
-         description:
-@@ -465,16 +463,16 @@ examples:
-                         adi,sensor-type = <9>; //custom thermocouple
-                         adi,single-ended;
-                         adi,custom-thermocouple = /bits/ 64
--                                 <(-50220000) 0
--                                  (-30200000) 99100000
--                                  (-5300000) 135400000
--                                  0 273150000
--                                  40200000 361200000
--                                  55300000 522100000
--                                  88300000 720300000
--                                  132200000 811200000
--                                  188700000 922500000
--                                  460400000 1000000000>; //10 pairs
-+                                 <(-50220000) 0>,
-+                                 <(-30200000) 99100000>,
-+                                 <(-5300000) 135400000>,
-+                                 <0 273150000>,
-+                                 <40200000 361200000>,
-+                                 <55300000 522100000>,
-+                                 <88300000 720300000>,
-+                                 <132200000 811200000>,
-+                                 <188700000 922500000>,
-+                                 <460400000 1000000000>; //10 pairs
-                };
- 
-         };
--- 
-2.20.1
+In particular with the recent patches from John Stultz to allow rpmhpd
+to be built as a module I don't think there's any guarantees that
+rpmh_probe() will have succeeded before rpmhpd_init_warming_device()
+executes.
 
+Regards,
+Bjorn
