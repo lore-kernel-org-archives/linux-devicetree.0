@@ -5,113 +5,161 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED727C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 22:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A16C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 23:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00482071B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 22:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13AE820717
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 23:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YPdf51gG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mb55dYBP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgC0Wy6 (ORCPT
+        id S1727718AbgC0XAd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 18:54:58 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46922 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbgC0Wy6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 18:54:58 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q3so5182294pff.13
-        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 15:54:57 -0700 (PDT)
+        Fri, 27 Mar 2020 19:00:33 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33521 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbgC0XAb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 19:00:31 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d17so5314135pgo.0
+        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 16:00:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=HU2M5O3jCfLj94Hwufwd4XPsJBSwx4R/uG7JulaLujI=;
-        b=YPdf51gGhsv5lOIYljUemnb/IoF4tLDIRzFJhjUoZ86UQMM8TttCZzXcTOBm97T8WG
-         GPAqsxP1v+5nFHf8EGUipD6IfGNrA1mSxdt0qWuTSZbbuB2DU1n7FL1zw+p1duoTY3B8
-         0kfrv3XzLbhyl4C7XnCgzJm1RHGY8y56waHMloM9d6gPDIYjKr/WXIJiuEZ2qXyw21hA
-         TRIy3sE3NFD1+QwN9qoSYlsDNGlH0c2jKCxzybtFbEf7vUOhHoytaHpKut3gHnc0BfQ5
-         OOX7Ke/fjwPS/IxP8XNtO8H3tlAAHG8ThSqH5rYQBtZjolHaESuhqtXayy0SH+ch2xtB
-         jiBw==
+        bh=JqIenWZwZuZZwflrKOCXfVDSGSS9yHIiXPKhRDM0rfQ=;
+        b=mb55dYBPoAEXndrnw3TFFXmQdpaONNEY0CTwf+ofOSZLOYI3t8q0fJSTRQvNHhrFPF
+         VFal9j5aj/Kdk1/7t20ftZGZTGKK/RH9u5mAVruZGe3lwx+LK+unHW5qyNUkL31YMwuR
+         3Pvz+SOf8BOMkjM5+JGE1CtZHVNUwroi01M/5qLddUPeyiKWNWp/DI2Dj1jdLLYisRqm
+         Far7EiRWmErWyTiiPJchgvc+qJoxX+RMwYQ4q9XXpozlloKysBoK7S/Preg9Bbr4/Q+z
+         uNK8Lc+EojNptOWgffWP8RxWA0SXCH27LBT50EUN6pCMyWC5RNAF+Mo8j55bm3Uc8sMz
+         3IEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HU2M5O3jCfLj94Hwufwd4XPsJBSwx4R/uG7JulaLujI=;
-        b=f2VXmQpq35G0Ic5rxBDKDNqj71aMG9KHECAXFu1ntfeFYu36cChpO6UtOvl8kqEYoQ
-         LiOpjiL4mjcd54nsJgG6XwU8Ab/0x6QCRCMYNWgmkli4LeKuu494KxYdYKrT2WLVUK09
-         FiGCM9ExAB9dQ5eJ3Mq/q8s2xcKrw5seii+COfe3TWp67in9cGaN7Oa0LKLHz7iR8cBK
-         0GdeWvCTaP5n2UcjCBmwd26WCqlhYoZ2Jgc1OX2IkpKNKZYmY0/T/gzROnCRD0NpYec2
-         2bxu96RjxTStWortkNhBb0MO7BRiNXTbOoxozR6HqKmE2L/+fPbxIY53EZhHKz9jx25R
-         MYsQ==
-X-Gm-Message-State: ANhLgQ2rkTIMIp5dUFI7JnNrUTdUDNNmicc9FAnquZATttqEpJS8AJQi
-        9+BoquqiQixPjjJqJsZef6a5Qw==
-X-Google-Smtp-Source: ADFU+vsJ5hSRbz6fduTj02IdL1Xzy2YBpy7LH6U+C7LpI1fAMwXLyOa9O45EJ3aIiGe9q26cEeMZ9Q==
-X-Received: by 2002:a62:75d0:: with SMTP id q199mr1560271pfc.72.1585349697006;
-        Fri, 27 Mar 2020 15:54:57 -0700 (PDT)
+        bh=JqIenWZwZuZZwflrKOCXfVDSGSS9yHIiXPKhRDM0rfQ=;
+        b=lUU5SfZKLsv/nfI7Y/WmBpzvWBLKYHF/61OULqeoGdFK9R7pBaCw5STTFuTYSv5fRT
+         oTHayHeHu7/4JEMgCvcLE0bF4ZfWn674EGkK/1O05fA2ORePxAAwohhsHkK+6gN6j6RK
+         krtafjw/WWnheakaTCrBgxdHvVTN72DmUzDVIJradvAm1pqPWCwfcXoVX9CSjVT146Ut
+         iQugpgbDF5C9RwIOqlYxNrd4Xlu9/aS+0Iva02fCmv4aph/iNfz8BqHun5Dj/Hef6GLe
+         hdlakdN8Dxce/oFa5hRV2JgXE3GEpGUo8gqVWXaWFeJ25Q9WDSvkGk8OUjjJxMVdI9LT
+         8IyQ==
+X-Gm-Message-State: ANhLgQ2Rg23bOOfJpIhB8cnAEyQz6eJwRIY9b6cZV73SIgXW0gMQUnxe
+        SqbBf/ngwU2ljXy8Ge9uhTEa7Q==
+X-Google-Smtp-Source: ADFU+vsHwqLL5TtFqgU4KcqOiYr0XygvoaMkIOSpnKmIG6QUfqJWOKbXb+1ATrf6wNyFpl4jFtlJ2w==
+X-Received: by 2002:a62:a512:: with SMTP id v18mr1478997pfm.306.1585350028760;
+        Fri, 27 Mar 2020 16:00:28 -0700 (PDT)
 Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d3sm4543941pjz.2.2020.03.27.15.54.55
+        by smtp.gmail.com with ESMTPSA id b25sm4862093pfp.201.2020.03.27.16.00.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 15:54:56 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 15:54:54 -0700
+        Fri, 27 Mar 2020 16:00:27 -0700 (PDT)
+Date:   Fri, 27 Mar 2020 16:00:25 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, agross@kernel.org, robh@kernel.org,
-        amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v5 6/6] arm64: dts: qcom: Indicate rpmhpd hosts a power
- domain that can be used as a warming device.
-Message-ID: <20200327225454.GI5063@builder>
-References: <20200320014107.26087-1-thara.gopinath@linaro.org>
- <20200320014107.26087-7-thara.gopinath@linaro.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
+ device node
+Message-ID: <20200327230025.GJ5063@builder>
+References: <1585219723-28323-1-git-send-email-pillair@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320014107.26087-7-thara.gopinath@linaro.org>
+In-Reply-To: <1585219723-28323-1-git-send-email-pillair@codeaurora.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 19 Mar 18:41 PDT 2020, Thara Gopinath wrote:
+On Thu 26 Mar 03:48 PDT 2020, Rakesh Pillai wrote:
 
-> RPMh hosts mx power domain that can be used to warm up the SoC.  Indicate
-> this by using #cooling-cells property.
+> Add device node for the ath10k SNOC platform driver probe
+> and add resources required for WCN3990 on sc7180 soc.
 > 
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 > ---
 > 
-> v3->v4:
-> 	- Removed subnode to indicate that mx power domain is a warming
-> 	  device. Instead #cooling-cells is used as a power domain
-> 	  provider property to indicate if the provider hosts a power
-> 	  domain that can be used as a warming device.
+> Depends on https://patchwork.kernel.org/patch/11455345/
+> The above patch adds the dt-bindings for wifi-firmware
+> subnode
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  8 ++++++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 +++++++++++++++++++++++++++
+>  2 files changed, 35 insertions(+)
 > 
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index fe35d37a11cc..0d878b2ca351 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -3703,6 +3703,7 @@
->  			rpmhpd: power-controller {
->  				compatible = "qcom,sdm845-rpmhpd";
->  				#power-domain-cells = <1>;
-> +				#cooling-cells = <2>;
->  				operating-points-v2 = <&rpmhpd_opp_table>;
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 043c9b9..a6168a4 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -327,6 +327,14 @@
+>  	};
+>  };
 >  
->  				rpmhpd_opp_table: opp-table {
+> +&wifi {
+> +	status = "okay";
+> +	qcom,msa-fixed-perm;
+> +	wifi-firmware {
+> +		iommus = <&apps_smmu 0xc2 0x1>;
+
+How is sc7180 different from sdm845, where the iommus property goes
+directly in the &wifi node?
+
+Regards,
+Bjorn
+
+> +	};
+> +};
+> +
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>  
+>  &qspi_clk {
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 998f101..2745128 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -83,6 +83,11 @@
+>  			reg = <0 0x8f600000 0 0x500000>;
+>  			no-map;
+>  		};
+> +
+> +		wlan_fw_mem: memory@94104000 {
+> +			reg = <0 0x94104000 0 0x200000>;
+> +			no-map;
+> +		};
+>  	};
+>  
+>  	cpus {
+> @@ -835,6 +840,28 @@
+>  			};
+>  		};
+>  
+> +		wifi: wifi@18800000 {
+> +			compatible = "qcom,wcn3990-wifi";
+> +			reg = <0 0x18800000 0 0x800000>;
+> +			reg-names = "membase";
+> +			iommus = <&apps_smmu 0xc0 0x1>;
+> +			interrupts =
+> +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
+> +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
+> +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
+> +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
+> +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
+> +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
+> +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
+> +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
+> +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
+> +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
+> +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
+> +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
+> +			memory-region = <&wlan_fw_mem>;
+> +			status = "disabled";
+> +		};
+> +
+>  		config_noc: interconnect@1500000 {
+>  			compatible = "qcom,sc7180-config-noc";
+>  			reg = <0 0x01500000 0 0x28000>;
 > -- 
-> 2.20.1
-> 
+> 2.7.4
