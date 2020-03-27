@@ -1,184 +1,98 @@
-Return-Path: <SRS0=lKpO=5L=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,WEIRD_QUOTING autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82709C2D0E8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 23:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FE1C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 00:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5826E20848
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Mar 2020 23:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522C420663
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 00:15:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="gxK9Lq1U";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w6pqPp7I"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HsJzc7G0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgCZXU5 (ORCPT
+        id S1726067AbgC0AP0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:20:57 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:43375 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726359AbgCZXU5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:20:57 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 3E0F95C0296;
-        Thu, 26 Mar 2020 19:20:56 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Thu, 26 Mar 2020 19:20:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=SPBez9eP4WUK7nuKDXBKLrvMRPHaZsR
-        cUIsM6kI098U=; b=gxK9Lq1U1ZxYWuJmDagu+BiWgP0UnweCyPcj1hQFPT3pqyB
-        LxatrOpz3FAEfvUd5qLkvi73gmsE81WE1yuXW3/+H2utlTJ700zpmigwBnng3LbP
-        Epw8/ZUwW//YNGi5vI5WP29M05ArTjZhgECYpIDLXpl6l0XutKGVK/TqH3kcZBdb
-        3fSSnnl3RegVFPK/pIMZwfbrLHVDz3R6nOZICjfQBEfWu4mT5wdRt6V042RXxLmB
-        HkftvIlma412PclEU/x7QGDAcvIx6P6fK/P70Q67FDmPZhmfiGiC5mD8vTQus/wK
-        YbUFsrsiOCXjtwmYkz/tONJ9O56EGqCaNR+XSBg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SPBez9
-        eP4WUK7nuKDXBKLrvMRPHaZsRcUIsM6kI098U=; b=w6pqPp7Ik+M1thZhT77paX
-        0kTNlrTdUYnMQAcVrtDz0NnabndanpH5Kz7uitVjMAH0IawekET32chwxjx/QrAB
-        AI5EfDCNQ0ShnkOkID+8nHPKbHikhphmtXZIsHLlv2WNug7wH7+rQJVOYtlTdBUy
-        /I5OGMrmq66pb2tLup533nvm5ega0BzsX+qGUr9aHIGB8pen3wqOIAzVku6CGdr5
-        xIWIZvNyfoE7Wpw1QhVFQ+KvRMN7rQD1z/FJcERurYlNGq8E/FSzXocw+RRPxMX9
-        jEcJsfq855jiZVYtNqFIlqx/UDaUIpMMzgTwthXI2YV74airZKu9lhdGwLETBR3Q
-        ==
-X-ME-Sender: <xms:1zh9XiSSQNyIfR04Kthsm7UhzVRMzwkPn4FDqhKG-ph4JO8hrCG-fw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehjedguddtkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehn
-    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfies
-    rghjrdhiugdrrghu
-X-ME-Proxy: <xmx:1zh9XufHtV7zdwoJoABA-XKbJMCRjPY8iHi8hsLe8a8Jb5SOWvmeYA>
-    <xmx:1zh9XhKzeexi5vEcv5EEK2-QJmy_wLjc9fAATGXS2oBd9NlFV8nS-w>
-    <xmx:1zh9Xj46U2c1B70fLh5hYzpKB_YaQ7-xS0qosaP_zzgI0y1FsQ5TFQ>
-    <xmx:2Dh9XmZVnS9kqIWj4sBS7nBGvNBOOGjDmrY1GIvL4Kj1IhMLrUY-hA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 02149E00EF; Thu, 26 Mar 2020 19:20:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-1021-g152deaf-fmstable-20200319v1
-Mime-Version: 1.0
-Message-Id: <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
-In-Reply-To: <20200306170218.79698-2-geissonator@yahoo.com>
-References: <20200306170218.79698-1-geissonator@yahoo.com>
- <20200306170218.79698-2-geissonator@yahoo.com>
-Date:   Fri, 27 Mar 2020 09:50:58 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Andrew Geissler" <geissonator@gmail.com>,
-        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org,
-        "Andrew Geissler" <geissonator@yahoo.com>
-Subject: Re: [PATCH 2/2] ARM: dts: aspeed: zaius: Add gpio line names
-Content-Type: text/plain
+        Thu, 26 Mar 2020 20:15:26 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60680 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726359AbgC0AP0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Mar 2020 20:15:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=hd1YFsXLbrypTE4jWtW6CeMXVCF7Ic9nihmkXsYCCD4=; b=HsJzc7G0a9knRIHt+lZN7CgY4l
+        aC+6VHmZ1DrIsd2cNn6tl+DhmNGFt+S2AWz76VmXK5u887jBzcJ0q6MVB9qLWQp1v9dgb+3gImGLw
+        ODSDTS3xY3hIR3nIz7Qkzutx3d2BWDQwdbEWhgqe7IURUcbypOz19oFGfNERpenPCmI0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jHceZ-0004we-2F; Fri, 27 Mar 2020 01:15:15 +0100
+Date:   Fri, 27 Mar 2020 01:15:15 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 3/9] net: phy: add kr phy connection type
+Message-ID: <20200327001515.GL3819@lunn.ch>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-4-git-send-email-florinel.iordache@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585230682-24417-4-git-send-email-florinel.iordache@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On Sat, 7 Mar 2020, at 03:32, Andrew Geissler wrote:
-> Name the GPIOs to help userspace work with them. The names describe the
-> functionality the lines provide, not the net or ball name. This makes it
-> easier to share userspace code across different systems and makes the
-> use of the lines more obvious.
+On Thu, Mar 26, 2020 at 03:51:16PM +0200, Florinel Iordache wrote:
+> Add support for backplane kr phy connection types currently available
+> (10gbase-kr, 40gbase-kr4) and the required phylink updates (cover all
+> the cases for KR modes which are clause 45 compatible to correctly assign
+> phy_interface and phylink#supported)
 > 
-> Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
-
-So we're creating a bit of an ad-hoc ABI here between the DT and userspace.
-
-Where are we documenting it?
-
-Generally I think the idea is good though, so:
-
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
-
+> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
 > ---
->  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 37 +++++++++++++++++++---
->  1 file changed, 33 insertions(+), 4 deletions(-)
+>  drivers/net/phy/phylink.c | 15 ++++++++++++---
+>  include/linux/phy.h       |  6 +++++-
+>  2 files changed, 17 insertions(+), 4 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts 
-> b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-> index bc60ec291681..4bcc82046362 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-> @@ -478,32 +478,61 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_gpioh_unbiased>;
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index fed0c59..db1bb87 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -4,6 +4,7 @@
+>   * technologies such as SFP cages where the PHY is hot-pluggable.
+>   *
+>   * Copyright (C) 2015 Russell King
+> + * Copyright 2020 NXP
+>   */
+>  #include <linux/ethtool.h>
+>  #include <linux/export.h>
+> @@ -303,7 +304,6 @@ static int phylink_parse_mode(struct phylink *pl, struct fwnode_handle *fwnode)
+>  			break;
 >  
-> +	gpio-line-names =
-> +	/*A0-A7*/	"","cfam-reset","","","","","","",
-> +	/*B0-B7*/	"","","","","","","","",
-> +	/*C0-C7*/	"","","","","","","","",
-> +	/*D0-D7*/	"fsi-enable","","","","","led-sys-boot-status","led-attention",
-> +				"led-fault",
-> +	/*E0-E7*/	"","","","","","","","presence-pcie-e2b",
-> +	/*F0-F7*/	"","","","","","","","checkstop",
-> +	/*G0-G7*/	"fsi-clock","fsi-data","","","","","","",
-> +	/*H0-H7*/	"onewire0","onewire1","onewire2","onewire3","","","","",
-> +	/*I0-I7*/	"","","","power-button","","","","",
-> +	/*J0-J7*/	"","","","","","","","",
-> +	/*K0-K7*/	"","","","","","","","",
-> +	/*L0-L7*/	"","","","","","","","",
-> +	/*M0-M7*/	"","","","","","","","",
-> +	/*N0-N7*/	"","","","","","","","",
-> +	/*O0-O7*/	"","","","","iso_u164_en","","fsi-trans","",
-> +	/*P0-P7*/	"ncsi_mux_en_n","bmc_i2c2_sw_rst_n","","bmc_i2c5_sw_rst_n","",
-> +				"","fsi-mux","",
-> +	/*Q0-Q7*/	"","","","","","","","",
-> +	/*R0-R7*/	"","","","","","","","",
-> +	/*S0-S7*/	"","","","","","","","",
-> +	/*T0-T7*/	"","","","","","","","",
-> +	/*U0-U7*/	"","","","","","","","",
-> +	/*V0-V7*/	"","","","","","","","",
-> +	/*W0-W7*/	"","","","","","","","",
-> +	/*X0-X7*/	"","","","","","","","",
-> +	/*Y0-Y7*/	"","","","","","","","",
-> +	/*Z0-Z7*/	"","","","","","","","",
-> +	/*AA0-AA7*/	"","","led-hdd-fault","","","","","",
-> +	/*AB0-AB7*/	"","","","","","","","",
-> +	/*AC0-AC7*/	"","","","","","","","";
-> +
->  	line_iso_u146_en {
->  		gpio-hog;
->  		gpios = <ASPEED_GPIO(O, 4) GPIO_ACTIVE_HIGH>;
->  		output-high;
-> -		line-name = "iso_u164_en";
->  	};
->  
->  	ncsi_mux_en_n {
->  		gpio-hog;
->  		gpios = <ASPEED_GPIO(P, 0) GPIO_ACTIVE_HIGH>;
->  		output-low;
-> -		line-name = "ncsi_mux_en_n";
->  	};
->  
->  	line_bmc_i2c2_sw_rst_n {
->  		gpio-hog;
->  		gpios = <ASPEED_GPIO(P, 1) GPIO_ACTIVE_HIGH>;
->  		output-high;
-> -		line-name = "bmc_i2c2_sw_rst_n";
->  	};
->  
->  	line_bmc_i2c5_sw_rst_n {
->  		gpio-hog;
->  		gpios = <ASPEED_GPIO(P, 3) GPIO_ACTIVE_HIGH>;
->  		output-high;
-> -		line-name = "bmc_i2c5_sw_rst_n";
->  	};
->  };
->  
-> -- 
-> 2.21.0 (Apple Git-122)
-> 
->
+>  		case PHY_INTERFACE_MODE_USXGMII:
+> -		case PHY_INTERFACE_MODE_10GKR:
+
+We might have a backwards compatibility issue here. If i remember
+correctly, there are some boards out in the wild using
+PHY_INTERFACE_MODE_10GKR not PHY_INTERFACE_MODE_10GBASER.
+
+See e0f909bc3a242296da9ccff78277f26d4883a79d
+
+Russell, what do you say about this?
+
+	 Andrew
