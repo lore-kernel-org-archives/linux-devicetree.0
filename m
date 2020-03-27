@@ -2,94 +2,207 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01297C2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 03:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9EEC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 05:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4FA20787
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 03:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585278316;
-	bh=YIf6aQbdkDH1cQnI7Mm8lvierFh+tPaKpJdINhnNVxg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=e4huM9r8N9pYqQ2gCTfCCRnHUCfrBDKXiqu1c0+tdIfhnmXt8oUidr8KzNBwY+eyX
-	 WIovj1kHcnWbaJViVjcI1DK2Rpa3E0+whMl+Ss4pNA3776qanouVufMek3miD0ptjI
-	 Oz7lGbp1LNLeXuJ38AkxVq8ct2ErUEZysYDbJsic=
+	by mail.kernel.org (Postfix) with ESMTP id 2A46620663
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 05:04:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B4ufnI/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbgC0DFQ (ORCPT
+        id S1726149AbgC0FEy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 23:05:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgC0DFQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Mar 2020 23:05:16 -0400
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        Fri, 27 Mar 2020 01:04:54 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:56509 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725956AbgC0FEy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 01:04:54 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585285493; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=SG6WaenvHTcDY9BCxDftkj4em5j0Ob7ZRiq3kSRzIPs=; b=B4ufnI/5rBgojGW6LW2Ds0nDEfWX+DaCDswKzVEb09+NCHaB4pcn+kTWicvHylWXs6z+SQ5B
+ 80GJKkMdwKT4IodR1MwWrlQhqXZXarNT3PTvLeO1snodjmgKDM6wzpKuhUsbgA6kJk/sQVYn
+ JaXcM96x8iXn4yKx9Aqfw1bZZsQ=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7d8975.7f655f3e0b58-smtp-out-n01;
+ Fri, 27 Mar 2020 05:04:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F1C97C43636; Fri, 27 Mar 2020 05:04:52 +0000 (UTC)
+Received: from [192.168.0.13] (unknown [183.83.138.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 621242083E;
-        Fri, 27 Mar 2020 03:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585278315;
-        bh=YIf6aQbdkDH1cQnI7Mm8lvierFh+tPaKpJdINhnNVxg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gscSa0b2I4VjrlYCOv6soG876N5HH7XtFKOr7CVoyAdEubKbOAJ2tJIWrq1LDaPTv
-         2OgcQNdP2Smb82Ad4//KDNT/R+YSAMyUtelYOm0raw7jA6ZAs18OP02GBfdrLMIrk+
-         4mrxLpUGuZIV9KQiswZsEDoDT2LpjukSVdhCuT54=
-Received: by mail-qt1-f177.google.com with SMTP id c9so7493936qtw.7;
-        Thu, 26 Mar 2020 20:05:15 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3EcYiEJR8aTgYF3FBJe0EykJJSVmwDyCUv91OtZP/pPZ9JQ6K8
-        liKQAzEcFgKVaM6tnBMILar6ZpV7DqOb7rVOSQ==
-X-Google-Smtp-Source: ADFU+vslGC615com2rm1wCgzAp5WB2w4yiciuQ1qMy22ERjZcJ2jcVj8Uw6zWW9MVqImCv+H7p5eSrCRLUyipOXv8/Y=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr12051193qtg.110.1585278314570;
- Thu, 26 Mar 2020 20:05:14 -0700 (PDT)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD584C433F2;
+        Fri, 27 Mar 2020 05:04:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD584C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V2 3/8] soc: qcom-geni-se: Add interconnect support to fix
+ earlycon crash
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        wsa@the-dreams.de, Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, Doug Anderson <dianders@chromium.org>
+References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
+ <1584105134-13583-4-git-send-email-akashast@codeaurora.org>
+ <20200313204441.GJ144492@google.com>
+ <1f86fdf0-df7c-4e4a-d4d8-8b0162e52cb4@codeaurora.org>
+ <20200317182910.GR144492@google.com>
+ <3831b33c-93ee-e5e0-fcfb-530b4738f930@codeaurora.org>
+ <20200319194332.GA60149@google.com>
+ <a7227a1f-00a1-0818-80f3-904fe264f864@codeaurora.org>
+ <CAE=gft6AGkcdUAkoyevZgmtBgaiEkoQzzJcg7sYjbpy5Kh2fyA@mail.gmail.com>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <08717de4-cfeb-4049-ebbf-aa2c1c6989c7@codeaurora.org>
+Date:   Fri, 27 Mar 2020 10:34:43 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200325213439.16509-8-ezequiel@collabora.com> <20200326191343.1989-1-ezequiel@collabora.com>
-In-Reply-To: <20200326191343.1989-1-ezequiel@collabora.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 26 Mar 2020 21:05:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ4sLE8mf=Ssg3wxbpf-f65i+YRkCBj+8DVGPonRA0=9A@mail.gmail.com>
-Message-ID: <CAL_JsqJ4sLE8mf=Ssg3wxbpf-f65i+YRkCBj+8DVGPonRA0=9A@mail.gmail.com>
-Subject: Re: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to json-schema
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAE=gft6AGkcdUAkoyevZgmtBgaiEkoQzzJcg7sYjbpy5Kh2fyA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 1:14 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
->
-> Convert Rockchip VPU (Hantro IP block) codec driver documentation to
-> json-schema.
->
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
-> v4:
-> * Fix issues pointed out by Rob,
->   and make sure now dt_binding_check passes.
->
->  .../bindings/media/rockchip-vpu.txt           | 43 -----------
->  .../bindings/media/rockchip-vpu.yaml          | 74 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 75 insertions(+), 44 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.yaml
+Hi Evan,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 3/20/2020 10:00 PM, Evan Green wrote:
+> On Fri, Mar 20, 2020 at 3:22 AM Akash Asthana <akashast@codeaurora.org> wrote:
+>> Hi Evan, Matthias,
+>>
+>> On 3/20/2020 1:13 AM, Matthias Kaehlcke wrote:
+>>> On Wed, Mar 18, 2020 at 02:24:35PM +0530, Akash Asthana wrote:
+>>>> Hi Matthias,
+>>>>
+>>>> On 3/17/2020 11:59 PM, Matthias Kaehlcke wrote:
+>>>>> Hi Akash,
+>>>>>
+>>>>> On Tue, Mar 17, 2020 at 04:27:47PM +0530, Akash Asthana wrote:
+>>>>>> Hi Matthias,
+>>>>>>
+>>>>>> On 3/14/2020 2:14 AM, Matthias Kaehlcke wrote:
+>>>>>>> Hi Akash,
+>>>>>>>
+>>>>>>> On Fri, Mar 13, 2020 at 06:42:09PM +0530, Akash Asthana wrote:
+>>>>>>>> V1 patch@https://patchwork.kernel.org/patch/11386469/ caused SC7180 system
+>>>>>>>> to reset at boot time.
+>>>>>>> The v1 patch isn't relevant in the commit message, please just describe the
+>>>>>>> problem. Also the crash only occurs when earlycon is used.
+>>>>>> ok
+>>>>>>>> As QUP core clock is shared among all the SE drivers present on particular
+>>>>>>>> QUP wrapper, the reset seen is due to earlycon usage after QUP core clock
+>>>>>>>> is put to 0 from other SE drivers before real console comes up.
+>>>>>>>>
+>>>>>>>> As earlycon can't vote for it's QUP core need, to fix this add ICC
+>>>>>>>> support to common/QUP wrapper driver and put vote for QUP core from
+>>>>>>>> probe on behalf of earlycon and remove vote during sys suspend.
+>>>>>>> Only removing the vote on suspend isn't ideal, the system might never get
+>>>>>>> suspended. That said I don't have a really good alternative suggestion.
+>>>>>>>
+>>>>>>> One thing you could possibly do is to launch a delayed work, check
+>>>>>>> console_device() every second or so and remove the vote when it returns
+>>>>>>> non-NULL. Not claiming this would be a great solution ...
+>>>>>>>
+>>>>>>> The cleanest solution might be a notifier when the early console is
+>>>>>>> unregistered, it seems somewhat over-engineered though ... Then again
+>>>>>>> other (future) uart drivers with interconnect support might run into
+>>>>>>> the same problem.
+>>>>>> We are hitting this problem because QUP core clocks are shared among all the
+>>>>>> SE driver present in particular QUP wrapper, if other HW controllers has
+>>>>>> similar architecture we will hit this issue.
+>>>>>>
+>>>>>> How about if we expose an API from common driver(geni-se) for putting QUP
+>>>>>> core BW vote to 0.
+>>>>>>
+>>>>>> We call this from console probe just after uart_add_one_port call (console
+>>>>>> resources are enabled as part of this call) to put core quota to 0 on behalf
+>>>>>> of earlyconsole?
+>>>>>    From my notes from earlier debugging I have doubts this would work:
+>>>>>
+>>>>>      There is a short window where the early console and the 'real' console coexist:
+>>>>>
+>>>>>      [    3.858122] printk: console [ttyMSM0] enabled
+>>>>>      [    3.875692] printk: bootconsole [qcom_geni0] disabled
+>>>>>
+>>>>>      The reset probably occurs when the early console tries to write, but the ICC
+>>>>>      is effectively disabled because ttyMSM0 and the other geni ports are runtime
+>>>>>      suspended.
+>>>> Code flow from console driver probe(qcom_geni_serial.c)
+>>>>
+>>>> uart_add_one_port--->uart_configure_port--->{ 1) uart_change_pm(enable
+>>>> console resources)  2)register_console(boot to real console switch happens
+>>>> here)}
+>>>>
+>>>> Console resources are not disabled from anywhere before the switch happens
+>>>> completely. I meant to say until we saw below logs.
+>>>>
+>>>> [    3.875692] printk: bootconsole [qcom_geni0] disabled
+>>>>
+>>>> I think the board reset issue cannot occur during the window where early
+>>>> console and 'real' console coexist.
+>>> Thanks for the clarification! Indeed my notes were only a hypothesis, I
+>>> don't see evidence that there is an actual downvote shortly after console
+>>> registration.
+>>>
+>>>> I have validated proposed solution by me, it is working fine.
+>>>>
+>>>> Currently voting is done for every QUP and not only to which earlycon is
+>>>> connect, with the above approach we can't remove vote from other QUPs.
+>>>>
+>>>> However we can limit voting only to earlycon QUP by removing interconnect
+>>>> from DT node of other QUPs.
+>>>>
+>>>> I am not sure how clean is this solution.
+>>> I'm more inclined towards a solution along the lines of what Evan
+>>> proposed, i.e. delaying the votes (either in geni or ICC) until we
+>>> are ready.
+>> Based on discussion I think the delayed solution is most suited if
+>> implemented in ICC core because other ICC client might face the similar
+>> problem.
+>>
+>> However for geni case I am more inclined towards below proposed solution.
+>>
+>> -----------------------------------------------------------------------------------------------------
+>>
+>> How about if we expose an API from common driver(geni-se) for putting QUP
+>> core BW vote to 0.
+>>
+>> We call this from console probe just after uart_add_one_port call (console
+>> resources are enabled as part of this call) to put core quota to 0 on behalf
+>> of earlyconsole?
+> This seems ok to me. Earlycon sets up a vote, and then real probe
+> tears it down. As long as in the shuffle of all of these things into
+> SE library helpers you still have a way of differentiating the
+> earlycon vote from the real vote. In other words, don't reuse this
+> early icc_path for the real UART vote. You should probably also
+> destroy the path once you've voted zero on it.
+> -Evan
+
+Thanks for confirming, I will not use early icc_path for real console 
+and I will destroy it once voted to 0 from real console probe.
+
+Regards,
+
+Akash
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
