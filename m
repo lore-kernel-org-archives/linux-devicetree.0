@@ -2,143 +2,94 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E37EC43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 05:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4962C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 06:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5636720714
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 05:33:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eNKY14M8"
+	by mail.kernel.org (Postfix) with ESMTP id B586C20714
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 06:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgC0Fds (ORCPT
+        id S1725942AbgC0GKv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 01:33:48 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19682 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbgC0Fds (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 01:33:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585287227; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=V+ERd6fCgQjZF/hnv7fmKN9YfpzFtPi8H3fqR0rE/u0=; b=eNKY14M81SEKPYraXIhcAF3yQgiOMlcw6utiBAyh8s0aiU8Hvi7G2wJfv5Vkf9cpoMU/mhJG
- FmjeEZ/P6u9s+Rjs0qS0GwURXEo5ZVWpG9Eckp22d94BV2igEM3AS2k8/mppWF+UmFMJt2vY
- GVt3RA4VQAMOvjeZ8cw7mjaO52k=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7d9035.7f249cbb05e0-smtp-out-n01;
- Fri, 27 Mar 2020 05:33:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ED29BC4478C; Fri, 27 Mar 2020 05:33:39 +0000 (UTC)
-Received: from [192.168.0.13] (unknown [183.83.138.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9B442C433F2;
-        Fri, 27 Mar 2020 05:33:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9B442C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V2 2/8] soc: qcom: geni: Support for ICC voting
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        wsa@the-dreams.de, Mark Brown <broonie@kernel.org>,
+        Fri, 27 Mar 2020 02:10:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:40764 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbgC0GKu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 02:10:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FF097FA;
+        Thu, 26 Mar 2020 23:10:50 -0700 (PDT)
+Received: from ssg-dev-vb.arm.com (unknown [10.57.25.3])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 585553F71F;
+        Thu, 26 Mar 2020 23:14:51 -0700 (PDT)
+From:   Hadar Gat <hadar.gat@arm.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-3-git-send-email-akashast@codeaurora.org>
- <CAE=gft4_Su4+SXWAW_HWy5BF1mH7QaDHCiwAAhrNaekTeU57rA@mail.gmail.com>
- <74851dda-296d-cdc5-2449-b9ec59bbc057@codeaurora.org>
- <CAE=gft5Uucr83DoQqaE7_8_H=ExnkPBQvRiUK_+LxOMeadam_g@mail.gmail.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <51bdf6b5-28b1-64ca-011d-59990012569f@codeaurora.org>
-Date:   Fri, 27 Mar 2020 11:03:30 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <CAE=gft5Uucr83DoQqaE7_8_H=ExnkPBQvRiUK_+LxOMeadam_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>, Hadar Gat <hadar.gat@arm.com>
+Subject: [PATCH v7 0/3] hw_random: introduce Arm CryptoCell TRNG driver
+Date:   Fri, 27 Mar 2020 09:10:20 +0300
+Message-Id: <1585289423-18440-1-git-send-email-hadar.gat@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Evan,
+The Arm CryptoCell is a hardware security engine.
+This patch introduces driver for its TRNG (True Random Number Generator)
+engine.
 
-On 3/20/2020 10:15 PM, Evan Green wrote:
-> On Fri, Mar 20, 2020 at 4:03 AM Akash Asthana <akashast@codeaurora.org> wrote:
->> Hi Evan,
->>
->> +/* Core 2X clock frequency to BCM threshold mapping */
->> +#define CORE_2X_19_2_MHZ               960
->> +#define CORE_2X_50_MHZ                 2500
->> +#define CORE_2X_100_MHZ                        5000
->> +#define CORE_2X_150_MHZ                        7500
->> +#define CORE_2X_200_MHZ                        10000
->> +#define CORE_2X_236_MHZ                        16383
->>
->> These are all just 50 * clock_rate. Can you instead specify that one
->> define of CLK_TO_BW_RATIO 50, and then use clk_get_rate() to get the
->> input clock frequency. That way, if these end up getting clocked at a
->> different rate, the bandwidth also scales appropriately. Also, can you
->> enumerate why 50 is an appropriate ratio?
->> -Evan
->>
->> -Evan
->>
->> Clock rate for Core 2X is controlled by BW voting only, we don't set clock rate for core 2X clock either by DFS or calling clk_set_rate API like we do for SE clocks from individual driver.
->>
->> In DT node it's not mentioned as clock.
->>
->> As discussed in patch@ https://patchwork.kernel.org/patch/11436897/  We are not scaling Core 2X clock based on dynamic need of driver instead we are putting recommended value from HW team for each driver.
-> Oh I get it. This is pretty opaque, since this table is saying "here
-> are the bandwidth values that happen to work out to a Core2X clock
-> rate of N".
+v7 change: in arm-cctrng.yaml, removed unneeded 'minitems'
 
-Hmm,  BCM threshold to CORE2X clock rate mapping is exposed to us from 
-clock team.
+v6 change: add missing initialization of hwrng quality.
 
-BCM threshold value is internally convert to mentioned clock rate this 
-is something internal to board ICC driver.
+v5 changes:
+	1. in arm-cctrng.yaml, fixed error in 'make dt_binding_check'
+	2. in cctrng.c, clean up cctrng clock handling
 
->   But it's not obvious why setting the Core2X clock rate to
-> N is desirable or appropriate. The answer seems to be hardware guys
-> told us these thresholds work well in practice.
-Yes, this is correct as the core clocks behaves different than any other 
-NOC, we rely on the recommendation from VI/HW team.
->   And if I'm reading
-> into it more, probably they're saying these bandwidths are too low to
-> be worth dynamically managing beyond on/off
-I am not sure whether they intend to say this.
-> At the very least we should explain some of this in the comment above
-> these defines. Something like:
-> /* Define bandwidth thresholds that cause the underlying Core 2X
-> interconnect clock to run at the named frequency. These baseline
-> values are recommended by the hardware team, and are not dynamically
-> scaled with GENI bandwidth beyond basic on/off. */
-> -Evan
+v4 changes: update arm-cctrng.yaml to conform with json-schema standard.
 
-Ok,
+v3 change: removed few unneeded "#ifdef CONFIG_PM" from the code.
 
-regards,
+v2 changes: fixed 'make dt_bnding_check' errors.
 
-Akash
+Hadar Gat (3):
+  dt-bindings: add device tree binding for Arm CryptoCell trng engine
+  hw_random: cctrng: introduce Arm CryptoCell driver
+  MAINTAINERS: add HG as cctrng maintainer
+
+ .../devicetree/bindings/rng/arm-cctrng.yaml        |  54 ++
+ MAINTAINERS                                        |   9 +
+ drivers/char/hw_random/Kconfig                     |  12 +
+ drivers/char/hw_random/Makefile                    |   1 +
+ drivers/char/hw_random/cctrng.c                    | 736 +++++++++++++++++++++
+ drivers/char/hw_random/cctrng.h                    |  72 ++
+ 6 files changed, 884 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+ create mode 100644 drivers/char/hw_random/cctrng.c
+ create mode 100644 drivers/char/hw_random/cctrng.h
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+2.7.4
+
