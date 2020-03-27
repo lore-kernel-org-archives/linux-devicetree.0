@@ -6,62 +6,97 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6D3C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC4DC2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA4E206F6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D7D2073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3pJjhKfQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="P04eDa8u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgC0OPp (ORCPT
+        id S1727335AbgC0OWy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:15:45 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34000 "EHLO vps0.lunn.ch"
+        Fri, 27 Mar 2020 10:22:54 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34046 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbgC0OPp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:15:45 -0400
+        id S1726656AbgC0OWx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:22:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=s4i5KmLKfub8BBxXB3cWuYtKCz0ltkH5r8L+83ZwU2g=; b=3pJjhKfQTzZ1v9BAbUW+liAWeV
-        jGi6zab4lBOwxHobsVXn2SqI9PtZxqqUHrwC4uXyO1kc++9Aacb8/FYMcypIZehz7RTkWerfAMorA
-        yAB9sTv0D0ckDyxUZYHjgMQzJiXZkxXTXB0brbIGsDFGpSlhIrJV5d/ZSpzaPkd4Nzek=;
+        bh=U0es5eCjPHafmknYI44UIritcApZVL6ufHPKfH3LHp8=; b=P04eDa8uV9VPNA/3xDFaHSp7lu
+        PTChCW80xpzV6lIYT1iZfFj2B4jFIt5iRbfawNZSgHYK1l2bIRJQgP0ktBL/Tf9so2gmFp6xazFee
+        kRIRD6dSvVtcDK6pjzZmXw3K7HrUK3rGXWYJ6FAMgSVulG/K0G5QgFVSrtgfn6r4I32s=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
         (envelope-from <andrew@lunn.ch>)
-        id 1jHplq-00027N-TP; Fri, 27 Mar 2020 15:15:38 +0100
-Date:   Fri, 27 Mar 2020 15:15:38 +0100
+        id 1jHpsj-0002C9-4p; Fri, 27 Mar 2020 15:22:45 +0100
+Date:   Fri, 27 Mar 2020 15:22:45 +0100
 From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH] arm64: dts: update SolidRun Armada 8040 phy interface
- types
-Message-ID: <20200327141538.GE11004@lunn.ch>
-References: <E1jHoHy-0002Ep-IY@rmk-PC.armlinux.org.uk>
- <20200327134319.GD11004@lunn.ch>
- <20200327134651.GM25745@shell.armlinux.org.uk>
- <20200327135046.GN25745@shell.armlinux.org.uk>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
+Message-ID: <20200327142245.GF11004@lunn.ch>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200327135046.GN25745@shell.armlinux.org.uk>
+In-Reply-To: <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> ... and actually there is no point.
+> +/* Backplane custom logging */
+> +#define BPDEV_LOG(name) \
+> +	char log_buffer[LOG_BUFFER_SIZE]; \
+> +	va_list args; va_start(args, msg); \
+> +	vsnprintf(log_buffer, LOG_BUFFER_SIZE - 1, msg, args); \
+> +	if (!bpphy->attached_dev) \
+> +		dev_##name(&bpphy->mdio.dev, log_buffer); \
+> +	else \
+> +		dev_##name(&bpphy->mdio.dev, "%s: %s", \
+> +			netdev_name(bpphy->attached_dev), log_buffer); \
+> +	va_end(args)
 
-O.K. lets merge these as normal, not as fixes.  It is probably too
-late for ARM SoC, so i guess they will get merged next cycle.
+> +void bpdev_err(struct phy_device *bpphy, char *msg, ...)
+> +{
+> +	BPDEV_LOG(err);
+> +}
+> +EXPORT_SYMBOL(bpdev_err);
+> +
+> +void bpdev_warn(struct phy_device *bpphy, char *msg, ...)
+> +{
+> +	BPDEV_LOG(warn);
+> +}
+> +EXPORT_SYMBOL(bpdev_warn);
+> +
+> +void bpdev_info(struct phy_device *bpphy, char *msg, ...)
+> +{
+> +	BPDEV_LOG(info);
+> +}
+> +EXPORT_SYMBOL(bpdev_info);
+> +
+> +void bpdev_dbg(struct phy_device *bpphy, char *msg, ...)
+> +{
+> +	BPDEV_LOG(dbg);
+> +}
+> +EXPORT_SYMBOL(bpdev_dbg);
+
+You are currently modelling this as a phydev. So please just use
+phydev_err(), phydev_info(), phydev_dbg() etc.
+
+Also, if you look at other PHY code, struct phy_device * is nearly
+always called phydev. Please try to be consistent with the existing
+code base.
 
      Andrew
