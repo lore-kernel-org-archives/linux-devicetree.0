@@ -2,126 +2,79 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7327AC43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686CAC2D0E8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4398D20705
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="KFFzlOF8";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dZIFWv5B"
+	by mail.kernel.org (Postfix) with ESMTP id 38A6320737
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgC0J2d (ORCPT
+        id S1726027AbgC0JeG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:28:33 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:58693 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725946AbgC0J2d (ORCPT
+        Fri, 27 Mar 2020 05:34:06 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:51108 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725946AbgC0JeG (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:28:33 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 071275800A5;
-        Fri, 27 Mar 2020 05:28:32 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Fri, 27 Mar 2020 05:28:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=LhbEX+PTcMuPpL/1ETXXhTFLIWQ
-        COOvbBr7bWPk6nqo=; b=KFFzlOF8jEmg0DqntkIpgK2wxHlt/GqsgU2g+iagndP
-        DdNijv3uS7jXI44crUGd4W3da3oMvV2EctegJACm/uDP2BfpRcTgKVQtM5q4odLs
-        U+w9apbY7q3miOFvV7IPdjDVslaPPGcwgPjaTii+xtTtWrZvh/pPQYt1pW6vKDT9
-        hwUrKpKm7R1mnKIggtJlW4ciPA6RCSYRK+tY8eiJzdHmd2Xn3zxffWrwC3VWLlYb
-        iavPMGvPaiAqMV1H5JqGZ0AwUG+4C3owepqGJ7LCf14LV/ipNcJEI13msNrjB8vV
-        BDFSXs0+tqBXuso3rQHpBjTOwIatLksQ4quDmQXnK+Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=LhbEX+
-        PTcMuPpL/1ETXXhTFLIWQCOOvbBr7bWPk6nqo=; b=dZIFWv5B0fd9XhM75muntn
-        mlezGQOSxqrOGQRHoKoYfJS4kNNCwLcKPPDIJ7yUTYo6p8s+EHYPMDoIAmgM1sex
-        0hpnHd30iNy0TYtIu5lzzoUjfA8U57fwvgVChCMkZUFbBEbrz87iN4EpXWt70YM2
-        wjKOYSVjcYGVprBHEKTXl9ulf3Oz+msYRIuvZ+RZUxFPUNvJxHUSg7anE4N5xLqW
-        YZbs0EaeNAf5z94rKBH+Si0+81IDcBTPg1LHU2hhNQ/3Ud9YOeCGX8dTxqekI/tR
-        iDuFunCHZ5RGAU55TUHDWikr/vxXVoq+xnUH+3RkmcRU2dj3jsjxs0Y1Wjw18flw
-        ==
-X-ME-Sender: <xms:Psd9XvPEofr28nUW4bHdiPDMjnTxtZWrhu31hu0jIGFBg066VQDtsg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehledgtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
-    vghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:Psd9XmIb0kbHJLhvnKnYMWl_Vpx_H3BXmHm1z0MGx4k6FlRru5sehA>
-    <xmx:Psd9XhJrBqH0Z6921ZHPakUs-Ae6IQC67XnHOCnA6o_ImnU-qxwwBw>
-    <xmx:Psd9XiXFiYAWb_VhBLLOFZpl00jqEC0FCe9MCxQJSNSLQ7On98BKeg>
-    <xmx:QMd9Xvvp2qQ01S6DgBBHHgfrdena6ZBXSdyYS_7uV7H4yjaISUFDVA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 914AF306C109;
-        Fri, 27 Mar 2020 05:28:29 -0400 (EDT)
-Date:   Fri, 27 Mar 2020 10:28:26 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-Cc:     Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Fredrik Noring <noring@nocrew.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        John Youn <John.Youn@synopsys.com>
-Subject: Re: [RESENDING RFC PATCH 0/4] Add logic to consolidate TRBs for
- Synopsys xHC
-Message-ID: <20200327092826.GB1693819@kroah.com>
-References: <cover.1585297723.git.joglekar@synopsys.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1585297723.git.joglekar@synopsys.com>
+        Fri, 27 Mar 2020 05:34:06 -0400
+X-IronPort-AV: E=Sophos;i="5.72,311,1580742000"; 
+   d="scan'208";a="43017750"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 27 Mar 2020 18:34:05 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 1113F420E963;
+        Fri, 27 Mar 2020 18:34:05 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     kishon@ti.com, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 0/4] dt-bindings: phy: add r8a77961 support
+Date:   Fri, 27 Mar 2020 18:33:52 +0900
+Message-Id: <1585301636-24399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 02:22:23PM +0530, Tejas Joglekar wrote:
-> The Synopsys xHC has an internal TRB cache of size TRB_CACHE_SIZE for
-> each endpoint. The default value for TRB_CACHE_SIZE is 16 for SS and 8
-> for HS. The controller loads and updates the TRB cache from the
-> transfer ring in system memory whenever the driver issues a start
-> transfer or update transfer command.
-> 
-> For chained TRBs, the Synopsys xHC requires that the total amount of
-> bytes for all TRBs loaded in the TRB cache be greater than or equal to
-> 1 MPS. Or the chain ends within the TRB cache (with a last TRB).
-> 
-> If this requirement is not met, the controller will not be able to
-> send or receive a packet and it will hang causing a driver timeout and
-> error.
-> 
-> This patch set adds logic to the XHCI driver to detect and prevent this
-> from happening along with the quirk to enable this logic for Synopsys
-> HAPS platform.
-> 
-> Based on Mathias's feedback on previous implementation where consolidation
-> was done in TRB cache, with this patch series the implementation is done
-> during mapping of the URB by consolidating the SG list into a temporary
-> buffer if the SG list buffer sizes within TRB_CACHE_SIZE is less than MPS.
-> 
-> 
-> Tejas Joglekar (4):
->   dt-bindings: usb: Add snps,consolidate-sgl & consolidate-sgl
->   usb: xhci: Set quirk for XHCI_CONSOLIDATE_SG_LIST
->   usb: dwc3: Add device property consolidate-sgl
->   usb: xhci: Use temporary buffer to consolidate SG
-> 
-> Resending as 'umlaut' is not accepted by some servers in email.
+This patch adds USBPHY 2.0/3.0 devices support for r8a77961
+(R-Car M3-W+).
 
-Only patch 4/4 seems to have gone through :(
+Changes from v3:
+ - Retain a description of #phy-cell in patch 1/4.
+ - Add Reviewed-by in patch 1/4 and 3/4.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=262507
+
+Changes from v2:
+ - Modify json-schema files which Geert-san was pointed out.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=261847
+
+Changes from v1:
+ - Rebase these patches on top of my patches of convert bindings to
+   json-schema.
+ - Add Reviewed-by.
+ https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=261195
+
+Yoshihiro Shimoda (4):
+  dt-bindings: phy: renesas: usb2-phy: convert bindings to json-schema
+  dt-bindings: phy: renesas: usb2-phy: add r8a77961 support
+  dt-bindings: phy: renesas: usb3-phy: convert bindings to json-schema
+  dt-bindings: phy: renesas: usb3-phy: add r8a77961 support
+
+ .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  70 ------------
+ .../devicetree/bindings/phy/rcar-gen3-phy-usb3.txt |  52 ---------
+ .../devicetree/bindings/phy/renesas,usb2-phy.yaml  | 117 +++++++++++++++++++++
+ .../devicetree/bindings/phy/renesas,usb3-phy.yaml  |  79 ++++++++++++++
+ 4 files changed, 196 insertions(+), 122 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
+ delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
+
+-- 
+2.7.4
 
