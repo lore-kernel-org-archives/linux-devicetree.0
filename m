@@ -2,124 +2,97 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5990C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 18:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E28C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 19:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5212073B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 18:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC74B2072F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 19:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ftU32uvo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XzwTwOQ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgC0Sbh (ORCPT
+        id S1727473AbgC0TB6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 14:31:37 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40013 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgC0Sbh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 14:31:37 -0400
-Received: by mail-ot1-f65.google.com with SMTP id r19so4932775otn.7
-        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 11:31:36 -0700 (PDT)
+        Fri, 27 Mar 2020 15:01:58 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36404 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726738AbgC0TB6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 15:01:58 -0400
+Received: by mail-lf1-f65.google.com with SMTP id s1so8752100lfd.3
+        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 12:01:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KI2dTrx/jXK38PbXpYOkSOlcGmSiDkUIwHW8vQMK71g=;
-        b=ftU32uvodMmh9TUHBTsggNDykA0JWSoOl8vv6OZMmjFyeH+BjHX3KbXJ64DokTNeW8
-         bJYL7htiWlyya8+yMZKcSWzvd2QzqRSVq90WRpVAWIED6t6G4Vvy7gQfUYwlHv636Qon
-         pJILf2c9ad+yw94jyDC4zn1jVtQfCbD0fA8u3QGgsSr56xs/5hzWg7WxsVfMscprH+9x
-         9lycyrBABLC8NZOHDGFQg2Ys67QcMo26x36JMYW8Tf1jlljbxEUL0GxZ9hL1SlJ2Zf6M
-         YYu2l01UCXdJThX0Sx+viedEeZKn4XfRrk4z/XGsRE5sUu2IdQj9jfosX+ApYrGPqjwJ
-         nSXg==
+        bh=CooN/lA7d5yACqkmjNxbvElnXH9xWYc5D690cPagV5A=;
+        b=XzwTwOQ2tZqjO9DLphNswRW0Faz+tkI3lW4QKn8PnDodceq0s69XJc+EX+CaxLUZAc
+         DsmeaJdkg7faxGR2WlOr2Q2xOqCK3LhvO83UpvhTPjbrrDITVXe01nU0HW2zIBGLSdNK
+         x+SI4S2qeU3EY5SopL7X1UD90wHcT3WjJvLfVVsAO2U5Em5d1XWCXX0PRhRjUwlFbFjC
+         /RhNOl/qPgtup89fKy/XuqC10uHh8xb2p99SAbLCDPTbSVvO8tHFnVGOGXPs57VzLKHy
+         z3pNrxrHAv/ZVQFSEpVOjEocb4Os2eKubiclJ5LN8KBbJgdGF3NkBVCWlJGOm0DbvFTa
+         Y1mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KI2dTrx/jXK38PbXpYOkSOlcGmSiDkUIwHW8vQMK71g=;
-        b=Y1qJxDluDC43tSbi9HcBMmEoCXnUIwgiOxa1LMeJ6zwKXq7ufEPJJ3KoohUqf1hVCt
-         75We6DhkpQJKRM32l+KnE2ptxU8nTDBYLR11+aMbCjSgAMJ2OBI5xClISFcqOcP5zaAb
-         38uIrLawFtHz5RmInxQhkOtYrfCcYwNTzw3XNCqyRm2ENRDfXKlbVP1g8ZJKPTrFfvCK
-         6UWeKYV5iCoYx1vI1rHmptHL/LUaz4pqTsJ4YFd5Dz0d01Pzs0T0fYo59ypsL+8cN9ey
-         qusnaenXMxk37a0R43EUogms7fGoOh7dfgbd0ereHbS/9dkFJU05ws3PZKWNcpPPWYCC
-         AEvA==
-X-Gm-Message-State: ANhLgQ3y4PlnhoJKXURPId2IX/VWDOuGhPkz3tQZhwKOYXQdyhlF03gh
-        e039F4rI/nx8LuSdyTarAhzLskhpBcqqWL8gK9+2gbR4
-X-Google-Smtp-Source: ADFU+vvTE+yu3Qrc0iwfoYnnfjvt5whAuu9S0p0ocDjhgWmev5ClxaCzU9FH1Cxy+HeexYbpKglLL/8Ushcu3EV/D5M=
-X-Received: by 2002:a9d:42f:: with SMTP id 44mr22412otc.236.1585333895496;
- Fri, 27 Mar 2020 11:31:35 -0700 (PDT)
+        bh=CooN/lA7d5yACqkmjNxbvElnXH9xWYc5D690cPagV5A=;
+        b=Z/zFFFUv5radn8ePUgwrAILtAEkqWAZcoPPcCJVQAD/rlHcbd/UsMru8zS/tUm9YTs
+         BHw3KT+TouJ9Zz4Z+JQolrxjuzrFhnmVFqLnrNqtsqEeJxR6bMv+MHFVcgA18BJqNyA/
+         iXvtHYE7469YyeWn3MfizjsgN/Iu05yTuSJbzX/6A2lI5fl7U4+v02xV/xkcMLh5vB39
+         chtJ+6QE3QYclgIjYXnxD2KYWYdxfflS5/IgHv27rWWknan31s4Nv78XgfPekIkUsclO
+         x9QGPOSVif4nrY41+B1AEYWiNfK85Avt0yOOQ8mTPr5iyLCvyatOzn1Cr73hARuvMDQU
+         KqvQ==
+X-Gm-Message-State: AGi0PuYNAAhhhrJrwPjqFQdmQmYO8r4uKm0J09jTDEz0+tWqyv51SHMH
+        wF8JHtXjUVMH33hqVbYTK5sqiMwzoNhqYJzu3gR1Kw==
+X-Google-Smtp-Source: APiQypLD/fNDqtD4u7+uuQ8ZqMmHjJHk9/rbkJ2Ows6MzWRJlKEVAAUCTvzeqzTfoWN78XIJxBngK/onAWpgkIOJt00=
+X-Received: by 2002:ac2:5f7c:: with SMTP id c28mr457241lfc.4.1585335716191;
+ Fri, 27 Mar 2020 12:01:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200321210305.28937-1-saravanak@google.com> <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
- <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com> <20200327152144.GA2996253@kroah.com>
-In-Reply-To: <20200327152144.GA2996253@kroah.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 27 Mar 2020 11:30:59 -0700
-Message-ID: <CAGETcx-J+TP+0NsOe75Uu3Q8K6=qYja6eDbjNH2764QV53=nMA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
- behavior by default
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+References: <20200317205017.28280-1-michael@walle.cc> <20200317205017.28280-13-michael@walle.cc>
+ <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
+ <9c310f2a11913d4d089ef1b07671be00@walle.cc> <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
+ <22944c9b62aa69da418de7766b7741bd@walle.cc> <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
+ <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
+In-Reply-To: <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 27 Mar 2020 20:01:44 +0100
+Message-ID: <CACRpkdYwqReW+UcY=4S3ZnC+jFeVr=e+Ns12A_CK6o7VBUXHbA@mail.gmail.com>
+Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 8:21 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Mar 27, 2020 at 11:25:48AM +0100, Marek Szyprowski wrote:
-> > Hi,
-> >
-> > On 2020-03-21 22:03, Saravana Kannan wrote:
-> > > Set fw_devlink to "permissive" behavior by default so that device links
-> > > are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
-> > > firmware.
-> > >
-> > > This ensures suppliers get their sync_state() calls only after all their
-> > > consumers have probed successfully. Without this, suppliers will get
-> > > their sync_state() calls at late_initcall_sync() even if their consuer
-> > >
-> > > Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
-> > > that needs more testing as it's known to break some corner case
-> > > drivers/platforms.
-> > >
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >
-> > This patch has just landed in linux-next 20200326. Sadly it breaks
-> > booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit
-> > mode. There is no warning nor panic message, just a silent freeze. The
-> > last message shown on the earlycon is:
-> >
-> > [    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
+On Fri, Mar 27, 2020 at 4:28 PM Michael Walle <michael@walle.cc> wrote:
 
-Marek,
+> For starters, would that be a drivers/gpio/gpio-regmap.c or a
+> drivers/base/regmap/regmap-gpio.c? I would assume the first,
 
-Any chance you could get me a stack trace for when it's stuck? That'd
-be super helpful and I'd really appreciate it. Is it working fine on
-other variants of Raspberry?
+Yeah I would name it like that. gpio-regmap.c.
 
->
-> I've just reverted this for now.
->
-
-Greg,
-
-I have no problem with reverting this. If there's any other
-tree/branch you can put this on where it could get more testing and
-reporting of issues, that'd be great.
-
--Saravana
+Yours,
+Linus Walleij
