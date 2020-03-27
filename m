@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B79C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F918C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D4020705
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7046A206F6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:03:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgC0LDg (ORCPT
+        id S1726937AbgC0LDk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:03:36 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:51932 "EHLO inva020.nxp.com"
+        Fri, 27 Mar 2020 07:03:40 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:54320 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbgC0LDf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:03:35 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ED4A31A0E3A;
-        Fri, 27 Mar 2020 12:03:33 +0100 (CET)
+        id S1726901AbgC0LDk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 07:03:40 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6F43F200D58;
+        Fri, 27 Mar 2020 12:03:38 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 64D6B1A0E39;
-        Fri, 27 Mar 2020 12:03:19 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 56A17200D57;
+        Fri, 27 Mar 2020 12:03:24 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 18BB440281;
-        Fri, 27 Mar 2020 19:03:06 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 93FBC40294;
+        Fri, 27 Mar 2020 19:03:10 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     robh+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org,
         aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
@@ -41,47 +41,38 @@ To:     robh+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-gpio@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 1/3] dt-bindings: arm: fsl-scu: Add imx8dxl pinctrl support
-Date:   Fri, 27 Mar 2020 18:55:57 +0800
-Message-Id: <1585306559-13973-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 3/3] arm64: defconfig: Enable CONFIG_PINCTRL_IMX8DXL by default
+Date:   Fri, 27 Mar 2020 18:55:59 +0800
+Message-Id: <1585306559-13973-3-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1585306559-13973-1-git-send-email-Anson.Huang@nxp.com>
+References: <1585306559-13973-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update binding doc to support i.MX8DXL pinctrl.
+Enable CONFIG_PINCTRL_IMX8DXL by default to support i.MX8DXL
+pinctrl driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 7f42cc3..3910d2c 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -108,7 +108,8 @@ This binding uses the i.MX common pinctrl binding[3].
- Required properties:
- - compatible:		Should be one of:
- 			"fsl,imx8qm-iomuxc",
--			"fsl,imx8qxp-iomuxc".
-+			"fsl,imx8qxp-iomuxc",
-+			"fsl,imx8dxl-iomuxc".
- 
- Required properties for Pinctrl sub nodes:
- - fsl,pins:		Each entry consists of 3 integers which represents
-@@ -116,7 +117,8 @@ Required properties for Pinctrl sub nodes:
- 			integers <pin_id mux_mode> are specified using a
- 			PIN_FUNC_ID macro, which can be found in
- 			<dt-bindings/pinctrl/pads-imx8qm.h>,
--			<dt-bindings/pinctrl/pads-imx8qxp.h>.
-+			<dt-bindings/pinctrl/pads-imx8qxp.h>,
-+			<dt-bindings/pinctrl/pads-imx8dxl.h>.
- 			The last integer CONFIG is the pad setting value like
- 			pull-up on this pin.
- 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index ac87184..04a5aec 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -449,6 +449,7 @@ CONFIG_PINCTRL_IMX8MN=y
+ CONFIG_PINCTRL_IMX8MP=y
+ CONFIG_PINCTRL_IMX8MQ=y
+ CONFIG_PINCTRL_IMX8QXP=y
++CONFIG_PINCTRL_IMX8DXL=y
+ CONFIG_PINCTRL_IPQ8074=y
+ CONFIG_PINCTRL_IPQ6018=y
+ CONFIG_PINCTRL_MSM8916=y
 -- 
 2.7.4
 
