@@ -2,97 +2,156 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A49C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3711C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C387A2072F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585322507;
-	bh=bMKA/njcNLdYnsV0HkVziUEuigOUwS1wO51wrpw/0+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AzYb3oz7/gU9IZjMJmTf8Fec11Jdw2LbKfaCEFG/eTPyMUrLk78Mlano2gMyMR04Y
-	 ccP89UbQ0ldPljeddvGC7wQzTtTX8uANCKXlUwkBOFsXxZ5eSwhXHqZ6E48OHRGG9R
-	 eo2fZbKeccnnGcO6+48p67wxL55lx/HPySaM0xy8=
+	by mail.kernel.org (Postfix) with ESMTP id 99D0F20748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:27:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QeX12oQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgC0PVr (ORCPT
+        id S1727835AbgC0P1L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:21:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbgC0PVr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 11:21:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8090206F2;
-        Fri, 27 Mar 2020 15:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585322506;
-        bh=bMKA/njcNLdYnsV0HkVziUEuigOUwS1wO51wrpw/0+k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=E7lUXgm0yW97YRmqowZ6P+3l/BUBtb8fmq9MY8/8zcXePhELjO5WQ/89FEwb7pxV/
-         6QEjgBRGkMSf5l+9I+/VUX9Qvd43/faWjuo+0g4UXTGwO8TZjRaFKfSeewRD2geCpJ
-         36tpGiHo3dmHrn+naSiZkqUUvmAZj5A2SRZ+pWSI=
-Date:   Fri, 27 Mar 2020 16:21:44 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
- behavior by default
-Message-ID: <20200327152144.GA2996253@kroah.com>
-References: <20200321210305.28937-1-saravanak@google.com>
- <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
- <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
+        Fri, 27 Mar 2020 11:27:11 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56662 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727505AbgC0P1L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 11:27:11 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02RFR5Cc034074;
+        Fri, 27 Mar 2020 10:27:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585322825;
+        bh=JoSE4KS/EBjkD65NeBxt6yyL8T/GBsNherjOFrGs2kY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QeX12oQA01mdt0aCxMz6k1HBIXZWnc1xbuF992rNER6psMbqrKzR+G/c/+QKA+qX9
+         +FL8BUDqeywrmILz4iX8PDrhNBI5ftOQbTnYA1UA49z0dD5hR12hb6TsCkOpcdIwTc
+         wgRZhCl5ZfPMibm4Au2eT9Kq6M5CAW5k6CnsfAiQ=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02RFR4l3087392;
+        Fri, 27 Mar 2020 10:27:05 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 27
+ Mar 2020 10:27:04 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 27 Mar 2020 10:27:04 -0500
+Received: from [10.250.133.193] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02RFR0Rk068295;
+        Fri, 27 Mar 2020 10:27:01 -0500
+Subject: Re: [PATCH 3/3] PCI: Cadence: Remove using
+ "cdns,max-outbound-regions" DT property
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200327145417.GA30341@google.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <27e3eb0b-c7d0-7eb7-1fb8-1f98b729513a@ti.com>
+Date:   Fri, 27 Mar 2020 20:57:00 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
+In-Reply-To: <20200327145417.GA30341@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 11:25:48AM +0100, Marek Szyprowski wrote:
-> Hi,
-> 
-> On 2020-03-21 22:03, Saravana Kannan wrote:
-> > Set fw_devlink to "permissive" behavior by default so that device links
-> > are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
-> > firmware.
-> >
-> > This ensures suppliers get their sync_state() calls only after all their
-> > consumers have probed successfully. Without this, suppliers will get
-> > their sync_state() calls at late_initcall_sync() even if their consuer
-> >
-> > Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
-> > that needs more testing as it's known to break some corner case
-> > drivers/platforms.
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> 
-> This patch has just landed in linux-next 20200326. Sadly it breaks 
-> booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit 
-> mode. There is no warning nor panic message, just a silent freeze. The 
-> last message shown on the earlycon is:
-> 
-> [    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
+Hi Bjorn,
 
-I've just reverted this for now.
+On 3/27/2020 8:24 PM, Bjorn Helgaas wrote:
+> Update subject to match capitalization of others:
+> 
+>   PCI: cadence: Remove "cdns,max-outbound-regions" DT property
+> 
+> On Fri, Mar 27, 2020 at 04:17:27PM +0530, Kishon Vijay Abraham I wrote:
+>> "cdns,max-outbound-regions" device tree property provides the
+>> maximum number of outbound regions supported by the Host PCIe
+>> controller. However the outbound regions are configured based
+>> on what is populated in the "ranges" DT property.
+> 
+> Looks like this is missing a blank line here?  Or it should be
+> rewrapped as part of the above paragraph?  I think the below makes
+> more sense as a separate paragraph, though.
 
-thanks,
+I'll add a blank line for the next paragraph and re-post once I get Ack from
+Rob on the DT binding patch.
 
-greg k-h
+Thanks for reviewing!
+
+Regards
+Kishon
+> 
+> Again, thanks for doing this; this is a great cleanup.
+> 
+>> Avoid using two properties for configuring outbound regions and
+>> use only "ranges" property instead.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/controller/cadence/pcie-cadence-host.c | 6 ------
+>>  drivers/pci/controller/cadence/pcie-cadence.h      | 2 --
+>>  2 files changed, 8 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 60f912a657b9..8f72967f298f 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -140,9 +140,6 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
+>>  	for_each_of_pci_range(&parser, &range) {
+>>  		bool is_io;
+>>  
+>> -		if (r >= rc->max_regions)
+>> -			break;
+>> -
+>>  		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
+>>  			is_io = false;
+>>  		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
+>> @@ -221,9 +218,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>>  	pcie = &rc->pcie;
+>>  	pcie->is_rc = true;
+>>  
+>> -	rc->max_regions = 32;
+>> -	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
+>> -
+>>  	if (!of_pci_dma_range_parser_init(&parser, np))
+>>  		if (of_pci_range_parser_one(&parser, &range))
+>>  			rc->no_bar_nbits = ilog2(range.size);
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+>> index a2b28b912ca4..6bd89a21bb1c 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+>> @@ -251,7 +251,6 @@ struct cdns_pcie {
+>>   * @bus_range: first/last buses behind the PCIe host controller
+>>   * @cfg_base: IO mapped window to access the PCI configuration space of a
+>>   *            single function at a time
+>> - * @max_regions: maximum number of regions supported by the hardware
+>>   * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
+>>   *                translation (nbits sets into the "no BAR match" register)
+>>   * @vendor_id: PCI vendor ID
+>> @@ -262,7 +261,6 @@ struct cdns_pcie_rc {
+>>  	struct resource		*cfg_res;
+>>  	struct resource		*bus_range;
+>>  	void __iomem		*cfg_base;
+>> -	u32			max_regions;
+>>  	u32			no_bar_nbits;
+>>  	u16			vendor_id;
+>>  	u16			device_id;
+>> -- 
+>> 2.17.1
+>>
