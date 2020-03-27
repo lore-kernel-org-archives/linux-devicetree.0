@@ -2,133 +2,183 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D8AC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272DBC2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C4320748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70E420578
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:29:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NH9IOM80"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="CosXR2MJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgC0P2Q (ORCPT
+        id S1727826AbgC0P3C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:28:16 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:60325 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgC0P2P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 11:28:15 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id EB34922FEC;
-        Fri, 27 Mar 2020 16:28:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585322892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eqUqITWsj9KDFGHrWeFv9QwKV40MUcbbCm0POjhjwys=;
-        b=NH9IOM80ezOu/xwgBZKQz57gkLeRbVpBO6uhULy0WRIQwRM6uLeXsXUIgRsya4g0GiBhLJ
-        V7nQFEI7obV92eVs8K0Ug7pHGzqpMHjtBP9MH2YUCHq5FqwNCeHAAxhU3Opxy1oqePUh8G
-        x9v49TPkEiJCurb1daDWtLGhW/jpfno=
+        Fri, 27 Mar 2020 11:29:02 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:35816 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727731AbgC0P3A (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 11:29:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Bh2PgbYLfBfl9wWC6MpbC6nc2/y6kXZr0xP8G3jYT2Q=; b=CosXR2MJzHJpTA3wj2pJJohdn
+        /w1wU3lKnYz6VmQ8QZRiKi6lc+zPrgSQHGnOC4PGBwcr5c1mDGylsGY0pwzE80wPfzSMABZ+6UBMj
+        gVGaFbSdIF+QwyK7L9teiBZ8fTrsX/7N359Fy1F6KRJaRZETS73myABadC4R43mmMmtHvdoQNq9sm
+        933wmMVbxgpvyz70/XwHIBj8hhmc0hOWw0/cS8evPOssDG6CoC4wV/Vb7sInLArZ1VJ5sXejxW9kf
+        uQpzRmhdPmDqk2MCWH8lVT5BjmYobOeBvLfiuD22Nqv49UZgiHfum1qIyyXgcKvGSwxVEfsDLU0MW
+        qg1lUZ4Zg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42102)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jHqui-0001qV-EU; Fri, 27 Mar 2020 15:28:52 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jHquf-0004Ki-LV; Fri, 27 Mar 2020 15:28:49 +0000
+Date:   Fri, 27 Mar 2020 15:28:49 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add backplane
+ dt bindings
+Message-ID: <20200327152849.GP25745@shell.armlinux.org.uk>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-3-git-send-email-florinel.iordache@nxp.com>
+ <20200327010411.GM3819@lunn.ch>
+ <AM0PR04MB5443185A1236F621B9EC9873FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 27 Mar 2020 16:28:11 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
-In-Reply-To: <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
-References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-13-michael@walle.cc>
- <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
- <9c310f2a11913d4d089ef1b07671be00@walle.cc>
- <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
- <22944c9b62aa69da418de7766b7741bd@walle.cc>
- <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
-Message-ID: <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: EB34922FEC
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[21];
-         NEURAL_HAM(-0.00)[-0.548];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[baylibre.com,vger.kernel.org,lists.infradead.org,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB5443185A1236F621B9EC9873FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-03-27 11:20, schrieb Linus Walleij:
-> On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
->> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
+On Fri, Mar 27, 2020 at 03:00:22PM +0000, Florinel Iordache wrote:
+> > On Thu, Mar 26, 2020 at 03:51:15PM +0200, Florinel Iordache wrote:
+> > > Add ethernet backplane device tree bindings
+> > 
+> > > +  - |
+> > > +    /* Backplane configurations for specific setup */
+> > > +    &mdio9 {
+> > > +        bpphy6: ethernet-phy@0 {
+> > > +            compatible = "ethernet-phy-ieee802.3-c45";
+> > > +            reg = <0x0>;
+> > > +            lane-handle = <&lane_d>; /* use lane D */
+> > > +            eq-algorithm = "bee";
+> > > +            /* 10G Short cables setup: up to 30 cm cable */
+> > > +            eq-init = <0x2 0x5 0x29>;
+> > > +            eq-params = <0>;
+> > > +        };
+> > > +    };
+> > 
+> > So you are modelling this as just another PHY? Does the driver get loaded based
+> > on the PHY ID in registers 2 and 3? Does the standard define these IDs or are
+> > they vendor specific?
+> > 
+> > Thanks
+> >         Andrew
 > 
->> > In that case maybe you should use the disable_locking option in
->> > regmap_config and provide your own callbacks that you can use in the
->> > irqchip code too?
->> 
->> But how would that solve problem (1). And keep in mind, that the
->> reqmap_irqchip is actually used for the interrupt controller, which
->> is not this gpio controller.
->> 
->> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
->> and all interrupt phandles pointing to the interrupt controller will
->> reference the toplevel node. Any phandles pointing to the gpio
->> controller will reference the GPIO subnode.
+> Hi Andrew,
+> Thank you all for the feedback.
+> I am currently working to address the entire feedback received 
+> so far for this new Backplane driver.
 > 
-> Ideally we would create something generic that has been on my
-> mind for some time, like a generic GPIO regmap irqchip now that
-> there are a few controllers like that.
-> 
-> I don't know how feasible it is or how much work it would be. But
-> as with GPIO_GENERIC (for MMIO) it would be helpful since we
-> can then implement things like .set_multiple() and .get_multiple()
-> for everyone.
+> Yes, we are modelling backplane driver as a phy driver.
 
-For starters, would that be a drivers/gpio/gpio-regmap.c or a
-drivers/base/regmap/regmap-gpio.c? I would assume the first,
-because the stuff in drivers/base/regmap operates on a given
-regmap and we'd just be using one, correct? On the other hand
-there is also the reqmap-irq.c. But as pointed out before, it
-will add an interrupt controller to the regmap, not a device
-so to speak.
+I think we need to think very carefully about that, and consider
+whether that really is a good idea.  phylib is currently built
+primarily around copper PHYs, although there are some which also
+support fiber as well in weird "non-standard" forms.
 
--michael
+What worries me is the situation which I've been working on, where
+we want access to the PCS PHYs, and we can't have the PCS PHYs
+represented as a phylib PHY because we may have a copper PHY behind
+the PCS PHY, and we want to be talking to the copper PHY in the
+first instance (the PCS PHY effectivel ybecomes a slave to the
+copper PHY.)
+
+My worry is that we're ending up with conflicting implementations
+for the same hardware which may only end up causing problems down
+the line.
+
+Please can you look at my DPAA2 PCS series which has been previously
+posted to netdev - it's rather difficult to work out who in NXP should
+be copied, because that information is not visible to those of us in
+the community - we only find that out after someone inside NXP posts
+patches, and even then the MAINTAINERS file doesn't seem to get
+updated.
+
+It's also worth mentioning that on other SoCs, such as Marvell SoCs,
+the serdes and "PCS" are entirely separate hardware blocks, and the
+implementation in the kernel, which works very well, is to use the
+drivers/phy for the serdes/comphy as they call it, and the ethernet
+driver binds to the comphy to control the serdes settings, whereas
+the ethernet driver looks after the PCS.  I haven't been able to
+look at your code enough yet to work out if that would be possible.
+
+I also wonder whether we want a separate class of MDIO device for
+PCS PHYs, just as we have things like DSA switches implemented
+entirely separately from phylib - they're basically different sub-
+classes of a mdio device.
+
+I think we have around 20 or so weeks to hash this out, since it's
+clear that the 10gbase-kr (10GKR) phy interface mode can't be used
+until we've eliminated it from existing dts files.
+
+> The driver is loaded based on PHY ID in registers 2 and 3 which 
+> are specified by the standard but it is a vendor specific value: 
+> 32-Bit identifier composed of the 3rd through 24th bits of the 
+> Organizationally Unique Identifier (OUI) assigned to the device 
+> manufacturer by the IEEE, plus a six-bit model number, plus a 
+> four-bit revision number.
+> This is done in the device specific code and not in backplane 
+> generic driver.
+> You can check support for QorIQ devices where qoriq_backplane_driver 
+> is registered as a phy_driver:
+>  
+> @file: qoriq_backplane.c
+> +static struct phy_driver qoriq_backplane_driver[] = {
+> +	{
+> +	.phy_id		= PCS_PHY_DEVICE_ID,
+> +	.name		= QORIQ_BACKPLANE_DRIVER_NAME,
+> +	.phy_id_mask	= PCS_PHY_DEVICE_ID_MASK,
+> +	.features       = BACKPLANE_FEATURES,
+> +	.probe          = qoriq_backplane_probe,
+> +	.remove         = backplane_remove,
+> +	.config_init    = qoriq_backplane_config_init,
+> +	.aneg_done      = backplane_aneg_done,
+> 
+> Here we register the particular phy device ID/mask and driver name 
+> specific for qoriq devices. 
+> Also we can use generic routines provided by generic backplane driver 
+> if they are suitable for particular qoriq device or otherwise we can use 
+> more specialized specific routines like: qoriq_backplane_config_init
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
