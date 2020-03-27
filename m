@@ -2,190 +2,125 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C08C2D0E8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A16C2D0E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1083520705
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:21:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lwFfgP7q"
+	by mail.kernel.org (Postfix) with ESMTP id 9CD5420705
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:24:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585304657;
+	bh=lF/JY9ZVPOd2GvsK5POWvp9v/fpJ4aUeUUUE0LLiT5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EcsK97HpLULVHQJxALJKEPNYAw54CMoCfUnGNoqFnydLGor2HgFraIcXCPNOdk/A7
+	 rpLoJs9g2ZcLjHy/RNZ3/J6SW1YSJjYcqJjJoSzlWYCE6ImSo4cBg7sl9BAXrxlXMT
+	 wNhIRZOVSt3rJamSAHp7cdZ1WDIrH+UalFuN3DDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgC0KVe (ORCPT
+        id S1726400AbgC0KYO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:21:34 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50906 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgC0KVe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 06:21:34 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d198so10860852wmd.0
-        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 03:21:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=mxz8+ilE2NjB6kYVNyYap8z20EWNc89Zq7z80dHig9g=;
-        b=lwFfgP7q0u5LzYu5IHEQz+moTPm67eiVbNP8jvxisTOsI5Ma9EXK0h13/GmZJTgMnl
-         +Onr6bFvSPfXY+9YSNs3mbaMYQKyYOx/Nun1R1AIDyUetdtqqChqnXG7/1EIZeZJwG+h
-         AoYjZMrLCixc4B2+nEQHEZhYmkVUgGuEFxsGPd1u8CQiLy2L6AQ8e4C5sS5mdW24AHni
-         L423xnfJL3YVYLmXGSdDIk0Rk/t8gmiLBSeHvfIrZebXL+l1ni5cFPFsMcSjyofPyV6m
-         rZrGDRGPqN0mT60S1tgbFGUZi4IjDSYnD6UJGS6q6bGnrTlVviriUNh9zl3/vfCBifys
-         8g/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=mxz8+ilE2NjB6kYVNyYap8z20EWNc89Zq7z80dHig9g=;
-        b=KRYv6ZB2yZMDXFkMpUphmIi46dz1lZmro4m9g2/U4ADSIFvSFsnjKGJNW2qEvICBle
-         GlObyh8GkHEsk9lpRhBDXjPiSUOl0F7fqzEVWWcppvbSEDG3Ae/NAlSIr/mO1afWFXOP
-         jutapZD4Hwyrj26DwOWdOQq+LsbUmrPqa7brFk3l12ydF7F0Lxdg7bBVHZ53Dquzcboo
-         tz75niZ9RPZBkhajtz2jrSAfVBE8DjV/PR35gbVRHJf8PskYnROhGLLbgjGiE9KNGWNV
-         q5JQIqc3Yh3MPgqm521QkP5jvIrkKg3qMa15SzBRn+W3Dr1eIEuKO9kfGT4lPlXsFZLg
-         Gxig==
-X-Gm-Message-State: ANhLgQ3Jm+nXg8cBh5FLiccHLMZfZG/aMfckLjAm472AiNsiZ6p/Q6FC
-        m6Rw5A2LLLU1oJM+fcrJvBKmqA==
-X-Google-Smtp-Source: ADFU+vv/J6W+8sMVirHWEM1E3vhMlYyC18B4Hdl1cCEW5yYGJgHZTGUu0teFlFTlPWijkILtA2tP2g==
-X-Received: by 2002:a1c:b4c6:: with SMTP id d189mr4433247wmf.132.1585304491231;
-        Fri, 27 Mar 2020 03:21:31 -0700 (PDT)
-Received: from dell ([95.149.164.95])
-        by smtp.gmail.com with ESMTPSA id n9sm7646671wru.50.2020.03.27.03.21.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 03:21:30 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 10:22:21 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] mfd: mp2629: Add support for mps battery charger
-Message-ID: <20200327102221.GA3383@dell>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-3-sravanhome@gmail.com>
- <20200327075541.GF603801@dell>
- <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com>
+        Fri, 27 Mar 2020 06:24:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgC0KYN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 06:24:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9319A20705;
+        Fri, 27 Mar 2020 10:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585304653;
+        bh=lF/JY9ZVPOd2GvsK5POWvp9v/fpJ4aUeUUUE0LLiT5Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cGsbdW4AfZk74llKktuJuBgvMAnTth5VSaNK32PplZn/Un0/A8h1qEA20gOXHdeHy
+         PV2+veX+oDFxPV3TmzxPLiYDzrzmjdIJ7oFCXg0e20Ivf/L/txU1h2DEv8ZobLSBcf
+         CHvzxL+4ZBTPq/78Dk+qC2TW9Onu4EUUKVCpUFQg=
+Date:   Fri, 27 Mar 2020 11:24:09 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        John Youn <John.Youn@synopsys.com>
+Subject: Re: [RESENDING RFC PATCH 1/4] dt-bindings: usb: Add
+ snps,consolidate-sgl & consolidate-sgl
+Message-ID: <20200327102409.GB1700570@kroah.com>
+References: <cover.1585297723.git.joglekar@synopsys.com>
+ <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com>
+ <20200327095447.GA1698181@kroah.com>
+ <11a058bc-a947-a763-680f-a11fd454925a@synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a6098b6a-2b2f-5279-f9fc-85201b9aabde@gmail.com>
+In-Reply-To: <11a058bc-a947-a763-680f-a11fd454925a@synopsys.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Saravanan, Jonathan,
-
-On Fri, 27 Mar 2020, saravanan sekar wrote:
-> On 27/03/20 8:55 am, Lee Jones wrote:
-> > On Sun, 22 Mar 2020, Saravanan Sekar wrote:
+On Fri, Mar 27, 2020 at 10:11:59AM +0000, Tejas Joglekar wrote:
+> Hi,
+> On 3/27/2020 3:24 PM, Greg KH wrote:
+> > On Fri, Mar 27, 2020 at 03:11:56PM +0530, Tejas Joglekar wrote:
+> >> This commit adds the documentation for consolidate-sgl, and
+> >> snps,consolidate-sgl property. These when set enables the quirk for
+> >> XHCI driver for consolidation of sg list into a temporary buffer when small
+> >> buffer sizes are scattered over the sg list not making up to MPS or total
+> >> transfer size within TRB cache size with Synopsys xHC.
+> >>
+> >> Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/usb/dwc3.txt     | 3 +++
+> >>  Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
+> >>  2 files changed, 6 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> >> index 9946ff9ba735..292d1f7969e4 100644
+> >> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> >> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> >> @@ -104,6 +104,9 @@ Optional properties:
+> >>  			this and tx-thr-num-pkt-prd to a valid, non-zero value
+> >>  			1-16 (DWC_usb31 programming guide section 1.2.3) to
+> >>  			enable periodic ESS TX threshold.
+> >> + - snps,consolidate-sgl: enable sg list consolidation - host mode only. Set to use
+> >> +			SG buffers of at least MPS size by consolidating smaller SG
+> >> +			buffers list into a single buffer.
+> >>  
+> >>   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+> >>   - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
+> >> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> >> index 3f378951d624..a90d853557ee 100644
+> >> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> >> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> >> @@ -43,6 +43,9 @@ Optional properties:
+> >>    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+> >>    - imod-interval-ns: default interrupt moderation interval is 5000ns
+> >>    - phys : see usb-hcd.yaml in the current directory
+> >> +  - consolidate-sgl: indicate if you need to consolidate sg list into a
+> >> +    temporary buffer when small SG buffer sizes does not make upto MPS
+> >> +    size or total transfer size across the TRB cache size.
 > > 
-> > > mp2629 is a highly-integrated switching-mode battery charge management
-> > > device for single-cell Li-ion or Li-polymer battery.
-> > > 
-> > > Add MFD core enables chip access for ADC driver for battery readings,
-> > > and a power supply battery-charger driver
-> > > 
-> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > ---
-> > >   drivers/mfd/Kconfig        |   9 +++
-> > >   drivers/mfd/Makefile       |   2 +
-> > >   drivers/mfd/mp2629.c       | 116 +++++++++++++++++++++++++++++++++++++
-> > >   include/linux/mfd/mp2629.h |  22 +++++++
-> > >   4 files changed, 149 insertions(+)
-> > >   create mode 100644 drivers/mfd/mp2629.c
-> > >   create mode 100644 include/linux/mfd/mp2629.h
+> > Shouldn't this refer to the fact that the hardware is broken?  Otherwise
+> > why would anyone know if they should, or should not, enable this option?
+> >
+> We have not seen issue with Linux environment for now. But with other OS with
+> SG list with very small buffer sizes the xHC controller hang was seen. So 
+> currently introducing the binding as optional one. One could enable this 
+> option when xHC halt happens due to small SG list sizes.  
 
-[...]
+What I mean is this should be something like,
+"quirk-broken-sg-list-handler" or something like that.  Otherwise how
+does anyone know if this really is needed or not.  Reading this would
+seem like everyone would like to do this, as consolidating links
+sounds like a good optimization, when instead this really cause more
+memory allocations, making this possibly worse performance.
 
-> > > +static int mp2629_probe(struct i2c_client *client)
-> > > +{
-> > > +	struct mp2629_info *info;
-> > Call this ddata instead of info.
-> Not sure the reason, I will do.
+thanks,
 
-Because this is device data.  Info is too loose of a definition.
-
-> > > +	struct resource	*resources;
-> > > +	int ret;
-> > > +	int i;
-> > > +
-> > > +	info = devm_kzalloc(&client->dev, sizeof(*info), GFP_KERNEL);
-> > > +	if (!info)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	info->dev = &client->dev;
-> > > +	i2c_set_clientdata(client, info);
-> > > +
-> > > +	info->regmap = devm_regmap_init_i2c(client, &mp2629_regmap_config);
-> > > +	if (IS_ERR(info->regmap)) {
-> > > +		dev_err(info->dev, "Failed to allocate regmap!\n");
-> > > +		return PTR_ERR(info->regmap);
-> > > +	}
-> > > +
-> > > +	for (i = 0; i < MP2629_MFD_MAX; i++) {
-> > > +		mp2629mfd[i].platform_data = &info->regmap;
-> > > +		mp2629mfd[i].pdata_size = sizeof(info->regmap);
-> > You don't need to store this in platform data as well.
-> > 
-> > You already have it in device data (ddata [currently 'info']).
-> 
-> "The IIO parts seems fine (minor comments inline) but I'm not keep on
-> directly accessing the internals of the mfd device info structure.
-> To my mind that should be opaque to the child drivers so as to provide
-> clear structure to any such accesses.
-> 
-> This mess in layering with the children directly using the parents
-> regmap is a little concerning. It means that the 3 drivers
-> really aren't very well separated and can't really be reviewed
-> independently (not a good thing)."
-> 
-> This is the review comments form Jonathan on V2, not to access parent data
-> structure directly.
-> Am I misunderstood his review comments? please suggest the better option to
-> follow as like in V2
-> or V2 + some improvements or V4 + improvements?
-
-I will take this up with Jonathan separately if necessary.
-
-For your FYI (and Jonathan if he's Cc'ed), it's very common for a
-child of an MFD to acquire resources from their parent.  That is the
-point of a lot of MFDs, to obtain and register shared resources and
-pass them onto their offspring.  There are 10's of examples of this.
-
-Things like Regmaps aren't platform data, they are device/driver data,
-which is usually passed though platform_set_drvdata().
-
-[...]
-
-> > > + */
-> > > +
-> > > +#ifndef __MP2629_H__
-> > > +#define __MP2629_H__
-> > > +
-> > > +#include <linux/types.h>
-> > > +
-> > > +struct device;
-> > > +struct regmap;
-> > Why not just add the includes?
-> Some more shared enum added in ADC driver
-
-Sorry?
-
-> > > +struct mp2629_info {
-> > > +	struct device *dev;
-> > > +	struct regmap *regmap;
-> > > +};
-> > > +
-> > > +#endif
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+greg k-h
