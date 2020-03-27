@@ -2,117 +2,95 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC3EC43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A7DC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE1F20578
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B34320578
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 10:47:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aferkor/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgC0Klv (ORCPT
+        id S1726515AbgC0Krl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 06:41:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43100 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgC0Klv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 06:41:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 14AAAAFB2;
-        Fri, 27 Mar 2020 10:41:48 +0000 (UTC)
-Message-ID: <0498ff6f39f77750c112a770e56f0beb201446a0.camel@suse.de>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        wahrenst@gmx.net, linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org
-Date:   Fri, 27 Mar 2020 11:41:46 +0100
-In-Reply-To: <4239bf44-1a2d-09c4-fc1b-186955c062ab@gmail.com>
-References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
-         <24f850f64b5c71c71938110775e16caaec2811cc.camel@suse.de>
-         <8c2bdd83-c8a9-7ba8-8d61-69594e6a2bde@i2se.com>
-         <4239bf44-1a2d-09c4-fc1b-186955c062ab@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-gzrfjv0pONOImR3jIMys"
-User-Agent: Evolution 3.34.4 
+        Fri, 27 Mar 2020 06:47:41 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58422 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgC0Krk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 06:47:40 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02RAlXB2117631;
+        Fri, 27 Mar 2020 05:47:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585306053;
+        bh=4njoQxq90QN3hHZRS5zql1ytyXJOR1pn085xcmSSb6M=;
+        h=From:To:CC:Subject:Date;
+        b=aferkor/Eq1MEH5773efv1Tq6H680KadTblZx1rM/mjie8JvsIQzkOzbn1Xg6iP6q
+         ovTXnOGrAWY28oSkTkF//4psiZvNryWOoRibuyx46mLHRCq8mbFdv9/axI0I+EJ1d2
+         rL54zV5Fhq+seYiySnBv/hVtWkzhkRkiuACPVA3E=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02RAlXop113842
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 27 Mar 2020 05:47:33 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 27
+ Mar 2020 05:47:33 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 27 Mar 2020 05:47:33 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02RAlT8o128190;
+        Fri, 27 Mar 2020 05:47:30 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] PCI: cadence: Deprecate inbound/outbound specific bindings
+Date:   Fri, 27 Mar 2020 16:17:24 +0530
+Message-ID: <20200327104727.4708-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This series is a result of comments given by Rob Herring @ [1].
+Patch series changes the DT bindings and makes the corresponding driver
+changes.
 
---=-gzrfjv0pONOImR3jIMys
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+[1] -> http://lore.kernel.org/r/20200219202700.GA21908@bogus
 
-On Thu, 2020-03-26 at 17:35 -0700, Florian Fainelli wrote:
->=20
-> On 3/26/2020 10:24 AM, Stefan Wahren wrote:
-> > Am 26.03.20 um 13:24 schrieb Nicolas Saenz Julienne:
-> > > Hi Stefan and Florian,
-> > >=20
-> > > On Tue, 2020-03-03 at 18:32 +0100, Nicolas Saenz Julienne wrote:
-> > > > The register based driver turned out to be unstable, specially on R=
-Pi3a+
-> > > > but not limited to it. While a fix is being worked on, we roll back=
- to
-> > > > using firmware based scheme.
-> > > >=20
-> > > > Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM
-> > > > driver
-> > > > instead of firmware")
-> > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > > > ---
-> > > now that the problem Stefan was seeing is being taken care of, I thin=
-k
-> > > it's
-> > > fair to reconsider taking this patch. Maybe even adding a Tested-by b=
-y
-> > > Stefan?
-> >=20
-> > after applying "drm/vc4: Fix HDMI mode validation" this commit doesn't
-> > cause any regression:
-> >=20
-> > Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
->=20
-> Good, how do you like to see this applied? Do we need to ensure that
-> drm/vc4: Fix HDMI mode validation is applied to Linus' tree before
-> merging this one? Nicolas, should this be queued for 5.7 or 5.8 (I do
-> not think the 5.7 PRs have been merged yet).
+Kishon Vijay Abraham I (3):
+  dt-bindings: PCI: cadence: Deprecate inbound/outbound specific
+    bindings
+  PCI: cadence: Use "dma-ranges" instead of "cdns,no-bar-match-nbits"
+    property
+  PCI: Cadence: Remove using "cdns,max-outbound-regions" DT property
 
-Ideally both should be applied in the same time yes. I'm going to prepare a=
-n
-extra PR for v5.7 today.
+ .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
+ .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
+ .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
+ .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
+ .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
+ .../controller/cadence/pcie-cadence-host.c    | 17 +++++++------
+ drivers/pci/controller/cadence/pcie-cadence.h |  2 --
+ 7 files changed, 47 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
 
-Regards,
-Nicolas
-
-
---=-gzrfjv0pONOImR3jIMys
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl592GoACgkQlfZmHno8
-x/4syAf+P2dd4A3mafbrtA3sC1NVo/CmhLWTMxs3oK4Bz/T1Izsmb6kQMRrFQaAN
-Q+BJYoadSildwMxEphIiMLMd/DgUcrvQxYNfbnN66J5dTRkKCSI1N8vthrguR5ZT
-eARTfnkzzOGkoOVKTeh6IsNDadlP3xM3+z6SsCoAIdGngzjcb43I8go5QL+ZXCFf
-jqy13op8m+Vcnluf1VZXhJDHfA6/VNCUUyV6xHUOMrJhoZ+bdPWEsewQj50m9NTx
-2+IO/Fe3LcC692M/d+4+/C6qCj593e0+mtN3kJt2/0MkipEDUVjbXX9CKcMojhrp
-e+vOQ+De19k3dq3DLwP2RPt88kDCHw==
-=L34C
------END PGP SIGNATURE-----
-
---=-gzrfjv0pONOImR3jIMys--
+-- 
+2.17.1
 
