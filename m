@@ -2,62 +2,120 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DD6C2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE123C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEAEC20838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:35:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="RbnVNUsH"
+	by mail.kernel.org (Postfix) with ESMTP id BB5AE20658
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgC0NfL (ORCPT
+        id S1727185AbgC0Nh3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:35:11 -0400
-Received: from mx-out2.startmail.com ([145.131.90.155]:52786 "EHLO
-        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgC0NfL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 09:35:11 -0400
-Date:   Fri, 27 Mar 2020 15:40:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
-        s=2017-11; t=1585316109;
-        bh=B3ie8oOubwFY+Sys4enBz3aY1yXLgBVZ+ICV7cbZufE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RbnVNUsHqnHzmbFqLprNCURsMkAp3asSeklKqz3MVhKvgic9iSPYoGaGwL0nL9FFM
-         2BxbBPAvBSSeD+tsHJyf7KOnYi1Nqi0E1lBt/yv5pfLMUysW2sREiue5ewWeczO58D
-         D3i0EjTmfTgex4KbLpJG1+z03ekom78WHdhGGaeK6bTnpwUw6xUSxdhSL+ESPkIvL+
-         7Lw9If6DlEoplVNq3ILofAhwFxDUuPKgT/+VDf/dtysfuVt0nzELFsoOPSBpDTYDsq
-         2vse9fjCHuhst2ojEzZkBTOZ9ZGPzCnjLwjO5pSsXUb09NVhFGjiBrBUhqU4DFFa0v
-         eGWh4oFNMFXRg==
-From:   Alexandru Lazar <alazar@startmail.com>
-To:     linux-iio@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH v5 0/2] Maxim MAX1241 driver
-Message-ID: <20200327134000.GA3579@leena.republic>
-References: <20200322140237.211347-1-alazar@startmail.com>
+        Fri, 27 Mar 2020 09:37:29 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:45640 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726275AbgC0Nh3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 09:37:29 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 14E41634C90;
+        Fri, 27 Mar 2020 15:37:06 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jHpAX-0000og-4s; Fri, 27 Mar 2020 15:37:05 +0200
+Date:   Fri, 27 Mar 2020 15:37:05 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
+Message-ID: <20200327133705.GC2394@valkosipuli.retiisi.org.uk>
+References: <20200313110350.10864-1-robert.foss@linaro.org>
+ <20200313110350.10864-3-robert.foss@linaro.org>
+ <20200313121746.GC5730@valkosipuli.retiisi.org.uk>
+ <CAG3jFytpx8_+DKhUVZnUFeMYK82Z1hFWcEnbyD0=4a8p3ojteg@mail.gmail.com>
+ <20200326144725.GA2394@valkosipuli.retiisi.org.uk>
+ <CAG3jFyu=HOsWNeRFC2t4HjzYrFrLjsbXzAm4+zD50Xq48mqzcw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200322140237.211347-1-alazar@startmail.com>
+In-Reply-To: <CAG3jFyu=HOsWNeRFC2t4HjzYrFrLjsbXzAm4+zD50Xq48mqzcw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 04:02:35PM +0200, Alexandru Lazar wrote:
-> Hello again,
+Hi Robert,
+
+On Fri, Mar 27, 2020 at 11:32:29AM +0100, Robert Foss wrote:
+> On Thu, 26 Mar 2020 at 15:47, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> >
+> > Hi Robert,
+> >
+> > On Thu, Mar 26, 2020 at 12:56:37PM +0100, Robert Foss wrote:
+> > ...
+> > > > > +static int __ov8856_power_on(struct ov8856 *ov8856)
+> > > > > +{
+> > > > > +     struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     ret = clk_prepare_enable(ov8856->xvclk);
+> > > > > +     if (ret < 0) {
+> > > > > +             dev_err(&client->dev, "failed to enable xvclk\n");
+> > > > > +             return ret;
+> > > > > +     }
+> > > > > +
+> > > > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
+> > > > > +
+> > > > > +     ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
+> > > > > +                                 ov8856->supplies);
+> > > > > +     if (ret < 0) {
+> > > > > +             dev_err(&client->dev, "failed to enable regulators\n");
+> > > > > +             goto disable_clk;
+> > > > > +     }
+> > > > > +
+> > > > > +     gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_LOW);
+> > > > > +
+> > > > > +     usleep_range(1500, 1800);
+> > > >
+> > > > I think you could omit the delay on ACPI based systems. Or just bail out
+> > > > early in that case.
+> > >
+> > > I'll add a check for reset_gpio being NULL, and skip the sleep for that case.
+> >
+> > There could also be a regulator but no GPIO.
+> >
+> > I think if you don't have either, then certainly there's no need for a
+> > delay.
 > 
-> Here's version 5 of a patch series which adds support for the Maxim
-> MAX1241, a 12-bit, single-channel, SPI-connected ADC.
+> Removing the delay if no action is taken makes sense, but I'm not sure
+> how best to do it.
+> If there are no regulators dummy ones are created automatically, which
+> makes distinguishing between a little bit cumbersome. The regulator
+> structs could of course all be inspected, and if all are dummy ones,
+> the delay could be skipped. But is there a neater way of doing this?
+> Manually inspecting the regs strikes me as a bit inelegant.
 
-*poke*
+I guess the cleanest, easy way to make this right, albeit slightly
+unoptimal in very rare cases where you have none of the above resources in
+a DT system, is to bail out if you're running on an ACPI based system.
 
-No rush here, just wanna make sure this doesn't go off-radar.
+I.e. checking for e.g. is_acpi_node(dev->fwnode).
 
-Thanks,
-Alex
+-- 
+Sakari Ailus
