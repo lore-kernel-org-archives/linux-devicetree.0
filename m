@@ -2,99 +2,123 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317B0C2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B239C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 081FB2082E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EB32082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 13:23:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gJsRc5fX"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="B3p2FW7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgC0NSr (ORCPT
+        id S1726515AbgC0NX3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 09:18:47 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39871 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgC0NSr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 09:18:47 -0400
-Received: by mail-qt1-f195.google.com with SMTP id f20so8457432qtq.6;
-        Fri, 27 Mar 2020 06:18:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jqrals/DlRSRzD2FBJsMSNR0STEdfCIvgqrhwYb6xjM=;
-        b=gJsRc5fXU04/ti7uaCr4CL1DP+JU/xVSVn6U+PWdIryDySbegTXzeD2pH0PaKylODk
-         nRYOcb7v7hA+khl3sFdOdfUT059XMdjgqyBngiOeERUZ9orE0jZRsfH2jAwz4arMWu3C
-         7LY/iUP5xUuI/7PIhZzl2cjBoR/RYXjqZ/ODBm+eCUzNjSS5/+z9bZc3loXrYe/9AjR1
-         E3YToCMYyHTYnhWqGpcHDLSOBG1sARvef+Ym7uzmK8wUf+De4lpSZK0bmDEgJEN8OxNG
-         CpYCe4fI7mz5xJ0vHK/mMlkbIVIGVTPiLE7wfPbndWkhTASzZbMciaV3zrQwtPpb82nh
-         Flww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=jqrals/DlRSRzD2FBJsMSNR0STEdfCIvgqrhwYb6xjM=;
-        b=Zr9pSbGhDWEdvc/dxSPBnAvNxq2n9cCm3QoSel2yY5TAe7rrU8L8LnlW9GSovXfoGN
-         fvsoTGPR2ZHPNw1y5LvePZVgXa7KIkRKmrYvSfrvsCIB3dcWQyGpPjPI0VNH/ioTOphs
-         pTkSXcBiGOkqbi2WzYoSR1I064FRb98vAA7uAePVCGfhxf04f1iHxLqmPPbKPda0gEE5
-         kLYTXMjju5fEpALfsfIjGicI07PNBZWmmTBjHleRYWUfsttiy/kPOcoHhOD9xOJw/gTa
-         xyxmpsux/iqPLY4KPbicDRX35KIQFsCLWltGvDzNokxuY8eecgYHKnmKduMJAQmAs9h8
-         EqEw==
-X-Gm-Message-State: ANhLgQ36ktLNsYvXPDEBhIgOD1v29l8hskbiA3tRumwgUEphm/XBXu8d
-        QHKobly3FPylw5BXruoq5cf653DnMRk=
-X-Google-Smtp-Source: ADFU+vu11Qis7wLq8KGvKi1TOOj827610u/IrA2NxQGaVGrPCd3k+OGfLG5jmqbejtfv8+ra9LXhuA==
-X-Received: by 2002:ac8:2f15:: with SMTP id j21mr14259609qta.55.1585315125952;
-        Fri, 27 Mar 2020 06:18:45 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:482:5bb::4])
-        by smtp.gmail.com with ESMTPSA id o186sm3663914qke.39.2020.03.27.06.18.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 06:18:45 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     jic23@kernel.org
-Cc:     robh+dt@kernel.org, alexandru.tachici@analog.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 3/3] dt-bindings: iio: dac: ad5770r: Fix the file path
-Date:   Fri, 27 Mar 2020 10:18:25 -0300
-Message-Id: <20200327131825.23650-3-festevam@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200327131825.23650-1-festevam@gmail.com>
-References: <20200327131825.23650-1-festevam@gmail.com>
+        Fri, 27 Mar 2020 09:23:29 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33784 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726275AbgC0NX3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 09:23:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=KxLAqRWANV+lRpwj2JfW/z28qcDsnVnMDHMTtllBTdU=; b=B3p2FW7y41USJyD7JbgxxGzYae
+        2wnaFlA/0Ag++03oLARlmo19xECQB4FkGAuOn+ffFTxdNCfMEOFQ0hgilpPt7ye/3abHiSHLT+jfV
+        DJGuWVZm+teNrbR0MpvqUUrFGFGkyvA/AANfjGHsyhLkIEg6hPn9bkoUfxbEwuPBtEJ8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jHox7-0001ab-P3; Fri, 27 Mar 2020 14:23:13 +0100
+Date:   Fri, 27 Mar 2020 14:23:13 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH net-next 6/9] net: phy: add backplane kr driver
+ support
+Message-ID: <20200327132313.GO3819@lunn.ch>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+ <20200327010706.GN3819@lunn.ch>
+ <AM0PR04MB5443C1142ABE578ACC641FC5FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB5443C1142ABE578ACC641FC5FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The following warning is seen with 'make dt_binding_check':
+On Fri, Mar 27, 2020 at 01:02:17PM +0000, Florinel Iordache wrote:
+> > > +static u32 le_ioread32(void __iomem *reg) {
+> > > +     return ioread32(reg);
+> > > +}
+> > > +
+> > > +static void le_iowrite32(u32 value, void __iomem *reg) {
+> > > +     iowrite32(value, reg);
+> > > +}
+> > > +
+> > > +static u32 be_ioread32(void __iomem *reg) {
+> > > +     return ioread32be(reg);
+> > > +}
+> > > +
+> > > +static void be_iowrite32(u32 value, void __iomem *reg) {
+> > > +     iowrite32be(value, reg);
+> > > +}
+> > 
+> > This is very surprising to me. I've not got my head around the structure of this
+> > code yet, but i'm surprised to see memory mapped access functions in generic
+> > code.
+> > 
+> >        Andrew
+> 
+> Hi Andrew,
+> 
+> This is part of the framework used to automatically setup desired I/O 
+> callbacks for memory access according to device specific endianness 
+> which is specified in the specific device tree (DTS).
+> This approach (explained below) was used to avoid the potential 
+> redundant code related to memory access LE/BE which should be 
+> similar for all devices. 
 
-Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml: $id: relative path/filename doesn't match actual path or filename
+All devices which are using mmio. I assume the standard does not say
+anything about memory mapped IO. It talks just about MDIO registers.
 
-Fix it by removing the "bindings" directory from the file path.
+I would expect the generic code to just have generic accessors, which
+could work for MMIO, yet more MDIO registers, i2c, spi, etc.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So add another support file which adds an MMIO implementation of these
+generic access functions. Any driver which uses MMIO can pull it in.
+The same should be true for the DT binding. Don't assume MMIO in the
+generic binding.
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-index fa86ef52b121..5661d62b994f 100644
---- a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-+++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-@@ -2,7 +2,7 @@
- # Copyright 2020 Analog Devices Inc.
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/bindings/iio/dac/adi,ad5770r.yaml#
-+$id: http://devicetree.org/schemas/iio/dac/adi,ad5770r.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Analog Devices AD5770R DAC device driver
--- 
-2.17.1
+> This portion of code is just preparing these four static IO routines 
+> for specific endianness access LE/BE
 
+Linux has a lot of MMIO accessors. Are you sure there is not one which
+will do the right thing, making use of cpu_le32() or cpu_be32()
+etc. Or are there different variants of the hardware, with some using
+BE registers and some using LE registers? Note, this is all about the
+endianness of the register, not the endianness of the cpu. cpu_le32()
+will be a NOP when the CPU is running LE.
+
+     Andrew
