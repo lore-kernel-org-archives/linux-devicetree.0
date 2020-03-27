@@ -2,85 +2,66 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E45FC2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6D3C43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF90206F6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA4E206F6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:15:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="Ktrg15VS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="3pJjhKfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbgC0OIy (ORCPT
+        id S1726698AbgC0OPp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:08:54 -0400
-Received: from www381.your-server.de ([78.46.137.84]:34958 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726333AbgC0OIy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 10:08:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=jP6ZOO6om6xc6qhwrRKcT0GKENl5I0NI6Co1aic9c8c=; b=Ktrg15VSQ4QWSZEgWQd6GvzCyJ
-        w4tKpe7jk2FeFGSxyDJHnwPIqF8JAt9Tg4cTqH9+aKZcLqQBh0p9pGSsnrePwFLBv319AseD9U3jj
-        VKu2ybvONl8ms4PQFPKxmqs0gknUZo/k1yN9oNTN9HY6fqGLZKIZ9TFJiwgjIUKGv6VQQ6fxTJSFo
-        dUN/BxLFCvnMnJWJpVXXUwDP7djiNMtBdkfi8Ycunskmk2saM12UxdV1WuGAhyNWCyxTpTWT0ti6b
-        K2Nng9AbE/79wV/YCUubtD7K5EXAOz32yXLRClI28CKgUfqlNc/77Nk9K0IfjGyNXD8/SjoNEPsCF
-        yPbzKxDQ==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jHpfH-0004OB-Ke; Fri, 27 Mar 2020 15:08:51 +0100
-Received: from [82.135.64.145] (helo=[192.168.178.20])
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jHpfH-000VXX-BY; Fri, 27 Mar 2020 15:08:51 +0100
-Subject: Re: [PATCH v5 0/2] Maxim MAX1241 driver
-To:     Alexandru Lazar <alazar@startmail.com>, linux-iio@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
-References: <20200322140237.211347-1-alazar@startmail.com>
- <20200327134000.GA3579@leena.republic>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <6ec489c8-d5e6-96fb-5802-1ba22b0c5626@metafoo.de>
-Date:   Fri, 27 Mar 2020 15:08:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 10:15:45 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34000 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727115AbgC0OPp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:15:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=s4i5KmLKfub8BBxXB3cWuYtKCz0ltkH5r8L+83ZwU2g=; b=3pJjhKfQTzZ1v9BAbUW+liAWeV
+        jGi6zab4lBOwxHobsVXn2SqI9PtZxqqUHrwC4uXyO1kc++9Aacb8/FYMcypIZehz7RTkWerfAMorA
+        yAB9sTv0D0ckDyxUZYHjgMQzJiXZkxXTXB0brbIGsDFGpSlhIrJV5d/ZSpzaPkd4Nzek=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jHplq-00027N-TP; Fri, 27 Mar 2020 15:15:38 +0100
+Date:   Fri, 27 Mar 2020 15:15:38 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH] arm64: dts: update SolidRun Armada 8040 phy interface
+ types
+Message-ID: <20200327141538.GE11004@lunn.ch>
+References: <E1jHoHy-0002Ep-IY@rmk-PC.armlinux.org.uk>
+ <20200327134319.GD11004@lunn.ch>
+ <20200327134651.GM25745@shell.armlinux.org.uk>
+ <20200327135046.GN25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200327134000.GA3579@leena.republic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25764/Fri Mar 27 14:11:26 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327135046.GN25745@shell.armlinux.org.uk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/27/20 2:40 PM, Alexandru Lazar wrote:
-> On Sun, Mar 22, 2020 at 04:02:35PM +0200, Alexandru Lazar wrote:
->> Hello again,
->>
->> Here's version 5 of a patch series which adds support for the Maxim
->> MAX1241, a 12-bit, single-channel, SPI-connected ADC.
-> *poke*
->
-> No rush here, just wanna make sure this doesn't go off-radar.
->
-No reply is good news! Means nobody has anything to complain :)
+> ... and actually there is no point.
 
-Johnathan usually picks up patches during the weekend (For which I think 
-we can not thank him enough!).
+O.K. lets merge these as normal, not as fixes.  It is probably too
+late for ARM SoC, so i guess they will get merged next cycle.
 
-- Lars
-
-
+     Andrew
