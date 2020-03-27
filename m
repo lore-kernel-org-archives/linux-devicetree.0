@@ -2,156 +2,133 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3711C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D8AC2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99D0F20748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C4320748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 15:28:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QeX12oQA"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NH9IOM80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgC0P1L (ORCPT
+        id S1727115AbgC0P2Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 11:27:11 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56662 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbgC0P1L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 11:27:11 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02RFR5Cc034074;
-        Fri, 27 Mar 2020 10:27:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585322825;
-        bh=JoSE4KS/EBjkD65NeBxt6yyL8T/GBsNherjOFrGs2kY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QeX12oQA01mdt0aCxMz6k1HBIXZWnc1xbuF992rNER6psMbqrKzR+G/c/+QKA+qX9
-         +FL8BUDqeywrmILz4iX8PDrhNBI5ftOQbTnYA1UA49z0dD5hR12hb6TsCkOpcdIwTc
-         wgRZhCl5ZfPMibm4Au2eT9Kq6M5CAW5k6CnsfAiQ=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02RFR4l3087392;
-        Fri, 27 Mar 2020 10:27:05 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 27
- Mar 2020 10:27:04 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 27 Mar 2020 10:27:04 -0500
-Received: from [10.250.133.193] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02RFR0Rk068295;
-        Fri, 27 Mar 2020 10:27:01 -0500
-Subject: Re: [PATCH 3/3] PCI: Cadence: Remove using
- "cdns,max-outbound-regions" DT property
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200327145417.GA30341@google.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <27e3eb0b-c7d0-7eb7-1fb8-1f98b729513a@ti.com>
-Date:   Fri, 27 Mar 2020 20:57:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Fri, 27 Mar 2020 11:28:16 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:60325 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgC0P2P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 11:28:15 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id EB34922FEC;
+        Fri, 27 Mar 2020 16:28:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1585322892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eqUqITWsj9KDFGHrWeFv9QwKV40MUcbbCm0POjhjwys=;
+        b=NH9IOM80ezOu/xwgBZKQz57gkLeRbVpBO6uhULy0WRIQwRM6uLeXsXUIgRsya4g0GiBhLJ
+        V7nQFEI7obV92eVs8K0Ug7pHGzqpMHjtBP9MH2YUCHq5FqwNCeHAAxhU3Opxy1oqePUh8G
+        x9v49TPkEiJCurb1daDWtLGhW/jpfno=
 MIME-Version: 1.0
-In-Reply-To: <20200327145417.GA30341@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Fri, 27 Mar 2020 16:28:11 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+In-Reply-To: <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
+References: <20200317205017.28280-1-michael@walle.cc>
+ <20200317205017.28280-13-michael@walle.cc>
+ <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
+ <9c310f2a11913d4d089ef1b07671be00@walle.cc>
+ <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
+ <22944c9b62aa69da418de7766b7741bd@walle.cc>
+ <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
+Message-ID: <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: EB34922FEC
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[21];
+         NEURAL_HAM(-0.00)[-0.548];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[baylibre.com,vger.kernel.org,lists.infradead.org,kernel.org,suse.com,roeck-us.net,linaro.org,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Am 2020-03-27 11:20, schrieb Linus Walleij:
+> On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
+>> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
+> 
+>> > In that case maybe you should use the disable_locking option in
+>> > regmap_config and provide your own callbacks that you can use in the
+>> > irqchip code too?
+>> 
+>> But how would that solve problem (1). And keep in mind, that the
+>> reqmap_irqchip is actually used for the interrupt controller, which
+>> is not this gpio controller.
+>> 
+>> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
+>> and all interrupt phandles pointing to the interrupt controller will
+>> reference the toplevel node. Any phandles pointing to the gpio
+>> controller will reference the GPIO subnode.
+> 
+> Ideally we would create something generic that has been on my
+> mind for some time, like a generic GPIO regmap irqchip now that
+> there are a few controllers like that.
+> 
+> I don't know how feasible it is or how much work it would be. But
+> as with GPIO_GENERIC (for MMIO) it would be helpful since we
+> can then implement things like .set_multiple() and .get_multiple()
+> for everyone.
 
-On 3/27/2020 8:24 PM, Bjorn Helgaas wrote:
-> Update subject to match capitalization of others:
-> 
->   PCI: cadence: Remove "cdns,max-outbound-regions" DT property
-> 
-> On Fri, Mar 27, 2020 at 04:17:27PM +0530, Kishon Vijay Abraham I wrote:
->> "cdns,max-outbound-regions" device tree property provides the
->> maximum number of outbound regions supported by the Host PCIe
->> controller. However the outbound regions are configured based
->> on what is populated in the "ranges" DT property.
-> 
-> Looks like this is missing a blank line here?  Or it should be
-> rewrapped as part of the above paragraph?  I think the below makes
-> more sense as a separate paragraph, though.
+For starters, would that be a drivers/gpio/gpio-regmap.c or a
+drivers/base/regmap/regmap-gpio.c? I would assume the first,
+because the stuff in drivers/base/regmap operates on a given
+regmap and we'd just be using one, correct? On the other hand
+there is also the reqmap-irq.c. But as pointed out before, it
+will add an interrupt controller to the regmap, not a device
+so to speak.
 
-I'll add a blank line for the next paragraph and re-post once I get Ack from
-Rob on the DT binding patch.
-
-Thanks for reviewing!
-
-Regards
-Kishon
-> 
-> Again, thanks for doing this; this is a great cleanup.
-> 
->> Avoid using two properties for configuring outbound regions and
->> use only "ranges" property instead.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/controller/cadence/pcie-cadence-host.c | 6 ------
->>  drivers/pci/controller/cadence/pcie-cadence.h      | 2 --
->>  2 files changed, 8 deletions(-)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 60f912a657b9..8f72967f298f 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -140,9 +140,6 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
->>  	for_each_of_pci_range(&parser, &range) {
->>  		bool is_io;
->>  
->> -		if (r >= rc->max_regions)
->> -			break;
->> -
->>  		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
->>  			is_io = false;
->>  		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
->> @@ -221,9 +218,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->>  	pcie = &rc->pcie;
->>  	pcie->is_rc = true;
->>  
->> -	rc->max_regions = 32;
->> -	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
->> -
->>  	if (!of_pci_dma_range_parser_init(&parser, np))
->>  		if (of_pci_range_parser_one(&parser, &range))
->>  			rc->no_bar_nbits = ilog2(range.size);
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
->> index a2b28b912ca4..6bd89a21bb1c 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence.h
->> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
->> @@ -251,7 +251,6 @@ struct cdns_pcie {
->>   * @bus_range: first/last buses behind the PCIe host controller
->>   * @cfg_base: IO mapped window to access the PCI configuration space of a
->>   *            single function at a time
->> - * @max_regions: maximum number of regions supported by the hardware
->>   * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
->>   *                translation (nbits sets into the "no BAR match" register)
->>   * @vendor_id: PCI vendor ID
->> @@ -262,7 +261,6 @@ struct cdns_pcie_rc {
->>  	struct resource		*cfg_res;
->>  	struct resource		*bus_range;
->>  	void __iomem		*cfg_base;
->> -	u32			max_regions;
->>  	u32			no_bar_nbits;
->>  	u16			vendor_id;
->>  	u16			device_id;
->> -- 
->> 2.17.1
->>
+-michael
