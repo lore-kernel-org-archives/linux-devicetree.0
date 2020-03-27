@@ -7,53 +7,57 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79251C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 01:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE36AC2D0ED
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A6220774
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 01:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11E320774
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 01:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OeidLvA5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z2i95Aqx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgC0Bct (ORCPT
+        id S1727800AbgC0Bcz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Mar 2020 21:32:49 -0400
-Received: from mail-pl1-f201.google.com ([209.85.214.201]:39602 "EHLO
-        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbgC0Bct (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 21:32:49 -0400
-Received: by mail-pl1-f201.google.com with SMTP id d11so5856279pll.6
-        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 18:32:49 -0700 (PDT)
+        Thu, 26 Mar 2020 21:32:55 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:33218 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727833AbgC0Bcy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Mar 2020 21:32:54 -0400
+Received: by mail-pf1-f202.google.com with SMTP id o5so6974463pfp.0
+        for <devicetree@vger.kernel.org>; Thu, 26 Mar 2020 18:32:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=00RV7bNLHk/+srLS130iQAKmhRfndHchHDNeo4WMsqs=;
-        b=OeidLvA5lvefgDK7/Lhlm9pfs2j2GdTsKuu8cUAqJgpnGukG4D3aD9o8ROmAxiZfiC
-         N1um11XjyxlpPPHf/FZ8K1Knc0277Ub7tcnjwFjGTNp6UbKWixZoqxIJkikE/UJ+SBJU
-         DEoQbeU3GkPGwQK1vCm+BsGV/ZnEauid0cdne89ZrJQXeRkV0wQdsZnIL82oHnGJ8Gy7
-         y8hn5XXtGEpKHzaVacRzIMYV4NRWE4E7QwF7lElKf7yq8G+pZwFc1UyIpMRgNs7bKa0z
-         scMoBz3E+MotGPm3SgxPfEx/JimkmjYMipqOEL53oJ+eI8rT+Z4JP6MI7vZgX/rVgMOB
-         LHJQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=CndPbhEYDs1U4gkN9kz/g201YX5b6/GIUM2pkWkOTok=;
+        b=Z2i95AqxFtFVeJnN0ep10o2FLq3PHgLj0xV1jas+TG8DoHR/Ie+akCb78FuKraPzKz
+         5aoVGcNUcN8y2qQzoBO0xfnWUftDtaJwhSSJ3j4DqC7DT63Dw4v4mM5VXLzsrlcbEXpp
+         5OpEooJMSJpoIbeIy/wyazTFWjJ9rqCjPkliTqDnMNWWtGBW4ip8H6gDpwQmHE6NHRXP
+         /e8lpO8XPWTXNUYU4mMInzlM3mpaz/GYK9bJAyiG+oT7KNYz2COa3tO7FBNqBBv4WH6p
+         8xOK/8TWkKuoLZwdOSnKmKYVvyr5dewf+biAQDRqc3ncEHidS84Wt9vcPYW49WP4Do7Z
+         YUuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=00RV7bNLHk/+srLS130iQAKmhRfndHchHDNeo4WMsqs=;
-        b=elTkpNTnLZV1Re55Z/LZaUzZa0gv7v0ONSuvwrcso7IkEI8IVguWkHcJo/kfeSDBRB
-         nNl1Qz6QGyQ10oIKLevo7zsxcUhqwLAwZKzMQhmPb7wpflAyPAAq01Exdy4Z35kKA6Lc
-         rayLChKM8Pecis0lI78aO1Xfp6HsnfVxlv31s8m5Z/cMC1+fL3iL3s8rHgnrFlfJkBAb
-         k5QKSjmAWo2UlUk7a5dgVyVtnngicuEdSOJBmjhCFLiFMRPtiYAKtQZVDkppq2mdPhQr
-         Hoas/6Wa1NRjQnAkCy9UgVLYha5ptvvC/vB0NcEXhyr3nPMNuKDYyX5reO6mdQaLhmSL
-         txhg==
-X-Gm-Message-State: ANhLgQ1LrhhcGyjd9VCY7P3VAm2FkrdSdNZI8I1F7p9+jlxbmHIXtay6
-        w7QfgbjejdqBJXTUJuRWvRdP1NVWee9k
-X-Google-Smtp-Source: ADFU+vvxEB6/tnu1KoE7CiH6g1ntv3CfQrUiRH4eQWXOoeZZYIIdOLTg20OXiK4zK1sdzoHVsZ96xI4ldhQa
-X-Received: by 2002:a63:cf4a:: with SMTP id b10mr11648063pgj.354.1585272768440;
- Thu, 26 Mar 2020 18:32:48 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 18:32:35 -0700
-Message-Id: <20200327013239.238182-1-rajatja@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=CndPbhEYDs1U4gkN9kz/g201YX5b6/GIUM2pkWkOTok=;
+        b=AZJkek/7exI2KbwP+wDrG1fthsovaTrA8KFN8i5vyC/2WlUSyFWtiwdmgxqvOxXvDC
+         qpV+R3UMqdTwKY43Tb3xno77UWKID3fdKptg85SVkJ39+qHq5kuKLFDKco7TX4t+3k7I
+         P+rJGVMGpdRnpFYYr2zv1vOHVSrhQrUwb/ARZoQ84Y5MYNvcoiOTqddBb4noWMzLRqvz
+         qinMUdZ9CNCD6qD42VpK7CAn5Iyvf/pJg1T4Ew1z8CtgmozCs7ROhUaxqIw1XZm5X+ej
+         SWkWKthnpCPCVCYTJWOnurrMwdASgVmrS6i+1I/fRnWbFUxz+yFn4zJFzhE6odTsJ+Mp
+         Y2og==
+X-Gm-Message-State: ANhLgQ37RMNMKxdiY5MJNQ6zS0HUxMggqEXPGCabW6Q9V7zSwfsC7blg
+        h5+KJW7ivpoifFPrJM83GrakGCHh5nRz
+X-Google-Smtp-Source: ADFU+vtEHaAqRLOhguRyQ6WDAN2vuYnRbqyv9pgMaWqOyGbQOTVbIoWbvV3BqJHbw+jxXtfx1C87+q2KzjgX
+X-Received: by 2002:a63:da4d:: with SMTP id l13mr11745412pgj.216.1585272773528;
+ Thu, 26 Mar 2020 18:32:53 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 18:32:37 -0700
+In-Reply-To: <20200327013239.238182-1-rajatja@google.com>
+Message-Id: <20200327013239.238182-3-rajatja@google.com>
 Mime-Version: 1.0
+References: <20200327013239.238182-1-rajatja@google.com>
 X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v3 1/5] input/serio/i8042: Attach fwnode to serio i8042 kbd device
+Subject: [PATCH v3 3/5] dt-bindings: input/atkbd.txt: Add binding for "function-row-physmap"
 From:   Rajat Jain <rajatja@google.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
         Rob Herring <robh+dt@kernel.org>,
@@ -77,58 +81,58 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Attach the firmware node to the serio i8042 kbd device so that device
-properties can be passed from the firmware.
+Create the documentation for the new introduced property, that
+describes the function-row keys physical positions.
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v3: Same as v2
+v3: same as v2
 v2: Remove the Change-Id from the commit log
 
- drivers/input/serio/i8042-x86ia64io.h | 1 +
- drivers/input/serio/i8042.c           | 3 +++
- 2 files changed, 4 insertions(+)
+ .../devicetree/bindings/input/atkbd.txt       | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/atkbd.txt
 
-diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
-index dc974c288e880..ed9ec4310d976 100644
---- a/drivers/input/serio/i8042-x86ia64io.h
-+++ b/drivers/input/serio/i8042-x86ia64io.h
-@@ -927,6 +927,7 @@ static int i8042_pnp_kbd_probe(struct pnp_dev *dev, const struct pnp_device_id *
- 	}
- 	i8042_pnp_id_to_string(dev->id, i8042_kbd_firmware_id,
- 			       sizeof(i8042_kbd_firmware_id));
-+	i8042_kbd_fwnode = dev_fwnode(&dev->dev);
- 
- 	/* Keyboard ports are always supposed to be wakeup-enabled */
- 	device_set_wakeup_enable(&dev->dev, true);
-diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-index 20ff2bed3917a..0dddf273afd94 100644
---- a/drivers/input/serio/i8042.c
-+++ b/drivers/input/serio/i8042.c
-@@ -21,6 +21,7 @@
- #include <linux/i8042.h>
- #include <linux/slab.h>
- #include <linux/suspend.h>
-+#include <linux/property.h>
- 
- #include <asm/io.h>
- 
-@@ -124,6 +125,7 @@ MODULE_PARM_DESC(unmask_kbd_data, "Unconditional enable (may reveal sensitive da
- static bool i8042_bypass_aux_irq_test;
- static char i8042_kbd_firmware_id[128];
- static char i8042_aux_firmware_id[128];
-+static struct fwnode_handle *i8042_kbd_fwnode;
- 
- #include "i8042.h"
- 
-@@ -1335,6 +1337,7 @@ static int __init i8042_create_kbd_port(void)
- 	strlcpy(serio->phys, I8042_KBD_PHYS_DESC, sizeof(serio->phys));
- 	strlcpy(serio->firmware_id, i8042_kbd_firmware_id,
- 		sizeof(serio->firmware_id));
-+	set_primary_fwnode(&serio->dev, i8042_kbd_fwnode);
- 
- 	port->serio = serio;
- 	port->irq = I8042_KBD_IRQ;
+diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
+new file mode 100644
+index 0000000000000..816653eb8e98d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/atkbd.txt
+@@ -0,0 +1,34 @@
++Device tree bindings for AT / PS2 keyboard device
++
++Optional properties:
++
++	function-row-physmap:
++			An ordered array of the physical codes for the function
++			row keys. Arranged in order from left to right.
++
++Example:
++
++	This is a sample ACPI _DSD node describing the property:
++
++        Name (_DSD, Package () {
++                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++                Package () {
++                        Package () { "function-row-physmap",
++                                Package () {
++                                        0xEA, /* T1 BACK */
++                                        0xE7, /* T2 REFRESH */
++                                        0x91, /* T3 FULLSCREEN */
++                                        0x92, /* T4 SCALE */
++                                        0x93, /* T5 SNIP */
++                                        0x94, /* T6 BRIGHTNESS_DOWN */
++                                        0x95, /* T7 BRIGHTNESS_UP */
++                                        0x96, /* T8 PRIVACY_SCRN_TOGGLE */
++                                        0x97, /* T9 KBD_BKLIGHT_DOWN */
++                                        0x98, /* T10 KBD_BKLIGHT_UP */
++                                        0xA0, /* T11 VOL_MUTE */
++                                        0xAE, /* T12 VOL_DOWN */
++                                        0xB0, /* T13 VOL_UP */
++                                }
++                        }
++                }
++        })
 -- 
 2.25.1.696.g5e7596f4ac-goog
 
