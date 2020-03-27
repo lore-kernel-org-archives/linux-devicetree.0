@@ -2,97 +2,83 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE223C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC78AC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A241B20675
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:16:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="whr96ld4"
+	by mail.kernel.org (Postfix) with ESMTP id 8F2C020675
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 11:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgC0LQM (ORCPT
+        id S1727173AbgC0LV4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 07:16:12 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:39177 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726379AbgC0LQM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 07:16:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585307771; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=9LK10OXgzi/rnLsXdPOkiREm+deDTcfebaSPGXR+HEQ=; b=whr96ld4AU1kStUkW7wbi2Rl6KrRCIhRpaMyvS/PGrz+bn6J5+pXCMHMhRdveGDYXDS0aFoF
- ix77czkT+Rv4JEdIILbJJbIFJM49y1+HvSNcaVJfths4cu4gQdGp5vat0BMGRQoOLX7NIA3o
- jmpNZhMEwf3EahXHtGOkNIYKmZg=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7de076.7f47fbeeb1f0-smtp-out-n05;
- Fri, 27 Mar 2020 11:16:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 81092C43636; Fri, 27 Mar 2020 11:16:06 +0000 (UTC)
-Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D3418C433D2;
-        Fri, 27 Mar 2020 11:16:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D3418C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     <Ajay.Kathat@microchip.com>
-Cc:     <linux-wireless@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <devicetree@vger.kernel.org>, <gregkh@linuxfoundation.org>,
-        <johannes@sipsolutions.net>, <Adham.Abozaeid@microchip.com>,
-        <Nicolas.Ferre@microchip.com>, <Claudiu.Beznea@microchip.com>,
-        <Venkateswara.Kaja@microchip.com>
-Subject: Re: [PATCH v6 00/17] wilc1000: move out of staging
-References: <20200327063302.20511-1-ajay.kathat@microchip.com>
-Date:   Fri, 27 Mar 2020 13:16:01 +0200
-In-Reply-To: <20200327063302.20511-1-ajay.kathat@microchip.com> (Ajay Kathat's
-        message of "Fri, 27 Mar 2020 06:33:07 +0000")
-Message-ID: <87ftduoxou.fsf@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Fri, 27 Mar 2020 07:21:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38680 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726937AbgC0LV4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 07:21:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A486FADF1;
+        Fri, 27 Mar 2020 11:21:54 +0000 (UTC)
+Message-ID: <a4c38810b7cb10dcfadd2844320d1c9e5b6bc6f6.camel@suse.de>
+Subject: Re: [PATCH v2 10/11] ARM: dts: bcm2711: Update expgpio's GPIO labels
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     stefan.wahren@i2se.com, devicetree@vger.kernel.org,
+        f.fainelli@gmail.com, linux-mmc@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, phil@raspberrypi.com,
+        linux-arm-kernel@lists.infradead.org
+Date:   Fri, 27 Mar 2020 12:21:53 +0100
+In-Reply-To: <20200306174413.20634-11-nsaenzjulienne@suse.de>
+References: <20200306174413.20634-1-nsaenzjulienne@suse.de>
+         <20200306174413.20634-11-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-6dBBE0GB6iAO/vrk1/4W"
+User-Agent: Evolution 3.34.4 
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-<Ajay.Kathat@microchip.com> writes:
 
-> From: Ajay Singh <ajay.kathat@microchip.com>
->
-> This patch series is to review and move wilc1000 driver out of staging.
-> Most of the review comments received in [1] & [2] are addressed in the
-> latest code. Please review and provide your inputs.
->
-> [1]. https://lore.kernel.org/linux-wireless/1537957525-11467-1-git-send-email-ajay.kathat@microchip.com/
-> [2]. https://lore.kernel.org/linux-wireless/1562896697-8002-1-git-send-email-ajay.kathat@microchip.com/
->
-> Changes since v5:
->  - handle DT binding review comments suggested in below link:
->   * https://lore.kernel.org/driverdev-devel/20200320175920.GA31641@bogus
->  - merged latest driver from staging which contains few cleanup patches
->    and changes to use crc7 from existing library instead of having
->    private implementation.
+--=-6dBBE0GB6iAO/vrk1/4W
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is already the third version this month, please avoid spamming the
-list unnecessarily. What you can do to speed up the acceptance is to get
-Reviewed-by tags from people, the more I see those the more confident I
-get about the driver. I will also review this again once I find some
-free time, but don't know when that will happen.
+On Fri, 2020-03-06 at 18:44 +0100, Nicolas Saenz Julienne wrote:
+> The 6th line of the GPIO expander is used to power the board's SD card.
+>=20
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
 
-But it would be good to document in the cover letter what commit id are
-you using as the baseline. That way it's easy to review rest of the
-changes Greg has applied separately and you don't need to resend the
-whole driver everytime.
+Applied for-next.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Regards,
+Nicolas
+
+
+--=-6dBBE0GB6iAO/vrk1/4W
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl594dEACgkQlfZmHno8
+x/6u+wgAoZAyf4EZVgmQpaGO9pvDTSICjk4v7Buc27vRC/dI7eee8lpEKtHySjxS
+ZFUZvrVtkH+1nI31qTADGEUvfLfGeZuhsl3PopdYT1L4Ajl8Wl/TgB2/jBwArPmT
+FYjuPGIYtBXg4m9qzo/hWE1gPXZOTESW5dnu6zC2KkIadq4FtZl06U7PZTbQAggH
+9REu3TOdgTvUwKmnOpTYRbfE2f5ei0Sjdem42mzLBDW5hy6i/I2zqL7qr+MT/v99
+WaE0jbqdcRsAP7HwZRF2JGP63WiFWjkfNSpGd2/AE+ETi3BK+m3iufCX8FJBrgrt
+Y+wvAAMZXkhGdHtI+fh9suxi1j+VKA==
+=5tFi
+-----END PGP SIGNATURE-----
+
+--=-6dBBE0GB6iAO/vrk1/4W--
+
