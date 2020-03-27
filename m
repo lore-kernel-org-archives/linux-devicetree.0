@@ -2,118 +2,126 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6463BC2D0E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7327AC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399E320716
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4398D20705
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:28:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="i1tpjs5L"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="KFFzlOF8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dZIFWv5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgC0JTX (ORCPT
+        id S1726217AbgC0J2d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:19:23 -0400
-Received: from mail-eopbgr1400090.outbound.protection.outlook.com ([40.107.140.90]:10828
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725946AbgC0JTX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:19:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zo6sgmlwkf9ySWokJi/pR9aQmn+XQ5hZrk1oVmcEl4lUSAzGHo+WBknO9uEabw/bF14tMeFp1MeQqRQoxqN2gxWzil4g7QgJ2U8jwjyYU7zL9moFYVTW7WinCDOf+pGUWQSaNEoedo+tnLhTc7UlvQJVsE+UWHZv0tHWvwrYXW/pIfAsMEdQZi1aovL89AlXEEUZSx5xBerifZwJJsXP+eRh0VGZYNy780LWslgcuQbtdBxBjymJHPybpmhEPl2dFQbCQBtQKlhrszubdY/sRDtBQPfRFkDpUsgXeRlwHexrTuXXbSGKYAtLQNUVf8+WfoVCSq35uJGFtMk5JkJQdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8WWd/EB7bKGVbjYf7lmOO/3qwqklrC7Ims8FSJ/BCr8=;
- b=jmHar2D7WK7Wy00+QYFYvs8uQulWWsPhSIcHNsdYZjDZBG8LxeN0ppVAaW6DoOM//bEmMs3ZU6O8U7r3R7LoqVjpKGgExKOQpg7+cMRccXB/0bsbXGFrao0ZVr3NVbDWHyf1AW3vxJPhX3xbs9MgLgPFXWB8iT5ydDsljlaMIp/BXMWFO0dKU9LVwdb4EtyQOfD9Iist4kYIFwKqVYrMl+r9uKL4zJS0gFIUwNFFNvTffYX2J9HFNDtQoru5pflFBtHdetsRkCp8ZR+w3vnUCstCDXyMJpFZFD3IyoOiFNuxMX6ljWBYb2yTp7vBg1K7Ehar7nDZsZz+2gioyqn00w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8WWd/EB7bKGVbjYf7lmOO/3qwqklrC7Ims8FSJ/BCr8=;
- b=i1tpjs5LJmmlmhTeCWjIL8ZcgI8X8D5SM6lgwcJKIP2JswuKv5O2bOliEHW16Uwv0mccBs5/x4PuwEZrvcts4swUwkn34bRPHpLhHhKhhfF14SIRIXSkou7dOMn7WKXlnVFBChjbDtREG7T140TDYziiL3E292vhpkBRSFv84yo=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB4063.jpnprd01.prod.outlook.com (20.178.140.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.22; Fri, 27 Mar 2020 09:19:20 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2835.023; Fri, 27 Mar 2020
- 09:19:19 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v3 1/4] dt-bindings: phy: renesas: usb2-phy: convert
- bindings to json-schema
-Thread-Topic: [PATCH v3 1/4] dt-bindings: phy: renesas: usb2-phy: convert
- bindings to json-schema
-Thread-Index: AQHWA/iZb4r2sibuR06+pRT+YCncm6hcIuKAgAAF3uA=
-Date:   Fri, 27 Mar 2020 09:19:19 +0000
-Message-ID: <TYAPR01MB4544104071EEA9DA9BF86B96D8CC0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1585286923-11740-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1585286923-11740-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdV+kPei=4tBb8FGC1oE2+sRffXRz2KZtKU7svyz=22AGg@mail.gmail.com>
-In-Reply-To: <CAMuHMdV+kPei=4tBb8FGC1oE2+sRffXRz2KZtKU7svyz=22AGg@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [211.11.155.148]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ca2af7de-3a51-4748-7de6-08d7d22fee4e
-x-ms-traffictypediagnostic: TYAPR01MB4063:
-x-microsoft-antispam-prvs: <TYAPR01MB406382A901F77500E64995A3D8CC0@TYAPR01MB4063.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0355F3A3AE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(396003)(346002)(376002)(81156014)(71200400001)(186003)(2906002)(4326008)(86362001)(4744005)(8676002)(6916009)(26005)(6506007)(76116006)(55016002)(5660300002)(52536014)(9686003)(33656002)(66446008)(7696005)(66476007)(66556008)(64756008)(8936002)(316002)(478600001)(81166006)(66946007)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4063;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OWhIQ7ZFSnRwkvW5pKiC6ibBNECFPhb18Tw+lold6OUHo2shyuNlh4xjJj82+2ExJJzZ/w8ezG4Isz2Wb3KFT8FNpFQCNHfMZt7teaKzi+DEPc+iv3GQro1VYS2wKYkhqzmF6ko/v3VTO+nHIPiGIP4WAx0MlgBmcLqk/8rGXIfCrZP9EkhVj9MziS7L/rBRBczEyMlaytHW/a7IYeoBmYrwZgbr4EpTRCgpxVZU69gNgFdZQYwq4d9jzXkPPGgq9eqKsPVjYR9B47zRXo65Vmgf3Jw21dg7W8N/Djj5FAMvLL4ymuu9ksA2cQgq/HpvvvrQZVL6Pc3zEVoNxi3xuE4LXHIGVbS7ag9LKgy1+3rYwXZVss/OKeLzquxGOzPJkBcJs6XEnfPdh7U9xw+yEaL7vEgU6rjJ7Rs3pyLhMBcNlKbip41gIgl96eRU/UXu
-x-ms-exchange-antispam-messagedata: 8Sbp+XcN9b9tn/V5YohJwSw119fjqdA96rZAiJI3EspHP1pUmAPZUitcOiDs05UUbObSnKODErmsF+8/gfVziwQ3D/3wf9PLDUmHQeyXlr2QhI9S5CeGZClihi1gNqWoF3gs71fTApbqIixlxZ30ug==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 27 Mar 2020 05:28:33 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:58693 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725946AbgC0J2d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 05:28:33 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 071275800A5;
+        Fri, 27 Mar 2020 05:28:32 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Fri, 27 Mar 2020 05:28:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=LhbEX+PTcMuPpL/1ETXXhTFLIWQ
+        COOvbBr7bWPk6nqo=; b=KFFzlOF8jEmg0DqntkIpgK2wxHlt/GqsgU2g+iagndP
+        DdNijv3uS7jXI44crUGd4W3da3oMvV2EctegJACm/uDP2BfpRcTgKVQtM5q4odLs
+        U+w9apbY7q3miOFvV7IPdjDVslaPPGcwgPjaTii+xtTtWrZvh/pPQYt1pW6vKDT9
+        hwUrKpKm7R1mnKIggtJlW4ciPA6RCSYRK+tY8eiJzdHmd2Xn3zxffWrwC3VWLlYb
+        iavPMGvPaiAqMV1H5JqGZ0AwUG+4C3owepqGJ7LCf14LV/ipNcJEI13msNrjB8vV
+        BDFSXs0+tqBXuso3rQHpBjTOwIatLksQ4quDmQXnK+Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=LhbEX+
+        PTcMuPpL/1ETXXhTFLIWQCOOvbBr7bWPk6nqo=; b=dZIFWv5B0fd9XhM75muntn
+        mlezGQOSxqrOGQRHoKoYfJS4kNNCwLcKPPDIJ7yUTYo6p8s+EHYPMDoIAmgM1sex
+        0hpnHd30iNy0TYtIu5lzzoUjfA8U57fwvgVChCMkZUFbBEbrz87iN4EpXWt70YM2
+        wjKOYSVjcYGVprBHEKTXl9ulf3Oz+msYRIuvZ+RZUxFPUNvJxHUSg7anE4N5xLqW
+        YZbs0EaeNAf5z94rKBH+Si0+81IDcBTPg1LHU2hhNQ/3Ud9YOeCGX8dTxqekI/tR
+        iDuFunCHZ5RGAU55TUHDWikr/vxXVoq+xnUH+3RkmcRU2dj3jsjxs0Y1Wjw18flw
+        ==
+X-ME-Sender: <xms:Psd9XvPEofr28nUW4bHdiPDMjnTxtZWrhu31hu0jIGFBg066VQDtsg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehledgtddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
+    vghgsehkrhhorghhrdgtohhm
+X-ME-Proxy: <xmx:Psd9XmIb0kbHJLhvnKnYMWl_Vpx_H3BXmHm1z0MGx4k6FlRru5sehA>
+    <xmx:Psd9XhJrBqH0Z6921ZHPakUs-Ae6IQC67XnHOCnA6o_ImnU-qxwwBw>
+    <xmx:Psd9XiXFiYAWb_VhBLLOFZpl00jqEC0FCe9MCxQJSNSLQ7On98BKeg>
+    <xmx:QMd9Xvvp2qQ01S6DgBBHHgfrdena6ZBXSdyYS_7uV7H4yjaISUFDVA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 914AF306C109;
+        Fri, 27 Mar 2020 05:28:29 -0400 (EDT)
+Date:   Fri, 27 Mar 2020 10:28:26 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>
+Cc:     Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Fredrik Noring <noring@nocrew.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        John Youn <John.Youn@synopsys.com>
+Subject: Re: [RESENDING RFC PATCH 0/4] Add logic to consolidate TRBs for
+ Synopsys xHC
+Message-ID: <20200327092826.GB1693819@kroah.com>
+References: <cover.1585297723.git.joglekar@synopsys.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca2af7de-3a51-4748-7de6-08d7d22fee4e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Mar 2020 09:19:19.8682
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HHwZ9FH06EUCxrA8a1qjJAq5XmH3RSl1/2Es9hU7zeDN9h6lbU7E+ZJrkBp2WUyEWoTAqsbH4jyFURYQMR9dFIbnDTtefxhP9aPXsTv22Z0Zp7EniPQZ/oKuVogW9F9T
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1585297723.git.joglekar@synopsys.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3IQ0KDQo+IEZyb206IEdl
-ZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogRnJpZGF5LCBNYXJjaCAyNywgMjAyMCA1OjU1IFBNDQo8
-c25pcD4NCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3Jj
-YXItZ2VuMy1waHktdXNiMi50eHQNCj4gPiArKysgL2Rldi9udWxsDQo+IA0KPiA+IC1UaGUgcGhh
-bmRsZSdzIGFyZ3VtZW50IGluIHRoZSBQSFkgc3BlY2lmaWVyIGlzIHRoZSBJTlRfU1RBVFVTIGJp
-dCBvZiBjb250cm9sbGVyOg0KPiA+IC0tIDEgPSBVU0JIX0lOVEEgKE9IQ0kpDQo+ID4gLS0gMiA9
-IFVTQkhfSU5UQiAoRUhDSSkNCj4gPiAtLSAzID0gVUNPTV9JTlQgKE9URyBhbmQgQkMpDQo+IA0K
-PiBTb3JyeSwgSSBmYWlsZWQgdG8gbm90aWNlIGR1cmluZyBteSBwcmV2aW91cyByZXZpZXcgdGhh
-dCB0aGUgYWJvdmUgaW5mb3JtYXRpb24NCj4gaXMgbG9zdCBkdXJpbmcgdGhlIGNvbnZlcnNpb24u
-ICBJIHRoaW5rIGl0IHdvdWxkIGJlIGdvb2QgdG8gcmV0YWluIGl0IGluIHRoZQ0KPiBkZXNjcmlw
-dGlvbiBmb3IgI3BoeS1jZWxscy4NCg0KSSBhZ3JlZS4gSSdsbCBhZGQgaXQuDQoNCj4gV2l0aCB0
-aGF0IGFkZGVkOg0KPiBSZXZpZXdlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5l
-c2FzQGdsaWRlci5iZT4NCg0KVGhhbmtzIQ0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hp
-bW9kYQ0KDQo=
+On Fri, Mar 27, 2020 at 02:22:23PM +0530, Tejas Joglekar wrote:
+> The Synopsys xHC has an internal TRB cache of size TRB_CACHE_SIZE for
+> each endpoint. The default value for TRB_CACHE_SIZE is 16 for SS and 8
+> for HS. The controller loads and updates the TRB cache from the
+> transfer ring in system memory whenever the driver issues a start
+> transfer or update transfer command.
+> 
+> For chained TRBs, the Synopsys xHC requires that the total amount of
+> bytes for all TRBs loaded in the TRB cache be greater than or equal to
+> 1 MPS. Or the chain ends within the TRB cache (with a last TRB).
+> 
+> If this requirement is not met, the controller will not be able to
+> send or receive a packet and it will hang causing a driver timeout and
+> error.
+> 
+> This patch set adds logic to the XHCI driver to detect and prevent this
+> from happening along with the quirk to enable this logic for Synopsys
+> HAPS platform.
+> 
+> Based on Mathias's feedback on previous implementation where consolidation
+> was done in TRB cache, with this patch series the implementation is done
+> during mapping of the URB by consolidating the SG list into a temporary
+> buffer if the SG list buffer sizes within TRB_CACHE_SIZE is less than MPS.
+> 
+> 
+> Tejas Joglekar (4):
+>   dt-bindings: usb: Add snps,consolidate-sgl & consolidate-sgl
+>   usb: xhci: Set quirk for XHCI_CONSOLIDATE_SG_LIST
+>   usb: dwc3: Add device property consolidate-sgl
+>   usb: xhci: Use temporary buffer to consolidate SG
+> 
+> Resending as 'umlaut' is not accepted by some servers in email.
+
+Only patch 4/4 seems to have gone through :(
+
