@@ -2,106 +2,143 @@ Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C172C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2185CC2D0E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD8720716
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:54:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585302891;
-	bh=zsAHFY8HYYi1pCUgG38aoKsgwN3WWwDDoEivELfqiDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aJpZA0pY/OkuWMAX60u9l3QILzN3cXOjHI8qRTujUn3cYemQELAcAzDgtFceJLyKj
-	 ALcfgDXKEO7RjZaGRXCniUojMRIWWGu04My4IRx89aVeYyRXV0qIcL7Fvwcb1+eq6d
-	 HcR8BX6m4oyTrE0BXXpcW2F8aoxKwa3jGGngr9QE=
+	by mail.kernel.org (Postfix) with ESMTP id EB72B2073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 09:59:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cWW3YcpE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbgC0Jyu (ORCPT
+        id S1727287AbgC0J7s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 05:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726168AbgC0Jyu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 05:54:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DDC420578;
-        Fri, 27 Mar 2020 09:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585302889;
-        bh=zsAHFY8HYYi1pCUgG38aoKsgwN3WWwDDoEivELfqiDU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KgT/fJ6hWwwiZFtxbE3ulRTspSgZCYIPpSSTg/5HLhkjAwiFvsywwHwnZAK1oe2v5
-         0O1n5knKyvTh75YkyA7t1M2Vn9RZhl/UkzJuVl/GyZ56aWAkR4FXYY9prUf+MCLjQJ
-         Rfw7GzamfClchGB2uyQ9yEwKizWbERO1XFRKcr+A=
-Date:   Fri, 27 Mar 2020 10:54:47 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Youn <John.Youn@synopsys.com>
-Subject: Re: [RESENDING RFC PATCH 1/4] dt-bindings: usb: Add
- snps,consolidate-sgl & consolidate-sgl
-Message-ID: <20200327095447.GA1698181@kroah.com>
-References: <cover.1585297723.git.joglekar@synopsys.com>
- <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com>
+        Fri, 27 Mar 2020 05:59:48 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34210 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgC0J7s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 05:59:48 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p10so9324546ljn.1
+        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 02:59:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iT9ew65Ai4POSw9apePAlYbX2sb+iJXvkgJnQxpRw0g=;
+        b=cWW3YcpEyyYutTrNo9KR9HBH3E1bK+HR2Lj5S1ufOBfKm/JNDbVKgSTehtTbK/piG7
+         AKjHnGwyvO2icmwsa3kFw6Zy9abidGdYmBJm7RwikCnCpiGoaqgq5m3bGu0GFONHPovH
+         s0c/WvnYnPEvbNXNyKweaiea++yeq0zcHNyQfUxojaI3SyGLY4+iyWjDQ0x68SaY8Drf
+         JMetNVWiEP6KTRh7NjcfaAuyl0sKbJRnuDYUHwbVm3S17ouQgtixys00HdZ8IS96Ovz4
+         pek6sQ78KGlTRqT5w9MPDkgc2TCFzKlFMmuVNKZoTHdy8naS5UOmiEGTokrk8DVStpkg
+         Jd4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iT9ew65Ai4POSw9apePAlYbX2sb+iJXvkgJnQxpRw0g=;
+        b=nZnRxHyex9ouEUtJTpIIsyiqajjreg52OHkfDnRTnsDnIBgS7x0Iy2agqrEVqX+yXQ
+         +d2cHIc1bXFMwD7V0M1dXLr+AGx1YpSZCtutSPhPmzpaBwruwqKW4Stuumola6eU6Ln1
+         ORJhkoPL6x28tmN1OtjelTU+NwyMrwBRUYPp/IpowPVa6y2sztHS41LD3BYEvy5WQN4Z
+         6zzQnGzneATeHHbQLw9x3GuBQ2Uii1a6uofuAr60ElMENvU2emK1F+u47OZbyVbelzS0
+         FJPPnIARnTDQzzaGyepMBmEUGEcZvArd1y07GfIFoqdoVmvYZzt4tSEqASNY0NCeJq2N
+         Q0qg==
+X-Gm-Message-State: AGi0PuZdVeLCtlDJMuppnRELRWiCM7bNUyf9AGA9ZFNtMGpazLBGlXWT
+        OJf6US/mueTeFXgEHdK6LAjFgNR5Z7UeyKW3OWjKqQ==
+X-Google-Smtp-Source: ADFU+vsFTyW5diEMQrZ6oc8ojCeBX7BYjVmipZYNTS3SNNq4tTiZwvSWUqKgPn07Ht2NDQ7OLG9B8uptAVDDcyFhwxQ=
+X-Received: by 2002:a2e:9605:: with SMTP id v5mr7685010ljh.258.1585303186378;
+ Fri, 27 Mar 2020 02:59:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a9ca8e08d7c4957789a209c77589f1aa4bd2f06.1585297723.git.joglekar@synopsys.com>
+References: <20200325220542.19189-1-robh@kernel.org> <20200325220542.19189-4-robh@kernel.org>
+In-Reply-To: <20200325220542.19189-4-robh@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 27 Mar 2020 10:59:35 +0100
+Message-ID: <CACRpkdbWeKjd6B2mLz3+7LOxSGP9FqSz6YRp_YHx+2qHkJVFCQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: Clean-up schema errors due to missing
+ 'addtionalProperties: false'
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-media@vger.kernel.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 03:11:56PM +0530, Tejas Joglekar wrote:
-> This commit adds the documentation for consolidate-sgl, and
-> snps,consolidate-sgl property. These when set enables the quirk for
-> XHCI driver for consolidation of sg list into a temporary buffer when small
-> buffer sizes are scattered over the sg list not making up to MPS or total
-> transfer size within TRB cache size with Synopsys xHC.
-> 
-> Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt     | 3 +++
->  Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 +++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 9946ff9ba735..292d1f7969e4 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -104,6 +104,9 @@ Optional properties:
->  			this and tx-thr-num-pkt-prd to a valid, non-zero value
->  			1-16 (DWC_usb31 programming guide section 1.2.3) to
->  			enable periodic ESS TX threshold.
-> + - snps,consolidate-sgl: enable sg list consolidation - host mode only. Set to use
-> +			SG buffers of at least MPS size by consolidating smaller SG
-> +			buffers list into a single buffer.
->  
->   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
->   - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index 3f378951d624..a90d853557ee 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -43,6 +43,9 @@ Optional properties:
->    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
->    - imod-interval-ns: default interrupt moderation interval is 5000ns
->    - phys : see usb-hcd.yaml in the current directory
-> +  - consolidate-sgl: indicate if you need to consolidate sg list into a
-> +    temporary buffer when small SG buffer sizes does not make upto MPS
-> +    size or total transfer size across the TRB cache size.
+On Wed, Mar 25, 2020 at 11:05 PM Rob Herring <robh@kernel.org> wrote:
 
-Shouldn't this refer to the fact that the hardware is broken?  Otherwise
-why would anyone know if they should, or should not, enable this option?
+> Numerous schemas are missing 'additionalProperties: false' statements which
+> ensures a binding doesn't have any extra undocumented properties or child
+> nodes. Fixing this reveals various missing properties, so let's fix all
+> those occurrences.
+>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Hartmut Knaack <knaack.h@gmx.de>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Guillaume La Roque <glaroque@baylibre.com>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-iio@vger.kernel.org.
+> Cc: linux-media@vger.kernel.org
+> Cc: linux-amlogic@lists.infradead.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-thanks,
+Sorry for errors caused by me,
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-greg k-h
+Yours,
+Linus Walleij
