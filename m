@@ -3,132 +3,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CB5C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80FCC43331
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F92A20748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99342073B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 14:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585320863;
-	bh=pIVAXzGjPus1GSIAlrpfJFjfmgqMlJOHNrnr56A0+18=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=d2Q6IbylbS+riWDJcWil2MmLdUAKH6JbmR2NpIIRVZh3XOwAJbyQvVc1hUj0+ir7y
-	 cgcrLIa5dCtD6ogsP6ktN6ewaH7RZrHucSQukmbP82LuMpKYAU+qr1Z6TPjaj/CUYl
-	 1eiPXT7cVdtVY8NOFXPj4B8CnN6wHG4EWtZlmyKk=
+	s=default; t=1585320907;
+	bh=NLcg8KW/dZw7wy0b01U+CcbR/Kn5ISoIiCtxhv/EldU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LACUsPIhZFGsX27TI1WrWGtVLTxuVh5Z8FX6VYS98IQzImjsNqsqhiAYp8PYjsq2r
+	 +iJ3LgiGpYYqPGEnS7hKjG4+eBvYElTjSvuhvE4aqPbKxzXfmXcc1W2Uq+0XQe2vfq
+	 c8zBNQBivRMvL8zDLVvpaD3sUgsJQT/Gzo1HT9gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbgC0OyU (ORCPT
+        id S1727263AbgC0OzD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 10:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
+        Fri, 27 Mar 2020 10:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbgC0OyU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Mar 2020 10:54:20 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        id S1726515AbgC0OzC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Mar 2020 10:55:02 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D68C22072F;
-        Fri, 27 Mar 2020 14:54:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 342442073B;
+        Fri, 27 Mar 2020 14:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585320859;
-        bh=pIVAXzGjPus1GSIAlrpfJFjfmgqMlJOHNrnr56A0+18=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Vrz+jfuvAIzj2pNqw3tVwvvXDbSYrFHAJaXe9St3JOLvsg0wxvrYJYY6ZYoxacp0/
-         D+mTqg476mg5iZiAflQP9j5VcAvvUBW9c4v56AU3bsnV+Q7OpE3/fMLOYAUXFnOypN
-         1/G8ujiLuyS2xGXIowquaQisShI+FhGYJzUxUtk8=
-Date:   Fri, 27 Mar 2020 09:54:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>, Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] PCI: Cadence: Remove using
- "cdns,max-outbound-regions" DT property
-Message-ID: <20200327145417.GA30341@google.com>
+        s=default; t=1585320902;
+        bh=NLcg8KW/dZw7wy0b01U+CcbR/Kn5ISoIiCtxhv/EldU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lj+ypSdD3GgA7cTWkjGw6AEbmyo0TBSyGhajV9dIULl5V9teVxwnjAmjzq0QD5wyJ
+         BOBtagFDlNDVunjYnRRgq0tXkMaUncYAH4kmdu9qLvmu5DZD82jkf1Aj6eiKVkoSM2
+         P4dczkaw3svEpC60eOqFY4A5RZavGk1tWvTjYCRU=
+Date:   Fri, 27 Mar 2020 15:54:56 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Simon Horman <simon.horman@netronome.com>,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH] docs: dt: fix a broken reference for a file converted
+ to json
+Message-ID: <20200327155456.6d582bde@coco.lan>
+In-Reply-To: <CAL_JsqLZQN253PDi-HXtP3s5CCg0OzaUK99onC9UjQWeVw3KYw@mail.gmail.com>
+References: <33fa622c263ad40a129dc2b8dd0111b40016bc17.1585316085.git.mchehab+huawei@kernel.org>
+        <CAL_JsqLZQN253PDi-HXtP3s5CCg0OzaUK99onC9UjQWeVw3KYw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200327104727.4708-4-kishon@ti.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update subject to match capitalization of others:
+Em Fri, 27 Mar 2020 08:26:58 -0600
+Rob Herring <robh+dt@kernel.org> escreveu:
 
-  PCI: cadence: Remove "cdns,max-outbound-regions" DT property
-
-On Fri, Mar 27, 2020 at 04:17:27PM +0530, Kishon Vijay Abraham I wrote:
-> "cdns,max-outbound-regions" device tree property provides the
-> maximum number of outbound regions supported by the Host PCIe
-> controller. However the outbound regions are configured based
-> on what is populated in the "ranges" DT property.
-
-Looks like this is missing a blank line here?  Or it should be
-rewrapped as part of the above paragraph?  I think the below makes
-more sense as a separate paragraph, though.
-
-Again, thanks for doing this; this is a great cleanup.
-
-> Avoid using two properties for configuring outbound regions and
-> use only "ranges" property instead.
+> On Fri, Mar 27, 2020 at 7:34 AM Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> >
+> > Changeset 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
+> > moved a binding to json and updated the links. Yet, one link
+> > was forgotten.  
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 6 ------
->  drivers/pci/controller/cadence/pcie-cadence.h      | 2 --
->  2 files changed, 8 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 60f912a657b9..8f72967f298f 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -140,9 +140,6 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
->  	for_each_of_pci_range(&parser, &range) {
->  		bool is_io;
->  
-> -		if (r >= rc->max_regions)
-> -			break;
-> -
->  		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
->  			is_io = false;
->  		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
-> @@ -221,9 +218,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	pcie = &rc->pcie;
->  	pcie->is_rc = true;
->  
-> -	rc->max_regions = 32;
-> -	of_property_read_u32(np, "cdns,max-outbound-regions", &rc->max_regions);
-> -
->  	if (!of_pci_dma_range_parser_init(&parser, np))
->  		if (of_pci_range_parser_one(&parser, &range))
->  			rc->no_bar_nbits = ilog2(range.size);
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index a2b28b912ca4..6bd89a21bb1c 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -251,7 +251,6 @@ struct cdns_pcie {
->   * @bus_range: first/last buses behind the PCIe host controller
->   * @cfg_base: IO mapped window to access the PCI configuration space of a
->   *            single function at a time
-> - * @max_regions: maximum number of regions supported by the hardware
->   * @no_bar_nbits: Number of bits to keep for inbound (PCIe -> CPU) address
->   *                translation (nbits sets into the "no BAR match" register)
->   * @vendor_id: PCI vendor ID
-> @@ -262,7 +261,6 @@ struct cdns_pcie_rc {
->  	struct resource		*cfg_res;
->  	struct resource		*bus_range;
->  	void __iomem		*cfg_base;
-> -	u32			max_regions;
->  	u32			no_bar_nbits;
->  	u16			vendor_id;
->  	u16			device_id;
-> -- 
-> 2.17.1
-> 
+> It was not. There's a merge conflict, so I dropped it until after rc1.
+
+Ah, ok.
+
+Thanks!
+Mauro
+
+> >
+> > Update this one too.
+> >
+> > Fixes: 32ced09d7903 ("dt-bindings: serial: Convert slave-device bindings to json-schema")
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> > index beca6466d59a..d2202791c1d4 100644
+> > --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> > +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> > @@ -29,7 +29,7 @@ Required properties for compatible string qcom,wcn399x-bt:
+> >
+> >  Optional properties for compatible string qcom,wcn399x-bt:
+> >
+> > - - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
+> > + - max-speed: see Documentation/devicetree/bindings/serial/serial.yaml
+> >   - firmware-name: specify the name of nvm firmware to load
+> >   - clocks: clock provided to the controller
+> >
+> > --
+> > 2.25.1
+> >  
+
+
+
+Thanks,
+Mauro
