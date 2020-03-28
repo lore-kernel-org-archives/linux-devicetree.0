@@ -2,203 +2,136 @@ Return-Path: <SRS0=dVBB=5N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C50C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 12:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C41C2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 12:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1167206E6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 12:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F020207FF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 12:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YTHJ8fwD"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="XLgcUGYR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgC1MCW (ORCPT
+        id S1726269AbgC1MEz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Mar 2020 08:02:22 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:25010 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726225AbgC1MCW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sat, 28 Mar 2020 08:02:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585396941; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=zzBLtQ+//D0bBXPqSlcrMZohpTUdmpgajv0NPqBclSs=; b=YTHJ8fwDBy7l8TiPSs+e60VzngK8QI7BEWgOH1YkXGcNxY44LIqwnqKy42rQOoOVoWRY3U0H
- vmmD24vrrHc5QzsYxg/3DLv2P6lIi96zNUuDT+6XEnuQPvCMujupbbI3M6jnuPkJl1BgJ6+W
- XU0m72twwk0Cj7qekJoEzZ4zVBk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7f3cb9.7f7608415458-smtp-out-n04;
- Sat, 28 Mar 2020 12:02:01 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B2FFCC433F2; Sat, 28 Mar 2020 12:02:01 +0000 (UTC)
-Received: from Pillair (unknown [183.83.66.17])
+        Sat, 28 Mar 2020 08:04:55 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:34069 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgC1MEz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 08:04:55 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86CE5C433D2;
-        Sat, 28 Mar 2020 12:01:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86CE5C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   <pillair@codeaurora.org>
-To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
-Cc:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-References: <1585219723-28323-1-git-send-email-pillair@codeaurora.org> <20200327230025.GJ5063@builder>
-In-Reply-To: <20200327230025.GJ5063@builder>
-Subject: RE: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
-Date:   Sat, 28 Mar 2020 17:31:52 +0530
-Message-ID: <000101d604f8$afc48220$0f4d8660$@codeaurora.org>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 06D1423058;
+        Sat, 28 Mar 2020 13:04:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1585397092;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=n5jtDDhzPSvYKIS+PmQfH6uIuXE3eV4q3g/zF9Fsvio=;
+        b=XLgcUGYRO9K8MDB5bv0eN6E/rPVGT7+8hpRkYKa0oYK7kqG+J82GWy9Z9UrVXXM2d3TY/l
+        44dxqw9vOcjFA43tDjkZeTHYvo/ZL/wck9Z06bEN5KblEyL2ihn4+V5olaW8sgt5tfgn5X
+        sAEssrEkn0SCRxZcAsyH0d9PcQckI6U=
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFGsu5WNDBp+FP/TOeyoiVSrY11cwGGydAyqXBTCQA=
-Content-Language: en-us
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Sat, 28 Mar 2020 13:04:50 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+In-Reply-To: <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
+References: <20200317205017.28280-1-michael@walle.cc>
+ <20200317205017.28280-13-michael@walle.cc>
+ <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
+Message-ID: <ef10a6f07f093c282df7fe94057cc7c7@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 06D1423058
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[21];
+         NEURAL_HAM(-0.00)[-0.578];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
- Comments inline.
+Hi Bartosz,
 
-
-> -----Original Message-----
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Sent: Saturday, March 28, 2020 4:30 AM
-> To: Rakesh Pillai <pillair@codeaurora.org>
-> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-linux-
-> kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
-> Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
-> module device node
+Am 2020-03-18 10:14, schrieb Bartosz Golaszewski:
+> wt., 17 mar 2020 o 21:50 Michael Walle <michael@walle.cc> napisał(a):
+>> 
+>> This adds support for the GPIO controller of the sl28 board management
+>> controller. This driver is part of a multi-function device.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
 > 
-> On Thu 26 Mar 03:48 PDT 2020, Rakesh Pillai wrote:
+> Hi Michael,
 > 
-> > Add device node for the ath10k SNOC platform driver probe
-> > and add resources required for WCN3990 on sc7180 soc.
-> >
-> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> > ---
-> >
-> > Depends on https://patchwork.kernel.org/patch/11455345/
-> > The above patch adds the dt-bindings for wifi-firmware
-> > subnode
-> > ---
-> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  8 ++++++++
-> >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27
-> +++++++++++++++++++++++++++
-> >  2 files changed, 35 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > index 043c9b9..a6168a4 100644
-> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > @@ -327,6 +327,14 @@
-> >  	};
-> >  };
-> >
-> > +&wifi {
-> > +	status = "okay";
-> > +	qcom,msa-fixed-perm;
-> > +	wifi-firmware {
-> > +		iommus = <&apps_smmu 0xc2 0x1>;
+> thanks for the driver. Please take a look at some comments below.
 > 
-> How is sc7180 different from sdm845, where the iommus property goes
-> directly in the &wifi node?
+>> ---
 
-Sc7180 IDP is a target without TrustZone support and also with S2 IOMMU
-enabled.
-Since in Trustzone based targets, the iommu SID configuration was done by
-TZ, there was nothing required to be done by driver.
-But in non-TZ based targets, the IOMMU mappings need to be done by the
-driver.
-Since this is the mapping of the firmware memory and to keep it different
-from the driver memory access, a different device has been created for
-firmware and these SIDs are configured.
+[..]
 
-The below ath10k series brings-in this support.
-https://patchwork.kernel.org/project/linux-wireless/list/?series=261367&stat
-e=* 
-
-Thanks,
-Rakesh Pillai.
-
+>> +#define GPIO_REG_DIR   0
+>> +#define GPIO_REG_OUT   1
+>> +#define GPIO_REG_IN    2
+>> +#define GPIO_REG_IE    3
+>> +#define GPIO_REG_IP    4
 > 
-> Regards,
-> Bjorn
+> These values would be more clear if they were defined as hex.
 > 
-> > +	};
-> > +};
-> > +
-> >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
-> >
-> >  &qspi_clk {
-> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > index 998f101..2745128 100644
-> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > @@ -83,6 +83,11 @@
-> >  			reg = <0 0x8f600000 0 0x500000>;
-> >  			no-map;
-> >  		};
-> > +
-> > +		wlan_fw_mem: memory@94104000 {
-> > +			reg = <0 0x94104000 0 0x200000>;
-> > +			no-map;
-> > +		};
-> >  	};
-> >
-> >  	cpus {
-> > @@ -835,6 +840,28 @@
-> >  			};
-> >  		};
-> >
-> > +		wifi: wifi@18800000 {
-> > +			compatible = "qcom,wcn3990-wifi";
-> > +			reg = <0 0x18800000 0 0x800000>;
-> > +			reg-names = "membase";
-> > +			iommus = <&apps_smmu 0xc0 0x1>;
-> > +			interrupts =
-> > +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0
-> */ >,
-> > +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1
-> */ >,
-> > +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2
-> */ >,
-> > +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3
-> */ >,
-> > +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4
-> */ >,
-> > +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5
-> */ >,
-> > +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6
-> */ >,
-> > +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7
-> */ >,
-> > +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8
-> */ >,
-> > +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9
-> */ >,
-> > +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10
-> */>,
-> > +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11
-> */>;
-> > +			memory-region = <&wlan_fw_mem>;
-> > +			status = "disabled";
-> > +		};
-> > +
-> >  		config_noc: interconnect@1500000 {
-> >  			compatible = "qcom,sc7180-config-noc";
-> >  			reg = <0 0x01500000 0 0x28000>;
-> > --
-> > 2.7.4
+>> +
+>> +#define GPI_REG_IN     0
+>> +
+>> +#define GPO_REG_OUT    0
+> 
+> Please also use a common prefix even for defines.
+
+The GPIO_, GPI_ and GPO_ prefixes corresponds to the different
+flavours. Do they still need a common prefix? Ie. the GPI_REG_IN
+has nothing to do with GPO_REG_OUT, nor has both something
+to do with the GPIO_REG_IN and GPIO_REG_OUT. I could prefix them
+with SL28CPLD_ though. But I don't know if that is what you had
+in mind because then they would be SL28CPLD_GPIO_REG_IN and
+SL28CPLD_GPI_REG_IN for example.
+
+-michael
