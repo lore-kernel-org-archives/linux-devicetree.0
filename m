@@ -2,106 +2,100 @@ Return-Path: <SRS0=dVBB=5N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B14DC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 18:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0973C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 18:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4754E20848
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 18:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD3D82071B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 18:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrZPc3M+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AI9p6o+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbgC1Sui (ORCPT
+        id S1726389AbgC1Sxg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:50:38 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43346 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbgC1Sui (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 14:50:38 -0400
-Received: by mail-pf1-f194.google.com with SMTP id f206so6312746pfa.10;
-        Sat, 28 Mar 2020 11:50:36 -0700 (PDT)
+        Sat, 28 Mar 2020 14:53:36 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:37301 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgC1Sxg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 14:53:36 -0400
+Received: by mail-qv1-f67.google.com with SMTP id n1so6765959qvz.4;
+        Sat, 28 Mar 2020 11:53:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lJztbg3kquFXjjuv4enGOn4xogqAqaadH1DhetiB26k=;
-        b=GrZPc3M+d/HKKXspmK1fowRDcNl5MdRG2JpyOfUUrBlLbSmWUtRH7oneRISr5HwQfz
-         kpcdlMdHL6H6WlnPABvm/1eACsodKwSTKjgyVCjNrsIBiQOt4ClpvEIzRbbjBh4lDMF+
-         53MSE6kzSA54B/NWJ3tZYF/aGI44Ii7hqXOK0sYsp9hC03hfQhgLgMYB3bfszT0gdGez
-         DBdD85JJ5sRyLkYzr4ZpzndawidofqaPj9/5zW3ARPGM5CSi2W7rrqEK1+jYEADfEe1O
-         1IEwVWOU+EBzJv0zpoS9pLeq7h+y1CGT3Kbd04oetZygKrxm7TZ64dKxw650Fwh15ckj
-         RoNw==
+        h=from:to:cc:subject:date:message-id;
+        bh=8fZWkFLO2sdKGPoR0hBsKxWxQxeZoxepub1q+Ci3nAA=;
+        b=AI9p6o+cnqSxNRxmf6L3z6B/1I+4CDVnYL8jgoTuoubtpLJoJrXIFQifwKMz4ylkJR
+         bDleVs1qAi8BYRXw3WCaKldWwiftfgrArw9hwBhshPwuCilqtgNcxG88dONHZEV4Zhel
+         DD0wPxn9YEePT/XBP11UlcKQhQRz+Q+3eO88NCZqB6ZzRhgmW41Ve7aQmwv9QPYyhLKT
+         rhE6Vf5G3MOv3igNpb4r0Ca87fjMjPGskqUg1uhGQpsWA1mFT/0WgY1qPxJXFE8BW8Su
+         k1G7jKHLLqynoH+LG89l83NTslq365WITs66WR1jN+VZU17PnRBOALYygivSyDa5K/uL
+         f/Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lJztbg3kquFXjjuv4enGOn4xogqAqaadH1DhetiB26k=;
-        b=XgS2/9GEpVLoH/Ql8bSMJf6kD2hUYt/bHCphIMv4O2U7JSB8DXEvAGSBQ60K0+Fvtr
-         dtpg5ZzMzfhie3M87S/iDWeVOBMsV+5l3xqyvLREtQfYdmvWItmteHrAJ1NBAsj/tC9g
-         r5K6cW4R9E6cQ6rDqpoxNpjpvXKe367eNs8KW2z5LoB/JNaViLYwZpWx5ATf8hG0V3i1
-         Gh7DHNI1PsyKfugXlmu9hrIM0lpZStmidr/T8eNIb3aOUcufpgeWiAyc/0ayvhxVIYtg
-         6TjOUn40+hiB72iq+/YGMn8w5lRPoS3CEnRFQLBDdPjwAbRF/nDwVfRxzpN+lZG2quSE
-         wUtg==
-X-Gm-Message-State: ANhLgQ2jEdK5ajTCwEfsc+UznE4rRCVcy76jV1Ym46DS5+OSnlZKjnOi
-        gWrU3S9fXtbzV79oORoX7540YKbor5mTxiZ9qXw=
-X-Google-Smtp-Source: ADFU+vvB3hIe4HEhNOKz/p6x69voaqbgpdkUnlsdlWWjaLUCVYBnfIv/CtD7hZr9iBy+SSZdivtXaesNKI8B2LqdmEs=
-X-Received: by 2002:a63:798a:: with SMTP id u132mr5651237pgc.203.1585421436474;
- Sat, 28 Mar 2020 11:50:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200322224626.13160-1-sravanhome@gmail.com> <20200322224626.13160-4-sravanhome@gmail.com>
- <CAHp75VfauHuAv1Wr=7ga=G+6JOYXuop_oyXiwmQgKeB2e_z=tQ@mail.gmail.com> <20200328144234.081b964f@archlinux>
-In-Reply-To: <20200328144234.081b964f@archlinux>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 28 Mar 2020 20:50:24 +0200
-Message-ID: <CAHp75VdTN3W3gsRRgvbKgduzcWFwVsm_K=dahAhE0ymWKBt-BA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] iio: adc: mp2629: Add support for mp2629 ADC driver
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Saravanan Sekar <sravanhome@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8fZWkFLO2sdKGPoR0hBsKxWxQxeZoxepub1q+Ci3nAA=;
+        b=R6l1uqNb+s8U1oVbJIEWk9qG9IIQy4Vi6HHLNOnLh7vGk6hApff+lH8Y4LiOZo3Tep
+         4Q3IUW1pAt2gpptjkyAV/T3TsuPjM4y+iqi3IxD7Onh07zb9EvLi/HahT7ni/a88qceO
+         RJikdK9smcZWPyIX+ZBN3MLOTdT4nWUuH7BJzw34Ju30hE7B0ypYwpabfKbcQ0Q342n4
+         7c0W9+uHboPfhN/CNYbtXFycYvYtzIMU7BHXXigYfZWyWd5OxN9Fl4LMniPvkAnOEPEH
+         Lt8oj1IVKt3cPzfWn1rAN4YA7EPJt1m7Xf/07f9gME3Wm3Yj6pYrktFCRlsxHyHEn7Ax
+         Ul1g==
+X-Gm-Message-State: ANhLgQ0yeqmcH7kinOkBZeM12r8uHIkMgXoVlTtkS5meu6cA8eQiH+lq
+        n462w6B5TBsYKUyHRTBzNjc=
+X-Google-Smtp-Source: ADFU+vvnRLp25ZCtGB/wiMAgJwBvO+p9cke13vjfMhM8k00ftPbd+dXxnlUZDhFcxOhhIbibeGm6wg==
+X-Received: by 2002:ad4:4ba5:: with SMTP id i5mr5064377qvw.181.1585421613295;
+        Sat, 28 Mar 2020 11:53:33 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14c:482:5bb::4])
+        by smtp.gmail.com with ESMTPSA id 31sm6708136qta.56.2020.03.28.11.53.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 11:53:32 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     sboyd@kernel.org
+Cc:     robh+dt@kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH v2] dt-bindings: clock: syscon-icst: Remove unneeded unit name
+Date:   Sat, 28 Mar 2020 15:53:26 -0300
+Message-Id: <20200328185326.17948-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 4:42 PM Jonathan Cameron <jic23@kernel.org> wrote:
-> On Mon, 23 Mar 2020 01:32:34 +0200
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Mar 23, 2020 at 12:47 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
+The following warnings are seen with 'make dt_binding_check':
 
-...
+Documentation/devicetree/bindings/clock/arm,syscon-icst.example.dts:17.16-24.11: Warning (unit_address_vs_reg): /example-0/clock@00: node has a unit name, but no reg or ranges property
+Documentation/devicetree/bindings/clock/arm,syscon-icst.example.dts:17.16-24.11: Warning (unit_address_format): /example-0/clock@00: unit name should not have leading 0s
 
-> > > +       indio_dev->dev.of_node = pdev->dev.of_node;
-> >
-> > Jonathan, doesn't IIO core do this for all?
-> >
->
-> Nope.  I'm not totally sure it's always safe to do so
-> as we have some weird parent structures in some cases.
-> A quick grep suggests that we may be fine though, or
-> alternatively be able to get away with a set it if not
-> already set approach.
->
-> I'll take a look when I get some time. It would be nice
-> to clean this up.
+Fix them by removing the unneeded clock unit name.
 
-We may follow the GPIO subsystem's approach, i.e. if there is no node
-provided take the one from the supplied  struct device.
-But it may have side effects. So, it's completely up to you.
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+Changes since v1:
+- Removed 'dac' from the Subject
 
+ Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml b/Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
+index de9a465096db..444aeea27db8 100644
+--- a/Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
++++ b/Documentation/devicetree/bindings/clock/arm,syscon-icst.yaml
+@@ -91,7 +91,7 @@ required:
+ 
+ examples:
+   - |
+-    vco1: clock@00 {
++    vco1: clock {
+       compatible = "arm,impd1-vco1";
+       #clock-cells = <0>;
+       lock-offset = <0x08>;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
