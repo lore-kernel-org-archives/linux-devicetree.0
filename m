@@ -2,138 +2,177 @@ Return-Path: <SRS0=dVBB=5N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D6CC2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 18:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC11C43331
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 20:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E41E1206F6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 18:59:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LsfvxAZT"
+	by mail.kernel.org (Postfix) with ESMTP id C934B2071B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 20:18:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbgC1S7b (ORCPT
+        id S1727070AbgC1USt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:59:31 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:51438 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbgC1S7a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 14:59:30 -0400
-Received: by mail-pg1-f201.google.com with SMTP id p13so11044459pgk.18
-        for <devicetree@vger.kernel.org>; Sat, 28 Mar 2020 11:59:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=RmZqFhOWmJfblEL39xHqmka8Tn/Hx8czxElVow6EI48=;
-        b=LsfvxAZTfx0EdEbqJrtv0QvW38sITdabmPyei4aZ2Hy3cyyWY8SsoAvWle9hPf5oDC
-         ioejvTsBSCiwQsSjc2tzw9uRHh5zKQM35MiR5Jdej0EAugnnFvynwQezlZKSIaFKf+La
-         nIHtqe5HTcqlUdFEb8uGC3sm6xVXOuKjYe9VctUSWq2rT40VMpsnwW1JlzqcHdJ/3ez7
-         Iqv4ChmXgPnGbUir4rlt7tTWuh4eaLA4hd2t5DdPvqYnkNloLEfog78LvamAkZV9W4++
-         wA5TR4ndSFw18N6W6nDejDarzS/aDW4vxFXuhtAkifBrNPgcvyAUmmDz7Cdr0CFTNk91
-         7fOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=RmZqFhOWmJfblEL39xHqmka8Tn/Hx8czxElVow6EI48=;
-        b=PlFOxfGJreEqrnKwAqezMpq6yziiiDVCbhho7ZX2GtPS0yQfzcuoC0rsWCbfpwLS8L
-         NBl/TZ91SFtJxadRYtGSTWC3xkVW4bKBXyP+apENpB1f4pXiBZdN+jBKi7qCgGV9sB80
-         UNNU+9qSXZNGiHOXwjwJCOXKyPVQIKX6UaQKfKaV+vlvGWMnMJgWuHF5n6/yH6jPb+2q
-         oxzik+AJyaM/nSIrfpt//r8mIurN2oNvPoRfP3Uqu9xb0laNvRKmM/29fPX/zKhFCYMB
-         yN7/WRvxCQ+sP+iP4ukOqoZcqYPFVGWZ6UG6I9ydV88vSixTAffdVSBMHy/7OQix11Bf
-         U6NQ==
-X-Gm-Message-State: ANhLgQ373Edl6SC7nScitii6O5U1JVd+MPzo2EX0SUbvIEOD5mg++Pjs
-        61J8lc39+PKUx0rRtLlg6sPSh9hT4ZqZ
-X-Google-Smtp-Source: ADFU+vuoEMxULA3UhwesqVMltERLeDVP8XgmIuQ9z/hiaou45fh2RQVncRU3HyXUkshQHrnPQy2r2ato9pUj
-X-Received: by 2002:a63:4c0b:: with SMTP id z11mr5506572pga.385.1585421969560;
- Sat, 28 Mar 2020 11:59:29 -0700 (PDT)
-Date:   Sat, 28 Mar 2020 11:59:14 -0700
-In-Reply-To: <20200328185916.98423-1-rajatja@google.com>
-Message-Id: <20200328185916.98423-3-rajatja@google.com>
-Mime-Version: 1.0
-References: <20200328185916.98423-1-rajatja@google.com>
-X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-Subject: [PATCH v4 3/5] dt-bindings: input/atkbd.txt: Add binding for "function-row-physmap"
-From:   Rajat Jain <rajatja@google.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajat Jain <rajatja@google.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
+        Sat, 28 Mar 2020 16:18:49 -0400
+Received: from mga18.intel.com ([134.134.136.126]:13886 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727009AbgC1USt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 28 Mar 2020 16:18:49 -0400
+IronPort-SDR: amEyykdrmcuGDzwxLI7SVxyFpb5FEmzZUf2j9Em/Rr2HisJSf1jimTlDcVK6D2gXmomoxJkzbS
+ HTncgiKjmUVw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2020 13:18:48 -0700
+IronPort-SDR: 8G6vRZkbxY7Lejf9g5PvRI2WmjBZDd83G0KoDb42WLdqIVZBhTz7RXzqZj1IUee8ghKyGOIFf0
+ APVn58glMouQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,317,1580803200"; 
+   d="scan'208";a="294222256"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Mar 2020 13:18:44 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jIHuo-00Dm35-DF; Sat, 28 Mar 2020 22:18:46 +0200
+Date:   Sat, 28 Mar 2020 22:18:46 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Al Cooper <alcooperx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        devicetree@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, furquan@google.com,
-        dlaurie@google.com, bleung@google.com, zentaro@google.com,
-        dbehr@google.com
-Cc:     rajatxjain@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 3/4] usb: ehci: Add new EHCI driver for Broadcom STB
+ SoC's
+Message-ID: <20200328201846.GF1922688@smile.fi.intel.com>
+References: <20200327204711.10614-1-alcooperx@gmail.com>
+ <20200327204711.10614-4-alcooperx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200327204711.10614-4-alcooperx@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Create the documentation for the new introduced property, that
-describes the function-row keys physical positions.
+On Fri, Mar 27, 2020 at 04:47:10PM -0400, Al Cooper wrote:
+> Add a new EHCI driver for Broadcom STB SoC's. A new EHCI driver
+> was created instead of adding support to the existing ehci platform
+> driver because of the code required to workaround bugs in the EHCI
+> controller.
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
-v4: Same as v3
-v3: same as v2
-v2: Remove the Change-Id from the commit log
+I'm not sure this has been tested. See below.
 
- .../devicetree/bindings/input/atkbd.txt       | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/atkbd.txt
+...
 
-diff --git a/Documentation/devicetree/bindings/input/atkbd.txt b/Documentation/devicetree/bindings/input/atkbd.txt
-new file mode 100644
-index 0000000000000..816653eb8e98d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/atkbd.txt
-@@ -0,0 +1,34 @@
-+Device tree bindings for AT / PS2 keyboard device
-+
-+Optional properties:
-+
-+	function-row-physmap:
-+			An ordered array of the physical codes for the function
-+			row keys. Arranged in order from left to right.
-+
-+Example:
-+
-+	This is a sample ACPI _DSD node describing the property:
-+
-+        Name (_DSD, Package () {
-+                ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+                Package () {
-+                        Package () { "function-row-physmap",
-+                                Package () {
-+                                        0xEA, /* T1 BACK */
-+                                        0xE7, /* T2 REFRESH */
-+                                        0x91, /* T3 FULLSCREEN */
-+                                        0x92, /* T4 SCALE */
-+                                        0x93, /* T5 SNIP */
-+                                        0x94, /* T6 BRIGHTNESS_DOWN */
-+                                        0x95, /* T7 BRIGHTNESS_UP */
-+                                        0x96, /* T8 PRIVACY_SCRN_TOGGLE */
-+                                        0x97, /* T9 KBD_BKLIGHT_DOWN */
-+                                        0x98, /* T10 KBD_BKLIGHT_UP */
-+                                        0xA0, /* T11 VOL_MUTE */
-+                                        0xAE, /* T12 VOL_DOWN */
-+                                        0xB0, /* T13 VOL_UP */
-+                                }
-+                        }
-+                }
-+        })
+> +#include <linux/acpi.h>
+> +#include <linux/of.h>
+
+I didn;t find evidence these are needed.
+
+...
+
+
+> +	res = readl_relaxed_poll_timeout(&ehci->regs->frame_index, val,
+> +					 (val != frame_idx), 1, 130);
+
+Too many parentheses.
+
+> +	if (res)
+> +		dev_err(ehci_to_hcd(ehci)->self.controller,
+> +			"Error waiting for SOF\n");
+
+...
+
+> +static int ehci_brcm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res_mem;
+> +	struct brcm_priv *priv;
+> +	struct usb_hcd *hcd;
+> +	int irq;
+> +	int err;
+> +
+> +	if (usb_disabled())
+> +		return -ENODEV;
+> +
+> +	err = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> +	if (err)
+> +		return err;
+> +
+
+> +	irq = platform_get_irq(pdev, 0);
+> +		return irq;
+
+I'm not sure it was an intention to leave a lot of dead code below.
+
+> +	/* Hook the hub control routine to work around a bug */
+
+> +	if (org_hub_control == NULL)
+
+	if (!org_hub_control) ?
+
+> +		org_hub_control = ehci_brcm_hc_driver.hub_control;
+> +	ehci_brcm_hc_driver.hub_control = ehci_brcm_hub_control;
+
+> +	device_wakeup_enable(hcd->self.controller);
+> +	device_enable_async_suspend(hcd->self.controller);
+> +	platform_set_drvdata(pdev, hcd);
+> +
+
+> +	return err;
+
+	return 0; ?
+
+> +err_clk:
+> +	clk_disable_unprepare(priv->clk);
+> +err_hcd:
+> +	usb_put_hcd(hcd);
+> +
+> +	return err;
+> +}
+
+...
+
+> +#ifdef CONFIG_PM_SLEEP
+
+You also can use __maybe_unused annotations.
+
+> +static int ehci_brcm_suspend(struct device *dev)
+> +{
+> +	int ret;
+> +	struct usb_hcd *hcd = dev_get_drvdata(dev);
+> +	struct brcm_priv *priv = hcd_to_ehci_priv(hcd);
+> +	bool do_wakeup = device_may_wakeup(dev);
+> +
+
+> +	ret = ehci_suspend(hcd, do_wakeup);
+> +	clk_disable_unprepare(priv->clk);
+> +	return ret;
+
+So, if you fail to suspend the device, clocks will become unusable, how to recover from such case?
+
+> +}
+
+> +#endif /* CONFIG_PM_SLEEP */
+
+...
+
+> +MODULE_DESCRIPTION(BRCM_DRIVER_DESC);
+
+Better to have it explicit.
+
 -- 
-2.26.0.rc2.310.g2932bb562d-goog
+With Best Regards,
+Andy Shevchenko
+
 
