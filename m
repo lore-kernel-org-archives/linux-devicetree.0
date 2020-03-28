@@ -7,117 +7,104 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E769BC2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 11:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0476C43331
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 11:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE2EA20723
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 11:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27A9206E6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 11:18:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlQDoAVc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/vurdna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbgC1LGd (ORCPT
+        id S1726156AbgC1LSy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:06:33 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37129 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbgC1LGa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 07:06:30 -0400
-Received: by mail-pj1-f66.google.com with SMTP id o12so4904064pjs.2;
-        Sat, 28 Mar 2020 04:06:29 -0700 (PDT)
+        Sat, 28 Mar 2020 07:18:54 -0400
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:38788 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbgC1LSy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 07:18:54 -0400
+Received: by mail-lj1-f181.google.com with SMTP id w1so12825737ljh.5;
+        Sat, 28 Mar 2020 04:18:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xwqIvEeP3Vt3fTQGzaeqWDuGXBUR2dpVD8iwb1hKRFg=;
-        b=BlQDoAVcKEIX+ETSBr03c2Puity6qf9d6K9OBD3OtsxsQZLxW5IhSDKjVrPEBfNk10
-         CwyHZ3nCrFC52cW9XrOPw9iBUu5CkzfmshjLxSuB7NuOEsWYCWt0NTif/MD7DFh19ipM
-         msgL3vMzJkgTC10KlD1f0NsmVIH0WKuuZ1oT1YEpXRDUo75cHdA+LoCYdtfSY02D3vdw
-         HWCXdFCcCIT0pO4i2UqnSjpSN5wwGBzBqkwNpdzCgtzvhch5qojUKRD4+QiBP/xLNrib
-         O108y4Bfpw5fYpW4tTBlSvKY1g6WQ9Rmaoi3syW0FQZf2BNj21lpiKG+IFbLtSS2v2n7
-         Uq1g==
+        bh=mn1ytLBqSAPBNw3XMPojcu/ZhP1LOxFipDY249AI3+0=;
+        b=j/vurdna05CpEPiYbgWaMbXlO1MSn4s6AHli5VB0CRBQUIL3tn/IsFdGyopV0K3H6s
+         7AXxFX+50Ui0uBudNqvmSb7LA0mF2kQiib+sKXYdbh+5mqIYBcEOLY/SUc3u+xiIva+g
+         uFRxkAE4GSZyvbU3rtCg1qZSbURWZ5emEMzXelXG2ipoCL6yM0t4hnvH7V0csTnmXW6N
+         Q5A/5z0tjCD/X9qXmobQvxl+LKG4sq7eB5C8+Zb8GImVfabGY+co+ZWkPGW0asWwx95D
+         oHolnrdhO1IEHoQyfA2ta+ueYLSHBCQ4XzFRuPGIFFfF6BhTXsJZfD5bSkHLwSxUh/Kc
+         CMPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xwqIvEeP3Vt3fTQGzaeqWDuGXBUR2dpVD8iwb1hKRFg=;
-        b=aSFTgRbQ8S3C/epn8V+C/7R9bTJLM7oINBkiSZhRF0ytB7A3ccbw5FypU39HRT1JiL
-         3T+fG0I5dfQZJUeGBI9aJl1PkH7TJxahOoSHgSTScAO9Q1Mr3uX95U48QK85sEnqy2Dq
-         P83t3WkOrlgmj9ooxU5BzzmYYyicnhkLp38GqPzUsVxfw467sSU6r0LOmbyZwfINLzKb
-         RESRYO3n19OkpGug36BwahA33O+axZd92pFiieY6HThUEMYsYqDQzeJXzoHA5K1M1E2Z
-         SI0HPWdfOxNJ28CsC67L6YW5+9bqzXiyZzhpMzuE/5gbv6efCT/stPCWrQBh/HJmDGaf
-         Mvrw==
-X-Gm-Message-State: ANhLgQ0q57exw0PObnDgOyKt89/4r3E0JF1PE3kT+I4TIVgI6y01n6rW
-        KFFbWjReXzpIZRCgqOfRzJ5LnCpilgLskJDYyPI=
-X-Google-Smtp-Source: ADFU+vsuOxLwPs1LAFXP4cwwIfR7SDP2dGQkWujS045o80/7BRwgtQyckb3WD2wg8wY/W9HD7HKLYfi4zo6W4CJOZCE=
-X-Received: by 2002:a17:902:5acb:: with SMTP id g11mr3566387plm.18.1585393589055;
- Sat, 28 Mar 2020 04:06:29 -0700 (PDT)
+        bh=mn1ytLBqSAPBNw3XMPojcu/ZhP1LOxFipDY249AI3+0=;
+        b=klGhelfZQWCiOGhi4+xrkjdWC4r0/maTL9BSZyS59YAYkQnJYmcF4JAIv2mAhg4rQw
+         0xHIACIMf7Of0roqe7DAh8Ky5u0ijFhF0HfnX2aGS2Ydl6SSpd9Ip435N2W5Nfep93Od
+         yaiBLpT3DtbuYys2aD5oBX2eaKRUROxRGB0+p01MACVOl+Ol0UGRC9ECqC4aInvIEx+3
+         Q46ssZyY/PgJfjIZa3yWRCOZfNnFMFEUc6kBQRAjwPRZNvPv1X1ELRQrujNd3pyHV3dE
+         JCHYRTAjUCh6M4Cu+lYaw6YxP9FAOM1JFNERKJJy/Bjods/sNYNV6G/33iMEV1zmIrX0
+         40aw==
+X-Gm-Message-State: AGi0PubX4GhuJSoNQ4HxE9SJmNcjutodynaJTQeh1sLv5eP2wbNJ3eYt
+        daHj58eGKnzKBTdWQq+8ELNa2x6sK1apBS4jx6w=
+X-Google-Smtp-Source: APiQypLE0oLlT/o3yAjG6ThkJD82LP/2VPbDKk0L+GjVnht7omgSVfHwuAggLs+wNUYJlyQmbGiwLidjVdGS9lfq8T4=
+X-Received: by 2002:a2e:9105:: with SMTP id m5mr2054389ljg.37.1585394331360;
+ Sat, 28 Mar 2020 04:18:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200328001154.17313-1-sravanhome@gmail.com> <20200328001154.17313-3-sravanhome@gmail.com>
- <CAHp75Vdc4MxMnmd_h6eFfZAji=4fir7x7bq2MX1q50nAQ1eJ=Q@mail.gmail.com> <23c39834-c2d9-5634-b9d7-8f9e16194752@gmail.com>
-In-Reply-To: <23c39834-c2d9-5634-b9d7-8f9e16194752@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 28 Mar 2020 13:06:17 +0200
-Message-ID: <CAHp75VcAh07Kb+G5HoZfgWwKTCfRHLcX7nD=g8r3+z5sm4u-dQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/5] mfd: mp2629: Add support for mps battery charger
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
+References: <CAHCN7xJSKH-gXA5ncFS3h6_2R28rn70O3HfT=ActS1XVgCFSeg@mail.gmail.com>
+In-Reply-To: <CAHCN7xJSKH-gXA5ncFS3h6_2R28rn70O3HfT=ActS1XVgCFSeg@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sat, 28 Mar 2020 08:18:42 -0300
+Message-ID: <CAOMZO5CZX=C2zSjXV0LTvNvAyqWkzLgR=OoRS=uY1wa4rXshVg@mail.gmail.com>
+Subject: Re: i.MX8MN Errors on 5.6-RC7
+To:     Adam Ford <aford173@gmail.com>
+Cc:     arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
         devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 12:51 PM saravanan sekar <sravanhome@gmail.com> wrote:
->
-> Hi Andy,
->
-> On 28/03/20 11:45 am, Andy Shevchenko wrote:
-> > On Sat, Mar 28, 2020 at 2:12 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
-> >> mp2629 is a highly-integrated switching-mode battery charge management
-> >> device for single-cell Li-ion or Li-polymer battery.
-> >>
-> >> Add MFD core enables chip access for ADC driver for battery readings,
-> >> and a power supply battery-charger driver
-> > ...
-> >
-> >> +#ifndef __MP2629_H__
-> >> +#define __MP2629_H__
-> >> +#include <linux/device.h>
-> >> +#include <linux/regmap.h>
-> >> +#include <linux/types.h>
-> > None of these header is in use here.
-> >
-> > struct device;
-> > struct regmap;
-> >
-> > would be enough.
->
-> Yesterday I conveyed to you that Lee is not recommended to use forward
-> declaration and asked me
->
-> to use includes, then you agreed with the same. Again same comments !!
-> sorry I am lost.
+Hi Adam,
 
-Ah, okay. I missed that.
-But types.h is still not needed, all data types are provided either by
-C or by rest two headers.
+On Fri, Mar 27, 2020 at 11:50 PM Adam Ford <aford173@gmail.com> wrote:
+>
+> I am getting a few errors on the i.MX8MN:
+>
+> [    0.000368] Failed to get clock for /timer@306a0000
+> [    0.000380] Failed to initialize '/timer@306a0000': -22
+> [    7.203447] caam 30900000.caam: Failed to get clk 'ipg': -2
+> [    7.334741] caam 30900000.caam: Failed to request all necessary clocks
+> [    7.438651] caam: probe of 30900000.caam failed with error -2
+> [    7.854193] imx-cpufreq-dt: probe of imx-cpufreq-dt failed with error -2
+>
+> I was curious to know if anyone else is seeing similar errors.  I
+> already submitted a proposed fix for a DMA timeout (not shown here)
+> which matched work already done on i.MX8MQ and i.MX8MM.
+>
+> I am not seeing huge differences between 8MM and 8MN in the nodes
+> which address the timer, caam or imx-cpufreq-dt.
+>
+> If anyone has any suggestions, I'd love to try them.
 
-> >> +struct mp2629_info {
-> >> +       struct device *dev;
-> >> +       struct regmap *regmap;
-> >> +};
-> >> +
-> >> +#endif
+I don't have access to a i.MX8MN board at the moment, but I am
+wondering if the errors could be AT-F related.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Which version do you use? Could you try
+https://source.codeaurora.org/external/imx/imx-atf/log/?h=imx_5.4.3_2.0.0
+?
+
+Regards,
+
+Fabio Estevam
