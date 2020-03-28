@@ -8,61 +8,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E26C43331
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 18:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8B2C43331
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 18:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299CC206E6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 18:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A789B2073E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 18:37:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kmSkohK9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mozY0O3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgC1ShC (ORCPT
+        id S1727020AbgC1ShF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Mar 2020 14:37:02 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40770 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgC1ShC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 14:37:02 -0400
-Received: by mail-qt1-f195.google.com with SMTP id c9so11627242qtw.7
-        for <devicetree@vger.kernel.org>; Sat, 28 Mar 2020 11:37:01 -0700 (PDT)
+        Sat, 28 Mar 2020 14:37:05 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40772 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgC1ShF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 14:37:05 -0400
+Received: by mail-qt1-f193.google.com with SMTP id c9so11627318qtw.7
+        for <devicetree@vger.kernel.org>; Sat, 28 Mar 2020 11:37:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=gOE1QJ7KEzi2821QFOUr5VIkfnYNAnKkaW2u6yhroF0=;
-        b=kmSkohK9C99aKQMtcTaFk7VI6eCx8fIEA2JspD5Ai/1besCmp5AL7m1d5zrNarN9/g
-         WcLnr93JMyYvpGjVt8uh69o6+w/N/DaH7++Ww/VMpBMxX3sgz792/2m2mxVjr9MM7vEd
-         RaVAGU1qju5Khd7nQaeGgIlME9y1JbQfp6xEkU/97kyu8z7P3Sk5I0iU3udPQEYpd+Xp
-         fElkx6HBH5tS+WIYZMUQeFhr4Z8AW+29n648e4nq7h3aNgXiymCOTkcd1YpzUYd0v5Su
-         wFbWHhebJ/9vWl3SMcRqc9o+1CwZoL6KTm5I5/vXRqDwGTftA8MptQ+GWSxqQ2+GxJD7
-         g4Rw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=L7P/B+D3AiYeRNTTtzGoWO1grg+iCf61OrKb7YkEpG0=;
+        b=mozY0O3aE0VsrcFIuz0SN2grN9wdhs9EnPiQNI3+eyqlmq52didy7GDf4OrhQA9mFJ
+         zvFn7B8hUwZweJt7r7xlbvOh5ezOUblSDGBkrYQ1lz8JN1jm9NaWQuF/UzXpCXfdVby4
+         ElA2DBkDa5zmyHf4TkZu25bsmsoQa+L9QPT/zqor/KhrXw5M/JcmfOr4miM2dMfmMIrm
+         eTvTYzgrk8dFWLYm4erp63ZN5llKI8R5JWVhYnIKVPkkLIr264MaVKDtiO5QvC0d4c+u
+         jUDZTeeZm04LNVsBwW31DBN5XD2d0svr4QFWKYgJCVagSRMlBlKZv9igXxVOvLY2QHJt
+         mDhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gOE1QJ7KEzi2821QFOUr5VIkfnYNAnKkaW2u6yhroF0=;
-        b=UHCuIWJPosxZYaNpLtPa++pelcNp6G+YGNiudmIplcKwrIEdBwq1+YShavvziZVXsv
-         HwFCYH7mHimlUHDV5ppf1eh3tYSrz/P12Gufam20njonIIZ9fdWtFD36aVswKj7VFJGL
-         qRz3qBBJ0lYj+cB7fv0KmJTlv3+8pgEmJa7L7BirlLGmaQjco9Vk+f0PQRspuFmrDPXM
-         nxv+wmvSRthJgkp3P71/LtTaNaFdu8E1tC0KRdl18bXL1H4CRif5dGmw+C7UqINYct8V
-         OOzkS+yBsYBApHIKU2AX2wiCXi7n+Y101d//sacRW7HLSZ0fMmfO/LT3iLeHcUTkz5oG
-         QPEA==
-X-Gm-Message-State: ANhLgQ2wy4vIGSOqqVwzohpLqEJtBZtNq0DDboyYlZFQ4pu17ZaWStuK
-        hoWd9/Q3SCqdqVErOhqM7uTLuOBa+Dc=
-X-Google-Smtp-Source: ADFU+vukbniIbbOEjIUJNNGnuXRbWumjZpud/PTzz0M96h+nBpM4Neds+sKV/il0u+AFwBLmJmF92Q==
-X-Received: by 2002:aed:39e4:: with SMTP id m91mr5206540qte.188.1585420621130;
-        Sat, 28 Mar 2020 11:37:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=L7P/B+D3AiYeRNTTtzGoWO1grg+iCf61OrKb7YkEpG0=;
+        b=U9atdwLH0yM/ojy/xuHRq3Nht494xIBq+BbVGE4bkUpwttIw3U/38tDSCZ5u1dFiCx
+         y7kZN4XC+ahCbQci5ll8NiH1e7c3xxqVfZ4m6+R+1818foahoS3N2X2FHdHbnrZkmUlV
+         mukvsYuDczmZkMQHpPWPjbiWW40mcrbot22c63XjXg1sUt3N3ft6cNfGCtTcOW0HIeFH
+         v6GnTGA1m6gJN1VYrQvEdxcXpr69TtOL7LO3RGeeTF58YsmFStT/thR91bTWlVClpl9C
+         aQ5wwpdc6mXjupsNd9DxUhekQsyF/p2UyuQmrUaLGUx0BnaZQYOXi+H2FXyd6fgdwjdt
+         sAkQ==
+X-Gm-Message-State: ANhLgQ17zqL8OW9wiH3Zxok9y9azM104RT9qpV9gbXGb04Nb6Je0l7vH
+        fbtGGLXing3wL9Ci5CCgfDA=
+X-Google-Smtp-Source: ADFU+vsLENpY4Q1bbAaq9kMxiairnEMYoFEgtPmD/wxeAhAyhV91TphsOcDU+P6yj8+0y+IeJ1qSgQ==
+X-Received: by 2002:ac8:358f:: with SMTP id k15mr4986112qtb.113.1585420624015;
+        Sat, 28 Mar 2020 11:37:04 -0700 (PDT)
 Received: from localhost.localdomain ([2804:14c:482:5bb::4])
-        by smtp.gmail.com with ESMTPSA id u40sm6822420qtc.62.2020.03.28.11.36.58
+        by smtp.gmail.com with ESMTPSA id u40sm6822420qtc.62.2020.03.28.11.37.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Mar 2020 11:37:00 -0700 (PDT)
+        Sat, 28 Mar 2020 11:37:03 -0700 (PDT)
 From:   Fabio Estevam <festevam@gmail.com>
 To:     sam@ravnborg.org
 Cc:     robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org, heiko.stuebner@theobroma-systems.com,
         Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: display: ltk500hd1829: Remove the reg property
-Date:   Sat, 28 Mar 2020 15:36:40 -0300
-Message-Id: <20200328183641.11226-1-festevam@gmail.com>
+Subject: [PATCH 2/2] dt-bindings: display: xpp055c272: Remove the reg property
+Date:   Sat, 28 Mar 2020 15:36:41 -0300
+Message-Id: <20200328183641.11226-2-festevam@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200328183641.11226-1-festevam@gmail.com>
+References: <20200328183641.11226-1-festevam@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -72,20 +75,19 @@ Commit 52120e8c7ae3 ("dt-bindings: display: fix panel warnings") removed
 the dsi unit name, but missed to remove the 'reg' property, which causes
 the following 'make dt_binding_check' warning:
 
-Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.example.dts:17.5-29.11: Warning (unit_address_vs_reg): /example-0/dsi: node has a reg or ranges property, but no unit name
+Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.example.dts:17.5-29.11: Warning (unit_address_vs_reg): /example-0/dsi: node has a reg or ranges property, but no unit name
 
 Fix it by removing the unneeded 'reg' property.
 
-Fixes: 52120e8c7ae3 ("dt-bindings: display: fix panel warnings")
 Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
- .../devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml  | 1 -
+ .../devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml    | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
-index fd931b293816..b900973b5f7b 100644
---- a/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml
+diff --git a/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
+index d9fdb58e06b4..6913923df569 100644
+--- a/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
++++ b/Documentation/devicetree/bindings/display/panel/xinpeng,xpp055c272.yaml
 @@ -37,7 +37,6 @@ examples:
      dsi {
          #address-cells = <1>;
@@ -93,7 +95,7 @@ index fd931b293816..b900973b5f7b 100644
 -        reg = <0xff450000 0x1000>;
  
          panel@0 {
-             compatible = "leadtek,ltk500hd1829";
+             compatible = "xinpeng,xpp055c272";
 -- 
 2.17.1
 
