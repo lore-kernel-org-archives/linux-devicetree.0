@@ -2,63 +2,61 @@ Return-Path: <SRS0=dVBB=5N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D9CC43331
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 02:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D69C43331
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 02:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B6020575
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 02:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9183206F6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 02:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dw8jxJiI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIYixAiA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgC1CeP (ORCPT
+        id S1727028AbgC1CuB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 22:34:15 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40327 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgC1CeP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 22:34:15 -0400
-Received: by mail-qt1-f194.google.com with SMTP id c9so10367746qtw.7;
-        Fri, 27 Mar 2020 19:34:14 -0700 (PDT)
+        Fri, 27 Mar 2020 22:50:01 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33915 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgC1CuA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 22:50:00 -0400
+Received: by mail-il1-f196.google.com with SMTP id t11so10715676ils.1;
+        Fri, 27 Mar 2020 19:50:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h9FUiJnnr5PX2/0tdiYpKEU/w0yDcw3x3MQa3IPxCF8=;
-        b=dw8jxJiID7bRFJDPdTiFwwqJqlfjX8HMUqDHr9GcqNPu75kEYsuaXT2+KaS0/6++f4
-         LZOvHSW2v/zvknpClBWQM7Zwx2+FNLjxlA8T4OzUs+ZspSE8yczmu1lZzpfUnrd1JIpN
-         jHB0qR5Byz+lihhGJomIy1bm6TjbuT8BXUq1FJgWjArqYzbhn+0j3Uif6epT2udRORX1
-         2bp26WjVxHi4lry9YPi/tjIjiuneeEAkvp+T4qGJsaizPBQmQzmyuP4nLjEfNMTz1XNl
-         /nRYEEPf8u62CGK78uTIo+0C3WvACle7rdEmQk0xSmvSgiOuwY19xNY33f9WPYr6OpRH
-         vjJw==
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=2T7espawJMH0SyrBBNkM4sZK6EGCQt+cUAnkbw8X+q8=;
+        b=UIYixAiAO44c3MPcDqJ+yFWSoFESPl38VStvTMjsrJOy0IsBwRiHeMEbR5nA/3TkAg
+         j5FovwdcFdK/ogckuQB6gKawnyfESHbFW6VGUGyCT+Jm/N/Ja40F9iCjMfnlWvkhh8sc
+         UPhr+945c8/GdnIHfxCEboQPtjRttgswyyivqG2/rw64ZPTqZRGxUuu8j1MR/Llz98E9
+         CEZUD6JHiiSYUlLoMTn2q2GOb6VIwlnQ6Wvyq2Ha7h0u3v5PH4Vbbh7sNjjU5mPSkCt4
+         ii9lTJ71OByT/yOGVXXJ1c1ElQ9V+IezHQOhkWQv7JrSKaVcpZKmqR9zbE7VSUMtzPhl
+         9EnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h9FUiJnnr5PX2/0tdiYpKEU/w0yDcw3x3MQa3IPxCF8=;
-        b=YPdEnDnMwuGBe2XeiZcGsUnLgwBSHoxDMJrOxPzK8FwLzpP+TUvyO3dtlehc3paxwN
-         s9/5H8aT4i0g6Neydb7jKgEkNkWoKSTX1QfLN4PLxYiXa5tSPjfFRya/7/oDq50Wz6sk
-         yzxBYMqTZaU8xG53Jl+ZsKTLGNYSFqMQnn0ktKODGN31RnZjL9nyZHC1598lso800+Jq
-         DdG3gCwAbE/DiOL2KikqssabqHVNigaHU3LHFj3/JyCtv4Vfjn9bp48cR3NpduNCc4AT
-         /w8VhR5tNx0fj6N9TpZIGRPqgkndwY7ew9CPYMg1rmkWOFCiUeL0/zUl83a0nczICVz+
-         8p3A==
-X-Gm-Message-State: ANhLgQ25O4BCT65EbAl6ZmqO9JawmdsqkHUHPug5hkC07va8adF30tOF
-        oiRRHa2Hvjx9HsVFGLTktAg=
-X-Google-Smtp-Source: ADFU+vv8zDTvr87UFUjjRLpX/3/jOQn9JKQUGc8o7COhSoa7xaMmmQ5xMhKlPTxhG/DT6jD+iHVfxg==
-X-Received: by 2002:ac8:3565:: with SMTP id z34mr2390096qtb.168.1585362853420;
-        Fri, 27 Mar 2020 19:34:13 -0700 (PDT)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id p191sm5069913qke.6.2020.03.27.19.34.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 19:34:12 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=2T7espawJMH0SyrBBNkM4sZK6EGCQt+cUAnkbw8X+q8=;
+        b=GYrLOdTl48m4z08KOczrLouJ95+YiS3wY/ZY7RevYajELbRGyqdXxuKxSt/lPhox0C
+         h2VD8/eaEMGRiUvS5VaySI/kECOcM+skKMl5jczYdoLK6dd0eCwBDF0esKF/1/BlODhU
+         Ke9mzoEthxvXKuhCFGAW5Ibf8hmmfI8RN2MN+5LI+72/B7WWqrlEHCTNa3L+TULw9+Bb
+         RGOc9lTBj4XnbH8JcqgBjRGrkNKwwtN83LAr3I3tSP6D7GPftNtluUqyqFp452YOglk3
+         EakqeVawJ23nzvliK/pLPL/+ViKcoHxLNT4rDZvbaox+RLmY65qH2L4vRbHfLnSFqSyY
+         gaYQ==
+X-Gm-Message-State: ANhLgQ0FY36TM+mQ6VkPjiGrxg0jX+hDQSUKYBPWgU0Ce9YA6rOsvEbV
+        VYABp/7sPa2g1B8+m/g43mtayTQjQUV4P1FEHiw=
+X-Google-Smtp-Source: ADFU+vu8brBOHjvUSXAejafUKJHfvGYcC5rvGqgefCeljGY9rSiNBTTc1qwA3lZCs0Mmew94vFBCEXJbPO00Gh/fpLA=
+X-Received: by 2002:a92:4896:: with SMTP id j22mr2016718ilg.158.1585363799665;
+ Fri, 27 Mar 2020 19:49:59 -0700 (PDT)
+MIME-Version: 1.0
 From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
+Date:   Fri, 27 Mar 2020 21:49:48 -0500
+Message-ID: <CAHCN7xJSKH-gXA5ncFS3h6_2R28rn70O3HfT=ActS1XVgCFSeg@mail.gmail.com>
+Subject: i.MX8MN Errors on 5.6-RC7
+To:     arm-soc <linux-arm-kernel@lists.infradead.org>
+Cc:     Adam Ford-BE <aford@beaconembedded.com>,
+        Adam Ford <aford173@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Shawn Guo <shawnguo@kernel.org>,
@@ -66,40 +64,31 @@ Cc:     aford@beaconembedded.com, Adam Ford <aford173@gmail.com>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: imx8mn: Change SDMA1 ahb clock for imx8mn
-Date:   Fri, 27 Mar 2020 21:33:53 -0500
-Message-Id: <20200328023353.156929-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Anson Huang <Anson.Huang@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Using SDMA1 with UART1 is causing a "Timeout waiting for CH0" error.
-This patch changes to ahb clock from SDMA1_ROOT to AHB which fixes the
-timeout error.
+I am getting a few errors on the i.MX8MN:
 
-Fixes: 6c3debcbae47 ("arm64: dts: freescale: Add i.MX8MN dtsi support")
+[    0.000368] Failed to get clock for /timer@306a0000
+[    0.000380] Failed to initialize '/timer@306a0000': -22
+[    7.203447] caam 30900000.caam: Failed to get clk 'ipg': -2
+[    7.334741] caam 30900000.caam: Failed to request all necessary clocks
+[    7.438651] caam: probe of 30900000.caam failed with error -2
+[    7.854193] imx-cpufreq-dt: probe of imx-cpufreq-dt failed with error -2
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+I was curious to know if anyone else is seeing similar errors.  I
+already submitted a proposed fix for a DMA timeout (not shown here)
+which matched work already done on i.MX8MQ and i.MX8MM.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index a44b5438e842..882e913436ca 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -661,7 +661,7 @@ sdma1: dma-controller@30bd0000 {
- 				reg = <0x30bd0000 0x10000>;
- 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MN_CLK_SDMA1_ROOT>,
--					 <&clk IMX8MN_CLK_SDMA1_ROOT>;
-+					 <&clk IMX8MN_CLK_AHB>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
- 				fsl,sdma-ram-script-name = "imx/sdma/sdma-imx7d.bin";
--- 
-2.25.1
+I am not seeing huge differences between 8MM and 8MN in the nodes
+which address the timer, caam or imx-cpufreq-dt.
 
+If anyone has any suggestions, I'd love to try them.
+
+adam
