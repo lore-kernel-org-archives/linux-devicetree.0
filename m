@@ -2,226 +2,229 @@ Return-Path: <SRS0=dVBB=5N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CD1C43331
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 15:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B67FC2D0EE
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 15:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B30207FF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 15:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F030206F6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 15:56:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kTaPhZun"
+	dkim=pass (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="VD4QbuI6";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=topicbv.onmicrosoft.com header.i=@topicbv.onmicrosoft.com header.b="rkOfyeDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbgC1Pfd (ORCPT
+        id S1726976AbgC1P4s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Mar 2020 11:35:33 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:61928 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgC1Pfd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 11:35:33 -0400
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200328153530epoutp01fac85d4b53d74c1b15958726d286e830~AgcATdDNb2195821958epoutp01J
-        for <devicetree@vger.kernel.org>; Sat, 28 Mar 2020 15:35:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200328153530epoutp01fac85d4b53d74c1b15958726d286e830~AgcATdDNb2195821958epoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585409730;
-        bh=xXkS91CFIroc7N2oaXEl9fLdr7tUf9+UutE4IeIiJjE=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=kTaPhZunPQsCM4rmqY22CKktKSkDU0r9LIdFCtBCtl356eDEiCCj6yZRu/uVjCMk5
-         zHbmSwo14yIP31EI57vsJTg3wGmv/5wuEweDQEkupsGiO6PximGl2DYiYZfsEBbpDS
-         3CoNnKiWpv8mqVtb0oIteFxJBQVGVEBP/an90N7o=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200328153529epcas5p32df5f14a80ca6f26d57289c7edd8f28c~Agb-PCBe01221612216epcas5p3i;
-        Sat, 28 Mar 2020 15:35:29 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5D.B7.04778.1CE6F7E5; Sun, 29 Mar 2020 00:35:29 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200328153528epcas5p4d1a6bc160d439101a3d5f3c43f40b1e2~Agb_XBtCF1572915729epcas5p44;
-        Sat, 28 Mar 2020 15:35:28 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200328153528epsmtrp18aa344e9aee5444064d301fbea5fc683~Agb_WJYU43038730387epsmtrp1Q;
-        Sat, 28 Mar 2020 15:35:28 +0000 (GMT)
-X-AuditID: b6c32a4a-33bff700000012aa-55-5e7f6ec1c85f
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        94.86.04024.0CE6F7E5; Sun, 29 Mar 2020 00:35:28 +0900 (KST)
-Received: from alimakhtar02 (unknown [107.108.234.165]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200328153525epsmtip1915a6f448bb9b6b4b27ef259c4ac617a~Agb7Y5kWE1061810618epsmtip1P;
-        Sat, 28 Mar 2020 15:35:25 +0000 (GMT)
-From:   "Alim Akhtar" <alim.akhtar@samsung.com>
-To:     =?UTF-8?Q?'Pawe=C5=82_Chmiel'?= <pawel.mikolaj.chmiel@gmail.com>,
-        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-Cc:     <krzk@kernel.org>, <avri.altman@wdc.com>,
-        <martin.petersen@oracle.com>, <kwmad.kim@samsung.com>,
-        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <ac67cfc3736cf50c716b823a59af878d59b7198f.camel@gmail.com>
-Subject: RE: [PATCH v4 5/5] arm64: dts: Add node for ufs exynos7
-Date:   Sat, 28 Mar 2020 21:05:23 +0530
-Message-ID: <000801d60516$823fd890$86bf89b0$@samsung.com>
+        Sat, 28 Mar 2020 11:56:48 -0400
+Received: from mail-eopbgr80087.outbound.protection.outlook.com ([40.107.8.87]:17634
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726518AbgC1P4s (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 28 Mar 2020 11:56:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aY6ahVDIRQGmtjRU1hd7ERdLQCtQz7mrtNeJj0Btobc=;
+ b=VD4QbuI6D2WcxwvoKc7Pab2fZiDskAyrOpwBT34v2KIo5XdnE1zyTyxw8XKkt2RO6LwDObPwlKubvO/+Oq6U0RmrvxkU2c+MQWQ29Xr2lXf6a4QpD7Jjee/tEWErqdbIX42vJ5FG+hdnEGXPSfoD9Bd8PWKwbHFV34Er/WvgpJQ=
+Received: from AM5PR0402CA0014.eurprd04.prod.outlook.com
+ (2603:10a6:203:90::24) by AM6PR0402MB3415.eurprd04.prod.outlook.com
+ (2603:10a6:209:d::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Sat, 28 Mar
+ 2020 15:56:39 +0000
+Received: from HE1EUR01FT047.eop-EUR01.prod.protection.outlook.com
+ (2603:10a6:203:90:cafe::a0) by AM5PR0402CA0014.outlook.office365.com
+ (2603:10a6:203:90::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend
+ Transport; Sat, 28 Mar 2020 15:56:39 +0000
+Authentication-Results: spf=pass (sender IP is 13.81.10.179)
+ smtp.mailfrom=topicproducts.com; arm.com; dkim=fail (signature did not
+ verify) header.d=topicbv.onmicrosoft.com;arm.com; dmarc=none action=none
+ header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topicproducts.com
+ designates 13.81.10.179 as permitted sender) receiver=protection.outlook.com;
+ client-ip=13.81.10.179; helo=westeu13-emailsignatures-cloud.codetwo.com;
+Received: from westeu13-emailsignatures-cloud.codetwo.com (13.81.10.179) by
+ HE1EUR01FT047.mail.protection.outlook.com (10.152.1.5) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.17 via Frontend Transport; Sat, 28 Mar 2020 15:56:38 +0000
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (104.47.8.51) by westeu13-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Sat, 28 Mar 2020 15:56:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cU/2ESMXc23Hvx5kyDhw8upqnPLXlJKrk/7O6dEiYsHL4lPfW/NRi9JDNbjcacN7SP7M1+WfFuXuU7mmy58Aki0GkyuJhK+2DvqCqU6GmvGkktHM76HcDYMBI5bKy/d9zh8ZV+S+zX6xh71K5S9JgTFaDIZd4lV3SEIQcyOZ9vlT1xd8zRGyWcwIDKx4gfmNOjw7qPH67DLuYSpVIZqdj2nS4AzeXhVpQolUOIcClLUE5zJQHfCqwuMJk2sDCYQ0DzVDvm+R7ZdAGLWwvXXVjNKoxiptcUiA4RjyS8rXpOZOqFcJ4Kft7l1a215NnZ/uIxfsmPPqMKr4/cJgETymSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aY6ahVDIRQGmtjRU1hd7ERdLQCtQz7mrtNeJj0Btobc=;
+ b=hVQT21u+r+tzASbPWP3G7nfXZLh7RG44dMaTrx7wMzo44kRpCgV7DkhcAX0muMffHu+FVpeCnRThlCsjIjeedQ6XiwgxfhW5Zp9BDv+U7vcNE2iHwvTwNG+XJk6Wqh0ECHGXnb3MUiZDis+tzC+i5bSqSFds1YJAFN/q2dF7UU8uMGZsm19fek7bK8pNTX8YAbuSnTJQTsb/V0uT7oVisrLomExIybGRlTBSxjeXkKCAwbFU1EFPQW2yKBOG1e3wZSHG2vsajiaCsMGYQPwaICXtHOBylM0xVxoCjmfwdKGDajv7ao0XadsAhOy9PrUQr/NIJct3/Fz8L1Ah8mktug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=topicproducts.com; dmarc=pass action=none header.from=topic.nl;
+ dkim=pass header.d=topic.nl; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=topicbv.onmicrosoft.com; s=selector2-topicbv-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aY6ahVDIRQGmtjRU1hd7ERdLQCtQz7mrtNeJj0Btobc=;
+ b=rkOfyeDKoDH/WdR8Wi4TxgdoUdv7MOU40ZfMVI+Ugy78IWKF9Z78PI975DJwhZxycur5TJevT3RhzoLvbO69YoGOG6wW3QlrZJkY+zyumtIjQQugWy3rPGRAPwYpdTOGP0HRnAc+EpeEEGk2U4xdJW6F3NMBesZc14VROlTk8D4=
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=mike.looijmans@topicproducts.com; 
+Received: from DB3PR0402MB3947.eurprd04.prod.outlook.com (52.134.67.147) by
+ DB3PR0402MB3820.eurprd04.prod.outlook.com (52.134.65.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.18; Sat, 28 Mar 2020 15:56:34 +0000
+Received: from DB3PR0402MB3947.eurprd04.prod.outlook.com
+ ([fe80::380e:f722:2d0d:9c71]) by DB3PR0402MB3947.eurprd04.prod.outlook.com
+ ([fe80::380e:f722:2d0d:9c71%6]) with mapi id 15.20.2856.019; Sat, 28 Mar 2020
+ 15:56:33 +0000
+Subject: Re: [PATCH v2] dt-bindings: iio: accel: Add bmi088 accelerometer
+ bindings
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com
+References: <20200323095551.23500-1-mike.looijmans@topic.nl>
+ <20200328151928.12f5517e@archlinux>
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+Organization: Topic
+Message-ID: <7215fe03-988b-518b-ddbd-6152c07259f5@topic.nl>
+Date:   Sat, 28 Mar 2020 16:56:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <20200328151928.12f5517e@archlinux>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM3PR07CA0059.eurprd07.prod.outlook.com
+ (2603:10a6:207:4::17) To DB3PR0402MB3947.eurprd04.prod.outlook.com
+ (2603:10a6:8:7::19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKI+vJzlUBp7WIi19k8pRZBKIHK2gKUSzVAA7h3SyUCe2DDm6ax9Wig
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrLKsWRmVeSWpSXmKPExsWy7bCmuu7BvPo4g48bFC1e/rzKZvFp/TJW
-        i/lHzrFanD+/gd3i5pajLBabHl9jtbi8aw6bxYzz+5gsuq/vYLNYfvwfk8WP433MFq17j7Bb
-        LN16k9GB1+NyXy+Tx85Zd9k9Nq3qZPPYvKTeo+XkfhaPj09vsXj0bVnF6PF5k5xH+4FupgDO
-        KC6blNSczLLUIn27BK6MfWe2MBXssq+4fW8tYwPjXdsuRg4OCQETid23IroYuTiEBHYzSmzZ
-        c5oJwvnEKNH59yYzhPONUeLG7G6gDCdYx9rfbVBVexklpi7awAaSEBJ4A1R10hzEZhPQldix
-        uI0NpEhEYBajxPJ/v1lAHGaBTiaJNfOnMINUcQq4Sxx+84gVxBYWcJB4uGI/2AoWAVWJLds2
-        gdm8ApYSF27OYYOwBSVOznzCAmIzC2hLLFv4mhniJAWJn0+Xgc0REXCTODlnMhtEjbjE0Z89
-        YD9ICGxil2g5Op0VosFFYueOt1DNwhKvjm9hh7ClJF72t7FDQiZbomeXMUS4RmLpvGMsELa9
-        xIErc1hASpgFNCXW79KHWMUn0fv7CRNEJ69ER5sQRLWqRPO7q1Cd0hITu7uhDvCQ2Lb6AusE
-        RsVZSB6bheSxWUgemIWwbAEjyypGydSC4tz01GLTAqO81HK94sTc4tK8dL3k/NxNjOBEp+W1
-        g3HZOZ9DjAIcjEo8vCuu1sYJsSaWFVfmHmKU4GBWEuF9GlkTJ8SbklhZlVqUH19UmpNafIhR
-        moNFSZx3EuvVGCGB9MSS1OzU1ILUIpgsEwenVAPjmtcbjqZnHnO7lbjg83/O/VF/Z73+2FTu
-        0HYqWkTxRM4qpp95S/17bP9nrvKe1uaicXxbWv3zeRPDbrj8SrwduPdH4lWZ1a1bvPXU7HWO
-        93/dvpVpi9eyZ54NfmrpszszHjDMe5yetejF613np6VYnS5XLrumt2Yv6zLT64piPHGvYj9m
-        L/8apsRSnJFoqMVcVJwIAFqMt/xwAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsWy7bCSnO6BvPo4g7sPVC1e/rzKZvFp/TJW
-        i/lHzrFanD+/gd3i5pajLBabHl9jtbi8aw6bxYzz+5gsuq/vYLNYfvwfk8WP433MFq17j7Bb
-        LN16k9GB1+NyXy+Tx85Zd9k9Nq3qZPPYvKTeo+XkfhaPj09vsXj0bVnF6PF5k5xH+4FupgDO
-        KC6blNSczLLUIn27BK6MGx/2MBWc1arYeSepgbFJqYuRk0NCwERi7e82pi5GLg4hgd2MEqu2
-        32CHSEhLXN84AcoWllj57zmYLSTwilHibr8iiM0moCuxY3EbG0iziMAcRold21aCFTELTGaS
-        WHqTH2LqL0aJV/NvsIAkOAXcJQ6/ecQKYgsLOEg8XLGfCcRmEVCV2LJtE5jNK2ApceHmHDYI
-        W1Di5MwnLBBDtSV6H7YywtjLFr5mhrhOQeLn02VgM0UE3CROzpnMBlEjLnH0Zw/zBEbhWUhG
-        zUIyahaSUbOQtCxgZFnFKJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7iREcsVqaOxgvL4k/
-        xCjAwajEw6sxsS5OiDWxrLgy9xCjBAezkgjv08iaOCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8
-        T/OORQoJpCeWpGanphakFsFkmTg4pRoYnXvWy/kfClxuu/NWqczla/c+Fb5c8Ho108+3GkrZ
-        NslbL1d+ur/6UpVlneP5OSYvXrS/C74bVZpofu7rJVEdlW8KDz/7vjz3NPq0YTK3/7RFdzgj
-        D/QrLWbL3zifrSZjh6ZBneGkOw8nOHZVSydZPDA9vm6WbI/UE72Ps/NP851gmGByX0GXV4ml
-        OCPRUIu5qDgRACEO/bnUAgAA
-X-CMS-MailID: 20200328153528epcas5p4d1a6bc160d439101a3d5f3c43f40b1e2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200327171423epcas5p485d227f19e45999ad9b42b21d2864e4a
-References: <20200327170638.17670-1-alim.akhtar@samsung.com>
-        <CGME20200327171423epcas5p485d227f19e45999ad9b42b21d2864e4a@epcas5p4.samsung.com>
-        <20200327170638.17670-6-alim.akhtar@samsung.com>
-        <ac67cfc3736cf50c716b823a59af878d59b7198f.camel@gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.130] (83.128.90.119) by AM3PR07CA0059.eurprd07.prod.outlook.com (2603:10a6:207:4::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.9 via Frontend Transport; Sat, 28 Mar 2020 15:56:33 +0000
+X-Originating-IP: [83.128.90.119]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: dd03b5ec-b026-4d1e-6275-08d7d33099da
+X-MS-TrafficTypeDiagnostic: DB3PR0402MB3820:|AM6PR0402MB3415:
+X-Microsoft-Antispam-PRVS: <AM6PR0402MB3415F23E6637C0F95251E5D296CD0@AM6PR0402MB3415.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;OLM:8273;
+X-Forefront-PRVS: 03569407CC
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3947.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(396003)(376002)(39830400003)(346002)(136003)(366004)(31696002)(2906002)(81156014)(42882007)(81166006)(8676002)(31686004)(66946007)(5660300002)(66556008)(36916002)(66476007)(8936002)(52116002)(44832011)(2616005)(956004)(316002)(6486002)(186003)(53546011)(6916009)(16526019)(26005)(36756003)(508600001)(16576012)(966005)(4326008);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: topicproducts.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: RFyCJpj0KwIuJI5LwV8IBpysDqM8asc+OWmEqoHiG9DbqvQ0/G6hw9uwy1V1eLKbdkvO+DshCgY1B3zNpryra1eXzcgC8GvN5be05QTJZavKpWX8QgjM1IWJDE3s7/PR3LuAPd9qvJNkvVeSXEJT2N5TAiGEUaiT2D6Uj5Gp4uGdD5q52Y1UE5j59yDAPG7/Jn9A1sHx9Cd9JUsNnFxWxft6ikaFaY39LjWFvTmNQ1BM9sk94CVcUtA8py1bMluZaGhcRwl8BCGsL66cauZJUxokbc/Lg3d9br3Ekc2RyciF5xNWHThzuvp8ZIVkd7afB23uBYtrQaHb0WZu0Gsd6X2rFAXoxwGelxXZ0rfi7gLR+6fah1u5eaEgIP95De4gFZ8V8h+WiQYvi2vCFkhyvzz2y2OQuP/Fm7HGim//PLMQD6E6GM7YMEq4UrBAVPbVTw0ulvzV5HDDecyFfvp7Yy3cdFkxdHfqHsn937ztFu6hGTj6+JES8qYye4w13Hi+y1c0JB5aFYiyqfUBsS3WYQ==
+X-MS-Exchange-AntiSpam-MessageData: gShpX05w4tF9TKxaw9/daBlN+UiTOAn4vkzhvR79THZd+zv7fVz3OwZ+XnZfB764IsElwFqubqcL21cYL/Uyf5xlXF47Lm1tDGmkCcMrcm6d+KvU/wKLzT/FsB4o547ITB911RIwBglliQTs5oaL7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3820
+X-CodeTwo-MessageID: a31156c5-bf95-4176-aee7-93c2129092ad.20200328155636@westeu13-emailsignatures-cloud.codetwo.com
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: HE1EUR01FT047.eop-EUR01.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:13.81.10.179;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu13-emailsignatures-cloud.codetwo.com;PTR:westeu13-emailsignatures-cloud.codetwo.com;CAT:NONE;SFTY:;SFS:(10009020)(136003)(376002)(346002)(396003)(39830400003)(46966005)(7636002)(966005)(44832011)(246002)(2616005)(956004)(53546011)(31696002)(8676002)(508600001)(6916009)(7596002)(8936002)(6486002)(356004)(42882007)(5660300002)(336012)(36916002)(16526019)(186003)(31686004)(26005)(70206006)(82310400001)(316002)(70586007)(2906002)(47076004)(4326008)(16576012)(36756003);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: c8cf5a23-6035-4ddf-7438-08d7d33096a2
+X-Forefront-PRVS: 03569407CC
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: J/Pgh76tTZyuSiE2G8bjhMG7rsQSV8qxq5tQmRVs3prDyaRRHj70+YrUV+xMAHwI7POqBhaSeZe89gmc6mZS4UwLF1V2Ig4uPLnRp7kBkDzfpGAYfVPreiFIBV9YPq4C0SzklgEfdYwTB7GdY1OJLOaD10CgDfwhsttV4hPM6CtM3sefllddo1HAdQw27B2zScNDn9mqzHL+oXdz/ZtK82lcDDW2NmlX/qo24c/R3fxuPNd/YJe+eRHJFkp1rBR76/TXXKuN26RYKaZQanud8HTy5Wmt17WeZERgMeP0oMGU/dP1pJ16qjrFyjaRq2uAjWNJs6vHGJ05mI0IWTMziN2/af5QTjMLFbmKKtCgzdhl9xOZLn4LgzwKb3GHaBgBR8coJAmKxD2186w9IhwPzUNetFu1ayH+3Y6LSgTQSyrtN60trODdHxd8iITqKQJv4WxofXUNvfQ+bzXZZRq2npnfvFRHsGlWb99L2tCXODwVpLTPyx7R/9oMWqNmR/6rnWKUME3GyjTGrUiyil1SvmzDuH93QFDaLvMLEX07cDzzQeEElartHeP2SwwhcP5ajevvI5/gMSr5iWk1vSy+CQ==
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2020 15:56:38.6802
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd03b5ec-b026-4d1e-6275-08d7d33099da
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.81.10.179];Helo=[westeu13-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3415
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Pawel
+Interleaved comments below.
 
-> -----Original Message-----
-> From: Pawe=C5=82=20Chmiel=20<pawel.mikolaj.chmiel=40gmail.com>=0D=0A>=20S=
-ent:=2028=20March=202020=2019:00=0D=0A>=20To:=20Alim=20Akhtar=20<alim.akhta=
-r=40samsung.com>;=20robh+dt=40kernel.org;=0D=0A>=20devicetree=40vger.kernel=
-.org;=20linux-scsi=40vger.kernel.org=0D=0A>=20Cc:=20krzk=40kernel.org;=20av=
-ri.altman=40wdc.com;=20martin.petersen=40oracle.com;=0D=0A>=20kwmad.kim=40s=
-amsung.com;=20stanley.chu=40mediatek.com;=0D=0A>=20cang=40codeaurora.org;=
-=20linux-samsung-soc=40vger.kernel.org;=20linux-arm-=0D=0A>=20kernel=40list=
-s.infradead.org;=20linux-kernel=40vger.kernel.org=0D=0A>=20Subject:=20Re:=
-=20=5BPATCH=20v4=205/5=5D=20arm64:=20dts:=20Add=20node=20for=20ufs=20exynos=
-7=0D=0A>=20=0D=0A>=20On=20Fri,=202020-03-27=20at=2022:36=20+0530,=20Alim=20=
-Akhtar=20wrote:=0D=0A>=20>=20Adding=20dt=20node=20foe=20UFS=20and=20UFS-PHY=
-=20for=20exynos7=20SoC.=0D=0A>=20>=0D=0A>=20>=20Signed-off-by:=20Alim=20Akh=
-tar=20<alim.akhtar=40samsung.com>=0D=0A>=20>=20---=0D=0A>=20>=20=20.../boot=
-/dts/exynos/exynos7-espresso.dts=20=20=20=20=20=20=7C=2016=20+++++++=0D=0A>=
-=20>=20=20arch/arm64/boot/dts/exynos/exynos7.dtsi=20=20=20=20=20=20=20=7C=
-=2043=20++++++++++++++++++-=0D=0A>=20>=20=202=20files=20changed,=2057=20ins=
-ertions(+),=202=20deletions(-)=0D=0A>=20>=0D=0A>=20>=20diff=20--git=20a/arc=
-h/arm64/boot/dts/exynos/exynos7-espresso.dts=0D=0A>=20>=20b/arch/arm64/boot=
-/dts/exynos/exynos7-espresso.dts=0D=0A>=20>=20index=207af288fa9475..b59a0a3=
-2620a=20100644=0D=0A>=20>=20---=20a/arch/arm64/boot/dts/exynos/exynos7-espr=
-esso.dts=0D=0A>=20>=20+++=20b/arch/arm64/boot/dts/exynos/exynos7-espresso.d=
-ts=0D=0A>=20>=20=40=40=20-406,6=20+406,22=20=40=40=0D=0A>=20>=20=20=09=7D;=
-=0D=0A>=20>=20=20=7D;=0D=0A>=20>=0D=0A>=20>=20+&ufs=20=7B=0D=0A>=20>=20+=09=
-status=20=3D=20=22okay=22;=0D=0A>=20>=20+=09pinctrl-names=20=3D=20=22defaul=
-t=22;=0D=0A>=20>=20+=09pinctrl-0=20=3D=20<&ufs_rst_n=20&ufs_refclk_out>;=0D=
-=0A>=20>=20+=09ufs,pwr-attr-mode=20=3D=20=22FAST=22;=0D=0A>=20>=20+=09ufs,p=
-wr-attr-lane=20=3D=20<2>;=0D=0A>=20>=20+=09ufs,pwr-attr-gear=20=3D=20<2>;=
-=0D=0A>=20>=20+=09ufs,pwr-attr-hs-series=20=3D=20=22HS_rate_b=22;=0D=0A>=20=
->=20+=09ufs-rx-adv-fine-gran-sup_en=20=3D=20<1>;=0D=0A>=20>=20+=09ufs-rx-ad=
-v-fine-gran-step=20=3D=20<3>;=0D=0A>=20>=20+=09ufs-rx-adv-min-activate-time=
--cap=20=3D=20<9>;=0D=0A>=20>=20+=09ufs-pa-granularity=20=3D=20<6>;=0D=0A>=
-=20>=20+=09ufs-pa-tacctivate=20=3D=20<3>;=0D=0A>=20>=20+=09ufs-pa-hibern8ti=
-me=20=3D=20<20>;=0D=0A>=20>=20+=7D;=0D=0A>=20>=20+=0D=0A>=20>=20=20&usbdrd_=
-phy=20=7B=0D=0A>=20>=20=20=09vbus-supply=20=3D=20<&usb30_vbus_reg>;=0D=0A>=
-=20>=20=20=09vbus-boost-supply=20=3D=20<&usb3drd_boost_5v>;=20diff=20--git=
-=0D=0A>=20>=20a/arch/arm64/boot/dts/exynos/exynos7.dtsi=0D=0A>=20>=20b/arch=
-/arm64/boot/dts/exynos/exynos7.dtsi=0D=0A>=20>=20index=205558045637ac..9d16=
-c90edd07=20100644=0D=0A>=20>=20---=20a/arch/arm64/boot/dts/exynos/exynos7.d=
-tsi=0D=0A>=20>=20+++=20b/arch/arm64/boot/dts/exynos/exynos7.dtsi=0D=0A>=20>=
-=20=40=40=20-220,9=20+220,14=20=40=40=0D=0A>=20>=20=20=09=09=09=23clock-cel=
-ls=20=3D=20<1>;=0D=0A>=20>=20=20=09=09=09clocks=20=3D=20<&fin_pll>,=20<&clo=
-ck_top1=0D=0A>=20DOUT_ACLK_FSYS1_200>,=0D=0A>=20>=20=20=09=09=09=09=20<&clo=
-ck_top1=20DOUT_SCLK_MMC0>,=0D=0A>=20>=20-=09=09=09=09=20<&clock_top1=20DOUT=
-_SCLK_MMC1>;=0D=0A>=20>=20+=09=09=09=09=20<&clock_top1=20DOUT_SCLK_MMC1>,=
-=0D=0A>=20>=20+=09=09=09=09=20<&clock_top1=20DOUT_SCLK_UFSUNIPRO20>,=0D=0A>=
-=20>=20+=09=09=09=09=20<&clock_top1=20DOUT_SCLK_PHY_FSYS1>,=0D=0A>=20>=20+=
-=09=09=09=09=20<&clock_top1=20DOUT_SCLK_PHY_FSYS1_26M>;=0D=0A>=20>=20=20=09=
-=09=09clock-names=20=3D=20=22fin_pll=22,=20=22dout_aclk_fsys1_200=22,=0D=0A=
->=20>=20-=09=09=09=09=20=20=20=20=20=20=22dout_sclk_mmc0=22,=20=22dout_sclk=
-_mmc1=22;=0D=0A>=20>=20+=09=09=09=09=20=20=20=20=20=20=22dout_sclk_mmc0=22,=
-=20=22dout_sclk_mmc1=22,=0D=0A>=20>=20+=09=09=09=09=20=20=20=20=20=20=22dou=
-t_sclk_ufsunipro20=22,=0D=0A>=20=22dout_sclk_phy_fsys1=22,=0D=0A>=20>=20+=
-=09=09=09=09=20=20=20=20=20=20=22dout_sclk_phy_fsys1_26m=22;=0D=0A>=20>=20=
-=20=09=09=7D;=0D=0A>=20>=0D=0A>=20>=20=20=09=09serial_0:=20serial=401363000=
-0=20=7B=0D=0A>=20>=20=40=40=20-601,6=20+606,40=20=40=40=0D=0A>=20>=20=20=09=
-=09=09=7D;=0D=0A>=20>=20=20=09=09=7D;=0D=0A>=20>=0D=0A>=20>=20+=09=09ufs:=
-=20ufs=4015570000=20=7B=0D=0A>=20>=20+=09=09=09compatible=20=3D=20=22samsun=
-g,exynos7-ufs=22;=0D=0A>=20>=20+=09=09=09=23address-cells=20=3D=20<1>;=0D=
-=0A>=20>=20+=09=09=09=23size-cells=20=3D=20<1>;=0D=0A>=20>=20+=09=09=09rang=
-es;=0D=0A>=20>=20+=09=09=09reg=20=3D=20<0x15570000=200x100>,=20=20/*=200:=
-=20HCI=20standard=20*/=0D=0A>=20>=20+=09=09=09=09<0x15570100=200x100>,=20=
-=20/*=201:=20Vendor=20specificed=0D=0A>=20*/=0D=0A>=20>=20+=09=09=09=09<0x1=
-5571000=200x200>,=20=20/*=202:=20UNIPRO=20*/=0D=0A>=20>=20+=09=09=09=09<0x1=
-5572000=200x300>;=20=20/*=203:=20UFS=20protector=20*/=0D=0A>=20>=20+=09=09=
-=09reg-names=20=3D=20=22hci=22,=20=22vs_hci=22,=20=22unipro=22,=20=22ufsp=
-=22;=0D=0A>=20>=20+=09=09=09interrupts=20=3D=20<GIC_SPI=20200=20IRQ_TYPE_LE=
-VEL_HIGH>;=0D=0A>=20>=20+=09=09=09clocks=20=3D=20<&clock_fsys1=20ACLK_UFS20=
-_LINK>,=0D=0A>=20>=20+=09=09=09=09<&clock_fsys1=20SCLK_UFSUNIPRO20_USER>;=
-=0D=0A>=20>=20+=09=09=09clock-names=20=3D=20=22core_clk=22,=20=22sclk_unipr=
-o_main=22;=0D=0A>=20>=20+=09=09=09freq-table-hz=20=3D=20<0=200>,=20<0=200>;=
-=0D=0A>=20>=20+=09=09=09pclk-freq-avail-range=20=3D=20<70000000=20133000000=
->;=0D=0A>=20>=20+=09=09=09ufs,pwr-local-l2-timer=20=3D=20<8000=2028000=2020=
-000>;=0D=0A>=20>=20+=09=09=09ufs,pwr-remote-l2-timer=20=3D=20<12000=2032000=
-=2016000>;=0D=0A>=20>=20+=09=09=09phys=20=3D=20<&ufs_phy>;=0D=0A>=20>=20+=
-=09=09=09phy-names=20=3D=20=22ufs-phy=22;=0D=0A>=20>=20+=09=09=09status=20=
-=3D=20=22disabled=22;=0D=0A>=20>=20+=09=09=7D;=0D=0A>=20>=20+=0D=0A>=20>=20=
-+=09=09ufs_phy:=20ufs-phy=400x15571800=20=7B=0D=0A>=20>=20+=09=09=09compati=
-ble=20=3D=20=22samsung,exynos7-ufs-phy=22;=0D=0A>=20>=20+=09=09=09reg=20=3D=
-=20<0x15571800=200x240>;=0D=0A>=20>=20+=09=09=09reg-names=20=3D=20=22phy-pm=
-a=22;=0D=0A>=20>=20+=09=09=09samsung,pmu-syscon=20=3D=20<&pmu_system_contro=
-ller>;=0D=0A>=20>=20+=09=09=09=23phy-cells=20=3D=20<0>;=0D=0A>=20>=20+=09=
-=09=09clocks=20=3D=20<&clock_fsys1=20MOUT_FSYS1_PHYCLK_SEL1>,=0D=0A>=20>=20=
-+=09=09=09=09<&clock_top1=20CLK_SCLK_PHY_FSYS1_26M>;=0D=0A>=20>=20+=09=09=
-=09clock-names=20=3D=20=22ref_clk_parent=22,=20=22ref_clk=22;=0D=0A>=20Hi=
-=0D=0A>=20Is=20this=20correct=20(aren't=20child=20and=20parent=20clock=20sw=
-apped)?=0D=0A>=20This=20will=20set=20MOUT_FSYS1_PHYCLK_SEL1=20to=20be=20par=
-ent=20clock=20of=0D=0A>=20CLK_SCLK_PHY_FSYS1_26M.=0D=0A=0D=0ALooks=20like=
-=20in=20one=20of=20my=20rebase=20it=20got=20swap,=20will=20correct=20it.=20=
-=20Thanks=20for=20pointing=20out.=0D=0A=0D=0A>=20I've=20tested=20this=20on=
-=20Exynos7420=20(which=20looks=20like=20can=20use=20the=20same=20clock=20dr=
-iver=20as=0D=0A>=20exynos7)=20and=20after=20adding=20some=20debug=20code=20=
-(because=20currently=20we're=20not=0D=0A>=20handling=20result=20of=20samsun=
-g_ufs_phy_clks_init)=20i=20got=0D=0A>=20=0D=0A>=20samsung-ufs-phy=201557180=
-0.ufs-phy:=20clk_set_parent=20result:=20-22=0D=0A>=20=0D=0AI=20will=20check=
-=20if=20I=20overlooked=20this=20error.=0D=0A>=20On=20vendor=20sources=20for=
-=20this=20device,=20driver=20was=20setting=20CLK_SCLK_PHY_FSYS1_26M=0D=0A>=
-=20to=20be=20parent=20of=20MOUT_FSYS1_PHYCLK_SEL1,=20and=20then=20it=20did=
-=20run=20without=20error.=0D=0A>=20=0D=0A>=20samsung-ufs-phy=2015571800.ufs=
--phy:=20clk_set_parent=20result:=200=0D=0A>=20=0D=0AWith=20this=20change,=
-=20does=20linkup=20worked=20for=20you?=0D=0A=0D=0A>=20Also=20looking=20at=
-=20clk-exynos7=20driver=20seems=20to=20confirm=20this.=0D=0A>=20=0D=0A>=20>=
-=20+=09=09=7D;=0D=0A>=20>=20+=0D=0A>=20>=20=20=09=09usbdrd_phy:=20phy=40155=
-00000=20=7B=0D=0A>=20>=20=20=09=09=09compatible=20=3D=20=22samsung,exynos7-=
-usbdrd-phy=22;=0D=0A>=20>=20=20=09=09=09reg=20=3D=20<0x15500000=200x100>;=
-=0D=0A=0D=0A=0D=0A
+I'll send a v6 bundle with the updated bindings.
+
+On 28-03-2020 16:19, Jonathan Cameron wrote:
+> On Mon, 23 Mar 2020 10:55:51 +0100
+> Mike Looijmans <mike.looijmans@topic.nl> wrote:
+> 
+>> This adds the device-tree bindings for the Bosch Sensortec BMI088 IMU,
+>> the accelerometer part.
+>>
+>> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> Hi Mike
+> 
+> The binding should look to be as complete as possible, independent on what
+> we are actually using in the driver.
+> 
+> A quick glance at the datasheet shows me this device has 2 interrupt lines
+> dedicated to the accelerometer and 2 power supplies, vddio and vdd.
+> 
+> Interrupt lines for flexible parts like this are fiddly to do, so take
+> a look at how we do this in other drivers.  Hmm. the interrupt line to set
+> a tag is 'interesting'.  I'd ignore that for now...
+
+Guess for the interrupts we can just suffice to say that MaxItems=2 and 
+it's up to the driver to make sense of things. Power supplies are clear.
+
+
+> 
+>> ---
+>> v2: convert to yaml format
+>>
+>>   .../bindings/iio/accel/bosch,bmi088.yaml      | 38 +++++++++++++++++++
+>>   1 file changed, 38 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml b/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
+>> new file mode 100644
+>> index 000000000000..715f79c3b2a9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/accel/bosch,bmi088.yaml
+>> @@ -0,0 +1,38 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/iio/accel/bosch,bma400.yaml#
+> 
+> Should reflect the compatible so include the accel part.
+
+Oops, copy/paste error...
+
+> 
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Bosch BMI088 IMU accelerometer part
+>> +
+>> +maintainers:
+>> +  - Mike Looijmans <mike.looijmans@topic.nl>
+>> +
+>> +description: |
+>> +  Acceleration part of the IMU sensor with an SPI interface
+>> +
+>> +  Specifications about the sensor can be found at:
+>> +    https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - bosch,bmi088_accel
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +examples:
+>> +  - |
+>> +  spi {
+>> +    bmi088_accel@1 {
+>> +      compatible = "bosch,bmi088_accel";
+>> +      reg = <1>;
+>> +      spi-max-frequency = <10000000>;
+>> +    };
+>> +  };
+> 
+
+
+-- 
+Mike Looijmans
