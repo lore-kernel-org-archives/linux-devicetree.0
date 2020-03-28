@@ -1,228 +1,105 @@
-Return-Path: <SRS0=jSFQ=5M=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=dVBB=5N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702F0C43331
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 23:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B13C2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 00:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37092206E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Mar 2020 23:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB2A206F1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 00:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AoOqU2Iw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdTPzQSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbgC0Xaz (ORCPT
+        id S1727356AbgC1AMN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Mar 2020 19:30:55 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:38517 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbgC0Xaz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 19:30:55 -0400
-Received: by mail-vs1-f65.google.com with SMTP id x206so7354644vsx.5
-        for <devicetree@vger.kernel.org>; Fri, 27 Mar 2020 16:30:54 -0700 (PDT)
+        Fri, 27 Mar 2020 20:12:13 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41009 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727193AbgC1AMM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Mar 2020 20:12:12 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h9so13840265wrc.8;
+        Fri, 27 Mar 2020 17:12:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O1GvI+xFM1FBiQL/lNsi04NXxyujijnrO0wFrw3iEaA=;
-        b=AoOqU2Iw5iNjiMKPZrMi6dHRRUePrxjxp+Qtr1vJ+IrlU9XiomgunWPNb48nax0B5q
-         S2s5VpjjKmpZ2vmRzwc7FYK8BGF+dsEOJrJpu8EsyvdA4WdeDwNSNfFJgaEhVaN7ikJ0
-         6/397mTiLc3gUu6I5ER1bxg7KTyf/IdJLee/Elk+o1C0xmQg668B0wMbsRxqhWdWoDyI
-         my8bhwZE9ueVvSl4AC1JpfZhb36Fvo9asb3J6zMLTRrqbFJgUOPNC+wm+9Hzf0Kymc8L
-         6Yc6Oxfkp2wuTsot7ErcvaiFvyWqjyC5SJTA1/Dvq8CWggN4fvgq0vfRxnn8N6fm54aS
-         a+Zw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=6QvXfJZlpggMK4ANi6m9pBKzrWALkcbq78l8N8OifPg=;
+        b=DdTPzQSSS2/ubRNz+h06dvMkaDyQidAdmr7yJ2mTtmmTwzoqX6EHYnr0/MwAzRwGIE
+         RlcOLbE+F3AacmuCQTK8cJEUKLDZ+4GKWInY23uvDR8OcceGXEu1iIzT8YGICQ310UD7
+         R8sUAcg2tpT4wWOBgSFav6VS+nxi7rK8To1sI4x7ydopKcNgLFJZB3X27lJqCtTd7NQV
+         wzoecopKD726yrk77Mnx14+2EyvKPbz6Zf7B2sz2Z7HuOmmrbAeWFKe55y3u48e/+hyX
+         BsohhHNKFVMeipbdBiZNDG7EogXjwZXoTtY7myZWugekXEj/1ozS2LW82aJI8P1rXddw
+         Gwrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O1GvI+xFM1FBiQL/lNsi04NXxyujijnrO0wFrw3iEaA=;
-        b=ssmW+tT+wWXZAs3pe1HYl1ETpI4xNKBeC2dceBdSmy7S1Hv8L4l0yGabsSrRQTFnvu
-         JJyHE4R1LGZlT4o1yt99Kro/KKQyXEcqc4qQMl0WA/9Rtz5wkbkp9dgzfQLaFyMA6YBr
-         u1kDU/8vGwi+MravgzqGC++BGtah/Opz1yg/H24k3oAVWl63piQ8U+rVzsveqQQSy2ss
-         xDq584IKfkLX7b5wkeYDSdsM64W5tieyuyNw/kO9rWCwFqfWxw8peLxp/JprJKrMJ5PC
-         U1WUkxvWZv/n289NWV64eDe9m0rwxJMOFz1DHMDzV7PttvUW4d93wchBXEUeFb4v64na
-         PY4w==
-X-Gm-Message-State: AGi0PuYRpjrUQWfSaKzJNMwVM4ODvDpPvqad8G1kOFlzYJn5F7mZTJko
-        djEYSh2DNjNH9NDXvwJp5bqD7Egoyqo=
-X-Google-Smtp-Source: ADFU+vuoqh2rq3JlGCXgjP8/hQAqhr+Zh5UniIICv8++F9RDKUVsGBejmVNWlonpv7SUXCWSkRpL0g==
-X-Received: by 2002:a62:1dd3:: with SMTP id d202mr1654818pfd.47.1585351421886;
-        Fri, 27 Mar 2020 16:23:41 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m7sm426908pjb.7.2020.03.27.16.23.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=6QvXfJZlpggMK4ANi6m9pBKzrWALkcbq78l8N8OifPg=;
+        b=b7KISZY4KukTC/TCg7eHhPfhdrLrjFCxq5ZlewscCGbzVmtdtrEajF+G+ioOeemOcd
+         vM/2I3TqaC/UFblrToRniQcYKg2kdAbDTUtBXkOrmLmUtBYJ64OhlIFNAdusvyvtSBSD
+         frp15DZ7M2WmQtv14rZqo0Vrxo80/+MsnFiJvKfj1ILVLgbm7eiX7CJOax7bVl4x0PRp
+         mRJeh+Qkb0PPDM+6atMP/k7oXuKMCiG6h86faWhZJKX9ELfin/wt6G03daqcfYU3TT3C
+         hpOgI3Sqgs+8pTBaU0+7+9bmlM7dxrq/OPeylgBo+5CgfHHiQbn3+7qHuLsxeHQjZhjZ
+         ZKww==
+X-Gm-Message-State: ANhLgQ2yemu/uw+OMX19GTQhs/kvD3n45bPEHm4ns8QbHesVeg1022Qo
+        O8rBETRjSjY6gbcUq0HIsJdKnIKzFRs=
+X-Google-Smtp-Source: ADFU+vt71LrkRSMzxCIoPkaoBOOACxjN15QoBbVzam8LUQZNktZELWKtn3lpLjnGh6viJMYFrwKTUw==
+X-Received: by 2002:adf:fc42:: with SMTP id e2mr1999357wrs.45.1585354330434;
+        Fri, 27 Mar 2020 17:12:10 -0700 (PDT)
+Received: from localhost.localdomain (p5B3F7536.dip0.t-ipconnect.de. [91.63.117.54])
+        by smtp.gmail.com with ESMTPSA id 61sm11237956wrn.82.2020.03.27.17.12.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Mar 2020 16:23:40 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 16:23:38 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Akash Asthana <akashast@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>, wsa@the-dreams.de,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-serial@vger.kernel.org, Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V2 3/8] soc: qcom-geni-se: Add interconnect support to
- fix earlycon crash
-Message-ID: <20200327232338.GL5063@builder>
-References: <1584105134-13583-1-git-send-email-akashast@codeaurora.org>
- <1584105134-13583-4-git-send-email-akashast@codeaurora.org>
- <20200313204441.GJ144492@google.com>
- <1f86fdf0-df7c-4e4a-d4d8-8b0162e52cb4@codeaurora.org>
- <20200317182910.GR144492@google.com>
- <3831b33c-93ee-e5e0-fcfb-530b4738f930@codeaurora.org>
- <20200319194332.GA60149@google.com>
- <a7227a1f-00a1-0818-80f3-904fe264f864@codeaurora.org>
- <CAE=gft6AGkcdUAkoyevZgmtBgaiEkoQzzJcg7sYjbpy5Kh2fyA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAE=gft6AGkcdUAkoyevZgmtBgaiEkoQzzJcg7sYjbpy5Kh2fyA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Fri, 27 Mar 2020 17:12:09 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
+        robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: [PATCH v5 5/5] MAINTAINERS: Add entry for mp2629 Battery Charger driver
+Date:   Sat, 28 Mar 2020 01:11:54 +0100
+Message-Id: <20200328001154.17313-6-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200328001154.17313-1-sravanhome@gmail.com>
+References: <20200328001154.17313-1-sravanhome@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 20 Mar 09:30 PDT 2020, Evan Green wrote:
+Add MAINTAINERS entry for Monolithic Power Systems mp2629 Charger driver.
 
-> On Fri, Mar 20, 2020 at 3:22 AM Akash Asthana <akashast@codeaurora.org> wrote:
-> >
-> > Hi Evan, Matthias,
-> >
-> > On 3/20/2020 1:13 AM, Matthias Kaehlcke wrote:
-> > > On Wed, Mar 18, 2020 at 02:24:35PM +0530, Akash Asthana wrote:
-> > >> Hi Matthias,
-> > >>
-> > >> On 3/17/2020 11:59 PM, Matthias Kaehlcke wrote:
-> > >>> Hi Akash,
-> > >>>
-> > >>> On Tue, Mar 17, 2020 at 04:27:47PM +0530, Akash Asthana wrote:
-> > >>>> Hi Matthias,
-> > >>>>
-> > >>>> On 3/14/2020 2:14 AM, Matthias Kaehlcke wrote:
-> > >>>>> Hi Akash,
-> > >>>>>
-> > >>>>> On Fri, Mar 13, 2020 at 06:42:09PM +0530, Akash Asthana wrote:
-> > >>>>>> V1 patch@https://patchwork.kernel.org/patch/11386469/ caused SC7180 system
-> > >>>>>> to reset at boot time.
-> > >>>>> The v1 patch isn't relevant in the commit message, please just describe the
-> > >>>>> problem. Also the crash only occurs when earlycon is used.
-> > >>>> ok
-> > >>>>>> As QUP core clock is shared among all the SE drivers present on particular
-> > >>>>>> QUP wrapper, the reset seen is due to earlycon usage after QUP core clock
-> > >>>>>> is put to 0 from other SE drivers before real console comes up.
-> > >>>>>>
-> > >>>>>> As earlycon can't vote for it's QUP core need, to fix this add ICC
-> > >>>>>> support to common/QUP wrapper driver and put vote for QUP core from
-> > >>>>>> probe on behalf of earlycon and remove vote during sys suspend.
-> > >>>>> Only removing the vote on suspend isn't ideal, the system might never get
-> > >>>>> suspended. That said I don't have a really good alternative suggestion.
-> > >>>>>
-> > >>>>> One thing you could possibly do is to launch a delayed work, check
-> > >>>>> console_device() every second or so and remove the vote when it returns
-> > >>>>> non-NULL. Not claiming this would be a great solution ...
-> > >>>>>
-> > >>>>> The cleanest solution might be a notifier when the early console is
-> > >>>>> unregistered, it seems somewhat over-engineered though ... Then again
-> > >>>>> other (future) uart drivers with interconnect support might run into
-> > >>>>> the same problem.
-> > >>>> We are hitting this problem because QUP core clocks are shared among all the
-> > >>>> SE driver present in particular QUP wrapper, if other HW controllers has
-> > >>>> similar architecture we will hit this issue.
-> > >>>>
-> > >>>> How about if we expose an API from common driver(geni-se) for putting QUP
-> > >>>> core BW vote to 0.
-> > >>>>
-> > >>>> We call this from console probe just after uart_add_one_port call (console
-> > >>>> resources are enabled as part of this call) to put core quota to 0 on behalf
-> > >>>> of earlyconsole?
-> > >>>   From my notes from earlier debugging I have doubts this would work:
-> > >>>
-> > >>>     There is a short window where the early console and the 'real' console coexist:
-> > >>>
-> > >>>     [    3.858122] printk: console [ttyMSM0] enabled
-> > >>>     [    3.875692] printk: bootconsole [qcom_geni0] disabled
-> > >>>
-> > >>>     The reset probably occurs when the early console tries to write, but the ICC
-> > >>>     is effectively disabled because ttyMSM0 and the other geni ports are runtime
-> > >>>     suspended.
-> > >> Code flow from console driver probe(qcom_geni_serial.c)
-> > >>
-> > >> uart_add_one_port--->uart_configure_port--->{ 1) uart_change_pm(enable
-> > >> console resources)  2)register_console(boot to real console switch happens
-> > >> here)}
-> > >>
-> > >> Console resources are not disabled from anywhere before the switch happens
-> > >> completely. I meant to say until we saw below logs.
-> > >>
-> > >> [    3.875692] printk: bootconsole [qcom_geni0] disabled
-> > >>
-> > >> I think the board reset issue cannot occur during the window where early
-> > >> console and 'real' console coexist.
-> > > Thanks for the clarification! Indeed my notes were only a hypothesis, I
-> > > don't see evidence that there is an actual downvote shortly after console
-> > > registration.
-> > >
-> > >> I have validated proposed solution by me, it is working fine.
-> > >>
-> > >> Currently voting is done for every QUP and not only to which earlycon is
-> > >> connect, with the above approach we can't remove vote from other QUPs.
-> > >>
-> > >> However we can limit voting only to earlycon QUP by removing interconnect
-> > >> from DT node of other QUPs.
-> > >>
-> > >> I am not sure how clean is this solution.
-> > > I'm more inclined towards a solution along the lines of what Evan
-> > > proposed, i.e. delaying the votes (either in geni or ICC) until we
-> > > are ready.
-> >
-> > Based on discussion I think the delayed solution is most suited if
-> > implemented in ICC core because other ICC client might face the similar
-> > problem.
-> >
-> > However for geni case I am more inclined towards below proposed solution.
-> >
-> > -----------------------------------------------------------------------------------------------------
-> >
-> > How about if we expose an API from common driver(geni-se) for putting QUP
-> > core BW vote to 0.
-> >
-> > We call this from console probe just after uart_add_one_port call (console
-> > resources are enabled as part of this call) to put core quota to 0 on behalf
-> > of earlyconsole?
-> 
-> This seems ok to me. Earlycon sets up a vote, and then real probe
-> tears it down. As long as in the shuffle of all of these things into
-> SE library helpers you still have a way of differentiating the
-> earlycon vote from the real vote.
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+---
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Note though that the boot console will outlive the real console when the
-kernel is booted with "keep_bootcon" on the command line (something I do
-from time to time).
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 32a95d162f06..0f82d5a7a614 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11358,10 +11358,15 @@ F:	drivers/tty/mxser.*
+ MONOLITHIC POWER SYSTEM PMIC DRIVER
+ M:	Saravanan Sekar <sravanhome@gmail.com>
+ S:	Maintained
++F:	Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ F:	Documentation/devicetree/bindings/regulator/mps,mp*.yaml
++F:	drivers/iio/adc/mp2629_adc.c
++F:	drivers/mfd/mp2629.c
++F:	drivers/power/supply/mp2629_charger.c
+ F:	drivers/regulator/mp5416.c
+ F:	drivers/regulator/mpq7920.c
+ F:	drivers/regulator/mpq7920.h
++F:	include/linux/mfd/mp2629.h
+ 
+ MR800 AVERMEDIA USB FM RADIO DRIVER
+ M:	Alexey Klimov <klimov.linux@gmail.com>
+-- 
+2.17.1
 
-So rather than relying on "real probe" to signal when we can release the
-earlycon's icc vote I think we should specify dev->con->exit in
-qcom_geni_serial_earlycon_setup(), so that it will signal when the
-earlycon actually goes away - and until that point the clocks should
-just be on.
-
-> In other words, don't reuse this
-> early icc_path for the real UART vote. You should probably also
-> destroy the path once you've voted zero on it.
-
-Maintaining the early and real votes completely separate sounds like a
-sure way to keep this sane; and there's no drawback on having multiple
-votes for the same thing and rely on the framework to keep track of the
-various users.
-
-Regards,
-Bjorn
