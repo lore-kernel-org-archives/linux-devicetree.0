@@ -2,154 +2,203 @@ Return-Path: <SRS0=dVBB=5N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85557C43331
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 11:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C50C2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 12:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59465206CC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 11:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1167206E6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 12:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7XK/uR9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YTHJ8fwD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbgC1L3s (ORCPT
+        id S1726307AbgC1MCW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Mar 2020 07:29:48 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42397 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgC1L3r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 07:29:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h15so14868352wrx.9;
-        Sat, 28 Mar 2020 04:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=48cUKb3hewA6YqxxcM8aRq1Cv5K4EWHquZ9kJ+7UoxA=;
-        b=J7XK/uR96SCZTbQlk5nx5a9xV0/oPjTVP6L+T791RLlhHdiAeFs/GwmPkcHngmgaGR
-         +Fjy4LENZQnIwA3gEmwwuLBtAeqeLdHljL/9qmaGka1WI57wWwzR+segwNCQW6ZlSfGG
-         PA9WYCZQ2QjuoyMTVkh4ivqRyvNBh13gmjvDipeiben/7eciS5nCvhahWJZ00F7Iq+xa
-         YDFGB+NjacR9xG3b28SpY22L86jMVeWKTV9sGRvzVDfbQJ6owCkP1GVX5iKMalmR3Ear
-         tRv+SkRfWds3vIP1zRbNlqXgmTXfs3SRSb0lxGM04zrvygExplOJMX1LBCj7K51P1ju4
-         goxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=48cUKb3hewA6YqxxcM8aRq1Cv5K4EWHquZ9kJ+7UoxA=;
-        b=aa9lcS2iBFs5InYerH5b1WEl3ANu4rLI8iMsV53v9pHnlRFKaRSuB1S0dFEBL2cx1y
-         7QYlO/ALKCKUMUu7RxcLr9t80/mp5hXuqxG7nyshBDEChPLCL5bewVJqi40L3NySluUC
-         VJUGFnz18VTqeRoY+VEMi4SafRJ82c5q2KS/F5dJtND5E2ZcHOXh+x/mBOc9dvRoKmqY
-         so6V1eWLZe3LByAdJiw1hOYk5SuZKQr3Ja5rq/ZhzfjP3dk7ilCOgWFHOiOGpxJahY+R
-         GwD6wol2mytoMcR8/bdi23dI2mw4GkWp7lYq674sw4Xy+45ZJZKfG/+2ic/tmSoU/Okv
-         6pvQ==
-X-Gm-Message-State: ANhLgQ1R2MpSIbcEc4vy7RuLW37bYDKIgUwA5ynszeaaC4Hvj+RPbTMS
-        4iB5Ze0Nl/w9600x/9796+wDp2rcXm4=
-X-Google-Smtp-Source: ADFU+vs4/LZ1qoi9tgNpOM9fvmW6ER9q3wSqLs/wu94Ztl/ULPfT1jcvMWdjNrRrQCO2/HtGqakGGA==
-X-Received: by 2002:a5d:4cc4:: with SMTP id c4mr4424245wrt.346.1585394984815;
-        Sat, 28 Mar 2020 04:29:44 -0700 (PDT)
-Received: from [192.168.0.104] (p5DCFFF1C.dip0.t-ipconnect.de. [93.207.255.28])
-        by smtp.gmail.com with ESMTPSA id m11sm12283575wmf.9.2020.03.28.04.29.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Mar 2020 04:29:44 -0700 (PDT)
-Subject: Re: [PATCH v5 4/5] power: supply: Add support for mps mp2629 battery
- charger
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <20200328001154.17313-1-sravanhome@gmail.com>
- <20200328001154.17313-5-sravanhome@gmail.com>
- <CAHp75VefP3oPyRJ=Z9Y5Wv3rSc-nJdKFLJ60YLdUbP5dFikS+w@mail.gmail.com>
-From:   saravanan sekar <sravanhome@gmail.com>
-Message-ID: <36892440-99b2-10e8-1d7c-dd8c97e03a39@gmail.com>
-Date:   Sat, 28 Mar 2020 12:29:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 28 Mar 2020 08:02:22 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:25010 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726225AbgC1MCW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 28 Mar 2020 08:02:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585396941; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=zzBLtQ+//D0bBXPqSlcrMZohpTUdmpgajv0NPqBclSs=; b=YTHJ8fwDBy7l8TiPSs+e60VzngK8QI7BEWgOH1YkXGcNxY44LIqwnqKy42rQOoOVoWRY3U0H
+ vmmD24vrrHc5QzsYxg/3DLv2P6lIi96zNUuDT+6XEnuQPvCMujupbbI3M6jnuPkJl1BgJ6+W
+ XU0m72twwk0Cj7qekJoEzZ4zVBk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7f3cb9.7f7608415458-smtp-out-n04;
+ Sat, 28 Mar 2020 12:02:01 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B2FFCC433F2; Sat, 28 Mar 2020 12:02:01 +0000 (UTC)
+Received: from Pillair (unknown [183.83.66.17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86CE5C433D2;
+        Sat, 28 Mar 2020 12:01:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86CE5C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+References: <1585219723-28323-1-git-send-email-pillair@codeaurora.org> <20200327230025.GJ5063@builder>
+In-Reply-To: <20200327230025.GJ5063@builder>
+Subject: RE: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Sat, 28 Mar 2020 17:31:52 +0530
+Message-ID: <000101d604f8$afc48220$0f4d8660$@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VefP3oPyRJ=Z9Y5Wv3rSc-nJdKFLJ60YLdUbP5dFikS+w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain;
+        charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFGsu5WNDBp+FP/TOeyoiVSrY11cwGGydAyqXBTCQA=
+Content-Language: en-us
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Bjorn,
+ Comments inline.
 
-On 28/03/20 12:02 pm, Andy Shevchenko wrote:
-> On Sat, Mar 28, 2020 at 2:12 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
->> The mp2629 provides switching-mode battery charge management for
->> single-cell Li-ion or Li-polymer battery. Driver supports the
->> access/control input source and battery charging parameters.
-> ...
->
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
-> Missed header bits.h.
->
-> ...
->
->> +       ret = iio_read_channel_processed(charger->iiochan[ch], &chval);
->> +       if (ret < 0)
-> Is it possible to get positive returned value?
-Really not for processed
->> +               return ret;
-> ...
->
->> +       val->intval = (rval * props[fld].step) + props[fld].min;
-> Too many parentheses.
->
-> ...
->
->> +       return ((psp == POWER_SUPPLY_PROP_PRECHARGE_CURRENT) ||
->> +               (psp == POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT) ||
->> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT) ||
->> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE));
-> Ditto.
-I think I misunderstood you previous review comment "Redundant 
-parentheses", no sure what is the expectation
->
-> ...
->
->> +       return ((psp == POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT) ||
->> +               (psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT));
-> Ditto.
->
-> ...
->
->> +       return sprintf(buf, "%d mohm\n", rval);
-> Hmm... For units we usually have separate node, but it is up to
-> maintainer, I dunno what the common practice is there.
->
-> ...
->
->> +       int val;
->> +       int ret;
->> +
->> +       ret = kstrtoint(buf, 10, &val);
->> +       if (ret)
->> +               return ret;
->> +
->> +       if (val < 0 && val > 140)
-> What the point to convert negative values in the first place? kstrtouint()
-Done
->> +               return -ERANGE;
-> ...
->
->> +       struct power_supply_config psy_cfg = {NULL};
-> { 0 }
->
-NULL to make compiler happy.
+
+> -----Original Message-----
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Sent: Saturday, March 28, 2020 4:30 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+linux-
+> kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
+> Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
+> 
+> On Thu 26 Mar 03:48 PDT 2020, Rakesh Pillai wrote:
+> 
+> > Add device node for the ath10k SNOC platform driver probe
+> > and add resources required for WCN3990 on sc7180 soc.
+> >
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > ---
+> >
+> > Depends on https://patchwork.kernel.org/patch/11455345/
+> > The above patch adds the dt-bindings for wifi-firmware
+> > subnode
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  8 ++++++++
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27
+> +++++++++++++++++++++++++++
+> >  2 files changed, 35 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 043c9b9..a6168a4 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -327,6 +327,14 @@
+> >  	};
+> >  };
+> >
+> > +&wifi {
+> > +	status = "okay";
+> > +	qcom,msa-fixed-perm;
+> > +	wifi-firmware {
+> > +		iommus = <&apps_smmu 0xc2 0x1>;
+> 
+> How is sc7180 different from sdm845, where the iommus property goes
+> directly in the &wifi node?
+
+Sc7180 IDP is a target without TrustZone support and also with S2 IOMMU
+enabled.
+Since in Trustzone based targets, the iommu SID configuration was done by
+TZ, there was nothing required to be done by driver.
+But in non-TZ based targets, the IOMMU mappings need to be done by the
+driver.
+Since this is the mapping of the firmware memory and to keep it different
+from the driver memory access, a different device has been created for
+firmware and these SIDs are configured.
+
+The below ath10k series brings-in this support.
+https://patchwork.kernel.org/project/linux-wireless/list/?series=261367&stat
+e=* 
+
+Thanks,
+Rakesh Pillai.
+
+> 
+> Regards,
+> Bjorn
+> 
+> > +	};
+> > +};
+> > +
+> >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> >
+> >  &qspi_clk {
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 998f101..2745128 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -83,6 +83,11 @@
+> >  			reg = <0 0x8f600000 0 0x500000>;
+> >  			no-map;
+> >  		};
+> > +
+> > +		wlan_fw_mem: memory@94104000 {
+> > +			reg = <0 0x94104000 0 0x200000>;
+> > +			no-map;
+> > +		};
+> >  	};
+> >
+> >  	cpus {
+> > @@ -835,6 +840,28 @@
+> >  			};
+> >  		};
+> >
+> > +		wifi: wifi@18800000 {
+> > +			compatible = "qcom,wcn3990-wifi";
+> > +			reg = <0 0x18800000 0 0x800000>;
+> > +			reg-names = "membase";
+> > +			iommus = <&apps_smmu 0xc0 0x1>;
+> > +			interrupts =
+> > +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0
+> */ >,
+> > +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1
+> */ >,
+> > +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2
+> */ >,
+> > +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3
+> */ >,
+> > +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4
+> */ >,
+> > +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5
+> */ >,
+> > +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6
+> */ >,
+> > +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7
+> */ >,
+> > +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8
+> */ >,
+> > +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9
+> */ >,
+> > +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10
+> */>,
+> > +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11
+> */>;
+> > +			memory-region = <&wlan_fw_mem>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> >  		config_noc: interconnect@1500000 {
+> >  			compatible = "qcom,sc7180-config-noc";
+> >  			reg = <0 0x01500000 0 0x28000>;
+> > --
+> > 2.7.4
