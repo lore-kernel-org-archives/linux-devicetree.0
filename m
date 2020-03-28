@@ -2,190 +2,196 @@ Return-Path: <SRS0=dVBB=5N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C07AC43331
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 12:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E94FC43331
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 13:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC1120723
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 12:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E469920723
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Mar 2020 13:30:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CY8eZFv7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eb4Ag3N7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgC1MhR (ORCPT
+        id S1726283AbgC1Naf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Mar 2020 08:37:17 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38306 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgC1MhR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 08:37:17 -0400
-Received: by mail-il1-f194.google.com with SMTP id n13so4012063ilm.5;
-        Sat, 28 Mar 2020 05:37:16 -0700 (PDT)
+        Sat, 28 Mar 2020 09:30:35 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37171 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgC1Naf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Mar 2020 09:30:35 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j11so10153136lfg.4;
+        Sat, 28 Mar 2020 06:30:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O/8yHh9a7PftoLLUSkGnNnfodolyFPpd9WhHKOKDPIA=;
-        b=CY8eZFv7KVbtrEKXF0M8rb3igcjdETQPtrZ4ZnFKlcfLnduiyC36E1ZgohJf95wvmX
-         p52eU0pxQVlFCQeSq3G6rsdkLILNCl34UO8f7yJRZglOun2Bdf4Zga+evMfYR2dU8s5P
-         Zd6TvAFNOu/tiXas5A8aYH5NxdrMAntPGczoEXjpX94OngWN4dyR3nLiZqyyIshMlnx/
-         gb8PZ6+IxUxNNng0uBuSXmhOK5M5o5f3Oel0hcJMguTUgQejUHwYwdUM3zPkS/sHA7rU
-         3/R2SOB5aQ9incRSZUHje8qqACLlXMMvnxiMhWsJE0Yq/rx8/07OkUPXFjONFKKS+DPU
-         pu3Q==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=fpTSSh5tRpcFW0jsHvOATJRcyb91oxueGaMFFSV1vFE=;
+        b=Eb4Ag3N7bVLIE8P2nqKmqwIgtQ/mRsSq3LqTMcUzn9Lok+qeOu7vS5eZ7arSpVa9bZ
+         OGilMipCBgUQx5zzq8QT/fgJgdFhuOTlOUWEGxYxyxORXVL9Qfbwb6aBHyFzJWoSf3QM
+         +matoSkgAthKaHGj7Ub+6QkYHmRTSelDPzlE+JFEiJ/CGKpgNUPoHHkJHc2JANBKki/F
+         IM0Go9udle+p5LQcwgExMEOjTan9cgaxuQ51T6Cz21DVc6wvUy3OPZ7SzgYRqTmE5ZBD
+         jgSyDocQ29ekqhnT0kw5d3FFla8ikPr+cpwlC9qdyt1d+zRDWfZR3QR1k1JZ5c1zoM2o
+         xyRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O/8yHh9a7PftoLLUSkGnNnfodolyFPpd9WhHKOKDPIA=;
-        b=AIQAUPHaatJoGbWOBmK4NuIbRQfPk28099ooz/kW774gBbF104NkiYJ4Z0dpg3y1ML
-         v1+Ikp48cNRho3Trn+M8ipjfLyOWBchwb/MhtVnb26Gw4SuhnGjynGi/+wdvr6uEKXI1
-         t/nW4+ZBxWudV6RxCq/GN0yp5LXpnWmTOAcXVZG1h6WVCS/PVPNreEL5Q6QYfdaiPSbx
-         R7bMlWclpv+U1Bl0kKmM59hE+Cp5MlCeQD9klWouDPN90JjTHF/B+/fx2RlH5mjrL25v
-         FbTgGdOpVgl3NiWMaIds63Ga9o874vmoz9pe/v3r8kqmTUuLbFQ920O1HcRA+cjUQG8P
-         j/KA==
-X-Gm-Message-State: ANhLgQ2JNLda8It9uOfIW2AIxrk/D2qcxm+4xEhvveGKUQFbP0mfc5BO
-        lenTMy46LQq3hn7bBtWzjYZDfu4/uDtsSFKLTD8=
-X-Google-Smtp-Source: ADFU+vu+FX/31Esa4oReLjE2l+HEqXJ0WmQE/QmsqlRjAHIQis3eJkgh0I/03U+PImxYEHaV+/7e3sBg1ZxBNUmLpX4=
-X-Received: by 2002:a92:5dc7:: with SMTP id e68mr3547084ilg.205.1585399035789;
- Sat, 28 Mar 2020 05:37:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHCN7xJSKH-gXA5ncFS3h6_2R28rn70O3HfT=ActS1XVgCFSeg@mail.gmail.com>
- <DB3PR0402MB39160D3F0D03B968B7CBE25AF5CD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39160D3F0D03B968B7CBE25AF5CD0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Sat, 28 Mar 2020 07:37:04 -0500
-Message-ID: <CAHCN7xJ2m3LRB3oGBb5QKbacYyTBQK1CdzGcTh3w=hj18H=4Pw@mail.gmail.com>
-Subject: Re: i.MX8MN Errors on 5.6-RC7
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=fpTSSh5tRpcFW0jsHvOATJRcyb91oxueGaMFFSV1vFE=;
+        b=Zd3gjnS/kAIh9tCXGFpt4a530dS/RSbKI1ERHJn9xLcE4UlTuMo+6731cxjw7kQ5uO
+         1RJH/LInLL4DQYL6tawxgJjddaZA7JBzc7+69BlvTs9sTu0uIL2FNIr13eP9k6t7uE9U
+         GEITer002jpn0Yo07sPhj7Ppn8Obw8j/wGSejDTuflyCJyAn8qNwMX5p21ZdLFaEI2Yd
+         DOba2Br+ywj9ar/va4XHFdHNna54G9q/Kot0xPmjHNLY5txViIMoeWCW4MWBtW0opv7/
+         JsoZqgRUNG8cSXPuBcvERQYjijTR3ft5CezSQKbJZrkI/LfIn2YyCJIDFR/TJU0gdA5M
+         aVFg==
+X-Gm-Message-State: AGi0PuYSE63QoJuUjwATfNLslyIn48BYevrKiOxTl8ze/C+03B7ys9Ph
+        77Cl07Rw92rcUNPYNhKie6c=
+X-Google-Smtp-Source: APiQypL1izzm57YETsCZdu0nqNghep3RFILqeIvIMSa2s1rNdZBiMtx2esbl9T6Q7UrptjZF/I8wvA==
+X-Received: by 2002:a19:c507:: with SMTP id w7mr1473474lfe.131.1585402231872;
+        Sat, 28 Mar 2020 06:30:31 -0700 (PDT)
+Received: from pablo-laptop ([2a02:a315:5445:5300:4fd:4b14:6ece:986c])
+        by smtp.googlemail.com with ESMTPSA id q10sm4441444lfa.29.2020.03.28.06.30.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Mar 2020 06:30:31 -0700 (PDT)
+Message-ID: <ac67cfc3736cf50c716b823a59af878d59b7198f.camel@gmail.com>
+Subject: Re: [PATCH v4 5/5] arm64: dts: Add node for ufs exynos7
+From:   =?UTF-8?Q?Pawe=C5=82?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc:     krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Sat, 28 Mar 2020 14:30:29 +0100
+In-Reply-To: <20200327170638.17670-6-alim.akhtar@samsung.com>
+References: <20200327170638.17670-1-alim.akhtar@samsung.com>
+         <CGME20200327171423epcas5p485d227f19e45999ad9b42b21d2864e4a@epcas5p4.samsung.com>
+         <20200327170638.17670-6-alim.akhtar@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 7:07 AM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Hi, Adam
->
-> > Subject: i.MX8MN Errors on 5.6-RC7
-> >
-> > I am getting a few errors on the i.MX8MN:
-> >
-> > [    0.000368] Failed to get clock for /timer@306a0000
-> > [    0.000380] Failed to initialize '/timer@306a0000': -22
-> > [    7.203447] caam 30900000.caam: Failed to get clk 'ipg': -2
-> > [    7.334741] caam 30900000.caam: Failed to request all necessary clocks
-> > [    7.438651] caam: probe of 30900000.caam failed with error -2
-> > [    7.854193] imx-cpufreq-dt: probe of imx-cpufreq-dt failed with error -2
-> >
-> > I was curious to know if anyone else is seeing similar errors.  I already
-> > submitted a proposed fix for a DMA timeout (not shown here) which
-> > matched work already done on i.MX8MQ and i.MX8MM.
-> >
-> > I am not seeing huge differences between 8MM and 8MN in the nodes which
-> > address the timer, caam or imx-cpufreq-dt.
-> >
-> > If anyone has any suggestions, I'd love to try them.
->
+On Fri, 2020-03-27 at 22:36 +0530, Alim Akhtar wrote:
+> Adding dt node foe UFS and UFS-PHY for exynos7 SoC.
+> 
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> ---
+>  .../boot/dts/exynos/exynos7-espresso.dts      | 16 +++++++
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi       | 43 ++++++++++++++++++-
+>  2 files changed, 57 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> index 7af288fa9475..b59a0a32620a 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> @@ -406,6 +406,22 @@
+>  	};
+>  };
+>  
+> +&ufs {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&ufs_rst_n &ufs_refclk_out>;
+> +	ufs,pwr-attr-mode = "FAST";
+> +	ufs,pwr-attr-lane = <2>;
+> +	ufs,pwr-attr-gear = <2>;
+> +	ufs,pwr-attr-hs-series = "HS_rate_b";
+> +	ufs-rx-adv-fine-gran-sup_en = <1>;
+> +	ufs-rx-adv-fine-gran-step = <3>;
+> +	ufs-rx-adv-min-activate-time-cap = <9>;
+> +	ufs-pa-granularity = <6>;
+> +	ufs-pa-tacctivate = <3>;
+> +	ufs-pa-hibern8time = <20>;
+> +};
+> +
+>  &usbdrd_phy {
+>  	vbus-supply = <&usb30_vbus_reg>;
+>  	vbus-boost-supply = <&usb3drd_boost_5v>;
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> index 5558045637ac..9d16c90edd07 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -220,9 +220,14 @@
+>  			#clock-cells = <1>;
+>  			clocks = <&fin_pll>, <&clock_top1 DOUT_ACLK_FSYS1_200>,
+>  				 <&clock_top1 DOUT_SCLK_MMC0>,
+> -				 <&clock_top1 DOUT_SCLK_MMC1>;
+> +				 <&clock_top1 DOUT_SCLK_MMC1>,
+> +				 <&clock_top1 DOUT_SCLK_UFSUNIPRO20>,
+> +				 <&clock_top1 DOUT_SCLK_PHY_FSYS1>,
+> +				 <&clock_top1 DOUT_SCLK_PHY_FSYS1_26M>;
+>  			clock-names = "fin_pll", "dout_aclk_fsys1_200",
+> -				      "dout_sclk_mmc0", "dout_sclk_mmc1";
+> +				      "dout_sclk_mmc0", "dout_sclk_mmc1",
+> +				      "dout_sclk_ufsunipro20", "dout_sclk_phy_fsys1",
+> +				      "dout_sclk_phy_fsys1_26m";
+>  		};
+>  
+>  		serial_0: serial@13630000 {
+> @@ -601,6 +606,40 @@
+>  			};
+>  		};
+>  
+> +		ufs: ufs@15570000 {
+> +			compatible = "samsung,exynos7-ufs";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			reg = <0x15570000 0x100>,  /* 0: HCI standard */
+> +				<0x15570100 0x100>,  /* 1: Vendor specificed */
+> +				<0x15571000 0x200>,  /* 2: UNIPRO */
+> +				<0x15572000 0x300>;  /* 3: UFS protector */
+> +			reg-names = "hci", "vs_hci", "unipro", "ufsp";
+> +			interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clock_fsys1 ACLK_UFS20_LINK>,
+> +				<&clock_fsys1 SCLK_UFSUNIPRO20_USER>;
+> +			clock-names = "core_clk", "sclk_unipro_main";
+> +			freq-table-hz = <0 0>, <0 0>;
+> +			pclk-freq-avail-range = <70000000 133000000>;
+> +			ufs,pwr-local-l2-timer = <8000 28000 20000>;
+> +			ufs,pwr-remote-l2-timer = <12000 32000 16000>;
+> +			phys = <&ufs_phy>;
+> +			phy-names = "ufs-phy";
+> +			status = "disabled";
+> +		};
+> +
+> +		ufs_phy: ufs-phy@0x15571800 {
+> +			compatible = "samsung,exynos7-ufs-phy";
+> +			reg = <0x15571800 0x240>;
+> +			reg-names = "phy-pma";
+> +			samsung,pmu-syscon = <&pmu_system_controller>;
+> +			#phy-cells = <0>;
+> +			clocks = <&clock_fsys1 MOUT_FSYS1_PHYCLK_SEL1>,
+> +				<&clock_top1 CLK_SCLK_PHY_FSYS1_26M>;
+> +			clock-names = "ref_clk_parent", "ref_clk";
+Hi
+Is this correct (aren't child and parent clock swapped)?
+This will set MOUT_FSYS1_PHYCLK_SEL1 to be parent clock of
+CLK_SCLK_PHY_FSYS1_26M.
+I've tested this on Exynos7420 (which looks like can use the same clock
+driver as exynos7) and after adding some debug code (because currently
+we're not handling result of samsung_ufs_phy_clks_init) i got
 
-Fabio,
+samsung-ufs-phy 15571800.ufs-phy: clk_set_parent result: -22
 
-I tried your ATF suggestion, and it fixed some issues and introduced others:
+On vendor sources for this device, driver was setting
+CLK_SCLK_PHY_FSYS1_26M to be parent of MOUT_FSYS1_PHYCLK_SEL1, and then
+it did run without error.
 
-[    0.767679] ------------[ cut here ]------------
-[    0.767687] coherent pool not initialised!
-[    0.767714] WARNING: CPU: 3 PID: 1 at kernel/dma/remap.c:190
-dma_alloc_from_pool+0x94/0xa0
-[    0.767718] Modules linked in:
-[    0.767728] CPU: 3 PID: 1 Comm: swapper/0 Not tainted
-5.6.0-rc7-00471-g97c33f1ada5c-dirty #5
-[    0.767732] Hardware name: Beacon EmbeddedWorks i.MX8M Nano
-Development Kit (DT)
-[    0.767738] pstate: 60000005 (nZCv daif -PAN -UAO)
-[    0.767744] pc : dma_alloc_from_pool+0x94/0xa0
-[    0.767749] lr : dma_alloc_from_pool+0x94/0xa0
-[    0.767753] sp : ffff80001003ba10
-[    0.767756] x29: ffff80001003ba10 x28: ffff00007c868080
-[    0.767762] x27: 0000000fffffffe0 x26: ffff00007fbdd080
-[    0.767768] x25: 0000000000000000 x24: ffff800010161b3c
-[    0.767774] x23: 0000000000001000 x22: ffff00007c86bd38
-[    0.767780] x21: ffff8000112ba000 x20: ffff00007f6ed410
-[    0.767785] x19: 0000000000000000 x18: 0000000000000010
-[    0.767791] x17: 00000000000045e0 x16: 00000000000045d0
-[    0.767796] x15: ffff00007f470470 x14: ffffffffffffffff
-[    0.767802] x13: ffff80009003b777 x12: ffff80001003b77f
-[    0.767807] x11: ffff8000118e1000 x10: ffff800011abc658
-[    0.767813] x9 : 0000000000000000 x8 : 6573696c61697469
-[    0.767818] x7 : 6e6920746f6e206c x6 : 00000000000000a9
-[    0.767824] x5 : 0000000000000000 x4 : 0000000000000000
-[    0.767829] x3 : 00000000ffffffff x2 : ffff8000118e1b80
-[    0.767835] x1 : 3a4437124c5a6b00 x0 : 0000000000000000
-[    0.767840] Call trace:
-[    0.767847]  dma_alloc_from_pool+0x94/0xa0
-[    0.767853]  dma_direct_alloc_pages+0x1a4/0x1e0
-[    0.767858]  dma_direct_alloc+0xc/0x20
-[    0.767863]  dma_alloc_attrs+0x7c/0xf0
-[    0.767870]  sdma_probe+0x3d4/0x7f0
-[    0.767877]  platform_drv_probe+0x50/0xa0
-[    0.767885]  really_probe+0xd4/0x320
-[    0.767891]  driver_probe_device+0x54/0xf0
-[    0.767897]  device_driver_attach+0x6c/0x80
-[    0.767903]  __driver_attach+0x54/0xd0
-[    0.767908]  bus_for_each_dev+0x6c/0xc0
-[    0.767914]  driver_attach+0x20/0x30
-[    0.767919]  bus_add_driver+0x140/0x1f0
-[    0.767925]  driver_register+0x60/0x110
-[    0.767930]  __platform_driver_register+0x44/0x50
-[    0.767938]  sdma_driver_init+0x18/0x20
-[    0.767944]  do_one_initcall+0x50/0x190
-[    0.767950]  kernel_init_freeable+0x1cc/0x23c
-[    0.767958]  kernel_init+0x10/0x100
-[    0.767963]  ret_from_fork+0x10/0x18
-[    0.767972] ---[ end trace 796b8d949d96f5f6 ]---
+samsung-ufs-phy 15571800.ufs-phy: clk_set_parent result: 0
 
+Also looking at clk-exynos7 driver seems to confirm this.
 
-Anson,
+> +		};
+> +
+>  		usbdrd_phy: phy@15500000 {
+>  			compatible = "samsung,exynos7-usbdrd-phy";
+>  			reg = <0x15500000 0x100>;
 
-> Which board did you try? I just run it on i.MX8MN-EVK board, no such failure:
-I have a board from Beacon EmbeddedWorks based on the i.MX8MN which is
-nearly identical to the i.MX8MM which doesn't exhibit any of these
-errors.
-
-I tried Fabio's suggestion of switching the version of ATF which did
-fix the Bluetooth communication errors I was getting, but I didn't
-show them before.
-
-Unfortunately, I don't have the i.MX8MN-EVK right now, I'm working on
-trying to get one.
-
-Can I ask which version of U-Boot and ATF you're using?  I am
-wondering if I need to update something else.
-
-adam
->
-> root@imx8mnevk:~# uname -a
-> Linux imx8mnevk 5.6.0-rc7 #621 SMP PREEMPT Sat Mar 28 19:56:30 CST 2020 aarch64 aarch64 aarch64 GNU/Linux
-> root@imx8mnevk:~# dmesg | grep fail
-> [    0.719353] imx-sdma 302b0000.dma-controller: Direct firmware load for imx/sdma/sdma-imx7d.bin failed with error -2
-> [    0.941304] calling  net_failover_init+0x0/0x8 @ 1
-> [    0.941310] initcall net_failover_init+0x0/0x8 returned 0 after 0 usecs
-> [    1.135885] calling  failover_init+0x0/0x24 @ 1
-> [    1.135897] initcall failover_init+0x0/0x24 returned 0 after 6 usecs
-> root@imx8mnevk:~#
->
-> Thanks,
-> Anson
