@@ -4,71 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C69C2D0ED
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7804AC2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 17:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BD82073E
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 17:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5068E20732
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 17:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="ZW157KiE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Ba0la23j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgC2RgJ (ORCPT
+        id S1728503AbgC2Rim (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 13:36:09 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:17458 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbgC2RgJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 13:36:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585503366;
+        Sun, 29 Mar 2020 13:38:42 -0400
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.120]:14273 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728465AbgC2Ril (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 13:38:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585503519;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=3bPEDGqyJOBTZ1dmWLnKidK90rqP4ViQpq+Ni8TIszo=;
-        b=ZW157KiEkI5Si2uEU7hBYeSSWdMfQqWLNbSYPBaIr7XsFuBNC2tLGKrC2Al6NNoG+j
-        wGxFGfRF25h+nPIEyFdOGZctkTEvsM66xCTHObdx2xQyjQqt1eQv9fP+nhmZBsHs1eYp
-        /NZaA+I8QDBYYnipKxkV+ZUGGwbCbD/YGazyA3HXXFQ5XyWTRC+rjuzlHRk7quI5a1Ht
-        Df1AiCJZZEWtcEFyMVgyBCdDK20K/fw3BeOQw6Me42OtTKkxWiNZSZCHexna7wMcGDda
-        15tIUp2VGq8hhLTYZYsX6EKrGt1qKjOMGfg7P2vRmGaHE+85iOQaDuIESxTmrK/B0HyX
-        Nllw==
+        bh=iyEhMCKeP2FreN2b/L3+ZjLXH7lhAMv1iW4jyUtBvjo=;
+        b=Ba0la23jr5Sj0IFxpZA8mXzm0IevQonvcn2TrIHR8ZVTvWI1TKS/WqiF8XABT74eC/
+        Nxb/jxkL1USZpiuIvnJvWoKhUX6uYWhL0lI7VblU8kl4wqArd9BuAeAejCpAvCjvXlOV
+        bO8T0Vxe9tc0Lb5eDA3wz1aMP3RriSLJIfCVzjnkG3tQpoPGR5COuqvDCKAVOEaL/kNN
+        XdOojt8a06BktecdEjXq6Ooxf1sfpSl9r8T+MkG/6I0OBflDbyU7Dokfhdz+pkELu85V
+        OSz6frPrT188Q/zgDsS29BpxSm5uCNhMYXch2P+rsg+iGBOE2AXC7AV1FjLLqulO7W9g
+        YgDw==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id m02241w2THZwBM9
+        with ESMTPSA id m02241w2THcUBMo
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Sun, 29 Mar 2020 19:35:58 +0200 (CEST)
+        Sun, 29 Mar 2020 19:38:30 +0200 (CEST)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Paul Cercueil <paul@crapouillou.net>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Kees Cook <keescook@chromium.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        mips-creator-ci20-dev@googlegroups.com
-Subject: [RFC v3 2/8] drm: ingenic-drm: add MODULE_DEVICE_TABLE
-Date:   Sun, 29 Mar 2020 19:35:48 +0200
-Message-Id: <02c8f35fde969fd852a62740b4fa8a01c53b79ef.1585503354.git.hns@goldelico.com>
+        James Hogan <jhogan@kernel.org>
+Cc:     Philipp Rossak <embed3d@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v5 6/8] ARM: DTS: omap4: add sgx gpu child node
+Date:   Sun, 29 Mar 2020 19:38:24 +0200
+Message-Id: <df6e1449b403d33d39f8bb994a1e3a81be552c13.1585503505.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1585503354.git.hns@goldelico.com>
-References: <cover.1585503354.git.hns@goldelico.com>
+In-Reply-To: <cover.1585503505.git.hns@goldelico.com>
+References: <cover.1585503505.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -76,26 +70,71 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-so that the driver can load by matching the device tree
-if compiled as module.
+and add interrupt.
 
+Since omap4420/30/60 and omap4470 come with different SGX variants
+we need to introduce a new omap4470.dtsi. If an omap4470 board
+does not want to use SGX it is no problem to still include
+omap4460.dtsi.
+
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # PandaBoard ES
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/omap4.dtsi   | 11 ++++++-----
+ arch/arm/boot/dts/omap4470.dts | 15 +++++++++++++++
+ 2 files changed, 21 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap4470.dts
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index 6d47ef7b148c..bcba2f024842 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -843,6 +843,7 @@ static const struct of_device_id ingenic_drm_of_match[] = {
- 	{ .compatible = "ingenic,jz4770-lcd", .data = &jz4770_soc_info },
- 	{ /* sentinel */ },
- };
-+MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 9a87440d0b9d..939061f96523 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -390,7 +390,7 @@ abb_iva: regulator-abb-iva {
+ 			status = "disabled";
+ 		};
  
- static struct platform_driver ingenic_drm_driver = {
- 	.driver = {
+-		target-module@56000000 {
++		sgx_module: target-module@56000000 {
+ 			compatible = "ti,sysc-omap4", "ti,sysc";
+ 			reg = <0x5600fe00 0x4>,
+ 			      <0x5600fe10 0x4>;
+@@ -409,10 +409,11 @@ target-module@56000000 {
+ 			#size-cells = <1>;
+ 			ranges = <0 0x56000000 0x2000000>;
+ 
+-			/*
+-			 * Closed source PowerVR driver, no child device
+-			 * binding or driver in mainline
+-			 */
++			gpu: gpu@0 {
++				compatible = "ti,omap4-sgx540-120", "img,sgx540-120", "img,sgx540";
++				reg = <0x0 0x2000000>;	/* 32MB */
++				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			};
+ 		};
+ 
+ 		dss: dss@58000000 {
+diff --git a/arch/arm/boot/dts/omap4470.dts b/arch/arm/boot/dts/omap4470.dts
+new file mode 100644
+index 000000000000..19b554612401
+--- /dev/null
++++ b/arch/arm/boot/dts/omap4470.dts
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Device Tree Source for OMAP4470 SoC
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++#include "omap4460.dtsi"
++
++&sgx {
++	compatible = "img,sgx544-112", "img,sgx544", "ti,omap-omap4-sgx544-112";
++};
 -- 
 2.25.1
 
