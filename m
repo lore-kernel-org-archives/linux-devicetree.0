@@ -2,106 +2,166 @@ Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B521C2D0ED
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 08:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05C4C2D0ED
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 09:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC4AB2073B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 08:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A320B2073B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 09:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=solid-run-com.20150623.gappssmtp.com header.i=@solid-run-com.20150623.gappssmtp.com header.b="d4O8PS/F"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="07E0C60Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbgC2Ims (ORCPT
+        id S1727675AbgC2JCC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 04:42:48 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39475 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbgC2Imr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 04:42:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id k15so1855052pfh.6
-        for <devicetree@vger.kernel.org>; Sun, 29 Mar 2020 01:42:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=solid-run-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mm21zqNKH5QxiJQcUlrn7BqWiGlQa1KdybRnnNJOm1U=;
-        b=d4O8PS/FC8ChncDuAjXIj/C137W0Vb8+83OzAVsVoNQZlVup9O/8zBRDfpBFScCDuf
-         f2+G4Gh2WpQbkgmIl4jYUSQbkY15kSvElrizfP16KI2RXfyLPifIzP7soGxlFyBn/CmF
-         /3beC3x5nlyeM6WfaHHDCRkB1mdBsngKPqH9ya16b4RyZyRPfand3BiPeRN4ajjSkWbt
-         pEqcjF4traFAIGBhAle3p8LXcFI306vytPurkB91t73vD3cwnTF4vijwgNRKq2rIDFKH
-         4AeMJMlv7DuOXNNXBIClzpPI6+6QI2GI6zH31yAiz9IKjp7zmUw/12usEJPso7Fuukq+
-         u+bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mm21zqNKH5QxiJQcUlrn7BqWiGlQa1KdybRnnNJOm1U=;
-        b=EsiWw5OW7Nz4otIDd6O0k0lOpCMES4QkylyMXgy8iI0wktIQVipQc+YAJjLMp0AMmv
-         AoKIJzQcjiaV9wUIReeIrufOn8GXqphy/Sqq1A4Z1XHTwTWfdyg3eef5xU3psgwA7Zr8
-         I6oR4uWG5fMD6Vndk7SsPPeFwiQUb7sHTJZHk5nxdIRVyTWybdZpk+8Kgb3z4KZOOWrI
-         E+18GMThBObWrsWdbCAiaCL1kAwEP1MNWMCLE5qR2IY1ye8w8tBu1rVVK3SqClQtYqXU
-         helfrDpI2kxP1I/ER60wmwH26RvHC64xPooCk1QVsjGNeHsALws3kr/2FXSVgHLDvJro
-         COEw==
-X-Gm-Message-State: ANhLgQ3PDkk2c/zDEbDe3ma34gcgcm7nLmEWjtutl5mzsKkvF4PRXoLz
-        LyFAAJ4rg72xi+CrotCI34IjhnqU7Xc1iYUski+Q9g==
-X-Google-Smtp-Source: ADFU+vse3gxid5D8S54aiYHM0Z+bLIH5hv0RLHRgFuvgHaZ9yYD5mNB7wS/HLa4mj4i7DdnB3XxnGFy/rDQ/QNX3iU0=
-X-Received: by 2002:a63:c64d:: with SMTP id x13mr7802548pgg.124.1585471366611;
- Sun, 29 Mar 2020 01:42:46 -0700 (PDT)
+        Sun, 29 Mar 2020 05:02:02 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34368 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727504AbgC2JCB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 05:02:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=H5gHcZt58ItxyBwqaqxZtntJGLmB68FixgDVNtg8rCs=; b=07E0C60Qj23SXfi8N3GXmOZby
+        1Hyu8JB6hjpqjVbF5nzJMATZNq7dhhOrute0Hyn00mXx80gRd3XdzNmtNIB7nMSCmCpqz/nl08AKK
+        k1ebxfRQ6/3jvcJ8JxSft+oWkYRLzN+rYGQSWCgltsgB5q00nYWgXMBVfU/01oeqtBL0/X2uY3nhQ
+        JnhwCkHDAK8MiExjdHJYTM3b6Axw22rJUXByf/MjgCz8FrU0I4zTKHPujP4vBVO717XpEHcoxQ0CS
+        1NQdgGPYuNbi/nYU5+y4A7xknuGQUU48hKfDeJcl5SMYOTxLyOHU1dWcoSIlUAF9W4fyPRR5IXt6x
+        rG5MBnaKA==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:38708)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jITpB-0003yK-JF; Sun, 29 Mar 2020 10:01:45 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jITp6-000650-KD; Sun, 29 Mar 2020 10:01:40 +0100
+Date:   Sun, 29 Mar 2020 10:01:40 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH net-next 3/9] net: phy: add kr phy connection
+ type
+Message-ID: <20200329090140.GW25745@shell.armlinux.org.uk>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-4-git-send-email-florinel.iordache@nxp.com>
+ <20200327001515.GL3819@lunn.ch>
+ <AM0PR04MB54435F251B435789A435A0BBFBCA0@AM0PR04MB5443.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20200328212115.12477-1-eichest@gmail.com> <877dz3el4k.fsf@tarshish>
-In-Reply-To: <877dz3el4k.fsf@tarshish>
-From:   Rabeeh Khoury <rabeeh@solid-run.com>
-Date:   Sun, 29 Mar 2020 11:42:35 +0300
-Message-ID: <CA+j0otmO9QEKuYGk54wO_su0Kyzdxaf9ZB34SMBXQEih+46qRw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: clearfog-gt-8k: fix ge phy reset pin
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Stefan Eichenberger <eichest@gmail.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB54435F251B435789A435A0BBFBCA0@AM0PR04MB5443.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 9:22 AM Baruch Siach <baruch@tkos.co.il> wrote:
->
-> Hi Stefan,
->
-> On Sun, Mar 29 2020, eichest@gmail.com wrote:
-> > From: Stefan Eichenberger <eichest@gmail.com>
-> >
-> > According to the ClearFog-GT-8K-rev-1_1-Simplified-Schematic the reset
-> > pin for the gigabit phy is MPP62 and not MPP43.
->
-> Have you tested that on real hardware?
->
-> The 1Gb PHY reset on my Clearfog GT-8K is connected to MPP43. Russell's
-> commit 46f94c7818e7 ("arm64: dts: clearfog-gt-8k: set gigabit PHY reset
-> deassert delay") indicates that this is the case on his board as well.
->
-> In case there was a hardware change between board revisions, we need
-> another dtb for that revision.
+On Sun, Mar 29, 2020 at 08:22:10AM +0000, Florinel Iordache wrote:
+> > On Thu, Mar 26, 2020 at 03:51:16PM +0200, Florinel Iordache wrote:
+> > > Add support for backplane kr phy connection types currently available
+> > > (10gbase-kr, 40gbase-kr4) and the required phylink updates (cover all
+> > > the cases for KR modes which are clause 45 compatible to correctly
+> > > assign phy_interface and phylink#supported)
+> > >
+> > > Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
+> > > ---
+> > >  drivers/net/phy/phylink.c | 15 ++++++++++++---
+> > >  include/linux/phy.h       |  6 +++++-
+> > >  2 files changed, 17 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> > > index fed0c59..db1bb87 100644
+> > > --- a/drivers/net/phy/phylink.c
+> > > +++ b/drivers/net/phy/phylink.c
+> > > @@ -4,6 +4,7 @@
+> > >   * technologies such as SFP cages where the PHY is hot-pluggable.
+> > >   *
+> > >   * Copyright (C) 2015 Russell King
+> > > + * Copyright 2020 NXP
+> > >   */
+> > >  #include <linux/ethtool.h>
+> > >  #include <linux/export.h>
+> > > @@ -303,7 +304,6 @@ static int phylink_parse_mode(struct phylink *pl, struct
+> > fwnode_handle *fwnode)
+> > >                       break;
+> > >
+> > >               case PHY_INTERFACE_MODE_USXGMII:
+> > > -             case PHY_INTERFACE_MODE_10GKR:
+> > 
+> > We might have a backwards compatibility issue here. If i remember correctly,
+> > there are some boards out in the wild using PHY_INTERFACE_MODE_10GKR not
+> > PHY_INTERFACE_MODE_10GBASER.
+> > 
+> > See e0f909bc3a242296da9ccff78277f26d4883a79d
+> > 
+> > Russell, what do you say about this?
+> > 
+> >          Andrew
+> 
+> Ethernet interface nomenclature is using the following terminology:
+> e.g. 10GBase-KR: data rate (10G),  modulation type (Base = Baseband),
+> medium type (K = BacKplane), physical layer encoding scheme
+> (R = scRambling/descRambling using 64b/66b encoding that allows for
+> Ethernet framing at a rate of 10.3125 Gbit/s)
+> So 10GBase-R name provide information only about the data rate and
+> the encoding scheme without specifying the interface medium.
+> 10GBase-R is a family of many different standards specified for
+> several different physical medium for copper and optical fiber like
+> for example:
+> 	10GBase-SR: Short range (over fiber)
+> 	10GBase-LR: Long reach (over fiber)
+> 	10GBase-LRM: Long reach multi-mode (over fiber)
+> 	10GBase-ER: Extended reach (over fiber)
+> 	10GBase-CR: 10G over copper
+> 	10GBase-KR: Backplane
+> 
+> 10GBase-KR represents Ethernet operation over electrical backplanes on
+> single lane and uses the same physical layer encoding as 10GBase-LR/ER/SR
+> defined in IEEE802.3 Clause 49. 
 
-It's a bug in the simplified schematics since that schematics is based
-on rev 1.0 and not rev 1.1 as claimed.
+I'm not sure why NXP folk think that they have to keep explaining this
+to us.  You do not.
 
-In rev 1.0; the 1Gbps phy reset was connected to MPP62; but that MPP
-is not functional as a GPIO when selecting MPP[56:61] as SD card.
-Due to that we manually rewired ALL rev 1.0 PCBs 1Gbps phy to be
-connected to MPP43 via R8038 pads.
+> So prior to my change, phy_interface_t provided both enumerators which is correct:
+> 	PHY_INTERFACE_MODE_10GBASER
+> 	PHY_INTERFACE_MODE_10GKR
+> Perhaps PHY_INTERFACE_MODE_10GKR was not used before because Backplane
+> support was not available and all 10GBase-R family of interfaces should
+> be using PHY_INTERFACE_MODE_10GBASER.
 
-Rev 1.1 fixes this by that by disconnecting 1Gbps phy reset from MPP62
-and wiring it to MPP43.
-So basically rev 1.0 and rev 1.1 are compatible software wise. We will
-fix the schematics.
+What you are missing is that PHY_INTERFACE_MODE_10GKR was introduced
+first and used _incorrectly_.  We are currently mid-transition to
+correct that mistake.
 
-Rabeeh
+While we are in transition, PHY_INTERFACE_MODE_10GKR can _not_ be used
+correctly, and nothing NXP or anyone else says will change that fact
+until the transition has been completed.
+
+In kernel land, we do not intentionally regress platforms, even if we
+have made a mistake.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
