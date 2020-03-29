@@ -2,130 +2,132 @@ Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C8BC43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 18:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD8CC2D0EB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 19:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66DA720732
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 18:22:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="fazfmfEZ"
+	by mail.kernel.org (Postfix) with ESMTP id AF8482076A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 19:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgC2SWv (ORCPT
+        id S1728303AbgC2TEE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 14:22:51 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40694 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728467AbgC2SWu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 14:22:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ul5mPuoITZiwsLENljEvGuoEiNdCieYNeoF+CgVtynY=; b=fazfmfEZAjksByCU8DCpoS9F+
-        Nr90jbUdAi42KYu8HacKRPIMwtSxS8gPV08oocVVKktH55e304YKnr90bFNgyYt2QdC6Xo/x1JCLe
-        MeRgQnh2C3QeyvqYQ8+L1rm2X7XpkYeZf2LSddGAxZZwyi/MC5qfNUH7IICpLRcznIUswY/hP9LbD
-        G4Sr5nykVqVuGxItgtmgYImpYs/uMsRUiZ77JSOE+KLbqGB6hWPDdTpsOER/1oj+L3kuk1YV4S2MR
-        F37blPxMy0YhqGydl4ZS6VnWEQ9q7PCOx7sAvRpULKz8Nt04SRvjE0A+hPeGf4wkCK6cklh8gZUlC
-        etqkiKGaA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:59598)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jIca0-0006Mb-Bc; Sun, 29 Mar 2020 19:22:40 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jIcZw-0006QA-JB; Sun, 29 Mar 2020 19:22:36 +0100
-Date:   Sun, 29 Mar 2020 19:22:36 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-pwm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Sun, 29 Mar 2020 15:04:04 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:57418 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbgC2TEE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 15:04:04 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id D9D85804FC;
+        Sun, 29 Mar 2020 21:03:53 +0200 (CEST)
+Date:   Sun, 29 Mar 2020 21:03:52 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org,
         Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH RFC 2/6] gpio: mvebu: honour EPROBE_DEFER for
- devm_clk_get()
-Message-ID: <20200329182236.GC25745@shell.armlinux.org.uk>
-References: <20200329104549.GX25745@shell.armlinux.org.uk>
- <E1jIVU9-0005h4-QU@rmk-PC.armlinux.org.uk>
- <20200329131659.4hbshjst4ccvje2n@pengutronix.de>
- <20200329133400.GA25745@shell.armlinux.org.uk>
- <20200329180056.cwju3zqviwnwwjd6@pengutronix.de>
+        devicetree@vger.kernel.org,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Chris Zhong <zyw@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
+        Nikolaus Schaller <hns@goldelico.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
+        Marek Belisko <marek@goldelico.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Nickey Yang <nickey.yang@rock-chips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Peter Rosin <peda@axentia.se>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stefan Mavrodiev <stefan@olimex.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Werner Johansson <werner.johansson@sonymobile.com>
+Subject: Re: [PATCH v1 32/36] dt-bindings: display: convert sharp,ls037v7dw01
+ to DT Schema
+Message-ID: <20200329190352.GA21479@ravnborg.org>
+References: <20200315134416.16527-1-sam@ravnborg.org>
+ <20200315134416.16527-33-sam@ravnborg.org>
+ <20200319030734.GH29911@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200329180056.cwju3zqviwnwwjd6@pengutronix.de>
+In-Reply-To: <20200319030734.GH29911@bogus>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=8lPrDCVDlfZqt0RlNdoA:9 a=CjuIK1q_8ugA:10
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 08:00:56PM +0200, Uwe Kleine-König wrote:
-> Hello Russell,
+Hi Rob.
+
+> > +
+> > +  mode-gpios:
+> > +    description: |
+> > +      GPIO ordered MO, LR, and UD as specified in LS037V7DW01.pdf
 > 
-> On Sun, Mar 29, 2020 at 02:34:00PM +0100, Russell King - ARM Linux admin wrote:
-> > On Sun, Mar 29, 2020 at 03:16:59PM +0200, Uwe Kleine-König wrote:
-> > > On Sun, Mar 29, 2020 at 11:48:09AM +0100, Russell King wrote:
-> > > > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> > > > index fa5641615db6..ee13b11c5298 100644
-> > > > --- a/drivers/gpio/gpio-mvebu.c
-> > > > +++ b/drivers/gpio/gpio-mvebu.c
-> > > > @@ -1132,6 +1132,9 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
-> > > >  	}
-> > > >  
-> > > >  	mvchip->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > +	if (mvchip->clk == ERR_PTR(-EPROBE_DEFER))
-> > > > +		return -EPROBE_DEFER;
-> > > > +
-> > > >  	/* Not all SoCs require a clock.*/
-> > > >  	if (!IS_ERR(mvchip->clk))
-> > > >  		clk_prepare_enable(mvchip->clk);
-> > > 
-> > > I'd say the following is the right thing to do here:
-> > > 
-> > > 	mvchip->clk = devm_clk_get_optional(...);
-> > > 	if (IS_ERR(mvchip->clk))
-> > > 		return ...
-> > 
-> > It's not that simple.  The clock is required for Armada 370, and is
-> > optional for Armada 8040.
+> 3 or...
 > 
-> I'd say it is still the right approach here. On Armada 370 the dtb then
-> has a clk and on Armada 8040 it doesn't. So if with
-> devm_clk_get_optional() something goes wrong that's because the dtb is
-> wrong. And in fact the handling is even better than with your suggested
-> patch as every error (but EPROBE_DEFER) is ignored instead of passed to
-> the caller with your (and the existing) approach.
+> > +      change configuration between QVGA and VGA mode and the
+> > +      scan direction. As these pins can be also configured
+> > +      with external pulls, all the GPIOs are considered
+> > +      optional with holes in the array.
+> 
+> minItems: 3
+> maxItems: 5
 
-Sort of.  Every error is currently treated as "no clock", and only
-later does such an error become fatal in the driver _if_ PWM is
-configured into the kernel and we're running on Armada 370.  If PWM
-is disabled in the kernel, or on some other SoC, then the driver
-doesn't care whether getting the clock reported any kind of error.
+This binding can specify up to three GPIOs like this:
 
-Your proposal is to always treat any error getting the clock,
-irrespective of whether there is PWM or not, as a fatal error for
-the driver.
 
-That is an entirely seperate functional change.
+> > +        mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH        /* gpio154, lcd MO */
+> > +                      &gpio1 2 GPIO_ACTIVE_HIGH         /* gpio2, lcd LR */
+> > +                      &gpio1 3 GPIO_ACTIVE_HIGH>;       /* gpio3, lcd UD */
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+They are in the linux kernel driver accessed like this:
+
+    devm_gpiod_get_index(&pdev->dev, "mode", 2, GPIOD_OUT_LOW);
+
+The following is OK in the DT file:
+
+    mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
+
+    mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH
+                  &gpio1 2 GPIO_ACTIVE_HIGH>;
+		  
+    mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH
+                  &gpio1 2 GPIO_ACTIVE_HIGH
+                  &gpio1 3 GPIO_ACTIVE_HIGH>;
+
+But the following is not OK:
+    mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>, <&gpio1 2 GPIO_ACTIVE_HIGH>;
+
+Any hints how to specify the binding to prevent the above?
+I have tried a few combinations - but they do not catch this.
+So my binding attempts are not restrictive enough.
+
+Any hints how to describe this properly?
+
+	Sam
