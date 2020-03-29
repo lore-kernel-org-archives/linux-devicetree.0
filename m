@@ -2,265 +2,118 @@ Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D3EC2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 22:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6364FC2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 22:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCE42074A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 22:07:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IpzvSj93"
+	by mail.kernel.org (Postfix) with ESMTP id 39E7A20781
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 22:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585522440;
+	bh=wfIxjNJ0sTS7Qcsd3YW25HzMdWGDXgBLhUnbMCC+gGo=;
+	h=From:To:CC:Subject:Date:List-ID:From;
+	b=VtE9V41rkOu1zJMO9aktjAnMbBQwC/PYfjFJhQWA0waXYvgsANtqNQRlLkdu9KfiK
+	 XDS21WcMnnMYgcKrlwZY0vsBRzdrKw5wCL+MtQykX8Fc2Q8PnfguQWBnbWMbTGeT0B
+	 DBICnudLLDlsJRkRLmqt/vRcfij4I0R2E91UuWOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgC2WHM (ORCPT
+        id S1729308AbgC2Wx7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 18:07:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46317 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729221AbgC2WHL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 18:07:11 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j17so18868804wru.13
-        for <devicetree@vger.kernel.org>; Sun, 29 Mar 2020 15:07:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=xqOYJnZwZ6nCjA/xlHPb8mgZN2nsbbT0ZoaYXOpkuLo=;
-        b=IpzvSj93LGGqfX/pEFFDBqxz2oGLAVMgMH+pkbxOXiDK3OPs3SQPYdJcwOKRpS564O
-         i+wJZiYEEeFnPD2EvGnsCDiamlX74r9xB6Lx7U6Q2qXLf+s3OIglehymhCdGKilxWPNR
-         9UuCACT3A1A/y4s+ZwsfvyLtaJyOrvLadae5e8LiPn8MBha7ofJ+J7wCd3HwOgR/k3a8
-         TK12ZIohUYrUq+KCqnZptjCVYDyNodp8QClv9BmnekHASLRc8Q4g8Kr2J9bkgXeqXmmJ
-         dKORQNKnbqMjlNejrNub2lzQR2GxGJMNaPh0FY2SeLs1eT2eytNJqQlBJWxki7XLFbz9
-         tnug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=xqOYJnZwZ6nCjA/xlHPb8mgZN2nsbbT0ZoaYXOpkuLo=;
-        b=iZQO/YDCs8MZiFOjxi0yodalqp7VkJN3sOMMp1E6IDTrWKFZWZJvsW19iuJ4+lnF7i
-         GUKSb0512LibYYtnUmiWmTKiUS033xG8sojtxRMwmnbDS9Cc/ETQS2WBtK0MgCgedwW6
-         S055UCHSoFxjRmODVIDAIja0raFUlf9esTNu7M6QraeeX7VOGvJXgYT9L5GfyL3jUOu4
-         KNxKV+5e+VgQVmjCKRh3EATfR+KUeyBMLDR2K+MalQCEEWy4IZv//BrPYs/e0jNm0ZkW
-         k6UX+lMcbI98Wu2LVaDq7TLrdWXGtjB9r84sHFKQ5v6ZzTN61k0c4ozspvnmrVEiEXVU
-         3pgA==
-X-Gm-Message-State: ANhLgQ0X8NTzZ8A115PW1vpNhoDfRxE/qp/2stmQoa5U7t9bOW2kg+SD
-        dWbyFFAgg2wytJ7sXW+jnoFiLQ==
-X-Google-Smtp-Source: ADFU+vu6IEW9IGES8IzwqBpA2MZlxUSPxSmcSdZEmeqfayfoxno1bZvmFyd211/q2428O8w4EnqkLw==
-X-Received: by 2002:adf:9465:: with SMTP id 92mr11523032wrq.122.1585519626825;
-        Sun, 29 Mar 2020 15:07:06 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e34:ed2f:f020:78b1:4459:6959:42d0])
-        by smtp.gmail.com with ESMTPSA id j188sm20026740wmj.36.2020.03.29.15.07.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 15:07:06 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rafael@kernel.org, robh@kernel.org
-Cc:     daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-pm@vger.kernel.org (open list:THERMAL),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/4] dt-bindings: thermal: Add the idle cooling device
-Date:   Mon, 30 Mar 2020 00:03:18 +0200
-Message-Id: <20200329220324.8785-2-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200329220324.8785-1-daniel.lezcano@linaro.org>
-References: <20200329220324.8785-1-daniel.lezcano@linaro.org>
+        Sun, 29 Mar 2020 18:53:59 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31109 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729281AbgC2Wx6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 18:53:58 -0400
+X-UUID: d370c5f1c69d415590d318d9d8aab34d-20200330
+X-UUID: d370c5f1c69d415590d318d9d8aab34d-20200330
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <ryder.lee@kernel.org>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 13965590; Mon, 30 Mar 2020 06:53:43 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 30 Mar 2020 06:53:37 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 30 Mar 2020 06:53:42 +0800
+From:   Ryder Lee <ryder.lee@kernel.org>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH] arm64: dts: mt7622: add built-in Wi-Fi device nodes
+Date:   Mon, 30 Mar 2020 06:53:40 +0800
+Message-ID: <315346e1d6fa00e5a0d7a8216982bf723af8e985.1584862530.git.ryder.lee@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some devices are not able to cool down by reducing their voltage /
-frequency because it could be not available or the system does not
-allow voltage scaling. In this configuration, it is not possible to
-use this strategy and the idle injection cooling device can be used
-instead.
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-One idle cooling device is now present for the CPU as implemented by
-the combination of the idle injection framework belonging to the power
-capping framework and the thermal cooling device. The missing part is
-the DT binding providing a way to describe how the cooling device will
-work on the system.
+This enables built-in 802.11n Wi-Fi support. It's 2.4GHz only.
 
-A first iteration was done by making the cooling device to point to
-the idle state. Unfortunately it does not make sense because it would
-need to duplicate the idle state description for each CPU in order to
-have a different phandle and make the thermal internal framework
-happy.
-
-It was proposed to add an cooling-cells to <3>, unfortunately the
-thermal framework is expecting a value of <2> as stated by the
-documentation and it is not possible from the cooling device generic
-code to loop this third value to the back end cooling device.
-
-Another proposal was to add a child 'thermal-idle' node as the SCMI
-does. This approach allows to have a self-contained configuration for
-the idle cooling device without colliding with the cpufreq cooling
-device which is based on the CPU node. In addition, it allows to have
-the cpufreq cooling device and the idle cooling device to co-exist
-together as showed in the example.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- .../bindings/thermal/thermal-idle.yaml        | 145 ++++++++++++++++++
- 1 file changed, 145 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/thermal-idle.yaml
+ .../boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts     |  4 ++++
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts          |  4 ++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi              | 11 +++++++++++
+ 3 files changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/thermal-idle.yaml b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-new file mode 100644
-index 000000000000..f9f59cfa3c36
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/thermal-idle.yaml
-@@ -0,0 +1,145 @@
-+# SPDX-License-Identifier: (GPL-2.0)
-+# Copyright 2020 Linaro Ltd.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/thermal-idle.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+index 83e10591e0e5..d174ad214857 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
+@@ -543,3 +543,7 @@
+ 	pinctrl-0 = <&watchdog_pins>;
+ 	status = "okay";
+ };
 +
-+title: Thermal idle cooling device binding
++&wmac {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index 3f783348c66a..0b4de627f96e 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -506,3 +506,7 @@
+ 	pinctrl-0 = <&watchdog_pins>;
+ 	status = "okay";
+ };
 +
-+maintainers:
-+  - Daniel Lezcano <daniel.lezcano@linaro.org>
++&wmac {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index dac51e98204c..03b14a5ab7f3 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -699,6 +699,17 @@
+ 		status = "disabled";
+ 	};
+ 
++	wmac: wmac@18000000 {
++		compatible = "mediatek,mt7622-wmac";
++		reg = <0 0x18000000 0 0x100000>;
++		interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_LOW>;
 +
-+description: |
-+  The thermal idle cooling device allows the system to passively
-+  mitigate the temperature on the device by injecting idle cycles,
-+  forcing it to cool down.
++		mediatek,infracfg = <&infracfg>;
++		status = "disabled";
 +
-+  This binding describes the thermal idle node.
++		power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
++	};
 +
-+properties:
-+   $nodename:
-+     const: thermal-idle
-+     description: |
-+        A /thermal-idle node describes the idle cooling device properties to
-+        cool down efficiently the attached thermal zone.
-+
-+   '#cooling-cells':
-+      const: 2
-+      description: |
-+         Must be 2, in order to specify minimum and maximum cooling state used in
-+         the cooling-maps reference. The first cell is the minimum cooling state
-+         and the second cell is the maximum cooling state requested.
-+
-+   duration:
-+      $ref: /schemas/types.yaml#/definitions/uint32
-+      description: |
-+         The idle duration in microsecond the device begins to cool down.
-+
-+   latency:
-+      $ref: /schemas/types.yaml#/definitions/uint32
-+      description: |
-+         The exit latency constraint in microsecond for the injected
-+         idle state for the device.
-+
-+required:
-+  - '#cooling-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/thermal/thermal.h>
-+
-+    // Example: Combining idle cooling device on big CPUs with cpufreq cooling device
-+    cpus {
-+            #address-cells = <2>;
-+            #size-cells = <0>;
-+
-+            /* ... */
-+
-+                 cpu_b0: cpu@100 {
-+                         device_type = "cpu";
-+                         compatible = "arm,cortex-a72";
-+                         reg = <0x0 0x100>;
-+                         enable-method = "psci";
-+                         capacity-dmips-mhz = <1024>;
-+                         dynamic-power-coefficient = <436>;
-+                         #cooling-cells = <2>; /* min followed by max */
-+                         cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-+                         idle-thermal {
-+                                 #cooling-cells = <2>;
-+                                 duration = <10000>;
-+                                 latency = <500>;
-+                         };
-+                };
-+
-+                cpu_b1: cpu@101 {
-+                        device_type = "cpu";
-+                        compatible = "arm,cortex-a72";
-+                        reg = <0x0 0x101>;
-+                        enable-method = "psci";
-+                        capacity-dmips-mhz = <1024>;
-+                        dynamic-power-coefficient = <436>;
-+                        #cooling-cells = <2>; /* min followed by max */
-+                        cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-+                        idle-thermal {
-+                                #cooling-cells = <2>;
-+                                duration = <10000>;
-+                                latency = <500>;
-+                        };
-+                 };
-+
-+          /* ... */
-+
-+    };
-+
-+    /* ... */
-+
-+    thermal_zones {
-+         cpu_thermal: cpu {
-+                polling-delay-passive = <100>;
-+                polling-delay = <1000>;
-+
-+                /* ... */
-+
-+                trips {
-+                        cpu_alert0: cpu_alert0 {
-+                                    temperature = <65000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                        };
-+
-+                        cpu_alert1: cpu_alert1 {
-+                                    temperature = <70000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                        };
-+
-+                        cpu_alert2: cpu_alert2 {
-+                                    temperature = <75000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                        };
-+
-+                        cpu_crit: cpu_crit {
-+                                    temperature = <95000>;
-+                                    hysteresis = <2000>;
-+                                    type = "critical";
-+                        };
-+                };
-+
-+                cooling-maps {
-+                        map0 {
-+                             trip = <&cpu_alert1>;
-+                             cooling-device = <&{/cpus/cpu@100/idle-thermal} 0 15 >,
-+                                              <&{/cpus/cpu@101/idle-thermal} 0 15>;
-+                        };
-+
-+                        map1 {
-+                             trip = <&cpu_alert2>;
-+                             cooling-device =
-+                                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+                                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+                       };
-+                };
-+          };
-+    };
+ 	ssusbsys: ssusbsys@1a000000 {
+ 		compatible = "mediatek,mt7622-ssusbsys",
+ 			     "syscon";
 -- 
-2.17.1
+2.18.0
 
