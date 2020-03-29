@@ -2,29 +2,29 @@ Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CCAC43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 16:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3848C2D0E5
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 16:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23A8620733
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 16:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760A220733
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 16:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgC2QXP (ORCPT
+        id S1728311AbgC2QZv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 12:23:15 -0400
-Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:52648 "EHLO
+        Sun, 29 Mar 2020 12:25:51 -0400
+Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:52668 "EHLO
         ixit.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728330AbgC2QXP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 29 Mar 2020 12:23:15 -0400
+        id S1728209AbgC2QZv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 29 Mar 2020 12:25:51 -0400
 Received: from localhost.localdomain (227.146.230.94.awnet.cz [94.230.146.227])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ixit.cz (Postfix) with ESMTPSA id 8F89E249A1;
-        Sun, 29 Mar 2020 18:23:12 +0200 (CEST)
+        by ixit.cz (Postfix) with ESMTPSA id 3A33A24975;
+        Sun, 29 Mar 2020 18:16:25 +0200 (CEST)
 From:   David Heidelberg <david@ixit.cz>
 To:     Sebastian Reichel <sre@kernel.org>,
         Jonghwa Lee <jonghwa3.lee@samsung.com>,
@@ -38,12 +38,10 @@ To:     Sebastian Reichel <sre@kernel.org>,
         linux-kernel@vger.kernel.org
 Cc:     David Heidelberg <david@ixit.cz>, Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org
-Subject: [PATCH 9/9] arm: dts: qcom: apq8064-nexus7: Add smb345 charger node
-Date:   Sun, 29 Mar 2020 18:21:28 +0200
-Message-Id: <20200329162128.218584-10-david@ixit.cz>
+Subject: [PATCH 0/9] Summit SMB3xx driver & device-tree
+Date:   Sun, 29 Mar 2020 18:15:43 +0200
+Message-Id: <20200329161552.215075-1-david@ixit.cz>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200329161552.215075-1-david@ixit.cz>
-References: <20200329161552.215075-1-david@ixit.cz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -51,60 +49,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add smb345 charger node to Nexus 7 2013 DTS.
-Proper charger initialization also prevents battery from overcharging.
+We gathered existing patches, fixed and improved what we could and
+final result is an working charging driver with device-tree support for
+Nexus 7.
 
-Original author: Vinay Simha BN <simhavcs@gmail.com>
+At this moment charging works with:
+ - Nexus 7 2012 (grouper and tilapia)
+ - Nexus 7 2013 (flo and deb)
+ - ... and there is more devices equiped with these chargers.
 
-Signed-off-by: David Heidelberg <david@ixit.cz>
----
- .../boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+David Heidelberg (7):
+  power: supply: smb347-charger: Add delay before getting IRQSTAT
+  power: supply: smb347-charger: Use resource-managed API
+  dt-bindings: power: supply: Add device-tree binding for Summit SMB3xx
+  power: supply: smb347-charger: Implement device-tree support
+  power: supply: smb347-charger: Support SMB345 and SMB358
+  power: supply: smb347-charger: Remove virtual smb347-battery
+  arm: dts: qcom: apq8064-nexus7: Add smb345 charger node
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-index a701d4bac320..9f14216a22f1 100644
---- a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
-@@ -3,6 +3,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/power/summit,smb347-charger.h>
- / {
- 	model = "Asus Nexus7(flo)";
- 	compatible = "asus,nexus7-flo", "qcom,apq8064";
-@@ -293,11 +294,30 @@ eeprom@52 {
- 					pagesize = <32>;
- 				};
- 
--				bq27541@55 {
-+				bat: battery@55 {
- 					compatible = "ti,bq27541";
- 					reg = <0x55>;
-+					power-supplies = <&power_supply>;
- 				};
- 
-+				power_supply: charger@6a {
-+					compatible = "summit,smb345";
-+					reg = <0x6a>;
-+
-+					interrupt-parent = <&tlmm_pinmux>;
-+					interrupts = <23 IRQ_TYPE_EDGE_BOTH>;
-+
-+					summit,max-chg-curr = <1800000>;
-+					summit,usb-curr-limit = <500000>;
-+
-+					summit,chip-temp-threshold = <110>;
-+
-+					summit,enable-usb-charging;
-+					summit,enable-otg-charging;
-+
-+					summit,enable-chg-ctrl =
-+						<SMB3XX_CHG_ENABLE_SW>;
-+				};
- 			};
- 		};
- 
+Dmitry Osipenko (2):
+  power: supply: smb347-charger: IRQSTAT_D is volatile
+  power: supply: smb347-charger: Replace mutex with IRQ disable/enable
+
+ .../power/supply/summit,smb347-charger.yaml   | 224 ++++++++
+ .../boot/dts/qcom-apq8064-asus-nexus7-flo.dts |  22 +-
+ drivers/power/supply/Kconfig                  |   6 +-
+ drivers/power/supply/smb347-charger.c         | 510 +++++++++---------
+ .../dt-bindings/power/summit,smb347-charger.h |  19 +
+ 5 files changed, 526 insertions(+), 255 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+ create mode 100644 include/dt-bindings/power/summit,smb347-charger.h
+
 -- 
 2.25.0
 
