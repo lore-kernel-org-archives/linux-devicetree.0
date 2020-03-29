@@ -2,137 +2,132 @@ Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6B7C2D0E7
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 10:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF90CC43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 10:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9225720732
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 10:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585477650;
-	bh=f3MF2NNJAi4232pZYddjeL7pVm1fUChXOUZS+6fT5iE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=kkd3s7Zpu5oDbx8e/WqPSWMRuUFp+Wk9+Uv9cWMh4YqiCTmui4ZbNg3pEaGgjACO3
-	 yWjlhc2kdN39l4TRR1cy8/dIgSg2O0aTpgoCm4OCyBRlBG+hDJjWz4WmujcLXLDakR
-	 SVLUyA3cnOJOvLkq6trvS0u5+Y4ZCfaJxEsp6gw4=
+	by mail.kernel.org (Postfix) with ESMTP id 8406D20675
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 10:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cw+9tTm5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgC2K11 (ORCPT
+        id S1727962AbgC2KeJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 06:27:27 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46030 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgC2K11 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 06:27:27 -0400
-Received: by mail-lf1-f67.google.com with SMTP id v4so11416843lfo.12;
-        Sun, 29 Mar 2020 03:27:25 -0700 (PDT)
+        Sun, 29 Mar 2020 06:34:09 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37348 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727869AbgC2KeI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 06:34:08 -0400
+Received: by mail-wm1-f68.google.com with SMTP id d1so17849441wmb.2;
+        Sun, 29 Mar 2020 03:34:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=f3MF2NNJAi4232pZYddjeL7pVm1fUChXOUZS+6fT5iE=;
-        b=u/0FHKWybogy8QjgF5XOPOnq6ZQ++zbVLRSpEGOAD8nPhRH8j6BvrM6Oah/6z1wZdW
-         cXW/UPpXVD9aAR9tAF6c4obpaaiM2nf4qbQO38L7Vz9TSeph2TpfButEUIY3Tdyu25pZ
-         qEwwp+YfDTw6bYdIgzSDPNm1RRhURaEcFix/7BPokCr3mQHLKIjWyVzjUGef+4UxwtQN
-         cl3mHgqtRhc87IIS9YDBxeUKLrNcDtIYxIivJm3jOVBYHK02maEllWHfgCAvQwZmFzmT
-         vu93NXEdhRXh0OFKqQsULxejesCn4Hcj/BhYDpII8rA57l2Cpg3KVeLydlh2OkAIzRgx
-         JIRA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=FlZLcBO7OYWRZLM3fnAWMQqlsSHKvKFSKGsey7ScD04=;
+        b=cw+9tTm5CubLPa3eNghOc8/tTgz+aoRUpcGucXULJ+ldNN6QMblIQREQsUok7XYMIk
+         ha8w9p/gRDaqa39YyCeDLhRrDkt+4q+bHhHtN1N5r/GB16h5vWpaDBRYq4cWDVmCYbtI
+         LhoMLLqgM8i5JmFitQATyqoECAHnFf8DB64QFr5DeCzSyG+T485qKEWYkcGar4TPwGiY
+         D+wex9yiUq1JIyfCngOdQ58Es1pLoMF8r5KRRprvGxH8cYXUJVe2Erpsw/XHx+u9FUF8
+         Jwc3wa+e+SyDOdX3wuMhA3LWBEcccWUM7IcZdEcO1cggFTiCyd66cxF+BcCFlodaCNzn
+         aB8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=f3MF2NNJAi4232pZYddjeL7pVm1fUChXOUZS+6fT5iE=;
-        b=rtp5jpRl3MYAtjmZRqOj/XRzbMTcKGdPMJiofhEeWPsB3nHUwl84Gn1HUGgsD1END3
-         UXPnj2jJqi8IWxhnWjAm1AKCj8NMQw7YKnAurdx+YbBqG62GFrp7umfUrQqYe78I32dq
-         pCfIKF967WzpsgXzq+9EZNBgMBu+eDOPA0wdfixxQxzSErf0eQqdfu9LH+x0/s3UVpdC
-         oV1I63D1O5VNSrtQYrx5pdX67aVwnHDeDTrdxe9TKd8TU7mCxe1utw0WtdRTWIhcT8f4
-         KTp6HZatfRkuF36To8KwiBWx+YvX85M1qsg1hmfoq+pIpvlXUZuep5rf95RRkmgGW8JV
-         WMVA==
-X-Gm-Message-State: AGi0PuYE3xUNLF8RjtlFIgicaLBefGJ+CVz56R+m0EVpooa95G/+S722
-        EThGeJETBnIjEIkCrTV/q4k=
-X-Google-Smtp-Source: APiQypLLAsw2f8SLVBZufs8bmyHwdQV0ZPvofG06Wa5VjHYfv4kHchwFrnk+SVdoLMHuhn893zG8ug==
-X-Received: by 2002:a19:6406:: with SMTP id y6mr5000126lfb.125.1585477644797;
-        Sun, 29 Mar 2020 03:27:24 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id j16sm1931138ljg.98.2020.03.29.03.27.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 29 Mar 2020 03:27:23 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v5 0/2] Add USB DWC3 support for SC7180
-In-Reply-To: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
-References: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
-Date:   Sun, 29 Mar 2020 13:27:18 +0300
-Message-ID: <875zenfoc9.fsf@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=FlZLcBO7OYWRZLM3fnAWMQqlsSHKvKFSKGsey7ScD04=;
+        b=ujmJuJs5r470oALl5YZ+q1uC6o3mEjbeVopOl/2G/c7wY0z7Ia7nek6b/EIyzD8DwH
+         c8kkE33pZJG9VFN3sgw+5VNEy2OmYhlpOznz6A/5amavW+xWbIMzjQC4dxV2PQpf8fyp
+         IzPed1VJJPRWlOXXYikEGIypMkc0TxOcbiqZfV2TG2/MzJQluzwbF1BZw+iig76qxbcy
+         53QeGxLovPExByoBeYsPRPVMMUD3f0aDcAQ62/J+dtIjiDpDvVO+94eHcEc9Upz8P7un
+         ByajeBbwDMYEl9dQlU3w0zKXhO6PfswHUZXknB6VsixQ32QSmNq3M6MsyMNlETIY2foj
+         TPyw==
+X-Gm-Message-State: ANhLgQ0Ks7qGMJ/n3cVEm+zZRyrAwvAQT9Mnad1gAh/1vhI11UuA8bUW
+        so1SdlhnDNJ1KtdNk65Oz/gQuRR3
+X-Google-Smtp-Source: ADFU+vsgvkJcM76vOwqLH3zSNrn5alEJfrSXUpOh5ObS7Qs3iQPqty7+fqs4pAtBixLWjHiL2dqujw==
+X-Received: by 2002:a7b:c0d1:: with SMTP id s17mr7685443wmh.58.1585478046213;
+        Sun, 29 Mar 2020 03:34:06 -0700 (PDT)
+Received: from [192.168.0.104] (p5B3F6BD9.dip0.t-ipconnect.de. [91.63.107.217])
+        by smtp.gmail.com with ESMTPSA id m19sm16289545wml.48.2020.03.29.03.34.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 03:34:05 -0700 (PDT)
+Subject: Re: [PATCH v5 4/5] power: supply: Add support for mps mp2629 battery
+ charger
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <20200328001154.17313-1-sravanhome@gmail.com>
+ <20200328001154.17313-5-sravanhome@gmail.com>
+ <CAHp75VefP3oPyRJ=Z9Y5Wv3rSc-nJdKFLJ60YLdUbP5dFikS+w@mail.gmail.com>
+ <36892440-99b2-10e8-1d7c-dd8c97e03a39@gmail.com>
+ <CAHp75VdAfiSjkHhTnghZ__WAJCJTGSWBprJBPNmpkxZTjZuVgQ@mail.gmail.com>
+From:   saravanan sekar <sravanhome@gmail.com>
+Message-ID: <3d811222-68fa-0992-eeeb-97d1c6d09608@gmail.com>
+Date:   Sun, 29 Mar 2020 12:34:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <CAHp75VdAfiSjkHhTnghZ__WAJCJTGSWBprJBPNmpkxZTjZuVgQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Andy,
 
-Sandeep Maheswaram <sanm@codeaurora.org> writes:
-
-> Converting dt binding to yaml.
-> Adding compatible for SC7180 in dt bindings.
+On 28/03/20 7:44 pm, Andy Shevchenko wrote:
+> On Sat, Mar 28, 2020 at 1:29 PM saravanan sekar <sravanhome@gmail.com> wrote:
+>> On 28/03/20 12:02 pm, Andy Shevchenko wrote:
+>>> On Sat, Mar 28, 2020 at 2:12 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
+> ...
 >
-> Changes in v5:
-> Addressed the comments from Stephen in yaml file.
+>>>> +       val->intval = (rval * props[fld].step) + props[fld].min;
+>>> Too many parentheses.
+>>>
+>>> ...
+>>>
+>>>> +       return ((psp == POWER_SUPPLY_PROP_PRECHARGE_CURRENT) ||
+>>>> +               (psp == POWER_SUPPLY_PROP_CHARGE_TERM_CURRENT) ||
+>>>> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT) ||
+>>>> +               (psp == POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE));
+>>> Ditto.
+>> I think I misunderstood you previous review comment "Redundant
+>> parentheses", no sure what is the expectation
+> (At least) surrounding pair is not needed, return (a == b) || (c == d);
+ok, I will remove outer ().
+>>> ...
+>>>
+>>>> +       return ((psp == POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT) ||
+>>>> +               (psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT));
+>>> Ditto.
+> ...
 >
-> Changes in v4:
-> Addressed the comments from Doug in yaml file.
+>>>> +       struct power_supply_config psy_cfg = {NULL};
+>>> { 0 }
+>>>
+>> NULL to make compiler happy.
+> Hmm... Can you share warning / error compiler issued in 0 case?
 >
-> Changes in v3:
-> Dropped the patch for adding the compatible in dwc3 driver from the serie=
-s.
-> Addressed the comments from Doug in yaml file.
->
-> Changes in v2:
-> Sorted the compatible in dwc3 driver.
-> Converted dt binding to yaml.
-> Added compatible in yaml.
+Please see the 0-day warning.
 
-now queued for v5.8
+"Reported-by: kbuild test robot <lkp@intel.com>
+sparse warnings: (new ones prefixed by >>)
+ >> drivers/power/supply/mp2629_charger.c:584:47: sparse: sparse: Using 
+plain integer as NULL pointer"
 
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6AeAYACgkQzL64meEa
-mQZE8A//adSbSBMaJegP9rkwyzjwC90gjKyrrsGUqrP1dEc9oCNIs9MlmTRYnOrN
-XEhJ8d8oXGMDZ+fxcVl0Vkvqxl0S6SVTHeL9fe8KsOTDsPWCDktJqwxs9haeYdul
-YHis8uRjHKDfDJXsEqGEkllNrYMUxBumN/JPTvo138LIMcVhEDRk5TvtDWD1gGXO
-pMk+q3a1p01ec35+wkjuiafAMaMsDNjBQ29r5ESTu7U5iGhgSecPT7XaTKh4RU63
-rMsKKydGb47Jml0e6Ppz46bP7nw3vXAreSBekmK/AR/o8xREMhQddEwOtKdvxPcP
-wmbQuqz+58XuH2QlSHYOp36glPyDxV+2m65KvqeG0mnaxJ99J5URAvSOp7pdccXH
-9Kbfudi8OPoMBRM8D475epJUCYZYGEiAEY4rlVCg51dBYic74xYXecTwjvNC5tr5
-wjSDxz/QrmeYNR5o8C2pBQEw811/NMfHrstiIIyU53/p51pxvi0EAm0ZbaY76jqG
-zsoOGx/7sroJVvpK8xaHOxe9I7u7s0AO4oO1Hfx8x182W3G2VZ6KEvKUiCwmejq2
-7qdB88yyX7EE76CKJDOpxItutjEP38dXPjmbIHX+Uq2Qde5RbfnWav+aNtSVXU1J
-1IIW6Ap4ucNURLp6Ytx+aglapseOz+HkPS4yw3P/56ldfWckQyc=
-=31p8
------END PGP SIGNATURE-----
---=-=-=--
