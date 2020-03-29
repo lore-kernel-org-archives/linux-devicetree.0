@@ -2,84 +2,143 @@ Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3848C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 16:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A98C43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 17:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760A220733
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 16:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 532F52073B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 17:18:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a4VluhOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgC2QZv (ORCPT
+        id S1728380AbgC2RSB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 12:25:51 -0400
-Received: from ip-78-45-52-129.net.upcbroadband.cz ([78.45.52.129]:52668 "EHLO
-        ixit.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgC2QZv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 29 Mar 2020 12:25:51 -0400
-Received: from localhost.localdomain (227.146.230.94.awnet.cz [94.230.146.227])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ixit.cz (Postfix) with ESMTPSA id 3A33A24975;
-        Sun, 29 Mar 2020 18:16:25 +0200 (CEST)
-From:   David Heidelberg <david@ixit.cz>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Myungjoo Ham <myungjoo.ham@samsung.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        mika.westerberg@linux.intel.com, ramakrishna.pallala@intel.com,
-        Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     David Heidelberg <david@ixit.cz>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 0/9] Summit SMB3xx driver & device-tree
-Date:   Sun, 29 Mar 2020 18:15:43 +0200
-Message-Id: <20200329161552.215075-1-david@ixit.cz>
-X-Mailer: git-send-email 2.25.0
+        Sun, 29 Mar 2020 13:18:01 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36700 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbgC2RSB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 13:18:01 -0400
+Received: by mail-pj1-f65.google.com with SMTP id nu11so6269685pjb.1
+        for <devicetree@vger.kernel.org>; Sun, 29 Mar 2020 10:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1VdjSPPRhlOBu7W9s+NexDovrzvWntWGJmIdhHoxZAQ=;
+        b=a4VluhObQuJFb8SVMTjUUnyaHON/TeGQbbeStEeHeBcJegBh1n4OVsHdtsIfVjvse5
+         IbvBFPybuUVOSQC5Fxd7Qc5iEqcrp89RD74YyUyxSTdpfuKOOp0DVATyIlxcyzQfmBWr
+         zEFxYeTsBKcYbSpW7IIWW+VqW4tsstUSA4qE0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1VdjSPPRhlOBu7W9s+NexDovrzvWntWGJmIdhHoxZAQ=;
+        b=MVfNn8158HMtgOq6rs3ZD4bgo/43hRPBAOrb/GVblPpHgXZeuVj2/gh2abhDSFKtBF
+         J2UMRwYhPOUHLXzL/55Vhd/Nc5Ic6SnLlxhujShrfM/4Hl4NyeC7xE1pNSa+xt6AvosD
+         8melTA0isB3lLv3JxBvQ6gGm9y7HwB//s3XVMgEOn2wZ1nK3tVY/9XCvsZ7E1LpMQEB/
+         usdPUgMXcmDCrtsXipGfrnd/29RnveKO5er1yk242/ZRAhQUcsYVOZjkl/4HCqGfU4YO
+         ofGo5DkbxiMf5ohklR5RcdGEwh8/MCs9BjUExFNuZX3vx7h8MkWi+D5WH2CTxqRzO041
+         8q7Q==
+X-Gm-Message-State: ANhLgQ1ekxMAQODJeDvd4LwwLJ3fjh9oPIzqrWMFrGUx/CuOkimlJQKz
+        TXNXBOcmgHoophW4o/22kYNy/Q==
+X-Google-Smtp-Source: ADFU+vsiB7DX7YoDE8Qsn1o3o8N1nnCf0ZGMiEPaCNY3wHCH2wyiT2nAj/cJUqGyY0agzks/DRDjjA==
+X-Received: by 2002:a17:90a:b702:: with SMTP id l2mr11203973pjr.22.1585502280189;
+        Sun, 29 Mar 2020 10:18:00 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id t2sm4016414pfh.157.2020.03.29.10.17.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 29 Mar 2020 10:17:59 -0700 (PDT)
+Date:   Sun, 29 Mar 2020 10:17:56 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+Message-ID: <20200329171756.GA199755@google.com>
+References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
+ <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We gathered existing patches, fixed and improved what we could and
-final result is an working charging driver with device-tree support for
-Nexus 7.
+Hi,
 
-At this moment charging works with:
- - Nexus 7 2012 (grouper and tilapia)
- - Nexus 7 2013 (flo and deb)
- - ... and there is more devices equiped with these chargers.
+On Fri, Mar 27, 2020 at 03:13:21PM +0530, Sandeep Maheswaram wrote:
+> Add interconnect support in dwc3-qcom driver to vote for bus
+> bandwidth.
+> 
+> This requires for two different paths - from USB master to
+> DDR slave. The other is from APPS master to USB slave.
+> 
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 126 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index 1dfd024..7e85fe6 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+>
+> ...
+>
+> +/* To disable an interconnect, we just set its bandwidth to 0 */
+> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
+> +{
+> +	int ret;
+> +
+> +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
+> +	if (ret)
+> +		goto err_reenable_memory_path;
+> +
+> +	return 0;
+> +
+> +	/* Re-enable things in the event of an error */
+> +err_reenable_memory_path:
+> +	ret = dwc3_qcom_interconnect_enable(qcom);
 
-David Heidelberg (7):
-  power: supply: smb347-charger: Add delay before getting IRQSTAT
-  power: supply: smb347-charger: Use resource-managed API
-  dt-bindings: power: supply: Add device-tree binding for Summit SMB3xx
-  power: supply: smb347-charger: Implement device-tree support
-  power: supply: smb347-charger: Support SMB345 and SMB358
-  power: supply: smb347-charger: Remove virtual smb347-battery
-  arm: dts: qcom: apq8064-nexus7: Add smb345 charger node
+This overwrites the error that led to the execution of this code path.
+The function should return original error, not the result of the
+_interconnect_enable() call.
 
-Dmitry Osipenko (2):
-  power: supply: smb347-charger: IRQSTAT_D is volatile
-  power: supply: smb347-charger: Replace mutex with IRQ disable/enable
+I saw Felipe queued the patch for v5.8. I think the main options to fix this
+are:
 
- .../power/supply/summit,smb347-charger.yaml   | 224 ++++++++
- .../boot/dts/qcom-apq8064-asus-nexus7-flo.dts |  22 +-
- drivers/power/supply/Kconfig                  |   6 +-
- drivers/power/supply/smb347-charger.c         | 510 +++++++++---------
- .../dt-bindings/power/summit,smb347-charger.h |  19 +
- 5 files changed, 526 insertions(+), 255 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
- create mode 100644 include/dt-bindings/power/summit,smb347-charger.h
+- a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be rebased
+  anyway once there is a v5.7-rc)
+- send the fix as a separate patch
+- Felipe amends the patch in his tree
 
--- 
-2.25.0
+Felipe, what would work best for you?
 
+Thanks
+
+Matthias
