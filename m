@@ -2,132 +2,233 @@ Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD8CC2D0EB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 19:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A18EC43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 19:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8482076A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 19:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D35C20748
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 19:36:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="s2cFM7cJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgC2TEE (ORCPT
+        id S1727728AbgC2Tgu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 15:04:04 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:57418 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727370AbgC2TEE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 15:04:04 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id D9D85804FC;
-        Sun, 29 Mar 2020 21:03:53 +0200 (CEST)
-Date:   Sun, 29 Mar 2020 21:03:52 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
-Subject: Re: [PATCH v1 32/36] dt-bindings: display: convert sharp,ls037v7dw01
- to DT Schema
-Message-ID: <20200329190352.GA21479@ravnborg.org>
-References: <20200315134416.16527-1-sam@ravnborg.org>
- <20200315134416.16527-33-sam@ravnborg.org>
- <20200319030734.GH29911@bogus>
+        Sun, 29 Mar 2020 15:36:50 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:34982 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727330AbgC2Tgu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 15:36:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585510605;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=LGEWryyfK/Q4YmTBmmWe/YtpTjCpoE18SQ1zSiub5+0=;
+        b=s2cFM7cJN9nbvSDJSp/eLgprnBwpBxsxEjT7gCAEW8qExxHQaoy0uho/CSyfUdEOFH
+        B686KYlnjKdv9gVgE4PcFXnhZjYDvUl/ZV23FClJaNGAc92EuCVKQwcPX4MEgw76AcPo
+        JdN2ldRGsBKnP1llv+Cyqtssabi6LBaKmo29aELnRclTIkstnk2yU6MH9G/BwhEaULcL
+        CrIloBljC/twBts0MD1zLz4yhmXnfKBiCcpMpu+NPfIo9rOZ3goYDSxYdrL7qg+itLXK
+        B7r2F4/gTZ3c34duRily4VUd/GixwfxlTGgrZ4uWrTJ9/UJjxsZiaM75m3g9UN9Vcy7t
+        C3CA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0pDz2rsNxxv"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id m02241w2TJaTBbV
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sun, 29 Mar 2020 21:36:29 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [RFC] dt-bindings.yaml: power: supply: add bindings for TI bq24296/7
+Date:   Sun, 29 Mar 2020 21:36:29 +0200
+Message-Id: <7d7602574b5eda80bd1d40f79854ba3670201c6e.1585510588.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319030734.GH29911@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=8lPrDCVDlfZqt0RlNdoA:9 a=CjuIK1q_8ugA:10
+Content-Type: text/plain; charset=UTF8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob.
+This is an attempt to define a schema for the bq24296/7
+charger and power supply controllers with battery monitoring
+and OTG booster.
 
-> > +
-> > +  mode-gpios:
-> > +    description: |
-> > +      GPIO ordered MO, LR, and UD as specified in LS037V7DW01.pdf
-> 
-> 3 or...
-> 
-> > +      change configuration between QVGA and VGA mode and the
-> > +      scan direction. As these pins can be also configured
-> > +      with external pulls, all the GPIOs are considered
-> > +      optional with holes in the array.
-> 
-> minItems: 3
-> maxItems: 5
+We model it as a dual regulator because it can generate
+a VSYS (with controllable voltage) and optionally an
+OTG voltage either from the battery or from external power
+supply.
 
-This binding can specify up to three GPIOs like this:
+This scheme works well with e.g. the dwc3 setup of the
+OMAP5 to turn on OTG regulator on demand.
 
+The DT should provide a reference to a monitored battery
+description so that initial and operation parameters
+of the battery can be specified to control the charger
+parameters.
 
-> > +        mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH        /* gpio154, lcd MO */
-> > +                      &gpio1 2 GPIO_ACTIVE_HIGH         /* gpio2, lcd LR */
-> > +                      &gpio1 3 GPIO_ACTIVE_HIGH>;       /* gpio3, lcd UD */
+To support different initial charging current for USB
+and AC charger mode, an optional gpio should be provided
+that the driver can use to set defaults.
 
-They are in the linux kernel driver accessed like this:
+A driver is available and working for several years,
+but the bindings should be clarified first.
 
-    devm_gpiod_get_index(&pdev->dev, "mode", 2, GPIOD_OUT_LOW);
+The example shows what we are successfully using for
+the working system.
 
-The following is OK in the DT file:
+Since the omap5 Pyra Handheld is not yet in the DTS tree,
+there would be no explicit user of this driver. So
+the plan is to submit a full patch set for the Pyra
+later.
 
-    mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ .../bindings/power/supply/bq2429x.yaml        | 122 ++++++++++++++++++
+ 1 file changed, 122 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq2429x.yaml
 
-    mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH
-                  &gpio1 2 GPIO_ACTIVE_HIGH>;
-		  
-    mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH
-                  &gpio1 2 GPIO_ACTIVE_HIGH
-                  &gpio1 3 GPIO_ACTIVE_HIGH>;
+diff --git a/Documentation/devicetree/bindings/power/supply/bq2429x.yaml b/Documentation/devicetree/bindings/power/supply/bq2429x.yaml
+new file mode 100644
+index 000000000000..1b31ece4026e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/bq2429x.yaml
+@@ -0,0 +1,122 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/supply/bq2429x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI bq24296/24297 and MPS MP2624 Li-Ion Charger with OTG booster
++
++maintainers:
++  - H. Nikolaus Schaller <hns@goldelico.com>
++
++description: |+
++  This binding will support the bq24296 and bq24297.
++  There are other ICs in the same family but those have
++  not been addressed.
++  The MP2624 is very similar to the bq24297 but not exactly
++  identical.
++  This chip is used by the OMAP5 based Pyra-Handheld.
++
++properties:
++  compatible:
++    oneOf:
++      - const: mps,mp2624
++      - const: ti,bq24296
++      - const: ti,bq24297
++
++  reg:
++    const: 0x6b
++
++  interrupts:
++    minItems: 1
++
++  monitored-battery:
++    - description: phandle to the battery node
++    - allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
++# QUESTION : how can we correctly describe that we support only the following phandle properties and ignore the others?
++    - enum:
++      - voltage-max-design-microvolt:
++        - default: 4200000
++      - voltage-min-design-microvolt:
++        - default: 3200000
++      - constant-charge-current-max-microamp:
++        - default: as defined by boot loader
++      - precharge-current-microamp:
++        - default: 128000
++      - charge-term-current-microamp:
++        - default: 128000
++
++  regulators:
++    minItems: 2
++    maxItems: 2
++    items:
++# QUESTION: can we specify that these are to be regulator nodes?
++      - description: |
++          two regulator child nodes for
++          [0] vsys (battery or usb input -> system output)
++          [1] otg (battery input -> usb output).
++
++  dc-det-gpios:
++    items:
++# QUESTION: how do we specify that it should be a gpio?
++      - description: gpio for detecting two different DC sources
++      - default: use usb-input-current-microamp only
++
++  ti,usb-input-current-microamp:
++    items:
++      - description: initial current for USB source (if dc-det is 0)
++      - default: value as defined by boot loader
++
++  ti,adp-input-current-microamp:
++    items:
++      - description: initial current for other source (if dc-det is 1)
++      - default: 2048000µA
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - regulators
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    bat: battery {
++      compatible = "simple-battery", "pyra-battery";
++      voltage-min-design-microvolt = <3200000>;
++      voltage-max-design-microvolt = <4200000>;
++      energy-full-design-microwatt-hours = <22200000>;
++      charge-full-design-microamp-hours = <6000000>;
++      charge-term-current-microamp = <128000>;
++      constant-charge-current-max-microamp = <1000000>;
++    };
++
++    bq24297@6b {
++      compatible = "ti,bq24297";
++      reg = <0x6b>;
++      monitored-battery = <&bat>;
++      interrupt-parent = <&gpio99>;
++      interrupts = <(1*8+3) IRQ_TYPE_EDGE_FALLING>;   /* P13 */
++      regulators {
++        vsys_reg: vsys_regulator {
++          regulator-compatible = "bq2429x-vsys";
++          regulator-name = "vsys";
++          regulator-min-microvolt = <3500000>;
++          regulator-max-microvolt = <4200000>;
++          regulator-always-on;
++          regulator-boot-on;
++        };
++        otg_reg: otg_regulator {
++          regulator-compatible = "bq2429x-otg";
++          regulator-name = "otg";
++          regulator-min-microvolt = <4900000>;
++          regulator-max-microvolt = <5100000>;
++        };
++      };
++    };
++
++...
+-- 
+2.25.1
 
-But the following is not OK:
-    mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>, <&gpio1 2 GPIO_ACTIVE_HIGH>;
-
-Any hints how to specify the binding to prevent the above?
-I have tried a few combinations - but they do not catch this.
-So my binding attempts are not restrictive enough.
-
-Any hints how to describe this properly?
-
-	Sam
