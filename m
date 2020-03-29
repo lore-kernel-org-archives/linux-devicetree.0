@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B8FC2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 12:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCDBC2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 12:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C831B20714
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 12:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E212076A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 12:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="luWn4VxA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYHCJt3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgC2MbX (ORCPT
+        id S1728242AbgC2Mb0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 08:31:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36556 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbgC2MbU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 08:31:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 31so17567636wrs.3;
-        Sun, 29 Mar 2020 05:31:19 -0700 (PDT)
+        Sun, 29 Mar 2020 08:31:26 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43400 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728218AbgC2Mb0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 08:31:26 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m11so11678783wrx.10;
+        Sun, 29 Mar 2020 05:31:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GKapBrOlmEHVYhUBBTH0BCVxUR3q5V6xELfo4+ssQ3g=;
-        b=luWn4VxAKy4BMYnYdqLUrCkt63SrzaWh6EqMAKjUtK8xE0ru4i7ApfWkdUQbtDXBgT
-         Ha4wm3V70sc1bAsUKo1+ujVuURtb03crrYALhV8kp9gDeXTuozFt8v+wwwRGaKr3PpPn
-         nwgzRGBBkwBP+fI4WR+FwUooSFbi80mP1avkhxS7payAmbjflmfrbAYEAZFVynLiNS+3
-         dloIumUUtPuoyUbl1FoICq/3/SW9WVlcu+PVP7B9bd4j6euBQsbcoBwVcJ7go2HnCBYU
-         cc7mBag5R4ab297eF9LlDh0cdjOBWaqzYZy8BHbYDHI7FiK1OsXp9bnX44TAgU5JIge+
-         G69w==
+        bh=6QvXfJZlpggMK4ANi6m9pBKzrWALkcbq78l8N8OifPg=;
+        b=NYHCJt3Ku9FOElSWdLyvILotVUQ7ZCoGExqhh1hga+Ilrw7vDZuekdpSow5u1b/pUU
+         WgkjB4wm5XfHB8qAAuhtzCgyzrKGEcT2iwCxqrgyoHFWFOuvOLRrWuBWIMdsDniv9/Ln
+         WCIlkU8kF+wP8dOWqMgEA0uRysKESLErcTVJcxxNZgB9HtdvB5nULiIpKerjEGieIkIO
+         5GiJ7vUMwLEdnHa+Kivz0wYNBzfwpBLqKWWEZIjyFKhlntgewA7hOe/1QP/w2mmq26cy
+         GI/HFZj1yVjCuuf2vofTkK76RaugXKgYPbbIsW6M3D8GhqL/uA7wY6g8/TTCyUPRKJ5C
+         S3Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=GKapBrOlmEHVYhUBBTH0BCVxUR3q5V6xELfo4+ssQ3g=;
-        b=o48HfwRL+8S6cWOmO4+/c1m33htyu+WGGTJhu+/UawAMup+7gOLDhIvsWhUxxsX2yj
-         PHHEndESeUPFpzPyNDnVmhM7Hr5wLP7uAjJQA9Ae1SQysEpqvTpobvU35NRMTVanIRKk
-         sUm1whnWW+TRrJBcECKq1xTXdc/pUgcEKzY31oM7z3ROiM6X1evNwok6NY9wdgYt34fl
-         V32CyZbUxmsPaQSQDTjjZzFAKtPovos1kEXA88L2ZN/I4gjc4JUgGEay9oulD1xus6qZ
-         suF9zyq3iXPxTfeMDAoacCa/9Pvw/ZyylCmam+pjRJe0rRiR/t4btJoiEPbTrCujpV7v
-         ETqg==
-X-Gm-Message-State: ANhLgQ0CKAUuw4UoftthZm8fxSGogTDYxUarla0EkAIrD98IjOazsgAA
-        QGbvrs4F+ad2QIpBd72YcF0=
-X-Google-Smtp-Source: ADFU+vtNyysNuarRctEs+jLSSz+ipgSiE9hlpQH+rJ096CnE78UdigIo4l6JvLOfcwjAw6ZxxuO1AQ==
-X-Received: by 2002:adf:aa92:: with SMTP id h18mr9960745wrc.139.1585485078601;
-        Sun, 29 Mar 2020 05:31:18 -0700 (PDT)
+        bh=6QvXfJZlpggMK4ANi6m9pBKzrWALkcbq78l8N8OifPg=;
+        b=FXMpYTAmZMokSy4WnEwnyWHprRFfoOero4rPuOMRjNFJ1+7s9bTjxiqQyQhqddMPaA
+         LWjQfXwyMgiX+CtDQ45BNGTXgbf+IKBrwensyIP1sR6l6Flg+ntsV7nRuP4hVAf9kOyu
+         2VwgJiE5eXNB14v71EhxEwB3IuQkHZJVo5l5z65jPemOVyoR3LLBrHL9uvv/+vhhXRFW
+         rEdHIkmpKpZb0wke/yrT/ugaMH3l6PCqj9rTPmsMu0zZCFYI6GZoJZAqJqjZi7lj3ddt
+         p0YyPoFzRH/WCJhZGrPb/YU212UvABHGW1bUgI1PIzGwoRRpQHa6hb6oHkvI/HGkA6NJ
+         xA7A==
+X-Gm-Message-State: ANhLgQ3Fmgg95W42ghMZJL5r2efjL8TUuebHL0kz+5uOVztIk0TYajTy
+        r8OU1zV7v05cwzOKPQQiMvw=
+X-Google-Smtp-Source: ADFU+vsqYKxoPbkbC9jA9HPJE9a9Nl32Esg9+w5puOxENCLxVc7vGrEBRwu4U9NAk5FO57lzaIepTw==
+X-Received: by 2002:adf:fc4c:: with SMTP id e12mr9500732wrs.265.1585485083974;
+        Sun, 29 Mar 2020 05:31:23 -0700 (PDT)
 Received: from localhost.localdomain (p5B3F6BD9.dip0.t-ipconnect.de. [91.63.107.217])
-        by smtp.gmail.com with ESMTPSA id f9sm17259108wrc.71.2020.03.29.05.31.17
+        by smtp.gmail.com with ESMTPSA id f9sm17259108wrc.71.2020.03.29.05.31.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 05:31:17 -0700 (PDT)
+        Sun, 29 Mar 2020 05:31:23 -0700 (PDT)
 From:   Saravanan Sekar <sravanhome@gmail.com>
 To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
         robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
@@ -62,9 +62,9 @@ To:     lee.jones@linaro.org, andy.shevchenko@gmail.com,
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
         Saravanan Sekar <sravanhome@gmail.com>
-Subject: [PATCH v6 1/5] dt-bindings: mfd: add document bindings for mp2629
-Date:   Sun, 29 Mar 2020 14:31:06 +0200
-Message-Id: <20200329123110.26482-2-sravanhome@gmail.com>
+Subject: [PATCH v6 5/5] MAINTAINERS: Add entry for mp2629 Battery Charger driver
+Date:   Sun, 29 Mar 2020 14:31:10 +0200
+Message-Id: <20200329123110.26482-6-sravanhome@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200329123110.26482-1-sravanhome@gmail.com>
 References: <20200329123110.26482-1-sravanhome@gmail.com>
@@ -73,80 +73,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree binding information for mp2629 mfd driver.
+Add MAINTAINERS entry for Monolithic Power Systems mp2629 Charger driver.
 
 Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 ---
- .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-new file mode 100644
-index 000000000000..3c3cd023256a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MP2629 Battery Charger PMIC from Monolithic Power System.
-+
-+maintainers:
-+  - Saravanan Sekar <sravanhome@gmail.com>
-+
-+description: |
-+  MP2629 is a PMIC providing battery charging and power supply for smartphones,
-+  wireless camera and portable devices. Chip is contrlled over I2C.
-+
-+  The battery charge management device handles battery charger controller and
-+  ADC IIO device for battery, system voltage
-+
-+properties:
-+  compatible:
-+    const: mps,mp2629
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+    description:
-+      The first cell is the IRQ number, the second cell is the trigger type.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/input/linux-event-codes.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pmic@4b {
-+            compatible = "mps,mp2629";
-+            reg = <0x4b>;
-+
-+            interrupt-controller;
-+            interrupt-parent = <&gpio2>;
-+            #interrupt-cells = <2>;
-+            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 32a95d162f06..0f82d5a7a614 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11358,10 +11358,15 @@ F:	drivers/tty/mxser.*
+ MONOLITHIC POWER SYSTEM PMIC DRIVER
+ M:	Saravanan Sekar <sravanhome@gmail.com>
+ S:	Maintained
++F:	Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+ F:	Documentation/devicetree/bindings/regulator/mps,mp*.yaml
++F:	drivers/iio/adc/mp2629_adc.c
++F:	drivers/mfd/mp2629.c
++F:	drivers/power/supply/mp2629_charger.c
+ F:	drivers/regulator/mp5416.c
+ F:	drivers/regulator/mpq7920.c
+ F:	drivers/regulator/mpq7920.h
++F:	include/linux/mfd/mp2629.h
+ 
+ MR800 AVERMEDIA USB FM RADIO DRIVER
+ M:	Alexey Klimov <klimov.linux@gmail.com>
 -- 
 2.17.1
 
