@@ -2,82 +2,88 @@ Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC55C43331
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 10:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EB2C2D0EB
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 10:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E98220675
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 10:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE9E2073B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 10:46:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="OSu5Ou+w"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TB6dAUe3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgC2KnI (ORCPT
+        id S1728044AbgC2KqB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 06:43:08 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:59016 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbgC2KnI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 29 Mar 2020 06:43:08 -0400
+        Sun, 29 Mar 2020 06:46:01 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:35574 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728034AbgC2KqB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 06:46:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GvIf4+eUNL1gbmmlGGdEoiRCzJ2FSgngRS1uiMDz0y8=; b=OSu5Ou+wMQoaATVtW/sNGEV0ri
-        ZMP0h6BdAqR+gpykFasX+sK1ESSQPPgG+6/1WeCbNqBi0DuYOXNdJlKfnbbTlruq91fp6QROEGs+1
-        PElH/opcIkEEYFXeFbrKXDuXoJm61ctGCR46x9gzq6KhYteY9rbs5995XBSJwQG3Lr4c=;
-Received: from p200300ccff499f001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff49:9f00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jIVPE-0006ng-Rt; Sun, 29 Mar 2020 12:43:05 +0200
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jIVPE-0003xz-Ao; Sun, 29 Mar 2020 12:43:04 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, festevam@gmail.com
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH] dts: ARM: e60k02: add interrupt for PMIC
-Date:   Sun, 29 Mar 2020 12:42:50 +0200
-Message-Id: <20200329104250.15194-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:Content-Type:MIME-Version:
+        Message-ID:Subject:To:From:Date:Reply-To:Cc:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/F8TTmllRhQAieNs3H3r8cSkUpyHMpQ7aHdeJZxCxpM=; b=TB6dAUe3IsgMBI6Ss1SOI4z8L
+        iac0Z1lLbuGhAexjYOp5axmyd+W0FmsuQDlca1oJABLPoEnb9A1331CkamBfrf1SJ83HJ3ujKC4tV
+        B6tWsnbTJ39myLy8PsrP/z5wv8MDpFyyJfUaViS/+Kvvj6PQR6Gt2SnKPmsc01iZAQPzymakS/Bca
+        q3QjXQ6jJ3ZPMHat+HSkYyLE9eZeexB/ljHkjeidBsAQ0loa8qdIDZIVtAkVBtwZwl4bSl9CajQBw
+        CmkPgfkTYALEkXIzzyKNa0/5UHt0DEFc96K0ItTUsUcfMMhn6iWnjsT0FIzgdTj1fRPfyqBbLwQA2
+        E+fryUP1Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42874)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jIVRy-0004UG-CK; Sun, 29 Mar 2020 11:45:54 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jIVRu-00069D-2a; Sun, 29 Mar 2020 11:45:50 +0100
+Date:   Sun, 29 Mar 2020 11:45:50 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH RFC 0/6] PWM fan support on Clearfog gt8k
+Message-ID: <20200329104549.GX25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since the PMIC driver now has IRQ handling, add the GPIO to
-listen to things like RTC alarm or ADC conversion completion.
+Hi,
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-The corresponding property is added to the bindings documentation in
-https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=ib-mfd-iio-rtc-5.7
- arch/arm/boot/dts/e60k02.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+This series adds support for the fan PWM output on the Clearfog GT8K
+platform, and can potentially be extended to the Macchiatobin.
 
-diff --git a/arch/arm/boot/dts/e60k02.dtsi b/arch/arm/boot/dts/e60k02.dtsi
-index ce50c4dc6f2a..3af1ab4458ef 100644
---- a/arch/arm/boot/dts/e60k02.dtsi
-+++ b/arch/arm/boot/dts/e60k02.dtsi
-@@ -117,6 +117,8 @@
- 	ricoh619: pmic@32 {
- 		compatible = "ricoh,rc5t619";
- 		reg = <0x32>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
- 		system-power-controller;
- 
- 		regulators {
+The cooling maps are experimental - it seems to work well for me
+without the fan speed varying too much, but what I've noticed with
+fewer entries in the map is instability in the fan speed - it
+continually toggles between two fan speeds as the temperature
+rises and falls due to the different fan speed.  Hence, this is more
+for discussion at this point (and in any case, -final is likely to be
+released today.)
+
+ .../dts/marvell/armada-8040-clearfog-gt-8k.dts     | 125 ++++++++++++
+ arch/arm64/boot/dts/marvell/armada-cp11x.dtsi      |   6 +
+ drivers/gpio/gpio-mvebu.c                          | 220 ++++++++++++++-------
+ 3 files changed, 275 insertions(+), 76 deletions(-)
+
 -- 
-2.20.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
