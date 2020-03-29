@@ -2,57 +2,65 @@ Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05245C2D0E7
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 09:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7F7C2D0E7
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 10:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60A62076A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 09:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65DA2073B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 10:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585475859;
-	bh=pyqkwg7+NdzzGNrT9rgcJIqmjn1T/lyVAWcXSX9NTDA=;
+	s=default; t=1585477163;
+	bh=zucRSTGGzuFkVabCQezWqRiMwAZFZTLz64620KT1MlI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2WUVbvnytibR2Te7Lyhjnd5rOAGVz1FF4XCAiu6SHJpBNaz8201XTiWyse0le5K8a
-	 Mic2TYTjfm9x1Xn1eVBe7R83Vp58nHPttvmUseEYeqTnziKWApOZbH0C6fQJPEO7xV
-	 jtq4cU1k314MAxcLavNQUrWUTz5OPIOGWqjM1Zis=
+	b=bT8EZGKDEdIUpRuSu7yJHoQn7lL4ck1wtuxex34MZ54ZOyXvxkqfF/72jGTGDYdSl
+	 ClP2/TZEXlX/WuUAt3Seo4UjeVWeMbSOzOrfs3yWBxTPGmEaDrFrKxCLreulkodeeR
+	 PzirbQygm1SU0gFLtfqBIzbI0uUvuY2yetFfPpfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgC2J5i (ORCPT
+        id S1727885AbgC2KTV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 05:57:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52898 "EHLO mail.kernel.org"
+        Sun, 29 Mar 2020 06:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbgC2J5i (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 29 Mar 2020 05:57:38 -0400
+        id S1727639AbgC2KTV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 29 Mar 2020 06:19:21 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFD3520675;
-        Sun, 29 Mar 2020 09:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92D0D20732;
+        Sun, 29 Mar 2020 10:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585475857;
-        bh=pyqkwg7+NdzzGNrT9rgcJIqmjn1T/lyVAWcXSX9NTDA=;
+        s=default; t=1585477160;
+        bh=zucRSTGGzuFkVabCQezWqRiMwAZFZTLz64620KT1MlI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PwqCrr7vnz4T0XKia7xKuKD6Al6Exm48qFPgQRTnAIwGlFGf6WQIwO7yuBzBkie5V
-         Sgwe/WsUVje38l3MV0usQO243dnTlVYaBDhqe90WbcD3vXhVcn/VFXISHf3X4gn6ST
-         6cKa58mv4Ae4qBRv4YcnGl40OIkfTnl6Yzoh/xDk=
-Date:   Sun, 29 Mar 2020 10:57:32 +0100
+        b=Ht87FUpI68j2yRsicb5MfQNxxsKNdJueCA2Kr8EY9Gnu9vDvz/SI2nKl9yYqhb23t
+         PECULlATF27BhYfK/jq22ikq8j0PkTp0/4u4EgJCxW6TU82prPIpldpekC2LpkY07r
+         NaWwz/H/iSJFmPBTYSNtFMzH0g0yjYkze3E3Lqe0=
+Date:   Sun, 29 Mar 2020 11:19:15 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <Laszlo.Nagy@analog.com>, <Andrei.Grozav@analog.com>,
-        <Michael.Hennerich@analog.com>, <Istvan.Csomortani@analog.com>,
-        <Adrian.Costina@analog.com>, <Dragos.Bogdan@analog.com>
-Subject: Re: [PATCH v13 1/8] include: fpga: adi-axi-common.h: fixup
- whitespace tab -> space
-Message-ID: <20200329105732.479d090f@archlinux>
-In-Reply-To: <20200324134636.64643-2-alexandru.ardelean@analog.com>
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "robh@kernel.org" <robh@kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
+        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+        "Costina, Adrian" <Adrian.Costina@analog.com>
+Subject: Re: [PATCH v13 8/8] dt-bindings: iio: adc: add bindings doc for
+ AD9467 ADC
+Message-ID: <20200329111915.0a3211bb@archlinux>
+In-Reply-To: <17a99874285734496a97d271dda7368b40e88255.camel@analog.com>
 References: <20200324134636.64643-1-alexandru.ardelean@analog.com>
-        <20200324134636.64643-2-alexandru.ardelean@analog.com>
+        <20200324134636.64643-9-alexandru.ardelean@analog.com>
+        <20200326185616.GA2673@bogus>
+        <17a99874285734496a97d271dda7368b40e88255.camel@analog.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -62,38 +70,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 24 Mar 2020 15:46:29 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+On Thu, 26 Mar 2020 19:45:39 +0000
+"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
 
-> The initial version use a tab between '#define' & 'ADI_AXI_REG_VERSION'.
-> This changes it to space. The change is purely cosmetic.
+> On Thu, 2020-03-26 at 12:56 -0600, Rob Herring wrote:
+> > On Tue, 24 Mar 2020 15:46:36 +0200, Alexandru Ardelean wrote:  
+> > > This change adds the binding doc for the AD9467 ADC.
+> > > 
+> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > > ---
+> > >  .../bindings/iio/adc/adi,ad9467.yaml          | 65 +++++++++++++++++++
+> > >  1 file changed, 65 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+> > >   
+> > 
+> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > there's no need to repost patches *only* to add the tags. The upstream
+> > maintainer will do that for acks received on the version they apply.
+> > 
+> > If a tag was not added on purpose, please state why and what changed.  
 > 
-> Acked-by: Moritz Fischer <mdf@kernel.org>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> My bad. Apologies for that.
+> No idea how I missed adding this. Especially since I already know that I should
+> add it.
+> 
+> I guess I got mixed up with too many branches and not paying attention.
+Fixed the missing tag from Rob and whole series applied to the togreg branch of
+iio.git.  Pushed out as testing for the autobuilders to poke at it.
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.  Note this won't make the coming
-merge window.
+Exposing the dma buffer stuff to the autobuilders is great. So far the only
+issue was that patch I took yesterday where we need to rethink things.
+However, that's just my sanity check local build so I'm sure we broke
+some obscure architecture :)
 
 Thanks,
 
 Jonathan
 
-> ---
->  include/linux/fpga/adi-axi-common.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
-> index 7fc95d5c95bb..ebd4e07ae3d8 100644
-> --- a/include/linux/fpga/adi-axi-common.h
-> +++ b/include/linux/fpga/adi-axi-common.h
-> @@ -11,7 +11,7 @@
->  #ifndef ADI_AXI_COMMON_H_
->  #define ADI_AXI_COMMON_H_
->  
-> -#define	ADI_AXI_REG_VERSION			0x0000
-> +#define ADI_AXI_REG_VERSION			0x0000
->  
->  #define ADI_AXI_PCORE_VER(major, minor, patch)	\
->  	(((major) << 16) | ((minor) << 8) | (patch))
 
