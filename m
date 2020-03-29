@@ -2,382 +2,258 @@ Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21016C2D0EB
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 11:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E820C43331
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 11:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E043D20774
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 11:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B51820675
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 11:07:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Ed0UISfy"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cjJ1AJFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgC2LAv (ORCPT
+        id S1727938AbgC2LHi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 07:00:51 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:35934 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727965AbgC2LAv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 07:00:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:To:From:Date:Reply-To:Cc:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DcDjMRJGak4rnCBBIVUoPjQcQK/n+fyetuJEHORJerY=; b=Ed0UISfy7jSV8UEXmJm5FzyAz
-        02T4cSjN9/tiaB9aP9Ue29lA1fLVkuEuG4El1lE/JBaApX6xK5K0OB921qV6XESR7to1TQhvSV/It
-        Hpa7f6T3p36AI2xNIndH66zLk+4edxncspCCg3bq2X5MWEDMdP5Zq/sSsAHmRszlc4S1M0QIMv+fu
-        l+LEhcUd8n+GEczhZhQoiF+tlOjEfFJxX343bz0GMTAU+aviO0jIR28Jl6R8ZaVKrONX6xnhdG9tt
-        vTWhHHxGhAszc/iCY/FE77a7PVjbOenLG4qd/WeBX0RP7JVEzS/Vw7TEGTjoAwgennskTgtosPaQO
-        ipvLNubYQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:59462)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jIVgK-0004ak-6T; Sun, 29 Mar 2020 12:00:44 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jIVgI-00069V-9U; Sun, 29 Mar 2020 12:00:42 +0100
-Date:   Sun, 29 Mar 2020 12:00:42 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH RFC 3/6] gpio: mvebu: add PWM support for Armada 8k
-Message-ID: <20200329110042.GY25745@shell.armlinux.org.uk>
-References: <20200329104549.GX25745@shell.armlinux.org.uk>
- <E1jIVUE-0005hC-VU@rmk-PC.armlinux.org.uk>
+        Sun, 29 Mar 2020 07:07:38 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:41983 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727869AbgC2LHh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 29 Mar 2020 07:07:37 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585480057; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=hbFsvwoybyQrzSjd5fOsfde02T95Q4Rlx3aKtpKf5b8=; b=cjJ1AJFlZ/DkVTT7WOgd9YpJpIiGofgNMTYQaPhAxQiaT5AS3JWvybzXomWZvoSLbTWGZvzb
+ S2evaEycIkJhsQuIt6weqpokLsYnoKqVJJzkbtwzwiFBNZwdf90LClAegJlZet9UXFNUo6c6
+ gKb2zJZ8vlryf8drX8px8Ushcc8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e808174.7f4ebdcceed8-smtp-out-n01;
+ Sun, 29 Mar 2020 11:07:32 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C14C7C433F2; Sun, 29 Mar 2020 11:07:31 +0000 (UTC)
+Received: from Pillair (unknown [183.83.66.17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7AE87C433D2;
+        Sun, 29 Mar 2020 11:07:28 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7AE87C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
+References: <1585219723-28323-1-git-send-email-pillair@codeaurora.org> <20200327230025.GJ5063@builder> <000101d604f8$afc48220$0f4d8660$@codeaurora.org> <20200328183055.GA663905@yoga>
+In-Reply-To: <20200328183055.GA663905@yoga>
+Subject: RE: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Sun, 29 Mar 2020 16:37:25 +0530
+Message-ID: <000301d605ba$3d034a10$b709de30$@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E1jIVUE-0005hC-VU@rmk-PC.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFGsu5WNDBp+FP/TOeyoiVSrY11cwGGydAyAh9ckM8BjsJxYqlUZtlw
+Content-Language: en-us
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 11:48:14AM +0100, Russell King wrote:
-> Add support for PWM devices on the Armada 8k, which are useful on the
-> Macchiatobin and Clearfog GT 8K platforms for controlling the fan
-> speed.
+Hi Bjorn,
+
+> -----Original Message-----
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Sent: Sunday, March 29, 2020 12:01 AM
+> To: pillair@codeaurora.org
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+linux-
+> kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
+> Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
 > 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> ---
->  drivers/gpio/gpio-mvebu.c | 166 +++++++++++++++++++++++++-------------
->  1 file changed, 111 insertions(+), 55 deletions(-)
+> On Sat 28 Mar 05:01 PDT 2020, pillair@codeaurora.org wrote:
 > 
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index ee13b11c5298..4abe298e9c0f 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -91,8 +91,16 @@
->  #define MVEBU_GPIO_SOC_VARIANT_ARMADAXP 0x3
->  #define MVEBU_GPIO_SOC_VARIANT_A8K	0x4
->  
-> +#define MVEBU_PWM_SOC_VARIANT_ARMADA370	1
-> +#define MVEBU_PWM_SOC_VARIANT_A8K	2
-> +
->  #define MVEBU_MAX_GPIO_PER_BANK		32
->  
-> +struct mvebu_gpio_soc_variant {
-> +	int gpio;
-> +	int pwm;
-> +};
-> +
->  struct mvebu_pwm {
->  	struct regmap		*regs;
->  	u32			 offset;
-> @@ -679,21 +687,17 @@ static void mvebu_pwm_get_state(struct pwm_chip *chip,
->  	else
->  		state->duty_cycle = 1;
->  
-> -	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
->  	val = (unsigned long long)u;
-> +	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
-> +	val += (unsigned long long)u;
->  	val *= NSEC_PER_SEC;
->  	do_div(val, mvpwm->clk_rate);
-> -	if (val < state->duty_cycle) {
-> +	if (val > UINT_MAX)
-> +		state->period = UINT_MAX;
-> +	else if (val)
-> +		state->period = val;
-> +	else
->  		state->period = 1;
-> -	} else {
-> -		val -= state->duty_cycle;
-> -		if (val > UINT_MAX)
-> -			state->period = UINT_MAX;
-> -		else if (val)
-> -			state->period = val;
-> -		else
-> -			state->period = 1;
-> -	}
-
-I should've split this out - there seems to be a bug in the existing
-PWM implementation concerning the calculation of the period, which the
-above change corrects.
-
-One register contains the duration for the "on" part of the period, and
-the other for the "off" part of the period. Therefore, the total period
-is the sum of _both_ the on part and the off part.
-
->  
->  	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF + mvchip->offset, &u);
->  	if (u)
-> @@ -779,6 +783,7 @@ static void __maybe_unused mvebu_pwm_resume(struct mvebu_gpio_chip *mvchip)
->  }
->  
->  static int mvebu_pwm_probe(struct platform_device *pdev,
-> +			   const struct mvebu_gpio_soc_variant *soc_variant,
->  			   struct mvebu_gpio_chip *mvchip,
->  			   int id)
->  {
-> @@ -787,27 +792,9 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
->  	void __iomem *base;
->  	u32 set;
->  
-> -	if (!of_device_is_compatible(mvchip->chip.of_node,
-> -				     "marvell,armada-370-gpio"))
-> +	if (!soc_variant->pwm)
->  		return 0;
->  
-> -	if (IS_ERR(mvchip->clk))
-> -		return PTR_ERR(mvchip->clk);
-> -
-> -	/*
-> -	 * Use set A for lines of GPIO chip with id 0, B for GPIO chip
-> -	 * with id 1. Don't allow further GPIO chips to be used for PWM.
-> -	 */
-> -	if (id == 0)
-> -		set = 0;
-> -	else if (id == 1)
-> -		set = U32_MAX;
-> -	else
-> -		return -EINVAL;
-> -
-> -	regmap_write(mvchip->regs,
-> -		     GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset, set);
-> -
->  	mvpwm = devm_kzalloc(dev, sizeof(struct mvebu_pwm), GFP_KERNEL);
->  	if (!mvpwm)
->  		return -ENOMEM;
-> @@ -815,20 +802,67 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
->  	mvchip->mvpwm = mvpwm;
->  	mvpwm->mvchip = mvchip;
->  
-> -	/*
-> -	 * There are only two sets of PWM configuration registers for
-> -	 * all the GPIO lines on those SoCs which this driver reserves
-> -	 * for the first two GPIO chips. So if the resource is missing
-> -	 * we can't treat it as an error.
-> -	 */
-> -	base = devm_platform_ioremap_resource_byname(pdev, "pwm");
-> -	if (IS_ERR(base))
-> -		return PTR_ERR(base);
-> +	switch (soc_variant->pwm) {
-> +	case MVEBU_PWM_SOC_VARIANT_ARMADA370:
-> +		if (IS_ERR(mvchip->clk))
-> +			return PTR_ERR(mvchip->clk);
-> +
-> +		/*
-> +		 * There are only two sets of PWM configuration registers for
-> +		 * all the GPIO lines on those SoCs which this driver reserves
-> +		 * for the first two GPIO chips. So if the resource is missing
-> +		 * we can't treat it as an error.
-> +		 */
-> +		base = devm_platform_ioremap_resource_byname(pdev, "pwm");
-> +		if (IS_ERR(base))
-> +			return PTR_ERR(base);
->  
-> -	mvpwm->regs = devm_regmap_init_mmio(&pdev->dev, base,
-> -					    &mvebu_gpio_regmap_config);
-> -	if (IS_ERR(mvpwm->regs))
-> -		return PTR_ERR(mvpwm->regs);
-> +		mvpwm->regs = devm_regmap_init_mmio(&pdev->dev, base,
-> +						    &mvebu_gpio_regmap_config);
-> +		if (IS_ERR(mvpwm->regs))
-> +			return PTR_ERR(mvpwm->regs);
-> +
-> +		/*
-> +		 * Use set A for lines of GPIO chip with id 0, B for GPIO chip
-> +		 * with id 1. Don't allow further GPIO chips to be used for PWM.
-> +		 */
-> +		if (id == 0)
-> +			set = 0;
-> +		else if (id == 1)
-> +			set = U32_MAX;
-> +		else
-> +			return -EINVAL;
-> +		break;
-> +
-> +	case MVEBU_PWM_SOC_VARIANT_A8K:
-> +		/*
-> +		 * If there is no clock, this is an older DT, so avoid
-> +		 * registering the PWM.
-> +		 */
-> +		if (IS_ERR(mvchip->clk))
-> +			return 0;
-> +
-> +		mvpwm->regs = mvchip->regs;
-> +		switch (id) {
-> +		case 1:
-> +			mvpwm->offset = 0x1f0;
-> +			set = 0;
-> +			break;
-> +		case 2:
-> +			mvpwm->offset = 0x1f8;
-> +			set = U32_MAX;
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	regmap_write(mvchip->regs,
-> +		     GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset, set);
->  
->  	mvpwm->clk_rate = clk_get_rate(mvchip->clk);
->  	if (!mvpwm->clk_rate) {
-> @@ -909,26 +943,48 @@ static void mvebu_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
->  #define mvebu_gpio_dbg_show NULL
->  #endif
->  
-> +static const struct mvebu_gpio_soc_variant mvebu_gpio_orion_variant = {
-> +	.gpio = MVEBU_GPIO_SOC_VARIANT_ORION,
-> +};
-> +
-> +static const struct mvebu_gpio_soc_variant mvebu_gpio_mv78200_variant = {
-> +	.gpio = MVEBU_GPIO_SOC_VARIANT_MV78200,
-> +};
-> +
-> +static const struct mvebu_gpio_soc_variant mvebu_gpio_armadaxp_variant = {
-> +	.gpio = MVEBU_GPIO_SOC_VARIANT_ARMADAXP,
-> +};
-> +
-> +static const struct mvebu_gpio_soc_variant mvebu_gpio_armada370_variant = {
-> +	.gpio = MVEBU_GPIO_SOC_VARIANT_ORION,
-> +	.pwm = MVEBU_PWM_SOC_VARIANT_ARMADA370,
-> +};
-> +
-> +static const struct mvebu_gpio_soc_variant mvebu_gpio_a8k_variant = {
-> +	.gpio = MVEBU_GPIO_SOC_VARIANT_A8K,
-> +	.pwm = MVEBU_PWM_SOC_VARIANT_A8K,
-> +};
-> +
->  static const struct of_device_id mvebu_gpio_of_match[] = {
->  	{
->  		.compatible = "marvell,orion-gpio",
-> -		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_ORION,
-> +		.data	    = &mvebu_gpio_orion_variant,
->  	},
->  	{
->  		.compatible = "marvell,mv78200-gpio",
-> -		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_MV78200,
-> +		.data	    = &mvebu_gpio_mv78200_variant,
->  	},
->  	{
->  		.compatible = "marvell,armadaxp-gpio",
-> -		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_ARMADAXP,
-> +		.data	    = &mvebu_gpio_armadaxp_variant,
->  	},
->  	{
->  		.compatible = "marvell,armada-370-gpio",
-> -		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_ORION,
-> +		.data	    = &mvebu_gpio_armada370_variant,
->  	},
->  	{
->  		.compatible = "marvell,armada-8k-gpio",
-> -		.data       = (void *) MVEBU_GPIO_SOC_VARIANT_A8K,
-> +		.data       = &mvebu_gpio_a8k_variant,
->  	},
->  	{
->  		/* sentinel */
-> @@ -1093,6 +1149,7 @@ static int mvebu_gpio_probe_syscon(struct platform_device *pdev,
->  
->  static int mvebu_gpio_probe(struct platform_device *pdev)
->  {
-> +	const struct mvebu_gpio_soc_variant *soc_variant;
->  	struct mvebu_gpio_chip *mvchip;
->  	const struct of_device_id *match;
->  	struct device_node *np = pdev->dev.of_node;
-> @@ -1100,15 +1157,14 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
->  	struct irq_chip_type *ct;
->  	unsigned int ngpios;
->  	bool have_irqs;
-> -	int soc_variant;
->  	int i, cpu, id;
->  	int err;
->  
->  	match = of_match_device(mvebu_gpio_of_match, &pdev->dev);
->  	if (match)
-> -		soc_variant = (unsigned long) match->data;
-> +		soc_variant = match->data;
->  	else
-> -		soc_variant = MVEBU_GPIO_SOC_VARIANT_ORION;
-> +		soc_variant = &mvebu_gpio_orion_variant;
->  
->  	/* Some gpio controllers do not provide irq support */
->  	have_irqs = of_irq_count(np) != 0;
-> @@ -1139,7 +1195,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
->  	if (!IS_ERR(mvchip->clk))
->  		clk_prepare_enable(mvchip->clk);
->  
-> -	mvchip->soc_variant = soc_variant;
-> +	mvchip->soc_variant = soc_variant->gpio;
->  	mvchip->chip.label = dev_name(&pdev->dev);
->  	mvchip->chip.parent = &pdev->dev;
->  	mvchip->chip.request = gpiochip_generic_request;
-> @@ -1157,7 +1213,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
->  	mvchip->chip.of_node = np;
->  	mvchip->chip.dbg_show = mvebu_gpio_dbg_show;
->  
-> -	if (soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K)
-> +	if (soc_variant->gpio == MVEBU_GPIO_SOC_VARIANT_A8K)
->  		err = mvebu_gpio_probe_syscon(pdev, mvchip);
->  	else
->  		err = mvebu_gpio_probe_raw(pdev, mvchip);
-> @@ -1168,7 +1224,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
->  	/*
->  	 * Mask and clear GPIO interrupts.
->  	 */
-> -	switch (soc_variant) {
-> +	switch (soc_variant->gpio) {
->  	case MVEBU_GPIO_SOC_VARIANT_ORION:
->  	case MVEBU_GPIO_SOC_VARIANT_A8K:
->  		regmap_write(mvchip->regs,
-> @@ -1265,7 +1321,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
->  
->  	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
->  	if (IS_ENABLED(CONFIG_PWM))
-> -		return mvebu_pwm_probe(pdev, mvchip, id);
-> +		return mvebu_pwm_probe(pdev, soc_variant, mvchip, id);
->  
->  	return 0;
->  
-> -- 
-> 2.20.1
+> > Hi Bjorn,
+> >  Comments inline.
+> >
+> >
+> > > -----Original Message-----
+> > > From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Sent: Saturday, March 28, 2020 4:30 AM
+> > > To: Rakesh Pillai <pillair@codeaurora.org>
+> > > Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > linux-
+> > > kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
+> > > Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> > > module device node
+> > >
+> > > On Thu 26 Mar 03:48 PDT 2020, Rakesh Pillai wrote:
+> > >
+> > > > Add device node for the ath10k SNOC platform driver probe
+> > > > and add resources required for WCN3990 on sc7180 soc.
+> > > >
+> > > > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > > > ---
+> > > >
+> > > > Depends on https://patchwork.kernel.org/patch/11455345/
+> > > > The above patch adds the dt-bindings for wifi-firmware
+> > > > subnode
+> > > > ---
+> > > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  8 ++++++++
+> > > >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27
+> > > +++++++++++++++++++++++++++
+> > > >  2 files changed, 35 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > > index 043c9b9..a6168a4 100644
+> > > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > > @@ -327,6 +327,14 @@
+> > > >  	};
+> > > >  };
+> > > >
+> > > > +&wifi {
+> > > > +	status = "okay";
+> > > > +	qcom,msa-fixed-perm;
+> > > > +	wifi-firmware {
+> > > > +		iommus = <&apps_smmu 0xc2 0x1>;
+> > >
+> > > How is sc7180 different from sdm845, where the iommus property goes
+> > > directly in the &wifi node?
+> >
+> > Sc7180 IDP is a target without TrustZone support and also with S2 IOMMU
+> > enabled.
+> > Since in Trustzone based targets, the iommu SID configuration was done
+by
+> > TZ, there was nothing required to be done by driver.
+> > But in non-TZ based targets, the IOMMU mappings need to be done by the
+> > driver.
+> > Since this is the mapping of the firmware memory and to keep it
+different
+> > from the driver memory access, a different device has been created for
+> > firmware and these SIDs are configured.
+> >
+> 
+> I see, I missed the fact that 0xc0:1 is used in the &wifi node itself.
+> 
+> So to confirm, we have streams 0xc0 and 0xc1 for data pipes and 0xc2 and
+> 0xc3 for some form of firmware access? And in the normal Qualcomm design
+> implementation the 0c2/0xc3 stream mapping is setup by TZ, and hidden
+> from Linux using the SMMU virtualisation?
 > 
 > 
+> Would have been nice to have some better mechanism for describing
+> multi-connected hardware block, than to sprinkle dummy nodes all over
+> the DT...
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Yes, this is the firmware memory. This method is followed in the venus video
+driver
+https://patchwork.kernel.org/patch/11315765/
+
+Do you suggest following some other mechanism ?
+
+Thanks,
+Rakesh Pillai.
+
+> 
+> Regards,
+> Bjorn
+> 
+> > The below ath10k series brings-in this support.
+> > https://patchwork.kernel.org/project/linux-
+> wireless/list/?series=261367&stat
+> > e=*
+> >
+> > Thanks,
+> > Rakesh Pillai.
+> >
+> > >
+> > > Regards,
+> > > Bjorn
+> > >
+> > > > +	};
+> > > > +};
+> > > > +
+> > > >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> > > >
+> > > >  &qspi_clk {
+> > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > > index 998f101..2745128 100644
+> > > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > > @@ -83,6 +83,11 @@
+> > > >  			reg = <0 0x8f600000 0 0x500000>;
+> > > >  			no-map;
+> > > >  		};
+> > > > +
+> > > > +		wlan_fw_mem: memory@94104000 {
+> > > > +			reg = <0 0x94104000 0 0x200000>;
+> > > > +			no-map;
+> > > > +		};
+> > > >  	};
+> > > >
+> > > >  	cpus {
+> > > > @@ -835,6 +840,28 @@
+> > > >  			};
+> > > >  		};
+> > > >
+> > > > +		wifi: wifi@18800000 {
+> > > > +			compatible = "qcom,wcn3990-wifi";
+> > > > +			reg = <0 0x18800000 0 0x800000>;
+> > > > +			reg-names = "membase";
+> > > > +			iommus = <&apps_smmu 0xc0 0x1>;
+> > > > +			interrupts =
+> > > > +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /*
+CE0
+> > > */ >,
+> > > > +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /*
+CE1
+> > > */ >,
+> > > > +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /*
+CE2
+> > > */ >,
+> > > > +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /*
+CE3
+> > > */ >,
+> > > > +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /*
+CE4
+> > > */ >,
+> > > > +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /*
+CE5
+> > > */ >,
+> > > > +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /*
+CE6
+> > > */ >,
+> > > > +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /*
+CE7
+> > > */ >,
+> > > > +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /*
+CE8
+> > > */ >,
+> > > > +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /*
+CE9
+> > > */ >,
+> > > > +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /*
+CE10
+> > > */>,
+> > > > +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /*
+CE11
+> > > */>;
+> > > > +			memory-region = <&wlan_fw_mem>;
+> > > > +			status = "disabled";
+> > > > +		};
+> > > > +
+> > > >  		config_noc: interconnect@1500000 {
+> > > >  			compatible = "qcom,sc7180-config-noc";
+> > > >  			reg = <0 0x01500000 0 0x28000>;
+> > > > --
+> > > > 2.7.4
