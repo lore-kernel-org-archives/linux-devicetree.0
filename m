@@ -2,408 +2,359 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA38C2D0ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF11C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E853220748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:37:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Yo5JtgQJ"
+	by mail.kernel.org (Postfix) with ESMTP id CEADE20714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585597199;
+	bh=RKSM/K6qKTbNRXtkVhC4q4/tipZmWkOQEDJ0CHGO8MI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P0mR/bjTdY1FrKx8i4VorqpO7v1mO/XQtIx9E6ezWj2MkuzpwuBtwqBbzgVF3PbHT
+	 cJPtFE8HIbYKJG6gC7ShosjHzmzSUMs11gaNm5IuIEMEH5sLVALWodngWUaNXlATAB
+	 cWyXCt1Ez6WlUHo1k13qPUubOBlqcOMMRLGysijY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgC3Tha (ORCPT
+        id S1728780AbgC3Tj7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:37:30 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:10194 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727942AbgC3ThM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 15:37:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585597031; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Y2jGsjW4Cat61j7texOeQJst/+4CaG9+N7miSMcfB4E=; b=Yo5JtgQJ8SHVGG9tiXUdTPYemQZvTH0ixtn0Pfxjvrw+wmGVAivetI9qv/UmEEAlTGw9Z2R8
- QVCOO+HGpMLNKMVFEuKj/f88H1u67V0iMCQvWRe6c259bXjniL45SoA4AA2nsTGZCl/nDVA2
- aMg0OnF4QGAkMNIebD2ra7L/9MM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e824a66.7f4abbf0f810-smtp-out-n04;
- Mon, 30 Mar 2020 19:37:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1E3AEC44788; Mon, 30 Mar 2020 19:37:09 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A7632C4478F;
-        Mon, 30 Mar 2020 19:37:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A7632C4478F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v4 2/4] phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
-Date:   Mon, 30 Mar 2020 12:36:55 -0700
-Message-Id: <1585597017-30683-3-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
-References: <1585597017-30683-1-git-send-email-wcheng@codeaurora.org>
+        Mon, 30 Mar 2020 15:39:59 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41068 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728445AbgC3Tj7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 15:39:59 -0400
+Received: by mail-io1-f67.google.com with SMTP id b12so2920482ion.8;
+        Mon, 30 Mar 2020 12:39:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=clmsQJK4BMI8m2Z/sWQrrUlWM9WX3L6ITcoHrmc1DJw=;
+        b=DezW00cMQvF7/esf4lzX5Vg+OPyy18TJkFa/i6KxW0RVcOBs8eUpkMgFksL4OtaWJW
+         i4AL7Pz/am/rgfcwz+ZGLYQ5NRFdcrVTp/rEgOvNBYxwOt5YorRrA6aTpcccOxXC6Fzu
+         Dkd845BCk/kXrP7V0B6js9I0ElQl0URaVq76ec1MRMdh6zuNcJCtYaUL+p98gzAqmGXM
+         CPB6lkOIYidwqgAdhAw1bWTqg+1gaZQOKFbnKCGFg2c41nKvkO5Ini8HFtO6bjupOm30
+         K6yH1/lGEr51EHB6n+DIrgysen1UsIOfJv9pVByB7IoXiLxbdJb97iavwrT2mZhVQCy0
+         eatA==
+X-Gm-Message-State: ANhLgQ1KZ4O0QoSdcOoHU0cXU03NRwoNQrX5GGuv3o53Ev/6cIU6q1RM
+        MnvzNSgmuILzCgZJXI+nbg==
+X-Google-Smtp-Source: ADFU+vuJvWcNlXMQdJNMUkyw9q7uDOBjMSajkXwEQcU+iQ0lcBY6IAptPDeVBvzuz6t96cWWyprB8g==
+X-Received: by 2002:a6b:d609:: with SMTP id w9mr12027791ioa.41.1585597196788;
+        Mon, 30 Mar 2020 12:39:56 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id l70sm5226774ili.81.2020.03.30.12.39.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 12:39:55 -0700 (PDT)
+Received: (nullmailer pid 12120 invoked by uid 1000);
+        Mon, 30 Mar 2020 19:39:53 -0000
+Date:   Mon, 30 Mar 2020 13:39:53 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ASoC: dt-bindings: simple-card: switch to yaml base
+ Documentation
+Message-ID: <20200330193953.GA22908@bogus>
+References: <871rpsq3bx.wl-kuninori.morimoto.gx@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <871rpsq3bx.wl-kuninori.morimoto.gx@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds the SNPS FemtoPHY driver used in QCOM SOCs.  There
-are potentially multiple instances of this UTMI PHY on the
-SOC, all which can utilize this driver.
+On Mon, Mar 16, 2020 at 02:24:50PM +0900, Kuninori Morimoto wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> This patch switches from .txt base to .yaml base Document.
+> This patch is assuming that "sound-dai" is already defined.
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> ---
+> v2 -> v3
+> 
+> 	- uses maxItems for many place which were already defined.
+> 	- assuming that "sound-dai" is already defined
+> 	- (@.*) -> (@[0-9a-f]+)
+> 
+>  .../devicetree/bindings/sound/simple-card.txt | 351 -------------
+>  .../bindings/sound/simple-card.yaml           | 487 ++++++++++++++++++
+>  2 files changed, 487 insertions(+), 351 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/simple-card.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/simple-card.yaml
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-Reviewed-by: Philipp Zabel <pza@pengutronix.de>
----
- drivers/phy/qualcomm/Kconfig             |  10 ++
- drivers/phy/qualcomm/Makefile            |   1 +
- drivers/phy/qualcomm/phy-qcom-snps-7nm.c | 294 +++++++++++++++++++++++++++++++
- 3 files changed, 305 insertions(+)
- create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> diff --git a/Documentation/devicetree/bindings/sound/simple-card.yaml b/Documentation/devicetree/bindings/sound/simple-card.yaml
+> new file mode 100644
+> index 000000000000..cd5ea50daa22
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/simple-card.yaml
+> @@ -0,0 +1,487 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/simple-card.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Simple Audio Card Driver Device Tree Bindings
+> +
+> +maintainers:
+> +  - Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> +
+> +definitions:
+> +
+> +  frame-master:
+> +    description: Indicates dai-link frame master.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
+> +      - maxItems: 1
+> +
+> +  bitclock-master:
+> +    description: Indicates dai-link bit clock master
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
+> +      - maxItems: 1
+> +
+> +  frame-inversion:
+> +    description: dai-link uses frame clock inversion
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +  bitclock-inversion:
+> +    description: dai-link uses bit clock inversion
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +  dai-tdm-slot-num:
+> +    description: see tdm-slot.txt.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  dai-tdm-slot-width:
+> +    description: see tdm-slot.txt.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  clocks:
+> +    maxItems: 1
 
-diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
-index e46824d..3158c14 100644
---- a/drivers/phy/qualcomm/Kconfig
-+++ b/drivers/phy/qualcomm/Kconfig
-@@ -85,6 +85,16 @@ config PHY_QCOM_USB_HS
- 	  Support for the USB high-speed ULPI compliant phy on Qualcomm
- 	  chipsets.
- 
-+config PHY_QCOM_USB_SNPS_HS_7NM
-+	tristate "Qualcomm 7nm USB HS PHY module"
-+	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-+	select GENERIC_PHY
-+	help
-+	  Enable support for the USB high-speed SNPS phy on Qualcomm 7nm
-+	  chipsets.  This PHY has differences in the register map compared
-+	  to the 28nm variant.  The PHY is paired with a Synopsys DWC3 USB
-+	  controller on MSM SOCs.
-+
- config PHY_QCOM_USB_HSIC
- 	tristate "Qualcomm USB HSIC ULPI PHY module"
- 	depends on USB_ULPI_BUS
-diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
-index 283251d..06bdb40 100644
---- a/drivers/phy/qualcomm/Makefile
-+++ b/drivers/phy/qualcomm/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
- obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
- obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
- obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
-+obj-$(CONFIG_PHY_QCOM_USB_SNPS_HS_7NM)		+= phy-qcom-snps-7nm.o
-diff --git a/drivers/phy/qualcomm/phy-qcom-snps-7nm.c b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-new file mode 100644
-index 0000000..00a46cd
---- /dev/null
-+++ b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
-+
-+#define USB2_PHY_USB_PHY_UTMI_CTRL0		(0x3c)
-+#define OPMODE_MASK					GENMASK(4, 3)
-+#define OPMODE_NORMAL				(0x00)
-+#define OPMODE_NONDRIVING			BIT(3)
-+#define SLEEPM						BIT(0)
-+#define TERMSEL						BIT(5)
-+
-+#define USB2_PHY_USB_PHY_UTMI_CTRL1		(0x40)
-+#define XCVRSEL						BIT(0)
-+
-+#define USB2_PHY_USB_PHY_UTMI_CTRL5		(0x50)
-+#define POR							BIT(1)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON0	(0x54)
-+#define RETENABLEN							BIT(3)
-+#define FSEL_MASK							GENMASK(7, 5)
-+#define FSEL_DEFAULT						(0x3 << 4)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1	(0x58)
-+#define VBUSVLDEXTSEL0						BIT(4)
-+#define PLLBTUNE							BIT(5)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON2	(0x5c)
-+#define VREGBYPASS							BIT(0)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL1	(0x60)
-+#define VBUSVLDEXT0					BIT(0)
-+
-+#define USB2_PHY_USB_PHY_HS_PHY_CTRL2	(0x64)
-+#define USB2_AUTO_RESUME			BIT(0)
-+#define USB2_SUSPEND_N				BIT(2)
-+#define USB2_SUSPEND_N_SEL			BIT(3)
-+
-+#define USB2_PHY_USB_PHY_CFG0					(0x94)
-+#define UTMI_PHY_DATAPATH_CTRL_OVERRIDE_EN	BIT(0)
-+#define UTMI_PHY_CMN_CTRL_OVERRIDE_EN		BIT(1)
-+
-+#define USB2_PHY_USB_PHY_REFCLK_CTRL	(0xa0)
-+#define REFCLK_SEL_MASK				GENMASK(1, 0)
-+#define REFCLK_SEL_DEFAULT			(0x2 << 0)
-+
-+static const char * const qcom_snps_hsphy_vreg_names[] = {
-+	"vdda-pll", "vdda33", "vdda18",
-+};
-+
-+#define SNPS_HS_NUM_VREGS		ARRAY_SIZE(qcom_snps_hsphy_vreg_names)
-+
-+/**
-+ * struct qcom_snps_hsphy - structure holding snps hs phy attributes
-+ *
-+ * @phy: generic phy
-+ * @base: iomapped memory space for qubs2 phy
-+ *
-+ * @cfg_ahb_clk: AHB2PHY interface clock
-+ * @ref_clk: phy reference clock
-+ * @iface_clk: phy interface clock
-+ * @phy_reset: phy reset control
-+ * @vregs: regulator supplies bulk data
-+
-+ * @phy_initialized: if PHY has been initialized correctly
-+ *
-+ */
-+struct qcom_snps_hsphy {
-+	struct phy *phy;
-+	void __iomem *base;
-+
-+	struct clk *cfg_ahb_clk;
-+	struct clk *ref_clk;
-+	struct reset_control *phy_reset;
-+	struct regulator_bulk_data vregs[SNPS_HS_NUM_VREGS];
-+
-+	bool phy_initialized;
-+};
-+
-+static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
-+				    u32 mask, u32 val)
-+{
-+	u32 reg;
-+
-+	reg = readl(base + offset);
-+	reg &= ~mask;
-+	reg |= val & mask;
-+	writel(reg, base + offset);
-+
-+	/* Ensure above write is completed */
-+	readl(base + offset);
-+}
-+
-+static int qcom_snps_hsphy_init(struct phy *phy)
-+{
-+	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
-+	int ret;
-+
-+	dev_vdbg(&phy->dev, "%s(): Initializing SNPS HS phy\n", __func__);
-+
-+	/* turn on regulator supplies */
-+	ret = regulator_bulk_enable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-+	if (ret)
-+		return ret;
-+
-+	/* enable ahb interface clock to program phy */
-+	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
-+	if (ret) {
-+		dev_err(&phy->dev, "failed to enable cfg ahb clock, %d\n", ret);
-+		goto poweroff_phy;
-+	}
-+
-+	/* Perform phy reset */
-+	ret = reset_control_assert(hsphy->phy_reset);
-+	if (ret) {
-+		dev_err(&phy->dev, "failed to assert phy_reset, %d\n", ret);
-+		goto disable_ahb_clk;
-+	}
-+
-+	/* 100 us delay to keep PHY in reset mode */
-+	usleep_range(100, 150);
-+
-+	ret = reset_control_deassert(hsphy->phy_reset);
-+	if (ret) {
-+		dev_err(&phy->dev, "failed to de-assert phy_reset, %d\n", ret);
-+		goto disable_ahb_clk;
-+	}
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
-+							UTMI_PHY_CMN_CTRL_OVERRIDE_EN,
-+							UTMI_PHY_CMN_CTRL_OVERRIDE_EN);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL5,
-+							POR, POR);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON0,
-+							FSEL_MASK, 0);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1,
-+					PLLBTUNE, PLLBTUNE);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_REFCLK_CTRL,
-+					REFCLK_SEL_DEFAULT, REFCLK_SEL_MASK);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON1,
-+					VBUSVLDEXTSEL0, VBUSVLDEXTSEL0);
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL1,
-+					VBUSVLDEXT0, VBUSVLDEXT0);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL_COMMON2,
-+					VREGBYPASS, VREGBYPASS);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-+					USB2_SUSPEND_N_SEL | USB2_SUSPEND_N,
-+					USB2_SUSPEND_N_SEL | USB2_SUSPEND_N);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL0,
-+					SLEEPM, SLEEPM);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_UTMI_CTRL5,
-+					POR, 0);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-+					USB2_SUSPEND_N_SEL, 0);
-+
-+	qcom_snps_hsphy_write_mask(hsphy->base, USB2_PHY_USB_PHY_CFG0,
-+					UTMI_PHY_CMN_CTRL_OVERRIDE_EN, 0);
-+
-+	hsphy->phy_initialized = true;
-+
-+	return 0;
-+
-+disable_ahb_clk:
-+	clk_disable_unprepare(hsphy->cfg_ahb_clk);
-+poweroff_phy:
-+	regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-+
-+	return ret;
-+}
-+
-+static int qcom_snps_hsphy_exit(struct phy *phy)
-+{
-+	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
-+
-+	reset_control_assert(hsphy->phy_reset);
-+	clk_disable_unprepare(hsphy->cfg_ahb_clk);
-+	regulator_bulk_disable(ARRAY_SIZE(hsphy->vregs), hsphy->vregs);
-+	hsphy->phy_initialized = false;
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops qcom_snps_hsphy_gen_ops = {
-+	.init		= qcom_snps_hsphy_init,
-+	.exit		= qcom_snps_hsphy_exit,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct of_device_id qcom_snps_hsphy_of_match_table[] = {
-+	{
-+		.compatible	= "qcom,sm8150-usb-hs-phy",
-+	},
-+	{
-+		.compatible	= "qcom,usb-snps-hs-7nm-phy",
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
-+
-+static int qcom_snps_hsphy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct qcom_snps_hsphy *hsphy;
-+	struct phy_provider *phy_provider;
-+	struct phy *generic_phy;
-+	struct resource *res;
-+	int ret, i;
-+	int num;
-+
-+	hsphy = devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
-+	if (!hsphy)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	hsphy->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(hsphy->base))
-+		return PTR_ERR(hsphy->base);
-+
-+	hsphy->ref_clk = devm_clk_get(dev, "ref");
-+	if (IS_ERR(hsphy->ref_clk)) {
-+		ret = PTR_ERR(hsphy->ref_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get ref clk, %d\n", ret);
-+		return ret;
-+	}
-+
-+	hsphy->phy_reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-+	if (IS_ERR(hsphy->phy_reset)) {
-+		dev_err(dev, "failed to get phy core reset\n");
-+		return PTR_ERR(hsphy->phy_reset);
-+	}
-+
-+	num = ARRAY_SIZE(hsphy->vregs);
-+	for (i = 0; i < num; i++)
-+		hsphy->vregs[i].supply = qcom_snps_hsphy_vreg_names[i];
-+
-+	ret = devm_regulator_bulk_get(dev, num, hsphy->vregs);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get regulator supplies: %d\n",
-+				ret);
-+		return ret;
-+	}
-+
-+	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
-+	if (IS_ERR(generic_phy)) {
-+		ret = PTR_ERR(generic_phy);
-+		dev_err(dev, "failed to create phy, %d\n", ret);
-+		return ret;
-+	}
-+	hsphy->phy = generic_phy;
-+
-+	dev_set_drvdata(dev, hsphy);
-+	phy_set_drvdata(generic_phy, hsphy);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (!IS_ERR(phy_provider))
-+		dev_info(dev, "Registered Qcom-SNPS HS phy\n");
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static struct platform_driver qcom_snps_hsphy_driver = {
-+	.probe		= qcom_snps_hsphy_probe,
-+	.driver = {
-+		.name	= "qcom-snps-hs-7nm-phy",
-+		.of_match_table = qcom_snps_hsphy_of_match_table,
-+	},
-+};
-+
-+module_platform_driver(qcom_snps_hsphy_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm 7nm USB HS PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Only used in one place, just move there.
+
+> +
+> +  system-clock-frequency:
+> +    description: |
+> +      If a clock is specified and a multiplication factor is given with
+> +      mclk-fs, the clock will be set to the calculated mclk frequency
+> +      when the stream starts.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  system-clock-direction-out:
+> +    description: |
+> +      specifies clock direction as 'out' on initialization.
+> +      It is useful for some aCPUs with fixed clocks.
+> +    $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +  mclk-fs:
+> +    description: |
+> +      Multiplication factor between stream rate and codec mclk.
+> +      When defined, mclk-fs property defined in dai-link sub nodes are ignored.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  aux-devs:
+> +    description: |
+> +      List of phandles pointing to auxiliary devices, such
+> +      as amplifiers, to be added to the sound card.
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +
+> +  convert-rate:
+> +    description: CPU to Codec rate convert.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  convert-channels:
+> +    description: CPU to Codec rate channels.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  prefix:
+> +    description: "device name prefix"
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +
+> +  label:
+> +    maxItems: 1
+> +
+> +  routing:
+> +    description: |
+> +      A list of the connections between audio components.
+> +      Each entry is a pair of strings, the first being the
+> +      connection's sink, the second being the connection's source.
+> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> +
+> +  widgets:
+> +    description: User specified audio sound widgets.
+> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
+> +
+> +  pin-switches:
+> +    description: the widget names for which pin switches must be created.
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +
+> +  format:
+> +    description: audio format.
+> +    items:
+> +      enum:
+> +        - i2s
+> +        - right_j
+> +        - left_j
+> +        - dsp_a
+> +        - dsp_b
+> +        - ac97
+> +        - pdm
+> +        - msb
+> +        - lsb
+> +
+> +  dai:
+> +    type: object
+> +    properties:
+> +      sound-dai:
+> +        maxItems: 1
+> +
+> +      # common properties
+> +      mclk-fs:
+> +        $ref: "#/definitions/mclk-fs"
+> +      prefix:
+> +        $ref: "#/definitions/prefix"
+> +      frame-inversion:
+> +        $ref: "#/definitions/frame-inversion"
+> +      bitclock-inversion:
+> +        $ref: "#/definitions/bitclock-inversion"
+> +      frame-master:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +      bitclock-master:
+> +        $ref: /schemas/types.yaml#/definitions/flag
+> +
+> +      dai-tdm-slot-num:
+> +        $ref: "#/definitions/dai-tdm-slot-num"
+> +      dai-tdm-slot-width:
+> +        $ref: "#/definitions/dai-tdm-slot-width"
+> +      clocks:
+> +        $ref: "#/definitions/clocks"
+> +      system-clock-frequency:
+> +        $ref: "#/definitions/system-clock-frequency"
+> +      system-clock-direction-out:
+> +        $ref: "#/definitions/system-clock-direction-out"
+> +    required:
+> +      - sound-dai
+> +
+> +properties:
+> +  compatible:
+> +    contains:
+> +      enum:
+> +        - simple-audio-card
+> +        - simple-scu-audio-card
+> +
+> +  "#address-cells":
+> +    const: 1
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  label:
+> +    $ref: "#/definitions/label"
+> +
+> +  simple-audio-card,name:
+> +    description: User specified audio sound card name.
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +
+> +# use patternProperties to use "#definitions/xxx"
+
+Huh? The meta-schema gives you an error? We should fix that, not 
+work-around it.
+
+> +patternProperties:
+> +  "^simple-audio-card,widgets$":
+> +    $ref: "#/definitions/widgets"
+> +  "^simple-audio-card,routing$":
+> +    $ref: "#/definitions/routing"
+> +  "^simple-audio-card,cpu(@[0-9a-f]+)?":
+> +    $ref: "#/definitions/dai"
+> +  "^simple-audio-card,codec(@[0-9a-f]+)?":
+> +    $ref: "#/definitions/dai"
+> +
+> +  # common properties
+> +  "^simple-audio-card,frame-master$":
+> +    $ref: "#/definitions/frame-master"
+> +  "^simple-audio-card,bitclock-master$":
+> +    $ref: "#/definitions/bitclock-master"
+> +  "^simple-audio-card,frame-inversion$":
+> +    $ref: "#/definitions/frame-inversion"
+> +  "^simple-audio-card,bitclock-inversion$":
+> +    $ref: "#/definitions/bitclock-inversion"
+> +  "^simple-audio-card,format$":
+> +    $ref: "#/definitions/format"
+> +  "^simple-audio-card,mclk-fs$":
+> +    $ref: "#/definitions/mclk-fs"
+> +  "^simple-audio-card,aux-devs$":
+> +    $ref: "#/definitions/aux-devs"
+> +  "^simple-audio-card,convert-rate$":
+> +    $ref: "#/definitions/convert-rate"
+> +  "^simple-audio-card,convert-channels$":
+> +    $ref: "#/definitions/convert-channels"
+> +  "^simple-audio-card,prefix$":
+> +    $ref: "#/definitions/prefix"
+> +  "^simple-audio-card,pin-switches$":
+> +    $ref: "#/definitions/pin-switches"
+> +  "^simple-audio-card,hp-det-gpio$":
+> +    maxItems: 1
+> +  "^simple-audio-card,mic-det-gpio$":
+> +    maxItems: 1
+> +
+> +  "^simple-audio-card,dai-link(@[0-9a-f]+)?$":
+> +    description: |
+> +      Container for dai-link level properties and the CPU and CODEC sub-nodes.
+> +      This container may be omitted when the card has only one DAI link.
+> +    type: object
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +
+> +      # common properties
+> +      frame-master:
+> +        $ref: "#/definitions/frame-master"
+> +      bitclock-master:
+> +        $ref: "#/definitions/bitclock-master"
+> +      frame-inversion:
+> +        $ref: "#/definitions/frame-inversion"
+> +      bitclock-inversion:
+> +        $ref: "#/definitions/bitclock-inversion"
+> +      format:
+> +        $ref: "#/definitions/format"
+> +      mclk-fs:
+> +        $ref: "#/definitions/mclk-fs"
+> +      aux-devs:
+> +        $ref: "#/definitions/aux-devs"
+> +      convert-rate:
+> +        $ref: "#/definitions/convert-rate"
+> +      convert-channels:
+> +        $ref: "#/definitions/convert-channels"
+> +      prefix:
+> +        $ref: "#/definitions/prefix"
+> +      pin-switches:
+> +        $ref: "#/definitions/pin-switches"
+> +      hp-det-gpio:
+> +        maxItems: 1
+> +      mic-det-gpio:
+> +        maxItems: 1
+> +
+> +    patternProperties:
+> +      "^cpu(@[0-9a-f]+)?":
+> +        $ref: "#/definitions/dai"
+> +      "^codec(@[0-9a-f]+)?":
+> +        $ref: "#/definitions/dai"
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +
+> +additionalProperties: false
