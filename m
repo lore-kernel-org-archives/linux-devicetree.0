@@ -2,92 +2,103 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E38AC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3C9C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 614CF2072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:28:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585585689;
-	bh=6RPaIUBO7fLLSXtfF+V8XGbHNXoxt/ndTSxvAR1MYKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=paPWMDCbXpfNQ0VaCWSzq1duejur8dMfDv2YlCOSZzvMnm4225+YDt9/rg/NqR4DD
-	 SAjbY/4EmMG2TtDijD7aVmhJzNE+46VzKUOaUzIpV69Cat72FgkhVIjexHUcjYd+W0
-	 bp7wHON69xRPvwB/sB99XwwbcGZPUZLEpK/JFOQg=
+	by mail.kernel.org (Postfix) with ESMTP id A644F20776
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:30:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mcvg7vKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgC3Q2J (ORCPT
+        id S1727942AbgC3Qab (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:28:09 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34849 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgC3Q2I (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 12:28:08 -0400
-Received: by mail-io1-f67.google.com with SMTP id o3so12844301ioh.2;
-        Mon, 30 Mar 2020 09:28:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=g4xE6WgRPY/ofYo+AU3gHyBfgox1LqQ8FIlPCkJQGyk=;
-        b=r0+96FptN8CJH6y52dEDWtF2x7ozTX8GYAfp2guU5/nTMdUudznJcGBi/7gtFHyDil
-         dWpdib+DqQ7cJmMuRABgNaXNAO+IzRJ20xfl9dzBfqtGF/rbSG0qUDjXHDsWR7yPr7lu
-         N3zbEpcTMf/3d1+9e3MTvHzLCEBkDIb+1SFociNGPrVBWMdb5C0ivuJB9QD9JsecJ575
-         bbyxbwrimxAQhvlxxRwuPyMeI6Ts6NhWhQzQtj1irN2Gzb3mcfAU64R2Du0LgRcSkATD
-         rMJVgKsleN0Y+cUxCLDpJHvM/0mH30bPM2FXq/genQ6yGMc+6X6n/ATY0gviaAszj1Z9
-         pFxA==
-X-Gm-Message-State: ANhLgQ22giKhDQosQxGwHYk1a9Wxnsq6/AV1fQjjfOi088CI5VHTZdNW
-        ixkqkA2HxqJMHmSkNzdWRA==
-X-Google-Smtp-Source: ADFU+vtqY4AfJ9Mj+w3Ew+uvBRq1gXk3qUFKAIQJlsvqmcTWMhltCzJINAWQvEG/UaLUJ+dp7lTSjQ==
-X-Received: by 2002:a02:a85:: with SMTP id 127mr11347531jaw.51.1585585686698;
-        Mon, 30 Mar 2020 09:28:06 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id s66sm5031561ilc.9.2020.03.30.09.28.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 09:28:05 -0700 (PDT)
-Received: (nullmailer pid 28168 invoked by uid 1000);
-        Mon, 30 Mar 2020 16:28:04 -0000
-Date:   Mon, 30 Mar 2020 10:28:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
-        jianxin.pan@amlogic.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        lnykww@gmail.com, yinxin_1989@aliyun.com
-Subject: Re: [PATCH v5 1/3] dt-bindings: mmc: Document the Amlogic Meson SDHC
- MMC host controller
-Message-ID: <20200330162804.GA27288@bogus>
-References: <20200328003249.1248978-1-martin.blumenstingl@googlemail.com>
- <20200328003249.1248978-2-martin.blumenstingl@googlemail.com>
+        Mon, 30 Mar 2020 12:30:31 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38964 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbgC3Qaa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Mar 2020 12:30:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=rzh9ueR7rZV8bhCQEK6RCcxjt9ukPqxxiqOJSvaCw8I=; b=mcvg7vKuOo7yU+LPEx+F+bszdM
+        g6XBJUJ6+WHAyGzXz+cPUuz06fumRjhrJuUR1yx6WCLiqDh17Cw899KfHjuHDXRy8fPJFlV/sDerU
+        bifb2uLLvscED+USvLy+KDCkDIhAZOKmyG10/v+Ypb9i8SQ7lUVFNsr5P6+E5yqvtUxE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jIxIy-00066S-VM; Mon, 30 Mar 2020 18:30:28 +0200
+Date:   Mon, 30 Mar 2020 18:30:28 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net
+Subject: Re: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
+Message-ID: <20200330163028.GE23477@lunn.ch>
+References: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200328003249.1248978-2-martin.blumenstingl@googlemail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 01:32:47AM +0100, Martin Blumenstingl wrote:
-> This documents the devicetree bindings for the SDHC MMC host controller
-> found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
-> bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
-> HS200 mode (up to 100MHz clock). It embeds an internal clock controller
-> which outputs four clocks (mod_clk, sd_clk, tx_clk and rx_clk) and is
-> fed by four external input clocks (clkin[0-3]). "pclk" is the module
-> register clock, it has to be enabled to access the registers.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   | 83 +++++++++++++++++++
->  .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |  8 ++
->  2 files changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
->  create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
+On Mon, Mar 30, 2020 at 07:01:36PM +0300, Codrin Ciubotariu wrote:
+> Some ethernet controllers, such as cadence's macb, have an embedded MDIO.
+> For this reason, the ethernet PHY nodes are not under an MDIO bus, but
+> directly under the ethernet node. Since these drivers might use
+> of_mdiobus_child_is_phy(), we should fix this function by returning false
+> if a fixed-link is found.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+So i assume the problem occurs here:
+
+static int macb_mdiobus_register(struct macb *bp)
+{
+        struct device_node *child, *np = bp->pdev->dev.of_node;
+
+        /* Only create the PHY from the device tree if at least one PHY is
+         * described. Otherwise scan the entire MDIO bus. We do this to support
+         * old device tree that did not follow the best practices and did not
+         * describe their network PHYs.
+         */
+        for_each_available_child_of_node(np, child)
+                if (of_mdiobus_child_is_phy(child)) {
+                        /* The loop increments the child refcount,
+                         * decrement it before returning.
+                         */
+                        of_node_put(child);
+
+                        return of_mdiobus_register(bp->mii_bus, np);
+                }
+
+        return mdiobus_register(bp->mii_bus);
+}
+
+I think a better solution is
+
+        for_each_available_child_of_node(np, child)
++		if (of_phy_is_fixed_link(child)
++		   continue;
+                if (of_mdiobus_child_is_phy(child)) {
+                        /* The loop increments the child refcount,
+                         * decrement it before returning.
+                         */
+                        of_node_put(child);
+
+                        return of_mdiobus_register(bp->mii_bus, np);
+                }
+
+        return mdiobus_register(bp->mii_bus);
+}
+
+This problem is only an issue for macb, so keep the fix local to macb.
+
+	Andrew
