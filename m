@@ -2,93 +2,101 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCC4C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E15C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE7820774
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C9C20771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585609265;
-	bh=9uX1Sypfl8iBUt/Ztjrsj6tPMSUHyJktT0nEeZMK3vg=;
+	s=default; t=1585609479;
+	bh=9WjqI5SPSCBz6gV5rpNapNZis++dQJUdYYl0VRE9YME=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VGoayyPquM1uNYgnDyFieq1cpW/PYHWyFd6wviwn0KxX77tQWlPtCmFVWRk+J902y
-	 8FRHuOuFqRoU6ZgikSgPnyYO6ZNnP2BLeuMsN4uQT2kMonX49CHLeCKwNPo7+32Wjo
-	 pvB7+wgxDy7Yn6qrI5yXVPTIMv970+ZMvPEOffC8=
+	b=NLEblfKn0EvYdRa60iqSyZGJfXKMkww2tRghl7a7ax1XN+D0ZME/AyN4zFr0B/MXt
+	 JhIQz2DISrVZkgMIWeKO6/r9ufpxicslI6f4q7+KNPm2EPHweMNYnLm9/+EVFk/1jp
+	 LyHHfzdpH2M7kI1xqojLLsToHmf/ykYR0d57v+AE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgC3XBE (ORCPT
+        id S1728987AbgC3XEi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:01:04 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:41862 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgC3XBE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:01:04 -0400
-Received: by mail-il1-f195.google.com with SMTP id t6so13987587ilj.8;
-        Mon, 30 Mar 2020 16:01:01 -0700 (PDT)
+        Mon, 30 Mar 2020 19:04:38 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:32897 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgC3XEi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:04:38 -0400
+Received: by mail-il1-f196.google.com with SMTP id k29so17578808ilg.0;
+        Mon, 30 Mar 2020 16:04:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JgZzZGX2+1l0VTjeEuKjYHaxC21r8KeS0zKEfm2qAVs=;
-        b=Hc8ThNRi5mxwLTBGG6u+Hq/dohlgY1THn7K4NdN9+d62bxEzxR9R99Flf1rKRuWFnK
-         2R7dMldfhU/DD2hly0HaW5l7Ean+otKDnCAQwOU2z4fn3CUEOwYHq7hFKRSU9ToTnl/M
-         dIIkzmQ5nOLT7BIDUqG8Lr2JJ2XIuAV3C5c6AOyCpdhNsC0amuS8wDbqlL5NMRRl9r3y
-         9D1sFPcS/F4F8VE2Ih7q4GyG33d6IWRra3DaFizIFrqRN2B/DgzFqgquu6U1ynQPRIR7
-         mRYUUVTL+OlCLDmPFtolL4dPLIO9EXkb/+wwoXMxNfxUwUJyDWdfbcKQpcQmxlQd3Tya
-         ixsw==
-X-Gm-Message-State: ANhLgQ1EiRN5B9H6/Ghf7rPXIuHaa8JUQStvsrynO0DpJCoiS2908399
-        162cSVIAeKMOSD/QGl5jHA==
-X-Google-Smtp-Source: ADFU+vtLyFwr4FXsEUk/I3P1I5kqV+BC9DO+oyzeHHyVLyI0YrYJpOTqJX7GI29JsPy2wasg0brZSQ==
-X-Received: by 2002:a92:cb49:: with SMTP id f9mr13402280ilq.193.1585609261355;
-        Mon, 30 Mar 2020 16:01:01 -0700 (PDT)
+        bh=zyVmX6PvPs45KAHBuPxiyr6Y4x+zS3R0igRu3UBZU14=;
+        b=Vq/2X2vcWkL7YgWnJrof5YXzB6UotgTIhBvKbLo6YojyyBAtrDUHzZYFHwbaKPegPK
+         mxRHNKWrVHAAfagOSzL6WUjRhFAdOw9jqbPlY1dsrwR6HGg4O3sNfpwvp+vtZC3UEImL
+         uS7x1iXDKS6cqb6C33/vtgBlWknHdeWc3hvVU1S9ljvvY/lluJzJ2KYIr4T90qdL193j
+         wXA44xZrgLd4B3AC7WhyJUVbnhG4Myy7eRA5E5s1XzwLvVbkd5amyw3bkwNPIJ2hR4nA
+         rhdUmYi3IpcCQdmdKsNjAnn39tNY43MYYB49tb/nC4hDxXRGvi0Vs9NRrsTjha/KxNJw
+         S4hw==
+X-Gm-Message-State: ANhLgQ0UCHKtGCIedERhGIImCVhVBuEMsW+JnVqYwCC58cIDqqg90yp5
+        B1mjbFYTjpEmrXQ0ztPj/w==
+X-Google-Smtp-Source: ADFU+vt65MXOBj8bh2BCCIAwztEIyDbufvyh7YknLu1e/QYsgpbMBwAXkTjyrfh5SoRzal+OImdt/g==
+X-Received: by 2002:a92:5c5c:: with SMTP id q89mr13643135ilb.195.1585609477611;
+        Mon, 30 Mar 2020 16:04:37 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id x12sm2011163iov.55.2020.03.30.16.00.59
+        by smtp.gmail.com with ESMTPSA id y71sm5347666ilk.23.2020.03.30.16.04.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 16:01:00 -0700 (PDT)
-Received: (nullmailer pid 21284 invoked by uid 1000);
-        Mon, 30 Mar 2020 23:00:59 -0000
-Date:   Mon, 30 Mar 2020 17:00:59 -0600
+        Mon, 30 Mar 2020 16:04:36 -0700 (PDT)
+Received: (nullmailer pid 26041 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:04:34 -0000
+Date:   Mon, 30 Mar 2020 17:04:34 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     rui.zhang@intel.com, robh+dt@kernel.org, daniel.lezcano@linaro.org,
-        j-keerthy@ti.com, amit.kucheria@verdurent.com, t-kristo@ti.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [RESEND PATCH v4 1/4] dt-bindings: thermal: k3: Add VTM bindings
- documentation
-Message-ID: <20200330230059.GA21226@bogus>
-References: <20200318083028.9984-1-j-keerthy@ti.com>
- <20200318083028.9984-2-j-keerthy@ti.com>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] dt-bindings: usb: dwc3: add optional extcon
+ description
+Message-ID: <20200330230434.GA21343@bogus>
+References: <20200318083508.20781-1-martin.kepplinger@puri.sm>
+ <20200318083508.20781-2-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200318083028.9984-2-j-keerthy@ti.com>
+In-Reply-To: <20200318083508.20781-2-martin.kepplinger@puri.sm>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 18 Mar 2020 14:00:25 +0530, Keerthy wrote:
-> Add VTM bindings documentation. In the Voltage Thermal
-> Management Module(VTM), K3 AM654 supplies a voltage
-> reference and a temperature sensor feature that are gathered in the band
-> gap voltage and temperature sensor (VBGAPTS) module. The band
-> gap provides current and voltage reference for its internal
-> circuits and other analog IP blocks. The analog-to-digital
-> converter (ADC) produces an output value that is proportional
-> to the silicon temperature.
+On Wed, Mar 18, 2020 at 09:35:08AM +0100, Martin Kepplinger wrote:
+> the dwc3 drd module already hooks up an extcon device if described in DT.
 > 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 > ---
->  .../bindings/thermal/ti,am654-thermal.yaml    | 56 +++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index 9946ff9ba735..9aa0cefbf5f6 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -31,6 +31,8 @@ Exception for clocks:
+>      "xlnx,zynqmp-dwc3"
+>  
+>  Optional properties:
+> + - extcon: phandle for the extcon device dwc3 DRD uses to detect
+> +   connect/disconnect events.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is deprecated in favor of usb-connector binding. I guess fine to 
+document it, but needs a big fat deprecated, do not use message.
+
+>   - usb-phy : array of phandle for the PHY device.  The first element
+>     in the array is expected to be a handle to the USB2/HS PHY and
+>     the second element is expected to be a handle to the USB3/SS PHY
+> -- 
+> 2.20.1
+> 
