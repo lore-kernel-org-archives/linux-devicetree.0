@@ -2,142 +2,221 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B33C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435DBC2D0EB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950D82072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:07:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsiQlVU+"
+	by mail.kernel.org (Postfix) with ESMTP id 0DF3B20784
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:11:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585595506;
+	bh=4k7npMR5i0GlS48xwHDyMNHtVDzt8QFmx7L+bpSa+l8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wfRQt5UNwvz57KGb22RqSozfiXnLVVHHtZk9oWNosI4gBZ/rmIxRdu5CNvLJ1oKLK
+	 ZISY+xjo3+QnrQ8KT3U1rA2hdCJmUPWLvNaLHBWvLtZJQ4oYTgiXMxqoQi4hOTovMC
+	 EH+mV+2Z1MpcC4Rz/hFF0ltNJeneJ4nwG5TsQ9ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgC3TH5 (ORCPT
+        id S1728096AbgC3TLm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:07:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46344 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgC3TH5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 15:07:57 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q3so9032573pff.13;
-        Mon, 30 Mar 2020 12:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bmnH3rera8wNeq52dRP7sYLJorb76j9t1Bss52B1zk0=;
-        b=CsiQlVU+bjcbRdarIqig2kKkx7cqpd37z4dUL2RENjJy7mMb3bG89IV5kXriYeu2Z6
-         z2NpmIQryXLDaswoiLnK9DOtnsVkk2pVOpAeeXJ78PegWPaFZdXjIhS6wYb+HC6kyW5g
-         pOvu/zqM6i/kPuDhjTMn5ucxPkbMhlpQx+yIyODYB7CCBSAfsPEWpqnWvb03BYmqbqJU
-         KWYUl3wo31GoIlI4N7X+AXH21bqePVzDmU7tKoOUBAlhtUL1KHibGRuJq91byiKz4X5v
-         Y/yYx9kw8BXWMJiW2obPjc6nAy9XsMA18xI6rTyf22ctRYLYwD/DcbrH+bJbavKcmi4H
-         TuvA==
+        Mon, 30 Mar 2020 15:11:42 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41878 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgC3TLl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 15:11:41 -0400
+Received: by mail-io1-f68.google.com with SMTP id b12so2820877ion.8;
+        Mon, 30 Mar 2020 12:11:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bmnH3rera8wNeq52dRP7sYLJorb76j9t1Bss52B1zk0=;
-        b=c2TbBXGCh54C5t+ixFQmatZvF3BHuOXJkZ4Vv3Kpb82WWELZ2029D5EdCNPQMP/1EP
-         0JOddwWrqGDsNtOHHkQH3NZBli8f78nc9Ml5xofsBhE79PtBj8/fq3oobk0XvE8As1Js
-         gW+4M+ixU5t5a+1jnzxXVv840MR2y/tpIQVEmcrvJ4lV0iL9VYLMLCzXwGidvYNqDbRt
-         cdiTte1vJKYGTXxAATQGEThtyrNm+DwnZJW0x7dNR1yHN+gQMn5fpQv66A3fi7fZ3ZzN
-         IZwZ+dyWBBQybtrqXQVAkFtPo/osz5KK2om3ENaeYShOtNk6s1xbjAm0StVYnCoY74wY
-         bkew==
-X-Gm-Message-State: ANhLgQ3A98B/cPoAuUKlYnVnLNEPwgp5gpeYToXvRlvbont+cphooBgH
-        RQud6y+dgZgLJZlOP1sVmhK2aW6BW1OKBjlqn33LYKelA3k=
-X-Google-Smtp-Source: ADFU+vv2/Ok8QRFv88ZZ2f0YVmbslivXbBYtvIVBvtbsp2Z8sMjUFrqmY+CiQtz4GCTtDv7Ki2aFG00s/SveGo9LLpA=
-X-Received: by 2002:aa7:958f:: with SMTP id z15mr13828976pfj.130.1585595275509;
- Mon, 30 Mar 2020 12:07:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200330152711.8769-1-i.mikhaylov@yadro.com> <20200330152711.8769-3-i.mikhaylov@yadro.com>
-In-Reply-To: <20200330152711.8769-3-i.mikhaylov@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 30 Mar 2020 22:07:43 +0300
-Message-ID: <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=naEzHVNq1KsTafl3xqH4koGPBy3a41PHj0Hsijlhu9s=;
+        b=V9XgwZMdMFb5UgUDyekxjidiupCOGMZ3G+RcgpWzgcqjrzIbE29RiQQwIVIx3kfOSH
+         MuESVCaxjKFSdA4i4BAkMr9S87yNfZHf4+88rOg3S4QU9Onm4CsP5lOer6CB2CpnYcQN
+         e5xCj9YXkQLqHJvSMqluWnJaBEnYoIJE9Pt6bhSWLGhVJaKnBIp9+dCcZRhKQLaV7uCF
+         mwPpbSDCqw0WpF8F9Su6+UOXTy8FI02MXbSZsQ2SOrAJI3+tzS64nBcuZCdS6o8W7sMn
+         zGB12rg+FIcmVOT8ubNboZPHMmfnaIBa4Qba5H2kOmFjtv02qjwuunxcGHa9uFQjjgUE
+         feiA==
+X-Gm-Message-State: ANhLgQ1HWaSk8NwcKXctBCl0DTzJjGpxocObElUSFnL2A0HRc4+qW91T
+        opkoiVsDpgHx3W9I98h2KQ==
+X-Google-Smtp-Source: ADFU+vsYIatZ1bjntaO5hjkGBwkqDPSOhoxi4SXRJcj+KJOdK7tBb4Gb0GLh/lVqM6oByQICfnINPw==
+X-Received: by 2002:a6b:8dc9:: with SMTP id p192mr11427400iod.90.1585595498899;
+        Mon, 30 Mar 2020 12:11:38 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id v80sm5125001ila.62.2020.03.30.12.11.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 12:11:37 -0700 (PDT)
+Received: (nullmailer pid 6109 invoked by uid 1000);
+        Mon, 30 Mar 2020 19:11:35 -0000
+Date:   Mon, 30 Mar 2020 13:11:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Nick Dyer <nick@shmanahar.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: input: Update atmel,maxtouch.txt to YAML
+Message-ID: <20200330191135.GA22010@bogus>
+References: <20200315100416.14151-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200315100416.14151-1-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 6:27 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->
-> Proximity sensor driver based on light/vcnl4000.c code.
-> For now supports only the single on-demand measurement.
->
-> The VCNL3020 is a fully integrated proximity sensor. Fully
-> integrated means that the infrared emitter is included in the
-> package. It has 16-bit resolution. It includes a signal
-> processing IC and features standard I2C communication
-> interface. It features an interrupt function.
+On Sun, Mar 15, 2020 at 11:04:15AM +0100, Paul Cercueil wrote:
+> Update atmel,maxtouch.txt to YAML. The new 'vdd-supply' property was
+> added in the process.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  .../bindings/input/atmel,maxtouch.txt         | 41 -----------
+>  .../bindings/input/atmel,maxtouch.yaml        | 68 +++++++++++++++++++
+>  2 files changed, 68 insertions(+), 41 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+>  create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> deleted file mode 100644
+> index c88919480d37..000000000000
+> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+> +++ /dev/null
+> @@ -1,41 +0,0 @@
+> -Atmel maXTouch touchscreen/touchpad
+> -
+> -Required properties:
+> -- compatible:
+> -    atmel,maxtouch
+> -
+> -    The following compatibles have been used in various products but are
+> -    deprecated:
+> -	atmel,qt602240_ts
+> -	atmel,atmel_mxt_ts
+> -	atmel,atmel_mxt_tp
+> -	atmel,mXT224
+> -
+> -- reg: The I2C address of the device
+> -
+> -- interrupts: The sink for the touchpad's IRQ output
+> -    See ../interrupt-controller/interrupts.txt
+> -
+> -Optional properties for main touchpad device:
+> -
+> -- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
+> -    on GPIO bit changes. An array of up to 8 entries can be provided
+> -    indicating the Linux keycode mapped to each bit of the status byte,
+> -    starting at the LSB. Linux keycodes are defined in
+> -    <dt-bindings/input/input.h>.
+> -
+> -    Note: the numbering of the GPIOs and the bit they start at varies between
+> -    maXTouch devices. You must either refer to the documentation, or
+> -    experiment to determine which bit corresponds to which input. Use
+> -    KEY_RESERVED for unused padding values.
+> -
+> -- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
+> -
+> -Example:
+> -
+> -	touch@4b {
+> -		compatible = "atmel,maxtouch";
+> -		reg = <0x4b>;
+> -		interrupt-parent = <&gpio>;
+> -		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+> new file mode 100644
+> index 000000000000..1b138a9836bf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+> @@ -0,0 +1,68 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 
-Still my tag applies, but
-I have few more comments below.
+Do you have rights to relicense?
 
-...
-
-> +#define VCNL_DRV_NAME          "vcnl3020"
-> +#define VCNL_REGMAP_NAME       "vcnl3020_regmap"
-
-I'm wondering why you need the second one.
-
-...
-
-> +       rc = device_property_read_u32(data->dev, "vishay,led-current-milliamp",
-> +                                     &led_current);
-
-> +       if (rc == 0) {
-> +               rc = regmap_write(data->regmap, VCNL_LED_CURRENT, led_current);
-> +               if (rc)
-> +                       dev_err(data->dev,
-> +                               "Error (%d) setting LED current", rc);
-> +       }
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +       return rc;
+> +title: Atmel maXTouch touchscreen/touchpad DT bindings
+> +
+> +maintainers:
+> +  - Paul Cercueil <paul@crapouillou.net>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - atmel,maxtouch
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  vdd-supply:
+> +    description: Phandle to regulator providing power to the touchscreen
+> +
+> +  linux,gpio-keymap:
+> +    minItems: 1
+> +    maxItems: 8
 
-Why not to use standard pattern, i.e.
+Needs a type reference (uint32-array).
 
-  if (rc)
-    return rc;
-  ...
-  rc = regmap_write(...);
+> +    description: >
+> +      When enabled, the SPT_GPIOPWN_T19 object sends messages
+> +      on GPIO bit changes. An array of up to 8 entries can be provided
+> +      indicating the Linux keycode mapped to each bit of the status byte,
+> +      starting at the LSB. Linux keycodes are defined in
+> +      <dt-bindings/input/input.h>.
+> +
+> +      Note: the numbering of the GPIOs and the bit they start at varies between
+> +      maXTouch devices. You must either refer to the documentation, or
+> +      experiment to determine which bit corresponds to which input. Use
+> +      KEY_RESERVED for unused padding values.
+> +
+> +  reset-gpios:
+> +    description: GPIO specifier for the touchscreen's reset pin (active low)
 
-?
+maxItems: 1
 
-...
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      mxt224-touchscreen@4a {
 
-> +       if (rc) {
-> +               dev_err(data->dev,
+touchscreen@4a
 
-> +                       "vcnl3020_measure() failed with error (%d)", rc);
-
-Perhaps you keep same pattern for error messages as in previous function(s).
-
-> +               goto err_unlock;
-> +       }
-
-> +       rc = regmap_bulk_read(data->regmap, VCNL_PS_RESULT_HI, &res, 2);
-
-sizeof(res)
-
-> +       if (rc)
-> +               goto err_unlock;
-
--- 
-With Best Regards,
-Andy Shevchenko
+> +        compatible = "atmel,maxtouch";
+> +        reg = <0x4a>;
+> +
+> +        interrupt-parent = <&gpx0>;
+> +        interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +        vdd-supply = <&tsp_reg>;
+> +      };
+> +    };
+> -- 
+> 2.25.1
+> 
