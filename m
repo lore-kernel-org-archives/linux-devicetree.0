@@ -2,192 +2,90 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FA3C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 10:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FC6C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 10:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B01B0206E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 10:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B925208E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 10:06:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="EC2zPH68"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rcnlHAN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgC3KEn (ORCPT
+        id S1728257AbgC3KGg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:04:43 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:39431 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728594AbgC3KEm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 06:04:42 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id IrHYjFxo2Br2bIrHbjbrcw; Mon, 30 Mar 2020 12:04:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1585562680; bh=pBQdu7TnN1u+LW6UJce1qhQz4FpBtFfXBHt2IBDpk5g=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=EC2zPH68oY4QgQDRAuI4Bb/7czsx5nRWTcoz47/TtQBVROa/emCgkBpQYiayndxM6
-         K07+G5AghboG70iPWNLaA1Z6S8rlVKfflgZfSLCQG9lJEDyUCDeSAcB7giPsSTu+US
-         hYLcslPNbPP9voFtqML1bCJUn6BMpWPRdwqnD5l+gRN0nRNtI7jNSzoIpRDbVl3Yr8
-         S/JwO/NIK9Rj3xWyd1FGpbMn2gKXXIawDBReKGwrqwD/DKRcwcKBZmkbqesH9FNJeh
-         BJmbiDQ7YCTT5DVk0afoaXJek55yal73Rz5bqXTpl4dv6uYk94jko/gkxoiSqVhREB
-         aHazZ09pCHYcQ==
-Subject: Re: [RFC PATCH v5 0/9] Add Tegra driver for video capture
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com
-Cc:     digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <4bb6a3b8-3332-014b-e763-bce9076179dd@xs4all.nl>
-Date:   Mon, 30 Mar 2020 12:04:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 30 Mar 2020 06:06:36 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35650 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728862AbgC3KGf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 06:06:35 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u68so8350970pfb.2
+        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 03:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rCDZDJlysJhXfpiBO1XjknNGnMdzqMitgGarrB4D0Go=;
+        b=rcnlHAN4S2P3qXI5QF+Y5grQereDq1PNGtU/ubadlUiv5qvNhmTbHits4RPEwRyOBU
+         hRlQXEGPnVApcVzTULEl4e/FgB2OfkQ6Fo139anpYQAfq8g/UU3y8+9kA4JD5gHeSV3W
+         8cyTa6kjfk1EGbmAxzjt1h5r9fl5RoBpeYG5/b6tkjCVj/jtXPwuTYvfEgW3/NkpqTGt
+         o6VqrHEBrqPAzGTFVbbe8k9Ey3pSm+2+bxABpTWFvloHdWSMILzznSG9IbS9VRxVrVPd
+         PZAx1+c/dD22RgpnCDGCV+Gf5ZpO2CXPnpZRGzbPAnN20XaEatKxrXMwHQWhKZwT5Wmn
+         xntA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rCDZDJlysJhXfpiBO1XjknNGnMdzqMitgGarrB4D0Go=;
+        b=FF2pq5O1NdCiF83AFVrZJOaMIkGRP4idfrFRSf0zLM/AcdXmeekQp8lcYI85v26+Nk
+         jzK7bHIpHApOvW5fDp4anKp1AjomAhl3aV9Gszkeef/YgbkT8lDDwUp8DiW/IajY2DDs
+         1w6gDBlMR/pCEmqkl7s2PDuaItEH/FP/2wqDyqDurezLTvSvTIZOEfQN/89FiS8qH95n
+         HInoPw9FQKF9WPh9XmDYsrcyVXfTcNZeT3Gm7AAJ6I6wB/US7k0dox8qEQFNyC94q8LM
+         +Ljum2vAd+vMxov+zAwr4Qscsoje33iexjMoA9XBugaftSYqGQMExQzhlFPbchhsOFtY
+         zcxA==
+X-Gm-Message-State: ANhLgQ13p4PdG9xnHfLpZLBO1aND9or1S8wqN6l+BiyB7aU3r8y3oh/Y
+        mXO1XeiqvxmHHfjTDbm1Qig3qg==
+X-Google-Smtp-Source: ADFU+vswMuTmj07ZJkt13uQAo+NdaDRcPhPAaO5t3pkoEPzJ6O3wxeHdKQc6XeaQ7YJyx0FfBFnoyg==
+X-Received: by 2002:a65:5383:: with SMTP id x3mr12028223pgq.279.1585562792992;
+        Mon, 30 Mar 2020 03:06:32 -0700 (PDT)
+Received: from localhost ([103.195.202.48])
+        by smtp.gmail.com with ESMTPSA id my15sm10223033pjb.28.2020.03.30.03.06.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 03:06:31 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>
+Cc:     devicetree@vger.kernel.org
+Subject: [PATCH 0/3] make dtbs_check cleanups for qcom thermal
+Date:   Mon, 30 Mar 2020 15:36:25 +0530
+Message-Id: <cover.1585562459.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfObvoIsiesmyNvsfanDi5WzjSAOuV1CfYPiSDZTpKWi2lvpeUXEbWg5bFkTawJL2aiWa7tndefzxPa4wEvbikncfGhAH3jLRtoMnSEIw8n5ZXjN5p7Ht
- hKHhxbWIU/iDwQyZODfbQR4Z/jZAk2koFIkUhT7SA+vNR62fSY0wMaZpt9L+3kPkvRwP0j4ltJbrnPiwF2IU0gd6qdXACu1YNdqWPq8M2LSo52N6uvCHEedA
- 27ic33PTNqF7Hi2orAGSkLJZsh27MjS6o5WT3w6sCQ/tc9XV/NMfz94K0BgaVlZ5WYbknnF962Qy127oYSwHRlpbGUjAyw7ExCg6fCyKhHYJ5C4SaVpHJqWq
- d4EQfuCIRrVKDEMkBaRBnRSdfw29kWLRzsrv9oy7ALaop240jQ1JyTBv7XPpgp7HCc1n5rIIjmV+zIfLMnC+gaG0Nawt/nc9yJkOZhsWfKpTGx1c8leuBaph
- HpSUHZ6iCYJO9qK2/SXog64PJ4vDBEH4amNpE6KNs1dDoq12RISa56di3BHFHo27xBstjviK56IxqEu/v6t+Vf3Z+Jo4aXuG+8n8UA==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sowjanya,
+Clean up the remaining trip-point names in qcom dtsi files. This is similar
+to the cleanups done before:
 
-On 3/23/20 6:52 PM, Sowjanya Komatineni wrote:
-> This series adds Tegra210 VI and CSI driver for built-in test pattern
-> generator (TPG) capture.
-> 
-> Tegra210 supports max 6 channels on VI and 6 ports on CSI where each
-> CSI port is one-to-one mapped to VI channel for video capture.
-> 
-> This series has TPG support only where it creates hard media links
-> between CSI subdevice and VI video device without device graphs.
-> 
-> v4l2-compliance results are available below the patch diff.
-> 
-> [v5]:	Includes,
-> 	- v4 feedback
-> 	- fix for venc powergate mc reset order.
-> 	- fix to have unbind and bind work during v4l2-ctl sleep and streaming.
+commit e8c48eb08ab14 ("arm64: dts: qcom: qcs404: remove unit name for thermal trip points")
+commit 19e684e835f63 ("arm64: dts: qcom: sdm845: remove unit name for thermal trip points")
 
-Unfortunately, I still crash on this.
 
-I do the following:
+Amit Kucheria (3):
+  arm64: dts: qcom: msm8916: remove unit name for thermal trip points
+  arm64: dts: qcom: msm8996: remove unit name for thermal trip points
+  arm64: dts: qcom: msm8998: remove unit name for thermal trip points
 
-Run: v4l2-ctl --stream-mmap
+ arch/arm64/boot/dts/qcom/msm8916.dtsi |  8 +++---
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 28 ++++++++++----------
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 38 +++++++++++++--------------
+ 3 files changed, 37 insertions(+), 37 deletions(-)
 
-Then, from another shell as root:
+-- 
+2.20.1
 
-cd /sys/devices/platform/50000000.host1x/tegra-video/driver
-echo -n tegra-video > unbind
-
-I get this crash:
-
-[  315.691971] Unable to handle kernel NULL pointer dereference at virtual address 00000000000000b0
-[  315.700749] Mem abort info:
-[  315.703536]   ESR = 0x96000004
-[  315.706587]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  315.711886]   SET = 0, FnV = 0
-[  315.714933]   EA = 0, S1PTW = 0
-[  315.718064] Data abort info:
-[  315.720936]   ISV = 0, ISS = 0x00000004
-[  315.724763]   CM = 0, WnR = 0
-[  315.727726] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000178ee8000
-[  315.734152] [00000000000000b0] pgd=0000000000000000
-[  315.739024] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[  315.744584] Modules linked in: r8152 nouveau lp855x_bl tegra_drm ttm
-[  315.750942] CPU: 3 PID: 2206 Comm: bash Tainted: G        W         5.6.0-rc1-arm64 #118
-[  315.759017] Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
-[  315.764927] pstate: 20000085 (nzCv daIf -PAN -UAO)
-[  315.769718] pc : _raw_write_lock_irqsave+0xb0/0x2b8
-[  315.774590] lr : ida_free+0x48/0x158
-[  315.778155] sp : ffff800011d8bba0
-[  315.781462] x29: ffff800011d8bba0 x28: ffff0000f4095400
-[  315.786766] x27: 0000000000000000 x26: 0000000000000000
-[  315.792070] x25: 0000000000000000 x24: 0000000000000000
-[  315.797372] x23: ffff0000f21ad400 x22: ffff0000f5c93000
-[  315.802674] x21: ffff0000f4095400 x20: ffff0000f86b5540
-[  315.807975] x19: 0000000000000000 x18: 0000000000000000
-[  315.813276] x17: 0000000000000001 x16: 0000000000000019
-[  315.818578] x15: 000000148ccdabe2 x14: 0000000000000136
-[  315.823879] x13: 0000000000000001 x12: 00000000000003f8
-[  315.829180] x11: 0000000000000000 x10: 0000000000000000
-[  315.834482] x9 : ffff0000ff899990 x8 : ffff0000ff899000
-[  315.839784] x7 : 0000000040000000 x6 : 0000000000210d00
-[  315.845085] x5 : 0000000000000001 x4 : 0000000000000000
-[  315.850386] x3 : 00000000000000b0 x2 : 0000000000000001
-[  315.855687] x1 : 0000000000000000 x0 : 0000000000000001
-[  315.860988] Call trace:
-[  315.863432]  _raw_write_lock_irqsave+0xb0/0x2b8
-[  315.867956]  ida_free+0x48/0x158
-[  315.871184]  __media_device_unregister_entity+0x28/0xf0
-[  315.876402]  media_device_unregister+0x6c/0x148
-[  315.880927]  host1x_video_remove+0x20/0x48
-[  315.885021]  host1x_device_remove+0x1c/0x30
-[  315.889198]  device_release_driver_internal+0xf4/0x1c0
-[  315.894325]  device_driver_detach+0x14/0x20
-[  315.898503]  unbind_store+0xd4/0xf8
-[  315.901986]  drv_attr_store+0x20/0x30
-[  315.905645]  sysfs_kf_write+0x40/0x50
-[  315.909301]  kernfs_fop_write+0xf8/0x210
-[  315.913219]  __vfs_write+0x18/0x40
-[  315.916616]  vfs_write+0xdc/0x1c8
-[  315.919926]  ksys_write+0x68/0xf0
-[  315.923235]  __arm64_sys_write+0x18/0x20
-[  315.927154]  el0_svc_common.constprop.0+0x68/0x160
-[  315.931936]  do_el0_svc+0x20/0x80
-[  315.935246]  el0_sync_handler+0x10c/0x180
-[  315.939246]  el0_sync+0x140/0x180
-[  315.942560] Code: 8803fc02 35ffffa3 17fffda6 f9800071 (885ffc60)
-[  315.948644] ---[ end trace e42b943f3c1af06c ]---
-
-The following diff fixes this:
-
------------------- cut here ------------------
-diff --git a/drivers/staging/media/tegra/tegra-vi.c b/drivers/staging/media/tegra/tegra-vi.c
-index 9714152aa6a7..53cf37af9602 100644
---- a/drivers/staging/media/tegra/tegra-vi.c
-+++ b/drivers/staging/media/tegra/tegra-vi.c
-@@ -583,7 +583,7 @@ static int tegra_channel_init(struct tegra_vi_channel *chan)
- 	/* initialize the video_device */
- 	chan->video->fops = &tegra_channel_fops;
- 	chan->video->v4l2_dev = &vid->v4l2_dev;
--	chan->video->release = video_device_release_empty;
-+	chan->video->release = video_device_release;
- 	chan->video->queue = &chan->queue;
- 	snprintf(chan->video->name, sizeof(chan->video->name), "%s-%s-%u",
- 		 dev_name(vi->dev), "output", chan->portno);
-@@ -647,6 +647,7 @@ static int tegra_channel_init(struct tegra_vi_channel *chan)
- 	media_entity_cleanup(&chan->video->entity);
- release_vdev:
- 	video_device_release(chan->video);
-+	chan->video = NULL;
- 	return ret;
- }
-
-@@ -707,7 +708,6 @@ static void tegra_vi_channels_cleanup(struct tegra_vi *vi)
- 			mutex_lock(&chan->video_lock);
- 			vb2_queue_release(&chan->queue);
- 			mutex_unlock(&chan->video_lock);
--			video_device_release(chan->video);
- 		}
-
- 		if (chan->frame_start_sp)
------------------- cut here ------------------
-
-Regards,
-
-	Hans
