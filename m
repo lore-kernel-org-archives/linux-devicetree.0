@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9045C2D0E7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAE8C2D0E7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB0E8206F6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D951120786
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2Wk9D3n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SHY9Z0Ng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgC3BKA (ORCPT
+        id S1728280AbgC3BKa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:10:00 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35046 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728496AbgC3BJ6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 21:09:58 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k21so16333361ljh.2;
-        Sun, 29 Mar 2020 18:09:55 -0700 (PDT)
+        Sun, 29 Mar 2020 21:10:30 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33697 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728391AbgC3BJ7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 21:09:59 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x200so5559416lff.0;
+        Sun, 29 Mar 2020 18:09:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vPqDxoQDIqKqbTClKBTFY/GuSR/u7mIa4tRLiNa4khw=;
-        b=b2Wk9D3nd02S1yBEw9VfNDHynpLIG1M19fnbYk4/jKvJE6gnNPd6fx/N9rmAc3h1WJ
-         0W4cIvLJs4zAoKqlmKnVdTm/7JOiI2jcLsTRUwkogWpygEHuBr7tnXXjJKfMFhu8jCzi
-         YNL7hvXCo/KE3R0Er5Z7L0GQKBMAtnPchxE9PvlT2PvaEMODvg/pRIs15ZIS8BfaXRGD
-         7qCFNCiqYt3gQNpoHKhM8w1hg292Gntwo2n6q4Cw4K3lczlaaHnH9gTmwB2oxgsIKVAj
-         voa3vghwgz+YfoFB1PGPeHCDGheL2yfhAk0ebY3wbFhZODm3AdVX9swEnK1snhMnnzA5
-         G39A==
+        bh=9E7zI2IZnXV4YyjveISOsemm9R4xu7EUE6WXPbYZj5s=;
+        b=SHY9Z0NgudDm+L5mpyLB00o4AL/yhAoKr3QhYv/uGqvjwF4WtUVJvJNV4sfPZp4VYL
+         gQ+u862RKGhEHlNflC6XRFa34GlMpKu7biU4hVlvoZHgIlYg9/0jNqr8zWTVgN/fD+G5
+         17chke2o76960p5eSNsbEF2fvD5ycrj+Ev4wEpl/k4OCU+JO65D6adaYNKF82XQjdMeV
+         EiVy40M+MMGcC82Z4m+p9h1t5h+REMeOl+LLhVgSz8MDVIJD/RaihQmdSsD7ssnUvOwN
+         i71Pw9XhUawf2Zz+MNMEz+qWo1g2srkUAlnyP1M/sFKBa8wCE+AB2T33wYureSb1X/K7
+         BkDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vPqDxoQDIqKqbTClKBTFY/GuSR/u7mIa4tRLiNa4khw=;
-        b=U+MSYHN1RurowozjbCw9o9b2SBdqN0fn65m5n44spwJt52qpDkZAnbnV/MAt34AStS
-         c8uKasm4KnwU/CMyg9NrbgmDd0LUCEYC4RS388lCdSG1Stjri4xoF2fDtWxegnxc+fvM
-         w4X0JUShJFzn1PoferHvg47NV3epqQTtA2rFcMIok+Aw5JxoMVA9B2dsrtfbtRwNiNWg
-         Cvi0E6munGHW1GR7E+Yt/QMjNtQTu+NSYYw1WJf3rfnvpkoSYPcbEVDCwTjTXOvDa1jU
-         7nHi/fsB+nzVhtZdicR8RjSFT4yp282Cijxw5ER/CdV80EaMoLRnWx8yEI4CZ3WhL2nY
-         MGWg==
-X-Gm-Message-State: AGi0PuZtC5s+NAzpJLlsccWBMM/sWQChDQhHErk7al2HW45cI/3OwOjF
-        bBUwGk0K0u99ayTxT1ccHkQ=
-X-Google-Smtp-Source: APiQypJKpYIkMoYh3zusIktDsInbffTBT2Ewun8AAXofUfmOfattVIpgibKPpUp/ustF4Zz22EcaHQ==
-X-Received: by 2002:a2e:740e:: with SMTP id p14mr5716504ljc.290.1585530595270;
-        Sun, 29 Mar 2020 18:09:55 -0700 (PDT)
+        bh=9E7zI2IZnXV4YyjveISOsemm9R4xu7EUE6WXPbYZj5s=;
+        b=bSgyBvoQ3aqIYUz/pAQHTl2cdrglX780L9RTCIPv8hruxwYym5Z/GNzAtmY4Qy4FB7
+         3y7vg4sDO7afm68xhpsMEcZDduz3Grb5pSaV6mKJz2wgyeXc7lLflpgvjEPM703Oc87q
+         kkb/+DD7367rGj3dmzh5AXGa1lDKQ4P5QcAX6PXpVHugbC/b6qOLwKWRu8htWDZ/d7Gc
+         1TcifQS2e0fw+QHyI2M5Mo//KSbekhu6azpqfen7Z444kJhul86JzWP23AyUJ1UT7byw
+         ZyRLP6U8FwWPt6IyMNdRPFlCHIJfwNkcluc7noIeDGGe5a8QJWPl11+MhafcRQ7nNgve
+         pLkw==
+X-Gm-Message-State: AGi0PubzB084BeULJoK/piyiELUqTDd9kO2naTG+aGbjWVTygtEBrV6s
+        ygRqhXh3Q04m0/03yUu2vf8=
+X-Google-Smtp-Source: APiQypJb/KYN7Ausy9RzxNHKtBOMbGpnF36P6KkLPqb8j8gQzwiIUSVwL00ZzzFM4pP1djvb07ArDg==
+X-Received: by 2002:a05:6512:31d3:: with SMTP id j19mr6551417lfe.178.1585530597501;
+        Sun, 29 Mar 2020 18:09:57 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.54
+        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 18:09:54 -0700 (PDT)
+        Sun, 29 Mar 2020 18:09:57 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v2 20/22] drm/tegra: dc: Extend debug stats with total number of events
-Date:   Mon, 30 Mar 2020 04:09:02 +0300
-Message-Id: <20200330010904.27643-21-digetx@gmail.com>
+Subject: [PATCH v2 22/22] ARM: multi_v7_defconfig: Enable interconnect API
+Date:   Mon, 30 Mar 2020 04:09:04 +0300
+Message-Id: <20200330010904.27643-23-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200330010904.27643-1-digetx@gmail.com>
 References: <20200330010904.27643-1-digetx@gmail.com>
@@ -78,86 +78,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It's useful to know the total number of underflow events and currently
-the debug stats are getting reset each time CRTC is being disabled. Let's
-account the overall number of events that doesn't get reset.
+NVIDIA Tegra now has interconnect providers that are used for memory
+bandwidth allocation.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/gpu/drm/tegra/dc.c | 10 ++++++++++
- drivers/gpu/drm/tegra/dc.h |  5 +++++
- 2 files changed, 15 insertions(+)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/tegra/dc.c b/drivers/gpu/drm/tegra/dc.c
-index 564af302a965..7112f80ff9e8 100644
---- a/drivers/gpu/drm/tegra/dc.c
-+++ b/drivers/gpu/drm/tegra/dc.c
-@@ -1616,6 +1616,11 @@ static int tegra_dc_show_stats(struct seq_file *s, void *data)
- 	seq_printf(s, "underflow: %lu\n", dc->stats.underflow);
- 	seq_printf(s, "overflow: %lu\n", dc->stats.overflow);
- 
-+	seq_printf(s, "frames total: %lu\n", dc->stats.frames_total);
-+	seq_printf(s, "vblank total: %lu\n", dc->stats.vblank_total);
-+	seq_printf(s, "underflow total: %lu\n", dc->stats.underflow_total);
-+	seq_printf(s, "overflow total: %lu\n", dc->stats.overflow_total);
-+
- 	return 0;
- }
- 
-@@ -2187,6 +2192,7 @@ static irqreturn_t tegra_dc_irq(int irq, void *data)
- 		/*
- 		dev_dbg(dc->dev, "%s(): frame end\n", __func__);
- 		*/
-+		dc->stats.frames_total++;
- 		dc->stats.frames++;
- 	}
- 
-@@ -2195,6 +2201,7 @@ static irqreturn_t tegra_dc_irq(int irq, void *data)
- 		dev_dbg(dc->dev, "%s(): vertical blank\n", __func__);
- 		*/
- 		drm_crtc_handle_vblank(&dc->base);
-+		dc->stats.vblank_total++;
- 		dc->stats.vblank++;
- 	}
- 
-@@ -2202,6 +2209,7 @@ static irqreturn_t tegra_dc_irq(int irq, void *data)
- 		/*
- 		dev_dbg(dc->dev, "%s(): underflow\n", __func__);
- 		*/
-+		dc->stats.underflow_total++;
- 		dc->stats.underflow++;
- 	}
- 
-@@ -2209,11 +2217,13 @@ static irqreturn_t tegra_dc_irq(int irq, void *data)
- 		/*
- 		dev_dbg(dc->dev, "%s(): overflow\n", __func__);
- 		*/
-+		dc->stats.overflow_total++;
- 		dc->stats.overflow++;
- 	}
- 
- 	if (status & HEAD_UF_INT) {
- 		dev_dbg_ratelimited(dc->dev, "%s(): head underflow\n", __func__);
-+		dc->stats.underflow_total++;
- 		dc->stats.underflow++;
- 	}
- 
-diff --git a/drivers/gpu/drm/tegra/dc.h b/drivers/gpu/drm/tegra/dc.h
-index 3a0ff57c5169..3eb4eddc2288 100644
---- a/drivers/gpu/drm/tegra/dc.h
-+++ b/drivers/gpu/drm/tegra/dc.h
-@@ -41,6 +41,11 @@ struct tegra_dc_stats {
- 	unsigned long vblank;
- 	unsigned long underflow;
- 	unsigned long overflow;
-+
-+	unsigned long frames_total;
-+	unsigned long vblank_total;
-+	unsigned long underflow_total;
-+	unsigned long overflow_total;
- };
- 
- struct tegra_windowgroup_soc {
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index f8e45351c3f9..658b5c1892eb 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -1085,6 +1085,7 @@ CONFIG_FSI_MASTER_ASPEED=m
+ CONFIG_FSI_SCOM=m
+ CONFIG_FSI_SBEFIFO=m
+ CONFIG_FSI_OCC=m
++CONFIG_INTERCONNECT=y
+ CONFIG_EXT4_FS=y
+ CONFIG_AUTOFS4_FS=y
+ CONFIG_MSDOS_FS=y
 -- 
 2.25.1
 
