@@ -2,135 +2,78 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D0BC2D0ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A16C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE6320757
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:22:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Lo81bSLQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3A3DD20733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:34:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbgC3LWC (ORCPT
+        id S1729709AbgC3Let (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:22:02 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45030 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729267AbgC3LWC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 07:22:02 -0400
-Received: by mail-qk1-f196.google.com with SMTP id j4so18378452qkc.11
-        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 04:22:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CzM9Ul/dphXe/6k6V017VGqcrogFXRUNidC2oEsJyA4=;
-        b=Lo81bSLQWPVgU/i6sxlrCIBODUnjRkBTUhlltdOET1Dmks4BFPSVpOUpndvcX76UyB
-         hkWTYKD7omKCo2QzXiH1W+Q/eSWGYesRpzjunThYHGs7hjuSdF+XD+aVckt8qcSQLHLf
-         2dGg3fYi4+AUTb5J78URConeOPfe4tGuRHbb2F1LS3sMbaCujqQsCxjWXbGbH5HyzGhD
-         p/Ux96ci6T31CRwG9rUx5pXRxGzCZ84npmpm7CJGxisaBEPrDQEfeik1T+tSs3DS8SSR
-         xRT/u5P760PPOifEwBJ2NscES25L2rM7gIEkuzVGazBBxQdHCpd66DpKgluiH+hEAOZj
-         1OzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CzM9Ul/dphXe/6k6V017VGqcrogFXRUNidC2oEsJyA4=;
-        b=PpgUwboQtyXE7rXGFncosvoph3MaRFHhYHeIziurZpFtq9/3d9Myma8lXewD92lork
-         /zxEMr+a+1HVr6RC6UD0azuSU2nKovk7iBkMVS8zBrof+CCZYxWPPL6UHUTiSZaLt2DI
-         prdZFmZiJXsU3fTF6YIngyhIGH84ueZpEOjc68OI6+RvhfUM6TWHQUWowqZgKWmLKCj6
-         bxLZCXBA7wTuCh+SqIHho/I0rBER/CT17X7LO0xJdIbo/L9HrUBlb3GzhnfcaC7av/rb
-         w/H7To41pljFykSxUHyHLEEB+K82cVCXkwA54QqB2n2GaPYgj/GklVtxs6Dcfw4Svks8
-         IuAg==
-X-Gm-Message-State: ANhLgQ2eCdLRSMCkabr1pxfGSqfD82VC4EnwNzrhGnr6bMSRXOzUUBOP
-        7e95bCE4OTwp7jY/95Q9fG/ndocGvSDE6P5bGsJsMg==
-X-Google-Smtp-Source: ADFU+vstVtsw7JWrmBNop5+zhRNU4WPamx9SIUzCEtNOrBy3Hzu3AZDNweBkY+DVn4Q0wOYnEWX26BByXVYtpX6VxmE=
-X-Received: by 2002:a37:a2c8:: with SMTP id l191mr11373979qke.120.1585567321647;
- Mon, 30 Mar 2020 04:22:01 -0700 (PDT)
+        Mon, 30 Mar 2020 07:34:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:58998 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729237AbgC3Let (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 07:34:49 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 0545E292556
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     linux-stm32@st-md-mailman.stormreply.com,
+        linux-rockchip@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, kernel@collabora.com,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH v5 0/5] Genericize DW MIPI DSI bridge and add i.MX 6 driver
+Date:   Mon, 30 Mar 2020 14:35:37 +0300
+Message-Id: <20200330113542.181752-1-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-References: <20200317205017.28280-1-michael@walle.cc> <20200317205017.28280-13-michael@walle.cc>
- <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
- <9c310f2a11913d4d089ef1b07671be00@walle.cc> <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
- <22944c9b62aa69da418de7766b7741bd@walle.cc> <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
- <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
-In-Reply-To: <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 30 Mar 2020 13:21:50 +0200
-Message-ID: <CAMpxmJUj7wBvO=Y-u5CXazHhjsPHXcq=5iST4KuLrfakW_a9Mg@mail.gmail.com>
-Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
-To:     Michael Walle <michael@walle.cc>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pt., 27 mar 2020 o 16:28 Michael Walle <michael@walle.cc> napisa=C5=82(a):
->
-> Am 2020-03-27 11:20, schrieb Linus Walleij:
-> > On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
-> >> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
-> >
-> >> > In that case maybe you should use the disable_locking option in
-> >> > regmap_config and provide your own callbacks that you can use in the
-> >> > irqchip code too?
-> >>
-> >> But how would that solve problem (1). And keep in mind, that the
-> >> reqmap_irqchip is actually used for the interrupt controller, which
-> >> is not this gpio controller.
-> >>
-> >> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
-> >> and all interrupt phandles pointing to the interrupt controller will
-> >> reference the toplevel node. Any phandles pointing to the gpio
-> >> controller will reference the GPIO subnode.
-> >
-> > Ideally we would create something generic that has been on my
-> > mind for some time, like a generic GPIO regmap irqchip now that
-> > there are a few controllers like that.
-> >
-> > I don't know how feasible it is or how much work it would be. But
-> > as with GPIO_GENERIC (for MMIO) it would be helpful since we
-> > can then implement things like .set_multiple() and .get_multiple()
-> > for everyone.
->
-> For starters, would that be a drivers/gpio/gpio-regmap.c or a
-> drivers/base/regmap/regmap-gpio.c? I would assume the first,
-> because the stuff in drivers/base/regmap operates on a given
-> regmap and we'd just be using one, correct? On the other hand
-> there is also the reqmap-irq.c. But as pointed out before, it
-> will add an interrupt controller to the regmap, not a device
-> so to speak.
->
-> -michael
+Hello everyone,
 
-This has been on my TODO list for so long, but I've never been able to
-find the time... I'd really appreciate any effort in that direction as
-I believe it would allow us to slowly port a big part of the GPIO
-expander drivers over to it and make large portions of our codebase
-generic.
+The v5 series is a significantly cleaned up version from v4,
+started by Ezequiel Garcia's suggestion of splitting out the
+regmap infrastructure from the drivers (thank you!).
 
-Best regards,
-Bartosz Golaszewski
+Turns out no changes are required to the existing drivers and
+the bridge can transparently take care of the layout logic,
+so there's no need to expose the regmap via plat_data anymore.
+
+Starting from this version I also opted to add per-patch
+changelogs. All review comments up to now have been addressed.
+
+Tested on IMX6DL.
+
+Adrian Ratiu (5):
+  drm: bridge: dw_mipi_dsi: add initial regmap infrastructure
+  drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
+  drm: bridge: synopsis: add dsi v1.01 support
+  drm: imx: Add i.MX 6 MIPI DSI host platform driver
+  dt-bindings: display: add i.MX6 MIPI DSI host controller doc
+
+ .../display/imx/fsl,mipi-dsi-imx6.yaml        | 134 ++++
+ drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 683 +++++++++++++-----
+ drivers/gpu/drm/imx/Kconfig                   |   7 +
+ drivers/gpu/drm/imx/Makefile                  |   1 +
+ drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 399 ++++++++++
+ 5 files changed, 1049 insertions(+), 175 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+ create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+
+-- 
+2.26.0
+
