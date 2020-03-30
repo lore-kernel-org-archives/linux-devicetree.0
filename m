@@ -7,102 +7,107 @@ X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46515C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91716C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEC1208E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6939F2073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585582864;
-	bh=oNmUHzPudsAa/6v3dbbFAVTcJ0bfHoryD0Vz1GFvo7o=;
+	s=default; t=1585582931;
+	bh=BAEX+yj2dVRYDWN3efKmGslHtehJLflllKYRDdr4nVs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y/I4zywHT1truTG2OAWtMAXmsh4ednBhcFT+UwKe4f8OlN/lnjp+/O+8nSbdBnnvu
-	 67jr1lXlZcA1PyVqWhFR4Z5gmiBp/kRJGyeS6HMcDOCHwAF+oofOnN0Fhx0e9mdPj/
-	 HMkSI9Yf/f+Js057TlEbdXN08GcCpyK3pTpgGZBA=
+	b=RDK77PEcRUAAINHRGHBprpAOueEiPakXt6M4W38UwXkBh2eTuNvRnDq5B61treH+K
+	 FiBn64uXhwMHvYOJSjGCYa+lTaPc5GzAZPjjuTBP8ct0ijjH7gpRKYb5zfTg0YO2ny
+	 yCMOSKZV+d4jyICdrCn/RN05o9t0RZjHI2QClmHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbgC3PlA (ORCPT
+        id S1729523AbgC3PmH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:41:00 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34037 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729489AbgC3PlA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 11:41:00 -0400
-Received: by mail-io1-f65.google.com with SMTP id h131so18240526iof.1;
-        Mon, 30 Mar 2020 08:40:59 -0700 (PDT)
+        Mon, 30 Mar 2020 11:42:07 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46313 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgC3PmH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 11:42:07 -0400
+Received: by mail-io1-f66.google.com with SMTP id i3so9065464ioo.13;
+        Mon, 30 Mar 2020 08:42:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FrZskpAncwXlTmer8dNjyojk8sFLFkrvun4f6jCecoI=;
-        b=IyU4xKvhHM4zH+Vlx2S1R/uAfQUz6ZcBeTTLEVTk5/e4+P1ERSt87GrrFuNJfXk4aI
-         7YpvMOrFT/+DF2qZkOx0EH7Uz3ueGSwoGo/Mi/iRubHZ3ANUDSt05HuMGWfwRSIWrgWk
-         yMfYgsZzWYsWdxPhSubwPLAXT5x3WV7gMGOKvhqHXYS7t45NOqH9lvyLV3ZCjwkySZFT
-         H0TM2WJ0bd3kWTLJJsC5zD4JTKqY3VTTP7vrD0OCVUhz0sveON/fYhMU4R8YVhvfyFaR
-         yJSgBZdvqXLmf5zqDwxpkXVxFov5ITtLqERl6juF4oX/3Y3FQdzsap9+GBTsfZdEwmUc
-         jf0Q==
-X-Gm-Message-State: ANhLgQ0W/HMN7sMQqhFhi5MM1gFw21hgFRP4nK/4OAR3/igOb+gNqUWO
-        x+MSjSLT0h+7HOaeZY+okA==
-X-Google-Smtp-Source: ADFU+vtYbOnj6T9VKwympEk/Igl3zqimx0Szkm1G0rEgizbRyrQ7fVa90Ym/eEv6H01RXEsxKQD8/g==
-X-Received: by 2002:a6b:8d4c:: with SMTP id p73mr10903567iod.14.1585582858637;
-        Mon, 30 Mar 2020 08:40:58 -0700 (PDT)
+        bh=XToUOXTBi4v+G+zH1meistMeAK6/7kaJVHzaJ0IgHkE=;
+        b=f1ZsDbxR2FfpJdEdxwNjwq4aR3pKPSmVhTUSSHaC4GpZIBCxoN/ZQ0hw9614oIHJE3
+         UvLupyUmWwnN6esvWfGLH20978tGG4JyFS3qpvZ3bzD38y97Gh66nhcR7AdDCeJXQhzB
+         UegY+rWIq9S5GjZmssrAes2eOKGZ88UaQzCPvYBj6XGXkSpl0xdi+i1dvuffeT+6tib2
+         ZzHwpzGqIUVPdeEFsvJzqhg65Wef0JQ1NEggEIlo07EvAgbC4LxIOqJdxADUfpN7LO+Y
+         NNf8Ete1eSGEi75IekkSGmUA5A88RpiMY5nppTR3M3JebOwL1WJ04l3sCKJE3aFVJHiC
+         vnlA==
+X-Gm-Message-State: ANhLgQ33dmQEwg/DK2mN+1ybTVp9KXt+gxwjRTc7M0OXoBtDZOdjDi6c
+        Vz9me9OMBCuNs3c77HDeLw==
+X-Google-Smtp-Source: ADFU+vuo2GMSlIScfz8VpFQrF31IFo0FS6MvSyPlgMZwQJUJOQOv+ANaUZdUOCWSeh/xQWl4VpTXlQ==
+X-Received: by 2002:a02:641:: with SMTP id 62mr11747164jav.79.1585582926290;
+        Mon, 30 Mar 2020 08:42:06 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id m14sm5078251ilr.16.2020.03.30.08.40.57
+        by smtp.gmail.com with ESMTPSA id c12sm5004502ila.31.2020.03.30.08.42.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:40:58 -0700 (PDT)
-Received: (nullmailer pid 23073 invoked by uid 1000);
-        Mon, 30 Mar 2020 15:40:56 -0000
-Date:   Mon, 30 Mar 2020 09:40:56 -0600
+        Mon, 30 Mar 2020 08:42:05 -0700 (PDT)
+Received: (nullmailer pid 24611 invoked by uid 1000);
+        Mon, 30 Mar 2020 15:42:02 -0000
+Date:   Mon, 30 Mar 2020 09:42:02 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        Robert Marko <robert.marko@sartura.hr>,
-        John Crispin <john@phrozen.org>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v4 2/3] dt-bindings: phy-qcom-ipq4019-usb: add binding
- document
-Message-ID: <20200330154056.GA22114@bogus>
-References: <20200328135345.695622-1-robert.marko@sartura.hr>
- <20200328135345.695622-2-robert.marko@sartura.hr>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Kees Cook <keescook@chromium.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
+        mips-creator-ci20-dev@googlegroups.com
+Subject: Re: [RFC v3 1/8] dt-bindings: display: convert ingenic,lcd.txt to
+ ingenic,lcd.yaml
+Message-ID: <20200330154202.GA23233@bogus>
+References: <cover.1585503354.git.hns@goldelico.com>
+ <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200328135345.695622-2-robert.marko@sartura.hr>
+In-Reply-To: <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 28 Mar 2020 14:53:49 +0100, Robert Marko wrote:
-> This patch adds the binding documentation for the HS/SS USB PHY found
-> inside Qualcom Dakota SoCs.
+On Sun, 29 Mar 2020 19:35:47 +0200, "H. Nikolaus Schaller" wrote:
+> and add compatible: jz4780-lcd, including an example how to
+> configure both lcd controllers.
 > 
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> Cc: Luka Perkov <luka.perkov@sartura.hr>
+> Also fix the clock names and examples.
+> 
+> Based on work by Paul Cercueil <paul@crapouillou.net> and
+> Sam Ravnborg <sam@ravnborg.org>
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
 > ---
->  .../bindings/phy/qcom-usb-ipq4019-phy.yaml    | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
+>  .../bindings/display/ingenic,lcd.txt          |  45 ------
+>  .../bindings/display/ingenic,lcd.yaml         | 128 ++++++++++++++++++
+>  2 files changed, 128 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml:  while scanning a block scalar
-  in "<unicode string>", line 37, column 5
-found a tab character where an indentation space is expected
-  in "<unicode string>", line 39, column 1
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-warning: no schema found in file: Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml: ignoring, error parsing file
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/ingenic,lcd.example.dt.yaml: lcd-controller@13050000: clocks: [[4294967295, 9]] is too short
 
-See https://patchwork.ozlabs.org/patch/1263219
+See https://patchwork.ozlabs.org/patch/1263508
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
