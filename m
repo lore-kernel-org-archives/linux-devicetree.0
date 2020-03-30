@@ -2,162 +2,202 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,WEIRD_QUOTING autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2933C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C977C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E05206F6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D037120781
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rjwo3vpU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ai6wI+yc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgC3SOU (ORCPT
+        id S1727996AbgC3SQV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:14:20 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50590 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgC3SOU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 14:14:20 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02UIE7X5124911;
-        Mon, 30 Mar 2020 13:14:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585592047;
-        bh=Ysd2CfzoUryMv7olffzf/9E4mY3hhWXojGKfYzHOL6k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Rjwo3vpUSjlp3mC2/WZM64s6nB/dhQIu6GTBHE/cLhtJTNoeDbutDwTjPzepHr0LV
-         3J/LRavtV0Ew/ZhxyM+qMfpIAVS+C14TCGYL/Y0LhYJ5ASohgsnmsj6Shmh8AUN6Hw
-         twDGupg6w8UITkOoJAq8YNqKbBNPxxLNnNrFrDJ4=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02UIE71J099822
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Mar 2020 13:14:07 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
- Mar 2020 13:14:06 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 30 Mar 2020 13:14:06 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02UIE0Qg044169;
-        Mon, 30 Mar 2020 13:14:02 -0500
-Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
- support for k3 am65x/j721e soc
-To:     Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        David Miller <davem@davemloft.net>
-CC:     <peter.ujfalusi@ti.com>, Rob Herring <robh@kernel.org>,
-        netdev <netdev@vger.kernel.org>, <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>, <kishon@ti.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-References: <20200323225254.12759-1-grygorii.strashko@ti.com>
- <20200326.200136.1601946994817303021.davem@davemloft.net>
- <CA+h21hr8G24ddEgAbU_TfoNAe0fqUJ0_Uyp54Gxn5cvPrM6u9g@mail.gmail.com>
- <8f5e981a-193c-0c1e-1e0a-b0380b2e6a9c@ti.com>
- <2d305c89-601c-5dee-06be-30257a26a392@ti.com>
- <cac3d501-cc36-73c5-eea8-aaa2d10105b0@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <590f9865-ace7-fc12-05e7-0c8579785f96@ti.com>
-Date:   Mon, 30 Mar 2020 21:14:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <cac3d501-cc36-73c5-eea8-aaa2d10105b0@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 30 Mar 2020 14:16:21 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42051 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbgC3SQV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 14:16:21 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z5so18872056oth.9;
+        Mon, 30 Mar 2020 11:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=hc3WCyyOJyVb1bVm2+erTwMdDqb8JOvqNVevK3r7VwI=;
+        b=ai6wI+ycqrkzpl/S2YJzZdSui/OqHxW+zs9NCXGh7U6Ao8RzV+b6ZH92pP+mJSeMDg
+         3zFsBbaW5dHtjdptA2ZKynOAnrY/IFF/rbTO3di295t+BhXrNfSP1TZfcKFLzaaoOfUV
+         bVKuFgdn0MvaqJSHswPZS+XldoySduiB80LONN0NvR4dSXufP5iF9jGiXSGWYDD9cBxG
+         xAJILj6xA/q3qaZGqm/kdv34TUUojc70Ogmsn38uo995wLI4LwNDS5srJoxLtqNTnQ0w
+         U9IlzFhfaJqL2AEjBt3teQ6hoVJOurZOyN+6s5i5g5RZL39LrAlRA3Usk0jJOm4IPLXJ
+         aPDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=hc3WCyyOJyVb1bVm2+erTwMdDqb8JOvqNVevK3r7VwI=;
+        b=EdvLemNxXnJ1LftsQOzPMFhujmuITyTJPbPfpiajmjYWdrJ7hZosla/6BYRmaZvKRz
+         6QWDBemcsgxjzgvkAmCrWE6GXun1MQ0HKsP+Z2x/Z9+bYwFFoIrGWa8O8TDBUbf70+xN
+         +Id8faID04DU50Vmfh/NlcxEhGtE9sPtABREMOiCZrLouR3XVtt3/6MU4pGfuMQKbcFN
+         nR+zRQEbMMO2VEBavxrElyYVy4D0nDc8wo6fe9UQnCJHtkTS5Izp0ayVSXFKWrU7siXe
+         ZxDc4NLwIYccXcCH3/WVkv9S86b69QfDGfxcNzhS1iKkACcjfaRmxRJRzvO5XPgooMzk
+         Zs6w==
+X-Gm-Message-State: ANhLgQ3OJ2hE+9CTE5b/UQqVmRCa10ZGkzCS2FQY1NBqOo3wZeiTDt3e
+        s+qcr7CgpqRopmBYAZ9lgKQqKXWfzx0=
+X-Google-Smtp-Source: ADFU+vvlSpRwHKn4r6g703Ne60gh2l2x19YSD2cUdpHUPeweDs5ZyHaHm8b4wc+Bl5wfRYsNGn1JCA==
+X-Received: by 2002:a05:6830:10a:: with SMTP id i10mr10498831otp.190.1585592178291;
+        Mon, 30 Mar 2020 11:16:18 -0700 (PDT)
+Received: from andrews-mbp-2.attlocal.net ([2600:1700:19e0:3310:81db:d33f:7ec:a679])
+        by smtp.gmail.com with ESMTPSA id o1sm4480246otl.49.2020.03.30.11.16.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 30 Mar 2020 11:16:17 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH 2/2] ARM: dts: aspeed: zaius: Add gpio line names
+From:   Andrew Geissler <geissonator@gmail.com>
+In-Reply-To: <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
+Date:   Mon, 30 Mar 2020 13:16:16 -0500
+Cc:     Joel Stanley <joel@jms.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9360D2B2-8242-4BA1-BF06-8916E87EDE67@gmail.com>
+References: <20200306170218.79698-1-geissonator@yahoo.com>
+ <20200306170218.79698-2-geissonator@yahoo.com>
+ <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
+To:     Andrew Jeffery <andrew@aj.id.au>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
 
-On 30/03/2020 11:28, Sekhar Nori wrote:
-> On 30/03/20 1:06 PM, Sekhar Nori wrote:
->> On 30/03/20 12:45 PM, Tero Kristo wrote:
->>> On 28/03/2020 03:53, Vladimir Oltean wrote:
->>>> Hi David,
->>>>
->>>> On Fri, 27 Mar 2020 at 05:02, David Miller <davem@davemloft.net> wrote:
->>>>>
->>>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>> Date: Tue, 24 Mar 2020 00:52:43 +0200
->>>>>
->>>>>> This v6 series adds basic networking support support TI K3
->>>>>> AM654x/J721E SoC which
->>>>>> have integrated Gigabit Ethernet MAC (Media Access Controller) into
->>>>>> device MCU
->>>>>> domain and named MCU_CPSW0 (CPSW2G NUSS).
->>>>>    ...
->>>>>
->>>>> Series applied, thank you.
->>>>
->>>> The build is now broken on net-next:
->>>>
->>>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
->>>> (phandle_references):
->>>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
->>>>
->>>> Reference to non-existent node
->>>> or label "mcu_conf"
->>>>
->>>>     also defined at
->>>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
->>>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
->>>> (phandle_references):
->>>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
->>>>
->>>> Reference to non-existent node
->>>> or label "phy_gmii_sel"
->>>>
->>>>     also defined at
->>>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
->>>>
->>>> As Grygorii said:
->>>>
->>>> Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3
->>>> Platform
->>>> tree and provided here for testing purposes.
->>>
->>> Yeah, I think you are missing a dependency that was applied via the K3
->>> branch earlier. They are in linux-next now, but I am not so sure how
->>> much that is going to help you.
->>>
->>> You could just drop the DT patches from this merge and let me apply them
->>> via the platform branch.
->>
->> One other option would be that Dave merges your K3 tag which was sent to
->> ARM SoC to net-next. Its based on v5.6-rc1, has no other dependencies,
->> is already in linux-next, should be immutable and safe to merge. This
->> has the advantage that no rebase is necessary on net-next.
->>
->> git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux
->> tags/ti-k3-soc-for-v5.7
-> 
-> FWIW, I was able to reproduce the build failure reported by Vladimir on
-> net-next, merge Tero's tag (above) cleanly into it, and see that ARM64
-> defconfig build on net-next succeeds after the merge.
 
-Thank you Sekhar for checking this.
+> On Mar 26, 2020, at 6:20 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
+>=20
+>=20
+>=20
+> On Sat, 7 Mar 2020, at 03:32, Andrew Geissler wrote:
+>> Name the GPIOs to help userspace work with them. The names describe =
+the
+>> functionality the lines provide, not the net or ball name. This makes =
+it
+>> easier to share userspace code across different systems and makes the
+>> use of the lines more obvious.
+>>=20
+>> Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+>=20
+> So we're creating a bit of an ad-hoc ABI here between the DT and =
+userspace.
+>=20
+> Where are we documenting it?
 
-I'm very sorry for introducing this issue. I've tried hard to avoid such issue,
-but still missed it (probably I have had to drop DT patches from last submission
-and send them separately).
+Yeah, so far it=E2=80=99s basically design by precedent. If you want =
+your OpenBMC
+function to work then follow the standards we're setting in other =
+dts=E2=80=99s.
 
-Sorry again.
+Is there a good place to document this? I could create a OpenBMC design
+doc but that would not address non-OpenBMC areas.
 
--- 
-Best regards,
-grygorii
+>=20
+> Generally I think the idea is good though, so:
+>=20
+> Acked-by: Andrew Jeffery <andrew@aj.id.au>
+
+Thanks
+
+>=20
+>> ---
+>> arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 37 =
++++++++++++++++++++---
+>> 1 file changed, 33 insertions(+), 4 deletions(-)
+>>=20
+>> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts=20
+>> b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+>> index bc60ec291681..4bcc82046362 100644
+>> --- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+>> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+>> @@ -478,32 +478,61 @@
+>> 	pinctrl-names =3D "default";
+>> 	pinctrl-0 =3D <&pinctrl_gpioh_unbiased>;
+>>=20
+>> +	gpio-line-names =3D
+>> +	/*A0-A7*/	"","cfam-reset","","","","","","",
+>> +	/*B0-B7*/	"","","","","","","","",
+>> +	/*C0-C7*/	"","","","","","","","",
+>> +	/*D0-D7*/	=
+"fsi-enable","","","","","led-sys-boot-status","led-attention",
+>> +				"led-fault",
+>> +	/*E0-E7*/	"","","","","","","","presence-pcie-e2b",
+>> +	/*F0-F7*/	"","","","","","","","checkstop",
+>> +	/*G0-G7*/	"fsi-clock","fsi-data","","","","","","",
+>> +	/*H0-H7*/	=
+"onewire0","onewire1","onewire2","onewire3","","","","",
+>> +	/*I0-I7*/	"","","","power-button","","","","",
+>> +	/*J0-J7*/	"","","","","","","","",
+>> +	/*K0-K7*/	"","","","","","","","",
+>> +	/*L0-L7*/	"","","","","","","","",
+>> +	/*M0-M7*/	"","","","","","","","",
+>> +	/*N0-N7*/	"","","","","","","","",
+>> +	/*O0-O7*/	"","","","","iso_u164_en","","fsi-trans","",
+>> +	/*P0-P7*/	=
+"ncsi_mux_en_n","bmc_i2c2_sw_rst_n","","bmc_i2c5_sw_rst_n","",
+>> +				"","fsi-mux","",
+>> +	/*Q0-Q7*/	"","","","","","","","",
+>> +	/*R0-R7*/	"","","","","","","","",
+>> +	/*S0-S7*/	"","","","","","","","",
+>> +	/*T0-T7*/	"","","","","","","","",
+>> +	/*U0-U7*/	"","","","","","","","",
+>> +	/*V0-V7*/	"","","","","","","","",
+>> +	/*W0-W7*/	"","","","","","","","",
+>> +	/*X0-X7*/	"","","","","","","","",
+>> +	/*Y0-Y7*/	"","","","","","","","",
+>> +	/*Z0-Z7*/	"","","","","","","","",
+>> +	/*AA0-AA7*/	"","","led-hdd-fault","","","","","",
+>> +	/*AB0-AB7*/	"","","","","","","","",
+>> +	/*AC0-AC7*/	"","","","","","","","";
+>> +
+>> 	line_iso_u146_en {
+>> 		gpio-hog;
+>> 		gpios =3D <ASPEED_GPIO(O, 4) GPIO_ACTIVE_HIGH>;
+>> 		output-high;
+>> -		line-name =3D "iso_u164_en";
+>> 	};
+>>=20
+>> 	ncsi_mux_en_n {
+>> 		gpio-hog;
+>> 		gpios =3D <ASPEED_GPIO(P, 0) GPIO_ACTIVE_HIGH>;
+>> 		output-low;
+>> -		line-name =3D "ncsi_mux_en_n";
+>> 	};
+>>=20
+>> 	line_bmc_i2c2_sw_rst_n {
+>> 		gpio-hog;
+>> 		gpios =3D <ASPEED_GPIO(P, 1) GPIO_ACTIVE_HIGH>;
+>> 		output-high;
+>> -		line-name =3D "bmc_i2c2_sw_rst_n";
+>> 	};
+>>=20
+>> 	line_bmc_i2c5_sw_rst_n {
+>> 		gpio-hog;
+>> 		gpios =3D <ASPEED_GPIO(P, 3) GPIO_ACTIVE_HIGH>;
+>> 		output-high;
+>> -		line-name =3D "bmc_i2c5_sw_rst_n";
+>> 	};
+>> };
+>>=20
+>> --=20
+>> 2.21.0 (Apple Git-122)
+>>=20
+>>=20
+
