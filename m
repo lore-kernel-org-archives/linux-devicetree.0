@@ -2,171 +2,91 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F68BC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F60C2D0EB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D130B20748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585596231;
-	bh=6OlA2qF0ge60Y9qd4QRLz8Wg6xFIOo/oolkIEsWt7nQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oTpx07AHJ8yBS8ec7WbgX3PYLpdsnEoHWZfYNmm9s0zsKPXoH3Nb7C4TGeyc+q3d2
-	 gsfWkus3dIR2m899OGTdSlJtJp8AFZwYfOk+tcomA8qw34p5cLcbGNHb7BFRQyGX4T
-	 ZLG1pDsnRyrj3m+URBBAbeOzonzICsfCB6O5hGTw=
+	by mail.kernel.org (Postfix) with ESMTP id 06DED20842
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:25:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgC3TXv (ORCPT
+        id S1727276AbgC3TZR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:23:51 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43691 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgC3TXv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 15:23:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id x9so12633343iom.10;
-        Mon, 30 Mar 2020 12:23:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MXO0cFSUgdRH+a4P/o/GAi4s4MndCf1pU3SuIpqOxH8=;
-        b=b2WK8r2tG8huW8HYFFvjSGY0TfaCN7piJfb0Q6GCQr2a3D7F1WfwdHRz/eIsnRs86h
-         y09f5qGv5o3X3V6sdlUdZ85G+LVyGsiVn2O6zaTDfR/dxWWFN4wS+IuLsuOghqSAS16q
-         JY7WtgUBEVR8UhHPFnmpe7aEd6AyuRYuLGOUvZ9KWwCR+B+w0+GcrzPTDVzJ0vZ7bfwA
-         0zSPfP/DNT2X+3VGFWso8z6aZa8wQ1yXJGxVB5OnNSQ08HeZK0RYyz7qEo/PQ+onL9kk
-         plhszG505Bx2v9I6pFuUbqrnfCNukCl4Wy1rrPlN8SP0l3zdmzRFjFpFcET95+k7sKyF
-         8tmA==
-X-Gm-Message-State: ANhLgQ2L0jfR/zywO3xGCDo+Jo+oRoFsqB9+tnHPwhAgy5Z4YXYYXiGC
-        /fynJzRe+bOxB9EsTf78WQ==
-X-Google-Smtp-Source: ADFU+vul8Oe41tCjMTU3VB/Pazto4kKTIj+AVWhsXgGw9jz3HDJI0g0/B3oHxwfVXEbonu12CN0a1g==
-X-Received: by 2002:a6b:b989:: with SMTP id j131mr12170677iof.6.1585596229713;
-        Mon, 30 Mar 2020 12:23:49 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id p189sm4307507iof.17.2020.03.30.12.23.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 12:23:49 -0700 (PDT)
-Received: (nullmailer pid 22585 invoked by uid 1000);
-        Mon, 30 Mar 2020 19:23:47 -0000
-Date:   Mon, 30 Mar 2020 13:23:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     rentao.bupt@gmail.com
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
- ID/string properties
-Message-ID: <20200330192347.GA6388@bogus>
-References: <20200315191632.12536-1-rentao.bupt@gmail.com>
- <20200315191632.12536-7-rentao.bupt@gmail.com>
+        Mon, 30 Mar 2020 15:25:17 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:48062 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbgC3TZR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 15:25:17 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 5F9AB20024;
+        Mon, 30 Mar 2020 21:25:13 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 21:25:11 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        sean@poorly.run, seanpaul@chromium.org
+Subject: Re: [PATCH v10 0/2] Add support for rm69299 Visionox panel driver
+ and add devicetree bindings for visionox panel
+Message-ID: <20200330192511.GG7594@ravnborg.org>
+References: <20200327073636.13823-1-harigovi@codeaurora.org>
+ <20200328204047.GG32230@ravnborg.org>
+ <20200329174417.GB199755@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200315191632.12536-7-rentao.bupt@gmail.com>
+In-Reply-To: <20200329174417.GB199755@google.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
+        a=-x4TflB_B6iPNPREh9QA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 12:16:32PM -0700, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
+Hi Matthias.
+
+On Sun, Mar 29, 2020 at 10:44:17AM -0700, Matthias Kaehlcke wrote:
+> Hi Sam,
 > 
-> Update device tree binding document for aspeed vhub's device IDs and
-> string properties.
+> On Sat, Mar 28, 2020 at 09:40:47PM +0100, Sam Ravnborg wrote:
+> > Hi Harigovindan
+> > 
+> > On Fri, Mar 27, 2020 at 01:06:34PM +0530, Harigovindan P wrote:
+> > > Adding support for visionox rm69299 panel driver and adding bindings for the same panel.
+> > > 
+> > > Harigovindan P (2):
+> > >   dt-bindings: display: add visionox rm69299 panel variant
+> > >   drm/panel: add support for rm69299 visionox panel driver
+> > 
+> > I have only the first patch, which is now applied.
+> > Please resend second patch as it is lost somewhere.
 > 
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> ---
->  No change in v2:
->    - the patch is added into the series since v2.
+> Yes, it seems for v8, v9 and v10 only the bindings were sent, even
+> though the cover letter and subject say it's a series of two patches.
 > 
->  .../bindings/usb/aspeed,usb-vhub.yaml         | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
+> To my knowledge the latest version of the driver patch is this:
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> index 06399ba0d9e4..5b2e8d867219 100644
-> --- a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> @@ -52,6 +52,59 @@ properties:
->          minimum: 1
->          maximum: 21
->  
-> +  vhub-vendor-id:
-> +    description: vhub Vendor ID
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - maximum: 65535
-> +
-> +  vhub-product-id:
-> +    description: vhub Product ID
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - maximum: 65535
+> https://patchwork.kernel.org/patch/11439689/
 
-There's already standard 'vendor-id' and 'device-id' properties. Use 
-those.
+I did not go back and check, but I recall there was
+review feedback that is not yet addressed.
 
-> +
-> +  vhub-device-revision:
+I applied the patch here and checkpatch was not happy:
+total: 14 errors, 22 warnings, 11 checks, 314 lines checked
 
-Specific to USB, not vhub.
+Many of these are trivial indent or spaces used where tabs should be
+used.
+These needs to be fixed before the driver will be applied.
 
-> +    description: vhub Device Revision in binary-coded decimal
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - maximum: 65535
-> +
-> +  vhub-strings:
-> +    type: object
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    patternProperties:
-> +      '^string@[0-9a-f]+$':
-> +        type: object
-> +        description: string descriptors of the specific language
-> +
-> +        properties:
-> +          reg:
-> +            maxItems: 1
-> +            description: 16-bit Language Identifier defined by USB-IF
-> +
-> +          manufacturer:
-> +            description: vhub manufacturer
-> +            allOf:
-> +              - $ref: /schemas/types.yaml#/definitions/string
-> +
-> +          product:
-> +            description: vhub product name
-> +            allOf:
-> +              - $ref: /schemas/types.yaml#/definitions/string
-> +
-> +          serial-number:
-> +            description: vhub device serial number
-> +            allOf:
-> +              - $ref: /schemas/types.yaml#/definitions/string
+And there was too much that I just did it while applying.
 
-For all of this, it's USB specific, not vhub specific. I'm not sure this 
-is the right approach. It might be better to just define properties 
-which are just raw USB descriptors rather than inventing some DT format 
-that then has to be converted into USB descriptors.
-
-Rob
+	Sam
