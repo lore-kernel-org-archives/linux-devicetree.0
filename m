@@ -2,153 +2,168 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D47C2D0E7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 00:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BA8C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3401D20784
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 00:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7044220748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:09:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3O0fT0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbgC3AXG (ORCPT
+        id S1727991AbgC3BJh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 20:23:06 -0400
-Received: from sauhun.de ([88.99.104.3]:43912 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgC3AXG (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 29 Mar 2020 20:23:06 -0400
-Received: from localhost (p5486C514.dip0.t-ipconnect.de [84.134.197.20])
-        by pokefinder.org (Postfix) with ESMTPSA id C96C92C0195;
-        Mon, 30 Mar 2020 02:23:02 +0200 (CEST)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [PATCH] i2c: regroup documentation of bindings
-Date:   Mon, 30 Mar 2020 02:22:20 +0200
-Message-Id: <20200330002220.3575-1-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
+        Sun, 29 Mar 2020 21:09:37 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43310 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727549AbgC3BJh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 21:09:37 -0400
+Received: by mail-lj1-f196.google.com with SMTP id g27so16238725ljn.10;
+        Sun, 29 Mar 2020 18:09:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Udu7OKRG+/CbZ2nQefBdE74UpfG/AooeTF97o8fdi2s=;
+        b=D3O0fT0ZWBVmquYl71TWwdVjHQ7cP8VMkn59W72GwzYWFpkXgmLhldngem2Q7G5LpL
+         cOQWy3LBZ5tp1YCHoFaVGwdZUwA6cgq0+kVLIHlT1zbhR729s+VwR9PSvzONITqzM2dK
+         YnPKkVFHzDDns8BYeJwFpJFFTQyPXuFzJIfu6skP092aTHfMhRCmN0OHYozPmTtJUNG1
+         Mcy2RuSsuWWHa3DB9jpG0h58EEz5/uBh4YViAEUGTl2B6ClktNH6YsPPyUWncMdLSPsa
+         Mr5W/PUrO/Nk3ICrA7QxbyayrSYswOy1pjU9rKgORmN1V99uplJ07Jd+hUs3MdOTVb6+
+         4rIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Udu7OKRG+/CbZ2nQefBdE74UpfG/AooeTF97o8fdi2s=;
+        b=cAahNmn1Y9tE1alMX22lceEIeJJjGB3C08rEvyjFCJxK1kXiDpU4xEQr67sp7t0xv3
+         NMWfDh4V8mD505INg+QD+/+EPgVcLEoP+9MFp7d/p6vNpZ1Xa1bLlDOg90I5ZVbBbtgH
+         G3WlG5eJR3sYjx4NiBhRHGTEzGzqSDR5KmMuFHmbnnwwnQLT5mz+ZY6MCQCpfoeCvnaf
+         zzJUXX9Vwt0yY2csd/trHpQJLwsvHen48r7SHLp646cNQH+87iFawL6TaH6l0opcUPYF
+         akw+QZsI426gCbxKZDsbK7s/vWE3VTxtB19wTcQ5+Fetf1wqhZjTKiTeLVIOkL1ARNiT
+         p4LQ==
+X-Gm-Message-State: AGi0PubWok03P8kUy14fkzkhtNas3IrTbYe1kn0c9JHYMYrnxYEbokKA
+        Kxj9h3LWf7jbrYCf2S5lGlM=
+X-Google-Smtp-Source: APiQypKO9tO+QHLLk4JgIJ/tZL0Ry6Gmfgs/koA0hVjTlWYp+VFlA7h+920qGDYBL3bwmOdrhVGlEA==
+X-Received: by 2002:a2e:a173:: with SMTP id u19mr5855125ljl.67.1585530574240;
+        Sun, 29 Mar 2020 18:09:34 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Mar 2020 18:09:33 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 00/22] Introduce memory interconnect for NVIDIA Tegra SoCs
+Date:   Mon, 30 Mar 2020 04:08:42 +0300
+Message-Id: <20200330010904.27643-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some bindings are for the bus master, some are for the slaves.
-Regroup them and give them seperate headings to make it clear.
+Hello,
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- Documentation/devicetree/bindings/i2c/i2c.txt | 63 +++++++++++--------
- 1 file changed, 38 insertions(+), 25 deletions(-)
+This series brings initial support for memory interconnect to Tegra20 and
+Tegra30 SoCs. The interconnect provides are quite generic and should be
+suitable for all Tegra SoCs, but currently support is added only for these
+two generations of Tegra SoCs.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-index 9a53df4243c6..aa74dd0e63e3 100644
---- a/Documentation/devicetree/bindings/i2c/i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-@@ -2,10 +2,10 @@ Generic device tree bindings for I2C busses
- ===========================================
- 
- This document describes generic bindings which can be used to describe I2C
--busses in a device tree.
-+busses and their child devices in a device tree.
- 
--Required properties
---------------------
-+Required properties (per bus)
-+-----------------------------
- 
- - #address-cells  - should be <1>. Read more about addresses below.
- - #size-cells     - should be <0>.
-@@ -16,18 +16,13 @@ For other required properties e.g. to describe register sets,
- clocks, etc. check the binding documentation of the specific driver.
- 
- The cells properties above define that an address of children of an I2C bus
--are described by a single value. This is usually a 7 bit address. However,
--flags can be attached to the address. I2C_TEN_BIT_ADDRESS is used to mark a 10
--bit address. It is needed to avoid the ambiguity between e.g. a 7 bit address
--of 0x50 and a 10 bit address of 0x050 which, in theory, can be on the same bus.
--Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we listen to
--be devices ourselves.
-+are described by a single value.
- 
--Optional properties
---------------------
-+Optional properties (per bus)
-+-----------------------------
- 
- These properties may not be supported by all drivers. However, if a driver
--wants to support one of the below features, it should adapt the bindings below.
-+wants to support one of the below features, it should adapt these bindings.
- 
- - clock-frequency
- 	frequency of bus clock in Hz.
-@@ -73,31 +68,49 @@ wants to support one of the below features, it should adapt the bindings below.
- 	i2c bus clock frequency (clock-frequency).
- 	Specified in Hz.
- 
--- interrupts
--	interrupts used by the device.
--
--- interrupt-names
--	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
--	other names are	left to individual drivers.
--
--- host-notify
--	device uses SMBus host notify protocol instead of interrupt line.
--
- - multi-master
- 	states that there is another master active on this bus. The OS can use
- 	this information to adapt power management to keep the arbitration awake
- 	all the time, for example.
- 
--- wakeup-source
--	device can be used as a wakeup source.
-+Required properties (per child device)
-+--------------------------------------
-+
-+- compatible
-+	name of I2C slave device following generic names recommended practice.
- 
- - reg
--	I2C slave addresses
-+	One or many I2C slave addresses. These are usually a 7 bit addresses.
-+	However, flags can be attached to an address. I2C_TEN_BIT_ADDRESS is
-+	used to mark a 10 bit address. It is needed to avoid the ambiguity
-+	between e.g. a 7 bit address of 0x50 and a 10 bit address of 0x050
-+	which, in theory, can be on the same bus.
-+	Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we
-+	listen to be devices ourselves.
-+
-+Optional properties (per child device)
-+--------------------------------------
-+
-+These properties may not be supported by all drivers. However, if a driver
-+wants to support one of the below features, it should adapt these bindings.
-+
-+- host-notify
-+	device uses SMBus host notify protocol instead of interrupt line.
-+
-+- interrupts
-+	interrupts used by the device.
-+
-+- interrupt-names
-+	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
-+	other names are	left to individual drivers.
- 
- - reg-names
- 	Names of map programmable addresses.
- 	It can contain any map needing another address than default one.
- 
-+- wakeup-source
-+	device can be used as a wakeup source.
-+
- Binding may contain optional "interrupts" property, describing interrupts
- used by the device. I2C core will assign "irq" interrupt (or the very first
- interrupt if not using interrupt names) as primary interrupt for the slave.
+For the starter only display controllers are getting interconnect API
+support, others could be supported later on. The display controllers
+have the biggest demand for interconnect API right now because dynamic
+memory frequency scaling can't be done safely without taking into account
+bandwidth requirement from the displays.
+
+(!) Please note that the EMC patches are made on top of the other EMC
+    patches [1][2] that I was sending out recently.
+
+[1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=164165
+[2] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=165451
+
+Changelog:
+
+v2: - Instead of a single dma-mem interconnect path, the paths are now
+      defined per memory client.
+
+    - The EMC provider now uses #interconnect-cells=<0>.
+
+    - Dropped Tegra124 because there is no enough information about how to
+      properly calculate required EMC clock rate for it and I don't have
+      hardware for testing. Somebody else will have to work on it.
+
+    - Moved interconnect providers code into drivers/memory/tegra/*.
+
+    - Added "Create tegra20-devfreq device" patch because interconnect
+      is not very usable without the devfreq memory auto-scaling since
+      memory freq will be fixed to the display's requirement.
+
+Artur Świgoń (1):
+  interconnect: Relax requirement in of_icc_get_from_provider()
+
+Dmitry Osipenko (21):
+  dt-bindings: memory: tegra20: mc: Document new interconnect property
+  dt-bindings: memory: tegra20: emc: Document new interconnect property
+  dt-bindings: memory: tegra30: mc: Document new interconnect property
+  dt-bindings: memory: tegra30: emc: Document new interconnect property
+  dt-bindings: host1x: Document new interconnect properties
+  dt-bindings: memory: tegra20: Add memory client IDs
+  dt-bindings: memory: tegra30: Add memory client IDs
+  ARM: tegra: Add interconnect properties to Tegra20 device-tree
+  ARM: tegra: Add interconnect properties to Tegra30 device-tree
+  memory: tegra: Register as interconnect provider
+  memory: tegra20-emc: Use devm_platform_ioremap_resource
+  memory: tegra20-emc: Continue probing if timings are missing in
+    device-tree
+  memory: tegra20-emc: Register as interconnect provider
+  memory: tegra20-emc: Create tegra20-devfreq device
+  memory: tegra30-emc: Continue probing if timings are missing in
+    device-tree
+  memory: tegra30-emc: Register as interconnect provider
+  drm/tegra: dc: Support memory bandwidth management
+  drm/tegra: dc: Tune up high priority request controls for Tegra20
+  drm/tegra: dc: Extend debug stats with total number of events
+  ARM: tegra: Enable interconnect API in tegra_defconfig
+  ARM: multi_v7_defconfig: Enable interconnect API
+
+ .../display/tegra/nvidia,tegra20-host1x.txt   |  68 +++++
+ .../memory-controllers/nvidia,tegra20-emc.txt |   2 +
+ .../memory-controllers/nvidia,tegra20-mc.txt  |   3 +
+ .../nvidia,tegra30-emc.yaml                   |   6 +
+ .../memory-controllers/nvidia,tegra30-mc.yaml |   5 +
+ arch/arm/boot/dts/tegra20.dtsi                |  22 +-
+ arch/arm/boot/dts/tegra30.dtsi                |  23 +-
+ arch/arm/configs/multi_v7_defconfig           |   1 +
+ arch/arm/configs/tegra_defconfig              |   1 +
+ drivers/gpu/drm/tegra/dc.c                    | 289 +++++++++++++++++-
+ drivers/gpu/drm/tegra/dc.h                    |  13 +
+ drivers/gpu/drm/tegra/drm.c                   |  19 ++
+ drivers/gpu/drm/tegra/plane.c                 |   1 +
+ drivers/gpu/drm/tegra/plane.h                 |   4 +-
+ drivers/interconnect/core.c                   |  11 +-
+ drivers/memory/tegra/mc.c                     | 118 +++++++
+ drivers/memory/tegra/mc.h                     |   8 +
+ drivers/memory/tegra/tegra20-emc.c            | 161 ++++++++--
+ drivers/memory/tegra/tegra30-emc.c            | 144 ++++++++-
+ include/dt-bindings/memory/tegra20-mc.h       |  53 ++++
+ include/dt-bindings/memory/tegra30-mc.h       |  67 ++++
+ include/soc/tegra/mc.h                        |   3 +
+ 22 files changed, 975 insertions(+), 47 deletions(-)
+
 -- 
-2.20.1
+2.25.1
 
