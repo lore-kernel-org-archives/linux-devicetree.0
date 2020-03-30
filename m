@@ -2,407 +2,353 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3FBC2D0EB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615AEC2D0EB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E9F20748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36ADC20776
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="T+WsUN/R"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="eMQN4flA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbgC3Is0 (ORCPT
+        id S1729451AbgC3IwW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:48:26 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:8726 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729422AbgC3Is0 (ORCPT
+        Mon, 30 Mar 2020 04:52:22 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:35230 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728759AbgC3IwW (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:48:26 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02U8h3Ox024505;
-        Mon, 30 Mar 2020 10:48:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=vTy92sv00CxuFV+cNS/2Kf+W70cjMIce9Yb3a+cK9pI=;
- b=T+WsUN/ROngylVJApuHtDTDgnYiCKPjyoiIRdq6H1MDwE9AKoVPV2FO/i4LefMO/jLSe
- pmbEED76M2HyQnV3diBCoS1Au+PTv+3Ft2PpqYXHTjIK1rANUHCYWG47950JGOQ5q530
- ZooHTYu7SW18FBOv2132l1w9L6PqyI6Dm7TkcvggTLMWfBFOAnZmyfrEglZHhdMEaSiR
- 13m4VPzkCA9FOtrcH1Z9v1zuteNcrDqpxJZYfxc4ekPlx1YjzU6lU4Qk4fqOIMwM4V7V
- TLt0JnEukvOqA2P+DwA+HSeGTsIV1BIypTHdR3rHrmyna1VKQf91pZ58yXJ0x63RIo1u wg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 301vkdgtge-1
+        Mon, 30 Mar 2020 04:52:22 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02U8oJB6032287;
+        Mon, 30 Mar 2020 04:52:18 -0400
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2173.outbound.protection.outlook.com [104.47.55.173])
+        by mx0b-00128a01.pphosted.com with ESMTP id 302wsq275w-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Mar 2020 10:48:13 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 34C0A100038;
-        Mon, 30 Mar 2020 10:48:09 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 198342A553C;
-        Mon, 30 Mar 2020 10:48:09 +0200 (CEST)
-Received: from [10.131.224.211] (10.75.127.51) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 30 Mar
- 2020 10:48:07 +0200
-Subject: Re: [PATCH v2 2/2] i2c: i2c-stm32f7: allows for any bus frequency
-To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>,
-        <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-References: <1585226661-26262-1-git-send-email-alain.volmat@st.com>
- <1585226661-26262-3-git-send-email-alain.volmat@st.com>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <7f9fe76a-92b0-11a0-3674-ee9354940b39@st.com>
-Date:   Mon, 30 Mar 2020 10:48:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1585226661-26262-3-git-send-email-alain.volmat@st.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 30 Mar 2020 04:52:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OwZ4s22b8c0AFApaGMJ+Us3Sj1W22OGfBayhDp5oC7b+x2rrSvFa99dG8vCuhjQMDKxRbT5wDtV5b4iBD5Fv8nooPcdNfSbeuPchAHsfejawbaCGkR9+azJ8M4nklU6bxsQYYzhCRhP72bNY1EqtQcUBYldaE+qNiQ47mhFQlxuPZ7tFjtxDrVpfafFgpLPaCetFDCw7x0qsgZdNwa0+YywPlXO+eLtSG36AaQHw4EerQDn9xAgZjbKpevw7KU1mH/qEhZkp2U3cEvOqCsxvMwhQAOXOjJv4KxXtHya4eVZLrv6KfpHGhRaMJDgUThtEAAd8dP8gWCdKZG0W1iivzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+aigdLLKZXkBkT92g9b23n0z3/gynQCeEta+ThJ9lYc=;
+ b=dskcKpIewFm0VnnhZj0ZR3eJhwJlIkZXYeHjbA8juzbn/0q7/AyEKzP6s6qrbURlZNjCer8+Fy8sAJwGOebssheJOX9tK6i1G9TYUCVLB9XC4EH5F9hSqWhuC2Lk+8PfIp+k7W7BQpuyl4MhdLOVaI98IroJgHghQntabLypndi75sRGCZslkAsdvrPgCj/uR3TDNN/U4XRuEqFJFEe4LVM+v+kEzOQXTLKDyyjcZ2w+rDYdw4aNzDwrluI0Uw5bktAn27NS1qwFqiO+Ad8Qt6V9hrmWcB/o1XG347jfO9MEt+PcEXWcPToFpasVrxNSqWHa2aPvGWBdb1485kloPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+aigdLLKZXkBkT92g9b23n0z3/gynQCeEta+ThJ9lYc=;
+ b=eMQN4flABGtiF0G1lemcAYJeD2djsDdSuLeJ5dSo5zbTr5LY4R698/7xoAAsTrUgg3S3OURjaH1P/91B+1ZwqkGNx2YRUGiStOl6hot9Oh2tTtvefbWrY65nVeTwKWtSxpTWnP1LDYlJI24+Z98Cx0cNZlpIOer90XEEDeeYq/g=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB4441.namprd03.prod.outlook.com (2603:10b6:5:109::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Mon, 30 Mar
+ 2020 08:52:16 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
+ 08:52:16 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>
+CC:     "Costina, Adrian" <Adrian.Costina@analog.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
+        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>,
+        "ardeleanalex@gmail.com" <ardeleanalex@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Grozav, Andrei" <Andrei.Grozav@analog.com>
+Subject: Re: [PATCH v9 0/8] iio: adi-axi-adc,ad9647: Add support for AD9467
+ ADC
+Thread-Topic: [PATCH v9 0/8] iio: adi-axi-adc,ad9647: Add support for AD9467
+ ADC
+Thread-Index: AQHV+EktcEyhuAEfVEOlIExR2iAuL6hJpH2AgAFJ+QCAB/16gIAOBIKA
+Date:   Mon, 30 Mar 2020 08:52:15 +0000
+Message-ID: <ce9c0b9d73435e923752c25ae6e66f6dbb562a14.camel@analog.com>
+References: <20200312083511.28832-1-alexandru.ardelean@analog.com>
+         <20200315130625.705548ce@archlinux>
+         <227c4c793044ca9a4e50f5d68d3de204c53d26e6.camel@analog.com>
+         <20200321104829.040661d9@archlinux>
+In-Reply-To: <20200321104829.040661d9@archlinux>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG5NODE2.st.com
- (10.75.127.14)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.26.73.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7a75c85f-60c7-421d-967e-08d7d487a5b1
+x-ms-traffictypediagnostic: DM6PR03MB4441:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR03MB444159DEFC59804907EF3C95F9CB0@DM6PR03MB4441.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0358535363
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(346002)(136003)(396003)(366004)(39850400004)(2906002)(316002)(71200400001)(54906003)(2616005)(81156014)(6916009)(81166006)(8936002)(966005)(30864003)(478600001)(6512007)(26005)(6486002)(186003)(8676002)(4326008)(107886003)(5660300002)(66476007)(66946007)(66556008)(64756008)(66446008)(91956017)(76116006)(6506007)(36756003)(86362001)(142933001);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: n0bf3INLRi79PUOpPRry4K5lgripEGromv0vC+cvEWM0YY4Xc/Q5wtAu4DUsM7D6Tjnt/ux7s//z4JibSFOCXp/OmrJpR1waTyvX5RSwcJxb9Bxij9pYOU01kPgTohYf9hm5hS2zx+HJCsDUatMmWYKGgoyILG6fbJXVBmmghwhtR07fjo2zXQQ7IB2GCbc7TmzBlNTzlprOMDKsQsT51TeRlyhmINVRXxmqE3tQ1WgTihuBkDWjcyHvFVFeOJTtj/SDbQecawtCaxYoyHDmxzEtf5j2uO0m31+CwNfZolZegJgP0rwgKc49GImVBwjfAiK7F1BW38AY5g3XJK2zPZS/dGt2FweDjN8hT4Oc+lFx9AtXXDxgg7Rbgj3WG3eokxtjKwSEAG4L1qK+koZznB8DwjyfdfqiY3zarXX0m4yVo0pNDaSHhfrQ6SbCYUGDDjbAF9xJ9envDy8UgHbUedDPhGYnAcKlgUTjEA5jQqbHbAhPiPgMwfS96n9FiXLq2klAVWNStX4vJg81Ik/a9Kf2I4DNBxcHLvbxnyqhTLQpCN2/CiO427aBZ9Qkr4pL
+x-ms-exchange-antispam-messagedata: 1adP0Wvf/RXPSkptAhhCA2nhrJia0h8pzz7GhPx8vRvSBSpLQoGJD3Kb+ZzqKZhEvRkHrqxw7T2Umw34vxxP9OV7t/1OVhTI0x1k7FDEGUlTpCVYNGxn+YnWaVNDpEmrPelZ3qKQcXgYhqYw9LEhZA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <49E3B03642FE8D4D80A6C7F5D3102F7E@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a75c85f-60c7-421d-967e-08d7d487a5b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2020 08:52:15.9898
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UILNWBBcHxjn8o1++jatE806L7KZ2VVc6yX0bZMycBP768s2ZDAn2XDixyPt55+sCqjRRKn9DpdhBAksXHcPOg9uC1DMIcbfPMRPOghaZZo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4441
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
  definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ bulkscore=0 impostorscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ adultscore=0 lowpriorityscore=0 mlxlogscore=999 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003300084
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello guys
-
-Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-
-Thanks
-
-On 3/26/20 1:44 PM, Alain Volmat wrote:
-> Do not limitate to the 3 (100KHz, 400KHz, 1MHz) bus frequency but
-> instead allows any frequency (if it matches timing requirements).
-> Depending on the requested frequency, use the spec data from either
-> Standard, Fast or Fast Plus mode.
-> 
-> Hardcoding of min/max bus frequencies is removed and is instead computed.
-> 
-> The driver do not use anymore speed identifier but instead handle
-> directly the frequency and figure out the spec data (necessary
-> for the computation of the timing register) based on the frequency.
-> 
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
-> v2: remove wrong "NOT REACHED" comment
->     simplify get_lower_rate function
-> 
->  drivers/i2c/busses/i2c-stm32f7.c | 115 ++++++++++++++++---------------
->  1 file changed, 60 insertions(+), 55 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-> index 330ffed011e0..f369f086b9d0 100644
-> --- a/drivers/i2c/busses/i2c-stm32f7.c
-> +++ b/drivers/i2c/busses/i2c-stm32f7.c
-> @@ -189,8 +189,6 @@ struct stm32f7_i2c_regs {
->  /**
->   * struct stm32f7_i2c_spec - private i2c specification timing
->   * @rate: I2C bus speed (Hz)
-> - * @rate_min: 80% of I2C bus speed (Hz)
-> - * @rate_max: 100% of I2C bus speed (Hz)
->   * @fall_max: Max fall time of both SDA and SCL signals (ns)
->   * @rise_max: Max rise time of both SDA and SCL signals (ns)
->   * @hddat_min: Min data hold time (ns)
-> @@ -201,8 +199,6 @@ struct stm32f7_i2c_regs {
->   */
->  struct stm32f7_i2c_spec {
->  	u32 rate;
-> -	u32 rate_min;
-> -	u32 rate_max;
->  	u32 fall_max;
->  	u32 rise_max;
->  	u32 hddat_min;
-> @@ -214,7 +210,6 @@ struct stm32f7_i2c_spec {
->  
->  /**
->   * struct stm32f7_i2c_setup - private I2C timing setup parameters
-> - * @speed: I2C speed mode (standard, Fast Plus)
->   * @speed_freq: I2C speed frequency  (Hz)
->   * @clock_src: I2C clock source frequency (Hz)
->   * @rise_time: Rise time (ns)
-> @@ -224,7 +219,6 @@ struct stm32f7_i2c_spec {
->   * @fmp_clr_offset: Fast Mode Plus clear register offset from set register
->   */
->  struct stm32f7_i2c_setup {
-> -	enum stm32_i2c_speed speed;
->  	u32 speed_freq;
->  	u32 clock_src;
->  	u32 rise_time;
-> @@ -287,7 +281,7 @@ struct stm32f7_i2c_msg {
->   * @base: virtual memory area
->   * @complete: completion of I2C message
->   * @clk: hw i2c clock
-> - * @speed: I2C clock frequency of the controller. Standard, Fast or Fast+
-> + * @bus_rate: I2C clock frequency of the controller
->   * @msg: Pointer to data to be written
->   * @msg_num: number of I2C messages to be executed
->   * @msg_id: message identifiant
-> @@ -314,7 +308,7 @@ struct stm32f7_i2c_dev {
->  	void __iomem *base;
->  	struct completion complete;
->  	struct clk *clk;
-> -	int speed;
-> +	unsigned int bus_rate;
->  	struct i2c_msg *msg;
->  	unsigned int msg_num;
->  	unsigned int msg_id;
-> @@ -343,10 +337,8 @@ struct stm32f7_i2c_dev {
->   * and Fast-mode Plus I2C-bus devices
->   */
->  static struct stm32f7_i2c_spec i2c_specs[] = {
-> -	[STM32_I2C_SPEED_STANDARD] = {
-> +	{
->  		.rate = I2C_MAX_STANDARD_MODE_FREQ,
-> -		.rate_min = I2C_MAX_STANDARD_MODE_FREQ * 8 / 10,	/* 80% */
-> -		.rate_max = I2C_MAX_STANDARD_MODE_FREQ,
->  		.fall_max = 300,
->  		.rise_max = 1000,
->  		.hddat_min = 0,
-> @@ -355,10 +347,8 @@ static struct stm32f7_i2c_spec i2c_specs[] = {
->  		.l_min = 4700,
->  		.h_min = 4000,
->  	},
-> -	[STM32_I2C_SPEED_FAST] = {
-> +	{
->  		.rate = I2C_MAX_FAST_MODE_FREQ,
-> -		.rate_min = I2C_MAX_FAST_MODE_FREQ * 8 / 10,		/* 80% */
-> -		.rate_max = I2C_MAX_FAST_MODE_FREQ,
->  		.fall_max = 300,
->  		.rise_max = 300,
->  		.hddat_min = 0,
-> @@ -367,10 +357,8 @@ static struct stm32f7_i2c_spec i2c_specs[] = {
->  		.l_min = 1300,
->  		.h_min = 600,
->  	},
-> -	[STM32_I2C_SPEED_FAST_PLUS] = {
-> +	{
->  		.rate = I2C_MAX_FAST_MODE_PLUS_FREQ,
-> -		.rate_min = I2C_MAX_FAST_MODE_PLUS_FREQ * 8 / 10,	/* 80% */
-> -		.rate_max = I2C_MAX_FAST_MODE_PLUS_FREQ,
->  		.fall_max = 100,
->  		.rise_max = 120,
->  		.hddat_min = 0,
-> @@ -411,10 +399,23 @@ static void stm32f7_i2c_disable_irq(struct stm32f7_i2c_dev *i2c_dev, u32 mask)
->  	stm32f7_i2c_clr_bits(i2c_dev->base + STM32F7_I2C_CR1, mask);
->  }
->  
-> +static struct stm32f7_i2c_spec *get_specs(u32 rate)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(i2c_specs); i++)
-> +		if (rate <= i2c_specs[i].rate)
-> +			return &i2c_specs[i];
-> +
-> +	return ERR_PTR(-EINVAL);
-> +}
-> +
-> +#define	RATE_MIN(rate)	(rate * 8 / 10)
->  static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  				      struct stm32f7_i2c_setup *setup,
->  				      struct stm32f7_i2c_timings *output)
->  {
-> +	struct stm32f7_i2c_spec *specs;
->  	u32 p_prev = STM32F7_PRESC_MAX;
->  	u32 i2cclk = DIV_ROUND_CLOSEST(NSEC_PER_SEC,
->  				       setup->clock_src);
-> @@ -432,18 +433,19 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  	u16 p, l, a, h;
->  	int ret = 0;
->  
-> -	if (setup->speed >= STM32_I2C_SPEED_END) {
-> -		dev_err(i2c_dev->dev, "speed out of bound {%d/%d}\n",
-> -			setup->speed, STM32_I2C_SPEED_END - 1);
-> +	specs = get_specs(setup->speed_freq);
-> +	if (specs == ERR_PTR(-EINVAL)) {
-> +		dev_err(i2c_dev->dev, "speed out of bound {%d}\n",
-> +			setup->speed_freq);
->  		return -EINVAL;
->  	}
->  
-> -	if ((setup->rise_time > i2c_specs[setup->speed].rise_max) ||
-> -	    (setup->fall_time > i2c_specs[setup->speed].fall_max)) {
-> +	if ((setup->rise_time > specs->rise_max) ||
-> +	    (setup->fall_time > specs->fall_max)) {
->  		dev_err(i2c_dev->dev,
->  			"timings out of bound Rise{%d>%d}/Fall{%d>%d}\n",
-> -			setup->rise_time, i2c_specs[setup->speed].rise_max,
-> -			setup->fall_time, i2c_specs[setup->speed].fall_max);
-> +			setup->rise_time, specs->rise_max,
-> +			setup->fall_time, specs->fall_max);
->  		return -EINVAL;
->  	}
->  
-> @@ -454,12 +456,6 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  		return -EINVAL;
->  	}
->  
-> -	if (setup->speed_freq > i2c_specs[setup->speed].rate) {
-> -		dev_err(i2c_dev->dev, "ERROR: Freq {%d/%d}\n",
-> -			setup->speed_freq, i2c_specs[setup->speed].rate);
-> -		return -EINVAL;
-> -	}
-> -
->  	/*  Analog and Digital Filters */
->  	af_delay_min =
->  		(setup->analog_filter ?
-> @@ -469,13 +465,13 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  		 STM32F7_I2C_ANALOG_FILTER_DELAY_MAX : 0);
->  	dnf_delay = setup->dnf * i2cclk;
->  
-> -	sdadel_min = i2c_specs[setup->speed].hddat_min + setup->fall_time -
-> +	sdadel_min = specs->hddat_min + setup->fall_time -
->  		af_delay_min - (setup->dnf + 3) * i2cclk;
->  
-> -	sdadel_max = i2c_specs[setup->speed].vddat_max - setup->rise_time -
-> +	sdadel_max = specs->vddat_max - setup->rise_time -
->  		af_delay_max - (setup->dnf + 4) * i2cclk;
->  
-> -	scldel_min = setup->rise_time + i2c_specs[setup->speed].sudat_min;
-> +	scldel_min = setup->rise_time + specs->sudat_min;
->  
->  	if (sdadel_min < 0)
->  		sdadel_min = 0;
-> @@ -530,8 +526,8 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  
->  	tsync = af_delay_min + dnf_delay + (2 * i2cclk);
->  	s = NULL;
-> -	clk_max = NSEC_PER_SEC / i2c_specs[setup->speed].rate_min;
-> -	clk_min = NSEC_PER_SEC / i2c_specs[setup->speed].rate_max;
-> +	clk_max = NSEC_PER_SEC / RATE_MIN(setup->speed_freq);
-> +	clk_min = NSEC_PER_SEC / setup->speed_freq;
->  
->  	/*
->  	 * Among Prescaler possibilities discovered above figures out SCL Low
-> @@ -549,7 +545,7 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  		for (l = 0; l < STM32F7_SCLL_MAX; l++) {
->  			u32 tscl_l = (l + 1) * prescaler + tsync;
->  
-> -			if ((tscl_l < i2c_specs[setup->speed].l_min) ||
-> +			if ((tscl_l < specs->l_min) ||
->  			    (i2cclk >=
->  			     ((tscl_l - af_delay_min - dnf_delay) / 4))) {
->  				continue;
-> @@ -561,7 +557,7 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  					setup->rise_time + setup->fall_time;
->  
->  				if ((tscl >= clk_min) && (tscl <= clk_max) &&
-> -				    (tscl_h >= i2c_specs[setup->speed].h_min) &&
-> +				    (tscl_h >= specs->h_min) &&
->  				    (i2cclk < tscl_h)) {
->  					int clk_error = tscl - i2cbus;
->  
-> @@ -607,6 +603,17 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
->  	return ret;
->  }
->  
-> +static u32 get_lower_rate(u32 rate)
-> +{
-> +	int i = ARRAY_SIZE(i2c_specs);
-> +
-> +	while (i--)
-> +		if (i2c_specs[i].rate < rate)
-> +			break;
-> +
-> +	return i2c_specs[i].rate;
-> +}
-> +
->  static int stm32f7_i2c_setup_timing(struct stm32f7_i2c_dev *i2c_dev,
->  				    struct stm32f7_i2c_setup *setup)
->  {
-> @@ -619,18 +626,15 @@ static int stm32f7_i2c_setup_timing(struct stm32f7_i2c_dev *i2c_dev,
->  
->  	i2c_parse_fw_timings(i2c_dev->dev, t, false);
->  
-> -	if (t->bus_freq_hz >= I2C_MAX_FAST_MODE_PLUS_FREQ)
-> -		i2c_dev->speed = STM32_I2C_SPEED_FAST_PLUS;
-> -	else if (t->bus_freq_hz >= I2C_MAX_FAST_MODE_FREQ)
-> -		i2c_dev->speed = STM32_I2C_SPEED_FAST;
-> -	else
-> -		i2c_dev->speed = STM32_I2C_SPEED_STANDARD;
-> +	if (t->bus_freq_hz > I2C_MAX_FAST_MODE_PLUS_FREQ) {
-> +		dev_err(i2c_dev->dev, "Invalid bus speed (%i>%i)\n",
-> +			t->bus_freq_hz, I2C_MAX_FAST_MODE_PLUS_FREQ);
-> +		return -EINVAL;
-> +	}
->  
-> +	setup->speed_freq = t->bus_freq_hz;
->  	i2c_dev->setup.rise_time = t->scl_rise_ns;
->  	i2c_dev->setup.fall_time = t->scl_fall_ns;
-> -
-> -	setup->speed = i2c_dev->speed;
-> -	setup->speed_freq = i2c_specs[setup->speed].rate;
->  	setup->clock_src = clk_get_rate(i2c_dev->clk);
->  
->  	if (!setup->clock_src) {
-> @@ -644,14 +648,12 @@ static int stm32f7_i2c_setup_timing(struct stm32f7_i2c_dev *i2c_dev,
->  		if (ret) {
->  			dev_err(i2c_dev->dev,
->  				"failed to compute I2C timings.\n");
-> -			if (i2c_dev->speed > STM32_I2C_SPEED_STANDARD) {
-> -				i2c_dev->speed--;
-> -				setup->speed = i2c_dev->speed;
-> +			if (setup->speed_freq > I2C_MAX_STANDARD_MODE_FREQ) {
->  				setup->speed_freq =
-> -					i2c_specs[setup->speed].rate;
-> +					get_lower_rate(setup->speed_freq);
->  				dev_warn(i2c_dev->dev,
->  					 "downgrade I2C Speed Freq to (%i)\n",
-> -					 i2c_specs[setup->speed].rate);
-> +					 setup->speed_freq);
->  			} else {
->  				break;
->  			}
-> @@ -663,13 +665,15 @@ static int stm32f7_i2c_setup_timing(struct stm32f7_i2c_dev *i2c_dev,
->  		return ret;
->  	}
->  
-> -	dev_dbg(i2c_dev->dev, "I2C Speed(%i), Freq(%i), Clk Source(%i)\n",
-> -		setup->speed, setup->speed_freq, setup->clock_src);
-> +	dev_dbg(i2c_dev->dev, "I2C Speed(%i), Clk Source(%i)\n",
-> +		setup->speed_freq, setup->clock_src);
->  	dev_dbg(i2c_dev->dev, "I2C Rise(%i) and Fall(%i) Time\n",
->  		setup->rise_time, setup->fall_time);
->  	dev_dbg(i2c_dev->dev, "I2C Analog Filter(%s), DNF(%i)\n",
->  		(setup->analog_filter ? "On" : "Off"), setup->dnf);
->  
-> +	i2c_dev->bus_rate = setup->speed_freq;
-> +
->  	return 0;
->  }
->  
-> @@ -1866,7 +1870,7 @@ static int stm32f7_i2c_write_fm_plus_bits(struct stm32f7_i2c_dev *i2c_dev,
->  {
->  	int ret;
->  
-> -	if (i2c_dev->speed != STM32_I2C_SPEED_FAST_PLUS ||
-> +	if (i2c_dev->bus_rate <= I2C_MAX_FAST_MODE_FREQ ||
->  	    IS_ERR_OR_NULL(i2c_dev->regmap))
->  		/* Optional */
->  		return 0;
-> @@ -2020,7 +2024,8 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto clk_free;
->  
-> -	if (i2c_dev->speed == STM32_I2C_SPEED_FAST_PLUS) {
-> +	/* Setup Fast mode plus if necessary */
-> +	if (i2c_dev->bus_rate > I2C_MAX_FAST_MODE_FREQ) {
->  		ret = stm32f7_i2c_setup_fm_plus_bits(pdev, i2c_dev);
->  		if (ret)
->  			goto clk_free;
-> 
+T24gU2F0LCAyMDIwLTAzLTIxIGF0IDEwOjQ4ICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBPbiBNb24sIDE2IE1hciAyMDIwIDA4OjQ3OjI3ICswMDAwDQo+ICJBcmRlbGVhbiwgQWxl
+eGFuZHJ1IiA8YWxleGFuZHJ1LkFyZGVsZWFuQGFuYWxvZy5jb20+IHdyb3RlOg0KPiANCj4gPiBP
+biBTdW4sIDIwMjAtMDMtMTUgYXQgMTM6MDYgKzAwMDAsIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6
+DQo+ID4gPiBPbiBUaHUsIDEyIE1hciAyMDIwIDEwOjM1OjAzICswMjAwDQo+ID4gPiBBbGV4YW5k
+cnUgQXJkZWxlYW4gPGFyZGVsZWFuYWxleEBnbWFpbC5jb20+IHdyb3RlOg0KPiA+ID4gICANCj4g
+PiA+ID4gVGhpcyBjaGFuZ2VzZXQgYWRkcyBzdXBwb3J0IGZvciB0aGUgQUQ5NDY3IExWRFMgSGln
+aC1TcGVlZCBBREMuDQo+ID4gPiA+IEluIG9yZGVyIHRvIHN1cHBvcnQgaXQsIHN1cHBvcnQgZm9y
+IGFuIEZQR0EgQURJIEFYSSBBREMgaXMgYWRkZWQgaW4gdGhpcw0KPiA+ID4gPiBzZXQuDQo+ID4g
+PiA+IFRoaXMgdXNlcyB0aGUgY3VycmVudCBzdXBwb3J0IGZvciBJSU8gYnVmZmVyIERNQUVuZ2lu
+ZS4gIA0KPiA+ID4gDQo+ID4gPiBJIHRvb2sgYSBsb29rIHRocm91Z2ggdGhpcyBzZXJpZXMgYW5k
+IEknbSB0aGluayBJJ20gbm93IGhhcHB5IHdpdGggaXQuDQo+ID4gPiBIb3dldmVyLCBJJ2QgbGlr
+ZSB0byBsZWF2ZSBhIGJpdCBvZiB0aW1lIGZvciBSb2IsIHRoZSBEVCBiaW5kaW5nDQo+ID4gPiBN
+YWludGFpbmVyIHRvIHRha2UgYSBsb29rIGF0IHRoZSBiaW5kaW5ncy4NCj4gPiA+IA0KPiA+ID4g
+TG9uZyB0ZXJtIEkgc29ydCBvZiB3b25kZXIgaWYgd2UgbWlnaHQgZ2V0IHNvbWUgYWx0ZXJuYXRp
+dmUgZm9yIHRoZQ0KPiA+ID4gQURJLUFYSSBpbnRlcmZhY2UsIGVpdGhlciBiZWNhdXNlIEFuYWxv
+ZyBkZWNpZGUgdG8gcmV3cml0ZSBpdCwgb3INCj4gPiA+IGJlY2F1c2Ugc29tZW9uZSBlbHNlIHB1
+dHMgdG9nZXRoZXIgc2ltaWxhciBJUC4gQXQgdGhhdCBwb2ludCB3ZSBtYXkNCj4gPiA+IHdhbnQg
+YSBtb3JlIHNvcGhpc3RpY2F0ZWQgcmVnaXN0cmF0aW9uIGZyYW1ld29yayBldGMuICBJIGd1ZXNz
+IHdlDQo+ID4gPiBjYW4gd2FpdCBhbmQgc2VlIGlmIGFueW9uZSBldmVyIGRvZXMgdGhhdCB0aG91
+Z2guICANCj4gPiANCj4gPiBUaGlzIHJlZ2lzdHJhdGlvbiBtZWNoYW5pc20gaXMgYSBiaXQgb2Yg
+YSByZXdyaXRlIG9mIGFuIG9sZGVyIG1lY2hhbmlzbQ0KPiA+IHRoYXQncw0KPiA+IGJlZW4gaW4t
+dXNlIGZvciA3KyB5ZWFycy4NCj4gPiBodHRwczovL2dpdGh1Yi5jb20vYW5hbG9nZGV2aWNlc2lu
+Yy9saW51eC9ibG9iL21hc3Rlci9kcml2ZXJzL2lpby9hZGMvY2ZfYXhpX2FkY19jb3JlLmMjTDgz
+Mg0KPiA+IEVzc2VudGlhbGx5LCB0aGUgb2xkIG9uZSBzZWFyY2hlcyBvbiB0aGUgU1BJIGJ1cyBm
+b3IgYSBkZXZpY2UsIHdoaWxlIHRoaXMNCj4gPiBvbmUNCj4gPiBtYWtlcyB0aGUgY291cGxpbmcg
+dG8gdGhlIEFYSS1BREMgZHJpdmVyIGEgYml0IHRpZ2h0ZXIsIGJ5IHJlcXVpcmluZyBpdCB0bw0K
+PiA+IGV4cGxpY2l0bHkgcmVnaXN0ZXIgd2l0aCB0aGUgQVhJLUFEQyBkcml2ZXIuDQo+ID4gTm8g
+aWRlYSB3aGljaCBpcyBiZXR0ZXI7IHNpbmNlIGJvdGggaW1wbGVtZW50YXRpb25zIHJlcXVpcmUg
+a25vd2xlZGdlIGFib3V0DQo+ID4gdGhlDQo+ID4gQVhJLUFEQyBkcml2ZXIuDQo+ID4gSW4gdGhl
+IERULCB0aGUgbWFpbiBkaWZmZXJlbmNlIGlzIGEgcmVuYW1lIG9mIHRoZSBwcm9wZXJ0eSAnc3Bp
+YnVzLQ0KPiA+IGNvbm5lY3RlZCcgdG8NCj4gPiAnYWRpLGFkYy1kZXYnLg0KPiANCj4gVGhlIGFw
+cHJvYWNoIGhlcmUgc2VlbXMgcmVhc29uYWJsZSB0byBtZS4gIFdlIGNhbiBiZSBtb3JlIGZsZXhp
+YmxlDQo+IGlmIHdlIGV2ZXIgbmVlZCB0by4NCj4gDQo+ID4gSSBhZ3JlZSB0aGF0IGEgbW9yZSBz
+b3BoaXN0aWNhdGVkL2dlbmVyYWxpemVkIGludGVyZmFjZSBiZXR3ZWVuIHRoZSAyIHdvdWxkDQo+
+ID4gYmUgYQ0KPiA+IGJldHRlciBpZGVhLCBidXQgW2dpdmVuIGhvdyBsb25nIHRoaXMgaGFzIGJl
+ZW4gYXMtaXNdLCBJIGRvbid0IGZlZWwgaXQNCj4gPiBoYXBwZW5pbmcNCj4gPiByZWFsbHkgc29v
+bi4NCj4gPiANCj4gPiBJJ20gYWxzbyBwcmVwYXJpbmcgbm93IGFuIEFYSS1EQUMgZHJpdmVyLCBz
+aW1pbGFyIHRvIHRoaXMgb25lLg0KPiA+IFRoZSBpZGVhIHdvdWxkIGJlIHRvIGFsc28gcHJlcGFy
+ZSB1cHN0cmVhbWluZyB0aGUgQUQ5MzYxLCB3aGljaCBpcyBhbiBSRg0KPiA+IHRyYW5zY2VpdmVy
+LiBJJ20gbm90IHN1cmUgd2hldGhlciB0aGF0IHdvdWxkIGNsYXNzaWZ5IGFzIGFuIE1GRCBkZXZp
+Y2UgW0FEQw0KPiA+ICYNCj4gPiBEQUNdLCBvciB3aGV0aGVyIGFzIGFuIElJTyBkZXZpY2UsIHdp
+dGggYSBkcml2ZXJzL2lpby90cmFuc2NlaXZlciBzdWItdHlwZS4NCj4gDQo+IFdlIGRpZCBoYXZl
+IHRoZSBzbGlnaHRseSBzaWxseSBuYW1pbmcgb2YgYWRkYWMgaW4gc3RhZ2luZyBmb3IgYSB3aGls
+ZS4NCj4gDQo+IEFueWhvdywgSSdkIHNheSBhIHNpbmdsZSBkcml2ZXIgKG5vdCBtZmQpLCBpbiBh
+IG5ldyBkaXJlY3RvcnkgYXMgYXBwcm9wcmlhdGUuDQo+IA0KPiA+IFJlbGF0ZWQsIHdoYXQgd291
+bGQgYmUgaW50ZXJlc3RpbmcsIGlzIGEgZ2VuZXJpYyBtdWx0aS1jaGlwLXN5bmMgbWVjaGFuaXNt
+Lg0KPiA+IEZvciBtYW55IGNvbXBsaWNhdGVkIGRldmljZXMgW3R5cGljYWxseSBoaWdoLXNwZWVk
+IEFEQ3MvREFDcy90cmFuc2NlaXZlcnNdLA0KPiA+IHRoaXMNCj4gPiBzZWVtcyB0byBiZSBhIG1v
+cmUgY29tbW9uIHVzZS1jYXNlLg0KPiA+IEkndmUgYmVlbiB3b25kZXJpbmcgYWJvdXQgYSB3YXkg
+dG8gZG8gaXQ7IGlmIHlvdSBoYXZlIGFueSBpbnB1dCwgb3IgYQ0KPiA+IHN1YnN5c3RlbQ0KPiA+
+IHRoYXQgZG9lcyB0aGF0IHdlbGwsIEknbSBvcGVuIHRvIGlucHV0cy4NCj4gPiBNRkQgZG9lc24n
+dCBzZWVtIHRvIGJlIHF1aXRlIGJlIHRoYXQuIERvaW5nIGl0IHdpdGggY2xvY2tzIGhhcyBiZWVu
+IHRyaWVkDQo+ID4gYW5kIGlzDQo+ID4gbm90IHZlcnkgZWFzeS4NCj4gPiBBbm90aGVyIGlkZWEg
+d291bGQgYmUgdG8gdHJ5IHRvIGltcGxlbWVudCBzb21lIGRldmljZS1ncm91cCBtZWNoYW5pc20u
+IFRoZQ0KPiA+IGlkZWENCj4gPiB3b3VsZCBiZSB0byBoYXZlIHN0YXRlLXRyYW5zaXRpb24gdGFi
+bGVzLCBhbmQgZWFjaCBkcml2ZXIgZGVmaW5lcyBpdCdzIG93bg0KPiA+IGNhbGxiYWNrcyBmb3Ig
+ZWFjaCBzdGF0ZS9zdGF0ZS10cmFuc2l0aW9uLiBXaGVuZXZlciBhIGRldmljZS1ncm91cCBuZWVk
+cyB0bw0KPiA+IGp1bXANCj4gPiBhIGNlcnRhaW4gc3RhdGUsIGFsbCBjYWxsYmFja3MgYXJlIGNh
+bGxlZCB0byBwdXQgZWFjaCBkZXZpY2UgaW4gaXQncyBvd24NCj4gPiBzdWItDQo+ID4gc3RhdGUu
+DQo+ID4gU3RpbGwgbm90IHN1cmUgaG93IGdvb2QgdGhpcyBhcHByb2FjaCBpcywgYnV0IGl0IHNv
+dW5kcyB0aGUgY2xvc2VzdCB0bw0KPiA+IHNvbWV0aGluZw0KPiA+IHRoYXQgd291bGQgd29yay4N
+Cj4gDQo+IEknbSBub3Qgc3VyZSBJIGZvbGxvdyBpbiBlbm91Z2ggZGV0YWlsIHdoYXQgeW91IG1l
+YW4gdG8gb2ZmZXIgZGV0YWlsZWQNCj4gb3BpbmlvbnMuDQo+IEFyZSB3ZSB0YWxraW5nIHBpcGVs
+aW5nIHR5cGUgc2V0dXBzIHNpbWlsYXIgdG8gdGhlIG1lZGlhIGZyYW1ld29yayBkb2VzPw0KDQpT
+ZWVtcyBJIGZvcmdvdCBhYm91dCB0aGlzIGVtYWlsLg0KU29ycnkgYWJvdXQgdGhhdC4gSWYgdGhl
+eSBnbyB0aHJvdWdoIHRoZSB3ZWVrZW5kLCBJIG1pZ2h0IGZvcmdldCBhYm91dCBzb21lDQplbWFp
+bHMuDQoNClNvLCBJJ20gbm90IHN1cGVyLWZhbWlsaWFyIHdpdGggbWVkYS4gSWYgeW91IGFyZSBy
+ZWZlcnJpbmcgdG8NCm9mX2dyYXBoL2Z3bm9kZV9ncmFwaCBzdHVmZiBbZm9yIGRlZmluaW5nIG9y
+ZGVyIG9mIGluaXRdLCB0aGVuIHllcywgc29tZXRoaW5nDQpzaW1pbGFyLg0KVGhvdWdoLCBJIHRo
+aW5rIEkgdHJpZWQgc29tZXRoaW5nIHdpdGggb2ZfZ3JhcGggYW5kIGl0IHNlZW1lZCB0byBiZSBh
+IGJpdCB0b28NCm1hbnkgRFQgZW50cmllcy4NCkkgdGhpbmsgdGhlIGNsb2NrICJsaW5rcy9jb25u
+ZWN0aW9ucyIgYXJlIGEgYml0IG5lYXRlciBhcyB0aGV5IHNwZWNpZnkgdGhlDQptaW5pbXVtIHJl
+cXVpcmVkIHRvIGtub3cgdGhhdCAyIGRldmljZXMgZGVwZW5kIG9uIG9uZSBhbm90aGVyIGluIGEg
+Y2VydGFpbg0Kb3JkZXIuDQoNCj4gDQo+IEl0IHdvdWxkIGNlcnRhaW5seSBiZSBwb3NzaWJsZSB0
+byBoYXZlIGEgbm90aWZpY2F0aW9uIHN5c3RlbSB0aGF0IG11bHRpcGxlDQo+IGRyaXZlcg0KPiBj
+YW4gcmVnaXN0ZXIgdG8gYnV0IEknbSBub3Qgc3VyZSBJIGZvbGxvdyB0aGUgdXNlY2FzZS4gIFBl
+cmhhcHMgc29tZSBpbiBkZXB0aA0KPiBleGFtcGxlcyB3b3VsZCBoZWxwIG1lIHVuZGVyc3RhbmQ/
+DQo+IA0KDQpUaGUgdXNlLWNhc2UgdHlwaWNhbGx5IGlzIHdoZW4gdGhlcmUgYXJlIDIgeCBoaWdo
+LXNwZWVkIHRyYW5zY2VpdmVycy4NCkFuZCB0aGlzIGdldHMgbW9yZSBjb21wbGljYXRlZCB3aGVu
+IGRvaW5nIEpFU0QyMDQuDQpCZWNhdXNlIHlvdSBuZWVkIGNlcnRhaW4gY2xvY2tzL1BMTHMgYW5k
+IGNlcnRhaW4gY2hpcHMgdG8gaW5pdGlhbGl6ZSBpbiBhDQpjZXJ0YWluIG9yZGVyLg0KDQpJZiB5
+b3UganVzdCB3YW50IHRvIGRvIGEgc2luZ2xlLXN0YXRpYyBpbml0aWFsaXphdGlvbiBkdXJpbmcg
+cHJvYmUgW2ZvciBzb21lDQpjb21wbGV4IHRyYW5zY2VpdmVyIGNvbmZpZ3VyYXRpb25dLCB5b3Ug
+Y2FuIGRvIGl0IHZpYSBwcm9iZSBhbmQgdGhhdCBpcyBmaW5lIFtpdA0Kd29ya3NdLg0KDQpCdXQg
+aWYgeW91IHdhbnQgdG8gcmUtY29uZmlndXJlIHRoZSBKRVNEMjA0IGxpbmsgW2F0IHJ1bi10aW1l
+XSwgb3IgY2hhbmdlIHNvbWUNCnRyYW5zY2VpdmVyIHBhcmFtZXRlcnMsIHlvdSB3b3VsZCBbc29t
+ZXRpbWVzXSBuZWVkIHRvIHJlLWRvIGEgYmlnIHBhcnQgb2YgdGhlDQpjb25maWd1cmF0aW9uIHRv
+cG9sb2d5LCBzYW1lIGFzIGR1cmluZyBwcm9iZSwgaW5jbHVkaW5nIGluIHRoZSBzYW1lIG9yZGVy
+IHRoYXQNCnRoZXkgd2VyZSBwcm9iZWQ7IGFkbWl0dGVkbHksIHNvbWUgdGhpbmdzIGNhbiBiZSBk
+b25lIHZpYSB0aGUgY2xvY2sgZnJhbWV3b3JrLA0KYnV0IHRoZXJlIGFyZSBsaW1pdGF0aW9ucy4N
+CkEgd29ya2Fyb3VuZCBbd2hpY2ggd2UgZGlkbid0IHRyeSBhbmQgbGlrZWx5IHdvbid0XSBpcyB0
+byBjb252ZXJ0IHRoZSBkcml2ZXJzIHRvDQptb2R1bGVzIGFuZCBtb3ZlIHNvbWUgdGhpbmdzIHRv
+IHVzZXJzcGFjZS4gIA0KSW4gdGhlIG1lYW50aW1lLCBvbmUgdGhpbmcgSSdtIHRyeWluZyBpcyB0
+byBkZWNvdXBsZSBzb21lIGluaXQgc3R1ZmYgYXdheSBmcm9tDQpwcm9iZSBhbmQgbW92ZSBpdCB0
+byBhIGdlbmVyaWMgc3RhdGUtbWFjaGluZSB0aGF0IHRha2VzIGNhcmUgb2YgcmUtDQppbml0aWFs
+aXphdGlvbiBvcmRlcmluZy4NCg0KDQo+IFRoYW5rcywNCj4gDQo+IEpvbmF0aGFuDQo+IA0KPiA+
+IFRoYW5rcw0KPiA+IEFsZXgNCj4gPiANCj4gPiA+IEpvbmF0aGFuDQo+ID4gPiAgIA0KPiA+ID4g
+PiBDaGFuZ2Vsb2cgdjggLT4gdjk6DQo+ID4gPiA+ICogYWRkaW5nIG1vcmUgQW5hbG9nIHBlb3Bs
+ZSB0byB0aGUgbGlzdDsgcHJlZG9taW5hbnRseSBIREwgcGVvcGxlOyB0aGlzDQo+ID4gPiA+ICAg
+c2hvdWxkIGhlbHAgbWUgc3luYyBwZW9wbGUgYWJvdXQgdGhlIGRldGFpbHMgb2YgcmVncy9yZWct
+bmFtZXMNCj4gPiA+ID4gKiBhZGRlZCAnQWNrZWQtYnk6IE1vcml0eiBGaXNjaGVyIDxtZGZAa2Vy
+bmVsLm9yZz4nIHRhZyB0byBmcGdhIHBhdGNoZXMNCj4gPiA+ID4gICAtIHdlIGNhbiBhbHdheXMg
+cmUtdXBkYXRlIHRoZXNlIHBhdGNoZXMgaWYgc29tZXRoaW5nIGVsc2UgaXMgZGVjaWRlZA0KPiA+
+ID4gPiBhYm91dA0KPiA+ID4gPiAgICAgdGhlIGxvY2F0aW9uIG9mIHRoZSAnYWRpLWF4aS1jb21t
+b24uaCcgaGVhZGVyOyBJJ20gbm90IGluc2lzdGluZw0KPiA+ID4gPiBhYm91dA0KPiA+ID4gPiAg
+ICAgd2hlcmUgdG8gcHV0IGl0OyBJJ20gb3BlbiB0byBvdGhlciBwcm9wb3NhbHMNCj4gPiA+ID4g
+KiBwYXRjaCAnaWlvOiBhZGM6IGFkaS1heGktYWRjOiBhZGQgc3VwcG9ydCBmb3IgQVhJIEFEQyBJ
+UCBjb3JlJw0KPiA+ID4gPiAgIC0gcHJlZml4ZWQgcmVncyBBRElfQVhJXyA7IEkgdHJpZWQgQURJ
+X0FYSV9BRENfLCBidXQgdGhhdCBzZWVtZWQgdG8NCj4gPiA+ID4gbWFrZQ0KPiA+ID4gPiAgICAg
+dGhlbSB0b28gbG9uZw0KPiA+ID4gPiAgIC0gZHJvcHBlZCB1bnVzZWQgcmVnczsgd2lsbCBhZGQg
+dGhlbSBhcyBzdHVmZiBnZXRzIGFkZGVkIGluIHRoZQ0KPiA+ID4gPiB1cHN0cmVhbQ0KPiA+ID4g
+PiAgICAgZHJpdmVyOyBpbiB0aGUgbWVhbnRpbWUsIHJlZy1uYW1lcyBjYW4gYmUgcmV3b3JrZWQN
+Cj4gPiA+ID4gICAtIGRyb3BwZWQgZ2VuZXJpYyBMT1dFUlhZX1NFVC9HRVQgbWFjcm9zDQo+ID4g
+PiA+ICAgLSB1cGRhdGUgcmVnLW5hbWVzIGEgYml0OyB3aWxsIHVwZGF0ZSB0aGVtIGluIHRoZSBk
+b2NzIGFuZCBIREwNCj4gPiA+ID4gICAtIG9yZGVyIGluIGFkaV9heGlfYWRjX2NvbnZfdW5yZWdp
+c3RlcigpIHNob3VsZCBub3cgYmUgc3ltbWV0cmljYWxseQ0KPiA+ID4gPiAgICAgb3BwcG9zaXRl
+IG5vdyB0byB0aGUgcmVnaXN0ZXIgZnVuY3Rpb24NCj4gPiA+ID4gICAtIGltcGxlbWVudGVkICdp
+c192aXNpYmxlKCknIGNhbGxiYWNrIHRvIGFkaV9heGlfYWRjX2F0dHJpYnV0ZXNbXSBzbw0KPiA+
+ID4gPiB0aGF0DQo+ID4gPiA+ICAgICBhdHRycyBjYW4gYmUgbWFkZSBpbnZpc2libGUgdG8gdXNl
+cnNwYWNlIGlmIG5lZWRlZDsNCj4gPiA+ID4gICAtICdpbmRpb19kZXYtPm5hbWUgPSAiYWRpLWF4
+aS1hZGMiOycNCj4gPiA+ID4gICAtIGFkZGVkIGtlcm5lbCBkb2Mtc3RyaW5nIGZvciBAcmVnX2Fj
+Y2Vzcw0KPiA+ID4gPiAqIHBhdGNoICdpaW86IGFkYzogYWQ5NDY3OiBhZGQgc3VwcG9ydCBBRDk0
+NjcgQURDJw0KPiA+ID4gPiAgIC0gYWQ5NDY3X3NwaV9yZWFkKCkgc3BsaXQgaW4gMiBidWZmZXJz
+OyB0YnVmICYgcmJ1Zg0KPiA+ID4gPiAgIC0gcmVtb3ZlZCAnaWYgKGNoYW4tPmV4dGVuZF9uYW1l
+KScgdGVzdCA7IGxlZnQtb3ZlciBmcm9tIGluaXRpYWwNCj4gPiA+ID4gZHJpdmVyDQo+ID4gPiA+
+ICAgLSByZW1vdmVkICdpZiAoIXN0LT5jbGspJyBjaGVjazsgZHJpdmVyIHdpbGwgZmFpbCBwcm9i
+ZSB3aXRob3V0IGENCj4gPiA+ID4gY2xvY2sNCj4gPiA+ID4gICAtIHJlbW92ZWQgJ2lmICghc3Bp
+LT5kZXYub2Zfbm9kZSknIGluIHByb2JlOyBzaG91bGRuJ3QgYmUgbmVlZGVkDQo+ID4gPiA+ICAg
+LSB1c2luZyAnb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKCknIGluIHByb2JlIHRvIGdldCBkYXRh
+OyBtb3ZlZCBjaGlwDQo+ID4gPiA+ICAgICBpbmZvIHRhYmxlIGVudHJ5IGFzIGRhdGEgb24gdGhl
+IG9mX2RldmljZV9pZCB0YWJsZQ0KPiA+ID4gPiANCj4gPiA+ID4gQ2hhbmdlbG9nIHY3IC0+IHY4
+Og0KPiA+ID4gPiAqIGluICdpaW86IGFkYzogYWRpLWF4aS1hZGM6IGFkZCBzdXBwb3J0IGZvciBB
+WEkgQURDIElQIGNvcmUnDQo+ID4gPiA+ICAgLSB1cGRhdGVkIHJlZ2lzdGVyIGRlZmluaXRpb25z
+IGFuZCBiaXRzIHRvIG5ld2VyIGZvcm1hdC9kb2NzOyB0aGUgcmVmDQo+ID4gPiA+IGRyaXZlciB3
+YXNuJ3QgcmVhbGx5IHVwLXRvLWRhdGUNCj4gPiA+ID4gICAgIC0tIHByZWZpeGVkIGJpdCBuYW1l
+cyB3aXRoIHJlZy1uYW1lIHRvIGF2b2lkIGJpdCBkZWZpbml0aW9uDQo+ID4gPiA+IGNvbGlzaW9u
+czsNCj4gPiA+ID4gdGhhdCBtYWtlcyBzb21lIG1hY3JvcyBsb25nZXIsIGJ1dCBhdCBsZWFzdCB0
+aGUgZm9ybWF0IGlzIGNvbnNpc3RlbnQNCj4gPiA+ID4gICAtIHVzaW5nIGRldl9uYW1lKCZwZGV2
+LT5kZXYpIGZvciBpbmRpb19kZXYtPm5hbWUNCj4gPiA+ID4gICAtIG1vdmVkIHJlc2V0IHRvIG93
+biBheGlfYWRjX3Jlc2V0KCkgZnVuY3Rpb247IG1heSBiZSByZS11c2VkIGxhdGVyDQo+ID4gPiA+
+ICAgLSBzb21lIHJlLWZvcm1hdHRpbmcvYWxpZ25tZW50IGNoYW5nZXMNCj4gPiA+ID4gICAtIGFk
+ZHJlc3MgRU5PU1lTIGNoZWNrcGF0Y2ggY29tcGxhaW50OyBjaGFuZ2VkIHdpdGggRU9QTk9UU1VQ
+UA0KPiA+ID4gPiANCj4gPiA+ID4gQ2hhbmdlbG9nIHY2IC0+IHY3Og0KPiA+ID4gPiAqIEZpeGVk
+IGR0LXNjaGVtYSBidWlsZCBmb3IgYWRpLGF4aS1hZGMueWFtbCBiYXNlZCBvbiBSb2IncyBzdWdn
+ZXN0aW9uDQo+ID4gPiA+ICAgLSBhZGRlZCAnJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVm
+aW5pdGlvbnMvcGhhbmRsZScgdG8gJ2FkaSxhZGMtDQo+ID4gPiA+IGRldicNCj4gPiA+ID4gICAt
+IGRyb3BwZWQgJ21heEl0ZW1zJyBmcm9tICdhZGksYWRjLWRldicNCj4gPiA+ID4gDQo+ID4gPiA+
+IENoYW5nZWxvZyB2NSAtPiB2Ng0KPiA+ID4gPiAqIGZpeCBVUkxzOyBnb3QgY2hhbmdlZCBkdXJp
+bmcgcmVuYW1lDQo+ID4gPiA+ICAgIGh0dHBzOi8vd2lraS5hbmFsb2cuY29tL3Jlc291cmNlcy9m
+cGdhL2RvY3MvYWRpX2F4aV9hZGNfaXAgLT4NCj4gPiA+ID4gICAgaHR0cHM6Ly93aWtpLmFuYWxv
+Zy5jb20vcmVzb3VyY2VzL2ZwZ2EvZG9jcy9heGlfYWRjX2lwDQo+ID4gPiA+ICAgLSBub3RpY2Vk
+IHdoaWxlIHdvcmtpbmcgb24gdGhlIEFYSSBEQUMgZHJpdmVyDQo+ID4gPiA+IA0KPiA+ID4gPiBD
+aGFuZ2Vsb2cgdjQgLT4gdjU6DQo+ID4gPiA+ICogdXBkYXRlIGRyaXZlcnMvaWlvL2FkYy9LY29u
+ZmlnIG5vdGUgYWJvdXQgbW9kdWxlIG5hbWU7IG9taXR0ZWQgZHVyaW5nDQo+ID4gPiA+IGZpcnN0
+IHJlbmFtZQ0KPiA+ID4gPiAgICAtICdtb2R1bGUgd2lsbCBiZSBjYWxsZWQgYXhpLWFkYy4nIC0+
+ICdtb2R1bGUgd2lsbCBiZSBjYWxsZWQgYWRpLWF4aS0NCj4gPiA+ID4gYWRjLicNCj4gPiA+ID4g
+DQo+ID4gPiA+IENoYW5nZWxvZyB2MyAtPiB2NDoNCj4gPiA+ID4gKiBhZGRyZXNzZWQgUm9iJ3Mg
+ZHQtcmVtYXJrcw0KPiA+ID4gPiAgICAtIGNoYW5nZSAnYWRpLWF4aS1hZGMtY2xpZW50JyBwcm9w
+IHRvICdhZGksYWRjLWRldicNCj4gPiA+ID4gDQo+ID4gPiA+IENoYW5nZWxvZyB2MiAtPiB2MzoN
+Cj4gPiA+ID4gKiBhZGRyZXNzZWQgY29tcGlsZXIgd2FybmluZw0KPiA+ID4gPiANCj4gPiA+ID4g
+Q2hhbmdlbG9nIHYxIC0+IHYyOg0KPiA+ID4gPiAqIGZpcnN0IHNlcmllcyB3YXMgYWRkZWQgYSBi
+aXQgaGFzdGlseQ0KPiA+ID4gPiAqIGFkZHJlc3NlZCAgJ21ha2UgZHRfYmluZGluZ19jaGVjaycg
+Y29tcGxhaW50czsgc2VlbXMgSSBtaXNzZWQgYSBmZXcNCj4gPiA+ID4gd2hlbg0KPiA+ID4gPiBy
+dW5uaW5nIHRoZSBjaGVjazsgDQo+ID4gPiA+ICogYWRkZWQgbWlzc2luZyBwYXRjaGVzIHRvIGlu
+Y2x1ZGUvbGludXgvZnBnYS9hZGktYXhpLWNvbW1vbi5oDQo+ID4gPiA+ICAgIC0gJ2luY2x1ZGU6
+IGZwZ2E6IGFkaS1heGktY29tbW9uLmg6IGZpeHVwIHdoaXRlc3BhY2UgdGFiIC0+IHNwYWNlJw0K
+PiA+ID4gPiAgICAtICdpbmNsdWRlOiBmcGdhOiBhZGktYXhpLWNvbW1vbi5oOiBhZGQgdmVyc2lv
+biBoZWxwZXIgbWFjcm9zJw0KPiA+ID4gPiAqIHBhdGNoICdpaW86IGJ1ZmZlci1kbWFlbmdpbmU6
+IGFkZCBkZXYtbWFuYWdlZCBjYWxscyBmb3IgYnVmZmVyDQo+ID4gPiA+IGFsbG9jL2ZyZWUnDQo+
+ID4gPiA+ICAgIC0gcmVtb3ZlIGNvcHkrcGFzdGVkIGNvbW1lbnQgZm9yICdkZXZtX2lpb19kbWFl
+bmdpbmVfYnVmZmVyX2FsbG9jKCknDQo+ID4gPiA+ICAgIC0gcmVtb3ZlZCBkZXZtX2lpb19kbWFl
+bmdpbmVfYnVmZmVyX2ZyZWUoKSA7IGhvcGVmdWxseSBpdCBtaWdodCBuZXZlcg0KPiA+ID4gPiBi
+ZQ0KPiA+ID4gPiBuZWVkZWQNCj4gPiA+ID4gICAgLSBmaXgtdXAgYWxpZ25tZW50IGZvciBkZXZt
+X2lpb19kbWFlbmdpbmVfYnVmZmVyX2FsbG9jKCkgaW4gaGVhZGVyDQo+ID4gPiA+ICogcGF0Y2gg
+J2lpbzogYWRjOiBhZGktYXhpLWFkYzogYWRkIHN1cHBvcnQgZm9yIEFYSSBBREMgSVAgY29yZScN
+Cj4gPiA+ID4gICAgLSByZW5hbWVkIGF4aS1hZGMuYyAtPiBhZGktYXhpLWFkYy5jICYgS2NvbmZp
+ZyBzeW1ib2wNCj4gPiA+ID4gICAgLSBwcmVmaXggYWxsIGF4aV9hZGMgLT4gYWRpX2F4aV9hZGMN
+Cj4gPiA+ID4gICAgLSByZW1vdmVkIHN3aXRjaCBzdGF0ZW1lbnQgaW4gYXhpX2FkY19yZWFkX3Jh
+dygpICYNCj4gPiA+ID4gYXhpX2FkY193cml0ZV9yYXcoKQ0KPiA+ID4gPiAgICAtIHJlbW92ZSBh
+eGlfYWRjX2NoYW5fc3BlYyA7IHJlcGxhY2VkIHdpdGggaWlvX2NoYW5fc3BlYyBkaXJlY3RseSA7
+DQo+ID4gPiA+IHdpbGwNCj4gPiA+ID4gdGhpbmsgb2YgYSBzaW1wbGVyIHNvbHV0aW9uIGZvciBl
+eHRyYSBjaGFuIHBhcmFtcw0KPiA+ID4gPiAgICAtIHJlbW92ZWQgbGVmdC1vdmVyICdzdHJ1Y3Qg
+YXhpX2FkY19jbGVhbnVwX2RhdGEnDQo+ID4gPiA+ICAgIC0gbW92ZWQgJ2Rldm1fYWRkX2FjdGlv
+bl9vcl9yZXNldCgpJyBjYWxsIHJpZ2h0IGFmdGVyDQo+ID4gPiA+ICdhZGlfYXhpX2FkY19hdHRh
+Y2hfY2xpZW50KCknDQo+ID4gPiA+ICAgIC0gc3dpdGNoZWQgdG8gdXNpbmcgJ2Rldm1fcGxhdGZv
+cm1faW9yZW1hcF9yZXNvdXJjZSgpJw0KPiA+ID4gPiAqIHBhdGNoICdpaW86IGFkYzogYWQ5NDY3
+OiBhZGQgc3VwcG9ydCBBRDk0NjcgQURDJw0KPiA+ID4gPiAgIC0gcmVuYW1lZCBBRElfQURDIHJl
+ZyBwcmVmaXhlcyB0byBBTjg3N19BREMNCj4gPiA+ID4gICAtIGRyb3BwZWQgJ2luZm9fbWFza19z
+ZXBhcmF0ZScgZmllbGQgaW4gQUQ5NDY3X0NIQU4gLSB3aWxsIGJlIHJlLWFkZGVkDQo+ID4gPiA+
+IGxhdGVyIHdoZW4gZHJpdmVyIGdldHMgbW9yZSBmZWF0dXJlczsgd2FzIGxlZnQtb3ZlciBmcm9t
+IHRoZSBpbml0aWFsIHJlZg0KPiA+ID4gPiBkcml2ZXINCj4gPiA+ID4gICAtIHJlbW92ZSAuc2hp
+ZnQgPSAwLCAgaW4gQUQ5NDY3X0NIQU4NCj4gPiA+ID4gICAtIHJlbmFtZWQgJ3NhbXBsZS1jbG9j
+aycgLT4gJ2FkYy1jbG9jaycNCj4gPiA+ID4gICAtIGRpcmVjdCByZXR1cm5zIGluIGFkOTQ2N19y
+ZWFkX3JhdygpICYgYWQ5NDY3X3dyaXRlX3JhdygpICYNCj4gPiA+ID4gYWQ5NDY3X3NldHVwKCkg
+c3dpdGNoIHN0YXRlbWVudHMNCj4gPiA+ID4gICAtIHJlbW92ZWQgYmxhbmsgbGluZSBhZnRlciBk
+ZXZtX2F4aV9hZGNfY29udl9yZWdpc3RlcigpDQo+ID4gPiA+ICAgLSByZW1vdmVkIGFkOTQ2N19p
+ZCAmIHJld29ya2VkIHRvIHVzZSBhZDk0Njdfb2ZfbWF0Y2gNCj4gPiA+ID4gDQo+ID4gPiA+IEFs
+ZXhhbmRydSBBcmRlbGVhbiAoNik6DQo+ID4gPiA+ICAgaW5jbHVkZTogZnBnYTogYWRpLWF4aS1j
+b21tb24uaDogZml4dXAgd2hpdGVzcGFjZSB0YWIgLT4gc3BhY2UNCj4gPiA+ID4gICBpbmNsdWRl
+OiBmcGdhOiBhZGktYXhpLWNvbW1vbi5oOiBhZGQgdmVyc2lvbiBoZWxwZXIgbWFjcm9zDQo+ID4g
+PiA+ICAgaWlvOiBidWZmZXItZG1hZW5naW5lOiB1c2UgJXp1IHNwZWNpZmllciBmb3Igc3ByaW50
+ZihhbGlnbikNCj4gPiA+ID4gICBpaW86IGJ1ZmZlci1kbWFlbmdpbmU6IGFkZCBkZXYtbWFuYWdl
+ZCBjYWxscyBmb3IgYnVmZmVyIGFsbG9jDQo+ID4gPiA+ICAgZHQtYmluZGluZ3M6IGlpbzogYWRj
+OiBhZGQgYmluZGluZ3MgZG9jIGZvciBBWEkgQURDIGRyaXZlcg0KPiA+ID4gPiAgIGR0LWJpbmRp
+bmdzOiBpaW86IGFkYzogYWRkIGJpbmRpbmdzIGRvYyBmb3IgQUQ5NDY3IEFEQw0KPiA+ID4gPiAN
+Cj4gPiA+ID4gTWljaGFlbCBIZW5uZXJpY2ggKDIpOg0KPiA+ID4gPiAgIGlpbzogYWRjOiBhZGkt
+YXhpLWFkYzogYWRkIHN1cHBvcnQgZm9yIEFYSSBBREMgSVAgY29yZQ0KPiA+ID4gPiAgIGlpbzog
+YWRjOiBhZDk0Njc6IGFkZCBzdXBwb3J0IEFEOTQ2NyBBREMNCj4gPiA+ID4gDQo+ID4gPiA+ICAu
+Li4vYmluZGluZ3MvaWlvL2FkYy9hZGksYWQ5NDY3LnlhbWwgICAgICAgICAgfCAgNjUgKysrDQo+
+ID4gPiA+ICAuLi4vYmluZGluZ3MvaWlvL2FkYy9hZGksYXhpLWFkYy55YW1sICAgICAgICAgfCAg
+NjMgKysrDQo+ID4gPiA+ICBkcml2ZXJzL2lpby9hZGMvS2NvbmZpZyAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgMzUgKysNCj4gPiA+ID4gIGRyaXZlcnMvaWlvL2FkYy9NYWtlZmlsZSAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgMiArDQo+ID4gPiA+ICBkcml2ZXJzL2lpby9hZGMvYWQ5NDY3LmMg
+ICAgICAgICAgICAgICAgICAgICAgfCA0MjAgKysrKysrKysrKysrKysNCj4gPiA+ID4gIGRyaXZl
+cnMvaWlvL2FkYy9hZGktYXhpLWFkYy5jICAgICAgICAgICAgICAgICB8IDUxOCArKysrKysrKysr
+KysrKysrKysNCj4gPiA+ID4gIC4uLi9idWZmZXIvaW5kdXN0cmlhbGlvLWJ1ZmZlci1kbWFlbmdp
+bmUuYyAgICB8ICA0MSArLQ0KPiA+ID4gPiAgaW5jbHVkZS9saW51eC9mcGdhL2FkaS1heGktY29t
+bW9uLmggICAgICAgICAgIHwgICA2ICstDQo+ID4gPiA+ICBpbmNsdWRlL2xpbnV4L2lpby9hZGMv
+YWRpLWF4aS1hZGMuaCAgICAgICAgICAgfCAgNjQgKysrDQo+ID4gPiA+ICBpbmNsdWRlL2xpbnV4
+L2lpby9idWZmZXItZG1hZW5naW5lLmggICAgICAgICAgfCAgIDMgKw0KPiA+ID4gPiAgMTAgZmls
+ZXMgY2hhbmdlZCwgMTIxNSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiA+ID4gPiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4gPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9paW8vYWRjL2FkaSxhZDk0NjcueWFtbA0KPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vYWRjL2FkaSxheGktDQo+ID4g
+PiA+IGFkYy55YW1sDQo+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9paW8vYWRj
+L2FkOTQ2Ny5jDQo+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9paW8vYWRjL2Fk
+aS1heGktYWRjLmMNCj4gPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xpbnV4L2lp
+by9hZGMvYWRpLWF4aS1hZGMuaA0KPiA+ID4gPiAgIA0K
