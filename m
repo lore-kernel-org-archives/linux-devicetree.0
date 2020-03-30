@@ -2,215 +2,177 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8008AC2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 14:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C88AC2D0EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 14:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6049320675
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 14:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A4D20675
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 14:28:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bhcHCWKs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgC3O0d (ORCPT
+        id S1726312AbgC3O2o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:26:33 -0400
-Received: from smtpout1.mo529.mail-out.ovh.net ([178.32.125.2]:49661 "EHLO
-        smtpout1.mo529.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727899AbgC3O0d (ORCPT
+        Mon, 30 Mar 2020 10:28:44 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:63138 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726085AbgC3O2o (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 10:26:33 -0400
-Received: from DAG2EX1.mxp2.local (unknown [10.108.4.98])
-        by mo529.mail-out.ovh.net (Postfix) with ESMTPS id 631562BB9042;
-        Mon, 30 Mar 2020 16:19:39 +0200 (CEST)
-Received: from gaetanandre.eu (37.59.142.105) by DAG2EX1.mxp2.local
- (172.16.2.3) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 30 Mar
- 2020 16:19:38 +0200
-From:   =?UTF-8?q?Ga=C3=ABtan=20Andr=C3=A9?= <rvlander@gaetanandre.eu>
-To:     <jic23@kernel.org>
-CC:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <~postmarketos/upstreaming@lists.sr.ht>,
-        =?UTF-8?q?Ga=C3=ABtan=20Andr=C3=A9?= <rvlander@gaetanandre.eu>
-Subject: [PATCH 2/2] iio: accel: st_sensors:  add support for LIS2HH12
-Date:   Mon, 30 Mar 2020 16:19:23 +0200
-Message-ID: <20200330141923.280226-2-rvlander@gaetanandre.eu>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200330141923.280226-1-rvlander@gaetanandre.eu>
-References: <20200330141923.280226-1-rvlander@gaetanandre.eu>
+        Mon, 30 Mar 2020 10:28:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585578523; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Z6pGLvcJiDN7TQIxiTcGrUrMaVtIipeZQGdjkSCnW+Y=;
+ b=bhcHCWKstddK/ff/aXZmEljsxPcXld2UvQupKM87eCwwg6xk0BwdT81rfWOv0M6HYZo16GfQ
+ /cw504xzEruVZZaSmIU/gkGMHwqs9AVzqaugFGs80CusRLuipU0HZe+ejlzfHzxlYYANo8Od
+ tdD2FoeLq5sxXXvqqjVmsorOuvI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e820212.7f0c896f1bc8-smtp-out-n02;
+ Mon, 30 Mar 2020 14:28:34 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2C790C433BA; Mon, 30 Mar 2020 14:28:34 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 146FAC43636;
+        Mon, 30 Mar 2020 14:28:33 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [37.59.142.105]
-X-ClientProxiedBy: DAG3EX2.mxp2.local (172.16.2.6) To DAG2EX1.mxp2.local
- (172.16.2.3)
-X-Ovh-Tracer-GUID: b16f366e-b63f-48ca-8e8a-b87c52f15bf8
-X-Ovh-Tracer-Id: 18445336701414359203
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrudeihedgjeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvffufffkofgjfhggtgfgihesthekredtredtjeenucfhrhhomhepifgrtohtrghnucetnhgurhoruceorhhvlhgrnhguvghrsehgrggvthgrnhgrnhgurhgvrdgvuheqnecuffhomhgrihhnpehsthdrtghomhenucfkpheptddrtddrtddrtddpfeejrdehledrudegvddruddtheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopefftefivdfgigdurdhmgihpvddrlhhotggrlhdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomheprhhvlhgrnhguvghrsehgrggvthgrnhgrnhgurhgvrdgvuhdprhgtphhtthhopehrvhhlrghnuggvrhesghgrvghtrghnrghnughrvgdrvghu
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 30 Mar 2020 19:58:33 +0530
+From:   kgunda@codeaurora.org
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V4 3/4] backlight: qcom-wled: Add WLED5 bindings
+In-Reply-To: <20200325153716.tcx3t4bd6p3gr2x6@holly.lan>
+References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
+ <1584985618-25689-4-git-send-email-kgunda@codeaurora.org>
+ <20200325153716.tcx3t4bd6p3gr2x6@holly.lan>
+Message-ID: <469430df70c9e3e12bfce7b654d7ce0e@codeaurora.org>
+X-Sender: kgunda@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for STMicroelectronics LISHH12 accelerometer in st_accel
-framework.
-
-https://www.st.com/resource/en/datasheet/lis2hh12.pdf
-
-Signed-off-by: Gaëtan André <rvlander@gaetanandre.eu>
----
- drivers/iio/accel/Kconfig         |  2 +-
- drivers/iio/accel/st_accel.h      |  2 +
- drivers/iio/accel/st_accel_core.c | 77 +++++++++++++++++++++++++++++++
- drivers/iio/accel/st_accel_i2c.c  |  5 ++
- 4 files changed, 85 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 5d91a6dda894..24ebe9e76915 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -238,7 +238,7 @@ config IIO_ST_ACCEL_3AXIS
- 	  Say yes here to build support for STMicroelectronics accelerometers:
- 	  LSM303DLH, LSM303DLHC, LIS3DH, LSM330D, LSM330DL, LSM330DLC,
- 	  LIS331DLH, LSM303DL, LSM303DLM, LSM330, LIS2DH12, H3LIS331DL,
--	  LNG2DM, LIS3DE, LIS2DE12
-+	  LNG2DM, LIS3DE, LIS2DE12, LIS2HH12
- 
- 	  This driver can also be built as a module. If so, these modules
- 	  will be created:
-diff --git a/drivers/iio/accel/st_accel.h b/drivers/iio/accel/st_accel.h
-index 5b13e293cade..5d356288e001 100644
---- a/drivers/iio/accel/st_accel.h
-+++ b/drivers/iio/accel/st_accel.h
-@@ -35,6 +35,7 @@ enum st_accel_type {
- 	LIS2DW12,
- 	LIS3DHH,
- 	LIS2DE12,
-+	LIS2HH12,
- 	ST_ACCEL_MAX,
- };
- 
-@@ -59,6 +60,7 @@ enum st_accel_type {
- #define LIS3DHH_ACCEL_DEV_NAME		"lis3dhh"
- #define LIS3DE_ACCEL_DEV_NAME		"lis3de"
- #define LIS2DE12_ACCEL_DEV_NAME		"lis2de12"
-+#define LIS2HH12_ACCEL_DEV_NAME		"lis2hh12"
- 
- /**
- * struct st_sensors_platform_data - default accel platform data
-diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-index e2ec5d127495..43c50167d220 100644
---- a/drivers/iio/accel/st_accel_core.c
-+++ b/drivers/iio/accel/st_accel_core.c
-@@ -904,6 +904,83 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
- 		.multi_read_bit = true,
- 		.bootime = 2,
- 	},
-+	{
-+		.wai = 0x41,
-+		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
-+		.sensors_supported = {
-+			[0] = LIS2HH12_ACCEL_DEV_NAME,
-+		},
-+		.ch = (struct iio_chan_spec *)st_accel_16bit_channels,
-+		.odr = {
-+			.addr = 0x20,
-+			.mask = 0x70,
-+			.odr_avl = {
-+				{ .hz = 10, .value = 0x01, },
-+				{ .hz = 50, .value = 0x02, },
-+				{ .hz = 100, .value = 0x03, },
-+				{ .hz = 200, .value = 0x04, },
-+				{ .hz = 400, .value = 0x05, },
-+				{ .hz = 800, .value = 0x06, },
-+			},
-+		},
-+		.pw = {
-+			.addr = 0x20,
-+			.mask = 0x70,
-+			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
-+		},
-+		.enable_axis = {
-+			.addr = ST_SENSORS_DEFAULT_AXIS_ADDR,
-+			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
-+		},
-+		.fs = {
-+			.addr = 0x23,
-+			.mask = 0x30,
-+			.fs_avl = {
-+				[0] = {
-+					.num = ST_ACCEL_FS_AVL_2G,
-+					.value = 0x00,
-+					.gain = IIO_G_TO_M_S_2(61),
-+				},
-+				[1] = {
-+					.num = ST_ACCEL_FS_AVL_4G,
-+					.value = 0x02,
-+					.gain = IIO_G_TO_M_S_2(122),
-+				},
-+				[2] = {
-+					.num = ST_ACCEL_FS_AVL_8G,
-+					.value = 0x03,
-+					.gain = IIO_G_TO_M_S_2(244),
-+				},
-+			},
-+		},
-+		.bdu = {
-+			.addr = 0x20,
-+			.mask = 0x08,
-+		},
-+		.drdy_irq = {
-+			.int1 = {
-+				.addr = 0x22,
-+				.mask = 0x01,
-+			},
-+			.int2 = {
-+				.addr = 0x25,
-+				.mask = 0x01,
-+			},
-+			.addr_ihl = 0x24,
-+			.mask_ihl = 0x02,
-+			.stat_drdy = {
-+				.addr = ST_SENSORS_DEFAULT_STAT_ADDR,
-+				.mask = 0x07,
-+			},
-+		},
-+		.sim = {
-+			.addr = 0x23,
-+			.value = BIT(0),
-+		},
-+		.multi_read_bit = true,
-+		.bootime = 2,
-+	},
-+
- };
- 
- static int st_accel_read_raw(struct iio_dev *indio_dev,
-diff --git a/drivers/iio/accel/st_accel_i2c.c b/drivers/iio/accel/st_accel_i2c.c
-index 8c489312f668..821854251a7b 100644
---- a/drivers/iio/accel/st_accel_i2c.c
-+++ b/drivers/iio/accel/st_accel_i2c.c
-@@ -104,6 +104,10 @@ static const struct of_device_id st_accel_of_match[] = {
- 		.compatible = "st,lis2de12",
- 		.data = LIS2DE12_ACCEL_DEV_NAME,
- 	},
-+	{
-+		.compatible = "st,lis2hh12",
-+		.data = LIS2HH12_ACCEL_DEV_NAME,
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, st_accel_of_match);
-@@ -138,6 +142,7 @@ static const struct i2c_device_id st_accel_id_table[] = {
- 	{ LIS2DW12_ACCEL_DEV_NAME },
- 	{ LIS3DE_ACCEL_DEV_NAME },
- 	{ LIS2DE12_ACCEL_DEV_NAME },
-+	{ LIS2HH12_ACCEL_DEV_NAME },
- 	{},
- };
- MODULE_DEVICE_TABLE(i2c, st_accel_id_table);
--- 
-2.26.0
-
+On 2020-03-25 21:07, Daniel Thompson wrote:
+> On Mon, Mar 23, 2020 at 11:16:57PM +0530, Kiran Gunda wrote:
+>> Add WLED5 specific bindings.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+>> ---
+>>  .../bindings/leds/backlight/qcom-wled.yaml         | 39 
+>> ++++++++++++++++++++++
+>>  1 file changed, 39 insertions(+)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml 
+>> b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+>> index 8a388bf..159115f 100644
+>> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+>> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+>> @@ -20,6 +20,7 @@ properties:
+>>         - qcom,pm8941-wled
+>>         - qcom,pmi8998-wled
+>>         - qcom,pm660l-wled
+>> +       - qcom,pm8150l-wled
+>> 
+>>    reg:
+>>      maxItems: 1
+>> @@ -28,10 +29,23 @@ properties:
+>>      maxItems: 1
+>>      description:
+>>        brightness value on boot, value from 0-4095.
+>> +      For pm8150l this value vary from 0-4095 or 0-32767
+>> +      depending on the brightness control mode. If CABC is
+>> +      enabled 0-4095 range is used.
+> 
+> I rather dislike some of the property descriptions using PMIC version
+> numbers to distinguish between peripheral versions and others using
+> WLEDx version numbers.
+> 
+> Could the property description be rephrased to use WLED3/4/5 
+> terminology
+> instead?
+> 
+Sure. I will modify in the next post.
+> 
+>>      allOf:
+>>        - $ref: /schemas/types.yaml#/definitions/uint32
+>>          default: 2048
+>> 
+>> +  max-brightness:
+>> +    maxItems: 1
+>> +    description:
+>> +      Maximum brightness level. Allowed values are,
+>> +      for pmi8998 it is  0-4095.
+>> +      For pm8150l, this can be either 4095 or 32767.
+>> +      If CABC is enabled, this is capped to 4095.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+> 
+> Similar thing here, is PMI8998 simply a synonym for WLED4 or there
+> something special about the PMIC versioning that requires it to be 
+> used?
+> 
+> 
+> Daniel.
+> 
+Sure. It is synonym for WLED4. I will modify in the next post.
+> 
+>>    label:
+>>      maxItems: 1
+>>      description:
+>> @@ -124,6 +138,31 @@ properties:
+>>        value for PM8941 from 1 to 3. Default 2
+>>        For PMI8998 from 1 to 4.
+>> 
+>> +  qcom,modulator-sel:
+>> +    maxItems: 1
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      Selects the modulator used for brightness modulation.
+>> +      Allowed values are,
+>> +               0 - Modulator A
+>> +               1 - Modulator B
+>> +      If not specified, then modulator A will be used by default.
+>> +      This property is applicable only to WLED5 peripheral.
+>> +
+>> +  qcom,cabc-sel:
+>> +    maxItems: 1
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description:
+>> +      Selects the CABC pin signal used for brightness modulation.
+>> +      Allowed values are,
+>> +              0 - CABC disabled
+>> +              1 - CABC 1
+>> +              2 - CABC 2
+>> +              3 - External signal (e.g. LPG) is used for dimming
+>> +      This property is applicable only to WLED5 peripheral.
+>> +
+>>    interrupts:
+>>      maxItems: 2
+>>      description:
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>>  a Linux Foundation Collaborative Project
