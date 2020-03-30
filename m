@@ -7,121 +7,86 @@ X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF10C2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19C6C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667C52073B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D32205ED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585583049;
-	bh=LvNjwC7RztwBb+yi8oI2Bwz5LXahk4iEX7nsDONhykY=;
+	s=default; t=1585583118;
+	bh=rF1xiKjb8k9k5rsL3XJ4GZFP0HxG7hR83vDckGAkwm4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IE0Sarzo2g00g8cb/1pz3HngZ91kOQemoKX/BrPlvNM4W/t+mAN4H1VsjbSqbsy2h
-	 jk5pYZDnUDm7aSg877k8NRM7tsP363psUqX2lUzdcUL7SQ5e3GH+EuMQIOnyuYy7rd
-	 F6Q4O6fkZK4stsLdn88wS8xZXFZQJ6u6TkwiEAIg=
+	b=DDbt5Yd4udGT+kT43iw5zyiy5OCA3NsJvMUvi/pXxTG25t1JKB/msFuhMhC40uY+d
+	 o374BPzP9i1tyuiwhUVqO5KCNvEJAxXSZ9QLaJTOSX+55qz/mTGDLcFsj+75UBC+M+
+	 x57/h7Nm4Zs+9F7y+n/U0TwqRGVyXJjAvYz3sVQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgC3PoI (ORCPT
+        id S1729301AbgC3PpP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:44:08 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40202 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgC3PoI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 11:44:08 -0400
-Received: by mail-il1-f195.google.com with SMTP id j9so16278574ilr.7;
-        Mon, 30 Mar 2020 08:44:06 -0700 (PDT)
+        Mon, 30 Mar 2020 11:45:15 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40370 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727973AbgC3PpP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 11:45:15 -0400
+Received: by mail-il1-f194.google.com with SMTP id j9so16282937ilr.7;
+        Mon, 30 Mar 2020 08:45:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6L0zwcu6TJpBy8ROIw82e95a8IhAis774QnwFUUDei4=;
-        b=LQrYUZZVixxLxkn9OUkCOuUoayju9+MeC+otgSACp/Vis/tbS9LzSDW9QpblqngMdN
-         rd3CMMOGNsZII8jauFAeD+ZfD0drRogCLcKt8PtdeHSwB4oFlJ78eRH4lNnAnjJeUCyz
-         zRSQqajD2J4yQfTP/vGqsolc9gT8A6Cvpfg7b5Ok+Hgq30ZtvANFBZUA8L54WAPYnukN
-         JTtlRmz5qbdOP6r7zfotwnRT8Dy4nayma6DCrwhFGFhInCU3Td+Op9EzLcq3e8eFBhyB
-         Jjn39LBlRabSs7uVbRH9d0ClOJMb385mzKL5BCC3XOvTZo9vfrU1ykt5b0VKUPq0cRDD
-         nllw==
-X-Gm-Message-State: ANhLgQ2y0dwvkumeguerueqhHG52HniJnBKvulUEoPmWWBUHlsm90Nnf
-        KtNcI3LYIEhvstJShjb0kg==
-X-Google-Smtp-Source: ADFU+vtLzoK7bLF3KNLPQffJzUbWf20WdfYgGwLo68WhEGLJBcEYEu+x/FRUoIOGhBcqWrVUOHXMcg==
-X-Received: by 2002:a92:8d0e:: with SMTP id s14mr11505607ild.117.1585583046446;
-        Mon, 30 Mar 2020 08:44:06 -0700 (PDT)
+        bh=9R8G5T/VKCO+aqrslpT5o8M241aUmf+x9/X8tSG6fnY=;
+        b=Gb7J8ROSxrWWVLBFmfwIrnOph6TlTtPlU3/ljOAXC6Px2g7v5zZaqPrdWuCdocz8RP
+         ES1SmQ7QleChoFCl1CPseR1DAI+bG2ccRtvFLIcyCDsdg8e6S80XBD3P0n2JWobdKaW0
+         S21J0dXEXryNaAOGDvmLTNq/dLzJABv+IjUQjbwFbghCxnDgqs0OY802MZXwpOR4+jDv
+         iw6uiRRSlE/EwZTnlsGj0+ECn+kBtjX8fuz1jpya+xnCINvTBpIYFQex977tLpNAldtN
+         dIsHat0gGrNkuU/vz1qrMjlPMhcxGxZNWRT7XrYKP2/Tf8dCPUR7mVzWJTl40iUYukIG
+         X1cg==
+X-Gm-Message-State: ANhLgQ1uNi/wepOqPZejN/CEvpr4tXxwfF/mzStGj1BMHr1VdPjTeq/E
+        KrKTYl/lEwBbmCfJWiNEfQ==
+X-Google-Smtp-Source: ADFU+vshXHqdgHy17vaPaT+/cbnSnbdv+mzm7sW3yyhSBYLwQf9VifgKgDNngQteQjbyeb9qGzngYA==
+X-Received: by 2002:a92:ce51:: with SMTP id a17mr12277809ilr.263.1585583114341;
+        Mon, 30 Mar 2020 08:45:14 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id c88sm4970096ill.15.2020.03.30.08.44.05
+        by smtp.gmail.com with ESMTPSA id w88sm4961029ila.24.2020.03.30.08.45.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:44:05 -0700 (PDT)
-Received: (nullmailer pid 27458 invoked by uid 1000);
-        Mon, 30 Mar 2020 15:44:04 -0000
-Date:   Mon, 30 Mar 2020 09:44:04 -0600
+        Mon, 30 Mar 2020 08:45:13 -0700 (PDT)
+Received: (nullmailer pid 28997 invoked by uid 1000);
+        Mon, 30 Mar 2020 15:45:12 -0000
+Date:   Mon, 30 Mar 2020 09:45:12 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-rockchip@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, kernel@collabora.com,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>
-Subject: Re: [PATCH v5 5/5] dt-bindings: display: add i.MX6 MIPI DSI host
- controller doc
-Message-ID: <20200330154404.GA26389@bogus>
-References: <20200330113542.181752-1-adrian.ratiu@collabora.com>
- <20200330113542.181752-6-adrian.ratiu@collabora.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] dt-bindings: Document Loongson PCI Host Controller
+Message-ID: <20200330154512.GA27624@bogus>
+References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
+ <20200330114239.1112759-4-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330113542.181752-6-adrian.ratiu@collabora.com>
+In-Reply-To: <20200330114239.1112759-4-jiaxun.yang@flygoat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Mar 2020 14:35:42 +0300, Adrian Ratiu wrote:
-> This provides an example DT binding for the MIPI DSI host controller
-> present on the i.MX6 SoC based on Synopsis DesignWare v1.01 IP.
+On Mon, 30 Mar 2020 19:42:28 +0800, Jiaxun Yang wrote:
 > 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> PCI host controller found on Loongson PCHs and SoCs.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
-> Changes since v4:
->   - Fixed yaml binding to pass `make dt_binding_check dtbs_check`
->   and addressed received binding feedback (Rob)
-> 
-> Changes since v3:
->   - Added commit message (Neil)
->   - Converted to yaml format (Neil)
->   - Minor dt node + driver fixes (Rob)
->   - Added small panel example to the host controller binding
-> 
-> Changes since v2:
->   - Fixed commit tags (Emil)
-> ---
->  .../display/imx/fsl,mipi-dsi-imx6.yaml        | 134 ++++++++++++++++++
->  1 file changed, 134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+>  .../devicetree/bindings/pci/loongson.yaml     | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:34.21-31: Warning (reg_format): /example-0/dsi@21e0000/ports/port@1:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (avoid_default_addr_size): /example-0/dsi@21e0000/ports/port@1: Relying on default #address-cells value
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (avoid_default_addr_size): /example-0/dsi@21e0000/ports/port@1: Relying on default #size-cells value
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (graph_port): /example-0/dsi@21e0000/ports/port@1: graph node '#address-cells' is -1, must be 1
-Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.example.dts:33.24-38.19: Warning (graph_port): /example-0/dsi@21e0000/ports/port@1: graph node '#size-cells' is -1, must be 0
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/loongson.example.dt.yaml: pci@1a000000: ranges: [[33554432, 0, 1073741824, 1073741824, 0, 1073741824]] is too short
 
-See https://patchwork.ozlabs.org/patch/1263893
+See https://patchwork.ozlabs.org/patch/1263901
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
