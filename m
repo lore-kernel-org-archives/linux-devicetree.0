@@ -2,129 +2,152 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709ECC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7F8C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47FC8205ED
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15BC205ED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="Ft6YaDQk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cbD3U0SW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgC3Ptb (ORCPT
+        id S1729210AbgC3Puo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:49:31 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17840 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728594AbgC3Ptb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 11:49:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585583265;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=fKY1wcYZ+Cm3/0t0E+sucQoBEZCO55f18FQxrRV8tbU=;
-        b=Ft6YaDQksZwXu9aWisZaNWPg1STNzyBBqVK6U82BAG/PpOniQXG1fupGENDI66jg
-        9KPkxqwfRHK/qcPngRUpyAVy0uN4KW+ftQ848pOkFSee3p2GORUtcXvdVrRjG3ATG2C
-        kGMde+FJBhfqMB9TxLu9yhO0y9txS8/uSecWr5pY=
-Received: from [10.233.233.252] (183.156.33.130 [183.156.33.130]) by mx.zoho.com.cn
-        with SMTPS id 1585583262424928.8644851457047; Mon, 30 Mar 2020 23:47:42 +0800 (CST)
-Date:   Mon, 30 Mar 2020 23:47:32 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <68446094-263d-d0d9-df00-bc1e81c1dffe@cogentembedded.com>
-References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com> <20200330114239.1112759-5-jiaxun.yang@flygoat.com> <68446094-263d-d0d9-df00-bc1e81c1dffe@cogentembedded.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 4/5] MIPS: DTS: Loongson64: Add PCI Controller Node
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-mips@vger.kernel.org
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mon, 30 Mar 2020 11:50:44 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43196 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729069AbgC3Puo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 11:50:44 -0400
+Received: by mail-pl1-f194.google.com with SMTP id v23so6869994ply.10
+        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 08:50:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dZsn4EW/SyaRsmueE+/vYE2vemazchjXW/dbHmCRlUs=;
+        b=cbD3U0SWemqC1mmtbV87ewilvyfjJ6wvBrx1Zv9z50jgAf9m1zNNdUG66wXMgyvK6w
+         ZZdtz3wzvXNip6aIDfmUPWqG85OQxDWzLAzKrN9IJ2NIzLYVNAO6ke9IydE4kwJIysFp
+         5v+XWRKX9MnKGNCQeTmnSp3izMpZzXfKXtPtc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dZsn4EW/SyaRsmueE+/vYE2vemazchjXW/dbHmCRlUs=;
+        b=UTqmxleXVaPGlxCsJLoOz8QJ/4CdyQiyybKf+qp07F27cglMSuUSSBkxM1cs1yXsO+
+         POMNoa7SnW3FEfnbmAyuCHoV3RMd8TguEM37u3jrjdNfKved84CsS6vmFF7od+HT9W7M
+         nallP9vXlWPcKQQ1/W21hcRwVDS6+EPqORpkZl2F1L4K0i+67iNcppv08vnLwq9VEXV2
+         kDZdToX9Q0RlsLqUm/ejSOqvbU6DbKalex2L8oGA1O99Zafc23RjKxMou0fYVnzM8v3v
+         S40iyOinlHxrQ4JYdgXHiVUP7j0CCnbc9suZLPmgtVQ+H0ntEBHY6rooQh8v4md1eBQN
+         mz7A==
+X-Gm-Message-State: ANhLgQ1SJWLDzmzrVJqT0QI80PxOnYvaP2pSPA46+hR6Ed1N3NmyMfSG
+        qIyNJWRERRlJZhmLb6f+KYseZA==
+X-Google-Smtp-Source: ADFU+vs3bQbui32mwgN4d69WBgcOI3D/G3nH3HTL6g28UawRkGYTx1Gv6AOqnTJmut2iCUcqWB559A==
+X-Received: by 2002:a17:90a:3249:: with SMTP id k67mr16585418pjb.167.1585583442859;
+        Mon, 30 Mar 2020 08:50:42 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id r7sm10438837pfg.38.2020.03.30.08.50.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2020 08:50:41 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 08:50:38 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <90CFB680-D6DA-45E5-9E19-08F577672BA8@flygoat.com>
-X-ZohoCNMailClient: External
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+Message-ID: <20200330155038.GC199755@google.com>
+References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
+ <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
+ <20200329171756.GA199755@google.com>
+ <87h7y62r28.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87h7y62r28.fsf@kernel.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Mar 30, 2020 at 11:19:11AM +0300, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Matthias Kaehlcke <mka@chromium.org> writes:
+> >> Add interconnect support in dwc3-qcom driver to vote for bus
+> >> bandwidth.
+> >> 
+> >> This requires for two different paths - from USB master to
+> >> DDR slave. The other is from APPS master to USB slave.
+> >> 
+> >> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> >> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+> >> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> >> ---
+> >>  drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
+> >>  1 file changed, 126 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> >> index 1dfd024..7e85fe6 100644
+> >> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> >> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> >>
+> >> ...
+> >>
+> >> +/* To disable an interconnect, we just set its bandwidth to 0 */
+> >> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
+> >> +{
+> >> +	int ret;
+> >> +
+> >> +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
+> >> +	if (ret)
+> >> +		goto err_reenable_memory_path;
+> >> +
+> >> +	return 0;
+> >> +
+> >> +	/* Re-enable things in the event of an error */
+> >> +err_reenable_memory_path:
+> >> +	ret = dwc3_qcom_interconnect_enable(qcom);
+> >
+> > This overwrites the error that led to the execution of this code path.
+> > The function should return original error, not the result of the
+> > _interconnect_enable() call.
+> >
+> > I saw Felipe queued the patch for v5.8. I think the main options to fix this
+> > are:
+> >
+> > - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be rebased
+> >   anyway once there is a v5.7-rc)
+> > - send the fix as a separate patch
+> > - Felipe amends the patch in his tree
+> >
+> > Felipe, what would work best for you?
+> 
+> Let's go for a v6, which commits should I drop? I can't find anything
+> related to $subject in my queue:
+> 
+> $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dwc3-qcom.c
+> 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/of_clk.h>
 
-
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8830=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
-1:37:21, Sergei Shtylyov <sergei=2Eshtylyov@cogentembedded=2Ecom> =E5=86=99=
-=E5=88=B0:
->Hello!
->
->On 03/30/2020 02:42 PM, Jiaxun Yang wrote:
->
->> Add PCI Host controller node for Loongson64 with RS780E PCH dts=2E
->> Note that PCI interrupts are probed via legacy way, as different
->> machine have different interrupt arrangement, we can't cover all
->> of them in dt=2E
->>=20
->> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> ---
->>  arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi | 17 ++++++++++++++++-
->>  1 file changed, 16 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
->b/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
->> index 45c54d555fa4=2E=2Ef09599a4b9d7 100644
->> --- a/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
->> +++ b/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
->> @@ -5,10 +5,25 @@ bus@10000000 {
->>  		compatible =3D "simple-bus";
->>  		#address-cells =3D <2>;
->>  		#size-cells =3D <2>;
->> -		ranges =3D <0 0x10000000 0 0x10000000 0 0x10000000
->> +		ranges =3D <0 0x00000000 0 0x00000000 0 0x00010000 /* ioports */
->> +				0 0x10000000 0 0x10000000 0 0x10000000
->>  				0 0x40000000 0 0x40000000 0 0x40000000
->>  				0xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Space
->*/>;
->> =20
->> +		pci@1a000000 {
->> +			compatible =3D "loongson,rs780e-pci";
->> +			device_type =3D "pci";
->> +			#address-cells =3D <3>;
->> +			#size-cells =3D <2>;
->> +			#interrupt-cells =3D <0x1>;
->
->   No need for 0x=2E
->
->> +
->> +			reg =3D <0 0x1a000000 0 0x02000000>;
->> +
->> +			ranges =3D <0x01000000 0x0 0x00004000 0x0 0x00004000  0x0
->0x00004000>,
->> +				<0x02000000 0x0 0x40000000 0x0 0x40000000  0x0 0x40000000>;
->
->   No need for 0x before 0 here either=2E And why double spaces?
-=20
-Thanks=2E Will fix in next version=2E
-
-The space was intent to split address and size but it seems unnecessary=2E
-
->
->> +
->> +		};
->> +
->>  		isa {
->>  			compatible =3D "isa";
->>  			#address-cells =3D <2>;
->>=20
->
->MBR, Sergei
-
---=20
-Jiaxun Yang
+I thought I saw a "queued for v5.8" message from you, but can't find that back.
+I guess I saw the "queued" message for the "Add USB DWC3 support for SC7180"
+series and thought it was for this one. Sorry for the confusion.
