@@ -2,123 +2,192 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFBBC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 21:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29977C2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 21:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B46206CC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 21:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0203C20771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 21:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585604155;
+	bh=aiIETxsRU9cWHGPKABH0F6Ne4u49MEXFd7rXnrdkb7o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=BsEf4sGGB0iGz4D7Nwe8860FAEa2c1mjhezT1AzZgQyEoU6vAtlrAqnpcwd9i0ldI
+	 pwTzUgu02J7KRP6W581L85hi25v6Vq8oX4b+VF89m12mHb8wq8tRW8m3YNnWBpKGtb
+	 R735AO+X5Xo2gDrkMfCYcqq2yAg0jhZQCE9WVthM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgC3Vax (ORCPT
+        id S1728819AbgC3Vfv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:30:53 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:36848 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728901AbgC3Vax (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 17:30:53 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id 32AC5296540
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Martyn Welch <martyn.welch@collabora.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        linux-rockchip@lists.infradead.org,
-        NXP Linux Team <linux-imx@nxp.com>, kernel@collabora.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v5 4/5] drm: imx: Add i.MX 6 MIPI DSI host platform driver
-In-Reply-To: <4a9d2d6e5cecbe296c14119d27a8793a7dbed7b2.camel@collabora.com>
-References: <20200330113542.181752-1-adrian.ratiu@collabora.com>
- <20200330113542.181752-5-adrian.ratiu@collabora.com>
- <CAOMZO5CEZSBfhb9xAdf=sDhUnmSeuWSsnUQArz=a1TPzytLAeQ@mail.gmail.com>
- <4a9d2d6e5cecbe296c14119d27a8793a7dbed7b2.camel@collabora.com>
-Date:   Tue, 31 Mar 2020 00:31:56 +0300
-Message-ID: <877dz134xf.fsf@collabora.com>
+        Mon, 30 Mar 2020 17:35:51 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:32842 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728778AbgC3Vfv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 17:35:51 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f20so19820652ljm.0;
+        Mon, 30 Mar 2020 14:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=WSt+AV7Um/5j64JardkiDA0adpMNTurHI5wI61uphv0=;
+        b=HIvQu3phGCWVkZ9DCay3XYK3Kfyn2+4cKzw8ERzWrog/cBnDNuZxBVUxKyh2yIw0Uq
+         6b0JMiAOWxwVtl76ZbYi6ZLUCEtFkVfR2EHPUSs/6MKx9GNz3ao52n4CPLVWb7Rax/V1
+         oZjrjmIBWLpuJlNhX6dctbGqG2nSKx0gjeEFAzXWOU+liFtk2Vo6WKJVVEb6zoAD0O73
+         t8CVriQLM6iIMTDt7rRY6GJkLK6EBXTVlpp5Al6+zrkQJNQyrsvc18aPf4k/zYtoXaUJ
+         DG/VTLjSCJgWGTCBrz+G7VgFRTK9/ANArqe4dZV/VXnOyTU3p0x8tWQlQYbTAd1Md/Gz
+         vdkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=WSt+AV7Um/5j64JardkiDA0adpMNTurHI5wI61uphv0=;
+        b=uPFL5iOREZEWlCbRPOyVwTUaDmXd+ipMAzKLNraOewayVf/DJooHcQQTtlul5cqmYv
+         3cd7Wee/kI01uSYbNVk5ViVwnUq0H4ivgFApzC5AiigjSNyVrlNsg8lu41zE7BNK0Z9P
+         zNl0n9VDnIW1qqBA1oWtsaTL05qFjsUT6YeRG8Hh3gxqiA5L7aj9XSkP5OahcwS8fzDi
+         jRb1M5eDMseuN3uV/sVt2T3bY0q/UGK8UV1BUUjDtqbz+HTcdGl//9R/LF9EPXPQB07l
+         ilM9iHY55XW3hv0VtFn7o9K4ECmsjWVK+aos/RXKA/qUiYPjKXzUiXNGWb8Lpj5zv7Fa
+         7u2w==
+X-Gm-Message-State: AGi0PuaZrhRJKlDd3hck1FWraww8StosDfCiB04E5sFDg8xwRcULjrFE
+        CX4TIYGngogM+6GRZXYm3VM=
+X-Google-Smtp-Source: APiQypK4zOFj7xjPNhBxV8d6hcKJ84vdq3BXLMd1kyZXNCG2zm7Q6Cm8uv46OaF0KLIsL7sjDV2RCw==
+X-Received: by 2002:a2e:9252:: with SMTP id v18mr5750072ljg.114.1585604146990;
+        Mon, 30 Mar 2020 14:35:46 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id p7sm7388655ljg.5.2020.03.30.14.35.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Mar 2020 14:35:46 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+In-Reply-To: <20200330155038.GC199755@google.com>
+References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org> <1585302203-11008-3-git-send-email-sanm@codeaurora.org> <20200329171756.GA199755@google.com> <87h7y62r28.fsf@kernel.org> <20200330155038.GC199755@google.com>
+Date:   Tue, 31 Mar 2020 00:35:41 +0300
+Message-ID: <87zhbx1q6q.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Mar 2020, Ezequiel Garcia <ezequiel@collabora.com> 
-wrote:
-> Hello Fabio, Adrian: 
-> 
-> On Mon, 2020-03-30 at 08:49 -0300, Fabio Estevam wrote: 
->> Hi Adrian,  On Mon, Mar 30, 2020 at 8:34 AM Adrian Ratiu 
->> <adrian.ratiu@collabora.com> wrote: 
->> > This adds support for the Synopsis DesignWare MIPI DSI v1.01 
->> > host controller which is embedded in i.MX 6 SoCs.   Based on 
->> > following patches, but updated/extended to work with existing 
->> > support found in the kernel:  - drm: imx: Support Synopsys 
->> > DesignWare MIPI DSI host controller 
->> >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com> 
->> >  - ARM: dtsi: imx6qdl: Add support for MIPI DSI host 
->> > controller 
->> >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com> 
->>  This one looks like a devicetree patch, but this patch does 
->> not touch devicetree.  
->> > +       ret = clk_prepare_enable(dsi->pllref_clk); +       if 
->> > (ret) { +               dev_err(dev, "%s: Failed to enable 
->> > pllref_clk\n", __func__); +               return ret; + 
->> > } + +       dsi->mux_sel = 
->> > syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,gpr"); + 
->> > if (IS_ERR(dsi->mux_sel)) { +               ret = 
->> > PTR_ERR(dsi->mux_sel); +               dev_err(dev, "%s: 
->> > Failed to get GPR regmap: %d\n", + 
->> > __func__, ret); +               return ret; 
->>  You should disable the dsi->pllref_clk clock prior to 
->> returning the error.  
-> 
-> Another approach could be moving the clock on and off to to 
-> component_ops.{bind,unbind} (as rockhip driver does). 
-> 
-> What exactly is the PLL clock needed for? Would it make sense to 
-> move it some of the PHY power on/off? (Maybe not, but it's 
-> worthing checking). 
-> 
-> Also, it seems the other IP blocks have this PLL clock, so maybe 
-> it could be moved to the dw_mipi_dsi core? This could be 
-> something for a follow-up, to avoid creeping this series.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ezequiel,
 
-pll is the video reference clock which drives the data lanes and 
-yes all drivers have it as it's a basic requirement, so moving it 
-to the common bridge is indeed a good idea, however this kind of 
-driver refactoring is out of scope for this specific patch series, 
-because, for now, I'd like to get the regmap and the imx6 driver 
-in, once that is done we can think how to further abstract away 
-common logic and slim down the existing drivers further.
+Hi,
 
-Basically I just want to avoid feature creep as I expect v6 to be 
-~ 8 patches big and the series is already over 1200 lines.
-
-Thank you,
-Adrian
-
+Matthias Kaehlcke <mka@chromium.org> writes:
+>> Matthias Kaehlcke <mka@chromium.org> writes:
+>> >> Add interconnect support in dwc3-qcom driver to vote for bus
+>> >> bandwidth.
+>> >>=20
+>> >> This requires for two different paths - from USB master to
+>> >> DDR slave. The other is from APPS master to USB slave.
+>> >>=20
+>> >> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>> >> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+>> >> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> >> ---
+>> >>  drivers/usb/dwc3/dwc3-qcom.c | 128 +++++++++++++++++++++++++++++++++=
++++++++++-
+>> >>  1 file changed, 126 insertions(+), 2 deletions(-)
+>> >>=20
+>> >> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qco=
+m.c
+>> >> index 1dfd024..7e85fe6 100644
+>> >> --- a/drivers/usb/dwc3/dwc3-qcom.c
+>> >> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+>> >>
+>> >> ...
+>> >>
+>> >> +/* To disable an interconnect, we just set its bandwidth to 0 */
+>> >> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
+>> >> +{
+>> >> +	int ret;
+>> >> +
+>> >> +	ret =3D icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
+>> >> +	if (ret)
+>> >> +		return ret;
+>> >> +
+>> >> +	ret =3D icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
+>> >> +	if (ret)
+>> >> +		goto err_reenable_memory_path;
+>> >> +
+>> >> +	return 0;
+>> >> +
+>> >> +	/* Re-enable things in the event of an error */
+>> >> +err_reenable_memory_path:
+>> >> +	ret =3D dwc3_qcom_interconnect_enable(qcom);
+>> >
+>> > This overwrites the error that led to the execution of this code path.
+>> > The function should return original error, not the result of the
+>> > _interconnect_enable() call.
+>> >
+>> > I saw Felipe queued the patch for v5.8. I think the main options to fi=
+x this
+>> > are:
+>> >
+>> > - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will b=
+e rebased
+>> >   anyway once there is a v5.7-rc)
+>> > - send the fix as a separate patch
+>> > - Felipe amends the patch in his tree
+>> >
+>> > Felipe, what would work best for you?
+>>=20
+>> Let's go for a v6, which commits should I drop? I can't find anything
+>> related to $subject in my queue:
+>>=20
+>> $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dw=
+c3-qcom.c
+>> 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/o=
+f_clk.h>
 >
-> Thanks,
-> Ezequiel
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> I thought I saw a "queued for v5.8" message from you, but can't find that=
+ back.
+> I guess I saw the "queued" message for the "Add USB DWC3 support for SC71=
+80"
+> series and thought it was for this one. Sorry for the confusion.
+
+no worries :-)
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6CZi0ACgkQzL64meEa
+mQY+7g/+KJ/u05ouSFK7ldMY2YfeD/JN7oamyhJSMtVd+EDFXyzVBYcSRD4m+P2c
+l0L8DLKvPTfQ609Gc0B4RBra2tg1H7m2vGdKPbGIDxWXQoMyIXFYp7E7b8+UjJ87
+MNSwuzqyvC8ZFOd0ILPecBxUjFzdzEPhbHr2W6jdyfT5kIl4wcAxchcTGnus8ujb
+KlwUWUjyuGyX5r7axrdjXe55MS2aouKtYQLojXtwhVyegGS0xlJtVF5+so2l89v9
+GAgDe9Srw9eNfg/pmNHjK+PwRjkKLFnGiT/m4jPCb5roRWmX8P83JnA3rp+DCjpF
++plyrINP+MjoWH+rl1eifOSmTktORDFzyHEdfx2O38XYxHMjD1ap6OhOEc2WveY9
+f0G/eRN7DctjpxFwp6IBDywhUgSo5YH/L3q2ojaG0AfBgxD42hCdTU7OWFepvhab
+DFldPJwBjqbVupLSMEzOmgvM9wnBuqzXERzcEncl19f7Sh1vx6NFqY+5/iABFJKQ
+0hhWlQ+DRrGWKxam9ft0ddEtco+Nla2IOVr2vk63DysSKkGEbQeU8a4BxJ9kY/Jo
+hZCMdci6ePlYa63VCrZ+u1F6+DSRQ9lvPxjnUmy4T7InCL1dOezT6WttAgB1DO1T
+oX1o6+tY1DlUOemO6Mlg0ueBWg59hZYTeg2NSVbal5VoMzO9BSk=
+=lyM0
+-----END PGP SIGNATURE-----
+--=-=-=--
