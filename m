@@ -2,142 +2,92 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0031FC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BD3C2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2CE720784
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A332078B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585610271;
-	bh=N9SPv3Kq0vRavjJ1oGzs+0aBZeKvoatSZxjYYOOF+Pg=;
+	s=default; t=1585610444;
+	bh=NP6Yl/GRgbpZfOYo5/XkbWdXml3aKWb43LbuDabnrf4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=p0axl0n9mDv6I6XFUy+ZbcJ2wKg+IYE2cWcBdw2FvhX6emTHkJu68twYLJe2Z9IhZ
-	 CKPArSDxOIB38cX3Pg5Pwou3UvRedXAwpPJjnZebUca3wWo3zH26cNtWydjvfeXgtX
-	 GS/AtOQJCEpx3O88vJud2+N7OID8uvyx6Xv2WIzo=
+	b=Xj9oy96R2srtDm8/50UL6gTRmCK0M3PaZCbrIa1bevH14tEy2t+EaIj/L8fRT6FCo
+	 LDM20r3YDSkR/Moxcm7msKU6tfbs90Zf5QWGVh1HjjYWnyrXv4364d2UVXiznPsruj
+	 El5vhvUtuz6atS1MZvJ7nodUuAGDAeNHdwUY44K4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgC3XRv (ORCPT
+        id S1729335AbgC3XUn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:17:51 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37687 "EHLO
+        Mon, 30 Mar 2020 19:20:43 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33276 "EHLO
         mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgC3XRv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:17:51 -0400
-Received: by mail-il1-f193.google.com with SMTP id a6so17634628ilr.4;
-        Mon, 30 Mar 2020 16:17:50 -0700 (PDT)
+        with ESMTP id S1729024AbgC3XUn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:20:43 -0400
+Received: by mail-il1-f193.google.com with SMTP id k29so17611801ilg.0;
+        Mon, 30 Mar 2020 16:20:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BTXjifd7ocglD8FboIBeR1N5hRHtq0vpT75Dg952cWQ=;
-        b=IxTjHjqDhMsozwd2HNXFbYcM2Rc1oO/xdRR3vMNh187q0tjc7XmpjiX0MCC8EPQoZG
-         O5+wyoD2ghu4Lq0M6/sgetwEHT69BgZrvpYWHeGVbyFlAMU4+CVPGcA2Y7wH27191HZU
-         nSDqmNLZoBWA4v0e+1lus0q75C8n+CB+i+HlJcO0hM80nja2VxWCkmNbhXL469jNQxSm
-         5dw8OC0VgAkhtPdULC8cDanANbJENlI970Bky5MLIyz56UX7UbNAO1Ljss56mBKWOAsk
-         bn8G6FgemD2x4cki9mn2JVFQG2gQ+liB8FCxPWfh1jc4JaIjGKFOBqkzkyyN3bcX37Oh
-         0Rlw==
-X-Gm-Message-State: ANhLgQ2QsdVkKJUvcwYe8aTrx2XhtPMXzHE66iefGyWonNcMpW3l/2mK
-        qBP+dDt4ME2CpObdnLKfgw==
-X-Google-Smtp-Source: ADFU+vt94dHL8ZNH73PSwCvVDGJWSHYvQZp10YVT6AUavcgqdGX/LdcbPXO/CeDpMSVuIc6hSx48Og==
-X-Received: by 2002:a92:d0c7:: with SMTP id y7mr13779079ila.56.1585610269995;
-        Mon, 30 Mar 2020 16:17:49 -0700 (PDT)
+        bh=RBOl7Iekk96c/AIshrO/3RWqL8uoE2wDrX33YLwOSfA=;
+        b=q7x51mgyazH4pO4gnQpexWGV+/MsOQZAnCfQz8ZHoCkCfmgpPWDPS686yh0y8MP/CD
+         qKqcFMYfXd+pUv6zouc99BiSZwtaafEBxoYd84CVr19FdZurjOV8RGGXvH6KuM3+pw83
+         TcP9/IYfqWPRWUMfqBzdC+TnZbawfSBDORE28iEAimrzKm09NWYw+uWXs0Kt0KRgA3jA
+         hwTY3BMn+zl9ZBuYGwTEWDLcd0M9CHN0jIodswYoMFWNWa7v7L4fOpu24VHnPfBYVH6q
+         QGO/Bw5VdJSWYyZjajwlPguEOeDefS5H08Z4v3CHyxzGKibc/PuIUds8o6zMvRyWYXNh
+         1QzQ==
+X-Gm-Message-State: ANhLgQ3fqWsg07qlvXODT2I8FNaw4XBLZI4JU4MDNz+KG1homZl9Ix5X
+        ZpFXZW74WMhuF/8rg41eww==
+X-Google-Smtp-Source: ADFU+vuWSuZ4f9YO6jw06I9AgPXOM3ftiwikw3P3ryqZHCbuD8iOLBgqAHDz4IGWRDg4StG2CP/baQ==
+X-Received: by 2002:a92:91c3:: with SMTP id e64mr6471514ill.68.1585610442647;
+        Mon, 30 Mar 2020 16:20:42 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id j1sm4600895iok.2.2020.03.30.16.17.49
+        by smtp.gmail.com with ESMTPSA id s25sm5336349ilb.37.2020.03.30.16.20.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 16:17:49 -0700 (PDT)
-Received: (nullmailer pid 12466 invoked by uid 1000);
-        Mon, 30 Mar 2020 23:17:48 -0000
-Date:   Mon, 30 Mar 2020 17:17:48 -0600
+        Mon, 30 Mar 2020 16:20:41 -0700 (PDT)
+Received: (nullmailer pid 16658 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:20:40 -0000
+Date:   Mon, 30 Mar 2020 17:20:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/2] dt-bindings: sram: convert rockchip-pmu-sram
- bindings to yaml
-Message-ID: <20200330231748.GA10021@bogus>
-References: <20200319161159.24548-1-jbx6244@gmail.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, alexandre.torgue@st.com,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com,
+        olivier.moysan@st.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: iio: dac: stm32-dac: convert bindings to
+ json-schema
+Message-ID: <20200330232040.GA16570@bogus>
+References: <1584639983-31098-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319161159.24548-1-jbx6244@gmail.com>
+In-Reply-To: <1584639983-31098-1-git-send-email-fabrice.gasnier@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 05:11:58PM +0100, Johan Jonker wrote:
-> Current dts files with 'rockchip-pmu-sram' compatible nodes
-> are now verified with sram.yaml, although the original
-> text document still exists. Merge rockchip-pmu-sram.txt
-> with sram.yaml by adding it as description with an example.
+On Thu, 19 Mar 2020 18:46:23 +0100, Fabrice Gasnier wrote:
+> Convert the STM32 DAC binding to DT schema format using json-schema
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
-> Not tested with hardware.
-> 
-> Changed v2:
->   Merge with sram.yaml
+> Changes in v2:
+> - Fix id relative path/filename as detected by Rob's bot
 > ---
->  .../devicetree/bindings/sram/rockchip-pmu-sram.txt       | 16 ----------------
->  Documentation/devicetree/bindings/sram/sram.yaml         | 13 +++++++++++++
->  2 files changed, 13 insertions(+), 16 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+>  .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
+>  .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
+>  2 files changed, 110 insertions(+), 63 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-> deleted file mode 100644
-> index 6b42fda30..000000000
-> --- a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-> +++ /dev/null
-> @@ -1,16 +0,0 @@
-> -Rockchip SRAM for pmu:
-> -------------------------------
-> -
-> -The sram of pmu is used to store the function of resume from maskrom(the 1st
-> -level loader). This is a common use of the "pmu-sram" because it keeps power
-> -even in low power states in the system.
-> -
-> -Required node properties:
-> -- compatible : should be "rockchip,rk3288-pmu-sram"
-> -- reg : physical base address and the size of the registers window
-> -
-> -Example:
-> -	sram@ff720000 {
-> -		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
-> -		reg = <0xff720000 0x1000>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
-> index 7b83cc6c9..a9b1c2b74 100644
-> --- a/Documentation/devicetree/bindings/sram/sram.yaml
-> +++ b/Documentation/devicetree/bindings/sram/sram.yaml
-> @@ -224,6 +224,19 @@ examples:
->      };
->  
->    - |
-> +    // Rockchip's rk3288 SoC uses the sram of pmu to store the function of
-> +    // resume from maskrom(the 1st level loader). This is a common use of
-> +    // the "pmu-sram" because it keeps power even in low power states
-> +    // in the system.
-> +    sram@ff720000 {
-> +      compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
 
-You need to document the compatible.
-
-> +      reg = <0xff720000 0x1000>;
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      ranges = <0 0xff720000 0x1000>;
-> +    };
-> +
-> +  - |
->      // Allwinner's A80 SoC uses part of the secure sram for hotplugging of the
->      // primary core (cpu0). Once the core gets powered up it checks if a magic
->      // value is set at a specific location. If it is then the BROM will jump
-> -- 
-> 2.11.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
