@@ -2,135 +2,146 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5FEC2D0EB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 07:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4CFC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 07:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A668A20784
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 07:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A291C20748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 07:37:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ulhlK3QD"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EoXO05vQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgC3HbR (ORCPT
+        id S1729425AbgC3HhI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 03:31:17 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41107 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729344AbgC3HbR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 03:31:17 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a24so1337561pfc.8;
-        Mon, 30 Mar 2020 00:31:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SEwlVyEv36eeIRNWATF1aFQ5BBswo3YJxEpbUEmPHfo=;
-        b=ulhlK3QDhORQq7j8zyNINp8aFMjGg4QklBE2Ocb/P/cRQVp98/JNMkMYa8ZPASSR5a
-         p2OKwOT8slo+Zm5wpjFiDY+RJJTjsbIiHMUPY7WxxI0mQwzeIYrw8G+Qcg3S2qQAKuvs
-         yi5X2sFwEJnuwxP09ETYhRcKkTZj0Ykk1wgjaQ/hRAymHRlljvO89nf5KMlC9s0kxh0s
-         pQF9gT2oJOs6JmMofg3z+9MAshfvsM2O7VGn9QZfVUvY3iW8aT5/mc1zkuVcZrQnY1px
-         x4TuNTEvtDzR1s1MiEOR6ojUcpOjNtpppW+BPLIUNf38+yiqCm0b6aAD+6VQ570LBR7c
-         iPww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SEwlVyEv36eeIRNWATF1aFQ5BBswo3YJxEpbUEmPHfo=;
-        b=syBFb/rpb3m6cfxedrd2fsjbCpKWfSAzwbRiJ+RHB5s4MLlDw+1Y3mE5ejv0c6BaiI
-         /mceGhoyxpKTjIj3b47Txrt5tiWyT4TQKET7s7rIgOiond/p81i+N6vENt9zlC0wVlvz
-         DPlEMsvKzFv+mMd0T+lK2zzCOIIcI6KV2JLSd5DveX6xO0bxn2CfcmtxEUFgvQH6MOeG
-         /aWZA2rruYjnTvT9IJjZ2iPXUKp4BzExgWFWkLzMorBLJ691s6fH1XYw8MoxHzl55pjw
-         PDmm9Ix8tBULGN3wxaxq+FG0Tlf4T/66VKd+lrdmCZVYdhyHvDgC06MAPWRxWS0gAIKG
-         qCPA==
-X-Gm-Message-State: ANhLgQ1g3rh6XuJFK6HtSL3rceeQNRDsq0umZGFjqjg9/CTfS++6Oeaq
-        yqPODmDEmvf0ADyNnBVad8g=
-X-Google-Smtp-Source: ADFU+vvZhDfj+ZP7g9wtM/Cs/lguG9sQbIRc/a/b3v4CzDuWHLhq26abeNCo5nQjVkZd/YaXdbA/5w==
-X-Received: by 2002:a65:6855:: with SMTP id q21mr10003864pgt.188.1585553475645;
-        Mon, 30 Mar 2020 00:31:15 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id r186sm9648935pfc.181.2020.03.30.00.31.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 00:31:15 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH 1/4] clk: sprd: check its parent status before reading gate clock
-Date:   Mon, 30 Mar 2020 15:31:07 +0800
-Message-Id: <20200330073107.14180-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200330071451.7899-2-zhang.lyra@gmail.com>
-References: <20200330071451.7899-2-zhang.lyra@gmail.com>
+        Mon, 30 Mar 2020 03:37:08 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44562 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729420AbgC3HhH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 03:37:07 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02U7avtO076750;
+        Mon, 30 Mar 2020 02:36:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585553818;
+        bh=voYQW80EDvQkOlSfgnq9c/dTJexZ26VOrA18YkmsPTw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=EoXO05vQBMtq0tom/g/Fbz6SZPBShTbVdsPJ4+iOQlEjDowyGWB1hDXOUzYbr4BE/
+         ua9Cn8M1pnrkq97+Jp0+ERZ16Lej0LWhkw80kgiPcM8lWJhrHTN+0Lgb2sCW9L5E2o
+         J5cfY5e4wbDZ1Fy2BTB7wPn+rs7beppbGEgVK+Ts=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02U7avrb068349
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 30 Mar 2020 02:36:57 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
+ Mar 2020 02:36:57 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 30 Mar 2020 02:36:57 -0500
+Received: from [10.24.69.198] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02U7aq7w094270;
+        Mon, 30 Mar 2020 02:36:53 -0500
+Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
+ support for k3 am65x/j721e soc
+To:     Tero Kristo <t-kristo@ti.com>, Vladimir Oltean <olteanv@gmail.com>,
+        David Miller <davem@davemloft.net>
+CC:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        <peter.ujfalusi@ti.com>, Rob Herring <robh@kernel.org>,
+        netdev <netdev@vger.kernel.org>, <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>, <kishon@ti.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+References: <20200323225254.12759-1-grygorii.strashko@ti.com>
+ <20200326.200136.1601946994817303021.davem@davemloft.net>
+ <CA+h21hr8G24ddEgAbU_TfoNAe0fqUJ0_Uyp54Gxn5cvPrM6u9g@mail.gmail.com>
+ <8f5e981a-193c-0c1e-1e0a-b0380b2e6a9c@ti.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <2d305c89-601c-5dee-06be-30257a26a392@ti.com>
+Date:   Mon, 30 Mar 2020 13:06:52 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <8f5e981a-193c-0c1e-1e0a-b0380b2e6a9c@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+On 30/03/20 12:45 PM, Tero Kristo wrote:
+> On 28/03/2020 03:53, Vladimir Oltean wrote:
+>> Hi David,
+>>
+>> On Fri, 27 Mar 2020 at 05:02, David Miller <davem@davemloft.net> wrote:
+>>>
+>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
+>>> Date: Tue, 24 Mar 2020 00:52:43 +0200
+>>>
+>>>> This v6 series adds basic networking support support TI K3
+>>>> AM654x/J721E SoC which
+>>>> have integrated Gigabit Ethernet MAC (Media Access Controller) into
+>>>> device MCU
+>>>> domain and named MCU_CPSW0 (CPSW2G NUSS).
+>>>   ...
+>>>
+>>> Series applied, thank you.
+>>
+>> The build is now broken on net-next:
+>>
+>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
+>> (phandle_references):
+>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
+>>
+>> Reference to non-existent node
+>> or label "mcu_conf"
+>>
+>>    also defined at
+>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
+>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
+>> (phandle_references):
+>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
+>>
+>> Reference to non-existent node
+>> or label "phy_gmii_sel"
+>>
+>>    also defined at
+>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
+>>
+>> As Grygorii said:
+>>
+>> Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3
+>> Platform
+>> tree and provided here for testing purposes.
+> 
+> Yeah, I think you are missing a dependency that was applied via the K3
+> branch earlier. They are in linux-next now, but I am not so sure how
+> much that is going to help you.
+> 
+> You could just drop the DT patches from this merge and let me apply them
+> via the platform branch.
 
-Some clocks only can be accessed if their parent is enabled. mipi_csi_xx
-clocks on SC9863A are examples. We have to ensure the parent clock is
-enabled when reading those clocks.
+One other option would be that Dave merges your K3 tag which was sent to
+ARM SoC to net-next. Its based on v5.6-rc1, has no other dependencies,
+is already in linux-next, should be immutable and safe to merge. This
+has the advantage that no rebase is necessary on net-next.
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- drivers/clk/sprd/gate.c | 7 +++++++
- drivers/clk/sprd/gate.h | 9 +++++++++
- 2 files changed, 16 insertions(+)
+git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux
+tags/ti-k3-soc-for-v5.7
 
-diff --git a/drivers/clk/sprd/gate.c b/drivers/clk/sprd/gate.c
-index 574cfc116bbc..56e1714b541e 100644
---- a/drivers/clk/sprd/gate.c
-+++ b/drivers/clk/sprd/gate.c
-@@ -94,8 +94,15 @@ static int sprd_gate_is_enabled(struct clk_hw *hw)
- {
- 	struct sprd_gate *sg = hw_to_sprd_gate(hw);
- 	struct sprd_clk_common *common = &sg->common;
-+	struct clk_hw *parent;
- 	unsigned int reg;
- 
-+	if (sg->flags & SPRD_GATE_NON_AON) {
-+		parent = clk_hw_get_parent(hw);
-+		if (!parent || !clk_hw_is_enabled(parent))
-+			return 0;
-+	}
-+
- 	regmap_read(common->regmap, common->reg, &reg);
- 
- 	if (sg->flags & CLK_GATE_SET_TO_DISABLE)
-diff --git a/drivers/clk/sprd/gate.h b/drivers/clk/sprd/gate.h
-index b55817869367..aa4d72381788 100644
---- a/drivers/clk/sprd/gate.h
-+++ b/drivers/clk/sprd/gate.h
-@@ -19,6 +19,15 @@ struct sprd_gate {
- 	struct sprd_clk_common	common;
- };
- 
-+/*
-+ * sprd_gate->flags is used for:
-+ * CLK_GATE_SET_TO_DISABLE	BIT(0)
-+ * CLK_GATE_HIWORD_MASK		BIT(1)
-+ * CLK_GATE_BIG_ENDIAN		BIT(2)
-+ * so we define new flags from	BIT(3)
-+ */
-+#define SPRD_GATE_NON_AON BIT(3) /* not alway on, need to check before read */
-+
- #define SPRD_SC_GATE_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,	\
- 				    _sc_offset, _enable_mask, _flags,	\
- 				    _gate_flags, _udelay, _ops, _fn)	\
--- 
-2.20.1
++ ARM SoC maintainers for their information and any advise.
+
+Thanks,
+Sekhar
 
