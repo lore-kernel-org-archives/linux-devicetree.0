@@ -2,103 +2,148 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3C9C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D0CC2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A644F20776
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BAA72073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mcvg7vKu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="sevkwHAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgC3Qab (ORCPT
+        id S1728465AbgC3QdU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:30:31 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38964 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbgC3Qaa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:30:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=rzh9ueR7rZV8bhCQEK6RCcxjt9ukPqxxiqOJSvaCw8I=; b=mcvg7vKuOo7yU+LPEx+F+bszdM
-        g6XBJUJ6+WHAyGzXz+cPUuz06fumRjhrJuUR1yx6WCLiqDh17Cw899KfHjuHDXRy8fPJFlV/sDerU
-        bifb2uLLvscED+USvLy+KDCkDIhAZOKmyG10/v+Ypb9i8SQ7lUVFNsr5P6+E5yqvtUxE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jIxIy-00066S-VM; Mon, 30 Mar 2020 18:30:28 +0200
-Date:   Mon, 30 Mar 2020 18:30:28 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net
-Subject: Re: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
-Message-ID: <20200330163028.GE23477@lunn.ch>
-References: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
-MIME-Version: 1.0
+        Mon, 30 Mar 2020 12:33:20 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:15212 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbgC3QdU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 12:33:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585585998;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=m5OQurJ34G52si3xIHL2HoNqFTlRdT/1c2JFQwVStnA=;
+        b=sevkwHAFC4Ku8T1/SpAy6r9w/mgj+9cMf79C4S7fF5p3ftt94frkFzwZZVRXXC4IyV
+        x9vhs8r6njYIIcOJmA9iyPDeF9SujHi8UmeFibidIAGmYkcWpDngfWP71hkEwU/PpQIa
+        QJp3nJyfoP9vamSPRVe6B8IPSzHowitCS/+cLu6DIzLdwwH7XHQuFtMhbdgm+1grWUUd
+        2631FiAqiXfhDGl+wf4pYYu+7undCxQ3rMJ/DLhrLhZHr+iMsHTjVj3xMrBYIGI9PtGO
+        Dw7jxmt59OV6QE+b31BPyPZMXkbe66+XtQC6nIo0VqWen1u5ozqU3lV4oZaNH5Ezy4Oc
+        r1Ew==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAgw43oE44="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id m02241w2UGXBGiV
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Mon, 30 Mar 2020 18:33:11 +0200 (CEST)
+Subject: Re: [RFC v3 1/8] dt-bindings: display: convert ingenic,lcd.txt to ingenic,lcd.yaml
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200330154202.GA23233@bogus>
+Date:   Mon, 30 Mar 2020 18:33:10 +0200
+Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        MIPS Creator CI20 Development 
+        <mips-creator-ci20-dev@googlegroups.com>,
+        Rob Herring <robh@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <02E5EC5D-1FBB-45E4-907E-10450B449726@goldelico.com>
+References: <cover.1585503354.git.hns@goldelico.com> <a75c77fa8528f44832993f9780ae4ea409125a90.1585503354.git.hns@goldelico.com> <20200330154202.GA23233@bogus>
+To:     Paul Cercueil <paul@crapouillou.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 07:01:36PM +0300, Codrin Ciubotariu wrote:
-> Some ethernet controllers, such as cadence's macb, have an embedded MDIO.
-> For this reason, the ethernet PHY nodes are not under an MDIO bus, but
-> directly under the ethernet node. Since these drivers might use
-> of_mdiobus_child_is_phy(), we should fix this function by returning false
-> if a fixed-link is found.
+Hi Paul,
 
-So i assume the problem occurs here:
+> Am 30.03.2020 um 17:42 schrieb Rob Herring <robh@kernel.org>:
+>=20
+> On Sun, 29 Mar 2020 19:35:47 +0200, "H. Nikolaus Schaller" wrote:
+>> and add compatible: jz4780-lcd, including an example how to
+>> configure both lcd controllers.
+>>=20
+>> Also fix the clock names and examples.
+>>=20
+>> Based on work by Paul Cercueil <paul@crapouillou.net> and
+>> Sam Ravnborg <sam@ravnborg.org>
+>>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>> .../bindings/display/ingenic,lcd.txt          |  45 ------
+>> .../bindings/display/ingenic,lcd.yaml         | 128 =
+++++++++++++++++++
+>> 2 files changed, 128 insertions(+), 45 deletions(-)
+>> delete mode 100644 =
+Documentation/devicetree/bindings/display/ingenic,lcd.txt
+>> create mode 100644 =
+Documentation/devicetree/bindings/display/ingenic,lcd.yaml
+>>=20
+>=20
+> My bot found errors running 'make dt_binding_check' on your patch:
+>=20
+> =
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/displ=
+ay/ingenic,lcd.example.dt.yaml: lcd-controller@13050000: clocks: =
+[[4294967295, 9]] is too short
+>=20
+> See https://patchwork.ozlabs.org/patch/1263508
 
-static int macb_mdiobus_register(struct macb *bp)
-{
-        struct device_node *child, *np = bp->pdev->dev.of_node;
+If I read the message correctly, I think there should be 2 clocks =
+specified in
+the jz4725b-lcd example and not just
 
-        /* Only create the PHY from the device tree if at least one PHY is
-         * described. Otherwise scan the entire MDIO bus. We do this to support
-         * old device tree that did not follow the best practices and did not
-         * describe their network PHYs.
-         */
-        for_each_available_child_of_node(np, child)
-                if (of_mdiobus_child_is_phy(child)) {
-                        /* The loop increments the child refcount,
-                         * decrement it before returning.
-                         */
-                        of_node_put(child);
+	clocks =3D <&cgu JZ4725B_CLK_LCD>;
 
-                        return of_mdiobus_register(bp->mii_bus, np);
-                }
+Unfortunately the jz4725b.dtsi does not seem to be upstream or in =
+linux-next so
+I don't know if it works without lcd_pclk or not.
 
-        return mdiobus_register(bp->mii_bus);
-}
+If there is really just one clock, we need to modify the clocks and =
+clock-names
+schema and add minItems: 1 and maxItems: 2 to allow for this =
+flexibility.
 
-I think a better solution is
+Otherwise we have to fix the example. Do you have some git with an =
+up-to-date
+jz4725b.dtsi to look at?
 
-        for_each_available_child_of_node(np, child)
-+		if (of_phy_is_fixed_link(child)
-+		   continue;
-                if (of_mdiobus_child_is_phy(child)) {
-                        /* The loop increments the child refcount,
-                         * decrement it before returning.
-                         */
-                        of_node_put(child);
+>=20
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+>=20
+> pip3 install =
+git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-                        return of_mdiobus_register(bp->mii_bus, np);
-                }
++++ :)
 
-        return mdiobus_register(bp->mii_bus);
-}
+>=20
+> Please check and re-submit.
 
-This problem is only an issue for macb, so keep the fix local to macb.
+Sure, since it is a RFC.
 
-	Andrew
+BR and thanks,
+Nikolaus
+
