@@ -2,111 +2,97 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5B1C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 13:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD28DC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 13:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430462073B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 13:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6CD206CC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 13:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgC3Nvf (ORCPT
+        id S1727612AbgC3N5x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:51:35 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60556 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728209AbgC3Nvf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 09:51:35 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 36C842965EC
-Message-ID: <4a9d2d6e5cecbe296c14119d27a8793a7dbed7b2.camel@collabora.com>
-Subject: Re: [PATCH v5 4/5] drm: imx: Add i.MX 6 MIPI DSI host platform
- driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Fabio Estevam <festevam@gmail.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-rockchip@lists.infradead.org,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>, kernel@collabora.com,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        Martyn Welch <martyn.welch@collabora.com>
-Date:   Mon, 30 Mar 2020 10:51:23 -0300
-In-Reply-To: <CAOMZO5CEZSBfhb9xAdf=sDhUnmSeuWSsnUQArz=a1TPzytLAeQ@mail.gmail.com>
-References: <20200330113542.181752-1-adrian.ratiu@collabora.com>
-         <20200330113542.181752-5-adrian.ratiu@collabora.com>
-         <CAOMZO5CEZSBfhb9xAdf=sDhUnmSeuWSsnUQArz=a1TPzytLAeQ@mail.gmail.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Mon, 30 Mar 2020 09:57:53 -0400
+Received: from mga01.intel.com ([192.55.52.88]:55285 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgC3N5x (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Mar 2020 09:57:53 -0400
+IronPort-SDR: XRBD/VPW9I8Kr0ERlEONgxd7Wux+StSnBj24Nf54OS5n5tGmKQBoHqEsDX2u3yIJE9lUu3ZZ4Z
+ YCCpdQ31MVkQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 06:57:52 -0700
+IronPort-SDR: gpBtDX8eCH7FPm/oTANkhiBgT7C3LcYmTxj4V4fYHVRnHSmLlXU2EfOXWkjBLcFEkqq3cZ3hvj
+ sR+HqgJrtWfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
+   d="scan'208";a="449803069"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Mar 2020 06:57:49 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jIuvH-00EDZT-4T; Mon, 30 Mar 2020 16:57:51 +0300
+Date:   Mon, 30 Mar 2020 16:57:51 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
+        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
+        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
+Subject: Re: [V4, 2/2] media: i2c: Add DW9768 VCM driver
+Message-ID: <20200330135751.GQ1922688@smile.fi.intel.com>
+References: <20200330123634.363-1-dongchun.zhu@mediatek.com>
+ <20200330123634.363-3-dongchun.zhu@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330123634.363-3-dongchun.zhu@mediatek.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Fabio, Adrian:
+On Mon, Mar 30, 2020 at 08:36:34PM +0800, Dongchun Zhu wrote:
+> This patch adds a V4L2 sub-device driver for DW9768 voice coil moter,
+> providing control to set the desired focus via I2C serial interface.
 
-On Mon, 2020-03-30 at 08:49 -0300, Fabio Estevam wrote:
-> Hi Adrian,
-> 
-> On Mon, Mar 30, 2020 at 8:34 AM Adrian Ratiu <adrian.ratiu@collabora.com> wrote:
-> > This adds support for the Synopsis DesignWare MIPI DSI v1.01 host
-> > controller which is embedded in i.MX 6 SoCs.
-> > 
-> > Based on following patches, but updated/extended to work with existing
-> > support found in the kernel:
-> > 
-> > - drm: imx: Support Synopsys DesignWare MIPI DSI host controller
-> >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
-> > 
-> > - ARM: dtsi: imx6qdl: Add support for MIPI DSI host controller
-> >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com>
-> 
-> This one looks like a devicetree patch, but this patch does not touch
-> devicetree.
-> 
-> > +       ret = clk_prepare_enable(dsi->pllref_clk);
-> > +       if (ret) {
-> > +               dev_err(dev, "%s: Failed to enable pllref_clk\n", __func__);
-> > +               return ret;
-> > +       }
-> > +
-> > +       dsi->mux_sel = syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,gpr");
-> > +       if (IS_ERR(dsi->mux_sel)) {
-> > +               ret = PTR_ERR(dsi->mux_sel);
-> > +               dev_err(dev, "%s: Failed to get GPR regmap: %d\n",
-> > +                       __func__, ret);
-> > +               return ret;
-> 
-> You should disable the dsi->pllref_clk clock prior to returning the error.
-> 
+...
 
-Another approach could be moving the clock on and off to
-to component_ops.{bind,unbind} (as rockhip driver does).
+> +static const struct dev_pm_ops dw9768_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				pm_runtime_force_resume)
+> +	SET_RUNTIME_PM_OPS(dw9768_runtime_suspend, dw9768_runtime_resume, NULL)
+> +};
+> +
+> +static struct i2c_driver dw9768_i2c_driver = {
+> +	.driver = {
+> +		.name = DW9768_NAME,
 
-What exactly is the PLL clock needed for? Would it make sense
-to move it some of the PHY power on/off? (Maybe not, but it's worthing
-checking).
+> +		.pm = IS_ENABLED(CONFIG_PM) ? &dw9768_pm_ops : NULL,
 
-Also, it seems the other IP blocks have this PLL clock, so maybe
-it could be moved to the dw_mipi_dsi core? This could be something
-for a follow-up, to avoid creeping this series.
+What is this conditional for?
 
-Thanks,
-Ezequiel
+> +		.of_match_table = dw9768_of_table,
+> +	},
+> +	.probe_new  = dw9768_probe,
+> +	.remove = dw9768_remove,
+> +};
+
+> +
+
+Extra blank line.
+
+> +module_i2c_driver(dw9768_i2c_driver);
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
