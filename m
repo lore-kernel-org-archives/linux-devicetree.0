@@ -2,184 +2,317 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D856C2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF73C2D0F2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7280220771
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:11:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="EejkddiJ"
+	by mail.kernel.org (Postfix) with ESMTP id 81118205ED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585606659;
+	bh=UkDN60bck9OF+CKTn2hCyEZ96tMTgqoymvC7asqB9Js=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KEvg/Q/DMl90lu2JjOTEpZlnf6dJ/dvU/Mk2dH6Es/I7L65txZg87e53LL4xx72uU
+	 X8Xx1jwq47uhagAW9xV/O3d2AweyiihnFSYgsKXrbV9+7ny0PK8EYGMf6Cv200CZ2e
+	 ablwQAeQOa04pTW8t70PCerpZcmFSu7mDAxmZ28g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730986AbgC3WLd (ORCPT
+        id S1729051AbgC3WRe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:11:33 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36804 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728987AbgC3WLc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 18:11:32 -0400
-Received: by mail-wr1-f66.google.com with SMTP id 31so23568696wrs.3;
-        Mon, 30 Mar 2020 15:11:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MdDlaK3jLN/q9KcoyP33Chc7uvr3eCaMbY+7EESj0As=;
-        b=EejkddiJCEPU8jCPYEqGgLrI766UTSVP81xsECLV/sI5ZxSNQI+IBeTYqywvQiQwpd
-         jizrNf5HboqfV1xdwyv9bR/1B+GDxkQ/oNit9/Cz/4jFBonU7K4TuFHcUmoRDocz77mZ
-         A7nfupQ7qilNBOA/PiQxGhiDHCtPuLDrMB+89iaatZlN1RkKwVLJRtgLbPFHII9JZOsV
-         Fo/5pJ2w8Dx3lBz3om4roa1BHfL+JgvG86CwfM730MoQBABygMPLBBCbC3MMQoLrbZb7
-         /Gt4dwYUFDL8WRM5vsLMdpPIByS7GMShGaFjei5C5xaHLoQ9A1YxmbqURvF4UpI5omsn
-         Pv/A==
+        Mon, 30 Mar 2020 18:17:34 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45342 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728980AbgC3WRe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 18:17:34 -0400
+Received: by mail-il1-f195.google.com with SMTP id x16so17499294ilp.12;
+        Mon, 30 Mar 2020 15:17:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MdDlaK3jLN/q9KcoyP33Chc7uvr3eCaMbY+7EESj0As=;
-        b=hLr4YqLL6+DQAXwwilAMgCo7PPNWZydg8/Sis7QeBQbcupO9ENiPf7DzM32E/cdRnF
-         Q9ijughANSFoseBBUgcrfjcb0MdXsLDZ7/3gOB3VOXfZJhn1CTYS+/INeV+8d6RHy6He
-         W5d+KlOi02fCbj0rnrL7O1x1NK/eSiDZE31ZjDqz3Du8esnVyYIpTPTGzWXuiwRVIXqx
-         1MNNsdWqn/ZtKckbP5ynAZ3MUprYqN2UhEOx1ntflXmuIB0uNujJ4gK5Uc3e4+JAeFp/
-         sCr9FgMvKLAFGObkIw61hDNpjhSSyfiQNDxmPHi1N8ND8A+HYN8nyEpDv3uahiiEJGUu
-         HLSw==
-X-Gm-Message-State: ANhLgQ17ywB+7M9OiPC2jTuGQjwpNx3inPLoRUh04x7RoYw+h+OyYVdt
-        jUnkfQ1SZSrwDhe5P8UlfvE=
-X-Google-Smtp-Source: ADFU+vvgELv6WlxBfdmfHasYH7xckVLjjI/gfkH1djbfjyg5T6s6EazSzp1kVoD4jaIVPog2bhKWUQ==
-X-Received: by 2002:a5d:5228:: with SMTP id i8mr17301089wra.156.1585606290341;
-        Mon, 30 Mar 2020 15:11:30 -0700 (PDT)
-Received: from localhost.localdomain (p200300F13710ED00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3710:ed00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id b187sm1260509wmc.14.2020.03.30.15.11.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5D3JWTl1QzLG/V+Hra/4SEMj8E+g/+5w/ra3WOml/tY=;
+        b=pYLbESsuq2uRD0IV7MdeOd+251EntAzwn70JRJOYjvfCPI3c2Hk5NT9mqTXl3VSByx
+         RGrKrvrx37ctdzMnzoA+ikJ2C2++lduLHW6jJhNlhmkvkK83SsGOALsbhTKqNDdyngRa
+         yaohb+I8zyUme0uFLIE5Abz/wwBAwr/CC+cYH522NErFU9XXzjc9VBCM29+K4GRDailM
+         ZDZxeO5BYstudgiMPLRVZcITb7h9Rz8LrdcMINVZOm5t5lgXYYcWd0eID8cAy0dm+/ud
+         NWiC/ohxEDqIuj583YGFYAwAERuwDcYzVExfAq86DJU1nSARwj1wbkHf8kCpiKxFOf/W
+         thQw==
+X-Gm-Message-State: ANhLgQ2kFpr1FgEwEwV7LPPC2BPKyMKUGQgselyxxM5IyxEs/4qBD1TG
+        NPAiXQfjofXE5EuwmVzqPg==
+X-Google-Smtp-Source: ADFU+vu+RdYKFetamtyJZ77gVC5CWVXmhc8ENkRdLPahpmm6UCJX0YRLuzxicB8PcFkskdG5xwAueA==
+X-Received: by 2002:a92:798f:: with SMTP id u137mr14150243ilc.231.1585606652756;
+        Mon, 30 Mar 2020 15:17:32 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id 10sm5310473ilb.45.2020.03.30.15.17.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 15:11:29 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com,
-        jbrunet@baylibre.com, narmstrong@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RFC v1 2/5] clk: meson: g12a: Prepare the GPU clock tree to change at runtime
-Date:   Tue, 31 Mar 2020 00:11:01 +0200
-Message-Id: <20200330221104.3163788-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200330221104.3163788-1-martin.blumenstingl@googlemail.com>
-References: <20200330221104.3163788-1-martin.blumenstingl@googlemail.com>
+        Mon, 30 Mar 2020 15:17:32 -0700 (PDT)
+Received: (nullmailer pid 26371 invoked by uid 1000);
+        Mon, 30 Mar 2020 22:17:30 -0000
+Date:   Mon, 30 Mar 2020 16:17:30 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Christophe Roullier <christophe.roullier@st.com>
+Cc:     davem@davemloft.net, mark.rutland@arm.com, mripard@kernel.org,
+        martin.blumenstingl@googlemail.com, alexandru.ardelean@analog.com,
+        narmstrong@baylibre.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCHv2 2/2] dt-bindings: net: dwmac: Convert stm32 dwmac to DT
+ schema
+Message-ID: <20200330221730.GA17878@bogus>
+References: <20200317151706.25810-1-christophe.roullier@st.com>
+ <20200317151706.25810-3-christophe.roullier@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317151706.25810-3-christophe.roullier@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The "mali_0" or "mali_1" clock trees should not be updated while the
-clock is running. Enforce this by setting CLK_SET_RATE_GATE on the
-"mali_0" and "mali_1" gates. This makes the CCF switch to the "mali_1"
-tree when "mali_0" is currently active and vice versa, which is exactly
-what the vendor driver does when updating the frequency of the mali
-clock.
-Also populate set_rate requests from the divider to the mux so the GPU
-clock frequency can be updated at runtime (which will be required for
-GPU DVFS).
+On Tue, Mar 17, 2020 at 04:17:06PM +0100, Christophe Roullier wrote:
+> Convert stm32 dwmac to DT schema.
+> 
+> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> ---
+>  .../devicetree/bindings/net/stm32-dwmac.txt   |  44 -----
+>  .../devicetree/bindings/net/stm32-dwmac.yaml  | 160 ++++++++++++++++++
+>  2 files changed, 160 insertions(+), 44 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>  create mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> deleted file mode 100644
+> index a90eef11dc46..000000000000
+> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> +++ /dev/null
+> @@ -1,44 +0,0 @@
+> -STMicroelectronics STM32 / MCU DWMAC glue layer controller
+> -
+> -This file documents platform glue layer for stmmac.
+> -Please see stmmac.txt for the other unchanged properties.
+> -
+> -The device node has following properties.
+> -
+> -Required properties:
+> -- compatible:  For MCU family should be "st,stm32-dwmac" to select glue, and
+> -	       "snps,dwmac-3.50a" to select IP version.
+> -	       For MPU family should be "st,stm32mp1-dwmac" to select
+> -	       glue, and "snps,dwmac-4.20a" to select IP version.
+> -- clocks: Must contain a phandle for each entry in clock-names.
+> -- clock-names: Should be "stmmaceth" for the host clock.
+> -	       Should be "mac-clk-tx" for the MAC TX clock.
+> -	       Should be "mac-clk-rx" for the MAC RX clock.
+> -	       For MPU family need to add also "ethstp" for power mode clock
+> -- interrupt-names: Should contain a list of interrupt names corresponding to
+> -           the interrupts in the interrupts property, if available.
+> -		   Should be "macirq" for the main MAC IRQ
+> -		   Should be "eth_wake_irq" for the IT which wake up system
+> -- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+> -	       encompases the glue register, and the offset of the control register.
+> -
+> -Optional properties:
+> -- clock-names:     For MPU family "eth-ck" for PHY without quartz
+> -- st,eth-clk-sel (boolean) : set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
+> -- st,eth-ref-clk-sel (boolean) :  set this property in RMII mode when you have PHY without crystal 50MHz and want to select RCC clock instead of ETH_REF_CLK.
+> -
+> -Example:
+> -
+> -	ethernet@40028000 {
+> -		compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+> -		reg = <0x40028000 0x8000>;
+> -		reg-names = "stmmaceth";
+> -		interrupts = <0 61 0>, <0 62 0>;
+> -		interrupt-names = "macirq", "eth_wake_irq";
+> -		clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
+> -		clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+> -		st,syscon = <&syscfg 0x4>;
+> -		snps,pbl = <8>;
+> -		snps,mixed-burst;
+> -		dma-ranges;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> new file mode 100644
+> index 000000000000..4440216917b3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+> @@ -0,0 +1,160 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/net/stm32-dwmac.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: STMicroelectronics STM32 / MCU DWMAC glue layer controller
+> +
+> +maintainers:
+> +  - Alexandre Torgue <alexandre.torgue@st.com>
+> +  - Christophe Roullier <christophe.roullier@st.com>
+> +
+> +description:
+> +  This file documents platform glue layer for stmmac.
+> +
+> +# We need a select here so we don't match all nodes with 'snps,dwmac'
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - st,stm32-dwmac
+> +          - st,stm32mp1-dwmac
+> +  required:
+> +    - compatible
+> +
+> +allOf:
+> +  - $ref: "snps,dwmac.yaml#"
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - st,stm32-dwmac
+> +              - st,stm32mp1-dwmac
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/clk/meson/g12a.c | 30 ++++++++++++++++++++++--------
- 1 file changed, 22 insertions(+), 8 deletions(-)
+This schema is only applied when these compatibles are present, so you 
+don't need the 'if' and all this can move to the main section.
 
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index fad616cac01e..30c15766ebb1 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -3702,7 +3702,9 @@ static struct clk_regmap g12a_hdmi = {
- 
- /*
-  * The MALI IP is clocked by two identical clocks (mali_0 and mali_1)
-- * muxed by a glitch-free switch.
-+ * muxed by a glitch-free switch. The CCF can manage this glitch-free
-+ * mux because it does top-to-bottom updates the each clock tree and
-+ * switches to the "inactive" one when CLK_SET_RATE_GATE is set.
-  */
- static const struct clk_parent_data g12a_mali_0_1_parent_data[] = {
- 	{ .fw_name = "xtal", },
-@@ -3726,7 +3728,13 @@ static struct clk_regmap g12a_mali_0_sel = {
- 		.ops = &clk_regmap_mux_ops,
- 		.parent_data = g12a_mali_0_1_parent_data,
- 		.num_parents = 8,
--		.flags = CLK_SET_RATE_NO_REPARENT,
-+		/*
-+		 * Don't request the parent to change the rate because
-+		 * all GPU frequencies can be derived from the fclk_*
-+		 * clocks and one special GP0_PLL setting. This is
-+		 * important because we need the MPLL clocks for audio.
-+		 */
-+		.flags = 0,
- 	},
- };
- 
-@@ -3743,7 +3751,7 @@ static struct clk_regmap g12a_mali_0_div = {
- 			&g12a_mali_0_sel.hw
- 		},
- 		.num_parents = 1,
--		.flags = CLK_SET_RATE_NO_REPARENT,
-+		.flags = CLK_SET_RATE_PARENT,
- 	},
- };
- 
-@@ -3759,7 +3767,7 @@ static struct clk_regmap g12a_mali_0 = {
- 			&g12a_mali_0_div.hw
- 		},
- 		.num_parents = 1,
--		.flags = CLK_SET_RATE_PARENT,
-+		.flags = CLK_SET_RATE_GATE | CLK_SET_RATE_PARENT,
- 	},
- };
- 
-@@ -3774,7 +3782,13 @@ static struct clk_regmap g12a_mali_1_sel = {
- 		.ops = &clk_regmap_mux_ops,
- 		.parent_data = g12a_mali_0_1_parent_data,
- 		.num_parents = 8,
--		.flags = CLK_SET_RATE_NO_REPARENT,
-+		/*
-+		 * Don't request the parent to change the rate because
-+		 * all GPU frequencies can be derived from the fclk_*
-+		 * clocks and one special GP0_PLL setting. This is
-+		 * important because we need the MPLL clocks for audio.
-+		 */
-+		.flags = 0,
- 	},
- };
- 
-@@ -3791,7 +3805,7 @@ static struct clk_regmap g12a_mali_1_div = {
- 			&g12a_mali_1_sel.hw
- 		},
- 		.num_parents = 1,
--		.flags = CLK_SET_RATE_NO_REPARENT,
-+		.flags = CLK_SET_RATE_PARENT,
- 	},
- };
- 
-@@ -3807,7 +3821,7 @@ static struct clk_regmap g12a_mali_1 = {
- 			&g12a_mali_1_div.hw
- 		},
- 		.num_parents = 1,
--		.flags = CLK_SET_RATE_PARENT,
-+		.flags = CLK_SET_RATE_GATE | CLK_SET_RATE_PARENT,
- 	},
- };
- 
-@@ -3827,7 +3841,7 @@ static struct clk_regmap g12a_mali = {
- 		.ops = &clk_regmap_mux_ops,
- 		.parent_hws = g12a_mali_parent_hws,
- 		.num_parents = 2,
--		.flags = CLK_SET_RATE_NO_REPARENT,
-+		.flags = CLK_SET_RATE_PARENT,
- 	},
- };
- 
--- 
-2.26.0
+> +    then:
+> +      properties:
+> +       clocks:
+> +         minItems: 3
+> +         maxItems: 5
+> +         items:
+> +          - description: GMAC main clock
+> +          - description: MAC TX clock
+> +          - description: MAC RX clock
+> +          - description: For MPU family, used for power mode
+> +          - description: For MPU family, used for PHY without quartz
+> +
+> +       clock-names:
+> +         minItems: 3
+> +         maxItems: 5
+> +         contains:
+> +          enum:
+> +            - stmmaceth
+> +            - mac-clk-tx
+> +            - mac-clk-rx
+> +            - ethstp
+> +            - eth-ck
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - st,stm32mp1-dwmac
+> +          - const: snps,dwmac-4.20a
+> +      - items:
+> +          - enum:
+> +              - st,stm32-dwmac
+> +          - const: snps,dwmac-4.10a
+> +      - items:
+> +          - enum:
+> +              - st,stm32-dwmac
+> +          - const: snps,dwmac-3.50a
+> +
+> +  st,syscon:
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
+> +    description:
+> +      Should be phandle/offset pair. The phandle to the syscon node which
+> +      encompases the glue register, and the offset of the control register
+> +
+> +  st,eth-clk-sel:
+> +    description:
+> +      set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
+> +    type: boolean
+> +
+> +  st,eth-ref-clk-sel:
+> +    description:
+> +      set this property in RMII mode when you have PHY without crystal 50MHz and want to
+> +      select RCC clock instead of ETH_REF_CLK.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - st,syscon
+> +
+> +examples:
+> + - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> +    #include <dt-bindings/reset/stm32mp1-resets.h>
+> +    #include <dt-bindings/mfd/stm32h7-rcc.h>
+> +    //Example 1
+> +     ethernet0: ethernet@5800a000 {
+> +       compatible = "st,stm32mp1-dwmac", "snps,dwmac-4.20a";
+> +       reg = <0x5800a000 0x2000>;
+> +       reg-names = "stmmaceth";
+> +       interrupts = <&intc GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+> +       interrupt-names = "macirq";
+> +       clock-names = "stmmaceth",
+> +                     "mac-clk-tx",
+> +                     "mac-clk-rx",
+> +                     "ethstp",
+> +                     "eth-ck";
+> +       clocks = <&rcc ETHMAC>,
+> +                <&rcc ETHTX>,
+> +                <&rcc ETHRX>,
+> +                <&rcc ETHSTP>,
+> +                <&rcc ETHCK_K>;
+> +       st,syscon = <&syscfg 0x4>;
+> +       snps,pbl = <2>;
+> +       snps,axi-config = <&stmmac_axi_config_0>;
+> +       snps,tso;
+> +       status = "disabled";
 
+Don't show status in examples.
+
+> +       phy-mode = "rgmii";
+> +       };
+
+Wrong indentation.
+
+> +
+> +    //Example 2 (MCU example)
+> +     ethernet1: ethernet@40028000 {
+> +       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+> +       reg = <0x40028000 0x8000>;
+> +       reg-names = "stmmaceth";
+> +       interrupts = <0 61 0>, <0 62 0>;
+> +       interrupt-names = "macirq", "eth_wake_irq";
+> +       clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
+> +       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+> +       st,syscon = <&syscfg 0x4>;
+> +       snps,pbl = <8>;
+> +       snps,mixed-burst;
+> +       dma-ranges;
+> +       phy-mode = "mii";
+> +       };
+> +
+> +    //Example 3
+> +     ethernet2: ethernet@40027000 {
+> +       compatible = "st,stm32-dwmac", "snps,dwmac-4.10a";
+> +       reg = <0x40028000 0x8000>;
+> +       reg-names = "stmmaceth";
+> +       interrupts = <61>;
+> +       interrupt-names = "macirq";
+> +       clock-names = "stmmaceth", "mac-clk-tx", "mac-clk-rx";
+> +       clocks = <&rcc 62>, <&rcc 61>, <&rcc 60>;
+> +       st,syscon = <&syscfg 0x4>;
+> +       snps,pbl = <8>;
+> +       status = "disabled";
+> +       phy-mode = "mii";
+> +       };
+> -- 
+> 2.17.1
+> 
