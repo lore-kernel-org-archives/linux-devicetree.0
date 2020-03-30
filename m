@@ -1,119 +1,154 @@
-Return-Path: <SRS0=L4zF=5O=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6364FC2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 22:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D47C2D0E7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 00:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39E7A20781
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Mar 2020 22:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585522440;
-	bh=wfIxjNJ0sTS7Qcsd3YW25HzMdWGDXgBLhUnbMCC+gGo=;
-	h=From:To:CC:Subject:Date:List-ID:From;
-	b=VtE9V41rkOu1zJMO9aktjAnMbBQwC/PYfjFJhQWA0waXYvgsANtqNQRlLkdu9KfiK
-	 XDS21WcMnnMYgcKrlwZY0vsBRzdrKw5wCL+MtQykX8Fc2Q8PnfguQWBnbWMbTGeT0B
-	 DBICnudLLDlsJRkRLmqt/vRcfij4I0R2E91UuWOA=
+	by mail.kernel.org (Postfix) with ESMTP id 3401D20784
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 00:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgC2Wx7 (ORCPT
+        id S1727149AbgC3AXG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 18:53:59 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31109 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729281AbgC2Wx6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 18:53:58 -0400
-X-UUID: d370c5f1c69d415590d318d9d8aab34d-20200330
-X-UUID: d370c5f1c69d415590d318d9d8aab34d-20200330
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <ryder.lee@kernel.org>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 13965590; Mon, 30 Mar 2020 06:53:43 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 30 Mar 2020 06:53:37 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 30 Mar 2020 06:53:42 +0800
-From:   Ryder Lee <ryder.lee@kernel.org>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH] arm64: dts: mt7622: add built-in Wi-Fi device nodes
-Date:   Mon, 30 Mar 2020 06:53:40 +0800
-Message-ID: <315346e1d6fa00e5a0d7a8216982bf723af8e985.1584862530.git.ryder.lee@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Sun, 29 Mar 2020 20:23:06 -0400
+Received: from sauhun.de ([88.99.104.3]:43912 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726403AbgC3AXG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 29 Mar 2020 20:23:06 -0400
+Received: from localhost (p5486C514.dip0.t-ipconnect.de [84.134.197.20])
+        by pokefinder.org (Postfix) with ESMTPSA id C96C92C0195;
+        Mon, 30 Mar 2020 02:23:02 +0200 (CEST)
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [PATCH] i2c: regroup documentation of bindings
+Date:   Mon, 30 Mar 2020 02:22:20 +0200
+Message-Id: <20200330002220.3575-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+Some bindings are for the bus master, some are for the slaves.
+Regroup them and give them seperate headings to make it clear.
 
-This enables built-in 802.11n Wi-Fi support. It's 2.4GHz only.
-
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- .../boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts     |  4 ++++
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts          |  4 ++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi              | 11 +++++++++++
- 3 files changed, 19 insertions(+)
+ Documentation/devicetree/bindings/i2c/i2c.txt | 63 +++++++++++--------
+ 1 file changed, 38 insertions(+), 25 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-index 83e10591e0e5..d174ad214857 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-bananapi-bpi-r64.dts
-@@ -543,3 +543,7 @@
- 	pinctrl-0 = <&watchdog_pins>;
- 	status = "okay";
- };
-+
-+&wmac {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index 3f783348c66a..0b4de627f96e 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -506,3 +506,7 @@
- 	pinctrl-0 = <&watchdog_pins>;
- 	status = "okay";
- };
-+
-+&wmac {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index dac51e98204c..03b14a5ab7f3 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -699,6 +699,17 @@
- 		status = "disabled";
- 	};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+index 9a53df4243c6..aa74dd0e63e3 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+@@ -2,10 +2,10 @@ Generic device tree bindings for I2C busses
+ ===========================================
  
-+	wmac: wmac@18000000 {
-+		compatible = "mediatek,mt7622-wmac";
-+		reg = <0 0x18000000 0 0x100000>;
-+		interrupts = <GIC_SPI 211 IRQ_TYPE_LEVEL_LOW>;
+ This document describes generic bindings which can be used to describe I2C
+-busses in a device tree.
++busses and their child devices in a device tree.
+ 
+-Required properties
+--------------------
++Required properties (per bus)
++-----------------------------
+ 
+ - #address-cells  - should be <1>. Read more about addresses below.
+ - #size-cells     - should be <0>.
+@@ -16,18 +16,13 @@ For other required properties e.g. to describe register sets,
+ clocks, etc. check the binding documentation of the specific driver.
+ 
+ The cells properties above define that an address of children of an I2C bus
+-are described by a single value. This is usually a 7 bit address. However,
+-flags can be attached to the address. I2C_TEN_BIT_ADDRESS is used to mark a 10
+-bit address. It is needed to avoid the ambiguity between e.g. a 7 bit address
+-of 0x50 and a 10 bit address of 0x050 which, in theory, can be on the same bus.
+-Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we listen to
+-be devices ourselves.
++are described by a single value.
+ 
+-Optional properties
+--------------------
++Optional properties (per bus)
++-----------------------------
+ 
+ These properties may not be supported by all drivers. However, if a driver
+-wants to support one of the below features, it should adapt the bindings below.
++wants to support one of the below features, it should adapt these bindings.
+ 
+ - clock-frequency
+ 	frequency of bus clock in Hz.
+@@ -73,31 +68,49 @@ wants to support one of the below features, it should adapt the bindings below.
+ 	i2c bus clock frequency (clock-frequency).
+ 	Specified in Hz.
+ 
+-- interrupts
+-	interrupts used by the device.
+-
+-- interrupt-names
+-	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
+-	other names are	left to individual drivers.
+-
+-- host-notify
+-	device uses SMBus host notify protocol instead of interrupt line.
+-
+ - multi-master
+ 	states that there is another master active on this bus. The OS can use
+ 	this information to adapt power management to keep the arbitration awake
+ 	all the time, for example.
+ 
+-- wakeup-source
+-	device can be used as a wakeup source.
++Required properties (per child device)
++--------------------------------------
 +
-+		mediatek,infracfg = <&infracfg>;
-+		status = "disabled";
++- compatible
++	name of I2C slave device following generic names recommended practice.
+ 
+ - reg
+-	I2C slave addresses
++	One or many I2C slave addresses. These are usually a 7 bit addresses.
++	However, flags can be attached to an address. I2C_TEN_BIT_ADDRESS is
++	used to mark a 10 bit address. It is needed to avoid the ambiguity
++	between e.g. a 7 bit address of 0x50 and a 10 bit address of 0x050
++	which, in theory, can be on the same bus.
++	Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we
++	listen to be devices ourselves.
 +
-+		power-domains = <&scpsys MT7622_POWER_DOMAIN_WB>;
-+	};
++Optional properties (per child device)
++--------------------------------------
 +
- 	ssusbsys: ssusbsys@1a000000 {
- 		compatible = "mediatek,mt7622-ssusbsys",
- 			     "syscon";
++These properties may not be supported by all drivers. However, if a driver
++wants to support one of the below features, it should adapt these bindings.
++
++- host-notify
++	device uses SMBus host notify protocol instead of interrupt line.
++
++- interrupts
++	interrupts used by the device.
++
++- interrupt-names
++	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
++	other names are	left to individual drivers.
+ 
+ - reg-names
+ 	Names of map programmable addresses.
+ 	It can contain any map needing another address than default one.
+ 
++- wakeup-source
++	device can be used as a wakeup source.
++
+ Binding may contain optional "interrupts" property, describing interrupts
+ used by the device. I2C core will assign "irq" interrupt (or the very first
+ interrupt if not using interrupt names) as primary interrupt for the slave.
 -- 
-2.18.0
+2.20.1
 
