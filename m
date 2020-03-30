@@ -2,188 +2,133 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BDFC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF73BC2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE1520757
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B921420774
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585601098;
-	bh=sDsW8uneTQDfS7c+/SfXMBhezIxEy6/VKBXvZvsi85s=;
+	s=default; t=1585601169;
+	bh=lOgFT3LsqVV1YDo8f2DUvvy7lhJ9V4ORW7vn1hCfoMk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GeatPdvNjVHDjwG3v+ir47UlwEJ6K9PLnns6r3j3n00n0n0kC8VtvUExXl8fKIbAY
-	 pOTHjjZbsatKRistVB2UAiq8U7FwS//EiEcJjWi+wKosqJufc5H1/GmbVAQjDyhzr2
-	 Fh40BnTHxgDqIdSEZ7ma2BlxDcb6m0uyid9EOEAI=
+	b=CFcF53uFTBiIHxLmdVL8KLmJXUZBjynuL1BC8Ob2w2MskBY4hy8KKvXYUvxsP/6O5
+	 tf1RezR6Wa+kzAhwW/Ny/RGOcU9BFh8A8Bekmb+eGnCl26rBfCiz6WkoKM8FaPj4vk
+	 ZpSYiC/eiHdgIy2k71WjNuGYoZXdZFqe0W1Z9NGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgC3Uo6 (ORCPT
+        id S1728407AbgC3UqJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:44:58 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35003 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbgC3Uo6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 16:44:58 -0400
-Received: by mail-il1-f193.google.com with SMTP id 7so17273829ill.2
-        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 13:44:57 -0700 (PDT)
+        Mon, 30 Mar 2020 16:46:09 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37152 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbgC3UqJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 16:46:09 -0400
+Received: by mail-il1-f196.google.com with SMTP id a6so17273900ilr.4;
+        Mon, 30 Mar 2020 13:46:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l36hbTviCJO4CHJIHk/epKBvj80epxT6yi/PCZehM4s=;
-        b=Hwyg6EPkEFwXK/tHm5Bo7+sy1IVwq3KejjQSLzAhfuoisI1dDXmfcZCvF30qjqyCwM
-         b/FHh7aOttGWprXIcBLD7q9w810kQArELbFkRALDoOeBY7MDU8aibbjXL56DVmz+X2zy
-         G1BSE/kplRzw5l/iJsg/80yWGAJsyHUHLbttv6SEjVkTzNrhC8pWc5UYHn0FewxeqwVK
-         RMwUBaACF/kA7CEzQ8jN0ypO/5kiUk6bDARaiHSkO3VxKrQZ4vxQnMX3CNy76KBsc3S5
-         F5/pZzczN1A66z76KXOMF2zSucT83caKj2RJM0FUJGxvtUzjD8tOr8a3/VvbsEzpnkc/
-         71Ng==
-X-Gm-Message-State: ANhLgQ0CLTJNz7kUz+GOrGs8/7R8yv32q/4Ak7nXd/Iz5ObS3iMn4QpU
-        Cuk6bdH8m+iYox07/Qd53tidsQc=
-X-Google-Smtp-Source: ADFU+vueG9ZV7JYC4OiU5Ma/yDq1M0PnMDLnhzlbbEeN0NkJgyLXBc8je8EhJazkpvPGj5y0aOvazg==
-X-Received: by 2002:a92:1b59:: with SMTP id b86mr13224264ilb.291.1585601097079;
-        Mon, 30 Mar 2020 13:44:57 -0700 (PDT)
+        bh=BAHD/YUBzhydWwE/iCZpMojP/quu8HcEwcDTrZ8h834=;
+        b=qTyt2h9F/NWE5rQW6SF1OVQHhW1uAFq11I8mrVWwOzJ/HMM7PdtJLBWHNuZqOVmXQ8
+         QEtQCC2eVP4fRuzjOV0Fs1UmERC1Gjwf3k228aGdfFvle3aBEwVBcWwvOL6Xx2r6cpIe
+         cbXtprRvjjYPvSJCt214wXsToei/v3uQEj2RAnpPGjveSekNtOQkGTqe5t35q2y+NJT4
+         8U9G4ZJxytCQBY+KFc+tdwH9SX64Lav39H/rjSFmUSWUud4BfyETAkt9b3jZfDS7wKi5
+         HThfaaqwEqYi2UbHVuePmgukjA0ckX1yGqK/H/k+yFqnQm1Rm7d9ydPTJJAcjb1nR6MB
+         uAjg==
+X-Gm-Message-State: ANhLgQ0S1UtTAaVmo7dmwLo+xtYkPoy5dYwz5ZPuhRKsLTFDQSYJLNMR
+        l5ucpHzYglgPErS8m15B2w==
+X-Google-Smtp-Source: ADFU+vvlE38IaEgB1E1VNG9brIWJQdKajCluZzFENMztoPQXJvNW6huFEyZfTsPzQyXIopjuR2Ju+g==
+X-Received: by 2002:a92:6501:: with SMTP id z1mr13264790ilb.235.1585601166355;
+        Mon, 30 Mar 2020 13:46:06 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id d15sm4352040ioe.49.2020.03.30.13.44.56
+        by smtp.gmail.com with ESMTPSA id k8sm5160637ilk.85.2020.03.30.13.46.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 13:44:56 -0700 (PDT)
-Received: (nullmailer pid 11433 invoked by uid 1000);
-        Mon, 30 Mar 2020 20:44:55 -0000
-Date:   Mon, 30 Mar 2020 14:44:55 -0600
+        Mon, 30 Mar 2020 13:46:05 -0700 (PDT)
+Received: (nullmailer pid 13031 invoked by uid 1000);
+        Mon, 30 Mar 2020 20:46:04 -0000
+Date:   Mon, 30 Mar 2020 14:46:04 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Michael Tretter <m.tretter@pengutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Dhaval Shah <dshah@xilinx.com>, kernel@pengutronix.de
-Subject: Re: [PATCH 4/6] dt-bindings: soc: xlnx: extract xlnx,vcu-settings to
- separate binding
-Message-ID: <20200330204455.GA6329@bogus>
-References: <20200317094115.15896-1-m.tretter@pengutronix.de>
- <20200317094115.15896-5-m.tretter@pengutronix.de>
+To:     Igor Opaniuk <igor.opaniuk@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 1/5] ARM: dts: imx6: Dual license adding MIT
+Message-ID: <20200330204604.GA11575@bogus>
+References: <20200317101947.27250-1-igor.opaniuk@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200317094115.15896-5-m.tretter@pengutronix.de>
+In-Reply-To: <20200317101947.27250-1-igor.opaniuk@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:41:13AM +0100, Michael Tretter wrote:
-> The xlnx,vcu binding comprises two adjacent register banks:
+On Tue, Mar 17, 2020 at 12:19:43PM +0200, Igor Opaniuk wrote:
+> From: Igor Opaniuk <igor.opaniuk@toradex.com>
 > 
-> The first register bank ("vcu_slcr") contains registers for setting the
-> clocks of the vcu and controlling the performance monitors. The second
-> bank ("logicoreip") contains the configuration settings of the video codec
-> unit, which are set before synthesizing the bitstream.
+> Dual license files adding MIT license, which will permit to re-use
+> device trees in other non-GPL OSS projects.
+
+Are you the only author on these files? If not, you don't have rights to 
+do this.
+
 > 
-> Drivers that drive the actual video codec unit need to to read the
-> registers from the logicoreip register bank for configuring the vcu
-> firmware.
-> 
-> As logicoreip is a too generic name for this register bank, use
-> "vcu-settings" as a binding name, because the register bank basically
-> provides the configuration settings of the VCU.
-> 
-> Therefore, add the vcu-settings binding to provide a syscon interface
-> for other drivers to read these registers.
-> 
-> The alternative would have been to merge the two register banks of the
-> xlnx,vcu binding into one register bank and make xlnx,vcu provide a
-> syscon interface, but that would lead to more incompatibility than
-> making second register bank of xlnx,vcu optional.
-> 
-> Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+> Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
 > ---
->  .../soc/xilinx/xlnx,vcu-settings.yaml         | 45 +++++++++++++++++++
->  .../bindings/soc/xilinx/xlnx,vcu.txt          |  9 +---
->  2 files changed, 47 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu-settings.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu-settings.yaml b/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu-settings.yaml
-> new file mode 100644
-> index 000000000000..a38ab180854e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu-settings.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/xilinx/xlnx,vcu-settings.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Xilinx VCU Settings
-> +
-> +maintainers:
-> +  - Michael Tretter <kernel@pengutronix.de>
-> +
-> +# Custom select to avoid matching all nodes with 'syscon'
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - xlnx,vcu-settings
-> +  required:
-> +    - compatible
-
-You can drop this. The tooling now avoids this issue for 'syscon'.
-
-> +
-> +
-> +description: |
-> +  The Xilinx VCU Settings provides information about the configuration of the
-> +  video codec unit.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: xlnx,vcu-settings
-> +      - const: syscon
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    xlnx_vcu: vcu@a0041000 {
-> +          compatible = "xlnx,vcu-settings", "syscon";
-> +          reg = <0x0 0xa0041000 0x0 0x1000>;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt b/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt
-> index 6786d6715df0..2417b13ba468 100644
-> --- a/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt
-> +++ b/Documentation/devicetree/bindings/soc/xilinx/xlnx,vcu.txt
-> @@ -12,10 +12,7 @@ Required properties:
->  - compatible: shall be one of:
->  	"xlnx,vcu"
->  	"xlnx,vcu-logicoreip-1.0"
-> -- reg, reg-names: There are two sets of registers need to provide.
-> -	1. vcu slcr
-> -	2. Logicore
-> -	reg-names should contain name for the each register sequence.
-> +- reg : The base offset and size of the VCU_PL_SLCR register space.
->  - clocks: phandle for aclk and pll_ref clocksource
->  - clock-names: The identification string, "aclk", is always required for
->     the axi clock. "pll_ref" is required for pll.
-> @@ -23,9 +20,7 @@ Example:
+>  arch/arm/boot/dts/imx6dl-pinfunc.h | 2 +-
+>  arch/arm/boot/dts/imx6dl.dtsi      | 2 +-
+>  arch/arm/boot/dts/imx6qdl.dtsi     | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6dl-pinfunc.h b/arch/arm/boot/dts/imx6dl-pinfunc.h
+> index 9d88d09f9bf6..960d300ea9ba 100644
+> --- a/arch/arm/boot/dts/imx6dl-pinfunc.h
+> +++ b/arch/arm/boot/dts/imx6dl-pinfunc.h
+> @@ -1,4 +1,4 @@
+> -/* SPDX-License-Identifier: GPL-2.0-only */
+> +/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
+>  /*
+>   * Copyright 2013 Freescale Semiconductor, Inc.
+>   */
+> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+> index 008312ee0c31..77e946b3d012 100644
+> --- a/arch/arm/boot/dts/imx6dl.dtsi
+> +++ b/arch/arm/boot/dts/imx6dl.dtsi
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> +// SPDX-License-Identifier: GPL-2.0 OR MIT
+>  //
+>  // Copyright 2013 Freescale Semiconductor, Inc.
 >  
->  	xlnx_vcu: vcu@a0040000 {
->  		compatible = "xlnx,vcu-logicoreip-1.0";
-> -		reg = <0x0 0xa0040000 0x0 0x1000>,
-> -			 <0x0 0xa0041000 0x0 0x1000>;
-> -		reg-names = "vcu_slcr", "logicore";
-> +		reg = <0x0 0xa0040000 0x0 0x1000>;
->  		clocks = <&si570_1>, <&clkc 71>;
->  		clock-names = "pll_ref", "aclk";
->  	};
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index e6b4b8525f98..75d746952932 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -1,4 +1,4 @@
+> -// SPDX-License-Identifier: GPL-2.0+
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+>  //
+>  // Copyright 2011 Freescale Semiconductor, Inc.
+>  // Copyright 2011 Linaro Ltd.
 > -- 
-> 2.20.1
+> 2.17.1
 > 
