@@ -2,166 +2,95 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9374EC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D34C2D0EE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580C820733
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585611571;
-	bh=LfeNLA8hTH7wX4ycfGXxNf2CLaX9TbvhLmClroOnWaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a+ysTir0GIazyrOurkYx87qco4dgBnRrRK55xjOh6MKwK0sK+k3q4Ip8Pq2kKiXtJ
-	 AfW/onNy4IqlRN6+BF/ntGfNS1gRjo17sxJd7Jzqwm81rqHeWhOQlms/3hq4hxATlI
-	 /D8YzZ5Xnjzt+776qYTN4BdglGXgtlUIvI65WVQs=
+	by mail.kernel.org (Postfix) with ESMTP id BA7BF20733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:45:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ABb6LM8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgC3Xjb (ORCPT
+        id S1728980AbgC3Xpu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:39:31 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34346 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgC3Xja (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:39:30 -0400
-Received: by mail-io1-f67.google.com with SMTP id h131so19790859iof.1;
-        Mon, 30 Mar 2020 16:39:30 -0700 (PDT)
+        Mon, 30 Mar 2020 19:45:50 -0400
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:44736 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728537AbgC3Xpt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:45:49 -0400
+Received: by mail-wr1-f46.google.com with SMTP id m17so23722912wrw.11;
+        Mon, 30 Mar 2020 16:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GDnGHW3qNkgvLRDgu5vu6hawny2amkhzRWQ0FmPc35g=;
+        b=ABb6LM8ToMRg6Yrah5JleJW/rhbs3rC5+MnLM5ss4L9Xfh1nULPqhBYzglKJ13bYnM
+         GeMRq2+Nae3IN7gnVkDxuLoCOSqaXmP3MXm2UxG5mWjL36W+Ya2eqTCk4NFSwP0k2SYN
+         WxuwWXZV1tzZ0bydrILV8rQTb4H1n7CLzuxE1H0slY4VXo+0N8gIVUNCsGhMgxSQ9euT
+         k6aFpVUbFO3hYCImRqCGFZOWn8Ua52XZPtsPRe2hRh1FcsqWqJf1lcdnDgyDnU5XjZVz
+         7f9PE5gLJi+8GIpORxYMWz6v3qCnGsJZLirxmsBijnz7AqnYcccjMG3WmJDP/+FkHeYi
+         ocOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=suf5eKi2PlYuysyfvfSpAVKSO1upbbS/OhGRgy7bca0=;
-        b=MWUc67ROIaGjjfBBb0ABd3VJH2Kqiz+0b4BWGuCb1RrmMPqyjniF8jS0ygRJ4eY9bv
-         56JybXQyZaUowb0S7ajBo2ahjnu7gwRtstc/BP3djxjbCh1vnYDI8tRDROKljlUeZS0l
-         TRkqSuUPv6lmLFxW7J0/hfS6ssiw1P2NTc5uMuegBUy95sn8z7+OgByM5b0mYZ3hSbzD
-         IWOV9zaw6ACuDn/jA1qJGYWpkzOOCs8SXQUtoNLdMWlMpy8kOno3KSYuGk71qYKgWcf1
-         quJG/If50PUA3tIqe1XIn1S/JeGiimaXTFWDpq9E3wgoCCjDbblg4OpwDttVDBl603SZ
-         uw+g==
-X-Gm-Message-State: ANhLgQ13MVPJ41X+F5vC9giHttWyvyJFLxF+0UHchFX9+2T0ydSn1xJi
-        7tQ+acmECwAlkl77zR7xnNDJNG7UAw==
-X-Google-Smtp-Source: ADFU+vvQ2i8mdVUrsIlSYIE3hKLY1HQqdWExg0USOIYKG+exGgZY+bRoj7VDw92vWLp2qb219hVOtw==
-X-Received: by 2002:a6b:5c0d:: with SMTP id z13mr12178128ioh.96.1585611570040;
-        Mon, 30 Mar 2020 16:39:30 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id b62sm5388520ilb.1.2020.03.30.16.39.29
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GDnGHW3qNkgvLRDgu5vu6hawny2amkhzRWQ0FmPc35g=;
+        b=WUl4lWyd5zoGRFptE/XMXHJlSAii31xUHyrO/lop7KzhF0/bjX/MNEWZgZKsHprbeO
+         i5C0o5yQAlGYMPb3rqgcYAZXJ2ZAJLT1c4YDTVk/h5HaNNtxvJsy8iX53LAqTlDWUIex
+         DZWo/GAzAjvvAwE7rJysSAMY/0pLnycEvQbPx6dL8AeWUKvfd5FCaYcgh0pODeV9qXww
+         yeWN5rOo/G40c6tUfms/PmH7uUDiJoENrWiVafA6mQSitMjpz3UCBgD0a5lfcIMjIsvr
+         ZC0z++62nv2iwAFJHHLaZjYEaxtP2Y622pGSzj7Ofuznqspcy5/i5AAWe4OiFnt4ywAK
+         xGKw==
+X-Gm-Message-State: ANhLgQ1xRIaU//3pyhnr2OVmFMiAwcJdjE6sdFMKotylfDv0995QMaXb
+        EjYdatlVPeO+wWTBm1Mza6s=
+X-Google-Smtp-Source: ADFU+vsRAJpOrFH+eER9+kJfJgrHjQ2G/YBnZW8feggG/5Lyp88bIurZ3HekKzw9sQpYyAPLoBJuvA==
+X-Received: by 2002:a5d:60ca:: with SMTP id x10mr11321086wrt.372.1585611947798;
+        Mon, 30 Mar 2020 16:45:47 -0700 (PDT)
+Received: from localhost.localdomain (p200300F13710ED00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3710:ed00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id v186sm1392953wme.24.2020.03.30.16.45.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 16:39:29 -0700 (PDT)
-Received: (nullmailer pid 11087 invoked by uid 1000);
-        Mon, 30 Mar 2020 23:39:28 -0000
-Date:   Mon, 30 Mar 2020 17:39:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandru Lazar <alazar@startmail.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, mark.rutland@arm.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: Add MAX1241 device tree
- bindings in documentation
-Message-ID: <20200330233928.GA7566@bogus>
-References: <20200320150114.9297-1-alazar@startmail.com>
- <20200320150114.9297-2-alazar@startmail.com>
+        Mon, 30 Mar 2020 16:45:47 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, jbrunet@baylibre.com,
+        narmstrong@baylibre.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/2] clk: meson8b: allow the HDMI driver to manage "hdmi_sys"
+Date:   Tue, 31 Mar 2020 01:45:33 +0200
+Message-Id: <20200330234535.3327513-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320150114.9297-2-alazar@startmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 05:01:14PM +0200, Alexandru Lazar wrote:
-> Add device-tree bindings documentation for the MAX1241 device driver.
-> 
-> Signed-off-by: Alexandru Lazar <alazar@startmail.com>
-> ---
->  .../bindings/iio/adc/maxim,max1241.yaml       | 61 +++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml b/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
-> new file mode 100644
-> index 000000000000..de41d422ce3b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/maxim,max1241.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: GPL-2.0
+The "hdmi_sys" clock is driving the HDMI TX controller. The
+controller's IP seems to use this clock for example to derived the DDC
+clock.
 
-Dual license new bindings please:
+Testing has shown that we can disable this clock without locking up the
+system (as long as we don't read the HDMI TX registers while this clock
+is disabled - this can't happen as we don't have a driver yet and once
+we have one that driver will enable this clock).
 
-(GPL-2.0-only OR BSD-2-Clause)
 
-> +# Copyright 2020 Ioan-Alexandru Lazar
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/maxim,max1241.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Maxim MAX1241 12-bit, single-channel analog to digital converter
-> +
-> +maintainers:
-> +  - Ioan-Alexandru Lazar <alazar@startmail.com>
-> +
-> +description: |
-> +  Bindings for the max1241 12-bit, single-channel ADC device. This
-> +  driver supports voltage reading and can optionally be configured for
-> +  power-down mode operation. The datasheet can be found at:
-> +    https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - maxim,max1241
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vref-supply:
-> +    description:
-> +      Device tree identifier of the regulator that provides the external
-> +      reference voltage.
-> +    maxItems: 1
+Martin Blumenstingl (2):
+  clk: meson8b: export the HDMI system clock
+  clk: meson: meson8b: make the hdmi_sys clock tree mutable
 
-Drop this. Supplies are always 1 item.
+ drivers/clk/meson/meson8b.c              | 6 +++---
+ drivers/clk/meson/meson8b.h              | 1 -
+ include/dt-bindings/clock/meson8b-clkc.h | 1 +
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-> +
-> +  shdn-gpios:
+-- 
+2.26.0
 
-shutdown-gpios is the semi standard name.
-
-> +    description:
-> +      GPIO spec for the GPIO pin connected to the ADC's /SHDN pin. If
-> +      specified, the /SHDN pin will be asserted between conversions,
-> +      thus enabling power-down mode.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vref-supply
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    spi0 {
-
-Just 'spi'
-
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +        adc@0 {
-> +            compatible = "maxim,max1241";
-> +            reg = <0>;
-> +            vref-supply = <&vdd_3v3_reg>;
-> +            spi-max-frequency = <1000000>;
-> +            shdn-gpios = <&gpio 26 1>;
-> +        };
-> +    };
-> +
-> +
-> -- 
-> 2.25.2
-> 
