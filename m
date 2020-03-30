@@ -7,103 +7,109 @@ X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2693EC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5D0C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1A22072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D410020780
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585582703;
-	bh=scYqD7gyNDRlV6tVox9iPQIKLfyMzT9udzbugpL/XnE=;
+	s=default; t=1585582730;
+	bh=HAdnNiaSEN8tcbJsyDVz27UaMDUEFZ4dnJ1Gx9aV1TA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TiEIzMK2TbmH0LfJyZCrDLvU+zXIk9Thbu3evh6jg9einPCqVLovBqFUkBIj+bN6y
-	 SbV+pIbYVOVU65nv/KwHauuTUAFZOWExIb8wDgwMUG1utbU6w87CslvkjMbRNVi+LN
-	 Zpr3f+L51yJMBxaKeTn9DYjPEuRmVcrLaE0PkIjk=
+	b=r5tFjrHjpLlS09iO2Tu2iQjUvP3ajaMjJxDcKE4HfeaB7bMn994O4AYXNBxc0npP8
+	 Qu+FWIW3mOFMYQIHQ4bMjEoWVrTsbNcoj9w5/rhpbJk6z52ITiLV1wZM9lGxQaDuRM
+	 MghG9a2pDAAjYTUqeZcl5mTJDWuUeFKRlj97+3Rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgC3PiW (ORCPT
+        id S1729508AbgC3Piu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:38:22 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40338 "EHLO
+        Mon, 30 Mar 2020 11:38:50 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45346 "EHLO
         mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgC3PiW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 11:38:22 -0400
-Received: by mail-il1-f196.google.com with SMTP id j9so16256371ilr.7;
-        Mon, 30 Mar 2020 08:38:20 -0700 (PDT)
+        with ESMTP id S1729503AbgC3Pit (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 11:38:49 -0400
+Received: by mail-il1-f196.google.com with SMTP id x16so16212236ilp.12;
+        Mon, 30 Mar 2020 08:38:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EXjMGOdpbJrvmMf7CXHzMRGgy3e0VQX/+0etqeIYW0I=;
-        b=NPbkt9poFni0A6IYIINdF5/iAZ0ePAUo+11fz2WBbxooSVuKgd3HM1X5L0vrPTuasE
-         ftt/LIYPPZCy3XXeO/VlXQUVj3NHDEr1POGtCP8Ll75UM3s7uUtMecdU02Myjr2A24RJ
-         0Ytp/GAx2JCXAB/JHPgvB1BxOTcYkZnQCZHclnyz6ukR8fgeOXmjpaYKIhVzl4vVZGw9
-         QNQ+eI0PP+W441mkg/42F/zm2h+HzLjRGtyPU42hC3bGe716NnLobyghGaxeHEke2yrT
-         m+RoZFWzkBClvyRjbzAOF+zKyV7buIkSxkGp/wbca7B5THdcSjq/bG4Mxnpw3e6rJAWf
-         YDhQ==
-X-Gm-Message-State: ANhLgQ32zwh3qeRCyUumfYqJzS1j6TPJ/vRuaRaRl7B5laEIoq9OU38j
-        ePZOTRoSjyG/72Uh9+t7DeeNr/k=
-X-Google-Smtp-Source: ADFU+vs3+gql6fDj89qq2KjSl6YPLLP7Rggs4xlleR1CpIoDOZyi6hisfvhiRdP4SAUnEH4MpKBuLg==
-X-Received: by 2002:a92:cb49:: with SMTP id f9mr11644813ilq.193.1585582700524;
-        Mon, 30 Mar 2020 08:38:20 -0700 (PDT)
+        bh=kjvQ/aX+nqXYP/8xlPBLanrss6H0Kukdfj5oOHWtkGI=;
+        b=hP9tI0NoKNVkhPr+puV2t6qaHGdKshYfsGCJ7RHckXXJxsfzghY60Vj14r6EkEI8zE
+         WhHbrZqQTSeLTVc4JJGyzmwb7wmzSPX9SxvO25aGopi4xpnkwUeM5HjYoC1bQwj7T5Eo
+         d/6gL+HSDA/RgPT3+zmQgSAPu2ElV5xW/pRvIgwfH/tC4xXj0q0ZSt5L+Gsk/hUqMq0N
+         +eHj9h2TTCeQ0gzZ2mJmbk7RhxJNult3wfkaTcnlwcLS7hqjDBu07RVfUghnNjfYlwvt
+         jwyNb5dwOj00oK69jbleO9yrA85/nMVJRz7EPMsBlJysW4D/FpcQJEsy0rJe7cnoaaOf
+         ypzA==
+X-Gm-Message-State: ANhLgQ0LYOoUWsrFRoCYXE5g42i/u79SkMk+4iE4MnuxwOeNFVv8kHdp
+        +W50k6apgmPx7+dOJ2LA4BMumN4=
+X-Google-Smtp-Source: ADFU+vub9x8UsaNR5rZlhFtYZGuK9nLpiz/UHXGujrMmTJO3dB/kG0f8isqdsyg/WtZalr/2pwB4Bw==
+X-Received: by 2002:a92:d7cc:: with SMTP id g12mr12180998ilq.260.1585582729078;
+        Mon, 30 Mar 2020 08:38:49 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id h29sm4969835ili.19.2020.03.30.08.38.18
+        by smtp.gmail.com with ESMTPSA id k16sm4958078ila.38.2020.03.30.08.38.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:38:19 -0700 (PDT)
-Received: (nullmailer pid 19151 invoked by uid 1000);
-        Mon, 30 Mar 2020 15:38:18 -0000
-Date:   Mon, 30 Mar 2020 09:38:18 -0600
+        Mon, 30 Mar 2020 08:38:48 -0700 (PDT)
+Received: (nullmailer pid 19882 invoked by uid 1000);
+        Mon, 30 Mar 2020 15:38:46 -0000
+Date:   Mon, 30 Mar 2020 09:38:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jishnu Prakash <jprakash@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>, linux-iio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 1/3] iio: adc: Convert the QCOM SPMI ADC bindings to
- .yaml format
-Message-ID: <20200330153818.GA18495@bogus>
-References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
- <1585064650-16235-2-git-send-email-jprakash@codeaurora.org>
+To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/4] dt-bindings: display: Add IPK DSI subsystem bindings
+Message-ID: <20200330153846.GA19314@bogus>
+References: <cover.1585067507.git.angelo.ribeiro@synopsys.com>
+ <0bc20739facfa519296defe2a367774a7b5a355d.1585067507.git.angelo.ribeiro@synopsys.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585064650-16235-2-git-send-email-jprakash@codeaurora.org>
+In-Reply-To: <0bc20739facfa519296defe2a367774a7b5a355d.1585067507.git.angelo.ribeiro@synopsys.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 24 Mar 2020 21:14:08 +0530, Jishnu Prakash wrote:
-> Convert the adc bindings from .txt to .yaml format.
+On Tue, 24 Mar 2020 18:18:19 +0100, Angelo Ribeiro wrote:
+> Add dt-bindings for Synopsys DesignWare MIPI DSI Host and VPG (Video
+> Pattern Generator) support in the IPK display subsystem.
 > 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
+> The Synopsys DesignWare IPK display video pipeline is composed by a DSI
+> controller (snps,dw-ipk-dsi) and a VPG (snps,dw-ipk-vpg) as DPI
+> stimulus. Typically is used the Raspberry Pi
+> (raspberrypi,7inch-touchscreen-panel) as DSI panel that requires a
+> I2C controller (snps,designware-i2c).
+> 
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
 > ---
->  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 173 --------------------
->  .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 178 +++++++++++++++++++++
->  2 files changed, 178 insertions(+), 173 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
+>  .../bindings/display/snps,dw-ipk-dsi.yaml          | 163 +++++++++++++++++++++
+>  .../bindings/display/snps,dw-ipk-vpg.yaml          |  77 ++++++++++
+>  2 files changed, 240 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dts:20.11-26: Warning (reg_format): /example-0/vadc@3100:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dt.yaml: vadc@3100: 'adc-chan@0x39' does not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml: properties:reg:minItems: False schema does not allow 2
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml: properties:reg:maxItems: False schema does not allow 2
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml: properties:resets:minItems: False schema does not allow 2
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml: properties:resets:maxItems: False schema does not allow 2
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1260800
+See https://patchwork.ozlabs.org/patch/1260819
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
