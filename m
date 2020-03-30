@@ -2,139 +2,251 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B497C2D0F3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C02C2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D38FB20733
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:29:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="enaoigUV"
+	by mail.kernel.org (Postfix) with ESMTP id 22D3C20784
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:35:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585607740;
+	bh=PEdMdgM5NyNsov7qHA19DK0RlueRdGYngB2ksynv00E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2WCpU83Urr2zLCi97JyCCaLM5FkPGtdVvXTj2ws8dn6Fuz1eDFQLuTUAyMvJkfGjt
+	 b3S2/LxGOmQiA4uc4kbTgskWK2nDlldhazfsrU63/azrVtANfD8lOC+DTWhBWWnm+m
+	 F0kIzFria+IhXSDmi67lxMDXOX+cQPl/IqNhrIU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgC3W3m (ORCPT
+        id S1729945AbgC3Wfj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:29:42 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36163 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729211AbgC3W3j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 18:29:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g2so7331814plo.3
-        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 15:29:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=O8vQmmg7hNSl880dzS5U4D8ylPA2t24t6PDXIkjFhyw=;
-        b=enaoigUVvJO5lyNNbZ/eEngJDp3NLSbXaOW8jZMXRUmub8ne5NS0p2geytGwCNQhNo
-         XgeGgxBkDSUWgWGKpRxnhHWbYuC+j6er51oCUnB/RC16US6Q+bgZj2EVcsUFu4QdmJKz
-         VNedjGXM3sPPcxywmqhCVBX9zf2x5RN+C5cPU59YLceEVi8oVO9idqlgMe8G0fipax4l
-         OThjTm38AALbmpbzI/QhQM9SxvoafBFBUMqK0mC4pzNkrxdCOZNZQDs/Y7JhASw8hKIv
-         4NB+RAvstoycLWvAu/duRBk1nRUqYutikF6uLdIJ7WqN8UoEs/7TFZkf0Y5vuEOk88NH
-         vx0g==
+        Mon, 30 Mar 2020 18:35:39 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44289 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgC3Wfj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 18:35:39 -0400
+Received: by mail-il1-f196.google.com with SMTP id j69so17508805ila.11;
+        Mon, 30 Mar 2020 15:35:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=O8vQmmg7hNSl880dzS5U4D8ylPA2t24t6PDXIkjFhyw=;
-        b=QI9reCRyggqJMD8lRF19d7z1YPMDVmGzVHG5czNmxup+9egWUGztDsTyQ9S62QXanV
-         2bJY9vOcgMln3xNhGylchu37XW2vg88YQjiud3GDjzTrFxe/Cq61VidgvhhgByYoxq62
-         8Bg1nmErEMZlEj1I21fVEEwbPEj1qh9QM+ebSx/7Z7zZ+J6wxHuCpDmjuhki0txV0QZW
-         4LvtudZydwAsbewuXVtb4/4z8Ka5AmwQ/Um1s2plhKmKM2xOEpZmKaKPjdSLTr/t/pZG
-         QW7Y2uWTw0arWRbyEOSTUM8ANYqDBM0howQjX1aodt9YcJTWkJawsomnOCMkcpr1msZi
-         MgLg==
-X-Gm-Message-State: AGi0PuaZw8lKUZLuZlquoepbdAo3t3n0gH6zKToWW+wibayiVeGevNsh
-        ZRPO9qCI+T+AKIFGycgPdwVP/iEsqxY=
-X-Google-Smtp-Source: APiQypIuHql86lAYhHEvBXzOmE/e8Yj/bcnvY6jji2FWWAq4h5Q8oF0rrqf1mUeI/PTcQXDLTyv2kA==
-X-Received: by 2002:a17:90a:8087:: with SMTP id c7mr346640pjn.148.1585607376669;
-        Mon, 30 Mar 2020 15:29:36 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v42sm10448437pgn.6.2020.03.30.15.29.35
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I5WWfs5YS24hDXKa/XtUGtXEdA3TZ6qAt3nvgnrU3Mg=;
+        b=S42bGyddtT81fV3FRyMo2TSfC5Y78Ypj604lGERU61HstFdouh0f5/buY2E59GD6DY
+         e48XK2+8t1Be/m3rwdt6vF1OajIYRSMH3NOYib/MXOJVc1JS4NzwyIYANbNmt9K/Mx7G
+         dZRHCPLJzZw+uL6R5/FhIjofze+JlN9ebDgdzNXEfKQVTHkK8WmAzg9iSI/o8cQRcko3
+         wwbL2/FttfTl0Dj+G3wCj9i6W7NsCdOdl2PfTrLfLtBO/NXo7oUoIBTrX5kePWoDf1cR
+         9rhX/nFMmSoBya3YuZ86HDCrJY1FCgd2Vr1lT8GlyoOvPUCxK7irPHtdjB4O2/AoqlN/
+         jUrw==
+X-Gm-Message-State: ANhLgQ2k0sN1IrrwpSMwOBgTxTDRLS0qYjAKjZ6jQMY2dxIy0m6duuAS
+        4z7iBxJyiDuxX6ek2jdsLA==
+X-Google-Smtp-Source: ADFU+vssbUqtDjk9LmSKnh6QyMy6yhoEjw71OJha0yhLNQZ1KYIfV2iGgJtR8LtRx2C40kLrzGDj9w==
+X-Received: by 2002:a92:5e55:: with SMTP id s82mr12453797ilb.62.1585607737767;
+        Mon, 30 Mar 2020 15:35:37 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id x15sm5321840ilg.29.2020.03.30.15.35.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 15:29:36 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 15:29:33 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, agross@kernel.org, robh@kernel.org,
-        amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v5 4/6] soc: qcom: Extend RPMh power controller driver to
- register warming devices.
-Message-ID: <20200330222933.GC215915@minitux>
-References: <20200320014107.26087-1-thara.gopinath@linaro.org>
- <20200320014107.26087-5-thara.gopinath@linaro.org>
- <20200327225345.GH5063@builder>
- <f20b4940-11ad-82b1-6ece-661a1b033df8@linaro.org>
+        Mon, 30 Mar 2020 15:35:37 -0700 (PDT)
+Received: (nullmailer pid 18867 invoked by uid 1000);
+        Mon, 30 Mar 2020 22:35:35 -0000
+Date:   Mon, 30 Mar 2020 16:35:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 04/18] dt-bindings: mfd: Add bindings for sl28cpld
+Message-ID: <20200330223535.GA31402@bogus>
+References: <20200317205017.28280-1-michael@walle.cc>
+ <20200317205017.28280-5-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f20b4940-11ad-82b1-6ece-661a1b033df8@linaro.org>
+In-Reply-To: <20200317205017.28280-5-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 30 Mar 07:53 PDT 2020, Thara Gopinath wrote:
-> On 3/27/20 6:53 PM, Bjorn Andersson wrote:
-> > On Thu 19 Mar 18:41 PDT 2020, Thara Gopinath wrote:
-[..]
-> > > +static int __init rpmhpd_init_warming_device(void)
-> > > +{
-> > > +	size_t num_pds;
-> > > +	struct rpmhpd **rpmhpds;
-> > > +	int i;
-> > > +
-> > > +	if (!global_desc)
-> > > +		return -EINVAL;
-> > > +
-> > > +	rpmhpds = global_desc->rpmhpds;
-> > > +	num_pds = global_desc->num_pds;
-> > > +
-> > > +	if (!of_find_property(rpmhpds[0]->dev->of_node, "#cooling-cells", NULL))
-> > > +		return 0;
-> > > +
-> > > +	for (i = 0; i < num_pds; i++)
-> > > +		if (rpmhpds[i]->is_warming_dev)
-> > > +			of_pd_warming_register(rpmhpds[i]->dev, i);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +late_initcall(rpmhpd_init_warming_device);
-> > 
-> > ...why can't this be done in rpmhpd_probe()?
-> > 
-> > In particular with the recent patches from John Stultz to allow rpmhpd
-> > to be built as a module I don't think there's any guarantees that
-> > rpmh_probe() will have succeeded before rpmhpd_init_warming_device()
-> > executes.
+On Tue, Mar 17, 2020 at 09:50:03PM +0100, Michael Walle wrote:
+> This adds device tree bindings for the board management controller found
+> on the Kontron SMARC-sAL28 board.
 > 
-> It is to take care of boot order.
-
-Understood.
-
-> So this has to happen after the thermal framework is initialized. Thermal
-> framework is initialized with core_initcall. Can I move the rpmhpd init as a
-> postcore_initcall ? Then I can get rid of this separate function and keep it
-> as part of probe.
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  .../bindings/mfd/kontron,sl28cpld.yaml        | 143 ++++++++++++++++++
+>  1 file changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+> new file mode 100644
+> index 000000000000..3b9cca49d2d6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
+> @@ -0,0 +1,143 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Kontron's sl28cpld board management controller
+> +
+> +maintainers:
+> +  - Michael Walle <michael@walle.cc>
+> +
+> +description: |
+> +  The board management controller may contain different IP blocks like
+> +  watchdog, fan monitoring, PWM controller, interrupt controller and a
+> +  GPIO controller.
+> +
+> +properties:
+> +  compatible:
+> +    const: kontron,sl28cpld
+> +
+> +  reg:
+> +    description:
+> +      I2C device address.
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +patternProperties:
+> +  "^gp(io|i|o)(@[0-9]+)?$":
 
-So I presume the problem is that if this is called from probe, you might
-of_pd_warming_register(), which ends up in
-__thermal_cooling_device_register() before thermal_init() has been
-invoked? 
+Just 'gpio'. We don't need that level of distinguishing in node names.
 
-Which is bad because e.g. thermal_class is not yet initialized.
+> +    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
+> +
+> +  "^hwmon(@[0-9]+)?$":
+> +    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
+> +
+> +  "^pwm(@[0-9]+)?$":
+> +    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
+> +
+> +  "^watchdog(@[0-9]+)?$":
+> +    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
 
+The patches for these files need to come first or validating this file 
+fails. Really, you can just make all five files 1 patch.
 
-I don't want to rely on the order of initcalls for things to work, so
-could we make this more robust by having
-thermal_of_cooling_device_register() return -EPROBE_DEFER is
-thermal_init() isn't done?
+> +
+> +required:
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - compatible
+> +  - reg
+> +  - "#interrupt-cells"
+> +  - interrupt-controller
+> +
+> +oneOf:
+> +  - required:
+> +    - interrupts
+> +  - required:
+> +    - interrupts-extended
 
-Regards,
-Bjorn
+Don't need to do this. Just make 'interrupts' required and you'll get 
+interrupts-extended for free.
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        sl28cpld@4a {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            compatible = "kontron,sl28cpld";
+> +            reg = <0x4a>;
+> +            interrupts-extended = <&gpio2 6 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +            #interrupt-cells = <2>;
+> +            interrupt-controller;
+> +
+> +            gpio@0 {
+> +                compatible = "kontron,sl28cpld-gpio";
+> +                reg = <0>;
+> +
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +            };
+> +
+> +            gpio@1 {
+> +                compatible = "kontron,sl28cpld-gpio";
+> +                reg = <1>;
+> +
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +            };
+> +
+> +            gpo {
+> +                compatible = "kontron,sl28cpld-gpo";
+> +
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +                gpio-line-names = "a", "b", "c";
+> +            };
+> +
+> +            gpi {
+> +                compatible = "kontron,sl28cpld-gpi";
+> +
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +            };
+> +
+> +            hwmon {
+> +                compatible = "kontron,sl28cpld-fan";
+> +            };
+> +
+> +            pwm@0 {
+
+You already used the '0' address. You can't have 2 things at the 
+same address. There's only one number space at a given level. 
+
+All these child devices don't have any DT resources, so you don't really 
+need them. The parent node could be a gpio and pwm provider and that's 
+all you need in DT. Aside from DT resources, the only other reason 
+to have all these child nodes are if the child blocks are going to get 
+assembled in different combinations across a variety of h/w.
+
+Rob
