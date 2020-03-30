@@ -2,82 +2,74 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5F2C2D0E9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70087C2D0EB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0297D20757
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48638208E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585556364;
-	bh=6Gpay+Gl1gOj/ZbhJyNeR2KVwU/OiAF3kGRILxilEGw=;
+	s=default; t=1585556443;
+	bh=Z0Za8RD+sBtAUdyvKlbD0cpmJF4+Mj0Xr6XbvnNnKno=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=0SLUUDQ0J0th5zUBEgGvymTdZ9joOt0B2f7H80I+EGzM29IGI4aOsp3ld3PHPHWOT
-	 hILLsz//5E8su+G9MDtst+ZtaVsfYcOvXv4+/HXKttaiJzIvF7J7wVWVBypReWqTCg
-	 jFyrthjp9ISVl2XR/DeB+S3OFU7vYnEKFsenl2l0=
+	b=Q1cXufgp87Vo4DI6WG8cD0dIaavUpZbMXviQwmyPvuKFRjSQIUaY0Xqqye0qMJoIS
+	 Lub6i3PTtlBEjUl/3VDRHmzt78iaqYXd+S7ug9pL3cng7yfdzXlXON5kA6yI2Ns8/v
+	 6zJ7gReXUkbbbXrmZgNCIeXhPjdgct0v+hOn85xE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbgC3ITU (ORCPT
+        id S1729586AbgC3IUm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:19:20 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37673 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729576AbgC3ITT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 04:19:19 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r24so17100488ljd.4;
-        Mon, 30 Mar 2020 01:19:17 -0700 (PDT)
+        Mon, 30 Mar 2020 04:20:42 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35529 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729576AbgC3IUm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 04:20:42 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k21so17105926ljh.2;
+        Mon, 30 Mar 2020 01:20:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=7n6GKoIcVfWJLp8foyknsOYnUKfjIInXxnS+tducqOE=;
-        b=HhDC5Dg6KPSi7DJz7mZelWU9zeuSfMPhxUXFE05xnHykmAZ674UTIgvEE+NGUBpfbF
-         vZAy5u7zgn6W7/qyLmPqqAGzqa5O92Jkax3jcCM06hygUe3yjnLUCUKRhu2eDE8gMLLC
-         coJ4IWNkKzXHLXAHKfCMOjRDkl0Ruf2+D6CsMZJS8n/ZaKtqSCAx4J4Uyc7hg4Lov2s/
-         bW/ibDGIWlsNI4NQWhwmFlF4Cq+XKwjpF0sX68Hq2UIFdeVOPMYiBknyXYhcMTlUoYYP
-         8F2Gvu9epY/QMjjrrru/ZSfWyaSJBi2YOhFzfI4QJp8osuOtkSXYj5SFcHEBXExViSPg
-         U0Ig==
+        bh=FLZ+NG1wdQZ/qjkMH527FZGQHZbq+EwwCn4uJZaDInk=;
+        b=uwCapJDAj0Bl5VjtKDau23EU7c0ZBDf2eSSOYAS5ZKxQtpRd7DKd1mXjwZZapM2huO
+         GpUI1mjRh8rCz81GaKPP+0465Xu0AR1PzYQmDJZ5kU3tVx4p4mkUiHEbQ2tmE3ng4nFG
+         pgreSFpwXiIp454dg6vdWMV4PTYgOLWszBTss41mDF6iysabrBgjgMaNP53fHlB6lQyd
+         woyzkGD20dqAdKCn0bjtPy/kgieoWtv08M7eNHt7GgUmpw/0f8bGnmlg5cQ1uYknFJQ+
+         pGaPQV/Uq270iYoCNTCWSwvk8lHmgS5gkKzwf2hKmsKvKQJ2eW4XcCTN7tmDLqnPShul
+         mwaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
          :date:message-id:mime-version;
-        bh=7n6GKoIcVfWJLp8foyknsOYnUKfjIInXxnS+tducqOE=;
-        b=uPBG5uA3A2PRj/J8Ig2cOqwRcfiQ5iWAyw+9vCSEmPBt0rHuyt707RQELPd/uP5WqT
-         VGW6AGGF7ayFg9B+NDjvb8HSwQJrC4E1T+/9JQpm9k416YzvCpOMdv+aQ065tRtr3cA9
-         3EqXLglSRDvjJ1M6N8MlIlHDi2ffZabI9jfqOvpfk6+Skwh9zgwtW50kZ9iYWXLUK8Le
-         AJi/zGFT6X2eVdZXyBN1q6jGe37f79vxM89cSzVqJY1562ICS7kjDSIrx3MUHW9H5P2R
-         PDLvYU9OcJ/CplnVt9UVCwBYy/ZSrSvyAJTiLgpRVW/RrCOxGB1S1haGqCtt1gaGhwIm
-         IkKw==
-X-Gm-Message-State: AGi0PuaI/e0hgdURDlw2023zAR++xpuO5TT+xMfEDwxXsI1Rwn0zywil
-        twJu8Vh6/88YZnydtGhRBNQ=
-X-Google-Smtp-Source: APiQypL5gFfQjKxdK0m1NUzUNdcTeHnsHwajmRP3HoujZtbQC+x6XUBiCnKtZlfVN0l9gZNQXEpPXg==
-X-Received: by 2002:a2e:9acd:: with SMTP id p13mr6121558ljj.131.1585556356654;
-        Mon, 30 Mar 2020 01:19:16 -0700 (PDT)
+        bh=FLZ+NG1wdQZ/qjkMH527FZGQHZbq+EwwCn4uJZaDInk=;
+        b=g7BlYcq+9P+hR+DBR7St4w2U+6ox9mwqm+d7ZRdamCwNV4TC7R5QpJQT5Enq5z3Heu
+         q0tIwudL+nGzuiP5/nD2ldyVzRwrK4hhHQR6bzzkogI/Od7jmb9V6knq4v+mFYrUpaAB
+         YM/AaqMOG2Yb6WXGjFfD1Z1iCSEvL5EWrfhex0Pp7RjGlkUVv36YUFcTRHrX6/6+0Xyr
+         kXvO/rhAqUVhiyWSjyYIxnMPgiZ3oO3VMKbFdD16mh0tw4f3rycRzvEwjSw378mGVMth
+         ixYy0hnLs+zNQa521/r8S68BatpDbqooZS7eoGmpH2UMfrgvLRfj8hFsfcr50/lB6v6R
+         3z5Q==
+X-Gm-Message-State: AGi0Pua+Q+IfbYo1Ch1n4mkCnNU2WF7eTRKbpVbxT0KYuKHUkadcvrmO
+        g8ovQEpK5LpVQZVbbS9SnTc=
+X-Google-Smtp-Source: APiQypIvqSkCWRFpeGx0VgbWzSLtaopBfQIx6KI7sHtr+D7EVvS4k7wIxqBMRiJWc5X5GelkRzK5nA==
+X-Received: by 2002:a2e:988c:: with SMTP id b12mr6494651ljj.138.1585556439073;
+        Mon, 30 Mar 2020 01:20:39 -0700 (PDT)
 Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id t1sm6445168ljo.94.2020.03.30.01.19.15
+        by smtp.gmail.com with ESMTPSA id i2sm7577233ljj.72.2020.03.30.01.20.38
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 30 Mar 2020 01:19:15 -0700 (PDT)
+        Mon, 30 Mar 2020 01:20:38 -0700 (PDT)
 From:   Felipe Balbi <balbi@kernel.org>
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
-In-Reply-To: <20200329171756.GA199755@google.com>
-References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org> <1585302203-11008-3-git-send-email-sanm@codeaurora.org> <20200329171756.GA199755@google.com>
-Date:   Mon, 30 Mar 2020 11:19:11 +0300
-Message-ID: <87h7y62r28.fsf@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v2 0/3] dt-bindings: usb: add r8a77961 support
+In-Reply-To: <1585200410-28841-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1585200410-28841-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Date:   Mon, 30 Mar 2020 11:20:33 +0300
+Message-ID: <87eeta2qzy.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha256; protocol="application/pgp-signature"
@@ -90,73 +82,23 @@ X-Mailing-List: devicetree@vger.kernel.org
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
+Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com> writes:
 
-Hi,
+> This patch adds USB 2.0/3.0 devices support for r8a77961
+> (R-Car M3-W+).
+>
+> Changes from v1:
+>  - Update the comment of "renesas,xhci-r8a77961" for r8a77960.
+>  - Add Reviewed-by.
+>  https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=3D26=
+1191
+>
+> Yoshihiro Shimoda (3):
+>   dt-bindings: usb: usb-xhci: add r8a77961 support
+>   dt-bindings: usb: renesas,usbhs: add r8a77961 support
+>   dt-bindings: usb: renesas,usb3-peri: add r8a77961 support
 
-Matthias Kaehlcke <mka@chromium.org> writes:
->> Add interconnect support in dwc3-qcom driver to vote for bus
->> bandwidth.
->>=20
->> This requires for two different paths - from USB master to
->> DDR slave. The other is from APPS master to USB slave.
->>=20
->> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
->> Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
->> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->> ---
->>  drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++=
-++++++-
->>  1 file changed, 126 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
->> index 1dfd024..7e85fe6 100644
->> --- a/drivers/usb/dwc3/dwc3-qcom.c
->> +++ b/drivers/usb/dwc3/dwc3-qcom.c
->>
->> ...
->>
->> +/* To disable an interconnect, we just set its bandwidth to 0 */
->> +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
->> +{
->> +	int ret;
->> +
->> +	ret =3D icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret =3D icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
->> +	if (ret)
->> +		goto err_reenable_memory_path;
->> +
->> +	return 0;
->> +
->> +	/* Re-enable things in the event of an error */
->> +err_reenable_memory_path:
->> +	ret =3D dwc3_qcom_interconnect_enable(qcom);
->
-> This overwrites the error that led to the execution of this code path.
-> The function should return original error, not the result of the
-> _interconnect_enable() call.
->
-> I saw Felipe queued the patch for v5.8. I think the main options to fix t=
-his
-> are:
->
-> - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be r=
-ebased
->   anyway once there is a v5.7-rc)
-> - send the fix as a separate patch
-> - Felipe amends the patch in his tree
->
-> Felipe, what would work best for you?
-
-Let's go for a v6, which commits should I drop? I can't find anything
-related to $subject in my queue:
-
-$ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dwc3-=
-qcom.c
-201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/of_c=
-lk.h>
+All in testing/fixes now. Thank you
 
 =2D-=20
 balbi
@@ -166,18 +108,18 @@ Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6Bq38ACgkQzL64meEa
-mQbEeRAAvPDxpFbHJrTEdnNciIvj9jlgCFNwT07cC4jdy6SDizMAf5ktl3burtvp
-jMXU4DTnrNW5hMcU/Rp24gdyT0VhbYJs+L7sUQh1nE+h1wC41p0eUP51Kkj6O7nu
-yaEhbkp/LtUlwn3YX8yfkhVfeuvA2slpMD2yStj4cH/g+8J+RnyF6s27fgGJk9TX
-j6i/2nyuRI4F2BVdmjwz3OPwzoBKCWqw+iHSuYsWOS/L2Rr8wTRwpZSn7azcIu+X
-jmk4KlzOkywcep7taCnM/EL4oIRCwkUDL+MNgNpiipAki61J4tVqP/dapmzVvEZ1
-Ns45sqKG89rif1g9zQA2/XZOc0HvW/rE/A/Frz+R3OTQ1Y5cSvawU1hs6QiwDBcK
-Ep4hnVn4U4LoBKSUU8pnybljgDNfD5D8nVNRWtRidUc0r/xok2iTJvQIYqv5IVop
-GPpxjb2bh5Vv4E9vdDW4iDlOUZ95kvqxNKTICfez7xGWzeLXMOfBoqEImEBJgCCn
-JXvDpM4sDzA41vXMPv0fz6b75QujVvo8nqhJlsMS6P1/bZ/166M0dWu3RW77mrJj
-lNo+J1fL8O19kxm67is6U0jKx2fnVLvQoqk5Oekd7k+nG5Fcj8H0Lr3KUZeDlomy
-ZujbTfC7Qr49Frtm8VVYyucavB3r1gO3gg/S685T6DuPl0iRZ4M=
-=Wl6K
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6Bq9EACgkQzL64meEa
+mQagKw//XQ8qAVrkhsFlPKd3BaxDvIFS5iZCearaNXGq9luOBXZxZEJM0sPwyw82
+SET6P3fZCoYfR1e+TD/DUi3ixAKPP54iF8N28oXvFZwW7Fe7Y5ifxhEjPCEn/0CX
+BSU6/xqP9y02+65wY28morys5/hMrxMVjKBP0PUA6FAx7nWEIMWDQn5SzwgpOnAK
+t8z7GwfZfNGR9vpLtj22X09WaEaGlWv1cGTmw5nAdj8JQQO7mYTjet5Ih4HPz9Co
+afrhe8XHlkzrAmidJIQZASdZpYk0pXsmxN4d6WU64GXAN9P7RKOdBdYPEjsBWCsB
+tBWrz9fsCliR4edOpTO8uqmE88jIhgu+us8PuPnzullJWARtMN1QyKbf6Vr5HSS+
+iPQGFH3Vw76ZhNq+CAwKiqwrFKgNdV3BhBpG880ht14QXv4XRIbR5OsCkDrGnZQC
+b6CdrG+ayeT43Tij+e73NLysGZaIgKK9zC0wjeYk8lNlhoWJ0y9h/CJiuz5isL8o
+Su16YqKO/wXnSqIXYu24jVccXh4zmG2IXfwoGocijM3ptgzmjxz36Le6kU+Cnqc1
+xkYw5vzoZTi0o1sW4QnyGZyfjdkz3NwXtMBKsJC/SUeKnNL84UZ9IyppYAhRp6MX
+PsAQ1FR3t2LGS5L/Vh3yaOAcrrFxzVfzoRF0IvDAaAGVqO7XuZ8=
+=8Qwp
 -----END PGP SIGNATURE-----
 --=-=-=--
