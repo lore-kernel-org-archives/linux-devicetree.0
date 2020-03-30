@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E125C2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F26AC2D0E7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0601F21582
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D844A206F6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uoReP5o1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+DhtUuu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgC3BJs (ORCPT
+        id S1728239AbgC3BJo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:09:48 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33862 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbgC3BJr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 21:09:47 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p10so16076837ljn.1;
-        Sun, 29 Mar 2020 18:09:45 -0700 (PDT)
+        Sun, 29 Mar 2020 21:09:44 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:39039 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728201AbgC3BJo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 21:09:44 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i20so16304593ljn.6;
+        Sun, 29 Mar 2020 18:09:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EkjouEeBk5eg2E7LoRsCY9DiuMbRBnrdHMJNPQxQEMg=;
-        b=uoReP5o1Wpc4sXErhiwwYzGLqIZG8/HPTnwU7/VbcpDBs0yAOXD5zAtYc5xDmZL1ct
-         UuKYJpRsNORBwC3dD+X3wBa1m8tFRMzhZmWJ4z3Rc0eBrZhJ12T25VLwdECwkkKTHpTP
-         t35MNKIgHpLxPZAP0v8t9xEval1hNjGLep9oSnUp+WEsTqo3QWL+3qc1rn/tvGRi9IUO
-         0ShuXp9UEK8Dn0YFEW+wn5CZLvlkkxtD6nr09356ror89nA8ngq22tQkpAR/48R88sY6
-         rDYWrkNZbCJVkZbcjZ42l3Yka9hlLd33sO+pONmsjcbbEBT+NyCKwDos3/c5Tae10v3v
-         gZSg==
+        bh=PZPNrypYAJ0DVxGo/z3wAqcvtTxmsayiljwdnKM3VrQ=;
+        b=c+DhtUuuMUJ0rR4YA7n4mv3Ohj94+u2O55W9TrqbxwN2tEnvjmKzSGsG/NECIL4tPT
+         Czjqjem+O/r0pKA3h3XFnDh+qXsY7dd0dVR6hcMRYNEu/6UEJ5Ho879y6I3VQq9BnAzq
+         h/fxU34j2ZrNnLsNL2Fgfb2Qk5xhklR4eIACoYc2W++TIZ+ldJrqFc2uQY8WnZEqANsb
+         0/xULCchZQwJQpcPjntoWfznK6ijQhVLtg7t5hn4PwYDzl3nELgExhTHRIMQ8QhUUyqY
+         YnlRhCRfpu8qtdvX3irMlx6PCQK9KQD4BkbndFtqIDLnjmu7EYGnIhNA3NFgpvdM8tjf
+         8NkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EkjouEeBk5eg2E7LoRsCY9DiuMbRBnrdHMJNPQxQEMg=;
-        b=i6hdEVukkGSZCiQ28xbB5e2ycqBPgDsTN448w9DiPUOslo7Ox1VRXUJRC/Wxr5BtAJ
-         MeDBNEeSSR3UwkTjPjuzzIUDOFsISfnjrytt45neob7d/mnsHe9EzyouekxVJ5S0erHz
-         bcIxld1e7VTo/HxqvmGwsCZhzqJQZdOowggeY2BIiJBf1L2EmYWCoDvw9reKIWv9VTvE
-         Hy1kNZoHSsPKcih686vqS5x0eWa6tn9v/wOtZtIW7k1eN+xWGDIW3emRiL3H85bEVmwA
-         /ObevN9tHJsyEIlsfmyR+YaXc33T1uHExYNIgmUqJtkhcqj/kMG2/zlNhZ+CVnvJPgQv
-         NSUA==
-X-Gm-Message-State: AGi0PuajMxTSMmju7pKzspM58s6wRdT/35T6htxl6zDCM/k+MtdEHdNn
-        bKI4AriSfOlPtbjMVfdBh8nPGt5O
-X-Google-Smtp-Source: APiQypIZbS8q+NVKU2VHe5+16UUjZNBYbRLaViehODNF6YSe90cPCBqkF1gsWjim+Yl2LvdHvEowig==
-X-Received: by 2002:a2e:a412:: with SMTP id p18mr5826456ljn.39.1585530584794;
-        Sun, 29 Mar 2020 18:09:44 -0700 (PDT)
+        bh=PZPNrypYAJ0DVxGo/z3wAqcvtTxmsayiljwdnKM3VrQ=;
+        b=e+MfA2wip2itAZh/0YVtSO+RzjkiOLUBQUMR0/X5yW8axOtwvUIssSJJSy3/6W3k94
+         W/IN1rFbURT/FOnTCPX7uDT25C7yZHrR73nbdHfFLUxCU3ha6Y+dc3I+4KpD3gZwMYPf
+         oqzMsbsLNBbQ99LXaciuPtRE9Z+OUditkB9ErIgdc/+OvJZIjSS8y844RDpF6Y8nhPAI
+         h7Hv5pYJc/IaVT7Rmhcf+C1Nd9HHUT/YAh/5wB57qi3mAOG2fLkBaZyXr0MkDicFzNaL
+         H7BHaxPuhYmk0ZwkL+G+v25cxBpsQkVf1f88PiS1G0lxIRb3O8XyCwN8xTTT/RdsjXQX
+         0uAQ==
+X-Gm-Message-State: AGi0PuaDWRINOiwSgg1vVkbdIs0e3zoBXOpKxSU6eoeBzIWCcM4p5bF6
+        nxtREoiwAbs+kx+t0OLQTIU=
+X-Google-Smtp-Source: APiQypL5WrohbBW5CsxmlK1Tm0Cj8PudLUhgCzjYqMhQc6gTXz5YtkrXjBmZxeb+upQypsi3mdjjRQ==
+X-Received: by 2002:a2e:8911:: with SMTP id d17mr5816369lji.16.1585530581827;
+        Sun, 29 Mar 2020 18:09:41 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.43
+        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 18:09:44 -0700 (PDT)
+        Sun, 29 Mar 2020 18:09:40 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,62 +65,102 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v2 10/22] interconnect: Relax requirement in of_icc_get_from_provider()
-Date:   Mon, 30 Mar 2020 04:08:52 +0300
-Message-Id: <20200330010904.27643-11-digetx@gmail.com>
+Subject: [PATCH v2 07/22] dt-bindings: memory: tegra30: Add memory client IDs
+Date:   Mon, 30 Mar 2020 04:08:49 +0300
+Message-Id: <20200330010904.27643-8-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200330010904.27643-1-digetx@gmail.com>
 References: <20200330010904.27643-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Artur Świgoń <a.swigon@samsung.com>
+Each memory client have a unique hardware ID, this patch adds these IDs.
 
-This patch relaxes the condition in of_icc_get_from_provider() so that it
-is no longer required to set #interconnect-cells = <1> in the DT. In case
-of the devfreq driver for exynos-bus, #interconnect-cells is always zero.
-
-Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-[digetx@gmail.com: added cells_num checking for of_icc_xlate_onecell()]
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/interconnect/core.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ include/dt-bindings/memory/tegra30-mc.h | 67 +++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 2c6515e3ecf1..7d09656734c1 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -335,7 +335,7 @@ static struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
- 	struct icc_node *node = ERR_PTR(-EPROBE_DEFER);
- 	struct icc_provider *provider;
+diff --git a/include/dt-bindings/memory/tegra30-mc.h b/include/dt-bindings/memory/tegra30-mc.h
+index 169f005fbc78..930f708aca17 100644
+--- a/include/dt-bindings/memory/tegra30-mc.h
++++ b/include/dt-bindings/memory/tegra30-mc.h
+@@ -41,4 +41,71 @@
+ #define TEGRA30_MC_RESET_VDE		16
+ #define TEGRA30_MC_RESET_VI		17
  
--	if (!spec || spec->args_count != 1)
-+	if (!spec)
- 		return ERR_PTR(-EINVAL);
- 
- 	mutex_lock(&icc_lock);
-@@ -851,6 +851,15 @@ EXPORT_SYMBOL_GPL(icc_nodes_remove);
-  */
- int icc_provider_add(struct icc_provider *provider)
- {
-+	struct device_node *np = provider->dev->of_node;
-+	u32 cells_num;
-+	int err;
++#define TEGRA30_MC_PTCR			0
++#define TEGRA30_MC_DISPLAY0A		1
++#define TEGRA30_MC_DISPLAY0AB		2
++#define TEGRA30_MC_DISPLAY0B		3
++#define TEGRA30_MC_DISPLAY0BB		4
++#define TEGRA30_MC_DISPLAY0C		5
++#define TEGRA30_MC_DISPLAY0CB		6
++#define TEGRA30_MC_DISPLAY1B		7
++#define TEGRA30_MC_DISPLAY1BB		8
++#define TEGRA30_MC_EPPUP		9
++#define TEGRA30_MC_G2PR			10
++#define TEGRA30_MC_G2SR			11
++#define TEGRA30_MC_MPEUNIFBR		12
++#define TEGRA30_MC_VIRUV		13
++#define TEGRA30_MC_AFIR			14
++#define TEGRA30_MC_AVPCARM7R		15
++#define TEGRA30_MC_DISPLAYHC		16
++#define TEGRA30_MC_DISPLAYHCB		17
++#define TEGRA30_MC_FDCDRD		18
++#define TEGRA30_MC_FDCDRD2		19
++#define TEGRA30_MC_G2DR			20
++#define TEGRA30_MC_HDAR			21
++#define TEGRA30_MC_HOST1XDMAR		22
++#define TEGRA30_MC_HOST1XR		23
++#define TEGRA30_MC_IDXSRD		24
++#define TEGRA30_MC_IDXSRD2		25
++#define TEGRA30_MC_MPE_IPRED		26
++#define TEGRA30_MC_MPEAMEMRD		27
++#define TEGRA30_MC_MPECSRD		28
++#define TEGRA30_MC_PPCSAHBDMAR		29
++#define TEGRA30_MC_PPCSAHBSLVR		30
++#define TEGRA30_MC_SATAR		31
++#define TEGRA30_MC_TEXSRD		32
++#define TEGRA30_MC_TEXSRD2		33
++#define TEGRA30_MC_VDEBSEVR		34
++#define TEGRA30_MC_VDEMBER		35
++#define TEGRA30_MC_VDEMCER		36
++#define TEGRA30_MC_VDETPER		37
++#define TEGRA30_MC_MPCORELPR		38
++#define TEGRA30_MC_MPCORER		39
++#define TEGRA30_MC_EPPU			40
++#define TEGRA30_MC_EPPV			41
++#define TEGRA30_MC_EPPY			42
++#define TEGRA30_MC_MPEUNIFBW		43
++#define TEGRA30_MC_VIWSB		44
++#define TEGRA30_MC_VIWU			45
++#define TEGRA30_MC_VIWV			46
++#define TEGRA30_MC_VIWY			47
++#define TEGRA30_MC_G2DW			48
++#define TEGRA30_MC_AFIW			49
++#define TEGRA30_MC_AVPCARM7W		50
++#define TEGRA30_MC_FDCDWR		51
++#define TEGRA30_MC_FDCDWR2		52
++#define TEGRA30_MC_HDAW			53
++#define TEGRA30_MC_HOST1XW		54
++#define TEGRA30_MC_ISPW			55
++#define TEGRA30_MC_MPCORELPW		56
++#define TEGRA30_MC_MPCOREW		57
++#define TEGRA30_MC_MPECSWR		58
++#define TEGRA30_MC_PPCSAHBDMAW		59
++#define TEGRA30_MC_PPCSAHBSLVW		60
++#define TEGRA30_MC_SATAW		61
++#define TEGRA30_MC_VDEBSEVW		62
++#define TEGRA30_MC_VDEDBGW		63
++#define TEGRA30_MC_VDEMBEW		64
++#define TEGRA30_MC_VDETPMW		65
 +
-+	err = of_property_read_u32(np, "#interconnect-cells", &cells_num);
-+	if (WARN_ON(err))
-+		return err;
-+	if (WARN_ON(provider->xlate == of_icc_xlate_onecell && cells_num != 1))
-+		return -EINVAL;
- 	if (WARN_ON(!provider->set))
- 		return -EINVAL;
- 	if (WARN_ON(!provider->xlate))
+ #endif
 -- 
 2.25.1
 
