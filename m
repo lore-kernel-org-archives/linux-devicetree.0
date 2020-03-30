@@ -2,59 +2,60 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A21BC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9D5C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5BC20784
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8189A20733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWPGpeeD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oh689xve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgC3Ump (ORCPT
+        id S1728047AbgC3Ums (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:42:45 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35614 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727437AbgC3Ump (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 16:42:45 -0400
-Received: by mail-lj1-f193.google.com with SMTP id k21so19678365ljh.2;
-        Mon, 30 Mar 2020 13:42:44 -0700 (PDT)
+        Mon, 30 Mar 2020 16:42:48 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37238 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbgC3Ums (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 16:42:48 -0400
+Received: by mail-lf1-f68.google.com with SMTP id t11so2992436lfe.4;
+        Mon, 30 Mar 2020 13:42:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gmG6Nw2gJlFbmNF3ZrYh4WCs9X24BSpQSwGXaDwojEM=;
-        b=EWPGpeeD9xPPFMNqQ6vW4zN9xym3eTWIch0s0QCJ2Cy+B1Py/5kXTZOs8CKstvZVGr
-         Lzg3JkHf1lrq+CYKHi7QPBwRA4glrwK2KWK4c97VpHc/U8Y3osFvCxn6O+0If0LU0FmM
-         /wcHvHhNxpY7g9jWsLg5OGhrQKREZ8ZSgGIUscqLU2yHGiQ+MYa9II4CHdnp4tOxspKh
-         mg5Kz/w1Zx7HLaPBDJHf+PMYCKapObCs1GP/IfvzRlN5KViWBgGYiY1WQ9hyC2P4gmnp
-         OPz6KVVReN7P6QL5g8NeYzB2YAXMvei9IE3tI2n4yWmMk0yLLM1cHql10O+bjuAJlocy
-         lsZQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9UkrNjDcajPGTgBBKiQQcXEwPOc4ohLFowCr4Ks0haU=;
+        b=oh689xveR36/57W4/RPGauOKst42L1S+MXOTtXleBkLzOiJ+NL6bEEF08gPLfBCf0w
+         9Pjkq3FiUE6g4iYJ8R39BdR0UWMSKcTcSnno1jANPY0fk/zWl1BAJFlujrzpTgHKkSGV
+         gObEjTicF1K/HwtUIdhfSUayjN79qoBwC316M9dZthNujLGmduxoHiokK5om+GbTi3AS
+         L/Dxvq4qgEZhv5U/aZrx6fSyXGwCCMliWGEcViF4NUEropR1GG3/uqfvnR5+yzLKHgyT
+         aXNT0WT7NKJmJsVH/dDsGFZR3FUZqlExP3CH+UOkUsLNUYXSPO1fGkEna1DVIH04DUpT
+         cdTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gmG6Nw2gJlFbmNF3ZrYh4WCs9X24BSpQSwGXaDwojEM=;
-        b=GdbhjVMxaf8hbSxjstmjZnO6mCrH9yFuPXvzCQHveSqoInHa1G5wgo3p+YHSe2bxNg
-         20ACIWFJ+bGhICMy17yi0be1jnAAR5Qs4Ve7ZfccIRsdz9bRtxtM9Foq+4rDLyzEksTV
-         Z9c6r95hEPenUzz6BdfEpH5oXR6tgc+Zz4BoPZ7XgcikaW5envRGs0XiQgTt7+Mt4O0N
-         kKTHIeWvrWrreb+yYs1WZPDc0VdBmWmLyNA1MMgV7T6OUvSUVzJn8+uAUvBhvJz7XVBp
-         aq2t6q0Cz4bH7mYWok+mGNRYzELDAK6nL4sZ6eHG1BL2ynYwL4FEh6KvjHD6O+NwLVxc
-         KXMQ==
-X-Gm-Message-State: AGi0PubTuV6cHTA8Od+L8QjIY1P9O3mD6MYIgzHZhA4TFnB946aiX5CR
-        Oa85Z8jSeCbMksERJmlpgBM=
-X-Google-Smtp-Source: APiQypJxE6SfhjbuHfxqVIzERON0sXL7oImWTuEjhb77hQureETdjO+AJJ/LqtZPpIH8am9utoTy5A==
-X-Received: by 2002:a2e:804a:: with SMTP id p10mr5966662ljg.289.1585600963256;
-        Mon, 30 Mar 2020 13:42:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9UkrNjDcajPGTgBBKiQQcXEwPOc4ohLFowCr4Ks0haU=;
+        b=Ic/hZaz/uAexoa0HZLzld/MMF5y7Tw7yJmr4NZJ3uSxeJD5x6vRlQMOFhveLwI+WqZ
+         s4vCPScwKsqSFNKxCFnxjFM8RQu0FRWTlOIq3ghgSzLOiu9wAiqyrv16GF2Fj3RW+I+3
+         qizMyTZPeeaqQYFqVlLkw/3X4gL+BdmdKUWqY4925am/5yI1tIyTwqFsV33CI6skfF4D
+         6lNG0w+n0F9yO+jn7Q0g14+5Q+l2g9AAZ/Ql0zjxWD+HsdhwJ25hkUKb4YUSY8YXQmYq
+         QsomhrGP1XWqY/8rW4rmtRBAYHWvX22FfIaKMZanNS0EVglj1ETqTA98FvKpk5KldFWo
+         b5XQ==
+X-Gm-Message-State: AGi0PuYVWkFacdYk0Lflwlv2lu1ge1r6hbJc1aHFVjRumsdUjQexZUef
+        XYTKbr9ml+KXkV8N87pMFjU=
+X-Google-Smtp-Source: APiQypLLLnVzRTLcP4jabC1fU1WzfNOMcZ3hKwFpODI7tRHqByybGrOo5XBHUG6/XotAfAYXhdyTvQ==
+X-Received: by 2002:ac2:4c88:: with SMTP id d8mr9381636lfl.100.1585600965414;
+        Mon, 30 Mar 2020 13:42:45 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id v22sm7287988ljj.67.2020.03.30.13.42.41
+        by smtp.gmail.com with ESMTPSA id v22sm7287988ljj.67.2020.03.30.13.42.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 13:42:42 -0700 (PDT)
+        Mon, 30 Mar 2020 13:42:44 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
         Jaroslav Kysela <perex@perex.cz>,
@@ -64,10 +65,12 @@ To:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/2] Support headset on Tegra boards that use WM8903
-Date:   Mon, 30 Mar 2020 23:40:09 +0300
-Message-Id: <20200330204011.18465-1-digetx@gmail.com>
+Subject: [PATCH v1 2/2] ASoC: tegra: tegra_wm8903: Support nvidia,headset property
+Date:   Mon, 30 Mar 2020 23:40:11 +0300
+Message-Id: <20200330204011.18465-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200330204011.18465-1-digetx@gmail.com>
+References: <20200330204011.18465-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -75,27 +78,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+The microphone-jack state needs to be masked in a case of a 4-pin jack
+when microphone and ground pins are shorted. Presence of nvidia,headset
+tells that WM8903 CODEC driver should mask microphone's status if short
+circuit is detected, i.e headphones are inserted.
 
-Some devices have a 4-pin jack instead of a 3-pin and currently the
-WM8903 configuration is hardcoded to the case of 3-pin jack in the
-Tegra's ASoC driver. A new device-tree property is required in order
-to convey that hardware has a 4-pin jack, and thus, microphone's
-detection needs to be done in a different way.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ sound/soc/tegra/tegra_wm8903.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-In particular this is needed for Acer A500 tablet device that has
-a 4-pin headset jack, otherwise userspace sees headset instead of
-headphones and internal microphone isn't enabled by ALSA UCM rule
-when it should be. Please review and apply, thanks in advance.
-
-Dmitry Osipenko (2):
-  dt-bindings: sound: tegra-wm8903: Document new nvidia,headset property
-  ASoC: tegra: tegra_wm8903: Support nvidia,headset property
-
- .../devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt | 1 +
- sound/soc/tegra/tegra_wm8903.c                              | 6 +++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
+diff --git a/sound/soc/tegra/tegra_wm8903.c b/sound/soc/tegra/tegra_wm8903.c
+index 071c7d2de77c..e756dc8eeca4 100644
+--- a/sound/soc/tegra/tegra_wm8903.c
++++ b/sound/soc/tegra/tegra_wm8903.c
+@@ -177,6 +177,7 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
+ 	struct snd_soc_component *component = codec_dai->component;
+ 	struct snd_soc_card *card = rtd->card;
+ 	struct tegra_wm8903 *machine = snd_soc_card_get_drvdata(card);
++	int shrt = 0;
+ 
+ 	if (gpio_is_valid(machine->gpio_hp_det)) {
+ 		tegra_wm8903_hp_jack_gpio.gpio = machine->gpio_hp_det;
+@@ -189,12 +190,15 @@ static int tegra_wm8903_init(struct snd_soc_pcm_runtime *rtd)
+ 					&tegra_wm8903_hp_jack_gpio);
+ 	}
+ 
++	if (of_property_read_bool(card->dev->of_node, "nvidia,headset"))
++		shrt = SND_JACK_MICROPHONE;
++
+ 	snd_soc_card_jack_new(rtd->card, "Mic Jack", SND_JACK_MICROPHONE,
+ 			      &tegra_wm8903_mic_jack,
+ 			      tegra_wm8903_mic_jack_pins,
+ 			      ARRAY_SIZE(tegra_wm8903_mic_jack_pins));
+ 	wm8903_mic_detect(component, &tegra_wm8903_mic_jack, SND_JACK_MICROPHONE,
+-				0);
++				shrt);
+ 
+ 	snd_soc_dapm_force_enable_pin(&card->dapm, "MICBIAS");
+ 
 -- 
 2.25.1
 
