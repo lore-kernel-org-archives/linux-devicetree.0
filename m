@@ -2,73 +2,62 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F00C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4D9C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C30E20748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iK+mvsHD"
+	by mail.kernel.org (Postfix) with ESMTP id 511CC20714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585593816;
+	bh=Z0VUw2YakUTgB50DeHAQaZKDihqXNcZ0JYTwOd0KF9o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cuGXzR9pdE/Uyrbi54kiVo8Xkv0+cAoQbz7blPlGws3upquNsOixb9t1qv+aXP42b
+	 15RR9MloqnGA1V4wXxojzwuAij/ZTQQm1gDqWKzlArijzEzhu+YA3iZNy0R2dktx3T
+	 MLAi7apkDQ8fnelkKowBydylIhjB+Yohdq1Uu+w4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgC3SmC (ORCPT
+        id S1726518AbgC3Snf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:42:02 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36096 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgC3SmC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 14:42:02 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k18so16630471oib.3
-        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 11:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bMsXSbAs23J4I+WSSJ1Kd7A3MYfRXPuuAKW5ma32u/I=;
-        b=iK+mvsHDPS4OGPtKBhNUq8BDbqZv2bYZ0L0DQw/gj5t33XpHM9/YA31DtZAD4rBMeP
-         1t8tFJ2WveKx5dFYrefqwMcbo4CSa/Y9MMF/ncPsQjG3b0p4phy6U3yL5Si/Ah1Fn43a
-         AJumYtdIg8ZPcCb3dK0nTr9VOGbQ1DaIPozIHo2ToTVkOLBstZ4z4tftDP7S9Y2rqnz0
-         hs04gOoEn5GnU6PG+pjcCeLrAkx7tSvFA+MZ2l96TcgZ8PeEf+06kP8UphWexpVJSBuO
-         jkl0hUv+2xfXwpxlu3Wfk3jNKjnyn20X/cuvPzxZQ3BU/DytfJ5qlBgwDGBHLMxSKP26
-         jPwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bMsXSbAs23J4I+WSSJ1Kd7A3MYfRXPuuAKW5ma32u/I=;
-        b=jX3mpe6f5thXHV6HK2ff9M+deev8OAoplR//kcCuTCqhFnMsrt+1VJKz45a5v/PIaz
-         nvZ4X69Tw/sEfNb/KqlPzlchzCu3WMDkDuFx38194esH5mQWpQR9QvpJk0e1luExaF6N
-         PHhhp0MWEpv4OeV+qk6GJRsHNCzyJ1STXcKZbpFZo/FZ1geeFr2GVBjDj2WXYzigEes7
-         fZGb2T+MG3vScDGUrvBrX5J5nRXEAlZoTV/bad1bgv08e1hqoGSoPFVn1VMnZh+0wfwT
-         4WvnVluG0zCrC3zfq9oEO0Gqn1Zg1uLKh7IsmnQw5FbUqkJW7MeFEKkszcJHrbgVkRB8
-         PaHQ==
-X-Gm-Message-State: ANhLgQ0txjtCDwlRCKp5KBr6DHWTzpKIBDawzp/SW5CT3ckEfNflLR7C
-        ZyHdzOx+/GBPlubPjkyla3i3Lb3BFo4rK522UB/wSQ==
-X-Google-Smtp-Source: ADFU+vu8a0aFSp1Bsc6H0PWmUghHP16f0fOcxJ31iseInDunbVcIAiBxYijOxAbVRtDSEW4QOHql9nkcF2nT/W/I+MY=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr548350oih.172.1585593721353;
- Mon, 30 Mar 2020 11:42:01 -0700 (PDT)
+        Mon, 30 Mar 2020 14:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726385AbgC3Snf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Mar 2020 14:43:35 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14EEA20714;
+        Mon, 30 Mar 2020 18:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585593815;
+        bh=Z0VUw2YakUTgB50DeHAQaZKDihqXNcZ0JYTwOd0KF9o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fxoGOExezV4j/TqUOQtHDBhDeULDM+/Rp2luy9VMApyZE/qr3ssz9PAwcjugaxTU7
+         IjSYldrHryVFfyIqS+T2naPkhqSoBfD9mmW+JTGzs8QDYoNiK13ZQb6y3ICRB9GVtx
+         CVeZ0VCJxpIot37ah1DRzIFOac7PVlLtKp8L5s1I=
+Received: by mail-qt1-f169.google.com with SMTP id t17so16018013qtn.12;
+        Mon, 30 Mar 2020 11:43:35 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ37d66s3PHV8uwG0osLgYrhF9qGIp2ADDVVRkK02dfQe0MZ/Nwt
+        ZTxnz4kmFDxN8X9nwkIzFRSS10+T+/2iMnuLEw==
+X-Google-Smtp-Source: ADFU+vvQ0VB8PAiOLE1oS4Rl8T3375Rl3/Pz63Irc4+08WeMr8hOvQ1rBd58/OgA3kCy/W68GrYFFzK4tmdP1dLoAZY=
+X-Received: by 2002:ac8:18ab:: with SMTP id s40mr1475183qtj.224.1585593814245;
+ Mon, 30 Mar 2020 11:43:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200321210305.28937-1-saravanak@google.com> <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
- <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com> <20200327152144.GA2996253@kroah.com>
- <CAGETcx-J+TP+0NsOe75Uu3Q8K6=qYja6eDbjNH2764QV53=nMA@mail.gmail.com> <4f3326c2-186d-2853-fcb6-1210d67a836f@samsung.com>
-In-Reply-To: <4f3326c2-186d-2853-fcb6-1210d67a836f@samsung.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Mon, 30 Mar 2020 11:41:25 -0700
-Message-ID: <CAGETcx9nhF4hjs6BQ21Ees4LJLM7kENj6Ja619Sonjvvt1o7wA@mail.gmail.com>
-Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
- behavior by default
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
+References: <1564306219-17439-1-git-send-email-bmeng.cn@gmail.com>
+ <20190816215425.GA2726@bogus> <CAEUhbmU-SdjjsmPmc7JHQLVjfs7CcXxSf9mZ01h7w=nv7HiP4w@mail.gmail.com>
+In-Reply-To: <CAEUhbmU-SdjjsmPmc7JHQLVjfs7CcXxSf9mZ01h7w=nv7HiP4w@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 30 Mar 2020 12:43:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJX5wFOb89ZAqNkiXrEFt6BjApAwN7Pc_cg-5eVm-qZMw@mail.gmail.com>
+Message-ID: <CAL_JsqJX5wFOb89ZAqNkiXrEFt6BjApAwN7Pc_cg-5eVm-qZMw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: interrupt-controller: msi: Correct
+ msi-controller@c's reg
+To:     Bin Meng <bmeng.cn@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
@@ -76,68 +65,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 11:20 PM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
+On Fri, Mar 13, 2020 at 8:06 AM Bin Meng <bmeng.cn@gmail.com> wrote:
 >
-> Hi
+> Hi Rob,
 >
-> On 2020-03-27 19:30, Saravana Kannan wrote:
-> > On Fri, Mar 27, 2020 at 8:21 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> >> On Fri, Mar 27, 2020 at 11:25:48AM +0100, Marek Szyprowski wrote:
-> >>> On 2020-03-21 22:03, Saravana Kannan wrote:
-> >>>> Set fw_devlink to "permissive" behavior by default so that device links
-> >>>> are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
-> >>>> firmware.
-> >>>>
-> >>>> This ensures suppliers get their sync_state() calls only after all their
-> >>>> consumers have probed successfully. Without this, suppliers will get
-> >>>> their sync_state() calls at late_initcall_sync() even if their consuer
-> >>>>
-> >>>> Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
-> >>>> that needs more testing as it's known to break some corner case
-> >>>> drivers/platforms.
-> >>>>
-> >>>> Cc: Rob Herring <robh+dt@kernel.org>
-> >>>> Cc: Frank Rowand <frowand.list@gmail.com>
-> >>>> Cc: devicetree@vger.kernel.org
-> >>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> >>> This patch has just landed in linux-next 20200326. Sadly it breaks
-> >>> booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit
-> >>> mode. There is no warning nor panic message, just a silent freeze. The
-> >>> last message shown on the earlycon is:
-> >>>
-> >>> [    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
-> > Marek,
+> On Sat, Aug 17, 2019 at 5:54 AM Rob Herring <robh@kernel.org> wrote:
 > >
-> > Any chance you could get me a stack trace for when it's stuck? That'd
-> > be super helpful and I'd really appreciate it. Is it working fine on
-> > other variants of Raspberry?
+> > On Sun, 28 Jul 2019 02:30:18 -0700, Bin Meng wrote:
+> > > The base address of msi-controller@c should be set to c.
+> > >
+> > > Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
+> > > ---
+> > >
+> > >  Documentation/devicetree/bindings/interrupt-controller/msi.txt | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> >
+> > Applied, thanks.
 >
-> I have no access to other variants of Raspberry board.
->
-> The issue seems to be related to bcm2835aux_serial_driver. I've added
-> "initcall_debug" and "ignore_loglevel" to kernel cmdline and I got the
-> following log:
->
-> [    4.595353] calling  exar_pci_driver_init+0x0/0x30 @ 1
-> [    4.600597] initcall exar_pci_driver_init+0x0/0x30 returned 0 after
-> 44 usecs
-> [    4.607747] calling  bcm2835aux_serial_driver_init+0x0/0x28 @ 1
->
-> The with some debug printk calls I've found that the clock lookup fails
-> with -517 (-EPROBE_DEFER) in bcm2835aux_serial_driver:
-> https://elixir.bootlin.com/linux/v5.6/source/drivers/tty/serial/8250/8250_bcm2835aux.c#L52
->
-> Without this patch, the lookup works fine.
->
-> Please let me know if you need more information. The kernel cmdline I've
-> use is: "8250.nr_uarts=1 console=ttyS0,115200n8
-> earlycon=uart8250,mmio32,0x3f215040 root=/dev/mmcblk0p2 rootwait rw",
-> kernel is compiled with bcm2835_defconfig, booted on Raspberry Pi3b+
-> with arch/arm/boot/dts/bcm2837-rpi-3-b.dtb
+> This seems not be applied anywhere. Could you please check? Thanks!
 
-Thanks for the details! I think it gave me an idea of what might be
-going wrong here.
+Sorry, not sure what happened there. Now queued for 5.7.
 
--Saravana
+Rob
