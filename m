@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC69C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EE4C2D0EE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA7D20748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D374720748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 01:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7nQYiIa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAAbaMon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgC3BJ4 (ORCPT
+        id S1728587AbgC3BKA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Mar 2020 21:09:56 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45491 "EHLO
+        Sun, 29 Mar 2020 21:10:00 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33182 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgC3BJy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 21:09:54 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t17so16314658ljc.12;
-        Sun, 29 Mar 2020 18:09:52 -0700 (PDT)
+        with ESMTP id S1728280AbgC3BJ7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Mar 2020 21:09:59 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f20so16336312ljm.0;
+        Sun, 29 Mar 2020 18:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UVJ9yyE9K29bjnDrPjNdExCXsCR6dQskyYaw3z4hZMU=;
-        b=F7nQYiIaHaST/H7lR7YpTTa4yZjR1j5Co4uSUtl0sgMnIvNo+M+8NFbhKOUavfmm/K
-         L8+5mcmop875YhcV806hvT5NeLKYsURWzYro4YNtmtxxThG3DBQSRBJ//NBhVa/Okk96
-         blIweno/JmI2vIHcs2M+M4ocr7ITywTV95X+8QFqxcqUksEe66nTgUuojF5u3kqHxspg
-         1NjfQIp6xQcVYJng1r5m8wGrvQ5T6aaEVHyUeWn/zN01OXK9w0VoPkj6PF9Aa6GCc3Ip
-         jy5pmksmf3z4WB4zU7CpLFG/vX4jxXtz8+Luys44rcz0vmCYu5W2IWhL6O6ANdqxBHPh
-         KN4Q==
+        bh=PzPcH2Zw8s/lvusSJ+NeMT9K6QE3NO3BQ3OrhGxd84A=;
+        b=dAAbaMon+3/bSqoIuYfuwHx2KG8hghvSLrRSU22QfeV59mfGE+K6Fbxqmy75QxyRCz
+         vzG5MdQuMDqHNheti6KOwuAC/+GF7vBVf/jEwWYS0JpHBODi64d+2WUXzJ80dVgPaNbe
+         E2DmsKwTAP1jGTMw1ptNsZIEqJS4WhOcV9lNCgeUkDl9yc9Qhfifpe56l1OBc8mmkQVV
+         /NvfFxStOa1MuTM+BiVP1h8E8A+35d/0zkbSj9rlEX3Q2stjrqJdoJTxDE5PJap/Nf7q
+         zK7VvXq/44tRZFis67kdqpwYT1THGvNz40nr1jawM5e5NgNtwBdl8KhlaQDO66t+wvDQ
+         tlww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UVJ9yyE9K29bjnDrPjNdExCXsCR6dQskyYaw3z4hZMU=;
-        b=jh8QoreotbNhDq380wY0xiDEH3/1qJ5o5q+mo85zlYEOl47QUe6CfzcaIuB49YntDW
-         v7vuczRCikjU4imnlCAErGdc4RuqNYUQElc8YYueUkUUv+FlFmKrXQYQJeTrZkIYoJS+
-         R5Z1gJZB1ddPNu28bzFfIU+woGTpix130LG/sZFU31Sh2fY8yzrLBJscw01hLlG0HUTY
-         e9w0lUvVU1j4AfzJoAZuQ4VnjO4Bx1351pw7k+Od+vXbMv/Ibwka3+1xJbJYYdEc0UfZ
-         J14rnEVNHVjgROrFQTs2aCvuWVL+qSkxl9RrVwoVYuS20IL8/UF5Mx4p+n/yustbV99P
-         3Taw==
-X-Gm-Message-State: AGi0PuYCLpk6i7m8pSxy64fx2q7n3Z8yA9ogINfeniyY2cgkNB50H0i1
-        XZnWFMLTLPK8jYdz00TISL8=
-X-Google-Smtp-Source: APiQypIW79Ltthny3GKQ7ecV2+YYx75UJ9/u2MNZafMabV+CzVs4wTMFMrkD4t5ow3wMmWRR3u68tQ==
-X-Received: by 2002:a2e:88cb:: with SMTP id a11mr5830944ljk.245.1585530592036;
-        Sun, 29 Mar 2020 18:09:52 -0700 (PDT)
+        bh=PzPcH2Zw8s/lvusSJ+NeMT9K6QE3NO3BQ3OrhGxd84A=;
+        b=qDnu+kPWV/9ND+LKejEZmAqor6MfzIhuWpFppmsiCp3RGCOW9TsKaHsV4+VjMjYdYd
+         cCAZZ/Ay3YM21d9A1dL/Vmxd+5uykj5XmnVzK8A7IHMYnSk2Rj+kJMKCkEuMeQE8iWVb
+         0IZ0R6VJNUd3Dv+xluudgsxI68nABjhjj9SvAtWqHDue8O+eJ7UVHczpv7BmHt6wF0qK
+         Q+yXIITQDlUEWCmRwYs/0PxUOgKzmFwmdQre0UlgTtrhUAWiVk8looe9S9sT17ELQdjY
+         44ruHFIvrIrNGeT86Fqvmq33Ccka1MWcdEsOKwB3r3SS87mQWpiqTYZ06K8/DK9skHzR
+         ny/Q==
+X-Gm-Message-State: AGi0PubxDCJkYL5oYiRk7eCnVCo8DKFJttw5pyfuSfY+8thAhEYjg6af
+        fCIX+G1uhFxy0wNqQSEvonM=
+X-Google-Smtp-Source: APiQypIYV+VJ2BotiGVJkdVXlprPFDGmyLuF/8w8UIlmHETYi4iZ9H/wP0ZGxE/ac47Mtz3QpiVAvg==
+X-Received: by 2002:a2e:9b41:: with SMTP id o1mr5726081ljj.145.1585530596562;
+        Sun, 29 Mar 2020 18:09:56 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.51
+        by smtp.gmail.com with ESMTPSA id f23sm2449005lja.60.2020.03.29.18.09.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 18:09:51 -0700 (PDT)
+        Sun, 29 Mar 2020 18:09:55 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v2 17/22] memory: tegra30-emc: Register as interconnect provider
-Date:   Mon, 30 Mar 2020 04:08:59 +0300
-Message-Id: <20200330010904.27643-18-digetx@gmail.com>
+Subject: [PATCH v2 21/22] ARM: tegra: Enable interconnect API in tegra_defconfig
+Date:   Mon, 30 Mar 2020 04:09:03 +0300
+Message-Id: <20200330010904.27643-22-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200330010904.27643-1-digetx@gmail.com>
 References: <20200330010904.27643-1-digetx@gmail.com>
@@ -78,161 +78,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now external memory controller is a memory interconnection provider.
-This allows us to use interconnect API to change memory configuration.
+Tegra now has interconnect providers that are used for memory bandwidth
+allocation.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/tegra30-emc.c | 115 +++++++++++++++++++++++++++++
- 1 file changed, 115 insertions(+)
+ arch/arm/configs/tegra_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/memory/tegra/tegra30-emc.c b/drivers/memory/tegra/tegra30-emc.c
-index 69698665d431..5a4106173a75 100644
---- a/drivers/memory/tegra/tegra30-emc.c
-+++ b/drivers/memory/tegra/tegra30-emc.c
-@@ -14,6 +14,7 @@
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/err.h>
-+#include <linux/interconnect-provider.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
-@@ -327,6 +328,7 @@ struct tegra_emc {
- 	struct device *dev;
- 	struct tegra_mc *mc;
- 	struct notifier_block clk_nb;
-+	struct icc_provider provider;
- 	struct clk *clk;
- 	void __iomem *regs;
- 	unsigned int irq;
-@@ -1264,6 +1266,112 @@ static void tegra_emc_debugfs_init(struct tegra_emc *emc)
- 			    emc, &tegra_emc_debug_max_rate_fops);
- }
- 
-+static inline struct tegra_emc *
-+to_tegra_emc_provider(struct icc_provider *provider)
-+{
-+	return container_of(provider, struct tegra_emc, provider);
-+}
-+
-+static struct icc_node *
-+emc_of_icc_xlate_onecell(struct of_phandle_args *spec, void *data)
-+{
-+	struct icc_provider *provider = data;
-+	struct icc_node *node;
-+
-+	/* External Memory is the only possible ICC route */
-+	list_for_each_entry(node, &provider->nodes, node_list) {
-+		if (node->id == TEGRA_ICC_EMEM)
-+			return node;
-+	}
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+static int emc_icc_set(struct icc_node *src, struct icc_node *dst)
-+{
-+	struct tegra_emc *emc = to_tegra_emc_provider(dst->provider);
-+	unsigned long long rate = icc_units_to_bps(dst->avg_bw);
-+	unsigned int dram_data_bus_width_bytes = 4;
-+	unsigned int ddr = 2;
-+	int err;
-+
-+	do_div(rate, ddr * dram_data_bus_width_bytes);
-+	rate = min_t(u64, rate, U32_MAX);
-+
-+	err = clk_set_min_rate(emc->clk, rate);
-+	if (err)
-+		return err;
-+
-+	err = clk_set_rate(emc->clk, rate);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static int emc_icc_aggregate(struct icc_node *node,
-+			     u32 tag, u32 avg_bw, u32 peak_bw,
-+			     u32 *agg_avg, u32 *agg_peak)
-+{
-+	*agg_avg = min((u64)avg_bw + (*agg_avg), (u64)U32_MAX);
-+	*agg_peak = max(*agg_peak, peak_bw);
-+
-+	return 0;
-+}
-+
-+static int tegra_emc_interconnect_init(struct tegra_emc *emc)
-+{
-+	struct icc_node *node;
-+	int err;
-+
-+	/* older device-trees don't have interconnect properties */
-+	if (!of_find_property(emc->dev->of_node, "#interconnect-cells", NULL))
-+		return 0;
-+
-+	emc->provider.dev = emc->dev;
-+	emc->provider.set = emc_icc_set;
-+	emc->provider.data = &emc->provider;
-+	emc->provider.xlate = emc_of_icc_xlate_onecell;
-+	emc->provider.aggregate = emc_icc_aggregate;
-+
-+	err = icc_provider_add(&emc->provider);
-+	if (err)
-+		return err;
-+
-+	/* create External Memory Controller node */
-+	node = icc_node_create(TEGRA_ICC_EMC);
-+	err = PTR_ERR_OR_ZERO(node);
-+	if (err)
-+		goto del_provider;
-+
-+	node->name = "External Memory Controller";
-+	icc_node_add(node, &emc->provider);
-+
-+	/* link External Memory Controller to External Memory (DRAM) */
-+	err = icc_link_create(node, TEGRA_ICC_EMEM);
-+	if (err)
-+		goto remove_nodes;
-+
-+	/* create External Memory node */
-+	node = icc_node_create(TEGRA_ICC_EMEM);
-+	err = PTR_ERR_OR_ZERO(node);
-+	if (err)
-+		goto remove_nodes;
-+
-+	node->name = "External Memory (DRAM)";
-+	icc_node_add(node, &emc->provider);
-+
-+	return 0;
-+
-+remove_nodes:
-+	icc_nodes_remove(&emc->provider);
-+
-+del_provider:
-+	icc_provider_del(&emc->provider);
-+
-+	return err;
-+}
-+
- static int tegra_emc_probe(struct platform_device *pdev)
- {
- 	struct platform_device *mc;
-@@ -1344,6 +1452,13 @@ static int tegra_emc_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, emc);
- 	tegra_emc_debugfs_init(emc);
- 
-+	if (IS_ENABLED(CONFIG_INTERCONNECT)) {
-+		err = tegra_emc_interconnect_init(emc);
-+		if (err)
-+			dev_err(&pdev->dev, "failed to initialize ICC: %d\n",
-+				err);
-+	}
-+
- 	return 0;
- 
- unset_cb:
+diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
+index aa94369bdd0f..0029259a6bf5 100644
+--- a/arch/arm/configs/tegra_defconfig
++++ b/arch/arm/configs/tegra_defconfig
+@@ -268,6 +268,7 @@ CONFIG_AK8975=y
+ CONFIG_PWM=y
+ CONFIG_PWM_TEGRA=y
+ CONFIG_PHY_TEGRA_XUSB=y
++CONFIG_INTERCONNECT=y
+ CONFIG_EXT2_FS=y
+ CONFIG_EXT2_FS_XATTR=y
+ CONFIG_EXT2_FS_POSIX_ACL=y
 -- 
 2.25.1
 
