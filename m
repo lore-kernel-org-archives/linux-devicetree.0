@@ -2,177 +2,93 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F6FC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 21:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26B4C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 21:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C54920714
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 21:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D61820714
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 21:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585602049;
-	bh=MsOf2rjfkn6D5z9cwPg2yI0tluOCVboTQo6CzMW3S+M=;
+	s=default; t=1585602327;
+	bh=rdBN0mXNfj+Lz4ouGnYrYZbdJTKlhiV4h48TGhnFwO8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pmLmE7uyTgENCvQsWmdXUjYm3ClFuJke/eUxltXsOm8/RpiJJwbtVa/zzoqpRbj4C
-	 z2nIyrrHGOEamSVcNuw0Lx44W8zHyAe0tJlz06yh+TnNGVlZxwAUzruSdxRLuOUG5Q
-	 gmUqdrk0QXkwnHuO1+oLtTwo4Oy1DdllQFX1DL/k=
+	b=Sl4YpAJ24nMliNYHJqsTiU/53lFfXTESDYtaAt1ixoznON30P0YQzFjwPCuXgqrNk
+	 T+rf+OXc7rRO6an2pBPmD1RzKnogWEV+EsqX2lie/lV93l3tEVgsAeqhnF6fvnURIZ
+	 B5C1NNBGcmz4tk6Y8Q4ZlPxBpgsMlHXNTd2B/Ly4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgC3VAt (ORCPT
+        id S1728445AbgC3VF1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 17:00:49 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:38405 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728317AbgC3VAs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 17:00:48 -0400
-Received: by mail-il1-f194.google.com with SMTP id n13so9987666ilm.5;
-        Mon, 30 Mar 2020 14:00:47 -0700 (PDT)
+        Mon, 30 Mar 2020 17:05:27 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33367 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728317AbgC3VF0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 17:05:26 -0400
+Received: by mail-io1-f68.google.com with SMTP id o127so19420567iof.0;
+        Mon, 30 Mar 2020 14:05:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=s3VoV0iGSHssFfSmkEpV8NmrUdnQxQrDZOaiOqnYY+E=;
-        b=mep/XfHByB+Y6jW1Z+xjtRdYI1CD4BG/DNyf8WLGagFWfEM1ocxqrApfNBfy12Rb2G
-         lQFD6C7SngTOmEK8YnrO8wQiVJMni9UJDjqQHFaQItVU7jKJT7meSF3+uSDTAzNE+5f+
-         drnY+8Uy+561ejK8/+VPY85eTE9+bbxQ/xxv6h7X6NKHl7sdCTC3Oe39PSKLsc/LtDa3
-         BFkGiQhf6k4dnOH6gwqxEDWScMNTZjZZC9oOTP22p5Z1slzb7hY1TsGNxLnSw2GE4EBZ
-         TBGZUMLnGzzAfrcAqxFv2Dy84yTT7a8dK753bwroPi12Soc9L3vemeYg+RWfBEn1Ejvn
-         kh8Q==
-X-Gm-Message-State: ANhLgQ0/ivnhkKbsqjA/1N1XZB+j/l75CD2Ur559RJJtHxouRiQNi3i7
-        V8MVuvqaqemA3K2loob5GQ==
-X-Google-Smtp-Source: ADFU+vud/zP759a532s/gH7ulc5KJRaFL2fNP6x7E9IgKnJT/rwzUJQ9IGoEJ2O+coYrgUJGQjGZ+w==
-X-Received: by 2002:a92:8fcd:: with SMTP id r74mr13968641ilk.39.1585602047313;
-        Mon, 30 Mar 2020 14:00:47 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8tXDSX2PzFc8lPZTxH+CtlfEjScfEVePQ1OA7jnYYW0=;
+        b=tz/q7X5sLJ4aRE9kx+H5YtWeFUvxv5uSS3eWma+QqHiHAi7BMNspEHDdZRAGjPOLKk
+         gWSKjeqWul7MJnnoWYjoyc/5zEPUovmDqiQyqup8fav3sPP3PDNA5oARY14gokKIsgc1
+         sRbD8T074iqJj+XdjLtk8swMK2e510s7gaIK5pb+VtGnVf/pvnDLbS3vkb6N9VFAx8kD
+         6gQZiO95j4xwvFqJE1qhbysKjLk460QPMJFIavuWL4RF0n3KrFfni22JlCgr1+k3a3Br
+         3nqIC/bAQtHktwbfiiAOTixUZlOzOQRkyQDFhrT18DG4jxOSS0otpmEeTqMJmKT4sgy0
+         swsQ==
+X-Gm-Message-State: ANhLgQ2d+sn1xdYIdvbQzXe0x5aReicRgCbP6RPuMd3yDyfVAVxqKLT1
+        vwoS7kbhVFPiwvFOzIrKEQ==
+X-Google-Smtp-Source: ADFU+vsLX1L/PYCfqYAzFfBxs3g5Uc1emhP0yS3eiAGhtCUDnoasD+pUie7FL2kBzWtLetFrY7W+IQ==
+X-Received: by 2002:a6b:d609:: with SMTP id w9mr12335400ioa.41.1585602326068;
+        Mon, 30 Mar 2020 14:05:26 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id z15sm5262450ilf.0.2020.03.30.14.00.45
+        by smtp.gmail.com with ESMTPSA id l65sm4314953ioa.1.2020.03.30.14.05.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 14:00:46 -0700 (PDT)
-Received: (nullmailer pid 510 invoked by uid 1000);
-        Mon, 30 Mar 2020 21:00:44 -0000
-Date:   Mon, 30 Mar 2020 15:00:44 -0600
+        Mon, 30 Mar 2020 14:05:25 -0700 (PDT)
+Received: (nullmailer pid 7500 invoked by uid 1000);
+        Mon, 30 Mar 2020 21:05:23 -0000
+Date:   Mon, 30 Mar 2020 15:05:23 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/7] dt-bindings: pwm: document the PWM polarity flag
-Message-ID: <20200330210044.GA16928@bogus>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-3-oleksandr.suvorov@toradex.com>
- <20200317174344.GB1464607@ulmo>
- <20200317213056.futfiwn4qgr2njye@pengutronix.de>
- <20200318230539.GB2874972@ulmo>
- <20200319070510.gc6hr53gn7n2osvb@pengutronix.de>
- <20200319170455.GC3354541@ulmo>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Dan Murphy <dmurphy@ti.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 04/12] docs: dt: fix references to m_can.txt file
+Message-ID: <20200330210523.GA7429@bogus>
+References: <cover.1584450500.git.mchehab+huawei@kernel.org>
+ <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200319170455.GC3354541@ulmo>
+In-Reply-To: <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 06:04:55PM +0100, Thierry Reding wrote:
-> On Thu, Mar 19, 2020 at 08:05:10AM +0100, Uwe Kleine-König wrote:
-> > On Thu, Mar 19, 2020 at 12:05:39AM +0100, Thierry Reding wrote:
-> > > On Tue, Mar 17, 2020 at 10:30:56PM +0100, Uwe Kleine-König wrote:
-> > > > Hello Thierry,
-> > > > 
-> > > > On Tue, Mar 17, 2020 at 06:43:44PM +0100, Thierry Reding wrote:
-> > > > > On Tue, Mar 17, 2020 at 02:32:26PM +0200, Oleksandr Suvorov wrote:
-> > > > > > Add the description of PWM_POLARITY_NORMAL flag.
-> > > > > > 
-> > > > > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-> > > > > > ---
-> > > > > > 
-> > > > > >  Documentation/devicetree/bindings/pwm/pwm.txt | 1 +
-> > > > > >  1 file changed, 1 insertion(+)
-> > > > > > 
-> > > > > > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
-> > > > > > index 084886bd721e..440c6b9a6a4e 100644
-> > > > > > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
-> > > > > > @@ -46,6 +46,7 @@ period in nanoseconds.
-> > > > > >  Optionally, the pwm-specifier can encode a number of flags (defined in
-> > > > > >  <dt-bindings/pwm/pwm.h>) in a third cell:
-> > > > > >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
-> > > > > > +- PWM_POLARITY_NORMAL: don't invert the PWM signal polarity
-> > > > > 
-> > > > > This doesn't make sense. PWM_POLARITY_NORMAL is not part of the DT ABI.
-> > > > 
-> > > > "is not part of the DT ABI" is hardly a good reason. If it's sensible to
-> > > > be used, it is sensible to define it.
-> > > 
-> > > That's exactly it. It's not sensible at all to use it.
-> > 
-> > If you think the argument is "It is not sensible to be used." then please
-> > say so and don't add "PWM_POLARITY_NORMAL is not part of the DT ABI."
-> > which seems to be irrelevant now.
+On Tue, 17 Mar 2020 14:10:43 +0100, Mauro Carvalho Chehab wrote:
+> This file was converted to json and renamed. Update its
+> references accordingly.
 > 
-> I did say that, didn't I? I said that it doesn't make sense because it
-> isn't part of the ABI. And since this is the document that defines the
-> DT ABI, why should we add something that isn't part of the ABI?
+> Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-schema")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/net/can/tcan4x5x.txt | 2 +-
+>  MAINTAINERS                                            | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> Now, if you want to make this part of the ABI, then that should be done
-> as part of this patch so that the patch is actually consistent.
-> 
-> > > If you define it here it means people are allowed to do stuff like
-> > > this:
-> > > 
-> > > 	pwms = <&pwm 1234 PWM_POLARITY_INVERTED | PWM_POLARITY_NORMAL>;
-> > > 
-> > > which doesn't make sense.
-> > 
-> > I would hope that a human reader would catch this.
-> 
-> Maybe. At the same time we're now moving towards automatic checking of
-> device trees against a binding. These tools will only ever see the
-> binary representation, so won't be able to spot this nonsense. The whole
-> purpose of having these tools is so that we don't have to do the tedious
-> work of manually inspecting all device tree files. It's also not
-> guaranteed that we'll even be seeing all of the device tree files ever
-> written against these bindings.
-> 
-> > 
-> > > What's more, it impossible for the code to even notice that you're
-> > > being silly because | PWM_POLARITY_NORMAL is just | 0 and that's just
-> > > a nop.
-> > 
-> > I think this argument is a bad one. Whenever you introduce a
-> > function or symbol you can use it in a wrong way. With this argument you
-> > can also say GPIO_ACTIVE_LOW doesn't make sense because
-> > 
-> > 	pwms = <&pwm 1234 GPIO_ACTIVE_LOW>;
-> > 
-> > is silly.
-> 
-> Yes, it's also obviously silly to try and eat a hammer. I was assuming
-> people have at least /some/ sense and try not to use GPIO related flags
-> with PWM specifiers. And because I think that people aren't totally
-> stupid, I think they'll be capable of understanding that by default a
-> PWM will be "normal" and only if they want to deviate from "normal" do
-> they need to do something special, like specify PWM_POLARITY_INVERTED.
-> 
-> I'm growing tired of this discussion, to be honest. So if you really
-> absolutely must have PWM_POLARITY_NORMAL so that you can read DT files
-> without having to think, then fine, I'll take a patch that adds that.
-> But please let's not confuse the definitions for DT with the polarity
-> enum in the API.
 
-I agree with Thierry here. I'd give my reasons, but I've got 200 other 
-patches to review.
+Applied, thanks.
 
 Rob
