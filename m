@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9C7C2D0F2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118CAC2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170A820771
+	by mail.kernel.org (Postfix) with ESMTP id DB5A520771
 	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 22:11:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="O2VkcrLo"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="EF4TwF51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgC3WLe (ORCPT
+        id S1730981AbgC3WLc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 18:11:34 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40789 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730980AbgC3WLd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 18:11:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a81so506908wmf.5;
-        Mon, 30 Mar 2020 15:11:32 -0700 (PDT)
+        Mon, 30 Mar 2020 18:11:32 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37082 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729142AbgC3WLb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 18:11:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w10so23652435wrm.4;
+        Mon, 30 Mar 2020 15:11:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rH18uADPcvY9iN4ZlqKSVAo4EwI8zrMKYS+ddwe06gM=;
-        b=O2VkcrLoK9at2xeoNDR0dKr6GCXJ6GvgAIt8d5J00iWaeidqCAgYA/Ecvmzx7KpyPk
-         iY1iMNaGQDy8uz5sxfZ/Kpuz9DSKPPj9ViKBS4lc0d1Oz5X1qMtEeIV/MNqjgG2CoaXv
-         umHsW1zY/2z+M2ELF1oj5boUhcs1Koxg9hjF+ASA/LHYFXUlgH7LFXRqX/YHma5fdRMi
-         Ls6kcDu9tq92JUWxW2Xdd78Q/DDCyRG+Oj+jmR9j7X8R8eIRQhbAiz6IZn2ECqJq2zFV
-         54l5hYPtp8ork5A5rJEeXBKUdtVG+FuDrOJl+mibehlFUSKKiT9qngF9ejLc3puUy0yp
-         Tz+w==
+        bh=PKd+/SwaFc/8uopc54d2zl4DkYvufR8oUaq7MhGEZW0=;
+        b=EF4TwF51AfUN1lIwRYek6+eBZzsQcUmm8bYWbbXGb2mnRZLl1bp+BFHcJbg2P+stbv
+         NFnVkDzaV5X/I1su61qbHRah5jskYUf8kzjpDHNCjDHsl+rLSdm2aNoiJHyHtUwCWlGb
+         laEVNC+Lv9Y6JUG3Dm0b2NdJ1OOB7+C0q7JHoFjrKJJlk2OKm4D9OdSM+K3TIPl9PnqJ
+         a+XHAid03t4cTctRHHHdyUgvwvRMn1GUeHsB8hQYKgRFEcto6iQQc4cV83R+otSC1b61
+         cavCZ78jaDH7OScxrngocBBYwK5PTlB9YVMNqmftrhkqdokN79IZHIkPZIHP06aKzdga
+         BaAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rH18uADPcvY9iN4ZlqKSVAo4EwI8zrMKYS+ddwe06gM=;
-        b=JARoWeswA5LAEWTncfDmattExH/SIy+16i+c14zhGMRQYJrFBxN+8opgxu+csXP+In
-         9qABD3UKZV6gkawzfs94oduAgKqbK8zGo6VGC464a0aVkn2zl+0PTKO4/OSE1A48ibNE
-         Kq0mJDbFxf4bxDZEn+yloPfOuwjd2eJN11Lhyt5Jhjcnw+1pqmSuRxo5wdsbbXrG3rML
-         g+6oF//FZZmLTcsuWtilQwCwXJGuoHej/ja8W7ORdFlMJvzWZAtctQDgHlMJVNTQygdB
-         Vzmrsh+o51XuAmDZd7HwPm7v6PXvGBDXk6qIHm3tsVZASTcF45K9EGc9S9i8o5RJDfh0
-         WpGw==
-X-Gm-Message-State: ANhLgQ0J8JyMB/vxI6d3SkmEym7dCJHvlOPugSEsjCW1frnAISWDDCO8
-        Khdai9qHt1p06k+C/uaDATaeDF9O
-X-Google-Smtp-Source: ADFU+vv/JR5vRCpxN4sqzSkYjKWLWQFcPK5nZzBQVW0eC/j4OvXq+vgaLQoqul21ksctM5TC0GQyXg==
-X-Received: by 2002:a1c:e904:: with SMTP id q4mr234551wmc.84.1585606291646;
-        Mon, 30 Mar 2020 15:11:31 -0700 (PDT)
+        bh=PKd+/SwaFc/8uopc54d2zl4DkYvufR8oUaq7MhGEZW0=;
+        b=ajhQV5fqdqHdh38EDzTZAbFOpYynBoNj4p5UIflgVvEI1/VfOMLObfdvm1h1goqZLk
+         VhNPa3v7/g3CTwHn8m4E0XGislVjADZ4s9BMNDx8nKEohnTg1gGmI4l/zm6AagUEHwhh
+         5szFzB1fUG4UMHSRM0T+DPflmbanrB4mEfWADgKu+sarGmugaTE+pSu1SZW6orwnvbZ4
+         HUiNIhPlIXzZ5nSVaJeqD069rf1w7lLxG+A33T0SszZwioyUQcbFxLokb+NXID62xqno
+         7mM3qiUAwUGd01IJJhei5VcHbx1Fh8EBxtkwDhaHpJObyWsGRLasr6WD0EUXudL3PCet
+         dbVg==
+X-Gm-Message-State: ANhLgQ2zixfJnue0b7yP6N7JBEpiww0fbpct3Tb+uYGda3KqWWEBAXgO
+        a4Gr84Bs8mZujgRjXYBaMqs=
+X-Google-Smtp-Source: ADFU+vuzqjpSAFP9jLZ0jvH6APY0YiXy3oxdro+kCvlvWkDnfGPkNvMs4WdyNjCnUsk3/+L+tWmfGA==
+X-Received: by 2002:a5d:630b:: with SMTP id i11mr16188951wru.94.1585606289301;
+        Mon, 30 Mar 2020 15:11:29 -0700 (PDT)
 Received: from localhost.localdomain (p200300F13710ED00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3710:ed00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id b187sm1260509wmc.14.2020.03.30.15.11.30
+        by smtp.googlemail.com with ESMTPSA id b187sm1260509wmc.14.2020.03.30.15.11.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 15:11:31 -0700 (PDT)
+        Mon, 30 Mar 2020 15:11:28 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com,
         jbrunet@baylibre.com, narmstrong@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [RFC v1 3/5] arm64: dts: amlogic: meson-gx: add the Mali-450 OPP table and use DVFS
-Date:   Tue, 31 Mar 2020 00:11:02 +0200
-Message-Id: <20200330221104.3163788-4-martin.blumenstingl@googlemail.com>
+Subject: [RFC v1 1/5] clk: meson: gxbb: Prepare the GPU clock tree to change at runtime
+Date:   Tue, 31 Mar 2020 00:11:00 +0200
+Message-Id: <20200330221104.3163788-2-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200330221104.3163788-1-martin.blumenstingl@googlemail.com>
 References: <20200330221104.3163788-1-martin.blumenstingl@googlemail.com>
@@ -75,222 +75,125 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the OPP table for the Mali-450 GPU and drop the hardcoded initial
-clock configuration. This enables GPU DVFS and thus saves power when the
-GPU is not in use while still being able switch to a higher clock on
-demand.
-
-While here, make most of meson-gxl-mali re-usable to reduce the amount
-of duplicate code between GXBB and GXL. This is more important now as we
-don't want to duplicate the GPU OPP table.
+The "mali_0" or "mali_1" clock trees should not be updated while the
+clock is running. Enforce this by setting CLK_SET_RATE_GATE on the
+"mali_0" and "mali_1" gates. This makes the CCF switch to the "mali_1"
+tree when "mali_0" is currently active and vice versa, which is exactly
+what the vendor driver does when updating the frequency of the mali
+clock.
+Also populate set_rate requests from the divider to the mux so the GPU
+clock frequency can be updated at runtime (which will be required for
+GPU DVFS).
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../boot/dts/amlogic/meson-gx-mali450.dtsi    | 61 +++++++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   | 51 ++++------------
- .../boot/dts/amlogic/meson-gxl-mali.dtsi      | 46 +++-----------
- 3 files changed, 81 insertions(+), 77 deletions(-)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gx-mali450.dtsi
+ drivers/clk/meson/gxbb.c | 40 ++++++++++++++++++++++------------------
+ 1 file changed, 22 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-mali450.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-mali450.dtsi
-new file mode 100644
-index 000000000000..f9771b51c852
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx-mali450.dtsi
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2017 BayLibre SAS
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ */
-+
-+/ {
-+	gpu_opp_table: opp-table {
-+		compatible = "operating-points-v2";
-+
-+		opp-125000000 {
-+			opp-hz = /bits/ 64 <125000000>;
-+			opp-microvolt = <950000>;
-+		};
-+		opp-250000000 {
-+			opp-hz = /bits/ 64 <250000000>;
-+			opp-microvolt = <950000>;
-+		};
-+		opp-285714285 {
-+			opp-hz = /bits/ 64 <285714285>;
-+			opp-microvolt = <950000>;
-+		};
-+		opp-400000000 {
-+			opp-hz = /bits/ 64 <400000000>;
-+			opp-microvolt = <950000>;
-+		};
-+		opp-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <950000>;
-+		};
-+		opp-666666666 {
-+			opp-hz = /bits/ 64 <666666666>;
-+			opp-microvolt = <950000>;
-+		};
-+		opp-744000000 {
-+			opp-hz = /bits/ 64 <744000000>;
-+			opp-microvolt = <950000>;
-+		};
-+	};
-+};
-+
-+&apb {
-+	mali: gpu@c0000 {
-+		compatible = "arm,mali-450";
-+		reg = <0x0 0xc0000 0x0 0x40000>;
-+		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "gp", "gpmmu", "pp", "pmu",
-+			"pp0", "ppmmu0", "pp1", "ppmmu1",
-+			"pp2", "ppmmu2";
-+		operating-points-v2 = <&gpu_opp_table>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 0cb40326b0d3..e43b330129c7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -4,6 +4,7 @@
+diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
+index 5fd6a574f8c3..0a68af6eec3d 100644
+--- a/drivers/clk/meson/gxbb.c
++++ b/drivers/clk/meson/gxbb.c
+@@ -957,7 +957,9 @@ static struct clk_regmap gxbb_sar_adc_clk = {
+ 
+ /*
+  * The MALI IP is clocked by two identical clocks (mali_0 and mali_1)
+- * muxed by a glitch-free switch.
++ * muxed by a glitch-free switch. The CCF can manage this glitch-free
++ * mux because it does top-to-bottom updates the each clock tree and
++ * switches to the "inactive" one when CLK_SET_RATE_GATE is set.
   */
  
- #include "meson-gx.dtsi"
-+#include "meson-gx-mali450.dtsi"
- #include <dt-bindings/gpio/meson-gxbb-gpio.h>
- #include <dt-bindings/reset/amlogic,meson-gxbb-reset.h>
- #include <dt-bindings/clock/gxbb-clkc.h>
-@@ -241,46 +242,6 @@ mux {
- 	};
- };
- 
--&apb {
--	mali: gpu@c0000 {
--		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
--		reg = <0x0 0xc0000 0x0 0x40000>;
--		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "gp", "gpmmu", "pp", "pmu",
--			"pp0", "ppmmu0", "pp1", "ppmmu1",
--			"pp2", "ppmmu2";
--		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
--		clock-names = "bus", "core";
--
+ static const struct clk_parent_data gxbb_mali_0_1_parent_data[] = {
+@@ -980,14 +982,15 @@ static struct clk_regmap gxbb_mali_0_sel = {
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "mali_0_sel",
+ 		.ops = &clk_regmap_mux_ops,
 -		/*
--		 * Mali clocking is provided by two identical clock paths
--		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
--		 * free mux to safely change frequency while running.
+-		 * bits 10:9 selects from 8 possible parents:
+-		 * xtal, gp0_pll, mpll2, mpll1, fclk_div7,
+-		 * fclk_div4, fclk_div3, fclk_div5
 -		 */
--		assigned-clocks = <&clkc CLKID_GP0_PLL>,
--				  <&clkc CLKID_MALI_0_SEL>,
--				  <&clkc CLKID_MALI_0>,
--				  <&clkc CLKID_MALI>; /* Glitch free mux */
--		assigned-clock-parents = <0>, /* Do Nothing */
--					 <&clkc CLKID_GP0_PLL>,
--					 <0>, /* Do Nothing */
--					 <&clkc CLKID_MALI_0>;
--		assigned-clock-rates = <744000000>,
--				       <0>, /* Do Nothing */
--				       <744000000>,
--				       <0>; /* Do Nothing */
--	};
--};
--
- &cbus {
- 	spifc: spi@8c80 {
- 		compatible = "amlogic,meson-gxbb-spifc";
-@@ -362,6 +323,16 @@ &i2c_C {
- 	clocks = <&clkc CLKID_I2C>;
+ 		.parent_data = gxbb_mali_0_1_parent_data,
+ 		.num_parents = 8,
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		/*
++		 * Don't request the parent to change the rate because
++		 * all GPU frequencies can be derived from the fclk_*
++		 * clocks and one special GP0_PLL setting. This is
++		 * important because we need the MPLL clocks for audio.
++		 */
++		.flags = 0,
+ 	},
  };
  
-+&mali {
-+	compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
-+
-+	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
-+	clock-names = "bus", "core";
-+
-+	assigned-clocks = <&clkc CLKID_GP0_PLL>;
-+	assigned-clock-rates = <744000000>;
-+};
-+
- &periphs {
- 	pinctrl_periphs: pinctrl@4b0 {
- 		compatible = "amlogic,meson-gxbb-periphs-pinctrl";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
-index 6aaafff674f9..478e755cc87c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
-@@ -4,42 +4,14 @@
-  * Author: Neil Armstrong <narmstrong@baylibre.com>
-  */
+@@ -1004,7 +1007,7 @@ static struct clk_regmap gxbb_mali_0_div = {
+ 			&gxbb_mali_0_sel.hw
+ 		},
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
  
--&apb {
--	mali: gpu@c0000 {
--		compatible = "amlogic,meson-gxl-mali", "arm,mali-450";
--		reg = <0x0 0xc0000 0x0 0x40000>;
--		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "gp", "gpmmu", "pp", "pmu",
--			"pp0", "ppmmu0", "pp1", "ppmmu1",
--			"pp2", "ppmmu2";
--		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
--		clock-names = "bus", "core";
-+#include "meson-gx-mali450.dtsi"
+@@ -1020,7 +1023,7 @@ static struct clk_regmap gxbb_mali_0 = {
+ 			&gxbb_mali_0_div.hw
+ 		},
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_GATE | CLK_SET_RATE_PARENT,
+ 	},
+ };
  
+@@ -1033,14 +1036,15 @@ static struct clk_regmap gxbb_mali_1_sel = {
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "mali_1_sel",
+ 		.ops = &clk_regmap_mux_ops,
 -		/*
--		 * Mali clocking is provided by two identical clock paths
--		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
--		 * free mux to safely change frequency while running.
+-		 * bits 10:9 selects from 8 possible parents:
+-		 * xtal, gp0_pll, mpll2, mpll1, fclk_div7,
+-		 * fclk_div4, fclk_div3, fclk_div5
 -		 */
--		assigned-clocks = <&clkc CLKID_GP0_PLL>,
--				  <&clkc CLKID_MALI_0_SEL>,
--				  <&clkc CLKID_MALI_0>,
--				  <&clkc CLKID_MALI>; /* Glitch free mux */
--		assigned-clock-parents = <0>, /* Do Nothing */
--					 <&clkc CLKID_GP0_PLL>,
--					 <0>, /* Do Nothing */
--					 <&clkc CLKID_MALI_0>;
--		assigned-clock-rates = <744000000>,
--				       <0>, /* Do Nothing */
--				       <744000000>,
--				       <0>; /* Do Nothing */
--	};
-+&mali {
-+	compatible = "amlogic,meson-gxl-mali", "arm,mali-450";
-+
-+	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
-+	clock-names = "bus", "core";
-+
-+	assigned-clocks = <&clkc CLKID_GP0_PLL>;
-+	assigned-clock-rates = <744000000>;
+ 		.parent_data = gxbb_mali_0_1_parent_data,
+ 		.num_parents = 8,
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		/*
++		 * Don't request the parent to change the rate because
++		 * all GPU frequencies can be derived from the fclk_*
++		 * clocks and one special GP0_PLL setting. This is
++		 * important because we need the MPLL clocks for audio.
++		 */
++		.flags = 0,
+ 	},
  };
+ 
+@@ -1057,7 +1061,7 @@ static struct clk_regmap gxbb_mali_1_div = {
+ 			&gxbb_mali_1_sel.hw
+ 		},
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -1073,7 +1077,7 @@ static struct clk_regmap gxbb_mali_1 = {
+ 			&gxbb_mali_1_div.hw
+ 		},
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT,
++		.flags = CLK_SET_RATE_GATE | CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -1093,7 +1097,7 @@ static struct clk_regmap gxbb_mali = {
+ 		.ops = &clk_regmap_mux_ops,
+ 		.parent_hws = gxbb_mali_parent_hws,
+ 		.num_parents = 2,
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
 -- 
 2.26.0
 
