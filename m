@@ -2,97 +2,118 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD28DC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 13:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E48C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 14:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6CD206CC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 13:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4732073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 14:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgC3N5x (ORCPT
+        id S1726114AbgC3OGG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 09:57:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:55285 "EHLO mga01.intel.com"
+        Mon, 30 Mar 2020 10:06:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:54512 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgC3N5x (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 09:57:53 -0400
-IronPort-SDR: XRBD/VPW9I8Kr0ERlEONgxd7Wux+StSnBj24Nf54OS5n5tGmKQBoHqEsDX2u3yIJE9lUu3ZZ4Z
- YCCpdQ31MVkQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 06:57:52 -0700
-IronPort-SDR: gpBtDX8eCH7FPm/oTANkhiBgT7C3LcYmTxj4V4fYHVRnHSmLlXU2EfOXWkjBLcFEkqq3cZ3hvj
- sR+HqgJrtWfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,324,1580803200"; 
-   d="scan'208";a="449803069"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 30 Mar 2020 06:57:49 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jIuvH-00EDZT-4T; Mon, 30 Mar 2020 16:57:51 +0300
-Date:   Mon, 30 Mar 2020 16:57:51 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        sakari.ailus@linux.intel.com, drinkcat@chromium.org,
-        tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, sj.huang@mediatek.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        louis.kuo@mediatek.com, shengnan.wang@mediatek.com
-Subject: Re: [V4, 2/2] media: i2c: Add DW9768 VCM driver
-Message-ID: <20200330135751.GQ1922688@smile.fi.intel.com>
-References: <20200330123634.363-1-dongchun.zhu@mediatek.com>
- <20200330123634.363-3-dongchun.zhu@mediatek.com>
+        id S1725978AbgC3OGG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Mar 2020 10:06:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19C131042;
+        Mon, 30 Mar 2020 07:06:06 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D71083F71E;
+        Mon, 30 Mar 2020 07:06:04 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 15:05:54 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V5 0/2] firmware: arm_scmi: add smc/hvc transports support
+Message-ID: <20200330140544.GA22712@bogus>
+References: <1583673879-20714-1-git-send-email-peng.fan@nxp.com>
+ <AM0PR04MB4481F673F90C735F272C171F88F50@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200327163253.GA32313@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330123634.363-3-dongchun.zhu@mediatek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200327163253.GA32313@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 08:36:34PM +0800, Dongchun Zhu wrote:
-> This patch adds a V4L2 sub-device driver for DW9768 voice coil moter,
-> providing control to set the desired focus via I2C serial interface.
+On Fri, Mar 27, 2020 at 04:32:53PM +0000, Sudeep Holla wrote:
+> On Fri, Mar 20, 2020 at 08:27:47AM +0000, Peng Fan wrote:
+> > Hi Sudeep,
+> >
+> > > Subject: [PATCH V5 0/2] firmware: arm_scmi: add smc/hvc transports support
+> >
+> > Are you fine with this patchset? Or You expect multi channel support?
+> >
+> 
+> I applied these patches[1]. I also looked at multi channel support and
+> I think it should be simple. I have made changes and will post soon.
+> I would like you to review and if possible test. I don't want to break
+> the existing single channel, so please do test in your setup for single
+> channel itself.
+> 
 
-...
+This caused build break when !CONFIG_HAVE_ARM_SMCCC, I have added the
+below fixup. Posting the same for sake of tracking.
 
-> +static const struct dev_pm_ops dw9768_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
-> +	SET_RUNTIME_PM_OPS(dw9768_runtime_suspend, dw9768_runtime_resume, NULL)
-> +};
-> +
-> +static struct i2c_driver dw9768_i2c_driver = {
-> +	.driver = {
-> +		.name = DW9768_NAME,
+Regards,
+Sudeep
 
-> +		.pm = IS_ENABLED(CONFIG_PM) ? &dw9768_pm_ops : NULL,
+--
+diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+index 6b1b0d6c6d0e..11b238f81923 100644
+--- a/drivers/firmware/arm_scmi/Makefile
++++ b/drivers/firmware/arm_scmi/Makefile
+@@ -2,6 +2,8 @@
+ obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o scmi-transport.o
+ scmi-bus-y = bus.o
+ scmi-driver-y = driver.o
+-scmi-transport-y = mailbox.o shmem.o smc.o
++scmi-transport-y = shmem.o
++scmi-transport-$(CONFIG_MAILBOX) += mailbox.o
++scmi-transport-$(CONFIG_HAVE_ARM_SMCCC) += smc.o
+ scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o
+ obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
+index 94fc2b2df940..34bfadca14cc 100644
+--- a/drivers/firmware/arm_scmi/common.h
++++ b/drivers/firmware/arm_scmi/common.h
+@@ -210,7 +210,9 @@ struct scmi_desc {
+ };
 
-What is this conditional for?
+ extern const struct scmi_desc scmi_mailbox_desc;
++#ifdef CONFIG_HAVE_ARM_SMCCC
+ extern const struct scmi_desc scmi_smc_desc;
++#endif
 
-> +		.of_match_table = dw9768_of_table,
-> +	},
-> +	.probe_new  = dw9768_probe,
-> +	.remove = dw9768_remove,
-> +};
-
-> +
-
-Extra blank line.
-
-> +module_i2c_driver(dw9768_i2c_driver);
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+ void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr);
+ void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr, int id);
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index e76a3fab1074..6ef61e52eef7 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -827,7 +827,9 @@ ATTRIBUTE_GROUPS(versions);
+ /* Each compatible listed below must have descriptor associated with it */
+ static const struct of_device_id scmi_of_match[] = {
+ 	{ .compatible = "arm,scmi", .data = &scmi_mailbox_desc },
++#ifdef CONFIG_HAVE_ARM_SMCCC
+ 	{ .compatible = "arm,scmi-smc", .data = &scmi_smc_desc},
++#endif
+ 	{ /* Sentinel */ },
+ };
 
