@@ -2,202 +2,142 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,WEIRD_QUOTING autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C977C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F00C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D037120781
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C30E20748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ai6wI+yc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iK+mvsHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgC3SQV (ORCPT
+        id S1727749AbgC3SmC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:16:21 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42051 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgC3SQV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 14:16:21 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z5so18872056oth.9;
-        Mon, 30 Mar 2020 11:16:18 -0700 (PDT)
+        Mon, 30 Mar 2020 14:42:02 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36096 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgC3SmC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 14:42:02 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k18so16630471oib.3
+        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 11:42:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=hc3WCyyOJyVb1bVm2+erTwMdDqb8JOvqNVevK3r7VwI=;
-        b=ai6wI+ycqrkzpl/S2YJzZdSui/OqHxW+zs9NCXGh7U6Ao8RzV+b6ZH92pP+mJSeMDg
-         3zFsBbaW5dHtjdptA2ZKynOAnrY/IFF/rbTO3di295t+BhXrNfSP1TZfcKFLzaaoOfUV
-         bVKuFgdn0MvaqJSHswPZS+XldoySduiB80LONN0NvR4dSXufP5iF9jGiXSGWYDD9cBxG
-         xAJILj6xA/q3qaZGqm/kdv34TUUojc70Ogmsn38uo995wLI4LwNDS5srJoxLtqNTnQ0w
-         U9IlzFhfaJqL2AEjBt3teQ6hoVJOurZOyN+6s5i5g5RZL39LrAlRA3Usk0jJOm4IPLXJ
-         aPDg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bMsXSbAs23J4I+WSSJ1Kd7A3MYfRXPuuAKW5ma32u/I=;
+        b=iK+mvsHDPS4OGPtKBhNUq8BDbqZv2bYZ0L0DQw/gj5t33XpHM9/YA31DtZAD4rBMeP
+         1t8tFJ2WveKx5dFYrefqwMcbo4CSa/Y9MMF/ncPsQjG3b0p4phy6U3yL5Si/Ah1Fn43a
+         AJumYtdIg8ZPcCb3dK0nTr9VOGbQ1DaIPozIHo2ToTVkOLBstZ4z4tftDP7S9Y2rqnz0
+         hs04gOoEn5GnU6PG+pjcCeLrAkx7tSvFA+MZ2l96TcgZ8PeEf+06kP8UphWexpVJSBuO
+         jkl0hUv+2xfXwpxlu3Wfk3jNKjnyn20X/cuvPzxZQ3BU/DytfJ5qlBgwDGBHLMxSKP26
+         jPwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=hc3WCyyOJyVb1bVm2+erTwMdDqb8JOvqNVevK3r7VwI=;
-        b=EdvLemNxXnJ1LftsQOzPMFhujmuITyTJPbPfpiajmjYWdrJ7hZosla/6BYRmaZvKRz
-         6QWDBemcsgxjzgvkAmCrWE6GXun1MQ0HKsP+Z2x/Z9+bYwFFoIrGWa8O8TDBUbf70+xN
-         +Id8faID04DU50Vmfh/NlcxEhGtE9sPtABREMOiCZrLouR3XVtt3/6MU4pGfuMQKbcFN
-         nR+zRQEbMMO2VEBavxrElyYVy4D0nDc8wo6fe9UQnCJHtkTS5Izp0ayVSXFKWrU7siXe
-         ZxDc4NLwIYccXcCH3/WVkv9S86b69QfDGfxcNzhS1iKkACcjfaRmxRJRzvO5XPgooMzk
-         Zs6w==
-X-Gm-Message-State: ANhLgQ3OJ2hE+9CTE5b/UQqVmRCa10ZGkzCS2FQY1NBqOo3wZeiTDt3e
-        s+qcr7CgpqRopmBYAZ9lgKQqKXWfzx0=
-X-Google-Smtp-Source: ADFU+vvlSpRwHKn4r6g703Ne60gh2l2x19YSD2cUdpHUPeweDs5ZyHaHm8b4wc+Bl5wfRYsNGn1JCA==
-X-Received: by 2002:a05:6830:10a:: with SMTP id i10mr10498831otp.190.1585592178291;
-        Mon, 30 Mar 2020 11:16:18 -0700 (PDT)
-Received: from andrews-mbp-2.attlocal.net ([2600:1700:19e0:3310:81db:d33f:7ec:a679])
-        by smtp.gmail.com with ESMTPSA id o1sm4480246otl.49.2020.03.30.11.16.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 30 Mar 2020 11:16:17 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH 2/2] ARM: dts: aspeed: zaius: Add gpio line names
-From:   Andrew Geissler <geissonator@gmail.com>
-In-Reply-To: <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
-Date:   Mon, 30 Mar 2020 13:16:16 -0500
-Cc:     Joel Stanley <joel@jms.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9360D2B2-8242-4BA1-BF06-8916E87EDE67@gmail.com>
-References: <20200306170218.79698-1-geissonator@yahoo.com>
- <20200306170218.79698-2-geissonator@yahoo.com>
- <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
-To:     Andrew Jeffery <andrew@aj.id.au>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bMsXSbAs23J4I+WSSJ1Kd7A3MYfRXPuuAKW5ma32u/I=;
+        b=jX3mpe6f5thXHV6HK2ff9M+deev8OAoplR//kcCuTCqhFnMsrt+1VJKz45a5v/PIaz
+         nvZ4X69Tw/sEfNb/KqlPzlchzCu3WMDkDuFx38194esH5mQWpQR9QvpJk0e1luExaF6N
+         PHhhp0MWEpv4OeV+qk6GJRsHNCzyJ1STXcKZbpFZo/FZ1geeFr2GVBjDj2WXYzigEes7
+         fZGb2T+MG3vScDGUrvBrX5J5nRXEAlZoTV/bad1bgv08e1hqoGSoPFVn1VMnZh+0wfwT
+         4WvnVluG0zCrC3zfq9oEO0Gqn1Zg1uLKh7IsmnQw5FbUqkJW7MeFEKkszcJHrbgVkRB8
+         PaHQ==
+X-Gm-Message-State: ANhLgQ0txjtCDwlRCKp5KBr6DHWTzpKIBDawzp/SW5CT3ckEfNflLR7C
+        ZyHdzOx+/GBPlubPjkyla3i3Lb3BFo4rK522UB/wSQ==
+X-Google-Smtp-Source: ADFU+vu8a0aFSp1Bsc6H0PWmUghHP16f0fOcxJ31iseInDunbVcIAiBxYijOxAbVRtDSEW4QOHql9nkcF2nT/W/I+MY=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr548350oih.172.1585593721353;
+ Mon, 30 Mar 2020 11:42:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200321210305.28937-1-saravanak@google.com> <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
+ <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com> <20200327152144.GA2996253@kroah.com>
+ <CAGETcx-J+TP+0NsOe75Uu3Q8K6=qYja6eDbjNH2764QV53=nMA@mail.gmail.com> <4f3326c2-186d-2853-fcb6-1210d67a836f@samsung.com>
+In-Reply-To: <4f3326c2-186d-2853-fcb6-1210d67a836f@samsung.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 30 Mar 2020 11:41:25 -0700
+Message-ID: <CAGETcx9nhF4hjs6BQ21Ees4LJLM7kENj6Ja619Sonjvvt1o7wA@mail.gmail.com>
+Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
+ behavior by default
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sun, Mar 29, 2020 at 11:20 PM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> Hi
+>
+> On 2020-03-27 19:30, Saravana Kannan wrote:
+> > On Fri, Mar 27, 2020 at 8:21 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> >> On Fri, Mar 27, 2020 at 11:25:48AM +0100, Marek Szyprowski wrote:
+> >>> On 2020-03-21 22:03, Saravana Kannan wrote:
+> >>>> Set fw_devlink to "permissive" behavior by default so that device links
+> >>>> are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
+> >>>> firmware.
+> >>>>
+> >>>> This ensures suppliers get their sync_state() calls only after all their
+> >>>> consumers have probed successfully. Without this, suppliers will get
+> >>>> their sync_state() calls at late_initcall_sync() even if their consuer
+> >>>>
+> >>>> Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
+> >>>> that needs more testing as it's known to break some corner case
+> >>>> drivers/platforms.
+> >>>>
+> >>>> Cc: Rob Herring <robh+dt@kernel.org>
+> >>>> Cc: Frank Rowand <frowand.list@gmail.com>
+> >>>> Cc: devicetree@vger.kernel.org
+> >>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> >>> This patch has just landed in linux-next 20200326. Sadly it breaks
+> >>> booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit
+> >>> mode. There is no warning nor panic message, just a silent freeze. The
+> >>> last message shown on the earlycon is:
+> >>>
+> >>> [    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
+> > Marek,
+> >
+> > Any chance you could get me a stack trace for when it's stuck? That'd
+> > be super helpful and I'd really appreciate it. Is it working fine on
+> > other variants of Raspberry?
+>
+> I have no access to other variants of Raspberry board.
+>
+> The issue seems to be related to bcm2835aux_serial_driver. I've added
+> "initcall_debug" and "ignore_loglevel" to kernel cmdline and I got the
+> following log:
+>
+> [    4.595353] calling  exar_pci_driver_init+0x0/0x30 @ 1
+> [    4.600597] initcall exar_pci_driver_init+0x0/0x30 returned 0 after
+> 44 usecs
+> [    4.607747] calling  bcm2835aux_serial_driver_init+0x0/0x28 @ 1
+>
+> The with some debug printk calls I've found that the clock lookup fails
+> with -517 (-EPROBE_DEFER) in bcm2835aux_serial_driver:
+> https://elixir.bootlin.com/linux/v5.6/source/drivers/tty/serial/8250/8250_bcm2835aux.c#L52
+>
+> Without this patch, the lookup works fine.
+>
+> Please let me know if you need more information. The kernel cmdline I've
+> use is: "8250.nr_uarts=1 console=ttyS0,115200n8
+> earlycon=uart8250,mmio32,0x3f215040 root=/dev/mmcblk0p2 rootwait rw",
+> kernel is compiled with bcm2835_defconfig, booted on Raspberry Pi3b+
+> with arch/arm/boot/dts/bcm2837-rpi-3-b.dtb
 
+Thanks for the details! I think it gave me an idea of what might be
+going wrong here.
 
-> On Mar 26, 2020, at 6:20 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
->=20
->=20
->=20
-> On Sat, 7 Mar 2020, at 03:32, Andrew Geissler wrote:
->> Name the GPIOs to help userspace work with them. The names describe =
-the
->> functionality the lines provide, not the net or ball name. This makes =
-it
->> easier to share userspace code across different systems and makes the
->> use of the lines more obvious.
->>=20
->> Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
->=20
-> So we're creating a bit of an ad-hoc ABI here between the DT and =
-userspace.
->=20
-> Where are we documenting it?
-
-Yeah, so far it=E2=80=99s basically design by precedent. If you want =
-your OpenBMC
-function to work then follow the standards we're setting in other =
-dts=E2=80=99s.
-
-Is there a good place to document this? I could create a OpenBMC design
-doc but that would not address non-OpenBMC areas.
-
->=20
-> Generally I think the idea is good though, so:
->=20
-> Acked-by: Andrew Jeffery <andrew@aj.id.au>
-
-Thanks
-
->=20
->> ---
->> arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 37 =
-+++++++++++++++++++---
->> 1 file changed, 33 insertions(+), 4 deletions(-)
->>=20
->> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts=20
->> b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
->> index bc60ec291681..4bcc82046362 100644
->> --- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
->> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
->> @@ -478,32 +478,61 @@
->> 	pinctrl-names =3D "default";
->> 	pinctrl-0 =3D <&pinctrl_gpioh_unbiased>;
->>=20
->> +	gpio-line-names =3D
->> +	/*A0-A7*/	"","cfam-reset","","","","","","",
->> +	/*B0-B7*/	"","","","","","","","",
->> +	/*C0-C7*/	"","","","","","","","",
->> +	/*D0-D7*/	=
-"fsi-enable","","","","","led-sys-boot-status","led-attention",
->> +				"led-fault",
->> +	/*E0-E7*/	"","","","","","","","presence-pcie-e2b",
->> +	/*F0-F7*/	"","","","","","","","checkstop",
->> +	/*G0-G7*/	"fsi-clock","fsi-data","","","","","","",
->> +	/*H0-H7*/	=
-"onewire0","onewire1","onewire2","onewire3","","","","",
->> +	/*I0-I7*/	"","","","power-button","","","","",
->> +	/*J0-J7*/	"","","","","","","","",
->> +	/*K0-K7*/	"","","","","","","","",
->> +	/*L0-L7*/	"","","","","","","","",
->> +	/*M0-M7*/	"","","","","","","","",
->> +	/*N0-N7*/	"","","","","","","","",
->> +	/*O0-O7*/	"","","","","iso_u164_en","","fsi-trans","",
->> +	/*P0-P7*/	=
-"ncsi_mux_en_n","bmc_i2c2_sw_rst_n","","bmc_i2c5_sw_rst_n","",
->> +				"","fsi-mux","",
->> +	/*Q0-Q7*/	"","","","","","","","",
->> +	/*R0-R7*/	"","","","","","","","",
->> +	/*S0-S7*/	"","","","","","","","",
->> +	/*T0-T7*/	"","","","","","","","",
->> +	/*U0-U7*/	"","","","","","","","",
->> +	/*V0-V7*/	"","","","","","","","",
->> +	/*W0-W7*/	"","","","","","","","",
->> +	/*X0-X7*/	"","","","","","","","",
->> +	/*Y0-Y7*/	"","","","","","","","",
->> +	/*Z0-Z7*/	"","","","","","","","",
->> +	/*AA0-AA7*/	"","","led-hdd-fault","","","","","",
->> +	/*AB0-AB7*/	"","","","","","","","",
->> +	/*AC0-AC7*/	"","","","","","","","";
->> +
->> 	line_iso_u146_en {
->> 		gpio-hog;
->> 		gpios =3D <ASPEED_GPIO(O, 4) GPIO_ACTIVE_HIGH>;
->> 		output-high;
->> -		line-name =3D "iso_u164_en";
->> 	};
->>=20
->> 	ncsi_mux_en_n {
->> 		gpio-hog;
->> 		gpios =3D <ASPEED_GPIO(P, 0) GPIO_ACTIVE_HIGH>;
->> 		output-low;
->> -		line-name =3D "ncsi_mux_en_n";
->> 	};
->>=20
->> 	line_bmc_i2c2_sw_rst_n {
->> 		gpio-hog;
->> 		gpios =3D <ASPEED_GPIO(P, 1) GPIO_ACTIVE_HIGH>;
->> 		output-high;
->> -		line-name =3D "bmc_i2c2_sw_rst_n";
->> 	};
->>=20
->> 	line_bmc_i2c5_sw_rst_n {
->> 		gpio-hog;
->> 		gpios =3D <ASPEED_GPIO(P, 3) GPIO_ACTIVE_HIGH>;
->> 		output-high;
->> -		line-name =3D "bmc_i2c5_sw_rst_n";
->> 	};
->> };
->>=20
->> --=20
->> 2.21.0 (Apple Git-122)
->>=20
->>=20
-
+-Saravana
