@@ -2,193 +2,231 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB06C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 17:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CD6C2D0EB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 17:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A299D20578
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 17:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7833420776
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 17:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbQngvNY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="JbhH6ZeZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728594AbgC3RWf (ORCPT
+        id S1729436AbgC3RWr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:22:35 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50519 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbgC3RWe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 13:22:34 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t128so2400215wma.0;
-        Mon, 30 Mar 2020 10:22:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U2X2gfUgsp7MWaJ9ojRT3T9FixQ8EI50TxiIcZ/XUYk=;
-        b=AbQngvNYQT168N4Niuh3/TF8u6Lo7Kfimvof+S9aig0UDP8iK/UyNDtrmth9YqtLak
-         kWFyv6TRpwpEXkP4C41wyqPWapW880lmvkSjSIuTLpaK/ZNjGG1FX6gxFO0wwVvKcKNm
-         lYIUOAP2CHqhf/P8hM373RjoiY9adQo+kukPVc56bjHpmRT4Vlp+iA+wacPDASdbfEY1
-         YQOoStWOXStSHI9l5c62dnjKDhEhfSnc/85aFGWCxfL4iCyqA9lur0dlT+pba4+m/Em7
-         A5p1idNS7279bNyM5zYNiqhXJ+Vc8YgVDtL+Gw4b3YMMTTn+jxvVjXrw7yEw/dMjcaxc
-         s5sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=U2X2gfUgsp7MWaJ9ojRT3T9FixQ8EI50TxiIcZ/XUYk=;
-        b=Sml51UG2MJiON27ZIZHw3Akw9wqR/cwhga0lj6hguqd4DhP1fvlcFeTiQRkVL/xu6r
-         bxb8KrbYJ79aVXWfplJWfnf5U6U0zvCiU/AszNp/3M8jQId4rKfSjgl0t1iHG31MWX9Y
-         BRpHlU/TpzmdpcDoUBUvnFSFeS0j7kJVITxkl14ynkYqQ6RtuoSQPOQ3OtEo2LEGFHoc
-         w3LGJOXuvWLaVbHEix1Jov9iDEKUbBRq/4cb+6+4WCv31oPstjAPIrUoY7wePt7TCgWU
-         8QLH4nPXiCnY0k6P/GEAC5vvEOMoDqPYJE688YBkpYB2VU6kZ6o64ZkySdYn4oGh3WC3
-         eVkg==
-X-Gm-Message-State: ANhLgQ1G+56NHdrOqV6AyqajysAGWUWqREKN1b3AFUsBaWoj4p6irDDF
-        p31/LZnjtJM/AB4JnblML6k=
-X-Google-Smtp-Source: ADFU+vt4dQDMaQGvqFjZhq6V1gpngc4X+Jasx2kFcMadVDzBTokQ5SkiLAwFtxhUTK8TkuOvkwM5tg==
-X-Received: by 2002:a7b:cc81:: with SMTP id p1mr328473wma.158.1585588952696;
-        Mon, 30 Mar 2020 10:22:32 -0700 (PDT)
-Received: from [10.230.3.19] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id y16sm21826929wrp.78.2020.03.30.10.22.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 10:22:32 -0700 (PDT)
-Subject: Re: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, davem@davemloft.net
-References: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
- <20200330163028.GE23477@lunn.ch>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <9bbbe2ed-985b-49e7-cc16-8b6bae3e8e8e@gmail.com>
-Date:   Mon, 30 Mar 2020 10:22:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.6.0
+        Mon, 30 Mar 2020 13:22:47 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:11795 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728096AbgC3RWr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 13:22:47 -0400
+X-Greylist: delayed 363 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Mar 2020 13:22:45 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585588964;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=KxeIHeglbqB251Du7zG5m44JsZjNiJxHjofFRSSX30I=;
+        b=JbhH6ZeZ/71d8ZQ2CivYkMey1CyT+K1VXKKrL3xNIpLK1ws5r1HhYM5ZfyHNaG+OKE
+        IfEA0lAaLcyNKQe7/k9gR86Ztml55Pc1Iz/ohwXfEWQP/eSHfaJkW/PZ5cvBId1nvRq4
+        u4xLXG2jDbDAJC96AhBgT2rC3nO8CGBgoteHpiaXa+5ZedT8neDocvNULufYyZMUoj1U
+        yhgUU/sUU217gqQsJRP5n+ZRwBdIUUQ0gn2TLwOpcl9iPM1f0AGZekAG0NImfQONEVGp
+        FPNJAArbFqy/P0SqCgjLV+W1J49UfrxxPLg1HO849J5tVo/lwmDOmJ5hgucwU3iqTtru
+        UphQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJDdfbYs7ef"
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id u043b8w2UHAcO1X
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Mon, 30 Mar 2020 19:10:38 +0200 (CEST)
+Date:   Mon, 30 Mar 2020 19:10:31 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     =?iso-8859-1?Q?Ga=EBtan_Andr=E9?= <rvlander@gaetanandre.eu>
+Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 2/2] iio: accel: st_sensors:  add support for LIS2HH12
+Message-ID: <20200330171031.GA41042@gerhold.net>
+References: <20200330141923.280226-1-rvlander@gaetanandre.eu>
+ <20200330141923.280226-2-rvlander@gaetanandre.eu>
 MIME-Version: 1.0
-In-Reply-To: <20200330163028.GE23477@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200330141923.280226-2-rvlander@gaetanandre.eu>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
+On Mon, Mar 30, 2020 at 04:19:23PM +0200, Gaëtan André wrote:
+> Add support for STMicroelectronics LISHH12 accelerometer in st_accel
+> framework.
+> 
+> https://www.st.com/resource/en/datasheet/lis2hh12.pdf
+> 
+> Signed-off-by: Gaëtan André <rvlander@gaetanandre.eu>
 
-On 3/30/2020 9:30 AM, Andrew Lunn wrote:
-> On Mon, Mar 30, 2020 at 07:01:36PM +0300, Codrin Ciubotariu wrote:
->> Some ethernet controllers, such as cadence's macb, have an embedded MDIO.
->> For this reason, the ethernet PHY nodes are not under an MDIO bus, but
->> directly under the ethernet node. Since these drivers might use
->> of_mdiobus_child_is_phy(), we should fix this function by returning false
->> if a fixed-link is found.
-> 
-> So i assume the problem occurs here:
-> 
-> static int macb_mdiobus_register(struct macb *bp)
-> {
->         struct device_node *child, *np = bp->pdev->dev.of_node;
-> 
->         /* Only create the PHY from the device tree if at least one PHY is
->          * described. Otherwise scan the entire MDIO bus. We do this to support
->          * old device tree that did not follow the best practices and did not
->          * describe their network PHYs.
->          */
->         for_each_available_child_of_node(np, child)
->                 if (of_mdiobus_child_is_phy(child)) {
->                         /* The loop increments the child refcount,
->                          * decrement it before returning.
->                          */
->                         of_node_put(child);
-> 
->                         return of_mdiobus_register(bp->mii_bus, np);
->                 }
-> 
->         return mdiobus_register(bp->mii_bus);
-> }
-> 
-> I think a better solution is
-> 
->         for_each_available_child_of_node(np, child)
-> +		if (of_phy_is_fixed_link(child)
-> +		   continue;
->                 if (of_mdiobus_child_is_phy(child)) {
->                         /* The loop increments the child refcount,
->                          * decrement it before returning.
->                          */
->                         of_node_put(child);
-> 
->                         return of_mdiobus_register(bp->mii_bus, np);
->                 }
-> 
->         return mdiobus_register(bp->mii_bus);
-> }
-> 
-> This problem is only an issue for macb, so keep the fix local to macb.
+Thanks a lot for sending this patch upstream!
 
-Agree, there is no reason for of_mdiobus_child_is_phy() to be checking
-for a fixed-link. If you submit this formally:
+> ---
+>  drivers/iio/accel/Kconfig         |  2 +-
+>  drivers/iio/accel/st_accel.h      |  2 +
+>  drivers/iio/accel/st_accel_core.c | 77 +++++++++++++++++++++++++++++++
+>  drivers/iio/accel/st_accel_i2c.c  |  5 ++
+>  4 files changed, 85 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> index 5d91a6dda894..24ebe9e76915 100644
+> --- a/drivers/iio/accel/Kconfig
+> +++ b/drivers/iio/accel/Kconfig
+> @@ -238,7 +238,7 @@ config IIO_ST_ACCEL_3AXIS
+>  	  Say yes here to build support for STMicroelectronics accelerometers:
+>  	  LSM303DLH, LSM303DLHC, LIS3DH, LSM330D, LSM330DL, LSM330DLC,
+>  	  LIS331DLH, LSM303DL, LSM303DLM, LSM330, LIS2DH12, H3LIS331DL,
+> -	  LNG2DM, LIS3DE, LIS2DE12
+> +	  LNG2DM, LIS3DE, LIS2DE12, LIS2HH12
+>  
+>  	  This driver can also be built as a module. If so, these modules
+>  	  will be created:
+> diff --git a/drivers/iio/accel/st_accel.h b/drivers/iio/accel/st_accel.h
+> index 5b13e293cade..5d356288e001 100644
+> --- a/drivers/iio/accel/st_accel.h
+> +++ b/drivers/iio/accel/st_accel.h
+> @@ -35,6 +35,7 @@ enum st_accel_type {
+>  	LIS2DW12,
+>  	LIS3DHH,
+>  	LIS2DE12,
+> +	LIS2HH12,
+>  	ST_ACCEL_MAX,
+>  };
+>  
+> @@ -59,6 +60,7 @@ enum st_accel_type {
+>  #define LIS3DHH_ACCEL_DEV_NAME		"lis3dhh"
+>  #define LIS3DE_ACCEL_DEV_NAME		"lis3de"
+>  #define LIS2DE12_ACCEL_DEV_NAME		"lis2de12"
+> +#define LIS2HH12_ACCEL_DEV_NAME		"lis2hh12"
+>  
+>  /**
+>  * struct st_sensors_platform_data - default accel platform data
+> diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+> index e2ec5d127495..43c50167d220 100644
+> --- a/drivers/iio/accel/st_accel_core.c
+> +++ b/drivers/iio/accel/st_accel_core.c
+> @@ -904,6 +904,83 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
+>  		.multi_read_bit = true,
+>  		.bootime = 2,
+>  	},
+> +	{
+> +		.wai = 0x41,
+> +		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
+> +		.sensors_supported = {
+> +			[0] = LIS2HH12_ACCEL_DEV_NAME,
+> +		},
+> +		.ch = (struct iio_chan_spec *)st_accel_16bit_channels,
+> +		.odr = {
+> +			.addr = 0x20,
+> +			.mask = 0x70,
+> +			.odr_avl = {
+> +				{ .hz = 10, .value = 0x01, },
+> +				{ .hz = 50, .value = 0x02, },
+> +				{ .hz = 100, .value = 0x03, },
+> +				{ .hz = 200, .value = 0x04, },
+> +				{ .hz = 400, .value = 0x05, },
+> +				{ .hz = 800, .value = 0x06, },
+> +			},
+> +		},
+> +		.pw = {
+> +			.addr = 0x20,
+> +			.mask = 0x70,
+> +			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
+> +		},
+> +		.enable_axis = {
+> +			.addr = ST_SENSORS_DEFAULT_AXIS_ADDR,
+> +			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
+> +		},
+> +		.fs = {
+> +			.addr = 0x23,
+> +			.mask = 0x30,
+> +			.fs_avl = {
+> +				[0] = {
+> +					.num = ST_ACCEL_FS_AVL_2G,
+> +					.value = 0x00,
+> +					.gain = IIO_G_TO_M_S_2(61),
+> +				},
+> +				[1] = {
+> +					.num = ST_ACCEL_FS_AVL_4G,
+> +					.value = 0x02,
+> +					.gain = IIO_G_TO_M_S_2(122),
+> +				},
+> +				[2] = {
+> +					.num = ST_ACCEL_FS_AVL_8G,
+> +					.value = 0x03,
+> +					.gain = IIO_G_TO_M_S_2(244),
+> +				},
+> +			},
+> +		},
+> +		.bdu = {
+> +			.addr = 0x20,
+> +			.mask = 0x08,
+> +		},
+> +		.drdy_irq = {
+> +			.int1 = {
+> +				.addr = 0x22,
+> +				.mask = 0x01,
+> +			},
+> +			.int2 = {
+> +				.addr = 0x25,
+> +				.mask = 0x01,
+> +			},
+> +			.addr_ihl = 0x24,
+> +			.mask_ihl = 0x02,
+> +			.stat_drdy = {
+> +				.addr = ST_SENSORS_DEFAULT_STAT_ADDR,
+> +				.mask = 0x07,
+> +			},
+> +		},
+> +		.sim = {
+> +			.addr = 0x23,
+> +			.value = BIT(0),
+> +		},
+> +		.multi_read_bit = true,
+> +		.bootime = 2,
+> +	},
+> +
+>  };
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+I checked that this conforms to the information in the linked datasheet:
+
+Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
+
+>  
+>  static int st_accel_read_raw(struct iio_dev *indio_dev,
+> diff --git a/drivers/iio/accel/st_accel_i2c.c b/drivers/iio/accel/st_accel_i2c.c
+> index 8c489312f668..821854251a7b 100644
+> --- a/drivers/iio/accel/st_accel_i2c.c
+> +++ b/drivers/iio/accel/st_accel_i2c.c
+> @@ -104,6 +104,10 @@ static const struct of_device_id st_accel_of_match[] = {
+>  		.compatible = "st,lis2de12",
+>  		.data = LIS2DE12_ACCEL_DEV_NAME,
+>  	},
+> +	{
+> +		.compatible = "st,lis2hh12",
+> +		.data = LIS2HH12_ACCEL_DEV_NAME,
+> +	},
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, st_accel_of_match);
+> @@ -138,6 +142,7 @@ static const struct i2c_device_id st_accel_id_table[] = {
+>  	{ LIS2DW12_ACCEL_DEV_NAME },
+>  	{ LIS3DE_ACCEL_DEV_NAME },
+>  	{ LIS2DE12_ACCEL_DEV_NAME },
+> +	{ LIS2HH12_ACCEL_DEV_NAME },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(i2c, st_accel_id_table);
+> -- 
+> 2.26.0
