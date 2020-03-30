@@ -2,170 +2,88 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD70C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 09:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8896DC2D0E9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 09:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1947F20658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 09:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BAC5206CC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 09:08:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dt32BAoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729839AbgC3JEA (ORCPT
+        id S1729768AbgC3JIJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 05:04:00 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:45369 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729827AbgC3JEA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:04:00 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 30 Mar 2020 14:33:56 +0530
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 30 Mar 2020 14:33:33 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 484A74725; Mon, 30 Mar 2020 14:33:32 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, jsanka@codeaurora.org,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Subject: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-Date:   Mon, 30 Mar 2020 14:33:28 +0530
-Message-Id: <1585559008-12705-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Mon, 30 Mar 2020 05:08:09 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45904 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729583AbgC3JIJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 05:08:09 -0400
+Received: by mail-ed1-f65.google.com with SMTP id u59so19708918edc.12
+        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 02:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JBfZUA3Ue04SNaNjIZbI9Q9GTKiTiLsqF41qopeumkI=;
+        b=dt32BAoHu9GoJYKoESUHVeABNyH6w2lRqp4VaFNbRqhLaC6j9w9egbO4jl4XaZEIx+
+         8zcfAVXuYsi0EM0VrT4p2tfAnXNrRRK2FvCByoRDjyG9NmUScF0FPmjXZfE5IDFZen1+
+         zvbHyUcNeuM+3LtmfPvMWFI+psRdwt4e7d/Hp+H+BwjWMX5iDTkckQzHD6HaQzineZn/
+         dhBCM5nDXXR97TXcuuraV3uV5gcaJCbTWmw3h2ob/7z7BWFtZFyMBn5x5gmCnd272G50
+         bUazJJrRwv/9rbSLa98jrRM1UyRqGtw/stwXwGWWsUSln9sff7FAJSnye1gsir9W9zfL
+         NTPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JBfZUA3Ue04SNaNjIZbI9Q9GTKiTiLsqF41qopeumkI=;
+        b=SXMtn1axZvej9YgNOBCLNJZIhVGPZh+yuIPeMtjPB2YJY2CB8qxZE0Fiz93wbl7hCB
+         ixm2Rq6FQ5gCpRFA+65O7KikLEyJPCdnIRjQMkDxVRhthGEmsnWe3xOpEYl1IRh2n/qg
+         JtPiesoMP+dn4plHBiuCu6OdSm6O2PzaNLEsTTJS3acTj7fGy/3Z7lJE5xaujaBOQL/L
+         dmfdI3BdJY3YizditT6CYMo7nAhDRYzBSssUkTXI6aV7MyVoRZV3y7DOobTb3jnhMGLa
+         JjvCV8HWK8DNeWuohRQG8/I+LLzYbf9ivT+wIhQyTI5rEUNg73nPZIFirNh7HrBnYHaK
+         2X6A==
+X-Gm-Message-State: ANhLgQ0tPB5QtQ02AgTHLQOVzY/FsZpX2qy/+LRr0gai8JMKF+UD5cwP
+        P+4WQVN1XdFHXJVgH5XezqYvRiqNsOHijYAk0lHbXA==
+X-Google-Smtp-Source: ADFU+vvI5+4zWFwNRaiSUVTSAykaV3rTKvG6GrKxC8T0xaJwOzpUM715vIIVfPuIzsUyjRQDmL1jVdM1D7tN6CGWUfU=
+X-Received: by 2002:a17:906:3410:: with SMTP id c16mr10254113ejb.304.1585559287665;
+ Mon, 30 Mar 2020 02:08:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200318054442.3066726-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200318054442.3066726-1-bjorn.andersson@linaro.org>
+From:   Loic Poulain <loic.poulain@linaro.org>
+Date:   Mon, 30 Mar 2020 11:11:33 +0200
+Message-ID: <CAMZdPi_psRiy1FG338N1=9F+o4b=0ANLdc3UiCTB=UoMS=CH=A@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8996: Reduce vdd_apc voltage
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-"The PM core always increments the runtime usage counter
-before calling the ->suspend() callback and decrements it
-after calling the ->resume() callback"
+On Wed, 18 Mar 2020 at 06:46, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> Some msm8996 based devices are unstable when run with VDD_APC of 1.23V,
+> which is listed as the maximum voltage in "Turbo" mode. Given that the
+> CPU cluster is not run in "Turbo" mode, reduce this to 0.98V - the
+> maximum voltage for nominal operation.
+>
+> Fixes: 7a2a2231ef22 ("arm64: dts: apq8096-db820c: Fix VDD core voltage")
+> Cc: Loic Poulain <loic.poulain@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-DPU and DSI are managed as runtime devices. When
-suspend is triggered, PM core adds a refcount on all the
-devices and calls device suspend, since usage count is
-already incremented, runtime suspend was not getting called
-and it kept the clocks on which resulted in target not
-entering into XO shutdown.
+Don't see any problem with that change, tested with and without
+cpufreq (db820c).
 
-Add changes to manage runtime devices during pm sleep.
-
-Changes in v1:
- - Remove unnecessary checks in the function
-   _dpu_kms_disable_dpu (Rob Clark).
-
-Changes in v2:
- - Avoid using suspend_late to reset the usagecount
-   as suspend_late might not be called during suspend
-   call failures (Doug).
-
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 33 +++++++++++++++++++++++++++++++++
- drivers/gpu/drm/msm/msm_drv.c           |  4 ++++
- drivers/gpu/drm/msm/msm_kms.h           |  2 ++
- 3 files changed, 39 insertions(+)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index ce19f1d..2343cbd 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -26,6 +26,7 @@
- #include "dpu_encoder.h"
- #include "dpu_plane.h"
- #include "dpu_crtc.h"
-+#include "dsi.h"
- 
- #define CREATE_TRACE_POINTS
- #include "dpu_trace.h"
-@@ -325,6 +326,37 @@ static void dpu_kms_disable_commit(struct msm_kms *kms)
- 	pm_runtime_put_sync(&dpu_kms->pdev->dev);
- }
- 
-+static void _dpu_kms_disable_dpu(struct msm_kms *kms)
-+{
-+	struct dpu_kms *dpu_kms = to_dpu_kms(kms);
-+	struct drm_device *dev = dpu_kms->dev;
-+	struct msm_drm_private *priv = dev->dev_private;
-+	struct msm_dsi *dsi;
-+	int i;
-+
-+	dpu_kms_disable_commit(kms);
-+
-+	for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
-+		if (!priv->dsi[i])
-+			continue;
-+		dsi = priv->dsi[i];
-+		pm_runtime_put_sync(&dsi->pdev->dev);
-+	}
-+	pm_runtime_put_sync(dev->dev);
-+
-+	/* Increment the usagecount without triggering a resume */
-+	pm_runtime_get_noresume(dev->dev);
-+
-+	pm_runtime_get_noresume(&dpu_kms->pdev->dev);
-+
-+	for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
-+		if (!priv->dsi[i])
-+			continue;
-+		dsi = priv->dsi[i];
-+		pm_runtime_get_noresume(&dsi->pdev->dev);
-+	}
-+}
-+
- static ktime_t dpu_kms_vsync_time(struct msm_kms *kms, struct drm_crtc *crtc)
- {
- 	struct drm_encoder *encoder;
-@@ -751,6 +783,7 @@ static void dpu_irq_uninstall(struct msm_kms *kms)
- #ifdef CONFIG_DEBUG_FS
- 	.debugfs_init    = dpu_kms_debugfs_init,
- #endif
-+	.disable_dpu = _dpu_kms_disable_dpu,
- };
- 
- static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms)
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 7d985f8..bb11e00 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1040,6 +1040,7 @@ static int msm_pm_suspend(struct device *dev)
- {
- 	struct drm_device *ddev = dev_get_drvdata(dev);
- 	struct msm_drm_private *priv = ddev->dev_private;
-+	struct msm_kms *kms = priv->kms;
- 
- 	if (WARN_ON(priv->pm_state))
- 		drm_atomic_state_put(priv->pm_state);
-@@ -1051,6 +1052,9 @@ static int msm_pm_suspend(struct device *dev)
- 		return ret;
- 	}
- 
-+	if (kms->funcs->disable_dpu)
-+		kms->funcs->disable_dpu(kms);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/gpu/drm/msm/msm_kms.h b/drivers/gpu/drm/msm/msm_kms.h
-index 1cbef6b..c73a89b 100644
---- a/drivers/gpu/drm/msm/msm_kms.h
-+++ b/drivers/gpu/drm/msm/msm_kms.h
-@@ -126,6 +126,8 @@ struct msm_kms_funcs {
- 	/* debugfs: */
- 	int (*debugfs_init)(struct msm_kms *kms, struct drm_minor *minor);
- #endif
-+	void (*disable_dpu)(struct msm_kms *kms);
-+
- };
- 
- struct msm_kms;
--- 
-1.9.1
-
+Tested-by: Loic Poulain <loic.poulain@linaro.org>
