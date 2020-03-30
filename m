@@ -2,112 +2,95 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209A4C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 17:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA475C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15B52073B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 17:53:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WDPNg7gj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NSrzvOuU"
+	by mail.kernel.org (Postfix) with ESMTP id 813FC20780
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585591650;
+	bh=4nkt2HPVeO+06M3qK1TKZ+BXpPf908TSaUR4M1YFUqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WOUp9646VvDJTXWVAyub8fnj2vK4/glZg5UV/d3TCRRAnscJm0i8Gsd625sPBU071
+	 iORUthSVQn5wF7afanuWd34iiXKFMDPbrdDhhlkpumiXdwlseAi6ogmGWgp/D3e0R0
+	 OSYFQ5o0cie41ujbiXGXzyS5qQx0cdK54Y3p4E+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbgC3Rxv (ORCPT
+        id S1727368AbgC3SHa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:53:51 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:43447 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726403AbgC3Rxv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:53:51 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id CEF555C0156;
-        Mon, 30 Mar 2020 13:53:49 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 30 Mar 2020 13:53:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=CO/QIjk6nVgu5l6xwmRAbGjYJII
-        JyujEhdRtGQKC0yE=; b=WDPNg7gjzTvVo7d+rIGUCh5Q+yydtxODX3VC2EbKStl
-        l8HDIRZLUTl3O831dUMZEC/1GrKL8CFx0BdqMcKNMgiv+MQLc87HmlX2iX7H4FYq
-        15azSmdvBc4FBn3eNMFlSixNbxYyRA1BaVvZVlCRW+SWYSi6qeHnd6yURHIH0Wm1
-        dCsTdOghvAo+cFxuWNpq63AX2lZWphfkq4zYE5e5/lhERtwYQPQQakNqZHWbiS/K
-        LI/h0UxifIw8thUWg1m1u77S7nNQK2BAW5FoIlBUUqIpMPyiPZGT3E8WmtPT4ySZ
-        cl+5S+zDpLBkD0GhuNDz4ASSDrfXj6cfXmvQFQkcWXQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=CO/QIj
-        k6nVgu5l6xwmRAbGjYJIIJyujEhdRtGQKC0yE=; b=NSrzvOuU7xZY7KjoQZaek9
-        QKirBMApR5sbHK6sByJvBcJby3HAsNE+xCGVmWqAIWuhNv79adbpcyehrdEEk8ne
-        5dqft9smcmI5ief3RdWQhly9sHK07X/FZtiQBREC99HDQF9hkZ55H0Ely0fM1blu
-        ZVPt5k/UlMnmFB7C3cg+jgVucKc7usy9bM5glkMtYXyAyEIFsluL2j6PsGeV4qOg
-        QvmvYnRRf0NwNsROHyQVLrJGV8GcAu67ThtDdHXeWkHNAOIFgLCMPalNp/AeBMMo
-        0ldgHtNrW0Os9PxSah4jIUpnLvlrgXIw+8OHUQhXkWOJBq1duIe+FA2ggfINO2CQ
-        ==
-X-ME-Sender: <xms:LTKCXvlC9v0ufYkzn3wmyUvw4StGhSJNYPPGh95j174wXGtFz01XGQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeihedguddukecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
-    dtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:LTKCXu9SAXFkJ4gGPB073ikDj8R8hAVTuqRrRFKmUtHz3kBX-nDRlw>
-    <xmx:LTKCXrHoetWILzt06Wtg1Cy1xk_wOmF8D70AT8QaAVq96XawU7D83g>
-    <xmx:LTKCXm0GepNm5MEIzYtsyxjLuVl53wvhdJuE7vUfCTYi0CgEJ4Ecjw>
-    <xmx:LTKCXk5uQMWH-EwF-EBHfQDTtDuKlvHCtSp6v_2mv5dXl-8F6TH6sA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3B89D306CA01;
-        Mon, 30 Mar 2020 13:53:49 -0400 (EDT)
-Date:   Mon, 30 Mar 2020 19:53:47 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: olinuxino: add user red LED
-Message-ID: <20200330175347.r4uam7cybvuxlgog@gilmour.lan>
-References: <20200325205924.30736-1-ynezz@true.cz>
+        Mon, 30 Mar 2020 14:07:30 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45228 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727302AbgC3SH3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 14:07:29 -0400
+Received: by mail-il1-f193.google.com with SMTP id x16so16762466ilp.12;
+        Mon, 30 Mar 2020 11:07:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X6Rm7pqIHT/ZZieSSimVABq7HFocgGJ+F6beDGS/Zj0=;
+        b=YxaHpY9hq2ETy7ZT9wsfuZh+Al3GsSo/uZh8MTXYuP+TtkXojmMimLUkO+l0dl2byQ
+         4vfuz9IXIQGpCqVu08PO3GChcqIRC8W0VPwOxtuHlAOUZY7V2SAZwLtYkmBaKrRYq7gA
+         x00rlKAjZelvsv4kZ9bOe8FfDaE2watV1FFl0zqN6fJHO7ZLOQD9utkq4/ZgpcQk86Sg
+         lR4KrvJa/UT4bph6ANKg+tp/0LNFVaVlLwKtLVdEFMZ8RNB0c6sD7MH32JtCJp2Qj699
+         fgQeW72EuwrzkvZoOA3UaDNcEBzdoCJqyUisNWi6c2Rpc/yIdW8JwYUCg6i0eWpspqKy
+         EijA==
+X-Gm-Message-State: ANhLgQ3vk37ENmtef5uesi+uIDHJkiYJ2MMlT9jsfFGf1w5uwhaYZ7c0
+        bTwkJ+OrvPsF/0b6T9zVXA==
+X-Google-Smtp-Source: ADFU+vvLlcdF6jawVNDoIZEEWczuYZ+X06SdUAcAB3/cUQVHUpNUfY2aKkUG4UP9cI1cQZfQJpG6+w==
+X-Received: by 2002:a92:d108:: with SMTP id a8mr12764691ilb.107.1585591648623;
+        Mon, 30 Mar 2020 11:07:28 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id d27sm5125485ilg.13.2020.03.30.11.07.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 11:07:27 -0700 (PDT)
+Received: (nullmailer pid 2568 invoked by uid 1000);
+        Mon, 30 Mar 2020 18:07:26 -0000
+Date:   Mon, 30 Mar 2020 12:07:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: Re: [PATCH V2 1/2] dt-bindings: spi: Convert QSPI bindings to YAML
+Message-ID: <20200330180726.GA2312@bogus>
+References: <1584098121-18075-1-git-send-email-akashast@codeaurora.org>
+ <1584098121-18075-2-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nwt6gyfwcuq2byho"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200325205924.30736-1-ynezz@true.cz>
+In-Reply-To: <1584098121-18075-2-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, 13 Mar 2020 16:45:20 +0530, Akash Asthana wrote:
+> Convert QSPI bindings to DT schema format using json-schema.
+> 
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Stephen's comment, dropped properties "#address-cells" &
+>    "#size-cells" from QSPI node as it's already defined in 
+>    $ref: /spi/spi-controller.yaml#.
+>  - As per Stephen's comment, dropped description for reg property and
+>    answered few Nitpicks.
+> 
+>  .../devicetree/bindings/spi/qcom,spi-qcom-qspi.txt | 36 ----------
+>  .../bindings/spi/qcom,spi-qcom-qspi.yaml           | 79 ++++++++++++++++++++++
+>  2 files changed, 79 insertions(+), 36 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
+> 
 
---nwt6gyfwcuq2byho
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks.
 
-On Wed, Mar 25, 2020 at 09:59:24PM +0100, Petr =C5=A0tetiar wrote:
-> There is a red LED marked as `GPIO_LED1` on the silkscreen and connected
-> to PE17 by default. So lets add this missing bit in the current hardware
-> description.
->
-> Signed-off-by: Petr =C5=A0tetiar <ynezz@true.cz>
-
-QUeued for 5.8, thanks!
-Maxime
-
---nwt6gyfwcuq2byho
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXoIyKwAKCRDj7w1vZxhR
-xd6FAQDYqWDZm020M4w5o+B3FOfze/BkzqWC4OhCWE+zV1F8MwD8DpZYBKfNcDSq
-p4b9HbGJU/Wpobkc5NXQmfPwF+viIww=
-=v6rS
------END PGP SIGNATURE-----
-
---nwt6gyfwcuq2byho--
+Rob
