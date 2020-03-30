@@ -2,84 +2,135 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0B4C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D0BC2D0ED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24532072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE6320757
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:22:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Lo81bSLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgC3LRM (ORCPT
+        id S1729760AbgC3LWC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:17:12 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:59390 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbgC3LRL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:17:11 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 198621A04AB;
-        Mon, 30 Mar 2020 13:17:10 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AD3161A04A6;
-        Mon, 30 Mar 2020 13:17:05 +0200 (CEST)
-Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 49786402B1;
-        Mon, 30 Mar 2020 19:17:00 +0800 (SGT)
-From:   Kuldeep Singh <kuldeep.singh@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuldeep Singh <kuldeep.singh@nxp.com>
-Subject: [PATCH] arm: dts: ls1021atwr: Add QSPI node properties
-Date:   Mon, 30 Mar 2020 16:46:31 +0530
-Message-Id: <1585566991-24049-2-git-send-email-kuldeep.singh@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585566991-24049-1-git-send-email-kuldeep.singh@nxp.com>
-References: <1585566991-24049-1-git-send-email-kuldeep.singh@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 30 Mar 2020 07:22:02 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45030 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729267AbgC3LWC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 07:22:02 -0400
+Received: by mail-qk1-f196.google.com with SMTP id j4so18378452qkc.11
+        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 04:22:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CzM9Ul/dphXe/6k6V017VGqcrogFXRUNidC2oEsJyA4=;
+        b=Lo81bSLQWPVgU/i6sxlrCIBODUnjRkBTUhlltdOET1Dmks4BFPSVpOUpndvcX76UyB
+         hkWTYKD7omKCo2QzXiH1W+Q/eSWGYesRpzjunThYHGs7hjuSdF+XD+aVckt8qcSQLHLf
+         2dGg3fYi4+AUTb5J78URConeOPfe4tGuRHbb2F1LS3sMbaCujqQsCxjWXbGbH5HyzGhD
+         p/Ux96ci6T31CRwG9rUx5pXRxGzCZ84npmpm7CJGxisaBEPrDQEfeik1T+tSs3DS8SSR
+         xRT/u5P760PPOifEwBJ2NscES25L2rM7gIEkuzVGazBBxQdHCpd66DpKgluiH+hEAOZj
+         1OzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CzM9Ul/dphXe/6k6V017VGqcrogFXRUNidC2oEsJyA4=;
+        b=PpgUwboQtyXE7rXGFncosvoph3MaRFHhYHeIziurZpFtq9/3d9Myma8lXewD92lork
+         /zxEMr+a+1HVr6RC6UD0azuSU2nKovk7iBkMVS8zBrof+CCZYxWPPL6UHUTiSZaLt2DI
+         prdZFmZiJXsU3fTF6YIngyhIGH84ueZpEOjc68OI6+RvhfUM6TWHQUWowqZgKWmLKCj6
+         bxLZCXBA7wTuCh+SqIHho/I0rBER/CT17X7LO0xJdIbo/L9HrUBlb3GzhnfcaC7av/rb
+         w/H7To41pljFykSxUHyHLEEB+K82cVCXkwA54QqB2n2GaPYgj/GklVtxs6Dcfw4Svks8
+         IuAg==
+X-Gm-Message-State: ANhLgQ2eCdLRSMCkabr1pxfGSqfD82VC4EnwNzrhGnr6bMSRXOzUUBOP
+        7e95bCE4OTwp7jY/95Q9fG/ndocGvSDE6P5bGsJsMg==
+X-Google-Smtp-Source: ADFU+vstVtsw7JWrmBNop5+zhRNU4WPamx9SIUzCEtNOrBy3Hzu3AZDNweBkY+DVn4Q0wOYnEWX26BByXVYtpX6VxmE=
+X-Received: by 2002:a37:a2c8:: with SMTP id l191mr11373979qke.120.1585567321647;
+ Mon, 30 Mar 2020 04:22:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200317205017.28280-1-michael@walle.cc> <20200317205017.28280-13-michael@walle.cc>
+ <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
+ <9c310f2a11913d4d089ef1b07671be00@walle.cc> <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
+ <22944c9b62aa69da418de7766b7741bd@walle.cc> <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
+ <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
+In-Reply-To: <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 30 Mar 2020 13:21:50 +0200
+Message-ID: <CAMpxmJUj7wBvO=Y-u5CXazHhjsPHXcq=5iST4KuLrfakW_a9Mg@mail.gmail.com>
+Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-LS1021A-TWR has one micron "n25q128a13" flash of size 16M.
-Add QSPI node properties for it.
+pt., 27 mar 2020 o 16:28 Michael Walle <michael@walle.cc> napisa=C5=82(a):
+>
+> Am 2020-03-27 11:20, schrieb Linus Walleij:
+> > On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
+> >> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
+> >
+> >> > In that case maybe you should use the disable_locking option in
+> >> > regmap_config and provide your own callbacks that you can use in the
+> >> > irqchip code too?
+> >>
+> >> But how would that solve problem (1). And keep in mind, that the
+> >> reqmap_irqchip is actually used for the interrupt controller, which
+> >> is not this gpio controller.
+> >>
+> >> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
+> >> and all interrupt phandles pointing to the interrupt controller will
+> >> reference the toplevel node. Any phandles pointing to the gpio
+> >> controller will reference the GPIO subnode.
+> >
+> > Ideally we would create something generic that has been on my
+> > mind for some time, like a generic GPIO regmap irqchip now that
+> > there are a few controllers like that.
+> >
+> > I don't know how feasible it is or how much work it would be. But
+> > as with GPIO_GENERIC (for MMIO) it would be helpful since we
+> > can then implement things like .set_multiple() and .get_multiple()
+> > for everyone.
+>
+> For starters, would that be a drivers/gpio/gpio-regmap.c or a
+> drivers/base/regmap/regmap-gpio.c? I would assume the first,
+> because the stuff in drivers/base/regmap operates on a given
+> regmap and we'd just be using one, correct? On the other hand
+> there is also the reqmap-irq.c. But as pointed out before, it
+> will add an interrupt controller to the regmap, not a device
+> so to speak.
+>
+> -michael
 
-Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
----
- arch/arm/boot/dts/ls1021a-twr.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+This has been on my TODO list for so long, but I've never been able to
+find the time... I'd really appreciate any effort in that direction as
+I believe it would allow us to slowly port a big part of the GPIO
+expander drivers over to it and make large portions of our codebase
+generic.
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index 9b1fe99..5edf001 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -242,6 +242,20 @@
-         status = "okay";
- };
- 
-+&qspi {
-+	status = "okay";
-+
-+	n25q128a130: flash@0 {
-+		compatible = "jedec,spi-nor";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <50000000>;
-+		reg = <0>;
-+		spi-rx-bus-width = <4>;
-+		spi-tx-bus-width = <4>;
-+	};
-+};
-+
- &sai1 {
- 	status = "okay";
- };
--- 
-2.7.4
-
+Best regards,
+Bartosz Golaszewski
