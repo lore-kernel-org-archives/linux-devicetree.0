@@ -3,105 +3,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1983EC43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58691C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68BF20733
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273F120784
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585609838;
-	bh=ROdBNHhnJVXCziLb01Nl9Ab43spOVxD41Kiwd8Dl5lk=;
+	s=default; t=1585610160;
+	bh=kQNJGIOlBsLvH2udN0TRswnlfdnFRf6H7w352S3USNY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uiDzWQ7/HRzsrSkhrqsLVz6EezjrZSZ7oTJ5uvnR7YxylVNxmP4EP+tRrApYJRMIx
-	 L5YXiBGasv9thuDqHYzqR0qNz11OEpVJH9Am7NoYkIWu+ua654cX11ffakt5q5QBVY
-	 6Jll6F2JZoSXrRqxWlN0edswd3gJVyzp202QpPTA=
+	b=cjiErMr32TuBfzc+wKbfXxsS6yQV4nfhS3zvx/GYtYyRCVVCw0nLvapDGLwEPVhwB
+	 ZwqMTythqRbYaSsTBTs2OC4syRT9VzY0DjWt2+IJBjiticDQApU68QuGWWZ2b04ZdX
+	 gtMzVprGonnTHT95XGbVZqrd9/fCDD+ouHbsoDSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgC3XKi (ORCPT
+        id S1729024AbgC3XP7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:10:38 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:39452 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgC3XKi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:10:38 -0400
-Received: by mail-il1-f194.google.com with SMTP id r5so17612122ilq.6;
-        Mon, 30 Mar 2020 16:10:37 -0700 (PDT)
+        Mon, 30 Mar 2020 19:15:59 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36792 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgC3XP7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:15:59 -0400
+Received: by mail-io1-f68.google.com with SMTP id n10so5677516iom.3;
+        Mon, 30 Mar 2020 16:15:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wMjPI/yKnzx8ZMDThBLvU02BMUS49h8m8pE+Plt4TKQ=;
-        b=n+RqRSub53/uR57yrWT1VP0iQvGH13Qn7uvTO7HZt4npKBL0wOSKwLbEjp4jcKUDQi
-         TTwZxSRqRZbscWGeUZG1q7af/4lH5XAg/UGXTASql4ipPXjr3uoFeN5IsQSn8iCyNysa
-         noeDVi2D6K1q0ThqCuwV5zBrnYzd+lx3sYGrTJZ+dPqlNtY2HEzm1Mhq8jgTmqZ/02+a
-         XBHjQolntBOIEudPA/Aatq6uq2ckBuen4+SqhG+rd9tioTFma1T4diFvA3dmlT67Ktnz
-         hiEIJ9x8Vy8UhK0tv/xSrtG7N7Ck/kSxzjcQ25h4apckBB+AW7TVwjvcRU/W1djWmQY8
-         eg/g==
-X-Gm-Message-State: ANhLgQ1Z0sG8tt16ox8Qg74ltE5tnw15HKF9u+VfWAIuKJiVGa6p2lDy
-        pV6Pfqgy0vnnvWxSTk89OQ==
-X-Google-Smtp-Source: ADFU+vvNWYK99dPlPx1tH5tSkAkRlbi7ycuFHhKOo8RHSuWD6/khgAo9a9iHkP/WdAVAeNcl7HZ98w==
-X-Received: by 2002:a92:8fdd:: with SMTP id r90mr13516679ilk.29.1585609837170;
-        Mon, 30 Mar 2020 16:10:37 -0700 (PDT)
+        bh=MzTiIR9WIdGk4sSFyoVRaphe8GsQGc2l1TSUK2PTluM=;
+        b=Wu2v6j9uYLsdEWaLKPPo51gZD3vTE8+XVourSfvEPRPAJBJvPCivpvEH0fNZFYD7Mi
+         5U3G+Yxeby39SyxLLrNGo79HPMNYsveuefN2mS4kAUSVrpAz3OoWgnSfYZSV0G97i2Nn
+         oMlAq5bZNgzCXbXlMs4qxkH/4/OGKyqox1YGVu/X/JP4A0e33Qya37nuIAyXj7vOgHvz
+         daQhtoqJ+aJ/o8bxFAlma7VELKI9zyR2DfuPIYJyu6uXLiswPLUzlIGtlID/MLPnrLNx
+         Zvbv/LMfV1g8gTFNrrU6ebwIIB0QpWB5ExOB8yf4+sBTnv75q+nVz2N/XfrMC10Fl5DX
+         O2mw==
+X-Gm-Message-State: ANhLgQ1MlBxecW/5uutPRHsJ1cqqmP2ckz9zYm7Z412mShniF7BarPB0
+        9B9x2ku9B4ECcq7Mo5DvpA==
+X-Google-Smtp-Source: ADFU+vt9bzeSBDXZlx6pjw+tK/wi5g5Qw+8DG1MTXxR4RKIA4KRk2Ttwqfq05dNY7X2wF9Y9Ih/Veg==
+X-Received: by 2002:a02:c605:: with SMTP id i5mr1593116jan.26.1585610158133;
+        Mon, 30 Mar 2020 16:15:58 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id k1sm4532088iob.48.2020.03.30.16.10.36
+        by smtp.gmail.com with ESMTPSA id q17sm5442226ilk.48.2020.03.30.16.15.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 16:10:36 -0700 (PDT)
-Received: (nullmailer pid 2557 invoked by uid 1000);
-        Mon, 30 Mar 2020 23:10:35 -0000
-Date:   Mon, 30 Mar 2020 17:10:35 -0600
+        Mon, 30 Mar 2020 16:15:57 -0700 (PDT)
+Received: (nullmailer pid 9828 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:15:56 -0000
+Date:   Mon, 30 Mar 2020 17:15:56 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH 2/4] clk: qcom: mmcc-msm8996: Properly describe GPU_GX
- gdsc
-Message-ID: <20200330231035.GA326@bogus>
-References: <20200319053902.3415984-1-bjorn.andersson@linaro.org>
- <20200319053902.3415984-3-bjorn.andersson@linaro.org>
- <158474710844.125146.15515925711513283888@swboyd.mtv.corp.google.com>
- <20200321051612.GA5063@builder>
- <158481619279.125146.6917548675896981321@swboyd.mtv.corp.google.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v4 1/5] media: dt-bindings: media: i2c: Deprecate usage
+ of the clock-frequency property
+Message-ID: <20200330231556.GA5102@bogus>
+References: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584620363-2255-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <158481619279.125146.6917548675896981321@swboyd.mtv.corp.google.com>
+In-Reply-To: <1584620363-2255-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 11:43:12AM -0700, Stephen Boyd wrote:
-> Quoting Bjorn Andersson (2020-03-20 22:16:12)
-> > On Fri 20 Mar 16:31 PDT 2020, Stephen Boyd wrote:
-> > 
-> > > Quoting Bjorn Andersson (2020-03-18 22:39:00)
-> > > > diff --git a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> > > > index 85518494ce43..65d9aa790581 100644
-> > > > --- a/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> > > > +++ b/Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> > > > @@ -67,6 +67,10 @@ properties:
-> > > >      description:
-> > > >         Protected clock specifier list as per common clock binding
-> > > >  
-> > > > +  vdd_gfx-supply:
-> > > 
-> > > Why not vdd-gfx-supply? What's with the underscore?
-> > > 
-> > 
-> > The pad is named "VDD_GFX" in the datasheet and the schematics. I see
-> > that we've started y/_/-/ in some of the newly added bindings, would you
-> > prefer I follow this?
+On Thu, Mar 19, 2020 at 12:19:19PM +0000, Lad Prabhakar wrote:
+> Deprecate usage of the clock-frequency property. The preferred method to
+> set clock rates is to use assigned-clock-rates.
+
+Somewhere here and in the subject you should have 'ov5645'. Otherwise,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > 
-> If the datasheet has this then I guess it's fine. I'll wait for Rob to
-> ack.
-
-vddgfx or vdd-gfx.
-
-Rob
-
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
