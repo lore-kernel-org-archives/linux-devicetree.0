@@ -2,167 +2,100 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B784BC2D0F1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A21BC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD1520733
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5BC20784
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:42:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="QBfuYm3K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWPGpeeD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgC3UlM (ORCPT
+        id S1728165AbgC3Ump (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:41:12 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:36862 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728481AbgC3UlL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 16:41:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 1FB5041272;
-        Mon, 30 Mar 2020 20:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1585600867; x=1587415268; bh=OU3hBGEfOQcxytxHcUWUuI35b
-        IUOuu3HXbM3CIo0vkY=; b=QBfuYm3KLrYd59pO8C9CwBNFTPOk4X8UTiGOig9Wm
-        Z7B8plOFw6gX2yjVllCSjZieFXOvzDK7dy+MgAMKHBPJKszLMI7Ctqpm3rwOri63
-        DCSnh79H/0yeWSYnN/Abx0Y4omtl8GyavEyFxODtjeB8PARjXkdT2MUNnYKNTl1v
-        Q8=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id e8APibuRPKhO; Mon, 30 Mar 2020 23:41:07 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 77DC84126E;
-        Mon, 30 Mar 2020 23:41:07 +0300 (MSK)
-Received: from localhost.localdomain (10.199.0.226) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Mon, 30 Mar 2020 23:41:07 +0300
-Message-ID: <5cb43513906e1175801ea4e753c855623fcd11d1.camel@yadro.com>
-Subject: Re: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 30 Mar 2020 23:41:15 +0300
-In-Reply-To: <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
-References: <20200330152711.8769-1-i.mikhaylov@yadro.com>
-         <20200330152711.8769-3-i.mikhaylov@yadro.com>
-         <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Mon, 30 Mar 2020 16:42:45 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35614 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727437AbgC3Ump (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 16:42:45 -0400
+Received: by mail-lj1-f193.google.com with SMTP id k21so19678365ljh.2;
+        Mon, 30 Mar 2020 13:42:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gmG6Nw2gJlFbmNF3ZrYh4WCs9X24BSpQSwGXaDwojEM=;
+        b=EWPGpeeD9xPPFMNqQ6vW4zN9xym3eTWIch0s0QCJ2Cy+B1Py/5kXTZOs8CKstvZVGr
+         Lzg3JkHf1lrq+CYKHi7QPBwRA4glrwK2KWK4c97VpHc/U8Y3osFvCxn6O+0If0LU0FmM
+         /wcHvHhNxpY7g9jWsLg5OGhrQKREZ8ZSgGIUscqLU2yHGiQ+MYa9II4CHdnp4tOxspKh
+         mg5Kz/w1Zx7HLaPBDJHf+PMYCKapObCs1GP/IfvzRlN5KViWBgGYiY1WQ9hyC2P4gmnp
+         OPz6KVVReN7P6QL5g8NeYzB2YAXMvei9IE3tI2n4yWmMk0yLLM1cHql10O+bjuAJlocy
+         lsZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gmG6Nw2gJlFbmNF3ZrYh4WCs9X24BSpQSwGXaDwojEM=;
+        b=GdbhjVMxaf8hbSxjstmjZnO6mCrH9yFuPXvzCQHveSqoInHa1G5wgo3p+YHSe2bxNg
+         20ACIWFJ+bGhICMy17yi0be1jnAAR5Qs4Ve7ZfccIRsdz9bRtxtM9Foq+4rDLyzEksTV
+         Z9c6r95hEPenUzz6BdfEpH5oXR6tgc+Zz4BoPZ7XgcikaW5envRGs0XiQgTt7+Mt4O0N
+         kKTHIeWvrWrreb+yYs1WZPDc0VdBmWmLyNA1MMgV7T6OUvSUVzJn8+uAUvBhvJz7XVBp
+         aq2t6q0Cz4bH7mYWok+mGNRYzELDAK6nL4sZ6eHG1BL2ynYwL4FEh6KvjHD6O+NwLVxc
+         KXMQ==
+X-Gm-Message-State: AGi0PubTuV6cHTA8Od+L8QjIY1P9O3mD6MYIgzHZhA4TFnB946aiX5CR
+        Oa85Z8jSeCbMksERJmlpgBM=
+X-Google-Smtp-Source: APiQypJxE6SfhjbuHfxqVIzERON0sXL7oImWTuEjhb77hQureETdjO+AJJ/LqtZPpIH8am9utoTy5A==
+X-Received: by 2002:a2e:804a:: with SMTP id p10mr5966662ljg.289.1585600963256;
+        Mon, 30 Mar 2020 13:42:43 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id v22sm7287988ljj.67.2020.03.30.13.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 13:42:42 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] Support headset on Tegra boards that use WM8903
+Date:   Mon, 30 Mar 2020 23:40:09 +0300
+Message-Id: <20200330204011.18465-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.199.0.226]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2020-03-30 at 22:07 +0300, Andy Shevchenko wrote:
-> On Mon, Mar 30, 2020 at 6:27 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> > Proximity sensor driver based on light/vcnl4000.c code.
-> > For now supports only the single on-demand measurement.
-> > 
-> > The VCNL3020 is a fully integrated proximity sensor. Fully
-> > integrated means that the infrared emitter is included in the
-> > package. It has 16-bit resolution. It includes a signal
-> > processing IC and features standard I2C communication
-> > interface. It features an interrupt function.
-> 
-> Still my tag applies, but
-> I have few more comments below.
-> 
-> ...
-> 
-> > +#define VCNL_DRV_NAME          "vcnl3020"
-> > +#define VCNL_REGMAP_NAME       "vcnl3020_regmap"
-> 
-> I'm wondering why you need the second one.
+Hello,
 
-For regmap initialize as name in 
-static const struct regmap_config vcnl3020_regmap_config = {
-       .name           = VCNL_REGMAP_NAME,
+Some devices have a 4-pin jack instead of a 3-pin and currently the
+WM8903 configuration is hardcoded to the case of 3-pin jack in the
+Tegra's ASoC driver. A new device-tree property is required in order
+to convey that hardware has a 4-pin jack, and thus, microphone's
+detection needs to be done in a different way.
 
-I can get rid of it from struct with name definition.
+In particular this is needed for Acer A500 tablet device that has
+a 4-pin headset jack, otherwise userspace sees headset instead of
+headphones and internal microphone isn't enabled by ALSA UCM rule
+when it should be. Please review and apply, thanks in advance.
 
-> > +       rc = device_property_read_u32(data->dev, "vishay,led-current-
-> > milliamp",
-> > +                                     &led_current);
-> > +       if (rc == 0) {
-> > +               rc = regmap_write(data->regmap, VCNL_LED_CURRENT,
-> > led_current);
-> > +               if (rc)
-> > +                       dev_err(data->dev,
-> > +                               "Error (%d) setting LED current", rc);
-> > +       }
-> > +
-> > +       return rc;
-> 
-> Why not to use standard pattern, i.e.
-> 
->   if (rc)
->     return rc;
->   ...
->   rc = regmap_write(...);
-> 
-> ?
+Dmitry Osipenko (2):
+  dt-bindings: sound: tegra-wm8903: Document new nvidia,headset property
+  ASoC: tegra: tegra_wm8903: Support nvidia,headset property
 
-Optional parameter. There exists a lot of ways to do it:
+ .../devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt | 1 +
+ sound/soc/tegra/tegra_wm8903.c                              | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-rc = device_property_read_u32(dev, "milliamp", &led_current);
-rc = regmap_write(regmap, VCNL_LED_CURRENT, (!rc) : led_current ? 0);
-or
-
-rc = regmap_write(regmap, VCNL_LED_CURRENT, (!rc) : led_current ?
-VCNL_LED_CURRENT_DEFAULT);
-or even maybe make a function like get_led_current:
-
-rc = regmap_write(regmap, VCNL_LED_CURRENT, get_led_curent(dev));
-where 
-static u32 get_led_current(dev) {
-	u32 led_current;
-	rc = device_property_read_u32(dev, "milliamp", &led_current);
-	return (!rc) : led_current ? VCNL_LED_CURRENT_DEFAULT;
-}
-Which one would be more preferable?
-
-> ...
-> 
-> > +       if (rc) {
-> > +               dev_err(data->dev,
-> > +                       "vcnl3020_measure() failed with error (%d)", rc);
-> 
-> Perhaps you keep same pattern for error messages as in previous function(s).
-
-Sure.
-
-> 
-> > +               goto err_unlock;
-> > +       }
-> > +       rc = regmap_bulk_read(data->regmap, VCNL_PS_RESULT_HI, &res, 2);
-> 
-> sizeof(res)
-
-Oops.
-
+-- 
+2.25.1
 
