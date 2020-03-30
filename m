@@ -6,77 +6,82 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04980C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F1BC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD3920733
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11D420733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585609506;
-	bh=fRDc6Xk28BTZDk1X4bdEY2EM4SCqhy1qmgwW6MV+7XM=;
+	s=default; t=1585609612;
+	bh=AELQrW7y3T3q6mg9ZOSrYRC8agnayQ+CyIkqhTLPOuM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ffsOuwMRHW7+2okRiG5+Vi5+CsM7HFXyUvfoBrqi109WMgxOMufBjyR4657aHVBN8
-	 yz0G3Zm06m+hlGyTsCtOKFa0y6JY3j4SnBci7y5j/ZUzUBlPZXRticvLz2pQPt+aG+
-	 Ybv8CcqOTnnePa8HiA6fyvcDd9rivBhHZKgGYFtw=
+	b=LWbYt9XF9zG4+4ALJHvJVM3C9avEiphrEAiESwVWbhoRHePnPLBcBr3azkzn6+JxU
+	 9o4HiqQPYf61r3ap0+z4xd/XSjKHso/bOJOqbjV0EVb3UdiS0USStTYxRBkD3GE9/D
+	 4UJBGXqWSi28OUxJ5zYgJ/8UYa3AAcT+KFs/uR7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbgC3XFG (ORCPT
+        id S1729197AbgC3XGw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:05:06 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37256 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728876AbgC3XFG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:05:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id q9so19739256iod.4;
-        Mon, 30 Mar 2020 16:05:05 -0700 (PDT)
+        Mon, 30 Mar 2020 19:06:52 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36000 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728987AbgC3XGw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:06:52 -0400
+Received: by mail-io1-f68.google.com with SMTP id n10so5658051iom.3;
+        Mon, 30 Mar 2020 16:06:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hg3MFEW1h1HeRiEBjv8wSxOFZQ/ZC2zyXucOt0y4fkk=;
-        b=E3yZpToPZBK7diHWeYTzNKV0HR4nzs7UZVnL/m3b1DkaCG5tegrJuAzOHxGwZF+fjx
-         A1INllO9eSsVfw15gY7RWxjgStisKyqFxGylTZsgfzxTp7Ig18ucGQy7FTsFI2LtQqC1
-         DoWtEbUAcy4oPXUwWI7YBaDA2mFfPjdzWK0+hpy14Fz/bV3FtjxsJPDLBsxw/s1yaGC6
-         mAeclTIg6hU+giEoCtH/iuhqXKyE0azR0qMUp2GnSfduTgIAorgsALBY2/+gw4pkDAWB
-         Y5c9+JmwyV2Qrn1PLzLFHE+dIahMP7doPaTmQMsEGEBiJayZ2eYccqgtJEXamfej6/Qw
-         2bIg==
-X-Gm-Message-State: ANhLgQ1HmRJuayo2FlKLkt7iy7ECkY5KKb4+FXuI2yhInFky1zqwfjSb
-        Prn/Eo3407GIqP4jAInDgw==
-X-Google-Smtp-Source: ADFU+vvgSxUIVaT6sR2eCibpXrqhfW+vpgKtK8JohpcQGYc7CSt7z0ytze1qTGSmBfyoyG/F5myd7Q==
-X-Received: by 2002:a02:ce91:: with SMTP id y17mr1441537jaq.36.1585609505433;
-        Mon, 30 Mar 2020 16:05:05 -0700 (PDT)
+        bh=2R3HeLQuIVaRCkh6X9o27tq3rLDIUQvSz/ALYknVRuQ=;
+        b=ZqnPHyDWKMvPuny61ARi723y1mevUwHsDOfUDDWCUYTsRJxEeopk29eDupbAYak+TO
+         VDBP33W8yK6OTNRWj558ja+OoeMuWNWdhdJe4bGYqbn6/oGH6h/LQ33FV90NlMCEKXh5
+         bLv0LHagTwBPWO0KH9Yb06D4V0Da1MgVi4Grwh02KP1d9oA3PHSRte6mAkGTOcsU8mwz
+         GmBy2AA+1nKnM/rnM16pWjj8lC6Uz0F+vEXB8Xl6s0qw5KIPngiOG7sJnmMDJhn8HEfP
+         gZS1Lu9w5QhgZUQiBqCHD1pYJo974y1TsB3TvI6jrIKM4MQgMIOe0/1UL1tEQ1DVgSvx
+         Kyng==
+X-Gm-Message-State: ANhLgQ18JoKd958qNvgrKSdmlDAjvuluRtC6p9jf0CEtQLyt+xEwEeXg
+        uC8HuyrSzTfmQTvWF+ujKQ==
+X-Google-Smtp-Source: ADFU+vuK6gZ0DHpy9mtPPqneXZSnMRxos+jfYY3/2CKIx6COKayBSG14rG/bH2o8Ip/2xpj5hXIgbw==
+X-Received: by 2002:a02:2384:: with SMTP id u126mr13486357jau.64.1585609609630;
+        Mon, 30 Mar 2020 16:06:49 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id h12sm2968141ilq.66.2020.03.30.16.05.04
+        by smtp.gmail.com with ESMTPSA id m4sm5313115ill.78.2020.03.30.16.06.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 16:05:04 -0700 (PDT)
-Received: (nullmailer pid 26818 invoked by uid 1000);
-        Mon, 30 Mar 2020 23:05:03 -0000
-Date:   Mon, 30 Mar 2020 17:05:03 -0600
+        Mon, 30 Mar 2020 16:06:48 -0700 (PDT)
+Received: (nullmailer pid 29320 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:06:47 -0000
+Date:   Mon, 30 Mar 2020 17:06:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, sibis@codeaurora.org,
-        swboyd@chromium.org, dianders@chromium.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: arm: cpus: Add kryo468 compatible
-Message-ID: <20200330230503.GA26765@bogus>
-References: <cd0f3d35ca0fc2944fd97e030a28318ff82dd5c1.1584516925.git.amit.kucheria@linaro.org>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     kishon@ti.com, robh+dt@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, balbi@kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
+        jckuo@nvidia.com, Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: Re: [PATCH V1 1/8] dt-bindings: phy: tegra-xusb: Add charger-detect
+ property
+Message-ID: <20200330230647.GA29166@bogus>
+References: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
+ <1584527467-8058-2-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cd0f3d35ca0fc2944fd97e030a28318ff82dd5c1.1584516925.git.amit.kucheria@linaro.org>
+In-Reply-To: <1584527467-8058-2-git-send-email-nkristam@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 18 Mar 2020 14:38:16 +0530, Amit Kucheria wrote:
-> Kryo468 is found in sc7180, so add it to the list of cpu compatibles
+On Wed, 18 Mar 2020 16:01:00 +0530, Nagarjuna Kristam wrote:
+> Add nvidia,charger-detect boolean property for Tegra210 and Tegra186
+> platforms. This property is used to inform driver to perform charger
+> detection on corresponding USB 2 port.
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 > ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
