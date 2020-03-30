@@ -4,89 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAF7C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CA0C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36D220781
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A52D20771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 18:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585591656;
-	bh=zb4exHoKNP9nLoK/adxpBPJohu4ng0k4iVekqgkZONU=;
+	s=default; t=1585591856;
+	bh=j8+7+Qddrx8Pzj2DauRmg0CRX8GAK9npccrBeH7bqEk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZzfBwnuPi/CP1qLSHlFOfo8S5Parq3rE1Z07CFbdZrfFx2Td4A43qXU0OaNhNgO2k
-	 zmIV9exO+0ajpfi8BDq295BZdtuM9Wf27sU5z7Il3l0aM5NDtMrc/ed6lWXONnybNx
-	 tIMkm9eqV8rSep1X1XcefQw/ybmPyUxMu2NIB6LM=
+	b=2v4UTe0O9XtoQ6tA0FFSw45P9iGZ/d3N5211RgAkjsR7HNBfLmJXWVrYi/j1rrku1
+	 vpel8yxPyjXz+I9dWYEFPOOUPKsedVGm+WbK181VhPbRuKx6HBoKa0E90lZ+ky8LrU
+	 0mBbxP6RqhvWUNWeT6y3ccDvr8Gyn5of3hTkJJbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgC3SHg (ORCPT
+        id S1727300AbgC3SK4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 14:07:36 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38770 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727302AbgC3SHg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 14:07:36 -0400
-Received: by mail-il1-f196.google.com with SMTP id n13so9438479ilm.5;
-        Mon, 30 Mar 2020 11:07:35 -0700 (PDT)
+        Mon, 30 Mar 2020 14:10:56 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36532 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgC3SK4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 14:10:56 -0400
+Received: by mail-io1-f67.google.com with SMTP id n10so4758759iom.3;
+        Mon, 30 Mar 2020 11:10:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mj9C+ldVbUlZ3vIXMBDLPPubLs9WW33ew+oonI4HdKc=;
-        b=MiuBvZj5dZrhPHoQEzTH1XdPwUsV1uWSyDaIA0YTFjg2Ai/NiSkTyWqcFCQi5rIrwB
-         6gErFMn8TR5RJxBcuMYf4m0Fy7I3rIw2NsIheqREKTLHZa74ETfmIu6jNtXYbcJyCx1k
-         rwYhrpB00oW0y0p8PyrUEE6V38yBECkfZO9k91OfO9ko2YQkYAI5kztqO2K28s0ARqOl
-         a97VmpGcIb6ol4xgBWtgHD69LG1/foj7WLWXXeMShu80hxzHz7FcKDA1rnKNNnGFK2K2
-         ZdRqBGSyvGji2h/rxrZZlod4kDXIzG4L/qXy+S6BLeKChG6wUHyOK0CBlIGJXbveFiRQ
-         wExg==
-X-Gm-Message-State: ANhLgQ1YQ8/gm8H1I0aym/5LMCxAi9kPz19POKb1Ba/5rTLMzo+/KCQC
-        /Pc35hIsqtFXUsJprxWJNg==
-X-Google-Smtp-Source: ADFU+vtNqSrTRYSiHT+MOixHEmT/udRjClK4h0+HRhanDrEbRpaw67MMVUx3gP60KWbNpRPLNo+PQg==
-X-Received: by 2002:a92:443:: with SMTP id 64mr12853112ile.258.1585591655065;
-        Mon, 30 Mar 2020 11:07:35 -0700 (PDT)
+        bh=IclrqcW8ysqtuVmS55rZcOs0qoTX1+BcxJZ+I1k0oLs=;
+        b=Djn1A8ZVxIruhvRmXnV7nyWArn/frzvTy41ozQFE0UdfzUdoyotVbzgE8/ImA3b5VL
+         y6XeHx3macMsvkpUiNQ+9i4H7hnCfydaF+HrIRTeqRzceyIx86iWccC4uC40QA/qXysW
+         Vq6BGJMwIBAQAwDCf6zeSgsjW2zQx0KQw4S1bv0FU2xDilBUZDQdTAxDTRmKzLRi1l7j
+         KNG3IWTy+bk7M1SQN4ksftiitttvg29x3DIsZ/dNSHM+ZkgMygOZD7DxbhdIuUa+iP/o
+         aSpyWJXrSl71BsL8bx1Bnn6M4OhSMbSmpClJI1TIfqJAhTAHcY1k1i7f00VkioIPbp0K
+         ZnSg==
+X-Gm-Message-State: ANhLgQ28pKsUldQ8Iutud2kbStzun3vOC7Xw1RSBClY8FBlKA7V+WdMq
+        cbfbAGgw6PmICC/Qxko3evgQwy8=
+X-Google-Smtp-Source: ADFU+vtRD5i4b5WuUylbDfvEsPS/m7kyJL1kE9fsXtKCkDqfbgwFrDee2r1oGdFUeVl9G7yiIgiu4A==
+X-Received: by 2002:a6b:d808:: with SMTP id y8mr11628918iob.121.1585591855212;
+        Mon, 30 Mar 2020 11:10:55 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id b83sm5086913ill.7.2020.03.30.11.07.33
+        by smtp.gmail.com with ESMTPSA id j23sm4248204ioa.10.2020.03.30.11.10.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 11:07:34 -0700 (PDT)
-Received: (nullmailer pid 3078 invoked by uid 1000);
-        Mon, 30 Mar 2020 18:07:33 -0000
-Date:   Mon, 30 Mar 2020 12:07:33 -0600
+        Mon, 30 Mar 2020 11:10:54 -0700 (PDT)
+Received: (nullmailer pid 7604 invoked by uid 1000);
+        Mon, 30 Mar 2020 18:10:52 -0000
+Date:   Mon, 30 Mar 2020 12:10:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org,
-        Akash Asthana <akashast@codeaurora.org>
-Subject: Re: [PATCH V2 2/2] dt-bindings: spi: Add interconnect binding for
- QSPI
-Message-ID: <20200330180733.GA2966@bogus>
-References: <1584098121-18075-1-git-send-email-akashast@codeaurora.org>
- <1584098121-18075-3-git-send-email-akashast@codeaurora.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, heiko@sntech.de, robh+dt@kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] dt-bindings: iio: adc: convert rockchip saradc
+ bindings to yaml
+Message-ID: <20200330181052.GA7527@bogus>
+References: <20200313132926.10543-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584098121-18075-3-git-send-email-akashast@codeaurora.org>
+In-Reply-To: <20200313132926.10543-1-jbx6244@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Mar 2020 16:45:21 +0530, Akash Asthana wrote:
-> Add documentation for the interconnect and interconnect-names
-> properties for QSPI.
+On Fri, 13 Mar 2020 14:29:24 +0100, Johan Jonker wrote:
+> Current dts files with 'saradc' nodes are manually verified.
+> In order to automate this process rockchip-saradc.txt
+> has to be converted to yaml.
 > 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
-> Changes in V2:
->  - Added minItems = 1 for interconnect property
-> 
->  Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  .../bindings/iio/adc/rockchip-saradc.txt           | 37 ----------
+>  .../bindings/iio/adc/rockchip-saradc.yaml          | 79 ++++++++++++++++++++++
+>  2 files changed, 79 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
