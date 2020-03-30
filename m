@@ -2,92 +2,110 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A60C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0504AC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93CF20675
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C840220675
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 23:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585610500;
-	bh=+srPd4Oc/I3TPZow92d/pRFhLp6+7ZpR+E8KGN4O2pE=;
+	s=default; t=1585610550;
+	bh=xG6fwScExTyel/LV37Alpm4jQexHoGMsQsJN/tpRvYM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bgLSnnAQNqPMRtGSDFlSAqbrZ4XvZYU3IoerUJhBhEY/JKXsTUHAa2i2m44blJ612
-	 md8wr7czT62MYb8Eh3DsQR2GITmxM1MJut5+h92MtiM6kfNLA6tGs5yDxBWBh5aY6x
-	 MH7vh3dNuQYcpFZI46KxqOnAAHzcbaSCyp1CmZRE=
+	b=rAgeWJ/tOJNHB4x3vIXmUwMszjWgwUssAPjcgclddxcEgSVCJTImYrZuA80Xviwyz
+	 iqyUECBWVKeiO7dbyDQy9QcI5KKMUp0wMBt6Jfs4+18tnwlmibScjB3wut+Z4Oe/zx
+	 od/e1+C6kRJLyfAInbMSHf0Zd83YERcWcigJmeIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgC3XVj (ORCPT
+        id S1729069AbgC3XWa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 19:21:39 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41220 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbgC3XVj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:21:39 -0400
-Received: by mail-io1-f67.google.com with SMTP id b12so3539801ion.8;
-        Mon, 30 Mar 2020 16:21:38 -0700 (PDT)
+        Mon, 30 Mar 2020 19:22:30 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45659 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728880AbgC3XWa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 19:22:30 -0400
+Received: by mail-io1-f66.google.com with SMTP id y14so2637385iol.12;
+        Mon, 30 Mar 2020 16:22:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dVnw6FbVGtknI/LXqWPEB0fCBLV8ok47WPEsicGJKgc=;
-        b=UTZXXajbyMtlnjw0IM251oLIrn08qXfCtNA44hqb+ZF6DNI+DF/im6iC4QQaeojrHs
-         pAS05T5rPWDZ7iFn5UidaycMPdG6L4HbnMqgF+9Cj1b1jRHLKT5um/4cohXD1Qld7GI3
-         xtDLyWuLx7L0r4rODLA0RTvHjTsl4n7FqDRsDHACnnNey+FEAF3wRElNG9DjfruBeATz
-         No6gGuaTAnZ4B052BWlaMDH7S+K+eB2jG8Colht/mkHnIgtmhaHY/Qv4I0mAbuCsasgk
-         x9g6lNjJMR1Gzk1obyOYefCTXXOlVYRQc1Axvw4qqDa+RAKLZUI1BnqkHyGKlzeZW3+b
-         7QUw==
-X-Gm-Message-State: ANhLgQ2AHAlpyGQ5qlUhexFZI6G9QSmVXBHpL1ROaWPaN2SjlodHl+3U
-        LtZJupICmpy1UQ0IW1X3qw==
-X-Google-Smtp-Source: ADFU+vvLjBYxSJO2if2o0gwQCWJ+uAWhliFrL8r8v9ZHNOquhf0xFKTFptjnxSL3vxEJ724p7DSufA==
-X-Received: by 2002:a5e:c104:: with SMTP id v4mr12880353iol.122.1585610498381;
-        Mon, 30 Mar 2020 16:21:38 -0700 (PDT)
+        bh=XIWn5Ab3uVFI3qxzD5maLCo29537ULIcC0kUHsUxsj4=;
+        b=TsDpzzgaEeMwkH9K3Cvf50j/0Jd0vAHBCk28hNH/Jx8Jmk89bSsXkkh4MtcfIzDcW5
+         QBzoQg3Ha5+YM3cI91CiACFlfn5s8Y0KYU3MNMimXYq1ymcOzWPiNaLAnyiaVqBzim4K
+         IO0LeXf8gJUCVpgERT+cOL1TjMMnV2CVvZaNLhvTm3QFH9h7Vw4/IwKnauKdGbJiVP9M
+         VJmo3FQTABfZiKkHt3xIaourZ4RFD1wID1YpbidD5d5IifsC6BOt8oPZ1bvXS634QGxl
+         ws3Exfgzuj4OGz9rcRv6cyp2K+ge1ZfoFjb/P9mP/N4yDOOfu9HFZdebuUCop5e28MQi
+         DrSg==
+X-Gm-Message-State: ANhLgQ1Shz3h0rDVnygmmYmCYNwVHu8MpTBsOdgq6iPY0lbWSOG8M8fR
+        iWwng6UUsIAoCcWi2lsHCV9v260=
+X-Google-Smtp-Source: ADFU+vuBgwRJJLNw8wMfUkmeopLiMj54ov/9v+GIxteeKCwFkd6CF3WrVK8pBuSYUYonDOKZAgHWSA==
+X-Received: by 2002:a5e:c70b:: with SMTP id f11mr12837586iop.28.1585610549351;
+        Mon, 30 Mar 2020 16:22:29 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id i16sm5401647ils.40.2020.03.30.16.21.36
+        by smtp.gmail.com with ESMTPSA id f80sm5419367ild.25.2020.03.30.16.22.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 16:21:37 -0700 (PDT)
-Received: (nullmailer pid 18111 invoked by uid 1000);
-        Mon, 30 Mar 2020 23:21:36 -0000
-Date:   Mon, 30 Mar 2020 17:21:36 -0600
+        Mon, 30 Mar 2020 16:22:28 -0700 (PDT)
+Received: (nullmailer pid 19439 invoked by uid 1000);
+        Mon, 30 Mar 2020 23:22:27 -0000
+Date:   Mon, 30 Mar 2020 17:22:27 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        pierre-louis.bossart@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com,
-        daniel.baluta@gmail.com, linux-imx@nxp.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        yuehaibing@huawei.com, krzk@kernel.org,
-        linux-kernel@vger.kernel.org, sound-open-firmware@alsa-project.org,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH 5/5] dt-bindings: dsp: fsl: Add fsl,imx8mp-dsp entry
-Message-ID: <20200330232136.GA18056@bogus>
-References: <20200319194957.9569-1-daniel.baluta@oss.nxp.com>
- <20200319194957.9569-6-daniel.baluta@oss.nxp.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] of: of_private.h: Replace zero-length array with
+  flexible-array member
+Message-ID: <20200330232227.GA19356@bogus>
+References: <20200319231058.GA18540@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319194957.9569-6-daniel.baluta@oss.nxp.com>
+In-Reply-To: <20200319231058.GA18540@embeddedor.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 19 Mar 2020 21:49:57 +0200, Daniel Baluta wrote:
-> From: Daniel Baluta <daniel.baluta@nxp.com>
+On Thu, 19 Mar 2020 18:10:58 -0500, "Gustavo A. R. Silva" wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> Minimal implementation needs the same DT properties as
-> existing compatible strings. So, we just add the new
-> compatible string in the list.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/of/of_private.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
