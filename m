@@ -2,145 +2,102 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8B4C2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 06:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF7AC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 07:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E07620774
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 06:45:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sQ2f+skF"
+	by mail.kernel.org (Postfix) with ESMTP id 863EB20774
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 07:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgC3Gpj (ORCPT
+        id S1729367AbgC3HCM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 02:45:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46416 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728983AbgC3Gpj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 02:45:39 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j17so20068183wru.13
-        for <devicetree@vger.kernel.org>; Sun, 29 Mar 2020 23:45:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=V56YQ8YQXjkIauhgboyrxCMrbncDw2TqLEBJO6LLNNM=;
-        b=sQ2f+skFCCbEiOoww8kH9zZYLPWziNWtDYM/MzX1shre1CF6ETuE51sUbV60Mcbp3c
-         7ofQGCgIpUXTV10fB8GyD0slTikuSNdlePQ7vG9wO47RRcTnybZAdKTqKbhPzCIZpk8v
-         Hy6ije5XX9W48RP7H3ASmx4vFqgFf/gk/I4VS8cK396oDd/bs6+1e+/m+XdzXseQvP6g
-         hkxkwAApQvHdND1yQ4DgfVVkdUao2XNw+v5HTUR2TLdHbCGM+4Cnc3wfMniX+0A13ev+
-         CmNpK5tc1KR7tqVtcmTg0w7xWqBt2ETiw2Fgn8j2zb5UJh8aLCCVM5utDA2vJth35Hv5
-         5YKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=V56YQ8YQXjkIauhgboyrxCMrbncDw2TqLEBJO6LLNNM=;
-        b=M3+7DEroMPuB/bPJoR5Z7kJ7gJo4+fC9LsYBayg0CDYgqT77IBTjWJ0e+mhWzSNslE
-         FTGowQ71CDhnvF0nBhmVLRUuNySvY2btml6VjxGYCb7/xALHd12ZfuleCvSP2SM/B3Av
-         OTCefpsRthvuvmWH8P57djhKndrJa1HkFnapFX1D29FuV78oY+AftsEjsgcqEzirSkYk
-         ijuKiz4n3VwFDz/ge3EBUfRKJBsKiNWS7Lll3zUWLrZ10PMIZmuicMFRkj8SFI+uSejI
-         uoHCHQuiMFl1LgrgcDySjnGMHAR/iJf/UM0EvwzFEfJnk55xm0WM4Zj+wPZtKlgw4pLM
-         freQ==
-X-Gm-Message-State: ANhLgQ29DwkYkTnkx0nkzJmC1dnQCuRusEuA4JaK0yJztpJPbpYFcoLl
-        +rSNUToJSJIHxFvhdP5CpP1Rvw==
-X-Google-Smtp-Source: ADFU+vsGOjMWUR3XuueAXOf+kGUjz672AeJsnP+zNGCOJq+3zYTVOE2f/ajoKzhEq5O/LNUAMeRj0A==
-X-Received: by 2002:a5d:4f92:: with SMTP id d18mr12996829wru.400.1585550737261;
-        Sun, 29 Mar 2020 23:45:37 -0700 (PDT)
-Received: from dell ([95.149.164.95])
-        by smtp.gmail.com with ESMTPSA id c23sm21059704wrb.79.2020.03.29.23.45.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Mar 2020 23:45:36 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 07:46:30 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
-Message-ID: <20200330064630.GA30614@dell>
-References: <20200322224626.13160-1-sravanhome@gmail.com>
- <20200322224626.13160-2-sravanhome@gmail.com>
- <20200327080013.GG603801@dell>
- <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
+        Mon, 30 Mar 2020 03:02:12 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41421 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729360AbgC3HCM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 03:02:12 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jIoQx-0000IP-Kx; Mon, 30 Mar 2020 09:02:07 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jIoQv-0007Uu-Bq; Mon, 30 Mar 2020 09:02:05 +0200
+Date:   Mon, 30 Mar 2020 09:02:05 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Christian Herber <christian.herber@nxp.com>,
+        Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Marek Vasut <marex@denx.de>, netdev <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: Re: [PATCH v4 1/4] dt-bindings: net: phy: Add support for NXP
+ TJA11xx
+Message-ID: <20200330070205.pi5oaju5kjzjms5s@pengutronix.de>
+References: <AM0PR04MB70413A974A2152D27CAADFAC86F00@AM0PR04MB7041.eurprd04.prod.outlook.com>
+ <20200323151423.GA32387@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
+In-Reply-To: <20200323151423.GA32387@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:00:16 up 135 days, 22:18, 153 users,  load average: 0.23, 0.08,
+ 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 27 Mar 2020, saravanan sekar wrote:
-> On 27/03/20 9:00 am, Lee Jones wrote:
-> > On Sun, 22 Mar 2020, Saravanan Sekar wrote:
-> > 
-> > > Add device tree binding information for mp2629 mfd driver.
-> > > 
-> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > ---
-> > >   .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
-> > >   1 file changed, 60 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > new file mode 100644
-> > > index 000000000000..314309ea91ac
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
-> > > @@ -0,0 +1,60 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > Are these links supposed to work?
-> Not really, but as far my understanding needed for dt-bindings check
+Hi,
 
-Rob, why are these here if they just result in 404s?
-
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > > +    #include <dt-bindings/input/linux-event-codes.h>
-> > > +    i2c {
-> > i2c@0x????????
+On Mon, Mar 23, 2020 at 04:14:23PM +0100, Andrew Lunn wrote:
+> > Yes, it is one device with two address. This is if you call the entire IC a device. If you look at it from a PHY perspective, it is two devices with 1 address.
+> > If you just look at it as a single device, it gets difficult to add PHY specific properties in the future, e.g. master/slave selection.
 > 
-> Its a I2C controller node, I don't think address is needed. Mention like
-> this my previous other driver patches,
-
-This doesn't sound right.
-
-How do you control/operate the controller?
-
-Surely you read/write from/to registers?
-
-> dt_binding_check is also passed
+> > In my opinion its important to have some kind of container for the
+> > entire IC, but likewise for the individual PHYs.
 > 
-> > > +        #address-cells = <1>;
-> > > +        #size-cells = <0>;
-> > > +
-> > > +        pmic@4b {
-> > > +            compatible = "mps,mp2629";
-> > > +            reg = <0x4b>;
-> > > +
-> > > +            interrupt-controller;
-> > > +            interrupt-parent = <&gpio2>;
-> > > +            #interrupt-cells = <2>;
-> > > +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-> > > +        };
-> > > +    };
+> Yes, we need some sort of representation of two devices.
+> 
+> Logically, the two PHYs are on the same MDIO bus, so you could have
+> two nodes on the main bus.
+> 
+> Or you consider the secondary PHY as being on an internal MDIO bus
+> which is transparently bridged to the main bus. This is what was
+> proposed in the last patchset.
+> 
+> Because this bridge is transparent, the rest of the PHY/MDIO framework
+> has no idea about it. So i prefer that we keep with two PHY nodes on
+> the main bus. But i still think we need the master PHY to register the
+> secondary PHY, due to the missing PHY ID, and the other constrains
+> like resets which the master PHY has to handle.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+this discussion is stalled.
+What is the final decision? What is the proper and mainlinable way?
+
+Regards,
+Oleksij
+--
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
