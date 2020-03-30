@@ -7,158 +7,265 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1E4C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BFFC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2962072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CEF8206CC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585599804;
-	bh=d8XJLrTnwSQUfzbQQPE8q6PwswKMvTeAcdMlWnWyezM=;
+	s=default; t=1585600374;
+	bh=uE5j6Du2miWsHbK4g9nkkZStDwU1VX1Cqm69tlUEByA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x5Q0p7//LpVGstS5uE9tyeHcZAZzZfiPyWl/shcSlzy+pNOutuS4yv1hVpJikfXMt
-	 /iYpUS/TZ+OzzYDWnDpTxG7UfGmVmc2fmndrlA7mwUu9CrtVCZ0VFXMPDu59EK04uu
-	 GTpr2PE00UuiUiENp1HwvWj8te77m2gew1OoEduU=
+	b=rfMYDpP98Evhpkc3cpWWOSrtA0lIKbDMq9QKSInvTVUS0ujZpTukuiB7jne/LyYdO
+	 rGVb5YaUrt99+vURpDsDMT6jB4/C9ptBV3VgUGWQSuf+9zBkxLnPAGnELcJYCThWy3
+	 tFtogQR5lCl9NoPy//rW9MnsgWf7QO5sNtX9gp90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbgC3UXY (ORCPT
+        id S1727936AbgC3Ucy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:23:24 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38842 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbgC3UXY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 16:23:24 -0400
-Received: by mail-il1-f193.google.com with SMTP id n13so9879405ilm.5;
-        Mon, 30 Mar 2020 13:23:23 -0700 (PDT)
+        Mon, 30 Mar 2020 16:32:54 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38997 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727714AbgC3Ucx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 16:32:53 -0400
+Received: by mail-io1-f66.google.com with SMTP id c16so4877360iod.6;
+        Mon, 30 Mar 2020 13:32:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ATU7uGxXPYRDHpKRltXUHSrkmJcvmcEFJ9x1hejSj4Q=;
-        b=YFCTQwjmanDBN5+S8Z15ihi4k7FxZYbKuJQ42ykIHiPhVvGQVevAS99bPcmzG1JCCO
-         b9rECmoJXvdJImobXMW0ZXtFqtemEodBF9mitxgWK0UEseq79zuXl5Q5Eu7Kfzh5ZUSG
-         vNSp7spaDsw2f/ugAqB0rqsiFejM5GZysEJts3NRilhiEGUAuTy9bHvAvqL7+P1OYW2U
-         9bmIu2MwSqZV1t+1aI1BoW6gHZ7m/jeP1ZVf3cZm5OnJmjkSFRy5cOwdls24dvx1a0+Z
-         bXz6XSFeWyKcPz7boJPN7UucwTK5tQCPOJxbaiX62T9swIOODlKpZjZGV/irN3WaUcBm
-         SWDA==
-X-Gm-Message-State: ANhLgQ1bu21HfdPK/C1PWxU3kscvG4d2oqIzJILNycXg9mLr1fD+YIyB
-        SIsaP2s1l3w6z/0dbEufx+qbFZ8=
-X-Google-Smtp-Source: ADFU+vt7GlXUI+dwK2GfTS1Un6SfBA2LRvKChI2EYuVBmxrE9W6bpCd7iZvCpfWOJdLf7P72Mo/S8Q==
-X-Received: by 2002:a92:83ca:: with SMTP id p71mr12294078ilk.278.1585599803046;
-        Mon, 30 Mar 2020 13:23:23 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=uGrV7jzmVZ6lp3fYoGfMXzMSFPwx7qqWA6yYs9+zPaY=;
+        b=cf0zldYflIzgrv/bLNls6d3ytDYRxsDkvBcj7STxLY1NFZTgF6ooEv+tUNWJT5XpvB
+         O/E+mMIpyGet9Omgmp7aQTgQF3tQ8I+wZc7aHvz4RSKqUyZoBlHXs1pDCUcvIPyP1Lgo
+         MDX2PV2p8lY4vaN94UmT3FjW59et+cYU2BUhKdgxPEga+qoVPpDp3LdL3HOL3pGWcGIX
+         rKV1LDWK9UMu4DHqMbWSA455ksCwjjS5BvGyMeJUGX/hCYZuU1ShKIT1Pq3MJa3UgOfD
+         Mx9HIfO/bR2m8HKXuo3bGn8kjwFR1xZpwC+mNIzdZRGuR3nXgm90MC9R34TelzsXai4N
+         OxQg==
+X-Gm-Message-State: ANhLgQ2UVRnqhXuW0Stwb+qaNZseFPkK120EPVf8tLBl0xeKoQ7iM0X8
+        PJtaOK58wHB/4Ip2urOLWRe4fPE=
+X-Google-Smtp-Source: ADFU+vuRS1yb0ZpQ8s0w4xohZ7ExBOpVYoxyX8tyHejpPPcJs/BEMfP74Okao3IbmgWtRAsHP/AlBA==
+X-Received: by 2002:a5e:da0c:: with SMTP id x12mr12154932ioj.69.1585600372335;
+        Mon, 30 Mar 2020 13:32:52 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id i3sm4289598iow.11.2020.03.30.13.23.22
+        by smtp.gmail.com with ESMTPSA id i6sm5221949ila.20.2020.03.30.13.32.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 13:23:22 -0700 (PDT)
-Received: (nullmailer pid 14413 invoked by uid 1000);
-        Mon, 30 Mar 2020 20:23:21 -0000
-Date:   Mon, 30 Mar 2020 14:23:21 -0600
+        Mon, 30 Mar 2020 13:32:51 -0700 (PDT)
+Received: (nullmailer pid 27005 invoked by uid 1000);
+        Mon, 30 Mar 2020 20:32:50 -0000
+Date:   Mon, 30 Mar 2020 14:32:50 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     kishon@ti.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: phy: intel: Add documentation for Keem
- Bay eMMC PHY
-Message-ID: <20200330202321.GA9386@bogus>
-References: <20200316103726.16339-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200316103726.16339-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: Re: [PATCH v2 6/6] dt-bindings: iio: Add adis16475 documentation
+Message-ID: <20200330203250.GA14978@bogus>
+References: <20200316125312.39178-1-nuno.sa@analog.com>
+ <20200316125312.39178-7-nuno.sa@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200316103726.16339-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200316125312.39178-7-nuno.sa@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 06:37:25PM +0800, Wan Ahmad Zainie wrote:
-> Document Intel Keem Bay eMMC PHY DT bindings.
+On Mon, Mar 16, 2020 at 01:53:12PM +0100, Nuno Sá wrote:
+> Document the ADIS16475 device devicetree bindings.
 > 
-> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+> Signed-off-by: Nuno Sá <nuno.sa@analog.com>
 > ---
->  .../bindings/phy/intel,keembay-emmc-phy.yaml  | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+> Changes in v2:
+>  * Remove burst32 property;
+>  * Rename clk-mode to adi,sync-mode;
+>  * Remove clock-names;
+>  * Add conditionals to state that clocks is only needed depending on adi,sync-mode property
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+>  .../bindings/iio/imu/adi,adis16475.yaml       | 146 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 147 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
 > new file mode 100644
-> index 000000000000..af1d62fc8323
+> index 000000000000..9eeb42773edd
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-
-Dual license new bindings:
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +# Copyright 2020 Intel Corporation
+> +++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+> @@ -0,0 +1,146 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/phy/intel,keembay-emmc-phy.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +$id: http://devicetree.org/schemas/iio/imu/adi,adis16475.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Intel Keem Bay eMMC PHY
+> +title: Analog Devices ADIS16475 and similar IMUs
 > +
 > +maintainers:
-> +  - Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+> +  - Nuno Sá <nuno.sa@analog.com>
+> +
+> +description: |
+> +  Analog Devices ADIS16475 and similar IMUs
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ADIS16475.pdf
 > +
 > +properties:
 > +  compatible:
 > +    enum:
-> +      - intel,keembay-emmc-phy
+> +      - adi,adis16475-1
+> +      - adi,adis16475-2
+> +      - adi,adis16475-3
+> +      - adi,adis16477-1
+> +      - adi,adis16477-2
+> +      - adi,adis16477-3
+> +      - adi,adis16470
+> +      - adi,adis16465-1
+> +      - adi,adis16465-2
+> +      - adi,adis16465-3
+> +      - adi,adis16467-1
+> +      - adi,adis16467-2
+> +      - adi,adis16467-3
+> +      - adi,adis16500
+> +      - adi,adis16505-1
+> +      - adi,adis16505-2
+> +      - adi,adis16505-3
+> +      - adi,adis16507-1
+> +      - adi,adis16507-2
+> +      - adi,adis16507-3
 > +
 > +  reg:
+> +    maxItems: 1
+> +
+> +  spi-cpha: true
+> +
+> +  spi-cpol: true
+> +
+> +  spi-max-frequency:
+> +    maximum: 2000000
+> +
+> +  interrupts:
 > +    maxItems: 1
 > +
 > +  clocks:
 > +    maxItems: 1
 > +
-> +  clock-names:
-> +    items:
-> +      - const: emmcclk
-> +
-> +  intel,syscon:
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-
-Make this binding  a child of the syscon and get rid of this.
-
+> +  reset-gpios:
 > +    description:
-> +      A phandle to a syscon device used to access core/phy configuration
-> +      registers.
+> +      Must be the device tree identifier of the RESET pin. If specified,
+> +      it will be asserted during driver probe. As the line is active low,
+> +      it should be marked GPIO_ACTIVE_LOW.
+> +    maxItems: 1
 > +
-> +  "#phy-cells":
-> +    const: 0
+> +  adi,sync-mode:
+> +    description:
+> +      Configures the device SYNC pin. The following modes are supported
+> +      0 - output_sync
+> +      1 - direct_sync
+> +      2 - scaled_sync
+> +      3 - pulse_sync
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0
+> +    maximum: 3
+> +
+> +  adi,scaled-output-hz:
+> +    description:
+> +      This property must be present if the clock mode is scaled-sync through
+> +      clock-names property. In this mode, the input clock can have a range
+> +      of 1Hz to 128HZ which must be scaled to originate an allowable sample
+> +      rate. This property specifies that rate.
+> +    minimum: 1900
+> +    maximum: 2100
 > +
 > +required:
 > +  - compatible
 > +  - reg
-> +  - intel,syscon
-> +  - "#phy-cells"
+> +  - interrupts
+> +  - spi-cpha
+> +  - spi-cpol
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - adi,adis16500
+> +          - adi,adis16505-1
+> +          - adi,adis16505-2
+> +          - adi,adis16505-3
+> +          - adi,adis16507-1
+> +          - adi,adis16507-2
+> +          - adi,adis16507-3
+> +
+> +then:
+> +  properties:
+> +    adi,sync-mode:
+> +      minimum: 0
+> +      maximum: 2
+> +
+> +  if:
+> +    properties:
+> +      adi,sync-mode:
+> +        enum: [1, 2]
+> +
+> +  then:
+> +    dependencies:
+> +      adi,sync-mode: [ clocks ]
+
+You can remove this if/then if you...
+
+> +
+> +else:
+
+> +  if:
+> +    properties:
+> +      adi,sync-mode:
+> +        enum: [1, 2, 3]
+> +
+> +  then:
+> +    dependencies:
+> +      adi,sync-mode: [ clocks ]
+
+...put this if by itself under an 'allOf'. (And then the 1st if should 
+go under the 'allOf' too).
+
 > +
 > +examples:
 > +  - |
-> +    mmc_phy_syscon: syscon@20290000 {
-> +          compatible = "simple-mfd", "syscon";
-> +          reg = <0x0 0x20290000 0x0 0x54>;
-> +    };
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    spi {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
 > +
-> +    emmc_phy: mmc_phy@20290000 {
-
-phy@...
-
-> +          compatible = "intel,keembay-emmc-phy";
-> +          reg = <0x0 0x20290000 0x0 0x54>;
-
-Here you have overlapping register regions. Don't do that.
-
-Given they are the same size, why do you need the syscon at all?
-
-> +          clocks = <&mmc>;
-> +          clock-names = "emmcclk";
-> +          intel,syscon = <&mmc_phy_syscon>;
-> +          #phy-cells = <0>;
+> +            adis16475: adis16475-3@0 {
+> +                    compatible = "adi,adis16475-3";
+> +                    reg = <0>;
+> +                    spi-cpha;
+> +                    spi-cpol;
+> +                    spi-max-frequency = <2000000>;
+> +                    interrupts = <4 IRQ_TYPE_EDGE_RISING>;
+> +                    interrupt-parent = <&gpio>;
+> +            };
 > +    };
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f11262f1f3bb..f8ccc92ab378 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1015,6 +1015,7 @@ W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/iio/imu/adis16475.c
+>  F:	Documentation/ABI/testing/sysfs-bus-iio-imu-adis16475
+> +F:	Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+>  
+>  ANALOG DEVICES INC ADM1177 DRIVER
+>  M:	Beniamin Bia <beniamin.bia@analog.com>
 > -- 
-> 2.17.1
+> 2.25.1
 > 
