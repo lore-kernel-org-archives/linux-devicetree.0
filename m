@@ -4,127 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E40C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB2BC2D0EE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1962C2072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B3820776
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585582758;
-	bh=RIGAzAySt0foiAmx4kzVLv9s41B9esaPiT690vZiVE8=;
+	s=default; t=1585582791;
+	bh=YXP+ZxDUHbQPXG+vN02hy2oglUrQTaehFkRMOGXes9Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K6L19XINAN8QWGGCeIKWjeVtz4kGbU9pdhoBfCJevaSyWUezLDFB0ANewOtw08JFS
-	 QpF3cxhLqmDdTEfO6bgy3EuHhtxroA2tCtj1qCVCjvtih9xKU/QzncRAwIdeWQvTJa
-	 Je3g/KGf5VFbvba+fSCf0ElZND/luQPu96D1tQgQ=
+	b=zPK0MSm1CgwchXxemVwTEB2KYkvS9xIsf+RkBZzftBCx+b976nMumi8wVS+6lGSfy
+	 Kyl7DdayGDcRLYp4we4oGcptyOdiIyVtxCdDD4o5f4EgUfRcQxQ8EyVypAoD6qruZ9
+	 5Prteh8h5LntwCO6uQBEKMExmIsB3gRhwSiAFg34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgC3PjR (ORCPT
+        id S1729413AbgC3Pjv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 11:39:17 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33215 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgC3PjR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 11:39:17 -0400
-Received: by mail-io1-f66.google.com with SMTP id o127so18236276iof.0;
-        Mon, 30 Mar 2020 08:39:16 -0700 (PDT)
+        Mon, 30 Mar 2020 11:39:51 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39891 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729398AbgC3Pjv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 11:39:51 -0400
+Received: by mail-il1-f194.google.com with SMTP id r5so16224709ilq.6;
+        Mon, 30 Mar 2020 08:39:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EZ1nff7YVijHzSQUa7ruR5O25OH0APmgrgDxrtZq5h4=;
-        b=haURtfDgYWITnFVn96lwrRuVtQnC5N/kbofVhztHQCFCGrAwuHFYXJnZ6JkdPML/lp
-         HSeSLtnKRkV5O/mWayOXOKUIFtF1LoqX8kbULjX2Zm0VfVYGjwRgeq4NhSk5dq/yDgqy
-         CUZ15w5ejBWEEIkqYWTi+sflqH58RGYIAl3iFKkfSdSwKK+KihL3Ts+5KeMS1M+w4TbZ
-         XJW9NrUQh3SrbJ8I4P5sLfphTcJI5ufVkSGXkwGURG8dFuYsFP78bKPxJc48U9+VDnIZ
-         3dK8DrHqRPAvNNgwk0WhTgQa3nFuwkNaaqrdd1GihWkWQDYe1Hyz1a4e6EXuE6aks+Tz
-         seeg==
-X-Gm-Message-State: ANhLgQ25l+XwpCgSNqxYMZxO3C3pu69htFr+B0jH7miJJ4Z7VJ90Ntjf
-        TvFRC7gkBg5P9XUwzJO/5g==
-X-Google-Smtp-Source: ADFU+vtAbJIIRWynygDv7+bYMc+vjWB5ZJKEe6w3jC9R106pug4ci8qV3wN4dQNxIjcAu3fiI/HPww==
-X-Received: by 2002:a5d:9a06:: with SMTP id s6mr8991926iol.165.1585582756185;
-        Mon, 30 Mar 2020 08:39:16 -0700 (PDT)
+        bh=W6rZXeVDXuiNB2eyzP6KmsiWKTclilo12JD/by0Xhl0=;
+        b=Mlfn2BhjX8eDqA22OA7Vl6fBctKJ+QNZ9XbgMwLcFFniJpB3r4rabf3nyENn2wCv73
+         sMqHjkafKgA6AmRhO7+D2s9oPBqnSZEtKPWsejwNw3E7pctcjgSYSkxZaPI7aLnMUjNQ
+         DX2SsxEfJHMpxN/Sgv+HCg0xOe+HUNwKQbmK0qa0JPHkhziEJPeJHEyb5EPfMfe1QGc/
+         PJZ0SKhacud2cnbsD7K1DhsNZlzM+ByrQYQcvxWMMYDKTGEwDsSztLYmoBQqqLOYUO5E
+         VegKKqaXHviFDTgyWlb5lSEo9O8F65xATYxKYmo7kBZ4mkhkb1EXZTGy31rnWVQHxuLd
+         RJyA==
+X-Gm-Message-State: ANhLgQ0j2dXXPJLhF3d/mfTveQjYBXPoTcpqD2NAyD8JkFO8JeiXYv5g
+        fvLXxgk4gqZVeo1Pt0MPuQ==
+X-Google-Smtp-Source: ADFU+vuVQIgPaf1Ao71iRH8paXsYDjItwWB3E5W7tkX2cZKV+GuUz/WVjODL+5u2LtNfZTgwONZfnw==
+X-Received: by 2002:a05:6e02:e89:: with SMTP id t9mr12192934ilj.83.1585582789835;
+        Mon, 30 Mar 2020 08:39:49 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id u77sm5012485ili.35.2020.03.30.08.39.13
+        by smtp.gmail.com with ESMTPSA id n8sm2216453ilm.12.2020.03.30.08.39.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 08:39:15 -0700 (PDT)
-Received: (nullmailer pid 20530 invoked by uid 1000);
-        Mon, 30 Mar 2020 15:39:12 -0000
-Date:   Mon, 30 Mar 2020 09:39:12 -0600
+        Mon, 30 Mar 2020 08:39:49 -0700 (PDT)
+Received: (nullmailer pid 21313 invoked by uid 1000);
+        Mon, 30 Mar 2020 15:39:45 -0000
+Date:   Mon, 30 Mar 2020 09:39:45 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Martin Kepplinger <martink@posteo.de>,
-        =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Silvano di Ninno <silvano.dininno@nxp.com>,
-        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/8] dt-bindings: interconnect: Add bindings for imx8m noc
-Message-ID: <20200330153912.GA20064@bogus>
-References: <cover.1585188174.git.leonard.crestez@nxp.com>
- <b7a93b75a3ea57aadeeda766a0b729a4bc97ccc9.1585188174.git.leonard.crestez@nxp.com>
+To:     Florinel Iordache <florinel.iordache@nxp.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org,
+        Florinel Iordache <florinel.iordache@nxp.com>
+Subject: Re: [PATCH net-next 2/9] dt-bindings: net: add backplane dt bindings
+Message-ID: <20200330153945.GA20686@bogus>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+ <1585230682-24417-3-git-send-email-florinel.iordache@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b7a93b75a3ea57aadeeda766a0b729a4bc97ccc9.1585188174.git.leonard.crestez@nxp.com>
+In-Reply-To: <1585230682-24417-3-git-send-email-florinel.iordache@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 26 Mar 2020 04:16:13 +0200, Leonard Crestez wrote:
-> Add initial dt bindings for the interconnects inside i.MX chips.
-> Multiple external IPs are involved but SOC integration means the
-> software controllable interfaces are very similar.
+On Thu, 26 Mar 2020 15:51:15 +0200, Florinel Iordache wrote:
+> Add ethernet backplane device tree bindings
 > 
-> Main NOC node acts as interconnect provider if #interconnect-cells is
-> present. Currently there is a single imx interconnect provider for the
-> whole SOC.
-> 
-> Other pieces of scalable interconnects can be present, each with their
-> own OPP table.
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
 > ---
->  .../bindings/interconnect/fsl,imx8m-noc.yaml  | 138 ++++++++++++++++++
->  1 file changed, 138 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.yaml
+>  .../bindings/net/ethernet-controller.yaml          |  3 +-
+>  .../devicetree/bindings/net/ethernet-phy.yaml      | 53 +++++++++++++
+>  Documentation/devicetree/bindings/net/serdes.yaml  | 90 ++++++++++++++++++++++
+>  3 files changed, 145 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/serdes.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.yaml:  while parsing a block mapping
-  in "<unicode string>", line 4, column 1
-did not find expected key
-  in "<unicode string>", line 79, column 9
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.example.dts] Error 1
+Documentation/devicetree/bindings/net/serdes.yaml:  mapping values are not allowed in this context
+  in "<unicode string>", line 30, column 62
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/net/serdes.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/net/serdes.example.dts] Error 1
 make[1]: *** Waiting for unfinished jobs....
+Documentation/devicetree/bindings/net/ethernet-phy.yaml:  mapping values are not allowed in this context
+  in "<unicode string>", line 179, column 20
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/net/ethernet-phy.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/net/ethernet-phy.example.dts] Error 1
+warning: no schema found in file: Documentation/devicetree/bindings/net/serdes.yaml
+warning: no schema found in file: Documentation/devicetree/bindings/net/ethernet-phy.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/serdes.yaml: ignoring, error parsing file
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/ethernet-phy.yaml: ignoring, error parsing file
 Makefile:1262: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1261720
+See https://patchwork.ozlabs.org/patch/1261991
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
