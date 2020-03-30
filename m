@@ -2,231 +2,119 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CD6C2D0EB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 17:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7252DC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 17:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7833420776
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 17:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4530D20780
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 17:53:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="JbhH6ZeZ"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pVaSqStD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MZNc3HlM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgC3RWr (ORCPT
+        id S1728075AbgC3Rxi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 13:22:47 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.22]:11795 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728096AbgC3RWr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 13:22:47 -0400
-X-Greylist: delayed 363 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Mar 2020 13:22:45 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1585588964;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=KxeIHeglbqB251Du7zG5m44JsZjNiJxHjofFRSSX30I=;
-        b=JbhH6ZeZ/71d8ZQ2CivYkMey1CyT+K1VXKKrL3xNIpLK1ws5r1HhYM5ZfyHNaG+OKE
-        IfEA0lAaLcyNKQe7/k9gR86Ztml55Pc1Iz/ohwXfEWQP/eSHfaJkW/PZ5cvBId1nvRq4
-        u4xLXG2jDbDAJC96AhBgT2rC3nO8CGBgoteHpiaXa+5ZedT8neDocvNULufYyZMUoj1U
-        yhgUU/sUU217gqQsJRP5n+ZRwBdIUUQ0gn2TLwOpcl9iPM1f0AGZekAG0NImfQONEVGp
-        FPNJAArbFqy/P0SqCgjLV+W1J49UfrxxPLg1HO849J5tVo/lwmDOmJ5hgucwU3iqTtru
-        UphQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJDdfbYs7ef"
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id u043b8w2UHAcO1X
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Mon, 30 Mar 2020 19:10:38 +0200 (CEST)
-Date:   Mon, 30 Mar 2020 19:10:31 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     =?iso-8859-1?Q?Ga=EBtan_Andr=E9?= <rvlander@gaetanandre.eu>
-Cc:     jic23@kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 2/2] iio: accel: st_sensors:  add support for LIS2HH12
-Message-ID: <20200330171031.GA41042@gerhold.net>
-References: <20200330141923.280226-1-rvlander@gaetanandre.eu>
- <20200330141923.280226-2-rvlander@gaetanandre.eu>
+        Mon, 30 Mar 2020 13:53:38 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51899 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726403AbgC3Rxi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Mar 2020 13:53:38 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 151FB5C0138;
+        Mon, 30 Mar 2020 13:53:37 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 30 Mar 2020 13:53:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=mgR3D3zqcJ1KgSGC+204rTVds/V
+        oKOPgYAKcEaRCR3I=; b=pVaSqStD9BOCE7oL66tSTUJJv48rfpCAn1ijcwWGNlC
+        FEWha0lkwTAUttmyfok9LA9wD6pvIKbqs9MKWQp2y28HgMr6IWd80kGNPsJdz9bC
+        fKYx2UtT6r+E8LUKgV79gNBfiwhmDyGYeWYcx7AAXX6Ho9bFYfP7MbhMC89wSbCI
+        tjdDCUZ0lLGQKOrGXAnGQWhFoBf4miQXVYHXB2H+bs8HNqf76wRLJ6t9EFhqgCi4
+        tT8oG9AjMq6d6a3U8b0YOQ7RRvDXvHNJaNWpQbhoeuftFNHnXOiqfeuXHV9R+GRL
+        AW0RQN86gfXMtMU+f3wpNfvH/vCnXFlShB9cGUSWLgA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=mgR3D3
+        zqcJ1KgSGC+204rTVds/VoKOPgYAKcEaRCR3I=; b=MZNc3HlMmBBSSEiF6FM8fB
+        fRkBL9o9mHSgsGF2xRnufR+FO3Uy8Ud/db8rJp6SWWhCXN8WnGDwiXId8SefCpE0
+        09lGcu8x/H3M4+84kEQ+MzjrI8h8rqw97Ys4b+CZsZ1VEuJBDJgCw0jeVWpLPGHL
+        2HzkbfaQfukJ93FTJYXEagTCy5wlKqiTQ7ln+lMMQVSj8umQRIf6MaMA8AS1GbeJ
+        YfdcamZfI6qVceM/9Sk1AWDYtm0nO3LlhoiT7xkh6WFpHzQWZOBbFA1EzHYoCJFj
+        LwxkcDO8hUdVBMnYZXwb1f7FFih8N11XPdDKfm4+uFS174BhNVDTJdvmOdgY/H6Q
+        ==
+X-ME-Sender: <xms:HDKCXvImM_LQGGZg7r9TFfJTWNcDCBBW6o-NwITvQrtZO-EcNNsAzA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudeihedguddukecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
+    dtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:HDKCXvmBbLsJOxywwYElPil87O-Dg-DPmacfEt9_lY7KVdmWY5weUg>
+    <xmx:HDKCXu9XYxQzzLzhGMROVhYDRqfIb0op08d_vQnSQ21MH_qVbvtvJQ>
+    <xmx:HDKCXu5G9v4yaNtLlqEy1x_iVFaDy4K96O-74nD9XlcV299kK9MoPQ>
+    <xmx:ITKCXmOPHgMHcUlImX3tzqCRZXpXa6WT0xYfX9o8DLk_nOuusRc5mQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5AE1A3280060;
+        Mon, 30 Mar 2020 13:53:32 -0400 (EDT)
+Date:   Mon, 30 Mar 2020 19:53:31 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Qiang Yu <yuq825@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-sunxi@googlegroups.com,
+        linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, lima@lists.freedesktop.org,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH] ARM: dts: sun8i-h3: add opp table for mali gpu
+Message-ID: <20200330175331.4o7iunuw7anwlmco@gilmour.lan>
+References: <20200328091632.12837-1-yuq825@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fs72k4kzd3zlkg52"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200330141923.280226-2-rvlander@gaetanandre.eu>
+In-Reply-To: <20200328091632.12837-1-yuq825@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+
+--fs72k4kzd3zlkg52
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
 Hi,
 
-On Mon, Mar 30, 2020 at 04:19:23PM +0200, Gaëtan André wrote:
-> Add support for STMicroelectronics LISHH12 accelerometer in st_accel
-> framework.
-> 
-> https://www.st.com/resource/en/datasheet/lis2hh12.pdf
-> 
-> Signed-off-by: Gaëtan André <rvlander@gaetanandre.eu>
+On Sat, Mar 28, 2020 at 05:16:32PM +0800, Qiang Yu wrote:
+> OPP table vaule is get from orangepi lichee linux-3.4
+> kernel driver.
+>
+> Signed-off-by: Qiang Yu <yuq825@gmail.com>
 
-Thanks a lot for sending this patch upstream!
+Thanks!
 
-> ---
->  drivers/iio/accel/Kconfig         |  2 +-
->  drivers/iio/accel/st_accel.h      |  2 +
->  drivers/iio/accel/st_accel_core.c | 77 +++++++++++++++++++++++++++++++
->  drivers/iio/accel/st_accel_i2c.c  |  5 ++
->  4 files changed, 85 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-> index 5d91a6dda894..24ebe9e76915 100644
-> --- a/drivers/iio/accel/Kconfig
-> +++ b/drivers/iio/accel/Kconfig
-> @@ -238,7 +238,7 @@ config IIO_ST_ACCEL_3AXIS
->  	  Say yes here to build support for STMicroelectronics accelerometers:
->  	  LSM303DLH, LSM303DLHC, LIS3DH, LSM330D, LSM330DL, LSM330DLC,
->  	  LIS331DLH, LSM303DL, LSM303DLM, LSM330, LIS2DH12, H3LIS331DL,
-> -	  LNG2DM, LIS3DE, LIS2DE12
-> +	  LNG2DM, LIS3DE, LIS2DE12, LIS2HH12
->  
->  	  This driver can also be built as a module. If so, these modules
->  	  will be created:
-> diff --git a/drivers/iio/accel/st_accel.h b/drivers/iio/accel/st_accel.h
-> index 5b13e293cade..5d356288e001 100644
-> --- a/drivers/iio/accel/st_accel.h
-> +++ b/drivers/iio/accel/st_accel.h
-> @@ -35,6 +35,7 @@ enum st_accel_type {
->  	LIS2DW12,
->  	LIS3DHH,
->  	LIS2DE12,
-> +	LIS2HH12,
->  	ST_ACCEL_MAX,
->  };
->  
-> @@ -59,6 +60,7 @@ enum st_accel_type {
->  #define LIS3DHH_ACCEL_DEV_NAME		"lis3dhh"
->  #define LIS3DE_ACCEL_DEV_NAME		"lis3de"
->  #define LIS2DE12_ACCEL_DEV_NAME		"lis2de12"
-> +#define LIS2HH12_ACCEL_DEV_NAME		"lis2hh12"
->  
->  /**
->  * struct st_sensors_platform_data - default accel platform data
-> diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-> index e2ec5d127495..43c50167d220 100644
-> --- a/drivers/iio/accel/st_accel_core.c
-> +++ b/drivers/iio/accel/st_accel_core.c
-> @@ -904,6 +904,83 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
->  		.multi_read_bit = true,
->  		.bootime = 2,
->  	},
-> +	{
-> +		.wai = 0x41,
-> +		.wai_addr = ST_SENSORS_DEFAULT_WAI_ADDRESS,
-> +		.sensors_supported = {
-> +			[0] = LIS2HH12_ACCEL_DEV_NAME,
-> +		},
-> +		.ch = (struct iio_chan_spec *)st_accel_16bit_channels,
-> +		.odr = {
-> +			.addr = 0x20,
-> +			.mask = 0x70,
-> +			.odr_avl = {
-> +				{ .hz = 10, .value = 0x01, },
-> +				{ .hz = 50, .value = 0x02, },
-> +				{ .hz = 100, .value = 0x03, },
-> +				{ .hz = 200, .value = 0x04, },
-> +				{ .hz = 400, .value = 0x05, },
-> +				{ .hz = 800, .value = 0x06, },
-> +			},
-> +		},
-> +		.pw = {
-> +			.addr = 0x20,
-> +			.mask = 0x70,
-> +			.value_off = ST_SENSORS_DEFAULT_POWER_OFF_VALUE,
-> +		},
-> +		.enable_axis = {
-> +			.addr = ST_SENSORS_DEFAULT_AXIS_ADDR,
-> +			.mask = ST_SENSORS_DEFAULT_AXIS_MASK,
-> +		},
-> +		.fs = {
-> +			.addr = 0x23,
-> +			.mask = 0x30,
-> +			.fs_avl = {
-> +				[0] = {
-> +					.num = ST_ACCEL_FS_AVL_2G,
-> +					.value = 0x00,
-> +					.gain = IIO_G_TO_M_S_2(61),
-> +				},
-> +				[1] = {
-> +					.num = ST_ACCEL_FS_AVL_4G,
-> +					.value = 0x02,
-> +					.gain = IIO_G_TO_M_S_2(122),
-> +				},
-> +				[2] = {
-> +					.num = ST_ACCEL_FS_AVL_8G,
-> +					.value = 0x03,
-> +					.gain = IIO_G_TO_M_S_2(244),
-> +				},
-> +			},
-> +		},
-> +		.bdu = {
-> +			.addr = 0x20,
-> +			.mask = 0x08,
-> +		},
-> +		.drdy_irq = {
-> +			.int1 = {
-> +				.addr = 0x22,
-> +				.mask = 0x01,
-> +			},
-> +			.int2 = {
-> +				.addr = 0x25,
-> +				.mask = 0x01,
-> +			},
-> +			.addr_ihl = 0x24,
-> +			.mask_ihl = 0x02,
-> +			.stat_drdy = {
-> +				.addr = ST_SENSORS_DEFAULT_STAT_ADDR,
-> +				.mask = 0x07,
-> +			},
-> +		},
-> +		.sim = {
-> +			.addr = 0x23,
-> +			.value = BIT(0),
-> +		},
-> +		.multi_read_bit = true,
-> +		.bootime = 2,
-> +	},
-> +
->  };
+I've fixed up the value typo, sorted the opp table according to its
+node name, and added some new lines after each OPP node. This will be
+part of 5.8.
 
-I checked that this conforms to the information in the linked datasheet:
+Maxime
 
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
+--fs72k4kzd3zlkg52
+Content-Type: application/pgp-signature; name="signature.asc"
 
->  
->  static int st_accel_read_raw(struct iio_dev *indio_dev,
-> diff --git a/drivers/iio/accel/st_accel_i2c.c b/drivers/iio/accel/st_accel_i2c.c
-> index 8c489312f668..821854251a7b 100644
-> --- a/drivers/iio/accel/st_accel_i2c.c
-> +++ b/drivers/iio/accel/st_accel_i2c.c
-> @@ -104,6 +104,10 @@ static const struct of_device_id st_accel_of_match[] = {
->  		.compatible = "st,lis2de12",
->  		.data = LIS2DE12_ACCEL_DEV_NAME,
->  	},
-> +	{
-> +		.compatible = "st,lis2hh12",
-> +		.data = LIS2HH12_ACCEL_DEV_NAME,
-> +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, st_accel_of_match);
-> @@ -138,6 +142,7 @@ static const struct i2c_device_id st_accel_id_table[] = {
->  	{ LIS2DW12_ACCEL_DEV_NAME },
->  	{ LIS3DE_ACCEL_DEV_NAME },
->  	{ LIS2DE12_ACCEL_DEV_NAME },
-> +	{ LIS2HH12_ACCEL_DEV_NAME },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(i2c, st_accel_id_table);
-> -- 
-> 2.26.0
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXoIyGwAKCRDj7w1vZxhR
+xednAP9gvyOKiByE8Fiks6VW3DsnsVEnfi1WpPbOdJiv+ErK3QD+PKcUkslxkuzc
+Cp1Tv6r9bfBseVedxQUUBKX2bRMcNgc=
+=i72i
+-----END PGP SIGNATURE-----
+
+--fs72k4kzd3zlkg52--
