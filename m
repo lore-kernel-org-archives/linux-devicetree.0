@@ -2,364 +2,147 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7A5C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 10:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDE0C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 10:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3535206E6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 10:06:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qycWlmyE"
+	by mail.kernel.org (Postfix) with ESMTP id E39D420733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 10:07:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585562848;
+	bh=Ih3i9hio4E+l2yRz5iex17bsbwdjJkq1iyYOeIbg+jQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=dJVc09gOQHiAF6uuBsmCULyHktRyI50BbxBPMpkf7OChLSefWG03nUbkRURcMGRD9
+	 7Cw3CN+9owQf65mfLX0appcEdmOhhC+3zaIWseFBJujKc1C1lu9zOsTrs3YSwJzf6o
+	 0r3tpzgLV1NdnG58WmRHtBQR+vDiNRbd6cGF8Kbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgC3KGs (ORCPT
+        id S1728967AbgC3KH1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 06:06:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38819 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729082AbgC3KGr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 06:06:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c21so7693841pfo.5
-        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 03:06:46 -0700 (PDT)
+        Mon, 30 Mar 2020 06:07:27 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37507 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbgC3KH1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 06:07:27 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t11so1209793lfe.4;
+        Mon, 30 Mar 2020 03:07:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=t9nTriwKRskndC3FQU+CejJdO8RJWivFT2/XH3sqCgc=;
-        b=qycWlmyESLgLrT4nBdwQKfJ43Gle9E/5kZIqRHWRE24o5doKCQr+kEm7uUJfHT8mpx
-         N6UleKO0sqfV1PajKsw9SuZEdQ2zPTwDZVLcFdtlTFVudX2eeLQWzUkpIcDJczGNy2tK
-         /3THT+R7xHQTDzvSkVaupeN2bKbcUaU2qJhT2oNwdfoVfKKFyP6M7+ej/YE1bBil3vQS
-         V8yUQMd2cy+49AHgqHt+1XA4VWVDwV1TnEJvHj2qZvHPd8vnyL3kzxfdmu3q6Y9Bn+L2
-         jeiSB0iEeazCwJN60NdquCx3mNymm42sq8CyqNrdg2ppa2qmW2FgsDpiGNBwWbvGxn6U
-         q5AQ==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=pn1nEZ5WRc7r1oBeu3ACXMRxB5gHQTein//I6VEvyMk=;
+        b=To8v++WqI2k8HyEftGBjw25ilWel8fn9JU6mV0H0/ytUABHhLNgLKkPZsKbV6FeFj1
+         cah5fYzerRwOd0OZE+Cg0hrU4eWftc3mHg4YC3SmenHNFB0uuIJPtJOskFMwYerSoowh
+         CvVNTPyjpkdmI4RfEexF7VCsE8lg0eSpjLdtqqXEij0IaJ28Y0UR5uzYtec0dZs1GxAG
+         VAB64hUI7Ckoyo2QZFhZH5Lym82CSHz7OnIoOx0y4E9+rhHf8+8VCTCnpd70Ay1AT1Sn
+         gKzQn4pzaE22v8eIa+Jr7OHtV9GUY5huMogmlrreuXNozQ7ucwtrPZ3jAfYmwEkKF6pv
+         ShgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=t9nTriwKRskndC3FQU+CejJdO8RJWivFT2/XH3sqCgc=;
-        b=S/kZc4yqhQynBov4gkT1uFK3X3tlYs7X0/ib9JrWfJctSJMG3Fc+8l+Covjgs/W14V
-         7w3pdpQCMPdHtiUeTolykwadf2wDPpS0zgQzJrefdr0iPLUKjEzssa5IXUw21kV5ajzt
-         pbnjv4/P03pzJaKBzQEEdhThhzzzB2VbIz4jipLGhDNB/EpFTVWBkxNgtyLhdakBYIjm
-         up+xXn4LzpqArIXa2U5xinRcenIT6Ye5Zl3LrJpIEsyhHLbsT9zdVVEFHCWUiEExqBW1
-         N0vpyFcp7byJ1AKy2w6vggQ9duIGIjNC+G6BCvRsGb5FqmVGF6udPg8apA5GkwGAJa7X
-         0mKA==
-X-Gm-Message-State: ANhLgQ11qLkqOkp50wtox5FI8WaCVUkwz3zxT6uX1ECk3vRdW6n6c6WA
-        TYz2e+eExOaJAtOEZ25CZU2oqg==
-X-Google-Smtp-Source: ADFU+vs+qAml2X+oV6c986AFWU5n2cg6AJNpIpPui0EVRhYl7gNk/82abDdsDutvg0KcVnLBoAyXQQ==
-X-Received: by 2002:a63:704:: with SMTP id 4mr12118395pgh.294.1585562805534;
-        Mon, 30 Mar 2020 03:06:45 -0700 (PDT)
-Received: from localhost ([103.195.202.48])
-        by smtp.gmail.com with ESMTPSA id c8sm10277816pfj.108.2020.03.30.03.06.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 03:06:44 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>
-Cc:     devicetree@vger.kernel.org
-Subject: [PATCH 3/3] arm64: dts: qcom: msm8998: remove unit name for thermal trip points
-Date:   Mon, 30 Mar 2020 15:36:28 +0530
-Message-Id: <cd6f0c7298437d35642b35c9ede9064c247d6090.1585562459.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1585562459.git.amit.kucheria@linaro.org>
-References: <cover.1585562459.git.amit.kucheria@linaro.org>
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=pn1nEZ5WRc7r1oBeu3ACXMRxB5gHQTein//I6VEvyMk=;
+        b=I/6SV+QByLn8IrjCdOXwlH/J8byUIi61jBe9RbKT8DPlwKYmZO0oaCRE5zLCWEdWM4
+         scY+cdUwNobgBbREOZ8NecbAzBF2NlvixR6RP7sKmJBQW8/2PVLsbcIHjZHpkcLOUQha
+         Z+r+oht0RLw8npiOVE2FCmD5dCRXfhGBSM01rsVs+ZeKY3BWArUx5sEgN1xHUgYWu5oj
+         n4J3kDEheTKBNhR9q7Dyddj8WI7W44AmkHGhxK/ll4JebKSHz3e4lU43gLmhI4YkH7nT
+         vXOznhHgIYxHp3lVciJJ/jkkHs8p5cC17FYyO1iNg+TJawC61CZsT2+TmECN4Uo52GKg
+         c+qw==
+X-Gm-Message-State: AGi0PuZ/OYRX3u+yysXVKtKiqde0cSzJlcipiB/zpH0cscxYErwcJqbm
+        NxnDdCj7V5IbMMdn9njaTVc=
+X-Google-Smtp-Source: APiQypIWGcEAv1TvxsYN0+ybnQg5S+ZYDd2PDDjIG79GcvXLZcK4Hi/zLOCSHoxBSsdvbct8oCLsAQ==
+X-Received: by 2002:ac2:4199:: with SMTP id z25mr7505806lfh.90.1585562844369;
+        Mon, 30 Mar 2020 03:07:24 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id c4sm7471624lfm.37.2020.03.30.03.07.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 30 Mar 2020 03:07:23 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>, kishon@ti.com,
+        robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org,
+        jckuo@nvidia.com
+Subject: Re: [PATCH V1 0/8] Tegra XUSB charger detect support
+In-Reply-To: <48fde9ce-7d40-c2c3-1a9c-994654a02367@nvidia.com>
+References: <1584527467-8058-1-git-send-email-nkristam@nvidia.com> <87pncve963.fsf@kernel.org> <48fde9ce-7d40-c2c3-1a9c-994654a02367@nvidia.com>
+Date:   Mon, 30 Mar 2020 13:07:19 +0300
+Message-ID: <875zem2m20.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The thermal trip points have unit name but no reg property, so we can
-remove them. It also fixes the following warnings from 'make dtbs_check'
-after adding the thermal yaml bindings.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-cpu0-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-cpu1-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-cpu2-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-cpu3-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-cpu4-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-cpu5-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-cpu6-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-cpu7-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-clust0-mhm-thermal:trips: 'trip-point@0' does not match any of the
-regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-clust1-mhm-thermal:trips: 'trip-point@0' does not match any of the
-regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-cluster1-l2-thermal:trips: 'trip-point@0' does not match any of the
-regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-mem-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-wlan-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-q6-dsp-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dt.yaml: thermal-zones:
-multimedia-thermal:trips: 'trip-point@0' does not match any of the
-regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
 
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-cpu0-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-cpu1-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-cpu2-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-cpu3-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-cpu4-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-cpu5-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-cpu6-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-cpu7-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-clust0-mhm-thermal:trips: 'trip-point@0' does not match any of the
-regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-clust1-mhm-thermal:trips: 'trip-point@0' does not match any of the
-regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-cluster1-l2-thermal:trips: 'trip-point@0' does not match any of the
-regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-modem-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-mem-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-wlan-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-q6-dsp-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-camera-thermal:trips: 'trip-point@0' does not match any of the regexes:
-'^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
-arch/arm64/boot/dts/qcom/msm8998-mtp.dt.yaml: thermal-zones:
-multimedia-thermal:trips: 'trip-point@0' does not match any of the
-regexes: '^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$', 'pinctrl-[0-9]+'
+Hi,
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 38 +++++++++++++--------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+Nagarjuna Kristam <nkristam@nvidia.com> writes:
+> On 29-03-2020 16:10, Felipe Balbi wrote:
+>>> This patch series adds charger detect support on XUSB hardware used in
+>>> Tegra210 and Tegra186 SoCs.
+>>>
+>>> This patchset is composed with :
+>>>   - dt bindings of XUSB Pad Controller
+>>>   - Tegra XUSB device mode driver to add vbus_draw support
+>>>   - Tegra PHY driver for charger detect support
+>>>
+>>> Tests done:
+>>>   - Connect USB cable from ubuntu host to micro-B port of DUT to detect
+>>>     SDP_TYPE charger
+>>>   - Connect USB cable from external powered USB hub(which inturn connec=
+ts
+>>>     to ubuntu host) to micro-B port of DUT to detect CDP_TYPE charger.
+>>>   - Connect USB cable from USB charger to micro-B port of DUT to detect
+>>>     DCP_TYPE charger.
+>>> DUT: Jetson-tx1, Jetson tx2.
+>>>
+>>> Nagarjuna Kristam (8):
+>>>    dt-bindings: phy: tegra-xusb: Add charger-detect property
+>>>    usb: gadget: tegra-xudc: Add vbus_draw support
+>>>    phy: tegra: xusb: Add support for UTMI pad power control
+>>>    phy: tegra: xusb: Add USB2 pad power control support for Tegra210
+>>>    phy: tegra: xusb: Add soc ops API to enable UTMI PAD protection
+>>>    phy: tegra: xusb: Add support for charger detect
+>>>    phy: tegra: xusb: Enable charger detect for Tegra186
+>>>    phy: tegra: xusb: Enable charger detect for Tegra210
+>> this doesn't apply cleanly. Could you resend after -rc1 is tagged?
+>>=20
+>> -- balbi
+>
+> Sure, will send rebased patch once rc1 is available.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 91f7f2d075978..074c4b614d221 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -500,7 +500,7 @@
- 			thermal-sensors = <&tsens0 1>;
- 
- 			trips {
--				cpu0_alert0: trip-point@0 {
-+				cpu0_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -521,7 +521,7 @@
- 			thermal-sensors = <&tsens0 2>;
- 
- 			trips {
--				cpu1_alert0: trip-point@0 {
-+				cpu1_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -542,7 +542,7 @@
- 			thermal-sensors = <&tsens0 3>;
- 
- 			trips {
--				cpu2_alert0: trip-point@0 {
-+				cpu2_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -563,7 +563,7 @@
- 			thermal-sensors = <&tsens0 4>;
- 
- 			trips {
--				cpu3_alert0: trip-point@0 {
-+				cpu3_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -584,7 +584,7 @@
- 			thermal-sensors = <&tsens0 7>;
- 
- 			trips {
--				cpu4_alert0: trip-point@0 {
-+				cpu4_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -605,7 +605,7 @@
- 			thermal-sensors = <&tsens0 8>;
- 
- 			trips {
--				cpu5_alert0: trip-point@0 {
-+				cpu5_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -626,7 +626,7 @@
- 			thermal-sensors = <&tsens0 9>;
- 
- 			trips {
--				cpu6_alert0: trip-point@0 {
-+				cpu6_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -647,7 +647,7 @@
- 			thermal-sensors = <&tsens0 10>;
- 
- 			trips {
--				cpu7_alert0: trip-point@0 {
-+				cpu7_alert0: trip-point0 {
- 					temperature = <75000>;
- 					hysteresis = <2000>;
- 					type = "passive";
-@@ -668,7 +668,7 @@
- 			thermal-sensors = <&tsens0 12>;
- 
- 			trips {
--				gpu1_alert0: trip-point@0 {
-+				gpu1_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -683,7 +683,7 @@
- 			thermal-sensors = <&tsens0 13>;
- 
- 			trips {
--				gpu2_alert0: trip-point@0 {
-+				gpu2_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -698,7 +698,7 @@
- 			thermal-sensors = <&tsens0 5>;
- 
- 			trips {
--				cluster0_mhm_alert0: trip-point@0 {
-+				cluster0_mhm_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -713,7 +713,7 @@
- 			thermal-sensors = <&tsens0 6>;
- 
- 			trips {
--				cluster1_mhm_alert0: trip-point@0 {
-+				cluster1_mhm_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -728,7 +728,7 @@
- 			thermal-sensors = <&tsens0 11>;
- 
- 			trips {
--				cluster1_l2_alert0: trip-point@0 {
-+				cluster1_l2_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -743,7 +743,7 @@
- 			thermal-sensors = <&tsens1 1>;
- 
- 			trips {
--				modem_alert0: trip-point@0 {
-+				modem_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -758,7 +758,7 @@
- 			thermal-sensors = <&tsens1 2>;
- 
- 			trips {
--				mem_alert0: trip-point@0 {
-+				mem_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -773,7 +773,7 @@
- 			thermal-sensors = <&tsens1 3>;
- 
- 			trips {
--				wlan_alert0: trip-point@0 {
-+				wlan_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -788,7 +788,7 @@
- 			thermal-sensors = <&tsens1 4>;
- 
- 			trips {
--				q6_dsp_alert0: trip-point@0 {
-+				q6_dsp_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -803,7 +803,7 @@
- 			thermal-sensors = <&tsens1 5>;
- 
- 			trips {
--				camera_alert0: trip-point@0 {
-+				camera_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
-@@ -818,7 +818,7 @@
- 			thermal-sensors = <&tsens1 6>;
- 
- 			trips {
--				multimedia_alert0: trip-point@0 {
-+				multimedia_alert0: trip-point0 {
- 					temperature = <90000>;
- 					hysteresis = <2000>;
- 					type = "hot";
--- 
-2.20.1
+Thank you
 
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl6BxNcACgkQzL64meEa
+mQb6uw/+Jw0l6xhc47L2wGe3VtmVnfoW4PXuqhadHEnexsIsDoPU996tLlojuqtI
+IQtQv5KKOZpMr7agoR7sDkBEr7xjxAuJKtd3tmT4Ib9qmaerUAzXUw6FLLKVPP+U
+d4J0s8F2vMqnHnAUp8uWVeTliUhXykHePG1lOmAjvEIeopFHVMHBg8QJ687BFEgt
+veR5rqUPJEBo05dwL/+3k1jSraWgnCPYKKPi8/G9IiomNWBu+a2/F06yj/F0ZguI
++IslMiqkb4lrqSoF5T3d9iK/5C3WZtgpiKYKdfLu7Q/5Fokbj0bCD9Jpg2sDbEYq
+nEaHVEiLEYVAjHhWonAER3GGNg7cXGbNrYsVmE5sYYRWqeBZz9pgiEu0Ll7UCyRT
+VjLptlJojWEiYkWmykuoB+bShWLI8L+AhNlX7h8llX8cfgNW9ZWAIIF1RrkcYM4T
+pfNgFf4+Pskvm7miJ//w7pQT6F4Mrb2vdmDUDtDLm6YAEIHxl6cAUZJD60gA8ZUq
+8qLA+yTfoj3QD6HUgqZhXPJ+g1KrTCufvFAaBuWGEhiN2ZoEsOVMA2qWXVXXkZb6
+9sOgPlMwRgLoBUphbU8bdBXuEtj8dsvfdWKMB97+mOmbz/L3b9iC5KoI4BDQw/xl
+wkvDcPeD9GjDwOECEdjjSOoxZL17UIVADvtEtNCyHuVKnQD216E=
+=cObg
+-----END PGP SIGNATURE-----
+--=-=-=--
