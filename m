@@ -2,101 +2,119 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62013C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D03CC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3582C2072E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF5C2072E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 16:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585584188;
+	bh=lj6lk2Y9Wilw3U7preSl4MIXWR616TrbL/l1zLZqeRU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tlcwOQpxIGkYRacGCnLKMXDTauxy3a5KHcT6Iru5YrTZBnw4FdC6RBuoorRXKUJlF
+	 x4cYOdW2A9TvQwj0R3jlQHu/Te2AZTMtvwZI+ZFW2T/2FvUBJ8Z/c1HEAdJnrqPys0
+	 hxT7yfgW/4PeEBiNueIWewupopjBCUjesAiOpETE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbgC3QCL (ORCPT
+        id S1729862AbgC3QDH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 12:02:11 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:64643 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728738AbgC3QCL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 12:02:11 -0400
-IronPort-SDR: GttmZn8y512m6vL+lQWEvqWi+0Sg9Q7x7GBoOD4qxRx9pC9P7UDcGGRE8zXsadi8DW3CPCFLot
- BzwDwOETzSIhP4w9RaOE9gtlHeiE1TeTOqwwLhHqTqh7gEfyC6D/fStsxLmfDPqOanFVtYbVRe
- 7On/Hzm0+U5wUycuObKh2SR6XTfw+iLceIlKrhhD9FVgcJLn+M8/Rkoup9/rM6eD0JaHH3WIL3
- M4oAPNuKoM5egs6wyikvKLi2WuCSqDeFKE0NA1f7vRly0uPndNUaWQWEpqOEfvz6cfhI1QySjV
- zpM=
-X-IronPort-AV: E=Sophos;i="5.72,324,1580799600"; 
-   d="scan'208";a="70742983"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Mar 2020 09:02:10 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 30 Mar 2020 09:02:09 -0700
-Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Mon, 30 Mar 2020 09:01:54 -0700
-From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
-Date:   Mon, 30 Mar 2020 19:01:36 +0300
-Message-ID: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 30 Mar 2020 12:03:07 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33530 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727048AbgC3QDH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 12:03:07 -0400
+Received: by mail-il1-f193.google.com with SMTP id k29so16303272ilg.0;
+        Mon, 30 Mar 2020 09:03:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kZgYXQbJLj89O4ta8azIBTnlwIyHbrjAjhucjQsGXzg=;
+        b=CW4VJ0idMCYzjf62SQDyAQS/eEAnjC1kEdGz2YQkxxPfox9v+F35zixPk9l2BjFI+L
+         +FF2772DsRLk1h9LAf63bldXL7m9BjvKXFpJjc3qLXQy5hWuQF49EgBUH2iEfO1LuLyb
+         53UjY3RK9hjPx6pv6aedhvm5rZuVuEASC1imsEWD/r/RWVQODA/Xv4DptgSljyIYYh6n
+         aBhz8cvJp23to/ymEAyyZL3Zg67Nf3sqKmF7kgvA0pAIXyzC69RGlX/r0savKaMGDaDf
+         AcxVqov3wJlQKbJwyYk2BbvaMQV2VfOsi2wzve4DzPCkb/vjGcspghNQLhfKFTwrWNih
+         DWfg==
+X-Gm-Message-State: ANhLgQ2esMaUEA2MOIalWhk+U4Mf43sLBUYjgPpBNFnM/RqIDlB6UDfc
+        v3y6JYP5ruvUJqgO6eDcHA==
+X-Google-Smtp-Source: ADFU+vtt+io7ja0ZorBm8+7HKHTZRk2B4475TcYlAmG8/96ZwgpGsVKBksJefrlilE/q9BHX71F3wA==
+X-Received: by 2002:a92:3ac4:: with SMTP id i65mr11307095ilf.247.1585584186563;
+        Mon, 30 Mar 2020 09:03:06 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id h29sm4989538ili.19.2020.03.30.09.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 09:03:05 -0700 (PDT)
+Received: (nullmailer pid 26424 invoked by uid 1000);
+        Mon, 30 Mar 2020 16:03:04 -0000
+Date:   Mon, 30 Mar 2020 10:03:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Subject: Re: [PATCH v8 1/3] dt-bindings: mfd: Add Gateworks System Controller
+ bindings
+Message-ID: <20200330160304.GA24832@bogus>
+References: <1585341214-25285-1-git-send-email-tharvey@gateworks.com>
+ <1585341214-25285-2-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585341214-25285-2-git-send-email-tharvey@gateworks.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some ethernet controllers, such as cadence's macb, have an embedded MDIO.
-For this reason, the ethernet PHY nodes are not under an MDIO bus, but
-directly under the ethernet node. Since these drivers might use
-of_mdiobus_child_is_phy(), we should fix this function by returning false
-if a fixed-link is found.
+On Fri, Mar 27, 2020 at 01:33:32PM -0700, Tim Harvey wrote:
+> This patch adds documentation of device-tree bindings for the
+> Gateworks System Controller (GSC).
+> 
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> ---
+> v8:
+>  - add register to fan-controller node name
+> 
+> v7:
+>  - change divider from mili-ohms to ohms
+>  - add constraints for voltage divider and offset
+>  - remove unnecessary ref for offset
+>  - renamed fan to fan-controller and changed base prop to reg
+> 
+> v6:
+>  - fix typo
+>  - drop invalid description from #interrupt-cells property
+>  - fix adc pattern property
+>  - add unit suffix
+>  - replace hwmon/adc with adc/channel
+>  - changed adc type to mode and enum int
+>  - add unit suffix and drop ref for voltage-divider
+>  - moved fan to its own subnode with base register
+> 
+> v5:
+>  - resolve dt_binding_check issues
+> 
+> v4:
+>  - move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+>  - remove unncessary resolution/scaling properties for ADCs
+>  - update to yaml
+>  - remove watchdog
+> 
+> v3:
+>  - replaced _ with -
+>  - remove input bindings
+>  - added full description of hwmon
+>  - fix unit address of hwmon child nodes
+> ---
+>  .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 194 +++++++++++++++++++++
+>  1 file changed, 194 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
 
-Fixes: 801a8ef54e8b ("of: phy: Only register a phy device for phys")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
----
- drivers/of/of_mdio.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 9f982c0627a0..7cf8aad645a4 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -195,12 +195,17 @@ static const struct of_device_id whitelist_phys[] = {
-  * o Compatible string of "ethernet-phy-ieee802.3-c22"
-  * o In the white list above (and issue a warning)
-  * o No compatibility string
-+ * o Not a fixed-link
-  *
-  * A device which is not a phy is expected to have a compatible string
-  * indicating what sort of device it is.
-  */
- bool of_mdiobus_child_is_phy(struct device_node *child)
- {
-+	const struct of_device_id fixed_link[] = {
-+		{ .name = "fixed-link" },
-+		{}
-+	};
- 	u32 phy_id;
- 
- 	if (of_get_phy_id(child, &phy_id) != -EINVAL)
-@@ -219,7 +224,8 @@ bool of_mdiobus_child_is_phy(struct device_node *child)
- 		return true;
- 	}
- 
--	if (!of_find_property(child, "compatible", NULL))
-+	if (!of_find_property(child, "compatible", NULL) &&
-+	    !of_match_node(fixed_link, child))
- 		return true;
- 
- 	return false;
--- 
-2.20.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
