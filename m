@@ -2,133 +2,143 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF73BC2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF8AC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B921420774
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585601169;
-	bh=lOgFT3LsqVV1YDo8f2DUvvy7lhJ9V4ORW7vn1hCfoMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CFcF53uFTBiIHxLmdVL8KLmJXUZBjynuL1BC8Ob2w2MskBY4hy8KKvXYUvxsP/6O5
-	 tf1RezR6Wa+kzAhwW/Ny/RGOcU9BFh8A8Bekmb+eGnCl26rBfCiz6WkoKM8FaPj4vk
-	 ZpSYiC/eiHdgIy2k71WjNuGYoZXdZFqe0W1Z9NGc=
+	by mail.kernel.org (Postfix) with ESMTP id 1B362206CC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 20:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2bXKFNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgC3UqJ (ORCPT
+        id S1728065AbgC3U5B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 16:46:09 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37152 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbgC3UqJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 16:46:09 -0400
-Received: by mail-il1-f196.google.com with SMTP id a6so17273900ilr.4;
-        Mon, 30 Mar 2020 13:46:06 -0700 (PDT)
+        Mon, 30 Mar 2020 16:57:01 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35774 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727750AbgC3U5B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 16:57:01 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a20so22577912edj.2;
+        Mon, 30 Mar 2020 13:56:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xV24bY+9ZHrEg7r2qYUHnQ8d27A7ffpYwBJNYjkSVys=;
+        b=b2bXKFNiFz7uYVBZYuUFOsPh+KRsloBhmBsh55XB9RUHCsuUoTL56b0zhQxc7XlXE7
+         rxnEjGULGjg6n2E1rcof+8xU9YKcOZYHAA/rfvFAMHTmRfPUM+BhPujRpbcabTQOBbwb
+         yg6QqQMVVy+amHCdIhhPsPNEFh11eko0FdApqzApyQAUTjPven7iQwZS5UMilDIu7zAi
+         Rf/nXJJ7rdlqj03DEWhMlNtZY78T/p8cYrDwmpGZIN+O0S1UEVWh9n91cfU9rbsQqlIM
+         FksYuIfWBZ8I+g3tEF3wQBkAdQP4+W5z3ZYkqQZiUhyTziz+bXcXwZarSvsuWfhsYd9E
+         PXxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BAHD/YUBzhydWwE/iCZpMojP/quu8HcEwcDTrZ8h834=;
-        b=qTyt2h9F/NWE5rQW6SF1OVQHhW1uAFq11I8mrVWwOzJ/HMM7PdtJLBWHNuZqOVmXQ8
-         QEtQCC2eVP4fRuzjOV0Fs1UmERC1Gjwf3k228aGdfFvle3aBEwVBcWwvOL6Xx2r6cpIe
-         cbXtprRvjjYPvSJCt214wXsToei/v3uQEj2RAnpPGjveSekNtOQkGTqe5t35q2y+NJT4
-         8U9G4ZJxytCQBY+KFc+tdwH9SX64Lav39H/rjSFmUSWUud4BfyETAkt9b3jZfDS7wKi5
-         HThfaaqwEqYi2UbHVuePmgukjA0ckX1yGqK/H/k+yFqnQm1Rm7d9ydPTJJAcjb1nR6MB
-         uAjg==
-X-Gm-Message-State: ANhLgQ0S1UtTAaVmo7dmwLo+xtYkPoy5dYwz5ZPuhRKsLTFDQSYJLNMR
-        l5ucpHzYglgPErS8m15B2w==
-X-Google-Smtp-Source: ADFU+vvlE38IaEgB1E1VNG9brIWJQdKajCluZzFENMztoPQXJvNW6huFEyZfTsPzQyXIopjuR2Ju+g==
-X-Received: by 2002:a92:6501:: with SMTP id z1mr13264790ilb.235.1585601166355;
-        Mon, 30 Mar 2020 13:46:06 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id k8sm5160637ilk.85.2020.03.30.13.46.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xV24bY+9ZHrEg7r2qYUHnQ8d27A7ffpYwBJNYjkSVys=;
+        b=TwqUTOXAzOWRz5aC2KKaCLxPXtCFQzNLvjHpzwaJ18t8/Uua+ba1Aa2aA5Bwjj7eeg
+         5dvaZAqU4Vn1ph2po9ac5tB81gGARfCiJC07vtV12ase5xHxfif3373sFicfGEIifn4O
+         pz0ItMSto7qlEEpTZE0DFxy+mpZPwQ6JNXhqd6rm3a1L7gr1y03OadRRhmpWxeodnvk9
+         V57xCKTdwrkYkhqBqOzTfvFN6ZI4dnD6OF17Txu3iOmhq2p7NWBWMkpx5QMLh9nKWz84
+         G6RBXFcsVOUjmQdNwFPGAD6hHAVghSsMaKfTrCpi5+KHXKL5LHKD1Jo8lVNiEfLwBhQv
+         txbg==
+X-Gm-Message-State: ANhLgQ1jBzq2n9k0StY6ckYaO5JHjn7OORLIOPAAoC05506oBdtk8lcR
+        Npks6o0LS1sOENd9wncmiYo=
+X-Google-Smtp-Source: ADFU+vumP9c0QoPy1L/XVTrWfUB8yNiEmoCy+BYk7bNQi2c0EANdKJo32GXatd9yH3cBjgoyJwd8+g==
+X-Received: by 2002:a17:906:3607:: with SMTP id q7mr12498455ejb.65.1585601816946;
+        Mon, 30 Mar 2020 13:56:56 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
+        by smtp.googlemail.com with ESMTPSA id n10sm2006475edf.3.2020.03.30.13.56.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 13:46:05 -0700 (PDT)
-Received: (nullmailer pid 13031 invoked by uid 1000);
-        Mon, 30 Mar 2020 20:46:04 -0000
-Date:   Mon, 30 Mar 2020 14:46:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Igor Opaniuk <igor.opaniuk@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
+        Mon, 30 Mar 2020 13:56:56 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Andy Gross <agross@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Mathieu Olivari <mathieu@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/5] ARM: dts: imx6: Dual license adding MIT
-Message-ID: <20200330204604.GA11575@bogus>
-References: <20200317101947.27250-1-igor.opaniuk@gmail.com>
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
+Date:   Mon, 30 Mar 2020 22:56:46 +0200
+Message-Id: <20200330205647.24806-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317101947.27250-1-igor.opaniuk@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 12:19:43PM +0200, Igor Opaniuk wrote:
-> From: Igor Opaniuk <igor.opaniuk@toradex.com>
-> 
-> Dual license files adding MIT license, which will permit to re-use
-> device trees in other non-GPL OSS projects.
+Disable the i2c device on gsbi4, mark gsbi4_h as unused and gsbi4_qup
+and src clks as protected. gsbi4_h can't be set to protected as it's
+used by both gsbi and rpm and making it protected creates some problem
+with gsbi4 uart function.
+Without this fix, clock framework will turn them off at end
+of probe. On ipq806x by design gsbi4_qup, gsbi4_h clks and i2c on gsbi4
+are meant for RPM usage. So turning them off in kernel is incorrect.
 
-Are you the only author on these files? If not, you don't have rights to 
-do this.
+Signed-off-by: Mathieu Olivari <mathieu@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ arch/arm/boot/dts/qcom-ipq8064-ap148.dts | 9 ---------
+ arch/arm/boot/dts/qcom-ipq8064.dtsi      | 3 +++
+ drivers/clk/qcom/gcc-ipq806x.c           | 1 +
+ 3 files changed, 4 insertions(+), 9 deletions(-)
 
-> 
-> Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
-> ---
-> 
->  arch/arm/boot/dts/imx6dl-pinfunc.h | 2 +-
->  arch/arm/boot/dts/imx6dl.dtsi      | 2 +-
->  arch/arm/boot/dts/imx6qdl.dtsi     | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6dl-pinfunc.h b/arch/arm/boot/dts/imx6dl-pinfunc.h
-> index 9d88d09f9bf6..960d300ea9ba 100644
-> --- a/arch/arm/boot/dts/imx6dl-pinfunc.h
-> +++ b/arch/arm/boot/dts/imx6dl-pinfunc.h
-> @@ -1,4 +1,4 @@
-> -/* SPDX-License-Identifier: GPL-2.0-only */
-> +/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
->  /*
->   * Copyright 2013 Freescale Semiconductor, Inc.
->   */
-> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-> index 008312ee0c31..77e946b3d012 100644
-> --- a/arch/arm/boot/dts/imx6dl.dtsi
-> +++ b/arch/arm/boot/dts/imx6dl.dtsi
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +// SPDX-License-Identifier: GPL-2.0 OR MIT
->  //
->  // Copyright 2013 Freescale Semiconductor, Inc.
->  
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index e6b4b8525f98..75d746952932 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
->  //
->  // Copyright 2011 Freescale Semiconductor, Inc.
->  // Copyright 2011 Linaro Ltd.
-> -- 
-> 2.17.1
-> 
+diff --git a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+index 554c65e7aa0e..580aec63030d 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
++++ b/arch/arm/boot/dts/qcom-ipq8064-ap148.dts
+@@ -21,14 +21,5 @@ mux {
+ 				};
+ 			};
+ 		};
+-
+-		gsbi@16300000 {
+-			i2c@16380000 {
+-				status = "ok";
+-				clock-frequency = <200000>;
+-				pinctrl-0 = <&i2c4_pins>;
+-				pinctrl-names = "default";
+-			};
+-		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+index 16c0da97932c..d9a803c8a59b 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -421,6 +421,9 @@ qcom,ssbi@500000 {
+ 		gcc: clock-controller@900000 {
+ 			compatible = "qcom,gcc-ipq8064";
+ 			reg = <0x00900000 0x4000>;
++
++			protected-clocks = <GSBI4_QUP_SRC>, <GSBI4_QUP_CLK>;
++
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 		};
+diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806x.c
+index b0eee0903807..f7d7a2bc84c1 100644
+--- a/drivers/clk/qcom/gcc-ipq806x.c
++++ b/drivers/clk/qcom/gcc-ipq806x.c
+@@ -991,6 +991,7 @@ static struct clk_branch gsbi4_h_clk = {
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gsbi4_h_clk",
+ 			.ops = &clk_branch_ops,
++			.flags = CLK_IGNORE_UNUSED,
+ 		},
+ 	},
+ };
+-- 
+2.25.1
+
