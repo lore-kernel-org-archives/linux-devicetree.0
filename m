@@ -2,65 +2,98 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E271C2D0EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 04:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D1AC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 05:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0556D20786
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 04:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA14320733
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 05:19:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="H51wOSB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgC3Eop (ORCPT
+        id S1728405AbgC3FTZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 00:44:45 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:33056 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgC3Eoo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 00:44:44 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A906415C5482C;
-        Sun, 29 Mar 2020 21:44:43 -0700 (PDT)
-Date:   Sun, 29 Mar 2020 21:44:43 -0700 (PDT)
-Message-Id: <20200329.214443.1573923323943355565.davem@davemloft.net>
-To:     philippe.schenker@toradex.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, netdev@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, shawnguo@kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        silvan.murer@gmail.com, a.fatoum@pengutronix.de,
-        s.hauer@pengutronix.de, o.rempel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v2 2/2] ARM: dts: apalis-imx6qdl: use rgmii-id
- instead of rgmii
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200325173425.306802-2-philippe.schenker@toradex.com>
-References: <20200325173425.306802-1-philippe.schenker@toradex.com>
-        <20200325173425.306802-2-philippe.schenker@toradex.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 29 Mar 2020 21:44:44 -0700 (PDT)
+        Mon, 30 Mar 2020 01:19:25 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:12647 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727706AbgC3FTZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 01:19:25 -0400
+X-UUID: 0f20d00ab22441028f7c2718f3f30338-20200330
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=PiWLw0TeG7GcgBMd5OgryJCpKyO8lgrXQHDKaqgPG58=;
+        b=H51wOSB4E8IfmA8XEkPuCE4rb6zVrbPrgRG7NerAS16eswoZuZgmsBARj6W8ThUSXXAKCZSRNlHf77IQsb1QfsjsVqVy/q4wIKsHIie6dIkpwrxtcPhdUfv/zkse4bpy1kBhyRdQzj5lKUEL6gxH2Rw8LIgDyt6AsteDnWyAONc=;
+X-UUID: 0f20d00ab22441028f7c2718f3f30338-20200330
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <henryc.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 5589251; Mon, 30 Mar 2020 13:19:15 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 30 Mar 2020 13:19:12 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 30 Mar 2020 13:19:11 +0800
+Message-ID: <1585545553.32635.10.camel@mtksdaap41>
+Subject: Re: [PATCH V4 11/13] dt-bindings: regulator: add DVFSRC regulator
+ dt-bindings
+From:   Henry Chen <henryc.chen@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Viresh Kumar" <vireshk@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Nicolas Boichat" <drinkcat@google.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Arvin Wang <arvin.wang@mediatek.com>,
+        "Mike Turquette" <mturquette@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+Date:   Mon, 30 Mar 2020 13:19:13 +0800
+In-Reply-To: <20200324203833.GL7039@sirena.org.uk>
+References: <1584092066-24425-1-git-send-email-henryc.chen@mediatek.com>
+         <1584092066-24425-12-git-send-email-henryc.chen@mediatek.com>
+         <20200324203833.GL7039@sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Date: Wed, 25 Mar 2020 18:34:25 +0100
+SGkgTWFyaywNCk9uIFR1ZSwgMjAyMC0wMy0yNCBhdCAyMDozOCArMDAwMCwgTWFyayBCcm93biB3
+cm90ZToNCj4gT24gRnJpLCBNYXIgMTMsIDIwMjAgYXQgMDU6MzQ6MjRQTSArMDgwMCwgSGVucnkg
+Q2hlbiB3cm90ZToNCj4gDQo+ID4gKy0gcmVndWxhdG9yIDogVGhlIERWRlNSQyByZWd1bGF0b3Ig
+aXMgbW9kZWxsZWQgYXMgYSBzdWJkZXZpY2Ugb2YgdGhlIERWRlNSQy4NCj4gPiArCUJlY2F1c2Ug
+RFZGU1JDIGNhbiByZXF1ZXN0IHBvd2VyIGRpcmVjdGx5IHZpYSByZWdpc3RlciByZWFkL3dyaXRl
+LCBsaWtlcw0KPiA+ICsJdmNvcmUgd2hpY2ggaXMgYSBjb3JlIHBvd2VyIG9mIG10ODE4My4gQXMg
+c3VjaCwgdGhlIERWRlNSQyByZWd1bGF0b3INCj4gPiArCXJlcXVpcmVzIHRoYXQgRFZGU1JDIG5v
+ZGVzIGJlIHByZXNlbnQuIHNoYWxsIGNvbnRhaW4gb25seSBvbmUgb2YgdGhlDQo+ID4gKwlmb2xs
+b3dpbmc6ICJtZWRpYXRlayxtdDgxODMtZHZmc3JjLXJlZ3VsYXRvciINCj4gDQo+IFdoeSBkbyB3
+ZSBldmVuIG5lZWQgYSBjb21wYXRpYmxlIGhlcmUgLSBpdCdzIG5vdCBhZGRpbmcgYW55IG5ldw0K
+PiBpbmZvcm1hdGlvbiB0byB0aGUgcGFyZW50IG10ODE4MyBub2RlLCB0aGUgY29tcGF0aWJsZSBp
+cyBtYWlubHkgZm9yIHRoZQ0KPiB3YXkgTGludXggZGl2aWRlcyB0aGluZ3MgdXAgcmF0aGVyIHRo
+YW4gYSBkZXNjcmlwdGlvbiBvZiB0aGUgaGFyZHdhcmUuDQo+IFdlIGNvdWxkIGp1c3Qgc2F5IHRo
+YXQgdGhlIHJlZ3VsYXRvciBub2RlIGFsd2F5cyBoYXMgYSBwYXJ0aWN1bGFyIG5hbWUNCj4gaW5z
+dGVhZC4NClNvcnJ5LCBub3QgcXVpdGUgc3VyZSB3aGF0IHlvdSBtZWFuLCBiZWNhdXNlIEkgdGhp
+bmsgRFZGU1JDIGlzIGENCnJlZ3VsYXRvciBwcm92aWRlciB0aGF0IGNhbiBwcm92aWRlIHZjb3Jl
+IHZvbHRhZ2UgY29udHJvbCBvbiBtdDgxODMsIGFuZA0KaXQgY2FuIHByb3ZpZGUgbW9yZSBwb3dl
+ciBjb250cm9sIGluIHRoZSBuZXh0IGdlbmVyYXRpb24gTWVkaWF0ZWsgU09DLg0KSGVyZSBJIGFk
+ZCBhIHN1Yi1ub2RlIHRvIGRlc2NyaWJlIGl0LiBPciBzaG91bGQgSSBtb3ZlIHRoaXMgbm9kZSB0
+bw0KcmVndWxhdG9yIGZvbGRlcj8gDQoNCj4gDQo+IEl0J3MgYWxzbyBub3QgcXVpdGUgdHJ1ZSB0
+aGF0IGl0IGNvbnRhaW5zICJvbmx5IiB0aGUgY29tcGF0aWJsZSAtIGl0DQo+IGFsc28gYWxsb3dz
+IHRoZSByZWd1bGF0b3IgY29uc3RyYWludHMgdG8gYmUgZGVmaW5lZC4NCg0K
 
-> Until now a PHY-fixup in mach-imx set our rgmii timing correctly. For
-> the PHY KSZ9131 there is no PHY-fixup in mach-imx. To support this PHY
-> too, use rgmii-id.
-> For the now used KSZ9031 nothing will change, as rgmii-id is only
-> implemented and supported by the KSZ9131.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-
-Applied.
