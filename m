@@ -2,52 +2,66 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_REPLYTO_END_DIGIT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A83C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 04:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48767C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 04:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A8820732
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 04:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C1C720578
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 04:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726028AbgC3EIw convert rfc822-to-8bit (ORCPT
+        id S1726830AbgC3Eoj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 00:08:52 -0400
-Received: from os3-362-14218.vs.sakura.ne.jp ([133.167.64.222]:54850 "EHLO
-        mail.j-snap.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725268AbgC3EIw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 00:08:52 -0400
-Received: from emepride.com (ec2-18-236-227-90.us-west-2.compute.amazonaws.com [18.236.227.90])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mail.j-snap.com (Postfix) with ESMTPSA id 9BBCA1DD87C
-        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 12:30:06 +0900 (JST)
-Reply-To: Jx_838@163.com
-From:   Mar Cha <Project2020@emepride.com>
-To:     devicetree@vger.kernel.org
-Subject: Project Collaboration.
-Date:   29 Mar 2020 20:29:53 -0700
-Message-ID: <20200329160858.E12A8ECB8CEB0E29@emepride.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+        Mon, 30 Mar 2020 00:44:39 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:33028 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgC3Eoj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 00:44:39 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8164D15C5482A;
+        Sun, 29 Mar 2020 21:44:37 -0700 (PDT)
+Date:   Sun, 29 Mar 2020 21:44:36 -0700 (PDT)
+Message-Id: <20200329.214436.1632842454034665578.davem@davemloft.net>
+To:     philippe.schenker@toradex.com
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, netdev@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+        silvan.murer@gmail.com, a.fatoum@pengutronix.de,
+        s.hauer@pengutronix.de, o.rempel@pengutronix.de
+Subject: Re: [PATCH net-next v2 1/2] net: phy: micrel.c: add rgmii
+ interface delay possibility to ksz9131
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200325173425.306802-1-philippe.schenker@toradex.com>
+References: <20200325173425.306802-1-philippe.schenker@toradex.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 29 Mar 2020 21:44:38 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello devicetree
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Date: Wed, 25 Mar 2020 18:34:24 +0100
 
-My boss Jean Maynard has asked me to contact you at once. He 
-checked your profile and would like to collaborate with you on 
-some project Email him at ( l3606436169@163.com ) for briefs and 
-procedures because he has no LinkedIn account.
+> The KSZ9131 provides DLL controlled delays on RXC and TXC lines. This
+> patch makes use of those delays. The information which delays should
+> be enabled or disabled comes from the interface names, documented in
+> ethernet-controller.yaml:
+> 
+> rgmii:      Disable RXC and TXC delays
+> rgmii-id:   Enable RXC and TXC delays
+> rgmii-txid: Enable only TXC delay, disable RXC delay
+> rgmii-rxid: Enable onlx RXC delay, disable TXC delay
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
-His representative is presently in your country and he will meet 
-with you today after the briefs and procedures if you are 
-interested.
-
-Mar Cha
+Applied.
