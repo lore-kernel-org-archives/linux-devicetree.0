@@ -2,164 +2,110 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B9EC2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86571C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F2020774
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585557498;
-	bh=BkHx8NFiQ75YGJGHV3YLzUBEEQCGCQ6ZgXds5RE21G4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OB1DMlsw+8M22qKLsOvJE4+Gi8eEeJ8YTf8mkZUHwr3C0iQCxf4OuQRLXubXX4p7V
-	 sbP6i2jBKL7GJA4Z93R4dIMX8JlnzaDFUn3HrFN0en4HXens9WrZ3mLeOik+0RUvb4
-	 Of69AnhGhB9avtdutxhOH4QLG+kgFzIrOwGb3NKA=
+	by mail.kernel.org (Postfix) with ESMTP id 5AE9D20732
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 08:44:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EWG4BCTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgC3IiM (ORCPT
+        id S1729726AbgC3Iom (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 04:38:12 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:56073 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgC3IiM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 04:38:12 -0400
-X-Greylist: delayed 5280 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Mar 2020 04:38:09 EDT
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 02U8bmN8026273;
-        Mon, 30 Mar 2020 17:37:49 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 02U8bmN8026273
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585557470;
-        bh=PxRmu3HuDIYTqEJxiJ5PqE2LXmQuo3D9zlavzY5jVI4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=brVEPKJScKZunXMPy14SQD8gmdtXfD/Z7CL8ZRWvjqvg8UYOEXDjY45m6LQp+Upry
-         SgIqRIt+Vbfvxsnbg1Sa4ESbah6Ht4e+ygLsb2zMtFxzxi6m+CL+3akLM9W4IRUtrC
-         8IrkWOugyFCF6k+q9DWaJ/RylMYkLVAXmcO1Y053y79in1DJ1SYDKl6QryZcJvymZW
-         zhUI92s1QDExgPzlgqMqS+2VzRW+Hf/0CueUJkv89pUXdRGkEy/yT1U57PQSLpZHL5
-         dpuemg5XzFyFNtnhwxT9TEaThfuk/wESfJfRmQy4YDPJPK/eWz1pRIvn+23Xa8wREx
-         iiOBT5PkS+9Hg==
-X-Nifty-SrcIP: [209.85.222.47]
-Received: by mail-ua1-f47.google.com with SMTP id r47so5951861uad.11;
-        Mon, 30 Mar 2020 01:37:49 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYfI1t4jOABvMJbBeheO5K31RVjKrp+v3PMdlyhGrfyx/pJ5lj8
-        56rX/6bnMc6mi60tJtnMdm1005lbsmAaPgRPoO8=
-X-Google-Smtp-Source: APiQypJeTOypTow5s/orWLiqA+luxDBNhpwR1xE86uZ7tA8NnJnWdBsJgIswlbl89EaZoapGrF/J2WDHqcRU1fH6V1M=
-X-Received: by 2002:a9f:28c5:: with SMTP id d63mr6911883uad.25.1585557468135;
- Mon, 30 Mar 2020 01:37:48 -0700 (PDT)
+        Mon, 30 Mar 2020 04:44:42 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5600 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728759AbgC3Iol (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 04:44:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e81b1190001>; Mon, 30 Mar 2020 01:43:05 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 30 Mar 2020 01:44:40 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 30 Mar 2020 01:44:40 -0700
+Received: from [10.19.66.205] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 30 Mar
+ 2020 08:44:37 +0000
+Subject: Re: [PATCH V1 0/8] Tegra XUSB charger detect support
+To:     Felipe Balbi <balbi@kernel.org>, <kishon@ti.com>,
+        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <jckuo@nvidia.com>
+References: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
+ <87pncve963.fsf@kernel.org>
+X-Nvconfidentiality: public
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <48fde9ce-7d40-c2c3-1a9c-994654a02367@nvidia.com>
+Date:   Mon, 30 Mar 2020 14:16:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200325220542.19189-1-robh@kernel.org> <20200325220542.19189-5-robh@kernel.org>
- <CAK7LNARJn4uugHxcjK+WOWBs0gPVZQsCu4y6M8hkNK1U5FehRA@mail.gmail.com>
-In-Reply-To: <CAK7LNARJn4uugHxcjK+WOWBs0gPVZQsCu4y6M8hkNK1U5FehRA@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 30 Mar 2020 17:37:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARXj3=1VPWL4kFmGkZuvV=yKb7gVaX2nbeiO54f-zWeHQ@mail.gmail.com>
-Message-ID: <CAK7LNARXj3=1VPWL4kFmGkZuvV=yKb7gVaX2nbeiO54f-zWeHQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: Add missing 'additionalProperties: false'
-To:     Rob Herring <robh@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87pncve963.fsf@kernel.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585557785; bh=1dKDEs5gWtkDsylFO2e+kSrsyDzzlh3tTKE9IwHKrPs=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=EWG4BCTr1V0RuTNLY0j/gnn3pyoRNc1+vbP86nP6hU6uLUGQ2ClNoxhMvgTaq7Sh2
+         UR0fSJ2oRmJm4LSeOj+ktG9cC3XJSqAYzScVgqZ8bacYup4u/TyAmQftR/D6KLxtFK
+         EG+1ME9eqGYB/O2FvedQC02e3RGoNMYxM02swps8ryEtdRrkXpFxKtPOoZ8JojUXqq
+         Z1Vn0oMTTqhoXiUamkHqWvVwEuajm1EcbY8OGSuLccztgIHbgMQC5p5SvZ2serCSCo
+         sBjQhc+3REeI6+7gAKqbJWzYcGez5Z0duKaDjnYgyUXmh1ClkqhXMRJNWldkFWI3cn
+         4jjYEMHVNRXRw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Mon, Mar 30, 2020 at 4:09 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Thu, Mar 26, 2020 at 7:06 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > Setting 'additionalProperties: false' is frequently omitted, but is
-> > important in order to check that there aren't extra undocumented
-> > properties in a binding.
-> >
-> > Ideally, we'd just add this automatically and make this the default, but
-> > there's some cases where it doesn't work. For example, if a common
-> > schema is referenced, then properties in the common schema aren't part
-> > of what's considered for 'additionalProperties'. Also, sometimes there
-> > are bus specific properties such as 'spi-max-frequency' that go into
-> > bus child nodes, but aren't defined in the child node's schema.
-> >
-> > So let's stick with the json-schema defined default and add
-> > 'additionalProperties: false' where needed. This will be a continual
-> > review comment and game of wack-a-mole.
-> >
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
->
->
-> >  .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml      | 2 ++
->
->
-> You may have already queue this up, but just in case.
->
-> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
 
+On 29-03-2020 16:10, Felipe Balbi wrote:
+>> This patch series adds charger detect support on XUSB hardware used in
+>> Tegra210 and Tegra186 SoCs.
+>>
+>> This patchset is composed with :
+>>   - dt bindings of XUSB Pad Controller
+>>   - Tegra XUSB device mode driver to add vbus_draw support
+>>   - Tegra PHY driver for charger detect support
+>>
+>> Tests done:
+>>   - Connect USB cable from ubuntu host to micro-B port of DUT to detect
+>>     SDP_TYPE charger
+>>   - Connect USB cable from external powered USB hub(which inturn connects
+>>     to ubuntu host) to micro-B port of DUT to detect CDP_TYPE charger.
+>>   - Connect USB cable from USB charger to micro-B port of DUT to detect
+>>     DCP_TYPE charger.
+>> DUT: Jetson-tx1, Jetson tx2.
+>>
+>> Nagarjuna Kristam (8):
+>>    dt-bindings: phy: tegra-xusb: Add charger-detect property
+>>    usb: gadget: tegra-xudc: Add vbus_draw support
+>>    phy: tegra: xusb: Add support for UTMI pad power control
+>>    phy: tegra: xusb: Add USB2 pad power control support for Tegra210
+>>    phy: tegra: xusb: Add soc ops API to enable UTMI PAD protection
+>>    phy: tegra: xusb: Add support for charger detect
+>>    phy: tegra: xusb: Enable charger detect for Tegra186
+>>    phy: tegra: xusb: Enable charger detect for Tegra210
+> this doesn't apply cleanly. Could you resend after -rc1 is tagged?
+> 
+> -- balbi
 
-I take back Ack for socionext,uniphier-gpio.yaml
+Sure, will send rebased patch once rc1 is available.
 
-
-
-Now "make dt_binding_check" produces a new warning.
-
-gpio@55000000: 'interrupt-parent' does not match any of the regexes:
-'pinctrl-[0-9]+'
-
-
-This binding uses 'interrupt-parent'
-without 'interrupts'.
-
-Instead, the mapping of the interrupt numbers
-is specified by the vendor-specific property
-socionext,interrupt-ranges
-
-
-
-I cannot add   "interrupt-parent: true" because
-dt-schema/meta-schemas/interrupts.yaml
-has "interrupt-parent: false".
-
-
-Is there any solution?
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Thanks,
+Nagarjuna
