@@ -4,219 +4,169 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 435DBC2D0EB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F68BC43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF3B20784
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D130B20748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 19:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585595506;
-	bh=4k7npMR5i0GlS48xwHDyMNHtVDzt8QFmx7L+bpSa+l8=;
+	s=default; t=1585596231;
+	bh=6OlA2qF0ge60Y9qd4QRLz8Wg6xFIOo/oolkIEsWt7nQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wfRQt5UNwvz57KGb22RqSozfiXnLVVHHtZk9oWNosI4gBZ/rmIxRdu5CNvLJ1oKLK
-	 ZISY+xjo3+QnrQ8KT3U1rA2hdCJmUPWLvNaLHBWvLtZJQ4oYTgiXMxqoQi4hOTovMC
-	 EH+mV+2Z1MpcC4Rz/hFF0ltNJeneJ4nwG5TsQ9ec=
+	b=oTpx07AHJ8yBS8ec7WbgX3PYLpdsnEoHWZfYNmm9s0zsKPXoH3Nb7C4TGeyc+q3d2
+	 gsfWkus3dIR2m899OGTdSlJtJp8AFZwYfOk+tcomA8qw34p5cLcbGNHb7BFRQyGX4T
+	 ZLG1pDsnRyrj3m+URBBAbeOzonzICsfCB6O5hGTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgC3TLm (ORCPT
+        id S1728123AbgC3TXv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 15:11:42 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41878 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgC3TLl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 15:11:41 -0400
-Received: by mail-io1-f68.google.com with SMTP id b12so2820877ion.8;
-        Mon, 30 Mar 2020 12:11:39 -0700 (PDT)
+        Mon, 30 Mar 2020 15:23:51 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43691 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726781AbgC3TXv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 15:23:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id x9so12633343iom.10;
+        Mon, 30 Mar 2020 12:23:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=naEzHVNq1KsTafl3xqH4koGPBy3a41PHj0Hsijlhu9s=;
-        b=V9XgwZMdMFb5UgUDyekxjidiupCOGMZ3G+RcgpWzgcqjrzIbE29RiQQwIVIx3kfOSH
-         MuESVCaxjKFSdA4i4BAkMr9S87yNfZHf4+88rOg3S4QU9Onm4CsP5lOer6CB2CpnYcQN
-         e5xCj9YXkQLqHJvSMqluWnJaBEnYoIJE9Pt6bhSWLGhVJaKnBIp9+dCcZRhKQLaV7uCF
-         mwPpbSDCqw0WpF8F9Su6+UOXTy8FI02MXbSZsQ2SOrAJI3+tzS64nBcuZCdS6o8W7sMn
-         zGB12rg+FIcmVOT8ubNboZPHMmfnaIBa4Qba5H2kOmFjtv02qjwuunxcGHa9uFQjjgUE
-         feiA==
-X-Gm-Message-State: ANhLgQ1HWaSk8NwcKXctBCl0DTzJjGpxocObElUSFnL2A0HRc4+qW91T
-        opkoiVsDpgHx3W9I98h2KQ==
-X-Google-Smtp-Source: ADFU+vsYIatZ1bjntaO5hjkGBwkqDPSOhoxi4SXRJcj+KJOdK7tBb4Gb0GLh/lVqM6oByQICfnINPw==
-X-Received: by 2002:a6b:8dc9:: with SMTP id p192mr11427400iod.90.1585595498899;
-        Mon, 30 Mar 2020 12:11:38 -0700 (PDT)
+        bh=MXO0cFSUgdRH+a4P/o/GAi4s4MndCf1pU3SuIpqOxH8=;
+        b=b2WK8r2tG8huW8HYFFvjSGY0TfaCN7piJfb0Q6GCQr2a3D7F1WfwdHRz/eIsnRs86h
+         y09f5qGv5o3X3V6sdlUdZ85G+LVyGsiVn2O6zaTDfR/dxWWFN4wS+IuLsuOghqSAS16q
+         JY7WtgUBEVR8UhHPFnmpe7aEd6AyuRYuLGOUvZ9KWwCR+B+w0+GcrzPTDVzJ0vZ7bfwA
+         0zSPfP/DNT2X+3VGFWso8z6aZa8wQ1yXJGxVB5OnNSQ08HeZK0RYyz7qEo/PQ+onL9kk
+         plhszG505Bx2v9I6pFuUbqrnfCNukCl4Wy1rrPlN8SP0l3zdmzRFjFpFcET95+k7sKyF
+         8tmA==
+X-Gm-Message-State: ANhLgQ2L0jfR/zywO3xGCDo+Jo+oRoFsqB9+tnHPwhAgy5Z4YXYYXiGC
+        /fynJzRe+bOxB9EsTf78WQ==
+X-Google-Smtp-Source: ADFU+vul8Oe41tCjMTU3VB/Pazto4kKTIj+AVWhsXgGw9jz3HDJI0g0/B3oHxwfVXEbonu12CN0a1g==
+X-Received: by 2002:a6b:b989:: with SMTP id j131mr12170677iof.6.1585596229713;
+        Mon, 30 Mar 2020 12:23:49 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id v80sm5125001ila.62.2020.03.30.12.11.36
+        by smtp.gmail.com with ESMTPSA id p189sm4307507iof.17.2020.03.30.12.23.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 12:11:37 -0700 (PDT)
-Received: (nullmailer pid 6109 invoked by uid 1000);
-        Mon, 30 Mar 2020 19:11:35 -0000
-Date:   Mon, 30 Mar 2020 13:11:35 -0600
+        Mon, 30 Mar 2020 12:23:49 -0700 (PDT)
+Received: (nullmailer pid 22585 invoked by uid 1000);
+        Mon, 30 Mar 2020 19:23:47 -0000
+Date:   Mon, 30 Mar 2020 13:23:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Nick Dyer <nick@shmanahar.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: input: Update atmel,maxtouch.txt to YAML
-Message-ID: <20200330191135.GA22010@bogus>
-References: <20200315100416.14151-1-paul@crapouillou.net>
+To:     rentao.bupt@gmail.com
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        taoren@fb.com
+Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
+ ID/string properties
+Message-ID: <20200330192347.GA6388@bogus>
+References: <20200315191632.12536-1-rentao.bupt@gmail.com>
+ <20200315191632.12536-7-rentao.bupt@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200315100416.14151-1-paul@crapouillou.net>
+In-Reply-To: <20200315191632.12536-7-rentao.bupt@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 15, 2020 at 11:04:15AM +0100, Paul Cercueil wrote:
-> Update atmel,maxtouch.txt to YAML. The new 'vdd-supply' property was
-> added in the process.
+On Sun, Mar 15, 2020 at 12:16:32PM -0700, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Update device tree binding document for aspeed vhub's device IDs and
+> string properties.
+> 
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 > ---
->  .../bindings/input/atmel,maxtouch.txt         | 41 -----------
->  .../bindings/input/atmel,maxtouch.yaml        | 68 +++++++++++++++++++
->  2 files changed, 68 insertions(+), 41 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->  create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+>  No change in v2:
+>    - the patch is added into the series since v2.
 > 
-> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> deleted file mode 100644
-> index c88919480d37..000000000000
-> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-> +++ /dev/null
-> @@ -1,41 +0,0 @@
-> -Atmel maXTouch touchscreen/touchpad
-> -
-> -Required properties:
-> -- compatible:
-> -    atmel,maxtouch
-> -
-> -    The following compatibles have been used in various products but are
-> -    deprecated:
-> -	atmel,qt602240_ts
-> -	atmel,atmel_mxt_ts
-> -	atmel,atmel_mxt_tp
-> -	atmel,mXT224
-> -
-> -- reg: The I2C address of the device
-> -
-> -- interrupts: The sink for the touchpad's IRQ output
-> -    See ../interrupt-controller/interrupts.txt
-> -
-> -Optional properties for main touchpad device:
-> -
-> -- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
-> -    on GPIO bit changes. An array of up to 8 entries can be provided
-> -    indicating the Linux keycode mapped to each bit of the status byte,
-> -    starting at the LSB. Linux keycodes are defined in
-> -    <dt-bindings/input/input.h>.
-> -
-> -    Note: the numbering of the GPIOs and the bit they start at varies between
-> -    maXTouch devices. You must either refer to the documentation, or
-> -    experiment to determine which bit corresponds to which input. Use
-> -    KEY_RESERVED for unused padding values.
-> -
-> -- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
-> -
-> -Example:
-> -
-> -	touch@4b {
-> -		compatible = "atmel,maxtouch";
-> -		reg = <0x4b>;
-> -		interrupt-parent = <&gpio>;
-> -		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
-> new file mode 100644
-> index 000000000000..1b138a9836bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-
-Do you have rights to relicense?
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Atmel maXTouch touchscreen/touchpad DT bindings
-> +
-> +maintainers:
-> +  - Paul Cercueil <paul@crapouillou.net>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - atmel,maxtouch
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  vdd-supply:
-> +    description: Phandle to regulator providing power to the touchscreen
-> +
-> +  linux,gpio-keymap:
-> +    minItems: 1
-> +    maxItems: 8
-
-Needs a type reference (uint32-array).
-
-> +    description: >
-> +      When enabled, the SPT_GPIOPWN_T19 object sends messages
-> +      on GPIO bit changes. An array of up to 8 entries can be provided
-> +      indicating the Linux keycode mapped to each bit of the status byte,
-> +      starting at the LSB. Linux keycodes are defined in
-> +      <dt-bindings/input/input.h>.
-> +
-> +      Note: the numbering of the GPIOs and the bit they start at varies between
-> +      maXTouch devices. You must either refer to the documentation, or
-> +      experiment to determine which bit corresponds to which input. Use
-> +      KEY_RESERVED for unused padding values.
-> +
-> +  reset-gpios:
-> +    description: GPIO specifier for the touchscreen's reset pin (active low)
-
-maxItems: 1
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      mxt224-touchscreen@4a {
-
-touchscreen@4a
-
-> +        compatible = "atmel,maxtouch";
-> +        reg = <0x4a>;
-> +
-> +        interrupt-parent = <&gpx0>;
-> +        interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +        vdd-supply = <&tsp_reg>;
-> +      };
-> +    };
-> -- 
-> 2.25.1
+>  .../bindings/usb/aspeed,usb-vhub.yaml         | 68 +++++++++++++++++++
+>  1 file changed, 68 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> index 06399ba0d9e4..5b2e8d867219 100644
+> --- a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> @@ -52,6 +52,59 @@ properties:
+>          minimum: 1
+>          maximum: 21
+>  
+> +  vhub-vendor-id:
+> +    description: vhub Vendor ID
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - maximum: 65535
+> +
+> +  vhub-product-id:
+> +    description: vhub Product ID
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - maximum: 65535
+
+There's already standard 'vendor-id' and 'device-id' properties. Use 
+those.
+
+> +
+> +  vhub-device-revision:
+
+Specific to USB, not vhub.
+
+> +    description: vhub Device Revision in binary-coded decimal
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - maximum: 65535
+> +
+> +  vhub-strings:
+> +    type: object
+> +
+> +    properties:
+> +      '#address-cells':
+> +        const: 1
+> +
+> +      '#size-cells':
+> +        const: 0
+> +
+> +    patternProperties:
+> +      '^string@[0-9a-f]+$':
+> +        type: object
+> +        description: string descriptors of the specific language
+> +
+> +        properties:
+> +          reg:
+> +            maxItems: 1
+> +            description: 16-bit Language Identifier defined by USB-IF
+> +
+> +          manufacturer:
+> +            description: vhub manufacturer
+> +            allOf:
+> +              - $ref: /schemas/types.yaml#/definitions/string
+> +
+> +          product:
+> +            description: vhub product name
+> +            allOf:
+> +              - $ref: /schemas/types.yaml#/definitions/string
+> +
+> +          serial-number:
+> +            description: vhub device serial number
+> +            allOf:
+> +              - $ref: /schemas/types.yaml#/definitions/string
+
+For all of this, it's USB specific, not vhub specific. I'm not sure this 
+is the right approach. It might be better to just define properties 
+which are just raw USB descriptors rather than inventing some DT format 
+that then has to be converted into USB descriptors.
+
+Rob
