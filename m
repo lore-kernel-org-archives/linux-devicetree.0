@@ -2,181 +2,184 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9763C43331
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 05:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90370C43331
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 06:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938BA206F6
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 05:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6512082F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 06:20:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="JB9Rg7+J"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ec+UG6k3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgC3FpA (ORCPT
+        id S1729068AbgC3GU2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 01:45:00 -0400
-Received: from mail-eopbgr130043.outbound.protection.outlook.com ([40.107.13.43]:43470
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728489AbgC3FoQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 01:44:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PO/zxxA9h+OUlxowcctCaCpe9ImMk7orpgFdAZYLTaXJqPxb2lUFflINSl6zLTE/gk8k4LvRcAr1vVYkpoxuOzI1XB5kEgEm9g5whNDm86GN22Nq9Nex76JWMQunOI8L6OtqYJjsnG+eqKFH+NVsRsFYrXg/k0O6z7dXJAaWZJt2nhwcrGD0w2JGJ4fEAHleXLgip7TsTMBDaFmtMNJtS0ygY+KtQOLgGORoJvdig3bI4eo67WeMKEv7v+ppk1jci2yn5o5AmSP9XJNkfQ3s3B3J2Jq/fAszpyJlxDmZ1H5J1uMB8kAlKSeFe85BDRCVxxsAIOLpdIZHqkObsv0Dug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xC1yDsg2znOkTFzr3iiN5qQA8e+KkwwlS8W/yers4X8=;
- b=EqjzmhqDj/C7Uns2GfxwEviEkrXUrNpMRxMR7YH3HpZYhRlPkcefkFM9aMpPI+iPzPK2wBwan0adbi9XSdQ2q0Pite/ckYPquPcJ3tIqa+le2BdRk4WRKGjSWqBuHib2K9T8OISp0pLf2bKVDh/sZywnL7Bhmd35RYvJS84znLxo1joLjRxTNctcKTLcW6ug7L83B0+OrKPvZRegkRbwe0by7uE8SOQWm47aX8Nf/pNysQXzWv21+Ju9UXKLx4FZXKnLBmLEmzVlqRt0YSv6vMgagUWcZoRPtLMMiCWvNwGHasLa/qFLYpT8I82jmGkviGN2GJRFd4OBSTQ7wgo5sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xC1yDsg2znOkTFzr3iiN5qQA8e+KkwwlS8W/yers4X8=;
- b=JB9Rg7+JBfXLmG0QPnxG4SNeiKwrG3TriStdAxRZATgpT+tOaeQRVWGtzLpouf9PT8v09XIZOFxAbVQ1OOZKlRJ362gt3krC5yZDy963UoZTCQnBM505FA7bLRF9rKzt33AfqCE0WzViF5EpkWAAKlo4hPW2UvGmSIZC+xuJwTE=
-Received: from DB8PR04MB6985.eurprd04.prod.outlook.com (52.133.243.85) by
- DB8PR04MB6508.eurprd04.prod.outlook.com (20.179.248.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Mon, 30 Mar 2020 05:43:35 +0000
-Received: from DB8PR04MB6985.eurprd04.prod.outlook.com
- ([fe80::a523:58cc:b584:2c2]) by DB8PR04MB6985.eurprd04.prod.outlook.com
- ([fe80::a523:58cc:b584:2c2%6]) with mapi id 15.20.2856.019; Mon, 30 Mar 2020
- 05:43:35 +0000
-From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     Florinel Iordache <florinel.iordache@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add backplane dt
- bindings
-Thread-Topic: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add backplane
- dt bindings
-Thread-Index: AQHWA3W3jF7aogLlGUecGp366aweTahboFSAgADpoACAAAfzgIAABHgAgAAe0oCAA+xYoA==
-Date:   Mon, 30 Mar 2020 05:43:35 +0000
-Message-ID: <DB8PR04MB6985BA5D411AD5F9456F833BECCB0@DB8PR04MB6985.eurprd04.prod.outlook.com>
-References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
- <1585230682-24417-3-git-send-email-florinel.iordache@nxp.com>
- <20200327010411.GM3819@lunn.ch>
- <AM0PR04MB5443185A1236F621B9EC9873FBCC0@AM0PR04MB5443.eurprd04.prod.outlook.com>
- <20200327152849.GP25745@shell.armlinux.org.uk>
- <20200327154448.GK11004@lunn.ch>
- <20200327173507.GQ25745@shell.armlinux.org.uk>
-In-Reply-To: <20200327173507.GQ25745@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=madalin.bucur@oss.nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [79.115.171.113]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 63239714-41f0-4ba4-80d5-08d7d46d49ed
-x-ms-traffictypediagnostic: DB8PR04MB6508:|DB8PR04MB6508:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB6508BC21DD478A6A67B46F95ADCB0@DB8PR04MB6508.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0358535363
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6985.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(346002)(396003)(136003)(39860400002)(366004)(316002)(54906003)(5660300002)(110136005)(478600001)(86362001)(52536014)(186003)(66946007)(66476007)(64756008)(76116006)(26005)(66556008)(66446008)(71200400001)(2906002)(33656002)(7416002)(8676002)(7696005)(55016002)(9686003)(81166006)(81156014)(8936002)(53546011)(6506007)(4326008);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gj13wxUyLTS08Pk1bARBAltkbgMmkaEFUxrW2vxvEXts3ZWkvhQFx4deHxJNB5UWn+Yp7byRA2FvXury35ZUZCbf/Q3Y98e9O/3+qHkkLP+HvriCZh9L5M1E96sw5k0m9+1RjYUTyfjkfQODlgR+mhozuEhEoHDxRBZSbwAzuM4MpAhgA4RnX2q+3gWSyGPt7tf4MGRbIxBWsn8nGsEkR2c+zNsIMNLcNqC1NnCPAF/nNWaPKyD/xJQ7L3cRLQp0N2Z54XLMv9yAEQ6rk2g3U3ZDACJIesJDDqoTcToAG1JPC4bVqyBzJE2EOqv3qDTTjvNEr1jtLhMOakgi+BnuApJ1Wf8vPFAKU/vhtIMAljp9hzsXpAHnHz+69LMYH+IpMYwRGRPZojRfjk6rdkFlyHYwdEF/JWeS0B7tEsmLlKCfHTJy/7ZTEIqCYO1/TYY2
-x-ms-exchange-antispam-messagedata: E54TVxGGpW6ksi6DG4UAohG2OCvXrk6T2OCNYrUSBZ+9Oefngtbbm7N9d8F/NlDn6qTKn1pVUkqZec90IEABvxm+eI4i51RKeFd2KnsbptWh9b7opCEHrmR+eARwT750+d+E3Qu5TaX700tGdjwBKw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 30 Mar 2020 02:20:28 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:38843 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729054AbgC3GU2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 02:20:28 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200330062026euoutp02a3e14c0fbd6ef72335903214da1d637f~BAJ7V7Zz10357303573euoutp02N
+        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 06:20:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200330062026euoutp02a3e14c0fbd6ef72335903214da1d637f~BAJ7V7Zz10357303573euoutp02N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585549226;
+        bh=nsIfS6BnmjJA8Lt919nWtF036B/rzvBikihgl7w5WIk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Ec+UG6k3+xA2J4v4AcJNd84aJDUOQBl2AO+FBu8KvUtlqKnV1KJ8sEi2YlVcpWcM9
+         rIvAqTjIhURan9uODCxO1iXofnAyWTLDw9h//I3VapKv8qhT452UrYengzQd3Rm186
+         yG2qd1/ckgx9Sju4V2JLePIfffAvYv91gJVGz3Ho=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200330062025eucas1p1aa51b3df54c37aae5f1cbec85b941d2d~BAJ7FBuGL3253432534eucas1p17;
+        Mon, 30 Mar 2020 06:20:25 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id B9.3A.61286.9AF818E5; Mon, 30
+        Mar 2020 07:20:25 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200330062025eucas1p143ff4a865cb9ed37a28507033a601276~BAJ6oLSz23252332523eucas1p19;
+        Mon, 30 Mar 2020 06:20:25 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200330062025eusmtrp2e73997cc62fee5718b621d5a64b1c933~BAJ6nEgvx2090220902eusmtrp2r;
+        Mon, 30 Mar 2020 06:20:25 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-74-5e818fa92ed8
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 03.30.08375.9AF818E5; Mon, 30
+        Mar 2020 07:20:25 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200330062024eusmtip13be868ceaa19317d913e9c15ffde358f~BAJ6FZsRQ0535305353eusmtip1G;
+        Mon, 30 Mar 2020 06:20:24 +0000 (GMT)
+Subject: Re: [RFC PATCH v1] driver core: Set fw_devlink to "permissive"
+ behavior by default
+To:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <4f3326c2-186d-2853-fcb6-1210d67a836f@samsung.com>
+Date:   Mon, 30 Mar 2020 08:20:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63239714-41f0-4ba4-80d5-08d7d46d49ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2020 05:43:35.1198
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F7x/544+boVcrNKAIImd+B4q0WVS2HKKhGS41a8sBxtiodlJSBaItfocs+5Rw14mJVQFkHEcc8rnijwxyUAtLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6508
+In-Reply-To: <CAGETcx-J+TP+0NsOe75Uu3Q8K6=qYja6eDbjNH2764QV53=nMA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djPc7or+xvjDHomaVrMP3KO1WLmm/9s
+        Fs2L17NZ7NguYnF51xw2i7lfpjJbtO49wm7RdegvmwOHx7bd21g9ds66y+6xYFOpx6ZVnWwe
+        ++euYff4vEkugC2KyyYlNSezLLVI3y6BK2Nu7yH2ggbRiieL+BsYDwh2MXJySAiYSDy5fJyx
+        i5GLQ0hgBaNE59rtzBDOF0aJY5M62CGcz4wS044/Z4Np+XdzLRNEYjmjxMIn7UAtHEDOe0aJ
+        ry4gNcICsRKb9h1lBwmLANmf34HNYRZYzSRxrfMEO0gNm4ChRNfbLrCZvAJ2Em/eTgSzWQRU
+        JeZO2sEKYosKxEhcPNzPClEjKHFy5hMWEJtTIFDi/9TnYHFmAXmJ5q2zmSFscYlbT+YzQdy5
+        i11i90xXCNtFYt/PlawQtrDEq+Nb2CFsGYn/O+eD/SIh0Mwo8fDcWnYIp4dR4nLTDEaIKmuJ
+        O+d+sYF8wyygKbF+lz6IKSHgKPF1vzaEySdx460gxAl8EpO2TWeGCPNKdLQJQcxQk5h1fB3c
+        1oMXLjFPYFSaheSxWUiemYXkmVkIaxcwsqxiFE8tLc5NTy02zEst1ytOzC0uzUvXS87P3cQI
+        TEan/x3/tIPx66WkQ4wCHIxKPLwztjbECbEmlhVX5h5ilOBgVhLhZfMHCvGmJFZWpRblxxeV
+        5qQWH2KU5mBREuc1XvQyVkggPbEkNTs1tSC1CCbLxMEp1cDoLRw6wWdWyKYrTdltV/svsSQq
+        3SuKkfk/Rcf+Tok5H+fZKDv29gjDee0uc//FWuzcOzH7w4cE/b2L7mu+uKhcWDfr6Idf+nMT
+        Nl4NurPp8a0a/5e+oYmvf3ycJMvLlV3LPNFksqOSwZGe7BcM8U2tbl/brjr8r7/cLMWwpFB4
+        7iuN80+bpbiVWIozEg21mIuKEwFZMScSQgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7or+xvjDBofcVnMP3KO1WLmm/9s
+        Fs2L17NZ7NguYnF51xw2i7lfpjJbtO49wm7RdegvmwOHx7bd21g9ds66y+6xYFOpx6ZVnWwe
+        ++euYff4vEkugC1Kz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSez
+        LLVI3y5BL2Nu7yH2ggbRiieL+BsYDwh2MXJySAiYSPy7uZapi5GLQ0hgKaPEiXNz2CESMhIn
+        pzWwQtjCEn+udbFBFL1llLjZcJEFJCEsECuxad9RsAYRILtn1RR2kCJmgdVMElM2vmCB6NjA
+        JPHodgszSBWbgKFE11uQUZwcvAJ2Em/eTgSzWQRUJeZO2gG2TlQgRuLnni4WiBpBiZMzn4DZ
+        nAKBEv+nPgerYRYwk5i3+SEzhC0v0bx1NpQtLnHryXymCYxCs5C0z0LSMgtJyywkLQsYWVYx
+        iqSWFuem5xYb6hUn5haX5qXrJefnbmIExuG2Yz8372C8tDH4EKMAB6MSD++MrQ1xQqyJZcWV
+        uYcYJTiYlUR42fyBQrwpiZVVqUX58UWlOanFhxhNgZ6byCwlmpwPTBF5JfGGpobmFpaG5sbm
+        xmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYy1uUNh/ZVzZD9M0Etd0K3n8XCXytZpWZ
+        st4vzzRbQuEw6605fjKMVZZ1/D9zbvPZXJ6kuDJisfukd98OCRVe1VWze1Hfm7r19+bfX4pF
+        Ba6//9x2aMYLGcOrzqGiyY33Tk3UF2bw2x/o80bqQWL7waSgFfOfrt10f0G8wu7/DM92H/0V
+        tz3IWImlOCPRUIu5qDgRAO8ScBrZAgAA
+X-CMS-MailID: 20200330062025eucas1p143ff4a865cb9ed37a28507033a601276
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200327102554eucas1p1f848633a39f8e158472506b84877f98c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200327102554eucas1p1f848633a39f8e158472506b84877f98c
+References: <20200321210305.28937-1-saravanak@google.com>
+        <CGME20200327102554eucas1p1f848633a39f8e158472506b84877f98c@eucas1p1.samsung.com>
+        <bd8b42d3-a35a-cc8e-0d06-2899416c2996@samsung.com>
+        <20200327152144.GA2996253@kroah.com>
+        <CAGETcx-J+TP+0NsOe75Uu3Q8K6=qYja6eDbjNH2764QV53=nMA@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: netdev-owner@vger.kernel.org <netdev-owner@vger.kernel.org> On
-> Behalf Of Russell King - ARM Linux admin
-> Sent: Friday, March 27, 2020 7:35 PM
-> To: Andrew Lunn <andrew@lunn.ch>
-> Cc: Florinel Iordache <florinel.iordache@nxp.com>; davem@davemloft.net;
-> netdev@vger.kernel.org; f.fainelli@gmail.com; hkallweit1@gmail.com;
-> devicetree@vger.kernel.org; linux-doc@vger.kernel.org; robh+dt@kernel.org=
-;
-> mark.rutland@arm.com; kuba@kernel.org; corbet@lwn.net;
-> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; Madalin Bucur (OSS)
-> <madalin.bucur@oss.nxp.com>; Ioana Ciornei <ioana.ciornei@nxp.com>; linux=
--
-> kernel@vger.kernel.org
-> Subject: Re: [EXT] Re: [PATCH net-next 2/9] dt-bindings: net: add
-> backplane dt bindings
->=20
-> On Fri, Mar 27, 2020 at 04:44:48PM +0100, Andrew Lunn wrote:
-> > > What worries me is the situation which I've been working on, where
-> > > we want access to the PCS PHYs, and we can't have the PCS PHYs
-> > > represented as a phylib PHY because we may have a copper PHY behind
-> > > the PCS PHY, and we want to be talking to the copper PHY in the
-> > > first instance (the PCS PHY effectivel ybecomes a slave to the
-> > > copper PHY.)
-> >
-> > I guess we need to clarify what KR actually means. If we have a
-> > backplane with a MAC on each end, i think modelling it as a PHY could
-> > work.
-> >
-> > If however, we have a MAC connected to a backplane, and on the end of
-> > the backplane is a traditional PHY, or an SFP cage, we have problems.
-> > As your point out, we cannot have two PHYs in a chain for one MAC.
-> >
-> > But i agree with Russell. We need a general solution of how we deal
-> > with PCSs.
->=20
-> What really worries me is that we may be driving the same hardware
-> with two different approaches/drivers for two different applications
-> which isn't going to work out very well in the long run.
+Hi
 
-The same HW can be used in multiple ways here so having different drivers
-for these modes is not really an issue, you won't be able to use it both
-in backplane and non-backplane mode at the same time.
+On 2020-03-27 19:30, Saravana Kannan wrote:
+> On Fri, Mar 27, 2020 at 8:21 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+>> On Fri, Mar 27, 2020 at 11:25:48AM +0100, Marek Szyprowski wrote:
+>>> On 2020-03-21 22:03, Saravana Kannan wrote:
+>>>> Set fw_devlink to "permissive" behavior by default so that device links
+>>>> are automatically created (with DL_FLAG_SYNC_STATE_ONLY) by scanning the
+>>>> firmware.
+>>>>
+>>>> This ensures suppliers get their sync_state() calls only after all their
+>>>> consumers have probed successfully. Without this, suppliers will get
+>>>> their sync_state() calls at late_initcall_sync() even if their consuer
+>>>>
+>>>> Ideally, we'd want to set fw_devlink to "on" or "rpm" by default. But
+>>>> that needs more testing as it's known to break some corner case
+>>>> drivers/platforms.
+>>>>
+>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>> Cc: Frank Rowand <frowand.list@gmail.com>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+>>> This patch has just landed in linux-next 20200326. Sadly it breaks
+>>> booting of the Raspberry Pi3b and Pi4 boards, either in 32bit or 64bit
+>>> mode. There is no warning nor panic message, just a silent freeze. The
+>>> last message shown on the earlycon is:
+>>>
+>>> [    0.893217] Serial: 8250/16550 driver, 1 ports, IRQ sharing enabled
+> Marek,
+>
+> Any chance you could get me a stack trace for when it's stuck? That'd
+> be super helpful and I'd really appreciate it. Is it working fine on
+> other variants of Raspberry?
 
-Besides the (oversimplifying) model used in SW, there is no constraint
-to have just one independently manageable entity belonging to the PHY
-layer. Nowadays there are complex configurable PCS/PMA units, retimers,
-single chip PHYs that can function also in backplane mode, and so on.
-All these require a rethinking of the one PHY per interface, tied to a
-MDIO bus model we use today. The DPAA 1 already make use of the MDIO bus
-infrastructure to manage the PCS devices in the SoC, without an issue
-related to the PHYlib one PHY assumption.
+I have no access to other variants of Raspberry board.
 
-One risk I see here is that we may abandon PHYlib before we give it a
-chance to adapt to the new complexity of the HW and roll something new
-just to do away with the required work in understanding its inner workings.
-This could even be fine but it creates a no return point for drivers that
-will use a new infrastructure we put in place (i.e. no backporting).
+The issue seems to be related to bcm2835aux_serial_driver. I've added 
+"initcall_debug" and "ignore_loglevel" to kernel cmdline and I got the 
+following log:
 
-Madalin
+[    4.595353] calling  exar_pci_driver_init+0x0/0x30 @ 1
+[    4.600597] initcall exar_pci_driver_init+0x0/0x30 returned 0 after 
+44 usecs
+[    4.607747] calling  bcm2835aux_serial_driver_init+0x0/0x28 @ 1
+
+The with some debug printk calls I've found that the clock lookup fails 
+with -517 (-EPROBE_DEFER) in bcm2835aux_serial_driver: 
+https://elixir.bootlin.com/linux/v5.6/source/drivers/tty/serial/8250/8250_bcm2835aux.c#L52
+
+Without this patch, the lookup works fine.
+
+Please let me know if you need more information. The kernel cmdline I've 
+use is: "8250.nr_uarts=1 console=ttyS0,115200n8 
+earlycon=uart8250,mmio32,0x3f215040 root=/dev/mmcblk0p2 rootwait rw", 
+kernel is compiled with bcm2835_defconfig, booted on Raspberry Pi3b+ 
+with arch/arm/boot/dts/bcm2837-rpi-3-b.dtb
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
