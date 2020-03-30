@@ -2,368 +2,157 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3A2C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59691C2D0ED
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A8F2073B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B462073B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 11:48:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="B1jPz2rC"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="OwrdblbD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbgC3LpP (ORCPT
+        id S1729759AbgC3Ls0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 07:45:15 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17820 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728764AbgC3LpO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Mar 2020 07:45:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585568663;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=6zR1IDvkP0LMZ6Y1QTmVvc1RpE6FI+SEHibXscQB6uE=;
-        b=B1jPz2rC3/6+GcAcBe4V/pXtMIAY5vYVA4tll9Qu9bktGWC7Y6HbbYAFcN3AXpga
-        VM95OTegAedTlIqdkJRssbYZMm5Sv5lLbE7eD3sVbGnyOR5faFpGmboq9kj8ZNiylVl
-        LNX56+aQUKeBbgf2r3uERBpatmnpc3JSTaNFr6t4=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1585568661292641.3282127841759; Mon, 30 Mar 2020 19:44:21 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <20200330114239.1112759-6-jiaxun.yang@flygoat.com>
-Subject: [PATCH 5/5] MIPS: Loongson64: Switch to generic PCI driver
-Date:   Mon, 30 Mar 2020 19:42:30 +0800
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
-References: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
+        Mon, 30 Mar 2020 07:48:26 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:35107 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728764AbgC3Ls0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 07:48:26 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C5D9423D22;
+        Mon, 30 Mar 2020 13:48:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1585568902;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/WNHnqJr48B9UGKgZOiUmrkZCrV3XIE1znDFAU2j6Tg=;
+        b=OwrdblbDl1rXIFYSbMyycWAJ/UOrU4LJoT06Nn1G+IM+/E1naMieKRwBijsqcFco+PCiRB
+        Y9hqzgjb4FFo1rpJ109DNWxxkRidjc/7K4mc0+Jc+KapaponxbXASGImRVwIqw8PeZnq27
+        cB865PGVvlh96zdgrv44Q1RrplOc2Tc=
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 30 Mar 2020 13:48:21 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
+In-Reply-To: <CAMpxmJUj7wBvO=Y-u5CXazHhjsPHXcq=5iST4KuLrfakW_a9Mg@mail.gmail.com>
+References: <20200317205017.28280-1-michael@walle.cc>
+ <20200317205017.28280-13-michael@walle.cc>
+ <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
+ <9c310f2a11913d4d089ef1b07671be00@walle.cc>
+ <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
+ <22944c9b62aa69da418de7766b7741bd@walle.cc>
+ <CACRpkdbJ3DBO+W4P0n-CfZ1T3L8d_L0Nizra8frkv92XPXR4WA@mail.gmail.com>
+ <4d8d3bc26bdf73eb5c0e5851589fe085@walle.cc>
+ <CAMpxmJUj7wBvO=Y-u5CXazHhjsPHXcq=5iST4KuLrfakW_a9Mg@mail.gmail.com>
+Message-ID: <021f3add4b03b7a682832921a96ef85f@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C5D9423D22
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[21];
+         NEURAL_HAM(-0.00)[-0.772];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[linaro.org,vger.kernel.org,lists.infradead.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We can now enable generic PCI driver in Kconfig, and remove legacy
-PCI driver code.
-
-Radeon vbios quirk is moved to the platform folder to fit the
-new structure.
-
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/Kconfig                  |   1 +
- arch/mips/loongson64/Makefile      |   2 +-
- arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
- arch/mips/pci/Makefile             |   1 -
- arch/mips/pci/fixup-loongson3.c    |  71 ------------------
- arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
- 6 files changed, 31 insertions(+), 189 deletions(-)
- create mode 100644 arch/mips/loongson64/vbios_quirk.c
- delete mode 100644 arch/mips/pci/fixup-loongson3.c
- delete mode 100644 arch/mips/pci/ops-loongson3.c
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 690718b3701a..345a988fa637 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -477,6 +477,7 @@ config MACH_LOONGSON64
- =09select IRQ_MIPS_CPU
- =09select NR_CPUS_DEFAULT_4
- =09select USE_GENERIC_EARLY_PRINTK_8250
-+=09select PCI_DRIVERS_GENERIC
- =09select SYS_HAS_CPU_LOONGSON64
- =09select SYS_HAS_EARLY_PRINTK
- =09select SYS_SUPPORTS_SMP
-diff --git a/arch/mips/loongson64/Makefile b/arch/mips/loongson64/Makefile
-index b7f40b179c71..f04461839540 100644
---- a/arch/mips/loongson64/Makefile
-+++ b/arch/mips/loongson64/Makefile
-@@ -8,6 +8,6 @@ obj-$(CONFIG_MACH_LOONGSON64) +=3D cop2-ex.o platform.o acp=
-i_init.o dma.o \
- obj-$(CONFIG_SMP)=09+=3D smp.o
- obj-$(CONFIG_NUMA)=09+=3D numa.o
- obj-$(CONFIG_RS780_HPET) +=3D hpet.o
--obj-$(CONFIG_PCI) +=3D pci.o
- obj-$(CONFIG_LOONGSON_MC146818) +=3D rtc.o
- obj-$(CONFIG_SUSPEND) +=3D pm.o
-+obj-$(CONFIG_PCI_QUIRKS) +=3D vbios_quirk.o
-diff --git a/arch/mips/loongson64/vbios_quirk.c b/arch/mips/loongson64/vbio=
-s_quirk.c
-new file mode 100644
-index 000000000000..1f0a462aeddd
---- /dev/null
-+++ b/arch/mips/loongson64/vbios_quirk.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/pci.h>
-+#include <loongson.h>
-+
-+static void pci_fixup_radeon(struct pci_dev *pdev)
-+{
-+=09struct resource *res =3D &pdev->resource[PCI_ROM_RESOURCE];
-+
-+=09if (res->start)
-+=09=09return;
-+
-+=09if (!loongson_sysconf.vgabios_addr)
-+=09=09return;
-+
-+=09pci_disable_rom(pdev);
-+=09if (res->parent)
-+=09=09release_resource(res);
-+
-+=09res->start =3D virt_to_phys((void *) loongson_sysconf.vgabios_addr);
-+=09res->end   =3D res->start + 256*1024 - 1;
-+=09res->flags =3D IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
-+=09=09     IORESOURCE_PCI_FIXED;
-+
-+=09dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
-+=09=09 PCI_ROM_RESOURCE, res);
-+}
-+DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, 0x9615,
-+=09=09=09=09PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
-diff --git a/arch/mips/pci/Makefile b/arch/mips/pci/Makefile
-index 342ce10ef593..438f10955d89 100644
---- a/arch/mips/pci/Makefile
-+++ b/arch/mips/pci/Makefile
-@@ -35,7 +35,6 @@ obj-$(CONFIG_LASAT)=09=09+=3D pci-lasat.o
- obj-$(CONFIG_MIPS_COBALT)=09+=3D fixup-cobalt.o
- obj-$(CONFIG_LEMOTE_FULOONG2E)=09+=3D fixup-fuloong2e.o ops-loongson2.o
- obj-$(CONFIG_LEMOTE_MACH2F)=09+=3D fixup-lemote2f.o ops-loongson2.o
--obj-$(CONFIG_MACH_LOONGSON64)=09+=3D fixup-loongson3.o ops-loongson3.o
- obj-$(CONFIG_MIPS_MALTA)=09+=3D fixup-malta.o pci-malta.o
- obj-$(CONFIG_PMC_MSP7120_GW)=09+=3D fixup-pmcmsp.o ops-pmcmsp.o
- obj-$(CONFIG_PMC_MSP7120_EVAL)=09+=3D fixup-pmcmsp.o ops-pmcmsp.o
-diff --git a/arch/mips/pci/fixup-loongson3.c b/arch/mips/pci/fixup-loongson=
-3.c
-deleted file mode 100644
-index 8a741c2c6685..000000000000
---- a/arch/mips/pci/fixup-loongson3.c
-+++ /dev/null
-@@ -1,71 +0,0 @@
--/*
-- * fixup-loongson3.c
-- *
-- * Copyright (C) 2012 Lemote, Inc.
-- * Author: Xiang Yu, xiangy@lemote.com
-- *         Chen Huacai, chenhc@lemote.com
-- *
-- * This program is free software; you can redistribute  it and/or modify i=
-t
-- * under  the terms of  the GNU General  Public License as published by th=
-e
-- * Free Software Foundation;  either version 2 of the  License, or (at you=
-r
-- * option) any later version.
-- *
-- * THIS  SOFTWARE  IS PROVIDED   ``AS  IS'' AND   ANY  EXPRESS OR IMPLIED
-- * WARRANTIES,   INCLUDING, BUT NOT  LIMITED  TO, THE IMPLIED WARRANTIES O=
-F
-- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  I=
-N
-- * NO  EVENT  SHALL   THE AUTHOR  BE    LIABLE FOR ANY   DIRECT, INDIRECT,
-- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BU=
-T
-- * NOT LIMITED   TO, PROCUREMENT OF  SUBSTITUTE GOODS  OR SERVICES; LOSS O=
-F
-- * USE, DATA,  OR PROFITS; OR  BUSINESS INTERRUPTION) HOWEVER CAUSED AND O=
-N
-- * ANY THEORY OF LIABILITY, WHETHER IN  CONTRACT, STRICT LIABILITY, OR TOR=
-T
-- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE O=
-F
-- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-- *
-- */
--
--#include <linux/pci.h>
--#include <boot_param.h>
--
--static void print_fixup_info(const struct pci_dev *pdev)
--{
--=09dev_info(&pdev->dev, "Device %x:%x, irq %d\n",
--=09=09=09pdev->vendor, pdev->device, pdev->irq);
--}
--
--int pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
--{
--=09print_fixup_info(dev);
--=09return dev->irq;
--}
--
--static void pci_fixup_radeon(struct pci_dev *pdev)
--{
--=09struct resource *res =3D &pdev->resource[PCI_ROM_RESOURCE];
--
--=09if (res->start)
--=09=09return;
--
--=09if (!loongson_sysconf.vgabios_addr)
--=09=09return;
--
--=09pci_disable_rom(pdev);
--=09if (res->parent)
--=09=09release_resource(res);
--
--=09res->start =3D virt_to_phys((void *) loongson_sysconf.vgabios_addr);
--=09res->end   =3D res->start + 256*1024 - 1;
--=09res->flags =3D IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
--=09=09     IORESOURCE_PCI_FIXED;
--
--=09dev_info(&pdev->dev, "BAR %d: assigned %pR for Radeon ROM\n",
--=09=09 PCI_ROM_RESOURCE, res);
--}
--
--DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_ATI, PCI_ANY_ID,
--=09=09=09=09PCI_CLASS_DISPLAY_VGA, 8, pci_fixup_radeon);
--
--/* Do platform specific device initialization at pci_enable_device() time =
-*/
--int pcibios_plat_dev_init(struct pci_dev *dev)
--{
--=09return 0;
--}
-diff --git a/arch/mips/pci/ops-loongson3.c b/arch/mips/pci/ops-loongson3.c
-deleted file mode 100644
-index 2f6ad36bdea6..000000000000
---- a/arch/mips/pci/ops-loongson3.c
-+++ /dev/null
-@@ -1,116 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/types.h>
--#include <linux/pci.h>
--#include <linux/kernel.h>
--
--#include <asm/mips-boards/bonito64.h>
--
--#include <loongson.h>
--
--#define PCI_ACCESS_READ  0
--#define PCI_ACCESS_WRITE 1
--
--#define HT1LO_PCICFG_BASE      0x1a000000
--#define HT1LO_PCICFG_BASE_TP1  0x1b000000
--
--static int loongson3_pci_config_access(unsigned char access_type,
--=09=09struct pci_bus *bus, unsigned int devfn,
--=09=09int where, u32 *data)
--{
--=09unsigned char busnum =3D bus->number;
--=09int function =3D PCI_FUNC(devfn);
--=09int device =3D PCI_SLOT(devfn);
--=09int reg =3D where & ~3;
--=09void *addrp;
--=09u64 addr;
--
--=09if (where < PCI_CFG_SPACE_SIZE) { /* standard config */
--=09=09addr =3D (busnum << 16) | (device << 11) | (function << 8) | reg;
--=09=09if (busnum =3D=3D 0) {
--=09=09=09if (device > 31)
--=09=09=09=09return PCIBIOS_DEVICE_NOT_FOUND;
--=09=09=09addrp =3D (void *)TO_UNCAC(HT1LO_PCICFG_BASE | addr);
--=09=09} else {
--=09=09=09addrp =3D (void *)TO_UNCAC(HT1LO_PCICFG_BASE_TP1 | addr);
--=09=09}
--=09} else if (where < PCI_CFG_SPACE_EXP_SIZE) {  /* extended config */
--=09=09struct pci_dev *rootdev;
--
--=09=09rootdev =3D pci_get_domain_bus_and_slot(0, 0, 0);
--=09=09if (!rootdev)
--=09=09=09return PCIBIOS_DEVICE_NOT_FOUND;
--
--=09=09addr =3D pci_resource_start(rootdev, 3);
--=09=09if (!addr)
--=09=09=09return PCIBIOS_DEVICE_NOT_FOUND;
--
--=09=09addr |=3D busnum << 20 | device << 15 | function << 12 | reg;
--=09=09addrp =3D (void *)TO_UNCAC(addr);
--=09} else {
--=09=09return PCIBIOS_DEVICE_NOT_FOUND;
--=09}
--
--=09if (access_type =3D=3D PCI_ACCESS_WRITE)
--=09=09writel(*data, addrp);
--=09else {
--=09=09*data =3D readl(addrp);
--=09=09if (*data =3D=3D 0xffffffff) {
--=09=09=09*data =3D -1;
--=09=09=09return PCIBIOS_DEVICE_NOT_FOUND;
--=09=09}
--=09}
--=09return PCIBIOS_SUCCESSFUL;
--}
--
--static int loongson3_pci_pcibios_read(struct pci_bus *bus, unsigned int de=
-vfn,
--=09=09=09=09 int where, int size, u32 *val)
--{
--=09u32 data =3D 0;
--=09int ret =3D loongson3_pci_config_access(PCI_ACCESS_READ,
--=09=09=09bus, devfn, where, &data);
--
--=09if (ret !=3D PCIBIOS_SUCCESSFUL)
--=09=09return ret;
--
--=09if (size =3D=3D 1)
--=09=09*val =3D (data >> ((where & 3) << 3)) & 0xff;
--=09else if (size =3D=3D 2)
--=09=09*val =3D (data >> ((where & 3) << 3)) & 0xffff;
--=09else
--=09=09*val =3D data;
--
--=09return PCIBIOS_SUCCESSFUL;
--}
--
--static int loongson3_pci_pcibios_write(struct pci_bus *bus, unsigned int d=
-evfn,
--=09=09=09=09  int where, int size, u32 val)
--{
--=09u32 data =3D 0;
--=09int ret;
--
--=09if (size =3D=3D 4)
--=09=09data =3D val;
--=09else {
--=09=09ret =3D loongson3_pci_config_access(PCI_ACCESS_READ,
--=09=09=09=09bus, devfn, where, &data);
--=09=09if (ret !=3D PCIBIOS_SUCCESSFUL)
--=09=09=09return ret;
--
--=09=09if (size =3D=3D 1)
--=09=09=09data =3D (data & ~(0xff << ((where & 3) << 3))) |
--=09=09=09    (val << ((where & 3) << 3));
--=09=09else if (size =3D=3D 2)
--=09=09=09data =3D (data & ~(0xffff << ((where & 3) << 3))) |
--=09=09=09    (val << ((where & 3) << 3));
--=09}
--
--=09ret =3D loongson3_pci_config_access(PCI_ACCESS_WRITE,
--=09=09=09bus, devfn, where, &data);
--
--=09return ret;
--}
--
--struct pci_ops loongson_pci_ops =3D {
--=09.read =3D loongson3_pci_pcibios_read,
--=09.write =3D loongson3_pci_pcibios_write
--};
---=20
-2.26.0.rc2
+Hi,
 
 
+Am 2020-03-30 13:21, schrieb Bartosz Golaszewski:
+> pt., 27 mar 2020 o 16:28 Michael Walle <michael@walle.cc> napisał(a):
+>> 
+>> Am 2020-03-27 11:20, schrieb Linus Walleij:
+>> > On Thu, Mar 26, 2020 at 9:06 PM Michael Walle <michael@walle.cc> wrote:
+>> >> Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
+>> >
+>> >> > In that case maybe you should use the disable_locking option in
+>> >> > regmap_config and provide your own callbacks that you can use in the
+>> >> > irqchip code too?
+>> >>
+>> >> But how would that solve problem (1). And keep in mind, that the
+>> >> reqmap_irqchip is actually used for the interrupt controller, which
+>> >> is not this gpio controller.
+>> >>
+>> >> Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
+>> >> and all interrupt phandles pointing to the interrupt controller will
+>> >> reference the toplevel node. Any phandles pointing to the gpio
+>> >> controller will reference the GPIO subnode.
+>> >
+>> > Ideally we would create something generic that has been on my
+>> > mind for some time, like a generic GPIO regmap irqchip now that
+>> > there are a few controllers like that.
+>> >
+>> > I don't know how feasible it is or how much work it would be. But
+>> > as with GPIO_GENERIC (for MMIO) it would be helpful since we
+>> > can then implement things like .set_multiple() and .get_multiple()
+>> > for everyone.
+>> 
+>> For starters, would that be a drivers/gpio/gpio-regmap.c or a
+>> drivers/base/regmap/regmap-gpio.c? I would assume the first,
+>> because the stuff in drivers/base/regmap operates on a given
+>> regmap and we'd just be using one, correct? On the other hand
+>> there is also the reqmap-irq.c. But as pointed out before, it
+>> will add an interrupt controller to the regmap, not a device
+>> so to speak.
+>> 
+>> -michael
+> 
+> This has been on my TODO list for so long, but I've never been able to
+> find the time... I'd really appreciate any effort in that direction as
+> I believe it would allow us to slowly port a big part of the GPIO
+> expander drivers over to it and make large portions of our codebase
+> generic.
+
+I might have at least a first patch this week. So if you and Linus
+Walleij might have some time to help review and comment on that, it
+would be greatly appreciated.
+
+-michael
+
+> 
+> Best regards,
+> Bartosz Golaszewski
