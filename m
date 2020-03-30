@@ -2,217 +2,114 @@ Return-Path: <SRS0=ov7W=5P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDB4C2D0E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 14:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8451BC2D0EE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92AFD20781
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 14:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A89E2082F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Mar 2020 15:27:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L9/0Hme3"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="l1yQglxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbgC3OyC (ORCPT
+        id S1728916AbgC3P1M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 10:54:02 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:32829 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbgC3OyB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 10:54:01 -0400
-Received: by mail-qv1-f68.google.com with SMTP id p19so9048618qve.0
-        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 07:54:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ku5iL1N6RANAABzr84iAJg9CN/CMxTxUbEuZrAn7SbU=;
-        b=L9/0Hme32NofXz992b6CsrXgGCn+cAPnw0YKmlXlaEVc2EdsrME7DA1dyG6E68jsb5
-         +lEdHtcSG+Jh7vGSwM5eL03dAWRakzA5SVmGtw1s2vdArPYrqPo9j0GoPl6NzQSn0anC
-         p4aaijoNZEDfjF9IzjVZRsWMrtm3Wi7rG/HP1SQ1OUc+hOa1qJouNTG9FTkRYpAKjZAD
-         jhfcB0SpfkiH+Ycu3+SACdv1LE7IqPq71vnEZTCTWrRZ1ugePDlBu4g5uFUam58Vel0g
-         pSywvkBrhQ2WvVjiobH6uT7Uyh8skIVlfpqAsGNhIiHl+BWEc20xyZzQrscHnvgbbkWb
-         yJCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ku5iL1N6RANAABzr84iAJg9CN/CMxTxUbEuZrAn7SbU=;
-        b=blx2EeDdnBRgDBCmx0XMfKGgb9N83dhB/30meNy//yxdeZBwtGem2bxduO//hvrRnM
-         DGudtLPzoYoarrIN+NF9QTstlhwS4YwBLAyoq5gkH0FSEiQor5yNNAcshSUQ6ugylJbH
-         xLs3iLPMADErHXcUMTjiDZT+B3vHL9daVJYU9JxAlLdQdevX6vqWed6+rRayQ4H03bMi
-         x2B8OSzGvkbdcKiyYb5kTGDEEjp20EeZFt3tbCn/sY3kOZJLzlA/gr9/5nkYvZ62U806
-         ZFITNoxWX11wq4nB1T3USc91ABeU0+DpvapxXHPVlghfE4umPa9IVEVGpmF2OCbdlXmF
-         blaw==
-X-Gm-Message-State: ANhLgQ09sBbFW2G8++AsHgmmdb7TGRQWatQG+hb76gCIkhbMfslv8+VS
-        8aWK6C+3XXc+/ZsonGnOiYLILA==
-X-Google-Smtp-Source: ADFU+vvnZVsf13I2tKyzEPZbzZSTUzrSmDWcuIiitXTu0rbnYah/+4rhMe7ysN6LuRmkXvkXtRCo3Q==
-X-Received: by 2002:a0c:e08d:: with SMTP id l13mr12253135qvk.216.1585580040023;
-        Mon, 30 Mar 2020 07:54:00 -0700 (PDT)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id 73sm10651439qkf.82.2020.03.30.07.53.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 07:53:59 -0700 (PDT)
-Subject: Re: [Patch v5 4/6] soc: qcom: Extend RPMh power controller driver to
- register warming devices.
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     rui.zhang@intel.com, ulf.hansson@linaro.org,
-        daniel.lezcano@linaro.org, agross@kernel.org, robh@kernel.org,
-        amit.kucheria@verdurent.com, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200320014107.26087-1-thara.gopinath@linaro.org>
- <20200320014107.26087-5-thara.gopinath@linaro.org>
- <20200327225345.GH5063@builder>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <f20b4940-11ad-82b1-6ece-661a1b033df8@linaro.org>
-Date:   Mon, 30 Mar 2020 10:53:58 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 30 Mar 2020 11:27:12 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:52330 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725978AbgC3P1M (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Mar 2020 11:27:12 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id DBF704126E;
+        Mon, 30 Mar 2020 15:27:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1585582028; x=
+        1587396429; bh=j4/XjXFKkk1FU9ylD8nIv+Ofp3lPFgY922qjOBiGNiM=; b=l
+        1yQglxI49XhmiTFJ+UZPs1qITWjpXQaN5EglrfCZHjBrFubr0+OgvfmmpzwLLQwy
+        8rdNKEbcZqc6Ivfj/s+3MZGs3dlu7sh74QinVQhuauONi06ZSikwyZfVZSZ36qZi
+        wtU/14uh9IueInNKl2dT2Q8MR/5mA8/bWFg7KQFCCc=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id F6_OzbTblhik; Mon, 30 Mar 2020 18:27:08 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 8F4AC41209;
+        Mon, 30 Mar 2020 18:27:08 +0300 (MSK)
+Received: from localhost.yadro.com (10.199.0.226) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Mon, 30
+ Mar 2020 18:27:08 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v5 0/2] iio: proximity: driver for vcnl3020
+Date:   Mon, 30 Mar 2020 18:27:09 +0300
+Message-ID: <20200330152711.8769-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <20200327225345.GH5063@builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.0.226]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add proximity sensor driver for Vishay vcnl3020. Only on-demand
+measurement is supported for now.
 
+Changes from v4:
+   1. add vdd-supply,vddio-supply,interrupts properties into yaml.
+   2. led-current -> vishay,led-current-milliamp.
+   3. add possible values enum list.
+   4. add bulk_read for result hi/lo registers.
+   5. add description of vcnl3020_data structure.
+   6. vcnl3020 id table is removed.
+   7. make "vishay,led-current-milliamp" optional in yaml and code.
 
-On 3/27/20 6:53 PM, Bjorn Andersson wrote:
-> On Thu 19 Mar 18:41 PDT 2020, Thara Gopinath wrote:
-> 
->> RPMh power control hosts power domains that can be used as
->> thermal warming devices. Register these power domains
->> with the generic power domain warming device thermal framework.
->>
->> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
->> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->> ---
->>
->> v3->v4:
->> 	- Introduce a boolean value is_warming_dev in rpmhpd structure to
->> 	  indicate if a generic power domain can be used as a warming
->> 	  device or not.With this change, device tree no longer has to
->> 	  specify which power domain inside the rpmh power domain provider
->> 	  is a warming device.
->> 	- Move registering of warming devices into a late initcall to
->> 	  ensure that warming devices are registered after thermal
->> 	  framework is initialized.
-> 
-> This information is lost when we merge patches, as such I would like
-> such design decisions to be described in the commit message itself.
-> But...
-> 
->>
->>   drivers/soc/qcom/rpmhpd.c | 37 ++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 36 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
->> index 7142409a3b77..4e9c0bbb8826 100644
->> --- a/drivers/soc/qcom/rpmhpd.c
->> +++ b/drivers/soc/qcom/rpmhpd.c
->> @@ -11,6 +11,7 @@
->>   #include <linux/of_device.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/pm_opp.h>
->> +#include <linux/pd_warming.h>
->>   #include <soc/qcom/cmd-db.h>
->>   #include <soc/qcom/rpmh.h>
->>   #include <dt-bindings/power/qcom-rpmpd.h>
->> @@ -48,6 +49,7 @@ struct rpmhpd {
->>   	bool		enabled;
->>   	const char	*res_name;
->>   	u32		addr;
->> +	bool		is_warming_dev;
->>   };
->>   
->>   struct rpmhpd_desc {
->> @@ -55,6 +57,8 @@ struct rpmhpd_desc {
->>   	size_t num_pds;
->>   };
->>   
->> +const struct rpmhpd_desc *global_desc;
->> +
->>   static DEFINE_MUTEX(rpmhpd_lock);
->>   
->>   /* SDM845 RPMH powerdomains */
->> @@ -89,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
->>   	.pd = { .name = "mx", },
->>   	.peer = &sdm845_mx_ao,
->>   	.res_name = "mx.lvl",
->> +	.is_warming_dev = true,
->>   };
->>   
->>   static struct rpmhpd sdm845_mx_ao = {
->> @@ -452,7 +457,14 @@ static int rpmhpd_probe(struct platform_device *pdev)
->>   					       &rpmhpds[i]->pd);
->>   	}
->>   
->> -	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
->> +	ret = of_genpd_add_provider_onecell(pdev->dev.of_node, data);
->> +
->> +	if (ret)
->> +		return ret;
->> +
->> +	global_desc = desc;
->> +
->> +	return 0;
->>   }
->>   
->>   static struct platform_driver rpmhpd_driver = {
->> @@ -469,3 +481,26 @@ static int __init rpmhpd_init(void)
->>   	return platform_driver_register(&rpmhpd_driver);
->>   }
->>   core_initcall(rpmhpd_init);
->> +
->> +static int __init rpmhpd_init_warming_device(void)
->> +{
->> +	size_t num_pds;
->> +	struct rpmhpd **rpmhpds;
->> +	int i;
->> +
->> +	if (!global_desc)
->> +		return -EINVAL;
->> +
->> +	rpmhpds = global_desc->rpmhpds;
->> +	num_pds = global_desc->num_pds;
->> +
->> +	if (!of_find_property(rpmhpds[0]->dev->of_node, "#cooling-cells", NULL))
->> +		return 0;
->> +
->> +	for (i = 0; i < num_pds; i++)
->> +		if (rpmhpds[i]->is_warming_dev)
->> +			of_pd_warming_register(rpmhpds[i]->dev, i);
->> +
->> +	return 0;
->> +}
->> +late_initcall(rpmhpd_init_warming_device);
-> 
-> ...why can't this be done in rpmhpd_probe()?
-> 
-> In particular with the recent patches from John Stultz to allow rpmhpd
-> to be built as a module I don't think there's any guarantees that
-> rpmh_probe() will have succeeded before rpmhpd_init_warming_device()
-> executes.
+Changes from v3:
+   1. minor changes.
+   2. add i2c block to fix dts section in yaml.
 
-It is to take care of boot order.
-So this has to happen after the thermal framework is initialized. 
-Thermal framework is initialized with core_initcall. Can I move the 
-rpmhpd init as a postcore_initcall ? Then I can get rid of this separate 
-function and keep it as part of probe.
+Changes from v2:
+   1. using regmap_read_poll_timeout instead of do-while in measurement
+      function.
+   2. change struct i2client* in vcnl3020_data to struct dev*
+   3. enable REGMAP_I2C in Kconfig
 
-> 
-> Regards,
-> Bjorn
-> 
+Changes from v1:
+   1. using regmap interface instead of i2c_smbus_* calls.
+   2. switch from probe to probe_new.
+   3. s32/int32_t -> int
+
+Ivan Mikhaylov (2):
+  iio: proximity: provide device tree binding document
+  iio: proximity: Add driver support for vcnl3020 proximity sensor
+
+ .../bindings/iio/proximity/vcnl3020.yaml      |  65 +++++
+ drivers/iio/proximity/Kconfig                 |  11 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/vcnl3020.c              | 225 ++++++++++++++++++
+ 4 files changed, 302 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+ create mode 100644 drivers/iio/proximity/vcnl3020.c
 
 -- 
-Warm Regards
-Thara
+2.21.1
+
