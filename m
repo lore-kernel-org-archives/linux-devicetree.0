@@ -2,114 +2,97 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BEEC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD41C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81C520784
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD0B20781
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="viJtbtjD"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ceJi3zIy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbgCaNJt (ORCPT
+        id S1730755AbgCaNbg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:09:49 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:60992 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730473AbgCaNJt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 09:09:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1585660186; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MnwtTc/EcdatrYJ8xwpC2XqSDdEDN2As8dDKoKSgRsY=;
-        b=viJtbtjDgLg/oVj83f6PuXcpO19M2ildvSP0Bd4WrZNicQgd24xrsOLQouZkLa+AoD1aSW
-        kT1G4jj3UXQ0vO+XMtD5HJLk7qGBT4mLhaP7QYufe4teGm/pxJTg9v5PHKclz+kZNqIbcd
-        DSq8s2JHVAWDNEhScJaAfpMsFpH+z+4=
-Date:   Tue, 31 Mar 2020 15:09:33 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        =?iso-8859-2?b?UGF3ZbM=?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
-        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Message-Id: <X7728Q.UX8A28S31JO92@crapouillou.net>
-In-Reply-To: <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
-References: <20200312153411.13535-1-paul@crapouillou.net>
-        <20200312153411.13535-2-paul@crapouillou.net> <20200313090011.GB7416@pi3>
-        <CGME20200318142549eucas1p1793027850923ebad20b4691cba676671@eucas1p1.samsung.com>
-        <D6.31.03891.A6F227E5@epmailinsp8.samsung.com>
-        <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
+        Tue, 31 Mar 2020 09:31:36 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38658 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730543AbgCaNbg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 09:31:36 -0400
+Received: by mail-ed1-f67.google.com with SMTP id e5so25126170edq.5;
+        Tue, 31 Mar 2020 06:31:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nwQ6p0kjxHWUaH6A6bVvx98gfYpYtkPqYfqeOSPqSBo=;
+        b=ceJi3zIySsmcUUoMmbHyJIINyLKe1RaNcCjos5UDdJyQw4zHK+W9pBsv/ATDJMWnx7
+         gqi08d8eB+GQcLMotvF2luheKYoJ+pMkCW6SOAlIrXTHusdPn+5UcgJ2yr5Hnr8L+CUc
+         6vglca50z1wEpzPK3t4w2fQi9Uu2s55eRg03uSO+wUkvcUKQPFYMES3TXyAL5Gom6JmO
+         5w0XUDYTiTG1UahLy/9VNjHRy5Nx5EeNDy8tZHKcQVCqfAKM0i8XsoCZRYNk6o+5w89A
+         UyaN1vXpkdI0wsq0CcavJkv01KK86hVYk93wPvOpT1/+G1kaS/L//0UtSjqePGqLt399
+         sOXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nwQ6p0kjxHWUaH6A6bVvx98gfYpYtkPqYfqeOSPqSBo=;
+        b=CQKHpOQ+kpk8peWNS2tT+3WtUnRA9NaeDvBX+ca+LC0qdWY4fuH0I4563C6t11zBjz
+         7K2mqTx434MQp6//MhRaGHn6FNfjapdleApAhZmQJ7zgEYNqMRtgxTWz6lebUvC7PHWo
+         D6ZkOXHEiPdVwBzQKV+uvtCZtDxrJ5CDo0E6d9iTPNCwYimmLrerp1COCyFvk3QgBCt8
+         f9xlax1DV+pmbF7zqhkjdGF6mJHJ0fH2vxeTqMOV7EZcd4KSyKDAOHJ9fsmjrNciNpRS
+         XF6Qb1DLGGkzOpX7SeF6DILg50fDS5wyWkM3pa/Z2RvXGPL1H0WJe3+HRGuvr+WlKeKW
+         sa2A==
+X-Gm-Message-State: ANhLgQ2szH/YIrzFUT4BHezVVptM7QjTrDetQiGtozg3n4Y9FKGTH+Sy
+        AU8dJyqgzc+6IgMHn8DSnxCXTDcTFaiLdytuqQW5ySOQ
+X-Google-Smtp-Source: ADFU+vsUMbwWMvrTmly08wlYEdvS8JaGTqzQfOyIFOyynV49KSGBzq6rwLnsJZGo0uibBQM6JWfp7zNbBSCAn7fUy5I=
+X-Received: by 2002:a05:6402:b14:: with SMTP id bm20mr15236694edb.365.1585661493777;
+ Tue, 31 Mar 2020 06:31:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20200330221104.3163788-1-martin.blumenstingl@googlemail.com>
+ <20200330221104.3163788-4-martin.blumenstingl@googlemail.com> <05c15e30-3e20-6fce-d2ca-87b8762d0fef@baylibre.com>
+In-Reply-To: <05c15e30-3e20-6fce-d2ca-87b8762d0fef@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 31 Mar 2020 15:31:22 +0200
+Message-ID: <CAFBinCDdjz8FqwAvPOKRYF-KMm6bMMa9D1j7x1=Pkvsx-zRrUg@mail.gmail.com>
+Subject: Re: [RFC v1 3/5] arm64: dts: amlogic: meson-gx: add the Mali-450 OPP
+ table and use DVFS
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, khilman@baylibre.com,
+        jbrunet@baylibre.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Cc: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Hi Neil,
 
-Hi Marek,
+On Tue, Mar 31, 2020 at 9:44 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Hi,
+>
+> On 31/03/2020 00:11, Martin Blumenstingl wrote:
+> > Add the OPP table for the Mali-450 GPU and drop the hardcoded initial
+> > clock configuration. This enables GPU DVFS and thus saves power when the
+> > GPU is not in use while still being able switch to a higher clock on
+> > demand.
+> >
+> > While here, make most of meson-gxl-mali re-usable to reduce the amount
+> > of duplicate code between GXBB and GXL. This is more important now as we
+> > don't want to duplicate the GPU OPP table.
+>
+> Looks good, but please add comment about the CLKID_GP0_PLL assigned clock rate.
+I can do that - do you want that comment to be part of the patch
+description or in the .dtsi?
 
-Le mar. 31 mars 2020 =C3=A0 7:36, Marek Szyprowski=20
-<m.szyprowski@samsung.com> a =C3=A9crit :
-> Hi Paul,
->=20
-> On 2020-03-18 15:25, Paul Cercueil wrote:
->>>>   +    };
->>>>   +
->>>>   +    tsp_reg: regulator-1 {
->>>>   +        compatible =3D "regulator-fixed";
->>>>   +        regulator-name =3D "TSP_FIXED_VOLTAGES";
->>>>   +        regulator-min-microvolt =3D <3300000>;
->>>>   +        regulator-max-microvolt =3D <3300000>;
->>>>   +        gpio =3D <&gpl0 3 GPIO_ACTIVE_HIGH>;
->>>>   +        startup-delay-us =3D <70000>;
->>>>   +        enable-active-high;
->>>>   +        regulator-boot-on;
->>>>   +        regulator-always-on;
->>>=20
->>>  always-on and boot-on should not be needed. You have a consumer=20
->>> for this
->>>  regulator.
->>=20
->>  About this: the touchscreen driver does not use a regulator, so I
->>  believe that's why these properties were here.
->>=20
->>  I sent patches upstream to address the issue:
->>  https://lkml.org/lkml/2020/3/15/94
->>=20
->>  I believe this means I cannot merge the i9100 devicetree until it is
->>  acked.
->=20
-> One more information - similar change has been already posted, but it
-> looks it got lost then: https://patchwork.kernel.org/patch/10550903/
-
-I was aware of this patch, but didn't know it was sent upstream.
-
-This other patch uses two regulators, vdd/avdd but doesn't give any=20
-reason why.
-
-Pawe=C5=82, is that really needed?
-
--Paul
+> I'll ask LibreELEC people to have a run on these patches (including the clk changes) with Kodi.
+real-world testing would be amazing!
 
 
-> Best regards
-> --
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
->=20
-
-
+Martin
