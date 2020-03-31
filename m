@@ -2,86 +2,171 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EC9C2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8053FC2D0F2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43FDF206DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:32:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585683132;
-	bh=R/xbQ3x0Tl3UR+fUjZS4V0QbsUouAGo0fp+vGcIXflI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tdkgHRTqMkw57fOpAx9+FY7YMyF1Tk++Y07CHCzVn4qFVFDNs5u5ODEZee5qUrRj/
-	 Ia3WrxUcGd8o609u6LpJ9qJSAPOkyj8Lq2dKaUqn0vgsJvZFIsIedTMDFH0yPhTze0
-	 5fEfASBbppoetOzUDUYPDxSjdHl7xQjhBw3UQvks=
+	by mail.kernel.org (Postfix) with ESMTP id 573712072E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:39:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FV0KFnXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbgCaTcL (ORCPT
+        id S1728187AbgCaTjx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:32:11 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40112 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbgCaTcL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 15:32:11 -0400
-Received: by mail-il1-f196.google.com with SMTP id j9so20687466ilr.7;
-        Tue, 31 Mar 2020 12:32:11 -0700 (PDT)
+        Tue, 31 Mar 2020 15:39:53 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44217 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbgCaTjx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 15:39:53 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so8517207plr.11
+        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 12:39:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+SEBPmaKCwakluiOKH2/X9qd2KFCw5+klGBkFt7yBuA=;
+        b=FV0KFnXnWFV6SBFzOh8FP08ZqhKreHenI9vDUSgbxtfySfNkAdijq6e7XwFFxAvGRk
+         QOOtVE6scJLeC6rCVa9ZbNaR72ECMnRJCdJka0ewLjn4VPXY5u9YtSRw8uEBQMmPghng
+         3nQ+BVEvaDoDdBzpkRzcfkikbck06smg9Bo5g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ffyuJBft5eRj0uXoExB7KaHT1VC+KdBgrEZukPCp/jk=;
-        b=IAUlI2ghkL9cn58LkUS49/bjbCNzfOlDNObjJN/kNLwam+bz7q7J0PqGi2/wMVe7f5
-         Yz/LCLVveHaAMmshrLoePN9r849zogGjRYnVgQ2u3t7Xl2EdbjXv4LcvD1GEe/+V17Ud
-         /gjyp6HpEOyQUKMaZyfGo+LDEkhbo4LIW1JaiEku2ErdWR+dMDIj8TYkSpvOVr9nG8kR
-         iTTQgmbQqRVOPJ23Q/iP48NRHjjP/5XnBtYZhPLUZ5gvJCgkOQJS+/J+2Tsuxkna8yrF
-         mh8TJJhNoP9eUNnK5Cwff39DXJ6f0aoiZV/uMjuYIS1Y4L+XoI1Ul9W2ipe8foJdL1sY
-         m6lw==
-X-Gm-Message-State: ANhLgQ3/LCTsXW8HNBdyFZ43eKLAn9OTbBHPk3cVA5s3ExstqFC0mz9i
-        KRw+M4vTTa+Pi1ffoOtm0A==
-X-Google-Smtp-Source: ADFU+vs20F/WPfwobCVQDiWAIDI6LL0zgRgv9YyT1gwXPo5RofbdAd8avWmVDPg2Lg2rbY31XKH7RA==
-X-Received: by 2002:a92:48cb:: with SMTP id j72mr18224637ilg.162.1585683130347;
-        Tue, 31 Mar 2020 12:32:10 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id d70sm6197008ill.57.2020.03.31.12.32.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 12:32:09 -0700 (PDT)
-Received: (nullmailer pid 30593 invoked by uid 1000);
-        Tue, 31 Mar 2020 19:32:08 -0000
-Date:   Tue, 31 Mar 2020 13:32:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, heiko@sntech.de,
-        robh+dt@kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] dt-bindings: sound: rockchip-i2s: add
- power-domains property
-Message-ID: <20200331193208.GA30530@bogus>
-References: <20200324094149.6904-1-jbx6244@gmail.com>
- <20200324094149.6904-3-jbx6244@gmail.com>
+        bh=+SEBPmaKCwakluiOKH2/X9qd2KFCw5+klGBkFt7yBuA=;
+        b=HOf95ifxwjBPMmpMbSoFdmDmgJmpJTihoolTG66ekmwWZJtLKBCBIjoqohfvAavGkv
+         6rl6sucnXvHHjY4k6MXqr4AVm6vQzQlSlZm8k79ehhPGKxmSTsayUgTkt7mYjRwHrqnO
+         SKlo25ZdAzXzscctmHTC1wZmcmzeOXCyhS7meQyUZnk8gr4FB1rQanDg6pIQ0aC5nh+r
+         L/LsQ7uQmrGxCrgCOn27GFlfdFiFQruyVZpfZ6NY1biGRvtN+F7lNGWLOSJYTyfCrA6s
+         6r7ieAujS/isoFL+ZydD3bGltrD4Dq3pIA44jY4kuO1dQlxAVIVtSDKsT0TklBsZQIMy
+         eXDQ==
+X-Gm-Message-State: AGi0PuYuKTn/fp2PQQ94sGcBM5fAXzgwzrS43CEZRgzT5ebTSVGPOTEY
+        /n08elQ5WHqJ1EPxapOHsuj8Mw==
+X-Google-Smtp-Source: APiQypITpWVqi8mhgij3s8U7rauYobkIxu0/d4+dAG6s7e92YB2WQe21W0C75Mqwdn2vf8vd6SNbAg==
+X-Received: by 2002:a17:90a:362a:: with SMTP id s39mr591368pjb.28.1585683591124;
+        Tue, 31 Mar 2020 12:39:51 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id e184sm12989883pfh.219.2020.03.31.12.39.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 12:39:50 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 12:39:49 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+Subject: Re: [PATCH V3 6/8] tty: serial: qcom_geni_serial: Add interconnect
+ support
+Message-ID: <20200331193949.GK199755@google.com>
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+ <1585652976-17481-7-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200324094149.6904-3-jbx6244@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1585652976-17481-7-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 24 Mar 2020 10:41:49 +0100, Johan Jonker wrote:
-> In the old txt situation we add/describe only properties that are used
-> by the driver/hardware itself. With yaml it also filters things in a
-> node that are used by other drivers like 'power-domains' for rk3399,
-> so add it to 'rockchip-i2s.yaml'.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  Documentation/devicetree/bindings/sound/rockchip-i2s.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+Hi Akash,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue, Mar 31, 2020 at 04:39:34PM +0530, Akash Asthana wrote:
+> Get the interconnect paths for Uart based Serial Engine device
+> and vote according to the baud rate requirement of the driver.
+> 
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Bjorn's comment, removed se == NULL check from geni_serial_icc_get
+>  - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
+>  - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>    path handle
+>  - As per Matthias comment, added error handling for icc_set_bw call
+> 
+> Changes in V3:
+>  - As per Matthias comment, use common library APIs defined in geni-se
+>    driver for ICC functionality.
+> 
+>  drivers/tty/serial/qcom_geni_serial.c | 28 +++++++++++++++++++++++++---
+>  1 file changed, 25 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> index 8c5d97c..2befe72 100644
+> --- a/drivers/tty/serial/qcom_geni_serial.c
+> +++ b/drivers/tty/serial/qcom_geni_serial.c
+> @@ -965,6 +965,14 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+>  	ser_clk_cfg = SER_CLK_EN;
+>  	ser_clk_cfg |= clk_div << CLK_DIV_SHFT;
+>  
+> +	/*
+> +	 * Bump up BW vote on CPU path as driver supports FIFO mode only.
+> +	 * Assume peak_bw as twice of avg_bw.
+> +	 */
+> +	port->se.from_cpu.avg_bw = Bps_to_icc(baud);
+> +	port->se.from_cpu.peak_bw = Bps_to_icc(2 * baud);
+> +	geni_icc_vote_on(&port->se);
+> +
+>  	/* parity */
+>  	tx_trans_cfg = readl(uport->membase + SE_UART_TX_TRANS_CFG);
+>  	tx_parity_cfg = readl(uport->membase + SE_UART_TX_PARITY_CFG);
+> @@ -1202,11 +1210,14 @@ static void qcom_geni_serial_pm(struct uart_port *uport,
+>  	if (old_state == UART_PM_STATE_UNDEFINED)
+>  		old_state = UART_PM_STATE_OFF;
+>  
+> -	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF)
+> +	if (new_state == UART_PM_STATE_ON && old_state == UART_PM_STATE_OFF) {
+> +		geni_icc_vote_on(&port->se);
+>  		geni_se_resources_on(&port->se);
+> -	else if (new_state == UART_PM_STATE_OFF &&
+> -			old_state == UART_PM_STATE_ON)
+> +	} else if (new_state == UART_PM_STATE_OFF &&
+> +			old_state == UART_PM_STATE_ON) {
+>  		geni_se_resources_off(&port->se);
+> +		geni_icc_vote_off(&port->se);
+> +	}
+>  }
+>  
+>  static const struct uart_ops qcom_geni_console_pops = {
+> @@ -1304,6 +1315,17 @@ static int qcom_geni_serial_probe(struct platform_device *pdev)
+>  			return -ENOMEM;
+>  	}
+>  
+> +	ret = geni_icc_get(&port->se, "qup-core", "qup-config", NULL);
+> +	if (ret)
+> +		return ret;
+> +	/* Set the bus quota to a reasonable value */
+> +	port->se.to_core.avg_bw = console ? GENI_DEFAULT_BW :
+> +		Bps_to_icc(CORE_2X_50_MHZ);
+> +	port->se.to_core.peak_bw = console ? GENI_DEFAULT_BW :
+> +		Bps_to_icc(CORE_2X_100_MHZ);
+
+I'm still unconvinced about the setting of the core bandwidth based on
+whether the port is used as console or not. It could possibly break
+consoles working at speeds > 115kbs and reserve more bandwidth than
+necessary for ports with 'slow' devices.
+
+Why not scale the core bandwidth dynamically? You said earlier that there
+is no clear/linear translation of port speed to bandwidth, but you could
+use the same logic that is implicitly used here:
+
+	if (baudrate <= 115200) {
+		avg_bw = GENI_DEFAULT_BW;
+		peak_bw = GENI_DEFAULT_BW;
+	} else {
+		avg_bw = Bps_to_icc(CORE_2X_50_MHZ);
+		peak_bw = Bps_to_icc(CORE_2X_100_MHZ);
+	}
+
+This would be more robust, power efficient and future readers of the
+code don't have to wonder "why is the console special?" when our
+discussions on this will be long forgotten.
