@@ -2,108 +2,114 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A229FC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BEEC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A18206CC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:03:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585659810;
-	bh=EnBQqz1Zs0ivzG+fg1aNTGdyXL/Kj1Ictb4w4EVq7W4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2NjJHm813QUevmNm6eE6ELFPqofZhQ6Dz5YAUgyYh8Qbe5MnL7BFQXPQAQA/HocVN
-	 eIJPy5eu/Ir7YcGGYqSHg61x82E6SSpLxchs2AbmwCHcFzuwUvIiwlajjtYTrKm30I
-	 cdBlUHQJQmzygNvs/ogT+U+qMrlnhKkBOHPMLjIA=
+	by mail.kernel.org (Postfix) with ESMTP id C81C520784
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:09:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="viJtbtjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730473AbgCaNDa (ORCPT
+        id S1730560AbgCaNJt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:03:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:52758 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730442AbgCaND3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 09:03:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38C5D31B;
-        Tue, 31 Mar 2020 06:03:29 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA9483F71E;
-        Tue, 31 Mar 2020 06:03:28 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 14:03:27 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        kai.vehmanen@linux.intel.com, dl-linux-imx <linux-imx@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Yue Haibing <yuehaibing@huawei.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        sound-open-firmware@alsa-project.org,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH 2/5] ASoC: SOF: imx: fix undefined reference issue
-Message-ID: <20200331130327.GE4802@sirena.org.uk>
-References: <20200319194957.9569-1-daniel.baluta@oss.nxp.com>
- <20200319194957.9569-3-daniel.baluta@oss.nxp.com>
- <20200331122540.GD4802@sirena.org.uk>
- <CAEnQRZD_Hjp2vsouUURuZ_zgAnnUXynq_L5YgCZAN4pFkcmGWQ@mail.gmail.com>
+        Tue, 31 Mar 2020 09:09:49 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:60992 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730473AbgCaNJt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 09:09:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1585660186; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MnwtTc/EcdatrYJ8xwpC2XqSDdEDN2As8dDKoKSgRsY=;
+        b=viJtbtjDgLg/oVj83f6PuXcpO19M2ildvSP0Bd4WrZNicQgd24xrsOLQouZkLa+AoD1aSW
+        kT1G4jj3UXQ0vO+XMtD5HJLk7qGBT4mLhaP7QYufe4teGm/pxJTg9v5PHKclz+kZNqIbcd
+        DSq8s2JHVAWDNEhScJaAfpMsFpH+z+4=
+Date:   Tue, 31 Mar 2020 15:09:33 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        =?iso-8859-2?b?UGF3ZbM=?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <X7728Q.UX8A28S31JO92@crapouillou.net>
+In-Reply-To: <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
+References: <20200312153411.13535-1-paul@crapouillou.net>
+        <20200312153411.13535-2-paul@crapouillou.net> <20200313090011.GB7416@pi3>
+        <CGME20200318142549eucas1p1793027850923ebad20b4691cba676671@eucas1p1.samsung.com>
+        <D6.31.03891.A6F227E5@epmailinsp8.samsung.com>
+        <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7CZp05NP8/gJM8Cl"
-Content-Disposition: inline
-In-Reply-To: <CAEnQRZD_Hjp2vsouUURuZ_zgAnnUXynq_L5YgCZAN4pFkcmGWQ@mail.gmail.com>
-X-Cookie: It's later than you think.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Cc: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
 
---7CZp05NP8/gJM8Cl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Marek,
 
-On Tue, Mar 31, 2020 at 03:41:57PM +0300, Daniel Baluta wrote:
-> On Tue, Mar 31, 2020 at 3:25 PM Mark Brown <broonie@kernel.org> wrote:
+Le mar. 31 mars 2020 =C3=A0 7:36, Marek Szyprowski=20
+<m.szyprowski@samsung.com> a =C3=A9crit :
+> Hi Paul,
+>=20
+> On 2020-03-18 15:25, Paul Cercueil wrote:
+>>>>   +    };
+>>>>   +
+>>>>   +    tsp_reg: regulator-1 {
+>>>>   +        compatible =3D "regulator-fixed";
+>>>>   +        regulator-name =3D "TSP_FIXED_VOLTAGES";
+>>>>   +        regulator-min-microvolt =3D <3300000>;
+>>>>   +        regulator-max-microvolt =3D <3300000>;
+>>>>   +        gpio =3D <&gpl0 3 GPIO_ACTIVE_HIGH>;
+>>>>   +        startup-delay-us =3D <70000>;
+>>>>   +        enable-active-high;
+>>>>   +        regulator-boot-on;
+>>>>   +        regulator-always-on;
+>>>=20
+>>>  always-on and boot-on should not be needed. You have a consumer=20
+>>> for this
+>>>  regulator.
+>>=20
+>>  About this: the touchscreen driver does not use a regulator, so I
+>>  believe that's why these properties were here.
+>>=20
+>>  I sent patches upstream to address the issue:
+>>  https://lkml.org/lkml/2020/3/15/94
+>>=20
+>>  I believe this means I cannot merge the i9100 devicetree until it is
+>>  acked.
+>=20
+> One more information - similar change has been already posted, but it
+> looks it got lost then: https://patchwork.kernel.org/patch/10550903/
 
-> > This has you as the author but you list a signoff by Pierre before you?
+I was aware of this patch, but didn't know it was sent upstream.
 
-> Patch was initially designed by Pierre [1] when in the internal SOF
-> tree we already had the I.MX8M patches.
-> Whereas, in the current patch series I firstly fix the i.MX8 then I
-> add support for i.MX8M.
+This other patch uses two regulators, vdd/avdd but doesn't give any=20
+reason why.
 
-> Should I go back and put Pierre as original author?
+Pawe=C5=82, is that really needed?
 
-Yes, if you're forwarding a patch someone else wrote you should keep
-their authorship.
+-Paul
 
---7CZp05NP8/gJM8Cl
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+> Best regards
+> --
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+>=20
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6DP54ACgkQJNaLcl1U
-h9BNCwf8DKshKqaUb3H081iRZrUHWAJSZU+DnmiD5ENcYbns3F/gJNUhdt8nItvh
-VRWzN4wsKM2ELUd0ktdzcRaxxQS52CBuw0JkJAsVMlOZ2UxE3hYBSe6HrT6gAvpf
-BKcnouJmHOot/rGlw/Z+NtyCxEDQkqz24/+Jv63z6PRrnwb3DHDBJLhP8+FlJ2We
-cKTS1TR290aRfdmPaXyPTiwxGolcGzf5ulXnmgi/0/ytRGd59Yi8IwbC/Cm1sbh7
-rG+PE9vO5P2oHG8TBUUBAcGqO0nLtzn2UdkF6EVzM7IqcPr+QWeIdv9Fgo1b4BN8
-h44Bx4448w4dpDXA6nidWLq33Zbe6Q==
-=Aux6
------END PGP SIGNATURE-----
 
---7CZp05NP8/gJM8Cl--
