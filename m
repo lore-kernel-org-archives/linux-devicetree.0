@@ -2,142 +2,109 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD44DC2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120C0C2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8369A20BED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:45:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585691121;
-	bh=V69CebeAwIgLONixye8JFjO2nVGz27fdPvhR47l5p5c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rxo7m1K+ox8Pzq7htH/71nMIQUIDHUEhfmmJsV8JC6ragaZcezVIxUEXPiVsIwmCn
-	 4MOVgfNXSYprwsRXp0MB06v5pYWoCQ1FP3nQNbcdtZraTLNIx8MSOjExOkVd9rzcx8
-	 WsHhQ6Je83IQbcLV8QPLBI8RcryuBr+jm+h1msGE=
+	by mail.kernel.org (Postfix) with ESMTP id D288E2080C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:45:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nj0/EDIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbgCaVpV (ORCPT
+        id S1731415AbgCaVp0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:45:21 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36104 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729647AbgCaVpU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 17:45:20 -0400
-Received: by mail-il1-f196.google.com with SMTP id p13so20975736ilp.3;
-        Tue, 31 Mar 2020 14:45:20 -0700 (PDT)
+        Tue, 31 Mar 2020 17:45:26 -0400
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:32817 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731379AbgCaVpZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 17:45:25 -0400
+Received: by mail-lj1-f182.google.com with SMTP id f20so23657453ljm.0;
+        Tue, 31 Mar 2020 14:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7qtvvgY+oQwzC6C15g6s473c+gdmOvol2/yXCpXgmnQ=;
+        b=Nj0/EDIRyrx8JkqEovY/FEMtWJE9Hc9FEuajpCkoFySM7sGSNwtAEsSwUN08Vb7lVz
+         jQajjFJEYPx+Ql0aBfeSi3zxXHdKA92GIq4xC+N7gLFmDPmInjRe9E+qfwsLa6r0DBMK
+         wxJenlQ/wZo++raTYn+cqG2jIorFBuQyfQI/TTiRtHCR0o9h2kxIRzG958w17tlF1umt
+         O4bMcoZwNarRxTyCdF993Y0DkPmfZ/QX141d40XSWA3+MVrRqhi397H5pUQyTUeyheGt
+         ouqXqNhOixIfVUFb8M6b0BrmxDQZFUk9bv43vJfW/OJRJULNWtPzMl0o2UOQAlouF+ZX
+         Jo5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=OKro9uAXHnB0is9bdTO7JG0JsIX+rngJzFGMCECx088=;
-        b=hTDEzxBecnNqb4HJ2u1B85VEXZSkaaDz0XCHMi+Xb8Q0rvF8nYHhVpo02NwUpIiUqw
-         jxl0PDlgb3igk9Drb2pfIpPlZs4/2LtKQ3l/FGBfSviUC896BYi8hLKiSLKpToW3qDM2
-         Fz/VGYz4yYqmsunBFBKQLiDNVf9lruIdqZ2DJCM69LICnNJFZPGwF9OxfJMfbytgZrvn
-         kP63QZzfWy/8Z/70yLc/qJEg8Oet8g8Td1bqQAEkOqUTC9f9CZtPK4sWhRK/EP4AgceA
-         NWufpCmzEf3xqrIswyt9nCb+GNMQt7WoaUSgjxlwUIMODi55DazW87Ku+70s//aMoXNC
-         AIRw==
-X-Gm-Message-State: ANhLgQ3hDb7tr46vtsXHHAYGdmSf7HF3JBYDNzzDYmgo60nwsPIuW3FO
-        RoFFQMLy3dO3F6PhsN4Kvg==
-X-Google-Smtp-Source: ADFU+vtJXEMat76W7wSOsLcZpVmb1igoGAxsDoAPotNAhqZth57H315EwJzR6CYpEMJdFqAP7k/Ctg==
-X-Received: by 2002:a92:3203:: with SMTP id z3mr18241920ile.136.1585691119666;
-        Tue, 31 Mar 2020 14:45:19 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id g78sm34429ild.36.2020.03.31.14.45.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7qtvvgY+oQwzC6C15g6s473c+gdmOvol2/yXCpXgmnQ=;
+        b=AWEUQUuxlM0JL6hiXPGS9LFFx6zdyJ1l7gBdUetofvw2aDHsC/ogCsLU7EVlMH8knt
+         2cIQwmXvGkVGHRAcHM04H/W0ppMM9VtqxHA+I6mErQILEqiWp6sC5K8rGEaYSOcEJWlt
+         5KHb+pzlgg3o583T9lqB/HfSShBvCwxVWkKPrQtBXwwpuRYDZwCRe4hAghXD99IXhBh+
+         q1i0jk6UJ6buMizGd3jGfgfiOu1HXED5TR+xIiHTBIh5+uSEo1BH37p2AhYqFASZsKvj
+         zrqXJTJXeHHYrCRGLftTBzEH6okcgTUWdewW2fi9tHuowd0ynfGkZ8e/begkaNLWVf9P
+         mu6g==
+X-Gm-Message-State: AGi0Puawuy4QP32AGV5Xd+y2NCXbKL2vbA58HQ2VZDQhYpp39BEoC7LC
+        SfEuyHUIqfXm6KPiy25/P+o=
+X-Google-Smtp-Source: APiQypIDhnA8je37wjidai8ApC2JmlSUU7udaOUaZxlmJgc024zMS1RvsBpUGLoqtxyLQwL7Kpk9KQ==
+X-Received: by 2002:a2e:9655:: with SMTP id z21mr11886862ljh.122.1585691122805;
+        Tue, 31 Mar 2020 14:45:22 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id a4sm3757826ljb.27.2020.03.31.14.45.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 14:45:18 -0700 (PDT)
-Received: (nullmailer pid 26487 invoked by uid 1000);
-        Tue, 31 Mar 2020 21:45:17 -0000
-Date:   Tue, 31 Mar 2020 15:45:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Tomas Novotny <tomas@novotny.cz>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: iio: light: vcnl4000: Add near-level
-Message-ID: <20200331214517.GA24128@bogus>
-References: <cover.1585134362.git.agx@sigxcpu.org>
- <f0ad40351d7ab12f79d2c29f738443514ae0fb76.1585134362.git.agx@sigxcpu.org>
- <20200329102526.1ee85e96@archlinux>
+        Tue, 31 Mar 2020 14:45:22 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
+        Matt Merhar <mattmerhar@protonmail.com>
+Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 3/6] dt-bindings: Add vendor prefix for Acer Inc.
+Date:   Wed,  1 Apr 2020 00:43:24 +0300
+Message-Id: <20200331214327.6496-4-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200331214327.6496-1-digetx@gmail.com>
+References: <20200331214327.6496-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200329102526.1ee85e96@archlinux>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 10:25:26AM +0100, Jonathan Cameron wrote:
-> On Wed, 25 Mar 2020 12:09:06 +0100
-> Guido Günther <agx@sigxcpu.org> wrote:
-> 
-> > This value indicates when userspace should consider an object
-> > near to the sensor/device.
-> > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> 
-> I'm fine with this.  Note for Rob or other DT people.
-> 
-> This is a new generic binding hence no vendor prefix.
+Acer is a hardware and electronics corporation, specializing in advanced
+electronics technology. Acer's products include desktop PCs, laptop PCs,
+tablets, servers, displays, storage devices, virtual reality devices,
+smartphones and peripherals. Their web site is http://www.acer.com/.
 
-Then document in a common place.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> 
-> I will ideally want review of both the dt patches though
-> before applying.  As we've missed the merge window anyway
-> there is no particular rush.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
-> > ---
-> >  .../devicetree/bindings/iio/light/vishay,vcnl4000.yaml    | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
-> > index 21ef2eb7a205..ac9e3bb6a505 100644
-> > --- a/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
-> > @@ -25,6 +25,13 @@ properties:
-> >    reg:
-> >      maxItems: 1
-> >  
-> > +  near-level:
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index cd97efc34667..d15fcc922f67 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -27,6 +27,8 @@ patternProperties:
+     description: Abilis Systems
+   "^abracon,.*":
+     description: Abracon Corporation
++  "^acer,.*":
++    description: Acer Inc.
+   "^acme,.*":
+     description: Acme Systems srl
+   "^actions,.*":
+-- 
+2.25.1
 
-Perhaps proximity-near-level instead.
-
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      Raw proximity values equal or above this level should be
-> > +      considered 'near' to the device (an object is near to the
-> > +      sensor).
-> > +
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -40,6 +47,7 @@ examples:
-> >        light-sensor@51 {
-> >                compatible = "vishay,vcnl4200";
-> >                reg = <0x51>;
-> > +              near-level = <220>;
-> >        };
-> >    };
-> >  ...
-> 
