@@ -2,191 +2,276 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F281BC2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69554C2D0E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C867220838
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32430208E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:11:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HbI9zMZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbgCaLK7 (ORCPT
+        id S1730436AbgCaLLU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:10:59 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:48552 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730380AbgCaLK7 (ORCPT
+        Tue, 31 Mar 2020 07:11:20 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14974 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730380AbgCaLLU (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:10:59 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 31 Mar 2020 07:11:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585653079; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=dC0QnFVm0tfK5f7rYZZAiw1ArIlyBk9KTuu+tAImyZo=; b=HbI9zMZP6YRTdHs/SAs23EejBG2/CPvyQzDO7wUsESUsdWesPJrk0AocOu2wyy5ldiT3ZLmf
+ XV8fhBn9nZd5Ziu0poyXhNrK0yCtuLu5nQbeIzJepdu+UAPH19C2RgUqhTayYbwSjQIwt0xh
+ JP2yWCon8Dku+xt5t93k5oLocL4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e832548.7f07e20a8ce0-smtp-out-n01;
+ Tue, 31 Mar 2020 11:11:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 66B43C4478C; Tue, 31 Mar 2020 11:11:04 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id BD454634C89;
-        Tue, 31 Mar 2020 14:10:19 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1jJEmg-0001HJ-Pk; Tue, 31 Mar 2020 14:10:18 +0300
-Date:   Tue, 31 Mar 2020 14:10:18 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, laurent.pinchart@ideasonboard.com
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-Message-ID: <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
- <20200325110358.GB853@valkosipuli.retiisi.org.uk>
- <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
- <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
- <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA6DEC433F2;
+        Tue, 31 Mar 2020 11:10:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA6DEC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org
+Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, mka@chromium.org,
+        dianders@chromium.org, evgreen@chromium.org,
+        Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH V3 2/8] soc: qcom: geni: Support for ICC voting
+Date:   Tue, 31 Mar 2020 16:39:30 +0530
+Message-Id: <1585652976-17481-3-git-send-email-akashast@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hans,
+Add necessary macros and structure variables to support ICC BW
+voting from individual SE drivers.
 
-On Tue, Mar 31, 2020 at 12:56:57PM +0200, Hans Verkuil wrote:
-> On 3/31/20 12:32 PM, Sakari Ailus wrote:
-> > Hi Hans,
-> > 
-> > On Mon, Mar 30, 2020 at 12:59:15PM +0200, Hans Verkuil wrote:
-> >> On 3/25/20 12:03 PM, Sakari Ailus wrote:
-> >>> Hi Sowjanya,
-> >>>
-> >>> Thanks for the patchset.
-> >>>
-> >>> On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni wrote:
-> >>>> Tegra210 contains a powerful Video Input (VI) hardware controller
-> >>>> which can support up to 6 MIPI CSI camera sensors.
-> >>>>
-> >>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
-> >>>> capture from an external camera sensor connected to CSI or from
-> >>>> built-in test pattern generator.
-> >>>>
-> >>>> Tegra210 supports built-in test pattern generator from CSI to VI.
-> >>>>
-> >>>> This patch adds a V4L2 media controller and capture driver support
-> >>>> for Tegra210 built-in CSI to VI test pattern generator.
-> >>>>
-> >>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> >>>> ---
-> >>>>  drivers/staging/media/Kconfig              |    2 +
-> >>>>  drivers/staging/media/Makefile             |    1 +
-> >>>>  drivers/staging/media/tegra/Kconfig        |   10 +
-> >>>>  drivers/staging/media/tegra/Makefile       |    8 +
-> >>>>  drivers/staging/media/tegra/TODO           |   10 +
-> >>>>  drivers/staging/media/tegra/tegra-common.h |  263 +++++++
-> >>>>  drivers/staging/media/tegra/tegra-csi.c    |  522 ++++++++++++++
-> >>>>  drivers/staging/media/tegra/tegra-csi.h    |  118 ++++
-> >>>>  drivers/staging/media/tegra/tegra-vi.c     | 1058 ++++++++++++++++++++++++++++
-> >>>>  drivers/staging/media/tegra/tegra-vi.h     |   83 +++
-> >>>>  drivers/staging/media/tegra/tegra-video.c  |  129 ++++
-> >>>>  drivers/staging/media/tegra/tegra-video.h  |   32 +
-> >>>>  drivers/staging/media/tegra/tegra210.c     |  754 ++++++++++++++++++++
-> >>>>  drivers/staging/media/tegra/tegra210.h     |  192 +++++
-> >>>
-> >>> Why staging? Are there reasons not to aim this to the kernel proper right
-> >>> away? If you only support TPG, the driver may not have too many (if any)
-> >>> real users anyway.
-> >>>
-> >>>>  14 files changed, 3182 insertions(+)
-> >>>>  create mode 100644 drivers/staging/media/tegra/Kconfig
-> >>>>  create mode 100644 drivers/staging/media/tegra/Makefile
-> >>>>  create mode 100644 drivers/staging/media/tegra/TODO
-> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-common.h
-> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-csi.c
-> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-csi.h
-> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-vi.c
-> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-vi.h
-> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-video.c
-> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-video.h
-> >>>>  create mode 100644 drivers/staging/media/tegra/tegra210.c
-> >>>>  create mode 100644 drivers/staging/media/tegra/tegra210.h
-> >>>>
-> >>
-> >> <snip>
-> >>
-> >>>> +static int tegra_channel_g_input(struct file *file, void *priv,
-> >>>> +				 unsigned int *i)
-> >>>> +{
-> >>>> +	*i = 0;
-> >>>> +	return 0;
-> >>>> +}
-> >>>> +
-> >>>> +static int tegra_channel_s_input(struct file *file, void *priv,
-> >>>> +				 unsigned int input)
-> >>>> +{
-> >>>> +	if (input > 0)
-> >>>> +		return -EINVAL;
-> >>>> +
-> >>>> +	return 0;
-> >>>> +}
-> >>>
-> >>> Please see patchset on topic "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on
-> >>> linux-media; it's relevant here, too.
-> >>
-> >> No, it isn't. The pipeline is controlled by the driver, not by userspace.
-> >> This is a regular video capture driver, not an ISP driver.
-> > 
-> > I don't think that really makes a difference, whether a device is an ISP or
-> > not, but instead what does is whether there is something to control in its
-> > pipeline that cannot be generally done through the regular V4L2 interface.
-> > Even plain CSI-2 receiver drivers should be media device centric these days
-> > as doing otherwise excludes using a range of sensor drivers with them,
-> > including any possible future support for e.g. sensor embedded data.
-> > 
-> 
-> We've been back and forth on this before for this driver. I see no reason to make things
-> complicated, these are simple video pipelines for video capture. Making this media
-> device centric means that existing software using the BSP version of this driver require
-> a full rewrite, which is not desirable.
-> 
-> If we are going to require CSI receiver drivers to be media centric, then that's a
-> major departure of existing practice. And something that needs to be discussed first,
+Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+---
+Changes in V2:
+ - As per Bjorn's comment dropped enums for ICC paths, given the three
+   paths individual members
 
-I'd be happy to discuss that.
+Changes in V3:
+ - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
+ - Add geni_icc_path structure in common header
 
-Either way, the current design is problematic as it excludes a range of
-camera sensors being used with the driver --- addressing of which requires
-converting the driver MC centric. If the driver is merged to mainline, then
-the user might face a Kconfig option or a module parameter to choose
-between the two --- this defines uAPI behaviour after all.
+ drivers/soc/qcom/qcom-geni-se.c | 98 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/qcom-geni-se.h    | 36 +++++++++++++++
+ 2 files changed, 134 insertions(+)
 
-The only way to avoid that in the future is to make it MC-centric right
-away.
-
-> since that will require that support for each csi receiver driver is added to libcamera.
-> Is libcamera ready for that? Are common applications using libcamera yet?
-> 
-> Obviously, if NVIDIA decides that this is worth the effort, then I have no objection.
-> But I don't think it is something we should require at this stage.
-
-Works for me. But in that case NVIDIA should also be aware that doing so
-has consequences.
-
-We also haven't discussed what to do with old V4L2-centric drivers which
-you'd use with sensors that expose their own subdevs. The proportion of all
-sensors might not be large currently but it is almost certainly bound to
-grow in the future.
-
-FWIW, Intel ipu3-cio2 CSI-2 receiver driver is MC-centric e.g. for the
-above reasons. Libcamera supports it currently. I'll let Laurent (cc'd)
-comment on the details.
-
+diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+index 7d622ea..9344c14 100644
+--- a/drivers/soc/qcom/qcom-geni-se.c
++++ b/drivers/soc/qcom/qcom-geni-se.c
+@@ -720,6 +720,104 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
+ }
+ EXPORT_SYMBOL(geni_se_rx_dma_unprep);
+ 
++int geni_icc_get(struct geni_se *se, const char *icc_core, const char *icc_cpu,
++		const char *icc_ddr)
++{
++	if (icc_core) {
++		se->to_core.path = devm_of_icc_get(se->dev, "qup-core");
++		if (IS_ERR(se->to_core.path))
++			return PTR_ERR(se->to_core.path);
++	}
++
++	if (icc_cpu) {
++		se->from_cpu.path = devm_of_icc_get(se->dev, "qup-config");
++		if (IS_ERR(se->from_cpu.path))
++			return PTR_ERR(se->from_cpu.path);
++	}
++
++	if (icc_ddr) {
++		se->to_ddr.path = devm_of_icc_get(se->dev, "qup-memory");
++		if (IS_ERR(se->to_ddr.path))
++			return PTR_ERR(se->to_ddr.path);
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(geni_icc_get);
++
++int geni_icc_vote_on(struct geni_se *se)
++{
++	int ret;
++
++	if (se->to_core.path) {
++		ret = icc_set_bw(se->to_core.path, se->to_core.avg_bw,
++			se->to_core.peak_bw);
++		if (ret) {
++			dev_err_ratelimited(se->dev, "%s: ICC BW voting failed for core\n",
++						__func__);
++			return ret;
++		}
++	}
++
++	if (se->from_cpu.path) {
++		ret = icc_set_bw(se->from_cpu.path, se->from_cpu.avg_bw,
++			se->from_cpu.peak_bw);
++		if (ret) {
++			dev_err_ratelimited(se->dev, "%s: ICC BW voting failed for cpu\n",
++						__func__);
++			return ret;
++		}
++	}
++
++	if (se->to_ddr.path) {
++		ret = icc_set_bw(se->to_ddr.path, se->to_ddr.avg_bw,
++			se->to_ddr.peak_bw);
++		if (ret) {
++			dev_err_ratelimited(se->dev, "%s: ICC BW voting failed for ddr\n",
++						__func__);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(geni_icc_vote_on);
++
++int geni_icc_vote_off(struct geni_se *se)
++{
++	int ret;
++
++	if (se->to_core.path) {
++		ret = icc_set_bw(se->to_core.path, 0, 0);
++		if (ret) {
++			dev_err_ratelimited(se->dev, "%s: ICC BW remove failed for core\n",
++						__func__);
++			return ret;
++		}
++	}
++
++	if (se->from_cpu.path) {
++		ret = icc_set_bw(se->from_cpu.path, 0, 0);
++		if (ret) {
++			dev_err_ratelimited(se->dev, "%s: ICC BW remove failed for cpu\n",
++						__func__);
++			return ret;
++		}
++	}
++
++	if (se->to_ddr.path) {
++		ret = icc_set_bw(se->to_ddr.path, 0, 0);
++		if (ret) {
++			dev_err_ratelimited(se->dev, "%s: ICC BW remove failed for ddr\n",
++						__func__);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(geni_icc_vote_off);
++
+ static int geni_se_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
+index dd46494..a83c86b 100644
+--- a/include/linux/qcom-geni-se.h
++++ b/include/linux/qcom-geni-se.h
+@@ -6,6 +6,8 @@
+ #ifndef _LINUX_QCOM_GENI_SE
+ #define _LINUX_QCOM_GENI_SE
+ 
++#include <linux/interconnect.h>
++
+ /* Transfer mode supported by GENI Serial Engines */
+ enum geni_se_xfer_mode {
+ 	GENI_SE_INVALID,
+@@ -25,6 +27,12 @@ enum geni_se_protocol_type {
+ struct geni_wrapper;
+ struct clk;
+ 
++struct geni_icc_path {
++	struct icc_path *path;
++	unsigned int avg_bw;
++	unsigned int peak_bw;
++};
++
+ /**
+  * struct geni_se - GENI Serial Engine
+  * @base:		Base Address of the Serial Engine's register block
+@@ -33,6 +41,9 @@ struct clk;
+  * @clk:		Handle to the core serial engine clock
+  * @num_clk_levels:	Number of valid clock levels in clk_perf_tbl
+  * @clk_perf_tbl:	Table of clock frequency input to serial engine clock
++ * @to_core:	ICC path structure for geni to core
++ * @from_cpu:	ICC path structure for cpu to geni
++ * @to_ddr:	ICC path structure for geni to ddr
+  */
+ struct geni_se {
+ 	void __iomem *base;
+@@ -41,6 +52,9 @@ struct geni_se {
+ 	struct clk *clk;
+ 	unsigned int num_clk_levels;
+ 	unsigned long *clk_perf_tbl;
++	struct geni_icc_path to_core;
++	struct geni_icc_path from_cpu;
++	struct geni_icc_path to_ddr;
+ };
+ 
+ /* Common SE registers */
+@@ -229,6 +243,21 @@ struct geni_se {
+ #define GENI_SE_VERSION_MINOR(ver) ((ver & HW_VER_MINOR_MASK) >> HW_VER_MINOR_SHFT)
+ #define GENI_SE_VERSION_STEP(ver) (ver & HW_VER_STEP_MASK)
+ 
++/*
++ * Define bandwidth thresholds that cause the underlying Core 2X interconnect
++ * clock to run at the named frequency. These baseline values are recommended
++ * by the hardware team, and are not dynamically scaled with GENI bandwidth
++ * beyond basic on/off.
++ */
++#define CORE_2X_19_2_MHZ		960
++#define CORE_2X_50_MHZ			2500
++#define CORE_2X_100_MHZ			5000
++#define CORE_2X_150_MHZ			7500
++#define CORE_2X_200_MHZ			10000
++#define CORE_2X_236_MHZ			16383
++
++#define GENI_DEFAULT_BW			Bps_to_icc(1000)
++
+ #if IS_ENABLED(CONFIG_QCOM_GENI_SE)
+ 
+ u32 geni_se_get_qup_hw_version(struct geni_se *se);
+@@ -416,5 +445,12 @@ int geni_se_rx_dma_prep(struct geni_se *se, void *buf, size_t len,
+ void geni_se_tx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len);
+ 
+ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len);
++
++int geni_icc_get(struct geni_se *se, const char *icc_core, const char *icc_cpu,
++		const char *icc_ddr);
++
++int geni_icc_vote_on(struct geni_se *se);
++
++int geni_icc_vote_off(struct geni_se *se);
+ #endif
+ #endif
 -- 
-Kind regards,
-
-Sakari Ailus
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
