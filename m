@@ -6,91 +6,90 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D18BC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB5DC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1B020838
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D02020838
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585691817;
-	bh=bUmSdOZvoAXcq8F9nRgbim6VaPzEgZeRoBCC8hpIH1o=;
+	s=default; t=1585691864;
+	bh=O8kunBfWKRqS97ByfKBHH9TqSMDTRE0G1JnjUob7VJI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2Ro2Z41ndpzJVx8NbXUsyUfu7om/gQ04rBNSp0q9bEK9F0BgwuAP+U2cMf5daMk4a
-	 ThxSeMOO+kDOwFxWndPrJ4XQirHFLtanVg+d5addlSSglhlrUOeOwdXEFUzSxRcsPq
-	 GsYNX0wYwBLzd8c7Y/fTSPTLt3hgDbUxVi7iCBCI=
+	b=Ki16OiKbgd5r9JFrgOher4giJGcUJfjZnRhEgB7Bk8orNFs1YLQROk/rYrbW4jZ5g
+	 PP42OvSkfS7g7eWpm1M9uw2iU+Sz5Xelwm8n9I0uW+nZvr32h9j01WYfNi0BtolOBK
+	 riTZdPxiX85awE016q2G4RWhSiRpHOu/iuY8f4eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgCaV44 (ORCPT
+        id S1731391AbgCaV5n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:56:56 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33023 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgCaV44 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 17:56:56 -0400
-Received: by mail-io1-f66.google.com with SMTP id o127so23458396iof.0;
-        Tue, 31 Mar 2020 14:56:55 -0700 (PDT)
+        Tue, 31 Mar 2020 17:57:43 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33270 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728893AbgCaV5n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 17:57:43 -0400
+Received: by mail-il1-f193.google.com with SMTP id k29so21010794ilg.0;
+        Tue, 31 Mar 2020 14:57:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4WUJcrPXs22r9JdeLAnm70kiB0BphSPIJzUg0VapEbY=;
-        b=SZoOMKFUBzfQbsJHMuXV85guvwAUNY0us6RWlY8M5l7BPCvCTr15eHZHJ+m9QAH+RX
-         VL5PJXYOhvysVzWkZ5DBZMDxVLUJjYrMx53eFGSDth4I8cAEeDhqFUuo9DP8xld1xjYL
-         wmEUQGfG0JNJ4ftVYneLtjMxwUaMCPgux82k1c57Iat97RZ5Sm9+Z4NmXtsXw2T8E0nw
-         DiYjkBSIZMMY9rjTx61nD+j9AZpQLoh+3mZCZb/x7qOEU4w17kNJ9sIsM08JbpR9wmZV
-         bdWushGk1Hj5v1X3Gz5JJsRsu8a+LrYAxvSGgVyZj6T5IsiE2Rwlma9ks3QdIZ/ZqfTv
-         xAkQ==
-X-Gm-Message-State: ANhLgQ39nT7xSfWvBdqGqSFAl8ASDrudkhRypYkRGGFswgeb9Je/bmhx
-        tNEPqBXViYqBW0D2ijfhSLD24YAk/w==
-X-Google-Smtp-Source: ADFU+vv0OawzkBUN9BFAdbkSWK1TqBslM3XoIY17+04sBZBRJwhn+CB96C91SkkB2ucf9uoqAPGiyA==
-X-Received: by 2002:a02:8798:: with SMTP id t24mr17150645jai.119.1585691814748;
-        Tue, 31 Mar 2020 14:56:54 -0700 (PDT)
+        bh=2QEqtdDPs3fIca6WRuiiLpB1Rw0w1HZd/cc02uAbwKQ=;
+        b=EIidPigLsOJtwT2GeBWYF0q9/Lai4ggaPliqG3jdh10hcPiIohgrN9cIZEgAIRbKAS
+         N1FEkjRdLCK4nQuLLf6Lf+5bB1p1mRrChFJ4OzJyHJYYhEP1TOY0ZAGFkMkXC6dfgCL1
+         w63vggn0/DlvsgwT91Fb5JRgs2+mvGnwHntLAKKsMwCUO0UH4Z5ulMQMBAZi+1EqxqXd
+         YH8XaGm4RcwOqJKTndn95pJt/pc3uLNwPVVhxzqauz4p8XSFTlEh9c8kZIUCCdB6XEqk
+         mI/k/W8jOSzVCSp4ljCRoIlTVz0IWAFE6akgh4dfFQdp1T5gLJz1jsDRcpM3rKL0XKER
+         ldzg==
+X-Gm-Message-State: ANhLgQ0q/L8R6rtyRfYtiV2QnoR5yeUJ48rdJ4S86J9u6JcD6FQBA3tT
+        63aUwoI8AWup7Ka+AmX5ig==
+X-Google-Smtp-Source: ADFU+vvBIEGlbOI6faPF9K8IAOJ/ri8FhnlXczhbYRNtjtERZ5gcGCOfaseZHNNUNem9nC0Kotewaw==
+X-Received: by 2002:a92:1d4b:: with SMTP id d72mr18224640ild.14.1585691862545;
+        Tue, 31 Mar 2020 14:57:42 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id e73sm42029ilg.39.2020.03.31.14.56.53
+        by smtp.gmail.com with ESMTPSA id m71sm38807ilb.67.2020.03.31.14.57.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 14:56:53 -0700 (PDT)
-Received: (nullmailer pid 10981 invoked by uid 1000);
-        Tue, 31 Mar 2020 21:56:52 -0000
-Date:   Tue, 31 Mar 2020 15:56:52 -0600
+        Tue, 31 Mar 2020 14:57:41 -0700 (PDT)
+Received: (nullmailer pid 12286 invoked by uid 1000);
+        Tue, 31 Mar 2020 21:57:40 -0000
+Date:   Tue, 31 Mar 2020 15:57:40 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Clement Leger <cleger@kalray.eu>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 1/4] dt-bindings: remoteproc: k3-dsp: Update bindings for
- C71x DSPs
-Message-ID: <20200331215652.GA10923@bogus>
-References: <20200325204701.16862-1-s-anna@ti.com>
- <20200325204701.16862-2-s-anna@ti.com>
+To:     frowand.list@gmail.com
+Cc:     pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 1/2] of: gpio unittest kfree() wrong object
+Message-ID: <20200331215740.GA12198@bogus>
+References: <1585187131-21642-1-git-send-email-frowand.list@gmail.com>
+ <1585187131-21642-2-git-send-email-frowand.list@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200325204701.16862-2-s-anna@ti.com>
+In-Reply-To: <1585187131-21642-2-git-send-email-frowand.list@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 25 Mar 2020 15:46:58 -0500, Suman Anna wrote:
-> Some Texas Instruments K3 family of SoCs have one of more newer
-> generation TMS320C71x CorePac processor subsystem in addition to
-> the existing TMS320C66x CorePac processor subsystems. Update the
-> device tree bindings document for the C71x DSP devices.
+On Wed, 25 Mar 2020 20:45:30 -0500, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 > 
-> The example is also updated to show the single C71 DSP present
-> on J721E SoCs.
+> kernel test robot reported "WARNING: held lock freed!" triggered by
+> unittest_gpio_remove().  unittest_gpio_remove() was unexpectedly
+> called due to an error in overlay tracking.  The remove had not
+> been tested because the gpio overlay removal tests have not been
+> implemented.
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+> kfree() gdev instead of pdev.
+> 
+> Fixes: f4056e705b2e ("of: unittest: add overlay gpio test to catch gpio hog problem")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 > ---
->  .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 78 ++++++++++++++++---
->  1 file changed, 69 insertions(+), 9 deletions(-)
+>  drivers/of/unittest.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
