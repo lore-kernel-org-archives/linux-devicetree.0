@@ -4,316 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5EFC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 23:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7125FC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 23:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB9120838
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 23:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3178C20786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 23:41:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LJS0gu5N"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mRqmaUgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731470AbgCaXcO (ORCPT
+        id S1731565AbgCaXlj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 19:32:14 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34119 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731259AbgCaXcO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 19:32:14 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 23so11153173pfj.1
-        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 16:32:13 -0700 (PDT)
+        Tue, 31 Mar 2020 19:41:39 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35170 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731331AbgCaXlj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 19:41:39 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a13so1107250pfa.2
+        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 16:41:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=1HVkfCZfA09hqCSwGr9pi3bCsfyBjCkprFJud88h6Eg=;
-        b=LJS0gu5NPnfkn+N8TfYnBTTyF+DE7VO9inN7xOWsdRJ2Yf/pBLhcc3ZWWw10EODhVi
-         g8rPT4+9brsADpP8MdC3CRFnnM/ozbwUqPaa1B9hGMfFsY3gyf80n3dSwiQs4+cLs93K
-         glHidqby5ckbHHxSaPVuKXjN7AMOhTzSLRhftPIRQK1oB0IL3yhoOS1X+bbIJCnuI3+3
-         L2TNkCrcGIB73wdVxAq0gJv5b9B/G3ZYlIR4WnOvfHXCQXCFQMdXHMNqv0u9tDSGbmS9
-         WFQ/RhsBa7yo9P06SNZHiqiwU+b5TL7WdLY0P2D2QMP/l/Z1jjENWM8LJH8ZGqAQpJ0K
-         Y0Tg==
+        bh=kgLg1BYMpswLOvaY9ouREHThum7EqW/Wb2UtLfVPDwA=;
+        b=mRqmaUgoOW9VnbKgx4EF0ko6I3gfQVayMY4tJ2KbUJwDw6KyIFwM3GYQ3zv6iwPfDA
+         RBj7069dKZ7bUxg+TF5m3UxXR1+LM79xl51LOpF1ztxjrT9RN69vCvl8pcShYculTJRu
+         XZLW0nI4bg5rC2m/ln/Y4GNh0P00XwtvlwYYoH+wnPGSz1fE9aNuheBrgFPitLVK4D8j
+         0tc6pHbeZWS88bb9hFgA/XOD/P6dlxVFKLt07HeT1whYTLhZf1/1E3wWUdht2AxOhfYT
+         8dt33gRdJl9DmRe/FIhGc3AylBB1+l1w/rTh3Ok1t0cZKTwismTjg89tvCSn1BoPMfMD
+         yYOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=1HVkfCZfA09hqCSwGr9pi3bCsfyBjCkprFJud88h6Eg=;
-        b=h/d9VQX6eFDOvAUyRxSKzh+JDhTmn+LG3kUMfF00EFQNFc74np9kjObY+xT/dD8g48
-         qJessVPuEgHtMLMUx2gR0TJXu2UCvo2QSC7T9XnEVxyQlnZjQfi48gpVpLIwFs5HRaWk
-         cj2BZd//KWdXx/BvhtSIySrc76MPvNgTGvXu2/aCCq97uC3Xe9bvnf3nLc0kLKU5hl4B
-         CKLC12TlMFUVsuROLMs57XNM3DU+b5roxmogNkJG3q4MxMQcQ2MfZ+3M2JnD7hSPaOJm
-         ucAax5WewIXxFf8ACd/rV4MQ2Zd5VLRmBDkN+XTVuxr4OiDNFmlhrgmcJI/6n+fzZMwI
-         EYYQ==
-X-Gm-Message-State: ANhLgQ2LVjtTgQYxk6et6HIx5CT4DVWoY76HOeiCCHNuc3r9IUv+IHOO
-        ynbm5HEVGNDMcWdgKO8ZR6qOpw==
-X-Google-Smtp-Source: ADFU+vvnkx2Csw/AMK/p49sBaVOWuY1loy/APpY6aE13XVgXhALJ7Zl0e6xhwPFi2IfS425Vh5SsQg==
-X-Received: by 2002:a62:30c6:: with SMTP id w189mr20952100pfw.257.1585697532480;
-        Tue, 31 Mar 2020 16:32:12 -0700 (PDT)
+        bh=kgLg1BYMpswLOvaY9ouREHThum7EqW/Wb2UtLfVPDwA=;
+        b=IQMQrVtNg05O3HKvN8xQF0baJta0cfSxlUxM5jVWoc6Z90+zXY5u5IEcTMHTyrtcUg
+         afFkNd0hSIW+tci28+rz6LnEr1M/k+guK4MixJHgH1ENTgj5tY8jNV8FjuuXovhI5F8k
+         bovE3sh0qbMLVXhidRT0hNGe8jqKYEdDFH4zrUYz+sjE3qT8QMrVkwoeuH1Ruvgrx3ja
+         ACgpUcD5MeCwjMKqfUuU/wzlsArVoOajJcp16hQrfT3BuEUu7w1+0il23yAk6ks6rxRP
+         01MlEY+9TgDh8aAM97jXfkwQ10V2O8opbjokjuF3//htTCF8a9ZnNjkuBHm0Qk1aTeI4
+         aqew==
+X-Gm-Message-State: AGi0PuYJOuNOolyyjYTLwV3JCgLt5odJcLpabOUjGC6UMzJI9GPIFrON
+        GtHLa3qmjkfiAS5i8kI8X0j61g==
+X-Google-Smtp-Source: APiQypJMF+3p+OYDbDQ4wyrkTdV5Dob4Zmqb1h73XbhqTI/p2mAJDLPwuix49HbnjKy/j58rekzVAA==
+X-Received: by 2002:a63:fd43:: with SMTP id m3mr7937975pgj.129.1585698097837;
+        Tue, 31 Mar 2020 16:41:37 -0700 (PDT)
 Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a8sm91544pgg.79.2020.03.31.16.32.10
+        by smtp.gmail.com with ESMTPSA id l5sm116369pgt.10.2020.03.31.16.41.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 16:32:11 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 16:32:09 -0700
+        Tue, 31 Mar 2020 16:41:37 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 16:41:35 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, agross@kernel.org, wsa@the-dreams.de,
-        broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org,
-        georgi.djakov@linaro.org, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        swboyd@chromium.org, mgautam@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        mka@chromium.org, dianders@chromium.org, evgreen@chromium.org
-Subject: Re: [PATCH V3 2/8] soc: qcom: geni: Support for ICC voting
-Message-ID: <20200331233209.GF254911@minitux>
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
- <1585652976-17481-3-git-send-email-akashast@codeaurora.org>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org,
+        psodagud@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org
+Subject: Re: [PATCH] dt-bindings: remoteproc: Add interconnect property
+Message-ID: <20200331234135.GC267644@minitux>
+References: <1585357496-6368-1-git-send-email-rishabhb@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585652976-17481-3-git-send-email-akashast@codeaurora.org>
+In-Reply-To: <1585357496-6368-1-git-send-email-rishabhb@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 31 Mar 04:09 PDT 2020, Akash Asthana wrote:
+On Fri 27 Mar 18:04 PDT 2020, Rishabh Bhatnagar wrote:
 
-> Add necessary macros and structure variables to support ICC BW
-> voting from individual SE drivers.
+> Allow proxy voting/unvoting of bus bandwidth for remote
+> processors. This property will specify the bus-master and
+> slave so that remoteproc platform driver can make the proxy
+> vote for bus bandwidth.
 > 
-> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
 > ---
-> Changes in V2:
->  - As per Bjorn's comment dropped enums for ICC paths, given the three
->    paths individual members
+>  Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> Changes in V3:
->  - Add geni_icc_get, geni_icc_vote_on and geni_icc_vote_off as helper API.
->  - Add geni_icc_path structure in common header
-> 
->  drivers/soc/qcom/qcom-geni-se.c | 98 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/qcom-geni-se.h    | 36 +++++++++++++++
->  2 files changed, 134 insertions(+)
-> 
-> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-> index 7d622ea..9344c14 100644
-> --- a/drivers/soc/qcom/qcom-geni-se.c
-> +++ b/drivers/soc/qcom/qcom-geni-se.c
-> @@ -720,6 +720,104 @@ void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
->  }
->  EXPORT_SYMBOL(geni_se_rx_dma_unprep);
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> index 9938918..529b0a0 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> @@ -111,6 +111,17 @@ on the Qualcomm ADSP Hexagon core.
+>  	qcom,sm8150-slpi-pas:
+>  		    must be "lcx", "lmx", "load_state"
 >  
-> +int geni_icc_get(struct geni_se *se, const char *icc_core, const char *icc_cpu,
-> +		const char *icc_ddr)
-> +{
-> +	if (icc_core) {
+> +- interconnect:
 
-Afaict it's only this that might be passed as NULL, so please drop these
-conditionals (keep the last one).
+This should be plural; "interconnects".
 
-> +		se->to_core.path = devm_of_icc_get(se->dev, "qup-core");
-> +		if (IS_ERR(se->to_core.path))
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: Specifies the interconnect bus-master and bus-slave for
+> +		    bandwidth voting during proxy vote/unvote.
+> +
+> +- interconnect-names:
+> +	Usage: optional
+> +	Value type: <stringlist>
+> +	Definition: The interconnect name depends on the compatible string
 
-It would be useful to print an error message here (if PTR_ERR(path) !=
--EPROBE_DEFER).
-
-> +			return PTR_ERR(se->to_core.path);
-> +	}
-> +
-> +	if (icc_cpu) {
-> +		se->from_cpu.path = devm_of_icc_get(se->dev, "qup-config");
-> +		if (IS_ERR(se->from_cpu.path))
-> +			return PTR_ERR(se->from_cpu.path);
-> +	}
-> +
-> +	if (icc_ddr) {
-> +		se->to_ddr.path = devm_of_icc_get(se->dev, "qup-memory");
-> +		if (IS_ERR(se->to_ddr.path))
-> +			return PTR_ERR(se->to_ddr.path);
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(geni_icc_get);
-> +
-> +int geni_icc_vote_on(struct geni_se *se)
-> +{
-> +	int ret;
-> +
-> +	if (se->to_core.path) {
-
-icc_set_bw(NULL, ...) is valid and will return 0, so these checks
-doesn't add any value.
-
-> +		ret = icc_set_bw(se->to_core.path, se->to_core.avg_bw,
-> +			se->to_core.peak_bw);
-> +		if (ret) {
-> +			dev_err_ratelimited(se->dev, "%s: ICC BW voting failed for core\n",
-> +						__func__);
-
-Please drop the __func__, the message is specific enough.
-
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (se->from_cpu.path) {
-> +		ret = icc_set_bw(se->from_cpu.path, se->from_cpu.avg_bw,
-> +			se->from_cpu.peak_bw);
-> +		if (ret) {
-> +			dev_err_ratelimited(se->dev, "%s: ICC BW voting failed for cpu\n",
-> +						__func__);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (se->to_ddr.path) {
-> +		ret = icc_set_bw(se->to_ddr.path, se->to_ddr.avg_bw,
-> +			se->to_ddr.peak_bw);
-> +		if (ret) {
-> +			dev_err_ratelimited(se->dev, "%s: ICC BW voting failed for ddr\n",
-> +						__func__);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(geni_icc_vote_on);
-> +
-> +int geni_icc_vote_off(struct geni_se *se)
-> +{
-> +	int ret;
-> +
-> +	if (se->to_core.path) {
-> +		ret = icc_set_bw(se->to_core.path, 0, 0);
-> +		if (ret) {
-> +			dev_err_ratelimited(se->dev, "%s: ICC BW remove failed for core\n",
-> +						__func__);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (se->from_cpu.path) {
-> +		ret = icc_set_bw(se->from_cpu.path, 0, 0);
-> +		if (ret) {
-> +			dev_err_ratelimited(se->dev, "%s: ICC BW remove failed for cpu\n",
-> +						__func__);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (se->to_ddr.path) {
-> +		ret = icc_set_bw(se->to_ddr.path, 0, 0);
-> +		if (ret) {
-> +			dev_err_ratelimited(se->dev, "%s: ICC BW remove failed for ddr\n",
-> +						__func__);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(geni_icc_vote_off);
-
-Given that these two functions only switch the bandwidth request between
-some value and 0, I really think we should carry a "bool enabled" on the
-path and replace these two functions with
-icc_bulk_enable()/icc_bulk_disable().
-
-The added benefit of this would be that you call icc_set_bw() instead of
-changing the geni_icc_path->{avg_bw,peak_bw} and don't need to keep
-track of them here.
+This should be elaborated upon, similar to e.g. power-domain-names.
 
 Regards,
 Bjorn
 
 > +
->  static int geni_se_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-> index dd46494..a83c86b 100644
-> --- a/include/linux/qcom-geni-se.h
-> +++ b/include/linux/qcom-geni-se.h
-> @@ -6,6 +6,8 @@
->  #ifndef _LINUX_QCOM_GENI_SE
->  #define _LINUX_QCOM_GENI_SE
->  
-> +#include <linux/interconnect.h>
-> +
->  /* Transfer mode supported by GENI Serial Engines */
->  enum geni_se_xfer_mode {
->  	GENI_SE_INVALID,
-> @@ -25,6 +27,12 @@ enum geni_se_protocol_type {
->  struct geni_wrapper;
->  struct clk;
->  
-> +struct geni_icc_path {
-> +	struct icc_path *path;
-> +	unsigned int avg_bw;
-> +	unsigned int peak_bw;
-> +};
-> +
->  /**
->   * struct geni_se - GENI Serial Engine
->   * @base:		Base Address of the Serial Engine's register block
-> @@ -33,6 +41,9 @@ struct clk;
->   * @clk:		Handle to the core serial engine clock
->   * @num_clk_levels:	Number of valid clock levels in clk_perf_tbl
->   * @clk_perf_tbl:	Table of clock frequency input to serial engine clock
-> + * @to_core:	ICC path structure for geni to core
-> + * @from_cpu:	ICC path structure for cpu to geni
-> + * @to_ddr:	ICC path structure for geni to ddr
->   */
->  struct geni_se {
->  	void __iomem *base;
-> @@ -41,6 +52,9 @@ struct geni_se {
->  	struct clk *clk;
->  	unsigned int num_clk_levels;
->  	unsigned long *clk_perf_tbl;
-> +	struct geni_icc_path to_core;
-> +	struct geni_icc_path from_cpu;
-> +	struct geni_icc_path to_ddr;
->  };
->  
->  /* Common SE registers */
-> @@ -229,6 +243,21 @@ struct geni_se {
->  #define GENI_SE_VERSION_MINOR(ver) ((ver & HW_VER_MINOR_MASK) >> HW_VER_MINOR_SHFT)
->  #define GENI_SE_VERSION_STEP(ver) (ver & HW_VER_STEP_MASK)
->  
-> +/*
-> + * Define bandwidth thresholds that cause the underlying Core 2X interconnect
-> + * clock to run at the named frequency. These baseline values are recommended
-> + * by the hardware team, and are not dynamically scaled with GENI bandwidth
-> + * beyond basic on/off.
-> + */
-> +#define CORE_2X_19_2_MHZ		960
-> +#define CORE_2X_50_MHZ			2500
-> +#define CORE_2X_100_MHZ			5000
-> +#define CORE_2X_150_MHZ			7500
-> +#define CORE_2X_200_MHZ			10000
-> +#define CORE_2X_236_MHZ			16383
-> +
-> +#define GENI_DEFAULT_BW			Bps_to_icc(1000)
-> +
->  #if IS_ENABLED(CONFIG_QCOM_GENI_SE)
->  
->  u32 geni_se_get_qup_hw_version(struct geni_se *se);
-> @@ -416,5 +445,12 @@ int geni_se_rx_dma_prep(struct geni_se *se, void *buf, size_t len,
->  void geni_se_tx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len);
->  
->  void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len);
-> +
-> +int geni_icc_get(struct geni_se *se, const char *icc_core, const char *icc_cpu,
-> +		const char *icc_ddr);
-> +
-> +int geni_icc_vote_on(struct geni_se *se);
-> +
-> +int geni_icc_vote_off(struct geni_se *se);
->  #endif
->  #endif
+>  - memory-region:
+>  	Usage: required
+>  	Value type: <phandle>
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
