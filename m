@@ -2,135 +2,129 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07B5C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CDAC2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7ABB20BED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5D220CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:29:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YSlYN7OT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbgCaQ31 (ORCPT
+        id S1730590AbgCaQ3j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:29:27 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58981 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730011AbgCaQ30 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:29:26 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJJlN-0007Xk-7h; Tue, 31 Mar 2020 18:29:17 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jJJlK-0005tF-Br; Tue, 31 Mar 2020 18:29:14 +0200
-Date:   Tue, 31 Mar 2020 18:29:14 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-pwm@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH RFC 2/6] gpio: mvebu: honour EPROBE_DEFER for
- devm_clk_get()
-Message-ID: <20200331162914.h65jnclbsmlzpzti@pengutronix.de>
-References: <20200329104549.GX25745@shell.armlinux.org.uk>
- <E1jIVU9-0005h4-QU@rmk-PC.armlinux.org.uk>
- <20200329131659.4hbshjst4ccvje2n@pengutronix.de>
- <20200329133400.GA25745@shell.armlinux.org.uk>
- <20200329180056.cwju3zqviwnwwjd6@pengutronix.de>
- <20200329182236.GC25745@shell.armlinux.org.uk>
+        Tue, 31 Mar 2020 12:29:39 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37471 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730413AbgCaQ3j (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:29:39 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u65so340263pfb.4
+        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 09:29:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3wP5LCDf1qLgKK+VOjwy/fW1+iOb+VwqM7TAcp3BsV8=;
+        b=YSlYN7OTswKyzWbeb+COMKOnvlKIkPMClodNu+D2n/6uKu5XWt6GHkoI5M1ofB5Gb+
+         rRdOjtgl3DGJBdnP1/umt9xvGTr3WFLeINe/yjJJBKc+9E3IM29YYplh6m3b72qpovtK
+         SfF/FNk5rtPH/jQEasgic5AtYgk1SBI7cPjzQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3wP5LCDf1qLgKK+VOjwy/fW1+iOb+VwqM7TAcp3BsV8=;
+        b=h4a6qppX4yCDOFCLOGThPqX2jUNuMd9xxwgYwcenZWuA38aXhSRswW5drSKcuQTcdl
+         20Y7KTy0sCsMOzMs9H0Cen7CIkBSzF5Won0z/eJGmN0EUeGC/DGykMf/3nsHmxSa3xOf
+         y9bTdlp4Tybx2UkL7pcBgRfnQA+DxUsSokmAkbH94hYEcgRIr9vu3WUievVleDF8xqqb
+         wNYCdrwDoCCd4DPN2JhPAT0iHbqAfnm2+rQPraCYVWRrujzeuXFB1W1Js7JKanKAa2A+
+         RJCxqZ2K4kDNYLhYPfjAbxftb5wzeihWWt1K+Jccv2BbUkEyafF0HgnwqXzBCkrjs/DJ
+         Ycww==
+X-Gm-Message-State: AGi0PubUrHPwRgcWJtIu+4Scf3qr+UM0KsY5INHzmGCdvbzJ5msMvePf
+        yTO3LGarZj9aOBc59nQzxS0VLA==
+X-Google-Smtp-Source: APiQypIE8YZwOIL+SRdJzFHBcl+UVQk/2x3rJ3G6v/OprL+VIZ3bbRQSzJiLgYHEFwbBEdfp1hC1WQ==
+X-Received: by 2002:a63:31c4:: with SMTP id x187mr11698385pgx.205.1585672177939;
+        Tue, 31 Mar 2020 09:29:37 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id i16sm2964502pfq.165.2020.03.31.09.29.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 09:29:37 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: sc7180: Swap order of gpucc and sdhc_2
+Date:   Tue, 31 Mar 2020 09:29:00 -0700
+Message-Id: <20200331092832.1.Ic361058ca22d7439164ffea11421740462e14272@changeid>
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200329182236.GC25745@shell.armlinux.org.uk>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Russell,
+Devices are supposed to be sorted by unit address.  These two got
+swapped when they landed.  Fix.
 
-On Sun, Mar 29, 2020 at 07:22:36PM +0100, Russell King - ARM Linux admin wrote:
-> On Sun, Mar 29, 2020 at 08:00:56PM +0200, Uwe Kleine-König wrote:
-> > On Sun, Mar 29, 2020 at 02:34:00PM +0100, Russell King - ARM Linux admin wrote:
-> > > On Sun, Mar 29, 2020 at 03:16:59PM +0200, Uwe Kleine-König wrote:
-> > > > On Sun, Mar 29, 2020 at 11:48:09AM +0100, Russell King wrote:
-> > > > > diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> > > > > index fa5641615db6..ee13b11c5298 100644
-> > > > > --- a/drivers/gpio/gpio-mvebu.c
-> > > > > +++ b/drivers/gpio/gpio-mvebu.c
-> > > > > @@ -1132,6 +1132,9 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
-> > > > >  	}
-> > > > >  
-> > > > >  	mvchip->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > > +	if (mvchip->clk == ERR_PTR(-EPROBE_DEFER))
-> > > > > +		return -EPROBE_DEFER;
-> > > > > +
-> > > > >  	/* Not all SoCs require a clock.*/
-> > > > >  	if (!IS_ERR(mvchip->clk))
-> > > > >  		clk_prepare_enable(mvchip->clk);
-> > > > 
-> > > > I'd say the following is the right thing to do here:
-> > > > 
-> > > > 	mvchip->clk = devm_clk_get_optional(...);
-> > > > 	if (IS_ERR(mvchip->clk))
-> > > > 		return ...
-> > > 
-> > > It's not that simple.  The clock is required for Armada 370, and is
-> > > optional for Armada 8040.
-> > 
-> > I'd say it is still the right approach here. On Armada 370 the dtb then
-> > has a clk and on Armada 8040 it doesn't. So if with
-> > devm_clk_get_optional() something goes wrong that's because the dtb is
-> > wrong. And in fact the handling is even better than with your suggested
-> > patch as every error (but EPROBE_DEFER) is ignored instead of passed to
-> > the caller with your (and the existing) approach.
-> 
-> Sort of.  Every error is currently treated as "no clock", and only
-> later does such an error become fatal in the driver _if_ PWM is
-> configured into the kernel and we're running on Armada 370.  If PWM
-> is disabled in the kernel, or on some other SoC, then the driver
-> doesn't care whether getting the clock reported any kind of error.
-> 
-> Your proposal is to always treat any error getting the clock,
-> irrespective of whether there is PWM or not, as a fatal error for
-> the driver.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Is this clock (assuming it's available) needed for GPIO operation? If
-not, I'd say the call to devm_clk_get should go into mvebu_pwm_probe().
-And if yes, then use devm_clk_get_optional in mvebu_gpio_probe() and
-either request it once more in mvebu_pwm_probe() (without _optional) or
-test for mvchip->clk == NULL. (Or maybe just don't check and let the
-driver fail when clk_get_rate(mvchip->clk) returns zero.)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-> That is an entirely seperate functional change.
-
-This is still different to what you do, but it is (IMHO) cleaner and
-fixes the problem you want to solve en passant.
-
-Best regards
-Uwe
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 998f101ad623..4bdadfd9efb9 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1294,6 +1294,20 @@ pinconf-sd-cd {
+ 			};
+ 		};
+ 
++		gpucc: clock-controller@5090000 {
++			compatible = "qcom,sc7180-gpucc";
++			reg = <0 0x05090000 0 0x9000>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
++				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
++			clock-names = "bi_tcxo",
++				      "gcc_gpu_gpll0_clk_src",
++				      "gcc_gpu_gpll0_div_clk_src";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
+ 		sdhc_2: sdhci@8804000 {
+ 			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
+ 			reg = <0 0x08804000 0 0x1000>;
+@@ -1312,20 +1326,6 @@ sdhc_2: sdhci@8804000 {
+ 			status = "disabled";
+ 		};
+ 
+-		gpucc: clock-controller@5090000 {
+-			compatible = "qcom,sc7180-gpucc";
+-			reg = <0 0x05090000 0 0x9000>;
+-			clocks = <&rpmhcc RPMH_CXO_CLK>,
+-				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
+-				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
+-			clock-names = "bi_tcxo",
+-				      "gcc_gpu_gpll0_clk_src",
+-				      "gcc_gpu_gpll0_div_clk_src";
+-			#clock-cells = <1>;
+-			#reset-cells = <1>;
+-			#power-domain-cells = <1>;
+-		};
+-
+ 		qspi: spi@88dc000 {
+ 			compatible = "qcom,qspi-v1";
+ 			reg = <0 0x088dc000 0 0x600>;
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.26.0.rc2.310.g2932bb562d-goog
+
