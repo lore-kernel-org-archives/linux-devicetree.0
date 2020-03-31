@@ -2,138 +2,147 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FC5C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 10:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44ACC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 10:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4A620781
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 10:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80902208E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 10:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbgCaK27 (ORCPT
+        id S1729955AbgCaKcz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 06:28:59 -0400
-Received: from mx.socionext.com ([202.248.49.38]:44524 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729925AbgCaK27 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 06:28:59 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 31 Mar 2020 19:28:57 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id C3E3F60057;
-        Tue, 31 Mar 2020 19:28:57 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Tue, 31 Mar 2020 19:28:57 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 6A380403AF;
-        Tue, 31 Mar 2020 19:28:57 +0900 (JST)
-Received: from [10.213.132.48] (unknown [10.213.132.48])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 481BA12013D;
-        Tue, 31 Mar 2020 19:28:57 +0900 (JST)
-Date:   Tue, 31 Mar 2020 19:28:57 +0900
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: dma: uniphier-xdmac: Consolidate register region description
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-In-Reply-To: <CAK7LNARyRcxR0nhPWo9mY=tahGtwY2E8A50X_Tv4VhFfM-WLGQ@mail.gmail.com>
-References: <1584955970-8162-2-git-send-email-hayashi.kunihiko@socionext.com> <CAK7LNARyRcxR0nhPWo9mY=tahGtwY2E8A50X_Tv4VhFfM-WLGQ@mail.gmail.com>
-Message-Id: <20200331192856.1B77.4A936039@socionext.com>
+        Tue, 31 Mar 2020 06:32:55 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:48102 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729925AbgCaKcz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 06:32:55 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 47818634C87;
+        Tue, 31 Mar 2020 13:32:16 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jJEBr-0001Gy-Bd; Tue, 31 Mar 2020 13:32:15 +0300
+Date:   Tue, 31 Mar 2020 13:32:15 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+Message-ID: <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
+ <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+ <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.70 [ja]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Mar 2020 19:20:35 +0900 <yamada.masahiro@socionext.com> wrote:
+Hi Hans,
 
-> On Mon, Mar 23, 2020 at 6:33 PM Kunihiko Hayashi
-> <hayashi.kunihiko@socionext.com> wrote:
-> >
-> > The extension register region isn't currently referred from the driver, so
-> > this consolidates the extension register region description into the base
-> > register region, and spreads the region size in example.
+On Mon, Mar 30, 2020 at 12:59:15PM +0200, Hans Verkuil wrote:
+> On 3/25/20 12:03 PM, Sakari Ailus wrote:
+> > Hi Sowjanya,
+> > 
+> > Thanks for the patchset.
+> > 
+> > On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni wrote:
+> >> Tegra210 contains a powerful Video Input (VI) hardware controller
+> >> which can support up to 6 MIPI CSI camera sensors.
+> >>
+> >> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+> >> capture from an external camera sensor connected to CSI or from
+> >> built-in test pattern generator.
+> >>
+> >> Tegra210 supports built-in test pattern generator from CSI to VI.
+> >>
+> >> This patch adds a V4L2 media controller and capture driver support
+> >> for Tegra210 built-in CSI to VI test pattern generator.
+> >>
+> >> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> >> ---
+> >>  drivers/staging/media/Kconfig              |    2 +
+> >>  drivers/staging/media/Makefile             |    1 +
+> >>  drivers/staging/media/tegra/Kconfig        |   10 +
+> >>  drivers/staging/media/tegra/Makefile       |    8 +
+> >>  drivers/staging/media/tegra/TODO           |   10 +
+> >>  drivers/staging/media/tegra/tegra-common.h |  263 +++++++
+> >>  drivers/staging/media/tegra/tegra-csi.c    |  522 ++++++++++++++
+> >>  drivers/staging/media/tegra/tegra-csi.h    |  118 ++++
+> >>  drivers/staging/media/tegra/tegra-vi.c     | 1058 ++++++++++++++++++++++++++++
+> >>  drivers/staging/media/tegra/tegra-vi.h     |   83 +++
+> >>  drivers/staging/media/tegra/tegra-video.c  |  129 ++++
+> >>  drivers/staging/media/tegra/tegra-video.h  |   32 +
+> >>  drivers/staging/media/tegra/tegra210.c     |  754 ++++++++++++++++++++
+> >>  drivers/staging/media/tegra/tegra210.h     |  192 +++++
+> > 
+> > Why staging? Are there reasons not to aim this to the kernel proper right
+> > away? If you only support TPG, the driver may not have too many (if any)
+> > real users anyway.
+> > 
+> >>  14 files changed, 3182 insertions(+)
+> >>  create mode 100644 drivers/staging/media/tegra/Kconfig
+> >>  create mode 100644 drivers/staging/media/tegra/Makefile
+> >>  create mode 100644 drivers/staging/media/tegra/TODO
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-common.h
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-csi.c
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-csi.h
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-vi.c
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-vi.h
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-video.c
+> >>  create mode 100644 drivers/staging/media/tegra/tegra-video.h
+> >>  create mode 100644 drivers/staging/media/tegra/tegra210.c
+> >>  create mode 100644 drivers/staging/media/tegra/tegra210.h
+> >>
 > 
+> <snip>
 > 
-> You should not say this in the commit log.
+> >> +static int tegra_channel_g_input(struct file *file, void *priv,
+> >> +				 unsigned int *i)
+> >> +{
+> >> +	*i = 0;
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int tegra_channel_s_input(struct file *file, void *priv,
+> >> +				 unsigned int input)
+> >> +{
+> >> +	if (input > 0)
+> >> +		return -EINVAL;
+> >> +
+> >> +	return 0;
+> >> +}
+> > 
+> > Please see patchset on topic "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on
+> > linux-media; it's relevant here, too.
 > 
-> The DT binding is hardware description.
-> Whether it is used or not in the driver is not a primary reason.
+> No, it isn't. The pipeline is controlled by the driver, not by userspace.
+> This is a regular video capture driver, not an ISP driver.
 
-I see. I forgot that this also applies to commit logs.
+I don't think that really makes a difference, whether a device is an ISP or
+not, but instead what does is whether there is something to control in its
+pipeline that cannot be generally done through the regular V4L2 interface.
+Even plain CSI-2 receiver drivers should be media device centric these days
+as doing otherwise excludes using a range of sensor drivers with them,
+including any possible future support for e.g. sensor embedded data.
 
->
-> I recommend you to read this:
-> 
-> 
-> Documentation/devicetree/bindings/writing-bindings.txt:
-> 
-> - DON'T refer to Linux or "device driver" in bindings. Bindings should be
->   based on what the hardware has, not what an OS and driver currently support.
+-- 
+Kind regards,
 
-Thanks for your suggestion.
-
-> 
-> > Fixes: b9fb56b6ba8a ("dt-bindings: dmaengine: Add UniPhier external DMA controller bindings")
-> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> > ---
-> >  Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> > index 86cfb59..830cd88 100644
-> > --- a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> > +++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> > @@ -23,8 +23,7 @@ properties:
-> >
-> >    reg:
-> >      items:
-> > -      - description: XDMAC base register region (offset and length)
-> > -      - description: XDMAC extension register region (offset and length)
-> > +      - description: XDMAC register region (offset and length)
-> 
-> Now that the reg is a single tuple,
-> the "items" is unneeded.
-
-Okay, I'll notice it.
-
-> 
-> >    interrupts:
-> >      maxItems: 1
-> > @@ -54,7 +53,7 @@ examples:
-> >    - |
-> >      xdmac: dma-controller@5fc10000 {
-> >          compatible = "socionext,uniphier-xdmac";
-> > -        reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
-> > +        reg = <0x5fc10000 0x5100>;
-> 
-> 
-> Checking the datasheet (LD20), this seems still wrong.
-> 
-> The last register is XDMAID3 : 0x5fc1520c
-> 
-> So, reg = <0x5fc10000 0x5300>;
-
-Hmm, You're right.
-I missed the information somewhere.
-
-> 
-> I attached a patch, which I think more correct.
-> Please check it, and I will send it to the correct ML.
-
-I checked it. This looks good to me and thanks for your help.
-I'll fix the remaining patches next.
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
-
+Sakari Ailus
