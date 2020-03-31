@@ -2,92 +2,93 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E335C2D0F1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1229C2D0EE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F3321473
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXlHk8rq"
+	by mail.kernel.org (Postfix) with ESMTP id A299E20CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:42:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585676563;
+	bh=HLOpOjACWNvnGb7Brv1jzvmMgCayDUtbh7Fp17KWvk8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gahEmrOGF5VIKer9IpaugIQd/SkJ/WIw/T81fajYCQcd6vI7N/J++BDSEzzo2GdVJ
+	 VUGE0x0mRvSzbYnpwzQVncBQkXHABfXvrcPwGt8fGVEsEf/GNKpvqivMCm/T5QcSTY
+	 OCMWMIWKWFxuv3XOzy420KsE1JV6jXzG+hRgeDFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgCaRlu (ORCPT
+        id S1726202AbgCaRmk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:41:50 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37881 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgCaRlu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:41:50 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i34so531697pgl.4;
-        Tue, 31 Mar 2020 10:41:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0WK1L776nmYgsU46xCXGDCiU0P0Wvlg3rNsyJsRlP98=;
-        b=oXlHk8rqDvug0MKUD6I63bxufCaRC8Qv5IN1o81KbvCaUN2Ayl1AQb1oVDmmIKiCaU
-         y+FKmCdXIQ/hd5W2+PQOjt9zCudi7Wlyqq4B+7n3d7Y2E+FpGVAkzNEdjUWWBQEPYDyb
-         rJ8Rsli2qX1/AuOPa0sURyKOgzjlDPFGDr2Mdj0nwI3hImibl+jNacA7PWw0odV7rDji
-         ZRWD7fxp+IyMvDagjNeJeUCELKz1eV2HlCBA3TSriuHmLMUzz0sqBTOPjHnFAAyOM0zl
-         aRFQ6IVIdzbSGwLEo0wEG0fGtF4zI+9IVqhPSRqXUMn8zqe1fdQ0v5rpxqvCvmtrKfYt
-         zgAg==
+        Tue, 31 Mar 2020 13:42:40 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41697 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgCaRmj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:42:39 -0400
+Received: by mail-io1-f68.google.com with SMTP id b12so6427737ion.8;
+        Tue, 31 Mar 2020 10:42:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0WK1L776nmYgsU46xCXGDCiU0P0Wvlg3rNsyJsRlP98=;
-        b=sEWnnFvL4WYaphVc/5jGdb4Ua6JhiUfeDMfh1qE+UUfG6ZdH/YOpnYJ7T1jwltHKel
-         zGlPZzCvriJuIiLmrEcdxGRkCTgWvoTqINo/C8WM2vSpcAzhu8OJEavzX+CUQQVQPp+S
-         bf55RIJtWph+00Wn+iRoDOj2RWhlqj4CdEqmqrNGIRBHHvA2arL6xEgaIQHbX+9UebNr
-         oSyp8ekPxc/bTANN5PS2Wwc54RwnW7cNrGrJgIn72SsemCXqrDOadT0So331n6N9Lktv
-         KeavOw93COVAlOFRp6cunHuFj2YnOYLSFlmupL3BF5JCopsKCJmlL+ly9R+3O/xHAeuB
-         s1UA==
-X-Gm-Message-State: AGi0PuZSgWKGo3ueAMJQbgr7dLb+AO3MCKn1AosRyzAz8rgyS5WEdgFk
-        CyKxmzH6aG82Viz3gGiSuirjkYdTMIcSdT9gAiY=
-X-Google-Smtp-Source: APiQypLQFtXGfHUfvQUXhzwkFBcnNbPE4ORbACPZdwZJmr1jkPWgd79RsT3GiwhfIVOyeVAXF4niiNd0dLyr4hHQD/4=
-X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr5918902pfs.36.1585676508695;
- Tue, 31 Mar 2020 10:41:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FTAqD+OnWKqPUS7vCWWL8ACHVlN3bM/iXdorWRR9HJA=;
+        b=m4amlG+dG+XITfbL0jZdKgd5wAS2AgyDDHpuEyV318YCBb+EIWdQY74Fp8phtRH9ZQ
+         TViNHhQ7eEi3vxeLrsxVAp+4a8GxgnYHNsF3mwf4R2O+44Zw3tKhKp9V3zoAUhgykJx8
+         WTDEQPp4w332p3uB89F6mHKfC1BiuUanZlji9LmDLOR1wU917lt8Aj70w5pXZoAXwZvv
+         7UnwPIeg8JqEOK2TQUxE5UiXPBtvdheGezloZ0aNjvx7MknboAdW9M6UhPN8Y2MRwFV2
+         iL7iRfOEuevhZrX3H6WaKFxVSu6MRAaFJ115eScmA8zFl0d+YaUyfJvkW15wiolMOFHZ
+         7PMg==
+X-Gm-Message-State: ANhLgQ3W2OqAiugHDQVk7PSuZUU5asMcnayAzaLgXlhVRxHm9ScQqwEx
+        2HkSMh+o3pOIn4awGiX3dnn/rQY=
+X-Google-Smtp-Source: ADFU+vsofZqcujz0YBlQeUxmcFaoWgeTxj5Kf5VemH202p86jO/BnjYgn6HMw3nAtP7k4B1E9T339Q==
+X-Received: by 2002:a02:2b02:: with SMTP id h2mr16570919jaa.81.1585676558974;
+        Tue, 31 Mar 2020 10:42:38 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id w88sm6083471ila.24.2020.03.31.10.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 10:42:38 -0700 (PDT)
+Received: (nullmailer pid 9628 invoked by uid 1000);
+        Tue, 31 Mar 2020 17:42:37 -0000
+Date:   Tue, 31 Mar 2020 11:42:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] docs: dt: qcom,dwc3.txt: fix cross-reference for a
+ converted file
+Message-ID: <20200331174237.GA9527@bogus>
+References: <66b8da28bbf0af6d8bd23953936e7feb6a7ed0c2.1584966325.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <20200331114811.7978-1-nuno.sa@analog.com> <20200331114811.7978-4-nuno.sa@analog.com>
-In-Reply-To: <20200331114811.7978-4-nuno.sa@analog.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 31 Mar 2020 20:41:41 +0300
-Message-ID: <CAHp75VdWa_-x4n+FwuZZ6a9pw19bejOGtx_VwWhvNAuSTYfgdw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] iio: adis: Add adis_update_bits() APIs
-To:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66b8da28bbf0af6d8bd23953936e7feb6a7ed0c2.1584966325.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
->
-> This patch adds a `regmap_update_bits()` like API to the ADIS library.
-> It provides locked and unlocked variant.
+On Mon, 23 Mar 2020 13:25:27 +0100, Mauro Carvalho Chehab wrote:
+> The qcom-qusb2-phy.txt file was converted and renamed to yaml.
+> Update cross-reference accordingly.
+> 
+> Fixes: 8ce65d8d38df ("dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bindings to yaml")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-> +       __val &=3D ~mask;
-> +       __val |=3D val & mask;
-
-You can use standard one liner, i.e.
-
-       __val =3D (__val & ~mask) | (val & mask);
-
---=20
-With Best Regards,
-Andy Shevchenko
+Acked-by: Rob Herring <robh@kernel.org>
