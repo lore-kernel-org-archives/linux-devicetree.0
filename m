@@ -6,83 +6,82 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F4AC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A8DC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77472080C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14062080C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:07:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585692340;
-	bh=7eghK33UHt3Chqx2guvTrV7W39MeoN9J/BT0aStE3IM=;
+	s=default; t=1585692441;
+	bh=xtYDDcAqIN7VOpFhiPB3YcBNlMQwrJarPAIGu7U/ktU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BtOsmOjp+XC4JT1zwpiBDVx6u8tY28Zq+2ZBVfQ4zCoUsTWO4vyCv3dYnekVmg0Me
-	 CFV3l5/zxO+Kxhms3k4gEhJBbgEQ0O/J+ZAsZE2+0YDVJKqMR1910RXYZCnSmQ1kH7
-	 WXbbkIAI833Se2Rmc+a8TzQk+Hoh54jZFS2M2D8o=
+	b=s3BbVRSdVTLBfT8j0RQQZS13eIsZpmJf2ve77OPbMhSVpYG+b0VYVVQbiTJTk8go5
+	 yzgIBUdOdCUSSe3w8uUgheiOOG0pPgQQvvwv7oDsc77gYS3WCqJ1iOuo4UyicI+284
+	 0OlDIVcmo8wDmjBXx3EyS0IdnNJCk5jio7CHMAUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731415AbgCaWFk (ORCPT
+        id S1731270AbgCaWHV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:05:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36485 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731304AbgCaWFj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 18:05:39 -0400
-Received: by mail-io1-f65.google.com with SMTP id n10so9416918iom.3;
-        Tue, 31 Mar 2020 15:05:39 -0700 (PDT)
+        Tue, 31 Mar 2020 18:07:21 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36664 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730556AbgCaWHV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 18:07:21 -0400
+Received: by mail-il1-f194.google.com with SMTP id p13so21030640ilp.3;
+        Tue, 31 Mar 2020 15:07:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rOIfNa9jSDYoTkdrnG0D+oJgScAuNFcwTbvGHk2M+5Q=;
-        b=t/2TZv8H5UWAI1IidOAixyP3tg1b72+CsVQ1lJ83steObxqv3igw5QzOvFrpwVHu2t
-         Z4yaHdygEHQ9pc++xuR7jmuP5gmw0ystrRqdabWCCaAkJZsU2R4YhCtWAH3uLYnTzLA0
-         u/X0VLXf6ahy2xSvYx7B7ZwQzRUlzAm7+AUPFJcYiksoSkg5vbIrPMrpaSoC2qlZpaCw
-         jw/AtY+uwoz0jqNQNNCQ5kP3kEGKLjg2xnLyAXWYOEPGmxu5EBl7QzwTnCjeJ8WAAuOK
-         Ew1fAyIOAWfF6JznMcvhVMz9KnvEKTBuOqxCNsZlZtpJ9nTjYKvzEYPlhpbCaGJlOrJj
-         abUA==
-X-Gm-Message-State: ANhLgQ2L4rgDALITBa0AGymbLk0a5tB5/exxUUl9lEwuEHk8yQ3VEuQX
-        DtXI2J18e1+ahLmIXjTgRQ==
-X-Google-Smtp-Source: ADFU+vsYaihj3BeOAMA2dZQ0vbo9icSYSvG7WTj4zQz/949WwYlUKMhl4yzmFbTx86K+/WBDGD7Ctg==
-X-Received: by 2002:a02:634e:: with SMTP id j75mr17812133jac.23.1585692338870;
-        Tue, 31 Mar 2020 15:05:38 -0700 (PDT)
+        bh=gwWUAkb8abOTifbHiNXnwsQ9Dtd0p1eR1MIaYvko6Eo=;
+        b=Ouj4a6lZIuWyFLfAJmHiqsdQmuz8f2ofwSzqdrySAHBICnJHkR/dKESiv0PTgtCZK+
+         PnS3nFAPLdhucDXyjwaxFdzSE1I5lJdFTZNPWnl3w9fkj2w587jfkYAVeNjU49CMikW+
+         1VFFFwctNoVXZsJHa13mE24OC+xPto80BClUz47ss7k704L2azUwsS1DT8YDJKYn3nid
+         7OK6IyPYPj9Qo9ivHtPON8hIHQkFvr74HPIMXp32jwyRMvnfOq5Wpt7cI1I6SCVwqxMF
+         9P2HzwJYAyt99vZhWGk6upfjQqA9Y/w3vkRjAIMlJIXuIuZQ3W/hBctZbNyJQB1maANL
+         BC3g==
+X-Gm-Message-State: ANhLgQ1lKzQ89uAEGW7Wk/thq7Di/sD0QGYyI9E50ofQEuvmciBv0Qg2
+        1g2e4Zcd2zSEcWE9s/73aQ==
+X-Google-Smtp-Source: ADFU+vtDNeOnim0HaWP5CQDpX6NvB9k8NLTc28IoNQAKLHA3sOrQLqnEllJxTDgRB6tbM1TZC74HUw==
+X-Received: by 2002:a92:5bd7:: with SMTP id c84mr19057734ilg.26.1585692440128;
+        Tue, 31 Mar 2020 15:07:20 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id z13sm45525ioh.16.2020.03.31.15.05.37
+        by smtp.gmail.com with ESMTPSA id g78sm50132ild.36.2020.03.31.15.07.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 15:05:38 -0700 (PDT)
-Received: (nullmailer pid 29406 invoked by uid 1000);
-        Tue, 31 Mar 2020 22:05:36 -0000
-Date:   Tue, 31 Mar 2020 16:05:36 -0600
+        Tue, 31 Mar 2020 15:07:19 -0700 (PDT)
+Received: (nullmailer pid 32334 invoked by uid 1000);
+        Tue, 31 Mar 2020 22:07:18 -0000
+Date:   Tue, 31 Mar 2020 16:07:18 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: power: Fix example for power-domain
-Message-ID: <20200331220536.GA29336@bogus>
-References: <20200326105626.6369-1-ulf.hansson@linaro.org>
- <20200326105626.6369-3-ulf.hansson@linaro.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     narmstrong@baylibre.com, robh+dt@kernel.org,
+        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        devicetree@vger.kernel.org, airlied@linux.ie, daniel@ffwll.ch,
+        mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] dt-bindings: display: meson-vpu: fix indentation of
+ reg-names' "items"
+Message-ID: <20200331220718.GA32235@bogus>
+References: <20200328004157.1259385-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326105626.6369-3-ulf.hansson@linaro.org>
+In-Reply-To: <20200328004157.1259385-1-martin.blumenstingl@googlemail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 26 Mar 2020 11:56:26 +0100, Ulf Hansson wrote:
-> The change that converted the domain-idle-states DT bindings to the
-> json-schema, forgot to update the corresponding example for the
-> power-domain binding. Let's fix it.
+On Sat, 28 Mar 2020 01:41:57 +0100, Martin Blumenstingl wrote:
+> Use two spaces for indentation instead of one to be consistent with the
+> rest of the file. No functional changes.
 > 
-> Fixes: 3261227d136d ("dt-bindings: power: Convert domain-idle-states bindings to json-schema")
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Fixes: 6b9ebf1e0e678b ("dt-bindings: display: amlogic, meson-vpu: convert to yaml")
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../bindings/power/power-domain.yaml          | 28 +++++++++----------
->  1 file changed, 14 insertions(+), 14 deletions(-)
+>  .../devicetree/bindings/display/amlogic,meson-vpu.yaml      | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
 
 Applied, thanks.
