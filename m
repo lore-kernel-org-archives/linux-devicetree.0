@@ -2,178 +2,132 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D335C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 00:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A82C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 01:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36BA3206F5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 00:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9977E2054F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 01:04:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rp3DjIoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbgCaAO0 (ORCPT
+        id S1729239AbgCaBEF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 20:14:26 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:33702 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729019AbgCaAO0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 20:14:26 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 02V0DJbF013894
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 30 Mar 2020 19:13:23 -0500
-Message-ID: <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
- ID/string properties
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Rob Herring <robh@kernel.org>, rentao.bupt@gmail.com
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Date:   Tue, 31 Mar 2020 11:13:17 +1100
-In-Reply-To: <20200330192347.GA6388@bogus>
-References: <20200315191632.12536-1-rentao.bupt@gmail.com>
-         <20200315191632.12536-7-rentao.bupt@gmail.com>
-         <20200330192347.GA6388@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 30 Mar 2020 21:04:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52251 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729129AbgCaBEE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 21:04:04 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z18so750707wmk.2
+        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 18:04:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fw2LMhqMpUKtHzYbQVOA9bjQOm3X2jbwN5CrhUGESVY=;
+        b=rp3DjIoLk0LM8SIxOuGq5sbJ4rPhWrk5QsErQqD0bL+5tNrJg1LIvspg8AZyyH2r5X
+         pT2ta0nzDwpHBnGmQiIEx1jxbjMA29SZzy1bFfQqrGCSSZN9DQWuoXn6Us3JRAg8GFj8
+         t73zUdAnwyE7z/ECeluUAfhIpIrVCCmcewk9UKiDPXXZGHsG+IfrjQ4zQYxz6v8d0B7e
+         hF7Ys/uNmD+HL1BhS8FgONzC2g6cdEcZukRTyMg4tKbiBp/Sg250tOJ+stSqXDeBHnF2
+         w+4lJl8svCssSiM5FHbrphE8WZv4lMPVcSFbB9zdTUPoK5x2kkTnUjBxO9SPenWAlWoq
+         sL3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fw2LMhqMpUKtHzYbQVOA9bjQOm3X2jbwN5CrhUGESVY=;
+        b=f9TzBx+vFjk4Ae0st2SZ1OZXC3WFoP/MQO7jKysLc+UuqstkRarcmPPUA1wozWM3YR
+         eeKRg3zTb5ceoaF0YTGT7RweUJHLlkFERhs5isalYfyXNVx5tCozTD0tvNHtV8rQuZ3c
+         6f0ASMbzd+y9YM9ICM6U910fQJVkilix2noOVDhznqKDUCemecHSSv9QrmJClw6H4Rsw
+         vScOw3Rdmb47i1nB80IXT2p5xjjdIBlU1o5dyUFvYxzKdBlYvDXK845e1p7wlRg2Wux8
+         iMzesyXOzCd3klVirClo9s0sGgsehYXocAZxg+Ealz7s7LGHPri7keJmTkUrseIGimvU
+         Whrw==
+X-Gm-Message-State: ANhLgQ32vX87lC+fyg+3VhQW04uZWhGY2CNCj6bmrSPDkOCQvVtVtHyk
+        +UDkgcKOh5yf/egNcyYsAzenVA==
+X-Google-Smtp-Source: ADFU+vtYCmQdzinR/X4HVv2e1fA66xpIh+DJ9q+KLmplPTod3qQodOWbJsvtyYzoNNVwTL7nNnPfAQ==
+X-Received: by 2002:a7b:c842:: with SMTP id c2mr799219wml.154.1585616642896;
+        Mon, 30 Mar 2020 18:04:02 -0700 (PDT)
+Received: from cheddar.halon.org.uk (cheddar.halon.org.uk. [93.93.131.118])
+        by smtp.gmail.com with ESMTPSA id y7sm27040892wrq.54.2020.03.30.18.04.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 18:04:02 -0700 (PDT)
+Received: from bsmtp by cheddar.halon.org.uk with local-bsmtp (Exim 4.92)
+        (envelope-from <steve.mcintyre@linaro.org>)
+        id 1jJ5Jx-0001Yw-P5; Tue, 31 Mar 2020 02:04:01 +0100
+Received: from stemci01 by c30-smcintyre.einval.org with local (Exim 4.92)
+        (envelope-from <steve.mcintyre@linaro.org>)
+        id 1jJ5Js-00016k-Lf; Tue, 31 Mar 2020 02:03:56 +0100
+Date:   Tue, 31 Mar 2020 02:03:56 +0100
+From:   Steve McIntyre <steve.mcintyre@linaro.org>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, robh+dt@kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        david@gibson.dropbear.id.au, sjg@chromium.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+        Ian Lepore <ian@freebsd.org>
+Subject: Re: [RFC PATCH v2 0/4] Add device tree build information
+Message-ID: <20200331010347.GF4037@linaro.org>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <1b946fcf-47a9-012d-1b04-f4bbd2682607@gmail.com>
+ <67d75f0c-7478-23b0-8619-746cf83cedb5@gmail.com>
+ <dba17be2-067f-8221-f313-7a3edcf61511@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dba17be2-067f-8221-f313-7a3edcf61511@st.com>
+X-attached: none
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-wibble: sender_address steve.mcintyre@linaro.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 2020-03-30 at 13:23 -0600, Rob Herring wrote:
-> On Sun, Mar 15, 2020 at 12:16:32PM -0700, rentao.bupt@gmail.com wrote:
-> > From: Tao Ren <rentao.bupt@gmail.com>
-> > 
-> > Update device tree binding document for aspeed vhub's device IDs and
-> > string properties.
-> > 
-> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> > ---
-> >  No change in v2:
-> >    - the patch is added into the series since v2.
-> > 
-> >  .../bindings/usb/aspeed,usb-vhub.yaml         | 68 +++++++++++++++++++
-> >  1 file changed, 68 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > index 06399ba0d9e4..5b2e8d867219 100644
-> > --- a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > @@ -52,6 +52,59 @@ properties:
-> >          minimum: 1
-> >          maximum: 21
-> >  
-> > +  vhub-vendor-id:
-> > +    description: vhub Vendor ID
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - maximum: 65535
-> > +
-> > +  vhub-product-id:
-> > +    description: vhub Product ID
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - maximum: 65535
-> 
-> There's already standard 'vendor-id' and 'device-id' properties. Use 
-> those.
+Hi Alexandre,
 
-So yes and no... I don't fundamentally object but keep in mind that
-traditionally, the properties are about matching with a physical
-hardware.
+On Mon, Mar 02, 2020 at 01:55:55PM +0100, Alexandre Torgue wrote:
+>On 2/28/20 6:47 PM, Frank Rowand wrote:
+>> > This would require modifying every single main .dts file to get the build info
+>> > I would prefer the method that Ian and David came up with (sorry, no lore link,
+>> > it did not go to lkml).  Extract from David's email:
+>> > 
+>> >     Date:   Tue, 21 Jan 2020 13:05:25 +1100
+>> >     From:   David Gibson <david@gibson.dropbear.id.au>
+>> >     Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+>> > 
+>> >     > Given that dts files are run through the C preprocessor before being
+>> >     > fed to dtc, the build script could use the '-include' flag to force-
+>> >     > include a fragment containing generated build info without any need to
+>> >     > modify existing dts files.
+>> > 
+>> >     Uh... maybe.  -include will essentially prepend the forced file, which
+>> >     is a bit awkward for our purposes.  It means that the prepended file
+>> >     would need the /dts-v1/ tag, and we couldn't have it in the main files
+>> >     which would be a bit confusing.  I think it would also cause problems
+>> >     with any /memreserve/ tags and means that the main tree could in
+>> >     theory overwrite the build information which we don't necessarily
+>> >     want.
+>> > 
+>> >     I guess we could build things the other way around: have the main .dts
+>> >     file specified with -include and have the dts on the dtc commandline
+>> >     be a fixed one with the build information.  It'd be a little weird,
+>> >     though.
+>> > 
+>> > -Frank
+>
+>Yes. I try briefly this idea but I got issues with dts-v1 tag. I agree, it is
+>cleaner to not modify input dts file. I can rework int this way.
 
-In this case however, we are describing a virtual piece of HW and so
-those IDs are going to be picked up to be exposed as the USB
-vendor/device of the vhub on the USB bus.
-
-Not necessarily an issue but it's more "configuration" than "matching"
-and as such, it might make sense to expose that with a prefix, though I
-would prefer something like usb-vendor-id or usb,vendor-id...
-
-> > +
-> > +  vhub-device-revision:
-> 
-> Specific to USB, not vhub.
-
-Same as the above.
-
-> > +    description: vhub Device Revision in binary-coded decimal
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - maximum: 65535
-> > +
-> > +  vhub-strings:
-> > +    type: object
-> > +
-> > +    properties:
-> > +      '#address-cells':
-> > +        const: 1
-> > +
-> > +      '#size-cells':
-> > +        const: 0
-> > +
-> > +    patternProperties:
-> > +      '^string@[0-9a-f]+$':
-> > +        type: object
-> > +        description: string descriptors of the specific language
-> > +
-> > +        properties:
-> > +          reg:
-> > +            maxItems: 1
-> > +            description: 16-bit Language Identifier defined by USB-IF
-> > +
-> > +          manufacturer:
-> > +            description: vhub manufacturer
-> > +            allOf:
-> > +              - $ref: /schemas/types.yaml#/definitions/string
-> > +
-> > +          product:
-> > +            description: vhub product name
-> > +            allOf:
-> > +              - $ref: /schemas/types.yaml#/definitions/string
-> > +
-> > +          serial-number:
-> > +            description: vhub device serial number
-> > +            allOf:
-> > +              - $ref: /schemas/types.yaml#/definitions/string
-> 
-> For all of this, it's USB specific, not vhub specific. I'm not sure this 
-> is the right approach. It might be better to just define properties 
-> which are just raw USB descriptors rather than inventing some DT format 
-> that then has to be converted into USB descriptors.
-
-Raw blob in the DT is rather annoying and leads to hard to parse stuff
-for both humans and scripts. The main strenght of the DT is it's easy
-to read and manipulate.
-
-Also not the entire descriptor is configurable this way.
-
-That said, it could be that using  the DT for the above is overkill and
-instead, we should consider a configfs like the rest of USB gadget.
-Though it isn't obvious how to do that, the current gadget stuff
-doesn't really "fit" what we need here.
-
-Maybe we could expose the port as UDCs but not actually expose them on
-the bus until the hub is "activated" via a special configfs entry...
+Have you made any progress on this please?
 
 Cheers,
-Ben.
-
-> os the 
-> Rob
+-- 
+Steve McIntyre                                steve.mcintyre@linaro.org
+<http://www.linaro.org/> Linaro.org | Open source software for ARM SoCs
 
