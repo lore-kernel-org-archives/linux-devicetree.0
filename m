@@ -2,106 +2,75 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34DAC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE5CC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DB72072E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F74207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:47:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgCaSqx (ORCPT
+        id S1726268AbgCaSrW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:46:53 -0400
-Received: from muru.com ([72.249.23.125]:33522 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgCaSqx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:46:53 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 8E5C28108;
-        Tue, 31 Mar 2020 18:47:37 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 11:46:47 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <pdp7pdp7@gmail.com>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Caleb Robey <c-robey@ti.com>, linux-omap@vger.kernel.org,
-        Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
+        Tue, 31 Mar 2020 14:47:22 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48738 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgCaSrV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 14:47:21 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 09D86291976;
+        Tue, 31 Mar 2020 19:47:20 +0100 (BST)
+Date:   Tue, 31 Mar 2020 20:47:16 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Weijie Gao <weijie.gao@mediatek.com>
+Cc:     <linux-mtd@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Drew Fustini <drew@beagleboard.org>
-Subject: Re: [PATCH v2] ARM: dts: am5729: beaglebone-ai: adding device tree
-Message-ID: <20200331184647.GF37466@atomide.com>
-References: <20191120220559.18914-1-c-robey@ti.com>
- <41c73bc1-99ae-6797-5bb7-7acc0f6518c0@ti.com>
- <20191212170452.GV35479@atomide.com>
- <CAEf4M_C05Hwc_BEL6MaFNNEW0Cf2kc-LvMi9qdKxL7hVAFFDGQ@mail.gmail.com>
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] mtd: rawnand: add driver support for MT7621 nand
+ flash controller
+Message-ID: <20200331204716.52f611db@collabora.com>
+In-Reply-To: <1585678079-5999-1-git-send-email-weijie.gao@mediatek.com>
+References: <1585678079-5999-1-git-send-email-weijie.gao@mediatek.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4M_C05Hwc_BEL6MaFNNEW0Cf2kc-LvMi9qdKxL7hVAFFDGQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Drew Fustini <pdp7pdp7@gmail.com> [200331 18:39]:
-> On Thu, Dec 12, 2019 at 6:06 PM Tony Lindgren <tony@atomide.com> wrote:
-> > > On 21/11/2019 00:05, Caleb Robey wrote:
-> > > > From: Jason Kridner <jdk@ti.com>
-> > > >
-> > > > BeagleBoard.org BeagleBone AI is an open source hardware single
-> > > > board computer based on the Texas Instruments AM5729 SoC featuring
-> > > > dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
-> > > > signal processor (DSP), quad-core embedded vision engine (EVE),
-> > > > Arm Cortex-M4 processors, dual programmable realtime unit
-> > > > industrial control subsystems and more. The board features 1GB
-> > > > DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
-> > > > 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
-> > > > headers.
-> > > >
-> > > > For more information, refer to:
-> > > > https://beaglebone.ai
-> > > >
-> > > > This patch introduces the BeagleBone AI device tree.
-> > > >
-> > > > Note that the device use the "ti,tpd12s016" component which is
-> > > > software compatible with "ti,tpd12s015". Thus we only use the
-> > > > latter driver.
-> > >
-> > > Ah. thanks. I see my comments resolved here.
-> > > no more comments to net part from my side.
-> >
-> > Just FYI, Jason had one pending comment on the earlier version
-> > about the compatible property to use.
-> >
-> > So I'm assuming there will be a new version posted, tagging
-> > this one as read.
-> 
-> It came to my attention today when talking with Jason Kridner and
-> Robert Nelson that we did not get the BeagleBone AI device tree
-> upstream yet.
-> 
-> I am having trouble identifying what the pending comment was from the
-> original patch series.
-> 
-> Was it related to this compatible string?
-> 
-> > +       compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
+On Wed, 1 Apr 2020 02:07:58 +0800
+Weijie Gao <weijie.gao@mediatek.com> wrote:
 
-Yes I think Jason had some comment on the compatible string
-to use.
+> This patch adds NAND flash controller driver for MediaTek MT7621 SoC.
+> 
+> The NAND flash controller is similar with controllers described in
+> mtk_nand.c, except that the controller from MT7621 doesn't support DMA
+> transmission, and some registers' offset and fields are different.
+> 
 
-Regards,
-
-Tony
+Please don't duplicate driver the driver for those minor differences:
+use regmap/reg_field to abstract reg field positions and make the DMA
+optional.
