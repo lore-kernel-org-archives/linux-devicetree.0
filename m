@@ -6,88 +6,97 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB5DC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64A9C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D02020838
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A2620838
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585691864;
-	bh=O8kunBfWKRqS97ByfKBHH9TqSMDTRE0G1JnjUob7VJI=;
+	s=default; t=1585691884;
+	bh=LGdCqe9ICfS1ZP4zD/UtW5mZe+3VLA+Ia7BX+4lYg9Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ki16OiKbgd5r9JFrgOher4giJGcUJfjZnRhEgB7Bk8orNFs1YLQROk/rYrbW4jZ5g
-	 PP42OvSkfS7g7eWpm1M9uw2iU+Sz5Xelwm8n9I0uW+nZvr32h9j01WYfNi0BtolOBK
-	 riTZdPxiX85awE016q2G4RWhSiRpHOu/iuY8f4eg=
+	b=jmgt6XgRx3ko5My3b0+8vkf9eWKtkPR1wFVQMMhRScR3xR1oRZEJebQZfrwmzSOsi
+	 ZDJwe/Cng+NKe6KSmcH2Dw9ao9GIf/c0w9I3u0m/lcUP2vMmIHMl7M9qvUMk9qym/S
+	 0SNwWEgi/8wjEVyDQ1eeDQukRTv8ETNslePjeIYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731391AbgCaV5n (ORCPT
+        id S1731441AbgCaV6D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:57:43 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:33270 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728893AbgCaV5n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 17:57:43 -0400
-Received: by mail-il1-f193.google.com with SMTP id k29so21010794ilg.0;
-        Tue, 31 Mar 2020 14:57:42 -0700 (PDT)
+        Tue, 31 Mar 2020 17:58:03 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41698 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbgCaV6D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 17:58:03 -0400
+Received: by mail-io1-f66.google.com with SMTP id b12so7246460ion.8;
+        Tue, 31 Mar 2020 14:58:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2QEqtdDPs3fIca6WRuiiLpB1Rw0w1HZd/cc02uAbwKQ=;
-        b=EIidPigLsOJtwT2GeBWYF0q9/Lai4ggaPliqG3jdh10hcPiIohgrN9cIZEgAIRbKAS
-         N1FEkjRdLCK4nQuLLf6Lf+5bB1p1mRrChFJ4OzJyHJYYhEP1TOY0ZAGFkMkXC6dfgCL1
-         w63vggn0/DlvsgwT91Fb5JRgs2+mvGnwHntLAKKsMwCUO0UH4Z5ulMQMBAZi+1EqxqXd
-         YH8XaGm4RcwOqJKTndn95pJt/pc3uLNwPVVhxzqauz4p8XSFTlEh9c8kZIUCCdB6XEqk
-         mI/k/W8jOSzVCSp4ljCRoIlTVz0IWAFE6akgh4dfFQdp1T5gLJz1jsDRcpM3rKL0XKER
-         ldzg==
-X-Gm-Message-State: ANhLgQ0q/L8R6rtyRfYtiV2QnoR5yeUJ48rdJ4S86J9u6JcD6FQBA3tT
-        63aUwoI8AWup7Ka+AmX5ig==
-X-Google-Smtp-Source: ADFU+vvBIEGlbOI6faPF9K8IAOJ/ri8FhnlXczhbYRNtjtERZ5gcGCOfaseZHNNUNem9nC0Kotewaw==
-X-Received: by 2002:a92:1d4b:: with SMTP id d72mr18224640ild.14.1585691862545;
-        Tue, 31 Mar 2020 14:57:42 -0700 (PDT)
+        bh=jIozpEk7R1PWhZJHP9ojDFOfKg1S3YK7gkqKMg9XXHk=;
+        b=QPidKuxGI964vU+w0yj8FdrizZ34M/TsuP8aHMcghFIWTeuzlA/3LMproIeLBAoHCq
+         VbnHDcDhMLKpMP4i9xnriVo/R1NwS0lo903WuiY6ko816A4C3mDfQrhxxafkwaJirhT9
+         cbBO1+B3z2pKhCuRGVw8OHD7yHDjeWsVuk6aoOxhnMeTl3NLFnNM3v3bWDA+PBlzDM4C
+         SVvWzrwdjCjASzSjmlniO1GmrWahkqD0TUjat0Q7fuTRQFdF10qNECW/yJSTJ+USo9/Y
+         yUIQRDbSy+i6wzFS88NCl2p0L14hVhmLF9UNS1t+EZqV4gtqSaTuIYaZlEUcrl8bmBGh
+         cn3Q==
+X-Gm-Message-State: ANhLgQ3Rp+0GRQWCifvs/NHp11DN5naq7cIs/y98BCoetBAsgxnUpo3F
+        m5cuT0HRZZqE1t2NwkIjlw==
+X-Google-Smtp-Source: ADFU+vu0NMEdlvuQiIfFmwmzLSErBtVKPP2kioAGYOPrT6CrZ8qm7nBCn4yQsGAHOA4m8jUxbO73IQ==
+X-Received: by 2002:a6b:2d7:: with SMTP id 206mr17354362ioc.42.1585691882134;
+        Tue, 31 Mar 2020 14:58:02 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id m71sm38807ilb.67.2020.03.31.14.57.41
+        by smtp.gmail.com with ESMTPSA id t77sm36579ilk.83.2020.03.31.14.58.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 14:57:41 -0700 (PDT)
-Received: (nullmailer pid 12286 invoked by uid 1000);
-        Tue, 31 Mar 2020 21:57:40 -0000
-Date:   Tue, 31 Mar 2020 15:57:40 -0600
+        Tue, 31 Mar 2020 14:58:01 -0700 (PDT)
+Received: (nullmailer pid 12849 invoked by uid 1000);
+        Tue, 31 Mar 2020 21:58:00 -0000
+Date:   Tue, 31 Mar 2020 15:58:00 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     frowand.list@gmail.com
 Cc:     pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 1/2] of: gpio unittest kfree() wrong object
-Message-ID: <20200331215740.GA12198@bogus>
+Subject: Re: [PATCH 2/2] of: some unittest overlays not untracked
+Message-ID: <20200331215800.GA12799@bogus>
 References: <1585187131-21642-1-git-send-email-frowand.list@gmail.com>
- <1585187131-21642-2-git-send-email-frowand.list@gmail.com>
+ <1585187131-21642-3-git-send-email-frowand.list@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585187131-21642-2-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <1585187131-21642-3-git-send-email-frowand.list@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 25 Mar 2020 20:45:30 -0500, frowand.list@gmail.com wrote:
+On Wed, 25 Mar 2020 20:45:31 -0500, frowand.list@gmail.com wrote:
 > From: Frank Rowand <frank.rowand@sony.com>
 > 
 > kernel test robot reported "WARNING: held lock freed!" triggered by
-> unittest_gpio_remove().  unittest_gpio_remove() was unexpectedly
-> called due to an error in overlay tracking.  The remove had not
-> been tested because the gpio overlay removal tests have not been
-> implemented.
+> unittest_gpio_remove(), which should not have been called because
+> the related gpio overlay was not tracked.  Another overlay that
+> was tracked had previously used the same id as the gpio overlay
+> but had not been untracked when the overlay was removed.  Thus the
+> clean up function of_unittest_destroy_tracked_overlays() incorrectly
+> attempted to remove the reused overlay id.
 > 
-> kfree() gdev instead of pdev.
+> Patch contents:
 > 
-> Fixes: f4056e705b2e ("of: unittest: add overlay gpio test to catch gpio hog problem")
+>   - Create tracking related helper functions
+>   - Change BUG() to WARN_ON() for overlay id related issues
+>   - Add some additional error checking for valid overlay id values
+>   - Add the missing overlay untrack
+>   - update comment on expectation that overlay ids are assigned in
+>     sequence
+> 
+> Fixes: 492a22aceb75 ("of: unittest: overlay: Keep track of created overlays")
 > Reported-by: kernel test robot <lkp@intel.com>
 > Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 > ---
->  drivers/of/unittest.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/of/unittest.c | 30 +++++++++++++++++++++++-------
+>  1 file changed, 23 insertions(+), 7 deletions(-)
 > 
 
 Applied, thanks.
