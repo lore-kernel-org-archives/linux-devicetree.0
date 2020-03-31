@@ -2,300 +2,360 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F5EC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3E5C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B717420748
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:40:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A929D206F5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="SOXcyaVY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HMPl0nI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729795AbgCaHkk (ORCPT
+        id S1726299AbgCaHpB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:40:40 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:33383 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCaHkk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 03:40:40 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 7CC1E22EE3;
-        Tue, 31 Mar 2020 09:40:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585640434;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mviIisaY+natZUJ2Z168wGqsXylmvuvr2v6d2rj4s3E=;
-        b=SOXcyaVY+Xh1wNUH5QfHmaec2ziYF4dLWLvGyJL95daw/h6eKFaCWpOIFTEW8H93ID6Qnh
-        y756CM/zRC6dngc+sUgBXs/wyn4mOK8MCbT3stSE0gEjxEDC6ttFmj2u/XkqH7FgOiiJqV
-        6Q1uQMqY7aUaYn+pGQPt1Aow6EJGC58=
+        Tue, 31 Mar 2020 03:45:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51492 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgCaHpB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 03:45:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c187so1362471wme.1
+        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 00:44:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Mle85YP+rDckZryHYT1DsaIY/T30NdXKh8r9XNQQ1KM=;
+        b=HMPl0nI9TzPcawnrnoiN5u0qufpBFwSXdRw5WNqgnuqr+t+BbwwHI5jFJkfZgS026L
+         /xN0/4B0PiwQh7xRM7aIhj66zdVJoRfncXIJ7PC9CNXV5SApHuzKGmaZvKiouoMfq3rk
+         R+V+QAHEgAWHbbLkqcLZzZhUWFu34ry4d9J/MAHErZLlpQpUU2Eiw/xtfZTagYKW4LkZ
+         gBtRZO4Ol/u9nK5AwZld17YKt8QYDYx+SPhNBO664lQHI/7B9PUfQpwFtQKqXu7oO36g
+         TlGHo1ctiRJGxpYYMEIWuZmo50MUz/EroCi8TQZt/UQh0a8aGlKWAniS3Kp0oqTqRci2
+         dzew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Mle85YP+rDckZryHYT1DsaIY/T30NdXKh8r9XNQQ1KM=;
+        b=R8ZAdgPHmjlcQz2zkbkY4fl8GTpMmfhEQ61lOQnwLHQAXLj51jxvDI5XCZVzf/ltBm
+         ug9HdmJssbYWo39MZOiRE0Cc4iIdwNYkfsF+IrvIQxgxkMDHzufcLNvtsUlcvtRO7QBn
+         WnZBBrRcCWDVIfqy+JtA0o/aHsG3jPn3CeG+a41AN2LS7Ad825h1bW8Tqz1obHrr95iD
+         j/VvXYcz5t6mzXBxath9IdmtKTXBB4+iyzrsR40X/TR/HJQZ9g4jfHN9d5EUmlYT8lB1
+         +O3zetfqoOyI+fJOM9Mlrb+0/ozFZ4tAtnD56YtIicUw8BKMjlEyLiOJFodWVEYizT5r
+         vK5g==
+X-Gm-Message-State: ANhLgQ11lXNjLHZGcajPNMQbBVG9Js3rregWCudenZswPTR3/xiElvo+
+        7kD/NUtEJzBa1Cx+4KsUE+S+MEzYttRyxA==
+X-Google-Smtp-Source: ADFU+vsD8LfwcGS5334AtS4GaZsZiNiMDvsXvl5GX4AHw2tuxAat2LUN+GwURQUspYtgY5st5oix9A==
+X-Received: by 2002:a1c:7707:: with SMTP id t7mr1969720wmi.173.1585640696624;
+        Tue, 31 Mar 2020 00:44:56 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2? ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
+        by smtp.gmail.com with ESMTPSA id y189sm2767742wmb.26.2020.03.31.00.44.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 00:44:56 -0700 (PDT)
+Subject: Re: [RFC v1 3/5] arm64: dts: amlogic: meson-gx: add the Mali-450 OPP
+ table and use DVFS
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org, khilman@baylibre.com,
+        jbrunet@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200330221104.3163788-1-martin.blumenstingl@googlemail.com>
+ <20200330221104.3163788-4-martin.blumenstingl@googlemail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <05c15e30-3e20-6fce-d2ca-87b8762d0fef@baylibre.com>
+Date:   Tue, 31 Mar 2020 09:44:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200330221104.3163788-4-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 31 Mar 2020 09:40:33 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 04/18] dt-bindings: mfd: Add bindings for sl28cpld
-In-Reply-To: <20200330223535.GA31402@bogus>
-References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-5-michael@walle.cc> <20200330223535.GA31402@bogus>
-Message-ID: <538e5e51e59594a39064841509395fdb@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 7CC1E22EE3
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         DBL_PROHIBIT(0.00)[0.0.0.0:email,0.0.0.1:email];
-         RCPT_COUNT_TWELVE(0.00)[21];
-         NEURAL_HAM(-0.00)[-0.835];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,kernel.org,nxp.com,linutronix.de,lakedaemon.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-03-31 00:35, schrieb Rob Herring:
-> On Tue, Mar 17, 2020 at 09:50:03PM +0100, Michael Walle wrote:
->> This adds device tree bindings for the board management controller 
->> found
->> on the Kontron SMARC-sAL28 board.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> ---
->>  .../bindings/mfd/kontron,sl28cpld.yaml        | 143 
->> ++++++++++++++++++
->>  1 file changed, 143 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml 
->> b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> new file mode 100644
->> index 000000000000..3b9cca49d2d6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
->> @@ -0,0 +1,143 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Kontron's sl28cpld board management controller
->> +
->> +maintainers:
->> +  - Michael Walle <michael@walle.cc>
->> +
->> +description: |
->> +  The board management controller may contain different IP blocks 
->> like
->> +  watchdog, fan monitoring, PWM controller, interrupt controller and 
->> a
->> +  GPIO controller.
->> +
->> +properties:
->> +  compatible:
->> +    const: kontron,sl28cpld
->> +
->> +  reg:
->> +    description:
->> +      I2C device address.
->> +    maxItems: 1
->> +
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 0
->> +
->> +  "#interrupt-cells":
->> +    const: 2
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  interrupt-controller: true
->> +
->> +patternProperties:
->> +  "^gp(io|i|o)(@[0-9]+)?$":
-> 
-> Just 'gpio'. We don't need that level of distinguishing in node names.
-> 
->> +    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
->> +
->> +  "^hwmon(@[0-9]+)?$":
->> +    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
->> +
->> +  "^pwm(@[0-9]+)?$":
->> +    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
->> +
->> +  "^watchdog(@[0-9]+)?$":
->> +    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
-> 
-> The patches for these files need to come first or validating this file
-> fails. Really, you can just make all five files 1 patch.
-> 
->> +
->> +required:
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - compatible
->> +  - reg
->> +  - "#interrupt-cells"
->> +  - interrupt-controller
->> +
->> +oneOf:
->> +  - required:
->> +    - interrupts
->> +  - required:
->> +    - interrupts-extended
-> 
-> Don't need to do this. Just make 'interrupts' required and you'll get
-> interrupts-extended for free.
-> 
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +    i2c {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        sl28cpld@4a {
->> +            #address-cells = <1>;
->> +            #size-cells = <0>;
->> +            compatible = "kontron,sl28cpld";
->> +            reg = <0x4a>;
->> +            interrupts-extended = <&gpio2 6 IRQ_TYPE_EDGE_FALLING>;
->> +
->> +            #interrupt-cells = <2>;
->> +            interrupt-controller;
->> +
->> +            gpio@0 {
->> +                compatible = "kontron,sl28cpld-gpio";
->> +                reg = <0>;
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +
->> +                interrupt-controller;
->> +                #interrupt-cells = <2>;
->> +            };
->> +
->> +            gpio@1 {
->> +                compatible = "kontron,sl28cpld-gpio";
->> +                reg = <1>;
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +
->> +                interrupt-controller;
->> +                #interrupt-cells = <2>;
->> +            };
->> +
->> +            gpo {
->> +                compatible = "kontron,sl28cpld-gpo";
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +                gpio-line-names = "a", "b", "c";
->> +            };
->> +
->> +            gpi {
->> +                compatible = "kontron,sl28cpld-gpi";
->> +
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +            };
->> +
->> +            hwmon {
->> +                compatible = "kontron,sl28cpld-fan";
->> +            };
->> +
->> +            pwm@0 {
-> 
-> You already used the '0' address. You can't have 2 things at the
-> same address. There's only one number space at a given level.
+Hi,
 
-There was a reason for having duplicate unit-addresses. See here
-for my reasoning:
-https://lore.kernel.org/linux-devicetree/e55d59a68f497c8f2eb406d40ae878b9@walle.cc/
+On 31/03/2020 00:11, Martin Blumenstingl wrote:
+> Add the OPP table for the Mali-450 GPU and drop the hardcoded initial
+> clock configuration. This enables GPU DVFS and thus saves power when the
+> GPU is not in use while still being able switch to a higher clock on
+> demand.
+> 
+> While here, make most of meson-gxl-mali re-usable to reduce the amount
+> of duplicate code between GXBB and GXL. This is more important now as we
+> don't want to duplicate the GPU OPP table.
 
-But I've already noticed that it shouldn't be done it this way. The
-DT check is already complaining.
+Looks good, but please add comment about the CLKID_GP0_PLL assigned clock rate.
 
+I'll ask LibreELEC people to have a run on these patches (including the clk changes) with Kodi.
 
-> All these child devices don't have any DT resources, so you don't 
-> really
-> need them. The parent node could be a gpio and pwm provider and that's
-> all you need in DT. Aside from DT resources, the only other reason
-> to have all these child nodes are if the child blocks are going to get
-> assembled in different combinations across a variety of h/w.
+Neil
 
-What do you mean by DT resources? There is a new patch series in 
-preparation
-where for example the watchdog has a new property
-"kontron,assert-wdt-timeout-pin". Which IMHO should be go under the 
-watchdog
-node.
-Besides from that, there are actually three interrupt controllers, ie. 
-the
-two full featured gpio controllers and one interrupt controller. Do you 
-think
-it makes sense to combine that into the parent node eg. merging 
-different
-thinks like an interrupt controller and the gpio controllers into a 
-single
-interrupt mapping in the parent node.
-See also:
-https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  .../boot/dts/amlogic/meson-gx-mali450.dtsi    | 61 +++++++++++++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   | 51 ++++------------
+>  .../boot/dts/amlogic/meson-gxl-mali.dtsi      | 46 +++-----------
+>  3 files changed, 81 insertions(+), 77 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gx-mali450.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-mali450.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-mali450.dtsi
+> new file mode 100644
+> index 000000000000..f9771b51c852
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-mali450.dtsi
+> @@ -0,0 +1,61 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2017 BayLibre SAS
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +
+> +/ {
+> +	gpu_opp_table: opp-table {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp-125000000 {
+> +			opp-hz = /bits/ 64 <125000000>;
+> +			opp-microvolt = <950000>;
+> +		};
+> +		opp-250000000 {
+> +			opp-hz = /bits/ 64 <250000000>;
+> +			opp-microvolt = <950000>;
+> +		};
+> +		opp-285714285 {
+> +			opp-hz = /bits/ 64 <285714285>;
+> +			opp-microvolt = <950000>;
+> +		};
+> +		opp-400000000 {
+> +			opp-hz = /bits/ 64 <400000000>;
+> +			opp-microvolt = <950000>;
+> +		};
+> +		opp-500000000 {
+> +			opp-hz = /bits/ 64 <500000000>;
+> +			opp-microvolt = <950000>;
+> +		};
+> +		opp-666666666 {
+> +			opp-hz = /bits/ 64 <666666666>;
+> +			opp-microvolt = <950000>;
+> +		};
+> +		opp-744000000 {
+> +			opp-hz = /bits/ 64 <744000000>;
+> +			opp-microvolt = <950000>;
+> +		};
+> +	};
+> +};
+> +
+> +&apb {
+> +	mali: gpu@c0000 {
+> +		compatible = "arm,mali-450";
+> +		reg = <0x0 0xc0000 0x0 0x40000>;
+> +		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "gp", "gpmmu", "pp", "pmu",
+> +			"pp0", "ppmmu0", "pp1", "ppmmu1",
+> +			"pp2", "ppmmu2";
+> +		operating-points-v2 = <&gpu_opp_table>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> index 0cb40326b0d3..e43b330129c7 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> @@ -4,6 +4,7 @@
+>   */
+>  
+>  #include "meson-gx.dtsi"
+> +#include "meson-gx-mali450.dtsi"
+>  #include <dt-bindings/gpio/meson-gxbb-gpio.h>
+>  #include <dt-bindings/reset/amlogic,meson-gxbb-reset.h>
+>  #include <dt-bindings/clock/gxbb-clkc.h>
+> @@ -241,46 +242,6 @@ mux {
+>  	};
+>  };
+>  
+> -&apb {
+> -	mali: gpu@c0000 {
+> -		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
+> -		reg = <0x0 0xc0000 0x0 0x40000>;
+> -		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+> -		interrupt-names = "gp", "gpmmu", "pp", "pmu",
+> -			"pp0", "ppmmu0", "pp1", "ppmmu1",
+> -			"pp2", "ppmmu2";
+> -		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
+> -		clock-names = "bus", "core";
+> -
+> -		/*
+> -		 * Mali clocking is provided by two identical clock paths
+> -		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
+> -		 * free mux to safely change frequency while running.
+> -		 */
+> -		assigned-clocks = <&clkc CLKID_GP0_PLL>,
+> -				  <&clkc CLKID_MALI_0_SEL>,
+> -				  <&clkc CLKID_MALI_0>,
+> -				  <&clkc CLKID_MALI>; /* Glitch free mux */
+> -		assigned-clock-parents = <0>, /* Do Nothing */
+> -					 <&clkc CLKID_GP0_PLL>,
+> -					 <0>, /* Do Nothing */
+> -					 <&clkc CLKID_MALI_0>;
+> -		assigned-clock-rates = <744000000>,
+> -				       <0>, /* Do Nothing */
+> -				       <744000000>,
+> -				       <0>; /* Do Nothing */
+> -	};
+> -};
+> -
+>  &cbus {
+>  	spifc: spi@8c80 {
+>  		compatible = "amlogic,meson-gxbb-spifc";
+> @@ -362,6 +323,16 @@ &i2c_C {
+>  	clocks = <&clkc CLKID_I2C>;
+>  };
+>  
+> +&mali {
+> +	compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
+> +
+> +	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
+> +	clock-names = "bus", "core";
+> +
+> +	assigned-clocks = <&clkc CLKID_GP0_PLL>;
+> +	assigned-clock-rates = <744000000>;
+> +};
+> +
+>  &periphs {
+>  	pinctrl_periphs: pinctrl@4b0 {
+>  		compatible = "amlogic,meson-gxbb-periphs-pinctrl";
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+> index 6aaafff674f9..478e755cc87c 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+> @@ -4,42 +4,14 @@
+>   * Author: Neil Armstrong <narmstrong@baylibre.com>
+>   */
+>  
+> -&apb {
+> -	mali: gpu@c0000 {
+> -		compatible = "amlogic,meson-gxl-mali", "arm,mali-450";
+> -		reg = <0x0 0xc0000 0x0 0x40000>;
+> -		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
+> -			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+> -		interrupt-names = "gp", "gpmmu", "pp", "pmu",
+> -			"pp0", "ppmmu0", "pp1", "ppmmu1",
+> -			"pp2", "ppmmu2";
+> -		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
+> -		clock-names = "bus", "core";
+> +#include "meson-gx-mali450.dtsi"
+>  
+> -		/*
+> -		 * Mali clocking is provided by two identical clock paths
+> -		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
+> -		 * free mux to safely change frequency while running.
+> -		 */
+> -		assigned-clocks = <&clkc CLKID_GP0_PLL>,
+> -				  <&clkc CLKID_MALI_0_SEL>,
+> -				  <&clkc CLKID_MALI_0>,
+> -				  <&clkc CLKID_MALI>; /* Glitch free mux */
+> -		assigned-clock-parents = <0>, /* Do Nothing */
+> -					 <&clkc CLKID_GP0_PLL>,
+> -					 <0>, /* Do Nothing */
+> -					 <&clkc CLKID_MALI_0>;
+> -		assigned-clock-rates = <744000000>,
+> -				       <0>, /* Do Nothing */
+> -				       <744000000>,
+> -				       <0>; /* Do Nothing */
+> -	};
+> +&mali {
+> +	compatible = "amlogic,meson-gxl-mali", "arm,mali-450";
+> +
+> +	clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
+> +	clock-names = "bus", "core";
+> +
+> +	assigned-clocks = <&clkc CLKID_GP0_PLL>;
+> +	assigned-clock-rates = <744000000>;
+>  };
+> 
 
-Also please keep in mind, that these are only the current available 
-building
-blocks of a sl28cpld. They are likely to be extended for other 
-functionalities.
-So while it might be possible to merge the current nodes into the parent 
-I don't
-know it that is possible for future blocks.
-
--michael
