@@ -2,214 +2,236 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2F2C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8997BC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:28:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0306A20786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585671684;
-	bh=YHNMT5j8Euq0n+mseKfPA6cKBa4Jew7v+YKTKPRHb/4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1cXIkdiQ7g4idkyhyIRLgZtUao5MNM567thRZP+JkKWR6uhYv8QymQIllk1oewgpX
-	 r081tbtQCXrMIe5wgu1kWiJEoC728qw0WUHb5aBLmrvnWA+CZ6d0QDJTTUu0kOlEz+
-	 8jj0P3lJIudrb9YCuLy9HXxWol0aNXhtDzt9ELPU=
+	by mail.kernel.org (Postfix) with ESMTP id 5D84C20784
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbgCaQVX (ORCPT
+        id S1729682AbgCaQ2P (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:21:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730011AbgCaQVX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 12:21:23 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E58DD21473;
-        Tue, 31 Mar 2020 16:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585671682;
-        bh=YHNMT5j8Euq0n+mseKfPA6cKBa4Jew7v+YKTKPRHb/4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gNLQBrPcq3oyN2Ogv+oTJyFfBNekyyJFE8OMY+ksIRuIUm4Epp9KM6Y1F/8vi0HEK
-         10SfgtgPdKeKpsdZiqQ2ixSx9HcCCrFep4hoh/CePpyQATN8UU/WSDZC0IVmvAP2LT
-         v14r3TcSkQKemqZJ9R1yludBCEJye3nWX1UaBApI=
-Received: by mail-qt1-f175.google.com with SMTP id z12so18836742qtq.5;
-        Tue, 31 Mar 2020 09:21:21 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0eFQXJPHRl5wRowCdEqbAlE5Qup/b60Tefav6tVtVAI01tH+j3
-        jEPDKj3BsjkAHgUdk6rL/n79Yy8651xuJTczsA==
-X-Google-Smtp-Source: ADFU+vtynyRBpHK1zGlgHy3HIyDVqOtqkMP9vtFANRwUVhPPv/eanwLrG9DiWcusvM2HxEgWHSF1cMX0wltfSbKtWIU=
-X-Received: by 2002:ac8:1611:: with SMTP id p17mr5993804qtj.300.1585671680921;
- Tue, 31 Mar 2020 09:21:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200315191632.12536-1-rentao.bupt@gmail.com> <20200315191632.12536-7-rentao.bupt@gmail.com>
- <20200330192347.GA6388@bogus> <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
-In-Reply-To: <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 31 Mar 2020 10:21:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
-Message-ID: <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
- ID/string properties
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
+        Tue, 31 Mar 2020 12:28:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:53426 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726194AbgCaQ2P (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:28:15 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id AFBE28030778;
+        Tue, 31 Mar 2020 16:28:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 6LJOtE4AVHZd; Tue, 31 Mar 2020 19:28:06 +0300 (MSK)
+Date:   Tue, 31 Mar 2020 19:28:13 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tao Ren <taoren@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wolfram Sang <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/6] i2c: designeware: Add Baikal-T1 SoC DW I2C specifics
+ support
+Message-ID: <20200331162813.dnpmyzs35tvkeavx@ubsrv2.baikal.int>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200306135451.4AF0480307C4@mail.baikalelectronics.ru>
+ <20200331114824.e3uljdymvsjuh6wh@ubsrv2.baikal.int>
+ <20200331142530.GM1922688@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200331142530.GM1922688@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 6:14 PM Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
->
-> On Mon, 2020-03-30 at 13:23 -0600, Rob Herring wrote:
-> > On Sun, Mar 15, 2020 at 12:16:32PM -0700, rentao.bupt@gmail.com wrote:
-> > > From: Tao Ren <rentao.bupt@gmail.com>
-> > >
-> > > Update device tree binding document for aspeed vhub's device IDs and
-> > > string properties.
-> > >
-> > > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> > > ---
-> > >  No change in v2:
-> > >    - the patch is added into the series since v2.
-> > >
-> > >  .../bindings/usb/aspeed,usb-vhub.yaml         | 68 +++++++++++++++++++
-> > >  1 file changed, 68 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > > index 06399ba0d9e4..5b2e8d867219 100644
-> > > --- a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > > +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > > @@ -52,6 +52,59 @@ properties:
-> > >          minimum: 1
-> > >          maximum: 21
-> > >
-> > > +  vhub-vendor-id:
-> > > +    description: vhub Vendor ID
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - maximum: 65535
-> > > +
-> > > +  vhub-product-id:
-> > > +    description: vhub Product ID
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - maximum: 65535
-> >
-> > There's already standard 'vendor-id' and 'device-id' properties. Use
-> > those.
->
-> So yes and no... I don't fundamentally object but keep in mind that
-> traditionally, the properties are about matching with a physical
-> hardware.
->
-> In this case however, we are describing a virtual piece of HW and so
-> those IDs are going to be picked up to be exposed as the USB
-> vendor/device of the vhub on the USB bus.
->
-> Not necessarily an issue but it's more "configuration" than "matching"
-> and as such, it might make sense to expose that with a prefix, though I
-> would prefer something like usb-vendor-id or usb,vendor-id...
+On Tue, Mar 31, 2020 at 05:25:30PM +0300, Andy Shevchenko wrote:
+> On Tue, Mar 31, 2020 at 02:48:24PM +0300, Sergey Semin wrote:
+> > Hello Andy,
+> > 
+> > Finally I've thought this through reasonably conformed with the changes
+> > requested in the framework of the other patchsets. My comments are
+> > below.
+> > 
+> > On Fri, Mar 06, 2020 at 03:54:45PM +0200, Andy Shevchenko wrote:
+> > > First of all, I got only 3 out of 6 patches. Are you sure you properly prepared
+> > > the series?
+> > > 
+> > > On Fri, Mar 06, 2020 at 04:19:49PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > > > From: Serge Semin <fancer.lancer@gmail.com>
+> > > 
+> > > Same comment as per DMA series, try next time to link the cover letter to the
+> > > series correctly.
+> > > 
+> > > > There are three DW I2C controllers embedded into the Baikal-T1 SoC. Two
+> > > > of them are normal with standard DW I2C IP-core configurations and registers
+> > > > accessible over normal MMIO space - so they are acceptable by the available
+> > > > DW I2C driver with no modification.
+> > > 
+> > > > But there is a third, which is a bit
+> > > > different. Its registers are indirectly accessed be means of "command/data
+> > > > in/data out" registers tuple. In order to have it also supported by the DW
+> > > > I2C driver, we must modify the code a bit. This is a main purpose of this
+> > > > patchset.
+> > > > 
+> > > > First of all traditionally we replaced the legacy plain text-based dt-binding
+> > > > file with yaml-based one. Then we found and fixed a bug in the DW I2C FIFO size
+> > > > detection algorithm which tried to do it too early before dw_readl/dw_writel
+> > > > methods could be used.
+> > > 
+> > > So far so good (looks like, I think colleagues of mine and myself will review
+> > > individual patches later on).
+> > > 
+> > > > Finally we introduced a platform-specific flag
+> > > > ACCESS_INDIRECT, which would enable the indirect access to the DW I2C registers
+> > > > implemented for one of the Baikal-T1 SoC DW I2C controllers. See the commit
+> > > > message of the corresponding patch for details.
+> > > 
+> > > This is quite questionable. In Intel SoCs we have indirect I²C controllers to
+> > > access (inside PMIC, for example). The approach used to do that is usually to
+> > > have an IPC mechanism and specific bus controller driver. See i2c-cht-wc.c for
+> > > instance.
+> > > 
+> > > I'm not sure if it makes a lot of duplication and if actually switching I²C
+> > > DesignWare driver to regmap API will solve it. At least that is the second
+> > > approach I would consider.
+> > > 
+> > > But I'll wait others to comment on this. We have to settle the solution before
+> > > going further.
+> > > 
+> > 
+> > As I see the others have not comments.) Anyway I see your point and having the
+> > regmap-based interface might be better than the approach I've suggested
+> > in this patchset particularly seeing that our DW i2c IP registers are
+> > hidden behind a system controller register space.
+> > 
+> > In order to follow your proposition to create a dedicated regmap and to supply
+> > it to the DW i2c driver, I have to redevelop not only this patchset, but
+> > also an adjacent drivers. In particular the changes will concern the
+> > MFD-based System Controller driver (which will instantiate this DW i2c
+> > controller device), Clocks Control Unit drivers set, and a few
+> > others. The whole alteration I described in the RFC:
+> > https://lkml.org/lkml/2020/3/22/393
+> > You've been in Cc there, so fill free to send your comments regarding
+> > the changes I suggested. Though this time I hope the solution will
+> > satisfy everyone, who had issues with patchsets I've recently sent.
+> > 
+> > Getting back to your comment in the framework of this patchset. The approach
+> > used for CHT Whiskey Cove i2c isn't fully suitable in our case for
+> > the reason of the DW I2C controller nature. DW I2C controller is a generic
+> > controller and used on many different platforms, while AFAICS CHT Whiskey Cove
+> > I2C is the SoC-specific used to access a charger-IC. So in the former case we
+> > may have an arbitrary set of i2c-slaves connected to the controller on
+> > different platforms, while on the latter one - there is a fixed set of
+> > slaves. In addition due to the same reason the DW I2C IP might be
+> > embedded into different sub-blocks on different platforms, while the CHT
+> > Whiskey Cove I2C is known to be a part of Intel CHT WC SoC PMIC.
+> > For instance Baikal-T1 SoC has one DW I2C controller embedded into the
+> > System Controller with indirectly accessible registers and two DW I2C
+> > interfaces with normal memory mapped registers. Due to this in case of DW I2C
+> > driver we can't just "suck" the regmap out from a parental MFD or
+> > anywhere else as it's done in the CHT Whiskey Cove I2C driver, but instead
+> > we should somehow supply a regmap pointer to the driver.
+> > 
+> > Taking into account all of these we can utilize a combined approach
+> > implemented in ./drivers/i2c/busses/i2c-cht-wc.c and
+> > drivers/mfd/intel_quark_i2c_gpio.c . I'll add a regmap pointer field to the
+> > "struct dw_i2c_platform_data" structure, so in case if there is no
+> > IORESOURCE_MEM resources available (platform_get_resource() fails), we
+> > try to get a regmap pointer from the platform data. If there is no valid
+> > regmap available, then completely fail the driver probe procedure. Though
+> > due to this alteration I'll have to change the
+> > dw_i2c_platform_data.i2c_scl_freq field usage a bit. In case if it's
+> > zero, then call i2c_parse_fw_timings(). This won't hurt ACPI or dt-less
+> > platforms, but will let us cover a case when regmap is set while i2c
+> > clock frequency is supposed to be taken from the kernel firmware (like
+> > dtb, etc).
+> > 
+> > So if you are Ok with this, I'll send a v2 patchset with corresponding
+> > alteration implemented.
+> 
+> I was thinking about something like this:
+> 
 
-For FDT uses, it's pretty much been configuration. It's mostly been
-for PCI that I've seen these properties used.
+> 1/ core driver (library + master + slave) is converted to use regmap
 
-> > > +
-> > > +  vhub-device-revision:
-> >
-> > Specific to USB, not vhub.
->
-> Same as the above.
->
-> > > +    description: vhub Device Revision in binary-coded decimal
-> > > +    allOf:
-> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > +      - maximum: 65535
-> > > +
-> > > +  vhub-strings:
-> > > +    type: object
-> > > +
-> > > +    properties:
-> > > +      '#address-cells':
-> > > +        const: 1
-> > > +
-> > > +      '#size-cells':
-> > > +        const: 0
-> > > +
-> > > +    patternProperties:
-> > > +      '^string@[0-9a-f]+$':
-> > > +        type: object
-> > > +        description: string descriptors of the specific language
-> > > +
-> > > +        properties:
-> > > +          reg:
-> > > +            maxItems: 1
-> > > +            description: 16-bit Language Identifier defined by USB-IF
-> > > +
-> > > +          manufacturer:
-> > > +            description: vhub manufacturer
-> > > +            allOf:
-> > > +              - $ref: /schemas/types.yaml#/definitions/string
-> > > +
-> > > +          product:
-> > > +            description: vhub product name
-> > > +            allOf:
-> > > +              - $ref: /schemas/types.yaml#/definitions/string
-> > > +
-> > > +          serial-number:
-> > > +            description: vhub device serial number
-> > > +            allOf:
-> > > +              - $ref: /schemas/types.yaml#/definitions/string
-> >
-> > For all of this, it's USB specific, not vhub specific. I'm not sure this
-> > is the right approach. It might be better to just define properties
-> > which are just raw USB descriptors rather than inventing some DT format
-> > that then has to be converted into USB descriptors.
->
-> Raw blob in the DT is rather annoying and leads to hard to parse stuff
-> for both humans and scripts. The main strenght of the DT is it's easy
-> to read and manipulate.
+Yes. I also intended to do this just by altering the dw_readl() and
+dw_writel() methods to work over regmap IO methods if regmap is
+available.
 
-True, and I'd certainly agree when we're talking about some vendor
-specific blob. but there's already code/tools to parse USB
-descriptors.
+> 2/ platform and PCI driver may provide regmap MMIO
 
-> Also not the entire descriptor is configurable this way.
->
-> That said, it could be that using  the DT for the above is overkill and
-> instead, we should consider a configfs like the rest of USB gadget.
-> Though it isn't obvious how to do that, the current gadget stuff
-> doesn't really "fit" what we need here.
+Regmap pointer will be also a part of "struct dw_i2c_dev". So if PCI
+code intends the regmap-based access to the controller registers, then
+it shall just initialize the regmap pointer in the private i2c-designware data
+instance of the dw_i2c_dev structure. So, yes, this is also covered by
+my solution. Though the PCI code will be left untouched, since I can't
+predict a particular regmap-related use-case of it.
 
-Surely the descriptor building code can be shared at a minimum.
+> 3/ your glue driver will provide different regmap accessors
 
-Regardless of whether gadget configfs fits, usually it is pretty clear
-whether something belongs in DT or userspace. That should be decided
-first.
+I was thinking of developing a more generic version so any platform
+with a specific access to the DW I2C register could use it just by supplying
+the regmap pointer in the dw_i2c_platform_data structure. Our DW I2C
+controller also perfectly fits to the generic i2c-designware-platdrv.c
+driver, so implementing an additional glue-layer would be too much seeing
+the difference only in the registers mapping.
 
-> Maybe we could expose the port as UDCs but not actually expose them on
-> the bus until the hub is "activated" via a special configfs entry...
+Let me explain the difference of our solutions. In case of implementing
+the glue layer, as you suggest, I would have to do it in a way like the DW PCIe
+driver is designed. I would need to move the code of current dw_i2c_plat_probe()
+function to a dedicated method named like dw_i2c_plat_init(pdev, !regmap!),
+while former method dw_i2c_plat_probe() would just call
+dw_i2c_plat_init(pdev, !NULL!). Then I would have to create a dedicated
+glue-driver - i2c-designware-bt1drv.c, which would be bound to a
+"baikal,t1-sys-i2c" device, try to find a Baikal-T1 System Controller
+device node (though this would be just a parent device), then would get
+it' syscon regmap handler, then would initialize a dedicated regmap handler to
+indirectly access the DW I2C controller register, then it would call the
+dw_i2c_plat_init(pdev, !regmap!) method with new regmap handler passed
+(though the new regmap passing could be also implemented over the
+platform_data pointer). Also seeing you already have a platform-specific
+parts in the generic i2c-designware-platdrv.c driver (like ACPI-based
+platforms and Microsemi Ocelot SoC), there might raise a necessity to
+unpin that specifics to a dedicated method, since my glue-layer
+wouldn't need that checks and initializations. Such alteration won't
+be that easy to implement and regression errors prone, since I don't have
+other platforms to test it.
 
-If control of the hub is done by userspace, I'd think configuration
-should be there too.
+In case of my solution the whole glue-layer part would be moved to
+the MFD-based Baikal-T1 System Controller driver and a generic
+platform_data-based interface would be implemented, which would just
+need to alter the registers mapping part of the i2c-designware-platdrv.c
+driver. Note that that part would need to be fixed in case of any solution.
 
-Rob
+So comparing these too approaches, I would select a one, which would
+need less common code modifications and would provide a generic
+solution. As I see it would be a platform_data-based design. What do you
+think?
+
+Regards,
+-Sergey
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
