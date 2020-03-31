@@ -2,133 +2,92 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6004CC2D0F1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E335C2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF2620CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585676426;
-	bh=KR3B5W4EHudmbK6aJ68bTF93QLBBpkya3pFrBNvSraE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uXC0EoiEdfhcOZ+nkdDRJS10aPRyjh5/lc2pdfkvXy1Jtpzqzt42AdFDun93/NQ1/
-	 ZLlRzjqPlggIafHmjIldAYj4VtlEX/zJMoUdIuQGJCeJLA5iw+3mBBioG9xYDAnNr1
-	 96HqOOl8ldvMQ0GqNryopLXhmwcULrDPHlThkzEY=
+	by mail.kernel.org (Postfix) with ESMTP id E3F3321473
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:41:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXlHk8rq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgCaRkZ (ORCPT
+        id S1726156AbgCaRlu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:40:25 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42279 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgCaRkZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:40:25 -0400
-Received: by mail-il1-f196.google.com with SMTP id f16so20258268ilj.9;
-        Tue, 31 Mar 2020 10:40:24 -0700 (PDT)
+        Tue, 31 Mar 2020 13:41:50 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37881 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgCaRlu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:41:50 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i34so531697pgl.4;
+        Tue, 31 Mar 2020 10:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0WK1L776nmYgsU46xCXGDCiU0P0Wvlg3rNsyJsRlP98=;
+        b=oXlHk8rqDvug0MKUD6I63bxufCaRC8Qv5IN1o81KbvCaUN2Ayl1AQb1oVDmmIKiCaU
+         y+FKmCdXIQ/hd5W2+PQOjt9zCudi7Wlyqq4B+7n3d7Y2E+FpGVAkzNEdjUWWBQEPYDyb
+         rJ8Rsli2qX1/AuOPa0sURyKOgzjlDPFGDr2Mdj0nwI3hImibl+jNacA7PWw0odV7rDji
+         ZRWD7fxp+IyMvDagjNeJeUCELKz1eV2HlCBA3TSriuHmLMUzz0sqBTOPjHnFAAyOM0zl
+         aRFQ6IVIdzbSGwLEo0wEG0fGtF4zI+9IVqhPSRqXUMn8zqe1fdQ0v5rpxqvCvmtrKfYt
+         zgAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6aBwK6Jn54nXE60sLLoNIliyeSRRLFSDoeTTM2YH+9c=;
-        b=p2UuW9iqhJoLKURFkEt/hXCK1/KLrIjbcdXJCtM0gzPz0DnSLun87o7k5VLxQOkb9h
-         qyQFWCtrYCXNK10LbWMNIrzr4tcDnbJFI1QhokkpzdHVYmwB8az3QrOWlYGQn0E8owlq
-         3eIjrW1+GUdDZ8ZigMXbw0TmM1hxu+2zR0X4xEK+1/mw/jq4dJ/SPq4L1GyJtsap9hO/
-         8SQV2Pvfq5ZSt3yw9EmHq0bjrCZmAnWkFGE8wSUcQY2wgr6x2MqNYbfw4LSet2Io30NI
-         esCtH4880tZF03TImfj9ndXJb50KHdXK/NDhBRP4qpfkGJW0/pbXoGBYvb+yRrdy26qv
-         Yueg==
-X-Gm-Message-State: ANhLgQ0gvOwWLJfA9MqgIu8oKzx7IRcvvwmFbgme0RMRD4f+2Wa1PFek
-        ueulsxAWoXm8UKODUYYBeQ==
-X-Google-Smtp-Source: ADFU+vtfh2X3JGSeIIM+yl3ExvWxhpP3OLXDWjVv5Kk09AwSb03T23fXxucTtsvMEsvZVDB/DlV5Xw==
-X-Received: by 2002:a92:24f:: with SMTP id 76mr2733651ilc.178.1585676424207;
-        Tue, 31 Mar 2020 10:40:24 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id k11sm2853756iom.43.2020.03.31.10.40.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 10:40:23 -0700 (PDT)
-Received: (nullmailer pid 6382 invoked by uid 1000);
-        Tue, 31 Mar 2020 17:40:21 -0000
-Date:   Tue, 31 Mar 2020 11:40:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     mark.rutland@arm.com, jassisinghbrar@gmail.com,
-        orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: mailbox: Add the Spreadtrum mailbox
- documentation
-Message-ID: <20200331174021.GA4288@bogus>
-References: <600e0b027a4e62a4aea8900e5a1e95e3e14b10f0.1584943873.git.baolin.wang7@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0WK1L776nmYgsU46xCXGDCiU0P0Wvlg3rNsyJsRlP98=;
+        b=sEWnnFvL4WYaphVc/5jGdb4Ua6JhiUfeDMfh1qE+UUfG6ZdH/YOpnYJ7T1jwltHKel
+         zGlPZzCvriJuIiLmrEcdxGRkCTgWvoTqINo/C8WM2vSpcAzhu8OJEavzX+CUQQVQPp+S
+         bf55RIJtWph+00Wn+iRoDOj2RWhlqj4CdEqmqrNGIRBHHvA2arL6xEgaIQHbX+9UebNr
+         oSyp8ekPxc/bTANN5PS2Wwc54RwnW7cNrGrJgIn72SsemCXqrDOadT0So331n6N9Lktv
+         KeavOw93COVAlOFRp6cunHuFj2YnOYLSFlmupL3BF5JCopsKCJmlL+ly9R+3O/xHAeuB
+         s1UA==
+X-Gm-Message-State: AGi0PuZSgWKGo3ueAMJQbgr7dLb+AO3MCKn1AosRyzAz8rgyS5WEdgFk
+        CyKxmzH6aG82Viz3gGiSuirjkYdTMIcSdT9gAiY=
+X-Google-Smtp-Source: APiQypLQFtXGfHUfvQUXhzwkFBcnNbPE4ORbACPZdwZJmr1jkPWgd79RsT3GiwhfIVOyeVAXF4niiNd0dLyr4hHQD/4=
+X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr5918902pfs.36.1585676508695;
+ Tue, 31 Mar 2020 10:41:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <600e0b027a4e62a4aea8900e5a1e95e3e14b10f0.1584943873.git.baolin.wang7@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200331114811.7978-1-nuno.sa@analog.com> <20200331114811.7978-4-nuno.sa@analog.com>
+In-Reply-To: <20200331114811.7978-4-nuno.sa@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 31 Mar 2020 20:41:41 +0300
+Message-ID: <CAHp75VdWa_-x4n+FwuZZ6a9pw19bejOGtx_VwWhvNAuSTYfgdw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] iio: adis: Add adis_update_bits() APIs
+To:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 02:13:46PM +0800, Baolin Wang wrote:
-> From: Baolin Wang <baolin.wang@unisoc.com>
-> 
-> Add the Spreadtrum mailbox documentation.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> ---
-> Changes from v1:
->  - Add 'additionalProperties'.
->  - Split description for each entry.
-> ---
->  .../devicetree/bindings/mailbox/sprd-mailbox.yaml  | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
-> new file mode 100644
-> index 0000000..0848b18
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/sprd-mailbox.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/mailbox/sprd-mailbox.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Spreadtrum mailbox controller bindings
-> +
-> +maintainers:
-> +  - Orson Zhai <orsonzhai@gmail.com>
-> +  - Baolin Wang <baolin.wang7@gmail.com>
-> +  - Chunyan Zhang <zhang.lyra@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - sprd,sc9860-mailbox
-> +
-> +  reg:
-> +    items:
-> +      - description: inbox registers' base address
-> +      - description: outbox registers' base address
+On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+>
+> This patch adds a `regmap_update_bits()` like API to the ADIS library.
+> It provides locked and unlocked variant.
 
-> +    minItems: 2
+> +       __val &=3D ~mask;
+> +       __val |=3D val & mask;
 
-This is redundant, drop it.
+You can use standard one liner, i.e.
 
-> +
-> +  interrupts:
-> +    items:
-> +      - description: inbox interrupt
-> +      - description: outbox interrupt
-> +    minItems: 2
+       __val =3D (__val & ~mask) | (val & mask);
 
-Same here.
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+--=20
+With Best Regards,
+Andy Shevchenko
