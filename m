@@ -2,93 +2,124 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD180C2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0491CC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A196F2071A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:42:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oDM3v2vU"
+	by mail.kernel.org (Postfix) with ESMTP id D78A720784
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbgCaNmq (ORCPT
+        id S1730745AbgCaNxh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:42:46 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43948 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730216AbgCaNmq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 09:42:46 -0400
-Received: by mail-lf1-f66.google.com with SMTP id n20so17312816lfl.10;
-        Tue, 31 Mar 2020 06:42:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g+oOx8oe1EcOiEsQwOx41lZlMI2tyT5SQXJ7reK/MjM=;
-        b=oDM3v2vUvoB+zQ1qxrk49Rs6ZBg+nafBMNk2MMzG+O8CPZW0Hudl4k6TwLZW4EMtJQ
-         fLBL0OIBYoNagGt804nTK8OZRHQcGD9TkcD/23CfxQu/IVD+Z8JAEon21F8t1lvztDi9
-         Tz5F28Tp5Nb3drKK+NDJO4zfpF1LnPGT54tgPPtUquRxFbqVF3sityDiMimZ94LN5H4m
-         9E30zffqveXsn+CfPYHHzZVgdTvf71weNFZ1d3R85/ri4X85LHdLh1JeCSY+++udvlls
-         sKV1dgy8Tmy1IXx/3uurUncdjaJy+dkQBEYwfdDl7J2IpK1ctInx9/6BCAFJfyhgcD0E
-         i0cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g+oOx8oe1EcOiEsQwOx41lZlMI2tyT5SQXJ7reK/MjM=;
-        b=tLJWzIzn0OT1fy/Zr0ueAlW7ElOFdZjI18FZsI4XwVB4X9Bx2cX2eriRwxzBkPGoYV
-         098142kSvrci7raBZZTnj8RroXaWTaNQ+nJeWYt60I1BBPe7q+nu94V3qtOruFWWgST6
-         JiAJeOcawYkAwlwz95xD0ToyLbs3i7576nn0KkEPdYuaXRCwPosyNHcymVBA+IjRSEGr
-         hxDtz4wTTgnaURxxEmqeB6/r6TMByzhvGapFOEIBcKF3Gui/hdGA9IcLn0aI1exzgUgw
-         MUihpWiwOz+ulsmK9UEZ0AB981DnjiaoSZkbYHf8jzzBfDy+Blu0Hr2nCkxMX7DF0QeY
-         ixGQ==
-X-Gm-Message-State: AGi0PuYjAXBve7kK8MafkdzIY9hdsc/TwRNkdUb+xHjWBE+3ZVtYcMWO
-        7d2KHDNIbCRI19I2WMVynKGbhhxf+maBug/iYkE=
-X-Google-Smtp-Source: APiQypL+H+6Kyrx6/X3/WVdrnJz8eQS2wW8bf4HVX9M6MsjMu5LPvIiOLF5pjFJDq/yzciCsM+hUGrhPSZOPEEObj1A=
-X-Received: by 2002:ac2:4c3b:: with SMTP id u27mr11614521lfq.7.1585662163062;
- Tue, 31 Mar 2020 06:42:43 -0700 (PDT)
+        Tue, 31 Mar 2020 09:53:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25372 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730420AbgCaNxh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 09:53:37 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VDX0hF068094;
+        Tue, 31 Mar 2020 09:52:25 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3044cgcm3k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 09:52:25 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02VDZGeG076868;
+        Tue, 31 Mar 2020 09:52:25 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3044cgcm38-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 09:52:25 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02VDotVT028130;
+        Tue, 31 Mar 2020 13:52:24 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma02wdc.us.ibm.com with ESMTP id 301x76s7mp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 13:52:24 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02VDqMbQ54919466
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 13:52:22 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2BDFB7805F;
+        Tue, 31 Mar 2020 13:52:22 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41F3B7805C;
+        Tue, 31 Mar 2020 13:52:16 +0000 (GMT)
+Received: from [9.85.129.243] (unknown [9.85.129.243])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 31 Mar 2020 13:52:15 +0000 (GMT)
+Subject: Re: [PATCH v4 3/7] tpm: tpm_tis: rewrite "tpm_tis_req_canceled()"
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+References: <20200331113207.107080-1-amirmizi6@gmail.com>
+ <20200331113207.107080-4-amirmizi6@gmail.com>
+ <20200331121352.GA9284@linux.intel.com>
+From:   Ken Goldman <kgold@linux.ibm.com>
+Message-ID: <774fa2af-e4a6-4577-f1f7-c786e3b5210c@linux.ibm.com>
+Date:   Tue, 31 Mar 2020 09:52:15 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200313110350.10864-1-robert.foss@linaro.org>
- <20200313110350.10864-3-robert.foss@linaro.org> <CAOMZO5D9bmXt9_qGTXw+qUG6JDHfuNtx++fJPJtn+mj1Dzsbag@mail.gmail.com>
- <CAG3jFystdBKnosNQ0LeWQfHEtMgU4iGSr_XuS2XU3-902c31nQ@mail.gmail.com>
-In-Reply-To: <CAG3jFystdBKnosNQ0LeWQfHEtMgU4iGSr_XuS2XU3-902c31nQ@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 31 Mar 2020 10:42:33 -0300
-Message-ID: <CAOMZO5DHBCJbfS2Lt7R-3J_TUJi1is2Xn6n5iZkRwvmn5i6Dmg@mail.gmail.com>
-Subject: Re: [v2 2/3] media: ov8856: Add devicetree support
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200331121352.GA9284@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_04:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ clxscore=1011 priorityscore=1501 impostorscore=0 mlxlogscore=999
+ malwarescore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003310120
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robert,
+On 3/31/2020 8:13 AM, Jarkko Sakkinen wrote:
+> On Tue, Mar 31, 2020 at 02:32:03PM +0300, amirmizi6@gmail.com wrote:
+>> From: Amir Mizinski <amirmizi6@gmail.com>
+>>
+>> Using this function while read/write data resulted in aborted operation.
+>> After investigating according to TCG TPM Profile (PTP) Specifications,
+>> i found cancel should happen only if TPM_STS.commandReady bit is lit and
+>> couldn't find a case when the current condition is valid.
+>> Also only cmdReady bit need to be compared instead of the full lower status
+>> register byte.
+>>
+>> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> We don't care about spec's. We care about hardware and not all hardware
+> follows specifications.
+> 
+> Please fix the exact thing you want to fix (and please provide a fixes
+> tag).
 
-On Tue, Mar 31, 2020 at 10:37 AM Robert Foss <robert.foss@linaro.org> wrote:
+I edit the TPM main spec, not the PTP.  As I discover TPMs that don't 
+meet the spec, or where the spec has changed over time, I add 
+informative comments to guide developers.
 
-> After testing this change, it breaks the driver during probing.
+If you know of TPM hardware that does not meet the PTP specification, 
+let me know the specifics.  I can bring it to the PTP work group and try 
+to get comments added.
 
-Why exactly does it break probing? Maybe the GPIO polarity defined in
-the device tree is wrong?
+I do not need to know the TPM vendor.  That information would not go 
+into the specification anyway.
 
-> I had a quick look into GPIOD_OUT_HIGH & LOW definitions, and they
-> seem to never be 0 or 1.
 
-If you do a grep in all gpiod_set_value_cansleep() usages in the
-kernel tree, there is not a single case where  GPIOD_OUT_HIGH or
-GPIOD_OUT_LOW is passed as argument of gpiod_set_value_cansleep().
