@@ -2,418 +2,297 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB0BC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DB6C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49567212CC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8D221473
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:15:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jf60Gj0y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rp0zWmZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbgCaSJL (ORCPT
+        id S1726290AbgCaSPn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:09:11 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:38802 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgCaSJL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 14:09:11 -0400
-Received: by mail-pj1-f66.google.com with SMTP id m15so1404131pje.3
-        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 11:09:09 -0700 (PDT)
+        Tue, 31 Mar 2020 14:15:43 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41856 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgCaSPn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 14:15:43 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a24so3861727pfc.8;
+        Tue, 31 Mar 2020 11:15:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0m7IBpCXDOsGY+DSPyHx/xVYlTu36NeTdj5dYNKeXyM=;
-        b=Jf60Gj0y7W+cyaBNFOzgemAgYw1uMEq3IlcSIzq9v1BofdlUZN/M99Ao+8+sMjnJYv
-         qzRUJu/MiBIF1Ia72bC7VxMY4OEjyWro8FmpvWlvZQtcdp1xUYB8I1I3/GZDe5+SUhaF
-         9MoJSDrFKsUHsm8K4RArk7UtKmEMVkFZPNiz/KT34/NzYlZ6vw2Kap0Hiiq4VJ6w62uQ
-         k5j84nspCKXerWktQfCkMgP2P9FhrQRQ2QgbQMvRaFOa62+ByjOxy4MJi92pU10yyBhb
-         hXv+YiE26NM0X3tqKWAmZ4TVF3rJUT2XKx8EMkVCF7iuMFMPYzNB0YCbc4L4vsLBITbg
-         5Btw==
+         :cc:content-transfer-encoding;
+        bh=xxaK7TWnzQ3tsJFSRYiRdAA4AhJRuyYhC9yptejiW3Q=;
+        b=Rp0zWmZ1VxDLmz4cYM+ZmN+MW3QgdVcW9y9omZc2kwDU41vRmMgCtMZEmPLEIMnVEN
+         PPQP8dd+ygROEZ36SowO53zBbatTQj/L0wpWfjKFSx8IDrPH1M4ZvcycAjbPZqc57EsS
+         h1ZJkUs3i2hezck+bYf9jvZEyqHX7H2WCPrF5a8HJaGvmRlv3nIR1tbZJ8XmNAU6HV+f
+         STVWHIMzwZgnwJGHyhoT+Ul8XBraxYhXzjhZKglwKwrz7lH0/hPTD94ubV8ARwOCYTBt
+         yrD5sf6MLb3yxL/pQ97pe9c3vkocpS8wawXnbvz0/a3qVrgcv8ayk51tg34kiqWjfT9b
+         Iomw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0m7IBpCXDOsGY+DSPyHx/xVYlTu36NeTdj5dYNKeXyM=;
-        b=mRAv/iy6LItKhOS9S8cCbZ5b6iICsZSNvqrBK46JPmQGltSPj5mpKlNzZ994E8TysR
-         wpV0R6gynhHTQuvsu8n1OQZcrBdZrZCRfbq1M2r1f/DwoCPJhhgNUE7zedbUo19ELHrI
-         mesuxRQS1JDGzE/DllPxtBv+eOmf1jpQyA/XTD8aVmv/9KeDLlDucVvzxaIdQwGqRTTY
-         l2CbcEp6NvdMypgrkZwRKtgstP6sBghUtvpDRqtN8EA/xcfyUv7nx+hwF3T78nfwhzM8
-         7426o/TH3Fy08iTqP8gOYsTLhFb+LF84PzWvKFtnaPBJSk8C0vxPSP709tD4n3hCEE6O
-         qO7g==
-X-Gm-Message-State: ANhLgQ2wrcKH1QATU1IPjNOhSUlQEu+vdhIatBWbvgerfRAx9IqSfrPd
-        skn/X9G2ZMMcp5xd6eZgWLt4t+CsQTuTUk1No1nLDw==
-X-Google-Smtp-Source: ADFU+vvzhxk52SK4jXu2EJF8XW24gPNMWVQvcEjxsdA0MOrrYuSfyVeAUnGaSwdYVlkamVi0/gm54g1mhEF/XKMfKts=
-X-Received: by 2002:a17:902:8ec1:: with SMTP id x1mr18956525plo.325.1585678148400;
- Tue, 31 Mar 2020 11:09:08 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xxaK7TWnzQ3tsJFSRYiRdAA4AhJRuyYhC9yptejiW3Q=;
+        b=VXq0NtinnQEWKQIRKjU91Ha3+cwE95lAsgp9RpSa/gMyeEwo6+Y5dSuUanwrBK3Q2t
+         1OSRJ4q1NIwNkAY+k3tEyMKmHCcfjjnLHxEXipV5eQIPne9ez5zV7gf+vXYe0yk/Zhya
+         0nAlEFiiRZXZRep2qzIbUaqo+LkwhGyGP+HGNhWuVKAGnRDhC4mOjAi+apxINyHg2eqB
+         cfACsrn4eJiHeofVGKbvkg3LxZnIzM1XLYECRLcUs1DntnaBD7gPW9/ML8hbXFi4rlSA
+         Gf8DPo5UukgkDcyzXWJfAVKjPJ3uTDIxQ2hrzev5u7YkFZRlm6ZNVeJfmsev9k0ZFcgb
+         zDtw==
+X-Gm-Message-State: AGi0PuYkouTZ2k4TtGARrXQcQZCN52WBoWimfMWSgnDFoqMgsPo3zV6i
+        s08DiQyuzP7hDvVlRytqWsnYo5VbeS0fC/Y3XcA=
+X-Google-Smtp-Source: APiQypLsvD+zTDMxwjtoPObW3tRx6qqtIe/5lQ9pcwg4XtPXaOyGLSX1pOq2/xQm5HMouV0jZnDA6ghb3lUFCsLSAeI=
+X-Received: by 2002:a63:7b1d:: with SMTP id w29mr5250305pgc.4.1585678542436;
+ Tue, 31 Mar 2020 11:15:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com> <285da2166eadc1d46667dd9659d8dae74d28b0b9.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <285da2166eadc1d46667dd9659d8dae74d28b0b9.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 31 Mar 2020 11:08:56 -0700
-Message-ID: <CAFd5g460hY9uOtwicWHK2rhgLdL+gStbKGmLN5KLWi5JXDQEog@mail.gmail.com>
-Subject: Re: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the 'linear_ranges'
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Changbin Du <changbin.du@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Gow <davidgow@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+References: <20200331114811.7978-1-nuno.sa@analog.com> <20200331114811.7978-6-nuno.sa@analog.com>
+In-Reply-To: <20200331114811.7978-6-nuno.sa@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 31 Mar 2020 21:15:35 +0300
+Message-ID: <CAHp75Vdxtn1gXi=xCJfGOkBYiWB2qsYQLTJyaEGiiFqHvELaHQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
+To:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
         devicetree <devicetree@vger.kernel.org>,
-        Gary Hook <Gary.Hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Tal Gilboa <talgi@mellanox.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 5:23 AM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
 >
->     Add a KUnit test for the linear_ranges helper.
+> Support ADIS16475 and similar IMU devices. These devices are
+> a precision, miniature MEMS inertial measurement unit (IMU) that
+> includes a triaxial gyroscope and a triaxial accelerometer. Each
+> inertial sensor combines with signal conditioning that optimizes
+> dynamic performance.
 >
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> The driver adds support for the following devices:
+>  * adis16470, adis16475, adis16477, adis16465, adis16467, adis16500,
+>    adis16505, adis16507.
 
-One minor nit, other than that:
+...
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> +ANALOG DEVICES INC ADIS16475 DRIVER
+> +M:     Nuno Sa <nuno.sa@analog.com>
+> +L:     linux-iio@vger.kernel.org
+> +W:     http://ez.analog.com/community/linux-device-drivers
+> +S:     Supported
+> +F:     drivers/iio/imu/adis16475.c
+> +F:     Documentation/ABI/testing/sysfs-bus-iio-imu-adis16475
 
-> ---
->
-> No changes since v6
->
->  lib/Kconfig.debug        |  11 ++
->  lib/Makefile             |   1 +
->  lib/test_linear_ranges.c | 228 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 240 insertions(+)
->  create mode 100644 lib/test_linear_ranges.c
->
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 69def4a9df00..32f355db4163 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2053,6 +2053,17 @@ config LIST_KUNIT_TEST
->
->           If unsure, say N.
->
-> +config LINEAR_RANGES_TEST
-> +       tristate "KUnit test for linear_ranges"
-> +       depends on KUNIT
-> +       help
-> +         This builds the linear_ranges unit test, which runs on boot.
-> +         Tests the linear_ranges logic correctness.
-> +         For more information on KUnit and unit tests in general please refer
-> +         to the KUnit documentation in Documentation/dev-tools/kunit/.
-> +
-> +         If unsure, say N.
-> +
->  config TEST_UDELAY
->         tristate "udelay test driver"
->         help
-> diff --git a/lib/Makefile b/lib/Makefile
-> index 18c3d313872e..200aa1780f92 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -301,3 +301,4 @@ obj-$(CONFIG_OBJAGG) += objagg.o
->
->  # KUnit tests
->  obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-> +obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
-> diff --git a/lib/test_linear_ranges.c b/lib/test_linear_ranges.c
-> new file mode 100644
-> index 000000000000..676e0b8abcdd
-> --- /dev/null
-> +++ b/lib/test_linear_ranges.c
-> @@ -0,0 +1,228 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * KUnit test for the linear_ranges helper.
-> + *
-> + * Copyright (C) 2020, ROHM Semiconductors.
-> + * Author: Matti Vaittinen <matti.vaittien@fi.rohmeurope.com>
-> + */
-> +#include <kunit/test.h>
-> +
-> +#include <linux/linear_range.h>
-> +
-> +/* First things first. I deeply dislike unit-tests. I have seen all the hell
-> + * breaking loose when people who think the unit tests are "the silver bullet"
-> + * to kill bugs get to decide how a company should implement testing strategy...
-> + *
-> + * Believe me, it may get _really_ ridiculous. It is tempting to think that
-> + * walking through all the possible execution branches will nail down 100% of
-> + * bugs. This may lead to ideas about demands to get certain % of "test
-> + * coverage" - measured as line coverage. And that is one of the worst things
-> + * you can do.
-> + *
-> + * Ask people to provide line coverage and they do. I've seen clever tools
-> + * which generate test cases to test the existing functions - and by default
-> + * these tools expect code to be correct and just generate checks which are
-> + * passing when ran against current code-base. Run this generator and you'll get
-> + * tests that do not test code is correct but just verify nothing changes.
-> + * Problem is that testing working code is pointless. And if it is not
-> + * working, your test must not assume it is working. You won't catch any bugs
-> + * by such tests. What you can do is to generate a huge amount of tests.
-> + * Especially if you were are asked to proivde 100% line-coverage x_x. So what
-> + * does these tests - which are not finding any bugs now - do?
+Run parse-maintainers.pl to fix this.
 
-I don't entirely disagree. I have worked on projects that do testing
-well where it actually makes development faster, and I have worked on
-projects that do testing poorly where it never improves code quality
-and is just an encumbrance, and I have never seen a project get to
-100% coverage (nor would I want to).
+...
 
-Do you feel differently about incremental coverage vs. absolute
-coverage? I have found incremental coverage to be a lot more valuable
-in my experiences.
+> +#include <asm/unaligned.h>
 
-You seem pretty passionate about this. Would you like to be included
-in our unit testing discussions in the future?
+Usually it goes after linux/*
 
-> + * They add inertia to every future development. I think it was Terry Pratchet
-> + * who wrote someone having same impact as thick syrup has to chronometre.
-> + * Excessive amount of unit-tests have this effect to development. If you do
-> + * actually find _any_ bug from code in such environment and try fixing it...
-> + * ...chances are you also need to fix the test cases. In sunny day you fix one
-> + * test. But I've done refactoring which resulted 500+ broken tests (which had
-> + * really zero value other than proving to managers that we do do "quality")...
-> + *
-> + * After this being said - there are situations where UTs can be handy. If you
-> + * have algorithms which take some input and should produce output - then you
-> + * can implement few, carefully selected simple UT-cases which test this. I've
-> + * previously used this for example for netlink and device-tree data parsing
-> + * functions. Feed some data examples to functions and verify the output is as
-> + * expected. I am not covering all the cases but I will see the logic should be
-> + * working.
-> + *
-> + * Here we also do some minor testing. I don't want to go through all branches
-> + * or test more or less obvious things - but I want to see the main logic is
-> + * working. And I definitely don't want to add 500+ test cases that break when
-> + * some simple fix is done x_x. So - let's only add few, well selected tests
-> + * which ensure as much logic is good as possible.
-> + */
-> +
-> +/*
-> + * Test Range 1:
-> + * selectors:  2       3       4       5       6
-> + * values (5): 10      20      30      40      50
-> + *
-> + * Test Range 2:
-> + * selectors:  7       8       9       10
-> + * values (4): 100     150     200     250
-> + */
-> +
-> +#define RANGE1_MIN 10
-> +#define RANGE1_MIN_SEL 2
-> +#define RANGE1_STEP 10
-> +
-> +/* 2, 3, 4, 5, 6 */
-> +static const unsigned int range1_sels[] = { RANGE1_MIN_SEL, RANGE1_MIN_SEL + 1,
-> +                                           RANGE1_MIN_SEL + 2,
-> +                                           RANGE1_MIN_SEL + 3,
-> +                                           RANGE1_MIN_SEL + 4 };
-> +/* 10, 20, 30, 40, 50 */
-> +static const unsigned int range1_vals[] = { RANGE1_MIN, RANGE1_MIN +
-> +                                           RANGE1_STEP,
-> +                                           RANGE1_MIN + RANGE1_STEP * 2,
-> +                                           RANGE1_MIN + RANGE1_STEP * 3,
-> +                                           RANGE1_MIN + RANGE1_STEP * 4 };
-> +
-> +#define RANGE2_MIN 100
-> +#define RANGE2_MIN_SEL 7
-> +#define RANGE2_STEP 50
-> +
-> +/*  7, 8, 9, 10 */
-> +static const unsigned int range2_sels[] = { RANGE2_MIN_SEL, RANGE2_MIN_SEL + 1,
-> +                                           RANGE2_MIN_SEL + 2,
-> +                                           RANGE2_MIN_SEL + 3 };
-> +/* 100, 150, 200, 250 */
-> +static const unsigned int range2_vals[] = { RANGE2_MIN, RANGE2_MIN +
-> +                                           RANGE2_STEP,
-> +                                           RANGE2_MIN + RANGE2_STEP * 2,
-> +                                           RANGE2_MIN + RANGE2_STEP * 3 };
-> +
-> +#define RANGE1_NUM_VALS (ARRAY_SIZE(range1_vals))
-> +#define RANGE2_NUM_VALS (ARRAY_SIZE(range2_vals))
-> +#define RANGE_NUM_VALS (RANGE1_NUM_VALS + RANGE2_NUM_VALS)
-> +
-> +#define RANGE1_MAX_SEL (RANGE1_MIN_SEL + RANGE1_NUM_VALS - 1)
-> +#define RANGE1_MAX_VAL (range1_vals[RANGE1_NUM_VALS - 1])
-> +
-> +#define RANGE2_MAX_SEL (RANGE2_MIN_SEL + RANGE2_NUM_VALS - 1)
-> +#define RANGE2_MAX_VAL (range2_vals[RANGE2_NUM_VALS - 1])
-> +
-> +#define SMALLEST_SEL RANGE1_MIN_SEL
-> +#define SMALLEST_VAL RANGE1_MIN
-> +
-> +static struct linear_range testr[] = {
-> +       {
-> +               .min = RANGE1_MIN,
-> +               .min_sel = RANGE1_MIN_SEL,
-> +               .max_sel = RANGE1_MAX_SEL,
-> +               .step = RANGE1_STEP,
-> +       }, {
-> +               .min = RANGE2_MIN,
-> +               .min_sel = RANGE2_MIN_SEL,
-> +               .max_sel = RANGE2_MAX_SEL,
-> +               .step = RANGE2_STEP
-> +       },
-> +};
-> +
-> +static void range_test_get_value(struct kunit *test)
+> +#include <linux/bitfield.h>
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+
+> +#include <linux/kernel.h>
+
+What this is for?
+
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/imu/adis.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/irq.h>
+> +#include <linux/module.h>
+
+> +#include <linux/of_device.h>
+
+Do you really need this? Perhaps mod_devicetable.h is what you are looking =
+for.
+
+> +#include <linux/spi/spi.h>
+
+...
+
+> +#ifdef CONFIG_DEBUG_FS
+
+> +DEFINE_SIMPLE_ATTRIBUTE(adis16475_serial_number_fops,
+> +                       adis16475_show_serial_number, NULL, "0x%.4llx\n")=
+;
+
+DEBUGFS ATTRIBUTE?
+
+> +DEFINE_SIMPLE_ATTRIBUTE(adis16475_product_id_fops,
+> +                       adis16475_show_product_id, NULL, "%llu\n");
+
+> +DEFINE_SIMPLE_ATTRIBUTE(adis16475_flash_count_fops,
+> +                       adis16475_show_flash_count, NULL, "%lld\n");
+
+Ditto.
+
+> +#else
+> +static int adis16475_debugfs_init(struct iio_dev *indio_dev)
 > +{
-> +       int ret, i;
-> +       unsigned int sel, val;
-> +
-> +       for (i = 0; i < RANGE1_NUM_VALS; i++) {
-> +               sel = range1_sels[i];
-> +               ret = linear_range_get_value_array(&testr[0], 2, sel, &val);
-> +               KUNIT_EXPECT_EQ(test, 0, ret);
-
-nit: It looks like the next line might crash if this expectation
-fails. If this is the case, you might want to use a KUNIT_ASSERT_*
-here.
-
-> +               KUNIT_EXPECT_EQ(test, val, range1_vals[i]);
-> +       }
-> +       for (i = 0; i < RANGE2_NUM_VALS; i++) {
-> +               sel = range2_sels[i];
-> +               ret = linear_range_get_value_array(&testr[0], 2, sel, &val);
-> +               KUNIT_EXPECT_EQ(test, 0, ret);
-> +               KUNIT_EXPECT_EQ(test, val, range2_vals[i]);
-> +       }
-> +       ret = linear_range_get_value_array(&testr[0], 2, sel + 1, &val);
-> +       KUNIT_EXPECT_NE(test, 0, ret);
+> +       return 0;
 > +}
-> +
-> +static void range_test_get_selector_high(struct kunit *test)
-> +{
-> +       int ret, i;
-> +       unsigned int sel;
-> +       bool found;
-> +
-> +       for (i = 0; i < RANGE1_NUM_VALS; i++) {
-> +               ret = linear_range_get_selector_high(&testr[0], range1_vals[i],
-> +                                                    &sel, &found);
-> +               KUNIT_EXPECT_EQ(test, 0, ret);
-> +               KUNIT_EXPECT_EQ(test, sel, range1_sels[i]);
-> +               KUNIT_EXPECT_TRUE(test, found);
-> +       }
-> +
-> +       ret = linear_range_get_selector_high(&testr[0], RANGE1_MAX_VAL + 1,
-> +                                            &sel, &found);
-> +       KUNIT_EXPECT_LE(test, ret, 0);
-> +
-> +       ret = linear_range_get_selector_high(&testr[0], RANGE1_MIN - 1,
-> +                                            &sel, &found);
-> +       KUNIT_EXPECT_EQ(test, 0, ret);
-> +       KUNIT_EXPECT_FALSE(test, found);
-> +       KUNIT_EXPECT_EQ(test, sel, range1_sels[0]);
-> +}
-> +
-> +static void range_test_get_value_amount(struct kunit *test)
-> +{
-> +       int ret;
-> +
-> +       ret = linear_range_values_in_range_array(&testr[0], 2);
-> +       KUNIT_EXPECT_EQ(test, (int)RANGE_NUM_VALS, ret);
-> +}
-> +
-> +static void range_test_get_selector_low(struct kunit *test)
-> +{
-> +       int i, ret;
-> +       unsigned int sel;
-> +       bool found;
-> +
-> +       for (i = 0; i < RANGE1_NUM_VALS; i++) {
-> +               ret = linear_range_get_selector_low_array(&testr[0], 2,
-> +                                                         range1_vals[i], &sel,
-> +                                                         &found);
-> +               KUNIT_EXPECT_EQ(test, 0, ret);
-> +               KUNIT_EXPECT_EQ(test, sel, range1_sels[i]);
-> +               KUNIT_EXPECT_TRUE(test, found);
-> +       }
-> +       for (i = 0; i < RANGE2_NUM_VALS; i++) {
-> +               ret = linear_range_get_selector_low_array(&testr[0], 2,
-> +                                                         range2_vals[i], &sel,
-> +                                                         &found);
-> +               KUNIT_EXPECT_EQ(test, 0, ret);
-> +               KUNIT_EXPECT_EQ(test, sel, range2_sels[i]);
-> +               KUNIT_EXPECT_TRUE(test, found);
-> +       }
-> +
+> +#endif
+
+...
+
 > +       /*
-> +        * Seek value greater than range max => get_selector_*_low should
-> +        * return Ok - but set found to false as value is not in range
+> +        * If decimation is used, then gyro and accel data will have mean=
+ingful
+> +        * bits on the LSB registers. This info is used on the trigger ha=
+ndler.
 > +        */
-> +       ret = linear_range_get_selector_low_array(&testr[0], 2,
-> +                                       range2_vals[RANGE2_NUM_VALS - 1] + 1,
-> +                                       &sel, &found);
+> +       if (!dec)
+> +               clear_bit(ADIS16475_LSB_DEC_MASK, &st->lsb_flag);
+> +       else
+> +               set_bit(ADIS16475_LSB_DEC_MASK, &st->lsb_flag);
+
+assign_bit()
+
+Also to the rest of same
+
+...
+
+> +       for (i =3D ARRAY_SIZE(adis16475_3db_freqs) - 2; i >=3D 1; i--) {
+
+Why those margins? size-2 and 1 ?
+
+> +               if (adis16475_3db_freqs[i] >=3D filter)
+> +                       break;
+> +       }
+
+...
+
+> +#define ADIS16475_GYRO_CHANNEL(_mod) \
+> +       ADIS16475_MOD_CHAN(IIO_ANGL_VEL, IIO_MOD_ ## _mod, \
+> +       ADIS16475_REG_ ## _mod ## _GYRO_L, ADIS16475_SCAN_GYRO_ ## _mod, =
+32, \
+> +       32)
+
+It's not obvious that this is macro inside macro. Can you indent better?
+Ditto for the rest similar ones.
+
+...
+
+> +static int adis16475_enable_irq(struct adis *adis, bool enable)
+> +{
+> +       /*
+> +        * There is no way to gate the data-ready signal internally insid=
+e the
+> +        * ADIS16475. We can only control it's polarity...
+> +        */
+> +       if (enable)
+> +               enable_irq(adis->spi->irq);
+> +       else
+> +               disable_irq(adis->spi->irq);
 > +
-> +       KUNIT_EXPECT_EQ(test, 0, ret);
-> +       KUNIT_EXPECT_EQ(test, sel, range2_sels[RANGE2_NUM_VALS - 1]);
-> +       KUNIT_EXPECT_FALSE(test, found);
+> +       return 0;
 > +}
-> +
-> +static struct kunit_case range_test_cases[] = {
-> +       KUNIT_CASE(range_test_get_value_amount),
-> +       KUNIT_CASE(range_test_get_selector_high),
-> +       KUNIT_CASE(range_test_get_selector_low),
-> +       KUNIT_CASE(range_test_get_value),
-> +       {},
-> +};
-> +
-> +static struct kunit_suite range_test_module = {
-> +       .name = "linear-ranges-test",
-> +       .test_cases = range_test_cases,
-> +};
-> +
-> +kunit_test_suites(&range_test_module);
-> +
-> +MODULE_LICENSE("GPL");
-> --
-> 2.21.0
->
->
-> --
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
->
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =]
+
+It's seems this function is bigger than in-place calls for enable or
+disable IRQ.
+
+...
+
+> +       return (crc =3D=3D 0);
+
+Too many parentheses.
+
+...
+
+> +               ret =3D __adis_update_bits(&st->adis, ADIS16475_REG_MSG_C=
+TRL,
+> +                                        ADIS16500_BURST32_MASK, en);
+> +               if (ret < 0)
+
+ret > 0 has any meaning? Maybe drop all these ' < 0' parts from the
+code (where it's appropriate)?
+
+> +                       return;
+
+...
+
+> +       buffer =3D (u16 *)adis->buffer;
+
+Why the casting is needed?
+
+> +       crc =3D get_unaligned_be16(&buffer[offset + 2]);
+
+If your buffer is aligned in the structure, you may simple use be16_to_cpu(=
+).
+Same for the rest of get_unaligned*() calls.
+Or do you have unaligned data there?
+
+> +       valid =3D adis16475_validate_crc((u8 *)adis->buffer, crc, st->bur=
+st32);
+
+Why casting?
+
+> +       if (!valid) {
+> +               dev_err(&adis->spi->dev, "Invalid crc\n");
+> +               goto check_burst32;
+> +       }
+
+...
+
+> +                                       /* keep sparse happy */
+
+Perhaps buffer should be declared as __be16.
+
+> +                                       data[i++] =3D (__force u16)__val;
+
+...
+
+
+> +       desc =3D irq_get_irq_data(spi->irq);
+
+> +       if (!desc) {
+> +               dev_err(&spi->dev, "Could not find IRQ %d\n", spi->irq);
+> +               return -EINVAL;
+> +       }
+
+Is this even possible?
+
+...
+
+> +       { .compatible =3D "adi,adis16507-3",
+> +               .data =3D &adis16475_chip_info[ADIS16507_3] },
+> +       { },
+
+Comma is not needed.
+
+...
+
+> +       st->info =3D of_device_get_match_data(&spi->dev);
+
+device_get_match_data()
+
+> +       if (!st->info)
+> +               return -EINVAL;
+
+--=20
+With Best Regards,
+Andy Shevchenko
