@@ -2,269 +2,155 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A46C2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207DFC2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F7820BED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:17:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lwFH5kmT"
+	by mail.kernel.org (Postfix) with ESMTP id EE16C21744
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585675229;
+	bh=D7FWF2ylL+0NQ2FWuF8jpzvckwDCaUUfutqBPPPnLhY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Kd1FVZX6HdxUK8p99remL5LbvDL4PjMnw1r/ne4DPdzCj2effqcBqARQ1MlXKkgqo
+	 viPhJgUYumbBZyoi3mQRp2wNideRDVcRbu9gfEcRAdcpf7GfthosuzTTHWm6rq5fP5
+	 +6KpdI0buIJjXX2wyKI3WxNlszvknSmGsddUQZpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgCaRRh (ORCPT
+        id S1726194AbgCaRU2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:17:37 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36068 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgCaRRh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:17:37 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c23so2241704pgj.3;
-        Tue, 31 Mar 2020 10:17:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ICG30y4zNo3hKOg/q4ebTZ3HatLK/FPtksBkCKfh5oE=;
-        b=lwFH5kmT+xLvy9HSwYOt8c/RcSf5tLMxfoJsICsjA0usmFsli0bz/+4fkqdmDJ5jBJ
-         JUC5rh5EnE7CoBMWczQaQu7OMUhQDZ6zyfUwOwWo2M332Y64DVimNpsOHsbdiAfrSKsj
-         K8pOGk/j3JYJTa4P1eRVAu2p/rr+RT7QhE3StZPZiKLkg8WvC5LNs/+Ih5oGSQzyolyO
-         YNNPQAYFNaea9PXB+ZeI7H3pYAJBT4ARacB9ILpO0JEWsJSqw9wQvd+GcDe7z/CD54bc
-         XvxmLWPInyTqZ9U2/hpPLq0EuGY9/gQDEJRiF3ic4THAw+n3MtLiJQmFVEKm5wqB+6mV
-         NISA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ICG30y4zNo3hKOg/q4ebTZ3HatLK/FPtksBkCKfh5oE=;
-        b=ifp5Xix2fpM3r3zSNGKlE5gUnjL/ebDk38n/MGdXNHitWU4wqIOCgEMSfWXFONvrx/
-         ewQIPQwHVh615nHTVACKF3Dvify1T/OvniqVZJAH7AwvSVrrNYnhHZIbTvgkMD31Dhxh
-         PFC+Qgw9eWA3W9JFNkjvMwYIHHKFKETNdveLbvhupekIvKkjYBINM/ok1871qZohW6sZ
-         OT4c5Egydc1HO/jlwCsH+018N8sGAIEo19Foth3Yv6oPx9soVOeHmhOViVfH1RL7U6e7
-         QdMSvhrr44C1Vp/zKN1mY4AzbCN0UxzxE4vcnJEVIEjhrvEXo1GdSB7dSU7tarmyeKPW
-         ZhhQ==
-X-Gm-Message-State: AGi0PuaHbbtyH1UN7a5uCQ8c13Jum4/oAmJwSU6liay0PIlWyuQgnxe4
-        dYT32YnPj1xiGoZOWyDPtf33jtx5sCmVr+q/oDCv7590u1c=
-X-Google-Smtp-Source: APiQypITqjeLzwW4boEvUSsGDOoC+q4vHjDm4i1oNqkLNQ44cl3FP6ZfCeBQoQoj9BDo8xbrDf6MQJrhnGaIPsTBxno=
-X-Received: by 2002:a63:7b1d:: with SMTP id w29mr5024588pgc.4.1585675055307;
- Tue, 31 Mar 2020 10:17:35 -0700 (PDT)
+        Tue, 31 Mar 2020 13:20:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbgCaRU2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 13:20:28 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9632321707;
+        Tue, 31 Mar 2020 17:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585675227;
+        bh=D7FWF2ylL+0NQ2FWuF8jpzvckwDCaUUfutqBPPPnLhY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Xm4DyzFlw4jGGUBlaafwQAckXswyUC7+wK8f9dZih9Eow6b2D8WjrmJf5p/Jld3fG
+         gQB5Lnaki+PI71nuqEdqSxCB4N0N8kXzta0yDfuH9HdjW0bjHdxslO1Ws5cAcqT3op
+         uQeXB1rPjS35avDSI+GNxcBACEkSyeQLXjnU25xY=
+Received: by mail-qt1-f181.google.com with SMTP id z24so17804787qtu.4;
+        Tue, 31 Mar 2020 10:20:27 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2obgHecaefchuOKsJ5SrybElLJdQaXltG6u81KOEZuoo6gv2Qa
+        gNvvfPR4oCPKMbTXIDCH5Nc6M7WWTLPh/a9CJQ==
+X-Google-Smtp-Source: ADFU+vuIDLlP6mJJzdijDIsPAvdYaGjDtb9aCWKF5WJKEAR+/umG5DoIAzKXfoqzc8KIaBO8hshbu4VG7fPqaOkBerA=
+X-Received: by 2002:aed:3461:: with SMTP id w88mr6324133qtd.143.1585675226482;
+ Tue, 31 Mar 2020 10:20:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200306135451.4AF0480307C4@mail.baikalelectronics.ru> <20200331114824.e3uljdymvsjuh6wh@ubsrv2.baikal.int>
- <20200331142530.GM1922688@smile.fi.intel.com> <20200331162813.dnpmyzs35tvkeavx@ubsrv2.baikal.int>
-In-Reply-To: <20200331162813.dnpmyzs35tvkeavx@ubsrv2.baikal.int>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 31 Mar 2020 20:17:28 +0300
-Message-ID: <CAHp75VfOxRdEZ81-rFUrAiQDdruKqhJn_Wh+PJnyB5WL2vMUCQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] i2c: designeware: Add Baikal-T1 SoC DW I2C specifics support
-To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200315134416.16527-1-sam@ravnborg.org> <20200315134416.16527-33-sam@ravnborg.org>
+ <20200319030734.GH29911@bogus> <20200329190352.GA21479@ravnborg.org>
+In-Reply-To: <20200329190352.GA21479@ravnborg.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 31 Mar 2020 11:20:13 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJGpCBohddU+h3366rzGVw6mgn5H9YMqq-MF4Ka=mVkzw@mail.gmail.com>
+Message-ID: <CAL_JsqJGpCBohddU+h3366rzGVw6mgn5H9YMqq-MF4Ka=mVkzw@mail.gmail.com>
+Subject: Re: [PATCH v1 32/36] dt-bindings: display: convert sharp,ls037v7dw01
+ to DT Schema
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Chris Zhong <zyw@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
+        Nikolaus Schaller <hns@goldelico.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marco Franchi <marco.franchi@nxp.com>,
+        Marek Belisko <marek@goldelico.com>,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Nickey Yang <nickey.yang@rock-chips.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Peter Rosin <peda@axentia.se>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Purism Kernel Team <kernel@puri.sm>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sandeep Panda <spanda@codeaurora.org>,
+        Stefan Mavrodiev <stefan@olimex.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Werner Johansson <werner.johansson@sonymobile.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 7:29 PM Sergey Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
-> On Tue, Mar 31, 2020 at 05:25:30PM +0300, Andy Shevchenko wrote:
-> > On Tue, Mar 31, 2020 at 02:48:24PM +0300, Sergey Semin wrote:
-> > > On Fri, Mar 06, 2020 at 03:54:45PM +0200, Andy Shevchenko wrote:
-
-...
-
-> > > As I see the others have not comments.) Anyway I see your point and h=
-aving the
-> > > regmap-based interface might be better than the approach I've suggest=
-ed
-> > > in this patchset particularly seeing that our DW i2c IP registers are
-> > > hidden behind a system controller register space.
-> > >
-> > > In order to follow your proposition to create a dedicated regmap and =
-to supply
-> > > it to the DW i2c driver, I have to redevelop not only this patchset, =
-but
-> > > also an adjacent drivers. In particular the changes will concern the
-> > > MFD-based System Controller driver (which will instantiate this DW i2=
-c
-> > > controller device), Clocks Control Unit drivers set, and a few
-> > > others. The whole alteration I described in the RFC:
-> > > https://lkml.org/lkml/2020/3/22/393
-> > > You've been in Cc there, so fill free to send your comments regarding
-> > > the changes I suggested. Though this time I hope the solution will
-> > > satisfy everyone, who had issues with patchsets I've recently sent.
-> > >
-> > > Getting back to your comment in the framework of this patchset. The a=
-pproach
-> > > used for CHT Whiskey Cove i2c isn't fully suitable in our case for
-> > > the reason of the DW I2C controller nature. DW I2C controller is a ge=
-neric
-> > > controller and used on many different platforms, while AFAICS CHT Whi=
-skey Cove
-> > > I2C is the SoC-specific used to access a charger-IC. So in the former=
- case we
-> > > may have an arbitrary set of i2c-slaves connected to the controller o=
-n
-> > > different platforms, while on the latter one - there is a fixed set o=
-f
-> > > slaves. In addition due to the same reason the DW I2C IP might be
-> > > embedded into different sub-blocks on different platforms, while the =
-CHT
-> > > Whiskey Cove I2C is known to be a part of Intel CHT WC SoC PMIC.
-> > > For instance Baikal-T1 SoC has one DW I2C controller embedded into th=
-e
-> > > System Controller with indirectly accessible registers and two DW I2C
-> > > interfaces with normal memory mapped registers. Due to this in case o=
-f DW I2C
-> > > driver we can't just "suck" the regmap out from a parental MFD or
-> > > anywhere else as it's done in the CHT Whiskey Cove I2C driver, but in=
-stead
-> > > we should somehow supply a regmap pointer to the driver.
-> > >
-> > > Taking into account all of these we can utilize a combined approach
-> > > implemented in ./drivers/i2c/busses/i2c-cht-wc.c and
-> > > drivers/mfd/intel_quark_i2c_gpio.c . I'll add a regmap pointer field =
-to the
-> > > "struct dw_i2c_platform_data" structure, so in case if there is no
-> > > IORESOURCE_MEM resources available (platform_get_resource() fails), w=
-e
-> > > try to get a regmap pointer from the platform data. If there is no va=
-lid
-> > > regmap available, then completely fail the driver probe procedure. Th=
-ough
-> > > due to this alteration I'll have to change the
-> > > dw_i2c_platform_data.i2c_scl_freq field usage a bit. In case if it's
-> > > zero, then call i2c_parse_fw_timings(). This won't hurt ACPI or dt-le=
-ss
-> > > platforms, but will let us cover a case when regmap is set while i2c
-> > > clock frequency is supposed to be taken from the kernel firmware (lik=
-e
-> > > dtb, etc).
-
-Whiskey Cove case provides an I=C2=B2C controller with specific access. Tha=
-t's it.
-In your case you will need similar glue driver which will utilize
-DesignWare core driver.
-
-> > > So if you are Ok with this, I'll send a v2 patchset with correspondin=
-g
-> > > alteration implemented.
+On Sun, Mar 29, 2020 at 1:04 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Rob.
+>
+> > > +
+> > > +  mode-gpios:
+> > > +    description: |
+> > > +      GPIO ordered MO, LR, and UD as specified in LS037V7DW01.pdf
 > >
-> > I was thinking about something like this:
+> > 3 or...
 > >
+> > > +      change configuration between QVGA and VGA mode and the
+> > > +      scan direction. As these pins can be also configured
+> > > +      with external pulls, all the GPIOs are considered
+> > > +      optional with holes in the array.
+> >
+> > minItems: 3
+> > maxItems: 5
 >
-> > 1/ core driver (library + master + slave) is converted to use regmap
+> This binding can specify up to three GPIOs like this:
+
+So it should be:
+
+minItems: 1
+maxItems: 3
+
+> > > +        mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH        /* gpio154, lcd MO */
+> > > +                      &gpio1 2 GPIO_ACTIVE_HIGH         /* gpio2, lcd LR */
+> > > +                      &gpio1 3 GPIO_ACTIVE_HIGH>;       /* gpio3, lcd UD */
 >
-> Yes. I also intended to do this just by altering the dw_readl() and
-> dw_writel() methods to work over regmap IO methods if regmap is
-> available.
-
-Why? Simple always use regmap API calls. Moreover, regmap provides
-update() which may give a leverage in some cases by dropping r-m-w
-code.
-
-Core part take a pointer to regmap when instantiate (probe) a driver
-on the device.
-
-> > 2/ platform and PCI driver may provide regmap MMIO
+> They are in the linux kernel driver accessed like this:
 >
-> Regmap pointer will be also a part of "struct dw_i2c_dev".
-
-Yes.
-
-> So if PCI
-> code intends the regmap-based access to the controller registers, then
-> it shall just initialize the regmap pointer in the private i2c-designware=
- data
-> instance of the dw_i2c_dev structure.
-
-Why data is being involved here?
-
-> So, yes, this is also covered by
-> my solution. Though the PCI code will be left untouched, since I can't
-> predict a particular regmap-related use-case of it.
-
-> > 3/ your glue driver will provide different regmap accessors
+>     devm_gpiod_get_index(&pdev->dev, "mode", 2, GPIOD_OUT_LOW);
 >
-> I was thinking of developing a more generic version so any platform
-> with a specific access to the DW I2C register could use it just by supply=
-ing
-> the regmap pointer in the dw_i2c_platform_data structure.
-
-regmap is not a platform data.
-
-> Our DW I2C
-> controller also perfectly fits to the generic i2c-designware-platdrv.c
-> driver, so implementing an additional glue-layer would be too much seeing
-> the difference only in the registers mapping.
-
-Register accessing, mapping as far as I understood is the same.
-However, with regmap layer it just an implementation detail of certain
-glue driver.
-
-> Let me explain the difference of our solutions. In case of implementing
-> the glue layer, as you suggest, I would have to do it in a way like the D=
-W PCIe
-> driver is designed. I would need to move the code of current dw_i2c_plat_=
-probe()
-> function to a dedicated method named like dw_i2c_plat_init(pdev, !regmap!=
-),
-> while former method dw_i2c_plat_probe() would just call
-> dw_i2c_plat_init(pdev, !NULL!). Then I would have to create a dedicated
-> glue-driver - i2c-designware-bt1drv.c, which would be bound to a
-> "baikal,t1-sys-i2c" device, try to find a Baikal-T1 System Controller
-> device node (though this would be just a parent device), then would get
-> it' syscon regmap handler, then would initialize a dedicated regmap handl=
-er to
-> indirectly access the DW I2C controller register, then it would call the
-> dw_i2c_plat_init(pdev, !regmap!) method with new regmap handler passed
-> (though the new regmap passing could be also implemented over the
-> platform_data pointer). Also seeing you already have a platform-specific
-> parts in the generic i2c-designware-platdrv.c driver (like ACPI-based
-> platforms and Microsemi Ocelot SoC), there might raise a necessity to
-> unpin that specifics to a dedicated method, since my glue-layer
-> wouldn't need that checks and initializations. Such alteration won't
-> be that easy to implement and regression errors prone, since I don't have
-> other platforms to test it.
+> The following is OK in the DT file:
 >
-> In case of my solution the whole glue-layer part would be moved to
-> the MFD-based Baikal-T1 System Controller driver and a generic
-> platform_data-based interface would be implemented, which would just
-> need to alter the registers mapping part of the i2c-designware-platdrv.c
-> driver. Note that that part would need to be fixed in case of any solutio=
-n.
+>     mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
 >
-> So comparing these too approaches, I would select a one, which would
-> need less common code modifications and would provide a generic
-> solution. As I see it would be a platform_data-based design. What do you
-> think?
+>     mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH
+>                   &gpio1 2 GPIO_ACTIVE_HIGH>;
+>
+>     mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH
+>                   &gpio1 2 GPIO_ACTIVE_HIGH
+>                   &gpio1 3 GPIO_ACTIVE_HIGH>;
 
-I think you may look at the existing examples how drivers are
-utilizing regmap layer.
-Along with that look how glue (or let's say quirk in your case)
-drivers are implemented, for example USB or SDHCI comes to my mind.
+With the above, the 2nd 2 should fail...
 
---=20
-With Best Regards,
-Andy Shevchenko
+> But the following is not OK:
+>     mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>, <&gpio1 2 GPIO_ACTIVE_HIGH>;
+
+And this should pass. We want phandle+arg type properties to be
+bracketed like this.
+
+If that's not working, then it's a bug in the tooling. Please confirm
+and I'll investigate.
+
+Rob
