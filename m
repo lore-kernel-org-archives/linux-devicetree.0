@@ -2,157 +2,132 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8C0C2D0F2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 14:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD8CC2D0EE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F992078B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 14:48:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585666136;
-	bh=e/7jTSv5Ln/7N2erMxSAhTPfQO0mGgov7i4pB0Kxz8M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RChb/fciGLS9OLvwIxXGMsLwTeSv8zVI6ZvTdqeqVH/HwMt4exfYtzwepN54tTThs
-	 Wf6odYNDjHl7Y0ivR8beeFiO+uphqjG9cXgIms7DSyJGj2fL3T0TCwQ76hihiOoK4D
-	 Em2TYF3C6y5mlPt7ti+tUOOdZZqzV3YyK02NbIJQ=
+	by mail.kernel.org (Postfix) with ESMTP id 822962137B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UcX4NrqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbgCaOst (ORCPT
+        id S1730286AbgCaPBp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 10:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730574AbgCaOst (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 10:48:49 -0400
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98470214DB;
-        Tue, 31 Mar 2020 14:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585666128;
-        bh=e/7jTSv5Ln/7N2erMxSAhTPfQO0mGgov7i4pB0Kxz8M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EbrJxT9+qQ4vbmfQodNUZ75MqmrVy3/2NQDxPg4GsBywCzjeqIw2fq6lj3s7435X2
-         NIM+7Ydop9wv5/4CkHGw9c7dOJtPBA/zSDJDrPe+DungVFsSYeZaSpNvpWfCUq24L2
-         R+q388+xL8Vgv6ukYJr671hgBiLOn4kma+Cvp9Ro=
-Received: by mail-qv1-f41.google.com with SMTP id p60so10971550qva.5;
-        Tue, 31 Mar 2020 07:48:48 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1vMtCY640U90YBDNmS9RLEHsh5XJbMHUiAIrRTnM79TJ+N1F3y
-        F6fi44rWk2ybm3rFmqdCCAJmx/+EFr9IetQppQ==
-X-Google-Smtp-Source: ADFU+vsm7QnLg9VC47OO+I8GiU3/k2tefVEY+Sy39Kwt/VBNT1kmLS6ih/sV4b6JI7vayYbVNykmFae5IwQbSwKy9fk=
-X-Received: by 2002:ad4:4bc3:: with SMTP id l3mr16286378qvw.79.1585666127545;
- Tue, 31 Mar 2020 07:48:47 -0700 (PDT)
+        Tue, 31 Mar 2020 11:01:45 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57662 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730153AbgCaPBo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 11:01:44 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VEwljB021795;
+        Tue, 31 Mar 2020 17:01:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=RRp8QYyeUiwuSaXSnIHnR9hdRCvg8TE5DV1VWhJfO9c=;
+ b=UcX4NrqDDsCH0+NbGCIMMUopkKgeeMNjQB/GJXKTltDNzQt5J4gptk9hbTa0JoJwxrGv
+ Q6SjvOd+l/XKhv6sQQqQD+rF986XEoaQId3y00Ke40cwE7MqGohA5W0BlTjlz0WbkcPO
+ 4uUFk5hIYw3cOSS/MXYRLztJov/b1Re09+gcWYXa3vgqtT8vcVwPLz9fKx3rXLOzxAuL
+ 7jvBwd059dOhDw3vqKOaifeKku82O+6vuWcEZFrgnV5PxsurbUdGqFIzXpXGJcFUyHO2
+ SYumR54vuXivBlNLLPo2gPXHEpyb5xMDnb3+AO+Tu+mOjdlS/EvH+IyuD3oUHXb4Xbdc EA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 302y53suhq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 17:01:03 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0CACE100038;
+        Tue, 31 Mar 2020 17:00:58 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA0CB2B4D4F;
+        Tue, 31 Mar 2020 17:00:57 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 31 Mar
+ 2020 17:00:52 +0200
+Subject: Re: [RFC PATCH v2 0/4] Add device tree build information
+To:     Steve McIntyre <steve.mcintyre@linaro.org>
+CC:     Frank Rowand <frowand.list@gmail.com>, <robh+dt@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        <david@gibson.dropbear.id.au>, <sjg@chromium.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kbuild@vger.kernel.org>,
+        <devicetree-compiler@vger.kernel.org>, Ian Lepore <ian@freebsd.org>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
+ <1b946fcf-47a9-012d-1b04-f4bbd2682607@gmail.com>
+ <67d75f0c-7478-23b0-8619-746cf83cedb5@gmail.com>
+ <dba17be2-067f-8221-f313-7a3edcf61511@st.com>
+ <20200331010347.GF4037@linaro.org>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <afa534b0-c671-600f-f344-de7026dc2c79@st.com>
+Date:   Tue, 31 Mar 2020 17:00:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200325220542.19189-1-robh@kernel.org> <20200325220542.19189-2-robh@kernel.org>
- <20200327202159.GA12749@ravnborg.org>
-In-Reply-To: <20200327202159.GA12749@ravnborg.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 31 Mar 2020 08:48:36 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+zFGvJ+3CmKw3OzgEWi-p4Uz9+nmnS5ax0J9ewoz5qZg@mail.gmail.com>
-Message-ID: <CAL_Jsq+zFGvJ+3CmKw3OzgEWi-p4Uz9+nmnS5ax0J9ewoz5qZg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: iio/accel: Drop duplicate adi, adxl345/6
- from trivial-devices.yaml
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200331010347.GF4037@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_05:2020-03-31,2020-03-31 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 2:22 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Rob.
->
-> On Wed, Mar 25, 2020 at 04:05:38PM -0600, Rob Herring wrote:
-> > The 'adi,adxl345' definition is a duplicate as there's a full binding in:
-> > Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> >
-> > The trivial-devices binding doesn't capture that 'adi,adxl346' has a
-> > fallback compatible 'adi,adxl345', so let's add it to adi,adxl345.yaml.
-> >
-> > Cc: Michael Hennerich <michael.hennerich@analog.com>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: Hartmut Knaack <knaack.h@gmx.de>
-> > Cc: Lars-Peter Clausen <lars@metafoo.de>
-> > Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> > Cc: linux-iio@vger.kernel.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../devicetree/bindings/iio/accel/adi,adxl345.yaml     | 10 +++++++---
-> >  Documentation/devicetree/bindings/trivial-devices.yaml |  4 ----
-> >  2 files changed, 7 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> > index c602b6fe1c0c..d124eba1ce54 100644
-> > --- a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
-> > @@ -17,9 +17,13 @@ description: |
-> >
-> >  properties:
-> >    compatible:
-> > -    enum:
-> > -      - adi,adxl345
-> > -      - adi,adxl375
-> > +    oneOf:
-> > +      - items:
-> > +          - const: adi,adxl346
-> > +          - const: adi,adxl345
-> > +      - enum:
-> > +          - adi,adxl345
-> > +          - adi,adxl375
->
-> I assume it is my schema understanding that is poor.
-> But I cannot parse the above.
->
-> The mix of items, enum and const confuses me.
+Hi Steeve
 
-compatible can be one of 3 possibilities:
-"adi,adxl346", "adi,adxl345"
-"adi,adxl345"
-"adi,adxl375"
+On 3/31/20 3:03 AM, Steve McIntyre wrote:
+> Hi Alexandre,
+> 
+> On Mon, Mar 02, 2020 at 01:55:55PM +0100, Alexandre Torgue wrote:
+>> On 2/28/20 6:47 PM, Frank Rowand wrote:
+>>>> This would require modifying every single main .dts file to get the build info
+>>>> I would prefer the method that Ian and David came up with (sorry, no lore link,
+>>>> it did not go to lkml).  Extract from David's email:
+>>>>
+>>>>      Date:   Tue, 21 Jan 2020 13:05:25 +1100
+>>>>      From:   David Gibson <david@gibson.dropbear.id.au>
+>>>>      Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+>>>>
+>>>>      > Given that dts files are run through the C preprocessor before being
+>>>>      > fed to dtc, the build script could use the '-include' flag to force-
+>>>>      > include a fragment containing generated build info without any need to
+>>>>      > modify existing dts files.
+>>>>
+>>>>      Uh... maybe.  -include will essentially prepend the forced file, which
+>>>>      is a bit awkward for our purposes.  It means that the prepended file
+>>>>      would need the /dts-v1/ tag, and we couldn't have it in the main files
+>>>>      which would be a bit confusing.  I think it would also cause problems
+>>>>      with any /memreserve/ tags and means that the main tree could in
+>>>>      theory overwrite the build information which we don't necessarily
+>>>>      want.
+>>>>
+>>>>      I guess we could build things the other way around: have the main .dts
+>>>>      file specified with -include and have the dts on the dtc commandline
+>>>>      be a fixed one with the build information.  It'd be a little weird,
+>>>>      though.
+>>>>
+>>>> -Frank
+>>
+>> Yes. I try briefly this idea but I got issues with dts-v1 tag. I agree, it is
+>> cleaner to not modify input dts file. I can rework int this way.
+> 
+> Have you made any progress on this please?
 
-For a single entry, 'items' can be omitted.
+Unfortunately no. I cook something locally but not yet upstream-able.
+Due to project issue I didn't find time to work on it. I think (I hope) 
+to be less busy next week and so I'll restart it.
 
-> I guess that if I am confused then others may end in the same situation.
-> Can we improve readability here or amybe add a comment?
+regards
+alex
 
-example-schema.yaml explains this to some extent. I'd rather improve that.
-
-Rob
+> 
+> Cheers,
+> 
