@@ -2,144 +2,117 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFA2C2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21BDC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3FE620838
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:34:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yASCTbB1"
+	by mail.kernel.org (Postfix) with ESMTP id C7F7020838
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:40:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585690855;
+	bh=uzfa/ApnWNsJDNBSp8YjEgiT8lKevUsbJIdX+XZbbqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jhllUGTtnoVHKcNAuUkf2xrO1oMjKLBthxljg7InWdeeH7wgP/p57++s6VGIyDjW0
+	 /D1zDDxlSgu86zLGo91tDMof4sLEkQcwNw7546OIUw/pwpVw0VMtURS29BTp3sD7dU
+	 gyLEvqCXPNcvIv34Xpjic5NVW5BpPbQc5IZlvrq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgCaVe5 (ORCPT
+        id S1731259AbgCaVky (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:34:57 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:15660 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727955AbgCaVe5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 17:34:57 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VLY8AI013715;
-        Tue, 31 Mar 2020 23:34:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=hogJljl3NSx7SbRBP5t51xt8cHudqMc3OCqtkkmKgFU=;
- b=yASCTbB1xg2nlN9WKX+WEs7JcLif3yHoyl6wHzPaJ4bKHSyCL4XUx5CBtxAp9I2b5iky
- 3ZqVA7x0AReUZu5/z4zRtqJg7ubIWtsl6H71432ju/7lzvlMynigy2bNIfcgKpOfC3UH
- QfIDsLrFMS9SX2z3L3UfkZvFfK0/IYgY1P1iKbZYuyyCOf6GVHB3Xt7Iuu38JIC/EK57
- pdkjbNGHkPRsofM2PCj4NKtKxBB6jC1q2Klm4uHkGSZV5vAYWYHwscwcEAy6Gxid6cxv
- f3g880PQFPP3s7BaUx7mC1ImGdGvnnSNYxEyLMOgZKsIE8onq1I0LZRys5DCcggKAZ6f jw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 301vkdsjj2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Mar 2020 23:34:33 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E34A810002A;
-        Tue, 31 Mar 2020 23:34:28 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C08452067F3;
-        Tue, 31 Mar 2020 23:34:28 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 31 Mar
- 2020 23:34:28 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Tue, 31 Mar 2020 23:34:28 +0200
-From:   Benoit HOUYERE <benoit.houyere@st.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "amirmizi6@gmail.com" <amirmizi6@gmail.com>
-CC:     "Eyal.Cohen@nuvoton.com" <Eyal.Cohen@nuvoton.com>,
-        "oshrialkoby85@gmail.com" <oshrialkoby85@gmail.com>,
-        "alexander.steffen@infineon.com" <alexander.steffen@infineon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "oshri.alkoby@nuvoton.com" <oshri.alkoby@nuvoton.com>,
-        "tmaimon77@gmail.com" <tmaimon77@gmail.com>,
-        "gcwilson@us.ibm.com" <gcwilson@us.ibm.com>,
-        "kgoldman@us.ibm.com" <kgoldman@us.ibm.com>,
-        "Dan.Morav@nuvoton.com" <Dan.Morav@nuvoton.com>,
-        "oren.tanami@nuvoton.com" <oren.tanami@nuvoton.com>,
-        "shmulik.hager@nuvoton.com" <shmulik.hager@nuvoton.com>,
-        "amir.mizinski@nuvoton.com" <amir.mizinski@nuvoton.com>,
-        Olivier COLLART <olivier.collart@st.com>,
-        Yves MAGNAUD <yves.magnaud@st.com>
-Subject: RE: [PATCH v4 4/7] tpm: tpm_tis: Fix expected bit handling and send
- all bytes in one shot without last byte in exception
-Thread-Topic: [PATCH v4 4/7] tpm: tpm_tis: Fix expected bit handling and send
- all bytes in one shot without last byte in exception
-Thread-Index: AQHWB1ZoDft9Zu6RoU68XNbFk/pAW6hjMfyw
-Date:   Tue, 31 Mar 2020 21:34:28 +0000
-Message-ID: <19c8ae3023404ae9affcb1ce04b7ee4b@SFHDAG3NODE3.st.com>
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
- <20200331113207.107080-5-amirmizi6@gmail.com>
- <20200331121720.GB9284@linux.intel.com>
-In-Reply-To: <20200331121720.GB9284@linux.intel.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.48]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 31 Mar 2020 17:40:54 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44183 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgCaVky (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 17:40:54 -0400
+Received: by mail-il1-f194.google.com with SMTP id j69so20965285ila.11;
+        Tue, 31 Mar 2020 14:40:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eq+6A9+LczeU2VzQyTNk/9n1oBeKvi0NgSFZ/oc66oQ=;
+        b=Ap8zUEtOi2EYLmUH4H4Nt4O8w6NqZn/LYPBucU2DpkKOaKclNEc70BRDiTMEkwbxec
+         VG6GJ2gcwJ5P8IiQrFkieN56NHVYXv4mY1t0y9mZ0O3JiclLz6QsDW+mHVboW0IcsMWI
+         7YGA60KSbhmxVzj6FEAFQplr6pJfv+zBDfay2u7g7PRGYum6I79sD4f/0U1Qr6Vy/FFG
+         SojqkWyfOWCMdRkOTT+jHJuCaMWc2iUu5tSr4kTsDPyTLNtfpf9qnLHqMoMoyY4CvZ8j
+         7X2iIAiMGeMEnZywaI0AARTlRXtmhK4nb48Tztsn5T/P5fcszvUDWivgJo8wXkGy/X59
+         sYbQ==
+X-Gm-Message-State: ANhLgQ1Ax+pPpH9XvfiIcYc0QcCfHYsfjLYO+Sfunz/8YVRNQ+DOdxGk
+        6/hsiKBdKLYZqEtfp6xh0oBNAWJUzA==
+X-Google-Smtp-Source: ADFU+vssb/q/y3wnHMbcu1KcLFBTw9EarimFzfJH01AQcRsX3nDONN9ZkpJiUj9gw96009vEgGk6Xw==
+X-Received: by 2002:a92:844f:: with SMTP id l76mr19385844ild.13.1585690853355;
+        Tue, 31 Mar 2020 14:40:53 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id h9sm21895iow.37.2020.03.31.14.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 14:40:52 -0700 (PDT)
+Received: (nullmailer pid 20298 invoked by uid 1000);
+        Tue, 31 Mar 2020 21:40:51 -0000
+Date:   Tue, 31 Mar 2020 15:40:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: ath10k: Add wifi-firmware subnode
+ for wifi node
+Message-ID: <20200331214051.GA2053@bogus>
+References: <1585134100-5944-1-git-send-email-pillair@codeaurora.org>
+ <1585134100-5944-2-git-send-email-pillair@codeaurora.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585134100-5944-2-git-send-email-pillair@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Mar 25, 2020 at 04:31:38PM +0530, Rakesh Pillai wrote:
+> Add a wifi-firmware subnode for the wifi node.
+> This wifi-firmware subnode is needed for the
+> targets which do not support TrustZone.
+> 
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
+>  .../devicetree/bindings/net/wireless/qcom,ath10k.txt       | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> index 71bf91f..65ee68e 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -96,6 +96,17 @@ Optional properties:
+>  - qcom,coexist-gpio-pin : gpio pin number  information to support coex
+>  			  which will be used by wifi firmware.
+>  
+> +* Subnodes
+> +The ath10k wifi node can contain one optional firmware subnode.
+> +Firmware subnode is needed when the platform does not have TustZone.
+> +The firmware subnode must have:
+> +
+> +- iommus:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: A list of phandle and IOMMU specifier pairs.
+> +
+> +
+>  Example (to supply PCI based wifi block details):
+>  
+>  In this example, the node is defined as child node of the PCI controller.
+> @@ -196,4 +207,7 @@ wifi@18000000 {
+>  		memory-region = <&wifi_msa_mem>;
+>  		iommus = <&apps_smmu 0x0040 0x1>;
+>  		qcom,msa-fixed-perm;
+> +		wifi-firmware {
+> +			iommus = <&apps_iommu 0xc22 0x1>;
 
-> On Tue, Mar 31, 2020 at 02:32:04PM +0300, amirmizi6@gmail.com wrote:
-> > From: Amir Mizinski <amirmizi6@gmail.com>
-> >=20
-> > Today, actual implementation for send massage is not correct. We check=
-=20
-> > and loop only on TPM_STS.stsValid bit and next we single check=20
-> > TPM_STS.expect bit value.
-> > TPM_STS.expected bit shall be checked in the same time of=20
-> > TPM_STS.stsValid, and should be repeated until timeout_A.
-> > To aquire that, "wait_for_tpm_stat" function is modified to=20
-> > "wait_for_tpm_stat_result". this function read regulary status=20
-> > register and check bit defined by "mask" to reach value defined in "mas=
-k_result"
-> > (that way a bit in mask can be checked if reached 1 or 0).
-> >=20
-> > Respectively, to send message as defined in=20
-> >  TCG_DesignPrinciples_TPM2p0Driver_vp24_pubrev.pdf, all bytes should be=
-=20
-> > sent in one shot instead of sending last byte in exception.
-> >=20
-> > This improvment was suggested by Benoit Houyere.
+Why can't you just add a 2nd entry to the existing 'iommus' property? 
 
->Use suggested-by tag.
+A driver doing of_dma_configure() is generally not the right thing to 
+do.
 
->Also if something is not correct, please provide a fixes tag.
-
-> You are speaking now in theoretical level, which we don't really care tha=
-t much. Is this causing you real issues? If the answer is yes, please repor=
-t them. If the > >answer is no, we don't need this.
-
-> /Jarkko
-
-I2C TPM specification introduce CRC calculation on TPM command bytes. CRC c=
-alculation take place from last byte acquired to  TPM_STS.expected bit rese=
-t (=3D0) .It introduces latency and actual incorrect implementation becomes=
- visible now under I2C on the contrary before that's all.=20
-The case where TPM keeps TPM_STS.expected bit set  with TPM_STS.stsValid se=
-t after last byte reception is possible and is not an issue. It's not theor=
-etical level, it's practical level now.
-
-
+Rob
