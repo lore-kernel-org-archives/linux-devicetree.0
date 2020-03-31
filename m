@@ -2,202 +2,100 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6097DC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 06:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2073BC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE7620748
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 06:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFFA320771
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VSjVD2wV"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pl3sFafD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgCaGIz (ORCPT
+        id S1726174AbgCaHKf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 02:08:55 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35483 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgCaGIz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 02:08:55 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c12so4891710plz.2
-        for <devicetree@vger.kernel.org>; Mon, 30 Mar 2020 23:08:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OpQKiggADNEam9j1IF1ZgKCFxLfApWFsR5KbZ1C+nBs=;
-        b=VSjVD2wV10lTVvj6HTTeoet5y8V8krcWRYwc6hXafNeAUq7SCc7y3tr4WGyeTC6oLL
-         I6oY0/HFBEB7zPN9e+C0wNSVibWi0OnZfTqxetkck/B5JXkZDu3Y0m5TZ13hwXEkKhYu
-         2mmIP6hkPsm/n8XrJjFOvbxyV3SntlQopq02k/DxfOJLxdPvdvOq3wrVCjUFVPLujD8c
-         cbwGVYlq2JJlU6Na9rsppS7NDQpBIrzzZmnHUkPJq5LuSnftQNIg/yT8GrH30NSce0M4
-         Y16tU+hFSRAs1vl/R0DuGyWjcnjsQvgPlkvNZSCM4OBMc+DoXpLbfNsW5TsRc2F9pefO
-         5djg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OpQKiggADNEam9j1IF1ZgKCFxLfApWFsR5KbZ1C+nBs=;
-        b=QqMRMQ2pUlrD7mqZnZGFar87CjdMCb2Tbv6q18Clw6em7NfZMIsy/EKeADI82qtn7I
-         WV2r1BjLddr3UzUwNFyeOPsCuWoBlQvGOBqj2M6JEovmBIWtJgjmJmeXMVwn6Mt4qXfk
-         f4FjpBbr9VwpweG3y7iCm4wYnDlj0RLoTuKmjOhEb+0i7wRlcG9QYyvCEZfr2DfJWrFr
-         Mix76SnaqPwBa/8iRL0vlvkHDhD3QKZqDYIcW6Xpmvn0YBKorLz5y7/tm1Un2X5uNHht
-         7L+IODm1RvuBVgXRlVHACBgR9TPSxh+RM1wTsEk4co4p6IFxZOmgQPxNykXhHJjcMw5F
-         x4Fg==
-X-Gm-Message-State: AGi0PuawN0LGteYtKpS/2FwK93Jxmda1a2lyjhjva6RYHzHAsIW+pk2O
-        h40WsRxoTPmNdOL7LfFCJ7RM8g==
-X-Google-Smtp-Source: APiQypI37mArLqJb3kpr8kgCNB7T0c03vWdQcOiyYbzHcdpgd5de0iK7DZWllc8CctrFEMVI2AM7AA==
-X-Received: by 2002:a17:90b:3556:: with SMTP id lt22mr2010864pjb.138.1585634932111;
-        Mon, 30 Mar 2020 23:08:52 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id m2sm1015301pjl.21.2020.03.30.23.08.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 23:08:51 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 23:08:49 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH 1/4] clk: qcom: gdsc: Handle GDSC regulator supplies
-Message-ID: <20200331060849.GC246874@minitux>
-References: <20200319053902.3415984-1-bjorn.andersson@linaro.org>
- <20200319053902.3415984-2-bjorn.andersson@linaro.org>
- <5dbd8e67-cc9f-631b-0b4f-b45389be83cd@codeaurora.org>
+        Tue, 31 Mar 2020 03:10:35 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:47018 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726420AbgCaHKf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 03:10:35 -0400
+X-UUID: 72369b837d594f6ba68a801989bb2769-20200331
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=tjPRKJwv3JpOCljaRUaL4xSBagZpOnRqSFRVswzw7Gs=;
+        b=pl3sFafDlzdqzPr2tiyYdnfDuM8e2VR5yyrpb56+s6YCZInYGQz7eFVwID0N/vWNuiQfSKrJ16r2al4CpLWqtCbiNnMbhtayoyFDENSBlRIOj8n088F93u2WgR7jJ774noNjnV32YfBnGiZbOJFLeJ9X+2IurBI/yb5Et7QgAoA=;
+X-UUID: 72369b837d594f6ba68a801989bb2769-20200331
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 224437747; Tue, 31 Mar 2020 15:10:23 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 31 Mar
+ 2020 15:10:21 +0800
+Received: from [10.16.6.141] (10.16.6.141) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 31 Mar 2020 15:10:19 +0800
+Message-ID: <1585638593.31955.5.camel@mszsdaap41>
+Subject: Re: [PATCH v3 1/4] dt-bindings: display: mediatek: add property to
+ control mipi tx drive current
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>
+Date:   Tue, 31 Mar 2020 15:09:53 +0800
+In-Reply-To: <20200323220033.GA29463@bogus>
+References: <20200311074032.119481-1-jitao.shi@mediatek.com>
+         <20200311074032.119481-2-jitao.shi@mediatek.com>
+         <20200323220033.GA29463@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5dbd8e67-cc9f-631b-0b4f-b45389be83cd@codeaurora.org>
+X-TM-SNTS-SMTP: 518E88426F51400BDCEE41B35C4881984A15EE42DB8BBE274CDC847E3BBA18762000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 30 Mar 22:35 PDT 2020, Taniya Das wrote:
+DQpPbiBNb24sIDIwMjAtMDMtMjMgYXQgMTY6MDAgLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOg0K
+PiBPbiBXZWQsIE1hciAxMSwgMjAyMCBhdCAwMzo0MDoyOVBNICswODAwLCBKaXRhbyBTaGkgd3Jv
+dGU6DQo+ID4gQWRkIGEgcHJvcGVydHkgdG8gY29udHJvbCBtaXBpIHR4IGRyaXZlIGN1cnJlbnQ6
+DQo+ID4gImRyaXZlLXN0cmVuZ3RoLW1pY3JvYW1wIg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
+IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0ICAgICB8
+IDQgKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21l
+ZGlhdGVrL21lZGlhdGVrLGRzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkc2kudHh0DQo+ID4gaW5kZXggYTE5YTZjYzM3
+NWVkLi5kNTAxZjlmZjRiMWYgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHNpLnR4dA0KPiA+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlh
+dGVrLGRzaS50eHQNCj4gPiBAQCAtMzMsNiArMzMsOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0K
+PiA+ICAtICNjbG9jay1jZWxsczogbXVzdCBiZSA8MD47DQo+ID4gIC0gI3BoeS1jZWxsczogbXVz
+dCBiZSA8MD4uDQo+ID4gIA0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICstIGRyaXZl
+LXN0cmVuZ3RoLW1pY3JvYW1wOiBhZGp1c3QgZHJpdmluZyBjdXJyZW50LCBzaG91bGQgYmUgMSB+
+IDB4Rg0KPiANCj4gVEJDLCAxLTB4ZiBpcyBpbiB1bml0cyBvZiBtaWNyb2FtcHM/IFNvIGEgbWF4
+IGRyaXZlIHN0cmVuZ3RoIG9mIDE1dUE/IA0KPiBTZWVtcyBhIGJpdCBsb3cuDQo+IA0KDQpUaGUg
+bWluaW11bSBhbXAgaXMgMzAwMCBtYWNyb2FtcHMsICBzdGVwIGlzIDIwMG1hY3JvYW1wcy4NClNv
+IHRoZSBkcml2ZSBjdXJyZW50IGlzIDMwMDAgKyAyMDAgKiBkcml2ZS1zdHJlbmd0aC1taWNyb2Ft
+cCBhbXBzLg0KDQpJIHdpbGwgdXBkYXRlICJkcml2ZS1zdHJlbmd0aC1taWNyb2FtcCIgZGVmaW5l
+IG5leHQgdmVyc2lvbi4NCg0KQlINCkppdGFvDQo+ID4gKw0KPiA+ICBFeGFtcGxlOg0KPiA+ICAN
+Cj4gPiAgbWlwaV90eDA6IG1pcGktZHBoeUAxMDIxNTAwMCB7DQo+ID4gQEAgLTQyLDYgKzQ1LDcg
+QEAgbWlwaV90eDA6IG1pcGktZHBoeUAxMDIxNTAwMCB7DQo+ID4gIAljbG9jay1vdXRwdXQtbmFt
+ZXMgPSAibWlwaV90eDBfcGxsIjsNCj4gPiAgCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gPiAgCSNw
+aHktY2VsbHMgPSA8MD47DQo+ID4gKwlkcml2ZS1zdHJlbmd0aC1taWNyb2FtcCA9IDwweDg+Ow0K
+PiA+ICB9Ow0KPiA+ICANCj4gPiAgZHNpMDogZHNpQDE0MDFiMDAwIHsNCj4gPiAtLSANCj4gPiAy
+LjIxLjANCg0KDQo=
 
-> Hi Stephen,
-> 
-> I think the upstream design always wanted the client/consumer to enable the
-> GPU Rail and then turn ON the GDSC?
-> 
-> Why are we going ahead with adding the support of regulator in the GDSC
-> driver?
-> 
-
-As I (partially) describe below the mdss driver on 8996 doesn't probe
-because the GDSC fails to enable, because the upstream supply is not
-enabled, so the mdss driver can't turn on the regulator needed by the
-GDSC.
-
-I don't see any other way to handle this than extending the gdsc
-implementation, hence my proposal to change the design.
-Suggestions/feedback are welcome though.
-
-Regards,
-Bjorn
-
-> On 3/19/2020 11:08 AM, Bjorn Andersson wrote:
-> > Certain GDSCs, such as the GPU_GX on MSM8996, requires that the upstream
-> > regulator supply is powered in order to be turned on.
-> > 
-> > It's not guaranteed that the bootloader will leave these supplies on and
-> > the driver core will attempt to enable any GDSCs before allowing the
-> > individual drivers to probe defer on the PMIC regulator driver not yet
-> > being present.
-> > 
-> > So the gdsc driver needs to be made aware of supplying regulators and
-> > probe defer on their absence, and it needs to enable and disable the
-> > regulator accordingly.
-> > 
-> > Voltage adjustments of the supplying regulator are deferred to the
-> > client drivers themselves.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >   drivers/clk/qcom/gdsc.c | 24 ++++++++++++++++++++++++
-> >   drivers/clk/qcom/gdsc.h |  4 ++++
-> >   2 files changed, 28 insertions(+)
-> > 
-> > diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
-> > index a250f59708d8..3528789cc9d0 100644
-> > --- a/drivers/clk/qcom/gdsc.c
-> > +++ b/drivers/clk/qcom/gdsc.c
-> > @@ -13,6 +13,7 @@
-> >   #include <linux/regmap.h>
-> >   #include <linux/reset-controller.h>
-> >   #include <linux/slab.h>
-> > +#include <linux/regulator/consumer.h>
-> >   #include "gdsc.h"
-> >   #define PWR_ON_MASK		BIT(31)
-> > @@ -112,6 +113,12 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
-> >   	int ret;
-> >   	u32 val = (status == GDSC_ON) ? 0 : SW_COLLAPSE_MASK;
-> > +	if (status == GDSC_ON && sc->rsupply) {
-> > +		ret = regulator_enable(sc->rsupply);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> >   	ret = regmap_update_bits(sc->regmap, sc->gdscr, SW_COLLAPSE_MASK, val);
-> >   	if (ret)
-> >   		return ret;
-> > @@ -143,6 +150,13 @@ static int gdsc_toggle_logic(struct gdsc *sc, enum gdsc_status status)
-> >   	ret = gdsc_poll_status(sc, status);
-> >   	WARN(ret, "%s status stuck at 'o%s'", sc->pd.name, status ? "ff" : "n");
-> > +
-> > +	if (!ret && status == GDSC_OFF && sc->rsupply) {
-> > +		ret = regulator_disable(sc->rsupply);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> >   	return ret;
-> >   }
-> > @@ -371,6 +385,16 @@ int gdsc_register(struct gdsc_desc *desc,
-> >   	if (!data->domains)
-> >   		return -ENOMEM;
-> > +	/* Resolve any regulator supplies */
-> > +	for (i = 0; i < num; i++) {
-> > +		if (!scs[i] || !scs[i]->supply)
-> > +			continue;
-> > +
-> > +		scs[i]->rsupply = devm_regulator_get(dev, scs[i]->supply);
-> > +		if (IS_ERR(scs[i]->rsupply))
-> > +			return PTR_ERR(scs[i]->rsupply);
-> > +	}
-> > +
-> >   	data->num_domains = num;
-> >   	for (i = 0; i < num; i++) {
-> >   		if (!scs[i])
-> > diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
-> > index 64cdc8cf0d4d..c36fc26dcdff 100644
-> > --- a/drivers/clk/qcom/gdsc.h
-> > +++ b/drivers/clk/qcom/gdsc.h
-> > @@ -10,6 +10,7 @@
-> >   #include <linux/pm_domain.h>
-> >   struct regmap;
-> > +struct regulator;
-> >   struct reset_controller_dev;
-> >   /**
-> > @@ -52,6 +53,9 @@ struct gdsc {
-> >   	struct reset_controller_dev	*rcdev;
-> >   	unsigned int			*resets;
-> >   	unsigned int			reset_count;
-> > +
-> > +	const char 			*supply;
-> > +	struct regulator		*rsupply;
-> >   };
-> >   struct gdsc_desc {
-> > 
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation.
-> 
-> --
