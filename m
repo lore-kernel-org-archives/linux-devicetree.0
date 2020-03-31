@@ -2,103 +2,109 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64A9C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 241B8C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A2620838
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 21:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECCA32080C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585691884;
-	bh=LGdCqe9ICfS1ZP4zD/UtW5mZe+3VLA+Ia7BX+4lYg9Q=;
+	s=default; t=1585692058;
+	bh=68y8XV+c+ckwiJ0Ks/NEh1YXjXG1GeqhNoCYKrAzUoM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jmgt6XgRx3ko5My3b0+8vkf9eWKtkPR1wFVQMMhRScR3xR1oRZEJebQZfrwmzSOsi
-	 ZDJwe/Cng+NKe6KSmcH2Dw9ao9GIf/c0w9I3u0m/lcUP2vMmIHMl7M9qvUMk9qym/S
-	 0SNwWEgi/8wjEVyDQ1eeDQukRTv8ETNslePjeIYs=
+	b=wfxjZUYzeTMxUo3z99XvUEhkWO4EphjHci0spl1GGCLsawN7Sc+GxwqiRbru364nC
+	 ZxA8lBjaJ8Mc6D6O0glGQVzkiVNolVzsVVOGndPrg5hWQjYbFfGdWfto2CiEaIRO+s
+	 fmp0dxV2gtbxZk1HM9NH1WLywY7rA8fO5wXiTSLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbgCaV6D (ORCPT
+        id S1729647AbgCaWAz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 17:58:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41698 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728840AbgCaV6D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 17:58:03 -0400
-Received: by mail-io1-f66.google.com with SMTP id b12so7246460ion.8;
-        Tue, 31 Mar 2020 14:58:02 -0700 (PDT)
+        Tue, 31 Mar 2020 18:00:55 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:34618 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727955AbgCaWAy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 18:00:54 -0400
+Received: by mail-il1-f196.google.com with SMTP id t11so21067366ils.1;
+        Tue, 31 Mar 2020 15:00:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jIozpEk7R1PWhZJHP9ojDFOfKg1S3YK7gkqKMg9XXHk=;
-        b=QPidKuxGI964vU+w0yj8FdrizZ34M/TsuP8aHMcghFIWTeuzlA/3LMproIeLBAoHCq
-         VbnHDcDhMLKpMP4i9xnriVo/R1NwS0lo903WuiY6ko816A4C3mDfQrhxxafkwaJirhT9
-         cbBO1+B3z2pKhCuRGVw8OHD7yHDjeWsVuk6aoOxhnMeTl3NLFnNM3v3bWDA+PBlzDM4C
-         SVvWzrwdjCjASzSjmlniO1GmrWahkqD0TUjat0Q7fuTRQFdF10qNECW/yJSTJ+USo9/Y
-         yUIQRDbSy+i6wzFS88NCl2p0L14hVhmLF9UNS1t+EZqV4gtqSaTuIYaZlEUcrl8bmBGh
-         cn3Q==
-X-Gm-Message-State: ANhLgQ3Rp+0GRQWCifvs/NHp11DN5naq7cIs/y98BCoetBAsgxnUpo3F
-        m5cuT0HRZZqE1t2NwkIjlw==
-X-Google-Smtp-Source: ADFU+vu0NMEdlvuQiIfFmwmzLSErBtVKPP2kioAGYOPrT6CrZ8qm7nBCn4yQsGAHOA4m8jUxbO73IQ==
-X-Received: by 2002:a6b:2d7:: with SMTP id 206mr17354362ioc.42.1585691882134;
-        Tue, 31 Mar 2020 14:58:02 -0700 (PDT)
+        bh=lc33E5Df9rZgd4qmK0wjmDHg2/VwMCkladXOyRxwDEQ=;
+        b=bgXmYjkO/QXHC+uOvMiTFY+STAW8VjaXPbVR42M8rXRfgJyTGV98WTnmjOU10qSwXu
+         Vh67M0cgtS6QLN4igqk7j6k9fXI/bJv9c5mGQUzdUbMH18uRsgcQ0JxUBduX0bJZoXmB
+         0FSCTPaXAmPOnVNCESe3wND20TGui1dP5pRkJmuVeHXkgq0rV7YcH72kmAs5iWLG3U20
+         MrNlBy4PdFxHOXmQRL2bfQfQppmBJQtllF35Cxf1j50nZ+D/GpTpycYBfba3/uh/TB/y
+         jqF09l8NLspnMyN4P/Bg7A1cF8+CXvxUMrWv814pe1oOnl2WDZ+li5ZiIh4gDUWAovIK
+         pAvw==
+X-Gm-Message-State: ANhLgQ3TUlwyn+iGmY4aK4/vcnrdlL90eR/2Rge9hqry+pB4LiQP1TyC
+        +KUvMcN4SBrbtFQdfnKtig==
+X-Google-Smtp-Source: ADFU+vt2obj9Pp0WVbC2XhGR8Zra56tn+jusDQkYJG1LqYScGnHUFR99v3w+nmrFf44+CRhVQro3Zw==
+X-Received: by 2002:a92:1d4b:: with SMTP id d72mr18236810ild.14.1585692053642;
+        Tue, 31 Mar 2020 15:00:53 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id t77sm36579ilk.83.2020.03.31.14.58.00
+        by smtp.gmail.com with ESMTPSA id n6sm43408iod.9.2020.03.31.15.00.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 14:58:01 -0700 (PDT)
-Received: (nullmailer pid 12849 invoked by uid 1000);
-        Tue, 31 Mar 2020 21:58:00 -0000
-Date:   Tue, 31 Mar 2020 15:58:00 -0600
+        Tue, 31 Mar 2020 15:00:52 -0700 (PDT)
+Received: (nullmailer pid 19586 invoked by uid 1000);
+        Tue, 31 Mar 2020 22:00:51 -0000
+Date:   Tue, 31 Mar 2020 16:00:51 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     frowand.list@gmail.com
-Cc:     pantelis.antoniou@konsulko.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 2/2] of: some unittest overlays not untracked
-Message-ID: <20200331215800.GA12799@bogus>
-References: <1585187131-21642-1-git-send-email-frowand.list@gmail.com>
- <1585187131-21642-3-git-send-email-frowand.list@gmail.com>
+To:     Weijie Gao <weijie.gao@mediatek.com>
+Cc:     linux-mtd@lists.infradead.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Weijie Gao <weijie.gao@mediatek.com>
+Subject: Re: [PATCH 2/2] dt-bindings: add documentation for mt7621-nand driver
+Message-ID: <20200331220051.GA18084@bogus>
+References: <1585678079-5999-1-git-send-email-weijie.gao@mediatek.com>
+ <1585678079-5999-2-git-send-email-weijie.gao@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585187131-21642-3-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <1585678079-5999-2-git-send-email-weijie.gao@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 25 Mar 2020 20:45:31 -0500, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+On Wed, 1 Apr 2020 02:07:59 +0800, Weijie Gao wrote:
+> This patch adds documentation for MediaTek MT7621 NAND flash controller
+> driver.
 > 
-> kernel test robot reported "WARNING: held lock freed!" triggered by
-> unittest_gpio_remove(), which should not have been called because
-> the related gpio overlay was not tracked.  Another overlay that
-> was tracked had previously used the same id as the gpio overlay
-> but had not been untracked when the overlay was removed.  Thus the
-> clean up function of_unittest_destroy_tracked_overlays() incorrectly
-> attempted to remove the reused overlay id.
-> 
-> Patch contents:
-> 
->   - Create tracking related helper functions
->   - Change BUG() to WARN_ON() for overlay id related issues
->   - Add some additional error checking for valid overlay id values
->   - Add the missing overlay untrack
->   - update comment on expectation that overlay ids are assigned in
->     sequence
-> 
-> Fixes: 492a22aceb75 ("of: unittest: overlay: Keep track of created overlays")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> Signed-off-by: Weijie Gao <weijie.gao@mediatek.com>
 > ---
->  drivers/of/unittest.c | 30 +++++++++++++++++++++++-------
->  1 file changed, 23 insertions(+), 7 deletions(-)
+>  .../bindings/mtd/mediatek,mt7621-nfc.yaml     | 68 +++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/mediatek,mt7621-nfc.yaml
 > 
 
-Applied, thanks.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Rob
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/mediatek,mt7621-nfc.example.dt.yaml: nand@1e003000: reg: [[503328768, 2048, 503330816, 2048]] is too short
+
+See https://patchwork.ozlabs.org/patch/1264888
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
