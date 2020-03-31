@@ -2,182 +2,106 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEECC2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34DAC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B937207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:40:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vTD9J09L"
+	by mail.kernel.org (Postfix) with ESMTP id A3DB72072E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbgCaSk2 (ORCPT
+        id S1726290AbgCaSqx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:40:28 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41407 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgCaSk2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 14:40:28 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a24so3897018pfc.8
-        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 11:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BiFlrx2jci6UF/44wjMJRVvmGi3zYDtbTuZw76ofS9M=;
-        b=vTD9J09LOf7YaKpipJJDrND2YBBqrJCrokT+YirTJiDmBCrXSEte4ecos/ucAha3yU
-         Gg8STR6sCIRMljfMemjURNJ7wDHYDK6srFfQMLyVAoe7cH2R5XV25criDj6PpGB+DQDP
-         gTFjnucSamy6DZk8q/6MJ/WNjs5N1oSqTdng6KM9E+GKLjrcb27i0CddZhEDygJVLS6H
-         5LuChaiCe53Ho9X/DZtDglzHhPdz0aFauosokOuLsa941Xk659PoHyaMmNLUk7NRpzvy
-         ZQ23pmTUl9qKF5NprxcAYwfyhaxDpAVjba1eucGXDIxg1HVnVXqa3uZ4moml+KHZ91iC
-         ta8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BiFlrx2jci6UF/44wjMJRVvmGi3zYDtbTuZw76ofS9M=;
-        b=GACrmEeKuJWNDrWSFYJDPTQZz5KQ0+9W/9RRhX5dRlhmUy5IUHcKl4gSbTYynctj9D
-         gB2Jyy7tYH5Lo30VzOf3QyoKVKiDsK9mVxCInR3+9sUnxY1qA+wNmvcsZ0OSITXkln1u
-         0qXfP8PkhsZ1FII9s+3VG9dyO391I43Y+vWx0GkMbCcCKo0nIkRa7sLHRbfpf93e+lYF
-         GdABaIJtMhnnS/whNuoDwoslZcXHvRd+/O+jp0zmX2th7FlY8coDcgf/JIv/UHbSK3+s
-         CuLSsYb28MY87Qyaq7vNLyRlkybYm2IjG5lKjmfXeJdvDepNaNpt0ez/oA75Xnkhiepa
-         y+Dw==
-X-Gm-Message-State: AGi0PubrRYMDwGA8Ndluyb2sTuDeHlFlp7TqwgjQz5praQQpk58NTheL
-        IbfPQ+ZGmucf1gE2l/fiNpJehQ==
-X-Google-Smtp-Source: APiQypKUNpAzOq4pKgWQBvZIXbKQl122MMmvgDMFQ7moe2HCfS52TO3xMq7di1tLyj/TuRnpFvvq6A==
-X-Received: by 2002:a62:ee15:: with SMTP id e21mr6219077pfi.90.1585680026497;
-        Tue, 31 Mar 2020 11:40:26 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g7sm5951509pfo.85.2020.03.31.11.40.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 11:40:25 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 11:40:23 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     pillair@codeaurora.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-Message-ID: <20200331184023.GB267644@minitux>
-References: <1585219723-28323-1-git-send-email-pillair@codeaurora.org>
- <20200327230025.GJ5063@builder>
- <000101d604f8$afc48220$0f4d8660$@codeaurora.org>
- <20200328183055.GA663905@yoga>
- <000301d605ba$3d034a10$b709de30$@codeaurora.org>
+        Tue, 31 Mar 2020 14:46:53 -0400
+Received: from muru.com ([72.249.23.125]:33522 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726282AbgCaSqx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 14:46:53 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 8E5C28108;
+        Tue, 31 Mar 2020 18:47:37 +0000 (UTC)
+Date:   Tue, 31 Mar 2020 11:46:47 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <pdp7pdp7@gmail.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Caleb Robey <c-robey@ti.com>, linux-omap@vger.kernel.org,
+        Jason Kridner <jkridner@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Drew Fustini <drew@beagleboard.org>
+Subject: Re: [PATCH v2] ARM: dts: am5729: beaglebone-ai: adding device tree
+Message-ID: <20200331184647.GF37466@atomide.com>
+References: <20191120220559.18914-1-c-robey@ti.com>
+ <41c73bc1-99ae-6797-5bb7-7acc0f6518c0@ti.com>
+ <20191212170452.GV35479@atomide.com>
+ <CAEf4M_C05Hwc_BEL6MaFNNEW0Cf2kc-LvMi9qdKxL7hVAFFDGQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000301d605ba$3d034a10$b709de30$@codeaurora.org>
+In-Reply-To: <CAEf4M_C05Hwc_BEL6MaFNNEW0Cf2kc-LvMi9qdKxL7hVAFFDGQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun 29 Mar 04:07 PDT 2020, pillair@codeaurora.org wrote:
-
-> Hi Bjorn,
-> 
-> > -----Original Message-----
-> > From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Sent: Sunday, March 29, 2020 12:01 AM
-> > To: pillair@codeaurora.org
-> > Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> linux-
-> > kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
-> > Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
-> > module device node
-> > 
-> > On Sat 28 Mar 05:01 PDT 2020, pillair@codeaurora.org wrote:
-> > 
-> > > Hi Bjorn,
-> > >  Comments inline.
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > > Sent: Saturday, March 28, 2020 4:30 AM
-> > > > To: Rakesh Pillai <pillair@codeaurora.org>
-> > > > Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > linux-
-> > > > kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org
-> > > > Subject: Re: [PATCH v7] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
-> > > > module device node
+* Drew Fustini <pdp7pdp7@gmail.com> [200331 18:39]:
+> On Thu, Dec 12, 2019 at 6:06 PM Tony Lindgren <tony@atomide.com> wrote:
+> > > On 21/11/2019 00:05, Caleb Robey wrote:
+> > > > From: Jason Kridner <jdk@ti.com>
 > > > >
-> > > > On Thu 26 Mar 03:48 PDT 2020, Rakesh Pillai wrote:
+> > > > BeagleBoard.org BeagleBone AI is an open source hardware single
+> > > > board computer based on the Texas Instruments AM5729 SoC featuring
+> > > > dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
+> > > > signal processor (DSP), quad-core embedded vision engine (EVE),
+> > > > Arm Cortex-M4 processors, dual programmable realtime unit
+> > > > industrial control subsystems and more. The board features 1GB
+> > > > DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
+> > > > 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
+> > > > headers.
 > > > >
-> > > > > Add device node for the ath10k SNOC platform driver probe
-> > > > > and add resources required for WCN3990 on sc7180 soc.
-> > > > >
-> > > > > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> > > > > ---
-> > > > >
-> > > > > Depends on https://patchwork.kernel.org/patch/11455345/
-> > > > > The above patch adds the dt-bindings for wifi-firmware
-> > > > > subnode
-> > > > > ---
-> > > > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  8 ++++++++
-> > > > >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27
-> > > > +++++++++++++++++++++++++++
-> > > > >  2 files changed, 35 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > index 043c9b9..a6168a4 100644
-> > > > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > @@ -327,6 +327,14 @@
-> > > > >  	};
-> > > > >  };
-> > > > >
-> > > > > +&wifi {
-> > > > > +	status = "okay";
-> > > > > +	qcom,msa-fixed-perm;
-> > > > > +	wifi-firmware {
-> > > > > +		iommus = <&apps_smmu 0xc2 0x1>;
+> > > > For more information, refer to:
+> > > > https://beaglebone.ai
 > > > >
-> > > > How is sc7180 different from sdm845, where the iommus property goes
-> > > > directly in the &wifi node?
+> > > > This patch introduces the BeagleBone AI device tree.
+> > > >
+> > > > Note that the device use the "ti,tpd12s016" component which is
+> > > > software compatible with "ti,tpd12s015". Thus we only use the
+> > > > latter driver.
 > > >
-> > > Sc7180 IDP is a target without TrustZone support and also with S2 IOMMU
-> > > enabled.
-> > > Since in Trustzone based targets, the iommu SID configuration was done
-> by
-> > > TZ, there was nothing required to be done by driver.
-> > > But in non-TZ based targets, the IOMMU mappings need to be done by the
-> > > driver.
-> > > Since this is the mapping of the firmware memory and to keep it
-> different
-> > > from the driver memory access, a different device has been created for
-> > > firmware and these SIDs are configured.
-> > >
-> > 
-> > I see, I missed the fact that 0xc0:1 is used in the &wifi node itself.
-> > 
-> > So to confirm, we have streams 0xc0 and 0xc1 for data pipes and 0xc2 and
-> > 0xc3 for some form of firmware access? And in the normal Qualcomm design
-> > implementation the 0c2/0xc3 stream mapping is setup by TZ, and hidden
-> > from Linux using the SMMU virtualisation?
-> > 
-> > 
-> > Would have been nice to have some better mechanism for describing
-> > multi-connected hardware block, than to sprinkle dummy nodes all over
-> > the DT...
+> > > Ah. thanks. I see my comments resolved here.
+> > > no more comments to net part from my side.
+> >
+> > Just FYI, Jason had one pending comment on the earlier version
+> > about the compatible property to use.
+> >
+> > So I'm assuming there will be a new version posted, tagging
+> > this one as read.
 > 
-> Yes, this is the firmware memory. This method is followed in the venus video
-> driver
-> https://patchwork.kernel.org/patch/11315765/
+> It came to my attention today when talking with Jason Kridner and
+> Robert Nelson that we did not get the BeagleBone AI device tree
+> upstream yet.
 > 
-> Do you suggest following some other mechanism ?
+> I am having trouble identifying what the pending comment was from the
+> original patch series.
 > 
+> Was it related to this compatible string?
+> 
+> > +       compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
 
-After considering this some more, and having a quick chat with Arnd
-yesterday, I don't have any other suggestions.
+Yes I think Jason had some comment on the compatible string
+to use.
 
-So I will pick up your v8.
+Regards,
 
-Thanks,
-Bjorn
+Tony
