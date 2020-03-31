@@ -2,243 +2,182 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDA2C2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264E5C2D0E8
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B9220B1F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCCD20B1F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:48:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbgCaLqt convert rfc822-to-8bit (ORCPT
+        id S1730424AbgCaLs1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:46:49 -0400
-Received: from maillog.nuvoton.com ([202.39.227.15]:40884 "EHLO
-        maillog.nuvoton.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730426AbgCaLqX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 07:46:23 -0400
-Received: from NTHCCAS01.nuvoton.com (nthccas01.nuvoton.com [10.1.8.28])
-        by maillog.nuvoton.com (Postfix) with ESMTP id 0B94F1C80EC7;
-        Tue, 31 Mar 2020 19:35:02 +0800 (CST)
-Received: from NTILML02.nuvoton.com (10.190.1.46) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server (TLS) id 15.0.1130.7; Tue, 31 Mar 2020
- 19:35:01 +0800
-Received: from NTILML02.nuvoton.com (10.190.1.47) by NTILML02.nuvoton.com
- (10.190.1.47) with Microsoft SMTP Server (TLS) id 15.0.1130.7; Tue, 31 Mar
- 2020 14:34:58 +0300
-Received: from taln70.nuvoton.co.il (10.191.1.70) by NTILML02.nuvoton.com
- (10.190.1.46) with Microsoft SMTP Server id 15.0.1130.7 via Frontend
- Transport; Tue, 31 Mar 2020 14:34:58 +0300
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-        by taln70.nuvoton.co.il (Postfix) with ESMTP id 00BEC250;
-        Tue, 31 Mar 2020 14:34:59 +0300 (IDT)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id E65DF639B1; Tue, 31 Mar 2020 14:34:28 +0300 (IDT)
-From:   <amirmizi6@gmail.com>
-To:     <Eyal.Cohen@nuvoton.com>, <jarkko.sakkinen@linux.intel.com>,
-        <oshrialkoby85@gmail.com>, <alexander.steffen@infineon.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <peterhuewe@gmx.de>,
-        <jgg@ziepe.ca>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <oshri.alkoby@nuvoton.com>,
-        <tmaimon77@gmail.com>, <gcwilson@us.ibm.com>,
-        <kgoldman@us.ibm.com>, <Dan.Morav@nuvoton.com>,
-        <oren.tanami@nuvoton.com>, <shmulik.hager@nuvoton.com>,
-        <amir.mizinski@nuvoton.com>, Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v4 4/7] tpm: tpm_tis: Fix expected bit handling and send all bytes in one shot without last byte in exception
-Date:   Tue, 31 Mar 2020 14:32:04 +0300
-Message-ID: <20200331113207.107080-5-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200331113207.107080-1-amirmizi6@gmail.com>
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
+        Tue, 31 Mar 2020 07:48:27 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:52068 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730560AbgCaLs0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 07:48:26 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 746A28030774;
+        Tue, 31 Mar 2020 11:48:19 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id a9g7bqgioPTM; Tue, 31 Mar 2020 14:48:18 +0300 (MSK)
+Date:   Tue, 31 Mar 2020 14:48:24 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/6] i2c: designeware: Add Baikal-T1 SoC DW I2C specifics
+ support
+Message-ID: <20200331114824.e3uljdymvsjuh6wh@ubsrv2.baikal.int>
+References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
+ <20200306135451.4AF0480307C4@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200306135451.4AF0480307C4@mail.baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+Hello Andy,
 
-Today, actual implementation for send massage is not correct. We check and
-loop only on TPM_STS.stsValid bit and next we single check TPM_STS.expect
-bit value.
-TPM_STS.expected bit shall be checked in the same time of
-TPM_STS.stsValid, and should be repeated until timeout_A.
-To aquire that, "wait_for_tpm_stat" function is modified to
-"wait_for_tpm_stat_result". this function read regulary status register
-and check bit defined by "mask" to reach value defined in "mask_result"
-(that way a bit in mask can be checked if reached 1 or 0).
+Finally I've thought this through reasonably conformed with the changes
+requested in the framework of the other patchsets. My comments are
+below.
 
-Respectively, to send message as defined in
-TCG_DesignPrinciples_TPM2p0Driver_vp24_pubrev.pdf, all bytes should be
-sent in one shot instead of sending last byte in exception.
+On Fri, Mar 06, 2020 at 03:54:45PM +0200, Andy Shevchenko wrote:
+> First of all, I got only 3 out of 6 patches. Are you sure you properly prepared
+> the series?
+> 
+> On Fri, Mar 06, 2020 at 04:19:49PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <fancer.lancer@gmail.com>
+> 
+> Same comment as per DMA series, try next time to link the cover letter to the
+> series correctly.
+> 
+> > There are three DW I2C controllers embedded into the Baikal-T1 SoC. Two
+> > of them are normal with standard DW I2C IP-core configurations and registers
+> > accessible over normal MMIO space - so they are acceptable by the available
+> > DW I2C driver with no modification.
+> 
+> > But there is a third, which is a bit
+> > different. Its registers are indirectly accessed be means of "command/data
+> > in/data out" registers tuple. In order to have it also supported by the DW
+> > I2C driver, we must modify the code a bit. This is a main purpose of this
+> > patchset.
+> > 
+> > First of all traditionally we replaced the legacy plain text-based dt-binding
+> > file with yaml-based one. Then we found and fixed a bug in the DW I2C FIFO size
+> > detection algorithm which tried to do it too early before dw_readl/dw_writel
+> > methods could be used.
+> 
+> So far so good (looks like, I think colleagues of mine and myself will review
+> individual patches later on).
+> 
+> > Finally we introduced a platform-specific flag
+> > ACCESS_INDIRECT, which would enable the indirect access to the DW I2C registers
+> > implemented for one of the Baikal-T1 SoC DW I2C controllers. See the commit
+> > message of the corresponding patch for details.
+> 
+> This is quite questionable. In Intel SoCs we have indirect I²C controllers to
+> access (inside PMIC, for example). The approach used to do that is usually to
+> have an IPC mechanism and specific bus controller driver. See i2c-cht-wc.c for
+> instance.
+> 
+> I'm not sure if it makes a lot of duplication and if actually switching I²C
+> DesignWare driver to regmap API will solve it. At least that is the second
+> approach I would consider.
+> 
+> But I'll wait others to comment on this. We have to settle the solution before
+> going further.
+> 
 
-This improvment was suggested by Benoit Houyere.
+As I see the others have not comments.) Anyway I see your point and having the
+regmap-based interface might be better than the approach I've suggested
+in this patchset particularly seeing that our DW i2c IP registers are
+hidden behind a system controller register space.
 
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
----
- drivers/char/tpm/tpm_tis_core.c | 72 ++++++++++++++++-------------------------
- 1 file changed, 28 insertions(+), 44 deletions(-)
+In order to follow your proposition to create a dedicated regmap and to supply
+it to the DW i2c driver, I have to redevelop not only this patchset, but
+also an adjacent drivers. In particular the changes will concern the
+MFD-based System Controller driver (which will instantiate this DW i2c
+controller device), Clocks Control Unit drivers set, and a few
+others. The whole alteration I described in the RFC:
+https://lkml.org/lkml/2020/3/22/393
+You've been in Cc there, so fill free to send your comments regarding
+the changes I suggested. Though this time I hope the solution will
+satisfy everyone, who had issues with patchsets I've recently sent.
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index 18b9dc4..c8f4cf8 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -44,9 +44,10 @@ static bool wait_for_tpm_stat_cond(struct tpm_chip *chip, u8 mask,
-        return false;
- }
+Getting back to your comment in the framework of this patchset. The approach
+used for CHT Whiskey Cove i2c isn't fully suitable in our case for
+the reason of the DW I2C controller nature. DW I2C controller is a generic
+controller and used on many different platforms, while AFAICS CHT Whiskey Cove
+I2C is the SoC-specific used to access a charger-IC. So in the former case we
+may have an arbitrary set of i2c-slaves connected to the controller on
+different platforms, while on the latter one - there is a fixed set of
+slaves. In addition due to the same reason the DW I2C IP might be
+embedded into different sub-blocks on different platforms, while the CHT
+Whiskey Cove I2C is known to be a part of Intel CHT WC SoC PMIC.
+For instance Baikal-T1 SoC has one DW I2C controller embedded into the
+System Controller with indirectly accessible registers and two DW I2C
+interfaces with normal memory mapped registers. Due to this in case of DW I2C
+driver we can't just "suck" the regmap out from a parental MFD or
+anywhere else as it's done in the CHT Whiskey Cove I2C driver, but instead
+we should somehow supply a regmap pointer to the driver.
 
--static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
--               unsigned long timeout, wait_queue_head_t *queue,
--               bool check_cancel)
-+static int wait_for_tpm_stat_result(struct tpm_chip *chip, u8 mask,
-+                                   u8 mask_result, unsigned long timeout,
-+                                   wait_queue_head_t *queue,
-+                                   bool check_cancel)
- {
-        unsigned long stop;
-        long rc;
-@@ -55,7 +56,7 @@ static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
+Taking into account all of these we can utilize a combined approach
+implemented in ./drivers/i2c/busses/i2c-cht-wc.c and
+drivers/mfd/intel_quark_i2c_gpio.c . I'll add a regmap pointer field to the
+"struct dw_i2c_platform_data" structure, so in case if there is no
+IORESOURCE_MEM resources available (platform_get_resource() fails), we
+try to get a regmap pointer from the platform data. If there is no valid
+regmap available, then completely fail the driver probe procedure. Though
+due to this alteration I'll have to change the
+dw_i2c_platform_data.i2c_scl_freq field usage a bit. In case if it's
+zero, then call i2c_parse_fw_timings(). This won't hurt ACPI or dt-less
+platforms, but will let us cover a case when regmap is set while i2c
+clock frequency is supposed to be taken from the kernel firmware (like
+dtb, etc).
 
-        /* check current status */
-        status = chip->ops->status(chip);
--       if ((status & mask) == mask)
-+       if ((status & mask) == mask_result)
-                return 0;
+So if you are Ok with this, I'll send a v2 patchset with corresponding
+alteration implemented.
 
-        stop = jiffies + timeout;
-@@ -83,7 +84,7 @@ static int wait_for_tpm_stat(struct tpm_chip *chip, u8 mask,
-                        usleep_range(TPM_TIMEOUT_USECS_MIN,
-                                     TPM_TIMEOUT_USECS_MAX);
-                        status = chip->ops->status(chip);
--                       if ((status & mask) == mask)
-+                       if ((status & mask) == mask_result)
-                                return 0;
-                } while (time_before(jiffies, stop));
-        }
-@@ -290,10 +291,11 @@ static int recv_data(struct tpm_chip *chip, u8 *buf, size_t count)
-        int size = 0, burstcnt, rc;
+Regards,
+-Sergey
 
-        while (size < count) {
--               rc = wait_for_tpm_stat(chip,
--                                TPM_STS_DATA_AVAIL | TPM_STS_VALID,
--                                chip->timeout_c,
--                                &priv->read_queue, true);
-+               rc = wait_for_tpm_stat_result(chip,
-+                                       TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+                                       TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+                                       chip->timeout_c,
-+                                       &priv->read_queue, true);
-                if (rc < 0)
-                        return rc;
-                burstcnt = get_burstcount(chip);
-@@ -348,8 +350,9 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-                        goto out;
-                }
-
--               if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
--                                     &priv->int_queue, false) < 0) {
-+               if (wait_for_tpm_stat_result(chip, TPM_STS_VALID,
-+                                            TPM_STS_VALID, chip->timeout_c,
-+                                            &priv->int_queue, false) < 0) {
-                        size = -ETIME;
-                        goto out;
-                }
-@@ -385,61 +388,40 @@ static int tpm_tis_send_data(struct tpm_chip *chip, const u8 *buf, size_t len)
-        struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-        int rc, status, burstcnt;
-        size_t count = 0;
--       bool itpm = priv->flags & TPM_TIS_ITPM_WORKAROUND;
-
-        status = tpm_tis_status(chip);
-        if ((status & TPM_STS_COMMAND_READY) == 0) {
-                tpm_tis_ready(chip);
--               if (wait_for_tpm_stat
--                   (chip, TPM_STS_COMMAND_READY, chip->timeout_b,
--                    &priv->int_queue, false) < 0) {
-+               if (wait_for_tpm_stat_result(chip, TPM_STS_COMMAND_READY,
-+                                            TPM_STS_COMMAND_READY,
-+                                            chip->timeout_b,
-+                                            &priv->int_queue, false) < 0) {
-                        rc = -ETIME;
-                        goto out_err;
-                }
-        }
-
--       while (count < len - 1) {
-+       while (count < len) {
-                burstcnt = get_burstcount(chip);
-                if (burstcnt < 0) {
-                        dev_err(&chip->dev, "Unable to read burstcount\n");
-                        rc = burstcnt;
-                        goto out_err;
-                }
--               burstcnt = min_t(int, burstcnt, len - count - 1);
-+               burstcnt = min_t(int, burstcnt, len - count);
-                rc = tpm_tis_write_bytes(priv, TPM_DATA_FIFO(priv->locality),
-                                         burstcnt, buf + count);
-                if (rc < 0)
-                        goto out_err;
-
-                count += burstcnt;
--
--               if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
--                                       &priv->int_queue, false) < 0) {
--                       rc = -ETIME;
--                       goto out_err;
--               }
--               status = tpm_tis_status(chip);
--               if (!itpm && (status & TPM_STS_DATA_EXPECT) == 0) {
--                       rc = -EIO;
--                       goto out_err;
--               }
-        }
--
--       /* write last byte */
--       rc = tpm_tis_write8(priv, TPM_DATA_FIFO(priv->locality), buf[count]);
--       if (rc < 0)
--               goto out_err;
--
--       if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
--                               &priv->int_queue, false) < 0) {
-+       if (wait_for_tpm_stat_result(chip, TPM_STS_VALID | TPM_STS_DATA_EXPECT,
-+                                    TPM_STS_VALID, chip->timeout_c,
-+                                    &priv->int_queue, false) < 0) {
-                rc = -ETIME;
-                goto out_err;
-        }
--       status = tpm_tis_status(chip);
--       if (!itpm && (status & TPM_STS_DATA_EXPECT) != 0) {
--               rc = -EIO;
--               goto out_err;
--       }
-
-        return 0;
-
-@@ -496,9 +478,11 @@ static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
-                ordinal = be32_to_cpu(*((__be32 *) (buf + 6)));
-
-                dur = tpm_calc_ordinal_duration(chip, ordinal);
--               if (wait_for_tpm_stat
--                   (chip, TPM_STS_DATA_AVAIL | TPM_STS_VALID, dur,
--                    &priv->read_queue, false) < 0) {
-+               if (wait_for_tpm_stat_result(chip,
-+                                            TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+                                            TPM_STS_DATA_AVAIL | TPM_STS_VALID,
-+                                            dur,
-+                                            &priv->read_queue, false) < 0) {
-                        rc = -ETIME;
-                        goto out_err;
-                }
---
-2.7.4
-
-
-
-===========================================================================================
-The privileged confidential information contained in this email is intended for use only by the addressees as indicated by the original sender of this email. If you are not the addressee indicated in this email or are not responsible for delivery of the email to such a person, please kindly reply to the sender indicating this fact and delete all copies of it from your computer and network server immediately. Your cooperation is highly appreciated. It is advised that any unauthorized use of confidential information of Nuvoton is strictly prohibited; and any information in this email irrelevant to the official business of Nuvoton shall be deemed as neither given nor endorsed by Nuvoton.
+> > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> > commit 98d54f81e36b ("Linux 5.6-rc4").
+> 
+> `git format-patch --base ...` should do the job.
+> 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> 
+> Same comment as per UART patch. Who is the Alexey in relation to the work done?
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
