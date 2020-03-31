@@ -2,160 +2,214 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8ECC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2F2C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9429C20784
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FXZX8Ueh"
+	by mail.kernel.org (Postfix) with ESMTP id 0306A20786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:21:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585671684;
+	bh=YHNMT5j8Euq0n+mseKfPA6cKBa4Jew7v+YKTKPRHb/4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1cXIkdiQ7g4idkyhyIRLgZtUao5MNM567thRZP+JkKWR6uhYv8QymQIllk1oewgpX
+	 r081tbtQCXrMIe5wgu1kWiJEoC728qw0WUHb5aBLmrvnWA+CZ6d0QDJTTUu0kOlEz+
+	 8jj0P3lJIudrb9YCuLy9HXxWol0aNXhtDzt9ELPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731032AbgCaQMD (ORCPT
+        id S1730099AbgCaQVX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:12:03 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40487 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730677AbgCaQL7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:11:59 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c20so7988275pfi.7
-        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 09:11:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HGjePE0GSqbKz6aKbzU/yxb5OZwh8Nq086ecagG4P/g=;
-        b=FXZX8UehOEz9Kni4GELnb/5/v6Qj6xwLNsOHkCFRAvqmZJFoMimJsYJGlR8qWuT3JP
-         /jiEuMvyz9s8viO8XrGdI9iGKa+z0LkGhzTuGioisjEORu/Jtd6YUUxEyaeT+fkbg+AI
-         hklRTmvh3uljXeEwgl9dNw7H3nNlcCzTsAfVo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HGjePE0GSqbKz6aKbzU/yxb5OZwh8Nq086ecagG4P/g=;
-        b=OPgTCbQMJNugRd2drTK6CGersLrIEtZhqJUHMUnKsvtO082pVCPwy6iz+8D+dueVNd
-         eyvIHvMW2bNNk221QeclqHjq5+Y/oMQ1bc+QDZZc14i3N0bL7oDt5MVRpbAL58RwcDi9
-         +GoNVD1xNLw6pYmBcdeDEezSleGgIqPwgcDu4VoF31hIfALMtLehQAm522rsW1xqzvDE
-         SQEuTPqTpu2+0Cx5XhV/Qp5Sn6nUIsyE4BKt8ytjCOLVpt/CfpPC9EHRZwXNTSwiZE3p
-         wC776/Gt9adJhLE6YOJvuoUdJgXfOLZOydu/bIFJcxNuZSEHuk1+Oe+9RnMB7UQe5GOo
-         +54A==
-X-Gm-Message-State: ANhLgQ2/0hF4g+OpRibCvjdXJlxz0oTK0OAe8gMwJTlDgt3IXPboN9Y8
-        5m7rGCKoury+B0MtxkPaWOwG7Q==
-X-Google-Smtp-Source: ADFU+vtfSPh8HumDN4cjkDTaweYzwxq2FI8K3EiPnKxEhov9TRTsTgaPcIbaDj4F/2NhI4oOVc9T0Q==
-X-Received: by 2002:a62:7c15:: with SMTP id x21mr19812360pfc.132.1585671117785;
-        Tue, 31 Mar 2020 09:11:57 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id z7sm12830932pfz.24.2020.03.31.09.11.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 09:11:57 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:11:55 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Cc:     Felipe Balbi <balbi@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
- driver
-Message-ID: <20200331161155.GD199755@google.com>
-References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
- <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
- <20200329171756.GA199755@google.com>
- <87h7y62r28.fsf@kernel.org>
- <20200330155038.GC199755@google.com>
- <87zhbx1q6q.fsf@kernel.org>
- <ec7e921a-45fe-c178-cc04-2a04dd4a75f5@codeaurora.org>
+        Tue, 31 Mar 2020 12:21:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730011AbgCaQVX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:21:23 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E58DD21473;
+        Tue, 31 Mar 2020 16:21:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585671682;
+        bh=YHNMT5j8Euq0n+mseKfPA6cKBa4Jew7v+YKTKPRHb/4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gNLQBrPcq3oyN2Ogv+oTJyFfBNekyyJFE8OMY+ksIRuIUm4Epp9KM6Y1F/8vi0HEK
+         10SfgtgPdKeKpsdZiqQ2ixSx9HcCCrFep4hoh/CePpyQATN8UU/WSDZC0IVmvAP2LT
+         v14r3TcSkQKemqZJ9R1yludBCEJye3nWX1UaBApI=
+Received: by mail-qt1-f175.google.com with SMTP id z12so18836742qtq.5;
+        Tue, 31 Mar 2020 09:21:21 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0eFQXJPHRl5wRowCdEqbAlE5Qup/b60Tefav6tVtVAI01tH+j3
+        jEPDKj3BsjkAHgUdk6rL/n79Yy8651xuJTczsA==
+X-Google-Smtp-Source: ADFU+vtynyRBpHK1zGlgHy3HIyDVqOtqkMP9vtFANRwUVhPPv/eanwLrG9DiWcusvM2HxEgWHSF1cMX0wltfSbKtWIU=
+X-Received: by 2002:ac8:1611:: with SMTP id p17mr5993804qtj.300.1585671680921;
+ Tue, 31 Mar 2020 09:21:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ec7e921a-45fe-c178-cc04-2a04dd4a75f5@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200315191632.12536-1-rentao.bupt@gmail.com> <20200315191632.12536-7-rentao.bupt@gmail.com>
+ <20200330192347.GA6388@bogus> <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
+In-Reply-To: <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 31 Mar 2020 10:21:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
+Message-ID: <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
+ ID/string properties
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tao Ren <taoren@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:45:19AM +0530, Sandeep Maheswaram (Temp) wrote:
-> Hi,
-> 
-> On 3/31/2020 3:05 AM, Felipe Balbi wrote:
-> > Hi,
-> > 
-> > Matthias Kaehlcke <mka@chromium.org> writes:
-> > > > Matthias Kaehlcke <mka@chromium.org> writes:
-> > > > > > Add interconnect support in dwc3-qcom driver to vote for bus
-> > > > > > bandwidth.
-> > > > > > 
-> > > > > > This requires for two different paths - from USB master to
-> > > > > > DDR slave. The other is from APPS master to USB slave.
-> > > > > > 
-> > > > > > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> > > > > > Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
-> > > > > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > > > ---
-> > > > > >   drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
-> > > > > >   1 file changed, 126 insertions(+), 2 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > index 1dfd024..7e85fe6 100644
-> > > > > > --- a/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> > > > > > 
-> > > > > > ...
-> > > > > > 
-> > > > > > +/* To disable an interconnect, we just set its bandwidth to 0 */
-> > > > > > +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
-> > > > > > +{
-> > > > > > +	int ret;
-> > > > > > +
-> > > > > > +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
-> > > > > > +	if (ret)
-> > > > > > +		return ret;
-> > > > > > +
-> > > > > > +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
-> > > > > > +	if (ret)
-> > > > > > +		goto err_reenable_memory_path;
-> > > > > > +
-> > > > > > +	return 0;
-> > > > > > +
-> > > > > > +	/* Re-enable things in the event of an error */
-> > > > > > +err_reenable_memory_path:
-> > > > > > +	ret = dwc3_qcom_interconnect_enable(qcom);
-> > > > > This overwrites the error that led to the execution of this code path.
-> > > > > The function should return original error, not the result of the
-> > > > > _interconnect_enable() call.
-> > > > > 
-> > > > > I saw Felipe queued the patch for v5.8. I think the main options to fix this
-> > > > > are:
-> > > > > 
-> > > > > - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be rebased
-> > > > >    anyway once there is a v5.7-rc)
-> > > > > - send the fix as a separate patch
-> > > > > - Felipe amends the patch in his tree
-> > > > > 
-> > > > > Felipe, what would work best for you?
-> > > > Let's go for a v6, which commits should I drop? I can't find anything
-> > > > related to $subject in my queue:
-> > > > 
-> > > > $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dwc3-qcom.c
-> > > > 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-> > > I thought I saw a "queued for v5.8" message from you, but can't find that back.
-> > > I guess I saw the "queued" message for the "Add USB DWC3 support for SC7180"
-> > > series and thought it was for this one. Sorry for the confusion.
-> > no worries :-)
-> > 
-> Should I remove the ret from below line and send a new version?
-> +	ret = dwc3_qcom_interconnect_enable(qcom);
+On Mon, Mar 30, 2020 at 6:14 PM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> On Mon, 2020-03-30 at 13:23 -0600, Rob Herring wrote:
+> > On Sun, Mar 15, 2020 at 12:16:32PM -0700, rentao.bupt@gmail.com wrote:
+> > > From: Tao Ren <rentao.bupt@gmail.com>
+> > >
+> > > Update device tree binding document for aspeed vhub's device IDs and
+> > > string properties.
+> > >
+> > > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> > > ---
+> > >  No change in v2:
+> > >    - the patch is added into the series since v2.
+> > >
+> > >  .../bindings/usb/aspeed,usb-vhub.yaml         | 68 +++++++++++++++++++
+> > >  1 file changed, 68 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> > > index 06399ba0d9e4..5b2e8d867219 100644
+> > > --- a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> > > +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
+> > > @@ -52,6 +52,59 @@ properties:
+> > >          minimum: 1
+> > >          maximum: 21
+> > >
+> > > +  vhub-vendor-id:
+> > > +    description: vhub Vendor ID
+> > > +    allOf:
+> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > > +      - maximum: 65535
+> > > +
+> > > +  vhub-product-id:
+> > > +    description: vhub Product ID
+> > > +    allOf:
+> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > > +      - maximum: 65535
+> >
+> > There's already standard 'vendor-id' and 'device-id' properties. Use
+> > those.
+>
+> So yes and no... I don't fundamentally object but keep in mind that
+> traditionally, the properties are about matching with a physical
+> hardware.
+>
+> In this case however, we are describing a virtual piece of HW and so
+> those IDs are going to be picked up to be exposed as the USB
+> vendor/device of the vhub on the USB bus.
+>
+> Not necessarily an issue but it's more "configuration" than "matching"
+> and as such, it might make sense to expose that with a prefix, though I
+> would prefer something like usb-vendor-id or usb,vendor-id...
 
-Yes, please!
+For FDT uses, it's pretty much been configuration. It's mostly been
+for PCI that I've seen these properties used.
+
+> > > +
+> > > +  vhub-device-revision:
+> >
+> > Specific to USB, not vhub.
+>
+> Same as the above.
+>
+> > > +    description: vhub Device Revision in binary-coded decimal
+> > > +    allOf:
+> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > > +      - maximum: 65535
+> > > +
+> > > +  vhub-strings:
+> > > +    type: object
+> > > +
+> > > +    properties:
+> > > +      '#address-cells':
+> > > +        const: 1
+> > > +
+> > > +      '#size-cells':
+> > > +        const: 0
+> > > +
+> > > +    patternProperties:
+> > > +      '^string@[0-9a-f]+$':
+> > > +        type: object
+> > > +        description: string descriptors of the specific language
+> > > +
+> > > +        properties:
+> > > +          reg:
+> > > +            maxItems: 1
+> > > +            description: 16-bit Language Identifier defined by USB-IF
+> > > +
+> > > +          manufacturer:
+> > > +            description: vhub manufacturer
+> > > +            allOf:
+> > > +              - $ref: /schemas/types.yaml#/definitions/string
+> > > +
+> > > +          product:
+> > > +            description: vhub product name
+> > > +            allOf:
+> > > +              - $ref: /schemas/types.yaml#/definitions/string
+> > > +
+> > > +          serial-number:
+> > > +            description: vhub device serial number
+> > > +            allOf:
+> > > +              - $ref: /schemas/types.yaml#/definitions/string
+> >
+> > For all of this, it's USB specific, not vhub specific. I'm not sure this
+> > is the right approach. It might be better to just define properties
+> > which are just raw USB descriptors rather than inventing some DT format
+> > that then has to be converted into USB descriptors.
+>
+> Raw blob in the DT is rather annoying and leads to hard to parse stuff
+> for both humans and scripts. The main strenght of the DT is it's easy
+> to read and manipulate.
+
+True, and I'd certainly agree when we're talking about some vendor
+specific blob. but there's already code/tools to parse USB
+descriptors.
+
+> Also not the entire descriptor is configurable this way.
+>
+> That said, it could be that using  the DT for the above is overkill and
+> instead, we should consider a configfs like the rest of USB gadget.
+> Though it isn't obvious how to do that, the current gadget stuff
+> doesn't really "fit" what we need here.
+
+Surely the descriptor building code can be shared at a minimum.
+
+Regardless of whether gadget configfs fits, usually it is pretty clear
+whether something belongs in DT or userspace. That should be decided
+first.
+
+> Maybe we could expose the port as UDCs but not actually expose them on
+> the bus until the hub is "activated" via a special configfs entry...
+
+If control of the hub is done by userspace, I'd think configuration
+should be there too.
+
+Rob
