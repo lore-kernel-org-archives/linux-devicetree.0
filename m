@@ -2,84 +2,89 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A70DC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 01:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487BDC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 02:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD8220748
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 01:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF1120781
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 02:16:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GMdHIBZw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgCaBUN convert rfc822-to-8bit (ORCPT
+        id S1729591AbgCaCQa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 21:20:13 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37023 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729129AbgCaBUN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 21:20:13 -0400
-Received: by mail-ed1-f68.google.com with SMTP id de14so23183521edb.4;
-        Mon, 30 Mar 2020 18:20:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=i9hBBEmJ746Eja0cO/shZ186afqjaJSCi9MEEkLweXE=;
-        b=WRDlccWih2ov3mW94XfTb6duB01V75hG87rBFdEDkz3MwVyjlH21XKxTfXy2+g0LsA
-         phjPnlSrGOc5BT8Of0HRgFPrgnLJa/XUxmdHhIFREL5k51GDz03w2hkBFNm5qjfI/JJN
-         n5Z2PI0CsuEnho3ux2aouq7nXT1J/+QNG3fa/ihJ7hJ/yWtzsNDFZPgYAqIkdktjRm4f
-         UxJOJ188O5mk5zJfsgYLsgsz9ZRZNNrF2h0QUOwKmYaU4055a5prWlShO3CcWNN8w97M
-         bXGkCcRiTq32AVP1qNIgb1RFfpUkeOuibI0qjcoLO4iJKbxCfg6L1Y+m6+QFVD81yIEG
-         XxZg==
-X-Gm-Message-State: ANhLgQ2I9HkRegt+5Ucim3IOc4usMXecHL6ruD9R3hfYcTMm6JLTfK0k
-        Pxug63PdBM39raOznUX5sd7XiDmynuc=
-X-Google-Smtp-Source: ADFU+vsOIKKmxQOHGDz6lwTtL79wP9RpIJxaOrstbql6+u4z3Xsb2/tC76L/HK8YCm/yzldPlYwMIw==
-X-Received: by 2002:a05:6402:1d90:: with SMTP id dk16mr13923758edb.95.1585617611013;
-        Mon, 30 Mar 2020 18:20:11 -0700 (PDT)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
-        by smtp.gmail.com with ESMTPSA id a21sm2103871edr.22.2020.03.30.18.20.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Mar 2020 18:20:10 -0700 (PDT)
-Received: by mail-wm1-f46.google.com with SMTP id c187so781088wme.1;
-        Mon, 30 Mar 2020 18:20:10 -0700 (PDT)
-X-Received: by 2002:a1c:988d:: with SMTP id a135mr899820wme.16.1585617610031;
- Mon, 30 Mar 2020 18:20:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200325205924.30736-1-ynezz@true.cz> <20200330175347.r4uam7cybvuxlgog@gilmour.lan>
-In-Reply-To: <20200330175347.r4uam7cybvuxlgog@gilmour.lan>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 31 Mar 2020 09:19:57 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66+oT=qfu7oHTs3d_e2hd_8Fc_0ULhHRfMLmrdcfOoe=A@mail.gmail.com>
-Message-ID: <CAGb2v66+oT=qfu7oHTs3d_e2hd_8Fc_0ULhHRfMLmrdcfOoe=A@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: olinuxino: add user red LED
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Mon, 30 Mar 2020 22:16:30 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:16902 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729239AbgCaCQa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 22:16:30 -0400
+X-UUID: 02dd4ef304ed4ed18834aaebcf31c48d-20200331
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Pi2gmU7gUHGbZuSoj+0wP9cb73MBtHR0fEjpiake8os=;
+        b=GMdHIBZw5IMWn6sQD7pbCNChTp5zKhE7hbHaMyfK8fyV/GrD3w+7aIfGZRqQN7ouclwJCGnCqdKXDEH8ZG04TdBss9yFTzgCYEyvxNMqzDgCcpHblbuJQ2U+zAi5X5mJgEttueYPwKWXsI4sHzEsAnqt1J+MlVzrOOoAbwF3lGk=;
+X-UUID: 02dd4ef304ed4ed18834aaebcf31c48d-20200331
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <dongchun.zhu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 589410140; Tue, 31 Mar 2020 10:16:14 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 31 Mar
+ 2020 10:16:12 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 31 Mar 2020 10:16:10 +0800
+Message-ID: <1585620980.5781.80.camel@mhfsdcap03>
+Subject: Re: [V4, 2/2] media: i2c: Add DW9768 VCM driver
+From:   Dongchun Zhu <dongchun.zhu@mediatek.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     <mchehab@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <sakari.ailus@linux.intel.com>, <drinkcat@chromium.org>,
+        <tfiga@chromium.org>, <matthias.bgg@gmail.com>,
+        <bingbu.cao@intel.com>, <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <sj.huang@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <louis.kuo@mediatek.com>, <shengnan.wang@mediatek.com>
+Date:   Tue, 31 Mar 2020 10:16:20 +0800
+In-Reply-To: <20200330135751.GQ1922688@smile.fi.intel.com>
+References: <20200330123634.363-1-dongchun.zhu@mediatek.com>
+         <20200330123634.363-3-dongchun.zhu@mediatek.com>
+         <20200330135751.GQ1922688@smile.fi.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: B146E5EF035629031CDCFBF9CF89F0AFC588A22BD4E14778C43D5F924A3AA11C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 1:53 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Wed, Mar 25, 2020 at 09:59:24PM +0100, Petr Štetiar wrote:
-> > There is a red LED marked as `GPIO_LED1` on the silkscreen and connected
-> > to PE17 by default. So lets add this missing bit in the current hardware
-> > description.
-> >
-> > Signed-off-by: Petr Štetiar <ynezz@true.cz>
->
-> QUeued for 5.8, thanks!
+SGkgQW5keSwNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KDQpPbiBNb24sIDIwMjAtMDMtMzAg
+YXQgMTY6NTcgKzAzMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4gT24gTW9uLCBNYXIgMzAs
+IDIwMjAgYXQgMDg6MzY6MzRQTSArMDgwMCwgRG9uZ2NodW4gWmh1IHdyb3RlOg0KPiA+IFRoaXMg
+cGF0Y2ggYWRkcyBhIFY0TDIgc3ViLWRldmljZSBkcml2ZXIgZm9yIERXOTc2OCB2b2ljZSBjb2ls
+IG1vdGVyLA0KPiA+IHByb3ZpZGluZyBjb250cm9sIHRvIHNldCB0aGUgZGVzaXJlZCBmb2N1cyB2
+aWEgSTJDIHNlcmlhbCBpbnRlcmZhY2UuDQo+IA0KPiAuLi4NCj4gDQo+ID4gK3N0YXRpYyBjb25z
+dCBzdHJ1Y3QgZGV2X3BtX29wcyBkdzk3NjhfcG1fb3BzID0gew0KPiA+ICsJU0VUX1NZU1RFTV9T
+TEVFUF9QTV9PUFMocG1fcnVudGltZV9mb3JjZV9zdXNwZW5kLA0KPiA+ICsJCQkJcG1fcnVudGlt
+ZV9mb3JjZV9yZXN1bWUpDQo+ID4gKwlTRVRfUlVOVElNRV9QTV9PUFMoZHc5NzY4X3J1bnRpbWVf
+c3VzcGVuZCwgZHc5NzY4X3J1bnRpbWVfcmVzdW1lLCBOVUxMKQ0KPiA+ICt9Ow0KPiA+ICsNCj4g
+PiArc3RhdGljIHN0cnVjdCBpMmNfZHJpdmVyIGR3OTc2OF9pMmNfZHJpdmVyID0gew0KPiA+ICsJ
+LmRyaXZlciA9IHsNCj4gPiArCQkubmFtZSA9IERXOTc2OF9OQU1FLA0KPiANCj4gPiArCQkucG0g
+PSBJU19FTkFCTEVEKENPTkZJR19QTSkgPyAmZHc5NzY4X3BtX29wcyA6IE5VTEwsDQo+IA0KPiBX
+aGF0IGlzIHRoaXMgY29uZGl0aW9uYWwgZm9yPw0KPiANCg0KRm9yIHRoZSBkdzk3NjhfcG1fb3Bz
+LCBoZXJlIG15IGlkZWEgaXMgdG8gdXNlIGFuIElTX0VOQUJMRUQoKSBjaGVjayB0bw0KYXZvaWQg
+ZGVmaW5pbmcgdGhlIHN0cnVjdHVyZSB3aGVuIENPTkZJR19QTSBpcyBub3Qgc2V0Lg0KDQo+ID4g
+KwkJLm9mX21hdGNoX3RhYmxlID0gZHc5NzY4X29mX3RhYmxlLA0KPiA+ICsJfSwNCj4gPiArCS5w
+cm9iZV9uZXcgID0gZHc5NzY4X3Byb2JlLA0KPiA+ICsJLnJlbW92ZSA9IGR3OTc2OF9yZW1vdmUs
+DQo+ID4gK307DQo+IA0KPiA+ICsNCj4gDQo+IEV4dHJhIGJsYW5rIGxpbmUuDQo+IA0KDQpXZWly
+ZCwgbW9zdCBWNEwyIGRyaXZlcihJMkMgY2xpZW50KSBzZWVtcyB0byBrZWVwIHRoaXMgYmxhbmsg
+bGluZS4NClNha2FyaSwgaXMgaXQgc3RpbGwgdGhlIGNhc2Ugb3IgYW0gSSBtaXN0YWtlbj8NCg0K
+PiA+ICttb2R1bGVfaTJjX2RyaXZlcihkdzk3NjhfaTJjX2RyaXZlcik7DQo+IA0KDQo=
 
-The gpio-led binding seems to prefer "led-0" up to "led-f" (^led-[0-9a-f])
-as the child node name. This was recently brought to my attention. Do we
-want to follow suit here?
-
-ChenYu
