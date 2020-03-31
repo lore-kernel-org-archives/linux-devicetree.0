@@ -7,165 +7,96 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF487C2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5938AC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB98F21473
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9C420CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585677383;
-	bh=yVjEro7Vq5Q1XoCkLOTo6NB94st8CQF18vxoDX2BR/M=;
+	s=default; t=1585677542;
+	bh=1rPhOHlMHpopYI/diEgrF0e8XTjh7OaDPcnw8/TvA80=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=THFojhwndwQoN27CqaUe6lW2mznx3T2ih6ri6KD/UPpS7xyr2Bcosf6nBnzB5qnj3
-	 uNmw8d+dTdVrV9clBB9aF8PejTEZWz8aQYBd83ScLa+iVgoKO4w2x3CeXHTHTBfCwg
-	 p0MgpdE2h/MG9EjY+KA2JBVxCx7Ag3xbtsA/Z0+U=
+	b=VnljrgIHN6ZLtUhcTiVvqxS1bm8sU8P/ZZOPplmTstS2mSwPOBUtWb/uxVrzX5ymj
+	 QfHALLHFBBGijjYJLozJ1+jp55Hx6yQIPZkngcLoceo2iAaci2d7nGRTyXzOTZAzZX
+	 0iKiwwg8SvvFsJqRMw9DqlclOr1EhZEAqKIRTxlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgCaR4X (ORCPT
+        id S1727185AbgCaR66 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:56:23 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41618 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgCaR4X (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:56:23 -0400
-Received: by mail-il1-f194.google.com with SMTP id t6so16724137ilj.8;
-        Tue, 31 Mar 2020 10:56:22 -0700 (PDT)
+        Tue, 31 Mar 2020 13:58:58 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44006 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbgCaR66 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:58:58 -0400
+Received: by mail-io1-f67.google.com with SMTP id x9so16241652iom.10;
+        Tue, 31 Mar 2020 10:58:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0Yp77BX0CNsI0E9W0U3Z3mSHpIexs+AJy6eqRXEJQU0=;
-        b=B1GDjomFsIguNX7u5ig6d7O9ctxoGqf5jc9PgWFWXiCfBP26efSsq7ShChVMjCE/vi
-         6qizsSu1/ENs4cj3b+EAOnd6rOHyNFhrs4OMOOWnX/7G9izb9jDizCUdGeDPG2tsOfm6
-         19l7QT5YifrmVSsVSa0XlhnoLgXEmOsxJ6ZCZgkF2WeYTxgMnagR+Jsy3RZO7ENqUxFw
-         QSl2jCQlA6MVAF9CepySPnGRAJ0bM+8/MrT/twdKVj0814p8qujNTnGfJyCDht8ix2ZL
-         SHIDdVyqaLneoI6BZWRYT18RwKZ8kbrEwHDCvncs2kK+HOmECUfKuorRYb5HOuQeaRe1
-         TFSQ==
-X-Gm-Message-State: ANhLgQ2ja4eDqaRtYkXvBPGRVkd7OOYH4Il5aIpBo10OjWYPmx/qSO3Z
-        Pd8jgMUfMGR+h6QpTeR9TA==
-X-Google-Smtp-Source: ADFU+vtpX68rVrNJUeA4Xd7HfNw0GlkZdMwR56tGbxSge2H9UtVNk87hzwLKVeKvE6Buoj/X3b/XtA==
-X-Received: by 2002:a92:5e14:: with SMTP id s20mr18027047ilb.101.1585677381521;
-        Tue, 31 Mar 2020 10:56:21 -0700 (PDT)
+        bh=td5o5/tiHIRBYofYMDETAP0Ltd0LRLXxBohco08C/no=;
+        b=WhQ5BXIoFNInaHzPI7eu0BM1DVTn2dclDosGzbeE5vR+Hpjzjw8uudivAYkAJi6oT8
+         o3PjdHm9DKPtVrV99xPNZ7h7pWz0TuaXOSYxlrqP2EL6C88ELRoAZ5wTWG+TQczWSRjA
+         34524e58llqubX888TK0Rh1HfkPZntJe1vBkP5bh9HvQRrzDAaZv9itHl2nfb4YUhLBe
+         qdt89Xe4smqHeFkl36YVanxA/mC/PjCqXr2UMmBuAssZYwtSuE3zNoRwTBKYe7hntR+p
+         ArWIfWYyqJgohf0u6L0Ca2gBimDmbK33jZsvOsUFOLHrV8DGmYcZ9KUEURVVxGl/7K0g
+         v2dw==
+X-Gm-Message-State: ANhLgQ3Wl16e4VW6iTq3ycVh2PwDuslBnr1Py//5M8vLZWmUto6zKOT3
+        VSuR/B/Ka2o0f3YnPRC6enLxzj4=
+X-Google-Smtp-Source: ADFU+vusw14RdmuJ7zrBadBBFp8IzG2PeGojTVZrZsBXAA0o/Wml8YZzKjsZTDX9R92K6374xp15Yw==
+X-Received: by 2002:a02:9988:: with SMTP id a8mr16525847jal.3.1585677537116;
+        Tue, 31 Mar 2020 10:58:57 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id x4sm4742966ilj.6.2020.03.31.10.56.19
+        by smtp.gmail.com with ESMTPSA id b4sm6160512ilg.58.2020.03.31.10.58.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 10:56:20 -0700 (PDT)
-Received: (nullmailer pid 27986 invoked by uid 1000);
-        Tue, 31 Mar 2020 17:56:19 -0000
-Date:   Tue, 31 Mar 2020 11:56:19 -0600
+        Tue, 31 Mar 2020 10:58:56 -0700 (PDT)
+Received: (nullmailer pid 31762 invoked by uid 1000);
+        Tue, 31 Mar 2020 17:58:55 -0000
+Date:   Tue, 31 Mar 2020 11:58:55 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kiran Gunda <kgunda@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        lee.jones@linaro.org, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH V4 3/4] backlight: qcom-wled: Add WLED5 bindings
-Message-ID: <20200331175619.GA25466@bogus>
-References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
- <1584985618-25689-4-git-send-email-kgunda@codeaurora.org>
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: iio: Add bindings for sx9310 sensor
+Message-ID: <20200331175855.GA30009@bogus>
+References: <20200323124310.1.I6ed779cd21abf3e70f21c1562bbda81f590976ab@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584985618-25689-4-git-send-email-kgunda@codeaurora.org>
+In-Reply-To: <20200323124310.1.I6ed779cd21abf3e70f21c1562bbda81f590976ab@changeid>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 11:16:57PM +0530, Kiran Gunda wrote:
-> Add WLED5 specific bindings.
+On Mon, Mar 23, 2020 at 12:45:14PM -0600, Daniel Campello wrote:
+> Adds device tree bandings for sx9310 sensor.
 > 
-
-More of the same comments here...
-
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
-> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
 > ---
->  .../bindings/leds/backlight/qcom-wled.yaml         | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> index 8a388bf..159115f 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> @@ -20,6 +20,7 @@ properties:
->         - qcom,pm8941-wled
->         - qcom,pmi8998-wled
->         - qcom,pm660l-wled
-> +       - qcom,pm8150l-wled
->  
->    reg:
->      maxItems: 1
-> @@ -28,10 +29,23 @@ properties:
->      maxItems: 1
->      description:
->        brightness value on boot, value from 0-4095.
-> +      For pm8150l this value vary from 0-4095 or 0-32767
-> +      depending on the brightness control mode. If CABC is
-> +      enabled 0-4095 range is used.
-
-Constraints.
-
->      allOf:
->        - $ref: /schemas/types.yaml#/definitions/uint32
->          default: 2048
->  
-> +  max-brightness:
-> +    maxItems: 1
-> +    description:
-> +      Maximum brightness level. Allowed values are,
-> +      for pmi8998 it is  0-4095.
-> +      For pm8150l, this can be either 4095 or 32767.
-
-Constraints!
-
-> +      If CABC is enabled, this is capped to 4095.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-
-Standard property. Assume it has a type definition.'
-
-> +
->    label:
->      maxItems: 1
->      description:
-> @@ -124,6 +138,31 @@ properties:
->        value for PM8941 from 1 to 3. Default 2
->        For PMI8998 from 1 to 4.
->  
-> +  qcom,modulator-sel:
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Selects the modulator used for brightness modulation.
-> +      Allowed values are,
-> +               0 - Modulator A
-> +               1 - Modulator B
-> +      If not specified, then modulator A will be used by default.
-> +      This property is applicable only to WLED5 peripheral.
-> +
-> +  qcom,cabc-sel:
-> +    maxItems: 1
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Selects the CABC pin signal used for brightness modulation.
-> +      Allowed values are,
-> +              0 - CABC disabled
-> +              1 - CABC 1
-> +              2 - CABC 2
-> +              3 - External signal (e.g. LPG) is used for dimming
-> +      This property is applicable only to WLED5 peripheral.
-> +
->    interrupts:
->      maxItems: 2
->      description:
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->  a Linux Foundation Collaborative Project
+>  .../iio/proximity/semtech,sx9310.yaml         | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> new file mode 100644
+> index 00000000000000..da3424abe37e9d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Dual license new bindings:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
