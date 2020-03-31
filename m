@@ -2,165 +2,149 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BFAC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 20:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F147BC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 20:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F5620757
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 20:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585685649;
-	bh=3hGNBX/MtzkMry8ExK/dL2ufyiCU1fzgSSe2pXdslmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WC6tDaMUEKZ5e+KKKLqqtu4CU7h/VjvGeQXn0IUPugnrAznHqYi8bh84YmRLvGBIZ
-	 4aIf2uYSIcXg6Pbvsk6nyT8WODNUmDct75MuLHREqeEschbtVXv2llUKoQfpNlqR5t
-	 4+vKZHvKW6fKoqCsKYEXvvB6aBXJTYPG8iwbsbiU=
+	by mail.kernel.org (Postfix) with ESMTP id C7AC220772
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 20:30:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oCEM7chc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgCaUOJ (ORCPT
+        id S1728189AbgCaUaE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 16:14:09 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34462 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgCaUOI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 16:14:08 -0400
-Received: by mail-il1-f195.google.com with SMTP id t11so20782533ils.1;
-        Tue, 31 Mar 2020 13:14:08 -0700 (PDT)
+        Tue, 31 Mar 2020 16:30:04 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:32802 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727852AbgCaUaE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 16:30:04 -0400
+Received: by mail-lj1-f195.google.com with SMTP id f20so23469483ljm.0;
+        Tue, 31 Mar 2020 13:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LMMU+s7iMJHk7FqiEPYs8vBGLtrPTwaKOmVYBPS58SI=;
+        b=oCEM7chcd+lHmzehO9870OYGvbHYP+SrlPe8vT9W5h1K/gAO4EB62vGpsYuQvmqsgp
+         y1zHuyXDQc5RL+hpq2GIJAOFI1psotTuSMjwuEe9eQGaMWOVmr1VgqSEDwShH9zLkHns
+         eKe+xUMFNPEgw2bewiNRQSo7aJqlpO9Z8qTwAZasK8fHgvTPHEmlqsudvpDo01ugR5w5
+         ZpN0lDtxTuVSOPz+WunHvxhd2f3DTi47KJSuTSYkHG8ya68xsU75QojO5rfvZgh+BBik
+         AFKdOX9kF6pjG0Xot8xdOr0oBsQaNLKV/s9cLJ70qwbS80L3S1eFoA8QgEa2UsCEoe6y
+         ez3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mi0F7xescdi5BUfbFSsgV16XAWuv/drpgItNLfvWHRA=;
-        b=bIiV8y6nD7Kk6mmI2r8GzsegbsSlevbGDTZPxQfB9j2vVVDzlOiCmTNrhnDB903JiM
-         +sRS/FDmFQIO4voniEVGCmwwkpgHM1hDf9S4ws5l7KVQww/JeibnzKqret+KNVo4yzbi
-         PocnJGWzf6cYt9WIhljVo3JnyiDtUAtTX8TP/oDa/cdoIw9k78MpI/s4uvALj6sVSYMW
-         6CQuuIFESL5S2XECfgzSjZ7EauqVP0S46su50ZEFxE4/8RgOJwutHlHbGIZQyeyfgSV+
-         h/1LMBXBtucchbxkYjmMJHFwrQrA7RtJMkuOV5Q1AvxETOxcZPr+Y9R4QRDbqjO0mLI1
-         o5jA==
-X-Gm-Message-State: ANhLgQ3bdqRzpjU527hYqkiL1SWoyJN7TvpQZnKmN24TVBOILlsGbf+a
-        wYKCCNK7Ab8To3XC2YfSNQ==
-X-Google-Smtp-Source: ADFU+vsTyKde0ZJ+1HPBmeWqBwGUvGZ/RjDMO+08xxGhivNmr8zoJ1fODw6Mvfil941467xCRAilOg==
-X-Received: by 2002:a92:8548:: with SMTP id f69mr18179772ilh.20.1585685647795;
-        Tue, 31 Mar 2020 13:14:07 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id m129sm372341ioa.2.2020.03.31.13.14.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 13:14:06 -0700 (PDT)
-Received: (nullmailer pid 24173 invoked by uid 1000);
-        Tue, 31 Mar 2020 20:14:02 -0000
-Date:   Tue, 31 Mar 2020 14:14:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: rtc: Convert snps,dw-apb-timer to DT
- schema
-Message-ID: <20200331201402.GA13587@bogus>
-References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
- <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200324174325.14213-2-Sergey.Semin@baikalelectronics.ru>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LMMU+s7iMJHk7FqiEPYs8vBGLtrPTwaKOmVYBPS58SI=;
+        b=hn/QfH1FVeAA6toSJ/U+iJ9k7WV77FWw56hXt5wvnQNEfp8j2V0Uh++jLJuaYSnwU2
+         QxvleV6TlZeklYNfoKERGCAKUcjS6ETYHm75dcOdEai01iXkUkL86kzfZPM8fZFI2tMb
+         nP6McjEmQ0ZX+YRtFFP86U/c82qTzlyUQHafvVEODgF9YzzE8reUGbN3Zo6VD7Xz/1l4
+         IcYLZSr1MlzxlzkQDXgWk2begjZH/nMc4JE1aKn0fCNOgQBpDwVtyknBIk29mrRSkIs5
+         YU4w+kEIzDbfTHzgYtgvE2TbzjZjVpJ+Xlmbt3dLEWxkAPzd/AvFTygyo84FWI9fTnnl
+         JC4A==
+X-Gm-Message-State: AGi0Pua0uaHFpv0UIhOAlEW0Msi0mMpLRngh1UhJHFeWYLDknJtCB6b1
+        p+vp79Pad6gzKee7SKjUOdCWBb5As5NtvnfkKsM=
+X-Google-Smtp-Source: APiQypJndi6nOWadfiPbOYHTode1edEee9bR6lQDxX095dN6jrdJVnUQM8J+A0BuXGOJI40dvo2K8Uy1Df/LML7D+lc=
+X-Received: by 2002:a05:651c:1aa:: with SMTP id c10mr11590837ljn.53.1585686601679;
+ Tue, 31 Mar 2020 13:30:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324174325.14213-2-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191120220559.18914-1-c-robey@ti.com> <41c73bc1-99ae-6797-5bb7-7acc0f6518c0@ti.com>
+ <20191212170452.GV35479@atomide.com> <CAEf4M_C05Hwc_BEL6MaFNNEW0Cf2kc-LvMi9qdKxL7hVAFFDGQ@mail.gmail.com>
+ <20200331184647.GF37466@atomide.com>
+In-Reply-To: <20200331184647.GF37466@atomide.com>
+From:   Drew Fustini <pdp7pdp7@gmail.com>
+Date:   Tue, 31 Mar 2020 22:30:30 +0200
+Message-ID: <CAEf4M_BxY0JgWXRRp48gFgWWcN2uJd7q4kXOCmOBziGpWYCvoA@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: am5729: beaglebone-ai: adding device tree
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Caleb Robey <c-robey@ti.com>, linux-omap@vger.kernel.org,
+        Jason Kridner <jkridner@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Drew Fustini <drew@beagleboard.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 08:43:20PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with DT schema. This commit replaces Synopsys DW Timer
-> legacy bare text binding with YAML file. As before the binding file
-> states that the corresponding dts node is supposed to be compatible
-> with generic DW APB Timer indicated by the "snps,dw-apb-timer"
-> compatible string and to provide a mandatory registers memory range,
-> one timer interrupt, either reference clock source or a fixed clock
-> rate value. It may also have an optional APB bus reference clock
-> phandle specified.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-rtc@vger.kernel.org
-> 
-> ---
-> 
-> I have doubts that this binding file belongs to the bindings/rtc
-> directory seeing it's a pure timer with no rtc facilities like
-> days/months/years counting and alarms. What about moving it to the
-> "Documentation/devicetree/bindings/timer/" directory?
-
-+1
-
-> I also don't know who is the corresponding driver maintainer, so I added
-> Daniel Lezcano to the maintainers schema. Any idea what email should be
-> specified there instead?
-> 
-> Please also note, that "oneOf: - required: ..." pattern isn't working
-> here. So if you omit any of the clock-related property the
-> dt_binding_check procedure won't fail. Seeing the anyOf schema is working
-> I suppose this happens due to the dtschema/lib.py script, which replaces
-> the global oneOf with a fixup for the interrupts/interrupts-extended
-> properties:
-> 
-> > def fixup_interrupts(schema):
-> >    # Supporting 'interrupts' implies 'interrupts-extended' is also supported.
-> >    if not 'interrupts' in schema['properties'].keys():
-> >        return
+On Tue, Mar 31, 2020 at 8:46 PM Tony Lindgren <tony@atomide.com> wrote:
+>
+> * Drew Fustini <pdp7pdp7@gmail.com> [200331 18:39]:
+> > On Thu, Dec 12, 2019 at 6:06 PM Tony Lindgren <tony@atomide.com> wrote:
+> > > > On 21/11/2019 00:05, Caleb Robey wrote:
+> > > > > From: Jason Kridner <jdk@ti.com>
+> > > > >
+> > > > > BeagleBoard.org BeagleBone AI is an open source hardware single
+> > > > > board computer based on the Texas Instruments AM5729 SoC featuring
+> > > > > dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
+> > > > > signal processor (DSP), quad-core embedded vision engine (EVE),
+> > > > > Arm Cortex-M4 processors, dual programmable realtime unit
+> > > > > industrial control subsystems and more. The board features 1GB
+> > > > > DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
+> > > > > 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
+> > > > > headers.
+> > > > >
+> > > > > For more information, refer to:
+> > > > > https://beaglebone.ai
+> > > > >
+> > > > > This patch introduces the BeagleBone AI device tree.
+> > > > >
+> > > > > Note that the device use the "ti,tpd12s016" component which is
+> > > > > software compatible with "ti,tpd12s015". Thus we only use the
+> > > > > latter driver.
+> > > >
+> > > > Ah. thanks. I see my comments resolved here.
+> > > > no more comments to net part from my side.
+> > >
+> > > Just FYI, Jason had one pending comment on the earlier version
+> > > about the compatible property to use.
+> > >
+> > > So I'm assuming there will be a new version posted, tagging
+> > > this one as read.
 > >
-> >    # Any node with 'interrupts' can have 'interrupt-parent'
-> >    schema['properties']['interrupt-parent'] = True
+> > It came to my attention today when talking with Jason Kridner and
+> > Robert Nelson that we did not get the BeagleBone AI device tree
+> > upstream yet.
 > >
-> >    schema['properties']['interrupts-extended'] = { "$ref": "#/properties/interrupts" };
+> > I am having trouble identifying what the pending comment was from the
+> > original patch series.
 > >
-> >    if not ('required' in schema.keys() and 'interrupts' in schema['required']):
-> >        return
+> > Was it related to this compatible string?
 > >
-> !>    # Currently no better way to express either 'interrupts' or 'interrupts-extended'
-> !>    # is required. If this fails validation, the error reporting is the whole
-> !>    # schema file fails validation
-> !>    schema['oneOf'] = [ {'required': ['interrupts']}, {'required': ['interrupts-extended']} ]
+> > > +       compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
+>
+> Yes I think Jason had some comment on the compatible string
+> to use.
 
-I'll fix this. I'll have to check for 'oneOf' and if it exists then put 
-it under an 'allOf'.
+Ah, I see it now [1]:
 
-> ---
->  .../devicetree/bindings/rtc/dw-apb.txt        | 32 -------
->  .../bindings/rtc/snps,dw-apb-timer.yaml       | 88 +++++++++++++++++++
->  2 files changed, 88 insertions(+), 32 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rtc/dw-apb.txt
->  create mode 100644 Documentation/devicetree/bindings/rtc/snps,dw-apb-timer.yaml
+> Probably need to change "beagleboard.org," to "beagle," as of today.
+> With the new yaml stuff for defining device tree entries, having the
+> period (.) in the vendor identifier can be a bit confusing. I altered
+> my submission to avoid this.
 
-Otherwise, looks good.
+so I think this should work:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+compatible = "beagleboard-org,am5729-beagleboneai", "ti,am5728",
+
+We'll get it resubmitted.
+
+Thanks,
+Drew
+
+[1] https://lore.kernel.org/linux-devicetree/CA+T6QPm-DNG_QoAMWw_zUDUkZCfhbBTgygnoPAykf3mgK7opaA@mail.gmail.com/
