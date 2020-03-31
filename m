@@ -2,132 +2,157 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D42C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE67BC2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E74720784
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B401920848
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dia3hfRr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ejCKGv9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbgCaQ4Z (ORCPT
+        id S1730720AbgCaRKx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:56:25 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38525 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730556AbgCaQ4Y (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:56:24 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c21so9937153pfo.5
-        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 09:56:22 -0700 (PDT)
+        Tue, 31 Mar 2020 13:10:53 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39599 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730149AbgCaRKx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:10:53 -0400
+Received: by mail-ot1-f68.google.com with SMTP id x11so22826314otp.6
+        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 10:10:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AoYRd9Pq6YoKCArfaky/GwN/okmu7M4Melv1gMLsus0=;
-        b=Dia3hfRrpxaRBxvHdYd3kMBU9QW0vqQmdSuDx/tIahRVeQTZWE1qSImujnys9OAPzf
-         ihL/Ae2uVTeIm7IRV4nnp3pPWpBiL7cxYKs2CPUGddpc3yogJ6Rik6vHHDjyPYtjRX5q
-         Py3e9yi5uOJCFjqDCc48fMSRehdhvj0dXwqdw=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qHYDmZrgq5jmEkRfovldh3Vm9VQlL40sufsyBZ8bEao=;
+        b=ejCKGv9ewqzPDwu36dgEf76BAdc6P8/FNIHvqlRJ2NbFTsqobiYJueIPM1QZi0OCCQ
+         mbU1B6WSb811ZFiG9JOqTsYC1SHqnNkP67uF97SvOhv96tkShJMN5PdECEv/UVHWpBbe
+         dmopibqZGT8YOlWB1Mxjj8B8vSeGI+adpgikk5ZFFX19jP5gQEyzgvSeCkR+ruYYKmOR
+         1nHq5goBe3vvatRr2t6ArsKapoHRzQb/Dp8xUl9h++ZuJuyY81r7fl+m1ecyqBeAUMb9
+         U7tiQZCEeGGDdpZ4SYSLIDyZTmrECoB9X/A+YpKZrNIyVhGzFEbffqrR2St0hFC6aHil
+         3G0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AoYRd9Pq6YoKCArfaky/GwN/okmu7M4Melv1gMLsus0=;
-        b=kg0oaKw4hzNmK8FVTpnrvLd5hROgjrX7t73Xs6lmxwpfhu5bjcN4kURBGHOKkIjdiN
-         5fPK1UeEiRs6U4vVtU9KFZxooWXtrLyC6GaV/2tcV1pmPp7zjHMrpHEhZszdmKREdxx7
-         chcQo0u5293a9kVQ4U0IwvzVojhMOJ5LIRlja9YFP+kWPcQUMxT1sKzPIb3FlT9bWmCI
-         6nn9T0+/ro1cHVFGNOXRglWo+QFQkwgBz3o+uAsbOWcmE/zOq82lOzbRXqJX8xqaAD49
-         OPs2zk4084uH5nru/3pvh2TUM0LgxJAujEUroLDMcn0Jp7oDggWSRfASBCCH7bdGfaIF
-         Z4TQ==
-X-Gm-Message-State: ANhLgQ2q6JNcpQRs668HI/N9Ti6aAlm9ywGpZARKoc3r5gwBntGzRXvP
-        pzvnAY41hwWBy17YCWda3mtjRxWP6AU=
-X-Google-Smtp-Source: ADFU+vu2yJB9PydRxx64pKqd+7UiF/mWFNoEoubw30zUx4+AkYrfUieVzTWz0wrsdhsJ/MmJMU3XnQ==
-X-Received: by 2002:a63:484:: with SMTP id 126mr19669475pge.161.1585673781872;
-        Tue, 31 Mar 2020 09:56:21 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id p22sm12147731pgn.73.2020.03.31.09.56.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 09:56:21 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:56:20 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: sc7180: Swap order of gpucc and sdhc_2
-Message-ID: <20200331165620.GF199755@google.com>
-References: <20200331092832.1.Ic361058ca22d7439164ffea11421740462e14272@changeid>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qHYDmZrgq5jmEkRfovldh3Vm9VQlL40sufsyBZ8bEao=;
+        b=QI94CyGJn1MnWBCgY6j3PAPfp+CXWE6q8LQJL56RI4qVbXZlOuQ12ViVtmqb2co5cr
+         OucN6KgwAHnWPmaiuMv1ZFqndGNqaLr3leDb936/x5lCcUjE9lFdq13wrTyuB+mKbp8G
+         OAJ73XhrBiTOEScgF4rklGyQ6R9OhC2Gu8RW00NVBu52sizj3ZuVjSl1sTUsAYzPyq8c
+         kK5GWczEFJmtA4007zUlcbMGEH1Gwkzv4ZRB4iRvtm/RL5GjPdxjVFazfii+nYZvo1cM
+         GLj5TPUysKdYW7Aa/9/A2nfn2SP1cmYZOgsDpc95GoVrWwDTzsnCnziPg86uGAR0iu+d
+         d1lw==
+X-Gm-Message-State: ANhLgQ3MYYUMN7hN2hAuAAPo//WuQM1dKPJu2gilrw3RbzSMi3MZrOgR
+        G4paICNhns4FMZkLbXlFydAvutjPU398eDe8MZYxsw==
+X-Google-Smtp-Source: ADFU+vvG/KSouwa/5JXn2S/dDVOQi5q+3SzbGyUUkrqFLoZCxv6KzvHR1l+yj5t93H1llPNa0r7/9yF4i0utZTLMJIE=
+X-Received: by 2002:a05:6830:1ac1:: with SMTP id r1mr9669891otc.139.1585674651276;
+ Tue, 31 Mar 2020 10:10:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200331092832.1.Ic361058ca22d7439164ffea11421740462e14272@changeid>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200222014038.180923-1-saravanak@google.com> <20200222014038.180923-6-saravanak@google.com>
+ <CAMuHMdW_pvt1b6Y8e5j0Q5yDFMsg5z61upOo+gFaq7zf1F0V6w@mail.gmail.com>
+In-Reply-To: <CAMuHMdW_pvt1b6Y8e5j0Q5yDFMsg5z61upOo+gFaq7zf1F0V6w@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 31 Mar 2020 10:10:15 -0700
+Message-ID: <CAGETcx_pg_wFLP9zdhxzKUnVp3Hx_t3xz88bas4UJavgehupBw@mail.gmail.com>
+Subject: Re: [PATCH v1 5/5] of: property: Delete of_devlink kernel commandline option
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 09:29:00AM -0700, Douglas Anderson wrote:
-> Devices are supposed to be sorted by unit address.  These two got
-> swapped when they landed.  Fix.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 998f101ad623..4bdadfd9efb9 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1294,6 +1294,20 @@ pinconf-sd-cd {
->  			};
->  		};
->  
-> +		gpucc: clock-controller@5090000 {
-> +			compatible = "qcom,sc7180-gpucc";
-> +			reg = <0 0x05090000 0 0x9000>;
-> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
-> +				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
-> +				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-> +			clock-names = "bi_tcxo",
-> +				      "gcc_gpu_gpll0_clk_src",
-> +				      "gcc_gpu_gpll0_div_clk_src";
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +			#power-domain-cells = <1>;
-> +		};
-> +
->  		sdhc_2: sdhci@8804000 {
->  			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
->  			reg = <0 0x08804000 0 0x1000>;
-> @@ -1312,20 +1326,6 @@ sdhc_2: sdhci@8804000 {
->  			status = "disabled";
->  		};
->  
-> -		gpucc: clock-controller@5090000 {
-> -			compatible = "qcom,sc7180-gpucc";
-> -			reg = <0 0x05090000 0 0x9000>;
-> -			clocks = <&rpmhcc RPMH_CXO_CLK>,
-> -				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
-> -				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-> -			clock-names = "bi_tcxo",
-> -				      "gcc_gpu_gpll0_clk_src",
-> -				      "gcc_gpu_gpll0_div_clk_src";
-> -			#clock-cells = <1>;
-> -			#reset-cells = <1>;
-> -			#power-domain-cells = <1>;
-> -		};
-> -
->  		qspi: spi@88dc000 {
->  			compatible = "qcom,qspi-v1";
->  			reg = <0 0x088dc000 0 0x600>;
+On Tue, Mar 31, 2020 at 5:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Saravana,
+>
+> On Sat, Feb 22, 2020 at 2:41 AM Saravana Kannan <saravanak@google.com> wrote:
+> > With the addition of fw_devlink kernel commandline option, of_devlink is
+> > redundant and not useful anymore. So, delete it.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+>
+> Thanks for your patch!
+>
+> This is now commit e94f62b7140fa3da ("of: property: Delete of_devlink
+> kernel commandline option") upstream.
+>
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -3299,12 +3299,6 @@
+> >                         This can be set from sysctl after boot.
+> >                         See Documentation/admin-guide/sysctl/vm.rst for details.
+> >
+> > -       of_devlink      [OF, KNL] Create device links between consumer and
+> > -                       supplier devices by scanning the devictree to infer the
+> > -                       consumer/supplier relationships.  A consumer device
+> > -                       will not be probed until all the supplier devices have
+> > -                       probed successfully.
+> > -
+> >         ohci1394_dma=early      [HW] enable debugging via the ohci1394 driver.
+> >                         See Documentation/debugging-via-ohci1394.txt for more
+> >                         info.
+>
+> While I agree with the thunk above...
+>
+> > diff --git a/drivers/of/property.c b/drivers/of/property.c
+> > index 15fc9315f1a7..f104f15b57fb 100644
+> > --- a/drivers/of/property.c
+> > +++ b/drivers/of/property.c
+> > @@ -1299,15 +1299,9 @@ static int of_link_to_suppliers(struct device *dev,
+> >         return ret;
+> >  }
+> >
+> > -static bool of_devlink;
+> > -core_param(of_devlink, of_devlink, bool, 0);
+> > -
+> >  static int of_fwnode_add_links(const struct fwnode_handle *fwnode,
+> >                                struct device *dev)
+> >  {
+> > -       if (!of_devlink)
+> > -               return 0;
+> > -
+> >         if (unlikely(!is_of_node(fwnode)))
+> >                 return 0;
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Hi Geert,
+
+> ... I have some reservations about removing the actual code.
+> The "of_devlink" kernel parameter was supported in v5.5 and v5.6, so
+> removing its support may silently break some setups.
+>
+> Is this likely to happen?
+
+As much as I'd love to see people start using this, I doubt of_devlink
+has been significantly adopted outside of Android yet (I'm working on
+making that easier :)). I'd be happy to be proven wrong though :)
+
+of_devlink/fw_devlink is mainly useful when module loading is causing
+ordering and clean up issues. So if deletion of of_devlink breaks
+anything, I'd expect it to break in obvious ways and not silently.
+
+> Do we need a compatibility fallback that warns to user to update his kernel
+> command line?
+
+I don't think we need to, but I'm not strongly against your suggestion
+either. Let us know what you think.
+
+-Saravana
