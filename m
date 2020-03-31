@@ -2,224 +2,233 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88673C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33175C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550DE20772
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB91620658
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="SzP36+QW"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BcjvcLxC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgCaL10 (ORCPT
+        id S1730570AbgCaLoG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:27:26 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:39935 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730180AbgCaL10 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:27:26 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id JF39j8765fHuvJF3DjAtCW; Tue, 31 Mar 2020 13:27:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1585654043; bh=wsDsD2wgn34DL4JV2mO8SWwTxih7XXpbFOGmXpps14Y=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=SzP36+QWa6gK+AsKanufIR5+nStwxxkctaR0AX5AiRSfCb86PkjJZn975cmlJ0g1Y
-         n5YerNBPkCWg68zyNeu+bTk4m0e8fwMlHjuqnHP/CB+tJEpriP7h4GZNQW3XRDr4T4
-         YpQv5jS4SQu5XUv60k2tD96JBcPvdZGFkV4q5ROAHvpwco89OEWeO0zKvbxLeL1Et4
-         0FqYqkKkWr60t8i4iP4Y4/2nXIsft0VR9R0mx/rKH7HsSSbDvwTpRQ5O56ndAp66lB
-         8r3j1OdmGSFeoIaL2jyvVLYdhFgmUVyyw2MRWfv0dz4L010/Ji3dBRtX82KM5qNlBB
-         wmUD/faqCEQ8w==
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, laurent.pinchart@ideasonboard.com
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
- <20200325110358.GB853@valkosipuli.retiisi.org.uk>
- <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
- <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
- <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
- <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
-Date:   Tue, 31 Mar 2020 13:27:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 31 Mar 2020 07:44:06 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:57354 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730424AbgCaLoG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 07:44:06 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200331114403euoutp0210aa151d754e464ace7df85e01b678c3~BYNxhx7Yv2185821858euoutp02m;
+        Tue, 31 Mar 2020 11:44:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200331114403euoutp0210aa151d754e464ace7df85e01b678c3~BYNxhx7Yv2185821858euoutp02m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585655043;
+        bh=fLUaALAhJU0GPsppx99QNEL/LVVPbYb1Y86e+Ys2dEU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=BcjvcLxCxjZiAgS0l2JcDE4a+/1VTtpXAljpF+BNuBk/ddxbw9AaQMqc/bx+A7uO8
+         eLYS1g29m+nJM9prb9cCpQvYJDV6SZVpZvwqO50bq3xkg4Ki7KluWQKraVgIaEktEn
+         HnSEjIZeroXgtE0/8kaBIsWol9YzXRDxyc1i+MNs=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200331114403eucas1p2a2d75fd5ed7aa795b9dd75f82560f851~BYNxTCIpx2947329473eucas1p2i;
+        Tue, 31 Mar 2020 11:44:03 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 24.03.60679.30D238E5; Tue, 31
+        Mar 2020 12:44:03 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200331114402eucas1p137fa539fd8880af609c144731c2268dd~BYNw3CN3i3094030940eucas1p1p;
+        Tue, 31 Mar 2020 11:44:02 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200331114402eusmtrp16e3bcf058264987d54e7bd63976dafb8~BYNw1rUfX0209802098eusmtrp1E;
+        Tue, 31 Mar 2020 11:44:02 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-4b-5e832d03104e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 08.8B.07950.20D238E5; Tue, 31
+        Mar 2020 12:44:02 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200331114400eusmtip1324ffeb3f4a193aca8ef85f592d3f465~BYNu7A0fm3131531315eusmtip1u;
+        Tue, 31 Mar 2020 11:44:00 +0000 (GMT)
+Subject: Re: [PATCH v2 2/2] powerpc: Remove Xilinx PPC405/PPC440 support
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        sfr@canb.auug.org.au, maz@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Alistair Popple <alistair@popple.id.au>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Enrico Weigelt <info@metux.net>,
+        Fabio Estevam <festevam@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wei Hu <weh@microsoft.com>, YueHaibing <yuehaibing@huawei.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <f29415e1-5a77-2f26-914a-91bb5a4428cc@samsung.com>
+Date:   Tue, 31 Mar 2020 13:43:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <9c3e02ffa9812c6f046708b45932d40f33e8817a.1585575111.git.michal.simek@xilinx.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBetCF78CJvsa46Wzl9zhTQodpkaVXIJqutol8gOt5GK9UE4UfT+Kxt0AGSjYM1K1OkyDBNJ/lNQ9gRYG+fgHAfcLuMEuX/dNssbwAD6KOfwuUuALgMB
- XSVj9eF8me4cR60BeW5dzoXj897MOGf/4M4cNsMNVsoUlNCuBrxn/GRBPa3VsuK4tpxVRBqc1cxAV3JHs5W0lUjW+5xUSrmhgj52HZ76fO4bT+EQiVf22gA2
- P4x1JUnAEFLBVxI5zl6d5IzYdqkjKPYaIqxzOpnxnRcs8yEn9lw+OrYt9fKj56HC1GpYK3x3Y8+7ZWJJFlrB9XfOL1PSL9TZ3jEsbKiUIt+fEqfhcvR7uyo6
- NTFlVB88fF74nRqSwaJfSpOOGL/1dYDiM4vYNkD7trtTmQIm164KVf8wpexVNrVKxDFk/dSVI2y2aHku+QmAKLNtqNWE8zWdslbeY5+GmGzpmzpLUMm2hekO
- 79F6f8A/NxgB28YZg0Ono70qmBQZ1FP9po5XDf/Row2RNkZoYAUIs4HCQMmq3vmffZbHVLD/IgbFAvES3RmcnG+E7rGut6W8HTY3DLC914cy8z9nPddrxZcL
- 10tZ9avMf26g5kHwvPKWwvQkWV8GD4KTsEirZaHJ4qQKBzf98B8pOWy5hnDgCexz4rw=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUxTZxTH89z3Niu7VgdPhGjSzRlNWpxj25ku7iVG7zeX7MOIyZhV78AN
+        0LTC5pYtUMpbB1jaIVmpgoBDSKNYK1iQjmADGmIb45Cy2Axmg+1CQatEEO1WeiXj2/8853fO
+        //w/PBypbGHXc0cKj4u6Qm2+ipFTPcOLPjWpLsvZdn+Uhpn2YRI8QQ8Ltc4KGjpvxCmoNTQS
+        8MIyzMKphcskPDSUk1BVRkBosBKB3W+kwDx7joJmr4+GP+bnGDBPVbAwNbYPTjdZEFitDgRl
+        bRcZmCjtJ6Dr7F0G/P5uFmrsBgTO+3dpOFvRTsGNuoc03OmzM7D0NE7DufHbBExNBmhw22/S
+        MBerJmA2kg3XKz00hB6NUuAqGWKgwf80cZL5XwIWwwEKHN42FsoHvCw4HQmfKwNjLFx2NpCw
+        1CiDe/MPqI80guOMAwlLzyxIOOP4QSg/ucAIpYEAI7g6JwihNVJCCfW31ILbFmSFFmeRYPRG
+        aaHtWoQQamaMtODsqmaEWZ+PFcytg+jTDfvlHxwW848Ui7rMXQfkeaZgmDn2+4bvfP5hpgTN
+        pZqQjMN8Fm7o8dMmJOeU/HmEJ9tHKKl4gvBflgApFY8Rdpp+oVZGrOVjrNToQDjYaX5ZRBG+
+        5O2jl6m1vIAHJ2Lssl7Hb8UxwzixDJF8vwKfHFpMQgy/A9dXdqFlreB3YWPpWNKC4jfhykfG
+        5PBrfDaOTV6nJWYNvvlrKMnI+BxsPF+fnCX5NPxnqJmQ9EbcG7Un78a8QY77A94ExCWK3Tjq
+        +kSKsBb/M+JiJZ2BR601lMRfQPhFVfjlcC/CHdY4I1E78T3fM2Z5EclvwRf7MqXnj/FCuJ6S
+        9qfgQHSNdEMKtvQ0ktKzAldVKCX6Tdz9WzezYmtyd5JmpLKtSmZblca2Ko3tf98WRHWhNLFI
+        X5Ar6rcXit9q9NoCfVFhrubQ0QInSvyb0fjIk6uo7/nBIcRzSPWKYnKsNEdJa4v1JwqGEOZI
+        1ToFs68kR6k4rD3xvag7+qWuKF/UD6F0jlKlKd5ujXyh5HO1x8VvRPGYqFvpEpxsfQnS7PR7
+        3qldyJgeD7uvHvi5+ha+s33bla/UHfvTNDtux79+/fE859l90Eg0u9SpXldQ2DsgDvc3fhbO
+        S5/O+LGpdXrvTPqUd89ErHlLXa/Nps6KPNj8PPXvd2ti+dT0ppRM0b0ntll2KWvje3XFr75h
+        IbM/DP30+anMa/h9t2tO26RTUfo87VtbSZ1e+x/TpcUQMwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUybVRSHc9/PlqzJuwLjBt2mTSYJkc7CgEOzocZorhozE6MhTmENewOb
+        lJJ+6WaiBVpgDZsFgmS1gzEgStME8w5x040hYGHi2jhtB04WGCxCZIWRIJudaEs14b/n3PN7
+        7r0nOTJaKXHpsqOVZtFYqatQcUnMxMbYdBaVVVv8zMLdDFjq9tMwOD3IwympjoXe8Q0GTtW0
+        UfB3s5+HTx9coGGlxkFDQy0F80P1CDxBOwOuSA8DHaMBFn5ZW+bANVvHw2zoIJz9rBlBS4sP
+        QW1XHwdT1d9S4O0McxAMfslDo6cGgTQXZqGzrpuB8dMrLPz8jYeD6PoGCz03f6JgdmaShUue
+        aywsr56kILJYBCP1gyzM359goN82zEFrcD32Jdc/FDxcmGTAN9rFg+PKKA+SL/bOV1dCPFyQ
+        WmmItsnht7XfmefUxNfuQyT6VzMi7b4PieOTBxypnpzkSH/vFEXOL9oY0nQ9i1xyT/PknGQh
+        9tF7LOm6vEiRxiU7SyTvSY5EAgGeuM4Podd3va3ebzRYzOIT5QaT+YDqkAay1ZoCUGfvK1Br
+        cvLf1WbnqvYW7j8iVhy1isa9hYfV5c7pBa7q6q4PAkE/Z0PLO5xILsPCPtziCPFOlCRTCj0I
+        R6bWY4Us1ngcj/VZE5lk/Cjs5BKZPxCO2ufYeCNZIHhoapWPc4qQiVdrblLxEC1MKHA0PEQn
+        jDsIt/RubBqcoMVN9V4UZ4VQiO3VISbOjLAH19+3b96UKhThkYvu/zLb8bUz85sZuVCM7V80
+        bZ7TQgZ+1H6DTnAa/nW+g0rwbvz1PQ/tQkr3Ft29RXFvUdxblHOI8aIU0WLSl+lN2WqTTm+y
+        VJapSw16CcX2dcD/sP8ickbeGEaCDKm2KWZC1cVKVmc1HdcPIyyjVSkK7qCtWKk4ojt+QjQa
+        SoyWCtE0jHJjwzXR6amlhtj2V5pLNLmafCjQ5Ofk5+SBKk3RIHz3jlIo05nF90SxSjT+71Ey
+        eboN/fB0qO923o6rYwPJe07vJLPbV54cT9K+FlTNpVa8bG3oN0qO8LG170mHJrNc9fxLH7fm
+        Xfepd8ofaxuo6yo9oyj68xZ+ZfHYQoH4KsXcDtx98cCd4Ju73+9u+NzbtBp4Kl17OKMk75Z0
+        wzyT9eyJy5Ef3/qosyqSJn/h0IjW34iXrNtUjKlcp8mkjSbdv/JTKejFAwAA
+X-CMS-MailID: 20200331114402eucas1p137fa539fd8880af609c144731c2268dd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200330133235eucas1p2293a8ec8af48231bf220959d21913d55
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200330133235eucas1p2293a8ec8af48231bf220959d21913d55
+References: <cover.1585575111.git.michal.simek@xilinx.com>
+        <CGME20200330133235eucas1p2293a8ec8af48231bf220959d21913d55@eucas1p2.samsung.com>
+        <9c3e02ffa9812c6f046708b45932d40f33e8817a.1585575111.git.michal.simek@xilinx.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/31/20 1:10 PM, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> On Tue, Mar 31, 2020 at 12:56:57PM +0200, Hans Verkuil wrote:
->> On 3/31/20 12:32 PM, Sakari Ailus wrote:
->>> Hi Hans,
->>>
->>> On Mon, Mar 30, 2020 at 12:59:15PM +0200, Hans Verkuil wrote:
->>>> On 3/25/20 12:03 PM, Sakari Ailus wrote:
->>>>> Hi Sowjanya,
->>>>>
->>>>> Thanks for the patchset.
->>>>>
->>>>> On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni wrote:
->>>>>> Tegra210 contains a powerful Video Input (VI) hardware controller
->>>>>> which can support up to 6 MIPI CSI camera sensors.
->>>>>>
->>>>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
->>>>>> capture from an external camera sensor connected to CSI or from
->>>>>> built-in test pattern generator.
->>>>>>
->>>>>> Tegra210 supports built-in test pattern generator from CSI to VI.
->>>>>>
->>>>>> This patch adds a V4L2 media controller and capture driver support
->>>>>> for Tegra210 built-in CSI to VI test pattern generator.
->>>>>>
->>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>> ---
->>>>>>  drivers/staging/media/Kconfig              |    2 +
->>>>>>  drivers/staging/media/Makefile             |    1 +
->>>>>>  drivers/staging/media/tegra/Kconfig        |   10 +
->>>>>>  drivers/staging/media/tegra/Makefile       |    8 +
->>>>>>  drivers/staging/media/tegra/TODO           |   10 +
->>>>>>  drivers/staging/media/tegra/tegra-common.h |  263 +++++++
->>>>>>  drivers/staging/media/tegra/tegra-csi.c    |  522 ++++++++++++++
->>>>>>  drivers/staging/media/tegra/tegra-csi.h    |  118 ++++
->>>>>>  drivers/staging/media/tegra/tegra-vi.c     | 1058 ++++++++++++++++++++++++++++
->>>>>>  drivers/staging/media/tegra/tegra-vi.h     |   83 +++
->>>>>>  drivers/staging/media/tegra/tegra-video.c  |  129 ++++
->>>>>>  drivers/staging/media/tegra/tegra-video.h  |   32 +
->>>>>>  drivers/staging/media/tegra/tegra210.c     |  754 ++++++++++++++++++++
->>>>>>  drivers/staging/media/tegra/tegra210.h     |  192 +++++
->>>>>
->>>>> Why staging? Are there reasons not to aim this to the kernel proper right
->>>>> away? If you only support TPG, the driver may not have too many (if any)
->>>>> real users anyway.
->>>>>
->>>>>>  14 files changed, 3182 insertions(+)
->>>>>>  create mode 100644 drivers/staging/media/tegra/Kconfig
->>>>>>  create mode 100644 drivers/staging/media/tegra/Makefile
->>>>>>  create mode 100644 drivers/staging/media/tegra/TODO
->>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-common.h
->>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-csi.c
->>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-csi.h
->>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-vi.c
->>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-vi.h
->>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-video.c
->>>>>>  create mode 100644 drivers/staging/media/tegra/tegra-video.h
->>>>>>  create mode 100644 drivers/staging/media/tegra/tegra210.c
->>>>>>  create mode 100644 drivers/staging/media/tegra/tegra210.h
->>>>>>
->>>>
->>>> <snip>
->>>>
->>>>>> +static int tegra_channel_g_input(struct file *file, void *priv,
->>>>>> +				 unsigned int *i)
->>>>>> +{
->>>>>> +	*i = 0;
->>>>>> +	return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static int tegra_channel_s_input(struct file *file, void *priv,
->>>>>> +				 unsigned int input)
->>>>>> +{
->>>>>> +	if (input > 0)
->>>>>> +		return -EINVAL;
->>>>>> +
->>>>>> +	return 0;
->>>>>> +}
->>>>>
->>>>> Please see patchset on topic "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on
->>>>> linux-media; it's relevant here, too.
->>>>
->>>> No, it isn't. The pipeline is controlled by the driver, not by userspace.
->>>> This is a regular video capture driver, not an ISP driver.
->>>
->>> I don't think that really makes a difference, whether a device is an ISP or
->>> not, but instead what does is whether there is something to control in its
->>> pipeline that cannot be generally done through the regular V4L2 interface.
->>> Even plain CSI-2 receiver drivers should be media device centric these days
->>> as doing otherwise excludes using a range of sensor drivers with them,
->>> including any possible future support for e.g. sensor embedded data.
->>>
->>
->> We've been back and forth on this before for this driver. I see no reason to make things
->> complicated, these are simple video pipelines for video capture. Making this media
->> device centric means that existing software using the BSP version of this driver require
->> a full rewrite, which is not desirable.
->>
->> If we are going to require CSI receiver drivers to be media centric, then that's a
->> major departure of existing practice. And something that needs to be discussed first,
-> 
-> I'd be happy to discuss that.
-> 
-> Either way, the current design is problematic as it excludes a range of
-> camera sensors being used with the driver --- addressing of which requires
-> converting the driver MC centric. If the driver is merged to mainline, then
-> the user might face a Kconfig option or a module parameter to choose
-> between the two --- this defines uAPI behaviour after all.
-> 
-> The only way to avoid that in the future is to make it MC-centric right
-> away.
-> 
->> since that will require that support for each csi receiver driver is added to libcamera.
->> Is libcamera ready for that? Are common applications using libcamera yet?
->>
->> Obviously, if NVIDIA decides that this is worth the effort, then I have no objection.
->> But I don't think it is something we should require at this stage.
-> 
-> Works for me. But in that case NVIDIA should also be aware that doing so
-> has consequences.
-> 
-> We also haven't discussed what to do with old V4L2-centric drivers which
-> you'd use with sensors that expose their own subdevs. The proportion of all
-> sensors might not be large currently but it is almost certainly bound to
-> grow in the future.
-> 
-> FWIW, Intel ipu3-cio2 CSI-2 receiver driver is MC-centric e.g. for the
-> above reasons. Libcamera supports it currently. I'll let Laurent (cc'd)
-> comment on the details.
-> 
 
-I think it would be good to at least describe in some detail what you gain
-by taking the media centric route, and what the obstacles are (loss of compatibility
-with existing applications, requiring libcamera support).
+On 3/30/20 3:32 PM, Michal Simek wrote:
+> The latest Xilinx design tools called ISE and EDK has been released in
+> October 2013. New tool doesn't support any PPC405/PPC440 new designs.
+> These platforms are no longer supported and tested.
+> 
+> PowerPC 405/440 port is orphan from 2013 by
+> commit cdeb89943bfc ("MAINTAINERS: Fix incorrect status tag") and
+> commit 19624236cce1 ("MAINTAINERS: Update Grant's email address and maintainership")
+> that's why it is time to remove the support fot these platforms.
+> 
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-My personal feeling has always been that for ISP drivers the pros of making
-a media-centric driver outweigh the cons, but that for a standard video capture
-pipeline without complex processing blocks the cons outweigh the pros.
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com> # for fbdev
 
-This might change if libcamera becomes widely used, but we're not there yet.
-
-To be honest, I am not opposed to having a kernel config option for drivers
-like this that select the media-centric API vs a regular API, if that can be
-done without too much work. If you need full control for your embedded system,
-then you enable the option. If you want full compatibility with existing
-applications, then disable it.
-
-Regards,
-
-	Hans
+> ---
+> 
+> Changes in v2:
+> - Based on my chat with Arnd I removed arch/powerpc/xmon/ changes done in
+>   v1 to keep them the same as before. (kbuild reported some issues with it
+>   too)
+> 
+>  Documentation/devicetree/bindings/xilinx.txt | 143 ------
+>  Documentation/powerpc/bootwrapper.rst        |  28 +-
+>  MAINTAINERS                                  |   6 -
+>  arch/powerpc/Kconfig.debug                   |   2 +-
+>  arch/powerpc/boot/Makefile                   |   7 +-
+>  arch/powerpc/boot/dts/Makefile               |   1 -
+>  arch/powerpc/boot/dts/virtex440-ml507.dts    | 406 ----------------
+>  arch/powerpc/boot/dts/virtex440-ml510.dts    | 466 -------------------
+>  arch/powerpc/boot/ops.h                      |   1 -
+>  arch/powerpc/boot/serial.c                   |   5 -
+>  arch/powerpc/boot/uartlite.c                 |  79 ----
+>  arch/powerpc/boot/virtex.c                   |  97 ----
+>  arch/powerpc/boot/virtex405-head.S           |  31 --
+>  arch/powerpc/boot/wrapper                    |   8 -
+>  arch/powerpc/configs/40x/virtex_defconfig    |  75 ---
+>  arch/powerpc/configs/44x/virtex5_defconfig   |  74 ---
+>  arch/powerpc/configs/ppc40x_defconfig        |   8 -
+>  arch/powerpc/configs/ppc44x_defconfig        |   8 -
+>  arch/powerpc/include/asm/xilinx_intc.h       |  16 -
+>  arch/powerpc/include/asm/xilinx_pci.h        |  21 -
+>  arch/powerpc/kernel/cputable.c               |  39 --
+>  arch/powerpc/platforms/40x/Kconfig           |  31 --
+>  arch/powerpc/platforms/40x/Makefile          |   1 -
+>  arch/powerpc/platforms/40x/virtex.c          |  54 ---
+>  arch/powerpc/platforms/44x/Kconfig           |  37 --
+>  arch/powerpc/platforms/44x/Makefile          |   2 -
+>  arch/powerpc/platforms/44x/virtex.c          |  60 ---
+>  arch/powerpc/platforms/44x/virtex_ml510.c    |  30 --
+>  arch/powerpc/platforms/Kconfig               |   4 -
+>  arch/powerpc/sysdev/Makefile                 |   2 -
+>  arch/powerpc/sysdev/xilinx_intc.c            |  88 ----
+>  arch/powerpc/sysdev/xilinx_pci.c             | 132 ------
+>  drivers/char/Kconfig                         |   2 +-
+>  drivers/video/fbdev/Kconfig                  |   2 +-
+>  34 files changed, 7 insertions(+), 1959 deletions(-)
+>  delete mode 100644 arch/powerpc/boot/dts/virtex440-ml507.dts
+>  delete mode 100644 arch/powerpc/boot/dts/virtex440-ml510.dts
+>  delete mode 100644 arch/powerpc/boot/uartlite.c
+>  delete mode 100644 arch/powerpc/boot/virtex.c
+>  delete mode 100644 arch/powerpc/boot/virtex405-head.S
+>  delete mode 100644 arch/powerpc/configs/40x/virtex_defconfig
+>  delete mode 100644 arch/powerpc/configs/44x/virtex5_defconfig
+>  delete mode 100644 arch/powerpc/include/asm/xilinx_intc.h
+>  delete mode 100644 arch/powerpc/include/asm/xilinx_pci.h
+>  delete mode 100644 arch/powerpc/platforms/40x/virtex.c
+>  delete mode 100644 arch/powerpc/platforms/44x/virtex.c
+>  delete mode 100644 arch/powerpc/platforms/44x/virtex_ml510.c
+>  delete mode 100644 arch/powerpc/sysdev/xilinx_intc.c
+>  delete mode 100644 arch/powerpc/sysdev/xilinx_pci.c
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
