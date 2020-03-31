@@ -2,177 +2,132 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073E2C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 03:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 494D1C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 04:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C82B0206EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 03:38:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZclICBXy"
+	by mail.kernel.org (Postfix) with ESMTP id 12C4D2072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 04:05:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgCaDiY (ORCPT
+        id S1726299AbgCaEFz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Mar 2020 23:38:24 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50900 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727614AbgCaDiY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Mar 2020 23:38:24 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02V3cGGG073613;
-        Mon, 30 Mar 2020 22:38:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585625896;
-        bh=qXhJwnXiI11Btcsok36Z3zck48iG5vt+ZvZfiwL9bnI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZclICBXyWUj+xxoVQ7hiTAi4DNUlHr3o7Yf3ESENRUhjEFVTCByQzh5OvjwL7Cigx
-         VuWzJVVXlLm0U1lHRA5DkYK6YI3d1kY+AB4/a4VlI4n9OqJEGn5qLK7A2LkwRH5+qC
-         qmkA2F+DFCUqdO1dnN3U7vsfYw88vpGO5JRPTAEg=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02V3cG0M114636
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 30 Mar 2020 22:38:16 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
- Mar 2020 22:38:15 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 30 Mar 2020 22:38:15 -0500
-Received: from [10.250.133.232] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02V3cClL095960;
-        Mon, 30 Mar 2020 22:38:13 -0500
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: cadence: Deprecate inbound/outbound
- specific bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200327104727.4708-1-kishon@ti.com>
- <20200327104727.4708-2-kishon@ti.com> <20200330160142.GA6259@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <2a18a228-9248-24a8-c9cd-a041c62aa381@ti.com>
-Date:   Tue, 31 Mar 2020 09:08:12 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 31 Mar 2020 00:05:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39366 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgCaEFz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 00:05:55 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 614BC29497A
+Message-ID: <246bf7c71620021258355c2fc32dd38ac6b0cc45.camel@collabora.com>
+Subject: Re: [PATCH v5 4/5] drm: imx: Add i.MX 6 MIPI DSI host platform
+ driver
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Martyn Welch <martyn.welch@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        linux-rockchip@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>, kernel@collabora.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 31 Mar 2020 01:05:39 -0300
+In-Reply-To: <877dz134xf.fsf@collabora.com>
+References: <20200330113542.181752-1-adrian.ratiu@collabora.com>
+         <20200330113542.181752-5-adrian.ratiu@collabora.com>
+         <CAOMZO5CEZSBfhb9xAdf=sDhUnmSeuWSsnUQArz=a1TPzytLAeQ@mail.gmail.com>
+         <4a9d2d6e5cecbe296c14119d27a8793a7dbed7b2.camel@collabora.com>
+         <877dz134xf.fsf@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-In-Reply-To: <20200330160142.GA6259@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 3/30/2020 9:31 PM, Rob Herring wrote:
-> On Fri, Mar 27, 2020 at 04:17:25PM +0530, Kishon Vijay Abraham I wrote:
->> Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits for
->> host mode as both these could be derived from "ranges" and "dma-ranges"
->> property. "cdns,max-outbound-regions" property would still be required
->> for EP mode.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../bindings/pci/cdns,cdns-pcie-ep.yaml       |  2 +-
->>  .../bindings/pci/cdns,cdns-pcie-host.yaml     |  3 +--
->>  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 25 +++++++++++++++++++
->>  .../bindings/pci/cdns-pcie-host.yaml          | 10 ++++++++
->>  .../devicetree/bindings/pci/cdns-pcie.yaml    |  8 ------
->>  5 files changed, 37 insertions(+), 11 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->> index 2996f8d4777c..50ce5d79d2c7 100644
->> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->> @@ -10,7 +10,7 @@ maintainers:
->>    - Tom Joseph <tjoseph@cadence.com>
->>  
->>  allOf:
->> -  - $ref: "cdns-pcie.yaml#"
->> +  - $ref: "cdns-pcie-ep.yaml#"
->>    - $ref: "pci-ep.yaml#"
->>  
->>  properties:
->> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->> index cabbe46ff578..84a8f095d031 100644
->> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
->> @@ -45,8 +45,6 @@ examples:
->>              #size-cells = <2>;
->>              bus-range = <0x0 0xff>;
->>              linux,pci-domain = <0>;
->> -            cdns,max-outbound-regions = <16>;
->> -            cdns,no-bar-match-nbits = <32>;
->>              vendor-id = <0x17cd>;
->>              device-id = <0x0200>;
->>  
->> @@ -57,6 +55,7 @@ examples:
->>  
->>              ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
->>                       <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
->> +            dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x1 0x00000000>;
->>  
->>              #interrupt-cells = <0x1>;
->>  
->> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->> new file mode 100644
->> index 000000000000..6150a7a7bdbf
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->> @@ -0,0 +1,25 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Cadence PCIe Device
->> +
->> +maintainers:
->> +  - Tom Joseph <tjoseph@cadence.com>
->> +
->> +allOf:
->> +  - $ref: "cdns-pcie.yaml#"
->> +
->> +properties:
->> +  cdns,max-outbound-regions:
->> +    description: maximum number of outbound regions
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
->> +    minimum: 1
->> +    maximum: 32
->> +    default: 32
+On Tue, 2020-03-31 at 00:31 +0300, Adrian Ratiu wrote:
+> On Mon, 30 Mar 2020, Ezequiel Garcia <ezequiel@collabora.com> 
+> wrote:
+> > Hello Fabio, Adrian: 
+> > 
+> > On Mon, 2020-03-30 at 08:49 -0300, Fabio Estevam wrote: 
+> > > Hi Adrian,  On Mon, Mar 30, 2020 at 8:34 AM Adrian Ratiu 
+> > > <adrian.ratiu@collabora.com> wrote: 
+> > > > This adds support for the Synopsis DesignWare MIPI DSI v1.01 
+> > > > host controller which is embedded in i.MX 6 SoCs.   Based on 
+> > > > following patches, but updated/extended to work with existing 
+> > > > support found in the kernel:  - drm: imx: Support Synopsys 
+> > > > DesignWare MIPI DSI host controller 
+> > > >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com> 
+> > > >  - ARM: dtsi: imx6qdl: Add support for MIPI DSI host 
+> > > > controller 
+> > > >   Signed-off-by: Liu Ying <Ying.Liu@freescale.com> 
+> > >  This one looks like a devicetree patch, but this patch does 
+> > > not touch devicetree.  
+> > > > +       ret = clk_prepare_enable(dsi->pllref_clk); +       if 
+> > > > (ret) { +               dev_err(dev, "%s: Failed to enable 
+> > > > pllref_clk\n", __func__); +               return ret; + 
+> > > > } + +       dsi->mux_sel = 
+> > > > syscon_regmap_lookup_by_phandle(dev->of_node, "fsl,gpr"); + 
+> > > > if (IS_ERR(dsi->mux_sel)) { +               ret = 
+> > > > PTR_ERR(dsi->mux_sel); +               dev_err(dev, "%s: 
+> > > > Failed to get GPR regmap: %d\n", + 
+> > > > __func__, ret); +               return ret; 
+> > >  You should disable the dsi->pllref_clk clock prior to 
+> > > returning the error.  
+> > 
+> > Another approach could be moving the clock on and off to to 
+> > component_ops.{bind,unbind} (as rockhip driver does). 
+> > 
+> > What exactly is the PLL clock needed for? Would it make sense to 
+> > move it some of the PHY power on/off? (Maybe not, but it's 
+> > worthing checking). 
+> > 
+> > Also, it seems the other IP blocks have this PLL clock, so maybe 
+> > it could be moved to the dw_mipi_dsi core? This could be 
+> > something for a follow-up, to avoid creeping this series.
 > 
-> I have a feeling that as the PCI endpoint binding evolves this won't be 
-> necessary. I can see a common need to define the number of BARs for an 
-> endpoint and then this will again just be error checking.
-
-For every buffer given by the host, we have to create a new outbound
-translation. If there are no outbound regions, we have to report the error to
-the endpoint function driver. At-least for reporting the error, we'd need to
-have this binding no?
+> Hi Ezequiel,
 > 
-> What's the result if you write to a non-existent region in register 
-> CDNS_PCIE_AT_OB_REGION_PCI_ADDR0/1? If the register is non-existent and 
-> doesn't abort, you could detect this instead.
+> pll is the video reference clock which drives the data lanes and 
+> yes all drivers have it as it's a basic requirement, so moving it 
+> to the common bridge is indeed a good idea, however this kind of 
+> driver refactoring is out of scope for this specific patch series, 
+> because, for now, I'd like to get the regmap and the imx6 driver 
+> in, once that is done we can think how to further abstract away 
+> common logic and slim down the existing drivers further.
+> 
+> Basically I just want to avoid feature creep as I expect v6 to be 
+> ~ 8 patches big and the series is already over 1200 lines.
+> 
 
-I'm not sure if we should ever try to write to a non-existent register though
-the behavior could be different in different platforms. IMHO maximum number of
-outbound regions is a HW property and is best described in device tree.
+Oh, absolutely: if there's one thing I try to avoid is
+feature creep -- together with bikeshedding!
 
-Thanks
-Kishon
+Do note however, that you could move the PLL clock handling
+to component_ops.{bind,unbind} and maybe simplify the error
+handling.
+
+(BTW, great work!)
+
+Cheers,
+Ezequiel
+
+
+
