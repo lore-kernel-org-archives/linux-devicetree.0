@@ -2,265 +2,115 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC79CC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29993C2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 23:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD72120658
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:59:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cWK/lHsH"
+	by mail.kernel.org (Postfix) with ESMTP id F108E208E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 23:13:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585696415;
+	bh=9XnDVeLNtXBo+7A+ymbQWmYaZXP1cYS2bkQlhtc03pg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KUff5dM5SiCVD2eUxH3iazWKNtTQA86YJMczz0RFMBxyzRNzYYP4zH7sPivgHE/Np
+	 HXf7U4KDndo6hC2xQbXw5PPhkX3ZDdt1T+Nl12W64ZTwaiev6MmVSqGTYFEnYrdA3S
+	 sj9X8fSMxlREMR3K4gxyovXmyGPLpq1At+kcdRjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731325AbgCaW77 (ORCPT
+        id S1731364AbgCaXNe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:59:59 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:34039 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731259AbgCaW76 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 18:59:58 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200331225955epoutp011b12528fd5d1570a7db49f0905472cdf~Bhb5BYv9B0446704467epoutp01O
-        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 22:59:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200331225955epoutp011b12528fd5d1570a7db49f0905472cdf~Bhb5BYv9B0446704467epoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585695596;
-        bh=cp03SGTakGmVgzpFFw5xpcGW130Uflqr7VsMCqzjjwM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=cWK/lHsHMNF76c541bTW9LRwiMgcPqZdq2DstPdYxll74Z4CpSxfGkHdhpDGzwO0z
-         aasGeAPNGt0XaHmGTgY4CYR14B6YwK2cNNpTV+iN9hxXyuImfdUJS48J1iRwCfmbIw
-         VeXeVinQgRec6xz3UW/FjZpFia/x3ZoKFQb+iz2Y=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200331225955epcas1p45ffea529fc50f8bb9cf6f3f5cba37916~Bhb4SdLIu2949529495epcas1p4K;
-        Tue, 31 Mar 2020 22:59:55 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 48sPt03fFDzMqYlm; Tue, 31 Mar
-        2020 22:59:52 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D4.FF.04145.86BC38E5; Wed,  1 Apr 2020 07:59:52 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200331225951epcas1p40ae4eff7ebbf4e21821f38628af4b2df~Bhb1Qr3EA0452704527epcas1p4b;
-        Tue, 31 Mar 2020 22:59:51 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200331225951epsmtrp1cbb2b7775d09fe76497f21a1cb079089~Bhb1PcNMv1348113481epsmtrp1Z;
-        Tue, 31 Mar 2020 22:59:51 +0000 (GMT)
-X-AuditID: b6c32a35-28dff70000001031-a1-5e83cb681aa6
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F4.D4.04158.76BC38E5; Wed,  1 Apr 2020 07:59:51 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200331225951epsmtip1590e75b13b20f717d6aa4364f5f4e865~Bhb01H2sJ2062120621epsmtip1-;
-        Tue, 31 Mar 2020 22:59:51 +0000 (GMT)
-Subject: Re: [PATCH 3/8] PM / devfreq: imx: Register interconnect device
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Martin Kepplinger <martink@posteo.de>
-Cc:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Silvano di Ninno <silvano.dininno@nxp.com>,
-        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <ea021693-c22b-27be-8346-011673ae0831@samsung.com>
-Date:   Wed, 1 Apr 2020 08:08:57 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 31 Mar 2020 19:13:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729647AbgCaXNe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 19:13:34 -0400
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E93B921707;
+        Tue, 31 Mar 2020 23:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585696413;
+        bh=9XnDVeLNtXBo+7A+ymbQWmYaZXP1cYS2bkQlhtc03pg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=J7zqVWd/5lRSv44OmqCPe15cyMfA4cypk3PPuwEoI45tJ1YAoTl5Ju1ma924UCJl6
+         Z6ky4U99dLrxKDMwa+PTXGoIyPPfnsUb6LRM8u/KABhxK6I52Zyo/oUkrVgFeiVNOT
+         ND0IQRvtzFnmuXNaM15v5te9g0dWSmNYMudOjc6w=
+Received: by mail-ed1-f53.google.com with SMTP id de14so27406240edb.4;
+        Tue, 31 Mar 2020 16:13:32 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0kEpjM6joDgA2tDHZQgypbnov2wqaCqiv5reWf1k0HTQvvf9Os
+        8SRsWVi7LObTtjSgEosbmgfE9h8PRF51tu0wsg==
+X-Google-Smtp-Source: ADFU+vsI2at//4iAqFj3XbOPyjbjd8Ju2JHJo+yfvuPMtXyncAneKqKuJ3LsmHFRegjrJGdHpUpM711na8maETHC9Bs=
+X-Received: by 2002:a50:ce01:: with SMTP id y1mr18621985edi.47.1585696411284;
+ Tue, 31 Mar 2020 16:13:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f4553b6aacc88a91ed407eb709097e2cd1bf1a19.1585188174.git.leonard.crestez@nxp.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0xTVxTHc/teXx/Gzrcq44Kbq2+gkQTsE8quDMzicHnLjCNZsj+WWXyj
-        L5TQX+lrnW5ZVqew0ilqtHMyBYUya3GBViwFJWxY4oCIMEMl6wgVHOicGAYoc9Gtv8z473PO
-        Pd9z8j03h8RklyRpZLnezJv0nJYmluG+qxsUWZqB/SpF+NnLaLyuEqCFgX6Avv+lF6B5RyeG
-        JsdDALWfLEX1gUEx8lwM4ehEl5dAbkcHjm7caJWg61/+KUGusVkx8k4Gxcj+5DyG5g4FAGq6
-        NSxCQddRMZprnQRouH8bCu1zEah58CcCnZ53YKiyKyBB9p6nBHoW9ODoblsKamoMYsizwL75
-        CuuwuwB7oe4CYB+OVkrY76zDOHvGa2G97mqC/S14hWAvOr9gPTN+EXv4qYJ9cjWZrWlzA3bO
-        u6ZY+mFFgYbn1LxJzutLDepyfVkh/e77JW+VKPMUTBazGb1Oy/Wcji+ki7YXZ71dro0shZbv
-        5rSWSKqYEwR645YCk8Fi5uUag2AupHmjWmvcbMwWOJ1g0Zdllxp0+YxCsUkZKdxVoZltnhAZ
-        W1bvOXIqhFvB/WQ7SCIhlQsDV77G7WAZKaP8ALZMTYviwV8A3rc+EMeDRwAuHvsGfy6pHutO
-        SLoAdP4wkpA8BNDj3EfYAUmupFg4fO+NaH4V5QQwEHwcU2CUSwKrfOdirQgqE3bfHSWivIJa
-        C0cWJ0GUpdQWOOscwqKMU+nwcocjlk+mPoB9vgOJmhdh38k7sT5JlArOn/tXFGWMSoG/3qlP
-        8Kuw/cEpLDoYUn4S9oamJHEPRfD2j40JXgn/uNaW4DR473BVgj+D5/sCRFxsA7Cte0gcf8iB
-        3U3HRFGbGLUBtnRujKfXwo5/ToP44BfgzMJBcbQEUlJoq5LFS16DN8NjojinwsavqokjgK5d
-        Yqd2iYXaJRZq/x92BuBu8BJvFHRlvMAYmaX/7QWxk8lU+sHxwe09gCIBvVwqz9+vkom53cJe
-        XQ+AJEavkhLvWVUyqZrb+ylvMpSYLFpe6AHKyLaPYmnJpYbIAerNJYxyU05ODspl8pQMQ6dI
-        Hbe0KhlVxpn5Cp438qbnOhGZlGYFxXWrF/Zk3J74e/1Qpdvma5prVwwQzOfLZ4vGfZ2PLIv+
-        5sVM0ZRrXXCUF8y9H237fd3EiW+nr3OfSMKtikNbCz5ec1yFZ1+beezOONiXaqupDx94R7/1
-        bDg9fcq2M6PcMzLN9WsvYdXqfEVD6o4CPVljayjK/blhxc2xPE5trqNxQcMxmZhJ4P4DZ8sD
-        ikgEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SXUhTYQCG+XbOzo7D6eem+Knkz7CMQaVh9JG2oh84N1kXKtSFNvQwLefG
-        jlpWlDo1HVYarHD+LGqWqaDOKM1M3EyskTrBJa0ynRdKWYkORcpqWuDdw/O+791LE+IGfiid
-        nZvHanMVOVJKSD61ScN3Ke26tFh98T481VgGsMf+BuCH468AXjY8J7B7ygXws9oMbBoc4ePO
-        LheJ7/ZZKNxi6CHx6GiHAL8t+SrAzR8X+djidvKxfu0xgZduDALc9M7Bw87mGj5e6nAD7Hhz
-        HLuKmyncOjJA4YZlA4HL+gYFWG/9ReF1ZyeJ554E46YHTgJ3epjD2xiDvhkwbY1tgPk+WSZg
-        6oocJHPPks9YWiop5oPzBcV0ma8xnd+6ecytX7HMmi2IufmkBTBLlvBTojPCxEw2J7uA1e6R
-        nxVmLbbO8DTtYRer611kEfgSpAc+NILxqPJjP6kHQloMewFaKZvhbQYh6I7jFaEH9F+WIJuN
-        2+wsADQ+30t5vQQyyDGf4K0HQjNA5umT3g4B2wSoxHyd8gZiOAPQj/tyL1NQhvrnJje8P4xC
-        E6tu4GURlKNF8xjhZRJGo94ew4YPgqmox+zmbXYC0OvaWdLLPjANLT/6veEJGIN+No4TmxyM
-        3s+a/vkI9GyhnqgGEuOWuXHLxLhlYtwyuQfIFhDCajiVUsXFafbmshd2cwoVl5+r3J2hVlnA
-        xmlksm4wPJxuBZAGUl9R1AFdmpivKOAKVVaAaEIaKKJOFqWJRZmKwkusVp2uzc9hOSsIo0lp
-        sChCPXRaDJWKPPY8y2pY7f+UR/uEFoF805W1y/yX8Tmf+bq6eE2/X167n/xEVam2bod8bD9I
-        8BxMFsXW6NjMJNtQqObqdh28fWy1IinZNFwZUqMcOCe0h38yrL/vqfZMpFTNJ5YP50UXVEqF
-        kXMxmStT2N9+1HNAbZ02JUlm4JGU8p2FV9UVEb5NpZwkMlVzyF0cICW5LEWcjNByij/lw9sV
-        MAMAAA==
-X-CMS-MailID: 20200331225951epcas1p40ae4eff7ebbf4e21821f38628af4b2df
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200326021638epcas1p1626d266c8dcfa051b7c590838e62b097
-References: <cover.1585188174.git.leonard.crestez@nxp.com>
-        <CGME20200326021638epcas1p1626d266c8dcfa051b7c590838e62b097@epcas1p1.samsung.com>
-        <f4553b6aacc88a91ed407eb709097e2cd1bf1a19.1585188174.git.leonard.crestez@nxp.com>
+References: <20200331214609.1742152-1-enric.balletbo@collabora.com> <20200331214609.1742152-4-enric.balletbo@collabora.com>
+In-Reply-To: <20200331214609.1742152-4-enric.balletbo@collabora.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 1 Apr 2020 07:13:20 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__9rrC3o9sTYKgSZi8n0xHdtSFoNMHOqLfQF6B_4BAGww@mail.gmail.com>
+Message-ID: <CAAOTY__9rrC3o9sTYKgSZi8n0xHdtSFoNMHOqLfQF6B_4BAGww@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm64: dts: mt8173: Fix mmsys node name
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        ulrich.hecht+renesas@gmail.com, devicetree@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>, hsinyi@chromium.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        linux-mediatek@lists.infradead.org, matthias.bgg@kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Leonard,
+Hi, Enric:
 
-On 3/26/20 11:16 AM, Leonard Crestez wrote:
-> There is no single device which can represent the imx interconnect.
-> Instead of adding a virtual one just make the main &noc act as the
-> global interconnect provider.
-> 
-> The imx interconnect provider driver will scale the NOC and DDRC based
-> on bandwidth request. More scalable nodes can be added in the future,
-> for example for audio/display/vpu/gpu NICs.
-> 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Enric Balletbo i Serra <enric.balletbo@collabora.com> =E6=96=BC 2020=E5=B9=
+=B44=E6=9C=881=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=885:47=E5=AF=AB=
+=E9=81=93=EF=BC=9A
+>
+> Node names are supposed to match the class of the device, mmsys is a
+> system controller (syscon) not a clock controller, so change the node
+> name accordingly.
+
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+
+>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
->  drivers/devfreq/imx-bus.c | 39 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
-> 
-> diff --git a/drivers/devfreq/imx-bus.c b/drivers/devfreq/imx-bus.c
-> index 285e0f1ae6b1..e9b13e43bf0a 100644
-> --- a/drivers/devfreq/imx-bus.c
-> +++ b/drivers/devfreq/imx-bus.c
-> @@ -15,10 +15,11 @@
->  struct imx_bus {
->  	struct devfreq_dev_profile profile;
->  	struct devfreq *devfreq;
->  	struct clk *clk;
->  	struct devfreq_passive_data passive_data;
-> +	struct platform_device *icc_pdev;
->  };
->  
->  static int imx_bus_target(struct device *dev,
->  		unsigned long *freq, u32 flags)
->  {
-> @@ -60,11 +61,42 @@ static int imx_bus_get_dev_status(struct device *dev,
->  	return 0;
->  }
->  
->  static void imx_bus_exit(struct device *dev)
->  {
-> +	struct imx_bus *priv = dev_get_drvdata(dev);
-> +
->  	dev_pm_opp_of_remove_table(dev);
-> +	platform_device_unregister(priv->icc_pdev);
-> +}
-> +
-> +/* imx_bus_init_icc() - register matching icc provider if required */
-
-Better to add following comments without 'imx_bus_init_icc() -' comment.
-/* Register matching icc provider if required */
-
-> +static int imx_bus_init_icc(struct device *dev)
-> +{
-> +	struct imx_bus *priv = dev_get_drvdata(dev);
-> +	const char *icc_driver_name;
-> +
-> +	if (!of_get_property(dev->of_node, "#interconnect-cells", 0))
-> +		return 0;
-> +	if (!IS_ENABLED(CONFIG_INTERCONNECT_IMX)) {
-> +		dev_warn(dev, "imx interconnect drivers disabled\n");
-> +		return 0;
-> +	}
-> +
-> +	icc_driver_name = of_device_get_match_data(dev);
-> +	if (!icc_driver_name)
-> +		return 0;
-
-Recommend to add the error or warning message.
-
-> +
-> +	priv->icc_pdev = platform_device_register_data(
-> +			dev, icc_driver_name, -1, NULL, 0);
-> +	if (IS_ERR(priv->icc_pdev)) {
-> +		dev_err(dev, "failed to register icc provider %s: %ld\n",
-> +				icc_driver_name, PTR_ERR(priv->devfreq));
-> +		return PTR_ERR(priv->devfreq);
-> +	}
-> +
-> +	return 0;
->  }
->  
->  static int imx_bus_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -112,18 +144,25 @@ static int imx_bus_probe(struct platform_device *pdev)
->  		ret = PTR_ERR(priv->devfreq);
->  		dev_err(dev, "failed to add devfreq device: %d\n", ret);
->  		goto err;
->  	}
->  
-> +	ret = imx_bus_init_icc(dev);
-> +	if (ret)
-
-Recommend to add the error message.
-
-> +		goto err;
-> +
->  	return 0;
->  
->  err:
->  	dev_pm_opp_of_remove_table(dev);
->  	return ret;
->  }
->  
->  static const struct of_device_id imx_bus_of_match[] = {
-> +	{ .compatible = "fsl,imx8mq-noc", .data = "imx8mq-interconnect", },
-> +	{ .compatible = "fsl,imx8mm-noc", .data = "imx8mm-interconnect", },
-> +	{ .compatible = "fsl,imx8mn-noc", .data = "imx8mn-interconnect", },
->  	{ .compatible = "fsl,imx8m-noc", },
->  	{ .compatible = "fsl,imx8m-nic", },
->  	{ /* sentinel */ },
->  };
->  MODULE_DEVICE_TABLE(of, imx_bus_of_match);
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+>
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/d=
+ts/mediatek/mt8173.dtsi
+> index 8b4e806d5119..a55e8c177832 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -908,7 +908,7 @@ u2port1: usb-phy@11291000 {
+>                         };
+>                 };
+>
+> -               mmsys: clock-controller@14000000 {
+> +               mmsys: syscon@14000000 {
+>                         compatible =3D "mediatek,mt8173-mmsys", "syscon";
+>                         reg =3D <0 0x14000000 0 0x1000>;
+>                         power-domains =3D <&scpsys MT8173_POWER_DOMAIN_MM=
+>;
+> --
+> 2.25.1
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
