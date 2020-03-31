@@ -2,90 +2,114 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4948DC2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9185C2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9412137B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585676183;
-	bh=qXZlG38kdiS2daxnXmu8ZDkg8Z0hcZCVMkKODARFtWk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l6s4uqYT/+QkilRT7VeS57H8zBBo3aBqI61NI+bwrCnhBjRbdpvj1GmfH9DlSRefo
-	 w/8sAoyP1TqphDDvA5/m/DUq/w7u18uGOi0RzX1N/kdIsMOJ98hrYlMw7XMQlRabgj
-	 CuYm4HyAJnd9Fls5SWTGJbXt9D9zK+ORjUT/Y4+s=
+	by mail.kernel.org (Postfix) with ESMTP id 6F20F2137B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:40:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="th3yCmPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgCaRgW (ORCPT
+        id S1725958AbgCaRkN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:36:22 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35759 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgCaRgW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:36:22 -0400
-Received: by mail-io1-f66.google.com with SMTP id o3so17045091ioh.2;
-        Tue, 31 Mar 2020 10:36:20 -0700 (PDT)
+        Tue, 31 Mar 2020 13:40:13 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39365 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgCaRkM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:40:12 -0400
+Received: by mail-pj1-f67.google.com with SMTP id z3so1367593pjr.4;
+        Tue, 31 Mar 2020 10:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZGgZ/DpbtjfvIoAyjH9WXHlU0MAC6qI9epf9j+QkcKY=;
+        b=th3yCmPTqqQGqzzkW/l97xkY9n6LcLBq0Q6woMFWev7XAzbKr1HS2mb/U3X3zpSIaE
+         8g/PuCmSRKZkX4IdCvjw4Qk5syo6pKaBl3MRW9P9PzQ+PAa2YjXdZo467gT2hsO3aUWQ
+         32/Ckxav4t5mEnYp0n50dSc3PisBJgeKXj+sW8pKeWDD1tgJP+5LpCcSwWrHr72DgeL1
+         DkiKreZel2jBtxw1QLa1V3zDzsNNCSnDl8oPz6xEK/wUTA3Z+ljIy4tL3shrMmpofR32
+         MG8tq1tapDMLsjir8Xemx9ANVGR3+xxCu+VEKofLlZoOnpqOUwiog3uGqHdrSAiBAux9
+         YtIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:content-language
-         :user-agent;
-        bh=S1V7zL1CGoQIvYCkkD9lC2eCSgJi/Eyw7rWZO9Jllp0=;
-        b=XoM6COAcEl2Tk+NXAfq+4vRwYwtZ95VXiTbP5bOgF22+dDJ4u8CjfiE7WtyBWs34mO
-         z4qPcy5JkEAf3TQ9cU3B9BORxfqnZHWhLUuRozoxeOpYMTZhlqFOzke/6a4qLdVA5ZfL
-         1qIQzoXhcJPEN07k2qLq3aMxGWLVN+osN9o4f212Pn3UQZAgS7IyQE32XDSgp8m8IOgI
-         giupYFOQ3WQIluFG45Cp90s69AZYjfJ/wM5Jrf+j7JZbnUSG12TFzJ5EU6On0IWEMEW+
-         3NjEU6wgcLr+9XktYzUnqowXePEHmUOamc9Dq6pcCAswqkZgUoYafoeOPDdnNsGv+jp2
-         LeDg==
-X-Gm-Message-State: ANhLgQ0zxJJY5dteIdghqwVlf/IKR4fgCrBJYufBuP6XUNQNXFH1e4Tq
-        fIhNqXajOh+8LgJ1B30AekBFIUE=
-X-Google-Smtp-Source: ADFU+vum0qwSAfSDX0Tn0W+7ZEAsCapO6gblBcfWRoyIc7VlLLnpNVNvmILJTzc2kwcHz9K8NJjr3Q==
-X-Received: by 2002:a05:6602:199:: with SMTP id m25mr16416621ioo.13.1585676179679;
-        Tue, 31 Mar 2020 10:36:19 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id o23sm6127111ild.33.2020.03.31.10.36.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 10:36:19 -0700 (PDT)
-Received: (nullmailer pid 324 invoked by uid 1000);
-        Tue, 31 Mar 2020 17:36:17 -0000
-Date:   Tue, 31 Mar 2020 11:36:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Denis Osterland-Heim <denis.osterland@diehl.com>
-Cc:     "dmurphy@ti.com" <dmurphy@ti.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Denis Osterland-Heim <denis.osterland@diehl.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v4 5/5] leds: pwm: add reference to common leds for
-  default-state
-Message-ID: <20200331173617.GA32737@bogus>
-References: <20200321081321.15614-1-Denis.Osterland@diehl.com>
- <20200321081321.15614-6-Denis.Osterland@diehl.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZGgZ/DpbtjfvIoAyjH9WXHlU0MAC6qI9epf9j+QkcKY=;
+        b=TT1ggirRF8qwYI94fBHx6Yf6KkAPZ4XSzbztF3YSbUWVz5sBmq6QoLL1ij3YOOkXlp
+         OGZKqLrfa5RwGYz7vtszMijdy927+5YiudVFOGlPitRh9TLyS/XnmGq3sUDufL5fOCy9
+         8R9E6gVmfV73esg/9xirBwRmta0CDzfrTOj5UgnKr6r9q8dmVgCg99QUw80RK8/Ac60z
+         TceOr23UqRvaGJuJ7EkFC+z6WMfSaEemXDJ7CmSrLADD7Q4DJp661wJ+awyZABAfLV8B
+         +XdUR3L7xpYrk9ct33mck2iB5AH2lq5G+Cr49YLUz680Y64BOQO4U8MFWZJ0y55xgWt7
+         Of0g==
+X-Gm-Message-State: AGi0PuZ6cmlxpfA8RTAgXFnHKlLWKnqEGQdwUrxrwWcOvVUoQfTc11dQ
+        ikckPp8TouHhqkJUpAvAg5Itf1MJm2yDV1bWhDQ=
+X-Google-Smtp-Source: APiQypIQuOZDYcgwqK9kKPwJGPfZOl5Efak8sh+J533FlKJ/LbInbJDvdydB3qMebrD1YhQoYcmStt+VziIDAqwgmpA=
+X-Received: by 2002:a17:90a:3602:: with SMTP id s2mr5288873pjb.143.1585676409848;
+ Tue, 31 Mar 2020 10:40:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200321081321.15614-6-Denis.Osterland@diehl.com>
-Content-Language: en-US
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200331114811.7978-1-nuno.sa@analog.com> <20200331114811.7978-3-nuno.sa@analog.com>
+In-Reply-To: <20200331114811.7978-3-nuno.sa@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 31 Mar 2020 20:40:02 +0300
+Message-ID: <CAHp75VfXS1P-EJaKERojK=-3erYi5MxyDMjfrELyY2X3PZEN1A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] iio: imu: adis: Add irq mask variable
+To:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 21 Mar 2020 08:15:51 +0000, Denis Osterland-Heim wrote:
-> 
-> The default-state is now supported for PWM leds.
-> 
-> Signed-off-by: Denis Osterland-Heim <Denis.Osterland@diehl.com>
-> ---
->  Documentation/devicetree/bindings/leds/leds-pwm.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
+>
+> There are some ADIS devices that can configure the data ready pin
+> polarity. Hence, we cannot hardcode our IRQ mask as IRQF_TRIGGER_RISING
+> since we might want to have it as IRQF_TRIGGER_FALLING.
 
-Acked-by: Rob Herring <robh@kernel.org>
+...
+
+> +static int adis_validate_irq_mask(struct adis *adis)
+> +{
+> +       if (!adis->irq_mask) {
+> +               adis->irq_mask =3D IRQF_TRIGGER_RISING;
+> +               return 0;
+
+> +       } else if (adis->irq_mask !=3D IRQF_TRIGGER_RISING &&
+
+'else' is redundant.
+
+> +                  adis->irq_mask !=3D IRQF_TRIGGER_FALLING) {
+
+But this condition rises questions. Why i can't configure both?
+Why I can't configure other flags there?
+
+> +               dev_err(&adis->spi->dev, "Invalid IRQ mask: %08lx\n",
+> +                       adis->irq_mask);
+> +               return -EINVAL;
+> +       }
+
+> +       return 0;
+> +}
+
+And actually name of the function is not exactly what it does. It
+validates *or* initializes.
+
+--=20
+With Best Regards,
+Andy Shevchenko
