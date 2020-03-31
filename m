@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50193C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87DEC2D0F4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2467020748
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D4A120848
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:57:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rvUYpuvv"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EKkrwcQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgCaH5D (ORCPT
+        id S1730314AbgCaH5H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:57:03 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:60484 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730294AbgCaH5C (ORCPT
+        Tue, 31 Mar 2020 03:57:07 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:57296 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729925AbgCaH5G (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 03:57:02 -0400
+        Tue, 31 Mar 2020 03:57:06 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585641422; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1585641426; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=VT9/ErTi2g1chyk6bUNJTnT/qqr1194jK5RfTnp8tS4=; b=rvUYpuvvq/A2z/VTfnSHylJ/F5ApaTMN8dhCoU98IC6jZ3m8N95WEOUOL1IRF2B8fX9KB1vV
- zODrLPgF9+ufnAWmHZGZOL0AFZ3dktDy4GsdS3jKznb0NJEW1AtX923YGMVWfDapatBrlhgd
- 5LWIg3STUmC6jpMPjO7waTO9Suo=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ bh=dVNPuFwMQs3mGQ6A/aNYnqJJmJ84rfGZXTYWK1NW09c=; b=EKkrwcQIT9ka1wAAVCJmKL5zgJQV8la2wt7E2tL88UFG7XhmXv3TFGPTEqL4Kvi8XTYbtkc/
+ LE171G8K1JbRRtyaj3qmfBtyNOfzr/8jkgaj3KLftlGFbh0ooqg22IYtN5KEObp4lvdONxHw
+ oHpKb/922LO7JsGFTTai7qQHy4U=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e82f7c9.7f3e5fc79420-smtp-out-n03;
- Tue, 31 Mar 2020 07:56:57 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e82f7c4.7ff857154d18-smtp-out-n04;
+ Tue, 31 Mar 2020 07:56:52 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 21CD4C4478F; Tue, 31 Mar 2020 07:56:57 +0000 (UTC)
+        id CE2F7C58A02; Tue, 31 Mar 2020 07:56:51 +0000 (UTC)
 Received: from hyd-lnxbld559.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: smasetty)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 39EB0C44795;
-        Tue, 31 Mar 2020 07:56:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 39EB0C44795
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4CE7CC43637;
+        Tue, 31 Mar 2020 07:56:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4CE7CC43637
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
 From:   Sharat Masetty <smasetty@codeaurora.org>
@@ -51,9 +51,9 @@ Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
         mka@chromium.org, sibis@codeaurora.org, saravanak@google.com,
         viresh.kumar@linaro.org, Sharat Masetty <smasetty@codeaurora.org>
-Subject: [PATCH 5/5] dt-bindings: drm/msm/gpu: Document OPP phandle list for the GPU
-Date:   Tue, 31 Mar 2020 13:25:53 +0530
-Message-Id: <1585641353-23229-6-git-send-email-smasetty@codeaurora.org>
+Subject: [PATCH 4/5] drm: msm: a6xx: Fix off by one error when setting GPU freq
+Date:   Tue, 31 Mar 2020 13:25:52 +0530
+Message-Id: <1585641353-23229-5-git-send-email-smasetty@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
 References: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
@@ -62,100 +62,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Update the documentation for listing the multiple optional GPU and the
-DDR OPP tables to help enable DDR scaling.
+This patch fixes an error in the for loop, thereby allowing search on
+the full list of possible GPU power levels.
 
 Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 ---
- .../devicetree/bindings/display/msm/gpu.txt        | 63 +++++++++++++++++++++-
- 1 file changed, 61 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
-index 70025cb..ff3ae1b 100644
---- a/Documentation/devicetree/bindings/display/msm/gpu.txt
-+++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
-@@ -21,7 +21,10 @@ Required properties:
-   following devices should not list clocks:
-    - qcom,adreno-630.2
- - iommus: optional phandle to an adreno iommu instance
--- operating-points-v2: optional phandle to the OPP operating points
-+- operating-points-v2: optional phandles to the OPP operating point tables
-+  one for the GPU OPPs and the other for the GPU->DDR OPPs. Note that if
-+  multiple OPP tables are specified, the GPU OPP table(considered primary)
-+  should be the first in the phandle list.
- - interconnects: optional phandle to an interconnect provider.  See
-   ../interconnect/interconnect.txt for details.
- - qcom,gmu: For GMU attached devices a phandle to the GMU device that will
-@@ -75,7 +78,7 @@ Example a6xx (with GMU):
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 489d9b6..81b8559 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -176,7 +176,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, unsigned long freq)
+ 	if (freq == gmu->freq)
+ 		return;
 
- 		iommus = <&adreno_smmu 0>;
+-	for (perf_index = 0; perf_index < gmu->nr_gpu_freqs - 1; perf_index++)
++	for (perf_index = 0; perf_index < gmu->nr_gpu_freqs; perf_index++)
+ 		if (freq == gmu->gpu_freqs[perf_index])
+ 			break;
 
--		operating-points-v2 = <&gpu_opp_table>;
-+		operating-points-v2 = <&gpu_opp_table>, <&gpu_ddr_bw_opp_table>;
-
- 		interconnects = <&rsc_hlos MASTER_GFX3D &rsc_hlos SLAVE_EBI1>;
-
-@@ -85,5 +88,61 @@ Example a6xx (with GMU):
- 			memory-region = <&zap_shader_region>;
- 			firmware-name = "qcom/LENOVO/81JL/qcdxkmsuc850.mbn"
- 		};
-+
-+		gpu_opp_table: opp-table {
-+			compatible = "operating-points-v2";
-+
-+			opp-430000000 {
-+				opp-hz = /bits/ 64 <430000000>;
-+				opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+				required-opps = <&gpu_ddr_bw_opp6>;
-+			};
-+
-+			opp-355000000 {
-+				opp-hz = /bits/ 64 <355000000>;
-+				opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+				required-opps = <&gpu_ddr_bw_opp4>;
-+			};
-+
-+			opp-267000000 {
-+				opp-hz = /bits/ 64 <267000000>;
-+				opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+				required-opps = <&gpu_ddr_bw_opp4>;
-+			};
-+
-+			opp-180000000 {
-+				opp-hz = /bits/ 64 <180000000>;
-+				opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+				required-opps = <&gpu_ddr_bw_opp2>;
-+			};
-+		};
-+
-+		gpu_ddr_bw_opp_table: gpu-ddr-bw-opp-table {
-+			compatible = "operating-points-v2";
-+
-+			gpu_ddr_bw_opp1: opp-300000000  {
-+				opp-peak-kBps =/bits/ 32 <1200000>;
-+			};
-+
-+			gpu_ddr_bw_opp2: opp-451000000  {
-+				opp-peak-kBps =/bits/ 32 <1804000>;
-+			};
-+
-+			gpu_ddr_bw_opp3: opp-547000000  {
-+				opp-peak-kBps =/bits/ 32 <2188000>;
-+			};
-+
-+			gpu_ddr_bw_opp4: opp-768000000  {
-+				opp-peak-kBps =/bits/ 32 <3072000>;
-+			};
-+
-+			gpu_ddr_bw_opp5: opp-1017000000  {
-+				opp-peak-kBps =/bits/ 32 <4068000>;
-+			};
-+
-+			gpu_ddr_bw_opp6: opp-1353000000  {
-+				opp-peak-kBps =/bits/ 32 <5412000>;
-+			};
-+		};
- 	};
- };
 --
 2.7.4
