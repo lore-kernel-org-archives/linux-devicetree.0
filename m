@@ -6,85 +6,93 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC03DC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB96C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 20:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3842080C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BE320658
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 20:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585684733;
-	bh=gA0axL2Eg/C/N9mByJWyPcBV1fT5qmjVN+ihCYHzDHs=;
+	s=default; t=1585684833;
+	bh=zvJLZ1Yiyd3wNasFIHUvdsiN9vMWVMooFuGGJBtZzKU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zOFwRbEaAOxhjec16W+6x1MaIR0+1hqL9EPclFdvb1fp9ZlvrbpaqjHMBddvzozRP
-	 AwqBwPYmeeBOIFTemdrk0HVKBy/cPTCx7IBlhGuQ7nlNXk/OVViJbOyY+h+kkZLPPw
-	 H10/4up6mPLvpP0VJWznziFo9rEvCksyksPWGnfM=
+	b=MAegDYSmV4b7xXvYnVYuisBpJDRuUjF5ltOTVmtDxD2MxcgYlMHYtcrjioCR1Rth1
+	 5JgfRQajpMceQEOv1uTCVcaECYh0jblUjlgIbAhiuft8QdP0Va2fNIr6p8G2le+7/l
+	 Zu7JK8pV+zl8xTJXfXKPv2hr6PKQXKfpIDXiRBHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbgCaT6x (ORCPT
+        id S1727720AbgCaUAc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:58:53 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43238 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgCaT6x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 15:58:53 -0400
-Received: by mail-il1-f196.google.com with SMTP id g15so20700188ilj.10;
-        Tue, 31 Mar 2020 12:58:52 -0700 (PDT)
+        Tue, 31 Mar 2020 16:00:32 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46683 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727837AbgCaUAc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 16:00:32 -0400
+Received: by mail-io1-f65.google.com with SMTP id i3so13973895ioo.13;
+        Tue, 31 Mar 2020 13:00:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pkZ0aQadXW+UarG3V6yDDnoy3MjYoP4UMbK1exK/Agk=;
-        b=md6mTqVDtTFOQI+0VVn0j3O31NrxmgqvIox8zZdsO0PBeM5FtMZvoLbAgkJwsKmeDn
-         dGUCPUCu7ZvTeE7DUYKQ3vHXoDk2x218fDO9+qiRFlxxl+v0wADf2OXzxfasId+9Kuxb
-         SS1kpxARX9tpbkBSR/jNHziVYvVPp6pvCmBYvOz5axQPCJaGDS+Fxruhow3HXqej6CJy
-         hDDiraa4u8MzzdrwpBVxbh2ZbDL6CbwAMFerxmXs/ogsu4jIQJKWD0aXA5/oYkTgFYvS
-         9C7DrI/KaiMDA1fz4q/DH2lU/gtJL+yjBwrpPtgKKSRoZm2tbzf0bsM1W1EjyxbHxHgz
-         KJfQ==
-X-Gm-Message-State: ANhLgQ102DAF3BZYW1R5pzA3RPn85nTOGZBkB3BneblKCcUpNaZhee/o
-        XJGqk8WNDFqKby1C2CdCbb7KnJKxdA==
-X-Google-Smtp-Source: ADFU+vsmNeRowX49DLQnGgdAShsW+1YjICc0B8+q1P0/NHtVfbMIgSjjmQj+1JoZ0y7gtYkwNtlb2w==
-X-Received: by 2002:a05:6e02:54e:: with SMTP id i14mr19034209ils.166.1585684732061;
-        Tue, 31 Mar 2020 12:58:52 -0700 (PDT)
+        bh=s9DFvHioEqxQs6sviOj1Sm2a5WFW4fOhlT5MmKmuEBU=;
+        b=k5vl1cHIhZuHBMga307KVT822UZEIRHQTa8vZCgfAYpJplTU/2yTfKS9NuOUw5CL5c
+         /ETvF0tsSLWRog6zXfkoKM80aGfQg5+FlC35Ti7fqZWKEmiCFM2Mg3FPOWRODcBQw2PP
+         WKiB8FeB0IMIi5sjGepKUJLoFxcHhXoMH1IZBp9/8HXuvkqyTjyAWiWNZO1lyxewRNKQ
+         5MFcorAnIdGe7WC1NNQvL8kl+46o/WvQ6zF2kZRUIQOpeN7ZD6VG0YXBiV1Ky7OiFmpW
+         QpPWSLN5BUokUx+q5ktBsvFIY/gcsDEz6aq3L5EwtyHX4mte/ZxyE4A7I8g2WZn509cU
+         p/7Q==
+X-Gm-Message-State: ANhLgQ3QnEMFNuyBdf8Ebf7uBAUraa/ju/48igJc8eTHwxtspckGAuU+
+        SZg4xY6Jh+4B4zNuCwoA/A==
+X-Google-Smtp-Source: ADFU+vvHXBGG9b+jJlsNae2tD54vi6RyRFIDg9NuHSbI3xqW9sGB/or7YPwGuRQfIT0By0v/er67tg==
+X-Received: by 2002:a5d:8b57:: with SMTP id c23mr17020954iot.161.1585684831803;
+        Tue, 31 Mar 2020 13:00:31 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id i3sm5108021iow.11.2020.03.31.12.58.50
+        by smtp.gmail.com with ESMTPSA id p69sm5718490ill.46.2020.03.31.13.00.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 12:58:51 -0700 (PDT)
-Received: (nullmailer pid 2448 invoked by uid 1000);
-        Tue, 31 Mar 2020 19:58:50 -0000
-Date:   Tue, 31 Mar 2020 13:58:50 -0600
+        Tue, 31 Mar 2020 13:00:29 -0700 (PDT)
+Received: (nullmailer pid 5074 invoked by uid 1000);
+        Tue, 31 Mar 2020 20:00:28 -0000
+Date:   Tue, 31 Mar 2020 14:00:28 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
-        martin.blumenstingl@googlemail.com, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 13/13] dt-bindings: usb: amlogic,dwc3: remove old DWC3
- wrapper
-Message-ID: <20200331195850.GA2337@bogus>
-References: <20200324102030.31000-1-narmstrong@baylibre.com>
- <20200324102030.31000-14-narmstrong@baylibre.com>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, heiko@sntech.de,
+        robh+dt@kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: sound: convert rockchip spdif
+ bindings to yaml
+Message-ID: <20200331200028.GA5018@bogus>
+References: <20200324123155.11858-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324102030.31000-14-narmstrong@baylibre.com>
+In-Reply-To: <20200324123155.11858-1-jbx6244@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 24 Mar 2020 11:20:30 +0100, Neil Armstrong wrote:
-> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Tue, 24 Mar 2020 13:31:53 +0100, Johan Jonker wrote:
+> Current dts files with 'spdif' nodes are manually verified.
+> In order to automate this process rockchip-spdif.txt
+> has to be converted to yaml.
 > 
-> There is now an updated bindings for these SoCs making the old
-> compatible obsolete.
+> Also rk3188.dtsi, rk3288.dtsi use an extra fallback string,
+> so change this in the documentation.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Changed:
+> "rockchip,rk3188-spdif", "rockchip,rk3066-spdif"
+> "rockchip,rk3288-spdif", "rockchip,rk3066-spdif"
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
->  .../devicetree/bindings/usb/amlogic,dwc3.txt  | 42 -------------------
->  1 file changed, 42 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+> Changed V2:
+>   dmas and dma-names layout
+> ---
+>  .../devicetree/bindings/sound/rockchip-spdif.txt   | 45 -----------
+>  .../devicetree/bindings/sound/rockchip-spdif.yaml  | 94 ++++++++++++++++++++++
+>  2 files changed, 94 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/rockchip-spdif.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
