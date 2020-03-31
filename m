@@ -2,149 +2,146 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705E7C2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31DEC2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45EF420848
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:26:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585668374;
-	bh=5IJuX6AkKeckjXGkAnpY4cbNqHBPFLgHVhnLoOaMTdI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=j+JSInR/GzKoLFXkoRf2R42hfFKuf+UCJW7HcWk+31dVywRncmlBFmloMynEsP2zH
-	 cey6joNByJ9SvL8UBJ9gzUkAKK6aoqKyfiSL7xP0++i9t9tlAcuZn7wrwFgvtImZ66
-	 12I29jhkmUk4KS2Fh0JQqqov8ya92S5bEw4Bk/Wk=
+	by mail.kernel.org (Postfix) with ESMTP id 980E620BED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:30:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6iR0Ax8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbgCaP0K (ORCPT
+        id S1731108AbgCaPaD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730149AbgCaP0K (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:26:10 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CF4620786;
-        Tue, 31 Mar 2020 15:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585668369;
-        bh=5IJuX6AkKeckjXGkAnpY4cbNqHBPFLgHVhnLoOaMTdI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=S/oqF+T/HoROYfLFrY1ioWZF2kvgn+TqZ1BT4qOw6L5CrOyrHgE3MbMhmE8CGoJO5
-         YdrpvTO4rp0NRKQr6DqkamIxS0DWA1Byijc8wOr2ELiD+yVjDYg49zvbg7lYW3qkSa
-         EaYSi5CK3cgeHod56nIIqFUezoWvFggl0C/lpW1A=
-Date:   Tue, 31 Mar 2020 10:25:54 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     bjorn@helgaas.com, Vidya Sagar <vidyas@nvidia.com>,
-        robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
-        Andrew Murray <andrew.murray@arm.com>, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        ARM <linux-arm-kernel@lists.infradead.org>, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
- Tegra194
-Message-ID: <20200331152554.GA188434@google.com>
+        Tue, 31 Mar 2020 11:30:03 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33252 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730391AbgCaPaB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 11:30:01 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x200so10508415lff.0;
+        Tue, 31 Mar 2020 08:30:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=xWWQQMjnoOXj+s35rdwO3AKWUNgB5UP2RN102SZyf9M=;
+        b=n6iR0Ax8nI25kt13ZeGCsBvnzPWCNcQh25Y3upu8+faElg1UmeSUZvzyCrEobwnxwc
+         gVNVJMeJVkjTnoRkX4CJnvEJrV5P1NW4deeOfm9g0Nercdv7CYLH2hH8ny2ka87gesHx
+         oyxIlVkIQuVkmpz7Tc/HGKF1aNxOjdpCvGTO1KhDoc0zeQuX/SOzgZ/pfeRUVUzuRBsp
+         XpFEKvQf+En0EZlW9iwD/63G2LR5zEzozv6vJ0Hy/LjskoC+GbEHzEV/d1aTUQgQQ9JP
+         cnMtBYNuvuGC9QJ2dMRo9w3h5iQSX3UHfPwiWqcWYzdtVloTd6TanNL1PTGtFWZycgcU
+         N+Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=xWWQQMjnoOXj+s35rdwO3AKWUNgB5UP2RN102SZyf9M=;
+        b=lXZOiUrA++XH+UWlD6ZzUIxye9eSbbFP+am29rqe6/a8TcVek7+PQvVt8xPPgFe/kR
+         FL4GihVeE4ZgkC63LjdjqN46GLWHf/DbcwpHqWjiwyTr5Gj77Cgm0OY/U5XSD9kQexCQ
+         encPqh3RtazqVhLRLJYrCvBL9rg87jeEJ3kh/k6qeFVUdfeuBmeiPKTQutJGzYJlF2Bx
+         RakKW4yxbdJqKA8n7h+L6M3m6Zzuy2wxuAmETUpDy/8DOuuTGKsAMNXHy+GjHQ9nzBo8
+         IM1ht1SUvIk8W672BhYAftcQZjzbrHpYbFlN3S6ijlgnU/2BMLUcUmFfJExh1xtZQFvE
+         veAg==
+X-Gm-Message-State: AGi0PuY6mXRToWL07eEt6V2MvtXo2RcnxlEt4eEoKd3pxXxiVx2Z2B/k
+        ZgLTttC8gxG9p1G+I2XeZHU=
+X-Google-Smtp-Source: APiQypLmVLtT8c3Ae8yFJGreZRae3ELGPZCOey9sa+nDWvoHUeTggKwcWmX/TR05X/+9guBOCeUrhg==
+X-Received: by 2002:ac2:4113:: with SMTP id b19mr2153946lfi.70.1585668599197;
+        Tue, 31 Mar 2020 08:29:59 -0700 (PDT)
+Received: from pablo-laptop ([2a02:a315:5445:5300:c0c9:238d:e5e0:ede5])
+        by smtp.googlemail.com with ESMTPSA id j125sm8827924lfj.38.2020.03.31.08.29.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 08:29:58 -0700 (PDT)
+Message-ID: <d9fe575926342b355f76e1f38fef62f0d7d38075.camel@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
+From:   =?UTF-8?Q?Pawe=C5=82?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 31 Mar 2020 17:29:56 +0200
+In-Reply-To: <6ca59c1b-2676-e69d-e4eb-4667a81d155f@samsung.com>
+References: <20200312153411.13535-1-paul@crapouillou.net>
+         <20200312153411.13535-2-paul@crapouillou.net> <20200313090011.GB7416@pi3>
+         <CGME20200318142549eucas1p1793027850923ebad20b4691cba676671@eucas1p1.samsung.com>
+         <D6.31.03891.A6F227E5@epmailinsp8.samsung.com>
+         <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
+         <X7728Q.UX8A28S31JO92@crapouillou.net>
+         <6ca59c1b-2676-e69d-e4eb-4667a81d155f@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331082325.GA32028@e121166-lin.cambridge.arm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 09:23:25AM +0100, Lorenzo Pieralisi wrote:
-> On Mon, Mar 30, 2020 at 10:00:57PM -0500, Bjorn Helgaas wrote:
-> > On Mon, Mar 30, 2020 at 9:55 PM Vidya Sagar <vidyas@nvidia.com> wrote:
-> > > On 3/31/2020 3:17 AM, Bjorn Helgaas wrote:
-> > > > External email: Use caution opening links or attachments
-> > > >
-> > > >
-> > > > On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
-> > > >> Add support for the endpoint mode of Synopsys DesignWare core based
-> > > >> dual mode PCIe controllers present in Tegra194 SoC.
-> > > >>
-> > > >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > > >> Acked-by: Thierry Reding <treding@nvidia.com>
-> > > >> ---
-> > > >> V5:
-> > > >> * Added Acked-by: Thierry Reding <treding@nvidia.com>
-> > > >> * Removed unwanted header file inclusion
-> > > >>
-> > > >> V4:
-> > > >> * Addressed Lorenzo's review comments
-> > > >> * Started using threaded irqs instead of kthreads
-> > > >>
-> > > >> V3:
-> > > >> * Addressed Thierry's review comments
-> > > >>
-> > > >> V2:
-> > > >> * Addressed Bjorn's review comments
-> > > >> * Made changes as part of addressing review comments for other patches
-> > > >>
-> > > >>   drivers/pci/controller/dwc/Kconfig         |  30 +-
-> > > >>   drivers/pci/controller/dwc/pcie-tegra194.c | 679 ++++++++++++++++++++-
-> > > >>   2 files changed, 691 insertions(+), 18 deletions(-)
-> > > >>
-> > > >> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > > >> index 0830dfcfa43a..169cde58dd92 100644
-> > > >> --- a/drivers/pci/controller/dwc/Kconfig
-> > > >> +++ b/drivers/pci/controller/dwc/Kconfig
-> > > >> @@ -248,14 +248,38 @@ config PCI_MESON
-> > > >>          implement the driver.
-> > > >>
-> > > >>   config PCIE_TEGRA194
-> > > >> -     tristate "NVIDIA Tegra194 (and later) PCIe controller"
-> > > >> +     tristate
-> > > >> +
-> > > >> +config PCIE_TEGRA194_HOST
-> > > >> +     tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
-> > > >>        depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
-> > > >>        depends on PCI_MSI_IRQ_DOMAIN
-> > > >>        select PCIE_DW_HOST
-> > > >>        select PHY_TEGRA194_P2U
-> > > >> +     select PCIE_TEGRA194
-> > > >> +     default y
-> > > >
-> > > > Sorry I missed this before, but why is this "default y"?  From
-> > > > Documentation/kbuild/kconfig-language.rst:
-> > > >
-> > > >    The default value deliberately defaults to 'n' in order to avoid
-> > > >    bloating the build. With few exceptions, new config options should
-> > > >    not change this. The intent is for "make oldconfig" to add as little
-> > > >    as possible to the config from release to release.
-> > > >
-> > > > I do see that several other things in other drivers/pci/ Kconfig files
-> > > > are also "default y", and we should probably change some of them.  But
-> > > > I don't want to add even more unless there's a good reason.
-> > > >
-> > > > I'm not looking for more reactions like these:
-> > > >
-> > > > https://lore.kernel.org/r/CAHk-=wiZ24JuVehJ5sEC0UG1Gk2nvB363wO02RRsR1oEht6R9Q@mail.gmail.com
-> > > > https://lore.kernel.org/r/CA+55aFzPpuHU1Nqd595SEQS=F+kXMzPs0Rba9FUgTodGxmXsgg@mail.gmail.com
-> > > >
-> > > > Can you please update this patch to either remove the "default y" or
-> > > > add the rationale for keeping it?
-> > > I'm fine with removing 'default y' line.
-> > > Should I send a patch only with this change?
-> > 
-> > I think it's probably just as easy for Lorenzo to delete that line on
-> > his branch.  If not, I'll cherry-pick the patches on that branch and
-> > do it locally.
+On Tue, 2020-03-31 at 15:55 +0200, Marek Szyprowski wrote:
+> Hi Paul,
 > 
-> Done, pushed out. It is a guideline that it is worth keeping in mind
-> while I review the code, sorry for missing it.
+> On 2020-03-31 15:09, Paul Cercueil wrote:
+> > Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > 
+> > Hi Marek,
+> > 
+> > Le mar. 31 mars 2020 à 7:36, Marek Szyprowski 
+> > <m.szyprowski@samsung.com> a écrit :
+> > > Hi Paul,
+> > > 
+> > > On 2020-03-18 15:25, Paul Cercueil wrote:
+> > > > > >   +    };
+> > > > > >   +
+> > > > > >   +    tsp_reg: regulator-1 {
+> > > > > >   +        compatible = "regulator-fixed";
+> > > > > >   +        regulator-name = "TSP_FIXED_VOLTAGES";
+> > > > > >   +        regulator-min-microvolt = <3300000>;
+> > > > > >   +        regulator-max-microvolt = <3300000>;
+> > > > > >   +        gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
+> > > > > >   +        startup-delay-us = <70000>;
+> > > > > >   +        enable-active-high;
+> > > > > >   +        regulator-boot-on;
+> > > > > >   +        regulator-always-on;
+> > > > > 
+> > > > >  always-on and boot-on should not be needed. You have a consumer 
+> > > > > for this
+> > > > >  regulator.
+> > > > 
+> > > >  About this: the touchscreen driver does not use a regulator, so I
+> > > >  believe that's why these properties were here.
+> > > > 
+> > > >  I sent patches upstream to address the issue:
+> > > >  https://protect2.fireeye.com/url?k=e8aedc29-b53072b3-e8af5766-0cc47a336fae-759579fd576d8382&u=https://lkml.org/lkml/2020/3/15/94 
+> > > > 
+> > > > 
+> > > >  I believe this means I cannot merge the i9100 devicetree until it is
+> > > >  acked.
+> > > 
+> > > One more information - similar change has been already posted, but it
+> > > looks it got lost then: https://patchwork.kernel.org/patch/10550903/
+> > 
+> > I was aware of this patch, but didn't know it was sent upstream.
+> > 
+> > This other patch uses two regulators, vdd/avdd but doesn't give any 
+> > reason why.
+> > 
+> I've checked the UniversalC210 schematic, which uses the same 
+> touchscreen chip. There are 2 supplies to the touchscreen chip: 2.8V VDD 
+> and 3.3V AVDD. Both are enabled by the same GPIO pin though. There is 
+> however no reset GPIO pin there.
+Hi
+Don't remember now how it worked on Galaxy S1, but it looks like it has
+the same setup - two regulators enabled by one GPIO pin.
+> 
+> > Paweł, is that really needed?
+> > 
+> Best regards
 
-Got it, thanks!  No worries, easy to fix.
-
-Bjorn
