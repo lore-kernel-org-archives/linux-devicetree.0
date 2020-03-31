@@ -2,141 +2,191 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA0AC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F281BC2D0EE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA0F20838
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:10:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="M+SA6eXS"
+	by mail.kernel.org (Postfix) with ESMTP id C867220838
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 11:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730366AbgCaLKv (ORCPT
+        id S1730464AbgCaLK7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 07:10:51 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:40823 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730180AbgCaLKv (ORCPT
+        Tue, 31 Mar 2020 07:10:59 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:48552 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730380AbgCaLK7 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 07:10:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585653050; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=A30pWpOcWWloATde2ShySI8DseQoiLN1y6svK/jE72k=; b=M+SA6eXSHQVit/KUMeKF21cK7m1thCbbfP6+WyqRKXNaxQaV/Gh9jXE/0tvRmuBdMDTWr1Ab
- yrqABamYBmJaYANrxhwRpLSMXgYC+WpEfZYy3xxEyMwCFCYL7WbDafN6twzW9XRKjmM8hF72
- xAzgKarApP3T2E9+8F1Xmp8TtHU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e83252f.7f5e16b0a1b8-smtp-out-n01;
- Tue, 31 Mar 2020 11:10:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6697CC433BA; Tue, 31 Mar 2020 11:10:39 +0000 (UTC)
-Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Tue, 31 Mar 2020 07:10:59 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EE8F3C433D2;
-        Tue, 31 Mar 2020 11:10:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EE8F3C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-From:   Akash Asthana <akashast@codeaurora.org>
-To:     gregkh@linuxfoundation.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org
-Cc:     linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, swboyd@chromium.org,
-        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, mka@chromium.org,
-        dianders@chromium.org, evgreen@chromium.org,
-        Akash Asthana <akashast@codeaurora.org>
-Subject: [PATCH V3 1/8] interconnect: Add devm_of_icc_get() as exported API for users
-Date:   Tue, 31 Mar 2020 16:39:29 +0530
-Message-Id: <1585652976-17481-2-git-send-email-akashast@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
-References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id BD454634C89;
+        Tue, 31 Mar 2020 14:10:19 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jJEmg-0001HJ-Pk; Tue, 31 Mar 2020 14:10:18 +0300
+Date:   Tue, 31 Mar 2020 14:10:18 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, laurent.pinchart@ideasonboard.com
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+Message-ID: <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
+ <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+ <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
+ <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
+ <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Users can use devm version of of_icc_get() to benefit from automatic
-resource release.
+Hi Hans,
 
-Signed-off-by: Akash Asthana <akashast@codeaurora.org>
-Reviewed by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/interconnect/core.c  | 25 +++++++++++++++++++++++++
- include/linux/interconnect.h |  7 +++++++
- 2 files changed, 32 insertions(+)
+On Tue, Mar 31, 2020 at 12:56:57PM +0200, Hans Verkuil wrote:
+> On 3/31/20 12:32 PM, Sakari Ailus wrote:
+> > Hi Hans,
+> > 
+> > On Mon, Mar 30, 2020 at 12:59:15PM +0200, Hans Verkuil wrote:
+> >> On 3/25/20 12:03 PM, Sakari Ailus wrote:
+> >>> Hi Sowjanya,
+> >>>
+> >>> Thanks for the patchset.
+> >>>
+> >>> On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni wrote:
+> >>>> Tegra210 contains a powerful Video Input (VI) hardware controller
+> >>>> which can support up to 6 MIPI CSI camera sensors.
+> >>>>
+> >>>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+> >>>> capture from an external camera sensor connected to CSI or from
+> >>>> built-in test pattern generator.
+> >>>>
+> >>>> Tegra210 supports built-in test pattern generator from CSI to VI.
+> >>>>
+> >>>> This patch adds a V4L2 media controller and capture driver support
+> >>>> for Tegra210 built-in CSI to VI test pattern generator.
+> >>>>
+> >>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> >>>> ---
+> >>>>  drivers/staging/media/Kconfig              |    2 +
+> >>>>  drivers/staging/media/Makefile             |    1 +
+> >>>>  drivers/staging/media/tegra/Kconfig        |   10 +
+> >>>>  drivers/staging/media/tegra/Makefile       |    8 +
+> >>>>  drivers/staging/media/tegra/TODO           |   10 +
+> >>>>  drivers/staging/media/tegra/tegra-common.h |  263 +++++++
+> >>>>  drivers/staging/media/tegra/tegra-csi.c    |  522 ++++++++++++++
+> >>>>  drivers/staging/media/tegra/tegra-csi.h    |  118 ++++
+> >>>>  drivers/staging/media/tegra/tegra-vi.c     | 1058 ++++++++++++++++++++++++++++
+> >>>>  drivers/staging/media/tegra/tegra-vi.h     |   83 +++
+> >>>>  drivers/staging/media/tegra/tegra-video.c  |  129 ++++
+> >>>>  drivers/staging/media/tegra/tegra-video.h  |   32 +
+> >>>>  drivers/staging/media/tegra/tegra210.c     |  754 ++++++++++++++++++++
+> >>>>  drivers/staging/media/tegra/tegra210.h     |  192 +++++
+> >>>
+> >>> Why staging? Are there reasons not to aim this to the kernel proper right
+> >>> away? If you only support TPG, the driver may not have too many (if any)
+> >>> real users anyway.
+> >>>
+> >>>>  14 files changed, 3182 insertions(+)
+> >>>>  create mode 100644 drivers/staging/media/tegra/Kconfig
+> >>>>  create mode 100644 drivers/staging/media/tegra/Makefile
+> >>>>  create mode 100644 drivers/staging/media/tegra/TODO
+> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-common.h
+> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-csi.c
+> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-csi.h
+> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-vi.c
+> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-vi.h
+> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-video.c
+> >>>>  create mode 100644 drivers/staging/media/tegra/tegra-video.h
+> >>>>  create mode 100644 drivers/staging/media/tegra/tegra210.c
+> >>>>  create mode 100644 drivers/staging/media/tegra/tegra210.h
+> >>>>
+> >>
+> >> <snip>
+> >>
+> >>>> +static int tegra_channel_g_input(struct file *file, void *priv,
+> >>>> +				 unsigned int *i)
+> >>>> +{
+> >>>> +	*i = 0;
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static int tegra_channel_s_input(struct file *file, void *priv,
+> >>>> +				 unsigned int input)
+> >>>> +{
+> >>>> +	if (input > 0)
+> >>>> +		return -EINVAL;
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>
+> >>> Please see patchset on topic "v4l2-dev/ioctl: Add V4L2_CAP_IO_MC" on
+> >>> linux-media; it's relevant here, too.
+> >>
+> >> No, it isn't. The pipeline is controlled by the driver, not by userspace.
+> >> This is a regular video capture driver, not an ISP driver.
+> > 
+> > I don't think that really makes a difference, whether a device is an ISP or
+> > not, but instead what does is whether there is something to control in its
+> > pipeline that cannot be generally done through the regular V4L2 interface.
+> > Even plain CSI-2 receiver drivers should be media device centric these days
+> > as doing otherwise excludes using a range of sensor drivers with them,
+> > including any possible future support for e.g. sensor embedded data.
+> > 
+> 
+> We've been back and forth on this before for this driver. I see no reason to make things
+> complicated, these are simple video pipelines for video capture. Making this media
+> device centric means that existing software using the BSP version of this driver require
+> a full rewrite, which is not desirable.
+> 
+> If we are going to require CSI receiver drivers to be media centric, then that's a
+> major departure of existing practice. And something that needs to be discussed first,
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 2c6515e..f5699ed 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -350,6 +350,31 @@ static struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
- 	return node;
- }
- 
-+static void devm_icc_release(struct device *dev, void *res)
-+{
-+	icc_put(*(struct icc_path **)res);
-+}
-+
-+struct icc_path *devm_of_icc_get(struct device *dev, const char *name)
-+{
-+	struct icc_path **ptr, *path;
-+
-+	ptr = devres_alloc(devm_icc_release, sizeof(**ptr), GFP_KERNEL);
-+	if (!ptr)
-+		return ERR_PTR(-ENOMEM);
-+
-+	path = of_icc_get(dev, name);
-+	if (!IS_ERR(path)) {
-+		*ptr = path;
-+		devres_add(dev, ptr);
-+	} else {
-+		devres_free(ptr);
-+	}
-+
-+	return path;
-+}
-+EXPORT_SYMBOL_GPL(devm_of_icc_get);
-+
- /**
-  * of_icc_get() - get a path handle from a DT node based on name
-  * @dev: device pointer for the consumer device
-diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-index d70a914..7706924 100644
---- a/include/linux/interconnect.h
-+++ b/include/linux/interconnect.h
-@@ -28,6 +28,7 @@ struct device;
- struct icc_path *icc_get(struct device *dev, const int src_id,
- 			 const int dst_id);
- struct icc_path *of_icc_get(struct device *dev, const char *name);
-+struct icc_path *devm_of_icc_get(struct device *dev, const char *name);
- void icc_put(struct icc_path *path);
- int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
- void icc_set_tag(struct icc_path *path, u32 tag);
-@@ -46,6 +47,12 @@ static inline struct icc_path *of_icc_get(struct device *dev,
- 	return NULL;
- }
- 
-+static inline struct icc_path *devm_of_icc_get(struct device *dev,
-+						const char *name)
-+{
-+	return NULL;
-+}
-+
- static inline void icc_put(struct icc_path *path)
- {
- }
+I'd be happy to discuss that.
+
+Either way, the current design is problematic as it excludes a range of
+camera sensors being used with the driver --- addressing of which requires
+converting the driver MC centric. If the driver is merged to mainline, then
+the user might face a Kconfig option or a module parameter to choose
+between the two --- this defines uAPI behaviour after all.
+
+The only way to avoid that in the future is to make it MC-centric right
+away.
+
+> since that will require that support for each csi receiver driver is added to libcamera.
+> Is libcamera ready for that? Are common applications using libcamera yet?
+> 
+> Obviously, if NVIDIA decides that this is worth the effort, then I have no objection.
+> But I don't think it is something we should require at this stage.
+
+Works for me. But in that case NVIDIA should also be aware that doing so
+has consequences.
+
+We also haven't discussed what to do with old V4L2-centric drivers which
+you'd use with sensors that expose their own subdevs. The proportion of all
+sensors might not be large currently but it is almost certainly bound to
+grow in the future.
+
+FWIW, Intel ipu3-cio2 CSI-2 receiver driver is MC-centric e.g. for the
+above reasons. Libcamera supports it currently. I'll let Laurent (cc'd)
+comment on the details.
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Kind regards,
+
+Sakari Ailus
