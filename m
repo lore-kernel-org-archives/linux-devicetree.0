@@ -2,109 +2,90 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241B8C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043CDC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECCA32080C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDF9B2080C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 22:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585692058;
-	bh=68y8XV+c+ckwiJ0Ks/NEh1YXjXG1GeqhNoCYKrAzUoM=;
+	s=default; t=1585692328;
+	bh=gwLwa1HRilXk8DinXmuj5s5qKtK8QQ1vRiqCosnvamg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wfxjZUYzeTMxUo3z99XvUEhkWO4EphjHci0spl1GGCLsawN7Sc+GxwqiRbru364nC
-	 ZxA8lBjaJ8Mc6D6O0glGQVzkiVNolVzsVVOGndPrg5hWQjYbFfGdWfto2CiEaIRO+s
-	 fmp0dxV2gtbxZk1HM9NH1WLywY7rA8fO5wXiTSLA=
+	b=lxnMA04Apc/Isokg6jqFYDToX3NryRnJFJkJGmm4J8wSrHNW3UCHX+NXGX6V5FFgI
+	 EoscdIC9aqmVn2PY+DBhHQb3LgMS+DuJyr3CvRfkelKJxT5P2BGxPK5ll9sg40FPyJ
+	 AEpx/pilfRK9C+pXMg69ygS6mHmN9txrGkQQK4nU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgCaWAz (ORCPT
+        id S1731270AbgCaWF2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 18:00:55 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34618 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgCaWAy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 18:00:54 -0400
-Received: by mail-il1-f196.google.com with SMTP id t11so21067366ils.1;
-        Tue, 31 Mar 2020 15:00:54 -0700 (PDT)
+        Tue, 31 Mar 2020 18:05:28 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41632 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728493AbgCaWF2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 18:05:28 -0400
+Received: by mail-io1-f66.google.com with SMTP id b12so7267239ion.8;
+        Tue, 31 Mar 2020 15:05:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lc33E5Df9rZgd4qmK0wjmDHg2/VwMCkladXOyRxwDEQ=;
-        b=bgXmYjkO/QXHC+uOvMiTFY+STAW8VjaXPbVR42M8rXRfgJyTGV98WTnmjOU10qSwXu
-         Vh67M0cgtS6QLN4igqk7j6k9fXI/bJv9c5mGQUzdUbMH18uRsgcQ0JxUBduX0bJZoXmB
-         0FSCTPaXAmPOnVNCESe3wND20TGui1dP5pRkJmuVeHXkgq0rV7YcH72kmAs5iWLG3U20
-         MrNlBy4PdFxHOXmQRL2bfQfQppmBJQtllF35Cxf1j50nZ+D/GpTpycYBfba3/uh/TB/y
-         jqF09l8NLspnMyN4P/Bg7A1cF8+CXvxUMrWv814pe1oOnl2WDZ+li5ZiIh4gDUWAovIK
-         pAvw==
-X-Gm-Message-State: ANhLgQ3TUlwyn+iGmY4aK4/vcnrdlL90eR/2Rge9hqry+pB4LiQP1TyC
-        +KUvMcN4SBrbtFQdfnKtig==
-X-Google-Smtp-Source: ADFU+vt2obj9Pp0WVbC2XhGR8Zra56tn+jusDQkYJG1LqYScGnHUFR99v3w+nmrFf44+CRhVQro3Zw==
-X-Received: by 2002:a92:1d4b:: with SMTP id d72mr18236810ild.14.1585692053642;
-        Tue, 31 Mar 2020 15:00:53 -0700 (PDT)
+        bh=7gyHDuCCObLbwOhDgDLIB3IBv9q5ANpOPQTizzDSzp0=;
+        b=OnpU/umN6BEcbm9jH8esKZmgTWL206z6AOmN45u6yUpn5M4wvqeI6iPZ+j1Zeeux8w
+         VBMSzR1CnE3FayWwqgl7wv/vIYe6/ZGG5+qgNPafEl4k9D/Ilsq+9lQKc908v+p18Dvt
+         Hy0wy1U6yxTGRvUp/m7gVPkQUdpFuDS5jwm3KEAHd5YVuLP/hSXe5hG3MRlhPD5MCDYp
+         RjUoFG4z5nRSpDx8JxaiJTXs3ZNArW6R+250wwe6s6kAA1LiOUTLXy2y1LlX/qqG0QZY
+         Q3DIqlknQ84yLMKV5/ga5/z/+X/1Js6dYxsi0mA0uaq7zHBUFh5TmDgs13LJrY4ZMBTh
+         rAbw==
+X-Gm-Message-State: ANhLgQ20fm3vTV8AM+l/Gq5TtgitIyho/LT4ZHcmyAvJgIxc7A0knCVo
+        bx3qgptNlLsLXCXxQLK04g==
+X-Google-Smtp-Source: ADFU+vsSpOsZ8Wc5swgJ7BDjH/PlcggrqpxIHsrUj7g2brTbnTX5zZ608Wo6F6HlLOic/Op0/GNsQQ==
+X-Received: by 2002:a02:dc6:: with SMTP id 189mr17932359jax.100.1585692325439;
+        Tue, 31 Mar 2020 15:05:25 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id n6sm43408iod.9.2020.03.31.15.00.51
+        by smtp.gmail.com with ESMTPSA id r5sm48089ioc.6.2020.03.31.15.05.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 15:00:52 -0700 (PDT)
-Received: (nullmailer pid 19586 invoked by uid 1000);
-        Tue, 31 Mar 2020 22:00:51 -0000
-Date:   Tue, 31 Mar 2020 16:00:51 -0600
+        Tue, 31 Mar 2020 15:05:24 -0700 (PDT)
+Received: (nullmailer pid 28953 invoked by uid 1000);
+        Tue, 31 Mar 2020 22:05:23 -0000
+Date:   Tue, 31 Mar 2020 16:05:23 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Weijie Gao <weijie.gao@mediatek.com>
-Cc:     linux-mtd@lists.infradead.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Weijie Gao <weijie.gao@mediatek.com>
-Subject: Re: [PATCH 2/2] dt-bindings: add documentation for mt7621-nand driver
-Message-ID: <20200331220051.GA18084@bogus>
-References: <1585678079-5999-1-git-send-email-weijie.gao@mediatek.com>
- <1585678079-5999-2-git-send-email-weijie.gao@mediatek.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: arm: Add some constraints for PSCI nodes
+Message-ID: <20200331220523.GA28810@bogus>
+References: <20200326105626.6369-1-ulf.hansson@linaro.org>
+ <20200326105626.6369-2-ulf.hansson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585678079-5999-2-git-send-email-weijie.gao@mediatek.com>
+In-Reply-To: <20200326105626.6369-2-ulf.hansson@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 1 Apr 2020 02:07:59 +0800, Weijie Gao wrote:
-> This patch adds documentation for MediaTek MT7621 NAND flash controller
-> driver.
+On Thu, 26 Mar 2020 11:56:25 +0100, Ulf Hansson wrote:
+> There's no point allowing anything else but "psci" for the corresponding
+> nodename of the PSCI node, so let's make this an explicit requirement.
 > 
-> Signed-off-by: Weijie Gao <weijie.gao@mediatek.com>
+> Moreover, let's also prevent additional properties, which also allows a
+> better verification of the "patternProperties" bindings for subnodes.
+> 
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 > ---
->  .../bindings/mtd/mediatek,mt7621-nfc.yaml     | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/mediatek,mt7621-nfc.yaml
+>  Documentation/devicetree/bindings/arm/psci.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Applied, thanks.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/mediatek,mt7621-nfc.example.dt.yaml: nand@1e003000: reg: [[503328768, 2048, 503330816, 2048]] is too short
-
-See https://patchwork.ozlabs.org/patch/1264888
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+Rob
