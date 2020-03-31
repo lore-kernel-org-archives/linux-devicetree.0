@@ -2,58 +2,59 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BB5C2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFE7C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D437B214D8
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11ABA2145D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 13:34:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CX6rpgNk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pEaC4MBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731002AbgCaNd6 (ORCPT
+        id S1731053AbgCaNeD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 09:33:58 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35694 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730981AbgCaNd5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 09:33:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d5so26048605wrn.2
-        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 06:33:56 -0700 (PDT)
+        Tue, 31 Mar 2020 09:34:03 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55834 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731046AbgCaNeC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 09:34:02 -0400
+Received: by mail-wm1-f65.google.com with SMTP id r16so2478146wmg.5
+        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 06:34:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oWqPN/2F35kUoboB7VuE68BOKEz/BXfljK/zGatyCzo=;
-        b=CX6rpgNk5Dr3qKnrubMvK4q2UgrMeUkjr0E0F1JgHADGyPC55iYFRLqqwEoNKST6nU
-         TpLcGrh+pmaxEVHOtDSD6OuZT/Ndnhg57uaHqlvXy4DomvQNq1AdGLybR7F1F9CJvUxk
-         yA9hK1JEZDI/fRjyCLIUziE6uXDS1AYzE17wfcFI7hlEpU94InlVQbrE6W2sXLF1eGUw
-         gNjpV8lWh5cdXoz8cPICBXHh+x7omJKnUJC80LxDenNWHvPHmlLlEG026qnejDduZWrG
-         oJhe8g2MqDHIUyLNQudXifQmq1vvvFzwdtix95uSlvlOmhJC5tsXDCLfA5GOC+64IRmD
-         dejA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Wp21xVStqwrN1N12ROe6rhSLRy5whD/V05w5RA8tsUU=;
+        b=pEaC4MBrF0d7B0b85LQcMeH5zZKdVyVNq5eZv5TiQpSDFkpooH40hCVmw0pLsDRHIT
+         zCmNLYoiXZrdB7Gjd20bco+olUBrpt4JObPEorRc7sU1MVmoRFjMGd4oK4wmCneUn5EF
+         XpmBH+artBLhjllPljF6s5ZhLCokfEcCaoQxg8gApfPIKfmBIfxOIG8b7XOXZEdV9d7T
+         SUR69mrZ66AMDjRvbCHOF+lMJ7BZW+auUkdlO5V1pWSE3WjR6H/+mp46WSUA4HT5Pj2Y
+         +8UuNnmDhB02kHaOSEyosTBd+fQxi5WCA0FI8y7K7ylpuC+rYz0qoqL+ejZ7IvjhK9Ab
+         xWXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oWqPN/2F35kUoboB7VuE68BOKEz/BXfljK/zGatyCzo=;
-        b=gHBqI2jL2dOGQTUddQBfv5VT2OhMb2GHPyHNppzwiPaxWcS4PzQDnkF9T2tfDGDqtp
-         uaphxv/r+r3ZeleonvevOe/VMLN0M1GJn5cZIMsLVGopTfLszdQSY+qkRJbiE/SDZ+kO
-         XPcmbj5Udk/MZt9LMnE3ZoVkO/hS/cQ4STchhFQQo5j609e0id2KxG9RhZB6C1h0A6Hg
-         S6q3D4JX/A1pzJrvWF4IM+HwuJRaCRh/PIYTvQT/5Ad8VR0bERl/ViXvwlXj9DhcL57I
-         yDbdXBtkDINryXWQu035gPEpllQVZaZ3CMeR1K7MgYVUsGlY7V7fp5rs86vNZH5AKHtO
-         JXgQ==
-X-Gm-Message-State: ANhLgQ3JV8Ujr6H5cAcBE2yWkXzuL67dzXclZyCqnmFFyXacF1d5YKJH
-        foTe7/Wr8wxfxQXAIa2LHdAXYg==
-X-Google-Smtp-Source: ADFU+vu4XlDHD+eAXmhnbIITSDymKAgWq0Yc108LTSVU+JOlZDZX5TChQouQWuBq86nDsCf9jJIwSg==
-X-Received: by 2002:adf:e684:: with SMTP id r4mr20689718wrm.6.1585661635563;
-        Tue, 31 Mar 2020 06:33:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Wp21xVStqwrN1N12ROe6rhSLRy5whD/V05w5RA8tsUU=;
+        b=GmaCcMiovzdP9WPPjBdSCB7wkpHrKQIxQiYdk3J2GXG5ZJiC0vdd9ewXFwR6SqUGBU
+         RmxGyRohv46o3U0q5GoQ7X/uRcg8iA8I8TVtBiP7glfByhGlSQVCsfcl9vw9DshQLJx+
+         FFYyW4ZUC1wbSVdhsdogJRu7kvBRPP0hxtbiJnhPnJgHFUtHWOocW+fSKWoaGTd3JezW
+         p4s/xq89jsUmlAWiKc8/8G+LlMhHZvH6XXNzyzYxDi+2pTAnMXwbZEgz9aiySAflU4XH
+         CZFLzJI5z0Ww+c31sb6jzehhlgZhYDSqPpH1+1NchZoBNJy77rqIua/+3Ca9DeYieCE/
+         Zq4Q==
+X-Gm-Message-State: ANhLgQ32P4MYfIBd11X/Gh07E8jI1zcz6rsQHWSAezt5S5c0BMC4pyI1
+        a1dTiP31Ekua18oQfUjXTbm63A==
+X-Google-Smtp-Source: ADFU+vt6gmU3ICepXWInCQgT7paaToRl88C0JQzwtYhmAlm1bldIjQplA/Nx855WwsF8gsnYyaQSiw==
+X-Received: by 2002:a1c:f70a:: with SMTP id v10mr3441990wmh.72.1585661639903;
+        Tue, 31 Mar 2020 06:33:59 -0700 (PDT)
 Received: from localhost.localdomain ([37.120.50.78])
-        by smtp.gmail.com with ESMTPSA id 61sm28623081wrn.82.2020.03.31.06.33.54
+        by smtp.gmail.com with ESMTPSA id 61sm28623081wrn.82.2020.03.31.06.33.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 06:33:54 -0700 (PDT)
+        Tue, 31 Mar 2020 06:33:59 -0700 (PDT)
 From:   Robert Foss <robert.foss@linaro.org>
 To:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
         Fabio Estevam <festevam@gmail.com>,
@@ -63,10 +64,12 @@ To:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [PATCH v3 0/3] media: ov8856: Add devicetree support
-Date:   Tue, 31 Mar 2020 15:33:43 +0200
-Message-Id: <20200331133346.372517-1-robert.foss@linaro.org>
+Subject: [PATCH v3 3/3] media: ov8856: Implement sensor module revision identification
+Date:   Tue, 31 Mar 2020 15:33:46 +0200
+Message-Id: <20200331133346.372517-4-robert.foss@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200331133346.372517-1-robert.foss@linaro.org>
+References: <20200331133346.372517-1-robert.foss@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -74,23 +77,91 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds devicetree support to the ov8856 driver.
-In order to to aid debugging and enable future sensor
-modes to be supported, module revision detection is also added.
+Query the sensor for its module revision, and compare it
+to known revisions.
+Currently only the '1B' revision has been added.
 
-Dongchun Zhu (1):
-  media: dt-bindings: ov8856: Document YAML bindings
+Signed-off-by: Robert Foss <robert.foss@linaro.org>
+---
 
-Robert Foss (2):
-  media: ov8856: Add devicetree support
-  media: ov8856: Implement sensor module revision identification
+- Changes since v2:
+  * Add module revision 2A
+  * Sakari: Remove ov8856_check_revision()
+  * Sakari: Stop EEPROM streaming mode
 
- .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++
- MAINTAINERS                                   |   1 +
- drivers/media/i2c/ov8856.c                    | 192 ++++++++++++++++--
- 3 files changed, 327 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
 
+ drivers/media/i2c/ov8856.c | 51 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+diff --git a/drivers/media/i2c/ov8856.c b/drivers/media/i2c/ov8856.c
+index 260aaf332631..c7551cee2bb0 100644
+--- a/drivers/media/i2c/ov8856.c
++++ b/drivers/media/i2c/ov8856.c
+@@ -32,6 +32,18 @@
+ #define OV8856_MODE_STANDBY		0x00
+ #define OV8856_MODE_STREAMING		0x01
+ 
++/* define 1B module revision */
++#define OV8856_1B_MODULE		0x02
++
++/* the OTP read-out buffer is at 0x7000 and 0xf is the offset
++ * of the byte in the OTP that means the module revision
++ */
++#define OV8856_MODULE_REVISION		0x700f
++#define OV8856_OTP_MODE_CTRL		0x3d84
++#define OV8856_OTP_LOAD_CTRL		0x3d81
++#define OV8856_OTP_MODE_AUTO		0x00
++#define OV8856_OTP_LOAD_CTRL_ENABLE	BIT(0)
++
+ /* vertical-timings from sensor */
+ #define OV8856_REG_VTS			0x380e
+ #define OV8856_VTS_MAX			0x7fff
+@@ -1152,6 +1164,45 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
+ 		return -ENXIO;
+ 	}
+ 
++	ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
++			       OV8856_REG_VALUE_08BIT, OV8856_MODE_STREAMING);
++	if (ret)
++		return ret;
++
++	ret = ov8856_write_reg(ov8856, OV8856_OTP_MODE_CTRL,
++			       OV8856_REG_VALUE_08BIT, OV8856_OTP_MODE_AUTO);
++	if (ret) {
++		dev_err(&client->dev, "failed to set otp mode");
++		return ret;
++	}
++
++	ret = ov8856_write_reg(ov8856, OV8856_OTP_LOAD_CTRL,
++			       OV8856_REG_VALUE_08BIT,
++			       OV8856_OTP_LOAD_CTRL_ENABLE);
++	if (ret) {
++		dev_err(&client->dev, "failed to enable load control");
++		return ret;
++	}
++
++	ret = ov8856_read_reg(ov8856, OV8856_MODULE_REVISION,
++			      OV8856_REG_VALUE_08BIT, &val);
++	if (ret) {
++		dev_err(&client->dev, "failed to read module revision");
++		return ret;
++	}
++
++	dev_info(&client->dev, "OV8856 revision %x (%s) at address 0x%02x\n",
++		val,
++		val == OV8856_1B_MODULE ? "1B" : "unknown revision",
++		client->addr);
++
++	ret = ov8856_write_reg(ov8856, OV8856_REG_MODE_SELECT,
++			       OV8856_REG_VALUE_08BIT, OV8856_MODE_STANDBY);
++	if (ret) {
++		dev_err(&client->dev, "failed to exit streaming mode");
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
