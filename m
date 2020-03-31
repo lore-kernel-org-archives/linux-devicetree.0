@@ -2,132 +2,302 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD8CC2D0EE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA31C2D0EE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822962137B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:01:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UcX4NrqD"
+	by mail.kernel.org (Postfix) with ESMTP id 1F5DF2078B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbgCaPBp (ORCPT
+        id S1730391AbgCaPNI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:01:45 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57662 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730153AbgCaPBo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 11:01:44 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VEwljB021795;
-        Tue, 31 Mar 2020 17:01:03 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=RRp8QYyeUiwuSaXSnIHnR9hdRCvg8TE5DV1VWhJfO9c=;
- b=UcX4NrqDDsCH0+NbGCIMMUopkKgeeMNjQB/GJXKTltDNzQt5J4gptk9hbTa0JoJwxrGv
- Q6SjvOd+l/XKhv6sQQqQD+rF986XEoaQId3y00Ke40cwE7MqGohA5W0BlTjlz0WbkcPO
- 4uUFk5hIYw3cOSS/MXYRLztJov/b1Re09+gcWYXa3vgqtT8vcVwPLz9fKx3rXLOzxAuL
- 7jvBwd059dOhDw3vqKOaifeKku82O+6vuWcEZFrgnV5PxsurbUdGqFIzXpXGJcFUyHO2
- SYumR54vuXivBlNLLPo2gPXHEpyb5xMDnb3+AO+Tu+mOjdlS/EvH+IyuD3oUHXb4Xbdc EA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 302y53suhq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Mar 2020 17:01:03 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0CACE100038;
-        Tue, 31 Mar 2020 17:00:58 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA0CB2B4D4F;
-        Tue, 31 Mar 2020 17:00:57 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.50) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 31 Mar
- 2020 17:00:52 +0200
-Subject: Re: [RFC PATCH v2 0/4] Add device tree build information
-To:     Steve McIntyre <steve.mcintyre@linaro.org>
-CC:     Frank Rowand <frowand.list@gmail.com>, <robh+dt@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        <david@gibson.dropbear.id.au>, <sjg@chromium.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-kbuild@vger.kernel.org>,
-        <devicetree-compiler@vger.kernel.org>, Ian Lepore <ian@freebsd.org>
-References: <20200221161418.20225-1-alexandre.torgue@st.com>
- <1b946fcf-47a9-012d-1b04-f4bbd2682607@gmail.com>
- <67d75f0c-7478-23b0-8619-746cf83cedb5@gmail.com>
- <dba17be2-067f-8221-f313-7a3edcf61511@st.com>
- <20200331010347.GF4037@linaro.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <afa534b0-c671-600f-f344-de7026dc2c79@st.com>
-Date:   Tue, 31 Mar 2020 17:00:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 31 Mar 2020 11:13:08 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48235 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730153AbgCaPNI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 11:13:08 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jJIZZ-0004xt-9e; Tue, 31 Mar 2020 17:13:01 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jJIZR-00038u-QY; Tue, 31 Mar 2020 17:12:53 +0200
+Date:   Tue, 31 Mar 2020 17:12:53 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200331151253.q6ody3erhvsabznz@pengutronix.de>
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-2-robert.foss@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200331010347.GF4037@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-31_05:2020-03-31,2020-03-31 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331133346.372517-2-robert.foss@linaro.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 16:59:20 up 137 days,  6:17, 160 users,  load average: 0.00, 0.03,
+ 0.03
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Steeve
+Hi Robert,
 
-On 3/31/20 3:03 AM, Steve McIntyre wrote:
-> Hi Alexandre,
+On 20-03-31 15:33, Robert Foss wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 > 
-> On Mon, Mar 02, 2020 at 01:55:55PM +0100, Alexandre Torgue wrote:
->> On 2/28/20 6:47 PM, Frank Rowand wrote:
->>>> This would require modifying every single main .dts file to get the build info
->>>> I would prefer the method that Ian and David came up with (sorry, no lore link,
->>>> it did not go to lkml).  Extract from David's email:
->>>>
->>>>      Date:   Tue, 21 Jan 2020 13:05:25 +1100
->>>>      From:   David Gibson <david@gibson.dropbear.id.au>
->>>>      Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
->>>>
->>>>      > Given that dts files are run through the C preprocessor before being
->>>>      > fed to dtc, the build script could use the '-include' flag to force-
->>>>      > include a fragment containing generated build info without any need to
->>>>      > modify existing dts files.
->>>>
->>>>      Uh... maybe.  -include will essentially prepend the forced file, which
->>>>      is a bit awkward for our purposes.  It means that the prepended file
->>>>      would need the /dts-v1/ tag, and we couldn't have it in the main files
->>>>      which would be a bit confusing.  I think it would also cause problems
->>>>      with any /memreserve/ tags and means that the main tree could in
->>>>      theory overwrite the build information which we don't necessarily
->>>>      want.
->>>>
->>>>      I guess we could build things the other way around: have the main .dts
->>>>      file specified with -include and have the dts on the dtc commandline
->>>>      be a fixed one with the build information.  It'd be a little weird,
->>>>      though.
->>>>
->>>> -Frank
->>
->> Yes. I try briefly this idea but I got issues with dts-v1 tag. I agree, it is
->> cleaner to not modify input dts file. I can rework int this way.
+> This patch adds documentation of device tree in YAML schema for the
+> OV8856 CMOS image sensor.
 > 
-> Have you made any progress on this please?
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+> 
+> - Changes since v5:
+>   * Add assigned-clocks and assigned-clock-rates
+>   * robher: dt-schema errors
+> 
+> - Changes since v4:
+>   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+>   * Add clock-lanes property to example
+>   * robher: Fix syntax error in devicetree example
+> 
+> - Changes since v3:
+>   * robher: Fix syntax error
+>   * robher: Removed maxItems
+>   * Fixes yaml 'make dt-binding-check' errors
+> 
+> - Changes since v2:
+>   Fixes comments from from Andy, Tomasz, Sakari, Rob.
+>   * Convert text documentation to YAML schema.
+> 
+> - Changes since v1:
+>   Fixes comments from Sakari, Tomasz
+>   * Add clock-frequency and link-frequencies in DT
+> 
+>  .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 151 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> new file mode 100644
+> index 000000000000..beeddfbb8709
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> @@ -0,0 +1,150 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright (c) 2019 MediaTek Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
+> +
+> +maintainers:
+> +  - Ben Kao <ben.kao@intel.com>
+> +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
+> +
+> +description: |-
+> +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
+> +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
+> +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
+> +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
+> +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
+> +  serial data output (up to 4-lane).
+> +
+> +properties:
+> +  compatible:
+> +    const: ovti,ov8856
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description:
+> +      Input clock for the sensor.
+> +    items:
+> +      - const: xvclk
+> +
+> +  clock-frequency:
+> +    description:
+> +      Frequency of the xvclk clock in Hertz.
 
-Unfortunately no. I cook something locally but not yet upstream-able.
-Due to project issue I didn't find time to work on it. I think (I hope) 
-to be less busy next week and so I'll restart it.
+Why do we need this here?
 
-regards
-alex
+> +  assigned-clocks:
+> +    description:
+> +      Input clock for the sensor.
+> +
+> +  assigned-clock-rates:
+> +    description:
+> +      Frequency of the xvclk clock in Hertz.
 
+Also this isn't related to the chip. You need this because you are using
+a qcom platform which provides the clock.
+
+IMHO you only need to specify the clock. You can get the frequency with
+the clk_get_rate() function.
+
+> +  dovdd-supply:
+> +    description:
+> +      Definition of the regulator used as interface power supply.
+
+Phandle to the interface power supply regulator?
+
+> +
+> +  avdd-supply:
+> +    description:
+> +      Definition of the regulator used as analog power supply.
+> +
+> +  dvdd-supply:
+> +    description:
+> +      Definition of the regulator used as digital power supply.
+> +
+> +  reset-gpios:
+> +    description:
+> +      The phandle and specifier for the GPIO that controls sensor reset.
+> +      This corresponds to the hardware pin XSHUTDOWN which is physically
+> +      active low.
+> +
+> +  port:
+> +    type: object
+> +    additionalProperties: false
+> +    description:
+> +      A node containing input and output port nodes with endpoint definitions
+> +      as documented in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +
+> +        properties:
+> +          clock-lanes:
+> +            maxItems: 1
+> +
+> +          data-lanes:
+> +            maxItems: 1
+> +
+> +          remote-endpoint: true
+> +
+> +        required:
+> +          - clock-lanes
+> +          - data-lanes
+> +          - remote-endpoint
+> +
+> +    required:
+> +      - endpoint
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - clock-frequency
+> +  - assigned-clocks
+> +  - assigned-clock-rates
+> +  - dovdd-supply
+> +  - avdd-supply
+> +  - dvdd-supply
+> +  - reset-gpios
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/clock/qcom,camcc-sdm845.h>
+
+IMHO we should avoid examples with hardware specific includes.
+
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        ov8856: camera@10 {
+> +            compatible = "ovti,ov8856";
+> +            reg = <0x10>;
+> +
+> +            reset-gpios = <&pio 111 GPIO_ACTIVE_LOW>;
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&clk_24m_cam>;
+> +
+> +            clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
+> +            clock-names = "xvclk";
+> +            clock-frequency = <19200000>;
+> +            assigned-clocks = <&clock_camcc CAM_CC_MCLK0_CLK>;
+> +            assigned-clock-rates = <19200000>;
+> +
+> +            avdd-supply = <&mt6358_vcama2_reg>;
+> +            dvdd-supply = <&mt6358_vcamd_reg>;
+> +            dovdd-supply = <&mt6358_vcamio_reg>;
+> +
+> +            port {
+> +                wcam_out: endpoint {
+> +                    remote-endpoint = <&mipi_in_wcam>;
+> +                    clock-lanes = <0>;
+> +                    data-lanes = <1 2 3 4>;
+> +                    link-frequencies = /bits/ 64 <360000000 180000000>;
+
+Should we add the link-frequencies as optional param?
+
+Regards,
+  Marco
+
+> +                };
+> +            };
+> +        };
+> +    };
+> +...
+> \ No newline at end of file
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a6fbdf354d34..0f99e863978a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12355,6 +12355,7 @@ L:	linux-media@vger.kernel.org
+>  T:	git git://linuxtv.org/media_tree.git
+>  S:	Maintained
+>  F:	drivers/media/i2c/ov8856.c
+> +F:	Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+>  
+>  OMNIVISION OV9650 SENSOR DRIVER
+>  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+> -- 
+> 2.25.1
 > 
-> Cheers,
 > 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
