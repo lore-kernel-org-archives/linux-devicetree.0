@@ -2,155 +2,138 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 207DFC2D0F1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC651C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE16C21744
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:20:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585675229;
-	bh=D7FWF2ylL+0NQ2FWuF8jpzvckwDCaUUfutqBPPPnLhY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Kd1FVZX6HdxUK8p99remL5LbvDL4PjMnw1r/ne4DPdzCj2effqcBqARQ1MlXKkgqo
-	 viPhJgUYumbBZyoi3mQRp2wNideRDVcRbu9gfEcRAdcpf7GfthosuzTTHWm6rq5fP5
-	 +6KpdI0buIJjXX2wyKI3WxNlszvknSmGsddUQZpU=
+	by mail.kernel.org (Postfix) with ESMTP id 7BB8020BED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 17:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dsnEmK4q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgCaRU2 (ORCPT
+        id S1725947AbgCaRVv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 13:20:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbgCaRU2 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:20:28 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9632321707;
-        Tue, 31 Mar 2020 17:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585675227;
-        bh=D7FWF2ylL+0NQ2FWuF8jpzvckwDCaUUfutqBPPPnLhY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Xm4DyzFlw4jGGUBlaafwQAckXswyUC7+wK8f9dZih9Eow6b2D8WjrmJf5p/Jld3fG
-         gQB5Lnaki+PI71nuqEdqSxCB4N0N8kXzta0yDfuH9HdjW0bjHdxslO1Ws5cAcqT3op
-         uQeXB1rPjS35avDSI+GNxcBACEkSyeQLXjnU25xY=
-Received: by mail-qt1-f181.google.com with SMTP id z24so17804787qtu.4;
-        Tue, 31 Mar 2020 10:20:27 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2obgHecaefchuOKsJ5SrybElLJdQaXltG6u81KOEZuoo6gv2Qa
-        gNvvfPR4oCPKMbTXIDCH5Nc6M7WWTLPh/a9CJQ==
-X-Google-Smtp-Source: ADFU+vuIDLlP6mJJzdijDIsPAvdYaGjDtb9aCWKF5WJKEAR+/umG5DoIAzKXfoqzc8KIaBO8hshbu4VG7fPqaOkBerA=
-X-Received: by 2002:aed:3461:: with SMTP id w88mr6324133qtd.143.1585675226482;
- Tue, 31 Mar 2020 10:20:26 -0700 (PDT)
+        Tue, 31 Mar 2020 13:21:51 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35055 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgCaRVv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 13:21:51 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c12so5528488plz.2;
+        Tue, 31 Mar 2020 10:21:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j8+rN5Pcf/ZHU8Cu3r+wRUAZeIw7Y2aVcFS/ElbbMOI=;
+        b=dsnEmK4q/by3MkmFJhH0P/IVqXj7TDb7Hm6j3iCBEVjxXKY+lZe2I+cTrb68qyXvuy
+         bceqOLlgZq9hTbN34dH1CeuVDAkjrJRxToThEbkWCpeb11og7BjNjcJnGtYUn4620fVK
+         V5dTQVrwLK/x49cUhD1VywJueVWQZwy/rWewefQbKBDtpeoN6s1JzGyzJqVVu72sQY+u
+         aFxvleeO2cOwRNwO/g2dtEf5UiyS/GSoxwE3qwu4nxBzVdkYBcG63jLnYgF2ESejMlhK
+         85YX5FO0s6p+68i9iFAHbNFsAdJAqfSELs8gRjKtkW88GpEbWm3EXB4+UY87U6I/Ht5C
+         AVRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j8+rN5Pcf/ZHU8Cu3r+wRUAZeIw7Y2aVcFS/ElbbMOI=;
+        b=dFls0DNSWJMD/gaNxV6vGieXQjvHpXqbfUVenSAxcNQruHTqAuzVOtGZbnkfm2pXiQ
+         IbXFotWn+6jPxhan7L2OcOgwPyC6s71HNN1iekJxbvSVDE6IaUUP7mYay4BSnF0SdIX8
+         FHyxlZTs0MNnWCXOS9j75cgxlPckPbaVKCSUC3EFCZzdMKOiPbwjSI3BX+OzW2k/EQeS
+         9DulpkkAm8uG/J9NPyVjOQFIy1s3tSPpsOz0ICaFIEsj+2rN6D4pbTJ7zkRJK1PwFtBZ
+         Miv9z7N/gho+yAcQXyl2x+bHbua7HjIe4dGOWHDp1VaH5Wj6+dNUCC31ge/JJyXCA0xz
+         ljHQ==
+X-Gm-Message-State: AGi0PuaUVZY5nYg/jNqI/6z7kVgDZ16kvjO13xxEYJDqfo0D5kq1DaJk
+        7uhzWy7RFk0TTJi68LwJCUKnghxvKZY5fk1uD3w=
+X-Google-Smtp-Source: APiQypLNlur1V4Vx/h/n/lkPdNk23r1zBF8l8EQLRooU7NS8cwaG6IdemE4gwpPaHNz4xB7hKRYdoIBj6SmNLb6UsRE=
+X-Received: by 2002:a17:90a:e982:: with SMTP id v2mr3121357pjy.1.1585675310212;
+ Tue, 31 Mar 2020 10:21:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200315134416.16527-1-sam@ravnborg.org> <20200315134416.16527-33-sam@ravnborg.org>
- <20200319030734.GH29911@bogus> <20200329190352.GA21479@ravnborg.org>
-In-Reply-To: <20200329190352.GA21479@ravnborg.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 31 Mar 2020 11:20:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJGpCBohddU+h3366rzGVw6mgn5H9YMqq-MF4Ka=mVkzw@mail.gmail.com>
-Message-ID: <CAL_JsqJGpCBohddU+h3366rzGVw6mgn5H9YMqq-MF4Ka=mVkzw@mail.gmail.com>
-Subject: Re: [PATCH v1 32/36] dt-bindings: display: convert sharp,ls037v7dw01
- to DT Schema
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org,
-        Alexandre Courbot <acourbot@nvidia.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Chris Zhong <zyw@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guido Gunther <agx@sigxcpu.org>, Heiko Schocher <hs@denx.de>,
-        Nikolaus Schaller <hns@goldelico.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jerry Han <hanxu5@huaqin.corp-partner.google.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Marco Franchi <marco.franchi@nxp.com>,
-        Marek Belisko <marek@goldelico.com>,
-        Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Nickey Yang <nickey.yang@rock-chips.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Peter Rosin <peda@axentia.se>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Purism Kernel Team <kernel@puri.sm>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sandeep Panda <spanda@codeaurora.org>,
-        Stefan Mavrodiev <stefan@olimex.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        Werner Johansson <werner.johansson@sonymobile.com>
+References: <20200330152711.8769-1-i.mikhaylov@yadro.com> <20200330152711.8769-3-i.mikhaylov@yadro.com>
+ <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
+ <5cb43513906e1175801ea4e753c855623fcd11d1.camel@yadro.com>
+ <CAHp75VexS-iVeDXsCFqgzCKokgzzeH=BFtUqOJdY+kS8O6B9bw@mail.gmail.com> <86186f02c630a05cf7254a38e0f15d726e2f440b.camel@yadro.com>
+In-Reply-To: <86186f02c630a05cf7254a38e0f15d726e2f440b.camel@yadro.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 31 Mar 2020 20:21:43 +0300
+Message-ID: <CAHp75VfAEpuNKpCKdN7cFPX6+OQ9h0vFvhKmeLpO9DS1SCbEkA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Mar 29, 2020 at 1:04 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Rob.
->
-> > > +
-> > > +  mode-gpios:
-> > > +    description: |
-> > > +      GPIO ordered MO, LR, and UD as specified in LS037V7DW01.pdf
+On Tue, Mar 31, 2020 at 7:56 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+> On Tue, 2020-03-31 at 14:00 +0300, Andy Shevchenko wrote:
+> > > > Why not to use standard pattern, i.e.
+> > > >
+> > > >   if (rc)
+> > > >     return rc;
+> > > >   ...
+> > > >   rc = regmap_write(...);
+> > > >
+> > > > ?
+> > >
+> > > Optional parameter. There exists a lot of ways to do it:
 > >
-> > 3 or...
+> > I'm simple reading the code. And I believe the above I suggested is
+> > cleaner equivalent.
+> > Is it?
 > >
-> > > +      change configuration between QVGA and VGA mode and the
-> > > +      scan direction. As these pins can be also configured
-> > > +      with external pulls, all the GPIOs are considered
-> > > +      optional with holes in the array.
+> > > rc = device_property_read_u32(dev, "milliamp", &led_current);
+> > > rc = regmap_write(regmap, VCNL_LED_CURRENT, (!rc) : led_current ? 0);
 > >
-> > minItems: 3
-> > maxItems: 5
+> > This seems not equal to above.
 >
-> This binding can specify up to three GPIOs like this:
+> Yes, it is not equal. Error will be returned in case of non existent parameter
+> in vcnl3020_init but parameter is optional. rc shouldn't be checked
 
-So it should be:
+Ah it makes sense.
 
-minItems: 1
-maxItems: 3
-
-> > > +        mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH        /* gpio154, lcd MO */
-> > > +                      &gpio1 2 GPIO_ACTIVE_HIGH         /* gpio2, lcd LR */
-> > > +                      &gpio1 3 GPIO_ACTIVE_HIGH>;       /* gpio3, lcd UD */
+> or should
+> return 0 with your suggestion.
 >
-> They are in the linux kernel driver accessed like this:
->
->     devm_gpiod_get_index(&pdev->dev, "mode", 2, GPIOD_OUT_LOW);
->
-> The following is OK in the DT file:
->
->     mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
->
->     mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH
->                   &gpio1 2 GPIO_ACTIVE_HIGH>;
->
->     mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH
->                   &gpio1 2 GPIO_ACTIVE_HIGH
->                   &gpio1 3 GPIO_ACTIVE_HIGH>;
+> rc = device_property_read_u32(...);
+> if (rc)
+>         return 0;
+> rc = regmap_write(...);
+> if (rc)
+>         dev_err(...);
+> return rc;
 
-With the above, the 2nd 2 should fail...
+In case we would like to have more optional parameters above will be a burden.
+Perhaps
 
-> But the following is not OK:
->     mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>, <&gpio1 2 GPIO_ACTIVE_HIGH>;
+static int get_and_apply_property_x(...)
+{
+  ...Above code...
+}
 
-And this should pass. We want phandle+arg type properties to be
-bracketed like this.
+...and in the function
 
-If that's not working, then it's a bug in the tooling. Please confirm
-and I'll investigate.
+rc = get_and_apply_property_x(...)
+if (rc)
+  return rc;
 
-Rob
+or if it's the last one,
+
+return get_and_apply_property_x(...);
+
+-- 
+With Best Regards,
+Andy Shevchenko
