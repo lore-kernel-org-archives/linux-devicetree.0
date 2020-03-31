@@ -2,310 +2,160 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6EDC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8ECC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04B9206CC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9429C20784
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q0agAYmm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FXZX8Ueh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbgCaQE7 (ORCPT
+        id S1731032AbgCaQMD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:04:59 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38291 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730562AbgCaQE7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:04:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f6so3383048wmj.3;
-        Tue, 31 Mar 2020 09:04:56 -0700 (PDT)
+        Tue, 31 Mar 2020 12:12:03 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40487 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730677AbgCaQL7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:11:59 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c20so7988275pfi.7
+        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 09:11:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4VKI9AuPhMvUgqTj7z2yAveanc53o7XusIgD/wUX0qM=;
-        b=q0agAYmm/VmDdDcewOukFSDP029eE+dPAyRe1UJebG980+mCCXFDfpDZYsJGXffTI9
-         by1tNoD5G+i/Ffh4pvhmWX3TLLoAMEzIL0+NsQ/Q3ngv8BdhSX5kl5sX/ldWDTuEITlf
-         4CfG/ggwB2NZs56lKww74VrGuLbMtYMZR5wmzOaipMmiozrTIBjFgLAaueoy7F4JYT9l
-         pR+UOHuggwL6Zq3a6PHNYd6Ty+JXTKndlizKODM4acD6ZV1+Agcxn1jadBN0WycrsLqH
-         NtNIirApMeePMh0wQNM4RLnxVBzfURMBSPQ25wes250TigM7rSn830EOpLFZKsTr+BHQ
-         gDWg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HGjePE0GSqbKz6aKbzU/yxb5OZwh8Nq086ecagG4P/g=;
+        b=FXZX8UehOEz9Kni4GELnb/5/v6Qj6xwLNsOHkCFRAvqmZJFoMimJsYJGlR8qWuT3JP
+         /jiEuMvyz9s8viO8XrGdI9iGKa+z0LkGhzTuGioisjEORu/Jtd6YUUxEyaeT+fkbg+AI
+         hklRTmvh3uljXeEwgl9dNw7H3nNlcCzTsAfVo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4VKI9AuPhMvUgqTj7z2yAveanc53o7XusIgD/wUX0qM=;
-        b=p8KlvI7Lsv2DWz+7APdcCrQh4DDlbYNiHjGHCABK8YlUgebBEfO0sIMxp6nJWsTDYb
-         oNYc9h/CvuZJybjoUAujBIiOMgM2hg+V+x6noW3PI05W3sEv6b3ROMztdlSmgR/AlNk7
-         ji/0Po0Ysz1BWLs4NbF76s65z5ndUBKfHVCUJOCR7AlFMFEhKP9QPN/8fbh4njQRyK8V
-         4DwjzX/B2LYcBFwX23nG7rKPb6j1V/p34a/iLMEV+vVxAJ5wTaLhFEKTxEVtVqclsDaN
-         VJBznEO5RnM6mqgyUEwURrr9BQ9CXEIsStUNB98t+zE3EXN1qrKn1UoUm2dFLSaKgv9J
-         H1Mg==
-X-Gm-Message-State: ANhLgQ34RFYe8RrYxOhUSIf0RjM/PjgOEoBe7Bgnq2RkCrcm1Ew+cihU
-        JbjgMpvaApdfdaO6r9pAucM=
-X-Google-Smtp-Source: ADFU+vuRA91pE+w4+dgBDghI6jnabCDYF3dXfWt06pUcEiVsl2Z3RjgW5I01mlHajMa+eP/KDc8jMw==
-X-Received: by 2002:a1c:4987:: with SMTP id w129mr4406106wma.168.1585670696219;
-        Tue, 31 Mar 2020 09:04:56 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id p17sm1651433wmb.30.2020.03.31.09.04.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 31 Mar 2020 09:04:55 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1] dt-bindings: display: convert rockchip rk3066 hdmi bindings to yaml
-Date:   Tue, 31 Mar 2020 18:04:48 +0200
-Message-Id: <20200331160448.15331-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HGjePE0GSqbKz6aKbzU/yxb5OZwh8Nq086ecagG4P/g=;
+        b=OPgTCbQMJNugRd2drTK6CGersLrIEtZhqJUHMUnKsvtO082pVCPwy6iz+8D+dueVNd
+         eyvIHvMW2bNNk221QeclqHjq5+Y/oMQ1bc+QDZZc14i3N0bL7oDt5MVRpbAL58RwcDi9
+         +GoNVD1xNLw6pYmBcdeDEezSleGgIqPwgcDu4VoF31hIfALMtLehQAm522rsW1xqzvDE
+         SQEuTPqTpu2+0Cx5XhV/Qp5Sn6nUIsyE4BKt8ytjCOLVpt/CfpPC9EHRZwXNTSwiZE3p
+         wC776/Gt9adJhLE6YOJvuoUdJgXfOLZOydu/bIFJcxNuZSEHuk1+Oe+9RnMB7UQe5GOo
+         +54A==
+X-Gm-Message-State: ANhLgQ2/0hF4g+OpRibCvjdXJlxz0oTK0OAe8gMwJTlDgt3IXPboN9Y8
+        5m7rGCKoury+B0MtxkPaWOwG7Q==
+X-Google-Smtp-Source: ADFU+vtfSPh8HumDN4cjkDTaweYzwxq2FI8K3EiPnKxEhov9TRTsTgaPcIbaDj4F/2NhI4oOVc9T0Q==
+X-Received: by 2002:a62:7c15:: with SMTP id x21mr19812360pfc.132.1585671117785;
+        Tue, 31 Mar 2020 09:11:57 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id z7sm12830932pfz.24.2020.03.31.09.11.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 09:11:57 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 09:11:55 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Cc:     Felipe Balbi <balbi@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v6 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+Message-ID: <20200331161155.GD199755@google.com>
+References: <1585302203-11008-1-git-send-email-sanm@codeaurora.org>
+ <1585302203-11008-3-git-send-email-sanm@codeaurora.org>
+ <20200329171756.GA199755@google.com>
+ <87h7y62r28.fsf@kernel.org>
+ <20200330155038.GC199755@google.com>
+ <87zhbx1q6q.fsf@kernel.org>
+ <ec7e921a-45fe-c178-cc04-2a04dd4a75f5@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ec7e921a-45fe-c178-cc04-2a04dd4a75f5@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Current dts files with 'hdmi' nodes for rk3066 are manually verified.
-In order to automate this process rockchip,rk3066-hdmi.txt
-has to be converted to yaml.
+On Tue, Mar 31, 2020 at 10:45:19AM +0530, Sandeep Maheswaram (Temp) wrote:
+> Hi,
+> 
+> On 3/31/2020 3:05 AM, Felipe Balbi wrote:
+> > Hi,
+> > 
+> > Matthias Kaehlcke <mka@chromium.org> writes:
+> > > > Matthias Kaehlcke <mka@chromium.org> writes:
+> > > > > > Add interconnect support in dwc3-qcom driver to vote for bus
+> > > > > > bandwidth.
+> > > > > > 
+> > > > > > This requires for two different paths - from USB master to
+> > > > > > DDR slave. The other is from APPS master to USB slave.
+> > > > > > 
+> > > > > > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> > > > > > Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+> > > > > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > > > ---
+> > > > > >   drivers/usb/dwc3/dwc3-qcom.c | 128 ++++++++++++++++++++++++++++++++++++++++++-
+> > > > > >   1 file changed, 126 insertions(+), 2 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> > > > > > index 1dfd024..7e85fe6 100644
+> > > > > > --- a/drivers/usb/dwc3/dwc3-qcom.c
+> > > > > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> > > > > > 
+> > > > > > ...
+> > > > > > 
+> > > > > > +/* To disable an interconnect, we just set its bandwidth to 0 */
+> > > > > > +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
+> > > > > > +{
+> > > > > > +	int ret;
+> > > > > > +
+> > > > > > +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
+> > > > > > +	if (ret)
+> > > > > > +		return ret;
+> > > > > > +
+> > > > > > +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
+> > > > > > +	if (ret)
+> > > > > > +		goto err_reenable_memory_path;
+> > > > > > +
+> > > > > > +	return 0;
+> > > > > > +
+> > > > > > +	/* Re-enable things in the event of an error */
+> > > > > > +err_reenable_memory_path:
+> > > > > > +	ret = dwc3_qcom_interconnect_enable(qcom);
+> > > > > This overwrites the error that led to the execution of this code path.
+> > > > > The function should return original error, not the result of the
+> > > > > _interconnect_enable() call.
+> > > > > 
+> > > > > I saw Felipe queued the patch for v5.8. I think the main options to fix this
+> > > > > are:
+> > > > > 
+> > > > > - a v6 of this patch to replace v5 in Felipe's tree (which IIUC will be rebased
+> > > > >    anyway once there is a v5.7-rc)
+> > > > > - send the fix as a separate patch
+> > > > > - Felipe amends the patch in his tree
+> > > > > 
+> > > > > Felipe, what would work best for you?
+> > > > Let's go for a v6, which commits should I drop? I can't find anything
+> > > > related to $subject in my queue:
+> > > > 
+> > > > $ git --no-pager log --oneline HEAD ^linus/master -- drivers/usb/dwc3/dwc3-qcom.c
+> > > > 201c26c08db4 usb: dwc3: qcom: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+> > > I thought I saw a "queued for v5.8" message from you, but can't find that back.
+> > > I guess I saw the "queued" message for the "Add USB DWC3 support for SC7180"
+> > > series and thought it was for this one. Sorry for the confusion.
+> > no worries :-)
+> > 
+> Should I remove the ret from below line and send a new version?
+> +	ret = dwc3_qcom_interconnect_enable(qcom);
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- .../display/rockchip/rockchip,rk3066-hdmi.txt      |  72 -----------
- .../display/rockchip/rockchip,rk3066-hdmi.yaml     | 141 +++++++++++++++++++++
- 2 files changed, 141 insertions(+), 72 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
-deleted file mode 100644
-index d1ad31bca..000000000
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
-+++ /dev/null
-@@ -1,72 +0,0 @@
--Rockchip specific extensions for rk3066 HDMI
--============================================
--
--Required properties:
--- compatible:
--	"rockchip,rk3066-hdmi";
--- reg:
--	Physical base address and length of the controller's registers.
--- clocks, clock-names:
--	Phandle to HDMI controller clock, name should be "hclk".
--- interrupts:
--	HDMI interrupt number.
--- power-domains:
--	Phandle to the RK3066_PD_VIO power domain.
--- rockchip,grf:
--	This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
--- ports:
--	Contains one port node with two endpoints, numbered 0 and 1,
--	connected respectively to vop0 and vop1.
--	Contains one port node with one endpoint
--	connected to a hdmi-connector node.
--- pinctrl-0, pinctrl-name:
--	Switch the iomux for the HPD/I2C pins to HDMI function.
--
--Example:
--	hdmi: hdmi@10116000 {
--		compatible = "rockchip,rk3066-hdmi";
--		reg = <0x10116000 0x2000>;
--		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cru HCLK_HDMI>;
--		clock-names = "hclk";
--		power-domains = <&power RK3066_PD_VIO>;
--		rockchip,grf = <&grf>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			hdmi_in: port@0 {
--				reg = <0>;
--				#address-cells = <1>;
--				#size-cells = <0>;
--				hdmi_in_vop0: endpoint@0 {
--					reg = <0>;
--					remote-endpoint = <&vop0_out_hdmi>;
--				};
--				hdmi_in_vop1: endpoint@1 {
--					reg = <1>;
--					remote-endpoint = <&vop1_out_hdmi>;
--				};
--			};
--			hdmi_out: port@1 {
--				reg = <1>;
--				hdmi_out_con: endpoint {
--					remote-endpoint = <&hdmi_con_in>;
--				};
--			};
--		};
--	};
--
--&pinctrl {
--		hdmi {
--			hdmi_hpd: hdmi-hpd {
--				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
--			};
--			hdmii2c_xfer: hdmii2c-xfer {
--				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
--						<0 RK_PA2 1 &pcfg_pull_none>;
--			};
--		};
--};
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
-new file mode 100644
-index 000000000..8f4acf707
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
-@@ -0,0 +1,141 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3066-hdmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip rk3066 HDMI controller
-+
-+maintainers:
-+  - Sandy Huang <hjc@rock-chips.com>
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    const: rockchip,rk3066-hdmi
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: hclk
-+
-+  pinctrl-0:
-+    maxItems: 2
-+
-+  pinctrl-names:
-+    const: default
-+    description:
-+      Switch the iomux for the HPD/I2C pins to HDMI function.
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
-+
-+  ports:
-+    type: object
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        description:
-+          Port node with two endpoints, numbered 0 and 1,
-+          connected respectively to vop0 and vop1.
-+
-+      port@1:
-+        type: object
-+        description:
-+          Port node with one endpoint connected to a hdmi-connector node.
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+      - port@0
-+      - port@1
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - pinctrl-0
-+  - pinctrl-names
-+  - power-domains
-+  - rockchip,grf
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3066a-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/pinctrl/rockchip.h>
-+    #include <dt-bindings/power/rk3066-power.h>
-+    hdmi: hdmi@10116000 {
-+      compatible = "rockchip,rk3066-hdmi";
-+      reg = <0x10116000 0x2000>;
-+      interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru HCLK_HDMI>;
-+      clock-names = "hclk";
-+      pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
-+      pinctrl-names = "default";
-+      power-domains = <&power RK3066_PD_VIO>;
-+      rockchip,grf = <&grf>;
-+
-+      ports {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        hdmi_in: port@0 {
-+          reg = <0>;
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+          hdmi_in_vop0: endpoint@0 {
-+            reg = <0>;
-+            remote-endpoint = <&vop0_out_hdmi>;
-+          };
-+          hdmi_in_vop1: endpoint@1 {
-+            reg = <1>;
-+            remote-endpoint = <&vop1_out_hdmi>;
-+          };
-+        };
-+        hdmi_out: port@1 {
-+          reg = <1>;
-+          hdmi_out_con: endpoint {
-+            remote-endpoint = <&hdmi_con_in>;
-+          };
-+        };
-+      };
-+    };
-+
-+    pinctrl {
-+      hdmi {
-+        hdmi_hpd: hdmi-hpd {
-+          rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
-+        };
-+        hdmii2c_xfer: hdmii2c-xfer {
-+          rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
-+                          <0 RK_PA2 1 &pcfg_pull_none>;
-+        };
-+      };
-+    };
--- 
-2.11.0
-
+Yes, please!
