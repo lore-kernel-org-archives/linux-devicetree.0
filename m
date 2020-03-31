@@ -2,152 +2,140 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628B2C2D0F1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 08:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD4EC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 08:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CE2206F6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 08:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC7B2073B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 08:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730034AbgCaIGy (ORCPT
+        id S1726622AbgCaIXe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:06:54 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:63129 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgCaIGy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 04:06:54 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 4C28F24000A;
-        Tue, 31 Mar 2020 08:06:48 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 10:06:48 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v11 4/5] rtc: mt6397: Add support for the MediaTek MT6358
- RTC
-Message-ID: <20200331080648.GH846876@piout.net>
-References: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Tue, 31 Mar 2020 04:23:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:47290 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726528AbgCaIXe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:23:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A4D530E;
+        Tue, 31 Mar 2020 01:23:33 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C58F3F71E;
+        Tue, 31 Mar 2020 01:23:31 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 09:23:25 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     bjorn@helgaas.com
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, robh+dt@kernel.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        Andrew Murray <andrew.murray@arm.com>, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        ARM <linux-arm-kernel@lists.infradead.org>, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+Message-ID: <20200331082325.GA32028@e121166-lin.cambridge.arm.com>
+References: <20200330214721.GA128269@google.com>
+ <bba72560-85cc-b59b-b0e8-bfc7c7408736@nvidia.com>
+ <CABhMZUXub++CLTJ_E88Jwar5RvVfL+3aWOHqZf5XSVeyS8X=wA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <CABhMZUXub++CLTJ_E88Jwar5RvVfL+3aWOHqZf5XSVeyS8X=wA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 31/03/2020 12:07:36+0800, Hsin-Hsiung Wang wrote:
-> From: Ran Bi <ran.bi@mediatek.com>
+On Mon, Mar 30, 2020 at 10:00:57PM -0500, Bjorn Helgaas wrote:
+> On Mon, Mar 30, 2020 at 9:55 PM Vidya Sagar <vidyas@nvidia.com> wrote:
+> >
+> >
+> >
+> > On 3/31/2020 3:17 AM, Bjorn Helgaas wrote:
+> > > External email: Use caution opening links or attachments
+> > >
+> > >
+> > > On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
+> > >> Add support for the endpoint mode of Synopsys DesignWare core based
+> > >> dual mode PCIe controllers present in Tegra194 SoC.
+> > >>
+> > >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > >> Acked-by: Thierry Reding <treding@nvidia.com>
+> > >> ---
+> > >> V5:
+> > >> * Added Acked-by: Thierry Reding <treding@nvidia.com>
+> > >> * Removed unwanted header file inclusion
+> > >>
+> > >> V4:
+> > >> * Addressed Lorenzo's review comments
+> > >> * Started using threaded irqs instead of kthreads
+> > >>
+> > >> V3:
+> > >> * Addressed Thierry's review comments
+> > >>
+> > >> V2:
+> > >> * Addressed Bjorn's review comments
+> > >> * Made changes as part of addressing review comments for other patches
+> > >>
+> > >>   drivers/pci/controller/dwc/Kconfig         |  30 +-
+> > >>   drivers/pci/controller/dwc/pcie-tegra194.c | 679 ++++++++++++++++++++-
+> > >>   2 files changed, 691 insertions(+), 18 deletions(-)
+> > >>
+> > >> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> > >> index 0830dfcfa43a..169cde58dd92 100644
+> > >> --- a/drivers/pci/controller/dwc/Kconfig
+> > >> +++ b/drivers/pci/controller/dwc/Kconfig
+> > >> @@ -248,14 +248,38 @@ config PCI_MESON
+> > >>          implement the driver.
+> > >>
+> > >>   config PCIE_TEGRA194
+> > >> -     tristate "NVIDIA Tegra194 (and later) PCIe controller"
+> > >> +     tristate
+> > >> +
+> > >> +config PCIE_TEGRA194_HOST
+> > >> +     tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
+> > >>        depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+> > >>        depends on PCI_MSI_IRQ_DOMAIN
+> > >>        select PCIE_DW_HOST
+> > >>        select PHY_TEGRA194_P2U
+> > >> +     select PCIE_TEGRA194
+> > >> +     default y
+> > >
+> > > Sorry I missed this before, but why is this "default y"?  From
+> > > Documentation/kbuild/kconfig-language.rst:
+> > >
+> > >    The default value deliberately defaults to 'n' in order to avoid
+> > >    bloating the build. With few exceptions, new config options should
+> > >    not change this. The intent is for "make oldconfig" to add as little
+> > >    as possible to the config from release to release.
+> > >
+> > > I do see that several other things in other drivers/pci/ Kconfig files
+> > > are also "default y", and we should probably change some of them.  But
+> > > I don't want to add even more unless there's a good reason.
+> > >
+> > > I'm not looking for more reactions like these:
+> > >
+> > > https://lore.kernel.org/r/CAHk-=wiZ24JuVehJ5sEC0UG1Gk2nvB363wO02RRsR1oEht6R9Q@mail.gmail.com
+> > > https://lore.kernel.org/r/CA+55aFzPpuHU1Nqd595SEQS=F+kXMzPs0Rba9FUgTodGxmXsgg@mail.gmail.com
+> > >
+> > > Can you please update this patch to either remove the "default y" or
+> > > add the rationale for keeping it?
+> > I'm fine with removing 'default y' line.
+> > Should I send a patch only with this change?
 > 
-> This add support for the MediaTek MT6358 RTC. Driver using
-> compatible data to store different RTC_WRTGR address offset.
-> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
-> driver which only needed by armv7 CPU without ATF.
-> 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/power/reset/mt6323-poweroff.c |  2 +-
->  drivers/rtc/rtc-mt6397.c              | 23 +++++++++++++++++++----
->  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
->  3 files changed, 28 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/mt6323-poweroff.c
-> index 1caf43d..0532803 100644
-> --- a/drivers/power/reset/mt6323-poweroff.c
-> +++ b/drivers/power/reset/mt6323-poweroff.c
-> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
->  	int ret;
->  
->  	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
-> -	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
-> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
->  
->  	ret = regmap_read_poll_timeout(pwrc->regmap,
->  					pwrc->base + RTC_BBPU, val,
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index cda238d..7f3dfd2 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -9,6 +9,7 @@
->  #include <linux/mfd/mt6397/core.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
-> @@ -20,7 +21,7 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  	int ret;
->  	u32 data;
->  
-> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> +	ret = regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -269,6 +270,8 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	rtc->addr_base = res->start;
->  
-> +	rtc->data = of_device_get_match_data(&pdev->dev);
-> +
->  	rtc->irq = platform_get_irq(pdev, 0);
->  	if (rtc->irq < 0)
->  		return rtc->irq;
-> @@ -325,10 +328,22 @@ static int mt6397_rtc_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->  			mt6397_rtc_resume);
->  
-> +static const struct mtk_rtc_data mt6358_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6358,
-> +};
-> +
-> +static const struct mtk_rtc_data mt6397_rtc_data = {
-> +	.wrtgr = RTC_WRTGR_MT6397,
-> +};
-> +
->  static const struct of_device_id mt6397_rtc_of_match[] = {
-> -	{ .compatible = "mediatek,mt6323-rtc", },
-> -	{ .compatible = "mediatek,mt6397-rtc", },
-> -	{ }
-> +	{ .compatible = "mediatek,mt6323-rtc",
-> +		.data = &mt6397_rtc_data, },
-> +	{ .compatible = "mediatek,mt6358-rtc",
-> +		.data = &mt6358_rtc_data, },
-> +	{ .compatible = "mediatek,mt6397-rtc",
-> +		.data = &mt6397_rtc_data, },
+> I think it's probably just as easy for Lorenzo to delete that line on
+> his branch.  If not, I'll cherry-pick the patches on that branch and
+> do it locally.
 
-This is weirdly indented.
+Done, pushed out. It is a guideline that it is worth keeping in mind
+while I review the code, sorry for missing it.
 
-Else,
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Lorenzo
