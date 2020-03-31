@@ -2,146 +2,170 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31DEC2D0F1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6144C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980E620BED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:30:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6iR0Ax8"
+	by mail.kernel.org (Postfix) with ESMTP id 86A7C212CC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:35:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbgCaPaD (ORCPT
+        id S1730849AbgCaPfI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:30:03 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33252 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730391AbgCaPaB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 11:30:01 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x200so10508415lff.0;
-        Tue, 31 Mar 2020 08:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=xWWQQMjnoOXj+s35rdwO3AKWUNgB5UP2RN102SZyf9M=;
-        b=n6iR0Ax8nI25kt13ZeGCsBvnzPWCNcQh25Y3upu8+faElg1UmeSUZvzyCrEobwnxwc
-         gVNVJMeJVkjTnoRkX4CJnvEJrV5P1NW4deeOfm9g0Nercdv7CYLH2hH8ny2ka87gesHx
-         oyxIlVkIQuVkmpz7Tc/HGKF1aNxOjdpCvGTO1KhDoc0zeQuX/SOzgZ/pfeRUVUzuRBsp
-         XpFEKvQf+En0EZlW9iwD/63G2LR5zEzozv6vJ0Hy/LjskoC+GbEHzEV/d1aTUQgQQ9JP
-         cnMtBYNuvuGC9QJ2dMRo9w3h5iQSX3UHfPwiWqcWYzdtVloTd6TanNL1PTGtFWZycgcU
-         N+Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=xWWQQMjnoOXj+s35rdwO3AKWUNgB5UP2RN102SZyf9M=;
-        b=lXZOiUrA++XH+UWlD6ZzUIxye9eSbbFP+am29rqe6/a8TcVek7+PQvVt8xPPgFe/kR
-         FL4GihVeE4ZgkC63LjdjqN46GLWHf/DbcwpHqWjiwyTr5Gj77Cgm0OY/U5XSD9kQexCQ
-         encPqh3RtazqVhLRLJYrCvBL9rg87jeEJ3kh/k6qeFVUdfeuBmeiPKTQutJGzYJlF2Bx
-         RakKW4yxbdJqKA8n7h+L6M3m6Zzuy2wxuAmETUpDy/8DOuuTGKsAMNXHy+GjHQ9nzBo8
-         IM1ht1SUvIk8W672BhYAftcQZjzbrHpYbFlN3S6ijlgnU/2BMLUcUmFfJExh1xtZQFvE
-         veAg==
-X-Gm-Message-State: AGi0PuY6mXRToWL07eEt6V2MvtXo2RcnxlEt4eEoKd3pxXxiVx2Z2B/k
-        ZgLTttC8gxG9p1G+I2XeZHU=
-X-Google-Smtp-Source: APiQypLmVLtT8c3Ae8yFJGreZRae3ELGPZCOey9sa+nDWvoHUeTggKwcWmX/TR05X/+9guBOCeUrhg==
-X-Received: by 2002:ac2:4113:: with SMTP id b19mr2153946lfi.70.1585668599197;
-        Tue, 31 Mar 2020 08:29:59 -0700 (PDT)
-Received: from pablo-laptop ([2a02:a315:5445:5300:c0c9:238d:e5e0:ede5])
-        by smtp.googlemail.com with ESMTPSA id j125sm8827924lfj.38.2020.03.31.08.29.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 08:29:58 -0700 (PDT)
-Message-ID: <d9fe575926342b355f76e1f38fef62f0d7d38075.camel@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
-From:   =?UTF-8?Q?Pawe=C5=82?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Paul Cercueil <paul@crapouillou.net>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
-        Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 31 Mar 2020 17:29:56 +0200
-In-Reply-To: <6ca59c1b-2676-e69d-e4eb-4667a81d155f@samsung.com>
-References: <20200312153411.13535-1-paul@crapouillou.net>
-         <20200312153411.13535-2-paul@crapouillou.net> <20200313090011.GB7416@pi3>
-         <CGME20200318142549eucas1p1793027850923ebad20b4691cba676671@eucas1p1.samsung.com>
-         <D6.31.03891.A6F227E5@epmailinsp8.samsung.com>
-         <6c549058-00f9-8526-a272-48c538166ccf@samsung.com>
-         <X7728Q.UX8A28S31JO92@crapouillou.net>
-         <6ca59c1b-2676-e69d-e4eb-4667a81d155f@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 31 Mar 2020 11:35:08 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46840 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730760AbgCaPfH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 11:35:07 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 217F12980F2
+Subject: Re: [v6, 1/5] media: dt-bindings: mt8183: Added camera ISP Pass 1
+To:     Jungo Lin <jungo.lin@mediatek.com>, tfiga@chromium.org,
+        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        matthias.bgg@gmail.com, mchehab@kernel.org
+Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        srv_heupstream@mediatek.com, ddavenport@chromium.org,
+        robh@kernel.org, Sean.Cheng@mediatek.com, sj.huang@mediatek.com,
+        frederic.chen@mediatek.com, Jerry-ch.Chen@mediatek.com,
+        frankie.chiu@mediatek.com, ryan.yu@mediatek.com,
+        Rynn.Wu@mediatek.com, yuzhao@chromium.org, zwisler@chromium.org,
+        shik@chromium.org, suleiman@chromium.org
+References: <Jungo Lin <jungo.lin@mediatek.com>
+ <20191219054930.29513-1-jungo.lin@mediatek.com>
+ <20191219054930.29513-2-jungo.lin@mediatek.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <77afc8e7-26b8-471d-0ec0-c77a9c379433@collabora.com>
+Date:   Tue, 31 Mar 2020 12:34:51 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191219054930.29513-2-jungo.lin@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 2020-03-31 at 15:55 +0200, Marek Szyprowski wrote:
-> Hi Paul,
-> 
-> On 2020-03-31 15:09, Paul Cercueil wrote:
-> > Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> > 
-> > Hi Marek,
-> > 
-> > Le mar. 31 mars 2020 à 7:36, Marek Szyprowski 
-> > <m.szyprowski@samsung.com> a écrit :
-> > > Hi Paul,
-> > > 
-> > > On 2020-03-18 15:25, Paul Cercueil wrote:
-> > > > > >   +    };
-> > > > > >   +
-> > > > > >   +    tsp_reg: regulator-1 {
-> > > > > >   +        compatible = "regulator-fixed";
-> > > > > >   +        regulator-name = "TSP_FIXED_VOLTAGES";
-> > > > > >   +        regulator-min-microvolt = <3300000>;
-> > > > > >   +        regulator-max-microvolt = <3300000>;
-> > > > > >   +        gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
-> > > > > >   +        startup-delay-us = <70000>;
-> > > > > >   +        enable-active-high;
-> > > > > >   +        regulator-boot-on;
-> > > > > >   +        regulator-always-on;
-> > > > > 
-> > > > >  always-on and boot-on should not be needed. You have a consumer 
-> > > > > for this
-> > > > >  regulator.
-> > > > 
-> > > >  About this: the touchscreen driver does not use a regulator, so I
-> > > >  believe that's why these properties were here.
-> > > > 
-> > > >  I sent patches upstream to address the issue:
-> > > >  https://protect2.fireeye.com/url?k=e8aedc29-b53072b3-e8af5766-0cc47a336fae-759579fd576d8382&u=https://lkml.org/lkml/2020/3/15/94 
-> > > > 
-> > > > 
-> > > >  I believe this means I cannot merge the i9100 devicetree until it is
-> > > >  acked.
-> > > 
-> > > One more information - similar change has been already posted, but it
-> > > looks it got lost then: https://patchwork.kernel.org/patch/10550903/
-> > 
-> > I was aware of this patch, but didn't know it was sent upstream.
-> > 
-> > This other patch uses two regulators, vdd/avdd but doesn't give any 
-> > reason why.
-> > 
-> I've checked the UniversalC210 schematic, which uses the same 
-> touchscreen chip. There are 2 supplies to the touchscreen chip: 2.8V VDD 
-> and 3.3V AVDD. Both are enabled by the same GPIO pin though. There is 
-> however no reset GPIO pin there.
-Hi
-Don't remember now how it worked on Galaxy S1, but it looks like it has
-the same setup - two regulators enabled by one GPIO pin.
-> 
-> > Paweł, is that really needed?
-> > 
-> Best regards
+Hi Jungo,
 
+On 12/19/19 3:49 AM, Jungo Lin wrote:
+> This patch adds DT binding document for the Pass 1 (P1) unit
+> in Mediatek's camera ISP system. The Pass 1 unit grabs the sensor
+> data out from the sensor interface, applies ISP image effects
+> from tuning data and outputs the image data or statistics data to DRAM.
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
+> ---
+> Changes from v6:
+>  - Add port node description in the dt-binding document.
+> ---
+>  .../bindings/media/mediatek,camisp.txt        | 83 +++++++++++++++++++
+
+It would be really nice to convert this to yaml.
+
+For reference: https://lwn.net/Articles/771621/
+
+Regards,
+Helen
+
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,camisp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/mediatek,camisp.txt b/Documentation/devicetree/bindings/media/mediatek,camisp.txt
+> new file mode 100644
+> index 000000000000..a85f37c0b87d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek,camisp.txt
+> @@ -0,0 +1,83 @@
+> +* Mediatek Image Signal Processor Pass 1 (ISP P1)
+> +
+> +The Pass 1 unit of Mediatek's camera ISP system grabs the sensor data out
+> +from the sensor interface, applies ISP effects from tuning data and outputs
+> +the image data and statistics data to DRAM. Furthermore, Pass 1 unit has
+> +the ability to output two different resolutions frames at the same time to
+> +increase the performance of the camera application.
+> +
+> +Required properties:
+> +- compatible: Must be "mediatek,mt8183-camisp" for MT8183.
+> +- reg: Physical base address of the camera function block register and
+> +  length of memory mapped region. Must contain an entry for each entry
+> +  in reg-names.
+> +- reg-names: Must include the following entries:
+> +  "cam_sys": Camera base function block
+> +  "cam_uni": Camera UNI function block
+> +  "cam_a": Camera ISP P1 hardware unit A
+> +  "cam_b": Camera ISP P1 hardware unit B
+> +  "cam_c": Camera ISP P1 hardware unit C
+> +- interrupts: Must contain an entry for each entry in interrupt-names.
+> +- interrupt-names : Must include the following entries:
+> +  "cam_uni": Camera UNI interrupt
+> +  "cam_a": Camera unit A interrupt
+> +  "cam_b": Camera unit B interrupt
+> +  "cam_c": Camera unit C interrupt
+> +- iommus: Shall point to the respective IOMMU block with master port
+> +  as argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> +  for details.
+> +- clocks: A list of phandle and clock specifier pairs as listed
+> +  in clock-names property, see
+> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+> +- clock-names: Must be "camsys_cam_cgpdn" and "camsys_camtg_cgpdn".
+> +- mediatek,larb: Must contain the local arbiters in the current SoCs, see
+> +  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+> +  for details.
+> +- power-domains: a phandle to the power domain, see
+> +  Documentation/devicetree/bindings/power/power_domain.txt for details.
+> +- mediatek,scp: The node of system control processor (SCP), see
+> +  Documentation/devicetree/bindings/remoteproc/mtk,scp.txt for details.
+> +- port: child port node corresponding to the data input, in accordance with
+> +  the video interface bindings defined in
+> +  Documentation/devicetree/bindings/media/video-interfaces.txt. The port
+> +  node must contain at least one endpoint.
+> +
+> +Example:
+> +SoC specific DT entry:
+> +
+> +	camisp: camisp@1a000000 {
+> +		compatible = "mediatek,mt8183-camisp";
+> +		reg = <0 0x1a000000 0 0x1000>,
+> +				<0 0x1a003000 0 0x1000>,
+> +				<0 0x1a004000 0 0x2000>,
+> +				<0 0x1a006000 0 0x2000>,
+> +				<0 0x1a008000 0 0x2000>;
+> +		reg-names = "cam_sys",
+> +				"cam_uni",
+> +				"cam_a",
+> +				"cam_b",
+> +				"cam_c";
+> +		interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_LOW>,
+> +				<GIC_SPI 254 IRQ_TYPE_LEVEL_LOW>,
+> +				<GIC_SPI 255 IRQ_TYPE_LEVEL_LOW>,
+> +				<GIC_SPI 256 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "cam_uni",
+> +				"cam_a",
+> +				"cam_b",
+> +				"cam_c";
+> +		iommus = <&iommu M4U_PORT_CAM_IMGO>;
+> +		clocks = <&camsys CLK_CAM_CAM>,
+> +				<&camsys CLK_CAM_CAMTG>;
+> +		clock-names = "camsys_cam_cgpdn",
+> +				"camsys_camtg_cgpdn";
+> +		mediatek,larb = <&larb3>,
+> +				<&larb6>;
+> +		power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
+> +		mediatek,scp = <&scp>;
+> +
+> +		port {
+> +			camisp_endpoint: endpoint {
+> +				remote-endpoint = <&seninf_camisp_endpoint>;
+> +			};
+> +		};
+> +	};
+> 
