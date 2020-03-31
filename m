@@ -2,244 +2,132 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2A4C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918D3C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E7620784
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0B1208E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:38:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SaBW4VKJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efL3HT8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgCaShn (ORCPT
+        id S1726208AbgCaSiL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:37:43 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40253 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgCaShn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 14:37:43 -0400
-Received: by mail-qk1-f196.google.com with SMTP id l25so24199555qki.7
-        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 11:37:42 -0700 (PDT)
+        Tue, 31 Mar 2020 14:38:11 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46280 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbgCaSiK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 14:38:10 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r7so15405323ljg.13;
+        Tue, 31 Mar 2020 11:38:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6bo50showiDDZymkVwcrzZUnNVACXf2piseIaZpnpDc=;
-        b=SaBW4VKJMe0E2qjcW8tep8L7AtKIbKOI3PwHv7sEu73TfC+gycMQ/geVK1jDDIi1DP
-         rih4oMkWd1qZ2gQmHh7IuvGqQj2Rme6a624fSZlalypsTMkFojle70D1Oi5ewYc7tzhy
-         Wk3FekAZMG7wV9yT/+MhupkLufJPJONC4DD1afgcZ99n/3mVZAMmZygSd7E+93sPzmMT
-         cU0pbdQEuCAA+/+zPfb8BlhVdY2L9uXSWCSWa11bJjQsL1dRIn2Yg4PaA75aXCCmfl5T
-         gnQuHLJqr8WnDEoCa+8evXtGEyHP08u8aD06dOE/egDtG56/igxneLy7MvrgpLfhcns/
-         ExJA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d/jwDOe+5jnEC+le3jpCg1Ia6gNwhPXykp3nmWWhaOs=;
+        b=efL3HT8pfTGSmpyjNAyFLdEXEf+iJsj0as5yEpNO7JudauMQa/KZj6D7xFxcKKnjhV
+         iPsBeft+PnbfJC+Vp6nLBwnlZ5tKQ+8ZBNF9YgWR7+3eFhLFJVkmXf+5gj2SEd4dqa3s
+         lkgGvPRBtmheVxe7N6FgijtF4pjZ9WlVZMf8zzO5uaB3URHQiV8pFOwzP1Rvzbdv9Tr9
+         Pd3REBTMmX+KxQgz/+GobUY/Nl/bjrmfSreT2c2ZkyqAMIIyNTUESippgbxRjAskm82a
+         cb7RqxivclSsiqz92iezds6lQlwNzWvgnITilpL2P9XR8heTGadXxSI7dCJihYX/6iMf
+         HvyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6bo50showiDDZymkVwcrzZUnNVACXf2piseIaZpnpDc=;
-        b=ONgHVMD2RgFNNZKSy2/0vSlsZSRT1SSTmhmoFtsenl3IBB1HSjKl0eVyuRkSTUiolj
-         GrnzRmEFVJsytBKAeIBWnRWmGyrG/XaxCWcrfHckSRuMM9njw8A0tSZ2KZNj6ReS0dOW
-         xSe92C09VDUjt2gFQZf1+mTP+rHNZvG36oVtwzCC4Ynz9AVgTBdDe7EADPzciWGx6/8v
-         Mep0aIaiabZasAigDAT/d52Aqri5fD6wpUPdXoLMnHFJ0jasWypTgZ9iu5BE8jxlhVYp
-         pvZZ3t6/IjXc0TWf0alPYWJmRvrJxfLK4WWVBWaoK2+9PCfvrCe5jOajIzzRScQsZoHi
-         iSdw==
-X-Gm-Message-State: ANhLgQ1YpsHnd2r3tMg6yPmOnciXX7oqFuJdkyPwwFf7rdACk4RjyAD2
-        atFKiWBiNKs7U63earFNvyk=
-X-Google-Smtp-Source: ADFU+vvEVPUXk9miWqKlR4xK/YHvMHFYmYN1HBOSW37JSD9DBLvt5Xv8gwqOQU2qHc8Y8b4En9YOuA==
-X-Received: by 2002:a37:9d4a:: with SMTP id g71mr5471980qke.54.1585679861295;
-        Tue, 31 Mar 2020 11:37:41 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:482:5bb::4])
-        by smtp.gmail.com with ESMTPSA id f21sm14285243qtc.97.2020.03.31.11.37.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 11:37:40 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     shawnguo@kernel.org
-Cc:     peng.fan@nxp.com, linux-imx@nxp.com, kernel@pengutronix.de,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] arm64: dts: imx8m: Fix AIPS reg properties
-Date:   Tue, 31 Mar 2020 15:37:25 -0300
-Message-Id: <20200331183725.25255-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d/jwDOe+5jnEC+le3jpCg1Ia6gNwhPXykp3nmWWhaOs=;
+        b=Il+9K3N2EH3lr64ps1nFPg4bqyNfRoi6lOSP6Vg+jrvv1S/9c+T4RgONi48CnhAlCi
+         4h9+fD67Xw2n9LVkVtmntwPWgTYjqeOjDGbzobUCo+LjnO6Yr4hpiKfbn3H+T2Dh6upV
+         9mfQcFWHZaNjXqivkydT9pfhfIOQBPdVRqpOYRhf2AADsNU9USx0xo51tXLV04OhdLDg
+         b0uMqB9IgJi1Q6Q6c7DFjnbYRy1FGkmAtpZfSWN4CRhDzCaix1K0p3IPcE0z5cNxJ6KZ
+         SDoLluUi9RS3ybfuDbj5dtrG0Xn8zViJvoq4wqIg1Day9YPILJ4HhRn4EEGkC+XZj9xW
+         Hlqw==
+X-Gm-Message-State: AGi0PuYOqDW7bRTOoKDcudl4f2tIcXLcgt9tOZa97CVNuNl4CiA9f9E6
+        Jy//MEwFFQ5nd8b0JPuBg4VeUTIbC8nJxWEdj1E=
+X-Google-Smtp-Source: APiQypKLpnll7mCTK5hJByNZ+I2zToNbaBev7/ujZB1Z7zORv+AAXOLY5C1GQuLB78hus+630w3uQzds8XU6gpqabLM=
+X-Received: by 2002:a2e:3c0a:: with SMTP id j10mr10921764lja.205.1585679888664;
+ Tue, 31 Mar 2020 11:38:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20191120220559.18914-1-c-robey@ti.com> <41c73bc1-99ae-6797-5bb7-7acc0f6518c0@ti.com>
+ <20191212170452.GV35479@atomide.com>
+In-Reply-To: <20191212170452.GV35479@atomide.com>
+From:   Drew Fustini <pdp7pdp7@gmail.com>
+Date:   Tue, 31 Mar 2020 20:38:38 +0200
+Message-ID: <CAEf4M_C05Hwc_BEL6MaFNNEW0Cf2kc-LvMi9qdKxL7hVAFFDGQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: am5729: beaglebone-ai: adding device tree
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Caleb Robey <c-robey@ti.com>, linux-omap@vger.kernel.org,
+        Jason Kridner <jkridner@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Drew Fustini <drew@beagleboard.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Commit dc3efc6ff0d5 ("arm64: dts: imx8m: fix aips dts node") caused several
-dtc warnings like these when building with W=1:
+On Thu, Dec 12, 2019 at 6:06 PM Tony Lindgren <tony@atomide.com> wrote:
+> > On 21/11/2019 00:05, Caleb Robey wrote:
+> > > From: Jason Kridner <jdk@ti.com>
+> > >
+> > > BeagleBoard.org BeagleBone AI is an open source hardware single
+> > > board computer based on the Texas Instruments AM5729 SoC featuring
+> > > dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
+> > > signal processor (DSP), quad-core embedded vision engine (EVE),
+> > > Arm Cortex-M4 processors, dual programmable realtime unit
+> > > industrial control subsystems and more. The board features 1GB
+> > > DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
+> > > 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
+> > > headers.
+> > >
+> > > For more information, refer to:
+> > > https://beaglebone.ai
+> > >
+> > > This patch introduces the BeagleBone AI device tree.
+> > >
+> > > Note that the device use the "ti,tpd12s016" component which is
+> > > software compatible with "ti,tpd12s015". Thus we only use the
+> > > latter driver.
+> >
+> > Ah. thanks. I see my comments resolved here.
+> > no more comments to net part from my side.
+>
+> Just FYI, Jason had one pending comment on the earlier version
+> about the compatible property to use.
+>
+> So I'm assuming there will be a new version posted, tagging
+> this one as read.
 
-arch/arm64/boot/dts/freescale/imx8mm.dtsi:265.23-542.5: Warning (simple_bus_reg): /soc@0/bus@30000000: simple-bus unit address format error, expected "301f0000"
-arch/arm64/boot/dts/freescale/imx8mm.dtsi:544.23-602.5: Warning (simple_bus_reg): /soc@0/bus@30400000: simple-bus unit address format error, expected "305f0000"
-arch/arm64/boot/dts/freescale/imx8mm.dtsi:604.23-862.5: Warning (simple_bus_reg): /soc@0/bus@30800000: simple-bus unit address format error, expected "309f0000"
-arch/arm64/boot/dts/freescale/imx8mm.dtsi:864.23-909.5: Warning (simple_bus_reg): /soc@0/bus@32c00000: simple-bus unit address format error, expected "32df0000"
+It came to my attention today when talking with Jason Kridner and
+Robert Nelson that we did not get the BeagleBone AI device tree
+upstream yet.
 
-Fix them by using the correct address base and size in the AIPS reg
-properties.
+I am having trouble identifying what the pending comment was from the
+original patch series.
 
-Fixes: dc3efc6ff0d5 ("arm64: dts: imx8m: fix aips dts node")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++----
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 8 ++++----
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 6 +++---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++----
- 4 files changed, 15 insertions(+), 15 deletions(-)
+Was it related to this compatible string?
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index cc7152ecedd9..8829628f757a 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -264,7 +264,7 @@
- 
- 		aips1: bus@30000000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x301f0000 0x10000>;
-+			reg = <0x30000000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x30000000 0x30000000 0x400000>;
-@@ -543,7 +543,7 @@
- 
- 		aips2: bus@30400000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x305f0000 0x10000>;
-+			reg = <0x30400000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x30400000 0x30400000 0x400000>;
-@@ -603,7 +603,7 @@
- 
- 		aips3: bus@30800000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x309f0000 0x10000>;
-+			reg = <0x30800000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x30800000 0x30800000 0x400000>,
-@@ -863,7 +863,7 @@
- 
- 		aips4: bus@32c00000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x32df0000 0x10000>;
-+			reg = <0x32c00000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x32c00000 0x32c00000 0x400000>;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index fa78f0163270..e62d4146cebc 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -241,7 +241,7 @@
- 
- 		aips1: bus@30000000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x301f0000 0x10000>;
-+			reg = <0x30000000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-@@ -448,7 +448,7 @@
- 
- 		aips2: bus@30400000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x305f0000 0x10000>;
-+			reg = <0x30400000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-@@ -508,7 +508,7 @@
- 
- 		aips3: bus@30800000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x309f0000 0x10000>;
-+			reg = <0x30800000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-@@ -754,7 +754,7 @@
- 
- 		aips4: bus@32c00000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x32df0000 0x10000>;
-+			reg = <0x32c00000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 9b1616e59d58..9f6ba763238d 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -145,7 +145,7 @@
- 
- 		aips1: bus@30000000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x301f0000 0x10000>;
-+			reg = <0x30000000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-@@ -318,7 +318,7 @@
- 
- 		aips2: bus@30400000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x305f0000 0x400000>;
-+			reg = <0x30400000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-@@ -378,7 +378,7 @@
- 
- 		aips3: bus@30800000 {
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x309f0000 0x400000>;
-+			reg = <0x30800000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 75b384217a23..bab88369be1b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -291,7 +291,7 @@
- 
- 		bus@30000000 { /* AIPS1 */
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x301f0000 0x10000>;
-+			reg = <0x30000000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x30000000 0x30000000 0x400000>;
-@@ -696,7 +696,7 @@
- 
- 		bus@30400000 { /* AIPS2 */
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x305f0000 0x10000>;
-+			reg = <0x30400000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x30400000 0x30400000 0x400000>;
-@@ -756,7 +756,7 @@
- 
- 		bus@30800000 { /* AIPS3 */
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x309f0000 0x10000>;
-+			reg = <0x30800000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x30800000 0x30800000 0x400000>,
-@@ -1029,7 +1029,7 @@
- 
- 		bus@32c00000 { /* AIPS4 */
- 			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x32df0000 0x10000>;
-+			reg = <0x32c00000 0x400000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges = <0x32c00000 0x32c00000 0x400000>;
--- 
-2.17.1
+> +       compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
 
+thanks,
+drew
+
+--
+Drew Fustini
+BeagleBoard.org Foundation
+https://beagleboard.org/about
