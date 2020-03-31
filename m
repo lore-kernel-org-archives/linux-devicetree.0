@@ -3,102 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2CDC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E66AC2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9F220848
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155D220786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 15:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Yx4mVs54"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WRpjx01c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbgCaPia (ORCPT
+        id S1731062AbgCaPm2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 11:38:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41378 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727703AbgCaPia (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 11:38:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=+gitPeRArdeA4p5pxqRTKKxGvRcHRsv7ZXkWGjwTB3M=; b=Yx4mVs54sJKW+wKK/7UWMK7Dvl
-        mm58Z5IMAkRBe1mjDlvif+ypG91g7ziA5DdWq8WcA2c0cBWfXqtd0JBgq3N8jqVto2VF5hbU7EOwE
-        q0Qc4WAzIpz67Q1v4X5L9PEHTWOj8uHnLc3sp25TooXlmnPpy5YuOONnn/tHaWhzMG8UdjzbRPF7B
-        liboyLjieOJ8z51KkVdDuYq8jYeKRR84WfVNBWCzxS+AM4dAy6Zk1sZl6vZKTFW6PUzq1YMtFVxnZ
-        Lo+POvvHdnUnLls+203QyYxDQKq4tpJdurI0X8ww3okBrX4ApMKOQn3Zp81m4D6VR/ykxOTT49yVd
-        j7n5UqRA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJIy6-0003mK-G1; Tue, 31 Mar 2020 15:38:22 +0000
-Subject: Re: [PATCH v4 7/7] tpm: tpm_tis: add tpm_tis_i2c driver
-To:     amirmizi6@gmail.com, Eyal.Cohen@nuvoton.com,
-        jarkko.sakkinen@linux.intel.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
- <20200331113207.107080-8-amirmizi6@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <a7365e83-06bf-e264-2b4d-3f34cc04ae2f@infradead.org>
-Date:   Tue, 31 Mar 2020 08:38:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 31 Mar 2020 11:42:28 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32798 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbgCaPm2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 11:42:28 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c138so851177pfc.0;
+        Tue, 31 Mar 2020 08:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KDuAtBeu4SFY4sw3CxQAeDAq4uGk1/P2qv0HzJwEFlU=;
+        b=WRpjx01cpOolF5J2y/dAVjyURXCWKzu2jJsCj290P6+4pAov6zJbViFRZ1fzOlUneD
+         tH3eXVSUEmKT9lZ5HAqCTaDgYmMfWiHgUIt7WNAhK0+NMDR21ddqZy09BozRY/njfcVX
+         oBvdfl/Wf7B9I4dD/v/hmqDhiJVpCBBT39mcvpsqMElY9nScj3/unELgfVxrqKgOsXoy
+         X74Yk67wDwl8f2qf27V8zVXeycyuIBQpmwFZuyaRx2yCBfDFGCJfy/DvTB2i95gL5i6y
+         TLGsYLK31OnXg2YsRJqIFhPn4TzNgvA/Bv2YBX2nWv75lPEZW97Wlvh3FWjfXX4Q9QrH
+         EBjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KDuAtBeu4SFY4sw3CxQAeDAq4uGk1/P2qv0HzJwEFlU=;
+        b=F4pRbquDokJB+Cqep2/5EDPr7q2/BopMq77o3TB6hBBRYaOTQlwtjMajjMZuFMbRRS
+         7WD0r2dbkLwRH5etNDRT+C4QMmNaOsOIpxNBUrfGQM86qtikdbq8eWBAiSQ6trAjkhvk
+         eHknbDNlMkyuzz2Rkaw6ueBnnSJnxQL+sEQu3f7dBCTs7A8GinOCC1f7GrIbMVfiny1Q
+         OWeIqUxkwt2vGeC5KnOmDNnuF/zcZfMOfgmQg379V1wKBE4KpKp1OLq9cn5BD8VZlsuU
+         /FTbk1i0I0VFlzOtQTUKdSaGCoPXAtmkqNRJFnufXxVvMND/qAGCBdjrtaE9f5VNlTV/
+         w3Tg==
+X-Gm-Message-State: ANhLgQ3RscA1gEhZmOPqgV+suljYgbBzitcNzjAoZqWtC/0ArE/6917m
+        0wbuQzfTrpK1WC2quuFR6Sc=
+X-Google-Smtp-Source: ADFU+vuYuJFEjZbk+8RzKG2Sw2VrFMI+77eghzMHaOXXYjsecX+mY4xs5y+UkncebiilTzlanexRFQ==
+X-Received: by 2002:a63:b40d:: with SMTP id s13mr19347404pgf.268.1585669347008;
+        Tue, 31 Mar 2020 08:42:27 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g69sm2183675pje.34.2020.03.31.08.42.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 31 Mar 2020 08:42:26 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 08:42:25 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Kun Yi <kunyi@google.com>
+Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        openbmc@lists.ozlabs.org, joel@jms.id.au,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH linux hwmon-next v2 2/3] hwmon: (sbtsi) Add documentation
+Message-ID: <20200331154225.GA11562@roeck-us.net>
+References: <20200323233354.239365-1-kunyi@google.com>
+ <20200323233354.239365-3-kunyi@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200331113207.107080-8-amirmizi6@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323233354.239365-3-kunyi@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi--
-
-On 3/31/20 4:32 AM, amirmizi6@gmail.com wrote:
-> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> index aacdeed..b482bbf 100644
-> --- a/drivers/char/tpm/Kconfig
-> +++ b/drivers/char/tpm/Kconfig
-> @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
->           If you have a H1 secure module running Cr50 firmware on SPI bus,
->           say Yes and it will be accessible from within Linux.
+On Mon, Mar 23, 2020 at 04:33:53PM -0700, Kun Yi wrote:
+> Document the SB-TSI sensor interface driver.
 > 
-> +config TCG_TIS_I2C
-> +       tristate "TPM I2C Interface Specification"
-> +       depends on I2C
-> +        depends on CRC_CCITT
-> +       select TCG_TIS_CORE
-> +       ---help---
-> +         If you have a TPM security chip which is connected to a regular
-> +         I2C master (i.e. most embedded platforms) that is compliant with the
-> +         TCG TPM I2C Interface Specification say Yes and it will be accessible from
-> +         within Linux. To compile this driver as a module, choose  M here;
-> +         the module will be called tpm_tis_i2c.
-> +
+> Signed-off-by: Kun Yi <kunyi@google.com>
+> Change-Id: I4b086a124d1d94a516386b0d2ff1cd7180b1dac1
+> ---
+>  Documentation/hwmon/sbtsi_temp.rst | 40 ++++++++++++++++++++++++++++++
 
-Please do as Documenatation/process/coding-style.rst says:
+The new file also needs to be added to Documentation/hwmon/index.rst.
 
-"Lines under a ``config`` definition
-are indented with one tab, while help text is indented an additional two
-spaces."
-
->  config TCG_TIS_I2C_ATMEL
->         tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
->         depends on I2C
-
-
-thanks.
--- 
-~Randy
-
+Guenter
