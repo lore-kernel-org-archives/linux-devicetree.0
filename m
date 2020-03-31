@@ -2,92 +2,366 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BABC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 12:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF243C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 12:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4642208E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 12:25:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585657545;
-	bh=lEz1klH4TymFRjb7lKYsi1k0Zi49pYdqaWSFWXTIeuk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BYCeq1A9Dc8ihUAMl1hx2evX5W6pie8jmYmgIU/nbYFlHc7tNHnJMXNY9HHTm4N5k
-	 0fUvGrHM2pMJ/EfoyBi1Bcc00GN4zim3HH2DFNR7v/UwTYfoY+QwBLISGfCP4GhKIk
-	 6VSz7p8n9Ccemu4Ul/2CvZHZbt8luzP5Xg/lHLCw=
+	by mail.kernel.org (Postfix) with ESMTP id 927EF20848
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 12:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730473AbgCaMZp (ORCPT
+        id S1730764AbgCaM0S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 08:25:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:52278 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730343AbgCaMZp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 08:25:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EB9A31B;
-        Tue, 31 Mar 2020 05:25:42 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 020F63F68F;
-        Tue, 31 Mar 2020 05:25:42 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 13:25:40 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Daniel Baluta <daniel.baluta@oss.nxp.com>
-Cc:     lgirdwood@gmail.com, pierre-louis.bossart@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com,
-        daniel.baluta@gmail.com, linux-imx@nxp.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        yuehaibing@huawei.com, krzk@kernel.org,
-        linux-kernel@vger.kernel.org, sound-open-firmware@alsa-project.org,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH 2/5] ASoC: SOF: imx: fix undefined reference issue
-Message-ID: <20200331122540.GD4802@sirena.org.uk>
-References: <20200319194957.9569-1-daniel.baluta@oss.nxp.com>
- <20200319194957.9569-3-daniel.baluta@oss.nxp.com>
+        Tue, 31 Mar 2020 08:26:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33098 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730697AbgCaM0S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 08:26:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f20so21784398ljm.0;
+        Tue, 31 Mar 2020 05:26:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=S9FPxJtkvbs2QQbxNMkV4KX7hSoD+fUQ1BX8fpZW+PY=;
+        b=Px3R+olFvb9Ut38OyX0+OMfo+isp7bNHI7+DYEceMUBeihVkq0W1XUr9pq43YXBW1t
+         M0NXe3KhKAg53Fe+R+BlrdBzjNd7IK5ArMwzv9hj5e23vZnO+JHMoQH4dQc8ux2UGT7n
+         GApHA++/mEsXodXFDYQ8Cer9uqDryyiSi+YNuBhq8kGEuluZeQxGFha9bN5HLbyfTZWQ
+         YBGGYGvTHvJVtzc9UTH/pfIEzdcfu/qpizZGt/SXKagCzhY4b8Agd0wIPZ38AASZ1A7q
+         M0ePcoou2tXj1qfJVpgZlrAg0fzTQbd1V7JWymVFU9pPAp4LlkU/I6s6RFgKBHpJwBs3
+         jc4w==
+X-Gm-Message-State: AGi0PubpM0sR5rX1swJrBpn0GR3GYphgpZVTZK/jnYMPfqCkD7yqZGyD
+        GiZEcrYCbI6Ip1F+7bYn1Dg=
+X-Google-Smtp-Source: APiQypICU+F92WBrMuDRM3M/ebu5bO1p5/lsWI6PARyEne/ujG/gsL6KV/8GObqa1Ju85m3LW63cmg==
+X-Received: by 2002:a05:651c:92:: with SMTP id 18mr6281008ljq.141.1585657574412;
+        Tue, 31 Mar 2020 05:26:14 -0700 (PDT)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id e2sm6264453ljl.83.2020.03.31.05.26.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 05:26:13 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 15:26:06 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Gary Hook <Gary.Hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Tal Gilboa <talgi@mellanox.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: [PATCH v7 07/10] power: supply: bd70528: use linear ranges
+Message-ID: <3ad3cc1cfaffc85259af4499bf43f9ce3eb488e2.1585656144.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sXc4Kmr5FA7axrvy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319194957.9569-3-daniel.baluta@oss.nxp.com>
-X-Cookie: It's later than you think.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Change the bd70528 to use common linear_range code instead of
+implementing a copy of it in this driver.
 
---sXc4Kmr5FA7axrvy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-On Thu, Mar 19, 2020 at 09:49:54PM +0200, Daniel Baluta wrote:
-> From: Daniel Baluta <daniel.baluta@nxp.com>
+No changes since v6
 
-> Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF
-> dependency")
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+ drivers/power/supply/Kconfig           |   1 +
+ drivers/power/supply/bd70528-charger.c | 144 ++++++++++---------------
+ 2 files changed, 56 insertions(+), 89 deletions(-)
 
-This has you as the author but you list a signoff by Pierre before you?
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index 9a5591ab90d0..8781c674ed07 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -695,6 +695,7 @@ config CHARGER_UCS1002
+ config CHARGER_BD70528
+ 	tristate "ROHM bd70528 charger driver"
+ 	depends on MFD_ROHM_BD70528
++	select LINEAR_RANGES
+ 	default n
+ 	help
+ 	 Say Y here to enable support for getting battery status
+diff --git a/drivers/power/supply/bd70528-charger.c b/drivers/power/supply/bd70528-charger.c
+index 3b820110ecfa..7a805faeee83 100644
+--- a/drivers/power/supply/bd70528-charger.c
++++ b/drivers/power/supply/bd70528-charger.c
+@@ -72,6 +72,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/power_supply.h>
++#include <linux/linear_range.h>
+ 
+ #define CHG_STAT_SUSPEND	0x0
+ #define CHG_STAT_TRICKLE	0x1
+@@ -335,38 +336,37 @@ static int bd70528_get_present(struct bd70528_psy *bdpsy, int *val)
+ 	return 0;
+ }
+ 
+-struct bd70528_linear_range {
+-	int min;
+-	int step;
+-	int vals;
+-	int low_sel;
+-};
+-
+-static const struct bd70528_linear_range current_limit_ranges[] = {
++static const struct linear_range current_limit_ranges[] = {
+ 	{
+ 		.min = 5,
+ 		.step = 1,
+-		.vals = 36,
+-		.low_sel = 0,
++		.min_sel = 0,
++		.max_sel = 0x22,
+ 	},
+ 	{
+ 		.min = 40,
+ 		.step = 5,
+-		.vals = 5,
+-		.low_sel = 0x23,
++		.min_sel = 0x23,
++		.max_sel = 0x26,
+ 	},
+ 	{
+ 		.min = 60,
+ 		.step = 20,
+-		.vals = 8,
+-		.low_sel = 0x27,
++		.min_sel = 0x27,
++		.max_sel = 0x2d,
+ 	},
+ 	{
+ 		.min = 200,
+ 		.step = 50,
+-		.vals = 7,
+-		.low_sel = 0x2e,
+-	}
++		.min_sel = 0x2e,
++		.max_sel = 0x34,
++	},
++	{
++		.min = 500,
++		.step = 0,
++		.min_sel = 0x35,
++		.max_sel = 0x3f,
++	},
+ };
+ 
+ /*
+@@ -374,18 +374,18 @@ static const struct bd70528_linear_range current_limit_ranges[] = {
+  * voltage for low temperatures. The driver currently only reads
+  * the charge current at room temperature. We do set both though.
+  */
+-static const struct bd70528_linear_range warm_charge_curr[] = {
++static const struct linear_range warm_charge_curr[] = {
+ 	{
+ 		.min = 10,
+ 		.step = 10,
+-		.vals = 20,
+-		.low_sel = 0,
++		.min_sel = 0,
++		.max_sel = 0x12
+ 	},
+ 	{
+ 		.min = 200,
+ 		.step = 25,
+-		.vals = 13,
+-		.low_sel = 0x13,
++		.min_sel = 0x13,
++		.max_sel = 0x1f
+ 	},
+ };
+ 
+@@ -398,56 +398,6 @@ static const struct bd70528_linear_range warm_charge_curr[] = {
+ #define MAX_WARM_CHG_CURR_SEL 0x1f
+ #define MIN_CHG_CURR_SEL 0x0
+ 
+-static int find_value_for_selector_low(const struct bd70528_linear_range *r,
+-				       int selectors, unsigned int sel,
+-				       unsigned int *val)
+-{
+-	int i;
+-
+-	for (i = 0; i < selectors; i++) {
+-		if (r[i].low_sel <= sel && r[i].low_sel + r[i].vals >= sel) {
+-			*val = r[i].min + (sel - r[i].low_sel) * r[i].step;
+-			return 0;
+-		}
+-	}
+-	return -EINVAL;
+-}
+-
+-/*
+- * For BD70528 voltage/current limits we happily accept any value which
+- * belongs the range. We could check if value matching the selector is
+- * desired by computing the range min + (sel - sel_low) * range step - but
+- * I guess it is enough if we use voltage/current which is closest (below)
+- * the requested?
+- */
+-static int find_selector_for_value_low(const struct bd70528_linear_range *r,
+-				       int selectors, unsigned int val,
+-				       unsigned int *sel, bool *found)
+-{
+-	int i;
+-	int ret = -EINVAL;
+-
+-	*found = false;
+-	for (i = 0; i < selectors; i++) {
+-		if (r[i].min <= val) {
+-			if (r[i].min + r[i].step * r[i].vals >= val) {
+-				*found = true;
+-				*sel = r[i].low_sel + (val - r[i].min) /
+-				       r[i].step;
+-				ret = 0;
+-				break;
+-			}
+-			/*
+-			 * If the range max is smaller than requested
+-			 * we can set the max supported value from range
+-			 */
+-			*sel = r[i].low_sel + r[i].vals;
+-			ret = 0;
+-		}
+-	}
+-	return ret;
+-}
+-
+ static int get_charge_current(struct bd70528_psy *bdpsy, int *ma)
+ {
+ 	unsigned int sel;
+@@ -463,9 +413,9 @@ static int get_charge_current(struct bd70528_psy *bdpsy, int *ma)
+ 
+ 	sel &= BD70528_MASK_CHG_CHG_CURR;
+ 
+-	ret = find_value_for_selector_low(&warm_charge_curr[0],
+-					  ARRAY_SIZE(warm_charge_curr), sel,
+-					  ma);
++	ret = linear_range_get_value_array(&warm_charge_curr[0],
++					   ARRAY_SIZE(warm_charge_curr),
++					   sel, ma);
+ 	if (ret) {
+ 		dev_err(bdpsy->dev,
+ 			"Unknown charge current value 0x%x\n",
+@@ -491,10 +441,9 @@ static int get_current_limit(struct bd70528_psy *bdpsy, int *ma)
+ 
+ 	sel &= BD70528_MASK_CHG_DCIN_ILIM;
+ 
+-	ret = find_value_for_selector_low(&current_limit_ranges[0],
+-					  ARRAY_SIZE(current_limit_ranges), sel,
+-					  ma);
+-
++	ret = linear_range_get_value_array(&current_limit_ranges[0],
++					   ARRAY_SIZE(current_limit_ranges),
++					   sel, ma);
+ 	if (ret) {
+ 		/* Unspecified values mean 500 mA */
+ 		*ma = 500;
+@@ -588,15 +537,28 @@ static int set_charge_current(struct bd70528_psy *bdpsy, int ma)
+ 		goto set;
+ 	}
+ 
+-	ret = find_selector_for_value_low(&warm_charge_curr[0],
+-					  ARRAY_SIZE(warm_charge_curr), ma,
+-					  &reg, &found);
++/*
++ * For BD70528 voltage/current limits we happily accept any value which
++ * belongs the range. We could check if value matching the selector is
++ * desired by computing the range min + (sel - sel_low) * range step - but
++ * I guess it is enough if we use voltage/current which is closest (below)
++ * the requested?
++ */
++
++	ret = linear_range_get_selector_low_array(warm_charge_curr,
++						  ARRAY_SIZE(warm_charge_curr),
++						  ma, &reg, &found);
+ 	if (ret) {
++		dev_err(bdpsy->dev,
++			 "Unsupported charge current %u mA\n", ma);
+ 		reg = MIN_CHG_CURR_SEL;
+ 		goto set;
+ 	}
+ 	if (!found) {
+-		/* There was a gap in supported values and we hit it */
++		/*
++		 * There was a gap in supported values and we hit it.
++		 * Yet a smaller value was found so we use it.
++		 */
+ 		dev_warn(bdpsy->dev,
+ 			 "Unsupported charge current %u mA\n", ma);
+ 	}
+@@ -648,17 +610,21 @@ static int set_current_limit(struct bd70528_psy *bdpsy, int ma)
+ 		goto set;
+ 	}
+ 
+-	ret = find_selector_for_value_low(&current_limit_ranges[0],
+-					  ARRAY_SIZE(current_limit_ranges), ma,
+-					  &reg, &found);
++	ret = linear_range_get_selector_low_array(current_limit_ranges,
++					ARRAY_SIZE(current_limit_ranges),
++					ma, &reg, &found);
+ 	if (ret) {
++		dev_err(bdpsy->dev, "Unsupported current limit %umA\n", ma);
+ 		reg = MIN_CURR_LIMIT_SEL;
+ 		goto set;
+ 	}
+ 	if (!found) {
+-		/* There was a gap in supported values and we hit it ?*/
+-		dev_warn(bdpsy->dev, "Unsupported current limit %umA\n",
+-			 ma);
++		/*
++		 * There was a gap in supported values and we hit it.
++		 * We found a smaller value from ranges and use it.
++		 * Warn user though.
++		 */
++		dev_warn(bdpsy->dev, "Unsupported current limit %umA\n", ma);
+ 	}
+ 
+ set:
+-- 
+2.21.0
 
---sXc4Kmr5FA7axrvy
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6DNsMACgkQJNaLcl1U
-h9AAewf/SRLQsBBj6wlAv5rhKMVQLnmnQY5R9scerh2jz6AEv/pHxINQd4zTWjnh
-pIhrebacgZCwofsY/n31xPI/thHIHJIo4bqgKIQs85UkXwCVHXXctSlyWKPsQz7y
-yuwX5Wp7Yamg32an6JuCQo3KCVC5kZt9TMT36nkVKSyhdxmVAkDj7x78EjJRPBTV
-1kvi+UzHvDghla+wt2olnvA5KfhNc2SlMi7hDBPtXAEnHr3XDwVoeDxIwobdLC4j
-KK0gxmGaHrmB5darIqDjRJeRiG9uzurATnY2GJREkJHgOnRV3mZkeOeQ4yFMoAvG
-iJphl8WUXrpNLg0rdwTMnxFHXL4fPg==
-=aJV2
------END PGP SIGNATURE-----
-
---sXc4Kmr5FA7axrvy--
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
