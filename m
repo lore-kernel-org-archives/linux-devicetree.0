@@ -2,92 +2,114 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F37C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A8EC2D0F1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1760206CC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585673380;
-	bh=yHAS29L5m0Tj17+jqpkqcxGQISwvDIxvJMm/vfNg7QU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xh+VY0OH2XM/saYYT7BAk5bZznxP9ob/XlelcAocPQyHLbDF28AnAKNDKpeMeh7ZQ
-	 +dB067t1N5UJX+er4aiO+Cj5ZHlCgSZV9ajT1O/kXtEpFlQT6BCxImakM8TvUPyquV
-	 us+JEuMbess01j6T8JLc8N2gBDbrotR3/FcSeSS0=
+	by mail.kernel.org (Postfix) with ESMTP id B4B4C20BED
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:56:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="iZHJ0fOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgCaQtk (ORCPT
+        id S1730149AbgCaQ4L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:49:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:38442 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCaQtk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:49:40 -0400
-Received: by mail-io1-f65.google.com with SMTP id m15so22495993iob.5;
-        Tue, 31 Mar 2020 09:49:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3QwrQutvISOdwRt5xFRlvMoy4S4i7e5APKKFlmWfPlI=;
-        b=PvlCBlOVhWpiEE5vOlhHcqN26W3aL5DkkchPoDew3CcASddiAUT2tm3rbub6g58/U6
-         y6UbJDsXPEaMQ86yFvefEQAT7/skAvRU9KmpQ/3mM47im7p/rHF275Ag59VllBgo+GD9
-         E1SR6I77dXgOqvAKi1V4abV2UCa/2u7GkfDWbsuuKmoB+EqqGQvfeOTOnYpZR2UKmapI
-         08Q49ocMaabZMLSOhasoLTIFhj+cGGDVJ3qHuDZB4G2wCHZ8e7crL1Z3PB/qQXde7rwd
-         os5C1S4d494Yx2zyTPWrO0F5gyrYH9L8Ffri8zKw6qtC5vo354BuHsi91KdK4UJs9Q/9
-         AwsA==
-X-Gm-Message-State: ANhLgQ33odvHo52AVS4GKqggNVwT126y0KI4yq6Ivt3emb+8Dy0WFKbJ
-        oiIKz8uniI6isEqG1lcvjg==
-X-Google-Smtp-Source: ADFU+vu0uvJu27akUkqWds8x0YrvgBWePU3mk/Nwbnw0BEYSzZyw5fX/kIW3WxqJWs3yGGKUbPvnEA==
-X-Received: by 2002:a02:5a82:: with SMTP id v124mr8013603jaa.132.1585673378445;
-        Tue, 31 Mar 2020 09:49:38 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id l17sm6133742ilf.28.2020.03.31.09.49.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 09:49:37 -0700 (PDT)
-Received: (nullmailer pid 20383 invoked by uid 1000);
-        Tue, 31 Mar 2020 16:49:36 -0000
-Date:   Tue, 31 Mar 2020 10:49:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     fabrice.gasnier@st.com, lee.jones@linaro.org, mark.rutland@arm.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] dt-bindings: mfd: Document STM32 low power timer
- bindings
-Message-ID: <20200331164936.GA18783@bogus>
-References: <20200331083146.10462-1-benjamin.gaignard@st.com>
- <20200331083146.10462-2-benjamin.gaignard@st.com>
+        Tue, 31 Mar 2020 12:56:11 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:35534 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730099AbgCaQ4K (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:56:10 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 855544126D;
+        Tue, 31 Mar 2020 16:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1585673767; x=1587488168; bh=gqp2ICgJ2oa8nDsJt1Xk3VAdh
+        K30cb8p4Nje35DG6LY=; b=iZHJ0fOlc7CKEAkrgHYsLLGzVeKsdbEYmt5eye6B0
+        lGrV3ycOT8HS/AfyRxc/kfJwPgmQDRf2tcztqzMiOEqAcnA2IMZFFcZRJrKEZhPV
+        edgs/qasWWSCg9TBeAQIgjec2MkT6IfEihQ432TNl8l/ZQXW+hP0iV2gQ10hvXfr
+        jA=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id o0lESavaoZVW; Tue, 31 Mar 2020 19:56:07 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 3513C41259;
+        Tue, 31 Mar 2020 19:56:07 +0300 (MSK)
+Received: from localhost.localdomain (10.199.0.226) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Tue, 31 Mar 2020 19:56:07 +0300
+Message-ID: <86186f02c630a05cf7254a38e0f15d726e2f440b.camel@yadro.com>
+Subject: Re: [PATCH v5 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 31 Mar 2020 19:56:18 +0300
+In-Reply-To: <CAHp75VexS-iVeDXsCFqgzCKokgzzeH=BFtUqOJdY+kS8O6B9bw@mail.gmail.com>
+References: <20200330152711.8769-1-i.mikhaylov@yadro.com>
+         <20200330152711.8769-3-i.mikhaylov@yadro.com>
+         <CAHp75VeLtPkb0e4uNP+1LGgtquBXkb5=bPi54O1U92uaO5jqvw@mail.gmail.com>
+         <5cb43513906e1175801ea4e753c855623fcd11d1.camel@yadro.com>
+         <CAHp75VexS-iVeDXsCFqgzCKokgzzeH=BFtUqOJdY+kS8O6B9bw@mail.gmail.com>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331083146.10462-2-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.199.0.226]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:31:41AM +0200, Benjamin Gaignard wrote:
-> Add a subnode to STM low power timer bindings to support timer driver
+On Tue, 2020-03-31 at 14:00 +0300, Andy Shevchenko wrote:
+> > > Why not to use standard pattern, i.e.
+> > > 
+> > >   if (rc)
+> > >     return rc;
+> > >   ...
+> > >   rc = regmap_write(...);
+> > > 
+> > > ?
+> > 
+> > Optional parameter. There exists a lot of ways to do it:
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> version 5:
-> - the previous has been acked-by Rob but since I have docummented
->   interrupts and interrupt-names properties I haven't applied it here.
+> I'm simple reading the code. And I believe the above I suggested is
+> cleaner equivalent.
+> Is it?
 > 
-> version 4:
-> - change compatible and subnode names
-> - document wakeup-source property
+> > rc = device_property_read_u32(dev, "milliamp", &led_current);
+> > rc = regmap_write(regmap, VCNL_LED_CURRENT, (!rc) : led_current ? 0);
 > 
->  .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+> This seems not equal to above.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yes, it is not equal. Error will be returned in case of non existent parameter
+in vcnl3020_init but parameter is optional. rc shouldn't be checked or should
+return 0 with your suggestion.
+
+rc = device_property_read_u32(...);
+if (rc)
+	return 0;
+rc = regmap_write(...);
+if (rc)
+	dev_err(...);
+return rc;
+
