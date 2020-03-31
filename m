@@ -2,181 +2,310 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E2CC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6EDC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCF4206CC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B04B9206CC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:04:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mdyk4hId"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q0agAYmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbgCaQAX (ORCPT
+        id S1731127AbgCaQE7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:00:23 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:43656 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731026AbgCaQAW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:00:22 -0400
-Received: by mail-vk1-f195.google.com with SMTP id v129so5491780vkf.10
-        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 09:00:21 -0700 (PDT)
+        Tue, 31 Mar 2020 12:04:59 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38291 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730562AbgCaQE7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:04:59 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f6so3383048wmj.3;
+        Tue, 31 Mar 2020 09:04:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/GMoukOL0KHHE8wEvMLxzDD6OsKNGd37py8qqC7r4eI=;
-        b=Mdyk4hIdWk9iaKwb4+KZqwkLAVAFtwZV/5MocNo0ZUVnr90atdWYJplVeGt1osWlMJ
-         tsGG0jSCSuDfx6UCog8dLugU+8D/yjeNzKb4ikMbN1zz2tOBe/7yHSe5i4d0VKOn18dH
-         u6KGIqmobDm7Jdik275lPhk3ZHks5e56i9mV0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4VKI9AuPhMvUgqTj7z2yAveanc53o7XusIgD/wUX0qM=;
+        b=q0agAYmm/VmDdDcewOukFSDP029eE+dPAyRe1UJebG980+mCCXFDfpDZYsJGXffTI9
+         by1tNoD5G+i/Ffh4pvhmWX3TLLoAMEzIL0+NsQ/Q3ngv8BdhSX5kl5sX/ldWDTuEITlf
+         4CfG/ggwB2NZs56lKww74VrGuLbMtYMZR5wmzOaipMmiozrTIBjFgLAaueoy7F4JYT9l
+         pR+UOHuggwL6Zq3a6PHNYd6Ty+JXTKndlizKODM4acD6ZV1+Agcxn1jadBN0WycrsLqH
+         NtNIirApMeePMh0wQNM4RLnxVBzfURMBSPQ25wes250TigM7rSn830EOpLFZKsTr+BHQ
+         gDWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/GMoukOL0KHHE8wEvMLxzDD6OsKNGd37py8qqC7r4eI=;
-        b=khGPEM2pFbMvZL7rJglbfT3+ZnwKMOuVyizR++jQdso6vLnz64h8o6CUy/r9UOisWz
-         6kz10+uF9qceSfeWPPNvcKLFBTFr50ObBeKfV7ylKJvDvJQHBvyFxdQ7NEZHApPgnjT4
-         fvgesrnrSd7n/s54o9SWWGLI4bq/2LQHo8j6ttZVot7oPtbhcfxiEnUwqo0q8IeE1/Ne
-         BMWA9Tap+7GGMBusoi8UzHD5H509gyA5u/yFYKhZKdvnG6jDAJTyNpDd7YK1KKWGCQwr
-         1WHl0WTWh8R24tyTQqOw9A6iEDWdYDiutM3dT9RJfiF+VhVfvOXvLNpfhWe3wkcFLt08
-         Ny6A==
-X-Gm-Message-State: AGi0PuYzLRGAW5EBbatt2wzsOkR+qZNhgw822nDEyu5u2NU7FMwXX8EP
-        GTSgvQvEkXfbRdpi0YET746QBmB3z5g=
-X-Google-Smtp-Source: APiQypIv+3S99xel94c8M5g5I0E09D0DvCJTSLz/lYBHf1JgEgcjQBrKtPg8eyaZCi25si6oUBpoKg==
-X-Received: by 2002:ac5:ccb9:: with SMTP id p25mr12547860vkm.69.1585670420351;
-        Tue, 31 Mar 2020 09:00:20 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id s134sm6612144vke.46.2020.03.31.09.00.18
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 31 Mar 2020 09:00:19 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id t20so7836446uao.7
-        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 09:00:18 -0700 (PDT)
-X-Received: by 2002:ab0:7406:: with SMTP id r6mr3595683uap.22.1585670417847;
- Tue, 31 Mar 2020 09:00:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <1585663107-12406-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1585663107-12406-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 31 Mar 2020 09:00:06 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Up4y6GUkJc8NNJBdC28L+6LvUs7pCUg4pyMCgHMGEkug@mail.gmail.com>
-Message-ID: <CAD=FV=Up4y6GUkJc8NNJBdC28L+6LvUs7pCUg4pyMCgHMGEkug@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4VKI9AuPhMvUgqTj7z2yAveanc53o7XusIgD/wUX0qM=;
+        b=p8KlvI7Lsv2DWz+7APdcCrQh4DDlbYNiHjGHCABK8YlUgebBEfO0sIMxp6nJWsTDYb
+         oNYc9h/CvuZJybjoUAujBIiOMgM2hg+V+x6noW3PI05W3sEv6b3ROMztdlSmgR/AlNk7
+         ji/0Po0Ysz1BWLs4NbF76s65z5ndUBKfHVCUJOCR7AlFMFEhKP9QPN/8fbh4njQRyK8V
+         4DwjzX/B2LYcBFwX23nG7rKPb6j1V/p34a/iLMEV+vVxAJ5wTaLhFEKTxEVtVqclsDaN
+         VJBznEO5RnM6mqgyUEwURrr9BQ9CXEIsStUNB98t+zE3EXN1qrKn1UoUm2dFLSaKgv9J
+         H1Mg==
+X-Gm-Message-State: ANhLgQ34RFYe8RrYxOhUSIf0RjM/PjgOEoBe7Bgnq2RkCrcm1Ew+cihU
+        JbjgMpvaApdfdaO6r9pAucM=
+X-Google-Smtp-Source: ADFU+vuRA91pE+w4+dgBDghI6jnabCDYF3dXfWt06pUcEiVsl2Z3RjgW5I01mlHajMa+eP/KDc8jMw==
+X-Received: by 2002:a1c:4987:: with SMTP id w129mr4406106wma.168.1585670696219;
+        Tue, 31 Mar 2020 09:04:56 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id p17sm1651433wmb.30.2020.03.31.09.04.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 31 Mar 2020 09:04:55 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
+        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dt-bindings: display: convert rockchip rk3066 hdmi bindings to yaml
+Date:   Tue, 31 Mar 2020 18:04:48 +0200
+Message-Id: <20200331160448.15331-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Current dts files with 'hdmi' nodes for rk3066 are manually verified.
+In order to automate this process rockchip,rk3066-hdmi.txt
+has to be converted to yaml.
 
-On Tue, Mar 31, 2020 at 6:58 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->
-> "The PM core always increments the runtime usage counter
-> before calling the ->suspend() callback and decrements it
-> after calling the ->resume() callback"
->
-> DPU and DSI are managed as runtime devices. When
-> suspend is triggered, PM core adds a refcount on all the
-> devices and calls device suspend, since usage count is
-> already incremented, runtime suspend was not getting called
-> and it kept the clocks on which resulted in target not
-> entering into XO shutdown.
->
-> Add changes to force suspend on runtime devices during pm sleep.
->
-> Changes in v1:
->  - Remove unnecessary checks in the function
->     _dpu_kms_disable_dpu (Rob Clark).
->
-> Changes in v2:
->  - Avoid using suspend_late to reset the usagecount
->    as suspend_late might not be called during suspend
->    call failures (Doug).
->
-> Changes in v3:
->  - Use force suspend instead of managing device usage_count
->    via runtime put and get API's to trigger callbacks (Doug).
->
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 2 ++
->  drivers/gpu/drm/msm/dsi/dsi.c           | 2 ++
->  drivers/gpu/drm/msm/msm_drv.c           | 4 ++++
->  3 files changed, 8 insertions(+)
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ .../display/rockchip/rockchip,rk3066-hdmi.txt      |  72 -----------
+ .../display/rockchip/rockchip,rk3066-hdmi.yaml     | 141 +++++++++++++++++++++
+ 2 files changed, 141 insertions(+), 72 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
 
-This looks much saner to me.  Thanks!  I assume it still works fine
-for you?  I'm still no expert on how all the pieces of DRM drivers
-work together, but at least there's not a bunch of strange fiddling
-with pm_runtime state and hopefully it will avoid weird corner
-cases...
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+deleted file mode 100644
+index d1ad31bca..000000000
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
++++ /dev/null
+@@ -1,72 +0,0 @@
+-Rockchip specific extensions for rk3066 HDMI
+-============================================
+-
+-Required properties:
+-- compatible:
+-	"rockchip,rk3066-hdmi";
+-- reg:
+-	Physical base address and length of the controller's registers.
+-- clocks, clock-names:
+-	Phandle to HDMI controller clock, name should be "hclk".
+-- interrupts:
+-	HDMI interrupt number.
+-- power-domains:
+-	Phandle to the RK3066_PD_VIO power domain.
+-- rockchip,grf:
+-	This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
+-- ports:
+-	Contains one port node with two endpoints, numbered 0 and 1,
+-	connected respectively to vop0 and vop1.
+-	Contains one port node with one endpoint
+-	connected to a hdmi-connector node.
+-- pinctrl-0, pinctrl-name:
+-	Switch the iomux for the HPD/I2C pins to HDMI function.
+-
+-Example:
+-	hdmi: hdmi@10116000 {
+-		compatible = "rockchip,rk3066-hdmi";
+-		reg = <0x10116000 0x2000>;
+-		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&cru HCLK_HDMI>;
+-		clock-names = "hclk";
+-		power-domains = <&power RK3066_PD_VIO>;
+-		rockchip,grf = <&grf>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-			hdmi_in: port@0 {
+-				reg = <0>;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				hdmi_in_vop0: endpoint@0 {
+-					reg = <0>;
+-					remote-endpoint = <&vop0_out_hdmi>;
+-				};
+-				hdmi_in_vop1: endpoint@1 {
+-					reg = <1>;
+-					remote-endpoint = <&vop1_out_hdmi>;
+-				};
+-			};
+-			hdmi_out: port@1 {
+-				reg = <1>;
+-				hdmi_out_con: endpoint {
+-					remote-endpoint = <&hdmi_con_in>;
+-				};
+-			};
+-		};
+-	};
+-
+-&pinctrl {
+-		hdmi {
+-			hdmi_hpd: hdmi-hpd {
+-				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
+-			};
+-			hdmii2c_xfer: hdmii2c-xfer {
+-				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
+-						<0 RK_PA2 1 &pcfg_pull_none>;
+-			};
+-		};
+-};
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
+new file mode 100644
+index 000000000..8f4acf707
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
+@@ -0,0 +1,141 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3066-hdmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip rk3066 HDMI controller
++
++maintainers:
++  - Sandy Huang <hjc@rock-chips.com>
++  - Heiko Stuebner <heiko@sntech.de>
++
++properties:
++  compatible:
++    const: rockchip,rk3066-hdmi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: hclk
++
++  pinctrl-0:
++    maxItems: 2
++
++  pinctrl-names:
++    const: default
++    description:
++      Switch the iomux for the HPD/I2C pins to HDMI function.
++
++  power-domains:
++    maxItems: 1
++
++  rockchip,grf:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      This soc uses GRF regs to switch the HDMI TX input between vop0 and vop1.
++
++  ports:
++    type: object
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        description:
++          Port node with two endpoints, numbered 0 and 1,
++          connected respectively to vop0 and vop1.
++
++      port@1:
++        type: object
++        description:
++          Port node with one endpoint connected to a hdmi-connector node.
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++      - port@0
++      - port@1
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - pinctrl-0
++  - pinctrl-names
++  - power-domains
++  - rockchip,grf
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/rk3066a-cru.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/pinctrl/rockchip.h>
++    #include <dt-bindings/power/rk3066-power.h>
++    hdmi: hdmi@10116000 {
++      compatible = "rockchip,rk3066-hdmi";
++      reg = <0x10116000 0x2000>;
++      interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&cru HCLK_HDMI>;
++      clock-names = "hclk";
++      pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
++      pinctrl-names = "default";
++      power-domains = <&power RK3066_PD_VIO>;
++      rockchip,grf = <&grf>;
++
++      ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        hdmi_in: port@0 {
++          reg = <0>;
++          #address-cells = <1>;
++          #size-cells = <0>;
++          hdmi_in_vop0: endpoint@0 {
++            reg = <0>;
++            remote-endpoint = <&vop0_out_hdmi>;
++          };
++          hdmi_in_vop1: endpoint@1 {
++            reg = <1>;
++            remote-endpoint = <&vop1_out_hdmi>;
++          };
++        };
++        hdmi_out: port@1 {
++          reg = <1>;
++          hdmi_out_con: endpoint {
++            remote-endpoint = <&hdmi_con_in>;
++          };
++        };
++      };
++    };
++
++    pinctrl {
++      hdmi {
++        hdmi_hpd: hdmi-hpd {
++          rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
++        };
++        hdmii2c_xfer: hdmii2c-xfer {
++          rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
++                          <0 RK_PA2 1 &pcfg_pull_none>;
++        };
++      };
++    };
+-- 
+2.11.0
 
-
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> index ce19f1d..b886d9d 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> @@ -1123,6 +1123,8 @@ static int __maybe_unused dpu_runtime_resume(struct device *dev)
->
->  static const struct dev_pm_ops dpu_pm_ops = {
->         SET_RUNTIME_PM_OPS(dpu_runtime_suspend, dpu_runtime_resume, NULL)
-> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +                               pm_runtime_force_resume)
->  };
->
->  static const struct of_device_id dpu_dt_match[] = {
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi.c b/drivers/gpu/drm/msm/dsi/dsi.c
-> index 55ea4bc2..62704885 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi.c
-> @@ -161,6 +161,8 @@ static int dsi_dev_remove(struct platform_device *pdev)
->
->  static const struct dev_pm_ops dsi_pm_ops = {
->         SET_RUNTIME_PM_OPS(msm_dsi_runtime_suspend, msm_dsi_runtime_resume, NULL)
-> +       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +                               pm_runtime_force_resume)
->  };
->
->  static struct platform_driver dsi_driver = {
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index 7d985f8..2b8c99c 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -1051,6 +1051,8 @@ static int msm_pm_suspend(struct device *dev)
->                 return ret;
->         }
->
-> +       pm_runtime_force_suspend(dev);
-
-nit: check return value of pm_runtime_force_suspend()?
-
-
-> +
->         return 0;
->  }
->
-> @@ -1063,6 +1065,8 @@ static int msm_pm_resume(struct device *dev)
->         if (WARN_ON(!priv->pm_state))
->                 return -ENOENT;
->
-> +       pm_runtime_force_resume(dev);
-
-nit: check return value of pm_runtime_force_resume()?
-
-
--Doug
