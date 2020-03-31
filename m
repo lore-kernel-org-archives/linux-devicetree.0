@@ -2,297 +2,191 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DB6C2D0EF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5DBC2D0EE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D8D221473
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC3220CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:25:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rp0zWmZ1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cni/Y2VV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgCaSPn (ORCPT
+        id S1726194AbgCaSZB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:15:43 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41856 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgCaSPn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 14:15:43 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a24so3861727pfc.8;
-        Tue, 31 Mar 2020 11:15:43 -0700 (PDT)
+        Tue, 31 Mar 2020 14:25:01 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40846 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgCaSZB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 14:25:01 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c20so8163144pfi.7
+        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 11:25:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xxaK7TWnzQ3tsJFSRYiRdAA4AhJRuyYhC9yptejiW3Q=;
-        b=Rp0zWmZ1VxDLmz4cYM+ZmN+MW3QgdVcW9y9omZc2kwDU41vRmMgCtMZEmPLEIMnVEN
-         PPQP8dd+ygROEZ36SowO53zBbatTQj/L0wpWfjKFSx8IDrPH1M4ZvcycAjbPZqc57EsS
-         h1ZJkUs3i2hezck+bYf9jvZEyqHX7H2WCPrF5a8HJaGvmRlv3nIR1tbZJ8XmNAU6HV+f
-         STVWHIMzwZgnwJGHyhoT+Ul8XBraxYhXzjhZKglwKwrz7lH0/hPTD94ubV8ARwOCYTBt
-         yrD5sf6MLb3yxL/pQ97pe9c3vkocpS8wawXnbvz0/a3qVrgcv8ayk51tg34kiqWjfT9b
-         Iomw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OD4APimgEZMGsgSh2+kf2nEhlo5tym5G5xyWPxzhCFU=;
+        b=cni/Y2VVfTEbC+1+JW9g4Pq7M9qQKO0873cdLiP6lzNX05tOqejyE9L7bRz81oVjqF
+         spmPg4yqW+e+X+BcUzgEpr7F7v9No1oxIyjSapvnXJYoXwgQ2yLTPm+BUrBQZSoCSOUl
+         AKCctgm1lWAEd9zuMEaC49/K/CTSOTfyd5GjA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xxaK7TWnzQ3tsJFSRYiRdAA4AhJRuyYhC9yptejiW3Q=;
-        b=VXq0NtinnQEWKQIRKjU91Ha3+cwE95lAsgp9RpSa/gMyeEwo6+Y5dSuUanwrBK3Q2t
-         1OSRJ4q1NIwNkAY+k3tEyMKmHCcfjjnLHxEXipV5eQIPne9ez5zV7gf+vXYe0yk/Zhya
-         0nAlEFiiRZXZRep2qzIbUaqo+LkwhGyGP+HGNhWuVKAGnRDhC4mOjAi+apxINyHg2eqB
-         cfACsrn4eJiHeofVGKbvkg3LxZnIzM1XLYECRLcUs1DntnaBD7gPW9/ML8hbXFi4rlSA
-         Gf8DPo5UukgkDcyzXWJfAVKjPJ3uTDIxQ2hrzev5u7YkFZRlm6ZNVeJfmsev9k0ZFcgb
-         zDtw==
-X-Gm-Message-State: AGi0PuYkouTZ2k4TtGARrXQcQZCN52WBoWimfMWSgnDFoqMgsPo3zV6i
-        s08DiQyuzP7hDvVlRytqWsnYo5VbeS0fC/Y3XcA=
-X-Google-Smtp-Source: APiQypLsvD+zTDMxwjtoPObW3tRx6qqtIe/5lQ9pcwg4XtPXaOyGLSX1pOq2/xQm5HMouV0jZnDA6ghb3lUFCsLSAeI=
-X-Received: by 2002:a63:7b1d:: with SMTP id w29mr5250305pgc.4.1585678542436;
- Tue, 31 Mar 2020 11:15:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OD4APimgEZMGsgSh2+kf2nEhlo5tym5G5xyWPxzhCFU=;
+        b=nEQnFHdkVhvNZbIR20ksbfzMNOnPddm2lvde76NfNkmFSx2Kz9CSr3uYSF8bf98aRX
+         irEz/RV1wRqRzGzSnR/yaF8R2t9GLEujmY6x/QQ5ORzdMQ6TlVLHMT/yu2+A4Ax1Ofcn
+         o7rbCkfm3Ye7RNgp6XksQjrjmb7rCcWBlJbhHy7P6kKwAE51ryYvbogTXVpCd9KO00aw
+         69ts91znV/2YqL15TutIPzrhZOFCyLff2vhxVuLYwKUi/oA+0MK0US2XkmctL4OGbL2R
+         L12RgXmbxhI8K5TBVWnGXjIzbHSQWmqlhdtTY8w57LH/hmkad+bDju7Tlei6Dglu1bBE
+         pwkA==
+X-Gm-Message-State: ANhLgQ11+cQGD079ZfO1hUTUcPTtJTC0GOt6B1kWpewJAa/bASDj3p/G
+        HO2T3BvVApcQbxgESBSs72fbOA==
+X-Google-Smtp-Source: ADFU+vvkTEocDVBgyI1pOMqmc7wnzKXhmUi3tdwPEyjL7Pj2+Kw4PlEZ3jjHUgkibnILpfJkUubkxA==
+X-Received: by 2002:a65:6805:: with SMTP id l5mr18470841pgt.256.1585679099890;
+        Tue, 31 Mar 2020 11:24:59 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id h15sm12963919pfq.10.2020.03.31.11.24.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 11:24:59 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 11:24:57 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+Subject: Re: [PATCH V3 3/8] soc: qcom-geni-se: Add interconnect support to
+ fix earlycon crash
+Message-ID: <20200331182457.GH199755@google.com>
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+ <1585652976-17481-4-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-References: <20200331114811.7978-1-nuno.sa@analog.com> <20200331114811.7978-6-nuno.sa@analog.com>
-In-Reply-To: <20200331114811.7978-6-nuno.sa@analog.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 31 Mar 2020 21:15:35 +0300
-Message-ID: <CAHp75Vdxtn1gXi=xCJfGOkBYiWB2qsYQLTJyaEGiiFqHvELaHQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
-To:     =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandru Ardelean <alexandru.Ardelean@analog.com>,
-        Michael Hennerich <Michael.Hennerich@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1585652976-17481-4-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote:
->
-> Support ADIS16475 and similar IMU devices. These devices are
-> a precision, miniature MEMS inertial measurement unit (IMU) that
-> includes a triaxial gyroscope and a triaxial accelerometer. Each
-> inertial sensor combines with signal conditioning that optimizes
-> dynamic performance.
->
-> The driver adds support for the following devices:
->  * adis16470, adis16475, adis16477, adis16465, adis16467, adis16500,
->    adis16505, adis16507.
+Hi Akash,
 
-...
+On Tue, Mar 31, 2020 at 04:39:31PM +0530, Akash Asthana wrote:
+> QUP core clock is shared among all the SE drivers present on particular
+> QUP wrapper, the system will reset(unclocked access) if earlycon used after
+> QUP core clock is put to 0 from other SE drivers before real console comes
+> up.
+> 
+> As earlycon can't vote for it's QUP core need, to fix this add ICC
+> support to common/QUP wrapper driver and put vote for QUP core from
+> probe on behalf of earlycon and remove vote during earlycon exit call.
+> 
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> Reported-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Change is V3:
+>  - Add geni_remove_earlycon_icc_vote API that will be used by earlycon
+>    exit function to remove ICC vote for earlyconsole.
+>  - Remove suspend/resume hook for geni-se driver as we are no longer
+>    removing earlyconsole ICC vote from system suspend, we are removing
+>    from earlycon exit.
+> 
+>  drivers/soc/qcom/qcom-geni-se.c       | 51 +++++++++++++++++++++++++++++++++++
+>  drivers/tty/serial/qcom_geni_serial.c |  7 +++++
+>  include/linux/qcom-geni-se.h          |  2 ++
+>  3 files changed, 60 insertions(+)
+> 
+> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> index 9344c14..d30c282 100644
+> --- a/drivers/soc/qcom/qcom-geni-se.c
+> +++ b/drivers/soc/qcom/qcom-geni-se.c
+> @@ -90,8 +90,11 @@ struct geni_wrapper {
+>  	struct device *dev;
+>  	void __iomem *base;
+>  	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
+> +	struct geni_icc_path to_core;
+>  };
+>  
+> +struct geni_wrapper *earlycon_wrapper;
 
-> +ANALOG DEVICES INC ADIS16475 DRIVER
-> +M:     Nuno Sa <nuno.sa@analog.com>
-> +L:     linux-iio@vger.kernel.org
-> +W:     http://ez.analog.com/community/linux-device-drivers
-> +S:     Supported
-> +F:     drivers/iio/imu/adis16475.c
-> +F:     Documentation/ABI/testing/sysfs-bus-iio-imu-adis16475
+should be static
 
-Run parse-maintainers.pl to fix this.
-
-...
-
-> +#include <asm/unaligned.h>
-
-Usually it goes after linux/*
-
-> +#include <linux/bitfield.h>
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-
-> +#include <linux/kernel.h>
-
-What this is for?
-
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/imu/adis.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/irq.h>
-> +#include <linux/module.h>
-
-> +#include <linux/of_device.h>
-
-Do you really need this? Perhaps mod_devicetable.h is what you are looking =
-for.
-
-> +#include <linux/spi/spi.h>
-
-...
-
-> +#ifdef CONFIG_DEBUG_FS
-
-> +DEFINE_SIMPLE_ATTRIBUTE(adis16475_serial_number_fops,
-> +                       adis16475_show_serial_number, NULL, "0x%.4llx\n")=
-;
-
-DEBUGFS ATTRIBUTE?
-
-> +DEFINE_SIMPLE_ATTRIBUTE(adis16475_product_id_fops,
-> +                       adis16475_show_product_id, NULL, "%llu\n");
-
-> +DEFINE_SIMPLE_ATTRIBUTE(adis16475_flash_count_fops,
-> +                       adis16475_show_flash_count, NULL, "%lld\n");
-
-Ditto.
-
-> +#else
-> +static int adis16475_debugfs_init(struct iio_dev *indio_dev)
-> +{
-> +       return 0;
-> +}
-> +#endif
-
-...
-
-> +       /*
-> +        * If decimation is used, then gyro and accel data will have mean=
-ingful
-> +        * bits on the LSB registers. This info is used on the trigger ha=
-ndler.
-> +        */
-> +       if (!dec)
-> +               clear_bit(ADIS16475_LSB_DEC_MASK, &st->lsb_flag);
-> +       else
-> +               set_bit(ADIS16475_LSB_DEC_MASK, &st->lsb_flag);
-
-assign_bit()
-
-Also to the rest of same
-
-...
-
-> +       for (i =3D ARRAY_SIZE(adis16475_3db_freqs) - 2; i >=3D 1; i--) {
-
-Why those margins? size-2 and 1 ?
-
-> +               if (adis16475_3db_freqs[i] >=3D filter)
-> +                       break;
-> +       }
-
-...
-
-> +#define ADIS16475_GYRO_CHANNEL(_mod) \
-> +       ADIS16475_MOD_CHAN(IIO_ANGL_VEL, IIO_MOD_ ## _mod, \
-> +       ADIS16475_REG_ ## _mod ## _GYRO_L, ADIS16475_SCAN_GYRO_ ## _mod, =
-32, \
-> +       32)
-
-It's not obvious that this is macro inside macro. Can you indent better?
-Ditto for the rest similar ones.
-
-...
-
-> +static int adis16475_enable_irq(struct adis *adis, bool enable)
-> +{
-> +       /*
-> +        * There is no way to gate the data-ready signal internally insid=
-e the
-> +        * ADIS16475. We can only control it's polarity...
-> +        */
-> +       if (enable)
-> +               enable_irq(adis->spi->irq);
-> +       else
-> +               disable_irq(adis->spi->irq);
 > +
-> +       return 0;
+>  #define QUP_HW_VER_REG			0x4
+>  
+>  /* Common SE registers */
+> @@ -818,6 +821,26 @@ int geni_icc_vote_off(struct geni_se *se)
+>  }
+>  EXPORT_SYMBOL(geni_icc_vote_off);
+>  
+> +void geni_remove_earlycon_icc_vote(void)
+> +{
+> +	struct geni_wrapper *wrapper = earlycon_wrapper;
+> +	struct device_node *parent = of_get_next_parent(wrapper->dev->of_node);
+> +	struct device_node *child;
+> +
+> +	for_each_child_of_node(parent, child) {
+> +		if (of_device_is_compatible(child, "qcom,geni-se-qup")) {
+> +			wrapper = platform_get_drvdata(of_find_device_by_node(
+> +					child));
+> +			icc_put(wrapper->to_core.path);
+> +			wrapper->to_core.path = NULL;
+> +		}
+> +	}
+> +	of_node_put(parent);
+> +
+> +	earlycon_wrapper = NULL;
 > +}
+> +EXPORT_SYMBOL(geni_remove_earlycon_icc_vote);
 
-It's seems this function is bigger than in-place calls for enable or
-disable IRQ.
+I didn't know that consoles have an exit handler, this is way nicer than
+the miscellaneous triggers we discussed earlier :)
 
-...
+> +
+>  static int geni_se_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -845,6 +868,34 @@ static int geni_se_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +#ifdef CONFIG_SERIAL_EARLYCON
+> +	wrapper->to_core.path = devm_of_icc_get(dev, "qup-core");
+> +	if (IS_ERR(wrapper->to_core.path))
+> +		return PTR_ERR(wrapper->to_core.path);
+> +	/*
+> +	 * Put minmal BW request on core clocks on behalf of early console.
+> +	 * The vote will be removed earlycon exit function.
+> +	 *
+> +	 * Note: We are putting vote on each QUP wrapper instead only to which
+> +	 * earlycon is connected because QUP core clock of different wrapper
+> +	 * share same voltage domain. If core1 is put to 0, then core2 will
+> +	 * also run at 0, if not voted. Default ICC vote will be removed ASA
+> +	 * we touch any of the core clock.
+> +	 * core1 = core2 = max(core1, core2)
+> +	 */
 
-> +       return (crc =3D=3D 0);
+I don't really understand this part. According to the comment if we vote
+(let's say) for core2 but not for core1 then:
 
-Too many parentheses.
+core1: 0
+core2: GENI_DEFAULT_BW
 
-...
+core1 = core2 = max(core1, core2)
+  or
+core1 = core2 = max(0, GENI_DEFAULT_BW)
 
-> +               ret =3D __adis_update_bits(&st->adis, ADIS16475_REG_MSG_C=
-TRL,
-> +                                        ADIS16500_BURST32_MASK, en);
-> +               if (ret < 0)
+hence
 
-ret > 0 has any meaning? Maybe drop all these ' < 0' parts from the
-code (where it's appropriate)?
+core1 = core2 = GENI_DEFAULT_BW
 
-> +                       return;
-
-...
-
-> +       buffer =3D (u16 *)adis->buffer;
-
-Why the casting is needed?
-
-> +       crc =3D get_unaligned_be16(&buffer[offset + 2]);
-
-If your buffer is aligned in the structure, you may simple use be16_to_cpu(=
-).
-Same for the rest of get_unaligned*() calls.
-Or do you have unaligned data there?
-
-> +       valid =3D adis16475_validate_crc((u8 *)adis->buffer, crc, st->bur=
-st32);
-
-Why casting?
-
-> +       if (!valid) {
-> +               dev_err(&adis->spi->dev, "Invalid crc\n");
-> +               goto check_burst32;
-> +       }
-
-...
-
-> +                                       /* keep sparse happy */
-
-Perhaps buffer should be declared as __be16.
-
-> +                                       data[i++] =3D (__force u16)__val;
-
-...
-
-
-> +       desc =3D irq_get_irq_data(spi->irq);
-
-> +       if (!desc) {
-> +               dev_err(&spi->dev, "Could not find IRQ %d\n", spi->irq);
-> +               return -EINVAL;
-> +       }
-
-Is this even possible?
-
-...
-
-> +       { .compatible =3D "adi,adis16507-3",
-> +               .data =3D &adis16475_chip_info[ADIS16507_3] },
-> +       { },
-
-Comma is not needed.
-
-...
-
-> +       st->info =3D of_device_get_match_data(&spi->dev);
-
-device_get_match_data()
-
-> +       if (!st->info)
-> +               return -EINVAL;
-
---=20
-With Best Regards,
-Andy Shevchenko
+What am I missing, why is it necessary to vote for both/all?
