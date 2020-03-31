@@ -2,116 +2,113 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98089C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264C0C43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778E32080C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F25D62080C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585684666;
+	bh=8btu5p+gtZ79iALhpL16Cyw4ZkiVjxY3MxwdNTyM8EQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q0xFs2gzjRmW9wGBiO1OhhT2yi1bPF4DqLNaDkgT1Mj0OB2250cytj4RyPmAOoA5Z
+	 i4c5XOLNSwCJQfAtjhEK8LnOL2fE8oHRfvA0TRAbRs4naKq/kO+++uYWlSLdvlqO2b
+	 cJ70ZkVHvGCyisssbXg4XgBpPyxPTKDB4yyGWi9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgCaTuu (ORCPT
+        id S1728124AbgCaT5p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:50:50 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:53976 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgCaTuu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 15:50:50 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3BE6E8030890;
-        Tue, 31 Mar 2020 19:50:47 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JaeAPcOyr_X9; Tue, 31 Mar 2020 22:50:45 +0300 (MSK)
-Date:   Tue, 31 Mar 2020 22:50:53 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Sebastian Reichel <sre@kernel.org>,
+        Tue, 31 Mar 2020 15:57:45 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36421 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgCaT5p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 15:57:45 -0400
+Received: by mail-io1-f65.google.com with SMTP id n10so9042972iom.3;
+        Tue, 31 Mar 2020 12:57:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h4MVejpKXdUvf3pPVBrkNWcFoXIpak/ROd8AjzEbfKY=;
+        b=a95HKWe6oxpNecmvI67Mc8PvzzKGOrOUZM5/SoCI2NgJyOhQW5xtenYN5+YDd9gbyC
+         adtYP6a1na66nlHbaBC2pjOIcXaOtVASOQ764kEsCSND856mc2jMtfoBPgVjDlasHWYs
+         U6tm+cocr7AiTYa2FcYeBoNRj7Xg6ley0Zs35hzAt9jpN1wdfAG3NEztiLni+eTolKRU
+         N8J8dbK3hZob52XerxB2WBJmxTcKu7XdSyQY3BDZFUyw+kmFRNTJPTDN5m9XhN46JNpY
+         YcLu6jw1qJBijNOVmvRci3cGvhof/ULJ3WrOiaVbCaEc7L1YYe5wpnN7dfzKx34aCFxh
+         +fRw==
+X-Gm-Message-State: ANhLgQ0YffB4Y49LKw8jm32EC+WxiI/FrS+mh1bp02FLRzJcZAXyoI8k
+        4gc+PVX5Jak9YAukUXaBlw==
+X-Google-Smtp-Source: ADFU+vtc5oUJqWcdHGbZePzerMkO7IsVV4rSImDoXIrm0C537o3o03dpCu4eAitRh3oGSvNBCV8CZQ==
+X-Received: by 2002:a02:2427:: with SMTP id f39mr12183287jaa.7.1585684664392;
+        Tue, 31 Mar 2020 12:57:44 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id f74sm6145627ilh.77.2020.03.31.12.57.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2020 12:57:42 -0700 (PDT)
+Received: (nullmailer pid 441 invoked by uid 1000);
+        Tue, 31 Mar 2020 19:57:41 -0000
+Date:   Tue, 31 Mar 2020 13:57:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     David Lu <david.lu@bitland.com.cn>
+Cc:     jungle.chiang@bitland.com.cn,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
- SYSCON reboot-mode bindings
-Message-ID: <20200331195053.dcexmhbsbnbfuabe@ubsrv2.baikal.int>
-References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
- <20200306130402.1F4F0803079F@mail.baikalelectronics.ru>
- <20200312211438.GA21883@bogus>
- <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
- <CAL_Jsq+W84r687zNV=2S-hj9=xbTQxkx9MpVNDTn6TOrBgiGUw@mail.gmail.com>
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: boe,tv101wum-n16: Add compatible for boe
+ tv105wum-nw0.
+Message-ID: <20200331195741.GA26161@bogus>
+References: <20200324094525.4758-1-david.lu@bitland.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+W84r687zNV=2S-hj9=xbTQxkx9MpVNDTn6TOrBgiGUw@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200324094525.4758-1-david.lu@bitland.com.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 05:14:25PM -0600, Rob Herring wrote:
-> On Fri, Mar 13, 2020 at 7:03 AM Sergey Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > On Thu, Mar 12, 2020 at 04:14:38PM -0500, Rob Herring wrote:
-> > > On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > >
-> > > > Optional regmap property will be used to refer to a syscon-controller
-> > > > having a reboot tolerant register mapped.
-> > >
-> > > NAK. It should simply be a child node of the 'syscon-controller'.
-> >
-> > Hm, It's dilemma. The driver maintainer said ack, while you disagree.)
-> > So the code change will be merged while the doc-part won't? Lets discuss then
-> > to settle the issue.
-> >
-> > Why 'syscon-reboot' can be out of syscon-controller node, while
-> > 'syscon-reboot-mode' can't?
+On Tue, Mar 24, 2020 at 05:45:25PM +0800, David Lu wrote:
+> Add bindings documentation for BOE TV105WUM-NW0 10.5" WUXGA TFT LCD
+> panel.
 > 
-> Look at the history and you will see one was reviewed by DT
-> maintainers and one wasn't.
-> 
-> > They both belong to the same usecase: save
-> > cause id and reboot. So having similar properties-set and declaring their
-> > nodes someplace nearby is natural.
-> 
-> Which is what I'm asking for. Where else in the tree does it make
-> sense to locate the 'syscon-reboot-mode' node? Locate nodes where they
-> logically belong.
-> 
-> > According to the driver 'syscon-reboot'
-> > can't lack the regmap property because it's mandatory, while here you refuse
-> > to have even optional support. Additionally in most of the cases the
-> > 'syscon-reboot' nodes aren't declared as a child of a system controller
-> > node. Why 'syscon-reboot-mode' can't work in a similar way?
-> 
-> There's plenty of bad or "don't follow current best practice" examples
-> in the tree for all sorts of things. That is not a reason for doing
-> something in a new binding or adding to an existing one.
-> 
-> Rob
+> Signed-off-by: David Lu <david.lu@bitland.com.cn>
+> Change-Id: I450c0e52aae080728d4794bdffc50bb0d2f39f40
 
-Alright. I see your point. What about I'd provide a sort of opposite
-implementation? I could make the "regmap"-phandle reference being optional
-in the !"syscon-reboot"! driver instead of adding the regmap-property
-support to the "syscon-reboot-mode" driver. So if regmap property isn't
-defined in the "syscon-reboot"-compatible node, the driver will try to
-get a syscon regmap from the parental node as it's done in the
-"syscon-reboot-mode" driver.
+Drop this.
 
-Seeing you think that regmap-property-based design is a bad practice in
-this case, I also could mark the property as deprecated in the "syscon-reboot"
-dt schema and print a warning from the "syscon-reboot" driver if one is defined.
+> ---
+>  .../devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml     | 2 ++
+>  1 file changed, 2 insertions(+)
 
-What do you think?
+With that fixed,
 
-Regards,
--Sergey
+Acked-by: Rob Herring <robh@kernel.org>
+
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> index 740213459134..7f5df5851017 100644
+> --- a/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+> @@ -24,6 +24,8 @@ properties:
+>        - boe,tv101wum-n53
+>          # AUO B101UAN08.3 10.1" WUXGA TFT LCD panel
+>        - auo,b101uan08.3
+> +        # BOE TV105WUM-NW0 10.5" WUXGA TFT LCD panel
+> +      - boe,tv105wum-nw0
+>  
+>    reg:
+>      description: the virtual channel number of a DSI peripheral
+> -- 
+> 2.24.1
+> 
+> 
+> 
