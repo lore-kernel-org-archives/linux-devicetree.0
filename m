@@ -2,75 +2,133 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE5CC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DCEC2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F74207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A3B208E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 18:49:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eMrdhT/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgCaSrW (ORCPT
+        id S1726282AbgCaStm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 14:47:22 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48738 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgCaSrV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 14:47:21 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 09D86291976;
-        Tue, 31 Mar 2020 19:47:20 +0100 (BST)
-Date:   Tue, 31 Mar 2020 20:47:16 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Weijie Gao <weijie.gao@mediatek.com>
-Cc:     <linux-mtd@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] mtd: rawnand: add driver support for MT7621 nand
- flash controller
-Message-ID: <20200331204716.52f611db@collabora.com>
-In-Reply-To: <1585678079-5999-1-git-send-email-weijie.gao@mediatek.com>
-References: <1585678079-5999-1-git-send-email-weijie.gao@mediatek.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 31 Mar 2020 14:49:42 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52201 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgCaStm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 14:49:42 -0400
+Received: by mail-pj1-f65.google.com with SMTP id w9so1465272pjh.1
+        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 11:49:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FR8ai6OEFNnFMOGot7XfHged9ha79/NcwHyPaC6Zbwc=;
+        b=eMrdhT/qP31mz6ElSVLxdGt16tmdCiwcHVSd6xDtLHUptLILvWkMm++hmvVqM/JPi/
+         8nFoewrfF+mxkk0rkCHK1UmGXpJvN3IDAi+KfvxAYv8yJqjdLmapL1HdSqCMIvVNt9IW
+         aYh1LdkINaKXdhA9dGSkxjL36bTYU1T61+ggc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FR8ai6OEFNnFMOGot7XfHged9ha79/NcwHyPaC6Zbwc=;
+        b=AK7bbawlPD2nthgX6AiukiyMdi4w1/mkjmjk+lKvepJavTxj1zIXt/yx6Eb+V8+5bL
+         T9L7YQeiEol8fHvYrjhSodj1CsQpJc8EPdGblz8m4MI+YY6MiQVyeBuGVmiZUWWGvX3J
+         oVwsIubVTY6om8BGonPTvABXBjqetJ2/rdpY/2q68u3njz39XuKJ0/6Oj5RYH8i3xbh0
+         dwlwc06JaZ53XsygIN2ZhjNfutaHg/XxrnUR3Bi+0yfK4/zCbugkHpFxRTVxlFBRelU6
+         lfC1dWDZjnV3qCPTvCFnYMVEZViyDM6WxZ6Wmb1+7K+i8RD+8F9v7kNp1Gh3pIfwWw7O
+         5RMw==
+X-Gm-Message-State: AGi0Pub2pnB6tFYiXgPzKToObmTNVTXjezOeWYWzitT4ASlGmb6WjJgl
+        Ib6HJ6ksY6ajbFc2zallcC828Q==
+X-Google-Smtp-Source: APiQypJRxT61RTFX4IkaJ3JmMkwZxMMGvWWRvLCrRvi42md6UNMe9jGvgAheR5m4rs1P0C+DQhpFAQ==
+X-Received: by 2002:a17:90a:c001:: with SMTP id p1mr350441pjt.86.1585680581150;
+        Tue, 31 Mar 2020 11:49:41 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id x71sm12937792pfd.129.2020.03.31.11.49.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 11:49:40 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 11:49:39 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     gregkh@linuxfoundation.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, wsa@the-dreams.de, broonie@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, georgi.djakov@linaro.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, swboyd@chromium.org,
+        mgautam@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-serial@vger.kernel.org, dianders@chromium.org,
+        evgreen@chromium.org
+Subject: Re: [PATCH V3 4/8] i2c: i2c-qcom-geni: Add interconnect support
+Message-ID: <20200331184939.GI199755@google.com>
+References: <1585652976-17481-1-git-send-email-akashast@codeaurora.org>
+ <1585652976-17481-5-git-send-email-akashast@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1585652976-17481-5-git-send-email-akashast@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 1 Apr 2020 02:07:58 +0800
-Weijie Gao <weijie.gao@mediatek.com> wrote:
+Hi Akash,
 
-> This patch adds NAND flash controller driver for MediaTek MT7621 SoC.
+On Tue, Mar 31, 2020 at 04:39:32PM +0530, Akash Asthana wrote:
+> Get the interconnect paths for I2C based Serial Engine device
+> and vote according to the bus speed of the driver.
 > 
-> The NAND flash controller is similar with controllers described in
-> mtk_nand.c, except that the controller from MT7621 doesn't support DMA
-> transmission, and some registers' offset and fields are different.
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Bjorn's comment, removed se == NULL check from geni_i2c_icc_get
+>  - As per Bjorn's comment, removed code to set se->icc_path* to NULL in failure
+>  - As per Bjorn's comment, introduced and using devm_of_icc_get API for getting
+>    path handle
+>  - As per Matthias comment, added error handling for icc_set_bw call
 > 
+> Changes in V3:
+>  - As per Matthias comment, use common library APIs defined in geni-se
+>    driver for ICC functionality.
+> 
+>  drivers/i2c/busses/i2c-qcom-geni.c | 30 +++++++++++++++++++++++++++++-
+>  1 file changed, 29 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index 18d1e4f..373c2ca 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -557,6 +557,26 @@ static int geni_i2c_probe(struct platform_device *pdev)
+>  	gi2c->adap.dev.of_node = dev->of_node;
+>  	strlcpy(gi2c->adap.name, "Geni-I2C", sizeof(gi2c->adap.name));
+>  
+> +	ret = geni_icc_get(&gi2c->se, "qup-core", "qup-config", "qup-memory");
+> +	if (ret)
+> +		return ret;
+> +	/*
+> +	 * Set the bus quota for core and cpu to a reasonable value for
+> +	 * register access.
+> +	 * Set quota for DDR based on bus speed, assume peak requirement
+> +	 * as twice of avg bw.
+> +	 */
+> +	gi2c->se.to_core.avg_bw = GENI_DEFAULT_BW;
+> +	gi2c->se.to_core.peak_bw = Bps_to_icc(CORE_2X_100_MHZ);
+> +	gi2c->se.from_cpu.avg_bw = GENI_DEFAULT_BW;
+> +	gi2c->se.from_cpu.peak_bw = GENI_DEFAULT_BW;
+> +	gi2c->se.to_ddr.avg_bw = Bps_to_icc(gi2c->clk_freq_out);
+> +	gi2c->se.to_ddr.peak_bw = Bps_to_icc(2 * gi2c->clk_freq_out);
+> +
+> +	ret = geni_icc_vote_on(&gi2c->se);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = geni_se_resources_on(&gi2c->se);
+>  	if (ret) {
+>  		dev_err(dev, "Error turning on resources %d\n", ret);
 
-Please don't duplicate driver the driver for those minor differences:
-use regmap/reg_field to abstract reg field positions and make the DMA
-optional.
+I think you need to call geni_icc_vote_off() here and in other error paths.
