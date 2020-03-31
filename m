@@ -2,140 +2,83 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD4EC43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 08:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49ABC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 08:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC7B2073B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 08:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DD620787
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 08:26:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgCaIXe (ORCPT
+        id S1729984AbgCaI0Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 04:23:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:47290 "EHLO foss.arm.com"
+        Tue, 31 Mar 2020 04:26:24 -0400
+Received: from smtp-out.xnet.cz ([178.217.244.18]:23401 "EHLO smtp-out.xnet.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgCaIXe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 04:23:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A4D530E;
-        Tue, 31 Mar 2020 01:23:33 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C58F3F71E;
-        Tue, 31 Mar 2020 01:23:31 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 09:23:25 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     bjorn@helgaas.com
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, robh+dt@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        Andrew Murray <andrew.murray@arm.com>, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        ARM <linux-arm-kernel@lists.infradead.org>, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V5 5/5] PCI: tegra: Add support for PCIe endpoint mode in
- Tegra194
-Message-ID: <20200331082325.GA32028@e121166-lin.cambridge.arm.com>
-References: <20200330214721.GA128269@google.com>
- <bba72560-85cc-b59b-b0e8-bfc7c7408736@nvidia.com>
- <CABhMZUXub++CLTJ_E88Jwar5RvVfL+3aWOHqZf5XSVeyS8X=wA@mail.gmail.com>
+        id S1726299AbgCaI0Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 04:26:24 -0400
+Received: from meh.true.cz (meh.true.cz [108.61.167.218])
+        (Authenticated sender: petr@true.cz)
+        by smtp-out.xnet.cz (Postfix) with ESMTPSA id 3F26340E6;
+        Tue, 31 Mar 2020 10:26:21 +0200 (CEST)
+Received: from localhost (meh.true.cz [local])
+        by meh.true.cz (OpenSMTPD) with ESMTPA id e7874178;
+        Tue, 31 Mar 2020 10:26:07 +0200 (CEST)
+Date:   Tue, 31 Mar 2020 10:26:06 +0200
+From:   Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: olinuxino: add user red LED
+Message-ID: <20200331082606.GD21251@meh.true.cz>
+Reply-To: Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>
+References: <20200325205924.30736-1-ynezz@true.cz>
+ <20200330175347.r4uam7cybvuxlgog@gilmour.lan>
+ <CAGb2v66+oT=qfu7oHTs3d_e2hd_8Fc_0ULhHRfMLmrdcfOoe=A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CABhMZUXub++CLTJ_E88Jwar5RvVfL+3aWOHqZf5XSVeyS8X=wA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGb2v66+oT=qfu7oHTs3d_e2hd_8Fc_0ULhHRfMLmrdcfOoe=A@mail.gmail.com>
+X-PGP-Key: https://gist.githubusercontent.com/ynezz/477f6d7a1623a591b0806699f9fc8a27/raw/a0878b8ed17e56f36ebf9e06a6b888a2cd66281b/pgp-key.pub
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 10:00:57PM -0500, Bjorn Helgaas wrote:
-> On Mon, Mar 30, 2020 at 9:55 PM Vidya Sagar <vidyas@nvidia.com> wrote:
+Chen-Yu Tsai <wens@csie.org> [2020-03-31 09:19:57]:
+
+Hi,
+
+> On Tue, Mar 31, 2020 at 1:53 AM Maxime Ripard <maxime@cerno.tech> wrote:
 > >
+> > On Wed, Mar 25, 2020 at 09:59:24PM +0100, Petr Štetiar wrote:
+> > > There is a red LED marked as `GPIO_LED1` on the silkscreen and connected
+> > > to PE17 by default. So lets add this missing bit in the current hardware
+> > > description.
+> > >
+> > > Signed-off-by: Petr Štetiar <ynezz@true.cz>
 > >
-> >
-> > On 3/31/2020 3:17 AM, Bjorn Helgaas wrote:
-> > > External email: Use caution opening links or attachments
-> > >
-> > >
-> > > On Tue, Mar 03, 2020 at 11:40:52PM +0530, Vidya Sagar wrote:
-> > >> Add support for the endpoint mode of Synopsys DesignWare core based
-> > >> dual mode PCIe controllers present in Tegra194 SoC.
-> > >>
-> > >> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> > >> Acked-by: Thierry Reding <treding@nvidia.com>
-> > >> ---
-> > >> V5:
-> > >> * Added Acked-by: Thierry Reding <treding@nvidia.com>
-> > >> * Removed unwanted header file inclusion
-> > >>
-> > >> V4:
-> > >> * Addressed Lorenzo's review comments
-> > >> * Started using threaded irqs instead of kthreads
-> > >>
-> > >> V3:
-> > >> * Addressed Thierry's review comments
-> > >>
-> > >> V2:
-> > >> * Addressed Bjorn's review comments
-> > >> * Made changes as part of addressing review comments for other patches
-> > >>
-> > >>   drivers/pci/controller/dwc/Kconfig         |  30 +-
-> > >>   drivers/pci/controller/dwc/pcie-tegra194.c | 679 ++++++++++++++++++++-
-> > >>   2 files changed, 691 insertions(+), 18 deletions(-)
-> > >>
-> > >> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > >> index 0830dfcfa43a..169cde58dd92 100644
-> > >> --- a/drivers/pci/controller/dwc/Kconfig
-> > >> +++ b/drivers/pci/controller/dwc/Kconfig
-> > >> @@ -248,14 +248,38 @@ config PCI_MESON
-> > >>          implement the driver.
-> > >>
-> > >>   config PCIE_TEGRA194
-> > >> -     tristate "NVIDIA Tegra194 (and later) PCIe controller"
-> > >> +     tristate
-> > >> +
-> > >> +config PCIE_TEGRA194_HOST
-> > >> +     tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
-> > >>        depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
-> > >>        depends on PCI_MSI_IRQ_DOMAIN
-> > >>        select PCIE_DW_HOST
-> > >>        select PHY_TEGRA194_P2U
-> > >> +     select PCIE_TEGRA194
-> > >> +     default y
-> > >
-> > > Sorry I missed this before, but why is this "default y"?  From
-> > > Documentation/kbuild/kconfig-language.rst:
-> > >
-> > >    The default value deliberately defaults to 'n' in order to avoid
-> > >    bloating the build. With few exceptions, new config options should
-> > >    not change this. The intent is for "make oldconfig" to add as little
-> > >    as possible to the config from release to release.
-> > >
-> > > I do see that several other things in other drivers/pci/ Kconfig files
-> > > are also "default y", and we should probably change some of them.  But
-> > > I don't want to add even more unless there's a good reason.
-> > >
-> > > I'm not looking for more reactions like these:
-> > >
-> > > https://lore.kernel.org/r/CAHk-=wiZ24JuVehJ5sEC0UG1Gk2nvB363wO02RRsR1oEht6R9Q@mail.gmail.com
-> > > https://lore.kernel.org/r/CA+55aFzPpuHU1Nqd595SEQS=F+kXMzPs0Rba9FUgTodGxmXsgg@mail.gmail.com
-> > >
-> > > Can you please update this patch to either remove the "default y" or
-> > > add the rationale for keeping it?
-> > I'm fine with removing 'default y' line.
-> > Should I send a patch only with this change?
+> > QUeued for 5.8, thanks!
 > 
-> I think it's probably just as easy for Lorenzo to delete that line on
-> his branch.  If not, I'll cherry-pick the patches on that branch and
-> do it locally.
+> The gpio-led binding seems to prefer "led-0" up to "led-f" (^led-[0-9a-f])
+> as the child node name. This was recently brought to my attention. Do we
+> want to follow suit here?
 
-Done, pushed out. It is a guideline that it is worth keeping in mind
-while I review the code, sorry for missing it.
+I can see following in Documentation/devicetree/bindings/leds/leds-gpio.yaml:
 
-Lorenzo
+ patternProperties:
+   # The first form is preferred, but fall back to just 'led' anywhere in the
+   # node name to at least catch some child nodes.
+   "(^led-[0-9a-f]$|led)":
+
+So it seems like `led-0` is indeed preferred, should I send v2 or a new patch
+as a fix on top of the previous one?
+
+-- ynezz
