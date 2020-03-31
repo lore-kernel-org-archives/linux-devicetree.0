@@ -2,122 +2,123 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D253EC2D0F2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E9EC43331
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A536D20CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585672314;
-	bh=He9nD9d9RM0lvtwuajuBocP1ZTW2FPL5FCBXVfZdWfc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sv8C4uMFZtQd1WWooiArFWJb4y9RB0DyR7v3BWs+P2fPx/66ui0oHMKuVDcgaQZtz
-	 2oCrcZBBpcGr6yIvK7SPd650jg5gZhsK/Ciz3iclMbRYLzKtAtUdgrmimaMhC1xzFM
-	 cTdOycpPpNA+h5BXjpQoapbl2+QMhUEfPWakQZjk=
+	by mail.kernel.org (Postfix) with ESMTP id 94FE121556
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:39:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nZPUFjTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731146AbgCaQbx (ORCPT
+        id S1730923AbgCaQjI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:31:53 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44257 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730442AbgCaQbx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:31:53 -0400
-Received: by mail-io1-f65.google.com with SMTP id r25so10544204ioc.11;
-        Tue, 31 Mar 2020 09:31:52 -0700 (PDT)
+        Tue, 31 Mar 2020 12:39:08 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34265 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730590AbgCaQjI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:39:08 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 23so10590236pfj.1
+        for <devicetree@vger.kernel.org>; Tue, 31 Mar 2020 09:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=44+c4Ocrbrg0k7nn//ayMhBbygL62o3qDE+l5x6G/Eg=;
+        b=nZPUFjTbbHvB/92RynnbfBTbJQ4r4i4GXHAtl8BEFpByyl7RKSEBp0C6lwh4iNcPfD
+         qHgIAxjTpGXG4oUFkLtR1qfpkDN1BeM173oX/Cxb1lYfb1tNUJLPhjT37qSBYKgrKpDP
+         s44cOKzpmbVm323hvvCJyqjOmt0BBIWJ74d1Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=d+R74nPaOd+vv5Gmpvi8SiKDP0tZWuo+3fb7DyGJD94=;
-        b=Xe94CU5O4VPWb1e722exKeelCmGRSw1Qs9mSTsMUBpQQotSmsrYD7aPLoFanXF/tNm
-         /KgAFd+UnrCK5mKq+qcuZtB/N6TItOWAzJLP0g+tuOcSm9BRw1/OiwzzKONM5sqEV/A3
-         q7ogmllqct/RRAmot+UFnAOmqQICtKUx5xWRrgi3SRFQ29i2+yEQuIRiYa4ks6hT43Tc
-         LJ4GLhRI5hJxsRyxaRRUH69Z6tQRwgWPwCcy9bgRpa3p6dvOhHtDbfkE32g5xTbm6qF/
-         cmSWba/AmtEYNmPV51wkP6MJYjwtCw0hHe3KIQtYzHMokSa8R4f6G1/DA0MnYWNXSFzY
-         +cIg==
-X-Gm-Message-State: ANhLgQ0Qba0UKqV0D99BJVJ1qFQDBRzkJjjah8l8wPO8eaeYGhjCavO0
-        +8mTd8WHNaof79SBRwPYxg==
-X-Google-Smtp-Source: ADFU+vseCz7jttp+qlbtqHQk7BycDFzLlrtD6E9EBfQMKQpsnrIBI40lc6Q/LtZu799Hxyrz31fqRg==
-X-Received: by 2002:a05:6638:a99:: with SMTP id 25mr17196821jas.37.1585672310128;
-        Tue, 31 Mar 2020 09:31:50 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id g78sm6111274ild.36.2020.03.31.09.31.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 09:31:49 -0700 (PDT)
-Received: (nullmailer pid 24308 invoked by uid 1000);
-        Tue, 31 Mar 2020 16:31:47 -0000
-Date:   Tue, 31 Mar 2020 10:31:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>
-Subject: Re: [PATCH v4 6/7] dt-bindings: tpm: Add YAML schema for TPM TIS I2C
- options
-Message-ID: <20200331163147.GA23388@bogus>
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
- <20200331113207.107080-7-amirmizi6@gmail.com>
+        bh=44+c4Ocrbrg0k7nn//ayMhBbygL62o3qDE+l5x6G/Eg=;
+        b=iLBUOV7pQOnFNhgkZyW6y1iaVc8ydzx3Jo5GRlv4/5YK/qf/3bCByeaS+eIDhrUFUr
+         SFIZlALi/0lXB/+cOF4/m1hftZQ+dQFvlCT5gLNgaH4CJbNxEIhGB/oD5IXSESECOfYj
+         LslFXa8uOViSEBAP9xaFGcm58ZijwnJBTQ4AbtROGmCu7W9bRAQD8QYdHH2Q9UTqoDHx
+         jLD3TeSCo3uW4icdsXsUDE+/naWFrpEErdzTmIlzE34X/18v4cW1l7+Rhye+8A5WvsJ6
+         G7bfOgIqN/ACOXVLKIjb2dk8wlNjEqHeidSCUbz+RXN3TLeyy5HomZ/zdsmgfMYTJCKc
+         pZEA==
+X-Gm-Message-State: ANhLgQ1fgdT8iM9Se+Tmx0VgD6H2Elq/0q5VuIVYcgKaBFgolfOqBXpW
+        15fLiLapDFTO5ydZ5aJopTH7xQ==
+X-Google-Smtp-Source: ADFU+vsGsUTeHUuF1unZrg9i5ze+SZDnJ9Sx+xT8F6R92O2gzLsoV/DUQ3aml+IuKmSF3F0qAd06zA==
+X-Received: by 2002:a62:3844:: with SMTP id f65mr19541464pfa.255.1585672746899;
+        Tue, 31 Mar 2020 09:39:06 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id s15sm12878266pfd.164.2020.03.31.09.39.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 31 Mar 2020 09:39:06 -0700 (PDT)
+Date:   Tue, 31 Mar 2020 09:39:05 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        sean@poorly.run, seanpaul@chromium.org
+Subject: Re: [PATCH v10 0/2] Add support for rm69299 Visionox panel driver
+ and add devicetree bindings for visionox panel
+Message-ID: <20200331163905.GE199755@google.com>
+References: <20200327073636.13823-1-harigovi@codeaurora.org>
+ <20200328204047.GG32230@ravnborg.org>
+ <20200329174417.GB199755@google.com>
+ <20200330192511.GG7594@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200331113207.107080-7-amirmizi6@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200330192511.GG7594@ravnborg.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 31 Mar 2020 14:32:06 +0300, <amirmizi6@gmail.com> wrote:
+On Mon, Mar 30, 2020 at 09:25:11PM +0200, Sam Ravnborg wrote:
+> Hi Matthias.
 > 
-> From: Amir Mizinski <amirmizi6@gmail.com>
+> On Sun, Mar 29, 2020 at 10:44:17AM -0700, Matthias Kaehlcke wrote:
+> > Hi Sam,
+> > 
+> > On Sat, Mar 28, 2020 at 09:40:47PM +0100, Sam Ravnborg wrote:
+> > > Hi Harigovindan
+> > > 
+> > > On Fri, Mar 27, 2020 at 01:06:34PM +0530, Harigovindan P wrote:
+> > > > Adding support for visionox rm69299 panel driver and adding bindings for the same panel.
+> > > > 
+> > > > Harigovindan P (2):
+> > > >   dt-bindings: display: add visionox rm69299 panel variant
+> > > >   drm/panel: add support for rm69299 visionox panel driver
+> > > 
+> > > I have only the first patch, which is now applied.
+> > > Please resend second patch as it is lost somewhere.
+> > 
+> > Yes, it seems for v8, v9 and v10 only the bindings were sent, even
+> > though the cover letter and subject say it's a series of two patches.
+> > 
+> > To my knowledge the latest version of the driver patch is this:
+> > 
+> > https://patchwork.kernel.org/patch/11439689/
 > 
-> Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c
-> PTP based physical layer.
+> I did not go back and check, but I recall there was
+> review feedback that is not yet addressed.
 > 
-> This patch adds the documentation for corresponding device tree bindings of
-> I2C based Physical TPM.
-> Refer to the 'I2C Interface Definition' section in
-> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
-> for specification.
+> I applied the patch here and checkpatch was not happy:
+> total: 14 errors, 22 warnings, 11 checks, 314 lines checked
 > 
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> ---
->  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+> Many of these are trivial indent or spaces used where tabs should be
+> used.
+> These needs to be fixed before the driver will be applied.
 > 
+> And there was too much that I just did it while applying.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Oh, I totally missed these, sure this needs to be addressed.
 
-Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml:  while parsing a block collection
-  in "<unicode string>", line 36, column 3
-did not find expected '-' indicator
-  in "<unicode string>", line 46, column 4
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-warning: no schema found in file: Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml: ignoring, error parsing file
-Makefile:1262: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Harigovindan, please also double check if there is any outstanding
+feedback that still needs to be addressed.
 
-See https://patchwork.ozlabs.org/patch/1264698
+Thanks
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+Matthias
