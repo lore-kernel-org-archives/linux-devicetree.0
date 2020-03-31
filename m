@@ -2,155 +2,86 @@ Return-Path: <SRS0=uzRV=5Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26770C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9356C2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18302072A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A0720748
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 07:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DnROpdfE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RajYM+r1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730070AbgCaHyr (ORCPT
+        id S1730156AbgCaH4k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 03:54:47 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48010 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729958AbgCaHyr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 03:54:47 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02V7sAJU073931;
-        Tue, 31 Mar 2020 02:54:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585641250;
-        bh=vuJ1LtoNo/1Xe+ARbakZrfo5qAgQNCNmGD1MsvYuBTk=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=DnROpdfElOhCcj2LjanOlw7/tTto7gjztbH9mgihddHp2z+JM7xQyN7LjiUON9u76
-         /KGMlgVE1fERgpO5IMyb8/Ncr6dBg1CUOaaheaQzGcc6Mu6WpqJUwRye7sFkq4uCA8
-         XbxrxYrmaoUcHdQexmRuJaE8oiM/w4ozPL79O9js=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02V7sAHM069702;
-        Tue, 31 Mar 2020 02:54:10 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
- Mar 2020 02:54:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 31 Mar 2020 02:54:10 -0500
-Received: from a0393675ula.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02V7s2gg009443;
-        Tue, 31 Mar 2020 02:54:07 -0500
-From:   Keerthy <j-keerthy@ti.com>
-To:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
-        <daniel.lezcano@linaro.org>
-CC:     <j-keerthy@ti.com>, <amit.kucheria@verdurent.com>,
-        <t-kristo@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>
-Subject: [PATCH v5 1/4] dt-bindings: thermal: k3: Add VTM bindings documentation
-Date:   Tue, 31 Mar 2020 13:23:53 +0530
-Message-ID: <20200331075356.19171-2-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200331075356.19171-1-j-keerthy@ti.com>
-References: <20200331075356.19171-1-j-keerthy@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 31 Mar 2020 03:56:40 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:60484 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729997AbgCaH4i (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 03:56:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585641397; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=nthYnpwagHT230rYskRhSng5IhNPXUQv68G+VcY197o=; b=RajYM+r13rv4T6+rd1m7ofBuGd3aUT9VP9bLlenfkafTQ0r2Mi1vzBVf2TCk1NBhtJSoxhq/
+ 9ETcxQAtqUDry5IgIePc8Bvqo56WVPf4nI0jzaoBQiiB4+6f+8KwBtehzz5MFailrQVkvTjk
+ v2P+B7GJuZk3wua1kL35k/FMq8Y=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e82f7b4.7fb70ed98458-smtp-out-n01;
+ Tue, 31 Mar 2020 07:56:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3A5D8C433D2; Tue, 31 Mar 2020 07:56:36 +0000 (UTC)
+Received: from hyd-lnxbld559.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4CB05C433BA;
+        Tue, 31 Mar 2020 07:56:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4CB05C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        mka@chromium.org, sibis@codeaurora.org, saravanak@google.com,
+        viresh.kumar@linaro.org, Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH 1/5] arm64: dts: qcom: sc7180: Add interconnect bindings for GPU
+Date:   Tue, 31 Mar 2020 13:25:49 +0530
+Message-Id: <1585641353-23229-2-git-send-email-smasetty@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
+References: <1585641353-23229-1-git-send-email-smasetty@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add VTM bindings documentation. In the Voltage Thermal
-Management Module(VTM), K3 AM654 supplies a voltage
-reference and a temperature sensor feature that are gathered in the band
-gap voltage and temperature sensor (VBGAPTS) module. The band
-gap provides current and voltage reference for its internal
-circuits and other analog IP blocks. The analog-to-digital
-converter (ADC) produces an output value that is proportional
-to the silicon temperature.
+This patch adds the interconnect bindings to the GPU node. This enables
+the GPU->DDR path bandwidth voting.
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 ---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in v5:
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 1097e8b..51630dd 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1718,6 +1718,8 @@
+ 			operating-points-v2 = <&gpu_opp_table>;
+ 			qcom,gmu = <&gmu>;
 
-  * Added Reviewed-by: Rob Herring <robh@kernel.org>
++			interconnects = <&gem_noc MASTER_GFX3D &mc_virt SLAVE_EBI1>;
++
+ 			gpu_opp_table: opp-table {
+ 				compatible = "operating-points-v2";
 
- .../bindings/thermal/ti,am654-thermal.yaml    | 56 +++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
-
-diff --git a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
-new file mode 100644
-index 000000000000..d241b65d6072
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/ti,am654-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments AM654 VTM (DTS) binding
-+
-+maintainers:
-+  - Keerthy <j-keerthy@ti.com>
-+
-+properties:
-+  compatible:
-+    const: ti,am654-vtm
-+
-+  reg:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  "#thermal-sensor-cells":
-+    const: 1
-+
-+required:
-+  - "#thermal-sensor-cells"
-+  - compatible
-+  - reg
-+  - power-domains
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-+    vtm: thermal@42050000 {
-+        compatible = "ti,am654-vtm";
-+        reg = <0x0 0x42050000 0x0 0x25c>;
-+        power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
-+        #thermal-sensor-cells = <1>;
-+    };
-+
-+    mpu0_thermal: mpu0_thermal {
-+        polling-delay-passive = <250>; /* milliseconds */
-+        polling-delay = <500>; /* milliseconds */
-+        thermal-sensors = <&vtm0 0>;
-+
-+        trips {
-+                mpu0_crit: mpu0_crit {
-+                        temperature = <125000>; /* milliCelsius */
-+                        hysteresis = <2000>; /* milliCelsius */
-+                        type = "critical";
-+                };
-+        };
-+    };
-+...
--- 
-2.17.1
-
+--
+2.7.4
