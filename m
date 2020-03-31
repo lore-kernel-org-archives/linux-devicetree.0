@@ -4,105 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B38C2D0F1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D253EC2D0F2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61B6020CC7
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A536D20CC7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 16:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585672268;
-	bh=JcF5LHvBucXGr74ab5oJRT96j/Tdv3YvPgui40LUGcs=;
+	s=default; t=1585672314;
+	bh=He9nD9d9RM0lvtwuajuBocP1ZTW2FPL5FCBXVfZdWfc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vZa2OE7VB7l3YsMipe7m/R7Sr/6LHvtyBSofXmn4rHnFoQtIa7Ps+Ar1sHtvQGy/H
-	 Dp08gB/B4xlbB25PyQyQDh7P3hP1Of5lxChlxinaOTOYPd/V6zj0ZfyACKtJEGbRZ6
-	 DcMZ3ICKFDyj4GfdW4lmWhakA88rkBjac5RhzgHQ=
+	b=Sv8C4uMFZtQd1WWooiArFWJb4y9RB0DyR7v3BWs+P2fPx/66ui0oHMKuVDcgaQZtz
+	 2oCrcZBBpcGr6yIvK7SPd650jg5gZhsK/Ciz3iclMbRYLzKtAtUdgrmimaMhC1xzFM
+	 cTdOycpPpNA+h5BXjpQoapbl2+QMhUEfPWakQZjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbgCaQbG (ORCPT
+        id S1731146AbgCaQbx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 12:31:06 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36183 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgCaQbG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:31:06 -0400
-Received: by mail-io1-f66.google.com with SMTP id n10so8306829iom.3;
-        Tue, 31 Mar 2020 09:31:05 -0700 (PDT)
+        Tue, 31 Mar 2020 12:31:53 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44257 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730442AbgCaQbx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 12:31:53 -0400
+Received: by mail-io1-f65.google.com with SMTP id r25so10544204ioc.11;
+        Tue, 31 Mar 2020 09:31:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zoQEkQjM/RIJRTp0VhUEAtYWdj5x7fe+RhUwfghxupI=;
-        b=WzS20qYhqf0IWsyYBSSqkdEemNosrZtX9J1l05rPS40rZzXkppIUOwkYz6+pqpW1fZ
-         qKne/UOM7gq4qm0ggxGBjysbA8HQDetFlDoiPXIA0tj7dRqzAo0/hVI6hTuZI2bxuXu9
-         x9B41iysI1FfMcu7YKzlvuDpiHPplEzsh9Dv2M+gZwxb/7aNgTVmznVyLxH/CWFai+e6
-         dNn+rMqdAsWrUsFLG37A7jFWq82gf0EpVwGdPYoBtnalooFWdpnZ/i9Xly3r+u2VrFQZ
-         s1g2Zw02Ejl5k7+EqZ3bcQnUvkfYD3/Li2mHwaEzJwGwpkpFZdMOCFHFYZ4sgTeOjvVW
-         oiTA==
-X-Gm-Message-State: ANhLgQ2sKYOob+VWUo2Ykl9rfgaUR6iqZHGMppWfOVFTILOT4rr3ZvAH
-        dByW60z0+qEkuETvecJKO6AyNuZKew==
-X-Google-Smtp-Source: ADFU+vu4PluKLuSQcRazSevqQJ+tYdJcBbLKoGll5Pt711ZFa614nH8fCOc5wkXi2o9PWi7OduTjZQ==
-X-Received: by 2002:a6b:c9d2:: with SMTP id z201mr16386409iof.169.1585672265396;
-        Tue, 31 Mar 2020 09:31:05 -0700 (PDT)
+        bh=d+R74nPaOd+vv5Gmpvi8SiKDP0tZWuo+3fb7DyGJD94=;
+        b=Xe94CU5O4VPWb1e722exKeelCmGRSw1Qs9mSTsMUBpQQotSmsrYD7aPLoFanXF/tNm
+         /KgAFd+UnrCK5mKq+qcuZtB/N6TItOWAzJLP0g+tuOcSm9BRw1/OiwzzKONM5sqEV/A3
+         q7ogmllqct/RRAmot+UFnAOmqQICtKUx5xWRrgi3SRFQ29i2+yEQuIRiYa4ks6hT43Tc
+         LJ4GLhRI5hJxsRyxaRRUH69Z6tQRwgWPwCcy9bgRpa3p6dvOhHtDbfkE32g5xTbm6qF/
+         cmSWba/AmtEYNmPV51wkP6MJYjwtCw0hHe3KIQtYzHMokSa8R4f6G1/DA0MnYWNXSFzY
+         +cIg==
+X-Gm-Message-State: ANhLgQ0Qba0UKqV0D99BJVJ1qFQDBRzkJjjah8l8wPO8eaeYGhjCavO0
+        +8mTd8WHNaof79SBRwPYxg==
+X-Google-Smtp-Source: ADFU+vseCz7jttp+qlbtqHQk7BycDFzLlrtD6E9EBfQMKQpsnrIBI40lc6Q/LtZu799Hxyrz31fqRg==
+X-Received: by 2002:a05:6638:a99:: with SMTP id 25mr17196821jas.37.1585672310128;
+        Tue, 31 Mar 2020 09:31:50 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id f2sm6047237ill.51.2020.03.31.09.31.03
+        by smtp.gmail.com with ESMTPSA id g78sm6111274ild.36.2020.03.31.09.31.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 09:31:04 -0700 (PDT)
-Received: (nullmailer pid 23196 invoked by uid 1000);
-        Tue, 31 Mar 2020 16:31:03 -0000
-Date:   Tue, 31 Mar 2020 10:31:03 -0600
+        Tue, 31 Mar 2020 09:31:49 -0700 (PDT)
+Received: (nullmailer pid 24308 invoked by uid 1000);
+        Tue, 31 Mar 2020 16:31:47 -0000
+Date:   Tue, 31 Mar 2020 10:31:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, Robert Marko <robert.marko@sartura.hr>,
-        John Crispin <john@phrozen.org>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v5 2/3] dt-bindings: phy-qcom-ipq4019-usb: add binding
- document
-Message-ID: <20200331163103.GA27585@bogus>
-References: <20200330164328.2944505-1-robert.marko@sartura.hr>
- <20200330164328.2944505-2-robert.marko@sartura.hr>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Amir Mizinski <amirmizi6@gmail.com>
+Subject: Re: [PATCH v4 6/7] dt-bindings: tpm: Add YAML schema for TPM TIS I2C
+ options
+Message-ID: <20200331163147.GA23388@bogus>
+References: <20200331113207.107080-1-amirmizi6@gmail.com>
+ <20200331113207.107080-7-amirmizi6@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330164328.2944505-2-robert.marko@sartura.hr>
+In-Reply-To: <20200331113207.107080-7-amirmizi6@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Mar 2020 18:43:29 +0200, Robert Marko wrote:
-> This patch adds the binding documentation for the HS/SS USB PHY found
-> inside Qualcom Dakota SoCs.
+On Tue, 31 Mar 2020 14:32:06 +0300, <amirmizi6@gmail.com> wrote:
 > 
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> Cc: Luka Perkov <luka.perkov@sartura.hr>
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c
+> PTP based physical layer.
+> 
+> This patch adds the documentation for corresponding device tree bindings of
+> I2C based Physical TPM.
+> Refer to the 'I2C Interface Definition' section in
+> 'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
+> for specification.
+> 
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
 > ---
-> Changes from v4 to v5:
-> * Replace tabs with whitespaces
-> * Add maintainer property
-> 
->  .../bindings/phy/qcom-usb-ipq4019-phy.yaml    | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
+>  .../bindings/security/tpm/tpm-tis-i2c.yaml         | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Error: Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dts:21.25-26 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dt.yaml] Error 1
+Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml:  while parsing a block collection
+  in "<unicode string>", line 36, column 3
+did not find expected '-' indicator
+  in "<unicode string>", line 46, column 4
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.example.dts] Error 1
 make[1]: *** Waiting for unfinished jobs....
+warning: no schema found in file: Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml: ignoring, error parsing file
 Makefile:1262: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1264091
+See https://patchwork.ozlabs.org/patch/1264698
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
