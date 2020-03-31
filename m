@@ -7,112 +7,147 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17666C43331
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAFCC2D0EF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90132072E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427D9206DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Mar 2020 19:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585682976;
-	bh=J1ivmXD16ZkXdr1AnGPFh2//lpTQ2ieOl2KYSREmx5g=;
+	s=default; t=1585683090;
+	bh=Jt5CuRwPmHl6A7qpcheE+r8WnPTsg9Vy8MY7OiamGpw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BQsI5IDHyqbxzzlyjskXKfQVZpQqfPNfz7dSHY5VdpLAhEzBK8i1aauQmVHdAY2l/
-	 NFJacPHjcoW3+DxfZbhM3Gz/skQjmF11Mtc2VYL3alSmJfjRQBs/ONBSlkTyR2aJF/
-	 +jFmT3c3CUJtwZ7GtTVOoJA5+ill8I1oz4lZhwsI=
+	b=TgYBCOkhsYTd+OCB7Lfw4YdnclbwL0e8D+yllQvBeaBxgMDmgso88aZUvwRI5pkHA
+	 N9FQiD6r5etYH6+dHR7SBuimA/S2hyQq0uAUXTZ+9VsAttmD1JSusM9k84Hv41Xe3i
+	 PGpIElJNZfW4vFftSY//Vd6Ghl8DLhYrWBQBk/ik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbgCaT3f (ORCPT
+        id S1728462AbgCaTb3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 15:29:35 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:37584 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729624AbgCaT3f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 15:29:35 -0400
-Received: by mail-il1-f194.google.com with SMTP id a6so20627115ilr.4;
-        Tue, 31 Mar 2020 12:29:34 -0700 (PDT)
+        Tue, 31 Mar 2020 15:31:29 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:39158 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbgCaTb3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 15:31:29 -0400
+Received: by mail-il1-f193.google.com with SMTP id r5so20633766ilq.6;
+        Tue, 31 Mar 2020 12:31:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ObOJq1WzFHtkZgBcoc/TF7vJW09KReKL6cLNV8fdqDM=;
-        b=jIHwIeUUZ0njjkh39zuBhHE0/lmzN2bkvb+lvvG0DZ6qzGoe2SoWqt0gOPTX4J4ts/
-         i75mxgc2E9MjLWosdV5b/tfJM//S10YdkEYQPHg8kvU5BmdIBPEAKA3E8gmlot0tTpbB
-         W+Z7AaSz37j5YOXRhDo1MzFqy0h7jLUWL3fakS7BPmNau9mAeQVateovINICiVYChJid
-         RbVK/n7FSuqL+3jD2v2xzwXRYR/5dt0j4iC12zvAXQ2Oz7Ci4GNu3tMoasS8SkeF3fgV
-         skTYBm6e8wjUhODKeZucPxH2Zfql4U9pHEUjgfKEx2BFl9Cf8gvPxqqVj6MVsItV6DvE
-         5fBQ==
-X-Gm-Message-State: ANhLgQ3NhX19crcXPj5aYgoFw3KO1Gz6AdSU74PQsPVDvG2L6lvZr2Mx
-        MSpqkaiYEvvh8CfHtKq0YQ==
-X-Google-Smtp-Source: ADFU+vveQIAPsuGoqvWA/0abYxzmeN+7ZOGjnLvYH/Pd7ZBX8SjDAS/lpIBwApsgmlv7Har/ZIo7TQ==
-X-Received: by 2002:a92:3a0b:: with SMTP id h11mr18574962ila.4.1585682974301;
-        Tue, 31 Mar 2020 12:29:34 -0700 (PDT)
+        bh=4E3rOca8V8PqiExuCYVosA0xfKnTr6EMn3Z9j+lzY0I=;
+        b=ElIQJTjTUzMcEAykiFtupHoAC3BsqGZq9r2vV5WP4B+flFUp1Gals1NHHsrC6gIxvL
+         lgH/yB628vlICjtxQ3sEwGS1et3KXezyTZdNpTiyjipDCUxs1wifNAt84ydhkL2pIbIS
+         d5GIUpOZjeUFg3dowYdOwCJ9RM/OGWuON0tLHOEOFrWTsvPtLxeSh0CNyiLF45025WjW
+         TJVw+a/gpVF8h8XZI6kWJfa8XX+kWt43AQJ6yQ7ybCF2F+auJF/p2BdiPg4VKnGBtzRM
+         3027b8ZuBixmS0H707uVmbZunHs9iTY3DY76AZJ6B4FJuhQuKj7RaSgX5HmydCK/+OCL
+         7fdA==
+X-Gm-Message-State: ANhLgQ29QC9mPrfLj0XUXEE5pJQvug+njQfCf5dfPDpFOHLJ22OAWzSh
+        XETqrPsKwFslIGykDSCVQA==
+X-Google-Smtp-Source: ADFU+vvpYU1W+QnpfWkq+2/wT8SBpnlfPrg6qX7DKaI/XsuDkVjohw5Nsj4P4wIQ6O/g1ZUHs4b96A==
+X-Received: by 2002:a92:5e92:: with SMTP id f18mr18940362ilg.19.1585683088851;
+        Tue, 31 Mar 2020 12:31:28 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id n6sm5174931iod.9.2020.03.31.12.29.33
+        by smtp.gmail.com with ESMTPSA id i4sm2598643ilq.4.2020.03.31.12.31.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 12:29:33 -0700 (PDT)
-Received: (nullmailer pid 26832 invoked by uid 1000);
-        Tue, 31 Mar 2020 19:29:32 -0000
-Date:   Tue, 31 Mar 2020 13:29:32 -0600
+        Tue, 31 Mar 2020 12:31:28 -0700 (PDT)
+Received: (nullmailer pid 29462 invoked by uid 1000);
+        Tue, 31 Mar 2020 19:31:26 -0000
+Date:   Tue, 31 Mar 2020 13:31:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kun Yi <kunyi@google.com>
-Cc:     jdelvare@suse.com, linux@roeck-us.net, mark.rutland@arm.com,
-        openbmc@lists.ozlabs.org, joel@jms.id.au,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH linux hwmon-next v2 3/3] dt-bindings: (hwmon/sbtsi_tmep)
- Add SB-TSI hwmon driver bindings
-Message-ID: <20200331192932.GA22905@bogus>
-References: <20200323233354.239365-1-kunyi@google.com>
- <20200323233354.239365-4-kunyi@google.com>
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     kishon@ti.com, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, jun.li@nxp.com, linux-imx@nxp.com
+Subject: Re: [PATCH v3 2/2] doc: dt-binding: cdns-salvo-phy: add binding doc
+Message-ID: <20200331193126.GA27304@bogus>
+References: <20200324071030.19801-1-peter.chen@nxp.com>
+ <20200324071030.19801-2-peter.chen@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323233354.239365-4-kunyi@google.com>
+In-Reply-To: <20200324071030.19801-2-peter.chen@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 04:33:54PM -0700, Kun Yi wrote:
-> Document device tree bindings for AMD SB-TSI emulated temperature
-> sensor.
+On Tue, Mar 24, 2020 at 03:10:30PM +0800, Peter Chen wrote:
+> Add Cadence SALVO PHY binding doc, this PHY is a legacy module,
+> and is only used for USB3 and USB2.
 > 
-> Signed-off-by: Kun Yi <kunyi@google.com>
-> Change-Id: Ife3285afa4cf8d410cb7bee1eb930dc0717084f9
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
 > ---
->  .../devicetree/bindings/hwmon/sbtsi_temp.txt       | 14 ++++++++++++++
-
-Convert to DT schema format and use the compatible string as the 
-filename.
-
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/sbtsi_temp.txt
+> Changes for v3:
+> - Fix more schema errors
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/sbtsi_temp.txt b/Documentation/devicetree/bindings/hwmon/sbtsi_temp.txt
+>  .../bindings/phy/cdns,salvo-phy.yaml          | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml b/Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
 > new file mode 100644
-> index 000000000000..4020f075699e
+> index 000000000000..a36e21e1808c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/sbtsi_temp.txt
-> @@ -0,0 +1,14 @@
-> +*AMD SoC SB-TSI hwmon driver.
+> +++ b/Documentation/devicetree/bindings/phy/cdns,salvo-phy.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright (c) 2020 NXP
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/cdns,salvo-phy.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence SALVO PHY
+> +
+> +maintainers:
+> +  - Peter Chen <peter.chen@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nxp,salvo-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: salvo_phy_clk
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +    description: phandle to the associated power domain
 
-Bindings are for hardware, not drivers.
-
-Please give a better explanation of what this h/w.
+Drop. That's every power-domains property.
 
 > +
-> +Required properties:
-> +- compatible: manufacturer and chip name, should be
-> +	"amd,sbtsi",
+> +  "#phy-cells":
+> +    const: 0
 > +
-> +- reg: I2C bus address of the device
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#phy-cells"
 > +
-> +Example:
+> +additionalProperties: false
 > +
-> +sbtsi@4c {
-> +	compatible = "amd,sbtsi";
-> +	reg = <0x4c>;
-> +};
+> +examples:
+> +  - |
+> +    #include <dt-bindings/firmware/imx/rsrc.h>
+> +
+> +    usb3phy: usb3-phy@5B160000 {
+
+Should be lowercase hex.
+
+> +        compatible = "nxp,salvo-phy";
+> +        reg = <0x5B160000 0x40000>;
+> +        clocks = <&usb3_lpcg 4>;
+> +        clock-names = "salvo_phy_clk";
+> +        power-domains = <&pd IMX_SC_R_USB_2_PHY>;
+> +        #phy-cells = <0>;
+> +    };
 > -- 
-> 2.25.1.696.g5e7596f4ac-goog
+> 2.17.1
 > 
