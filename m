@@ -2,108 +2,118 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56916C2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 15:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8023AC18E5B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 15:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC42206F6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 15:04:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JoZlrTrS"
+	by mail.kernel.org (Postfix) with ESMTP id 5E013212CC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 15:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733129AbgDAPEH (ORCPT
+        id S1732504AbgDAPGS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 11:04:07 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29004 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732929AbgDAPEH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 11:04:07 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031EqsJa011860;
-        Wed, 1 Apr 2020 17:03:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=ia/w/Dr7BasELP+Rh61NrAVeUw12Ky4ZCp/8xxycRqk=;
- b=JoZlrTrSP5foMhcxBSj+XDsO/Way7ED7GXPtjVK7Np3kufuxQAgb7/DZ3BWZZePZK3HI
- SMYe6oFoZViQhNFXcDLqrZ0be6N3HOXdDbqTP8I6jLbtwN9smYR8xaNB/yGZmsO0XoM6
- yEVQJ7ErGYLBBgQus4qHBPJgqJWM7jr499hYCAVL2hFI1Yz6GNZD8Eq60Lm+d6n3Docw
- i0E5o5/qDrNPikpBP218jGQ91iiT7hwpvf3OIpkzNguksFrlVfHOZw3kZqEtILwxn0hp
- fXCu09/lOTJSGLb4cuuu6As03Ff9FYgEaRZVuCDrXG584Yt7vuG7KRi8XyFvYVzAWkBX vQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 302y5402um-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 17:03:54 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AE7E9100034;
-        Wed,  1 Apr 2020 17:03:49 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7486A2B3A4B;
-        Wed,  1 Apr 2020 17:03:49 +0200 (CEST)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Apr 2020 17:03:49
- +0200
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: [PATCH v2] ARM: dts: stm32: add cortex-M4 pdds management in Cortex-M4 node
-Date:   Wed, 1 Apr 2020 17:03:39 +0200
-Message-ID: <20200401150339.7933-1-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 1 Apr 2020 11:06:18 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57442 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732554AbgDAPGR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 11:06:17 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B59E88030890;
+        Wed,  1 Apr 2020 15:06:09 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id o7swTIfdtaeL; Wed,  1 Apr 2020 18:06:08 +0300 (MSK)
+Date:   Wed, 1 Apr 2020 18:06:12 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/6] soc: Add Baikal-T1 SoC APB/AXI EHB and L2-cache
+ drivers
+Message-ID: <20200401150612.addu2gzahrarpgep@ubsrv2.baikal.int>
+References: <20200306130731.938808030702@mail.baikalelectronics.ru>
+ <20200306153246.9373B80307C4@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200306153246.9373B80307C4@mail.baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add declarations related to the syscon pdds for deep sleep management.
+Hello Arnd,
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
-v2: patch rebasing
+On Fri, Mar 06, 2020 at 04:19:47PM +0100, Arnd Bergmann wrote:
+> On Fri, Mar 6, 2020 at 2:07 PM <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > From: Serge Semin <fancer.lancer@gmail.com>
+> >
+> > Aside from PCIe/SATA/DDR/I2C/CPU-reboot specific settings the Baikal-T1
+> > system controller provides three vendor-specific blocks. In particular
+> > there are two Errors Handler Blocks to detect and report an info regarding
+> > any problems discovered on the AXI and APB buses. These are the main buses
+> > utilized by the SoC devices to interact with each other. In addition there
+> > is a way to tune the MIPS P5600 CM2 L2-cache up by setting the Tag/Data/WS
+> > L2-to-RAM latencies. All of this functionality is implemented in the
+> > APB/AXI EHB and L2-cache control block drivers to be a part of the kernel soc
+> > subsystem (as being specific to the Baikal-T1 SoC) and introduced in the
+> > framework of this patchset.
+> >
+> > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> > commit 98d54f81e36b ("Linux 5.6-rc4").
+> 
+> I have no objection to the drivers, but I wonder if these should be
+> in drivers/bus and drivers/memory instead of drivers/soc, which have
+> similar drivers already. The driver for the L2 cache is not really a
+> memory controller driver, but it may be close enough, and we
+> already have a couple of different things in there.
+> 
+>           Arnd
 
- arch/arm/boot/dts/stm32mp151.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Sorry for a delay. I was analyzing and fixing comments, which were raised
+in the framework of anther patchsets I've submitted. Some of them including
+yours cause bigger changes than just a few fixups and might be resolved
+at once by a solution I've described in RFC: https://lkml.org/lkml/2020/3/22/393
+You've been in Cc there, so feel free to send your comments.
 
-diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 5260818543e5..a40772eac487 100644
---- a/arch/arm/boot/dts/stm32mp151.dtsi
-+++ b/arch/arm/boot/dts/stm32mp151.dtsi
-@@ -1124,6 +1124,11 @@
- 			};
- 		};
- 
-+		pwr_mcu: pwr_mcu@50001014 {
-+			compatible = "syscon";
-+			reg = <0x50001014 0x4>;
-+		};
-+
- 		exti: interrupt-controller@5000d000 {
- 			compatible = "st,stm32mp1-exti", "syscon";
- 			interrupt-controller;
-@@ -1700,6 +1705,7 @@
- 			resets = <&rcc MCU_R>;
- 			st,syscfg-holdboot = <&rcc 0x10C 0x1>;
- 			st,syscfg-tz = <&rcc 0x000 0x1>;
-+			st,syscfg-pdds = <&pwr_mcu 0x0 0x1>;
- 			status = "disabled";
- 		};
- 	};
--- 
-2.17.1
+Regarding ehb drivers. You are right. They should be moved to the drivers/bus
+(it has also been described in the RFC). It is more suitable place for them.
+I'll do it in v2.
 
+Regarding l2 driver. Do you really think that L2 cache should be in
+drivers/memory? First there is no any cache-related drivers in that
+subsystem (at least I couldn't find any). Second the Baikal-T1
+L2-cache-RAM config block has just indirect connection with RAM.
+The block just tunes the L2-cache<->RAM stall clock cycles up on
+WS/Tag/Data RAM IO-operations. This config seems more SoC-specific,
+than memory-like. Do you think that the driver should still be in
+drivers/memory?
+
+On the other hand the block is part of the System Controller. I could
+just embed the l2-cache driver functionality into the System Controller
+MFD driver. Though honestly IMHO the functionality should live in
+a dedicated driver and drivers/soc is a better place for it. I also have
+doubts this part will be well accepted by Lee (drivers/mfd maintainer).
+
+So what do you think?
+
+Regards,
+-Sergey
