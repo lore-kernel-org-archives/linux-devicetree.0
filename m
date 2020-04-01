@@ -2,176 +2,192 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE4CC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A89DC2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C320720705
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:21:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z+AKAFs0"
+	by mail.kernel.org (Postfix) with ESMTP id 0B8B521655
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732749AbgDAOVg (ORCPT
+        id S1733060AbgDAOdQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:21:36 -0400
-Received: from mail-eopbgr140073.outbound.protection.outlook.com ([40.107.14.73]:5351
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732205AbgDAOVg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:21:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k1rruNO3/pMXmzna3M9oic47i5Lfx3/wwxOIsF7i2rY8OFqAA0VhGkF5lNwciPVMxHEv+HbH0PN1tbxFk9FSr9BhnpHxtcGBDMqjjVMeYLKOUo9D1BOKtIWG4TITp+mpAFu5JyZ7E6e9NTnxRMTn2KZf+zdjUuduY0wr5ZKA+mUntN6OYnQyyHvdyUspZtjRnhn4KNvwLvStK9dPjWERe4QgpvjN1F04L+q69Xtt7z/TPukda45AseGNawTSFDOeWLN8zBQCa4FfFoDrfT3qs+sILW56zfXjj7GUadVLzf04hJj3/uBB2g3c7Np6EMLpWSG0e8NypX3ZACK0zpQamw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1jz0BGOXq0nHgoApsMEmTwGe561EMm73LmRro4EnDCk=;
- b=g3Pmf1VJL6yroo3e/XdxAvlZJWXFzUTZTjydodprk4E5fBy9wDVd+SyUpvZXaoH99hU1M3bzfozq7XjRbxznAqZ4Al4K7e17LsA9Ea9H9nbbmzvuIHRSLdaKPnDishu8Lm1R6QIzkorfibNP4+n34aHrKwuRbNRmjOWumFbjN30Er3ErOwRRvJsSB+jMQdd0bJhqfwy9IAiaLwLkKfqSMUNsi/4WaASiZ9yXiX3U/sy6pWmTJTEtiQlC9NjTRCHY0S2Ay77q3iHNYUFeT6JDuvhkOl+P4ZYsiYkQiH4cizb3PNx7elT/g13uZm9LQihKbQ1H8f+zJZkAT0I67IfiRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1jz0BGOXq0nHgoApsMEmTwGe561EMm73LmRro4EnDCk=;
- b=Z+AKAFs0X3gZUBU0p7FJDPifHOZVA/Zy9dj3K509cxk/vTFisC8Z0vUTda8uPm2wehx983TTnPhTB/9C9wSywkj66gp0wURTGdFC8wO28ekOXeueDf1fS+/27SB152bMBnthkS8qv7q6oWyiJIw69wKCntsuyxLeFNH70tBkUz8=
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (20.178.114.161) by
- AM0PR04MB4467.eurprd04.prod.outlook.com (52.135.151.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Wed, 1 Apr 2020 14:21:28 +0000
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::ccc:be36:aaf0:709a]) by AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::ccc:be36:aaf0:709a%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 14:21:28 +0000
-From:   Florinel Iordache <florinel.iordache@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Florinel Iordache <florinel.iordache@nxp.com>
-Subject: RE: [EXT] Re: [PATCH net-next 6/9] net: phy: add backplane kr driver
- support
-Thread-Topic: [EXT] Re: [PATCH net-next 6/9] net: phy: add backplane kr driver
- support
-Thread-Index: AdYIKJUsx3bt4MTYS3+XcE5ss4tWhQABBMuAAAD8oPA=
-Date:   Wed, 1 Apr 2020 14:21:28 +0000
-Message-ID: <AM0PR04MB544389A6B2400335A23E4960FBC90@AM0PR04MB5443.eurprd04.prod.outlook.com>
-References: <AM0PR04MB5443E8D583734C98C54C519EFBC90@AM0PR04MB5443.eurprd04.prod.outlook.com>
- <20200401135135.GA62290@lunn.ch>
-In-Reply-To: <20200401135135.GA62290@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=florinel.iordache@nxp.com; 
-x-originating-ip: [78.96.99.111]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 27154afd-1b07-40ef-088b-08d7d647f7f7
-x-ms-traffictypediagnostic: AM0PR04MB4467:|AM0PR04MB4467:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB4467866B87E436E12388D466FBC90@AM0PR04MB4467.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(6506007)(52536014)(71200400001)(64756008)(44832011)(9686003)(66446008)(26005)(2906002)(5660300002)(66556008)(186003)(66946007)(55016002)(76116006)(66476007)(7696005)(86362001)(81156014)(33656002)(316002)(478600001)(8936002)(81166006)(8676002)(7416002)(54906003)(6916009)(4326008);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: udNBqA06JfHPR6bmj4Mm0lbv4MqDe1+H338TOYdGX4jY4K0Fvf1q335DW5VEeXFsvErRoy+eOk7ZqWvY17+O/Yd2nlhBxPiKXkMT1NULsd0l3T4k8fCbevBE4MUIEqLe0O851PKrdMn2SDmrVlBxWspnXfuzJ0PhYU2c/HwgxsO5lH0JLamLQ1DbIDerIWbkJxMNX+g9kdQYmtjyO7txbcoxV21pOHtt3tkOd0Jyg6jDQD66FXEYdZq7/fY3Sa4NquGE4snYWf6pD4peyRKqGQf0S8u69tDJtLPIk++pn+mv/MvMWnwvPKy/xpijuw3r3QUo8pneIFqkRSCOg5c57fzl2H9O7drsphtVQdn/gONYF+RlRpbwhjDTzB4YumqLxnIse+KbElsBZm7crM7s4xQwbPdULI+ftKGZNB57HQ4NMZCyQQHEDWBGNBFxlSD3
-x-ms-exchange-antispam-messagedata: JoVljybq5WNWUA+6z/8kmxem5FQhw3KOVvZLIYEN0ylMgsSE8BH/M3biPDzqwVZb8HBIyi29coOU6pjOTPdQQqmR/PX8Z1MYlMBwaD7X4tw/vUekPVu0bgANgnfwLcysA0+E43ngJphBqv0OSlDrvA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27154afd-1b07-40ef-088b-08d7d647f7f7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 14:21:28.6459
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cmpjOhrcc+f55ML+ibivQdedK8D6DNVaR4pRjPvxdi9GxwDMqeeWLqWEpQiUm6FlcGUHegIHj5+Bh2tq0jukgPKWdY2894ap5TXn+McNOxU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4467
+        Wed, 1 Apr 2020 10:33:16 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51360 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732749AbgDAOdQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Apr 2020 10:33:16 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E0506200DCC;
+        Wed,  1 Apr 2020 16:33:13 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C5C70200DBA;
+        Wed,  1 Apr 2020 16:33:13 +0200 (CEST)
+Received: from fsr-ub1864-112.ea.freescale.net (fsr-ub1864-112.ea.freescale.net [10.171.82.98])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B56FE20507;
+        Wed,  1 Apr 2020 16:33:12 +0200 (CEST)
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Alexandre Bailon <abailon@baylibre.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        =?UTF-8?q?Artur=20=C5=9Awigo=C5=84?= <a.swigon@samsung.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Angus Ainslie <angus@akkea.ca>,
+        Martin Kepplinger <martink@posteo.de>,
+        Silvano di Ninno <silvano.dininno@nxp.com>,
+        linux-pm@vger.kernel.org, kernel@pengutronix.de, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/8] interconnect: Add imx support via devfreq
+Date:   Wed,  1 Apr 2020 17:32:59 +0300
+Message-Id: <cover.1585751281.git.leonard.crestez@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> On Wed, Apr 01, 2020 at 01:35:36PM +0000, Florinel Iordache wrote:
-> > > On Thu, Mar 26, 2020 at 03:51:19PM +0200, Florinel Iordache wrote:
-> > > > +static void setup_supported_linkmode(struct phy_device *bpphy) {
-> > > > +     struct backplane_phy_info *bp_phy =3D bpphy->priv;
-> > >
-> > > I'm not sure it is a good idea to completely take over phydev->priv
-> > > like this, in what is just helper code. What if the PHY driver needs
-> > > memory of its own? There are a few examples of this already in other
-> > > PHY drivers. Could a KR PHY contain a temperature sensor? Could it
-> > > contain statistics counters which need accumulating?
-> > >
-> > >         Andrew
-> >
-> > Backplane KR driver allocates memory for structure backplane_phy_info
-> > which is saved in phydev->priv. After all this is the purpose of priv
-> > according to its description in phy.h: <<private data pointer For use
-> > by PHYs to maintain extra state>>. Here the priv is used to maintain
-> > extra state needed for backplane. This way the backplane specific data
-> > becomes available for all PHY callbacks (defined in struct phy_driver)
-> > that receive a pointer to phy_device structure. This initial version
-> > doesn't include accumulating statistics counters but we have in plan
-> > to add these in future versions. The counters will be kept in specific
-> > structures as members of the main backplane data mentioned above and
-> > entire support will be integrated with ethtool.
->=20
-> Hi Florinel
->=20
-> And what about hwmon, or anything else which a driver needs memory for?
->=20
-> As far as i see it, we have two bodies of code here. There is a set of he=
-lpers
-> which implement most of the backplane functionality. And then there is an
-> example driver for your hardware. In the future we expect other drivers t=
-o be
-> added for other vendors hardware.
->=20
-> phydev->priv is for the driver. helpers should not assume they have
-> complete control over it.
->=20
-> Anyway, this may be a mute point. Lets first solve the problem of how a P=
-CS is
-> represented.
->=20
->   Andrew
+This series adds interconnect scaling support for imx8m series chips. It uses a
+per-SOC interconnect provider layered on top of multiple instances of devfreq
+for scalable nodes along the interconnect.
 
-Hi Andrew,
+Existing qcom interconnect providers mostly translate bandwidth requests into
+firmware calls but equivalent firmware on imx8m is much thinner. Scaling
+support for individual nodes is implemented as distinct devfreq drivers
+instead.
 
-Backplane driver was designed as a generic backplane driver over
-the PHY Abstraction Layer, containing standard implementations over
-which several specific devices can be added.
-(please see the diagram existent in chapter: Ethernet Backplane support
-architecture, in the Documentation/networking/backplane.rst)
-So according to this design, the backplane driver can use the priv pointer
-provided by the layer below which is the PHY to be used as extra state
-by the next upper layer which is generic backplane. On the same concept
-we can provide another priv pointer in backplane main structure which is
-equivalent to phy_device to be used by the specific backplane drivers on
-the upper layer.
-Actually for this reason, in v2 which I am currently working, I already
-renamed the structure 'backplane_phy_info' to 'backplane_device'
+The imx interconnect provider doesn't communicate with devfreq directly
+but rather computes "minimum frequencies" for nodes along the path and
+creates dev_pm_qos requests.
 
-Thank you,
-Florin.
+Since there is no single devicetree node that can represent the
+"interconnect" the main NOC is picked as the "interconnect provider" and
+will probe the interconnect platform device if #interconnect-cells is
+present. This avoids introducing "virtual" devices but it means that DT
+bindings of main NOC includes properties for both devfreq and
+interconnect.
+
+Only the ddrc and main noc are scalable right now but more can be added.
+
+Also available on a github branch (with few unrelated changes):
+	https://github.com/cdleonard/linux/tree/next
+
+Changes since v1:
+* Fix dt_bindings_check for yaml and reduce example to fit current
+features
+* Fix comment spelling in imx-bus
+* Drop mentions of passive governor from imx-bus (will repost later)
+* Improve error message in imx_bus_init_icc
+* Use dev_pm_opp_set_rate
+Link: https://patchwork.kernel.org/cover/11458971/
+
+Changes since RFCv6:
+* Allow building interconnect drivers as modules
+* Handle icc_provider_del errors in imx_icc_unregister (like EBUSY).
+* Rename imx-devfreq to imx-bus, similar to exynos-bus
+* Explain why imx bus clock enabling is not required
+Link: https://patchwork.kernel.org/cover/11244421/
+
+Changes since RFCv5:
+* Replace scanning for interconnect-node-id with explicit
+scalable-nodes/scalable-node-ids property on NoC.
+* Now passes make `dtbs_check`
+* Remove struct imx_icc_provider
+* Switch to of_icc_xlate_onecell
+* Use of_find_device_by_node to fetch QoS target, this causes fewer probe
+deferrals, removes dependency on devfreq API and even allows reloading ddrc
+module at runtime
+* Add imx_icc_node_destroy helper
+* Remove 0/1 on DEFINE_BUS_SLAVE/MASTER which created spurious links
+Link: https://patchwork.kernel.org/cover/11222015/
+
+Changes since RFCv4:
+* Drop icc proxy nonsense
+* Make devfreq driver for NOC probe the ICC driver if
+#interconnect-cells is present
+* Move NOC support to interconnect series and rename the node in DT
+* Add support for all chips at once, differences are not intereseting
+and there is more community interest for 8mq than 8mm.
+Link: https://patchwork.kernel.org/cover/11111865/
+
+Changes since RFCv3:
+* Remove the virtual "icc" node and add devfreq nodes as proxy providers
+* Fix build on 32-bit arm (reported by kbuilt test robot)
+* Remove ARCH_MXC_ARM64 (never existed in upstream)
+* Remove _numlinks, calculate instead
+* Replace __BUSFREQ_H header guard
+* Improve commit message and comment spelling
+* Fix checkpatch issues
+Link to RFCv3: https://patchwork.kernel.org/cover/11078671/
+
+Changes since RFCv2 and initial work by Alexandre Bailon:
+* Relying on devfreq and dev_pm_qos instead of CLK
+* No more "platform opp" stuff
+* No more special suspend handling: use suspend-opp on devfreq instead
+* Replace all mentions of "busfreq" with "interconnect"
+Link to v2: https://patchwork.kernel.org/cover/11021563/
+
+Leonard Crestez (8):
+  dt-bindings: interconnect: Add bindings for imx8m noc
+  PM / devfreq: Add generic imx bus scaling driver
+  PM / devfreq: imx: Register interconnect device
+  interconnect: Add imx core driver
+  interconnect: imx: Add platform driver for imx8mm
+  interconnect: imx: Add platform driver for imx8mq
+  interconnect: imx: Add platform driver for imx8mn
+  arm64: dts: imx8m: Add NOC nodes
+
+ .../bindings/interconnect/fsl,imx8m-noc.yaml  | 101 ++++++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi     |  24 ++
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi     |  24 ++
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  24 ++
+ drivers/devfreq/Kconfig                       |   8 +
+ drivers/devfreq/Makefile                      |   1 +
+ drivers/devfreq/imx-bus.c                     | 180 +++++++++++
+ drivers/interconnect/Kconfig                  |   1 +
+ drivers/interconnect/Makefile                 |   1 +
+ drivers/interconnect/imx/Kconfig              |  17 +
+ drivers/interconnect/imx/Makefile             |   9 +
+ drivers/interconnect/imx/imx.c                | 298 ++++++++++++++++++
+ drivers/interconnect/imx/imx.h                |  62 ++++
+ drivers/interconnect/imx/imx8mm.c             | 108 +++++++
+ drivers/interconnect/imx/imx8mn.c             |  97 ++++++
+ drivers/interconnect/imx/imx8mq.c             | 106 +++++++
+ include/dt-bindings/interconnect/imx8mm.h     |  49 +++
+ include/dt-bindings/interconnect/imx8mn.h     |  41 +++
+ include/dt-bindings/interconnect/imx8mq.h     |  48 +++
+ 19 files changed, 1199 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/fsl,imx8m-noc.yaml
+ create mode 100644 drivers/devfreq/imx-bus.c
+ create mode 100644 drivers/interconnect/imx/Kconfig
+ create mode 100644 drivers/interconnect/imx/Makefile
+ create mode 100644 drivers/interconnect/imx/imx.c
+ create mode 100644 drivers/interconnect/imx/imx.h
+ create mode 100644 drivers/interconnect/imx/imx8mm.c
+ create mode 100644 drivers/interconnect/imx/imx8mn.c
+ create mode 100644 drivers/interconnect/imx/imx8mq.c
+ create mode 100644 include/dt-bindings/interconnect/imx8mm.h
+ create mode 100644 include/dt-bindings/interconnect/imx8mn.h
+ create mode 100644 include/dt-bindings/interconnect/imx8mq.h
+
+-- 
+2.17.1
+
