@@ -2,126 +2,233 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43529C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCAFC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D254120719
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2F02071A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:33:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NR5IMmGL"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fOX/9oUV";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XiCbwvRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgDARSN (ORCPT
+        id S1732637AbgDARdT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:18:13 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:60556 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727620AbgDARSN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 13:18:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pO60vM3lpUeaQgdjLjnsu19Yae3+toam0LF12vfn/pQ=; b=NR5IMmGLlT/tSbBz6nUV9G6au
-        i0nTRoOb/xOx8pY+vvJT8u0K8H7+mzQOh0hKG4rONPcoT+kgj7AwyR6aqNef24RruNMk974G3ssPa
-        qmLYstpsxoUQoBt/2LbuQnUMLKJHGnFmqrrtmHhf5vX8eDvaAXSJTk2hZOIwFStNRS7FTzGlZqgiJ
-        o44AejSrhGOGI0WlEvJF6URXMOfnvFt2AM4cMEGLrhtjgpFci+bbfPcbpr0bGB+e8v+f3t2iVx0ts
-        aB3SLBgSzdF2hL2MpCI4gyxQroS3IG+RLcIXiIdlf1Y5xqzl5EDsdNwBdScCwSm/gQD4tC9mhhf0g
-        C7ON0AG+Q==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60904)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jJgzy-000764-ND; Wed, 01 Apr 2020 18:17:54 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jJgzs-0000s7-1D; Wed, 01 Apr 2020 18:17:48 +0100
-Date:   Wed, 1 Apr 2020 18:17:48 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        netdev@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH] net: phy: at803x: fix clock sink configuration on
- ATH8030 and ATH8035
-Message-ID: <20200401171747.GW25745@shell.armlinux.org.uk>
-References: <20200401095732.23197-1-o.rempel@pengutronix.de>
+        Wed, 1 Apr 2020 13:33:19 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:52076 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732279AbgDARdT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 13:33:19 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031HUx20031105;
+        Wed, 1 Apr 2020 10:33:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=HwNU+ct4u0SQ+XlDd7iDo6HAs5Z7jJc7zCpud1nC5gM=;
+ b=fOX/9oUV9sVJ705bKjRemsWz2FQw2KIRuj+gaSkFagGeheZBlGh4a8LJ8Zl2g6zL4ELW
+ k7zAg57II+taYhziI6fUg3SBxO+KydDcjMdifTWpw/aiAh/bWYwjDnFp7XWeh4s4x1rD
+ smyLny82N24OTwmYMq4qipWGpHUnjvZSOGA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 303d0j8005-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 01 Apr 2020 10:33:03 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 1 Apr 2020 10:33:02 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iG8B3p2j0KqFg9fF1ApA9D52G8Ie7g8dR+cZeol7FOEghoH9BqXtFYm8elHNHxLsMwjS2Pct3yeHboJDhYIUJB7F4LVjMjAzt128sfImKlsp48V9p/Lgsp1ze4XM2jMRwXhhRRIozVv7tmibRMVsBBMM4dcwIlGhUfkLXoV4GeDCEC2pPhdd8GWISyW8iHHXgbXV9BiTDST3PnXjCkukEFi6CHYWjYLpui13orWjqL5jhvOFAz/tRHLDbLc2SDL3rsiVBZ2SavHvDEXXCDs1O99AXha4TCjGlLtYiBIXVF2L+WzDcwVG/y6FVmrCWY3Vv7pGk9fkzLh6A1sTLOGODw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HwNU+ct4u0SQ+XlDd7iDo6HAs5Z7jJc7zCpud1nC5gM=;
+ b=Q8Lm4XPrbka7qU3twqEjvZps0SqPAnG0obY5V2tsp19vFMob7xyPHw2bRlnbytRR9WTwFX7VoKDznrQw98WgEJrSi6OEDqABkIKnKiPcfbB5zmNdeg0EVAXUJC9FwWfJWrNX9MOwMfGOrbQo6h/0RJyQwxdpNaHRLeGAhX/czPnqnRpSscVGo0CeYdXg4e/+3OuVjlLhRir2Xsq0G3o/km4rpY4/vRrxM0UwV9X6X/hE1WNUGGJYMreFoTidq4Xb33FLJtg0gVUopxgR9Gc0Zgv3Jqzu7q0IW66OOXqAUneYAAO6FE3jFUfNzp7vBlZ1SvqUqHdik+A4hSmZENwTQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HwNU+ct4u0SQ+XlDd7iDo6HAs5Z7jJc7zCpud1nC5gM=;
+ b=XiCbwvRENJAjIamBai8XhZazZrTHovoleaCdZ76Ntyf0Gq8IPrHTfoVP7c90XU3A0QFko35IRlGae6ihh1LF6TNlyHf0dS6brUqZJfM977STmNMEw03uR4C4wMUJ2JWgh9J2+FK3r4r92PBg6Nlv/OjFshakyctLbj/J4I26EFI=
+Received: from MW3PR15MB3947.namprd15.prod.outlook.com (2603:10b6:303:49::9)
+ by MW3PR15MB4060.namprd15.prod.outlook.com (2603:10b6:303:4e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Wed, 1 Apr
+ 2020 17:33:01 +0000
+Received: from MW3PR15MB3947.namprd15.prod.outlook.com
+ ([fe80::acc7:ed14:3f77:9936]) by MW3PR15MB3947.namprd15.prod.outlook.com
+ ([fe80::acc7:ed14:3f77:9936%4]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
+ 17:33:01 +0000
+From:   Vijay Khemka <vijaykhemka@fb.com>
+To:     Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "joel@jms.id.au" <joel@jms.id.au>
+CC:     Sai Dasari <sdasari@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        "manikandan.e@hcl.com" <manikandan.e@hcl.com>
+Subject: Re: [PATCH v7] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Thread-Topic: [PATCH v7] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Thread-Index: AQHWCBpeweWL8h/MFEyTethCsbGKaahkEZ0A
+Date:   Wed, 1 Apr 2020 17:33:01 +0000
+Message-ID: <7C091D02-98E8-4617-AA58-9714A8FC4EB0@fb.com>
+References: <20200401114023.GA29180@cnn>
+In-Reply-To: <20200401114023.GA29180@cnn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2620:10d:c090:400::5:9e22]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f365ba4c-b739-4db2-03ed-08d7d662ba20
+x-ms-traffictypediagnostic: MW3PR15MB4060:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW3PR15MB406046A76C23D48D9077C2C5DDC90@MW3PR15MB4060.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 03607C04F0
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR15MB3947.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(346002)(396003)(136003)(39860400002)(376002)(366004)(47680400002)(6486002)(66476007)(186003)(316002)(2616005)(5660300002)(71200400001)(66946007)(66446008)(54906003)(81166006)(81156014)(4326008)(76116006)(8676002)(2906002)(6506007)(8936002)(86362001)(36756003)(6512007)(64756008)(478600001)(66556008)(33656002)(110136005);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: twT7HcOYm7lFPrR++TlxlhqJBrnMAliJH/ttFs3sMOSxJ3KgfpVwiJZvgaL0wU5484ju/i1F7WEX3s8vCErWJ4AcSEOcPErRXW1T2WbaJZSfM6YcTgLVZBNfhWJOMumf1Hl6Io0Lp4xNtIBelRY5grliSoIT2eKeShLL8sam9p4zT9ZDW2BnLuMzozhzvD4FUDS7JsQz1h59sK44s716qUo2l/SR05FJtOkk7sgqy7ibnO7YwBohd7NpGqpQWLc/tGw2n9hOsei+oYZ1s7KHpfSMx4oHb0Wc+okGyuosw7G7ZI95ulc8Ak/RHXepwlu4S2nLj/XI4mrWF9WqNOCOIrFMeInyVuqA/vNupeinnNiTQo78xrYiQCip+TatPzYFpESEAP0+nGWFv3lhzgq10/VJQMXLTkyiGYVKnumjG1CTLiDzMRYfB+Mz2IKz9qUB
+x-ms-exchange-antispam-messagedata: JC+ZkNPLuoRQmNMV0lkvnYWVZdRN47vXS0nO2kFVsp/RJWiZTKwLNnq4Uo0BzH7Wk6gI609UGKWqBr6qg/DR1Zd0gGfo93y7F/lhWUgqJud08DloVLlQ4k+BTC1Mym2uJnDGVInVT4YIqnawu1tMLN6Yyj6EKWcr9M+b7Y1Lm66SQhoEqLdHGlqFbCHgwqad
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <88CC0F16F768E447BA152357D17F3650@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401095732.23197-1-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f365ba4c-b739-4db2-03ed-08d7d662ba20
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 17:33:01.2789
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kI0Spob906jHnVJFTc1iPZkEzMQ+Ur09R0uu1Ln/O9XRpHd4dpOvbLKJB+80BOg3KKcu+oXc17Blxcz8tleSGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB4060
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-01_03:2020-03-31,2020-04-01 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1011 lowpriorityscore=0 malwarescore=0
+ mlxscore=0 suspectscore=0 bulkscore=0 adultscore=0 impostorscore=0
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004010148
+X-FB-Internal: deliver
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 11:57:32AM +0200, Oleksij Rempel wrote:
-> The masks in priv->clk_25m_reg and priv->clk_25m_mask are one-bits-set
-> for the values that comprise the fields, not zero-bits-set.
-> 
-> This patch fixes the clock frequency configuration for ATH8030 and
-> ATH8035 Atheros PHYs by removing the erroneous "~".
-> 
-> To reproduce this bug, configure the PHY  with the device tree binding
-> "qca,clk-out-frequency" and remove the machine specific PHY fixups.
-> 
-> Fixes: 2f664823a47021 ("net: phy: at803x: add device tree binding")
-> Reported-by: Russell King <linux@armlinux.org.uk>
-
-Please replace this with:
-
-Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
-
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-
-Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
-Tested-by: Russell King <rmk+kernel@armlinux.org.uk>
-
-Thanks.
-
-> ---
->  drivers/net/phy/at803x.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-> index 481cf48c9b9e4..31f731e6df720 100644
-> --- a/drivers/net/phy/at803x.c
-> +++ b/drivers/net/phy/at803x.c
-> @@ -425,8 +425,8 @@ static int at803x_parse_dt(struct phy_device *phydev)
->  		 */
->  		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
->  		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
-> -			priv->clk_25m_reg &= ~AT8035_CLK_OUT_MASK;
-> -			priv->clk_25m_mask &= ~AT8035_CLK_OUT_MASK;
-> +			priv->clk_25m_reg &= AT8035_CLK_OUT_MASK;
-> +			priv->clk_25m_mask &= AT8035_CLK_OUT_MASK;
->  		}
->  	}
->  
-> -- 
-> 2.26.0.rc2
-> 
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+DQoNCu+7v09uIDQvMS8yMCwgNDo0MCBBTSwgIk1hbmlrYW5kYW4gRWx1bWFsYWkiIDxtYW5pa2Fu
+ZGFuLmhjbC5lcnMuZXBsQGdtYWlsLmNvbT4gd3JvdGU6DQoNCiAgICBUaGUgWW9zZW1pdGUgVjIg
+aXMgYSBmYWNlYm9vayBtdWx0aS1ub2RlIHNlcnZlcg0KICAgIHBsYXRmb3JtIHRoYXQgaG9zdCBm
+b3VyIE9DUCBzZXJ2ZXIuIFRoZSBCTUMNCiAgICBpbiB0aGUgWW9zZW1pdGUgVjIgcGxhdGZvcm0g
+YmFzZWQgb24gQVNUMjUwMCBTb0MuDQogICAgDQogICAgVGhpcyBwYXRjaCBhZGRzIGxpbnV4IGRl
+dmljZSB0cmVlIGVudHJ5IHJlbGF0ZWQgdG8NCiAgICBZb3NlbWl0ZSBWMiBzcGVjaWZpYyBkZXZp
+Y2VzIGNvbm5lY3RlZCB0byBCTUMgU29DLg0KICAgIA0KICAgIFNpZ25lZC1vZmYtYnk6IE1hbmlr
+YW5kYW4gRWx1bWFsYWkgPG1hbmlrYW5kYW4uaGNsLmVycy5lcGxAZ21haWwuY29tPg0KICAgIEFj
+a2VkLWJ5ICAgICA6IEFuZHJldyBKZWZmZXJ5IDxhbmRyZXdAYWouaWQuYXU+DQogICAgUmV2aWV3
+ZWQtYnkgIDogVmlqYXkgS2hlbWthIDx2a2hlbWthQGZiLmNvbT4NCiAgICAtLS0NCiAgICAtLS0g
+ICAgICB2NyAtIEFkZGVkIG11bHRpLWhvc3QgU09MIGZlYXR1cmUuDQpDYW4geW91IHBsZWFzZSBh
+bHNvIGFkZCBpcG1iIGJyaWRnZSBkZXZpY2UgZGV0YWlscyBoZXJlLg0KICAgIC0tLSAgICAgIHY2
+IC0gQWRkZWQgZGV2aWNlIHRyZWUgcHJvcGVydHkgZm9yIG11bHRpLWhvc3QgTWVsbGFub3ggTklD
+IGluIHRoZSBuY3NpIGRyaXZlci4NCiAgICAtLS0gICAgICB2NSAtIFNwZWxsIGFuZCBjb250cmli
+dXRvciBuYW1lIGNvcnJlY3Rpb24uDQogICAgLS0tICAgICAgICAgICAtIExpY2Vuc2UgaWRlbnRp
+ZmllciBjaGFuZ2VkIHRvIEdQTC0yLjAtb3ItbGF0ZXIuDQogICAgLS0tICAgICAgICAgICAtIGFz
+cGVlZC1ncGlvLmggcmVtb3ZlZC4NCiAgICAtLS0gICAgICAgICAgIC0gRkFOMiB0YWNobyBjaGFu
+bmVsIGNoYW5nZWQuDQogICAgLS0tICAgICAgdjQgLSBCb290YXJncyByZW1vdmVkLg0KICAgIC0t
+LSAgICAgIHYzIC0gVWFydDEgRGVidWcgcmVtb3ZlZCAuDQogICAgLS0tICAgICAgdjIgLSBMUEMg
+YW5kIFZVQVJUIHJlbW92ZWQgLg0KICAgIC0tLSAgICAgIHYxIC0gSW5pdGlhbCBkcmFmdC4NCiAg
+ICAtLS0NCiAgICAtLS0NCiAgICAgLi4uL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2steW9z
+ZW1pdGV2Mi5kdHMgICAgfCAxODYgKysrKysrKysrKysrKysrKysrKysrDQogICAgIDEgZmlsZSBj
+aGFuZ2VkLCAxODYgaW5zZXJ0aW9ucygrKQ0KICAgICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9h
+cm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay15b3NlbWl0ZXYyLmR0cw0KICAgIA0KICAg
+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXlvc2Vt
+aXRldjIuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay15b3NlbWl0
+ZXYyLmR0cw0KICAgIG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQogICAgaW5kZXggMDAwMDAwMC4uYmM4
+MzkwMQ0KICAgIC0tLSAvZGV2L251bGwNCiAgICArKysgYi9hcmNoL2FybS9ib290L2R0cy9hc3Bl
+ZWQtYm1jLWZhY2Vib29rLXlvc2VtaXRldjIuZHRzDQogICAgQEAgLTAsMCArMSwxODYgQEANCiAg
+ICArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb3ItbGF0ZXINCiAgICArLy8g
+Q29weXJpZ2h0IChjKSAyMDE4IEZhY2Vib29rIEluYy4NCiAgICArL2R0cy12MS87DQogICAgKyNp
+bmNsdWRlICJhc3BlZWQtZzUuZHRzaSINCiAgICArDQogICAgKy8gew0KICAgICsJbW9kZWwgPSAi
+RmFjZWJvb2sgWW9zZW1pdGV2MiBCTUMiOw0KICAgICsJY29tcGF0aWJsZSA9ICJmYWNlYm9vayx5
+b3NlbWl0ZXYyLWJtYyIsICJhc3BlZWQsYXN0MjUwMCI7DQogICAgKwlhbGlhc2VzIHsNCiAgICAr
+CQlzZXJpYWw0ID0gJnVhcnQ1Ow0KICAgICsJfTsNCiAgICArCWNob3NlbiB7DQogICAgKwkJc3Rk
+b3V0LXBhdGggPSAmdWFydDU7DQogICAgKwl9Ow0KICAgICsNCiAgICArCW1lbW9yeUA4MDAwMDAw
+MCB7DQogICAgKwkJcmVnID0gPDB4ODAwMDAwMDAgMHgyMDAwMDAwMD47DQogICAgKwl9Ow0KICAg
+ICsNCiAgICArCWlpby1od21vbiB7DQogICAgKwkJLy8gVk9MQVRBR0UgU0VOU09SDQogICAgKwkJ
+Y29tcGF0aWJsZSA9ICJpaW8taHdtb24iOw0KICAgICsJCWlvLWNoYW5uZWxzID0gPCZhZGMgMD4g
+LCA8JmFkYyAxPiAsIDwmYWRjIDI+ICwgIDwmYWRjIDM+ICwNCiAgICArCQk8JmFkYyA0PiAsIDwm
+YWRjIDU+ICwgPCZhZGMgNj4gLCAgPCZhZGMgNz4gLA0KICAgICsJCTwmYWRjIDg+ICwgPCZhZGMg
+OT4gLCA8JmFkYyAxMD4sIDwmYWRjIDExPiAsDQogICAgKwkJPCZhZGMgMTI+ICwgPCZhZGMgMTM+
+ICwgPCZhZGMgMTQ+ICwgPCZhZGMgMTU+IDsNCiAgICArCX07DQogICAgK307DQogICAgKw0KICAg
+ICsmZm1jIHsNCiAgICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICArCWZsYXNoQDAgew0KICAgICsJ
+CXN0YXR1cyA9ICJva2F5IjsNCiAgICArCQltMjVwLGZhc3QtcmVhZDsNCiAgICArI2luY2x1ZGUg
+Im9wZW5ibWMtZmxhc2gtbGF5b3V0LmR0c2kiDQogICAgKwl9Ow0KICAgICt9Ow0KICAgICsNCiAg
+ICArJnNwaTEgew0KICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICsJcGluY3RybC1uYW1lcyA9
+ICJkZWZhdWx0IjsNCiAgICArCXBpbmN0cmwtMCA9IDwmcGluY3RybF9zcGkxX2RlZmF1bHQ+Ow0K
+ICAgICsJZmxhc2hAMCB7DQogICAgKwkJc3RhdHVzID0gIm9rYXkiOw0KICAgICsJCW0yNXAsZmFz
+dC1yZWFkOw0KICAgICsJCWxhYmVsID0gInBub3IiOw0KICAgICsJfTsNCiAgICArfTsNCiAgICAr
+JnVhcnQxIHsNCiAgICArCS8vIEhvc3QxIENvbnNvbGUNCiAgICArCXN0YXR1cyA9ICJva2F5IjsN
+CiAgICArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQogICAgKwlwaW5jdHJsLTAgPSA8JnBp
+bmN0cmxfdHhkMV9kZWZhdWx0DQogICAgKwkJICAgICAmcGluY3RybF9yeGQxX2RlZmF1bHQ+Ow0K
+ICAgICt9Ow0KICAgICsNCiAgICArJnVhcnQyIHsNCiAgICArCS8vIEhvc3QyIENvbnNvbGUNCiAg
+ICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQog
+ICAgKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdHhkMl9kZWZhdWx0DQogICAgKwkJICAgICAmcGlu
+Y3RybF9yeGQyX2RlZmF1bHQ+Ow0KICAgICsNCiAgICArfTsNCiAgICArDQogICAgKyZ1YXJ0MyB7
+DQogICAgKwkvLyBIb3N0MyBDb25zb2xlDQogICAgKwlzdGF0dXMgPSAib2theSI7DQogICAgKwlw
+aW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KICAgICsJcGluY3RybC0wID0gPCZwaW5jdHJsX3R4
+ZDNfZGVmYXVsdA0KICAgICsJCSAgICAgJnBpbmN0cmxfcnhkM19kZWZhdWx0PjsNCiAgICArfTsN
+CiAgICArDQogICAgKyZ1YXJ0NCB7DQogICAgKwkvLyBIb3N0NCBDb25zb2xlDQogICAgKwlzdGF0
+dXMgPSAib2theSI7DQogICAgKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KICAgICsJcGlu
+Y3RybC0wID0gPCZwaW5jdHJsX3R4ZDRfZGVmYXVsdA0KICAgICsJCSAgICAgJnBpbmN0cmxfcnhk
+NF9kZWZhdWx0PjsNCiAgICArfTsNCiAgICArDQogICAgKyZ1YXJ0NSB7DQogICAgKwkvLyBCTUMg
+Q29uc29sZQ0KICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICt9Ow0KICAgICsNCiAgICArJnZ1
+YXJ0IHsNCiAgICArCS8vIFZpcnR1YWwgVUFSVA0KICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAg
+ICt9Ow0KICAgICsNCiAgICArJm1hYzAgew0KICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICsJ
+cGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCiAgICArCXBpbmN0cmwtMCA9IDwmcGluY3RybF9y
+bWlpMV9kZWZhdWx0PjsNCiAgICArCXVzZS1uY3NpOw0KICAgICsJbWx4LG11bHRpLWhvc3Q7DQog
+ICAgK307DQogICAgKw0KICAgICsmYWRjIHsNCiAgICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICAr
+CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQogICAgKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxf
+YWRjMF9kZWZhdWx0DQogICAgKwkJCSZwaW5jdHJsX2FkYzFfZGVmYXVsdA0KICAgICsJCQkmcGlu
+Y3RybF9hZGMyX2RlZmF1bHQNCiAgICArCQkJJnBpbmN0cmxfYWRjM19kZWZhdWx0DQogICAgKwkJ
+CSZwaW5jdHJsX2FkYzRfZGVmYXVsdA0KICAgICsJCQkmcGluY3RybF9hZGM1X2RlZmF1bHQNCiAg
+ICArCQkJJnBpbmN0cmxfYWRjNl9kZWZhdWx0DQogICAgKwkJCSZwaW5jdHJsX2FkYzdfZGVmYXVs
+dA0KICAgICsJCQkmcGluY3RybF9hZGM4X2RlZmF1bHQNCiAgICArCQkJJnBpbmN0cmxfYWRjOV9k
+ZWZhdWx0DQogICAgKwkJCSZwaW5jdHJsX2FkYzEwX2RlZmF1bHQNCiAgICArCQkJJnBpbmN0cmxf
+YWRjMTFfZGVmYXVsdA0KICAgICsJCQkmcGluY3RybF9hZGMxMl9kZWZhdWx0DQogICAgKwkJCSZw
+aW5jdHJsX2FkYzEzX2RlZmF1bHQNCiAgICArCQkJJnBpbmN0cmxfYWRjMTRfZGVmYXVsdA0KICAg
+ICsJCQkmcGluY3RybF9hZGMxNV9kZWZhdWx0PjsNCiAgICArfTsNCiAgICArDQogICAgKyZpMmM4
+IHsNCiAgICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICArCS8vRlJVIEVFUFJPTQ0KICAgICsJZWVw
+cm9tQDUxIHsNCiAgICArCQljb21wYXRpYmxlID0gImF0bWVsLDI0YzY0IjsNCiAgICArCQlyZWcg
+PSA8MHg1MT47DQogICAgKwkJcGFnZXNpemUgPSA8MzI+Ow0KICAgICsJfTsNCiAgICArfTsNCiAg
+ICArDQogICAgKyZpMmM5IHsNCiAgICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICArCXRtcDQyMUA0
+ZSB7DQogICAgKwkvL0lOTEVUIFRFTVANCiAgICArCQljb21wYXRpYmxlID0gInRpLHRtcDQyMSI7
+DQogICAgKwkJcmVnID0gPDB4NGU+Ow0KICAgICsJfTsNCiAgICArCS8vT1VUTEVUIFRFTVANCiAg
+ICArCXRtcDQyMUA0ZiB7DQogICAgKwkJY29tcGF0aWJsZSA9ICJ0aSx0bXA0MjEiOw0KICAgICsJ
+CXJlZyA9IDwweDRmPjsNCiAgICArCX07DQogICAgK307DQogICAgKw0KICAgICsmaTJjMTAgew0K
+ICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICsJLy9IU0MNCiAgICArCWFkbTEyNzhANDAgew0K
+ICAgICsJCWNvbXBhdGlibGUgPSAiYWRpLGFkbTEyNzgiOw0KICAgICsJCXJlZyA9IDwweDQwPjsN
+CiAgICArCX07DQogICAgK307DQogICAgKw0KICAgICsmaTJjMTEgew0KICAgICsJc3RhdHVzID0g
+Im9rYXkiOw0KICAgICsJLy9NRVpaX1RFTVBfU0VOU09SDQogICAgKwl0bXA0MjFAMWYgew0KICAg
+ICsJCWNvbXBhdGlibGUgPSAidGksdG1wNDIxIjsNCiAgICArCQlyZWcgPSA8MHgxZj47DQogICAg
+Kwl9Ow0KICAgICt9Ow0KICAgICsNCiAgICArJmkyYzEyIHsNCiAgICArCXN0YXR1cyA9ICJva2F5
+IjsNCiAgICArCS8vTUVaWl9GUlUNCiAgICArCWVlcHJvbUA1MSB7DQogICAgKwkJY29tcGF0aWJs
+ZSA9ICJhdG1lbCwyNGM2NCI7DQogICAgKwkJcmVnID0gPDB4NTE+Ow0KICAgICsJCXBhZ2VzaXpl
+ID0gPDMyPjsNCiAgICArCX07DQogICAgK307DQogICAgKw0KICAgICsmcHdtX3RhY2hvIHsNCiAg
+ICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICArCS8vRlNDDQogICAgKwlwaW5jdHJsLW5hbWVzID0g
+ImRlZmF1bHQiOw0KICAgICsJcGluY3RybC0wID0gPCZwaW5jdHJsX3B3bTBfZGVmYXVsdCAmcGlu
+Y3RybF9wd20xX2RlZmF1bHQ+Ow0KICAgICsJZmFuQDAgew0KICAgICsJCXJlZyA9IDwweDAwPjsN
+CiAgICArCQlhc3BlZWQsZmFuLXRhY2gtY2ggPSAvYml0cy8gOCA8MHgwMD47DQogICAgKwl9Ow0K
+ICAgICsJZmFuQDEgew0KICAgICsJCXJlZyA9IDwweDAxPjsNCiAgICArCQlhc3BlZWQsZmFuLXRh
+Y2gtY2ggPSAvYml0cy8gOCA8MHgwMT47DQogICAgKwl9Ow0KICAgICt9Ow0KICAgIC0tIA0KICAg
+IDIuNy40DQogICAgDQogICAgDQoNCg==
