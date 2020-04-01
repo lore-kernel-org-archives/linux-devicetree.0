@@ -2,32 +2,32 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AD8C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D31EC2D0F2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A7620784
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BF22078B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgDAIxT (ORCPT
+        id S1732137AbgDAIx0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:53:19 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:55312 "EHLO inva021.nxp.com"
+        Wed, 1 Apr 2020 04:53:26 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:55482 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgDAIxT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:53:19 -0400
+        id S1732107AbgDAIxZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:53:25 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 380CC20025F;
-        Wed,  1 Apr 2020 10:53:17 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C3791200CD8;
+        Wed,  1 Apr 2020 10:53:22 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 183ED200CB2;
-        Wed,  1 Apr 2020 10:53:10 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6DACC200CD7;
+        Wed,  1 Apr 2020 10:53:15 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 477144024E;
-        Wed,  1 Apr 2020 16:53:01 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9FEDC402DF;
+        Wed,  1 Apr 2020 16:53:06 +0800 (SGT)
 From:   Shengjiu Wang <shengjiu.wang@nxp.com>
 To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         festevam@gmail.com, broonie@kernel.org,
@@ -35,66 +35,174 @@ To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
         tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 0/7] ASoC: Add new module driver for new ASRC
-Date:   Wed,  1 Apr 2020 16:45:33 +0800
-Message-Id: <cover.1585726761.git.shengjiu.wang@nxp.com>
+Subject: [PATCH v6 4/7] ASoC: fsl_asrc: Support new property fsl,asrc-format
+Date:   Wed,  1 Apr 2020 16:45:37 +0800
+Message-Id: <496f49f1fe20b969f4456b591f62223d430c6d74.1585726761.git.shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1585726761.git.shengjiu.wang@nxp.com>
+References: <cover.1585726761.git.shengjiu.wang@nxp.com>
+In-Reply-To: <cover.1585726761.git.shengjiu.wang@nxp.com>
+References: <cover.1585726761.git.shengjiu.wang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add new module driver for new ASRC in i.MX8MN, several commits
-are added for new property fsl,asrc-format
+In order to align with new ESARC, we add new property fsl,asrc-format.
+The fsl,asrc-format can replace the fsl,asrc-width, driver
+can accept format from devicetree, don't need to convert it to
+format through width.
 
-Shengjiu Wang (7):
-  ASoC: fsl_asrc: rename asrc_priv to asrc
-  ASoC: dt-bindings: fsl_asrc: Add new property fsl,asrc-format
-  ASoC: fsl-asoc-card: Support new property fsl,asrc-format
-  ASoC: fsl_asrc: Support new property fsl,asrc-format
-  ASoC: fsl_asrc: Move common definition to fsl_asrc_common
-  ASoC: dt-bindings: fsl_easrc: Add document for EASRC
-  ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/fsl_asrc.c     | 40 ++++++++++++++++++++++--------------
+ sound/soc/fsl/fsl_asrc.h     |  4 ++--
+ sound/soc/fsl/fsl_asrc_dma.c | 15 +++++++++++---
+ 3 files changed, 39 insertions(+), 20 deletions(-)
 
-changes in v6
-- updated according to Nicoin's and Rob's comments.
-
-changes in v5
-- Add new property fsl,asrc-format, rather than change fsl,asrc-width
-  to fsl,asrc-formt.
-- code change for above change.
-
-changes in v4
-- Add several commit for changing DT binding asrc-width to asrc-format
-- rename asrc_priv to asrc
-
-changes in v3
-- add new commit "ASoC: fsl_asrc: Change asrc_width to asrc_format"
-- modify binding doc to yaml format
-- remove fsl_easrc_dma.c, make fsl_asrc_dma.c useable for easrc.
-
-changes in v2
-- change i.MX815 to i.MX8MN
-- Add changes in Kconfig and Makefile
-
- .../devicetree/bindings/sound/fsl,asrc.txt    |    4 +
- .../devicetree/bindings/sound/fsl,easrc.yaml  |  101 +
- sound/soc/fsl/Kconfig                         |   11 +
- sound/soc/fsl/Makefile                        |    2 +
- sound/soc/fsl/fsl-asoc-card.c                 |   21 +-
- sound/soc/fsl/fsl_asrc.c                      |  303 +--
- sound/soc/fsl/fsl_asrc.h                      |   74 +-
- sound/soc/fsl/fsl_asrc_common.h               |  105 +
- sound/soc/fsl/fsl_asrc_dma.c                  |   54 +-
- sound/soc/fsl/fsl_easrc.c                     | 2114 +++++++++++++++++
- sound/soc/fsl/fsl_easrc.h                     |  651 +++++
- 11 files changed, 3206 insertions(+), 234 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,easrc.yaml
- create mode 100644 sound/soc/fsl/fsl_asrc_common.h
- create mode 100644 sound/soc/fsl/fsl_easrc.c
- create mode 100644 sound/soc/fsl/fsl_easrc.h
-
+diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+index 4d3e51bfa949..eea19e2b723b 100644
+--- a/sound/soc/fsl/fsl_asrc.c
++++ b/sound/soc/fsl/fsl_asrc.c
+@@ -589,7 +589,6 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+ 	unsigned int channels = params_channels(params);
+ 	unsigned int rate = params_rate(params);
+ 	struct asrc_config config;
+-	snd_pcm_format_t format;
+ 	int ret;
+ 
+ 	ret = fsl_asrc_request_pair(channels, pair);
+@@ -600,11 +599,6 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+ 
+ 	pair->config = &config;
+ 
+-	if (asrc->asrc_width == 16)
+-		format = SNDRV_PCM_FORMAT_S16_LE;
+-	else
+-		format = SNDRV_PCM_FORMAT_S24_LE;
+-
+ 	config.pair = pair->index;
+ 	config.channel_num = channels;
+ 	config.inclk = INCLK_NONE;
+@@ -612,11 +606,11 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
+ 
+ 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		config.input_format   = params_format(params);
+-		config.output_format  = format;
++		config.output_format  = asrc->asrc_format;
+ 		config.input_sample_rate  = rate;
+ 		config.output_sample_rate = asrc->asrc_rate;
+ 	} else {
+-		config.input_format   = format;
++		config.input_format   = asrc->asrc_format;
+ 		config.output_format  = params_format(params);
+ 		config.input_sample_rate  = asrc->asrc_rate;
+ 		config.output_sample_rate = rate;
+@@ -946,6 +940,7 @@ static int fsl_asrc_probe(struct platform_device *pdev)
+ 	int irq, ret, i;
+ 	u32 map_idx;
+ 	char tmp[16];
++	u32 width;
+ 
+ 	asrc = devm_kzalloc(&pdev->dev, sizeof(*asrc), GFP_KERNEL);
+ 	if (!asrc)
+@@ -1052,16 +1047,31 @@ static int fsl_asrc_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	ret = of_property_read_u32(np, "fsl,asrc-width",
+-				   &asrc->asrc_width);
++	ret = of_property_read_u32(np, "fsl,asrc-format", &asrc->asrc_format);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "failed to get output width\n");
+-		return ret;
++		ret = of_property_read_u32(np, "fsl,asrc-width", &width);
++		if (ret) {
++			dev_err(&pdev->dev, "failed to get output width\n");
++			return ret;
++		}
++
++		switch (width) {
++		case 16:
++			asrc->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
++			break;
++		case 24:
++			asrc->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
++			break;
++		default:
++			dev_warn(&pdev->dev, "unsupported width, switching to 24bit\n");
++			asrc->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
++			break;
++		}
+ 	}
+ 
+-	if (asrc->asrc_width != 16 && asrc->asrc_width != 24) {
+-		dev_warn(&pdev->dev, "unsupported width, switching to 24bit\n");
+-		asrc->asrc_width = 24;
++	if (!(FSL_ASRC_FORMATS & (1ULL << asrc->asrc_format))) {
++		dev_warn(&pdev->dev, "unsupported format, switching to S24_LE\n");
++		asrc->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, asrc);
+diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
+index 95d62c45afde..3b0f156af2c3 100644
+--- a/sound/soc/fsl/fsl_asrc.h
++++ b/sound/soc/fsl/fsl_asrc.h
+@@ -493,7 +493,7 @@ struct fsl_asrc_pair {
+  * @channel_avail: non-occupied channel numbers
+  * @clk_map: clock map for input/output clock
+  * @asrc_rate: default sample rate for ASoC Back-Ends
+- * @asrc_width: default sample width for ASoC Back-Ends
++ * @asrc_format: default sample format for ASoC Back-Ends
+  * @regcache_cfg: store register value of REG_ASRCFG
+  */
+ struct fsl_asrc {
+@@ -514,7 +514,7 @@ struct fsl_asrc {
+ 	unsigned char *clk_map[2];
+ 
+ 	int asrc_rate;
+-	int asrc_width;
++	snd_pcm_format_t asrc_format;
+ 
+ 	u32 regcache_cfg;
+ };
+diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+index 5fe83aece25b..b15946e03380 100644
+--- a/sound/soc/fsl/fsl_asrc_dma.c
++++ b/sound/soc/fsl/fsl_asrc_dma.c
+@@ -146,7 +146,7 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+ 	struct device *dev_be;
+ 	u8 dir = tx ? OUT : IN;
+ 	dma_cap_mask_t mask;
+-	int ret;
++	int ret, bits;
+ 
+ 	/* Fetch the Back-End dma_data from DPCM */
+ 	for_each_dpcm_be(rtd, stream, dpcm) {
+@@ -230,10 +230,19 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (asrc->asrc_width == 16)
++	bits = snd_pcm_format_physical_width(asrc->asrc_format);
++	if (bits < 8 || bits > 64)
++		return -EINVAL;
++	else if (bits == 8)
++		buswidth = DMA_SLAVE_BUSWIDTH_1_BYTE;
++	else if (bits == 16)
+ 		buswidth = DMA_SLAVE_BUSWIDTH_2_BYTES;
+-	else
++	else if (bits == 24)
++		buswidth = DMA_SLAVE_BUSWIDTH_3_BYTES;
++	else if (bits <= 32)
+ 		buswidth = DMA_SLAVE_BUSWIDTH_4_BYTES;
++	else
++		buswidth = DMA_SLAVE_BUSWIDTH_8_BYTES;
+ 
+ 	config_be.direction = DMA_DEV_TO_DEV;
+ 	config_be.src_addr_width = buswidth;
 -- 
 2.21.0
 
