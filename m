@@ -2,127 +2,82 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9E8C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 20:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F3CC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 21:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712A420784
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 20:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BDC20719
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 21:29:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fPxTEVFS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m/yww7rD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732737AbgDAUlU (ORCPT
+        id S1732637AbgDAV3E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 16:41:20 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54068 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732780AbgDAUlT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 16:41:19 -0400
-Received: by mail-pj1-f65.google.com with SMTP id l36so589257pjb.3
-        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 13:41:17 -0700 (PDT)
+        Wed, 1 Apr 2020 17:29:04 -0400
+Received: from mail-pj1-f42.google.com ([209.85.216.42]:54288 "EHLO
+        mail-pj1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732357AbgDAV3E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 17:29:04 -0400
+Received: by mail-pj1-f42.google.com with SMTP id np9so634798pjb.4
+        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 14:29:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zFP2MmEh+fFQszCsXSQY0ldP1U7Kx8dHPHKr9P/7iew=;
-        b=fPxTEVFSZHusXbeYgo0DRZTeCJp4bRLu6bZ/SGBluaqbz9og1z6nGehIiTjPxXSWC7
-         7XXKEc83C13IFBptDr+ZqsLS6/yvTM0tHmg7LbQnog3GlMw5pn0R/aBIgaifX2RxWAvh
-         NpqU2CLiUNC4FY2/d7FD3cmAXDu3Ck2nG0fcRyWy2LbJ5afHFwmd06gN6U581bUrthVk
-         nEFVgQms+XDfcztVX8JUlOAKbHf0EvNckanMnwF17//lXE391eKTb5W52IKB1JlXevhU
-         Ost7smm2vqyI9EryPdUv7MN5Kio8SpShtqi6RS1OkZ3129TVhVhdXtb4K13VAp8+50k4
-         p45A==
+         :content-disposition:in-reply-to:user-agent;
+        bh=cTFpqA5tG+WWT9sTreQ1YOunwJV7A8zTcn5uhSzjIZ8=;
+        b=m/yww7rDfQ3kktZhAjrnmc6g3M4Vsz4wORWt61gOe6FYkfHbNCzUioxpSDF3MPmBdV
+         Wz+TOWpWbgLz2bg1u9mPRpg/hmCCA6zHm4OXJnKbK+jRgPKHnQZcf9KXcaH2m7MmbV/r
+         RdUAXoiZP27scBBR04rsv7Id1hAiTQjJ2EeYg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zFP2MmEh+fFQszCsXSQY0ldP1U7Kx8dHPHKr9P/7iew=;
-        b=GgkU8yP1oS4mS8ooPcPjhCJpQIGZn2nbo7ZXmeiZe4c3VsVZI8PaLY1cI0OCgXiaKe
-         77AaroOWsMNB+7c3Bh3/Pxc5W1desfX4gz8Yd1YvKEeOJHM8JGYyWp3Kv2KtgWAbAQqG
-         la4naYny68XtM7HCFfzt3NCn/jWkHDFIY/vF5mMWWIaZXtIixit3nZwNab9goU78srHJ
-         YhEtf14J6tffw321dVuECxj5l8r0EO02ROWGh1bIba9NxmNuMm5g8ssdtIKeUiwl6wjb
-         bdwszcDFzpA0rir9SP1r2sABfbur8DqAq97XkBgolIu/oT/FZvN5TIPqVS7iF6VCw+Q5
-         H5Bg==
-X-Gm-Message-State: ANhLgQ1DRYl0iQyLiPgfjEyJ8jtQpAfNUPmoSKdWvwRhY1FhWFMRTzWB
-        mztswBlsa+LLwN9c2DyzKBdkAw==
-X-Google-Smtp-Source: ADFU+vtg2CznCLVwLCjsJxBM1gHwJDG488+MlRww+/0POpTMqwyeJXyuNMv9f4yNYHBNsJiDCllfBA==
-X-Received: by 2002:a17:902:76ca:: with SMTP id j10mr23691174plt.184.1585773676926;
-        Wed, 01 Apr 2020 13:41:16 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id nl7sm2408552pjb.36.2020.04.01.13.41.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Apr 2020 13:41:16 -0700 (PDT)
-Date:   Wed, 1 Apr 2020 13:41:13 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/12] devicetree: bindings: pci: add phy-tx0-term-offset
- to qcom,pcie
-Message-ID: <20200401204113.GH254911@minitux>
-References: <20200320183455.21311-1-ansuelsmth@gmail.com>
- <20200320183455.21311-8-ansuelsmth@gmail.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cTFpqA5tG+WWT9sTreQ1YOunwJV7A8zTcn5uhSzjIZ8=;
+        b=ogHzW9IQGUgEOV7LQ/lEPgstrZmhzVpcKXAF1evZEhHDgow9PFVuYxF0Srcc/8/cIk
+         Pk6ZrATmGyle8/5JgJJiRSN7wf4xBFVX27+qJI7Z0O0prXTtrf2ozy532dJLf0JDG8VV
+         NgnljBg954fZP2e+wRaVz5Ox27EovOX8edP998763Y4vigYCMIIyK/yuI9uEeX31gvQX
+         2k1lwkWNh/JN0khn/j58fb2xTvyWnY6p5SBiwutNrwyip+A23F91kLkjrapq1gyjk14I
+         7UC1gVPPgvyNres/+IbN7d89GHL2LEEOK/2MvL4he9W63jQ3dQXX8Xpp7kPm16ASn8H8
+         6JmQ==
+X-Gm-Message-State: AGi0PuZ0HrB8V8CL7UXUYb9t3e5Zvp4fj4Ix4zpgL94GFQQkGxp7VIgO
+        kKbXhIa8Br8hCOJwuIC2lfduJXj30Us=
+X-Google-Smtp-Source: APiQypLQF/i0d5RT+vCgKNX8CwUXkL5ru4KsrEREbSGlX8uxuXDitKjdh2D609gtDGT9DRBZaS55xw==
+X-Received: by 2002:a17:90b:4910:: with SMTP id kr16mr5297pjb.142.1585776543567;
+        Wed, 01 Apr 2020 14:29:03 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id d3sm2337317pjz.2.2020.04.01.14.29.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Apr 2020 14:29:03 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 14:29:01 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Krishna Manikandan <mkrishn@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v1 3/3] arm64: dts: sc7180: define interconnects for sc7180
+ target
+Message-ID: <20200401212901.GN199755@google.com>
+References: <1585732665-29492-1-git-send-email-mkrishn@codeaurora.org>
+ <1585732665-29492-2-git-send-email-mkrishn@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200320183455.21311-8-ansuelsmth@gmail.com>
+In-Reply-To: <1585732665-29492-2-git-send-email-mkrishn@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 20 Mar 11:34 PDT 2020, Ansuel Smith wrote:
+On Wed, Apr 01, 2020 at 02:47:45PM +0530, Krishna Manikandan wrote:
 
-> Document phy-tx0-term-offset propriety to qcom pcie driver
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> index 6efcef040741..8c1d014f37b0 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> @@ -254,6 +254,12 @@
->  			- "perst-gpios"	PCIe endpoint reset signal line
->  			- "wake-gpios"	PCIe endpoint wake signal line
->  
-> +- phy-tx0-term-offset:
+> Subject: arm64: dts: sc7180: define interconnects for sc7180 target
 
-If I understand your implementation correctly this difference in
-hardware revision should be encoded in the compatible string.
-
-Regards,
-Bjorn
-
-> +	Usage: optional
-> +	Value type: <u32>
-> +	Definition: If not defined is 0. In ipq806x is set to 7. In newer
-> +				revision (v2.0) the offset is zero.
-> +
->  * Example for ipq/apq8064
->  	pcie@1b500000 {
->  		compatible = "qcom,pcie-apq8064", "qcom,pcie-ipq8064", "snps,dw-pcie";
-> @@ -293,6 +299,7 @@
->  		reset-names = "axi", "ahb", "por", "pci", "phy", "ext";
->  		pinctrl-0 = <&pcie_pins_default>;
->  		pinctrl-names = "default";
-> +		phy-tx0-term-offset = <7>;
->  	};
->  
->  * Example for apq8084
-> -- 
-> 2.25.1
-> 
+Please be more specific about which interconnect entries are added.
+Also no need to repeat 'sc7180', it is already clear from the prefix.
