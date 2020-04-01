@@ -2,75 +2,93 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB33C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 13:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902C2C2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 13:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F592078C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 13:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6773F20776
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 13:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DZy3HHYZ"
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="Qhd9G2/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732575AbgDANGv (ORCPT
+        id S1732296AbgDANKu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:06:51 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:42938 "EHLO vps0.lunn.ch"
+        Wed, 1 Apr 2020 09:10:50 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:33824 "EHLO extserv.mm-sol.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732252AbgDANGu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 09:06:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=HcjlV2smdDYCCZAC2jlXo1gRdBbS5p7g45iucSysgk4=; b=DZy3HHYZq1xFx/KImjVqmgThHr
-        ObMDtbCS5JMuQXgr/e0XQGbiLnxKS/1LmlgFzGT9ptc7cI799OCijiQajMci6lInB5OutZFa1/EeI
-        gsfPfP2AMlrbW87d8AH7wYMPjYvwSY+sWahYVLFCDxjPHRrPQibZMhcr9sS6pJeKWWCc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jJd4v-000QDr-SS; Wed, 01 Apr 2020 15:06:45 +0200
-Date:   Wed, 1 Apr 2020 15:06:45 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Codrin.Ciubotariu@microchip.com
-Cc:     f.fainelli@gmail.com, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net
-Subject: Re: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
-Message-ID: <20200401130645.GB71179@lunn.ch>
-References: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
- <20200330163028.GE23477@lunn.ch>
- <9bbbe2ed-985b-49e7-cc16-8b6bae3e8e8e@gmail.com>
- <bd9f2507-958e-50bf-2b84-c21adf6ab588@microchip.com>
- <20200331125908.GB24486@lunn.ch>
- <12cdbe77-b932-9194-5d5e-5058622cef6c@microchip.com>
+        id S1732252AbgDANKu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Apr 2020 09:10:50 -0400
+X-Greylist: delayed 560 seconds by postgrey-1.27 at vger.kernel.org; Wed, 01 Apr 2020 09:10:49 EDT
+Received: from [192.168.1.3] (212-5-158-187.ip.btc-net.bg [212.5.158.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 46D27CFAB;
+        Wed,  1 Apr 2020 16:01:28 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1585746088; bh=zOxr38VY0D/4MvUtAz2wio+gKJ7DGco1NKhyuLfJmn8=;
+        h=Subject:To:Cc:From:Date:From;
+        b=Qhd9G2/BG12qd1SDazQPmx/WmHsy9p48aY/i3sjh8ZIHSkbpC5XWyUwla8MDCe2S1
+         qG+nuRYhknQUP+HGtMu5LAq/sOu5YKLtaRHxABuWzyPzaWTXD4XwEzEj7dKVLEBbCf
+         xBri1yb9Ai+wCyVXP/CaF+u+bMbgGknITT3QxXq1Y1fcY7R4Jw9sIOtPuo2FwqIpcA
+         DL6lcJxub/XtnH5n1dwBz5jlzahrpsyjNR3QyIdEvnrLLB+2KzcllP5PXqtCl1AlpH
+         XOHRsXt+++1YW1mSVy49pxGSO3qzriGhIJFg27paMHABECqRWJyr1DqaszAXbE++Zf
+         53q9cL4CvjVSQ==
+Subject: Re: [PATCH 01/12] pcie: qcom: add missing ipq806x clocks in pcie
+ driver
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200320183455.21311-1-ansuelsmth@gmail.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <416ed5fa-4e22-68cc-1c80-be720e72ad55@mm-sol.com>
+Date:   Wed, 1 Apr 2020 16:01:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12cdbe77-b932-9194-5d5e-5058622cef6c@microchip.com>
+In-Reply-To: <20200320183455.21311-1-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Hi Andrew
-> 
-> > 
-> > There are some still using this deprecated feature. But macb is the
-> > only one doing this odd looping over child nodes. It is this looping
-> > which is breaking things, not the use of the deprecated feature
-> > itself.
-> 
-> Yes, its due to the fact that the MDIO node is missing. Should we have 
-> in mind to add an MDIO node under the macb node, where we could add the 
-> PHY nodes?
+Hi Ansuel,
 
-Yes, you can make the driver complient any time you want. But as you
-said, you need to keep with backwards compatibility. But net-next is
-closed now, for the merge window. So you probably want to wait two
-weeks before posting code.
+As Bjorn already mentioned please make cover-letter in next version of
+the patchset so that we know what is the purpose of the patches.
 
-      Andrew
+I've the impression that you want to use pcie-qcom platform driver as an
+endpoint, am I wrong?
+
+I'll review the patches these days.
+
+On 3/20/20 8:34 PM, Ansuel Smith wrote:
+> Aux and Ref clk are missing in pcie qcom driver.
+> Add support in the driver to fix pcie inizialization
+> in ipq806x
+> 
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
+>  1 file changed, 33 insertions(+), 5 deletions(-)
+
+
+-- 
+regards,
+Stan
