@@ -2,167 +2,88 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7DBC2D0F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681A7C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588962080C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC872077D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:00:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QjJ6X4ic"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sjmeoWUL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbgDAI7D (ORCPT
+        id S1730420AbgDAJA4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:59:03 -0400
-Received: from mail-eopbgr60088.outbound.protection.outlook.com ([40.107.6.88]:25664
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727322AbgDAI7C (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:59:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AwxntRDI7TxZM+zpsLTtSepxEf2ahUXXNizTr2V8Nd+vKnU0HRtgGjlDCS8Xntz43a/VKRYb4Qd889zR3v0LysTCQr+yYseIcW/K6ze6xe1y57gloKfg/TdWpJNXEFVvgsXsjIFNDvdowC65iCGOcnVO11VUp2+PXSNHxUFUVxPI4M109ZUh+BkpBWOKi5gsBcwXrfNhK+ZyW4tEDTc3XyjeoN3PMz8gNFuEiHkxKU0D1o3C3LwRzQBkHTw0J9tG+dP02o+4mrb470MUPpKqVRRlnHTlMtcQac+eqG+B+56chxKw03y/K8DJZJ44O11tpD7sRfuCCUl2yKLaNuf5mA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4dCXclmoe09oER1oJZd9I98HtlHBLiKLFEkdikmAuAY=;
- b=j3uBsamZDODSovvhELaCNYw+XFEINiBMMFiCvx9xEhcyfkyNBQWz3I+57MfTN6k6I0tcNrmddyOvNZpgK06I4V5jNWwsNb6VFuUqE7FqXUeUOlRnlEAVAR84ekL2N6GWIn4MzFMHcoPUIq2uTc6+R33V7f7aZyM9YXCHrzgtyhYLVpS38SSSGaW5f+R0DEI6kLQhqUE8ZBKtmqQyCfVT/F9yzaSgRgKzXyGxWLQBDs+GA1gwOHQia/GiDBdiUmzY1Eww+1XNWodjNBKCZbQTziTSbKm2H0JtDjStKowFz5Z7ZBQCFFn/JvFG44k9BDIh0qYmXyakrvIlAy5W/NWRZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4dCXclmoe09oER1oJZd9I98HtlHBLiKLFEkdikmAuAY=;
- b=QjJ6X4icK3kWqTAe992Ein8yi2zz+nKyXEwTl8kW7DIBeQaFyYm6HKuEXzJiIUXelFNWvX5ap7zSXm8E221gDMQDoHh7aKcn+vQ2rJtgMzwOl+U+Kz2JBfvNhT9GKVPdpolr98Relu17ppw6xAJXZJKA/W/myq4fhgRL4wAyebM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3759.eurprd04.prod.outlook.com (52.134.15.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.19; Wed, 1 Apr 2020 08:58:54 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 08:58:54 +0000
-Subject: Re: [PATCH v2 6/6] Input: snvs_pwrkey - only IRQ_HANDLED for our own
- events
-To:     Adam Ford <aford173@gmail.com>
-Cc:     =?UTF-8?Q?Andr=c3=a9_Draszik?= <git@andred.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Anson Huang <anson.huang@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-References: <20200225161201.1975-1-git@andred.net>
- <20200225161201.1975-6-git@andred.net>
- <VI1PR0402MB3485A743C94442533B6840F298E70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <CAHCN7x+NJLaKF9SfHw9sDpw6zDUGs_TuD_co7USjQ5hgFDeaHg@mail.gmail.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <fd36d0ae-f3fa-6608-9179-3e7562068433@nxp.com>
-Date:   Wed, 1 Apr 2020 11:58:49 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-In-Reply-To: <CAHCN7x+NJLaKF9SfHw9sDpw6zDUGs_TuD_co7USjQ5hgFDeaHg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR05CA0074.eurprd05.prod.outlook.com
- (2603:10a6:208:136::14) To VI1PR0402MB3485.eurprd04.prod.outlook.com
- (2603:10a6:803:7::25)
+        Wed, 1 Apr 2020 05:00:56 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35037 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727627AbgDAJA4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 05:00:56 -0400
+Received: by mail-pj1-f67.google.com with SMTP id g9so2421056pjp.0;
+        Wed, 01 Apr 2020 02:00:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=G5w9RBvrR3WV0wIE+sZQB1JGP6d9WKUVbo/9PkL3ClU=;
+        b=sjmeoWULrkH1tiyyfW9jHoKfBl3e7nyRSF1aUIblVFaUN/mu296kgU21YgdIGWfn+h
+         zdURn18aS4+snbifdkA1s8BDLF2XTBAIZiLLvnZzpJ7Z/R/5ZPGja9hFa9g/lFBdu6u1
+         h+D5feCaKVjJtUQWO+hmHyqgbmlwfb9+PWujHtTL1phLMdPyxe8xvOpLGayNk8KKHKBt
+         zynsSQExMsahWUIXTBddC8Zele2NgjqgiirumN9kWYEoaDFCrwjOSdab1kDdwjlN3qop
+         vnG8sC7/w9Lu5S3owEeowz43YC4rYgr6lpvyvSUakiOEb0XDaDVBwV/EFKJbOTucUzRu
+         Wo9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G5w9RBvrR3WV0wIE+sZQB1JGP6d9WKUVbo/9PkL3ClU=;
+        b=T2pMXv8+wYPZSWwmHEBRfK/fAX1ArJ1R5qAdPOn0k1qcgKlvOldTxPda41BuptM7Bk
+         o30m9l2u12GSaed3lvWk7iFsnklBiiRbAFovJnv6ZKKK0X+X/V09oamh+/lI/chTvOpg
+         ee7j6V2ZbFph/F+d06cq4vGBPnKJnbPTEdD7DNWdmnBO0c6f8YDAlZKy7VRhby+8rmH2
+         vT2ket/XST8Gpi2k+r092yBJqwGAMYBt9FrEDFVa2acnJLbhe8xlHWvhde6Ej1g3uYdS
+         tUBzYkwlonhoWqsH/vH0hyoloaRd7ppq+FZgUy/ccFECU87a050whfoJN/rEEfAZxxcq
+         brUQ==
+X-Gm-Message-State: AGi0PubT4b/ymNpSypGU6/aeXQJ8TAhXI8FcO6ogFZ8OJPECALie6QQC
+        ENwa/IkyZiQ1ZTfZ35MgShM=
+X-Google-Smtp-Source: APiQypIG0HKQpeV9kSQbddQPBmsyGFCl3XNlZOs5/znCA1arlAiyTU9vFRvbsaVa5Utw0gmcOea2XA==
+X-Received: by 2002:a17:90a:e64e:: with SMTP id ep14mr3684476pjb.149.1585731654177;
+        Wed, 01 Apr 2020 02:00:54 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id g11sm1064804pjs.17.2020.04.01.02.00.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 01 Apr 2020 02:00:54 -0700 (PDT)
+Date:   Wed, 1 Apr 2020 02:00:50 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/7] ASoC: fsl_asrc: rename asrc_priv to asrc
+Message-ID: <20200401090050.GA7202@Asurada-Nvidia.nvidia.com>
+References: <cover.1585726761.git.shengjiu.wang@nxp.com>
+ <4a808f376c297f91da0caff9d0f73efb6f152e72.1585726761.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM0PR05CA0074.eurprd05.prod.outlook.com (2603:10a6:208:136::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Wed, 1 Apr 2020 08:58:51 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 27305df6-7ca2-470a-24c1-08d7d61ae760
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB3759:|VI1PR0402MB3759:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB37592A16063B44B016E8B46598C90@VI1PR0402MB3759.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:635;
-X-Forefront-PRVS: 03607C04F0
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(366004)(136003)(4326008)(186003)(16526019)(8936002)(81156014)(6486002)(26005)(31696002)(86362001)(53546011)(478600001)(6916009)(66946007)(66476007)(66556008)(31686004)(16576012)(7416002)(81166006)(2906002)(36756003)(316002)(52116002)(5660300002)(2616005)(54906003)(8676002)(956004);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JO6pIwXd0qdU6IzMGQtsgDwesKM3UxUCOLdQe0xqgbRIdr+sEEs6w5y1hVgVqJecOq9sGsQSK5BWyPaSMLu1tTWHdGsGcVtDJnKg8CTBloPmAI/ujln1edKRWFHfyjX857H+1EvPHqMazBuM5dfviu4KYMGmefLR8xcl3LUl9qxDc4eeyJ8Hzgazhz7ap+IljkyfNPU1wrsyQv+JCzhKfiA78KEvkMpnACgadIZln2yqG1dM68cS4BarUA9kgWCGy1rp4fvGPB3TwUtEArmCdRiZGfW/b/lqj8pK+Eorrc281O+Txi2jU20uYPtvu7T30/3gSnBvznP28lKpzfhTyiXrSgMN+gm0bCS3fN3flgFrGKTwR/+nPWCbbEpER4nrEoXd4VT2WGdCKzitaWOJtmf4jTWTANKYZJ2Qsg9Jn2dQICITmhA+rZCMysv1q5l4
-X-MS-Exchange-AntiSpam-MessageData: fLfHbKW1xRbXVWKiTgFwa051hZJdfQ/fS0B8G+MqeGYa8W4MzN19imQnmb2g0rjCcnnEAydQmixvPQ5HwuaHZYlEnSjThnJE660FbYoBca5VzN1BVVZGWToy9pXb71tut5ZsHpN05MQ5g++rtZ10eg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27305df6-7ca2-470a-24c1-08d7d61ae760
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2020 08:58:54.0053
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ROF+O8SaSxI/sFxwpD/QQWEHUmCECmlzsMKk5O+AXdhIVFlDbULwLLKIRB/ku5tuE+r7NJtkxu/BdKOSIPhLnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3759
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4a808f376c297f91da0caff9d0f73efb6f152e72.1585726761.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 3/28/2020 5:43 AM, Adam Ford wrote:
-> On Mon, Mar 2, 2020 at 3:22 AM Horia Geanta <horia.geanta@nxp.com> wrote:
->>
->> On 2/25/2020 6:12 PM, André Draszik wrote:
->>> The snvs_pwrkey shares the SNVS LPSR status register with the snvs_rtc.
->>>
->>> This driver here should only return IRQ_HANDLED if the status register
->>> indicates that the event we're handling in the irq handler was genuinely
->>> intended for this driver. Otheriwse the interrupt subsystem will
->>> assume the interrupt was handled successfully even though it wasn't
->>> at all.
->>>
->>> Signed-off-by: André Draszik <git@andred.net>
->>> Cc: "Horia Geantă" <horia.geanta@nxp.com>
->>> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
->>> Cc: Herbert Xu <herbert@gondor.apana.org.au>
->>> Cc: "David S. Miller" <davem@davemloft.net>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Shawn Guo <shawnguo@kernel.org>
->>> Cc: Sascha Hauer <s.hauer@pengutronix.de>
->>> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
->>> Cc: Fabio Estevam <festevam@gmail.com>
->>> Cc: NXP Linux Team <linux-imx@nxp.com>
->>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>> Cc: Anson Huang <Anson.Huang@nxp.com>
->>> Cc: Robin Gong <yibin.gong@nxp.com>
->>> Cc: linux-crypto@vger.kernel.org
->>> Cc: devicetree@vger.kernel.org
->>> Cc: linux-arm-kernel@lists.infradead.org
->>> Cc: linux-input@vger.kernel.org
->> For patches 2-6:
->> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
->>
->> Also imx8mn.dtsi and imx8mp.dtsi will have to be updated.
+On Wed, Apr 01, 2020 at 04:45:34PM +0800, Shengjiu Wang wrote:
+> In order to move common structure to fsl_asrc_common.h
+> we change the name of asrc_priv to asrc, the asrc_priv
+> will be used by new struct fsl_asrc_priv.
 > 
-> Is there an update coming for the 8mn family?  I am seeing it not wake
-> from the power key, and I was hoping to resolve that before i make a
-> push to submit a new 8MN board for review.
-> 
-Starting with linux-next next-20200320, there's commit
-arm64: dts: imx8mn: Add snvs clock to powerkey
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Could you confirm you've tested with a tree including it?
-
-Thanks,
-Horia
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
