@@ -2,119 +2,133 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7861AC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB416C2D0F2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C2D2073B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9098D2073B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:39:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xtrcxr1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgDAIey (ORCPT
+        id S1727322AbgDAIjo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:34:54 -0400
-Received: from mga05.intel.com ([192.55.52.43]:15300 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbgDAIex (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:34:53 -0400
-IronPort-SDR: dpwCN4ZnyE65b98ycXD9yIyuRuQUBS3+frPa4m30GDpWGJUwwUs+FUw6FtWPNow7ihhoCQX3Tp
- f/WuJnvSTBew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 01:34:52 -0700
-IronPort-SDR: RwT7UXzeOcUGqE6tXf86sqPLLmf4F50xYbBKutEuAFVkKcvphl88oRCC8HKIYBSLdBOPEsfiXI
- 7wGE+x1ViW3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,331,1580803200"; 
-   d="scan'208";a="395879471"
-Received: from vikasjox-mobl.amr.corp.intel.com (HELO localhost) ([10.249.39.53])
-  by orsmga004.jf.intel.com with ESMTP; 01 Apr 2020 01:34:40 -0700
-Date:   Wed, 1 Apr 2020 11:34:38 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Benoit HOUYERE <benoit.houyere@st.com>
-Cc:     "amirmizi6@gmail.com" <amirmizi6@gmail.com>,
-        "Eyal.Cohen@nuvoton.com" <Eyal.Cohen@nuvoton.com>,
-        "oshrialkoby85@gmail.com" <oshrialkoby85@gmail.com>,
-        "alexander.steffen@infineon.com" <alexander.steffen@infineon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "oshri.alkoby@nuvoton.com" <oshri.alkoby@nuvoton.com>,
-        "tmaimon77@gmail.com" <tmaimon77@gmail.com>,
-        "gcwilson@us.ibm.com" <gcwilson@us.ibm.com>,
-        "kgoldman@us.ibm.com" <kgoldman@us.ibm.com>,
-        "Dan.Morav@nuvoton.com" <Dan.Morav@nuvoton.com>,
-        "oren.tanami@nuvoton.com" <oren.tanami@nuvoton.com>,
-        "shmulik.hager@nuvoton.com" <shmulik.hager@nuvoton.com>,
-        "amir.mizinski@nuvoton.com" <amir.mizinski@nuvoton.com>,
-        Olivier COLLART <olivier.collart@st.com>,
-        Yves MAGNAUD <yves.magnaud@st.com>
-Subject: Re: [PATCH v4 4/7] tpm: tpm_tis: Fix expected bit handling and send
- all bytes in one shot without last byte in exception
-Message-ID: <20200401083438.GC17325@linux.intel.com>
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
- <20200331113207.107080-5-amirmizi6@gmail.com>
- <20200331121720.GB9284@linux.intel.com>
- <19c8ae3023404ae9affcb1ce04b7ee4b@SFHDAG3NODE3.st.com>
+        Wed, 1 Apr 2020 04:39:44 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30290 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726368AbgDAIjn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 04:39:43 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0318buli010433;
+        Wed, 1 Apr 2020 10:39:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=lzzw7FXM0MO9eFzpIxeWfpnrQEPQjgWmRDZU797bXb8=;
+ b=xtrcxr1EAvv7HnNqNv9zC+wI60OE8e8OmAvMRjfnYxqkn8Xaphz9JIFc/mU1K1LkZmMh
+ 5ihsorr2LVId7ONlbCmT05Jy7DYRYYNWXmleCIqweN+XizU/EOr24WuxhBW6/36YBUay
+ aN0hchzyNFAW92C7SjqCJR2a4Ke+gZUilqdwUIzYyUehmlkuJbOs7kBwJQqEM1tOT56x
+ TrRaYgUEgRnc5aNGW3bXnqHK5JvJuaSvvfHFSU9/owDtNddT6nCzKhjV2It591+wbno5
+ 3ajHWBVZba9hszEmi6E6PIj6xN8s0Mf14b35GwxkfQMX7f0Q2lUuVT5NmULsYEiY3mdK Vg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 301w813w5g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 10:39:22 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A386510002A;
+        Wed,  1 Apr 2020 10:39:21 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8BADA21CA86;
+        Wed,  1 Apr 2020 10:39:21 +0200 (CEST)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Apr 2020 10:39:21
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <fabrice.gasnier@st.com>, <lee.jones@linaro.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v6 0/6] clockevent: add low power STM32 timer
+Date:   Wed, 1 Apr 2020 10:39:03 +0200
+Message-ID: <20200401083909.18886-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19c8ae3023404ae9affcb1ce04b7ee4b@SFHDAG3NODE3.st.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 09:34:28PM +0000, Benoit HOUYERE wrote:
-> 
-> > On Tue, Mar 31, 2020 at 02:32:04PM +0300, amirmizi6@gmail.com wrote:
-> > > From: Amir Mizinski <amirmizi6@gmail.com>
-> > > 
-> > > Today, actual implementation for send massage is not correct. We check 
-> > > and loop only on TPM_STS.stsValid bit and next we single check 
-> > > TPM_STS.expect bit value.
-> > > TPM_STS.expected bit shall be checked in the same time of 
-> > > TPM_STS.stsValid, and should be repeated until timeout_A.
-> > > To aquire that, "wait_for_tpm_stat" function is modified to 
-> > > "wait_for_tpm_stat_result". this function read regulary status 
-> > > register and check bit defined by "mask" to reach value defined in "mask_result"
-> > > (that way a bit in mask can be checked if reached 1 or 0).
-> > > 
-> > > Respectively, to send message as defined in 
-> > >  TCG_DesignPrinciples_TPM2p0Driver_vp24_pubrev.pdf, all bytes should be 
-> > > sent in one shot instead of sending last byte in exception.
-> > > 
-> > > This improvment was suggested by Benoit Houyere.
-> 
-> >Use suggested-by tag.
-> 
-> >Also if something is not correct, please provide a fixes tag.
-> 
-> > You are speaking now in theoretical level, which we don't really care that much. Is this causing you real issues? If the answer is yes, please report them. If the > >answer is no, we don't need this.
-> 
-> > /Jarkko
-> 
-> I2C TPM specification introduce CRC calculation on TPM command bytes.
-> CRC calculation take place from last byte acquired to
-> TPM_STS.expected bit reset (=0) .It introduces latency and actual
-> incorrect implementation becomes visible now under I2C on the contrary
-> before that's all.  The case where TPM keeps TPM_STS.expected bit set
-> with TPM_STS.stsValid set after last byte reception is possible and is
-> not an issue. It's not theoretical level, it's practical level now.
+This series add low power timer as boadcast clockevent device.
+Low power timer could runs even when CPUs are in idle mode and 
+could wakeup them.
 
-Thank you, think I got it. This means that it does not need a fixes tag
-because it does not break any hardware that it currently supported.
+version 6:
+- simplify binding, DT and code to use only one interrupt
 
-I'd suggest refining the commit message. Not only it is somewhat loosely
-writte peace of text but also has typos like "massage".
+version 5:
+- document interrupts and interrupt-names bindings
+- use a different wake up interrupt
+- add device-tree patch
+- make STM32MP157 select low power timer configuration flag
+- enable fast_io in regmap configuration
 
-/Jarkko
+version 4:
+- move defines in mfd/stm32-lptimer.h
+- change compatible and subnode names
+- document wakeup-source property
+- reword commit message
+- make driver Kconfig depends of MFD_STM32_LPTIMER
+- remove useless include
+- remove rate and clk fields from the private structure
+- to add comments about the registers sequence in stm32_clkevent_lp_set_timer
+- rework probe function and use devm_request_irq()
+- do not allow module to be removed
+
+version 3:
+- fix timer set sequence
+- don't forget to free irq on remove function
+- use devm_kzalloc to simplify errors handling in probe function
+
+version 2:
+- stm32 clkevent driver is now a child of the stm32 lp timer node
+- add a probe function and adpat the driver to use regmap provide
+  by it parent
+- stop using timer_of helpers
+
+
+
+Benjamin Gaignard (6):
+  dt-bindings: mfd: Document STM32 low power timer bindings
+  ARM: dts: stm32: Add timer subnodes on stm32mp15 SoCs
+  mfd: stm32: Add defines to be used for clkevent purpose
+  mfd: stm32: enable regmap fast_io for stm32-lptimer
+  clocksource: Add Low Power STM32 timers driver
+  ARM: mach-stm32: select low power timer for STM32MP157
+
+ .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  |  21 ++
+ arch/arm/boot/dts/stm32mp151.dtsi                  |  35 ++++
+ arch/arm/mach-stm32/Kconfig                        |   1 +
+ drivers/clocksource/Kconfig                        |   4 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/timer-stm32-lp.c               | 221 +++++++++++++++++++++
+ drivers/mfd/stm32-lptimer.c                        |   1 +
+ include/linux/mfd/stm32-lptimer.h                  |   5 +
+ 8 files changed, 289 insertions(+)
+ create mode 100644 drivers/clocksource/timer-stm32-lp.c
+
+-- 
+2.15.0
+
