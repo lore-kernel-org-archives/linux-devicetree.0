@@ -2,164 +2,130 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92E4C2D0F3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38E2C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796E62078B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF83206F6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QfCEyKF4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LhfPBI25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732760AbgDAOBa (ORCPT
+        id S1732894AbgDAOGN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:01:30 -0400
-Received: from mail-vi1eur05on2082.outbound.protection.outlook.com ([40.107.21.82]:6061
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732587AbgDAOBa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 10:01:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hVu2fNCilSh4BnBUWLZ0HnzTS08HI3iYWbckE5GXqQdFEmOEfBXowg/m9qGVEi7eXaEmfTcgEblPmuSnD8mn25MQzxFk4aJ20LjLgpCtoyPkJMMbaydcSuoZyi/xvgFFzwZaRhXTYbvQLhfnfpHpd9Sv1dnCyZ29hBrENXuRKE/KSUdm2XI+7yhvtfbRPIVITKJFpopjWlpDR5ZkD5L7zVvwI3teg7T+zCPmEwx2ehQr0YoRz8raB5eAzcI7JMPvxSyaLkuQyMJqf9Aecq//znDyEwbCYGF27R91+vZyt9aRn3x4zfi0SD+67LTNtwdYwDYsksTvq6DbaGBZoHkt5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sdQZAnPhxbUU0wz7EbtiR/NiPNnaMZrIONl2QtELy5k=;
- b=SJCqkJBltqrbOk1TdPAwm48c3Qm5zFLWOimmlXkVz6N7yoTF2Gbcm3T2OZzoem9uhykpDBwWGNQOZN9XN0lIarlyjB1eaHNwd22l7THsG/XpBxTda5W6204WjqouNuoQnBv5Hl6jD6bh91lkbqV14cZryWrcmQyJJw9wR4dbB8VZaIHO5idbeRvUIWu9KMtHbzJvExi+LSIKhyc7J2yJH+mtjo3eRChAnMiJQzt3Em5zZZ+rg4guyrJcqopJJKT/t9RKv0qAmDl9UzmcARn0wZUu6vwVXDgqXWrP4btLTU3Hpn/UkKILWpLmI4CwTXCqlSFLkCIIw13z3yucK7CR3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sdQZAnPhxbUU0wz7EbtiR/NiPNnaMZrIONl2QtELy5k=;
- b=QfCEyKF4sgaEPO+GrkSNPiR+qWDHGCaT0fNdMk/OQ4ETDnqkDT5FSzFjz0ZaCZZUHuXvXJjNsXrsMkfSXphG4dNx3wEbuOtSlFs4svgGZxNHmmDP6gEdvONZYUuNEQcISJbPhiZuYMq8t2cyE2UZU5DPvTCLSkRRkO99Op9JHmw=
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (20.178.114.161) by
- AM0PR04MB4274.eurprd04.prod.outlook.com (52.134.124.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Wed, 1 Apr 2020 14:01:25 +0000
-Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::ccc:be36:aaf0:709a]) by AM0PR04MB5443.eurprd04.prod.outlook.com
- ([fe80::ccc:be36:aaf0:709a%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 14:01:25 +0000
-From:   Florinel Iordache <florinel.iordache@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Florinel Iordache <florinel.iordache@nxp.com>
-Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
-Thread-Topic: [PATCH net-next 6/9] net: phy: add backplane kr driver support
-Thread-Index: AdYIKzcJA6qpFTRuS0KZUSXx/e10Jg==
-Date:   Wed, 1 Apr 2020 14:01:25 +0000
-Message-ID: <AM0PR04MB544326757B0B510C7C3C6417FBC90@AM0PR04MB5443.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=florinel.iordache@nxp.com; 
-x-originating-ip: [78.96.99.111]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 93234786-f796-4285-5da6-08d7d6452a92
-x-ms-traffictypediagnostic: AM0PR04MB4274:|AM0PR04MB4274:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB427419D3BB299DEAC16D7C03FBC90@AM0PR04MB4274.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(376002)(346002)(366004)(39860400002)(396003)(6916009)(7416002)(7696005)(66446008)(64756008)(66556008)(6506007)(81166006)(81156014)(316002)(8676002)(2906002)(8936002)(52536014)(26005)(66476007)(54906003)(478600001)(186003)(44832011)(76116006)(33656002)(5660300002)(4326008)(66946007)(71200400001)(55016002)(9686003)(86362001);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tdmbRsfFz5nOqLQapvanb19l6UKaGG24ikn2Lr1GO+Kq6nSGvTASbsYRmclGx9cNG01+k1sHk5SYXSBxN7G2KfAh4qMxAzFXf11wKurgInzQUjNh88n74KMri7bHnSQzyj8VtfmvQ5FHUGOOW2ggxli8EosO72rJlEIvdH9o6d4WgDHMcbN6CoCBPBqPsxy6IAA9iBeyWeqgcHxB3+MLGZcGCtQwN2x9yO2ZDWA5w8bn7dSAnmeK9Hmod5IBJoHUI24ks7zYJX3y4Ix7hb+KJx5wRWIPIetzWzjsqYaLx93B5Jx9gWPMm/yRfjnZOvbBVDzEfvyYZA92naBTvVnORv/2umVcC8PBcTb95hOYxnYpk7Na+afDa8ug1wVsPY/AsMcrtLlQCnPIpYln3PBmQxN/fbLFwr2Z7zzhHyKcP9Hf5Z44OBfmKG5pGpBrgyhd
-x-ms-exchange-antispam-messagedata: ah7nl6lFBPsSUMCP5MXqskvDniSdtJTRkJWRTGRD3FgHAn2qXDeR77BZHcqrbc2vqZGekmp9bEpcWh2Wfvt2ka8T/foDZlL9F2KdFZWCg3pKCRxIVVrsDrF/T3kLgThAlFHqbweAs9/qLXEYoQx5/A==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 1 Apr 2020 10:06:13 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40490 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732879AbgDAOGM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 10:06:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t24so49729pgj.7;
+        Wed, 01 Apr 2020 07:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=G38ErvNfgSPVMkRdhVYHG64wSmL/kIIRmwmS2JA46B4=;
+        b=LhfPBI25ELfnr6VS94g6atdYCjjDErnJm3bXIxWMbxiHZJ4VzG09Wx6ZQODHU8PCtn
+         NUNOVFiZt/e0GBhTMwoBwqUSuVGAoM94kC0dRLl5mS6dvASg6C8ctK/tLy9V3Bien/vW
+         tci3sPEzUw5dZVTExr1jAReaBa2WYr2Ah0FTJeHs64xUhDH0SrcLPb6T7PI9O+Vh5gsj
+         uEFiGb+6rT4geZ0XR7vxTBjg1bnBDrNk4fwGQO7ZK8jKleSvrnDv8GkSq0/H5yaCHuLD
+         ox0SMLR9M1s9ieKhfn/Wb6O3aWZqh1JTZvVd2xc/SqoOq4IrEJxxBL2S/Kv88RjpCVQ/
+         W0ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=G38ErvNfgSPVMkRdhVYHG64wSmL/kIIRmwmS2JA46B4=;
+        b=rhCGcf4mtOPo9CeEaDsOjuTRG9Wy3hccUTnMf6/zQs0NIKRXFo3ArSENXVbMLapEY2
+         RfFWSOemII8lc/ZPteh1rB7kncHzY9NbiAjIGZ7yxdHHR2He/P6yatg+KtDzFj0ddip3
+         1L1cVwkqw24oKvL4aJqkMlq94CNyVRomu0QdxjjxXLPobsY4TbySc4z28x2IuEomdYFw
+         kCqRzNlSmq6ZKmHkiRLNb1rmbs6PzyB9lONDbK9oEd04M5uC6tByltFf3Mnl+FxuG9uj
+         hucNilr5kvtH4TYWjv0rSIF8oHbu+Z5XbFl6uGcH4ioksamB68AesMD3F2yK3ZiPMpa4
+         kA0w==
+X-Gm-Message-State: AGi0PuZrq6fcgMlv+47vUtFPQU3whCibcp1vsCVVmDDWbxFQ4rqTmuze
+        8KGmM+ZQVtIctJw3jpTItXsQ3WJj1cF2mnkpWrg=
+X-Google-Smtp-Source: APiQypI9GaHgoE/j8f8rUoVIvVvDe2roPST88XbP3ov09nRPSezDdfbn5NrizgUJc463yq51zQgRwxFO7XRWYstbNy8=
+X-Received: by 2002:a63:7b1d:: with SMTP id w29mr8992384pgc.4.1585749971287;
+ Wed, 01 Apr 2020 07:06:11 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93234786-f796-4285-5da6-08d7d6452a92
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 14:01:25.0797
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 03LwOiRrOm4aHykiZ2liflosIv1SUv3AAs0HVbwO+R2goXi1nRBeZXy3iQVRPqpWyIeY1P/V35aPe5yNTYA0h7ILuLXRXtVmJWPVuzbFOog=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4274
+References: <20200331114811.7978-1-nuno.sa@analog.com> <20200331114811.7978-6-nuno.sa@analog.com>
+ <CAHp75Vdxtn1gXi=xCJfGOkBYiWB2qsYQLTJyaEGiiFqHvELaHQ@mail.gmail.com>
+ <BN6PR03MB3347862A4C434CCA8C1B1E2599C90@BN6PR03MB3347.namprd03.prod.outlook.com>
+ <CAHp75VfuWMDR4dUmjsYgeMgNMcVDZKdKVCsZ5p6g0m3TLHi5UA@mail.gmail.com> <BN6PR03MB3347E5ECF100EAD1453B577D99C90@BN6PR03MB3347.namprd03.prod.outlook.com>
+In-Reply-To: <BN6PR03MB3347E5ECF100EAD1453B577D99C90@BN6PR03MB3347.namprd03.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Apr 2020 17:06:04 +0300
+Message-ID: <CAHp75Vcp5Rs53i_74MvbudcRrDYCD=Agfjh2cO_GNc7TXaS73g@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> On Thu, Mar 26, 2020 at 03:51:19PM +0200, Florinel Iordache wrote:
-> > Add support for backplane kr generic driver including link training
-> > (ieee802.3ap/ba) and fixed equalization algorithm
+On Wed, Apr 1, 2020 at 4:27 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
+> > On Wed, Apr 1, 2020 at 10:13 AM Sa, Nuno <Nuno.Sa@analog.com> wrote:
+> > > > On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.com> w=
+rote:
+
+...
+
+> > > > > +       for (i =3D ARRAY_SIZE(adis16475_3db_freqs) - 2; i >=3D 1;=
+ i--) {
+> > > >
+> > > > Why those margins? size-2 and 1 ?
+> > > >
+> > >
+> > > The -2 is needed since index 7 is not valid. The 1 I honestly don't r=
+emember
+> > why I did it
+> > > like this. Using > 0 is the same and more "common"...
 > >
-> > Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-> > +/* Read AN Link Status */
-> > +static int is_an_link_up(struct phy_device *bpphy) {
-> > +     struct backplane_phy_info *bp_phy =3D bpphy->priv;
-> > +     int ret, val =3D 0;
-> > +
-> > +     mutex_lock(&bp_phy->bpphy_lock);
-> > +
-> > +     /* Read twice because Link_Status is LL (Latched Low) bit */
-> > +     val =3D phy_read_mmd(bpphy, MDIO_MMD_AN, bp_phy-
-> >bp_dev.mdio.an_status);
-> > +     val =3D phy_read_mmd(bpphy, MDIO_MMD_AN,
-> > + bp_phy->bp_dev.mdio.an_status);
->=20
-> Why not just
->=20
-> val =3D phy_read_mmd(bpphy, MDIO_MMD_AN, MDIO_CTRL1);
->=20
-> Or is your hardware not actually conformant to the standard?
->=20
-> There has also been a lot of discussion of reading the status twice is co=
-rrect or
-> not. Don't you care the link has briefly gone down and up again?
->=20
->         Andrew
+> > More common is >=3D 0. That's my question basically.
+> > And if 7 is not valid why to keep it in the array at all?
+>
+> Well, I can remove the 7. I honestly took it from another driver and I gu=
+ess the idea
+> is to make explicit that 7 is not supported. Since this is a 3 bit field =
+and the datasheet
+> does not state this directly.
+>
+> As for the >=3D0, I prefer to have either as is or >0 since we don't real=
+ly need to check the
+> index 0. If 1 fails, then we will use 0 either way...
 
-This could be changed to use directly the MDIO_STAT1 in order to read
-AN status (and use MDIO_CTRL1 for writing the control register) but this
-is more flexible and more readable since we defined the structure
-kr_mdio_info that contains all registers offsets required by backplane
-driver like: LT(link training) registers, AN registers, PMD registers.
-So we wanted to put all these together to be clear that all these
-offsets are essential for backplane driver and they can be setup
-automatically by calling the function: backplane_setup_mdio_c45.
+It makes sense to check to get better optimization (and increased readabili=
+ty).
+Look for this
 
-+ void backplane_setup_mdio_c45(struct backplane_kr_info *bpkr)
-+ /* KX/KR AN registers: IEEE802.3 Clause 45 (MMD 7) */
-+ bpkr->mdio.an_control =3D MDIO_CTRL1;
-+ bpkr->mdio.an_status =3D MDIO_STAT1;
-+ bpkr->mdio.an_ad_ability_0 =3D MDIO_PMA_EXTABLE_10GBKR;
-+ bpkr->mdio.an_ad_ability_1 =3D MDIO_PMA_EXTABLE_10GBKR + 1;
-+ bpkr->mdio.an_lp_base_page_ability_1 =3D MDIO_PMA_EXTABLE_10GBKR + 4;
+i =3D ARRAY_SIZE(...);
 
-This approach is more flexible because it lets open the possibility for
-extension on other non-standard devices (devices non-compliant with
-clause 45) to still use this driver for backplane operation.
-These non-standard devices will have just to define their particular
-registers offsets in structure kr_mdio_info and then the rest of the driver
-can be used without other modifications.
+while (i--) {
+ ...
+}
 
-Florin.
+It's much better to read and understand.
+
+> > > > > +               if (adis16475_3db_freqs[i] >=3D filter)
+> > > > > +                       break;
+> > > > > +       }
+
+--=20
+With Best Regards,
+Andy Shevchenko
