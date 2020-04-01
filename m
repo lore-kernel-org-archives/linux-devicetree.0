@@ -2,376 +2,235 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA07FC2D0F1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 10:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49740C2D0E7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 10:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8763B2077D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 10:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED77212CC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 10:23:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UtEUt4mb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbgDAKTo (ORCPT
+        id S1728242AbgDAKXA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 06:19:44 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:56124 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727308AbgDAKTo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 06:19:44 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6F0808030776;
-        Wed,  1 Apr 2020 10:19:39 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id j0jbirOyuJqB; Wed,  1 Apr 2020 13:19:38 +0300 (MSK)
-Date:   Wed, 1 Apr 2020 13:19:31 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        <devicetree@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: interrupt-controller: Convert
- mti,gic to DT schema
-Message-ID: <20200401101930.3lk4t6wk6j5ne6ay@ubsrv2.baikal.int>
-References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
- <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200324174325.14213-3-Sergey.Semin@baikalelectronics.ru>
- <20200331210248.GA27684@bogus>
+        Wed, 1 Apr 2020 06:23:00 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36712 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726115AbgDAKXA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 06:23:00 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g2so9447027plo.3;
+        Wed, 01 Apr 2020 03:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sJXYD/KrXkJjDAueyAH7HsEdzJYm9FD8Z2MtDlOCrrk=;
+        b=UtEUt4mbMenaSDfZ+i3oxoB6VUwNtDy/5KRhj8thR4LPppi7VQh6sM8j1nP6wjhGE9
+         2kH1BD0+xnEKaD42Ohd9A4Dmzi2OW7DT8Vk/ApqUG9v4QKYrt7AZ9W1jzrwp3I8PAOWO
+         SGFvKChvZw/1NxSlE3/Qu8AY0smSXBjKMK5Jhy2uPKS3DT5hx60H8uQE4Vgz+1BZprZ1
+         O33Mxelnw9iGXfRITH03Z4QePDAi65XyGeK7bYI2FywCfCJ3CU2yJSDGeJ4DaDwAQCzl
+         8jOdKGkX40x2V4XmYWAgW/llpHjTAhGd0hzf6w05o9mN2RuULaD8rpkqbIzZIicROrFB
+         rkOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sJXYD/KrXkJjDAueyAH7HsEdzJYm9FD8Z2MtDlOCrrk=;
+        b=Xvs4eUM7+q6oyC0riAwwCz2acsQKwzgROdeM2zgqfPQqXhXiCD7rwaRFb7jyaLB5N8
+         NX9BOfAlv4KY071cEmyFfJnGV6SKiEaNnFFa6OKsWNL8F6Qxy5UTpDh76fWfdMNT/V3U
+         yES6OKAjMTR0rPt7zmJ2E8KPRlJEpBKZKXiaBYTaK2Qq3IM2cGKKv4/AkvxSAOn356ow
+         vhJx08MYu4/QrmnkatNODEhTVlZE78D/Sz4902KuL1XNjOn0ayHxBTPnlfBxerquWkWc
+         K40tqzAJW9ZkikVmOVOvdZzROLR5SDy57NSxqIHNj6P4OqkwkhwuDXTwol+Exax3bCLd
+         kU1Q==
+X-Gm-Message-State: AGi0PuYhfklbofwyFss2igT6TdhTUmPvCynCC8X/LV8mDR21dPuaThP3
+        Ncl5diZ37bFrA0J8Oh3j7/VJnS0dcEi3Wjt8ZDk=
+X-Google-Smtp-Source: APiQypJhwdk0KJ+Lsizg8n6B6HQOSOOZMnjnlz8bonWMFGqFcS2kC5KJTEBx4N3caI1tfhW8Q1NYHmWq55WINwHyYSk=
+X-Received: by 2002:a17:90a:3602:: with SMTP id s2mr3889830pjb.143.1585736578573;
+ Wed, 01 Apr 2020 03:22:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200331210248.GA27684@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200331114811.7978-1-nuno.sa@analog.com> <20200331114811.7978-6-nuno.sa@analog.com>
+ <CAHp75Vdxtn1gXi=xCJfGOkBYiWB2qsYQLTJyaEGiiFqHvELaHQ@mail.gmail.com> <BN6PR03MB3347862A4C434CCA8C1B1E2599C90@BN6PR03MB3347.namprd03.prod.outlook.com>
+In-Reply-To: <BN6PR03MB3347862A4C434CCA8C1B1E2599C90@BN6PR03MB3347.namprd03.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Apr 2020 13:22:51 +0300
+Message-ID: <CAHp75VfuWMDR4dUmjsYgeMgNMcVDZKdKVCsZ5p6g0m3TLHi5UA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 03:02:48PM -0600, Rob Herring wrote:
-> On Tue, Mar 24, 2020 at 08:43:21PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Modern device tree bindings are supposed to be created as YAML-files
-> > in accordance with DT schema. This commit replaces MIPS GIC legacy bare
-> > text binding with YAML file. As before the binding file states that the
-> > corresponding dts node is supposed to be compatible with MIPS Global
-> > Interrupt Controller indicated by the "mti,gic" compatible string and
-> > to provide a mandatory interrupt-controller and '#interrupt-cells'
-> > properties. There might be optional registers memory range,
-> > "mti,reserved-cpu-vectors" and "mti,reserved-ipi-vectors" properties
-> > specified.
-> > 
-> > MIPS GIC also includes a free-running global timer, per-CPU count/compare
-> > timers, and a watchdog. Since currently the GIC Timer is only supported the
-> > DT schema expects an IRQ and clock-phandler charged timer sub-node with
-> > "mti,mips-gic-timer" compatible string.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Alessandro Zummo <a.zummo@towertech.it>
-> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-rtc@vger.kernel.org
-> > 
-> > ---
-> > 
-> > I don't really know who is the corresponding driver maintainer, so I
-> > added to the maintainers schema Paul since he used to be looking for the
-> > MIPS arch and Thomas looking after it now. Any idea what email should be
-> > specified there instead?
-> > 
-> > Similarly to the previous patch the "oneOf: - required: ..." pattern isn't
-> > working here. Supposedly due to the script' dtschema/lib.py
-> > interrupts/interrupts-extended fixup.
-> > ---
-> >  .../interrupt-controller/mips-gic.txt         |  67 --------
-> >  .../interrupt-controller/mti,gic.yaml         | 152 ++++++++++++++++++
-> >  2 files changed, 152 insertions(+), 67 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > deleted file mode 100644
-> > index 173595305e26..000000000000
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > +++ /dev/null
-> > @@ -1,67 +0,0 @@
-> > -MIPS Global Interrupt Controller (GIC)
-> > -
-> > -The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-> > -It also supports local (per-processor) interrupts and software-generated
-> > -interrupts which can be used as IPIs.  The GIC also includes a free-running
-> > -global timer, per-CPU count/compare timers, and a watchdog.
-> > -
-> > -Required properties:
-> > -- compatible : Should be "mti,gic".
-> > -- interrupt-controller : Identifies the node as an interrupt controller
-> > -- #interrupt-cells : Specifies the number of cells needed to encode an
-> > -  interrupt specifier.  Should be 3.
-> > -  - The first cell is the type of interrupt, local or shared.
-> > -    See <include/dt-bindings/interrupt-controller/mips-gic.h>.
-> > -  - The second cell is the GIC interrupt number.
-> > -  - The third cell encodes the interrupt flags.
-> > -    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
-> > -    flags.
-> > -
-> > -Optional properties:
-> > -- reg : Base address and length of the GIC registers.  If not present,
-> > -  the base address reported by the hardware GCR_GIC_BASE will be used.
-> > -- mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
-> > -  to which the GIC may not route interrupts.  Valid values are 2 - 7.
-> > -  This property is ignored if the CPU is started in EIC mode.
-> > -- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
-> > -  reserved for IPIs.
-> > -  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
-> > -  of the reserved range.
-> > -  If not specified, the driver will allocate the last 2 * number of VPEs in the
-> > -  system.
-> > -
-> > -Required properties for timer sub-node:
-> > -- compatible : Should be "mti,gic-timer".
-> > -- interrupts : Interrupt for the GIC local timer.
-> > -
-> > -Optional properties for timer sub-node:
-> > -- clocks : GIC timer operating clock.
-> > -- clock-frequency : Clock frequency at which the GIC timers operate.
-> > -
-> > -Note that one of clocks or clock-frequency must be specified.
-> > -
-> > -Example:
-> > -
-> > -	gic: interrupt-controller@1bdc0000 {
-> > -		compatible = "mti,gic";
-> > -		reg = <0x1bdc0000 0x20000>;
-> > -
-> > -		interrupt-controller;
-> > -		#interrupt-cells = <3>;
-> > -
-> > -		mti,reserved-cpu-vectors = <7>;
-> > -		mti,reserved-ipi-vectors = <40 8>;
-> > -
-> > -		timer {
-> > -			compatible = "mti,gic-timer";
-> > -			interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-> > -			clock-frequency = <50000000>;
-> > -		};
-> > -	};
-> > -
-> > -	uart@18101400 {
-> > -		...
-> > -		interrupt-parent = <&gic>;
-> > -		interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
-> > -		...
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > new file mode 100644
-> > index 000000000000..1e47c0cdc231
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > @@ -0,0 +1,152 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> 
-> Do you have rights to add BSD?
-> 
+On Wed, Apr 1, 2020 at 10:13 AM Sa, Nuno <Nuno.Sa@analog.com> wrote:
+>
+> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Sent: Dienstag, 31. M=C3=A4rz 2020 20:16
+> > To: Sa, Nuno <Nuno.Sa@analog.com>
+> > Cc: linux-iio <linux-iio@vger.kernel.org>; devicetree
+> > <devicetree@vger.kernel.org>; Jonathan Cameron <jic23@kernel.org>;
+> > Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen <lars@metafoo.de>;
+> > Peter Meerwald-Stadler <pmeerw@pmeerw.net>; Rob Herring
+> > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Ardelean,
+> > Alexandru <alexandru.Ardelean@analog.com>; Hennerich, Michael
+> > <Michael.Hennerich@analog.com>
+> > Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
+> > On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.com> wrote=
+:
 
-My manager said we can submitted the DT schema bindings under both GPL and
-BSD licenses. Though I don't know what license was of the legacy binding file.
+...
 
-BTW Rob, you ask about the license very often whether I set pure GPL-2.0
-or dual-license header. Just wondering is it some kind of protocol to make
-sure a submitter has got proper rights to submit the binding?
+> > > +#include <asm/unaligned.h>
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/interrupt-controller/mti,gic.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: MIPS Global Interrupt Controller
-> > +
-> > +maintainers:
-> > +  - Paul Burton <paulburton@kernel.org>
-> > +  - Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > +
-> > +description: |
-> > +  The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-> > +  It also supports local (per-processor) interrupts and software-generated
-> > +  interrupts which can be used as IPIs. The GIC also includes a free-running
-> > +  global timer, per-CPU count/compare timers, and a watchdog.
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/interrupt-controller.yaml#
-> 
-> Drop this.
-> 
+> I thought we wanted alphabetic order...
 
-Ok.
+Yes, but from more generic header groups to less generic. Inside each
+group is alphabetical.
+asm/ is less generic than linux/.
 
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: mti,gic
-> > +
-> > +  "#interrupt-cells":
-> > +    const: 3
-> > +    description: |
-> > +      The 1st cell is the type of interrupt: local or shared defined in the
-> > +      file 'dt-bindings/interrupt-controller/mips-gic.h'. The 2nd cell is the
-> > +      GIC interrupt number. The 3d cell encodes the interrupt flags setting up
-> > +      the IRQ trigger modes, which are defined in the file
-> > +      'dt-bindings/interrupt-controller/irq.h'.
-> > +
-> > +  reg:
-> > +    description: |
-> > +      Base address and length of the GIC registers space. If not present,
-> > +      the base address reported by the hardware GCR_GIC_BASE will be used.
-> > +    maxItems: 1
-> > +
-> > +  interrupt-controller: true
-> > +
-> > +  mti,reserved-cpu-vectors:
-> > +    description: |
-> > +      Specifies the list of CPU interrupt vectors to which the GIC may not
-> > +      route interrupts. This property is ignored if the CPU is started in EIC
-> > +      mode.
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#definitions/uint32-array
-> > +      - minItems: 1
-> > +        maxItems: 6
-> > +        uniqueItems: true
-> > +        items:
-> > +          minimum: 2
-> > +          maximum: 7
-> > +
-> > +  mti,reserved-ipi-vectors:
-> > +    description: |
-> > +      Specifies the range of GIC interrupts that are reserved for IPIs.
-> > +      It accepts two values: the 1st is the starting interrupt and the 2nd is
-> > +      the size of the reserved range. If not specified, the driver will
-> > +      allocate the last (2 * number of VPEs in the system).
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#definitions/uint32-array
-> > +      - items:
-> > +          - minimum: 0
-> > +            maximum: 254
-> > +          - minimum: 2
-> > +            maximum: 254
-> > +
-> > +patternProperties:
-> > +  "^timer(@[0-9a-f]+)?$":
-> 
-> If you have an unit-address, then there should be a 'reg' property.
-> 
-> Seems like this can be just 'timer'?
-> 
+> > Usually it goes after linux/*
 
-Ok. reg property isn't supported by the timer sub-node. So I'll make it to
-be just "timer" node with no unit-address number.
+> > > +#include <linux/bitfield.h>
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/clk.h>
+> > > +#include <linux/debugfs.h>
+> > > +#include <linux/delay.h>
+> > > +#include <linux/device.h>
+> >
+> > > +#include <linux/kernel.h>
+> >
+> > What this is for?
+> >
+> Yeps. Not really needed...
 
--Sergey
+I think you needed it for DIV_ROUND_UP or alike macros. It also has
+container_of...
 
-> > +    type: object
-> > +    description: |
-> > +      MIPS GIC includes a free-running global timer, per-CPU count/compare
-> > +      timers, and a watchdog. Currently only the GIC Timer is supported.
-> > +    properties:
-> > +      compatible:
-> > +        const: mti,gic-timer
-> > +
-> > +      interrupts:
-> > +        description: |
-> > +          Interrupt for the GIC local timer, so normally it's suppose to be of
-> > +          <GIC_LOCAL X IRQ_TYPE_NONE> format.
-> > +        maxItems: 1
-> > +
-> > +      clocks:
-> > +        maxItems: 1
-> > +
-> > +      clock-frequency: true
-> > +
-> > +    required:
-> > +      - compatible
-> > +      - interrupts
-> > +
-> > +    oneOf:
-> > +      - required:
-> > +          - clocks
-> > +      - required:
-> > +          - clock-frequency
-> > +
-> > +    additionalProperties: false
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - "#interrupt-cells"
-> > +  - interrupt-controller
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/mips-gic.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    interrupt-controller@1bdc0000 {
-> > +      compatible = "mti,gic";
-> > +      reg = <0x1bdc0000 0x20000>;
-> > +      interrupt-controller;
-> > +      #interrupt-cells = <3>;
-> > +      mti,reserved-cpu-vectors = <7>;
-> > +      mti,reserved-ipi-vectors = <40 8>;
-> > +
-> > +      timer {
-> > +        compatible = "mti,gic-timer";
-> > +        interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-> > +        clock-frequency = <50000000>;
-> > +      };
-> > +    };
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/mips-gic.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    interrupt-controller@1bdc0000 {
-> > +      compatible = "mti,gic";
-> > +      reg = <0x1bdc0000 0x20000>;
-> > +      interrupt-controller;
-> > +      #interrupt-cells = <3>;
-> > +
-> > +      timer {
-> > +        compatible = "mti,gic-timer";
-> > +        interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-> > +        clocks = <&cpu_pll>;
-> > +      };
-> > +    };
-> > +  - |
-> > +    interrupt-controller {
-> > +      compatible = "mti,gic";
-> > +      interrupt-controller;
-> > +      #interrupt-cells = <3>;
-> > +    };
-> > +...
-> > -- 
-> > 2.25.1
-> > 
+> > > +#include <linux/iio/buffer.h>
+> > > +#include <linux/iio/iio.h>
+> > > +#include <linux/iio/imu/adis.h>
+> > > +#include <linux/iio/sysfs.h>
+> > > +#include <linux/iio/trigger_consumer.h>
+> > > +#include <linux/irq.h>
+> > > +#include <linux/module.h>
+> >
+> > > +#include <linux/of_device.h>
+> >
+> > Do you really need this? Perhaps mod_devicetable.h is what you are look=
+ing
+> > for.
+> >
+>
+> Yes. For ` of_device_get_match_data ``. If changed by `device_get_match_d=
+ata`, then I guess
+> I can drop it..
+
+Probably change to mod_devicetable.h with property.h.
+
+> > > +#include <linux/spi/spi.h>
+
+...
+
+> > > +       for (i =3D ARRAY_SIZE(adis16475_3db_freqs) - 2; i >=3D 1; i--=
+) {
+> >
+> > Why those margins? size-2 and 1 ?
+> >
+>
+> The -2 is needed since index 7 is not valid. The 1 I honestly don't remem=
+ber why I did it
+> like this. Using > 0 is the same and more "common"...
+
+More common is >=3D 0. That's my question basically.
+And if 7 is not valid why to keep it in the array at all?
+
+> > > +               if (adis16475_3db_freqs[i] >=3D filter)
+> > > +                       break;
+> > > +       }
+
+...
+
+> > > +#define ADIS16475_GYRO_CHANNEL(_mod) \
+> > > +       ADIS16475_MOD_CHAN(IIO_ANGL_VEL, IIO_MOD_ ## _mod, \
+> > > +       ADIS16475_REG_ ## _mod ## _GYRO_L, ADIS16475_SCAN_GYRO_ ##
+> > _mod, 32, \
+> > > +       32)
+> >
+> > It's not obvious that this is macro inside macro. Can you indent better=
+?
+> > Ditto for the rest similar ones.
+> >
+>
+> Honestly here I don't see any problems with indentation and it goes in co=
+nformity with
+> other IMU drivers already in tree. So here, as long as anyone else has a =
+problem with this, I prefer
+> to keep it this way...
+
+I'm not a maintainer, not my call :-)
+
+...
+
+> > > +       buffer =3D (u16 *)adis->buffer;
+> >
+> > Why the casting is needed?
+> >
+> > > +       crc =3D get_unaligned_be16(&buffer[offset + 2]);
+> >
+> > If your buffer is aligned in the structure, you may simple use be16_to_=
+cpu().
+> > Same for the rest of get_unaligned*() calls.
+> > Or do you have unaligned data there?
+>
+> This is a nice point. So, honestly I made it like this to keep conformity=
+ with other drivers we have
+> in our internal tree (in queue for upstream) and I also wondered about th=
+is. The only justification I can
+> find to use unligned calls is to keep this independent from the ADIS lib =
+(not sure if it makes sense) since
+> we get the pointer from the library (allocated there).
+>
+> Now, if Im not missing nothing obvious we can access the buffer normally =
+since it's being allocated
+> with kmalloc which means we have  ARCH_KMALLOC_MINALIGN (which is at leas=
+t 8 if Im not mistaken).
+> On top of this, the device sends the data as n 16 bits segments. So in th=
+eory, I guess we can ditch the
+> overhead of the *unaligned calls if any objections?
+
+No objections from my side at least.
+
+...
+
+> > > +       desc =3D irq_get_irq_data(spi->irq);
+> >
+> > > +       if (!desc) {
+> > > +               dev_err(&spi->dev, "Could not find IRQ %d\n", spi->ir=
+q);
+> > > +               return -EINVAL;
+> > > +       }
+> >
+> > Is this even possible?
+
+> I guess. If someone does not include it in device tree...
+
+Hmm... and this function will be called anyway?
+
+--=20
+With Best Regards,
+Andy Shevchenko
