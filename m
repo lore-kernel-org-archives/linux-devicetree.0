@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D0BC2D0F2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 00:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B2BC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 00:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A6B208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 00:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2859620787
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 00:31:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ivtVOLXc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZE96OJvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731508AbgDAAbj (ORCPT
+        id S1731548AbgDAAb4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 20:31:39 -0400
+        Tue, 31 Mar 2020 20:31:56 -0400
 Received: from mail26.static.mailgun.info ([104.130.122.26]:58150 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731427AbgDAAbj (ORCPT
+        by vger.kernel.org with ESMTP id S1731524AbgDAAb4 (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 20:31:39 -0400
+        Tue, 31 Mar 2020 20:31:56 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585701098; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1585701115; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=XwM6/VxbjB2bBUxJacWsaOY1tPxf7f4osqNmZwIygNU=; b=ivtVOLXcBFiAXyM34QzH+DoaPIloIFrp2umGzNARlNzRARthoj21N3KvXF59+5Df0we4mONP
- IfBbzN+r34HJt6kDGCU61NCRdnh3ccfWkkiiDd6/YpEzSCKd1YjnnrPMMkGXJvbrF594Ay6N
- vdc4n82BdF9f6q4DXo4sQdH9X5I=
+ bh=SutLuPcMOk2F8/XsaOFzGRk72Dm7cMdm+CPhWVhjnrM=; b=ZE96OJvr1IXegImrXyryiGwPyhSepj+wWfWF9fvOyWu/4PUHDGtaF+Gq3Bxg0RB5O0hlXuJG
+ siEN7sWmZSbC12TmCNg7Wg7cSo/QrispddJw/Ej2PDP4Ma7HSVlFKAxwJXTcu4+dWgVNi7lg
+ eE2UFr7dmwva44/LSys6vz6Wc2Y=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e83e0d3.7f94ba554df8-smtp-out-n04;
- Wed, 01 Apr 2020 00:31:15 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e83e0e9.7f029ac2f260-smtp-out-n03;
+ Wed, 01 Apr 2020 00:31:37 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 84AACC433BA; Wed,  1 Apr 2020 00:31:14 +0000 (UTC)
+        id 16FF6C4478C; Wed,  1 Apr 2020 00:31:35 +0000 (UTC)
 Received: from displaysanity13-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: varar)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B203CC433D2;
-        Wed,  1 Apr 2020 00:31:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B203CC433D2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8149EC43637;
+        Wed,  1 Apr 2020 00:31:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8149EC43637
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
 From:   Tanmay Shah <tanmay@codeaurora.org>
 To:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, seanpaul@chromium.org,
         swboyd@chromium.org
-Cc:     Chandan Uddaraju <chandanu@codeaurora.org>, robdclark@gmail.com,
+Cc:     Jeykumar Sankaran <jsanka@codeaurora.org>, robdclark@gmail.com,
         abhinavk@codeaurora.org, nganji@codeaurora.org,
-        jsanka@codeaurora.org, aravindh@codeaurora.org,
-        hoegsberg@google.com, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, Vara Reddy <varar@codeaurora.org>
-Subject: [DPU PATCH v5 1/5] dt-bindings: msm/dp: add bindings of DP/DP-PLL driver for Snapdragon
-Date:   Tue, 31 Mar 2020 17:30:27 -0700
-Message-Id: <1585701031-28871-2-git-send-email-tanmay@codeaurora.org>
+        aravindh@codeaurora.org, hoegsberg@google.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>
+Subject: [DPU PATCH v5 5/5] drm/msm/dpu: add display port support in DPU
+Date:   Tue, 31 Mar 2020 17:30:31 -0700
+Message-Id: <1585701031-28871-6-git-send-email-tanmay@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1585701031-28871-1-git-send-email-tanmay@codeaurora.org>
 References: <1585701031-28871-1-git-send-email-tanmay@codeaurora.org>
@@ -65,398 +66,152 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chandan Uddaraju <chandanu@codeaurora.org>
+From: Jeykumar Sankaran <jsanka@codeaurora.org>
 
-Add bindings for Snapdragon DisplayPort and
-display-port PLL driver.
+Add display port support in DPU by creating hooks
+for DP encoder enumeration and encoder mode
+initialization.
 
-Changes in V2:
-Provide details about sel-gpio
+This change is based on the Snapdragon Display port
+driver changes[1].
 
-Changes in V4:
-Provide details about max dp lanes
-Change the commit text
+changes in v2:
+	- rebase on [2] (Sean Paul)
+	- remove unwanted error checks and
+	  switch cases (Jordan Crouse)
 
-Changes in V5:
-Moved dp.txt to yaml file.
+[1] https://lwn.net/Articles/768265/
+[2] https://lkml.org/lkml/2018/11/17/87
 
+changes in V3:
+-- Moved this change as part of the DP driver changes.
+-- Addressed compilation issues on the latest code base.
+
+Signed-off-by: Jeykumar Sankaran <jsanka@codeaurora.org>
 Signed-off-by: Chandan Uddaraju <chandanu@codeaurora.org>
 Signed-off-by: Vara Reddy <varar@codeaurora.org>
 ---
- .../devicetree/bindings/display/msm/dp-sc7180.yaml | 325 +++++++++++++++++++++
- .../devicetree/bindings/display/msm/dpu.txt        |  16 +-
- 2 files changed, 337 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |  8 ++--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     | 65 ++++++++++++++++++++++++-----
+ 2 files changed, 58 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-new file mode 100644
-index 0000000..761a01d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/msm/dp-sc7180.yaml
-@@ -0,0 +1,325 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/msm/dp-sc7180.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Description of Qualcomm Display Port dt properties.
-+
-+maintainers:
-+  - Chandan Uddaraju <chandanu@codeaurora.org>
-+  - Vara Reddy <varar@codeaurora.org>
-+
-+description: |
-+  Device tree bindings for MSM Display Port which supports DP host controllers
-+  that are compatible with VESA Display Port interface specification.
-+
-+properties:
-+  "msm_dp":
-+    type: object
-+    description: |
-+      Node containing Display port register address bases, clocks, power supplies.
-+
-+    properties:
-+     compatible:
-+       items:
-+         - const: qcom,dp-display
-+
-+     cell-index:
-+       description: Specifies the controller instance.
-+
-+     reg:
-+       description: Physical base address and length of controller's registers.
-+
-+     reg-names:
-+       description: |
-+         Names for different register regions defined above. The required region
-+         is mentioned below.
-+       items:
-+         - const: dp_ahb
-+         - const: dp_aux
-+         - const: dp_link
-+         - const: dp_p0
-+         - const: dp_phy
-+         - const: dp_ln_tx0
-+         - const: dp_ln_tx1
-+         - const: afprom_physical
-+         - const: dp_pll
-+         - const: usb3_dp_com
-+         - const: hdcp_physical
-+
-+     interrupts:
-+       description: The interrupt signal from the DP block.
-+
-+     clocks:
-+       description: List of clock specifiers for clocks needed by the device.
-+
-+     clock-names:
-+       description: |
-+         Device clock names in the same order as mentioned in clocks property.
-+         The required clocks are mentioned below.
-+       items:
-+         - const: core_aux_clk
-+         - const: core_ref_clk_src
-+         - const: core_usb_ref_clk
-+         - const: core_usb_cfg_ahb_clk
-+         - const: core_usb_pipe_clk
-+         - const: ctrl_link_clk
-+         - const: ctrl_link_iface_clk
-+         - const: ctrl_pixel_clk
-+         - const: crypto_clk
-+         - const: pixel_clk_rcg
-+
-+     pll-node:
-+       description: phandle to DP PLL node.
-+
-+     vdda-1p2-supply:
-+       description: phandle to vdda 1.2V regulator node.
-+
-+     vdda-0p9-supply:
-+       description: phandle to vdda 0.9V regulator node.
-+
-+     aux-cfg0-settings:
-+       description: |
-+         Specifies the DP AUX configuration 0 settings.
-+         The first entry in this array corresponds to the register offset
-+         within DP AUX, while the remaining entries indicate the
-+         programmable values.
-+
-+     aux-cfg1-settings:
-+       description: |
-+         Specifies the DP AUX configuration 1 settings.
-+         The first entry in this array corresponds to the register offset
-+         within DP AUX, while the remaining entries indicate the
-+         programmable values.
-+
-+     aux-cfg2-settings:
-+       description: |
-+         Specifies the DP AUX configuration 2 settings.
-+         The first entry in this array corresponds to the register offset
-+         within DP AUX, while the remaining entries indicate the
-+         programmable values.
-+
-+     aux-cfg3-settings:
-+       description: |
-+         Specifies the DP AUX configuration 3 settings.
-+         The first entry in this array corresponds to the register offset
-+         within DP AUX, while the remaining entries indicate the
-+         programmable values.
-+
-+     aux-cfg4-settings:
-+       description: |
-+         Specifies the DP AUX configuration 4 settings.
-+         The first entry in this array corresponds to the register offset
-+         within DP AUX, while the remaining entries indicate the
-+         programmable values.
-+
-+     aux-cfg5-settings:
-+       description: |
-+         Specifies the DP AUX configuration 5 settings.
-+         The first entry in this array corresponds to the register offset
-+         within DP AUX, while the remaining entries indicate the
-+         programmable values.
-+
-+     aux-cfg6-settings:
-+       description: |
-+         Specifies the DP AUX configuration 6 settings.
-+         The first entry in this array corresponds to the register offset
-+         within DP AUX, while the remaining entries indicate the
-+         programmable values.
-+
-+     aux-cfg7-settings:
-+       description: |
-+         Specifies the DP AUX configuration 7 settings.
-+         The first entry in this array corresponds to the register offset
-+         within DP AUX, while the remaining entries indicate the
-+         programmable values.
-+
-+     aux-cfg8-settings:
-+       description: |
-+         Specifies the DP AUX configuration 8 settings.
-+         The first entry in this array corresponds to the register offset
-+         within DP AUX, while the remaining entries indicate the
-+         programmable values.
-+
-+     aux-cfg9-settings:
-+       description: |
-+         Specifies the DP AUX configuration 9 settings.
-+         The first entry in this array corresponds to the register offset
-+         within DP AUX, while the remaining entries indicate the
-+         programmable values.
-+
-+     max-pclk-frequency-khz:
-+       description: Maximum displayport pixel clock supported for the chipset.
-+
-+     data-lanes:
-+       description: Maximum number of lanes that can be used for Display port.
-+
-+     usbplug-cc-gpio:
-+       maxItems: 1
-+       description: Specifies the usbplug orientation gpio.
-+
-+     aux-en-gpio:
-+       maxItems: 1
-+       description: Specifies the aux-channel enable gpio.
-+
-+     aux-sel-gpio:
-+       maxItems: 1
-+       description: Specifies the sux-channel select gpio.
-+
-+     ports:
-+       description: |
-+         Contains display port controller endpoint subnode.
-+         remote-endpoint: |
-+           For port@0, set to phandle of the connected panel/bridge's
-+           input endpoint. For port@1, set to the DPU interface output.
-+           Documentation/devicetree/bindings/graph.txt and
-+           Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+  "dp_pll":
-+     type: object
-+     description: Node contains properties of Display port pll and phy driver.
-+
-+     properties:
-+       compatible:
-+         items:
-+           - const: qcom,dp-pll-10nm
-+
-+       cell-index:
-+         description: Specifies the controller instance.
-+
-+       reg:
-+         description: Physical base address and length of DP phy and pll registers.
-+
-+       reg-names:
-+         description: |
-+           Names for different register regions defined above. The required region
-+           is mentioned below.
-+         items:
-+           - const: pll_base
-+           - const: phy_base
-+           - const: ln_tx0_base
-+           - const: ln_tx1_base
-+           - const: gdsc_base
-+
-+       clocks:
-+         description: List of clock specifiers for clocks needed by the device.
-+
-+       clock-names:
-+         description: |
-+           Device clock names in the same order as mentioned in clocks property.
-+           The required clocks are mentioned below.
-+         items:
-+           - const: iface
-+           - const: ref
-+           - const: cfg_ahb
-+           - const: pipe
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
-+    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    msm_dp: displayport-controller@ae90000{
-+                cell-index = <0>;
-+        compatible = "qcom,dp-display";
-+        reg =   <0 0xae90000 0 0x200>,
-+                <0 0xae90200 0 0x200>,
-+                <0 0xae90400 0 0xc00>,
-+                <0 0xae91000 0 0x400>,
-+                <0 0x88eaa00 0 0x200>,
-+                <0 0x88ea200 0 0x200>,
-+                <0 0x88ea600 0 0x200>,
-+                <0 0x780000 0 0x6228>,
-+                <0 0x088ea000 0 0x40>,
-+                <0 0x88e8000 0 0x20>,
-+                <0 0x0aee1000 0 0x034>;
-+        reg-names = "dp_ahb", "dp_aux", "dp_link",
-+            "dp_p0", "dp_phy", "dp_ln_tx0", "dp_ln_tx1",
-+            "qfprom_physical", "dp_pll",
-+            "usb3_dp_com", "hdcp_physical";
-+
-+        interrupt-parent = <&display_subsystem>;
-+        interrupts = <12 0>;
-+
-+        clocks = <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
-+            <&rpmhcc RPMH_CXO_CLK>,
-+            <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-+            <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+            <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>,
-+            <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
-+            <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
-+            <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>,
-+            <&dispcc DISP_CC_MDSS_DP_CRYPTO_CLK>,
-+            <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
-+        clock-names = "core_aux_clk", "core_ref_clk_src",
-+            "core_usb_ref_clk", "core_usb_cfg_ahb_clk",
-+            "core_usb_pipe_clk", "ctrl_link_clk",
-+            "ctrl_link_iface_clk", "ctrl_pixel_clk",
-+            "crypto_clk", "pixel_clk_rcg";
-+
-+        pll-node = <&dp_pll>;
-+        vdda-1p2-supply = <&vreg_l3c_1p2>;
-+        vdda-0p9-supply = <&vreg_l4a_0p8>;
-+
-+        aux-cfg0-settings = [20 00];
-+        aux-cfg1-settings = [24 13 23 1d];
-+        aux-cfg2-settings = [28 24];
-+        aux-cfg3-settings = [2c 00];
-+        aux-cfg4-settings = [30 0a];
-+        aux-cfg5-settings = [34 26];
-+        aux-cfg6-settings = [38 0a];
-+        aux-cfg7-settings = [3c 03];
-+        aux-cfg8-settings = [40 bb];
-+        aux-cfg9-settings = [44 03];
-+
-+        max-pclk-frequency-khz = <67500>;
-+        data-lanes = <2>;
-+
-+        aux-en-gpio = <&msmgpio 55 1>;
-+        aux-sel-gpio = <&msmgpio 110 1>;
-+        usbplug-cc-gpio = <&msmgpio 90 1>;
-+
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            port@0 {
-+                reg = <0>;
-+                dp_in: endpoint {
-+                    remote-endpoint = <&dpu_intf0_out>;
-+                };
-+            };
-+
-+            port@1 {
-+                reg = <1>;
-+                dp_out: endpoint {
-+                };
-+            };
-+        };
-+    };
-+
-+    dp_pll: dp-pll@088ea000 {
-+        compatible = "qcom,dp-pll-10nm";
-+        label = "DP PLL";
-+        cell-index = <0>;
-+        #clock-cells = <1>;
-+
-+        reg = <0 0x088ea000 0 0x200>,
-+              <0 0x088eaa00 0 0x200>,
-+              <0 0x088ea200 0 0x200>,
-+              <0 0x088ea600 0 0x200>,
-+              <0 0x08803000 0 0x8>;
-+        reg-names = "pll_base", "phy_base", "ln_tx0_base",
-+            "ln_tx1_base", "gdsc_base";
-+
-+        clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-+             <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-+             <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+             <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-+        clock-names = "iface_clk", "ref_clk",
-+            "cfg_ahb_clk", "pipe_clk";
-+    };
-+
-diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
-index 551ae26..7e99e45 100644
---- a/Documentation/devicetree/bindings/display/msm/dpu.txt
-+++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
-@@ -63,8 +63,9 @@ Required properties:
- 	Documentation/devicetree/bindings/graph.txt
- 	Documentation/devicetree/bindings/media/video-interfaces.txt
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index b063243..7c95f72 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -2025,7 +2025,7 @@ static int dpu_encoder_setup_display(struct dpu_encoder_virt *dpu_enc,
+ {
+ 	int ret = 0;
+ 	int i = 0;
+-	enum dpu_intf_type intf_type;
++	enum dpu_intf_type intf_type = INTF_NONE;
+ 	struct dpu_enc_phys_init_params phys_params;
  
--	Port 0 -> DPU_INTF1 (DSI1)
--	Port 1 -> DPU_INTF2 (DSI2)
-+	Port 0 -> DPU_INTF0 (DP)
-+	Port 1 -> DPU_INTF1 (DSI1)
-+	Port 2 -> DPU_INTF2 (DSI2)
+ 	if (!dpu_enc) {
+@@ -2047,9 +2047,9 @@ static int dpu_encoder_setup_display(struct dpu_encoder_virt *dpu_enc,
+ 	case DRM_MODE_ENCODER_DSI:
+ 		intf_type = INTF_DSI;
+ 		break;
+-	default:
+-		DPU_ERROR_ENC(dpu_enc, "unsupported display interface type\n");
+-		return -EINVAL;
++	case DRM_MODE_ENCODER_TMDS:
++		intf_type = INTF_DP;
++		break;
+ 	}
  
- Optional properties:
- - assigned-clocks: list of clock specifiers for clocks needing rate assignment
-@@ -125,13 +126,20 @@ Example:
+ 	WARN_ON(disp_info->num_of_h_tiles < 1);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index cb08faf..441c274a 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -421,6 +421,33 @@ static int _dpu_kms_initialize_dsi(struct drm_device *dev,
+ 	return rc;
+ }
  
- 				port@0 {
- 					reg = <0>;
--					dpu_intf1_out: endpoint {
--						remote-endpoint = <&dsi0_in>;
-+					dpu_intf0_out: endpoint {
-+						remote-endpoint = <&dp_in>;
- 					};
- 				};
- 
- 				port@1 {
- 					reg = <1>;
-+					dpu_intf1_out: endpoint {
-+						remote-endpoint = <&dsi0_in>;
-+					};
-+				};
++static int _dpu_kms_initialize_displayport(struct drm_device *dev,
++					    struct msm_drm_private *priv,
++					    struct dpu_kms *dpu_kms)
++{
++	struct drm_encoder *encoder = NULL;
++	int rc = 0;
 +
-+				port@2 {
-+					reg = <2>;
- 					dpu_intf2_out: endpoint {
- 						remote-endpoint = <&dsi1_in>;
- 					};
++	if (!priv->dp)
++		return rc;
++
++	encoder = dpu_encoder_init(dev, DRM_MODE_ENCODER_TMDS);
++	if (IS_ERR(encoder)) {
++		DPU_ERROR("encoder init failed for dsi display\n");
++		return PTR_ERR(encoder);;
++	}
++
++	rc = msm_dp_modeset_init(priv->dp, dev, encoder);
++	if (rc) {
++		DPU_ERROR("modeset_init failed for DP, rc = %d\n", rc);
++		drm_encoder_cleanup(encoder);
++		return rc;
++	}
++
++	priv->encoders[priv->num_encoders++] = encoder;
++	return rc;
++}
++
+ /**
+  * _dpu_kms_setup_displays - create encoders, bridges and connectors
+  *                           for underlying displays
+@@ -433,12 +460,21 @@ static int _dpu_kms_setup_displays(struct drm_device *dev,
+ 				    struct msm_drm_private *priv,
+ 				    struct dpu_kms *dpu_kms)
+ {
+-	/**
+-	 * Extend this function to initialize other
+-	 * types of displays
+-	 */
++	int rc = 0;
++
++	rc = _dpu_kms_initialize_dsi(dev, priv, dpu_kms);
++	if (rc) {
++		DPU_ERROR("initialize_dsi failed, rc = %d\n", rc);
++		return rc;
++	}
+ 
+-	return _dpu_kms_initialize_dsi(dev, priv, dpu_kms);
++	rc = _dpu_kms_initialize_displayport(dev, priv, dpu_kms);
++	if (rc) {
++		DPU_ERROR("initialize_DP failed, rc = %d\n", rc);
++		return rc;
++	}
++
++	return rc;
+ }
+ 
+ static void _dpu_kms_drm_obj_destroy(struct dpu_kms *dpu_kms)
+@@ -626,13 +662,20 @@ static void _dpu_kms_set_encoder_mode(struct msm_kms *kms,
+ 	info.capabilities = cmd_mode ? MSM_DISPLAY_CAP_CMD_MODE :
+ 			MSM_DISPLAY_CAP_VID_MODE;
+ 
+-	/* TODO: No support for DSI swap */
+-	for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
+-		if (priv->dsi[i]) {
+-			info.h_tile_instance[info.num_of_h_tiles] = i;
+-			info.num_of_h_tiles++;
++	switch (info.intf_type) {
++	case DRM_MODE_ENCODER_DSI:
++		/* TODO: No support for DSI swap */
++		for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
++			if (priv->dsi[i]) {
++				info.h_tile_instance[info.num_of_h_tiles] = i;
++				info.num_of_h_tiles++;
++			}
+ 		}
+-	}
++		break;
++	case DRM_MODE_ENCODER_TMDS:
++		info.num_of_h_tiles = 1;
++		break;
++	};
+ 
+ 	rc = dpu_encoder_setup(encoder->dev, encoder, &info);
+ 	if (rc)
 -- 
 1.9.1
