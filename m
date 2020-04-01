@@ -2,158 +2,146 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEFEC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D24C2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C46212CC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC7620BED
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="JWWjcni4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tWM2eX3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387675AbgDAQYQ (ORCPT
+        id S2387786AbgDAQZJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:24:16 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:36312 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732532AbgDAQYP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 12:24:15 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 10E35412C9;
-        Wed,  1 Apr 2020 16:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:date:subject
-        :subject:from:from:received:received:received; s=mta-01; t=
-        1585758250; x=1587572651; bh=mhLppsDhlxWOUw8QuK09z229nPprcp+dDLY
-        3Oilh9h8=; b=JWWjcni4CcJZBqW3aPu0CGxDQTGevTYDv0Xr0gUqYwkqnR7kz2H
-        3IWEPDLqqOxvnU6TNGMF0/WlqfLeFUVURNIiB3WHbSnvcpjqds40EP+Q64aKVpF0
-        EZvpvGSf+kOOMSw+/7AEuSlFaJIWxTOx+Wp1zHLp39pyYUWCd74b2tJw=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nJ_6LTqWfVKM; Wed,  1 Apr 2020 19:24:10 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 4FC5741256;
-        Wed,  1 Apr 2020 19:24:09 +0300 (MSK)
-Received: from localhost.yadro.com (10.199.2.98) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Wed, 1 Apr
- 2020 19:24:09 +0300
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Wed, 1 Apr 2020 12:25:09 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55970 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387764AbgDAQZI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 12:25:08 -0400
+Received: by mail-pj1-f66.google.com with SMTP id fh8so185014pjb.5;
+        Wed, 01 Apr 2020 09:25:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gHFLCKlpXIGAn0egtGMAf9G1WrufJhSv91wXY+Y8f8Q=;
+        b=tWM2eX3i801PMq7UXOjk5Rdt+AbUlekjbWhkNHZLubyt7URQ62HbIkd62klBeCS1Ob
+         0bechhHZmZz0bUIAD2eQQxzk7/i4Yv9pCZIvNZGUVu4t1x2A56iCLukQ9gDV2p4kjldH
+         O+p9CbN7FF+/m3GsmzqB1T20aftGn5qll1X6AbDYLdYTNEx2+uD8m7/IH6REWVJdcSls
+         u+VoyYhb3lqNUPLDRXuzTWV9bi4xGRzl/zNJcjAUBV3yELDna/l33VoFKYgPwItULo1J
+         KCkG/7DXUDDKN6h9hN4+VI6xFJvMeqVVkfPoYus+LOy9GbUVaxZ5a2b9GSomfQ8MENUs
+         q7xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gHFLCKlpXIGAn0egtGMAf9G1WrufJhSv91wXY+Y8f8Q=;
+        b=mS4XvEIO21jAYcoutoxdpqF4kjXNvK0nxVNQbKjM3MaIRPVnnxZyuhJWXCPU5z/eBD
+         1HG8C3SWLOmLjRUa92qSmtaMZkqJL1tbHh4AeMjBi/D6VfT9ipK/G/1UUoiZOKHzUe9u
+         d4ebKmeTO8ZP7IGeNcmDf6bekVu2QdUuX4UO+dLOR5g+rKAf29GCF5HFbhbnfABbxYvQ
+         X7mjozt1V6UAp8SKZrHlHsSpHJbDzloWdstwqwDy8+QqnPhwixpoG8b18gOrp+NtrxF2
+         ue1UZ+eLNucx4ZeVvPpIcuMiILcLS1Y3UTFzs8u5/SH+Zj09lcF5SKQVN+b7zZPjC5TL
+         m/Eg==
+X-Gm-Message-State: AGi0PuZzbQ/Qr5fvm5aSxtocHuNmErHmMwvyOkZRtOuA8X69LFuSRtRM
+        /MaQQQukgB9f1P5ki7lm2i5kMITSPMQuL0+nPik=
+X-Google-Smtp-Source: APiQypJFkKtX6ZC6hJ0SDdwypkf/KeP+1RyrvwFBHvlwbJQHvhQXt7QZJ/RME6jjIkwyNRSQ2VZlIfHmuUBQY2B1cL8=
+X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr5878941pjn.8.1585758307412;
+ Wed, 01 Apr 2020 09:25:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200331114811.7978-1-nuno.sa@analog.com> <20200331114811.7978-6-nuno.sa@analog.com>
+ <CAHp75Vdxtn1gXi=xCJfGOkBYiWB2qsYQLTJyaEGiiFqHvELaHQ@mail.gmail.com>
+ <BN6PR03MB3347862A4C434CCA8C1B1E2599C90@BN6PR03MB3347.namprd03.prod.outlook.com>
+ <CAHp75VfuWMDR4dUmjsYgeMgNMcVDZKdKVCsZ5p6g0m3TLHi5UA@mail.gmail.com>
+ <BN6PR03MB3347E5ECF100EAD1453B577D99C90@BN6PR03MB3347.namprd03.prod.outlook.com>
+ <CAHp75Vcp5Rs53i_74MvbudcRrDYCD=Agfjh2cO_GNc7TXaS73g@mail.gmail.com> <BN6PR03MB33475E91FA8665937E8F3AE599C90@BN6PR03MB3347.namprd03.prod.outlook.com>
+In-Reply-To: <BN6PR03MB33475E91FA8665937E8F3AE599C90@BN6PR03MB3347.namprd03.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Apr 2020 19:24:59 +0300
+Message-ID: <CAHp75VddBgGtBf=3yNs331EU6HQgL-Aq7tmf+dG3Z9W-d0hdNQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
+To:     "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
         Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v6 1/2] iio: proximity: provide device tree binding document
-Date:   Wed, 1 Apr 2020 19:24:15 +0300
-Message-ID: <20200401162416.24474-2-i.mikhaylov@yadro.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200401162416.24474-1-i.mikhaylov@yadro.com>
-References: <20200401162416.24474-1-i.mikhaylov@yadro.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.199.2.98]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
-To:     unlisted-recipients:; (no To-header on input)
+        Mark Rutland <mark.rutland@arm.com>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mostly standard i2c driver with some additional led-current option
-for vcnl3020.
+On Wed, Apr 1, 2020 at 5:18 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
+>
+> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Sent: Mittwoch, 1. April 2020 16:06
+> > To: Sa, Nuno <Nuno.Sa@analog.com>
+> > Cc: linux-iio <linux-iio@vger.kernel.org>; devicetree
+> > <devicetree@vger.kernel.org>; Jonathan Cameron <jic23@kernel.org>;
+> > Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen <lars@metafoo.de>;
+> > Peter Meerwald-Stadler <pmeerw@pmeerw.net>; Rob Herring
+> > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Ardelean,
+> > Alexandru <alexandru.Ardelean@analog.com>; Hennerich, Michael
+> > <Michael.Hennerich@analog.com>
+> > Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
+> >
+> > On Wed, Apr 1, 2020 at 4:27 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
+> > > > On Wed, Apr 1, 2020 at 10:13 AM Sa, Nuno <Nuno.Sa@analog.com>
+> > wrote:
+> > > > > > On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.co=
+m>
+> > wrote:
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- .../bindings/iio/proximity/vcnl3020.yaml      | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+...
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-new file mode 100644
-index 000000000000..29ab2dee1694
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
-@@ -0,0 +1,65 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/vcnl3020.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Integrated Proximity Sensor With Infrared Emitter
-+
-+maintainers:
-+  - Ivan Mikhaylov <i.mikhaylov@yadro.com>
-+
-+description: |
-+  The VCNL3020 is a fully integrated proximity sensor. Fully integrated means
-+  that the infrared emitter is included in the package. It has 16-bit
-+  resolution. It includes a signal processing IC and features standard I2C
-+  communication interface. It features an interrupt function.
-+
-+  Specifications about the devices can be found at:
-+  https://www.vishay.com/docs/84150/vcnl3020.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - vishay,vcnl3020
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: IRQ line for the proximity sensor
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: Regulator that provides power to the sensor
-+
-+  vddio-supply:
-+    description: Regulator that provides power to the bus
-+
-+  vishay,led-current-milliamp:
-+    description:
-+        IR LED current value with valid Range = 0 to 20d. e.g. 0 = 0 mA,
-+        1 = 10 mA, 20 = 200 mA (2 = 20 mA = DEFAULT). LED Current is
-+        limited to 200 mA for values higher than decimal 20.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-+              18, 19, 20]
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        proximity@13 {
-+              compatible = "vishay,vcnl3020";
-+              reg = <0x13>;
-+              vishay,led-current-milliamp = <0x14>;
-+        };
-+    };
--- 
-2.21.1
+> > > Well, I can remove the 7. I honestly took it from another driver and =
+I guess
+> > the idea
+> > > is to make explicit that 7 is not supported. Since this is a 3 bit fi=
+eld and the
+> > datasheet
+> > > does not state this directly.
+> > >
+> > > As for the >=3D0, I prefer to have either as is or >0 since we don't =
+really need to
+> > check the
+> > > index 0. If 1 fails, then we will use 0 either way...
+> >
+> > It makes sense to check to get better optimization (and increased reada=
+bility).
+> > Look for this
+> >
+> > i =3D ARRAY_SIZE(...);
+> >
+> > while (i--) {
+> >  ...
+> > }
+> >
+> > It's much better to read and understand.
+>
+> Well, about the readability it's a bit subjective . It depends who is
+> reading the code. Just curious, how would you get better optimization
+> by doing >=3D0 instead of > 0?
 
+Feel the difference while (i--) vs. while (--i > 0).
+The latter one is a bit unusual.
+
+> Either way, I don=E2=80=99t have any strong feeling about this so I can d=
+o as
+> you suggest.
+
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
