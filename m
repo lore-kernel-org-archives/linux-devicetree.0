@@ -2,331 +2,241 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F82EC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DEFC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E69CB206F5
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC14120784
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:48:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=startmail.com header.i=@startmail.com header.b="S2esmc+V"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ln2+bUNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgDASqw (ORCPT
+        id S1732067AbgDASsx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:46:52 -0400
-Received: from mx-out2.startmail.com ([145.131.90.155]:55428 "EHLO
-        mx-out2.startmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732211AbgDASqw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 14:46:52 -0400
-From:   Alexandru Lazar <alazar@startmail.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
-        s=2017-11; t=1585766809;
-        bh=+637+Z/mx+woFC6bMaMRSAys7GdZNj8mmMIwwyL8tpc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2esmc+VbcTrQfueectXsW3MczkJXr/rwIdDoXwWRQmoZSUPLa8nk46C4Av/+DcBq
-         BFdPjBnVxasnn64zwmXWtBp9wyKSVikDb83kgWB//woAJfKXO13DIHeqR/g+LAWB5Q
-         3N2ScQsO/WDszIq4yVfYPrnQ0QLhhClCI56gi+4end9lskt2oNw7ERN1hr93/ELBFP
-         cvL0hNEHk44ji+ssy/kg0NOVyyjFQHVObO4SLRa8200b9VpG24YeC1PK3+I6ZL+QHV
-         PWawfZgcQFS5AbSkRoZfv1nYKpVoYMyguEVNhhsHH5cZaMaiuBXQfxn24ACDTsiXyg
-         /CJfPKmk9waEw==
-To:     linux-iio@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, Alexandru Lazar <alazar@startmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v6 2/2] iio: adc: Add MAX1241 driver
-Date:   Wed,  1 Apr 2020 21:51:38 +0300
-Message-Id: <20200401185138.10673-3-alazar@startmail.com>
-In-Reply-To: <20200401185138.10673-1-alazar@startmail.com>
-References: <20200401185138.10673-1-alazar@startmail.com>
+        Wed, 1 Apr 2020 14:48:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41888 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbgDASsx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 14:48:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a24so428291pfc.8
+        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 11:48:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ulhOw4stYNMJI54bH35cjH5xFB2S7Dajjn042iFhlAk=;
+        b=ln2+bUNX3IYbT39875VObE1yUtmBMva3t4VVBd1h9kJmOV5CiaWYRaASBOMr0NFMWN
+         QM7pjk832AFgMpB5ZMjur7BjF2+e32lnw1K11fT2ieeFUKBUi2Bm/kQUx+fU9iNsj5f3
+         6A+staF/q7hNn90hN55oTFJbZJksRHC+anShor0skqvE4bN/jAW51494pJ7FxhYVjtkf
+         dVFjMvS+KfQQAuE6uJXxXsjmuuclN9ATmat2zYkjOxE703XanidHkvKNXFgHb0NI+4tn
+         X62wHa1LXJmZI96g93oPzlX+d1HHgTLRR3IhoBza2ajxtaG8q9gJemPc74aEujN3ywvv
+         zeAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ulhOw4stYNMJI54bH35cjH5xFB2S7Dajjn042iFhlAk=;
+        b=uOxuSKCoiK3ZoglswghMyh4T14SNdLpgg7cN+gfPXsPK7OR9+lSSVk2PgrwJTFce4Y
+         SpxvVDrunthlzDQPtgMMzty9g+uoDCDA7AdPGFIOcprITLl21NOcF2IyzjgLYzZZKbtL
+         orxQNI62ZvgcH8Sjp6KZCh5c+sPJxZJgHa/1f2aGt0+OCTc4Fi2koPLmBNQwrEugIkHo
+         R4SACSbqlsdpBM62qeQHbJBrQ1ST8im/qKJbj969OYkBw624xolvapflRYTxOrxBqj7f
+         0Wp4H4Ih1lsKKl0qsWC0kZWvrLEeG56uOrYuGYIKQCcDqYVbeUDzhGMhQudyj7s5+4So
+         uQYg==
+X-Gm-Message-State: AGi0PuY5u17K1Y6nWs+taAU49DPCLoMdPGVuMQ/dz+kHwSW0dc3SzIM2
+        DgOBDYl80wIFqnbTVcOb4EKoVf8V7nOMFXjICZzuug==
+X-Google-Smtp-Source: APiQypI2HZUUxGoH2263hX+0V33Waac14jbJ/InoRrxuPaarHNJHGn8YvcMK3io31gtf28si3KlZBW+Hl7Z/YFLOgbI=
+X-Received: by 2002:aa7:99cd:: with SMTP id v13mr20824814pfi.106.1585766931503;
+ Wed, 01 Apr 2020 11:48:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
+ <285da2166eadc1d46667dd9659d8dae74d28b0b9.1585656143.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAFd5g460hY9uOtwicWHK2rhgLdL+gStbKGmLN5KLWi5JXDQEog@mail.gmail.com> <4f915b8b8bee36a61ebea62ebf34c61845170ad5.camel@fi.rohmeurope.com>
+In-Reply-To: <4f915b8b8bee36a61ebea62ebf34c61845170ad5.camel@fi.rohmeurope.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 1 Apr 2020 11:48:40 -0700
+Message-ID: <CAFd5g44gBrNti5Y_ctQKOE1_pWX3NAdTji1uH8m6dGj+tsJCew@mail.gmail.com>
+Subject: Re: [PATCH v7 04/10] lib/test_linear_ranges: add a test for the 'linear_ranges'
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "talgi@mellanox.com" <talgi@mellanox.com>,
+        "olteanv@gmail.com" <olteanv@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davidgow@google.com" <davidgow@google.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "bp@suse.de" <bp@suse.de>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
+        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add driver for the Maxim MAX1241 12-bit, single-channel ADC.
+On Wed, Apr 1, 2020 at 1:45 AM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+>
+> Hello Brendan,
+>
+> Thanks for taking a look at this :) Much appreciated! I have always
+> admired you guys who have the patience to do all the reviewing... It's
+> definitely not my favourite job :/
 
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Alexandru Lazar <alazar@startmail.com>
----
- drivers/iio/adc/Kconfig   |  10 ++
- drivers/iio/adc/Makefile  |   1 +
- drivers/iio/adc/max1241.c | 227 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 238 insertions(+)
- create mode 100644 drivers/iio/adc/max1241.c
+Huh, you know, I thought the same thing like 3 years ago. I guess it
+got the point where I had to do reviews for the things I maintained
+that I got used to it. Then I got to a point where I was requesting so
+many reviews from others that I felt that I owed the community
+reviews. So no thanks necessary, I feel that I am just paying it
+forward. :-)
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 5d8540b7b427..55f6462cd93f 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -566,6 +566,16 @@ config MAX1118
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called max1118.
- 
-+config MAX1241
-+	tristate "Maxim max1241 ADC driver"
-+	depends on SPI_MASTER
-+	help
-+	  Say yes here to build support for Maxim max1241 12-bit, single-channel
-+	  ADC.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called max1241.
-+
- config MAX1363
- 	tristate "Maxim max1363 ADC driver"
- 	depends on I2C
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index a1f1fbec0f87..37d6f17559dc 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -54,6 +54,7 @@ obj-$(CONFIG_LTC2497) += ltc2497.o
- obj-$(CONFIG_MAX1027) += max1027.o
- obj-$(CONFIG_MAX11100) += max11100.o
- obj-$(CONFIG_MAX1118) += max1118.o
-+obj-$(CONFIG_MAX1241) += max1241.o
- obj-$(CONFIG_MAX1363) += max1363.o
- obj-$(CONFIG_MAX9611) += max9611.o
- obj-$(CONFIG_MCP320X) += mcp320x.o
-diff --git a/drivers/iio/adc/max1241.c b/drivers/iio/adc/max1241.c
-new file mode 100644
-index 000000000000..541939c7abca
---- /dev/null
-+++ b/drivers/iio/adc/max1241.c
-@@ -0,0 +1,227 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * MAX1241 low-power, 12-bit serial ADC
-+ *
-+ * Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX1240-MAX1241.pdf
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/module.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/spi/spi.h>
-+
-+#define MAX1241_VAL_MASK GENMASK(11, 0)
-+#define MAX1241_SHUTDOWN_DELAY_USEC 4
-+
-+enum max1241_id {
-+	max1241,
-+};
-+
-+struct max1241 {
-+	struct spi_device *spi;
-+	struct mutex lock;
-+	struct regulator *vdd;
-+	struct regulator *vref;
-+	struct gpio_desc *shutdown;
-+
-+	__be16 data ____cacheline_aligned;
-+};
-+
-+static const struct iio_chan_spec max1241_channels[] = {
-+	{
-+		.type = IIO_VOLTAGE,
-+		.indexed = 1,
-+		.channel = 0,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				BIT(IIO_CHAN_INFO_SCALE),
-+	},
-+};
-+
-+static int max1241_read(struct max1241 *adc)
-+{
-+	struct spi_transfer xfers[] = {
-+		/*
-+		 * Begin conversion by bringing /CS low for at least
-+		 * tconv us.
-+		 */
-+		{
-+			.len = 0,
-+			.delay.value = 8,
-+			.delay.unit = SPI_DELAY_UNIT_USECS,
-+		},
-+		/*
-+		 * Then read two bytes of data in our RX buffer.
-+		 */
-+		{
-+			.rx_buf = &adc->data,
-+			.len = 2,
-+		},
-+	};
-+
-+	return spi_sync_transfer(adc->spi, xfers, ARRAY_SIZE(xfers));
-+}
-+
-+static int max1241_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
-+{
-+	int ret, vref_uV;
-+	struct max1241 *adc = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&adc->lock);
-+
-+		if (adc->shutdown) {
-+			gpiod_set_value(adc->shutdown, 0);
-+			udelay(MAX1241_SHUTDOWN_DELAY_USEC);
-+			ret = max1241_read(adc);
-+			gpiod_set_value(adc->shutdown, 1);
-+		} else
-+			ret = max1241_read(adc);
-+
-+		if (ret) {
-+			mutex_unlock(&adc->lock);
-+			return ret;
-+		}
-+
-+		*val = (be16_to_cpu(adc->data) >> 3) & MAX1241_VAL_MASK;
-+
-+		mutex_unlock(&adc->lock);
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		vref_uV = regulator_get_voltage(adc->vref);
-+
-+		if (vref_uV < 0)
-+			return vref_uV;
-+
-+		*val = vref_uV / 1000;
-+		*val2 = 12;
-+
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info max1241_info = {
-+	.read_raw = max1241_read_raw,
-+};
-+
-+static void max1241_disable_vdd_action(void *data)
-+{
-+	struct max1241 *adc = data;
-+	struct device *dev = &adc->spi->dev;
-+	int err;
-+
-+	err = regulator_disable(adc->vdd);
-+	if (err)
-+		dev_err(dev, "could not disable vdd regulator.\n");
-+}
-+
-+static void max1241_disable_vref_action(void *data)
-+{
-+	struct max1241 *adc = data;
-+	struct device *dev = &adc->spi->dev;
-+	int err;
-+
-+	err = regulator_disable(adc->vref);
-+	if (err)
-+		dev_err(dev, "could not disable vref regulator.\n");
-+}
-+
-+static int max1241_probe(struct spi_device *spi)
-+{
-+	struct device *dev = &spi->dev;
-+	struct iio_dev *indio_dev;
-+	struct max1241 *adc;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	adc = iio_priv(indio_dev);
-+	adc->spi = spi;
-+	mutex_init(&adc->lock);
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	adc->vdd = devm_regulator_get(dev, "vdd");
-+	if (IS_ERR(adc->vdd)) {
-+		dev_err(dev, "failed to get vdd regulator\n");
-+		return PTR_ERR(adc->vdd);
-+	}
-+
-+	ret = regulator_enable(adc->vdd);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, max1241_disable_vdd_action, adc);
-+	if (ret) {
-+		dev_err(dev, "could not set up vdd regulator cleanup action\n");
-+		return ret;
-+	}
-+
-+	adc->vref = devm_regulator_get(dev, "vref");
-+	if (IS_ERR(adc->vref)) {
-+		dev_err(dev, "failed to get vref regulator\n");
-+		return PTR_ERR(adc->vref);
-+	}
-+
-+	ret = regulator_enable(adc->vref);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, max1241_disable_vref_action, adc);
-+	if (ret) {
-+		dev_err(dev, "could not set up vref regulator cleanup action\n");
-+		return ret;
-+	}
-+
-+	adc->shutdown = devm_gpiod_get_optional(dev, "shutdown",
-+						GPIOD_OUT_HIGH);
-+	if (IS_ERR(adc->shutdown))
-+		return PTR_ERR(adc->shutdown);
-+
-+	if (adc->shutdown)
-+		dev_dbg(dev, "shutdown pin passed, low-power mode enabled");
-+	else
-+		dev_dbg(dev, "no shutdown pin passed, low-power mode disabled");
-+
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->dev.parent = dev;
-+	indio_dev->info = &max1241_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = max1241_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(max1241_channels);
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static const struct spi_device_id max1241_id[] = {
-+	{ "max1241", max1241 },
-+	{}
-+};
-+
-+static const struct of_device_id max1241_dt_ids[] = {
-+	{ .compatible = "maxim,max1241" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, max1241_dt_ids);
-+
-+static struct spi_driver max1241_spi_driver = {
-+	.driver = {
-+		.name = "max1241",
-+		.of_match_table = max1241_dt_ids,
-+	},
-+	.probe = max1241_probe,
-+	.id_table = max1241_id,
-+};
-+module_spi_driver(max1241_spi_driver);
-+
-+MODULE_AUTHOR("Alexandru Lazar <alazar@startmail.com>");
-+MODULE_DESCRIPTION("MAX1241 ADC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+> On Tue, 2020-03-31 at 11:08 -0700, Brendan Higgins wrote:
+> > On Tue, Mar 31, 2020 at 5:23 AM Matti Vaittinen
+> > <matti.vaittinen@fi.rohmeurope.com> wrote:
+> > >     Add a KUnit test for the linear_ranges helper.
+> > >
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> >
+> > One minor nit, other than that:
+> >
+> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> >
+> > > ---
+> > >
+>
+> /// Snip
+>
+> > > +
+> > > +/* First things first. I deeply dislike unit-tests. I have seen
+> > > all the hell
+> > > + * breaking loose when people who think the unit tests are "the
+> > > silver bullet"
+> > > + * to kill bugs get to decide how a company should implement
+> > > testing strategy...
+> > > + *
+> > > + * Believe me, it may get _really_ ridiculous. It is tempting to
+> > > think that
+> > > + * walking through all the possible execution branches will nail
+> > > down 100% of
+> > > + * bugs. This may lead to ideas about demands to get certain % of
+> > > "test
+> > > + * coverage" - measured as line coverage. And that is one of the
+> > > worst things
+> > > + * you can do.
+> > > + *
+> > > + * Ask people to provide line coverage and they do. I've seen
+> > > clever tools
+> > > + * which generate test cases to test the existing functions - and
+> > > by default
+> > > + * these tools expect code to be correct and just generate checks
+> > > which are
+> > > + * passing when ran against current code-base. Run this generator
+> > > and you'll get
+> > > + * tests that do not test code is correct but just verify nothing
+> > > changes.
+> > > + * Problem is that testing working code is pointless. And if it is
+> > > not
+> > > + * working, your test must not assume it is working. You won't
+> > > catch any bugs
+> > > + * by such tests. What you can do is to generate a huge amount of
+> > > tests.
+> > > + * Especially if you were are asked to proivde 100% line-coverage
+> > > x_x. So what
+> > > + * does these tests - which are not finding any bugs now - do?
+> >
+> > I don't entirely disagree. I have worked on projects that do testing
+> > well where it actually makes development faster, and I have worked on
+> > projects that do testing poorly where it never improves code quality
+> > and is just an encumbrance, and I have never seen a project get to
+> > 100% coverage (nor would I want to).
+> >
+> > Do you feel differently about incremental coverage vs. absolute
+> > coverage? I have found incremental coverage to be a lot more valuable
+> > in my experiences.
+>
+> I think I have only been dealing with projects measuring absolute
+> coverage. I think seeing a coverage as %-number is mostly not
+> interesting to me. What I think could be interesting is showing the
+> code-paths test has walked through. I believe that code spots that
+> should be tested should be hand picked by a human. When we look at any
+> %-number, we do not know what kind of code the test has tested.
 
+Ah, okay, code coverage by functions called is a thing and GCOV + LCOV
+for the Linux kernel can actually give these nice reports that show
+the code paths that have been executed. It requires a bit of manual
+review, but I have found it pretty handy. Let me try to find you an
+example...
+
+> > You seem pretty passionate about this. Would you like to be included
+> > in our unit testing discussions in the future?
+>
+> I think it would be nice :) I don't expect I will be active talker
+> there but I really like to know what direction things are proceeding in
+> general. And who knows, maybe I will have a word to say at times :) So
+> please, include me if it is not a big thing for you.
+
+Absolutely! Would you be interested in joining our mailing list:
+
+https://groups.google.com/g/kunit-dev
+
+> //Snip
+>
+> > > +
+> > > +static void range_test_get_value(struct kunit *test)
+> > > +{
+> > > +       int ret, i;
+> > > +       unsigned int sel, val;
+> > > +
+> > > +       for (i = 0; i < RANGE1_NUM_VALS; i++) {
+> > > +               sel = range1_sels[i];
+> > > +               ret = linear_range_get_value_array(&testr[0], 2,
+> > > sel, &val);
+> > > +               KUNIT_EXPECT_EQ(test, 0, ret);
+> >
+> > nit: It looks like the next line might crash if this expectation
+> > fails. If this is the case, you might want to use a KUNIT_ASSERT_*
+> > here.
+>
+> Huh. I re-read this and almost agreed with you. Then I re-re-read this
+> and disagreed. Perhaps we should write an unit-test to test this ;)
+>
+> The range1_sels and range1_vals arrays should always be of same size.
+> Thus the crash should not occur here. If RANGE1_NUM_VALS was bad then
+> we would get the crash already at
+>
+> > > +               sel = range1_sels[i];
+>
+> The linear_range_get_value_array() may return non zero value if value
+> contained in range1_sels[i] is not in the range - but range1_vals[i]
+> should still be valid memory.
+
+Got it. Sorry, I just assumed the second check was invalid if the
+first one was invalid.
+
+All looks good to me then!
