@@ -2,185 +2,199 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33118C2D0F3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 13:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75D8C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 13:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0472E2077D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 13:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8352073B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 13:42:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="iJgSy+pp"
+	dkim=pass (2048-bit key) header.d=nigauri-org.20150623.gappssmtp.com header.i=@nigauri-org.20150623.gappssmtp.com header.b="zKQiYJD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732396AbgDANi3 (ORCPT
+        id S1732550AbgDANml (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 09:38:29 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:42226 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732442AbgDANi2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 09:38:28 -0400
-Received: by mail-vk1-f194.google.com with SMTP id e20so6683381vke.9
-        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 06:38:25 -0700 (PDT)
+        Wed, 1 Apr 2020 09:42:41 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:37210 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732396AbgDANml (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 09:42:41 -0400
+Received: by mail-pj1-f68.google.com with SMTP id o12so2740862pjs.2
+        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 06:42:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tdGCqc9X95oHSJMV+qy+8plsVCVI++tvDUGtwBmzzE0=;
-        b=iJgSy+ppUkCv23YRcokF5MvB1CtI9Q9oPoqYsxGBvu9wQipZSozOMMaBt5dk8Z64Pw
-         pTqrH4QMYPH1T/fOh6ky2k1mwgCWG7thPsK0HAJKY+KXigsZcFA+vVdLs/+lh9GW4g30
-         qbRMR59VqZieEJeHPKCmGXfF7UbjExFTSoH7GkWcm0/jwTeKIVdLWDpubhtHxQnMbAgz
-         Ghv9x6l9K3/76kloSSkSjPNzkOp95zWBlJehfWWaBtJv76JVFxFIa+/Ygzb9Esu3jKuQ
-         0hsOys1sDLjt4KEaEehzyUyS3F73eRnw2Mfvv0aRNpK0bNEezRK7eWIi7O8gknxzWU0R
-         Eexg==
+        d=nigauri-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hJRkuri+52/NYhR4P5oF7/5wtZs4I8toehnqIWt5fAw=;
+        b=zKQiYJD43I58XZSGeOdLFmb066UAc9qa1JgNxJPsP9RoIqQVsFmHmId4uZqwtPh2jr
+         jLUTOXuf2v/WGLTLgn/hx4i6rV7sDazrrx/x3rOJlXcdy/1cCRSQjHRdYad1NUKT4HEe
+         ns2/XGeDQr+hXBUmixVdievZUsvm0oMdGVu/10OGeKnfOF7tAg/cFtqwAVgYjxXya+q1
+         NvZZJ+w1vqQ8fU+QFckJ1rXxCHYqylPTEXBE5U66R3ERaK0zEVqCBex4o6xit70JScKF
+         GuVUhND+iTDenLK6SzrfNdAFsUR2X2ZUsjOucAdjUbLk2MNnNDW17Rb85Kspne1ScnJz
+         t1nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tdGCqc9X95oHSJMV+qy+8plsVCVI++tvDUGtwBmzzE0=;
-        b=qQIg9pyms+fMWjoZt70RaNdZTEdVjcCAqcV7wXzxEzGdmtGbZzIHOMoj/iYVj3glAx
-         Ku4ml+aPSL9QE9xCD4zBn+efG8Mvd1t0O6Fy2caFd6sFsVl5w7EJfuRxwkxG841DOfZM
-         vJlPQpxt4I7wvv4SdRV2Ay4lb5gGTda2mTxnbR3eZcn3Zq66rOb3eUKxOfGGCIGAnpuy
-         XexfumMBZ2EHMCBPl/3ahj7Mtj8XfrATUqQjTxmbFhMWmqbn1v7v6EnEGx8ZR5DWuNSz
-         6KJo2YBowFpYf/Pa+hcYr6f4kegBLc8hmJh6/IiSRGveUoaqqwvvrh0yoyC8ac1BeI8I
-         QXlw==
-X-Gm-Message-State: AGi0PuYdOq5Xhninl6srn9tKVt/uOGWW4Aooha0S+DNGOhPs2Wv2qZQM
-        5tx+UmsKTt1W15Du2igoXyyzjYMLMXflE04CH3Pq3Q==
-X-Google-Smtp-Source: APiQypK82L+3ASqFUwhZ41FJdoIyKv5f4kEy867p4zztojbVdS++g9Yx4zgyKPjtA8Vk65/Js9wTmlxCm8JpqJ5m7bo=
-X-Received: by 2002:a1f:ee05:: with SMTP id m5mr16812468vkh.9.1585748305004;
- Wed, 01 Apr 2020 06:38:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hJRkuri+52/NYhR4P5oF7/5wtZs4I8toehnqIWt5fAw=;
+        b=ETQABSIHGylczDTeb8qVaflANSXlGUUEzbRjC3LMPetJ9GqSSllAJu5L3CjGtNGIeC
+         LKSO7LWNnqd4GHqQ2U7Fx/DaOjrByhECf3L10FafH2KGpesWdHqd72o9I4TPtBrkrRS6
+         J4NgibQL3/1JAXVXNE4LIVtOzArbWvZ5h5Wa+rJ959TTgWuuv3hWN79Vyc0EtKy4kqfB
+         JbDP++QJ0q9pjhCl9a6GAFSyxAvGgXStXR/GTPdZaSoHeVz04beCP78sNJRDXcQ1HRIq
+         g61VKWfpCNTgjdiEZkSL+3E5TBDtmiCrZEvKB1BIQjDZY/Vlbpzp0Qd7bGbH/ElETF6m
+         lHeQ==
+X-Gm-Message-State: AGi0PuaUp5DiXjJDfkL0RuUFAvQDJrZUTOzEWGhAj34IoTKRT6/ZDdUL
+        NsVzfz0gUgmSOP1A5UQ2gpMx+lXmhA==
+X-Google-Smtp-Source: APiQypKPUCKj53e9OPViAg30mCZMfIwyCH5EpAb0FsfM18/PiV3fHoyFFllX8iterjb+8o+gHbzp/g==
+X-Received: by 2002:a17:90a:94c8:: with SMTP id j8mr5035339pjw.155.1585748559475;
+        Wed, 01 Apr 2020 06:42:39 -0700 (PDT)
+Received: from localhost ([2405:6581:5360:1800:bf52:1f8e:88d2:6ec])
+        by smtp.gmail.com with ESMTPSA id lj14sm1710606pjb.25.2020.04.01.06.42.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 06:42:38 -0700 (PDT)
+From:   Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+To:     devicetree@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+Subject: [PATCH] dt-bindings: i2c: cadence: Migrate i2c-cadence documentation to YAML
+Date:   Wed,  1 Apr 2020 22:42:22 +0900
+Message-Id: <20200401134222.60317-1-iwamatsu@nigauri.org>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-References: <cover.1585738725.git.amit.kucheria@linaro.org>
- <146b5dfebf23321c1eed8190ada957e2264ffe65.1585738725.git.amit.kucheria@linaro.org>
- <da9860cf-0c2e-b7ff-47c2-19c79b06ad55@arm.com>
-In-Reply-To: <da9860cf-0c2e-b7ff-47c2-19c79b06ad55@arm.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Wed, 1 Apr 2020 19:08:13 +0530
-Message-ID: <CAHLCerMvwfBEGO6O9kHMg14AfJ1bEO7ZP4i=SH3XO6HCKucVKQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: thermal: Add yaml bindings for
- thermal sensors
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 6:10 PM Lukasz Luba <lukasz.luba@arm.com> wrote:
->
->
->
-> On 4/1/20 12:15 PM, Amit Kucheria wrote:
-> > As part of moving the thermal bindings to YAML, split it up into 3
-> > bindings: thermal sensors, cooling devices and thermal zones.
-> >
-> > The property #thermal-sensor-cells is required in each device that acts
-> > as a thermal sensor. It is used to uniquely identify the instance of the
-> > thermal sensor inside the system.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> >   .../bindings/thermal/thermal-sensor.yaml      | 72 +++++++++++++++++++
-> >   1 file changed, 72 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
-> > new file mode 100644
-> > index 0000000000000..920ee7667591d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
-> > @@ -0,0 +1,72 @@
-> > +# SPDX-License-Identifier: (GPL-2.0)
-> > +# Copyright 2020 Linaro Ltd.
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/thermal/thermal-sensor.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Thermal sensor binding
-> > +
-> > +maintainers:
-> > +  - Amit Kucheria <amitk@kernel.org>
-> > +
-> > +description: |
-> > +  Thermal management is achieved in devicetree by describing the sensor hardware
-> > +  and the software abstraction of thermal zones required to take appropriate
-> > +  action to mitigate thermal overloads.
-> > +
-> > +  The following node types are used to completely describe a thermal management
-> > +  system in devicetree:
-> > +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
-> > +   - cooling-device: device used to dissipate heat either passively or artively
->
-> s/artively/actively
->
-> > +   - thermal-zones: a container of the following node types used to describe all
-> > +     thermal data for the platform
-> > +
-> > +  This binding describes the thermal-sensor.
-> > +
-> > +  Thermal sensor devices provide temperature sensing capabilities on thermal
-> > +  zones. Typical devices are I2C ADC converters and bandgaps. Thermal sensor
-> > +  devices may control one or more internal sensors.
-> > +
-> > +properties:
-> > +  "#thermal-sensor-cells":
-> > +    description:
-> > +      Used to uniquely identify a thermal sensor instance within an IC. Will be
-> > +      0 on sensor nodes with only a single sensor and at least 1 on nodes
-> > +      containing several internal sensors.
-> > +    enum: [0, 1]
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +    // Example 1: SDM845 TSENS
-> > +    soc: soc@0 {
-> > +            #address-cells = <2>;
-> > +            #size-cells = <2>;
-> > +
-> > +            /* ... */
-> > +
-> > +            tsens0: thermal-sensor@c263000 {
-> > +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-> > +                    reg = <0 0x0c263000 0 0x1ff>, /* TM */
-> > +                          <0 0x0c222000 0 0x1ff>; /* SROT */
-> > +                    #qcom,sensors = <13>;
-> > +                    interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                 <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
-> > +                    interrupt-names = "uplow", "critical";
-> > +                    #thermal-sensor-cells = <1>;
-> > +            };
-> > +
-> > +            tsens1: thermal-sensor@c265000 {
-> > +                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-> > +                    reg = <0 0x0c265000 0 0x1ff>, /* TM */
-> > +                          <0 0x0c223000 0 0x1ff>; /* SROT */
-> > +                    #qcom,sensors = <8>;
-> > +                    interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                 <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
-> > +                    interrupt-names = "uplow", "critical";
-> > +                    #thermal-sensor-cells = <1>;
-> > +            };
-> > +    };
-> > +...
-> >
->
-> Apart from the above, looks good.
->
-> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+The document was migrated to YAML format and renamed cdns,i2c-r1p10.yaml
 
-Thanks for the review. Will spin a v5 with those trivial fixes.
+Signed-off-by: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+---
+ .../bindings/i2c/cdns,i2c-r1p10.yaml          | 58 +++++++++++++++++++
+ .../devicetree/bindings/i2c/i2c-cadence.txt   | 28 ---------
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 59 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/cdns,i2c-r1p10.yaml
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-cadence.txt
+
+diff --git a/Documentation/devicetree/bindings/i2c/cdns,i2c-r1p10.yaml b/Documentation/devicetree/bindings/i2c/cdns,i2c-r1p10.yaml
+new file mode 100644
+index 0000000000000..dc0952f3780fe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/cdns,i2c-r1p10.yaml
+@@ -0,0 +1,58 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/i2c/cdns,i2c-r1p10.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Cadence I2C controller Device Tree Bindings
++
++maintainers:
++  - Michal Simek <michal.simek@xilinx.com>
++
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++
++properties:
++  compatible:
++    enum:
++      - cdns,i2c-r1p10 # cadence i2c controller version 1.0
++      - cdns,i2c-r1p14 # cadence i2c controller version 1.4
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    minItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clock-frequency:
++    minimum: 1
++    maximum: 400000
++    description: |
++      Desired operating frequency, in Hz, of the bus.
++
++  clock-name:
++    const: pclk
++    description: |
++      Input clock name.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    i2c@e0004000 {
++        compatible = "cdns,i2c-r1p10";
++        clocks = <&clkc 38>;
++        interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
++        reg = <0xe0004000 0x1000>;
++        clock-frequency = <400000>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++    };
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt b/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
+deleted file mode 100644
+index ebaa90c58c8e7..0000000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c-cadence.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Binding for the Cadence I2C controller
+-
+-Required properties:
+-  - reg: Physical base address and size of the controller's register area.
+-  - compatible: Should contain one of:
+-		* "cdns,i2c-r1p10"
+-		Note:	Use this when cadence i2c controller version 1.0 is used.
+-		* "cdns,i2c-r1p14"
+-		Note:	Use this when cadence i2c controller version 1.4 is used.
+-  - clocks: Input clock specifier. Refer to common clock bindings.
+-  - interrupts: Interrupt specifier. Refer to interrupt bindings.
+-  - #address-cells: Should be 1.
+-  - #size-cells: Should be 0.
+-
+-Optional properties:
+-  - clock-frequency: Desired operating frequency, in Hz, of the bus.
+-  - clock-names: Input clock name, should be 'pclk'.
+-
+-Example:
+-	i2c@e0004000 {
+-		compatible = "cdns,i2c-r1p10";
+-		clocks = <&clkc 38>;
+-		interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+-		reg = <0xe0004000 0x1000>;
+-		clock-frequency = <400000>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 38fe2f3f7b6f2..1fb95a12eda48 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2672,7 +2672,7 @@ F:	drivers/cpuidle/cpuidle-zynq.c
+ F:	drivers/block/xsysace.c
+ N:	zynq
+ N:	xilinx
+-F:	Documentation/devicetree/bindings/i2c/i2c-cadence.txt
++F:	Documentation/devicetree/bindings/i2c/cdns,i2c-r1p10.yaml
+ F:	Documentation/devicetree/bindings/i2c/i2c-xiic.txt
+ F:	drivers/clocksource/timer-cadence-ttc.c
+ F:	drivers/i2c/busses/i2c-cadence.c
+-- 
+2.26.0
+
