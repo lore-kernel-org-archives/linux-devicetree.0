@@ -2,35 +2,36 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7E5C2D0F3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 03:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90024C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 03:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DFA20757
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 03:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E4620772
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 03:10:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="T2MAplSi"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="JyJ+gy9/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731694AbgDADJt (ORCPT
+        id S1731744AbgDADKm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 23:09:49 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17802 "EHLO
+        Tue, 31 Mar 2020 23:10:42 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17816 "EHLO
         sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731592AbgDADJt (ORCPT
+        by vger.kernel.org with ESMTP id S1731617AbgDADKm (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Mar 2020 23:09:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585710529;
+        Tue, 31 Mar 2020 23:10:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585710570;
         s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
         h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=GaL5PU1+MzN2vdc172Z+8T4IBBXDqZVCHe8kJc6oNlI=;
-        b=T2MAplSi5XVCw0+Be5E2HUiFKOVdFUm2uFz0LN4gRQ7fgsF/ptwDQ+HAghBj+6aV
-        OStnO8fFHxU7pKzVu+SpI6/77iLpvTGGNsDKbAN9JVFuJPuilf8frZvyGqfWpxlsPIM
-        5i/6DP+PNOn+aQ58qnEwQu4Qc51v4bmHpFLDw6fA=
+        bh=KcAzchodFlHrCft8V2AwyHfzu9rilizY3Z6FGXX3y14=;
+        b=JyJ+gy9/NxNNe5zeYbTkc2ynPUYF/KFmz8AqZs/lElhDoux5BlGDaJFZv34m1C15
+        4+6qRl/zGc/SQQs14dizVehpX10ZzA1AbBqVzWIVt3wLgElhOjJrWi+uVGw0s2zYwnR
+        JrYxrCFXwPuihr+cu5Td3xv/hUxF8++r6pZ8k3TI=
 Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1585710527100667.6418910848599; Wed, 1 Apr 2020 11:08:47 +0800 (CST)
+        with SMTPS id 1585710568507865.2339431988825; Wed, 1 Apr 2020 11:09:28 +0800 (CST)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -42,12 +43,12 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Andrew Murray <amurray@thegoodpenguin.co.uk>,
         Paul Burton <paulburton@kernel.org>, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <20200401030658.1174045-1-jiaxun.yang@flygoat.com>
-Subject: [PATCH v2 0/5] Loongson64 Generic PCI driver v2
-Date:   Wed,  1 Apr 2020 11:06:44 +0800
+Message-ID: <20200401030658.1174045-5-jiaxun.yang@flygoat.com>
+Subject: [PATCH v2 4/5] MIPS: DTS: Loongson64: Add PCI Controller Node
+Date:   Wed,  1 Apr 2020 11:06:48 +0800
 X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200330114239.1112759-1-jiaxun.yang@flygoat.com>
-References: 
+In-Reply-To: <20200401030658.1174045-1-jiaxun.yang@flygoat.com>
+References: <20200401030658.1174045-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-ZohoCNMailClient: External
@@ -57,32 +58,51 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Jiaxun Yang (5):
-  PCI: OF: Don't remap iospace on unsupported platform
-  PCI: Add Loongson PCI Controller support
-  dt-bindings: Document Loongson PCI Host Controller
-  MIPS: DTS: Loongson64: Add PCI Controller Node
-  MIPS: Loongson64: Switch to generic PCI driver
+Add PCI Host controller node for Loongson64 with RS780E PCH dts.
+Note that PCI interrupts are probed via legacy way, as different
+machine have different interrupt arrangement, we can't cover all
+of them in dt.
 
- .../devicetree/bindings/pci/loongson.yaml     |  57 ++++
- arch/mips/Kconfig                             |   1 +
- arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  17 +-
- arch/mips/loongson64/Makefile                 |   2 +-
- arch/mips/loongson64/vbios_quirk.c            |  29 ++
- arch/mips/pci/Makefile                        |   1 -
- arch/mips/pci/fixup-loongson3.c               |  71 -----
- arch/mips/pci/ops-loongson3.c                 | 116 --------
- drivers/pci/controller/Kconfig                |   9 +
- drivers/pci/controller/Makefile               |   1 +
- drivers/pci/controller/pci-loongson.c         | 257 ++++++++++++++++++
- drivers/pci/of.c                              |   9 +
- 12 files changed, 380 insertions(+), 190 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
- create mode 100644 arch/mips/loongson64/vbios_quirk.c
- delete mode 100644 arch/mips/pci/fixup-loongson3.c
- delete mode 100644 arch/mips/pci/ops-loongson3.c
- create mode 100644 drivers/pci/controller/pci-loongson.c
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+--
+v2: Clean-up
+---
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
+diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/d=
+ts/loongson/rs780e-pch.dtsi
+index 45c54d555fa4..8766f97306c6 100644
+--- a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
++++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+@@ -5,10 +5,25 @@ bus@10000000 {
+ =09=09compatible =3D "simple-bus";
+ =09=09#address-cells =3D <2>;
+ =09=09#size-cells =3D <2>;
+-=09=09ranges =3D <0 0x10000000 0 0x10000000 0 0x10000000
++=09=09ranges =3D <0 0x00000000 0 0x00000000 0 0x00010000 /* ioports */
++=09=09=09=090 0x10000000 0 0x10000000 0 0x10000000
+ =09=09=09=090 0x40000000 0 0x40000000 0 0x40000000
+ =09=09=09=090xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Spa=
+ce */>;
+=20
++=09=09pci@1a000000 {
++=09=09=09compatible =3D "loongson,rs780e-pci";
++=09=09=09device_type =3D "pci";
++=09=09=09#address-cells =3D <3>;
++=09=09=09#size-cells =3D <2>;
++
++=09=09=09reg =3D <0 0x1a000000 0 0x02000000>;
++
++=09=09=09ranges =3D <0x01000000 0 0x00004000 0 0x00004000 0 0x00004000>,
++=09=09=09=09 <0x02000000 0 0x40000000 0 0x40000000 0 0x40000000>;
++
++=09=09=09bus-range =3D <0x00 0xff>;
++=09=09};
++
+ =09=09isa {
+ =09=09=09compatible =3D "isa";
+ =09=09=09#address-cells =3D <2>;
 --=20
 2.26.0.rc2
 
