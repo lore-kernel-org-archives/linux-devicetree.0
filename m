@@ -2,154 +2,153 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9F7C2D0F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 07:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3C8C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 07:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 556CE2080C
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 07:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D4020714
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 07:51:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLIfnCa9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pkfQ/rTh";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="ITytz5uZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731680AbgDAHhi (ORCPT
+        id S1731849AbgDAHvE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:37:38 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52752 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731849AbgDAHhi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 03:37:38 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t8so2046107wmi.2;
-        Wed, 01 Apr 2020 00:37:36 -0700 (PDT)
+        Wed, 1 Apr 2020 03:51:04 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:55120 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730426AbgDAHvE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 03:51:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1585727463; x=1617263463;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=xyOGMOkFbFXBYV/0h98KFIzzgltfZyPCzPOGrobzedg=;
+  b=pkfQ/rThTO3pxU/8dZZcGxh3Tn0Eni8epfF2rPwPvZfI1ikTgak5695/
+   xnF3v3KwEvNHtWA+kTfQh9NPEE662gcP/sCPdRvXN7T4feoYTgnAlBtdp
+   md4QHGqSRCpfm6NX3RXy0nOm5kh3S3MCZu3jUtA5xX2DL0n7SR6NfXf1F
+   oafSkRUiELjdv+tqnwWPv3dIpq/bTuQCEmbp5jn9Hf/qL4B6kzJhLPA3y
+   GVpeKMg8jRRMSwoUZOQEU7s/z02ERJvfMwfBv1KHbjdojfymiRg61y2lY
+   GTI9RphfqHQlxGKZlj7wTiIVaQDMcNegizoTk1kBdwJxXltO9zfCe4agL
+   A==;
+IronPort-SDR: o4UZu/PqwrW1/ckZK4vf1XrQZPdpcV0xAXPqv4WjMKg4XKCEXz0dXp4fHQevCjSZ8ZJbTb6+Wo
+ OHMSmwHO3i8LtyRzxQwRNg52YC/nIWV9TJqfhEv4PXF48iulYX3M/FHoryofOoQxq/QrSQ2lJn
+ TZQyrbE6u0mc0lkftSkn8Vp3Q4hGhJp+zBgrAecYKOBRBPrvvjss2/YnZbJXWggrkL0IP2QiR/
+ /uExEnGv/l7+UIGQTc/nXlhmNFuT/vyV5c2zQzxPZeOpGMX6ivCGfuNE9CZweQcxTqpQxYelOS
+ nVI=
+X-IronPort-AV: E=Sophos;i="5.72,330,1580799600"; 
+   d="scan'208";a="7695485"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Apr 2020 00:51:02 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 1 Apr 2020 00:51:01 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Wed, 1 Apr 2020 00:51:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vh9T3dSFem7xA2/q4mEgS4KEOgeymQvn08JQ96RQdvdmDzpEv4KIxBdkffm5HKDKdGiOYmjfXeiJco2hmH8H3mO94dfP3rXuvNS0EjA9PFwk5pdLizD+QhDg7g2XzIyfwqLEPxvCGs9CE0Z6U4ngZ/1Hgjd1fQL6G2eRTgtXzHcK6NJEOa6JuTf+NylAZ4X/XdW+Ur9thjM0ug+9/dnCKcusLiE/bIzsbjLQds/7uKKxBh+i3/SJXiCyFawYCwQyfrDm/EZuNExmdGpeEDYEnsd5q9vsf2OFOPoau2zNnCWGemEkKbfxstDjQzrx/1eguuwlCHUDEVPRs7ZsGtfaGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xyOGMOkFbFXBYV/0h98KFIzzgltfZyPCzPOGrobzedg=;
+ b=TU0ByHmNjHFdQg3PkNsqaLPQHuhqVOqsfx218uSOLxRlFYmoE9qqWG0tJMEricH4+FnDLSIt874+yuWRooWmS/Y1nn7s+VZAMuT95fVVVUBt2RXzrGxStF6wHdbp4/B+9Rydrnii17rq+KE+iAKX6UgJrw3rIawN8eJCYsuFGxWHzXEQMbfsAlIXXSGSVlM9XPp6/1qVsp49r03/xo0GkGZ1MqVwJbCMNzyWt6NKFYCcsc9fcFOBz1Sjsz1XphrWJlRGRU5Afw7Eokwqr2t7e6HCIhDmbdRqpPU20PGHMeJdTc7y6XTyLF5qk1dxIlgI3JtT7aWCBsUC379byvVOKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0Y6Wj9TjOPkwLscHBPA5Cfe2j0fMXJtpZJ9SAqxrysY=;
-        b=gLIfnCa9RtFY4bg+BQkrVUO4Rvy87KxQjWbI4NQsRQAzQL0j7izLckcgIVc92kpaIC
-         xqfFVmbpVbso5u+xZy9+UrR6XKHdhiFyWltAqmDbM2rzuZLhLJVuH2NiPb5Z1MWAH88r
-         i9ocprWSufx8F2X7UhYwELcDpu5DwChiP80XwBruxSesGs8H9BwuFhDO4uTL/2sRJAsO
-         2OgSzLfNkoKmgtbn5Np6X7TqKUDOmWuTNl6Ej4D9PfKmZE2wX0V3cmWoxAN4vsz0EmaK
-         y8LoUpmUhQ4VOgyL7wxa0ALaHJABHW/scbpQl9TEhsNSVYHhxdd5qD9OTVmND9jgR1U7
-         QAEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=0Y6Wj9TjOPkwLscHBPA5Cfe2j0fMXJtpZJ9SAqxrysY=;
-        b=RcG9ys32HAjz4x5aqwzzOjoWuvynlHBnWn91d733D/I6aYEnS29r5dprwmSyAC+yEZ
-         sQheb8wRK6j3abnUIvsJfamnVbqZGZ3Z69Y979ejlym/Tt/PHZPyW2gzQ4cAnpnvED1Y
-         finjJmYehV4djg2e1whNkWSqVZK9PAX9VT+D5y4FoBHoNtR/sDgq4OLxAVww/SY9fzRR
-         uod0IsvpDZTx3vXaT3a1GHfVkwKKdFQyNIsDUYE/EjW+gkMT7WyF67t8sdrexHbigP9d
-         H9niZvD/2DPkbMSy4tazlwWSQPQS6I0jhcokOTGVJ/sTpMxqVScBpXYQGShmcQscinml
-         2LUg==
-X-Gm-Message-State: AGi0PuZ4Rmna/TAhpHHhKwGkW9+uo9MwWLxF5kmgeh6HCzK0YCBZc5AM
-        TDVgLBFmUXSCag0HX4Ao7pRY7h1J
-X-Google-Smtp-Source: APiQypIo6BlXDVUAujJm5bjFl9PFx10seyVOAuO+YssZ1j2o9iXGGnPhJ3AFEfXIPfLYVm9Tx24sew==
-X-Received: by 2002:a1c:dd8b:: with SMTP id u133mr2754794wmg.109.1585726655777;
-        Wed, 01 Apr 2020 00:37:35 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id g3sm1793431wrm.66.2020.04.01.00.37.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 01 Apr 2020 00:37:35 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] arm64: dts: rockchip: add #phy-cells to all usb2-phy nodes
-Date:   Wed,  1 Apr 2020 09:37:25 +0200
-Message-Id: <20200401073725.6063-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200401073725.6063-1-jbx6244@gmail.com>
-References: <20200401073725.6063-1-jbx6244@gmail.com>
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xyOGMOkFbFXBYV/0h98KFIzzgltfZyPCzPOGrobzedg=;
+ b=ITytz5uZ21USFEv7k+6xKqqs03hurcLRS1TnuRDjVsIY7FLxEy50a6oBvJz7jmDvgC0hFxIsCwo6TgME9IPSvuGbTsjQA83keyR716FrgiuF9J3tlxWKEgfCd473xa3E96g85O3ZTtjtoae9363Hb0rQyIcU2zjIinpO6K3OfX4=
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com (2603:10b6:a03:1cc::28)
+ by BY5PR11MB4021.namprd11.prod.outlook.com (2603:10b6:a03:191::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Wed, 1 Apr
+ 2020 07:50:58 +0000
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::114b:fdb3:5bf5:2694]) by BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::114b:fdb3:5bf5:2694%5]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
+ 07:50:58 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+        <davem@davemloft.net>
+Subject: Re: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
+Thread-Topic: [PATCH] net: mdio: of: Do not treat fixed-link as PHY
+Thread-Index: AQHWBqykuJ0v/jHHYESe6xUz4L35r6hhU7EAgAAOiACAAQRNgIAARHUAgAE8MwA=
+Date:   Wed, 1 Apr 2020 07:50:58 +0000
+Message-ID: <12cdbe77-b932-9194-5d5e-5058622cef6c@microchip.com>
+References: <20200330160136.23018-1-codrin.ciubotariu@microchip.com>
+ <20200330163028.GE23477@lunn.ch>
+ <9bbbe2ed-985b-49e7-cc16-8b6bae3e8e8e@gmail.com>
+ <bd9f2507-958e-50bf-2b84-c21adf6ab588@microchip.com>
+ <20200331125908.GB24486@lunn.ch>
+In-Reply-To: <20200331125908.GB24486@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Codrin.Ciubotariu@microchip.com; 
+x-originating-ip: [86.121.14.3]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ba4cd23a-87b5-45ba-7aab-08d7d6116a4d
+x-ms-traffictypediagnostic: BY5PR11MB4021:
+x-microsoft-antispam-prvs: <BY5PR11MB4021EB29B488801AC9068C57E7C90@BY5PR11MB4021.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 03607C04F0
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4497.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(376002)(366004)(136003)(346002)(396003)(39860400002)(66476007)(53546011)(86362001)(8676002)(6916009)(478600001)(6506007)(81156014)(36756003)(5660300002)(81166006)(2906002)(76116006)(71200400001)(54906003)(66946007)(91956017)(4744005)(26005)(66446008)(66556008)(8936002)(186003)(6486002)(2616005)(6512007)(31686004)(64756008)(31696002)(4326008)(316002);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3X0VObii2iflKf9PLl9ATGIcA/SgQDPRq+kr5mUVa5QJK3KoX0yV+haGavbFcgpGwN8e0E4n3WR4RhI3xEZt8ZHNzaSnuLdArqtb2lAiQDzy3odeGDl1EAVEHmRlxjATEIq2poVYAeDYktpURWiX/LYrINAXeuW6V4ljlb4RJCVtZpzPudQrA0BhFuqR3F89GvfpdsfpiCeeoPEkpeapw/GWP5wjmcLKCp2ALIXN4VUNB6t5VmYspbd22xTnSMk2WEpwdME22cLKVpgOO0+glYKP0UdIzygkRoQFH2+5TV8Kp4vSKf1stawKTnWw3Af6KhPbQ+BbNYXKwpnIWlg3XVhfGRnxp9aD1v+wKmykBpXHHwvbGN9spx1r9j6jDj/lC/WHNlPk3rU16xjqF12IV0mM3pTi9y1yvQxaJSGA3apW9IDHOwfeQ8bMIyeZe9gv
+x-ms-exchange-antispam-messagedata: RgfE5n3CUlf2+GGAB4mejdKYJ3/sBsYAJUnkqOTfZ0j0CeJhxjxlH/4dh1dq9SWe+Nlu/nqRIW+EMFUgSrxd8IVVZVxWL3V8CmdC9mAIkVhfWm0aaPpBShTJVtAa7v/vutCJBrun5hMR2Hzj75clQg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E32D10737FCB4540921FDE0399F08610@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba4cd23a-87b5-45ba-7aab-08d7d6116a4d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 07:50:58.0466
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: v9Och2DVSxi0zaaLl3GBZvPouuy8cyR4dODVnCYyyKs0B6YFUSRgUPqTgpfJwT1GZW2iRzSDYvYQRd1UHDwlYhVfmDyeDClXkuvUjqyBvRs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4021
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Current dts files for Rockchip with 'usb2-phy' subnodes
-are manually verified. In order to automate this process
-phy-rockchip-inno-usb2.txt has been converted to yaml.
-'usb2-phy' nodes are now checked by:
-'phy-rockchip-inno-usb2.yaml' and 'phy-provider.yaml'.
-'#phy-cells' is now required for all usb2-phy nodes,
-so add them.
-
-make -k ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/
-phy/phy-rockchip-inno-usb2.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/px30.dtsi   | 5 +++--
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 3 ++-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 6 ++++--
- 3 files changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index bd5f51d23..6f7171290 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -822,10 +822,11 @@
- 			reg = <0x100 0x20>;
- 			clocks = <&pmucru SCLK_USBPHY_REF>;
- 			clock-names = "phyclk";
--			#clock-cells = <0>;
-+			clock-output-names = "usb480m_phy";
- 			assigned-clocks = <&cru USB480M>;
- 			assigned-clock-parents = <&u2phy>;
--			clock-output-names = "usb480m_phy";
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
- 			status = "disabled";
- 
- 			u2phy_host: host-port {
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 8976c869f..470783a48 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -830,9 +830,10 @@
- 			clocks = <&xin24m>;
- 			clock-names = "phyclk";
- 			clock-output-names = "usb480m_phy";
--			#clock-cells = <0>;
- 			assigned-clocks = <&cru USB480M>;
- 			assigned-clock-parents = <&u2phy>;
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
- 			status = "disabled";
- 
- 			u2phy_otg: otg-port {
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 3dc8fe620..a7ee5aa65 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1391,8 +1391,9 @@
- 			reg = <0xe450 0x10>;
- 			clocks = <&cru SCLK_USB2PHY0_REF>;
- 			clock-names = "phyclk";
--			#clock-cells = <0>;
- 			clock-output-names = "clk_usbphy0_480m";
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
- 			status = "disabled";
- 
- 			u2phy0_host: host-port {
-@@ -1418,8 +1419,9 @@
- 			reg = <0xe460 0x10>;
- 			clocks = <&cru SCLK_USB2PHY1_REF>;
- 			clock-names = "phyclk";
--			#clock-cells = <0>;
- 			clock-output-names = "clk_usbphy1_480m";
-+			#clock-cells = <0>;
-+			#phy-cells = <0>;
- 			status = "disabled";
- 
- 			u2phy1_host: host-port {
--- 
-2.11.0
-
+T24gMzEuMDMuMjAyMCAxNTo1OSwgQW5kcmV3IEx1bm4gd3JvdGU6DQo+IEVYVEVSTkFMIEVNQUlM
+OiBEbyBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3MgeW91IGtub3cg
+dGhlIGNvbnRlbnQgaXMgc2FmZQ0KPiANCj4+IFRoYW5rcyBndXlzLiBJIHRob3VnaHQgdGhlcmUg
+bWlnaHQgYmUgb3RoZXIgY29udHJvbGxlcnMgdGhhdCBoYXZlIHRoZQ0KPj4gUEhZIG5vZGVzIGlu
+c2lkZSB0aGUgZXRoZXJuZXQgbm9kZS4NCj4gDQo+IEhpIENvZHJpbg0KDQpIaSBBbmRyZXcNCg0K
+PiANCj4gVGhlcmUgYXJlIHNvbWUgc3RpbGwgdXNpbmcgdGhpcyBkZXByZWNhdGVkIGZlYXR1cmUu
+IEJ1dCBtYWNiIGlzIHRoZQ0KPiBvbmx5IG9uZSBkb2luZyB0aGlzIG9kZCBsb29waW5nIG92ZXIg
+Y2hpbGQgbm9kZXMuIEl0IGlzIHRoaXMgbG9vcGluZw0KPiB3aGljaCBpcyBicmVha2luZyB0aGlu
+Z3MsIG5vdCB0aGUgdXNlIG9mIHRoZSBkZXByZWNhdGVkIGZlYXR1cmUNCj4gaXRzZWxmLg0KDQpZ
+ZXMsIGl0cyBkdWUgdG8gdGhlIGZhY3QgdGhhdCB0aGUgTURJTyBub2RlIGlzIG1pc3NpbmcuIFNo
+b3VsZCB3ZSBoYXZlIA0KaW4gbWluZCB0byBhZGQgYW4gTURJTyBub2RlIHVuZGVyIHRoZSBtYWNi
+IG5vZGUsIHdoZXJlIHdlIGNvdWxkIGFkZCB0aGUgDQpQSFkgbm9kZXM/IFRoZSBtYWNiIGJpbmRp
+bmdzIGRvbid0IHNlZW0gdG8gcmVxdWlyZSB0aGUgUEhZIG5vZGVzIA0KZGlyZWN0bHkgdW5kZXIg
+dGhlIG1hY2Igbm9kZSwgYnV0IHRoZSBjb21wYXRpYmlsaXR5IHdpdGggdGhlIGRlcHJlY2F0ZWQg
+DQpmZWF0dXJlIG5lZWRzIHRvIGJlIG1haW50YWluZWQuDQoNCkJlc3QgcmVnYXJkcywNCkNvZHJp
+bg==
