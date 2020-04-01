@@ -2,93 +2,117 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F627C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48827C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F2920842
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1CB207FF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YReJOvnM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgDAIUa (ORCPT
+        id S1726406AbgDAIVY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:20:30 -0400
-Received: from mga17.intel.com ([192.55.52.151]:36715 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgDAIUa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Apr 2020 04:20:30 -0400
-IronPort-SDR: UIN3sk57ourU3eRBAkihcrtyZhMJ77gKNNrXX+398kTeF/Xtv5Qn1SyjZmxm/RM0yW+kwNDQrV
- Fc5vrreDRoFA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 01:20:30 -0700
-IronPort-SDR: gcLKdk5leewbXh2NZqZHf8qkafOI+oTgdm3xH4UEYLpxs9isubzIwwu4awu9+iJuhnz77lD0/8
- tXpKeFVPV4tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,331,1580803200"; 
-   d="scan'208";a="242160906"
-Received: from vikasjox-mobl.amr.corp.intel.com (HELO localhost) ([10.249.39.53])
-  by fmsmga008.fm.intel.com with ESMTP; 01 Apr 2020 01:20:21 -0700
-Date:   Wed, 1 Apr 2020 11:20:19 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Christophe Richard <hristophe-h.ricard@st.com>
-Subject: Re: [PATCH v4 2/7] tpm: tpm_tis: Add check_data handle to
- tpm_tis_phy_ops in order to check data integrity
-Message-ID: <20200401082019.GB17325@linux.intel.com>
-References: <20200331113207.107080-1-amirmizi6@gmail.com>
- <20200331113207.107080-3-amirmizi6@gmail.com>
+        Wed, 1 Apr 2020 04:21:24 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:47564 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726197AbgDAIVY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 04:21:24 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0318Is1m016051;
+        Wed, 1 Apr 2020 10:21:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=2LCt8uA66pi/fY3wjKmgurjBraqWfS8tTA6ImKoZ4+M=;
+ b=YReJOvnM3mdzpepnWXqX+x1AX3MdpbBO910KweK2iWFva1K1R+zqB3Nx9riBzfJlXg4g
+ Mzpqx8Xdq/OTyGtVvt9ytzC5auozXjbkeGRvzPEggt/Q2xtnyA7xtAmXdAuccznKg+9G
+ YiRCW1Yhnl+Mh+3Ve+KEtOsosm5xSl/othLbb3zXvLyVrbBh4J0LSnh16wJh+WTvXUk3
+ g8BQumoLKq/xngo4vOxllOhRBlDrMNlKXPLCvLGSjqosM0k+xe2SXaINrahUYzrpErZN
+ HoX//vbhW3WBVpe/xhqjCTu5Zi5MM0K1Th/Wm4YRL0+5icBYwLIJONRrzBhIgmGWjRjW oQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 301xbmkrhj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Apr 2020 10:21:15 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8E106100038;
+        Wed,  1 Apr 2020 10:21:10 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 77A912126CB;
+        Wed,  1 Apr 2020 10:21:10 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Apr
+ 2020 10:20:12 +0200
+Subject: Re: [PATCH] ARM: dts: stm32: add cortex-M4 pdds management in
+ Cortex-M4 node
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>
+References: <20200320125841.11059-1-arnaud.pouliquen@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <0b14ed2a-c384-af73-2e28-541eadb309e2@st.com>
+Date:   Wed, 1 Apr 2020 10:20:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331113207.107080-3-amirmizi6@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200320125841.11059-1-arnaud.pouliquen@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_07:2020-03-31,2020-03-31 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 02:32:02PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
-> 
-> In order to compute the crc over the data sent in lower layer
->  (I2C for instance), tpm_tis_check_data() calls an operation (if available)
->  to check data integrity. If data integrity cannot be verified, a retry
->  attempt to save the sent/received data is implemented.
-> 
-> The current steps are done when sending a command:
->     1. Host writes to TPM_STS.commandReady.
->     2. Host writes command.
->     3. Host checks that TPM received data is valid.
->     4. If data is currupted go to step 1.
-> 
-> When receiving data:
->     1. Host checks that TPM_STS.dataAvail is set.
->     2. Host saves received data.
->     3. Host checks that received data is correct.
->     4. If data is currupted Host writes to TPM_STS.responseRetry and go to
->         step 1.
-> 
-> Co-developed-by: Christophe Richard <hristophe-h.ricard@st.com>
-> Signed-off-by: Christophe Richard <hristophe-h.ricard@st.com>
-> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+Hi Arnaud
 
-The email is malformed.
+On 3/20/20 1:58 PM, Arnaud Pouliquen wrote:
+> Add declarations related to the syscon pdds for deep sleep management.
+> 
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> ---
 
-So.. How did Christophe participate on writing this patch? I haven't
-seen him shouting anything about the subject and still his SOB is
-there.
+Can you please rebase it on top of stm32-next ?
 
-/Jarkko
+>   arch/arm/boot/dts/stm32mp151.dtsi | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
+> index 7b93eb4b8f49..46ea1024340e 100644
+> --- a/arch/arm/boot/dts/stm32mp151.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp151.dtsi
+> @@ -1115,6 +1115,11 @@
+>   			};
+>   		};
+>   
+> +		pwr_mcu: pwr_mcu@50001014 {
+> +			compatible = "syscon";
+> +			reg = <0x50001014 0x4>;
+> +		};
+> +
+>   		exti: interrupt-controller@5000d000 {
+>   			compatible = "st,stm32mp1-exti", "syscon";
+>   			interrupt-controller;
+> @@ -1693,6 +1698,7 @@
+>   			st,syscfg-tz = <&rcc 0x000 0x1>;
+>   			st,syscfg-rsc-tbl = <&tamp 0x144 0xFFFFFFFF>;
+>   			st,syscfg-copro-state = <&tamp 0x148 0xFFFFFFFF>;
+> +			st,syscfg-pdds = <&pwr_mcu 0x0 0x1>;
+>   			status = "disabled";
+>   		};
+>   	};
+> 
