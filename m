@@ -2,140 +2,126 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D151C2D0E7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 07:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2B9C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 07:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B9720772
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 07:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A38820772
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 07:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Yr1L/GEO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4xGsdFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731725AbgDAHbN (ORCPT
+        id S1731850AbgDAHhh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 03:31:13 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:55580 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731878AbgDAHbN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 03:31:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585726272; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=KosNbnHtjH3p3D7s3+9XQ5MW0eKcI46fqALRBrUF8A8=; b=Yr1L/GEO0gI4UbdbYdRNYDIR9sUhIFQTVikARL8QXOmCkcXswetRrxcN+Sv0wyMYb8T59mXi
- hZ1aUbth+AOi7MbQ9w5xzcc4Ja4TJpA/ZL2ukb6Ins1XmNkqVjCaYr+mdQeE/69srCkUl8IX
- sgC2Mmv3Q0rU0GietU4UATWNbGA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e844332.7f31c0ae7650-smtp-out-n05;
- Wed, 01 Apr 2020 07:30:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DEE31C433D2; Wed,  1 Apr 2020 07:30:57 +0000 (UTC)
-Received: from Pillair (unknown [183.83.66.17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 427C5C433BA;
-        Wed,  1 Apr 2020 07:30:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 427C5C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   <pillair@codeaurora.org>
-To:     "'Rob Herring'" <robh@kernel.org>
-Cc:     <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585134100-5944-1-git-send-email-pillair@codeaurora.org> <1585134100-5944-2-git-send-email-pillair@codeaurora.org> <20200331214051.GA2053@bogus>
-In-Reply-To: <20200331214051.GA2053@bogus>
-Subject: RE: [PATCH v2 1/3] dt-bindings: ath10k: Add wifi-firmware subnode for wifi node
-Date:   Wed, 1 Apr 2020 13:00:50 +0530
-Message-ID: <002001d607f7$7bc8ebd0$735ac370$@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQI6fc28eknFIs45cOq24ZTPq1i0fwFvI4SMAkxWCq6nfRN3kA==
-Content-Language: en-us
+        Wed, 1 Apr 2020 03:37:37 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35524 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731680AbgDAHhh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 03:37:37 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d5so29355141wrn.2;
+        Wed, 01 Apr 2020 00:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UL9L/CyBrVCzEQgwvr+OzrzI0iM1qlY+IPc8B3d54Uk=;
+        b=F4xGsdFAsV/TIjXPGAqXfSqlyGmZ30mfw39njgikMjE0/4qVNARRKCUhFTNcvs5HTH
+         T+5J2BSmhrESB3sIoug/Kk/Lli0CDqNb5OIY8Pd5dDr6u1eoZ77RASNtvfEdxMKsV9iy
+         cdXc0U/K7p1q07UqMx1aYS7oC4w0sh+XExOKCFBNaA7LshlaKCgIk1RZAOYTFGae5ibD
+         dPtgg7Y4itEheuRdbUSPwWfS+/dQJ8qVC/BkFPKEoGHPENaPDtSjfSIFwTlHRgUk9ZXL
+         r28d/c/wmK8UhrOP42pbzm3SA8mOV7J2bR8O0O/DX52LrxT+uuNX7iEEg9OmP8Q3JU0h
+         oyBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UL9L/CyBrVCzEQgwvr+OzrzI0iM1qlY+IPc8B3d54Uk=;
+        b=UN3msUZLKP87tocdUDHIt347tMkQqx2h19s/pVoM/1pfjjinYujvMSb9ucIkJ/0K13
+         kvvnE5MtPBJDj506ygqXKSzLX3ZirwogJBHmNq4n9cF7U2maA5y6guGQ3cXVkDvntFQW
+         VuQ8tRRNwRQHaVvU+Qw9+894ovQTFHt7iRP+39aRrPqpCNgfhsVh4Vlz+xzBytRwuaJM
+         ZMd++qozcA6m+8Iwd4aQFx2tCSAvUkNWvJ1uvJUd++Cyg3APW1ra2ynw7m2WHFurqxvb
+         6pgF89/pqRvM4hYnZN6c7nK/R3Pof4i7a06gVPC+gl3HV2MPQZKllf4lvpteLEFbcwle
+         Cb1A==
+X-Gm-Message-State: ANhLgQ0LjxPr54zlAO2DRYefFxLvDCn8PUhJVGF1kS03EhEeCIG/BrSn
+        V1qnuunDoDLDRipCxCyq+UE=
+X-Google-Smtp-Source: ADFU+vtwdLJ3roDKyKh7gH+Nq4Ettv7bI9BNPrDCjycpvqCdmWj6VAchRJw+IPzp8foaVLPgtOHruQ==
+X-Received: by 2002:adf:decf:: with SMTP id i15mr25756408wrn.277.1585726654815;
+        Wed, 01 Apr 2020 00:37:34 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id g3sm1793431wrm.66.2020.04.01.00.37.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Apr 2020 00:37:33 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] ARM: dts: rockchip: add #phy-cells to all usb2-phy nodes
+Date:   Wed,  1 Apr 2020 09:37:24 +0200
+Message-Id: <20200401073725.6063-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-Comments inline.
+Current dts files for Rockchip with 'usb2-phy' subnodes
+are manually verified. In order to automate this process
+phy-rockchip-inno-usb2.txt has been converted to yaml.
+'usb2-phy' nodes are now checked by:
+'phy-rockchip-inno-usb2.yaml' and 'phy-provider.yaml'.
+'#phy-cells' is now required for all usb2-phy nodes,
+so add them.
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Wednesday, April 1, 2020 3:11 AM
-> To: Rakesh Pillai <pillair@codeaurora.org>
-> Cc: ath10k@lists.infradead.org; linux-wireless@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2 1/3] dt-bindings: ath10k: Add wifi-firmware subnode
-> for wifi node
-> 
-> On Wed, Mar 25, 2020 at 04:31:38PM +0530, Rakesh Pillai wrote:
-> > Add a wifi-firmware subnode for the wifi node.
-> > This wifi-firmware subnode is needed for the
-> > targets which do not support TrustZone.
-> >
-> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> > ---
-> >  .../devicetree/bindings/net/wireless/qcom,ath10k.txt       | 14
-> ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git
-> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> > index 71bf91f..65ee68e 100644
-> > --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> > +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> > @@ -96,6 +96,17 @@ Optional properties:
-> >  - qcom,coexist-gpio-pin : gpio pin number  information to support coex
-> >  			  which will be used by wifi firmware.
-> >
-> > +* Subnodes
-> > +The ath10k wifi node can contain one optional firmware subnode.
-> > +Firmware subnode is needed when the platform does not have TustZone.
-> > +The firmware subnode must have:
-> > +
-> > +- iommus:
-> > +	Usage: required
-> > +	Value type: <prop-encoded-array>
-> > +	Definition: A list of phandle and IOMMU specifier pairs.
-> > +
-> > +
-> >  Example (to supply PCI based wifi block details):
-> >
-> >  In this example, the node is defined as child node of the PCI
-controller.
-> > @@ -196,4 +207,7 @@ wifi@18000000 {
-> >  		memory-region = <&wifi_msa_mem>;
-> >  		iommus = <&apps_smmu 0x0040 0x1>;
-> >  		qcom,msa-fixed-perm;
-> > +		wifi-firmware {
-> > +			iommus = <&apps_iommu 0xc22 0x1>;
-> 
-> Why can't you just add a 2nd entry to the existing 'iommus' property?
-> 
-> A driver doing of_dma_configure() is generally not the right thing to
-> do.
+make -k ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/
+phy/phy-rockchip-inno-usb2.yaml
 
-The SIDs mentioned in the wifi-firmware node will be belonging to the
-firmware and not any HLOS.
-In other targets with TZ, the hypervisor takes care of configuring the SIDs
-(for its master).
-In this target (sc7180 IDP) we are not having TZ (no hypervisor), hence
-these need to be configured by HLOS.
-The wifi-firmware node is added in-order to differentiate the SID between
-driver and firmware.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk322x.dtsi | 2 ++
+ arch/arm/boot/dts/rv1108.dtsi | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-This is same as the approach followed by Venus video driver in the below
-patch
-https://patchwork.kernel.org/patch/11315765/ 
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 06172ebbf..9ad32651a 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -214,6 +214,7 @@
+ 			clock-names = "phyclk";
+ 			clock-output-names = "usb480m_phy0";
+ 			#clock-cells = <0>;
++			#phy-cells = <0>;
+ 			status = "disabled";
+ 
+ 			u2phy0_otg: otg-port {
+@@ -241,6 +242,7 @@
+ 			clock-names = "phyclk";
+ 			clock-output-names = "usb480m_phy1";
+ 			#clock-cells = <0>;
++			#phy-cells = <0>;
+ 			status = "disabled";
+ 
+ 			u2phy1_otg: otg-port {
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index f9cfe2c80..b453f8d0f 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -269,9 +269,10 @@
+ 			reg = <0x100 0x0c>;
+ 			clocks = <&cru SCLK_USBPHY>;
+ 			clock-names = "phyclk";
+-			#clock-cells = <0>;
+ 			clock-output-names = "usbphy";
+ 			rockchip,usbgrf = <&usbgrf>;
++			#clock-cells = <0>;
++			#phy-cells = <0>;
+ 			status = "disabled";
+ 
+ 			u2phy_otg: otg-port {
+-- 
+2.11.0
 
-> 
-> Rob
