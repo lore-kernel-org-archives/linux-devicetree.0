@@ -2,298 +2,113 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C95AC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 12:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DECC10F26
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 12:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A2020776
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 12:18:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="mnWZ82pq"
+	by mail.kernel.org (Postfix) with ESMTP id 435A42078C
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 12:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbgDAMSa (ORCPT
+        id S1726901AbgDAM1D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 08:18:30 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35829 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732169AbgDAMSa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 08:18:30 -0400
-Received: by mail-qk1-f196.google.com with SMTP id k13so26732641qki.2;
-        Wed, 01 Apr 2020 05:18:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cYgn6RQydhxEk4Yg/z1Bm/e2sVRk32p5oBa766QTAqk=;
-        b=mnWZ82pqNPv0UXH2JHl3te3MYxNR553fID3X8WrACZm/1J602MoPR+mcCg7AmszPk3
-         zssmg/U6SuCeVojy8fm8nFWdO86Q13xCaXNse6jfC+hFTyOQL6btumPCb886B1/XsMJJ
-         Z343d2vMO94W49HMLzzXhHZChM6iTfzz+WX90=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cYgn6RQydhxEk4Yg/z1Bm/e2sVRk32p5oBa766QTAqk=;
-        b=VQQF6yCu0jIscFmD0PNIu6PAVtEFPAmuPdZNiyveQGcNXrvlDk9aGf9Ks5LM4gDhM+
-         L9GJ+xDUjUR5HPSocJW93fzZEdRzYGpptttTd06PXm68/w5Nho3eeZ89xJ+Sl4P+UqW7
-         fp9nfRl0T03gb6cxNT7Zoz2yIfySwBOgh6pK406RjZ2LnKcJlvCkGeDZM3u6EtioiBAG
-         MDgfeumX/1L5Mv326w2nMqVGwaDguzH9wXRAjsFzONqICYhH4lhCA65wYrtyTPrHxlbO
-         DoTDB84pibixodKv/5AEF+JH7CNDL7EcbGbq2HOp31vGnDxRvkMbDvjwwW4AIy7FOaoy
-         F+Cw==
-X-Gm-Message-State: ANhLgQ2cTQUXe/w05EJ9QxV9tAVaKk/JBEWRL2wSPhY6B2lQFGd1ypKc
-        RoZzbHYlZCOKVJMfOUj9YBYpcBQ5/eX9hMCqHI4em/sx
-X-Google-Smtp-Source: ADFU+vsGJIiZgzJs5OL/Q4JZje/tqiDApfEfPU29WwaxIGq+J9716ZkBiwCe7NGvvIhWTP92hnvGqh2b7LnBXWG2nyg=
-X-Received: by 2002:a37:61d0:: with SMTP id v199mr9555105qkb.292.1585743508846;
- Wed, 01 Apr 2020 05:18:28 -0700 (PDT)
+        Wed, 1 Apr 2020 08:27:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:50510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726804AbgDAM1D (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Apr 2020 08:27:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A7B730E;
+        Wed,  1 Apr 2020 05:27:03 -0700 (PDT)
+Received: from [10.37.12.63] (unknown [10.37.12.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A85E53F68F;
+        Wed,  1 Apr 2020 05:27:00 -0700 (PDT)
+Subject: Re: [PATCH v4 3/3] dt-bindings: thermal: Add yaml bindings for
+ thermal zones
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <cover.1585738725.git.amit.kucheria@linaro.org>
+ <af3625a9cdf1a8f0e433d67e3d785b03aae7bc82.1585738725.git.amit.kucheria@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <d4b8bf55-e240-6181-4976-880846cee413@arm.com>
+Date:   Wed, 1 Apr 2020 13:26:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200401114023.GA29180@cnn>
-In-Reply-To: <20200401114023.GA29180@cnn>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 1 Apr 2020 12:18:17 +0000
-Message-ID: <CACPK8Xf+EOUk-HroNmPe5Pjgu6BdP8VU-m6mxQMpTtL1CYBn=A@mail.gmail.com>
-Subject: Re: [PATCH v7] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-To:     Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-Cc:     Andrew Jeffery <andrew@aj.id.au>, Sai Dasari <sdasari@fb.com>,
-        Vijay Khemka <vijaykhemka@fb.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        manikandan.e@hcl.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <af3625a9cdf1a8f0e433d67e3d785b03aae7bc82.1585738725.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 1 Apr 2020 at 11:40, Manikandan Elumalai
-<manikandan.hcl.ers.epl@gmail.com> wrote:
->
-> The Yosemite V2 is a facebook multi-node server
-> platform that host four OCP server. The BMC
-> in the Yosemite V2 platform based on AST2500 SoC.
->
-> This patch adds linux device tree entry related to
-> Yosemite V2 specific devices connected to BMC SoC.
->
-> Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> Acked-by     : Andrew Jeffery <andrew@aj.id.au>
-> Reviewed-by  : Vijay Khemka <vkhemka@fb.com>
-> ---
-> ---      v7 - Added multi-host SOL feature.
-> ---      v6 - Added device tree property for multi-host Mellanox NIC in the ncsi driver.
-> ---      v5 - Spell and contributor name correction.
-> ---           - License identifier changed to GPL-2.0-or-later.
-> ---           - aspeed-gpio.h removed.
-> ---           - FAN2 tacho channel changed.
-> ---      v4 - Bootargs removed.
-> ---      v3 - Uart1 Debug removed .
-> ---      v2 - LPC and VUART removed .
-> ---      v1 - Initial draft.
-> ---
-> ---
->  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 186 +++++++++++++++++++++
+Hi Amit,
 
-You need to add the device tree to the makefile.
+Apart from small mistake during probably copy-paste (please check
+below), looks good.
 
->  1 file changed, 186 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> new file mode 100644
-> index 0000000..bc83901
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> @@ -0,0 +1,186 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +// Copyright (c) 2018 Facebook Inc.
-> +/dts-v1/;
-> +#include "aspeed-g5.dtsi"
+On 4/1/20 12:15 PM, Amit Kucheria wrote:
+> As part of moving the thermal bindings to YAML, split it up into 3
+> bindings: thermal sensors, cooling devices and thermal zones.
+> 
+> The thermal-zone binding is a software abstraction to capture the
+> properties of each zone - how often they should be checked, the
+> temperature thresholds (trips) at which mitigation actions need to be
+> taken and the level of mitigation needed at those thresholds.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since v3:
+>   - Clarify example by using cooling state numbers and a comment
+>   - Restrict thermal-sensors to a single reference to reflect actual code
+>     where there is a one-to-one mapping between sensors and thermal zones
+>   - Add two optional properties that were missed in earlier submissions:
+>     coefficients and sustainable-power
+>   - Improve description of hysteresis and contribution properties
+> 
+>   .../bindings/thermal/thermal-zones.yaml       | 341 ++++++++++++++++++
+>   1 file changed, 341 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> 
+
+[snip]
+
+> +                    cooling-maps {
+> +                            map0 {
+> +                                    trip = <&cpu0_alert0>;
+> +                                    /* Corresponds to 1400MHz in OPP table */
+> +                                    cooling-device = <&CPU0 3 3>, <&CPU1 3 3>,
+> +                                                     <&CPU2 3 3>, <&CPU3 3 3>;
+> +                            };
 > +
-> +/ {
-> +       model = "Facebook Yosemitev2 BMC";
-> +       compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-> +       aliases {
-> +               serial4 = &uart5;
-> +       };
-> +       chosen {
-> +               stdout-path = &uart5;
-> +       };
-> +
-> +       memory@80000000 {
-> +               reg = <0x80000000 0x20000000>;
-> +       };
-> +
-> +       iio-hwmon {
-> +               // VOLATAGE SENSOR
-> +               compatible = "iio-hwmon";
-> +               io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-> +               <&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-> +               <&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-> +               <&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-> +       };
-> +};
-> +
-> +&fmc {
-> +       status = "okay";
-> +       flash@0 {
-> +               status = "okay";
-> +               m25p,fast-read;
-> +#include "openbmc-flash-layout.dtsi"
-> +       };
-> +};
-> +
-> +&spi1 {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_spi1_default>;
-> +       flash@0 {
-> +               status = "okay";
-> +               m25p,fast-read;
-> +               label = "pnor";
-> +       };
-> +};
-> +&uart1 {
-> +       // Host1 Console
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_txd1_default
-> +                    &pinctrl_rxd1_default>;
-> +};
-> +
-> +&uart2 {
-> +       // Host2 Console
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_txd2_default
-> +                    &pinctrl_rxd2_default>;
-> +
-> +};
-> +
-> +&uart3 {
-> +       // Host3 Console
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_txd3_default
-> +                    &pinctrl_rxd3_default>;
-> +};
-> +
-> +&uart4 {
-> +       // Host4 Console
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_txd4_default
-> +                    &pinctrl_rxd4_default>;
-> +};
-> +
-> +&uart5 {
-> +       // BMC Console
-> +       status = "okay";
-> +};
-> +
-> +&vuart {
-> +       // Virtual UART
-> +       status = "okay";
-> +};
-> +
-> +&mac0 {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_rmii1_default>;
-> +       use-ncsi;
-> +       mlx,multi-host;
-> +};
-> +
-> +&adc {
-> +       status = "okay";
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_adc0_default
-> +                       &pinctrl_adc1_default
-> +                       &pinctrl_adc2_default
-> +                       &pinctrl_adc3_default
-> +                       &pinctrl_adc4_default
-> +                       &pinctrl_adc5_default
-> +                       &pinctrl_adc6_default
-> +                       &pinctrl_adc7_default
-> +                       &pinctrl_adc8_default
-> +                       &pinctrl_adc9_default
-> +                       &pinctrl_adc10_default
-> +                       &pinctrl_adc11_default
-> +                       &pinctrl_adc12_default
-> +                       &pinctrl_adc13_default
-> +                       &pinctrl_adc14_default
-> +                       &pinctrl_adc15_default>;
-> +};
-> +
-> +&i2c8 {
-> +       status = "okay";
-> +       //FRU EEPROM
-> +       eeprom@51 {
-> +               compatible = "atmel,24c64";
-> +               reg = <0x51>;
-> +               pagesize = <32>;
-> +       };
-> +};
-> +
-> +&i2c9 {
-> +       status = "okay";
-> +       tmp421@4e {
-> +       //INLET TEMP
-> +               compatible = "ti,tmp421";
-> +               reg = <0x4e>;
-> +       };
-> +       //OUTLET TEMP
-> +       tmp421@4f {
-> +               compatible = "ti,tmp421";
-> +               reg = <0x4f>;
-> +       };
-> +};
-> +
-> +&i2c10 {
-> +       status = "okay";
-> +       //HSC
-> +       adm1278@40 {
-> +               compatible = "adi,adm1278";
-> +               reg = <0x40>;
-> +       };
-> +};
-> +
-> +&i2c11 {
-> +       status = "okay";
-> +       //MEZZ_TEMP_SENSOR
-> +       tmp421@1f {
-> +               compatible = "ti,tmp421";
-> +               reg = <0x1f>;
-> +       };
-> +};
-> +
-> +&i2c12 {
-> +       status = "okay";
-> +       //MEZZ_FRU
-> +       eeprom@51 {
-> +               compatible = "atmel,24c64";
-> +               reg = <0x51>;
-> +               pagesize = <32>;
-> +       };
-> +};
-> +
-> +&pwm_tacho {
-> +       status = "okay";
-> +       //FSC
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> +       fan@0 {
-> +               reg = <0x00>;
-> +               aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-> +       };
-> +       fan@1 {
-> +               reg = <0x01>;
-> +               aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-> +       };
-> +};
-> --
-> 2.7.4
->
+> +                            map1 {
+> +                                    trip = <&cpu0_alert1>;
+> +                                    /* Corresponds to 1400MHz in OPP table */
+
+s/1400MHz/1000MHz/
+1400MHZ is used in map0 as <&CPUx 3 3>, here we have '5 5'.
+
+
+> +                                    cooling-device = <&CPU0 5 5>, <&CPU1 5 5>,
+> +                                                     <&CPU2 5 5>, <&CPU3 5 5>;
+> +                            };
+> +                    };
+> +            };
+
+
+Apart from that, looks good:
+
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+
+Regards,
+Lukasz
