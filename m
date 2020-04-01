@@ -2,246 +2,176 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DACDC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 00:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4440C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 01:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01338208E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 00:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EE5F20719
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 01:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pbw9SN2u"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UNAwPc+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731550AbgDAArx (ORCPT
+        id S1731509AbgDABMk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Mar 2020 20:47:53 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38288 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731331AbgDAArx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Mar 2020 20:47:53 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w3so8849931plz.5;
-        Tue, 31 Mar 2020 17:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Grz3j5qN3bekOkWLBc9tIOx+lzkuYvmCGEjHfUkVS6w=;
-        b=pbw9SN2uZr6z7NS/82qUlJyAHKLLx0o8fecHkIroHnXMV5ctnPROphGfQlBBot1HCJ
-         9OcK1ZODxSAfZkdboOKfCd5C/IeOTtoX6AWP9AGnjMnwMF/7ZnG6SxBatPQjXWM31rFD
-         bj4DxdivZodaaqf4CWmsWFHmRKfVgv3Wig1D7R1wuEuoEhm07ugJ67hxbTZa73y0n32b
-         2GIVLDRCaIvrlBYTQprdx+bvgZ6PQXyND3bjQz/iajIWAl4AkY+9Na7JIKzDTW6ICix1
-         /Y3bZijNDGJd8T9XyAvaZzhhNbsG4Bdlrpm5TThQ7kHe/ac11lz2rXrGlfUtBVo4nHVo
-         8VnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Grz3j5qN3bekOkWLBc9tIOx+lzkuYvmCGEjHfUkVS6w=;
-        b=E3fj2Nt9cwHHktlsa3ug9iJHU8O8mxuhRwYjbsu1LtdZqIkAJ6UwHpoAj8bMerzlz9
-         QiydwwDLOuKYT3bzRljLAX8ILU83Ld18Adkdj2lxQuhPIoC236hmJmROpa0DeUjT1V6w
-         lkLidiQ3EkrAQ+Gbt0mWiRhYUkUB6J0wFTEGVEua+nJCT5cPItAK6xqyVXrImQFeladK
-         X0UTWosrzR0Hx5pRi6X4AWevgjOVd60MstFmGYIj/KKO+kU2Hd9G+ttaO+4Viu3CFlrC
-         c4CQEy0qy1/5hGQQ8N6jVExjKCXRKoMVzV8fuWWlyS0mDVUfwU1BEXzCJ/UlCmiS5QSX
-         f5yQ==
-X-Gm-Message-State: AGi0PuaOPj0rBFiAtw7pT891ShuDQzXZbZYQrhwtOVon8tT5wHMpshAD
-        /QKfkYtOwGhYWjnBOw2muqE=
-X-Google-Smtp-Source: APiQypIwqp4XKFr4P8Yaluep4OmNAhSpUlnlig+OHmK65ulBwuoPP+K+mnxUF/3q8q4/i/5EaGbmXA==
-X-Received: by 2002:a17:90a:da06:: with SMTP id e6mr1793956pjv.14.1585702070887;
-        Tue, 31 Mar 2020 17:47:50 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91 (c-24-4-25-55.hsd1.ca.comcast.net. [24.4.25.55])
-        by smtp.gmail.com with ESMTPSA id x188sm261705pfx.198.2020.03.31.17.47.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 31 Mar 2020 17:47:50 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 17:47:43 -0700
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Tue, 31 Mar 2020 21:12:40 -0400
+Received: from mail-eopbgr00081.outbound.protection.outlook.com ([40.107.0.81]:25650
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731470AbgDABMk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Mar 2020 21:12:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Mpavwc1R/b2+3B7lb8ig2iCv5iSE4f1NSDKQgrLONpWTnbe+2FJU2qs9H6PerBWAFgHMz0QQ85LCb/idVaYAxDrz12FX46WCBKTe5OeAZyFZGDZNWEBxadFC4NWJhe+dnS54tN38Nme788zctPU0rXFQ/8YzcaXlY2ekYQnbKTcQCc89RH7QKYCoGiuSoWoxJsUcm5wfUa3IFoo12mjU6zyUI1r9mJPWcKY166RSwumTeheI5EAAtkLX7dbq1D2V2benQi4g9G636EV32U4iy9jvdWtlXi5T1pu+hhdf8FHZYsdOPwWuWjKKbAEQtLp0VNxmY1KbA3FuVo0OUhJ9nA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y9vA2uh24i0zwuZqHhKT9b1LHe0KC6f6ABSJGKPU3j4=;
+ b=M+GuyqIMtS/A3ETtsVCJlxyyvtsdjYXpp7r+ztHtU/9VV1Xp+dcgIyYy35Rpjgq7LB36xMWFAqo1wIeQV8S8h8ETX3jeQ5UgkLBpHFS18wuz4znsV5fksDU0kd1q6cneQaumrjVgf5lERPe+tIyAYYuk0O44nJa37fu1mKSP5mKW669beIImx5czANGXDKVaZVSzraW8EbdofrqqxGv3/fqAMnrGmfkhlEZJNL4+zyb37PXMbqhU8On4XPMfXx7/sskvbjMdeuTocKQWfy/nS3nDlV9kBih4rhPchbvpo0tDdhBwBrayBwyA7TXD49EJazFsvI5/wGTTyM8Gf0NpXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y9vA2uh24i0zwuZqHhKT9b1LHe0KC6f6ABSJGKPU3j4=;
+ b=UNAwPc+wvZu2t24c4hkCwmRe4qfBoKcMVb7zGnc7KoVJSPhyy3zui07WdMB8XiZsvk/gwH+Prz6n4lqLpv6tdHKHf7nQ6NAmM5va/q6wpLpmFwuDqqDNavvGgih6nwZnd91rYu5JN8FKMkpIk2lrgb9JdPCRCoFRTb5KNeE15WQ=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5363.eurprd04.prod.outlook.com (20.178.114.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Wed, 1 Apr 2020 01:12:37 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
+ 01:12:37 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tao Ren <taoren@fb.com>
-Subject: Re: [PATCH v2 6/6] dt-bindings: usb: document aspeed vhub device
- ID/string properties
-Message-ID: <20200401004741.GA6923@taoren-ubuntu-R90MNF91>
-References: <20200315191632.12536-1-rentao.bupt@gmail.com>
- <20200315191632.12536-7-rentao.bupt@gmail.com>
- <20200330192347.GA6388@bogus>
- <4dc3ac910c79dcca398eb5161dde44e1cc50baca.camel@kernel.crashing.org>
- <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/4] firmware: arm_scmi: Make mutex channel specific
+Thread-Topic: [PATCH 1/4] firmware: arm_scmi: Make mutex channel specific
+Thread-Index: AQHWBFX27nJMU2DyaUm7ucC0dRZvA6hje9AQ
+Date:   Wed, 1 Apr 2020 01:12:37 +0000
+Message-ID: <AM0PR04MB4481562E2A31386752F92C4488C90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20200327163654.13389-1-sudeep.holla@arm.com>
+ <20200327163654.13389-2-sudeep.holla@arm.com>
+In-Reply-To: <20200327163654.13389-2-sudeep.holla@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 689cf461-4d5a-4ef8-6ec9-08d7d5d9c43b
+x-ms-traffictypediagnostic: AM0PR04MB5363:|AM0PR04MB5363:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5363CAA0925C47F6F8DE4EA988C90@AM0PR04MB5363.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 03607C04F0
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(346002)(366004)(376002)(39860400002)(396003)(66556008)(55016002)(66476007)(66946007)(81156014)(8936002)(86362001)(4326008)(76116006)(7696005)(81166006)(66446008)(64756008)(9686003)(478600001)(8676002)(6506007)(33656002)(54906003)(316002)(2906002)(186003)(52536014)(26005)(71200400001)(5660300002)(110136005)(44832011);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0xS5eu5cv3eUzrSiZh44f8kCjfa+fQtmCBkcb/E7cUzq99VR6/xs0E5UxXK0lQWrkp2Tp+5hxOa8Czlt4BLSzxM7hW6+ZsyTcFk4TEWYoyZyrSnel9dSc0ZI5Fag2mcvs1ukmJyZd+1ECMgCkIvC/++nA24ltU5ySzezZnff+YTH9Z6WraZr38nxo+Uodgf9vxb2i21w8/LV40DGMGa51nSFueTXQtjmgUSe0i7hfrFgFf3On7gkeCimPmCjZU8ECjCIfpeBlImRGCFOMp6zwaWpJ+zYUWf6aF07yFNtLu9F2PNNgA/PynjzbeTZTCsmERpoMhgUJ6Ho84EME57yr3RpaOPiqmiKgw2vNhj8s2MholuZlvmgIN0JdQdbFec0YE5Bs5fjVH14gwZztjuqjQQEtz5jk01ldgqmzcqvN6unie/YxkNlOqiK5ZchKocX
+x-ms-exchange-antispam-messagedata: QoTexNhzkvZ5tq6cAX51Na7eZnPDcD3eIItK0VkluMvzE6gsN+Kv29q+8Jj0v4FGyx054mEddLw6qE6wE7rjdCAVzxbfz6ZjhQuoHFPueRZnJX4F8CfIt86zaKyaWjmfsB2y4NekU5QmltHW51SqJg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKZeCC352TKFGDNRRogSefF9vq+J=WqCEeg59PBsSOW1w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 689cf461-4d5a-4ef8-6ec9-08d7d5d9c43b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 01:12:37.2313
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GJRDfPnyJppKBmJGs2t0GgFyQMWXdtf5wX2trprjP9xTbz5ONvvyXS/24wFmE+XZTEEUFMnAqP9NDF+yKfYWuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5363
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 10:21:10AM -0600, Rob Herring wrote:
-> On Mon, Mar 30, 2020 at 6:14 PM Benjamin Herrenschmidt
-> <benh@kernel.crashing.org> wrote:
-> >
-> > On Mon, 2020-03-30 at 13:23 -0600, Rob Herring wrote:
-> > > On Sun, Mar 15, 2020 at 12:16:32PM -0700, rentao.bupt@gmail.com wrote:
-> > > > From: Tao Ren <rentao.bupt@gmail.com>
-> > > >
-> > > > Update device tree binding document for aspeed vhub's device IDs and
-> > > > string properties.
-> > > >
-> > > > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> > > > ---
-> > > >  No change in v2:
-> > > >    - the patch is added into the series since v2.
-> > > >
-> > > >  .../bindings/usb/aspeed,usb-vhub.yaml         | 68 +++++++++++++++++++
-> > > >  1 file changed, 68 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > > > index 06399ba0d9e4..5b2e8d867219 100644
-> > > > --- a/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > > > +++ b/Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> > > > @@ -52,6 +52,59 @@ properties:
-> > > >          minimum: 1
-> > > >          maximum: 21
-> > > >
-> > > > +  vhub-vendor-id:
-> > > > +    description: vhub Vendor ID
-> > > > +    allOf:
-> > > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +      - maximum: 65535
-> > > > +
-> > > > +  vhub-product-id:
-> > > > +    description: vhub Product ID
-> > > > +    allOf:
-> > > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +      - maximum: 65535
-> > >
-> > > There's already standard 'vendor-id' and 'device-id' properties. Use
-> > > those.
-> >
-> > So yes and no... I don't fundamentally object but keep in mind that
-> > traditionally, the properties are about matching with a physical
-> > hardware.
-> >
-> > In this case however, we are describing a virtual piece of HW and so
-> > those IDs are going to be picked up to be exposed as the USB
-> > vendor/device of the vhub on the USB bus.
-> >
-> > Not necessarily an issue but it's more "configuration" than "matching"
-> > and as such, it might make sense to expose that with a prefix, though I
-> > would prefer something like usb-vendor-id or usb,vendor-id...
-> 
-> For FDT uses, it's pretty much been configuration. It's mostly been
-> for PCI that I've seen these properties used.
+Hi Sudeep,
 
-Thank you Rob and Ben for the comments. I thought about using "vendor-id"
-or "idVendor" prefixed with "usb", "hub" or "vhub", and I chose "vhub"
-just to distinguish from per-port usb devices' properties in the future.
-Anyways I'm very happy to update the names per your suggestions.
+> Subject: [PATCH 1/4] firmware: arm_scmi: Make mutex channel specific
+>=20
+> In order to support multiple SMC/HVC transport channels with associated
+> shared memory,=20
 
-> 
-> > > > +
-> > > > +  vhub-device-revision:
-> > >
-> > > Specific to USB, not vhub.
-> >
-> > Same as the above.
-> >
-> > > > +    description: vhub Device Revision in binary-coded decimal
-> > > > +    allOf:
-> > > > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +      - maximum: 65535
-> > > > +
-> > > > +  vhub-strings:
-> > > > +    type: object
-> > > > +
-> > > > +    properties:
-> > > > +      '#address-cells':
-> > > > +        const: 1
-> > > > +
-> > > > +      '#size-cells':
-> > > > +        const: 0
-> > > > +
-> > > > +    patternProperties:
-> > > > +      '^string@[0-9a-f]+$':
-> > > > +        type: object
-> > > > +        description: string descriptors of the specific language
-> > > > +
-> > > > +        properties:
-> > > > +          reg:
-> > > > +            maxItems: 1
-> > > > +            description: 16-bit Language Identifier defined by USB-IF
-> > > > +
-> > > > +          manufacturer:
-> > > > +            description: vhub manufacturer
-> > > > +            allOf:
-> > > > +              - $ref: /schemas/types.yaml#/definitions/string
-> > > > +
-> > > > +          product:
-> > > > +            description: vhub product name
-> > > > +            allOf:
-> > > > +              - $ref: /schemas/types.yaml#/definitions/string
-> > > > +
-> > > > +          serial-number:
-> > > > +            description: vhub device serial number
-> > > > +            allOf:
-> > > > +              - $ref: /schemas/types.yaml#/definitions/string
-> > >
-> > > For all of this, it's USB specific, not vhub specific. I'm not sure this
-> > > is the right approach. It might be better to just define properties
-> > > which are just raw USB descriptors rather than inventing some DT format
-> > > that then has to be converted into USB descriptors.
-> >
-> > Raw blob in the DT is rather annoying and leads to hard to parse stuff
-> > for both humans and scripts. The main strenght of the DT is it's easy
-> > to read and manipulate.
-> 
-> True, and I'd certainly agree when we're talking about some vendor
-> specific blob. but there's already code/tools to parse USB
-> descriptors.
-> 
-> > Also not the entire descriptor is configurable this way.
-> >
-> > That said, it could be that using  the DT for the above is overkill and
-> > instead, we should consider a configfs like the rest of USB gadget.
-> > Though it isn't obvious how to do that, the current gadget stuff
-> > doesn't really "fit" what we need here.
-> 
-> Surely the descriptor building code can be shared at a minimum.
-> 
-> Regardless of whether gadget configfs fits, usually it is pretty clear
-> whether something belongs in DT or userspace. That should be decided
-> first.
-> 
-> > Maybe we could expose the port as UDCs but not actually expose them on
-> > the bus until the hub is "activated" via a special configfs entry...
-> 
-> If control of the hub is done by userspace, I'd think configuration
-> should be there too.
-> 
-> Rob
+Does this mean each channel will have its own shared memory? Or
+All channels share the same shared memory?
 
-Perhaps it's my lack of greater knowledge in gadget/dt areas, and I'm not
-quite clear what would be the recommended/accepted approach for this
-case. I'm looking forward for more suggestions.
+it is better to maintain the mutex per channel instead of
+> existing global one.
 
+If all channels shared the same memory, use per channel mutex lock
+will not be able to prevent other channels accessing shared memory
+at the same time. =20
 
-Cheers,
+Thanks,
+Peng.
+>=20
+> Move the smc_mutex into the scmi_smc structure and also rename it to
+> shmem_lock which is more appropriate for it's use.
+>=20
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/arm_scmi/smc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/firmware/arm_scmi/smc.c
+> b/drivers/firmware/arm_scmi/smc.c index 336168e40f49..6dc8a88cc91b
+> 100644
+> --- a/drivers/firmware/arm_scmi/smc.c
+> +++ b/drivers/firmware/arm_scmi/smc.c
+> @@ -27,11 +27,10 @@
+>  struct scmi_smc {
+>  	struct scmi_chan_info *cinfo;
+>  	struct scmi_shared_mem __iomem *shmem;
+> +	struct mutex shmem_lock;
+>  	u32 func_id;
+>  };
+>=20
+> -static DEFINE_MUTEX(smc_mutex);
+> -
+>  static bool smc_chan_available(struct device *dev, int idx)  {
+>  	return true;
+> @@ -78,6 +77,7 @@ static int smc_chan_setup(struct scmi_chan_info *cinfo,
+> struct device *dev,
+>=20
+>  	scmi_info->func_id =3D func_id;
+>  	scmi_info->cinfo =3D cinfo;
+> +	mutex_init(&scmi_info->shmem_lock);
+>  	cinfo->transport_info =3D scmi_info;
+>=20
+>  	return 0;
+> @@ -102,14 +102,14 @@ static int smc_send_message(struct
+> scmi_chan_info *cinfo,
+>  	struct scmi_smc *scmi_info =3D cinfo->transport_info;
+>  	struct arm_smccc_res res;
+>=20
+> -	mutex_lock(&smc_mutex);
+> +	mutex_lock(&scmi_info->shmem_lock);
+>=20
+>  	shmem_tx_prepare(scmi_info->shmem, xfer);
+>=20
+>  	arm_smccc_1_1_invoke(scmi_info->func_id, 0, 0, 0, 0, 0, 0, 0, &res);
+>  	scmi_rx_callback(scmi_info->cinfo,
+> shmem_read_header(scmi_info->shmem));
+>=20
+> -	mutex_unlock(&smc_mutex);
+> +	mutex_unlock(&scmi_info->shmem_lock);
+>=20
+>  	return res.a0;
+>  }
+> --
+> 2.17.1
 
-Tao
