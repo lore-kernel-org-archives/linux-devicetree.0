@@ -2,211 +2,99 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90648C2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 22:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA03C2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 22:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64A1020719
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 22:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F19207FF
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 22:15:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dM5bmioO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="f4HcLq1t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733173AbgDAWKj (ORCPT
+        id S1733043AbgDAWPO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:10:39 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:51686 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732849AbgDAWKi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 18:10:38 -0400
-Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D825CA35;
-        Thu,  2 Apr 2020 00:10:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1585779036;
-        bh=zk/g/UFjif2Z1RVqfuVlAwk1ZZtD/4CvaH9ZJVJBIM8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dM5bmioOymkqQ2jk5Xs0en27wHUEXnHmlAznC8JkkUVZjV0k05fZ4mzVfoPh+CthQ
-         ZiCKZ8FoG1r0qiPt9x9HO6RkGbZEu+DSsSUSqSNxbtANpRwX0a/BFV3rhHvGCPBakE
-         KbAmae+zhEcAopCfYcecOup1o6+qqdGc3/2fgLvY=
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v7 1/3] dt-bindings: phy: Add DT bindings for Xilinx ZynqMP PSGTR PHY
-Date:   Thu,  2 Apr 2020 01:10:23 +0300
-Message-Id: <20200401221025.26087-2-laurent.pinchart@ideasonboard.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200401221025.26087-1-laurent.pinchart@ideasonboard.com>
-References: <20200401221025.26087-1-laurent.pinchart@ideasonboard.com>
+        Wed, 1 Apr 2020 18:15:14 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:59743 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732537AbgDAWPN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 18:15:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1585779313; x=1617315313;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=pNTIwQ1CqOZCjXOldRhyWpBfPZeO+eg3UOXWN3Y4ZhM=;
+  b=f4HcLq1tbPKw/WWUeuHkZ9WubJXNSwLOpxqAuBtLzUwFDuQf4B0YLwE4
+   30wsqLJb3T2tGDHgnkFM7fgrebm365mOKahY6Vggl4nvPR+lki8f/ZYiW
+   leDJvH5IN47AmUGK4u+pwVExEMy/kNIB4SmBDED+4JI/X/lSAqkNthCtw
+   fVDZOQi42g7UOUJNVJjztJyBqaJBz2QJUtttO+rJJhNkQQs+aPrm9Xfuf
+   12ZJ6g0PcAcNxUQIwotuU9pEmrs0Tvh+4VGDS/dObu74/48LP5nE3RN6B
+   z2aOHuxE/wJDFlRxp1JcbYhIcvy7h+rcQmFUediWzY5i5JJSScgo0R0aS
+   w==;
+IronPort-SDR: qqE3wNJ1NKBF4wpf0zWePNhEAnobjp7/iTV/I5QY/VUA3NjQLZAoAXsRNEV8MseWD6qlejj0Xi
+ K3Dg1lQCWf6OyBJ26oZ9uq7AgzMEnDmJN9UcjN3LLKmmcOVgr3owYq395RoEVvrTKdgv9XeGYA
+ ysKExkPDqAsLKitmjRYVuuE3zEFv47TsyAsC5kqRotNHT2nleIhE6L5eppUAPbKD82k/9eOhhq
+ W0TyUMTOT2xn0x40LfyWjpqneTgz9cKPjhCwZex3lgCGHrtSPTjLkVTAl53KwpfcqumhQl4SGH
+ XkQ=
+X-IronPort-AV: E=Sophos;i="5.72,333,1580799600"; 
+   d="scan'208";a="70956400"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Apr 2020 15:15:12 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 1 Apr 2020 15:15:12 -0700
+Received: from sekiro.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 1 Apr 2020 15:15:15 -0700
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Tudor.Ambarus@microchip.com>, <Cristian.Birsan@microchip.com>,
+        <Codrin.Ciubotariu@microchip.com>,
+        "Ludovic Desroches" <ludovic.desroches@microchip.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH 1/5] ARM: dts: at91: sama5d2_ptc_ek: fix sdmmc0 node description
+Date:   Thu, 2 Apr 2020 00:15:00 +0200
+Message-ID: <20200401221504.41196-1-ludovic.desroches@microchip.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Remove non-removable and mmc-ddr-1_8v properties from the sdmmc0
+node which come probably from an unchecked copy/paste.
 
-Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-Processing System Gigabit Transceiver which provides PHY capabilities to
-USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
-
-Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes:42ed535595ec "ARM: dts: at91: introduce the sama5d2 ptc ek board"
+Cc: stable@vger.kernel.org # 4.19 and later
 ---
-Changes since v6:
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-- Fixed specification of compatible-dependent xlnx,tx-termination-fix
-  property
-- Dropped status property from example
-- Use 4 spaces to indent example
-
-Changes since v5:
-
-- Document clocks and clock-names properties
-- Document resets and reset-names properties
-- Replace subnodes with an additional entry in the PHY cells
-- Drop lane frequency PHY cell, replaced by reference clock phandle
-- Convert bindings to YAML
-- Reword the subject line
-- Drop Rob's R-b as the bindings have significantly changed
-- Drop resets and reset-names properties
----
- .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
- include/dt-bindings/phy/phy.h                 |   1 +
- 2 files changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-
-diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-new file mode 100644
-index 000000000000..d28ddca7b90e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-@@ -0,0 +1,105 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+
-+description: |
-+  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
-+  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
-+  Ethernet SGMII controllers.
-+
-+properties:
-+  "#phy-cells":
-+    const: 4
-+    description: |
-+      The cells contain the following arguments.
-+
-+      - description: The GTR lane
-+        minimum: 0
-+        maximum: 3
-+      - description: The PHY type
-+        enum:
-+          - PHY_TYPE_DP
-+          - PHY_TYPE_PCIE
-+          - PHY_TYPE_SATA
-+          - PHY_TYPE_SGMII
-+          - PHY_TYPE_USB
-+      - description: The PHY instance
-+        minimum: 0
-+        maximum: 1 # for DP, SATA or USB
-+        maximum: 3 # for PCIE or SGMII
-+      - description: The reference clock number
-+        minimum: 0
-+        maximum: 3
-+
-+  compatible:
-+    enum:
-+      - xlnx,zynqmp-psgtr-v1.1
-+      - xlnx,zynqmp-psgtr
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 4
-+    description: |
-+      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
-+      inputs shall not have an entry.
-+
-+  clock-names:
-+    minItems: 1
-+    maxItems: 4
-+    items:
-+      pattern: "^ref[0-3]$"
-+
-+  reg:
-+    items:
-+      - description: SERDES registers block
-+      - description: SIOU registers block
-+
-+  reg-names:
-+    items:
-+      - const: serdes
-+      - const: siou
-+
-+  xlnx,tx-termination-fix:
-+    description: |
-+      Include this for fixing functional issue with the TX termination
-+      resistance in GT, which can be out of spec for the XCZU9EG silicon
-+      version.
-+    type: boolean
-+
-+required:
-+  - "#phy-cells"
-+  - compatible
-+  - reg
-+  - reg-names
-+
-+if:
-+  properties:
-+    compatible:
-+      const: xlnx,zynqmp-psgtr-v1.1
-+
-+then:
-+  properties:
-+    xlnx,tx-termination-fix: false
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    phy: phy@fd400000 {
-+        compatible = "xlnx,zynqmp-psgtr-v1.1";
-+        reg = <0x0 0xfd400000 0x0 0x40000>,
-+              <0x0 0xfd3d0000 0x0 0x1000>;
-+        reg-names = "serdes", "siou";
-+        clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
-+        clock-names = "ref1", "ref2", "ref3";
-+        #phy-cells = <4>;
-+    };
-+
-+...
-diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-index 1f3f866fae7b..f6bc83b66ae9 100644
---- a/include/dt-bindings/phy/phy.h
-+++ b/include/dt-bindings/phy/phy.h
-@@ -17,5 +17,6 @@
- #define PHY_TYPE_USB3		4
- #define PHY_TYPE_UFS		5
- #define PHY_TYPE_DP		6
-+#define PHY_TYPE_SGMII		7
+diff --git a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
+index 1c24ac8019ba7..772809c54c1f3 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
+@@ -125,8 +125,6 @@ sdmmc0: sdio-host@a0000000 {
+ 			bus-width = <8>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_sdmmc0_default>;
+-			non-removable;
+-			mmc-ddr-1_8v;
+ 			status = "okay";
+ 		};
  
- #endif /* _DT_BINDINGS_PHY */
 -- 
-Regards,
-
-Laurent Pinchart
+2.26.0
 
