@@ -2,130 +2,126 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CCFC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43529C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB292063A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D254120719
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GxDcLOLg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NR5IMmGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732989AbgDAQ6Q (ORCPT
+        id S1730720AbgDARSN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:58:16 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47822 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732587AbgDAQ6P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 12:58:15 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EF489A2A;
-        Wed,  1 Apr 2020 18:58:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1585760293;
-        bh=eQZsIhB1wvrRknfrJZU+LzCKO7pIgPHcWCBsxNQwHzM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GxDcLOLgarB3bqbrxyHpH1KddDiIIYq45tDqrelzIWLisQO5vFHgl0/hOVCICbCa1
-         kbV+AC2AcXSFkC90PdrZFVfKZfZuO4oMAph4nJJjRrYquRxZPh8MIMJe/6OPLI6wQc
-         gP4Ora0w+PLrDdpxtdBrtQnlkFw86EpzfvdElmjA=
-Date:   Wed, 1 Apr 2020 19:58:05 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@iki.fi>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, frankc@nvidia.com, helen.koike@collabora.com,
-        digetx@gmail.com, sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-Message-ID: <20200401165805.GE4876@pendragon.ideasonboard.com>
-References: <20200325110358.GB853@valkosipuli.retiisi.org.uk>
- <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
- <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
- <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
- <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
- <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
- <20200331115221.GA4767@pendragon.ideasonboard.com>
- <6aa7d86c-3943-d508-ccf6-5ac46546abe9@nvidia.com>
- <3b00a559-992a-2da9-92b1-bee44e137ba2@nvidia.com>
- <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
+        Wed, 1 Apr 2020 13:18:13 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:60556 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727620AbgDARSN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 13:18:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pO60vM3lpUeaQgdjLjnsu19Yae3+toam0LF12vfn/pQ=; b=NR5IMmGLlT/tSbBz6nUV9G6au
+        i0nTRoOb/xOx8pY+vvJT8u0K8H7+mzQOh0hKG4rONPcoT+kgj7AwyR6aqNef24RruNMk974G3ssPa
+        qmLYstpsxoUQoBt/2LbuQnUMLKJHGnFmqrrtmHhf5vX8eDvaAXSJTk2hZOIwFStNRS7FTzGlZqgiJ
+        o44AejSrhGOGI0WlEvJF6URXMOfnvFt2AM4cMEGLrhtjgpFci+bbfPcbpr0bGB+e8v+f3t2iVx0ts
+        aB3SLBgSzdF2hL2MpCI4gyxQroS3IG+RLcIXiIdlf1Y5xqzl5EDsdNwBdScCwSm/gQD4tC9mhhf0g
+        C7ON0AG+Q==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60904)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jJgzy-000764-ND; Wed, 01 Apr 2020 18:17:54 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jJgzs-0000s7-1D; Wed, 01 Apr 2020 18:17:48 +0100
+Date:   Wed, 1 Apr 2020 18:17:48 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        netdev@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH] net: phy: at803x: fix clock sink configuration on
+ ATH8030 and ATH8035
+Message-ID: <20200401171747.GW25745@shell.armlinux.org.uk>
+References: <20200401095732.23197-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
+In-Reply-To: <20200401095732.23197-1-o.rempel@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sowjanya,
-
-On Wed, Apr 01, 2020 at 09:36:03AM -0700, Sowjanya Komatineni wrote:
-> Hi Sakari/Laurent,
+On Wed, Apr 01, 2020 at 11:57:32AM +0200, Oleksij Rempel wrote:
+> The masks in priv->clk_25m_reg and priv->clk_25m_mask are one-bits-set
+> for the values that comprise the fields, not zero-bits-set.
 > 
-> Few questions to confirm my understanding on below discussion.
+> This patch fixes the clock frequency configuration for ATH8030 and
+> ATH8035 Atheros PHYs by removing the erroneous "~".
 > 
-> 1. Some sensors that you are referring as don't work with single devnode 
-> controlling pipeline devices are ISP built-in sensors where setup of 
-> pipeline and subdevices happen separately?
+> To reproduce this bug, configure the PHY  with the device tree binding
+> "qca,clk-out-frequency" and remove the machine specific PHY fixups.
+> 
+> Fixes: 2f664823a47021 ("net: phy: at803x: add device tree binding")
+> Reported-by: Russell King <linux@armlinux.org.uk>
 
-Sensors that include ISPs could indeed require to be exposed as multiple
-subdevs, but I was mostly referring to raw Bayer sensors with hardware
-architectures similar to the SMIA++ and MIPI CCS specifications. Those
-sensors can perform cropping in up to three different locations (analog
-crop, digital crop, output crop), and can also scale in up to three
-different locations (binning, skipping and filter-based scaling).
+Please replace this with:
 
-Furthermore, with the V4L2 support for multiplexed streams that we are
-working on, a sensor that can produce both image data and embedded data
-would also need to be split in multiple subdevs.
+Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-> 2. With driver supporting single device node control of entire pipeline 
-> devices compared to MC-based, limitation is with userspace apps for only 
-> these complex camera sensors?
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-In those cases, several policy decisions on how to configure the sensor
-(whether to use binning, skipping and/or filter-based scaling for
-instance, or how much cropping and scaling to apply to achieve a certain
-output resolution) will need to be implemented in the kernel, and
-userspace will not have any control on them.
+Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
+Tested-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-> 3. Does all upstream video capture drivers eventually will be moved to 
-> support MC-based?
+Thanks.
 
-I think we'll see a decrease of the video-node-centric drivers in the
-future for embedded systems, especially the ones that include an ISP.
-When a system has an ISP, even if the ISP is implemented as a
-memory-to-memory device separate from the CSI-2 capture side, userspace
-will likely have a need for fine-grained control of the camera sensor.
-
-> 4. Based on libcamera doc looks like it will work with both types of 
-> MC-based and single devnode based pipeline setup drivers for normal 
-> sensors and limitation is when we use ISP built-in sensor or ISP HW 
-> block. Is my understanding correct?
-
-libcamera supports both, it doesn't put any restriction in that area.
-The pipeline handler (the device-specific code in libcamera that
-configures and control the hardware pipeline) is responsible for
-interfacing with the kernel drivers, and is free to use an MC-centric or
-video-node-centric API depending on what the kernel drivers offer.
-
-The IPA (image processing algorithms) module is also vendor-specific.
-Although it will not interface directly with kernel drivers, it will
-have requirements on how fine-grained control of the sensor is required.
-For systems that have an ISP in the SoC, reaching a high image quality
-level requires fine-grained control of the sensor, or at the very least
-being able to retrieve fine-grained sensor configuration information
-from the kernel. For systems using a camera sensor with an integrated
-ISP and a CSI-2 receiver without any further processing on the SoC side,
-there will be no such fine-grained control of the sensor by the IPA (and
-there could even be no IPA module at all).
+> ---
+>  drivers/net/phy/at803x.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+> index 481cf48c9b9e4..31f731e6df720 100644
+> --- a/drivers/net/phy/at803x.c
+> +++ b/drivers/net/phy/at803x.c
+> @@ -425,8 +425,8 @@ static int at803x_parse_dt(struct phy_device *phydev)
+>  		 */
+>  		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
+>  		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
+> -			priv->clk_25m_reg &= ~AT8035_CLK_OUT_MASK;
+> -			priv->clk_25m_mask &= ~AT8035_CLK_OUT_MASK;
+> +			priv->clk_25m_reg &= AT8035_CLK_OUT_MASK;
+> +			priv->clk_25m_mask &= AT8035_CLK_OUT_MASK;
+>  		}
+>  	}
+>  
+> -- 
+> 2.26.0.rc2
+> 
+> 
 
 -- 
-Regards,
-
-Laurent Pinchart
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
