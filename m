@@ -2,481 +2,301 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06157C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 05:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6ACC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 06:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24222074D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 05:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF79206F6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 06:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sVmW3trz"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nQo50/TR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbgDAF55 (ORCPT
+        id S1731741AbgDAGvh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 01:57:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35673 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731680AbgDAF54 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 01:57:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a13so1557600pfa.2;
-        Tue, 31 Mar 2020 22:57:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=4EghVonFFFh666wBbyI8Lr2r5illfaYhp603ieFfl6E=;
-        b=sVmW3trzaYelFXQQNs6M5ZWdhqSrBHmw6NC9m90XbDQdFtsx3hS6bNYGkSTH9XRuT9
-         uY0xWVIvzeGooDjeNUQeh1lw+RxWU3IIUKAW3FM1vpRk99szS4h9HIyBVlzCC5fcTZbO
-         akHRiCJYlzgnlkJR8k/EGdqQAz7AutCc8/w8w9nx4Hi2/CcC1DtwNH1JbhD1dKcYIW/f
-         OgTHm+bLD6oNxwSPLDYfmrtB/9zGK8Egcsmz/L2hJeTZgaZQhA7q/WoQH5pwcG5pBP+d
-         7YraYgfQMuYCCLjy+03pEQwZml0DoHOMo9QzGa747E+TWKMfF5tQtxe1JiSvtVnFNQt5
-         ypnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=4EghVonFFFh666wBbyI8Lr2r5illfaYhp603ieFfl6E=;
-        b=lcvRvKYCg93RZDFvQVDMqwvovHzZUeYjPamyAyvstGX4tuNSd2UN5NOLqmFzAwX9PG
-         1HaOATMM14EeBFBzAoxYB3OeUWuNSOGp7xEBzPPB8N8sjolT3nlbi3uVqW+XsiFAQSRZ
-         OM4P8utDnDspMlfE/xON/PQeuR92CdleYM9uztG4bYVBIAbqYIDAWpjjOHRqf8sS0DVB
-         4+GsQ5GOrIMbULT7OD+y7mRdsmAlWszU5erCsSh7BztKcjZmvx569l2fWcEtCLYsH1o4
-         HUtVPFC3efYEo/vEcJeEmFfStvH/4uFtn9re3MDGFeSqKN4YMI0LC/u1r4GlruPUse4E
-         znvQ==
-X-Gm-Message-State: ANhLgQ3ZHVyouJXjvyPydIHapMKAC1ZV20R9rNN8AJ3WSrTR+UjkR+wV
-        Hnu49r/2vKFW+gn9OnkojHk=
-X-Google-Smtp-Source: ADFU+vt6VWGtwjw3gcarMLeECPgU6djHXHRrkmBZPJnzGXbt6UVazpEGx1VKuFf36t+YV9urxS9TMQ==
-X-Received: by 2002:a63:2cd5:: with SMTP id s204mr18833017pgs.71.1585720672266;
-        Tue, 31 Mar 2020 22:57:52 -0700 (PDT)
-Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 5sm715956pfw.98.2020.03.31.22.57.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 31 Mar 2020 22:57:51 -0700 (PDT)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-Date:   Wed,  1 Apr 2020 13:57:38 +0800
-Message-Id: <0aa0f67a2de6f0a1f012cf6358b356537341af72.1585720483.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <49020c8b96410f023707777750125cfd680c904d.1585720483.git.baolin.wang7@gmail.com>
-References: <49020c8b96410f023707777750125cfd680c904d.1585720483.git.baolin.wang7@gmail.com>
-In-Reply-To: <49020c8b96410f023707777750125cfd680c904d.1585720483.git.baolin.wang7@gmail.com>
-References: <49020c8b96410f023707777750125cfd680c904d.1585720483.git.baolin.wang7@gmail.com>
+        Wed, 1 Apr 2020 02:51:37 -0400
+Received: from mail-am6eur05on2079.outbound.protection.outlook.com ([40.107.22.79]:6204
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730426AbgDAGvh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Apr 2020 02:51:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OpFS8FgeDASoB/2v5y8yal0pL/UCAV4y5I9+kwZndHGXpRkQ+t+1cG6wdNQaTr/5tjiMxHpDd5aIBMekVog8pKYHWSE8o25kwLbAIOSoKZKYAYpQY4XT4DHfsxSh9e/olj+0t+ZBByS160fKLyE9odvb/lmwFGFDPvsuqNH+T32YlMuCjmYV5aJTDHKFyMCUpMciFa5UOJVz3E1AqLujYetBBMhCF8Uu3nxGAAmrAVzYli8Xn593+zL/J5FVMf/JXIGnP2ALhaLU/E6uuBT04Rxs+cnMR/41kyXHeKsKlpzctQD182SGS99dHauGT8yqnm9Jj1ZCKL8KGz7HObe1BQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hNh6/KjEoyHfmtg3YcVfGORUignRmvkcuPpIpo8SfJM=;
+ b=Bzl1Am+oE/WtyN+nCvFboPP1JXrMnocxcKwF2aXu/G4x/cWH6LsojhEEg8pG8XMYZqR/IY32uPpKYtweDePAlrsjC5FgBE6A4+XXlQNeNVOe+DoLwh6gCZy3jPwXE5g+tsJ2IXAQjIqDCGwylaW2MAOIfm19pZlBq/gJjxPEn6WXFltu2XbfGZWnyIfso6hZR2Tbzg745d0DZfszBDUu7GqRZDyMDoX9bzypMZnsRQ+n+NC/+wjJGLjcS2HLw18/1FZaUISnCsY9gsu3oJG6aQMcAFisQtVeKCl5M18IaioU/ZtW5NMtEwEmI1XNVBMG76gL6he+1tocDRJCQCN8hg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hNh6/KjEoyHfmtg3YcVfGORUignRmvkcuPpIpo8SfJM=;
+ b=nQo50/TRc2g6zITnM2xFE8hMqjU59Gk7vyX3AjcEoCyLxNE2gtRJ4QzM19suZRy4kivvFrovvwLICCkRhPyQ9N762r2TYsEsRMbdpEQzAGfL0df62tjNDHPgkQNPgJAR2NVzE/j4Dp544xUrVNhVhr9e2K02V88tTo4W2LZGia8=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6163.eurprd04.prod.outlook.com (20.179.34.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.19; Wed, 1 Apr 2020 06:51:30 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
+ 06:51:30 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Fabio Estevam <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH] arm64: dts: imx8m: Fix AIPS reg properties
+Thread-Topic: [PATCH] arm64: dts: imx8m: Fix AIPS reg properties
+Thread-Index: AQHWB4t4/ugLiU2Tk0m1UIFW36Tgqqhj0+XA
+Date:   Wed, 1 Apr 2020 06:51:30 +0000
+Message-ID: <AM0PR04MB448118DFFFBA1C1119D257F588C90@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <20200331183725.25255-1-festevam@gmail.com>
+In-Reply-To: <20200331183725.25255-1-festevam@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 833b2e67-340c-4b40-5146-08d7d6091bfc
+x-ms-traffictypediagnostic: AM0PR04MB6163:|AM0PR04MB6163:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB61637D06DA30427EE896380F88C90@AM0PR04MB6163.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 03607C04F0
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4481.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(136003)(346002)(366004)(9686003)(2906002)(55016002)(6506007)(26005)(110136005)(54906003)(478600001)(81166006)(316002)(86362001)(81156014)(8936002)(7696005)(76116006)(186003)(8676002)(5660300002)(4326008)(66556008)(66446008)(66946007)(71200400001)(64756008)(52536014)(66476007)(33656002)(44832011)(32563001);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Dn6Ckrt7xKPrGYitp+iDkoFcDXh/iCFVCj6cP7sY4VT9bZcLpzfsE67Y9N2lIltIX5Q5tZiOnN8ro0iK34mwZA178ql/aBfDtV/KO+ijiuyUZwl6I6yApkVUkUaz7Fcz5PxKbNWm+jFZ1vQZ1/pdYmpyTPBciFldQKrxnil2X4rPcHkxgGzXacq9KPVNprA4fXy2Ddud0mzSv8cov1aD2K1xmFgxIEmjUtBzysJruj2XLCcGz1I/bcC/V1HZCAsnSzOg/t2VjvKOgnI1AUggxlGgXhiaRQlCisEWj0x6P53iodLI19r8I9GvjuJv9apfF3ZYbSIlsLZbhBLFT5hVFbGfs7tCjtnDwvDyZIuDfd+2CuD5Q71X8epOW4IG/y+QC/5sYIEDzEznMFmCOqS+ff8jwhaYBRXViNySgKIoLT5hDTEYjLncIf/2zaG3ZTAmB+XFvrUSlrKr4uPDpLDTlIn0NcWgnTJ06XK9tTT2XyY=
+x-ms-exchange-antispam-messagedata: cUMOiLxAUf0frRYiEOBX2w1XSanvCMWmacl0/HiQlgyKO9ow1MpbLZXDbdzMeVnQtESpVm17ci0IA35Ac9JS/WoSUaCbm9bFk/kTCi3ZR0EX7hvobYn1uAyO4+B7mlAV1WvSgKBnDAGoFTU7P6wy7A==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 833b2e67-340c-4b40-5146-08d7d6091bfc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 06:51:30.7135
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: q/j0qKrJxL2VaslJeas8IO4CaoubuoE1fAfQIhzXzDtnd99xtLKOr5WMUuYkMC4tEKrjW8UJ278Og7aabVVjkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6163
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Baolin Wang <baolin.wang@unisoc.com>
+Hi Fabio,
 
-The Spreadtrum mailbox controller supports 8 channels to communicate
-with MCUs, and it contains 2 different parts: inbox and outbox, which
-are used to send and receive messages by IRQ mode.
+> Subject: [PATCH] arm64: dts: imx8m: Fix AIPS reg properties
+>=20
+> Commit dc3efc6ff0d5 ("arm64: dts: imx8m: fix aips dts node") caused sever=
+al
+> dtc warnings like these when building with W=3D1:
+>=20
+> arch/arm64/boot/dts/freescale/imx8mm.dtsi:265.23-542.5: Warning
+> (simple_bus_reg): /soc@0/bus@30000000: simple-bus unit address format
+> error, expected "301f0000"
+> arch/arm64/boot/dts/freescale/imx8mm.dtsi:544.23-602.5: Warning
+> (simple_bus_reg): /soc@0/bus@30400000: simple-bus unit address format
+> error, expected "305f0000"
+> arch/arm64/boot/dts/freescale/imx8mm.dtsi:604.23-862.5: Warning
+> (simple_bus_reg): /soc@0/bus@30800000: simple-bus unit address format
+> error, expected "309f0000"
+> arch/arm64/boot/dts/freescale/imx8mm.dtsi:864.23-909.5: Warning
+> (simple_bus_reg): /soc@0/bus@32c00000: simple-bus unit address format
+> error, expected "32df0000"
+>=20
+> Fix them by using the correct address base and size in the AIPS reg prope=
+rties.
+>=20
+> Fixes: dc3efc6ff0d5 ("arm64: dts: imx8m: fix aips dts node")
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 8 ++++----
+> arch/arm64/boot/dts/freescale/imx8mn.dtsi | 8 ++++----
+> arch/arm64/boot/dts/freescale/imx8mp.dtsi | 6 +++---
+> arch/arm64/boot/dts/freescale/imx8mq.dtsi | 8 ++++----
+>  4 files changed, 15 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index cc7152ecedd9..8829628f757a 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -264,7 +264,7 @@
+>=20
+>  		aips1: bus@30000000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x301f0000 0x10000>;
+> +			reg =3D <0x30000000 0x400000>;
 
-Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
-Changes from v2:
- - None.
+Should the node name changed to bus@0x301f0000, but not
+change reg?
 
-Changes from v1:
- - None
----
- drivers/mailbox/Kconfig        |   8 +
- drivers/mailbox/Makefile       |   2 +
- drivers/mailbox/sprd-mailbox.c | 350 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 360 insertions(+)
- create mode 100644 drivers/mailbox/sprd-mailbox.c
+The 0x301f0000 is the correct aips configuration space.
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index ab4eb75..a33eaab 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -227,4 +227,12 @@ config ZYNQMP_IPI_MBOX
- 	  message to the IPI buffer and will access the IPI control
- 	  registers to kick the other processor or enquire status.
- 
-+config SPRD_MBOX
-+	tristate "Spreadtrum Mailbox"
-+	depends on ARCH_SPRD || COMPILE_TEST
-+	help
-+	  Mailbox driver implementation for the Spreadtrum platform. It is used
-+	  to send message between application processors and MCU. Say Y here if
-+	  you want to build the Spreatrum mailbox controller driver.
-+
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index c22fad6..0f47b6b 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -48,3 +48,5 @@ obj-$(CONFIG_STM32_IPCC) 	+= stm32-ipcc.o
- obj-$(CONFIG_MTK_CMDQ_MBOX)	+= mtk-cmdq-mailbox.o
- 
- obj-$(CONFIG_ZYNQMP_IPI_MBOX)	+= zynqmp-ipi-mailbox.o
-+
-+obj-$(CONFIG_SPRD_MBOX)		+= sprd-mailbox.o
-diff --git a/drivers/mailbox/sprd-mailbox.c b/drivers/mailbox/sprd-mailbox.c
-new file mode 100644
-index 0000000..58e5388
---- /dev/null
-+++ b/drivers/mailbox/sprd-mailbox.c
-@@ -0,0 +1,350 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Spreadtrum mailbox driver
-+ *
-+ * Copyright (c) 2020 Spreadtrum Communications Inc.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+
-+#define SPRD_MBOX_ID		0x0
-+#define SPRD_MBOX_MSG_LOW	0x4
-+#define SPRD_MBOX_MSG_HIGH	0x8
-+#define SPRD_MBOX_TRIGGER	0xc
-+#define SPRD_MBOX_FIFO_RST	0x10
-+#define SPRD_MBOX_FIFO_STS	0x14
-+#define SPRD_MBOX_IRQ_STS	0x18
-+#define SPRD_MBOX_IRQ_MSK	0x1c
-+#define SPRD_MBOX_LOCK		0x20
-+#define SPRD_MBOX_FIFO_DEPTH	0x24
-+
-+/* Bit and mask definiation for inbox's SPRD_MBOX_FIFO_STS register */
-+#define SPRD_INBOX_FIFO_DELIVER_MASK		GENMASK(23, 16)
-+#define SPRD_INBOX_FIFO_OVERLOW_MASK		GENMASK(15, 8)
-+#define SPRD_INBOX_FIFO_DELIVER_SHIFT		16
-+#define SPRD_INBOX_FIFO_BUSY_MASK		GENMASK(7, 0)
-+
-+/* Bit and mask definiation for SPRD_MBOX_IRQ_STS register */
-+#define SPRD_MBOX_IRQ_CLR			BIT(0)
-+
-+/* Bit and mask definiation for outbox's SPRD_MBOX_FIFO_STS register */
-+#define SPRD_OUTBOX_FIFO_FULL			BIT(0)
-+#define SPRD_OUTBOX_FIFO_WR_SHIFT		16
-+#define SPRD_OUTBOX_FIFO_RD_SHIFT		24
-+#define SPRD_OUTBOX_FIFO_POS_MASK		GENMASK(7, 0)
-+
-+/* Bit and mask definiation for inbox's SPRD_MBOX_IRQ_MSK register */
-+#define SPRD_INBOX_FIFO_BLOCK_IRQ		BIT(0)
-+#define SPRD_INBOX_FIFO_OVERFLOW_IRQ		BIT(1)
-+#define SPRD_INBOX_FIFO_DELIVER_IRQ		BIT(2)
-+#define SPRD_INBOX_FIFO_IRQ_MASK		GENMASK(2, 0)
-+
-+/* Bit and mask definiation for outbox's SPRD_MBOX_IRQ_MSK register */
-+#define SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ		BIT(0)
-+#define SPRD_OUTBOX_FIFO_IRQ_MASK		GENMASK(4, 0)
-+
-+#define SPRD_MBOX_CHAN_MAX			8
-+
-+struct sprd_mbox_chan {
-+	u8			id;
-+	struct mbox_chan	*chan;
-+};
-+
-+struct sprd_mbox_priv {
-+	struct mbox_controller	mbox;
-+	struct device		*dev;
-+	void __iomem		*inbox_base;
-+	void __iomem		*outbox_base;
-+	struct clk		*clk;
-+	u32			outbox_fifo_depth;
-+
-+	struct sprd_mbox_chan	mchan[SPRD_MBOX_CHAN_MAX];
-+	struct mbox_chan	chan[SPRD_MBOX_CHAN_MAX];
-+};
-+
-+static struct sprd_mbox_priv *to_sprd_mbox_priv(struct mbox_controller *mbox)
-+{
-+	return container_of(mbox, struct sprd_mbox_priv, mbox);
-+}
-+
-+static u32 sprd_mbox_get_fifo_len(struct sprd_mbox_priv *priv, u32 fifo_sts)
-+{
-+	u32 wr_pos = (fifo_sts >> SPRD_OUTBOX_FIFO_WR_SHIFT) &
-+		SPRD_OUTBOX_FIFO_POS_MASK;
-+	u32 rd_pos = (fifo_sts >> SPRD_OUTBOX_FIFO_RD_SHIFT) &
-+		SPRD_OUTBOX_FIFO_POS_MASK;
-+	u32 fifo_len;
-+
-+	/*
-+	 * If the read pointer is equal with write pointer, which means the fifo
-+	 * is full or empty.
-+	 */
-+	if (wr_pos == rd_pos) {
-+		if (fifo_sts & SPRD_OUTBOX_FIFO_FULL)
-+			fifo_len = priv->outbox_fifo_depth;
-+		else
-+			fifo_len = 0;
-+	} else if (wr_pos > rd_pos) {
-+		fifo_len = wr_pos - rd_pos;
-+	} else {
-+		fifo_len = priv->outbox_fifo_depth - rd_pos + wr_pos;
-+	}
-+
-+	return fifo_len;
-+}
-+
-+static irqreturn_t sprd_mbox_outbox_isr(int irq, void *data)
-+{
-+	struct sprd_mbox_priv *priv = data;
-+	struct sprd_mbox_chan *mchan;
-+	u32 fifo_sts, fifo_len, msg[2];
-+	int i, id;
-+
-+	fifo_sts = readl(priv->outbox_base + SPRD_MBOX_FIFO_STS);
-+
-+	fifo_len = sprd_mbox_get_fifo_len(priv, fifo_sts);
-+	if (!fifo_len) {
-+		dev_warn_ratelimited(priv->dev, "spurious outbox interrupt\n");
-+		return IRQ_NONE;
-+	}
-+
-+	for (i = 0; i < fifo_len; i++) {
-+		msg[0] = readl(priv->outbox_base + SPRD_MBOX_MSG_LOW);
-+		msg[1] = readl(priv->outbox_base + SPRD_MBOX_MSG_HIGH);
-+		id = readl(priv->outbox_base + SPRD_MBOX_ID);
-+
-+		mchan = &priv->mchan[id];
-+		mbox_chan_received_data(mchan->chan, (void *)msg);
-+
-+		/* Trigger to update outbox FIFO pointer */
-+		writel(0x1, priv->outbox_base + SPRD_MBOX_TRIGGER);
-+	}
-+
-+	/* Clear irq status after reading all message. */
-+	writel(SPRD_MBOX_IRQ_CLR, priv->outbox_base + SPRD_MBOX_IRQ_STS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t sprd_mbox_inbox_isr(int irq, void *data)
-+{
-+	struct sprd_mbox_priv *priv = data;
-+	struct sprd_mbox_chan *mchan;
-+	u32 fifo_sts, send_sts, id;
-+
-+	fifo_sts = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS);
-+
-+	/* Get the inbox data delivery status */
-+	send_sts = (fifo_sts & SPRD_INBOX_FIFO_DELIVER_MASK) >>
-+		SPRD_INBOX_FIFO_DELIVER_SHIFT;
-+	if (!send_sts) {
-+		dev_warn_ratelimited(priv->dev, "spurious inbox interrupt\n");
-+		return IRQ_NONE;
-+	}
-+
-+	while (send_sts) {
-+		id = __ffs(send_sts);
-+		send_sts &= (send_sts - 1);
-+
-+		mchan = &priv->mchan[id];
-+		mbox_chan_txdone(mchan->chan, 0);
-+	}
-+
-+	/* Clear FIFO delivery and overflow status */
-+	writel(fifo_sts &
-+	       (SPRD_INBOX_FIFO_DELIVER_MASK | SPRD_INBOX_FIFO_OVERLOW_MASK),
-+	       priv->inbox_base + SPRD_MBOX_FIFO_RST);
-+
-+	/* Clear irq status */
-+	writel(SPRD_MBOX_IRQ_CLR, priv->inbox_base + SPRD_MBOX_IRQ_STS);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int sprd_mbox_send_data(struct mbox_chan *chan, void *msg)
-+{
-+	struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-+	struct sprd_mbox_chan *mchan = chan->con_priv;
-+	u32 *data = msg, busy;
-+
-+	/*
-+	 * Check if current channel is busy or not, and we can not send data
-+	 * if current channel is busy.
-+	 */
-+	busy = readl(priv->inbox_base + SPRD_MBOX_FIFO_STS) &
-+		SPRD_INBOX_FIFO_BUSY_MASK;
-+	if (busy & BIT(mchan->id)) {
-+		dev_err(priv->dev, "Channel %d is busy\n", mchan->id);
-+		return -EBUSY;
-+	}
-+
-+	/* Write data into inbox FIFO, and only support 8 bytes every time */
-+	writel(data[0], priv->inbox_base + SPRD_MBOX_MSG_LOW);
-+	writel(data[1], priv->inbox_base + SPRD_MBOX_MSG_HIGH);
-+
-+	/* Set target core id */
-+	writel(mchan->id, priv->inbox_base + SPRD_MBOX_ID);
-+
-+	/* Trigger remote request */
-+	writel(0x1, priv->inbox_base + SPRD_MBOX_TRIGGER);
-+
-+	return 0;
-+}
-+
-+static int sprd_mbox_startup(struct mbox_chan *chan)
-+{
-+	struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-+	u32 val;
-+
-+	/* Select outbox FIFO mode and reset the outbox FIFO status */
-+	writel(0x0, priv->outbox_base + SPRD_MBOX_FIFO_RST);
-+
-+	/* Enable inbox FIFO overflow and delivery interrupt */
-+	val = readl(priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-+	val &= ~(SPRD_INBOX_FIFO_OVERFLOW_IRQ | SPRD_INBOX_FIFO_DELIVER_IRQ);
-+	writel(val, priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-+
-+	/* Enable outbox FIFO not empty interrupt */
-+	val = readl(priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-+	val &= ~SPRD_OUTBOX_FIFO_NOT_EMPTY_IRQ;
-+	writel(val, priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-+
-+	return 0;
-+}
-+
-+static void sprd_mbox_shutdown(struct mbox_chan *chan)
-+{
-+	struct sprd_mbox_priv *priv = to_sprd_mbox_priv(chan->mbox);
-+
-+	/* Disable inbox & outbox interrupt */
-+	writel(SPRD_INBOX_FIFO_IRQ_MASK, priv->inbox_base + SPRD_MBOX_IRQ_MSK);
-+	writel(SPRD_OUTBOX_FIFO_IRQ_MASK, priv->outbox_base + SPRD_MBOX_IRQ_MSK);
-+}
-+
-+static const struct mbox_chan_ops sprd_mbox_ops = {
-+	.send_data    = sprd_mbox_send_data,
-+	.startup      = sprd_mbox_startup,
-+	.shutdown     = sprd_mbox_shutdown,
-+};
-+
-+static void sprd_mbox_disable(void *data)
-+{
-+	struct sprd_mbox_priv *priv = data;
-+
-+	clk_disable_unprepare(priv->clk);
-+}
-+
-+static int sprd_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sprd_mbox_priv *priv;
-+	int i, ret, inbox_irq, outbox_irq;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+
-+	/*
-+	 * The Spreadtrum mailbox uses an inbox to send messages to the target
-+	 * core, and uses an outbox to receive messages from other cores.
-+	 *
-+	 * Thus the mailbox controller supplies 2 different register addresses
-+	 * and IRQ numbers for inbox and outbox.
-+	 */
-+	priv->inbox_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->inbox_base))
-+		return PTR_ERR(priv->inbox_base);
-+
-+	priv->outbox_base = devm_platform_ioremap_resource(pdev, 1);
-+	if (IS_ERR(priv->outbox_base))
-+		return PTR_ERR(priv->outbox_base);
-+
-+	priv->clk = devm_clk_get(dev, "enable");
-+	if (IS_ERR(priv->clk)) {
-+		dev_err(dev, "failed to get mailbox clock\n");
-+		return PTR_ERR(priv->clk);
-+	}
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, sprd_mbox_disable, priv);
-+	if (ret) {
-+		dev_err(dev, "failed to add mailbox disable action\n");
-+		return ret;
-+	}
-+
-+	inbox_irq = platform_get_irq(pdev, 0);
-+	if (inbox_irq < 0)
-+		return inbox_irq;
-+
-+	ret = devm_request_irq(dev, inbox_irq, sprd_mbox_inbox_isr,
-+			       IRQF_NO_SUSPEND, dev_name(dev), priv);
-+	if (ret) {
-+		dev_err(dev, "failed to request inbox IRQ: %d\n", ret);
-+		return ret;
-+	}
-+
-+	outbox_irq = platform_get_irq(pdev, 1);
-+	if (outbox_irq < 0)
-+		return outbox_irq;
-+
-+	ret = devm_request_irq(dev, outbox_irq, sprd_mbox_outbox_isr,
-+			       IRQF_NO_SUSPEND, dev_name(dev), priv);
-+	if (ret) {
-+		dev_err(dev, "failed to request outbox IRQ: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Get the default outbox FIFO depth */
-+	priv->outbox_fifo_depth =
-+		readl(priv->outbox_base + SPRD_MBOX_FIFO_DEPTH) + 1;
-+	priv->mbox.dev = dev;
-+	priv->mbox.chans = &priv->chan[0];
-+	priv->mbox.num_chans = SPRD_MBOX_CHAN_MAX;
-+	priv->mbox.ops = &sprd_mbox_ops;
-+	priv->mbox.txdone_irq = true;
-+
-+	for (i = 0; i < SPRD_MBOX_CHAN_MAX; i++) {
-+		priv->chan[i].con_priv = &priv->mchan[i];
-+
-+		priv->mchan[i].chan = &priv->chan[i];
-+		priv->mchan[i].id = i;
-+	}
-+
-+	ret = devm_mbox_controller_register(dev, &priv->mbox);
-+	if (ret) {
-+		dev_err(dev, "failed to register mailbox: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sprd_mbox_of_match[] = {
-+	{ .compatible = "sprd,sc9860-mailbox", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, sprd_mbox_of_match);
-+
-+static struct platform_driver sprd_mbox_driver = {
-+	.driver = {
-+		.name = "sprd-mailbox",
-+		.of_match_table = sprd_mbox_of_match,
-+	},
-+	.probe	= sprd_mbox_probe,
-+};
-+module_platform_driver(sprd_mbox_driver);
-+
-+MODULE_AUTHOR("Baolin Wang <baolin.wang@unisoc.com>");
-+MODULE_DESCRIPTION("Spreadtrum mailbox driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+Thanks,
+Peng.
+
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges =3D <0x30000000 0x30000000 0x400000>; @@ -543,7
+> +543,7 @@
+>=20
+>  		aips2: bus@30400000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x305f0000 0x10000>;
+> +			reg =3D <0x30400000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges =3D <0x30400000 0x30400000 0x400000>; @@ -603,7
+> +603,7 @@
+>=20
+>  		aips3: bus@30800000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x309f0000 0x10000>;
+> +			reg =3D <0x30800000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges =3D <0x30800000 0x30800000 0x400000>, @@ -863,7
+> +863,7 @@
+>=20
+>  		aips4: bus@32c00000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x32df0000 0x10000>;
+> +			reg =3D <0x32c00000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges =3D <0x32c00000 0x32c00000 0x400000>; diff --git
+> a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> index fa78f0163270..e62d4146cebc 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+> @@ -241,7 +241,7 @@
+>=20
+>  		aips1: bus@30000000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x301f0000 0x10000>;
+> +			reg =3D <0x30000000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges;
+> @@ -448,7 +448,7 @@
+>=20
+>  		aips2: bus@30400000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x305f0000 0x10000>;
+> +			reg =3D <0x30400000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges;
+> @@ -508,7 +508,7 @@
+>=20
+>  		aips3: bus@30800000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x309f0000 0x10000>;
+> +			reg =3D <0x30800000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges;
+> @@ -754,7 +754,7 @@
+>=20
+>  		aips4: bus@32c00000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x32df0000 0x10000>;
+> +			reg =3D <0x32c00000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> index 9b1616e59d58..9f6ba763238d 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> @@ -145,7 +145,7 @@
+>=20
+>  		aips1: bus@30000000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x301f0000 0x10000>;
+> +			reg =3D <0x30000000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges;
+> @@ -318,7 +318,7 @@
+>=20
+>  		aips2: bus@30400000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x305f0000 0x400000>;
+> +			reg =3D <0x30400000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges;
+> @@ -378,7 +378,7 @@
+>=20
+>  		aips3: bus@30800000 {
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x309f0000 0x400000>;
+> +			reg =3D <0x30800000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges;
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> index 75b384217a23..bab88369be1b 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -291,7 +291,7 @@
+>=20
+>  		bus@30000000 { /* AIPS1 */
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x301f0000 0x10000>;
+> +			reg =3D <0x30000000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges =3D <0x30000000 0x30000000 0x400000>; @@ -696,7
+> +696,7 @@
+>=20
+>  		bus@30400000 { /* AIPS2 */
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x305f0000 0x10000>;
+> +			reg =3D <0x30400000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges =3D <0x30400000 0x30400000 0x400000>; @@ -756,7
+> +756,7 @@
+>=20
+>  		bus@30800000 { /* AIPS3 */
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x309f0000 0x10000>;
+> +			reg =3D <0x30800000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges =3D <0x30800000 0x30800000 0x400000>, @@ -1029,7
+> +1029,7 @@
+>=20
+>  		bus@32c00000 { /* AIPS4 */
+>  			compatible =3D "fsl,aips-bus", "simple-bus";
+> -			reg =3D <0x32df0000 0x10000>;
+> +			reg =3D <0x32c00000 0x400000>;
+>  			#address-cells =3D <1>;
+>  			#size-cells =3D <1>;
+>  			ranges =3D <0x32c00000 0x32c00000 0x400000>;
+> --
+> 2.17.1
 
