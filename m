@@ -2,233 +2,211 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCAFC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CE0C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2F02071A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC3A2071A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 17:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fOX/9oUV";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XiCbwvRE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajprIKKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732637AbgDARdT (ORCPT
+        id S1732336AbgDARhs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 13:33:19 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:52076 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732279AbgDARdT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 13:33:19 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031HUx20031105;
-        Wed, 1 Apr 2020 10:33:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=HwNU+ct4u0SQ+XlDd7iDo6HAs5Z7jJc7zCpud1nC5gM=;
- b=fOX/9oUV9sVJ705bKjRemsWz2FQw2KIRuj+gaSkFagGeheZBlGh4a8LJ8Zl2g6zL4ELW
- k7zAg57II+taYhziI6fUg3SBxO+KydDcjMdifTWpw/aiAh/bWYwjDnFp7XWeh4s4x1rD
- smyLny82N24OTwmYMq4qipWGpHUnjvZSOGA= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 303d0j8005-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 01 Apr 2020 10:33:03 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 1 Apr 2020 10:33:02 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iG8B3p2j0KqFg9fF1ApA9D52G8Ie7g8dR+cZeol7FOEghoH9BqXtFYm8elHNHxLsMwjS2Pct3yeHboJDhYIUJB7F4LVjMjAzt128sfImKlsp48V9p/Lgsp1ze4XM2jMRwXhhRRIozVv7tmibRMVsBBMM4dcwIlGhUfkLXoV4GeDCEC2pPhdd8GWISyW8iHHXgbXV9BiTDST3PnXjCkukEFi6CHYWjYLpui13orWjqL5jhvOFAz/tRHLDbLc2SDL3rsiVBZ2SavHvDEXXCDs1O99AXha4TCjGlLtYiBIXVF2L+WzDcwVG/y6FVmrCWY3Vv7pGk9fkzLh6A1sTLOGODw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HwNU+ct4u0SQ+XlDd7iDo6HAs5Z7jJc7zCpud1nC5gM=;
- b=Q8Lm4XPrbka7qU3twqEjvZps0SqPAnG0obY5V2tsp19vFMob7xyPHw2bRlnbytRR9WTwFX7VoKDznrQw98WgEJrSi6OEDqABkIKnKiPcfbB5zmNdeg0EVAXUJC9FwWfJWrNX9MOwMfGOrbQo6h/0RJyQwxdpNaHRLeGAhX/czPnqnRpSscVGo0CeYdXg4e/+3OuVjlLhRir2Xsq0G3o/km4rpY4/vRrxM0UwV9X6X/hE1WNUGGJYMreFoTidq4Xb33FLJtg0gVUopxgR9Gc0Zgv3Jqzu7q0IW66OOXqAUneYAAO6FE3jFUfNzp7vBlZ1SvqUqHdik+A4hSmZENwTQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HwNU+ct4u0SQ+XlDd7iDo6HAs5Z7jJc7zCpud1nC5gM=;
- b=XiCbwvRENJAjIamBai8XhZazZrTHovoleaCdZ76Ntyf0Gq8IPrHTfoVP7c90XU3A0QFko35IRlGae6ihh1LF6TNlyHf0dS6brUqZJfM977STmNMEw03uR4C4wMUJ2JWgh9J2+FK3r4r92PBg6Nlv/OjFshakyctLbj/J4I26EFI=
-Received: from MW3PR15MB3947.namprd15.prod.outlook.com (2603:10b6:303:49::9)
- by MW3PR15MB4060.namprd15.prod.outlook.com (2603:10b6:303:4e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Wed, 1 Apr
- 2020 17:33:01 +0000
-Received: from MW3PR15MB3947.namprd15.prod.outlook.com
- ([fe80::acc7:ed14:3f77:9936]) by MW3PR15MB3947.namprd15.prod.outlook.com
- ([fe80::acc7:ed14:3f77:9936%4]) with mapi id 15.20.2856.019; Wed, 1 Apr 2020
- 17:33:01 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "joel@jms.id.au" <joel@jms.id.au>
-CC:     Sai Dasari <sdasari@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        "manikandan.e@hcl.com" <manikandan.e@hcl.com>
-Subject: Re: [PATCH v7] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Thread-Topic: [PATCH v7] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Thread-Index: AQHWCBpeweWL8h/MFEyTethCsbGKaahkEZ0A
-Date:   Wed, 1 Apr 2020 17:33:01 +0000
-Message-ID: <7C091D02-98E8-4617-AA58-9714A8FC4EB0@fb.com>
-References: <20200401114023.GA29180@cnn>
-In-Reply-To: <20200401114023.GA29180@cnn>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:400::5:9e22]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f365ba4c-b739-4db2-03ed-08d7d662ba20
-x-ms-traffictypediagnostic: MW3PR15MB4060:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW3PR15MB406046A76C23D48D9077C2C5DDC90@MW3PR15MB4060.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 03607C04F0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR15MB3947.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(346002)(396003)(136003)(39860400002)(376002)(366004)(47680400002)(6486002)(66476007)(186003)(316002)(2616005)(5660300002)(71200400001)(66946007)(66446008)(54906003)(81166006)(81156014)(4326008)(76116006)(8676002)(2906002)(6506007)(8936002)(86362001)(36756003)(6512007)(64756008)(478600001)(66556008)(33656002)(110136005);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: twT7HcOYm7lFPrR++TlxlhqJBrnMAliJH/ttFs3sMOSxJ3KgfpVwiJZvgaL0wU5484ju/i1F7WEX3s8vCErWJ4AcSEOcPErRXW1T2WbaJZSfM6YcTgLVZBNfhWJOMumf1Hl6Io0Lp4xNtIBelRY5grliSoIT2eKeShLL8sam9p4zT9ZDW2BnLuMzozhzvD4FUDS7JsQz1h59sK44s716qUo2l/SR05FJtOkk7sgqy7ibnO7YwBohd7NpGqpQWLc/tGw2n9hOsei+oYZ1s7KHpfSMx4oHb0Wc+okGyuosw7G7ZI95ulc8Ak/RHXepwlu4S2nLj/XI4mrWF9WqNOCOIrFMeInyVuqA/vNupeinnNiTQo78xrYiQCip+TatPzYFpESEAP0+nGWFv3lhzgq10/VJQMXLTkyiGYVKnumjG1CTLiDzMRYfB+Mz2IKz9qUB
-x-ms-exchange-antispam-messagedata: JC+ZkNPLuoRQmNMV0lkvnYWVZdRN47vXS0nO2kFVsp/RJWiZTKwLNnq4Uo0BzH7Wk6gI609UGKWqBr6qg/DR1Zd0gGfo93y7F/lhWUgqJud08DloVLlQ4k+BTC1Mym2uJnDGVInVT4YIqnawu1tMLN6Yyj6EKWcr9M+b7Y1Lm66SQhoEqLdHGlqFbCHgwqad
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <88CC0F16F768E447BA152357D17F3650@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 1 Apr 2020 13:37:48 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44522 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbgDARhs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 13:37:48 -0400
+Received: by mail-oi1-f193.google.com with SMTP id v134so192760oie.11;
+        Wed, 01 Apr 2020 10:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zsQ+CdOVb24V2BAprd8p1XllEy9+EN0Dhep/xWpJ87Q=;
+        b=ajprIKKwv+dueHWTPMNqkQe2LuNgg4lh96IinPEFHmrCeJTFtViEZUxW9z2QWE/PDH
+         Sx2D3ZDf1DwThSCl3I+xZUXxOdQM3YS1LnSnwaYyvUYYoH36qP/eq5tzoUwnhHdBX8Yn
+         su38DI78spLbvC8/1PSh6bzXv0uCioZLfkNVZpHiWsYMnzPdt2Clt8yVEXQw1zdIFrRV
+         lvA9OQ5fuHszWv7f+yfgmhzfwTdEK2OwfBNcOVcnM12x5l2e7gDjIcq2isr/61mT7f6U
+         7f9cfk1IiIY4ss1cNbtcbQjYupvAkuPlgDLmbUqg5KQ4+DbjusR80Fpb129eS5AwN/u4
+         1Bsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zsQ+CdOVb24V2BAprd8p1XllEy9+EN0Dhep/xWpJ87Q=;
+        b=KHYrTz1eVv6O5+hVfSgMtVKGg7+mIuixqY0jb4rIOGU5Bf1Ef/21M+StWaVid2fXaP
+         L9eioU5321tBWAqwBBftu2/IxM5JyZIXYLBrxyOXdFcANZfowbFMMStomE5F4k9XO6/u
+         CeS/MuR2IgHWW48I2MEjwiB1uFtiSRwfwYhRl4SByQ+EMsV2QeWSf+SW1XrHYwQbp/Yb
+         J2uC0de5q+AafCKL9AZr1eX/Qd7ww7mYFx325W8ZZytaLTAS8iq93tRF+15tMffQkjNa
+         G6cDEt3h0asMixRnAkg3SzlTcHBd1QZsrRUuHwAJSDI1jXCsfR92CbIBbJF6awMe8DiM
+         qVTA==
+X-Gm-Message-State: AGi0PubgAEpbnD56REQg/eMudRorwKAP++DGSQgyuQzBL2YEXmVTELnm
+        PkxJKgC0gZKoKxz6oeJ+OY7AO1TMsdDSdW4BXjU=
+X-Google-Smtp-Source: APiQypLVoagopL2LC5fv3WBtfUn4dJ6lfyRk+nZW8iJ4g+qJWR3D3El0wlnEgwGCNQ77KzGiyo/Iso2KZOY63vUG27E=
+X-Received: by 2002:aca:cf0d:: with SMTP id f13mr3508187oig.162.1585762666999;
+ Wed, 01 Apr 2020 10:37:46 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f365ba4c-b739-4db2-03ed-08d7d662ba20
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2020 17:33:01.2789
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kI0Spob906jHnVJFTc1iPZkEzMQ+Ur09R0uu1Ln/O9XRpHd4dpOvbLKJB+80BOg3KKcu+oXc17Blxcz8tleSGw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB4060
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_03:2020-03-31,2020-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- priorityscore=1501 clxscore=1011 lowpriorityscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 bulkscore=0 adultscore=0 impostorscore=0
- phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004010148
-X-FB-Internal: deliver
+References: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
+In-Reply-To: <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 1 Apr 2020 18:37:20 +0100
+Message-ID: <CA+V-a8ujOD1k+Oc2f+tSHPvt128oO9hT3zEFHghnxq5RAOMb7w@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: renesas: r8a774c0-cat874: Add support for
+ AISTARVISION MIPI Adapter V2.1
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCu+7v09uIDQvMS8yMCwgNDo0MCBBTSwgIk1hbmlrYW5kYW4gRWx1bWFsYWkiIDxtYW5pa2Fu
-ZGFuLmhjbC5lcnMuZXBsQGdtYWlsLmNvbT4gd3JvdGU6DQoNCiAgICBUaGUgWW9zZW1pdGUgVjIg
-aXMgYSBmYWNlYm9vayBtdWx0aS1ub2RlIHNlcnZlcg0KICAgIHBsYXRmb3JtIHRoYXQgaG9zdCBm
-b3VyIE9DUCBzZXJ2ZXIuIFRoZSBCTUMNCiAgICBpbiB0aGUgWW9zZW1pdGUgVjIgcGxhdGZvcm0g
-YmFzZWQgb24gQVNUMjUwMCBTb0MuDQogICAgDQogICAgVGhpcyBwYXRjaCBhZGRzIGxpbnV4IGRl
-dmljZSB0cmVlIGVudHJ5IHJlbGF0ZWQgdG8NCiAgICBZb3NlbWl0ZSBWMiBzcGVjaWZpYyBkZXZp
-Y2VzIGNvbm5lY3RlZCB0byBCTUMgU29DLg0KICAgIA0KICAgIFNpZ25lZC1vZmYtYnk6IE1hbmlr
-YW5kYW4gRWx1bWFsYWkgPG1hbmlrYW5kYW4uaGNsLmVycy5lcGxAZ21haWwuY29tPg0KICAgIEFj
-a2VkLWJ5ICAgICA6IEFuZHJldyBKZWZmZXJ5IDxhbmRyZXdAYWouaWQuYXU+DQogICAgUmV2aWV3
-ZWQtYnkgIDogVmlqYXkgS2hlbWthIDx2a2hlbWthQGZiLmNvbT4NCiAgICAtLS0NCiAgICAtLS0g
-ICAgICB2NyAtIEFkZGVkIG11bHRpLWhvc3QgU09MIGZlYXR1cmUuDQpDYW4geW91IHBsZWFzZSBh
-bHNvIGFkZCBpcG1iIGJyaWRnZSBkZXZpY2UgZGV0YWlscyBoZXJlLg0KICAgIC0tLSAgICAgIHY2
-IC0gQWRkZWQgZGV2aWNlIHRyZWUgcHJvcGVydHkgZm9yIG11bHRpLWhvc3QgTWVsbGFub3ggTklD
-IGluIHRoZSBuY3NpIGRyaXZlci4NCiAgICAtLS0gICAgICB2NSAtIFNwZWxsIGFuZCBjb250cmli
-dXRvciBuYW1lIGNvcnJlY3Rpb24uDQogICAgLS0tICAgICAgICAgICAtIExpY2Vuc2UgaWRlbnRp
-ZmllciBjaGFuZ2VkIHRvIEdQTC0yLjAtb3ItbGF0ZXIuDQogICAgLS0tICAgICAgICAgICAtIGFz
-cGVlZC1ncGlvLmggcmVtb3ZlZC4NCiAgICAtLS0gICAgICAgICAgIC0gRkFOMiB0YWNobyBjaGFu
-bmVsIGNoYW5nZWQuDQogICAgLS0tICAgICAgdjQgLSBCb290YXJncyByZW1vdmVkLg0KICAgIC0t
-LSAgICAgIHYzIC0gVWFydDEgRGVidWcgcmVtb3ZlZCAuDQogICAgLS0tICAgICAgdjIgLSBMUEMg
-YW5kIFZVQVJUIHJlbW92ZWQgLg0KICAgIC0tLSAgICAgIHYxIC0gSW5pdGlhbCBkcmFmdC4NCiAg
-ICAtLS0NCiAgICAtLS0NCiAgICAgLi4uL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2steW9z
-ZW1pdGV2Mi5kdHMgICAgfCAxODYgKysrKysrKysrKysrKysrKysrKysrDQogICAgIDEgZmlsZSBj
-aGFuZ2VkLCAxODYgaW5zZXJ0aW9ucygrKQ0KICAgICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9h
-cm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay15b3NlbWl0ZXYyLmR0cw0KICAgIA0KICAg
-IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXlvc2Vt
-aXRldjIuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay15b3NlbWl0
-ZXYyLmR0cw0KICAgIG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQogICAgaW5kZXggMDAwMDAwMC4uYmM4
-MzkwMQ0KICAgIC0tLSAvZGV2L251bGwNCiAgICArKysgYi9hcmNoL2FybS9ib290L2R0cy9hc3Bl
-ZWQtYm1jLWZhY2Vib29rLXlvc2VtaXRldjIuZHRzDQogICAgQEAgLTAsMCArMSwxODYgQEANCiAg
-ICArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb3ItbGF0ZXINCiAgICArLy8g
-Q29weXJpZ2h0IChjKSAyMDE4IEZhY2Vib29rIEluYy4NCiAgICArL2R0cy12MS87DQogICAgKyNp
-bmNsdWRlICJhc3BlZWQtZzUuZHRzaSINCiAgICArDQogICAgKy8gew0KICAgICsJbW9kZWwgPSAi
-RmFjZWJvb2sgWW9zZW1pdGV2MiBCTUMiOw0KICAgICsJY29tcGF0aWJsZSA9ICJmYWNlYm9vayx5
-b3NlbWl0ZXYyLWJtYyIsICJhc3BlZWQsYXN0MjUwMCI7DQogICAgKwlhbGlhc2VzIHsNCiAgICAr
-CQlzZXJpYWw0ID0gJnVhcnQ1Ow0KICAgICsJfTsNCiAgICArCWNob3NlbiB7DQogICAgKwkJc3Rk
-b3V0LXBhdGggPSAmdWFydDU7DQogICAgKwl9Ow0KICAgICsNCiAgICArCW1lbW9yeUA4MDAwMDAw
-MCB7DQogICAgKwkJcmVnID0gPDB4ODAwMDAwMDAgMHgyMDAwMDAwMD47DQogICAgKwl9Ow0KICAg
-ICsNCiAgICArCWlpby1od21vbiB7DQogICAgKwkJLy8gVk9MQVRBR0UgU0VOU09SDQogICAgKwkJ
-Y29tcGF0aWJsZSA9ICJpaW8taHdtb24iOw0KICAgICsJCWlvLWNoYW5uZWxzID0gPCZhZGMgMD4g
-LCA8JmFkYyAxPiAsIDwmYWRjIDI+ICwgIDwmYWRjIDM+ICwNCiAgICArCQk8JmFkYyA0PiAsIDwm
-YWRjIDU+ICwgPCZhZGMgNj4gLCAgPCZhZGMgNz4gLA0KICAgICsJCTwmYWRjIDg+ICwgPCZhZGMg
-OT4gLCA8JmFkYyAxMD4sIDwmYWRjIDExPiAsDQogICAgKwkJPCZhZGMgMTI+ICwgPCZhZGMgMTM+
-ICwgPCZhZGMgMTQ+ICwgPCZhZGMgMTU+IDsNCiAgICArCX07DQogICAgK307DQogICAgKw0KICAg
-ICsmZm1jIHsNCiAgICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICArCWZsYXNoQDAgew0KICAgICsJ
-CXN0YXR1cyA9ICJva2F5IjsNCiAgICArCQltMjVwLGZhc3QtcmVhZDsNCiAgICArI2luY2x1ZGUg
-Im9wZW5ibWMtZmxhc2gtbGF5b3V0LmR0c2kiDQogICAgKwl9Ow0KICAgICt9Ow0KICAgICsNCiAg
-ICArJnNwaTEgew0KICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICsJcGluY3RybC1uYW1lcyA9
-ICJkZWZhdWx0IjsNCiAgICArCXBpbmN0cmwtMCA9IDwmcGluY3RybF9zcGkxX2RlZmF1bHQ+Ow0K
-ICAgICsJZmxhc2hAMCB7DQogICAgKwkJc3RhdHVzID0gIm9rYXkiOw0KICAgICsJCW0yNXAsZmFz
-dC1yZWFkOw0KICAgICsJCWxhYmVsID0gInBub3IiOw0KICAgICsJfTsNCiAgICArfTsNCiAgICAr
-JnVhcnQxIHsNCiAgICArCS8vIEhvc3QxIENvbnNvbGUNCiAgICArCXN0YXR1cyA9ICJva2F5IjsN
-CiAgICArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQogICAgKwlwaW5jdHJsLTAgPSA8JnBp
-bmN0cmxfdHhkMV9kZWZhdWx0DQogICAgKwkJICAgICAmcGluY3RybF9yeGQxX2RlZmF1bHQ+Ow0K
-ICAgICt9Ow0KICAgICsNCiAgICArJnVhcnQyIHsNCiAgICArCS8vIEhvc3QyIENvbnNvbGUNCiAg
-ICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQog
-ICAgKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdHhkMl9kZWZhdWx0DQogICAgKwkJICAgICAmcGlu
-Y3RybF9yeGQyX2RlZmF1bHQ+Ow0KICAgICsNCiAgICArfTsNCiAgICArDQogICAgKyZ1YXJ0MyB7
-DQogICAgKwkvLyBIb3N0MyBDb25zb2xlDQogICAgKwlzdGF0dXMgPSAib2theSI7DQogICAgKwlw
-aW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KICAgICsJcGluY3RybC0wID0gPCZwaW5jdHJsX3R4
-ZDNfZGVmYXVsdA0KICAgICsJCSAgICAgJnBpbmN0cmxfcnhkM19kZWZhdWx0PjsNCiAgICArfTsN
-CiAgICArDQogICAgKyZ1YXJ0NCB7DQogICAgKwkvLyBIb3N0NCBDb25zb2xlDQogICAgKwlzdGF0
-dXMgPSAib2theSI7DQogICAgKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KICAgICsJcGlu
-Y3RybC0wID0gPCZwaW5jdHJsX3R4ZDRfZGVmYXVsdA0KICAgICsJCSAgICAgJnBpbmN0cmxfcnhk
-NF9kZWZhdWx0PjsNCiAgICArfTsNCiAgICArDQogICAgKyZ1YXJ0NSB7DQogICAgKwkvLyBCTUMg
-Q29uc29sZQ0KICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICt9Ow0KICAgICsNCiAgICArJnZ1
-YXJ0IHsNCiAgICArCS8vIFZpcnR1YWwgVUFSVA0KICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAg
-ICt9Ow0KICAgICsNCiAgICArJm1hYzAgew0KICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICsJ
-cGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCiAgICArCXBpbmN0cmwtMCA9IDwmcGluY3RybF9y
-bWlpMV9kZWZhdWx0PjsNCiAgICArCXVzZS1uY3NpOw0KICAgICsJbWx4LG11bHRpLWhvc3Q7DQog
-ICAgK307DQogICAgKw0KICAgICsmYWRjIHsNCiAgICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICAr
-CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQogICAgKwlwaW5jdHJsLTAgPSA8JnBpbmN0cmxf
-YWRjMF9kZWZhdWx0DQogICAgKwkJCSZwaW5jdHJsX2FkYzFfZGVmYXVsdA0KICAgICsJCQkmcGlu
-Y3RybF9hZGMyX2RlZmF1bHQNCiAgICArCQkJJnBpbmN0cmxfYWRjM19kZWZhdWx0DQogICAgKwkJ
-CSZwaW5jdHJsX2FkYzRfZGVmYXVsdA0KICAgICsJCQkmcGluY3RybF9hZGM1X2RlZmF1bHQNCiAg
-ICArCQkJJnBpbmN0cmxfYWRjNl9kZWZhdWx0DQogICAgKwkJCSZwaW5jdHJsX2FkYzdfZGVmYXVs
-dA0KICAgICsJCQkmcGluY3RybF9hZGM4X2RlZmF1bHQNCiAgICArCQkJJnBpbmN0cmxfYWRjOV9k
-ZWZhdWx0DQogICAgKwkJCSZwaW5jdHJsX2FkYzEwX2RlZmF1bHQNCiAgICArCQkJJnBpbmN0cmxf
-YWRjMTFfZGVmYXVsdA0KICAgICsJCQkmcGluY3RybF9hZGMxMl9kZWZhdWx0DQogICAgKwkJCSZw
-aW5jdHJsX2FkYzEzX2RlZmF1bHQNCiAgICArCQkJJnBpbmN0cmxfYWRjMTRfZGVmYXVsdA0KICAg
-ICsJCQkmcGluY3RybF9hZGMxNV9kZWZhdWx0PjsNCiAgICArfTsNCiAgICArDQogICAgKyZpMmM4
-IHsNCiAgICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICArCS8vRlJVIEVFUFJPTQ0KICAgICsJZWVw
-cm9tQDUxIHsNCiAgICArCQljb21wYXRpYmxlID0gImF0bWVsLDI0YzY0IjsNCiAgICArCQlyZWcg
-PSA8MHg1MT47DQogICAgKwkJcGFnZXNpemUgPSA8MzI+Ow0KICAgICsJfTsNCiAgICArfTsNCiAg
-ICArDQogICAgKyZpMmM5IHsNCiAgICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICArCXRtcDQyMUA0
-ZSB7DQogICAgKwkvL0lOTEVUIFRFTVANCiAgICArCQljb21wYXRpYmxlID0gInRpLHRtcDQyMSI7
-DQogICAgKwkJcmVnID0gPDB4NGU+Ow0KICAgICsJfTsNCiAgICArCS8vT1VUTEVUIFRFTVANCiAg
-ICArCXRtcDQyMUA0ZiB7DQogICAgKwkJY29tcGF0aWJsZSA9ICJ0aSx0bXA0MjEiOw0KICAgICsJ
-CXJlZyA9IDwweDRmPjsNCiAgICArCX07DQogICAgK307DQogICAgKw0KICAgICsmaTJjMTAgew0K
-ICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICsJLy9IU0MNCiAgICArCWFkbTEyNzhANDAgew0K
-ICAgICsJCWNvbXBhdGlibGUgPSAiYWRpLGFkbTEyNzgiOw0KICAgICsJCXJlZyA9IDwweDQwPjsN
-CiAgICArCX07DQogICAgK307DQogICAgKw0KICAgICsmaTJjMTEgew0KICAgICsJc3RhdHVzID0g
-Im9rYXkiOw0KICAgICsJLy9NRVpaX1RFTVBfU0VOU09SDQogICAgKwl0bXA0MjFAMWYgew0KICAg
-ICsJCWNvbXBhdGlibGUgPSAidGksdG1wNDIxIjsNCiAgICArCQlyZWcgPSA8MHgxZj47DQogICAg
-Kwl9Ow0KICAgICt9Ow0KICAgICsNCiAgICArJmkyYzEyIHsNCiAgICArCXN0YXR1cyA9ICJva2F5
-IjsNCiAgICArCS8vTUVaWl9GUlUNCiAgICArCWVlcHJvbUA1MSB7DQogICAgKwkJY29tcGF0aWJs
-ZSA9ICJhdG1lbCwyNGM2NCI7DQogICAgKwkJcmVnID0gPDB4NTE+Ow0KICAgICsJCXBhZ2VzaXpl
-ID0gPDMyPjsNCiAgICArCX07DQogICAgK307DQogICAgKw0KICAgICsmcHdtX3RhY2hvIHsNCiAg
-ICArCXN0YXR1cyA9ICJva2F5IjsNCiAgICArCS8vRlNDDQogICAgKwlwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOw0KICAgICsJcGluY3RybC0wID0gPCZwaW5jdHJsX3B3bTBfZGVmYXVsdCAmcGlu
-Y3RybF9wd20xX2RlZmF1bHQ+Ow0KICAgICsJZmFuQDAgew0KICAgICsJCXJlZyA9IDwweDAwPjsN
-CiAgICArCQlhc3BlZWQsZmFuLXRhY2gtY2ggPSAvYml0cy8gOCA8MHgwMD47DQogICAgKwl9Ow0K
-ICAgICsJZmFuQDEgew0KICAgICsJCXJlZyA9IDwweDAxPjsNCiAgICArCQlhc3BlZWQsZmFuLXRh
-Y2gtY2ggPSAvYml0cy8gOCA8MHgwMT47DQogICAgKwl9Ow0KICAgICt9Ow0KICAgIC0tIA0KICAg
-IDIuNy40DQogICAgDQogICAgDQoNCg==
+Hi Geert,
+
+Thank you for the review.
+
+
+On Wed, Apr 1, 2020 at 10:45 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Sun, Mar 22, 2020 at 3:13 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
+> > to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
+> > which have the camera endpoint nodes for imx219 and ov5645 so that this can
+> > be re-used with other G2x platforms.
+> >
+> > r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
+> > default ties ov5645 camera endpoint to CSI2.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  Changes for v2:
+> >  * Dropped #{address,size}-cells
+> >  * Dropped unit address and reg for port
+>
+> Thanks for the update!
+>
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
+> > @@ -0,0 +1,75 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
+> > + * connected with aistarvision-mipi-v2-adapter board
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "r8a774c0-ek874.dts"
+> > +#define MIPI_PARENT_I2C i2c3
+> > +#include "aistarvision-mipi-adapter-2.1.dtsi"
+> > +
+> > +/ {
+> > +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
+> > +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
+> > +};
+> > +
+> > +&i2c3 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&vin4 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&vin5 {
+> > +       status = "okay";
+> > +};
+> > +
+> > +&csi40 {
+> > +       status = "okay";
+> > +
+> > +       ports {
+> > +               port {
+> > +                       csi40_in: endpoint {
+> > +                               clock-lanes = <0>;
+> > +                               data-lanes = <1 2>;
+> > +                               remote-endpoint = <&ov5645_ep>;
+> > +                       };
+> > +               };
+> > +       };
+> > +};
+> > +
+> > +&ov5645 {
+> > +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
+> > +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
+> > +
+> > +       clocks = <&cpg CPG_MOD 716>;
+>
+> I'm still a bit puzzled here.
+>
+> CPG_MOD 716 is the CSI40 module clock, which runs at 25 MHz, and is
+> presumably output to the CSI0_CLKP/N pair? Or is its rate controlled
+> by the CSI driver?
+> On the MIPI board[*], that signal becomes MIPI1_CP/N.
+> However, the MIPI board also has a "Clock Source Selection" header,
+> which allows you to choose one of:
+>   1. The fixed 24 MHz crystal, which is apparently used for the imx219
+>      camera, as described by imx219_clk above, and matches the wanted
+>      clock rate specified below?
+>   2. CSI1_CLK,
+>   3. CSI2_CLK.
+> The last two become CLK0/1 on the CAT874 board, which are driven by
+> TPU0TO0/1.
+>
+Yes my bad for not looking into this earlier, for both ov5645 and
+imx219 I do short
+pins 3-4 and 5-6 of J14, so for both the sensors the clocks should be
+fixed clock
+of 24Mhz, so I changed it imx219_clk to osc25250_clk and passed the same to
+ov5645 node. (imx219 sensor can take in a external clock from 6-27Mhz [2])
+
+> Which setting do you use for the ov5645 camera?
+>
+> > +       clock-frequency = <24000000>;
+>
+> After your patch for the ov5645 driver, this should be replaced by
+> assigned-clock-rates?
+>
+After v4 [1] it was decided that the frequency should be set by driver itself,
+so I'll be revisiting ov5645 driver.
+
+[1] https://patchwork.linuxtv.org/patch/62185/
+[2] https://publiclab.org/system/images/photos/000/023/294/original/RASPBERRY_PI_CAMERA_V2_DATASHEET_IMX219PQH5_7.0.0_Datasheet_XXX.PDF
+
+Cheers,
+--Prabhakar
+
+> The rest looks good to me, but I'm not a multi-media/camera expert.
+>
+> [*] https://github.com/Kevin-WSCU/96Boards-Camera
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
