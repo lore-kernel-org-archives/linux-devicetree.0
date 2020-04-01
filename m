@@ -2,171 +2,95 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E2FC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59708C2D0E7
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A313020784
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF9C20772
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 09:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732131AbgDAJml (ORCPT
+        id S1727593AbgDAJ5w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 05:42:41 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41930 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731544AbgDAJml (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 05:42:41 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f52so25240221otf.8;
-        Wed, 01 Apr 2020 02:42:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9NFB4A2CPVwSz9Sg1U5/CRoks4HY24v+VcMc1LJYhlA=;
-        b=p1WRaOvxvULH8ETXZWUa2OKQudPCObw8EmvnL7gmHglr6xirhDFra5OFJqOh4iP94/
-         l3YFXm2BRljkuXohvkeRMQMMo1k9wohT5Ds3OEShcqfs7hkXHJkfd1YTtJq5X2+hxgNM
-         V19sT2eM4pcmDr24KvWP//l6XaJ3YCKyNSaXcxp3AbUxXAJJVS3667eziHptQVg9UTTA
-         1QWlQ0FbZ7BEkgvdMh+OQzhGKSmbHW4Npte2e5mcE17pnkDQl0gvrOk1cNiHU7hnXdr3
-         pgomRw8EREWcbAk6LY89/zI2J0iRb9/7B7U+NkRqq7pW9t1x2zrEWgTmODmbY3hKvEzR
-         voIg==
-X-Gm-Message-State: ANhLgQ3z56mS8WqiuuPgVFSXvAV/nGlVIbNOJJiuZjdfH4+WNKZDXSP/
-        bsknkJyGroQeuT6wXsN/Q9EwjXMATaAlXUeEeV0=
-X-Google-Smtp-Source: ADFU+vvaJkvIXHbATb21lCcc0MJLscOCEDsiXUahQfh8sCQeWQkEkYa7KZWVyEhPq2xVAduTUBjZdSJVtLeQCzJ8nlk=
-X-Received: by 2002:a9d:7590:: with SMTP id s16mr16100426otk.250.1585734160600;
- Wed, 01 Apr 2020 02:42:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1584886352-4132-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 1 Apr 2020 11:42:29 +0200
-Message-ID: <CAMuHMdXhi_1rxpB3zXO+KwtY+36dh+_O8NqVfyLs5mU1+Vy6Og@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: renesas: r8a774c0-cat874: Add support for
- AISTARVISION MIPI Adapter V2.1
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Wed, 1 Apr 2020 05:57:52 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42169 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbgDAJ5w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 05:57:52 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jJa7u-0002Hr-19; Wed, 01 Apr 2020 11:57:38 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jJa7p-00067a-CQ; Wed, 01 Apr 2020 11:57:33 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>
-Content-Type: text/plain; charset="UTF-8"
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        netdev@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>
+Subject: [PATCH] net: phy: at803x: fix clock sink configuration on ATH8030 and ATH8035
+Date:   Wed,  1 Apr 2020 11:57:32 +0200
+Message-Id: <20200401095732.23197-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.26.0.rc2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+The masks in priv->clk_25m_reg and priv->clk_25m_mask are one-bits-set
+for the values that comprise the fields, not zero-bits-set.
 
-On Sun, Mar 22, 2020 at 3:13 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> This patch adds support for AISTARVISION MIPI Adapter V2.1 board connected
-> to G2E board. Common file aistarvision-mipi-adapter-2.1.dtsi is created
-> which have the camera endpoint nodes for imx219 and ov5645 so that this can
-> be re-used with other G2x platforms.
->
-> r8a774c0-ek874-mipi-2.1.dts file enables the required VIN/CSI nodes and by
-> default ties ov5645 camera endpoint to CSI2.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  Changes for v2:
->  * Dropped #{address,size}-cells
->  * Dropped unit address and reg for port
+This patch fixes the clock frequency configuration for ATH8030 and
+ATH8035 Atheros PHYs by removing the erroneous "~".
 
-Thanks for the update!
+To reproduce this bug, configure the PHY  with the device tree binding
+"qca,clk-out-frequency" and remove the machine specific PHY fixups.
 
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a774c0-ek874-mipi-2.1.dts
-> @@ -0,0 +1,75 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the Silicon Linux RZ/G2E 96board platform (CAT874)
-> + * connected with aistarvision-mipi-v2-adapter board
-> + *
-> + * Copyright (C) 2020 Renesas Electronics Corp.
-> + */
-> +
-> +/dts-v1/;
-> +#include "r8a774c0-ek874.dts"
-> +#define MIPI_PARENT_I2C i2c3
-> +#include "aistarvision-mipi-adapter-2.1.dtsi"
-> +
-> +/ {
-> +       model = "Silicon Linux RZ/G2E evaluation kit EK874 (CAT874 + CAT875) with aistarvision-mipi-v2-adapter board";
-> +       compatible = "si-linux,cat875", "si-linux,cat874", "renesas,r8a774c0";
-> +};
-> +
-> +&i2c3 {
-> +       status = "okay";
-> +};
-> +
-> +&vin4 {
-> +       status = "okay";
-> +};
-> +
-> +&vin5 {
-> +       status = "okay";
-> +};
-> +
-> +&csi40 {
-> +       status = "okay";
-> +
-> +       ports {
-> +               port {
-> +                       csi40_in: endpoint {
-> +                               clock-lanes = <0>;
-> +                               data-lanes = <1 2>;
-> +                               remote-endpoint = <&ov5645_ep>;
-> +                       };
-> +               };
-> +       };
-> +};
-> +
-> +&ov5645 {
-> +       enable-gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-> +       reset-gpios = <&gpio5 3 GPIO_ACTIVE_LOW>;
-> +
-> +       clocks = <&cpg CPG_MOD 716>;
+Fixes: 2f664823a47021 ("net: phy: at803x: add device tree binding")
+Reported-by: Russell King <linux@armlinux.org.uk>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/at803x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'm still a bit puzzled here.
-
-CPG_MOD 716 is the CSI40 module clock, which runs at 25 MHz, and is
-presumably output to the CSI0_CLKP/N pair? Or is its rate controlled
-by the CSI driver?
-On the MIPI board[*], that signal becomes MIPI1_CP/N.
-However, the MIPI board also has a "Clock Source Selection" header,
-which allows you to choose one of:
-  1. The fixed 24 MHz crystal, which is apparently used for the imx219
-     camera, as described by imx219_clk above, and matches the wanted
-     clock rate specified below?
-  2. CSI1_CLK,
-  3. CSI2_CLK.
-The last two become CLK0/1 on the CAT874 board, which are driven by
-TPU0TO0/1.
-
-Which setting do you use for the ov5645 camera?
-
-> +       clock-frequency = <24000000>;
-
-After your patch for the ov5645 driver, this should be replaced by
-assigned-clock-rates?
-
-The rest looks good to me, but I'm not a multi-media/camera expert.
-
-[*] https://github.com/Kevin-WSCU/96Boards-Camera
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index 481cf48c9b9e4..31f731e6df720 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -425,8 +425,8 @@ static int at803x_parse_dt(struct phy_device *phydev)
+ 		 */
+ 		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
+ 		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
+-			priv->clk_25m_reg &= ~AT8035_CLK_OUT_MASK;
+-			priv->clk_25m_mask &= ~AT8035_CLK_OUT_MASK;
++			priv->clk_25m_reg &= AT8035_CLK_OUT_MASK;
++			priv->clk_25m_mask &= AT8035_CLK_OUT_MASK;
+ 		}
+ 	}
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.26.0.rc2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
