@@ -2,163 +2,171 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34965C2D0F3
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1370FC43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068B020719
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D841420787
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 18:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lXHTsCYC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3sNiT6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732994AbgDASYK (ORCPT
+        id S1732774AbgDAS1S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 14:24:10 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6574 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732842AbgDASYI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 14:24:08 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e84dc3a0001>; Wed, 01 Apr 2020 11:23:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 01 Apr 2020 11:24:07 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 01 Apr 2020 11:24:07 -0700
-Received: from [10.2.164.193] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 1 Apr
- 2020 18:24:07 +0000
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@iki.fi>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
-        <helen.koike@collabora.com>, <digetx@gmail.com>,
-        <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200325110358.GB853@valkosipuli.retiisi.org.uk>
- <8bc44545-7d1e-0e37-db27-d37784679574@xs4all.nl>
- <20200331103215.GI2394@valkosipuli.retiisi.org.uk>
- <ba37eb84-392c-3767-57f6-d297b0ab79a3@xs4all.nl>
- <20200331111018.GJ2394@valkosipuli.retiisi.org.uk>
- <a1145ee4-2991-a958-1225-090c57fec533@xs4all.nl>
- <20200331115221.GA4767@pendragon.ideasonboard.com>
- <6aa7d86c-3943-d508-ccf6-5ac46546abe9@nvidia.com>
- <3b00a559-992a-2da9-92b1-bee44e137ba2@nvidia.com>
- <1c60491b-1bb2-6291-80a6-c0fa14094077@nvidia.com>
- <20200401165805.GE4876@pendragon.ideasonboard.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <e3b437c6-76e1-d407-e81d-c05912ffcd0b@nvidia.com>
-Date:   Wed, 1 Apr 2020 11:24:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 1 Apr 2020 14:27:18 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41182 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730420AbgDAS1S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 14:27:18 -0400
+Received: by mail-ed1-f67.google.com with SMTP id v1so1059839edq.8;
+        Wed, 01 Apr 2020 11:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qc8FdgkWFDlzCGPYLOnP9rFKt+4lOYRHOhNF4lWF83w=;
+        b=h3sNiT6w5xhV7LEni1uXvK3mEPsRMhJkj6EkwmrmqhNJ3+PmaeC4pDLym0QIDqoXxj
+         nXVOWLYT6+vf1kIyr3ySKn3ujiPXPq2GhWRPEWPGYYnJLC5Mt+WFdYo6sJXcQLnLRO4k
+         cymwVaZhmrSxhbS4NuSNUrUvfvOV1QxQ4MTO9EMiEVXDsWSys5BTFov5jWj0n3IeCk1q
+         VF0fOEBc2NIE80cWUxOb5qjfYlaeU6u22H8ao2LiQ9iq1dSAnlM0EWZkMe20+kpwi1tn
+         do56udx2eWFB9Uhfr9Y+4dmYSfAoPG+/Cx2xyRQUOYzKwLTQFX8FkOje8+GLOIF3hFE5
+         OXoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qc8FdgkWFDlzCGPYLOnP9rFKt+4lOYRHOhNF4lWF83w=;
+        b=f8KXIp70mUZhOPD0TvN9ZOLIMGCtjueSsnUVLnY2bLICBwAkgAlAULgRQ2UBEfP9t+
+         P8pFI3lfbeoaa6CHDNZNrmT60ioloHvUjDEp1dYON669QgqCxs++6ueS7MHLevcYhQNV
+         NGqEIl2MljdPXbn5POnpFk2TP3xQsTp4u3FW7r6YaAenrwEsDglTsJNarrSwdBFqzbbC
+         AYh0u/Eyy8e7M88FYdQ11ByVMzTHQXDdQTW7nbc/OU1vSlAXqP5gVGzDsbJycJsWC+2b
+         r6PYpSQ/stXmDce4M20aZGLbSeBkGXhTNA6sKxSHQwfKvH6fSiwAq7W1qK45LttmXbam
+         H/+Q==
+X-Gm-Message-State: ANhLgQ3eRP+L+16frRa4BihcZnZ7seRvBEjPn9lUtJySGg1xl0Xfxz/9
+        gmR5k1rnyxm+DWMPT7Wk+d9ZqrCg6M+5JOEDC8B58wv4ZWI=
+X-Google-Smtp-Source: ADFU+vt4AHASmjNfRn5JQa4Gc3qglj7ra6KhGxH+2qm9C0dVE3Fxo3wYrvhP6p1JqhsehGN7/QhDVsZ76LkLt0jfxCI=
+X-Received: by 2002:aa7:d602:: with SMTP id c2mr22785839edr.118.1585765635929;
+ Wed, 01 Apr 2020 11:27:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200401165805.GE4876@pendragon.ideasonboard.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585765434; bh=wuMn7wVJU3FgOIzl/GEIXEsEfIt24oALd2phqNyAMuU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=lXHTsCYCf9kAi+an+1CCXN4D5DsUO8HiWJpzEgXYoxpziUI5/YXGAyI1Ng63tZNCn
-         sDs0BJ9TjF3gdM8GN3A+9bqGkrIkA6Z8AiNmuZfGC10Z6nWbFdiVzJnMn1r63JLe3H
-         izLR++U3RQSfNX9oj0Hb9pXt+v6ZtuM7+RiRkS1glZ0lBj8qFD5pcDE78s6exDSfBg
-         lEGGdM0Yt5F1eYR1AUSBFTNop+am26CRmaRpRqG/BODaiokrYxyD/IVYzDTLjyRXMI
-         JZOrPsF+nU/7t7J09CKhH2wutN99cHMXyekMHIMjxRUiq7dUxPk7yzT6skCSAp3RJJ
-         yUeiQGyxpgTlA==
+References: <20200323225254.12759-1-grygorii.strashko@ti.com>
+ <20200326.200136.1601946994817303021.davem@davemloft.net> <CA+h21hr8G24ddEgAbU_TfoNAe0fqUJ0_Uyp54Gxn5cvPrM6u9g@mail.gmail.com>
+ <8f5e981a-193c-0c1e-1e0a-b0380b2e6a9c@ti.com> <2d305c89-601c-5dee-06be-30257a26a392@ti.com>
+ <cac3d501-cc36-73c5-eea8-aaa2d10105b0@ti.com> <590f9865-ace7-fc12-05e7-0c8579785f96@ti.com>
+In-Reply-To: <590f9865-ace7-fc12-05e7-0c8579785f96@ti.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 1 Apr 2020 21:27:04 +0300
+Message-ID: <CA+h21hpAnWbnQihTVGyB-TyRYad+gWCdF7suzsXRFJg-nsU9xg@mail.gmail.com>
+Subject: Re: [PATCH net-next v6 00/11] net: ethernet: ti: add networking
+ support for k3 am65x/j721e soc
+To:     David Miller <davem@davemloft.net>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        peter.ujfalusi@ti.com, Rob Herring <robh@kernel.org>,
+        netdev <netdev@vger.kernel.org>, rogerq@ti.com,
+        devicetree@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>, kishon@ti.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi David,
 
-On 4/1/20 9:58 AM, Laurent Pinchart wrote:
-> External email: Use caution opening links or attachments
+On Mon, 30 Mar 2020 at 21:14, Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 >
+> Hi
 >
-> Hi Sowjanya,
+> On 30/03/2020 11:28, Sekhar Nori wrote:
+> > On 30/03/20 1:06 PM, Sekhar Nori wrote:
+> >> On 30/03/20 12:45 PM, Tero Kristo wrote:
+> >>> On 28/03/2020 03:53, Vladimir Oltean wrote:
+> >>>> Hi David,
+> >>>>
+> >>>> On Fri, 27 Mar 2020 at 05:02, David Miller <davem@davemloft.net> wrote:
+> >>>>>
+> >>>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
+> >>>>> Date: Tue, 24 Mar 2020 00:52:43 +0200
+> >>>>>
+> >>>>>> This v6 series adds basic networking support support TI K3
+> >>>>>> AM654x/J721E SoC which
+> >>>>>> have integrated Gigabit Ethernet MAC (Media Access Controller) into
+> >>>>>> device MCU
+> >>>>>> domain and named MCU_CPSW0 (CPSW2G NUSS).
+> >>>>>    ...
+> >>>>>
+> >>>>> Series applied, thank you.
+> >>>>
+> >>>> The build is now broken on net-next:
+> >>>>
+> >>>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
+> >>>> (phandle_references):
+> >>>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
+> >>>>
+> >>>> Reference to non-existent node
+> >>>> or label "mcu_conf"
+> >>>>
+> >>>>     also defined at
+> >>>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
+> >>>> arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi:303.23-309.6: ERROR
+> >>>> (phandle_references):
+> >>>> /interconnect@100000/interconnect@28380000/ethernet@46000000/ethernet-ports/port@1:
+> >>>>
+> >>>> Reference to non-existent node
+> >>>> or label "phy_gmii_sel"
+> >>>>
+> >>>>     also defined at
+> >>>> arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts:471.13-474.3
+> >>>>
+> >>>> As Grygorii said:
+> >>>>
+> >>>> Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3
+> >>>> Platform
+> >>>> tree and provided here for testing purposes.
+> >>>
+> >>> Yeah, I think you are missing a dependency that was applied via the K3
+> >>> branch earlier. They are in linux-next now, but I am not so sure how
+> >>> much that is going to help you.
+> >>>
+> >>> You could just drop the DT patches from this merge and let me apply them
+> >>> via the platform branch.
+> >>
+> >> One other option would be that Dave merges your K3 tag which was sent to
+> >> ARM SoC to net-next. Its based on v5.6-rc1, has no other dependencies,
+> >> is already in linux-next, should be immutable and safe to merge. This
+> >> has the advantage that no rebase is necessary on net-next.
+> >>
+> >> git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux
+> >> tags/ti-k3-soc-for-v5.7
+> >
+> > FWIW, I was able to reproduce the build failure reported by Vladimir on
+> > net-next, merge Tero's tag (above) cleanly into it, and see that ARM64
+> > defconfig build on net-next succeeds after the merge.
 >
-> On Wed, Apr 01, 2020 at 09:36:03AM -0700, Sowjanya Komatineni wrote:
->> Hi Sakari/Laurent,
->>
->> Few questions to confirm my understanding on below discussion.
->>
->> 1. Some sensors that you are referring as don't work with single devnode
->> controlling pipeline devices are ISP built-in sensors where setup of
->> pipeline and subdevices happen separately?
-> Sensors that include ISPs could indeed require to be exposed as multiple
-> subdevs, but I was mostly referring to raw Bayer sensors with hardware
-> architectures similar to the SMIA++ and MIPI CCS specifications. Those
-> sensors can perform cropping in up to three different locations (analog
-> crop, digital crop, output crop), and can also scale in up to three
-> different locations (binning, skipping and filter-based scaling).
+> Thank you Sekhar for checking this.
 >
-> Furthermore, with the V4L2 support for multiplexed streams that we are
-> working on, a sensor that can produce both image data and embedded data
-> would also need to be split in multiple subdevs.
-
-Thanks Laurent.
-
-For sensors with meta/embedded data along with image in same frame, 
-Tegra VI HW extracts based on programmed embedded data size info.
-
-So in our driver we capture this as separate buffer as embedded data is 
-part of frame.
-
-You above comment on multiplexed streams is for sensors using different 
-virutal channels for diff streams?
-
-
->> 2. With driver supporting single device node control of entire pipeline
->> devices compared to MC-based, limitation is with userspace apps for only
->> these complex camera sensors?
-> In those cases, several policy decisions on how to configure the sensor
-> (whether to use binning, skipping and/or filter-based scaling for
-> instance, or how much cropping and scaling to apply to achieve a certain
-> output resolution) will need to be implemented in the kernel, and
-> userspace will not have any control on them.
+> I'm very sorry for introducing this issue. I've tried hard to avoid such issue,
+> but still missed it (probably I have had to drop DT patches from last submission
+> and send them separately).
 >
->> 3. Does all upstream video capture drivers eventually will be moved to
->> support MC-based?
-> I think we'll see a decrease of the video-node-centric drivers in the
-> future for embedded systems, especially the ones that include an ISP.
-> When a system has an ISP, even if the ISP is implemented as a
-> memory-to-memory device separate from the CSI-2 capture side, userspace
-> will likely have a need for fine-grained control of the camera sensor.
->
->> 4. Based on libcamera doc looks like it will work with both types of
->> MC-based and single devnode based pipeline setup drivers for normal
->> sensors and limitation is when we use ISP built-in sensor or ISP HW
->> block. Is my understanding correct?
-> libcamera supports both, it doesn't put any restriction in that area.
-> The pipeline handler (the device-specific code in libcamera that
-> configures and control the hardware pipeline) is responsible for
-> interfacing with the kernel drivers, and is free to use an MC-centric or
-> video-node-centric API depending on what the kernel drivers offer.
->
-> The IPA (image processing algorithms) module is also vendor-specific.
-> Although it will not interface directly with kernel drivers, it will
-> have requirements on how fine-grained control of the sensor is required.
-> For systems that have an ISP in the SoC, reaching a high image quality
-> level requires fine-grained control of the sensor, or at the very least
-> being able to retrieve fine-grained sensor configuration information
-> from the kernel. For systems using a camera sensor with an integrated
-> ISP and a CSI-2 receiver without any further processing on the SoC side,
-> there will be no such fine-grained control of the sensor by the IPA (and
-> there could even be no IPA module at all).
+> Sorry again.
 >
 > --
-> Regards,
->
-> Laurent Pinchart
+> Best regards,
+> grygorii
+
+I think the ARM64 build is now also broken on Linus' master branch,
+after the net-next merge? I am not quite sure if the device tree
+patches were supposed to land in mainline the way they did.
+
+Thanks,
+-Vladimir
