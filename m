@@ -2,126 +2,245 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7837DC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 21:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369A1C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 21:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549232054F
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 21:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009CE20772
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 21:55:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QAniw9Sj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732554AbgDAVwy (ORCPT
+        id S1732849AbgDAVzY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 17:52:54 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:58472 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732357AbgDAVwx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 17:52:53 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 825C18030886;
-        Wed,  1 Apr 2020 21:52:49 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GdA5Bpm0qipx; Thu,  2 Apr 2020 00:52:47 +0300 (MSK)
-Date:   Thu, 2 Apr 2020 00:52:58 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/6] soc: Add Baikal-T1 SoC APB/AXI EHB and L2-cache
- drivers
-Message-ID: <20200401215258.jnemcpeac5wf3hyu@ubsrv2.baikal.int>
-References: <20200306130731.938808030702@mail.baikalelectronics.ru>
- <20200306153246.9373B80307C4@mail.baikalelectronics.ru>
- <20200401150612.addu2gzahrarpgep@ubsrv2.baikal.int>
- <CAK8P3a0+3xqLa9-Xsu-WWd5XZZ=4mPzwHhOmGSc9y9W=92L9Uw@mail.gmail.com>
+        Wed, 1 Apr 2020 17:55:24 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34284 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732357AbgDAVzY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 17:55:24 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 65so1922815wrl.1;
+        Wed, 01 Apr 2020 14:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:references:in-reply-to:subject:date:message-id
+         :mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=23XR5mx8Dze93AnMWKyPVY0N8s5g7kVY+bkAn8g7cvA=;
+        b=QAniw9SjKQdOhTQ6+egXHh8NRepoYDY4AiDAN7Uj1eGxSWo4AArd8Xtg/NIoC8BIDL
+         KRShWuizd69H8UwgFcT+nsJPKSweoIyITSUfLUqvs6AofqWK+y3TZRVbbvuiCocT3d34
+         1xYjOdKTWqw5ROCwZLYMo2mLc1wISqW/FV8ZJYhX6FQ0Zx41nYXpV8cU4TL7OIH0yXFx
+         CrPbHQtca7er4Idus89zSrtFbSpzq5cTu9jYKK6a2aDUz+WlTe/yJOVckTa7FPeYaETu
+         kYVOgbRKRj1TDcVlxbf9KMv4jmjmrSGAleN6jEjqAaYebTQCSV/TZw8qeWh8gBmxYEUJ
+         w5Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
+         :message-id:mime-version:content-transfer-encoding:content-language
+         :thread-index;
+        bh=23XR5mx8Dze93AnMWKyPVY0N8s5g7kVY+bkAn8g7cvA=;
+        b=UzCXBV4jBvb+BvjLbZRIjSEV11o7/PqfTzzQ1D+GUkknsLSCa4eXFbdZrGddHMjASQ
+         k3hgA9wVw6v+rxGPHQj+9Gzu3eh/HAUFKgyHrIzVv++DbYO+pvhcUc0ozikH3kus4efM
+         w83yczLTX43YvIeq2jk4fx8VYKiqCo0coxJ1VYkmqxfVt//MV5wilCwic/abpeM6GA0o
+         97r7Elfg7Mr4XtJNTk9o90uBW3M3s7PY53aJtRMVeazmtuQO2yOytFcLGV8bboaWdQDH
+         etYuKynoByQzTP6dc1S0RcUV3HZGPwVLHgtqZZu8s9x2UFIj0U9PM/XbLjHiHkpxzioN
+         o8Lg==
+X-Gm-Message-State: AGi0PuaproIXC6WnEqhUwA9vupKblam7oIGZMnOKEwRIqRQmh3Nyg1VU
+        TpI9VP9m/mqVzHuKP5EZZck=
+X-Google-Smtp-Source: APiQypLPNH390ekbgjowk9SJkVwRaMOwDEpGqo7J6aTA93oIuwiRwrzQR7kuqQyKFmyS2KRB8S9NlA==
+X-Received: by 2002:adf:a549:: with SMTP id j9mr39711wrb.183.1585778121081;
+        Wed, 01 Apr 2020 14:55:21 -0700 (PDT)
+Received: from AnsuelXPS (host3-220-static.183-80-b.business.telecomitalia.it. [80.183.220.3])
+        by smtp.gmail.com with ESMTPSA id a186sm4244571wmh.33.2020.04.01.14.55.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 01 Apr 2020 14:55:20 -0700 (PDT)
+From:   <ansuelsmth@gmail.com>
+To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
+        "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
+        "'Andy Gross'" <agross@kernel.org>,
+        "'Bjorn Helgaas'" <bhelgaas@google.com>,
+        "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Mark Rutland'" <mark.rutland@arm.com>,
+        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
+        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
+        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
+        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200320183455.21311-1-ansuelsmth@gmail.com> <20200320183455.21311-7-ansuelsmth@gmail.com> <20200401204007.GG254911@minitux>
+In-Reply-To: <20200401204007.GG254911@minitux>
+Subject: R: [PATCH 07/12] pcie: qcom: add tx term offset support
+Date:   Wed, 1 Apr 2020 23:55:17 +0200
+Message-ID: <006501d60870$3cf99fc0$b6ecdf40$@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0+3xqLa9-Xsu-WWd5XZZ=4mPzwHhOmGSc9y9W=92L9Uw@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: it
+Thread-Index: AQF7DJ39byRpk4MoIUXZtcQDafvd5gIhNZ99Afu/Pz6o+d5HcA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 09:10:20PM +0200, Arnd Bergmann wrote:
-> On Wed, Apr 1, 2020 at 5:06 PM Sergey Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> > On Fri, Mar 06, 2020 at 04:19:47PM +0100, Arnd Bergmann wrote:
-> > > On Fri, Mar 6, 2020 at 2:07 PM <Sergey.Semin@baikalelectronics.ru> wrote:
-> > > >
-> > > > From: Serge Semin <fancer.lancer@gmail.com>
-> > > >
-> > > > Aside from PCIe/SATA/DDR/I2C/CPU-reboot specific settings the Baikal-T1
-> > > > system controller provides three vendor-specific blocks. In particular
-> > > > there are two Errors Handler Blocks to detect and report an info regarding
-> > > > any problems discovered on the AXI and APB buses. These are the main buses
-> > > > utilized by the SoC devices to interact with each other. In addition there
-> > > > is a way to tune the MIPS P5600 CM2 L2-cache up by setting the Tag/Data/WS
-> > > > L2-to-RAM latencies. All of this functionality is implemented in the
-> > > > APB/AXI EHB and L2-cache control block drivers to be a part of the kernel soc
-> > > > subsystem (as being specific to the Baikal-T1 SoC) and introduced in the
-> > > > framework of this patchset.
-> > > >
-> > > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > > > commit 98d54f81e36b ("Linux 5.6-rc4").
-> > >
-> > > I have no objection to the drivers, but I wonder if these should be
-> > > in drivers/bus and drivers/memory instead of drivers/soc, which have
-> > > similar drivers already. The driver for the L2 cache is not really a
-> > > memory controller driver, but it may be close enough, and we
-> > > already have a couple of different things in there.
-> > >
+> On Fri 20 Mar 11:34 PDT 2020, Ansuel Smith wrote:
 > 
-> > Regarding l2 driver. Do you really think that L2 cache should be in
-> > drivers/memory? First there is no any cache-related drivers in that
-> > subsystem (at least I couldn't find any). Second the Baikal-T1
-> > L2-cache-RAM config block has just indirect connection with RAM.
-> > The block just tunes the L2-cache<->RAM stall clock cycles up on
-> > WS/Tag/Data RAM IO-operations. This config seems more SoC-specific,
-> > than memory-like. Do you think that the driver should still be in
-> > drivers/memory?
-> 
-> Either way could work, and both locations are a bit of a dumping
-> ground for different kinds of drivers. My preference would be
-> drivers/memory, but if anyone has a strong opinion the other way,
-> drivers/soc would be acceptable as well.
-> 
-> > On the other hand the block is part of the System Controller. I could
-> > just embed the l2-cache driver functionality into the System Controller
-> > MFD driver. Though honestly IMHO the functionality should live in
-> > a dedicated driver and drivers/soc is a better place for it. I also have
-> > doubts this part will be well accepted by Lee (drivers/mfd maintainer).
+> > From: Sham Muthayyan <smuthayy@codeaurora.org>
 > >
-> > So what do you think?
+> > Add tx term offset support to pcie qcom driver
+> > need in some revision of the ipq806x soc
+> >
+> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 61
+> ++++++++++++++++++++++----
+> >  1 file changed, 52 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
+> b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index ecc22fd27ea6..8009e3117765 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -45,7 +45,13 @@
+> >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+> >
+> >  #define PCIE20_PARF_PHY_CTRL			0x40
+> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	(0x1f << 16)
+> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		(x << 16)
+> > +
+> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
+> > +#define REF_SSP_EN				BIT(16)
+> > +#define REF_USE_PAD				BIT(12)
+> > +
+> >  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+> >  #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+> >  #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+> > @@ -77,6 +83,18 @@
+> >  #define DBI_RO_WR_EN				1
+> >
+> >  #define PERST_DELAY_US				1000
+> > +/* PARF registers */
+> > +#define PCIE20_PARF_PCS_DEEMPH			0x34
+> > +#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		(x << 16)
+> > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	(x << 8)
+> > +#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	(x << 0)
+> > +
+> > +#define PCIE20_PARF_PCS_SWING			0x38
+> > +#define PCS_SWING_TX_SWING_FULL(x)		(x << 8)
+> > +#define PCS_SWING_TX_SWING_LOW(x)		(x << 0)
+> > +
+> > +#define PCIE20_PARF_CONFIG_BITS			0x50
+> > +#define PHY_RX0_EQ(x)				(x << 24)
+> >
+> >  #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+> >  #define SLV_ADDR_SPACE_SZ			0x10000000
+> > @@ -97,6 +115,7 @@ struct qcom_pcie_resources_2_1_0 {
+> >  	struct reset_control *phy_reset;
+> >  	struct reset_control *ext_reset;
+> >  	struct regulator_bulk_data
+> supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
+> > +	uint8_t phy_tx0_term_offset;
+> >  };
+> >
+> >  struct qcom_pcie_resources_1_0_0 {
+> > @@ -184,6 +203,16 @@ struct qcom_pcie {
+> >
+> >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> >
+> > +static inline void
+> > +writel_masked(void __iomem *addr, u32 clear_mask, u32 set_mask)
+> > +{
+> > +	u32 val = readl(addr);
+> > +
+> > +	val &= ~clear_mask;
+> > +	val |= set_mask;
+> > +	writel(val, addr);
+> > +}
+> > +
+> >  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
+> >  {
+> >  	gpiod_set_value_cansleep(pcie->reset, 1);
+> > @@ -277,6 +306,10 @@ static int
+> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+> >  	if (IS_ERR(res->ext_reset))
+> >  		return PTR_ERR(res->ext_reset);
+> >
+> > +	if (of_property_read_u8(dev->of_node, "phy-tx0-term-offset",
+> > +				&res->phy_tx0_term_offset))
+> > +		res->phy_tx0_term_offset = 0;
 > 
-> If you make it a combined driver with the system controller,
-> drivers/soc would be the most logical place. drivers/mfd should
-> only be used for a multiplexer with child drivers doing the
-> actual functionality.
+> The appropriate way is to encode differences in hardware is to use
+> different compatibles for the two different versions of the hardware.
 > 
->         Arnd
+> Regards,
+> Bjorn
+> 
 
-I see. Thanks for the comment. I'll move the l2-cache driver to the
-drivers/memory then and send a new patchset referring to this discussion
-when it's ready. I'll make sure it'll be Cc'ed to you too.
+So a better way to handle this would be to check the SoC compatible?
+AFAIK a different offset is only needed on ipq8064 revision 2 and ipq8065
+but
+it looks bad to add a special code just for that 2 SoC. 
+I would prefer to handle this with the offset definition but If you think
+this would be
+the right way, I will follow that. Waiting for your response about this.
 
-Regards,
--Sergey
+> > +
+> >  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+> >  	return PTR_ERR_OR_ZERO(res->phy_reset);
+> >  }
+> > @@ -304,7 +337,6 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+> >  	struct dw_pcie *pci = pcie->pci;
+> >  	struct device *dev = pci->dev;
+> > -	u32 val;
+> >  	int ret;
+> >
+> >  	ret = reset_control_assert(res->ahb_reset);
+> > @@ -355,15 +387,26 @@ static int qcom_pcie_init_2_1_0(struct
+> qcom_pcie *pcie)
+> >  		goto err_deassert_ahb;
+> >  	}
+> >
+> > -	/* enable PCIe clocks and resets */
+> > -	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > -	val &= ~BIT(0);
+> > -	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> > +	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
+> > +
+> > +	/* Set Tx termination offset */
+> > +	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL,
+> > +		      PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK,
+> > +		      PHY_CTRL_PHY_TX0_TERM_OFFSET(res-
+> >phy_tx0_term_offset));
+> > +
+> > +	/* PARF programming */
+> > +	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(0x18) |
+> > +	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(0x18) |
+> > +	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(0x22),
+> > +	       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
+> > +	writel(PCS_SWING_TX_SWING_FULL(0x78) |
+> > +	       PCS_SWING_TX_SWING_LOW(0x78),
+> > +	       pcie->parf + PCIE20_PARF_PCS_SWING);
+> > +	writel(PHY_RX0_EQ(0x4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
+> >
+> > -	/* enable external reference clock */
+> > -	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> > -	val |= BIT(16);
+> > -	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
+> > +	/* Enable reference clock */
+> > +	writel_masked(pcie->parf + PCIE20_PARF_PHY_REFCLK,
+> > +		      REF_USE_PAD, REF_SSP_EN);
+> >
+> >  	ret = reset_control_deassert(res->phy_reset);
+> >  	if (ret) {
+> > --
+> > 2.25.1
+> >
+
