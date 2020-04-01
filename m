@@ -2,188 +2,93 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5CDC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F627C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7DF720787
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:15:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rVF2vAtM"
+	by mail.kernel.org (Postfix) with ESMTP id 24F2920842
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 08:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbgDAIPZ (ORCPT
+        id S1726977AbgDAIUa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 04:15:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:32278 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726536AbgDAIPY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 04:15:24 -0400
-X-UUID: 85477a0a56a0464e99d2b4dcd26fe772-20200401
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=EUSbiZ5r21/VYhtoXigszZHmGB4861uUEJICZijPPz8=;
-        b=rVF2vAtM9hLqWUY7cOfJM67VbleqT4ZU/KNk1kDPt4sKkz8UFCJAazznvi6O7G7cM3LyuGlml0V87Fpa/Hm9LKNsK6CtKWkAQGCH842sWY7ELJA5pVeSskNZmodPpiAC+exc/AuDecegLuiLusNEcAqoj4LtCTsmAQ/UJ7T79P4=;
-X-UUID: 85477a0a56a0464e99d2b4dcd26fe772-20200401
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 886987047; Wed, 01 Apr 2020 16:15:18 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 1 Apr 2020 16:15:10 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 1 Apr 2020 16:15:10 +0800
-Message-ID: <1585728912.29188.5.camel@mtksdaap41>
-Subject: Re: [PATCH v10 3/5] mfd: Add support for the MediaTek MT6358 PMIC
-From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "Frank Wunderlich" <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Ran Bi <ran.bi@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <srv_heupstream@mediatek.com>
-Date:   Wed, 1 Apr 2020 16:15:12 +0800
-In-Reply-To: <20200325094326.GH442973@dell>
-References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1583918223-22506-4-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <20200325094326.GH442973@dell>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 1 Apr 2020 04:20:30 -0400
+Received: from mga17.intel.com ([192.55.52.151]:36715 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726406AbgDAIUa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Apr 2020 04:20:30 -0400
+IronPort-SDR: UIN3sk57ourU3eRBAkihcrtyZhMJ77gKNNrXX+398kTeF/Xtv5Qn1SyjZmxm/RM0yW+kwNDQrV
+ Fc5vrreDRoFA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2020 01:20:30 -0700
+IronPort-SDR: gcLKdk5leewbXh2NZqZHf8qkafOI+oTgdm3xH4UEYLpxs9isubzIwwu4awu9+iJuhnz77lD0/8
+ tXpKeFVPV4tA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,331,1580803200"; 
+   d="scan'208";a="242160906"
+Received: from vikasjox-mobl.amr.corp.intel.com (HELO localhost) ([10.249.39.53])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Apr 2020 01:20:21 -0700
+Date:   Wed, 1 Apr 2020 11:20:19 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Christophe Richard <hristophe-h.ricard@st.com>
+Subject: Re: [PATCH v4 2/7] tpm: tpm_tis: Add check_data handle to
+ tpm_tis_phy_ops in order to check data integrity
+Message-ID: <20200401082019.GB17325@linux.intel.com>
+References: <20200331113207.107080-1-amirmizi6@gmail.com>
+ <20200331113207.107080-3-amirmizi6@gmail.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 06D9F1349F844C3C636E8A872788F7EFF171DBA945BD46709F6C7CC20C761D822000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200331113207.107080-3-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksDQpPbiBXZWQsIDIwMjAtMDMtMjUgYXQgMDk6NDMgKzAwMDAsIExlZSBKb25lcyB3cm90ZToN
-Cj4gT24gV2VkLCAxMSBNYXIgMjAyMCwgSHNpbi1Ic2l1bmcgV2FuZyB3cm90ZToNCj4gDQo+ID4g
-VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBNZWRpYVRlayBNVDYzNTggUE1JQy4gVGhpcyBpcyBh
-DQo+ID4gbXVsdGlmdW5jdGlvbiBkZXZpY2Ugd2l0aCB0aGUgZm9sbG93aW5nIHN1YiBtb2R1bGVz
-Og0KPiA+IA0KPiA+IC0gUmVndWxhdG9yDQo+ID4gLSBSVEMNCj4gPiAtIENvZGVjDQo+ID4gLSBJ
-bnRlcnJ1cHQNCj4gPiANCj4gPiBJdCBpcyBpbnRlcmZhY2VkIHRvIHRoZSBob3N0IGNvbnRyb2xs
-ZXIgdXNpbmcgU1BJIGludGVyZmFjZQ0KPiA+IGJ5IGEgcHJvcHJpZXRhcnkgaGFyZHdhcmUgY2Fs
-bGVkIFBNSUMgd3JhcHBlciBvciBwd3JhcC4NCj4gPiBNVDYzNTggTUZEIGlzIGEgY2hpbGQgZGV2
-aWNlIG9mIHRoZSBwd3JhcC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBX
-YW5nIDxoc2luLWhzaXVuZy53YW5nQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVy
-cy9tZmQvTWFrZWZpbGUgICAgICAgICAgICAgICAgIHwgICAyICstDQo+ID4gIGRyaXZlcnMvbWZk
-L210NjM1OC1pcnEuYyAgICAgICAgICAgICB8IDIzNiArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKw0KPiA+ICBkcml2ZXJzL21mZC9tdDYzOTctY29yZS5jICAgICAgICAgICAgfCAgNTUgKysr
-KysrLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L21mZC9tdDYzNTgvY29yZS5oICAgICAgfCAxNTggKysr
-KysrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVkZS9saW51eC9tZmQvbXQ2MzU4L3JlZ2lzdGVy
-cy5oIHwgMjgyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIGluY2x1
-ZGUvbGludXgvbWZkL210NjM5Ny9jb3JlLmggICAgICB8ICAgMyArDQo+ID4gIDYgZmlsZXMgY2hh
-bmdlZCwgNzMxIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQoNClsuLi5dDQoNCj4gPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvbXQ2MzU4LWlycS5jIGIvZHJpdmVycy9tZmQvbXQ2MzU4
-LWlycS5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi4wMjJl
-NWY1DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvbWZkL210NjM1OC1pcnEu
-Yw0KPiA+IEBAIC0wLDAgKzEsMjM2IEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVy
-OiBHUEwtMi4wDQo+ID4gKy8vDQo+ID4gKy8vIENvcHlyaWdodCAoYykgMjAxOSBNZWRpYVRlayBJ
-bmMuDQo+IA0KPiBUaGlzIGlzIG91dCBvZiBkYXRlLg0KPiANCg0KVGhhbmtzLiBJIHdpbGwgdXBk
-YXRlIGl0IGluIHRoZSBuZXh0IHBhdGNoLg0KDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1
-cHQuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L21mZC9tdDYzNTgvY29yZS5oPg0KPiA+ICsjaW5j
-bHVkZSA8bGludXgvbWZkL210NjM1OC9yZWdpc3RlcnMuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4
-L21mZC9tdDYzOTcvY29yZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ID4g
-KyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+
-DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9pcnEuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3Bs
-YXRmb3JtX2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQo+ID4gKw0K
-PiA+ICtzdGF0aWMgc3RydWN0IGlycV90b3BfdCBtdDYzNThfaW50c1tdID0gew0KPiA+ICsJTVQ2
-MzU4X1RPUF9HRU4oQlVDSyksDQo+ID4gKwlNVDYzNThfVE9QX0dFTihMRE8pLA0KPiA+ICsJTVQ2
-MzU4X1RPUF9HRU4oUFNDKSwNCj4gPiArCU1UNjM1OF9UT1BfR0VOKFNDSyksDQo+ID4gKwlNVDYz
-NThfVE9QX0dFTihCTSksDQo+ID4gKwlNVDYzNThfVE9QX0dFTihISyksDQo+ID4gKwlNVDYzNThf
-VE9QX0dFTihBVUQpLA0KPiA+ICsJTVQ2MzU4X1RPUF9HRU4oTUlTQyksDQo+ID4gK307DQo+ID4g
-Kw0KPiA+ICtzdGF0aWMgdm9pZCBwbWljX2lycV9lbmFibGUoc3RydWN0IGlycV9kYXRhICpkYXRh
-KQ0KPiA+ICt7DQo+ID4gKwl1bnNpZ25lZCBpbnQgaHdpcnEgPSBpcnFkX3RvX2h3aXJxKGRhdGEp
-Ow0KPiA+ICsJc3RydWN0IG10NjM5N19jaGlwICpjaGlwID0gaXJxX2RhdGFfZ2V0X2lycV9jaGlw
-X2RhdGEoZGF0YSk7DQo+IA0KPiA2Mzk3Pw0KPiANCj4gVGhpcyBkb2VzIG1ha2UgbWUgd29uZGVy
-IGhvdyBkaWZmZXJlbnQgdGhpcyBmaWxlIGlzIHRvIHRoZSBleGlzdGluZw0KPiBzdXBwb3J0IGZv
-ciB0aGUgTVQ2Mzk3LiAgV2hhdCBpcyB0aGUganVzdGlmaWNhdGlvbiBmb3Igbm90IGV4dGVuZGlu
-Zw0KPiB0aGF0IGluc3RlYWQgb2YgY3JlYXRpbmcgYSBicmFuZCBuZXcgZmlsZT8NCj4gDQoNCk1U
-NjM1OCBpcyBzaW1pbGFyIHRvIE1UNjM5NyBmb3IgbWZkIGRyaXZlciBleGNlcHQgdGhlIGhhcmR3
-YXJlIGRlc2lnbiBvZg0KaW50ZXJydXB0IHdoaWNoIHByb3ZpZGVzIG1vcmUgaW50ZXJydXB0cyB0
-aGFuIE1UNjM5Ny4NCkkgdGhpbmsgTVQ2MzU4IGNhbiByZXVzZSB0aGUgb3RoZXIgcGFydHMgb2Yg
-TVQ2Mzk3IG1mZCBkcml2ZXIsIHNvIEkgb25seQ0KYWRkIHRoZSBpbnRlcnJ1cHQgcGFydCBvZiBN
-VDYzNTguDQoNCj4gPiArCXN0cnVjdCBwbWljX2lycV9kYXRhICppcnFkID0gY2hpcC0+aXJxX2Rh
-dGE7DQo+ID4gKw0KPiA+ICsJaXJxZC0+ZW5hYmxlX2h3aXJxW2h3aXJxXSA9IHRydWU7DQo+ID4g
-K30NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIHBtaWNfaXJxX2Rpc2FibGUoc3RydWN0IGlycV9k
-YXRhICpkYXRhKQ0KPiA+ICt7DQo+ID4gKwl1bnNpZ25lZCBpbnQgaHdpcnEgPSBpcnFkX3RvX2h3
-aXJxKGRhdGEpOw0KPiA+ICsJc3RydWN0IG10NjM5N19jaGlwICpjaGlwID0gaXJxX2RhdGFfZ2V0
-X2lycV9jaGlwX2RhdGEoZGF0YSk7DQo+ID4gKwlzdHJ1Y3QgcG1pY19pcnFfZGF0YSAqaXJxZCA9
-IGNoaXAtPmlycV9kYXRhOw0KPiA+ICsNCj4gPiArCWlycWQtPmVuYWJsZV9od2lycVtod2lycV0g
-PSBmYWxzZTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgcG1pY19pcnFfbG9jayhz
-dHJ1Y3QgaXJxX2RhdGEgKmRhdGEpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBtdDYzOTdfY2hpcCAq
-Y2hpcCA9IGlycV9kYXRhX2dldF9pcnFfY2hpcF9kYXRhKGRhdGEpOw0KPiA+ICsNCj4gPiArCW11
-dGV4X2xvY2soJmNoaXAtPmlycWxvY2spOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9p
-ZCBwbWljX2lycV9zeW5jX3VubG9jayhzdHJ1Y3QgaXJxX2RhdGEgKmRhdGEpDQo+ID4gK3sNCj4g
-PiArCXVuc2lnbmVkIGludCBpLCB0b3BfZ3AsIGdwX29mZnNldCwgZW5fcmVnLCBpbnRfcmVncywg
-c2hpZnQ7DQo+ID4gKwlzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKmNoaXAgPSBpcnFfZGF0YV9nZXRfaXJx
-X2NoaXBfZGF0YShkYXRhKTsNCj4gPiArCXN0cnVjdCBwbWljX2lycV9kYXRhICppcnFkID0gY2hp
-cC0+aXJxX2RhdGE7DQo+ID4gKw0KPiA+ICsJZm9yIChpID0gMDsgaSA8IGlycWQtPm51bV9wbWlj
-X2lycXM7IGkrKykgew0KPiA+ICsJCWlmIChpcnFkLT5lbmFibGVfaHdpcnFbaV0gPT0gaXJxZC0+
-Y2FjaGVfaHdpcnFbaV0pDQo+ID4gKwkJCWNvbnRpbnVlOw0KPiA+ICsNCj4gPiArCQkvKiBGaW5k
-IG91dCB0aGUgSVJRIGdyb3VwICovDQo+ID4gKwkJdG9wX2dwID0gMDsNCj4gPiArCQl3aGlsZSAo
-KHRvcF9ncCArIDEpIDwgaXJxZC0+bnVtX3RvcCAmJg0KPiA+ICsJCSAgICAgICBpID49IG10NjM1
-OF9pbnRzW3RvcF9ncCArIDFdLmh3aXJxX2Jhc2UpDQo+ID4gKwkJCXRvcF9ncCsrOw0KPiA+ICsN
-Cj4gPiArCQkvKiBGaW5kIHRoZSBpcnEgcmVnaXN0ZXJzICovDQo+IA0KPiBOaXQ6ICJJUlEiDQo+
-IA0KDQpUaGFua3MuIEkgd2lsbCB1cGRhdGUgaXQgaW4gdGhlIG5leHQgcGF0Y2guDQoNCj4gPiAr
-CQlncF9vZmZzZXQgPSBpIC0gbXQ2MzU4X2ludHNbdG9wX2dwXS5od2lycV9iYXNlOw0KPiA+ICsJ
-CWludF9yZWdzID0gZ3Bfb2Zmc2V0IC8gTVQ2MzU4X1JFR19XSURUSDsNCj4gPiArCQlzaGlmdCA9
-IGdwX29mZnNldCAlIE1UNjM1OF9SRUdfV0lEVEg7DQo+ID4gKwkJZW5fcmVnID0gbXQ2MzU4X2lu
-dHNbdG9wX2dwXS5lbl9yZWcgKw0KPiA+ICsJCQkgKG10NjM1OF9pbnRzW3RvcF9ncF0uZW5fcmVn
-X3NoaWZ0ICogaW50X3JlZ3MpOw0KPiA+ICsNCj4gPiArCQlyZWdtYXBfdXBkYXRlX2JpdHMoY2hp
-cC0+cmVnbWFwLCBlbl9yZWcsIEJJVChzaGlmdCksDQo+ID4gKwkJCQkgICBpcnFkLT5lbmFibGVf
-aHdpcnFbaV0gPDwgc2hpZnQpOw0KPiA+ICsNCj4gPiArCQlpcnFkLT5jYWNoZV9od2lycVtpXSA9
-IGlycWQtPmVuYWJsZV9od2lycVtpXTsNCj4gPiArCX0NCj4gPiArCW11dGV4X3VubG9jaygmY2hp
-cC0+aXJxbG9jayk7DQo+ID4gK30NCj4gDQo+IFsuLi5dDQo+IA0KPiA+ICtpbnQgbXQ2MzU4X2ly
-cV9pbml0KHN0cnVjdCBtdDYzOTdfY2hpcCAqY2hpcCkNCj4gPiArew0KPiA+ICsJaW50IGksIGos
-IHJldDsNCj4gPiArCXN0cnVjdCBwbWljX2lycV9kYXRhICppcnFkOw0KPiA+ICsNCj4gPiArCWly
-cWQgPSBkZXZtX2t6YWxsb2MoY2hpcC0+ZGV2LCBzaXplb2Yoc3RydWN0IHBtaWNfaXJxX2RhdGEg
-KiksDQo+IA0KPiBzaXplb2YoKmlycWQpDQo+IA0KDQpUaGFua3MuIEkgd2lsbCB1cGRhdGUgaXQg
-aW4gdGhlIG5leHQgcGF0Y2guDQoNCj4gWy4uLl0NCj4gDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1
-Y3QgY2hpcF9kYXRhIG10NjM5N19jb3JlID0gew0KPiA+ICAJLmNpZF9hZGRyID0gTVQ2Mzk3X0NJ
-RCwNCj4gPiAgCS5jaWRfc2hpZnQgPSAwLA0KPiA+IEBAIC0xNTQsMTkgKzE4NCwzMyBAQCBzdGF0
-aWMgaW50IG10NjM5N19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICAJ
-aWYgKHBtaWMtPmlycSA8PSAwKQ0KPiA+ICAJCXJldHVybiBwbWljLT5pcnE7DQo+ID4gIA0KPiA+
-IC0JcmV0ID0gbXQ2Mzk3X2lycV9pbml0KHBtaWMpOw0KPiA+IC0JaWYgKHJldCkNCj4gPiAtCQly
-ZXR1cm4gcmV0Ow0KPiA+IC0NCj4gPiAgCXN3aXRjaCAocG1pYy0+Y2hpcF9pZCkgew0KPiA+ICAJ
-Y2FzZSBNVDYzMjNfQ0hJUF9JRDoNCj4gPiArCQlyZXQgPSBtdDYzOTdfaXJxX2luaXQocG1pYyk7
-DQo+ID4gKwkJaWYgKHJldCkNCj4gPiArCQkJcmV0dXJuIHJldDsNCj4gPiArDQo+ID4gIAkJcmV0
-ID0gZGV2bV9tZmRfYWRkX2RldmljZXMoJnBkZXYtPmRldiwgUExBVEZPUk1fREVWSURfTk9ORSwN
-Cj4gPiAgCQkJCQkgICBtdDYzMjNfZGV2cywgQVJSQVlfU0laRShtdDYzMjNfZGV2cyksDQo+ID4g
-IAkJCQkJICAgTlVMTCwgMCwgcG1pYy0+aXJxX2RvbWFpbik7DQo+ID4gIAkJYnJlYWs7DQo+ID4g
-IA0KPiA+ICsJY2FzZSBNVDYzNThfQ0hJUF9JRDoNCj4gPiArCQlyZXQgPSBtdDYzNThfaXJxX2lu
-aXQocG1pYyk7DQo+ID4gKwkJaWYgKHJldCkNCj4gPiArCQkJcmV0dXJuIHJldDsNCj4gPiArDQo+
-ID4gKwkJcmV0ID0gZGV2bV9tZmRfYWRkX2RldmljZXMoJnBkZXYtPmRldiwgUExBVEZPUk1fREVW
-SURfTk9ORSwNCj4gPiArCQkJCQkgICBtdDYzNThfZGV2cywgQVJSQVlfU0laRShtdDYzNThfZGV2
-cyksDQo+ID4gKwkJCQkJICAgTlVMTCwgMCwgcG1pYy0+aXJxX2RvbWFpbik7DQo+IA0KPiBJbiBh
-IHN1YnNlcXVlbnQgcGF0Y2ggeW91IGNhbiBjaG9vc2UgdGhlIGNvcnJlY3QgbXRYWFhYX2RldnMg
-c3RydWN0dXJlDQo+IHRvIHBhc3MgYW5kIGNhbGwgZGV2bV9tZmRfYWRkX2RldmljZXMoKSBvbmx5
-IG9uY2UgYmVsb3cgdGhlIHN3aXRjaCgpLg0KPiANCg0KVGhhbmtzIGZvciB5b3VyIGNvbW1lbnQu
-IEkgd2lsbCB1cGRhdGUgaXQgaW4gdGhlIG5leHQgcGF0Y2guDQoNCj4gPiArCQlicmVhazsNCj4g
-PiArDQo+ID4gIAljYXNlIE1UNjM5MV9DSElQX0lEOg0KPiA+ICAJY2FzZSBNVDYzOTdfQ0hJUF9J
-RDoNCj4gPiArCQlyZXQgPSBtdDYzOTdfaXJxX2luaXQocG1pYyk7DQo+ID4gKwkJaWYgKHJldCkN
-Cj4gPiArCQkJcmV0dXJuIHJldDsNCj4gPiArDQo+ID4gIAkJcmV0ID0gZGV2bV9tZmRfYWRkX2Rl
-dmljZXMoJnBkZXYtPmRldiwgUExBVEZPUk1fREVWSURfTk9ORSwNCj4gPiAgCQkJCQkgICBtdDYz
-OTdfZGV2cywgQVJSQVlfU0laRShtdDYzOTdfZGV2cyksDQo+ID4gIAkJCQkJICAgTlVMTCwgMCwg
-cG1pYy0+aXJxX2RvbWFpbik7DQo+IA0KPiBbLi4uXQ0KPiANCg0K
+On Tue, Mar 31, 2020 at 02:32:02PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
+> 
+> In order to compute the crc over the data sent in lower layer
+>  (I2C for instance), tpm_tis_check_data() calls an operation (if available)
+>  to check data integrity. If data integrity cannot be verified, a retry
+>  attempt to save the sent/received data is implemented.
+> 
+> The current steps are done when sending a command:
+>     1. Host writes to TPM_STS.commandReady.
+>     2. Host writes command.
+>     3. Host checks that TPM received data is valid.
+>     4. If data is currupted go to step 1.
+> 
+> When receiving data:
+>     1. Host checks that TPM_STS.dataAvail is set.
+>     2. Host saves received data.
+>     3. Host checks that received data is correct.
+>     4. If data is currupted Host writes to TPM_STS.responseRetry and go to
+>         step 1.
+> 
+> Co-developed-by: Christophe Richard <hristophe-h.ricard@st.com>
+> Signed-off-by: Christophe Richard <hristophe-h.ricard@st.com>
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
 
+The email is malformed.
+
+So.. How did Christophe participate on writing this patch? I haven't
+seen him shouting anything about the subject and still his SOB is
+there.
+
+/Jarkko
