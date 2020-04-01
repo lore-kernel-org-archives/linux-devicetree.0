@@ -2,226 +2,211 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6FFC43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 22:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90648C2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 22:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D7E20772
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 22:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A1020719
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 22:10:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dM5bmioO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732637AbgDAWHu (ORCPT
+        id S1733173AbgDAWKj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 18:07:50 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:58510 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732357AbgDAWHu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 18:07:50 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0D7828030886;
-        Wed,  1 Apr 2020 22:07:47 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id KYpXvjdddVu8; Thu,  2 Apr 2020 01:07:46 +0300 (MSK)
-Date:   Thu, 2 Apr 2020 01:07:50 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: interrupt-controller: Convert
- mti,gic to DT schema
-Message-ID: <20200401220750.wsoxsxr547aewtgt@ubsrv2.baikal.int>
-References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
- <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200324174325.14213-3-Sergey.Semin@baikalelectronics.ru>
- <20200331210248.GA27684@bogus>
- <20200401101930.3lk4t6wk6j5ne6ay@ubsrv2.baikal.int>
- <CAL_JsqJBVTahd9uQPe6KUfVxzGPrGfFarcKBU=EPpon6Ny=Sqg@mail.gmail.com>
+        Wed, 1 Apr 2020 18:10:39 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:51686 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732849AbgDAWKi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 18:10:38 -0400
+Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D825CA35;
+        Thu,  2 Apr 2020 00:10:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1585779036;
+        bh=zk/g/UFjif2Z1RVqfuVlAwk1ZZtD/4CvaH9ZJVJBIM8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dM5bmioOymkqQ2jk5Xs0en27wHUEXnHmlAznC8JkkUVZjV0k05fZ4mzVfoPh+CthQ
+         ZiCKZ8FoG1r0qiPt9x9HO6RkGbZEu+DSsSUSqSNxbtANpRwX0a/BFV3rhHvGCPBakE
+         KbAmae+zhEcAopCfYcecOup1o6+qqdGc3/2fgLvY=
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v7 1/3] dt-bindings: phy: Add DT bindings for Xilinx ZynqMP PSGTR PHY
+Date:   Thu,  2 Apr 2020 01:10:23 +0300
+Message-Id: <20200401221025.26087-2-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200401221025.26087-1-laurent.pinchart@ideasonboard.com>
+References: <20200401221025.26087-1-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJBVTahd9uQPe6KUfVxzGPrGfFarcKBU=EPpon6Ny=Sqg@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 08:13:58AM -0600, Rob Herring wrote:
-> On Wed, Apr 1, 2020 at 4:19 AM Sergey Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > On Tue, Mar 31, 2020 at 03:02:48PM -0600, Rob Herring wrote:
-> > > On Tue, Mar 24, 2020 at 08:43:21PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > >
-> > > > Modern device tree bindings are supposed to be created as YAML-files
-> > > > in accordance with DT schema. This commit replaces MIPS GIC legacy bare
-> > > > text binding with YAML file. As before the binding file states that the
-> > > > corresponding dts node is supposed to be compatible with MIPS Global
-> > > > Interrupt Controller indicated by the "mti,gic" compatible string and
-> > > > to provide a mandatory interrupt-controller and '#interrupt-cells'
-> > > > properties. There might be optional registers memory range,
-> > > > "mti,reserved-cpu-vectors" and "mti,reserved-ipi-vectors" properties
-> > > > specified.
-> > > >
-> > > > MIPS GIC also includes a free-running global timer, per-CPU count/compare
-> > > > timers, and a watchdog. Since currently the GIC Timer is only supported the
-> > > > DT schema expects an IRQ and clock-phandler charged timer sub-node with
-> > > > "mti,mips-gic-timer" compatible string.
-> > > >
-> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > > Cc: Paul Burton <paulburton@kernel.org>
-> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > > > Cc: Alessandro Zummo <a.zummo@towertech.it>
-> > > > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Cc: linux-rtc@vger.kernel.org
-> > > >
-> > > > ---
-> > > >
-> > > > I don't really know who is the corresponding driver maintainer, so I
-> > > > added to the maintainers schema Paul since he used to be looking for the
-> > > > MIPS arch and Thomas looking after it now. Any idea what email should be
-> > > > specified there instead?
-> > > >
-> > > > Similarly to the previous patch the "oneOf: - required: ..." pattern isn't
-> > > > working here. Supposedly due to the script' dtschema/lib.py
-> > > > interrupts/interrupts-extended fixup.
-> > > > ---
-> > > >  .../interrupt-controller/mips-gic.txt         |  67 --------
-> > > >  .../interrupt-controller/mti,gic.yaml         | 152 ++++++++++++++++++
-> > > >  2 files changed, 152 insertions(+), 67 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt b/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > > > deleted file mode 100644
-> > > > index 173595305e26..000000000000
-> > > > --- a/Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
-> > > > +++ /dev/null
-> > > > @@ -1,67 +0,0 @@
-> > > > -MIPS Global Interrupt Controller (GIC)
-> > > > -
-> > > > -The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-> > > > -It also supports local (per-processor) interrupts and software-generated
-> > > > -interrupts which can be used as IPIs.  The GIC also includes a free-running
-> > > > -global timer, per-CPU count/compare timers, and a watchdog.
-> > > > -
-> > > > -Required properties:
-> > > > -- compatible : Should be "mti,gic".
-> > > > -- interrupt-controller : Identifies the node as an interrupt controller
-> > > > -- #interrupt-cells : Specifies the number of cells needed to encode an
-> > > > -  interrupt specifier.  Should be 3.
-> > > > -  - The first cell is the type of interrupt, local or shared.
-> > > > -    See <include/dt-bindings/interrupt-controller/mips-gic.h>.
-> > > > -  - The second cell is the GIC interrupt number.
-> > > > -  - The third cell encodes the interrupt flags.
-> > > > -    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
-> > > > -    flags.
-> > > > -
-> > > > -Optional properties:
-> > > > -- reg : Base address and length of the GIC registers.  If not present,
-> > > > -  the base address reported by the hardware GCR_GIC_BASE will be used.
-> > > > -- mti,reserved-cpu-vectors : Specifies the list of CPU interrupt vectors
-> > > > -  to which the GIC may not route interrupts.  Valid values are 2 - 7.
-> > > > -  This property is ignored if the CPU is started in EIC mode.
-> > > > -- mti,reserved-ipi-vectors : Specifies the range of GIC interrupts that are
-> > > > -  reserved for IPIs.
-> > > > -  It accepts 2 values, the 1st is the starting interrupt and the 2nd is the size
-> > > > -  of the reserved range.
-> > > > -  If not specified, the driver will allocate the last 2 * number of VPEs in the
-> > > > -  system.
-> > > > -
-> > > > -Required properties for timer sub-node:
-> > > > -- compatible : Should be "mti,gic-timer".
-> > > > -- interrupts : Interrupt for the GIC local timer.
-> > > > -
-> > > > -Optional properties for timer sub-node:
-> > > > -- clocks : GIC timer operating clock.
-> > > > -- clock-frequency : Clock frequency at which the GIC timers operate.
-> > > > -
-> > > > -Note that one of clocks or clock-frequency must be specified.
-> > > > -
-> > > > -Example:
-> > > > -
-> > > > -   gic: interrupt-controller@1bdc0000 {
-> > > > -           compatible = "mti,gic";
-> > > > -           reg = <0x1bdc0000 0x20000>;
-> > > > -
-> > > > -           interrupt-controller;
-> > > > -           #interrupt-cells = <3>;
-> > > > -
-> > > > -           mti,reserved-cpu-vectors = <7>;
-> > > > -           mti,reserved-ipi-vectors = <40 8>;
-> > > > -
-> > > > -           timer {
-> > > > -                   compatible = "mti,gic-timer";
-> > > > -                   interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-> > > > -                   clock-frequency = <50000000>;
-> > > > -           };
-> > > > -   };
-> > > > -
-> > > > -   uart@18101400 {
-> > > > -           ...
-> > > > -           interrupt-parent = <&gic>;
-> > > > -           interrupts = <GIC_SHARED 24 IRQ_TYPE_LEVEL_HIGH>;
-> > > > -           ...
-> > > > -   };
-> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..1e47c0cdc231
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
-> > > > @@ -0,0 +1,152 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > >
-> > > Do you have rights to add BSD?
-> > >
-> >
-> > My manager said we can submitted the DT schema bindings under both GPL and
-> > BSD licenses. Though I don't know what license was of the legacy binding file.
-> 
-> Anything in the kernel without an explicit license is GPL-2.0-only.
-> 
-> > BTW Rob, you ask about the license very often whether I set pure GPL-2.0
-> > or dual-license header. Just wondering is it some kind of protocol to make
-> > sure a submitter has got proper rights to submit the binding?
-> 
-> New bindings should be dual GPL/BSD. Converted bindings should be
-> relicensed if the authors of the original agree or you should maintain
-> GPL-2.0-only.
-> 
-> Rob
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 
-Ah. ok. I didn't know that the legacy bindings have GPL-2.0 license by
-default. Thanks. I'll keep it in mind in patchsets with bindings conversion.
+Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+Processing System Gigabit Transceiver which provides PHY capabilities to
+USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
 
+Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+Changes since v6:
+
+- Fixed specification of compatible-dependent xlnx,tx-termination-fix
+  property
+- Dropped status property from example
+- Use 4 spaces to indent example
+
+Changes since v5:
+
+- Document clocks and clock-names properties
+- Document resets and reset-names properties
+- Replace subnodes with an additional entry in the PHY cells
+- Drop lane frequency PHY cell, replaced by reference clock phandle
+- Convert bindings to YAML
+- Reword the subject line
+- Drop Rob's R-b as the bindings have significantly changed
+- Drop resets and reset-names properties
+---
+ .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++++++++++++++++++
+ include/dt-bindings/phy/phy.h                 |   1 +
+ 2 files changed, 106 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+new file mode 100644
+index 000000000000..d28ddca7b90e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+@@ -0,0 +1,105 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++
++description: |
++  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
++  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
++  Ethernet SGMII controllers.
++
++properties:
++  "#phy-cells":
++    const: 4
++    description: |
++      The cells contain the following arguments.
++
++      - description: The GTR lane
++        minimum: 0
++        maximum: 3
++      - description: The PHY type
++        enum:
++          - PHY_TYPE_DP
++          - PHY_TYPE_PCIE
++          - PHY_TYPE_SATA
++          - PHY_TYPE_SGMII
++          - PHY_TYPE_USB
++      - description: The PHY instance
++        minimum: 0
++        maximum: 1 # for DP, SATA or USB
++        maximum: 3 # for PCIE or SGMII
++      - description: The reference clock number
++        minimum: 0
++        maximum: 3
++
++  compatible:
++    enum:
++      - xlnx,zynqmp-psgtr-v1.1
++      - xlnx,zynqmp-psgtr
++
++  clocks:
++    minItems: 1
++    maxItems: 4
++    description: |
++      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
++      inputs shall not have an entry.
++
++  clock-names:
++    minItems: 1
++    maxItems: 4
++    items:
++      pattern: "^ref[0-3]$"
++
++  reg:
++    items:
++      - description: SERDES registers block
++      - description: SIOU registers block
++
++  reg-names:
++    items:
++      - const: serdes
++      - const: siou
++
++  xlnx,tx-termination-fix:
++    description: |
++      Include this for fixing functional issue with the TX termination
++      resistance in GT, which can be out of spec for the XCZU9EG silicon
++      version.
++    type: boolean
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - reg-names
++
++if:
++  properties:
++    compatible:
++      const: xlnx,zynqmp-psgtr-v1.1
++
++then:
++  properties:
++    xlnx,tx-termination-fix: false
++
++additionalProperties: false
++
++examples:
++  - |
++    phy: phy@fd400000 {
++        compatible = "xlnx,zynqmp-psgtr-v1.1";
++        reg = <0x0 0xfd400000 0x0 0x40000>,
++              <0x0 0xfd3d0000 0x0 0x1000>;
++        reg-names = "serdes", "siou";
++        clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
++        clock-names = "ref1", "ref2", "ref3";
++        #phy-cells = <4>;
++    };
++
++...
+diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+index 1f3f866fae7b..f6bc83b66ae9 100644
+--- a/include/dt-bindings/phy/phy.h
++++ b/include/dt-bindings/phy/phy.h
+@@ -17,5 +17,6 @@
+ #define PHY_TYPE_USB3		4
+ #define PHY_TYPE_UFS		5
+ #define PHY_TYPE_DP		6
++#define PHY_TYPE_SGMII		7
+ 
+ #endif /* _DT_BINDINGS_PHY */
+-- 
 Regards,
--Sergey
+
+Laurent Pinchart
+
