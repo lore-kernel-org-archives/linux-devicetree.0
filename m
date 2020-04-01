@@ -2,146 +2,129 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D24C2D0F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C9CC2D0F0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC7620BED
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 302DD214D8
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 16:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tWM2eX3i"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="Rh7xnvV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387786AbgDAQZJ (ORCPT
+        id S2387488AbgDAQ1g (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 12:25:09 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55970 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387764AbgDAQZI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 12:25:08 -0400
-Received: by mail-pj1-f66.google.com with SMTP id fh8so185014pjb.5;
-        Wed, 01 Apr 2020 09:25:08 -0700 (PDT)
+        Wed, 1 Apr 2020 12:27:36 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39128 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387791AbgDAQ1O (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 12:27:14 -0400
+Received: by mail-ot1-f68.google.com with SMTP id x11so140320otp.6
+        for <devicetree@vger.kernel.org>; Wed, 01 Apr 2020 09:27:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gHFLCKlpXIGAn0egtGMAf9G1WrufJhSv91wXY+Y8f8Q=;
-        b=tWM2eX3i801PMq7UXOjk5Rdt+AbUlekjbWhkNHZLubyt7URQ62HbIkd62klBeCS1Ob
-         0bechhHZmZz0bUIAD2eQQxzk7/i4Yv9pCZIvNZGUVu4t1x2A56iCLukQ9gDV2p4kjldH
-         O+p9CbN7FF+/m3GsmzqB1T20aftGn5qll1X6AbDYLdYTNEx2+uD8m7/IH6REWVJdcSls
-         u+VoyYhb3lqNUPLDRXuzTWV9bi4xGRzl/zNJcjAUBV3yELDna/l33VoFKYgPwItULo1J
-         KCkG/7DXUDDKN6h9hN4+VI6xFJvMeqVVkfPoYus+LOy9GbUVaxZ5a2b9GSomfQ8MENUs
-         q7xw==
+         :cc;
+        bh=Z6etzW/Wlmpzc10GfWj1n2fg+ZHJsESBLfASbR0Ngog=;
+        b=Rh7xnvV1Jjpe8HCPzeDbsT0qlX2Dq/F5CNcch7nJmW88seFl28DzOKq779NGl4fJP6
+         kZcarkrWvs2xKDSx/BKS4ljBBHTZa3AQNaNYPmVX3J+DPyequ5mn+R0wFp4kv6c27QDe
+         dg/2ayJkHU7oOEp99SLCGG+uWwa/nTVSGu3cN2AleL7/RTCojjlngMZJzKMflgnsnK04
+         5BkwdhtHZqaZJEdYHDQV7PVK/6+woacjQ1GYHHIcQTL04n4/Wfzv3fJrX9Lqy62tuMQE
+         RF+m+hIQF1zG9DSV9BNMDXSI/UKxUxCVMOae3jn6P5+1X6w6nadDPnnmashubwidiQ8N
+         Rz0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gHFLCKlpXIGAn0egtGMAf9G1WrufJhSv91wXY+Y8f8Q=;
-        b=mS4XvEIO21jAYcoutoxdpqF4kjXNvK0nxVNQbKjM3MaIRPVnnxZyuhJWXCPU5z/eBD
-         1HG8C3SWLOmLjRUa92qSmtaMZkqJL1tbHh4AeMjBi/D6VfT9ipK/G/1UUoiZOKHzUe9u
-         d4ebKmeTO8ZP7IGeNcmDf6bekVu2QdUuX4UO+dLOR5g+rKAf29GCF5HFbhbnfABbxYvQ
-         X7mjozt1V6UAp8SKZrHlHsSpHJbDzloWdstwqwDy8+QqnPhwixpoG8b18gOrp+NtrxF2
-         ue1UZ+eLNucx4ZeVvPpIcuMiILcLS1Y3UTFzs8u5/SH+Zj09lcF5SKQVN+b7zZPjC5TL
-         m/Eg==
-X-Gm-Message-State: AGi0PuZzbQ/Qr5fvm5aSxtocHuNmErHmMwvyOkZRtOuA8X69LFuSRtRM
-        /MaQQQukgB9f1P5ki7lm2i5kMITSPMQuL0+nPik=
-X-Google-Smtp-Source: APiQypJFkKtX6ZC6hJ0SDdwypkf/KeP+1RyrvwFBHvlwbJQHvhQXt7QZJ/RME6jjIkwyNRSQ2VZlIfHmuUBQY2B1cL8=
-X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr5878941pjn.8.1585758307412;
- Wed, 01 Apr 2020 09:25:07 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Z6etzW/Wlmpzc10GfWj1n2fg+ZHJsESBLfASbR0Ngog=;
+        b=ULd7s5jNJVL9E2NYzCTOAm8eDkmkpyAZyRrwqEYqS3g2TVqvFHBpdqZk0iY/ai0sZM
+         n9RDQAr3P0kqO7PoawuWeTFcDhmEIj5mi0N/tEbp6mLr14l88mLKP2ee2YjkQrTSLLEN
+         hKwL9sHyqI4qtL7v7vWI6iZlk2rvzeevqbSnpwc1KshClnv5V0YUwZcY2v73vRCFnVp3
+         5GhXALTUIFqrwxm4oOXPGtRmUFsZPAoXQgwuu2hwaO9XLn4nA8Q4uDKPT2eFgIPGbNOa
+         Jt0SWPfg0sDWCeU0qetuljT2HZPJqIAecdKDp9fgAiX1Sv0ntyN+yzFL4PBTCLlqU13B
+         EkNg==
+X-Gm-Message-State: ANhLgQ1Nk4mSrKDmZR+yTA1bQcMXM1cCLMes6771Jf/rSnOspNWRNgbS
+        BiKabQf74LbrF4+aZOS3Ra7OyluV03ywf9/4z9sYeA==
+X-Google-Smtp-Source: ADFU+vvKgnFp9rspmykzhEanYhz/OKqP05HsLNsMveCdWplY4tf3BFByR2bGW/mxVNvhQGG+HpVk5gUY5nxF4PrgO+U=
+X-Received: by 2002:a05:6830:18eb:: with SMTP id d11mr17642312otf.243.1585758433464;
+ Wed, 01 Apr 2020 09:27:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200331114811.7978-1-nuno.sa@analog.com> <20200331114811.7978-6-nuno.sa@analog.com>
- <CAHp75Vdxtn1gXi=xCJfGOkBYiWB2qsYQLTJyaEGiiFqHvELaHQ@mail.gmail.com>
- <BN6PR03MB3347862A4C434CCA8C1B1E2599C90@BN6PR03MB3347.namprd03.prod.outlook.com>
- <CAHp75VfuWMDR4dUmjsYgeMgNMcVDZKdKVCsZ5p6g0m3TLHi5UA@mail.gmail.com>
- <BN6PR03MB3347E5ECF100EAD1453B577D99C90@BN6PR03MB3347.namprd03.prod.outlook.com>
- <CAHp75Vcp5Rs53i_74MvbudcRrDYCD=Agfjh2cO_GNc7TXaS73g@mail.gmail.com> <BN6PR03MB33475E91FA8665937E8F3AE599C90@BN6PR03MB3347.namprd03.prod.outlook.com>
-In-Reply-To: <BN6PR03MB33475E91FA8665937E8F3AE599C90@BN6PR03MB3347.namprd03.prod.outlook.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 1 Apr 2020 19:24:59 +0300
-Message-ID: <CAHp75VddBgGtBf=3yNs331EU6HQgL-Aq7tmf+dG3Z9W-d0hdNQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
-To:     "Sa, Nuno" <Nuno.Sa@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20200330164328.2944505-1-robert.marko@sartura.hr>
+ <20200330164328.2944505-2-robert.marko@sartura.hr> <20200331163103.GA27585@bogus>
+ <CA+HBbNEnH+0g0GK+xMGF48vJbLH3Ud2VY6yDOAxdgbRra3Y25A@mail.gmail.com> <CAL_JsqL_V6Lf3-eGoL454Gtgyp7a4hBo_2SXyq1jWfqDoXdXsQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqL_V6Lf3-eGoL454Gtgyp7a4hBo_2SXyq1jWfqDoXdXsQ@mail.gmail.com>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Wed, 1 Apr 2020 18:27:02 +0200
+Message-ID: <CA+HBbNEcrHgB1_ydaOaPKEWB6L6vrWNf=DYxt5YwdCoqYpLEqw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] dt-bindings: phy-qcom-ipq4019-usb: add binding document
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>
+        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 5:18 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
+On Wed, Apr 1, 2020 at 5:45 PM Rob Herring <robh@kernel.org> wrote:
 >
-> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Sent: Mittwoch, 1. April 2020 16:06
-> > To: Sa, Nuno <Nuno.Sa@analog.com>
-> > Cc: linux-iio <linux-iio@vger.kernel.org>; devicetree
-> > <devicetree@vger.kernel.org>; Jonathan Cameron <jic23@kernel.org>;
-> > Hartmut Knaack <knaack.h@gmx.de>; Lars-Peter Clausen <lars@metafoo.de>;
-> > Peter Meerwald-Stadler <pmeerw@pmeerw.net>; Rob Herring
-> > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Ardelean,
-> > Alexandru <alexandru.Ardelean@analog.com>; Hennerich, Michael
-> > <Michael.Hennerich@analog.com>
-> > Subject: Re: [PATCH v3 5/6] iio: imu: Add support for adis16475
+> On Tue, Mar 31, 2020 at 10:39 AM Robert Marko <robert.marko@sartura.hr> wrote:
 > >
-> > On Wed, Apr 1, 2020 at 4:27 PM Sa, Nuno <Nuno.Sa@analog.com> wrote:
-> > > > On Wed, Apr 1, 2020 at 10:13 AM Sa, Nuno <Nuno.Sa@analog.com>
-> > wrote:
-> > > > > > On Tue, Mar 31, 2020 at 2:49 PM Nuno S=C3=A1 <nuno.sa@analog.co=
-m>
-> > wrote:
-
-...
-
-> > > Well, I can remove the 7. I honestly took it from another driver and =
-I guess
-> > the idea
-> > > is to make explicit that 7 is not supported. Since this is a 3 bit fi=
-eld and the
-> > datasheet
-> > > does not state this directly.
+> > On Tue, Mar 31, 2020 at 6:31 PM Rob Herring <robh@kernel.org> wrote:
 > > >
-> > > As for the >=3D0, I prefer to have either as is or >0 since we don't =
-really need to
-> > check the
-> > > index 0. If 1 fails, then we will use 0 either way...
-> >
-> > It makes sense to check to get better optimization (and increased reada=
-bility).
-> > Look for this
-> >
-> > i =3D ARRAY_SIZE(...);
-> >
-> > while (i--) {
-> >  ...
-> > }
-> >
-> > It's much better to read and understand.
+> > > On Mon, 30 Mar 2020 18:43:29 +0200, Robert Marko wrote:
+> > > > This patch adds the binding documentation for the HS/SS USB PHY found
+> > > > inside Qualcom Dakota SoCs.
+> > > >
+> > > > Signed-off-by: John Crispin <john@phrozen.org>
+> > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > > > Cc: Luka Perkov <luka.perkov@sartura.hr>
+> > > > ---
+> > > > Changes from v4 to v5:
+> > > > * Replace tabs with whitespaces
+> > > > * Add maintainer property
+> > > >
+> > > >  .../bindings/phy/qcom-usb-ipq4019-phy.yaml    | 48 +++++++++++++++++++
+> > > >  1 file changed, 48 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.yaml
+> > > >
+> > >
+> > > My bot found errors running 'make dt_binding_check' on your patch:
+> > >
+> > > Error: Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dts:21.25-26 syntax error
+> > > FATAL ERROR: Unable to parse input tree
+> > > scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dt.yaml' failed
+> > > make[1]: *** [Documentation/devicetree/bindings/phy/qcom-usb-ipq4019-phy.example.dt.yaml] Error 1
+> > > make[1]: *** Waiting for unfinished jobs....
+> > > Makefile:1262: recipe for target 'dt_binding_check' failed
+> > > make: *** [dt_binding_check] Error 2
+> > >
+> > > See https://patchwork.ozlabs.org/patch/1264091
+> > >
+> > > If you already ran 'make dt_binding_check' and didn't see the above
+> > > error(s), then make sure dt-schema is up to date:
+> > >
+> > > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> > >
+> > > Please check and re-submit.
+> > Hi Rob,
+> > I tested locally before submitting and it will pass.
 >
-> Well, about the readability it's a bit subjective . It depends who is
-> reading the code. Just curious, how would you get better optimization
-> by doing >=3D0 instead of > 0?
+> Impossible. Your example has defines, but there are no include files listed.
+I don't know how it passed, but I definitively tested with make
+dtbs_check and then make dt_binding_check
+It could possibly be old DT schema files, I updated today and now it pops up.
+I will fix it and send a new version ASAP.
 
-Feel the difference while (i--) vs. while (--i > 0).
-The latter one is a bit unusual.
-
-> Either way, I don=E2=80=99t have any strong feeling about this so I can d=
-o as
-> you suggest.
-
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks
+>
+> Rob
