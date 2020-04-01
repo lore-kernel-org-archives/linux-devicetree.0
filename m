@@ -2,277 +2,95 @@ Return-Path: <SRS0=fmve=5R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFF7C43331
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D11C43331
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD09520705
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:17:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="axZXezGT"
+	by mail.kernel.org (Postfix) with ESMTP id 293B82073B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Apr 2020 14:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585750724;
+	bh=Ooe27YGnrMmmUWDeyh5IfImb651q5z6Sfxb+JkXYB9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JjLO2KdzKPQ+vi+cT1a+PC8iN+hrnBAaVI+Jh86Tdyf3BsbGPQFgK4SbIUYv5HvIv
+	 e1ejPcFBfQ31XSBc9ufKjcsb6qlsVCDLc6s6llZKTvikeZeyoL/+NNHexMb/sUP/mg
+	 po8U4QD+NpOMgtm6kbbXzoIXpsB4GSwPlaG4DbKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732823AbgDAORy (ORCPT
+        id S1732966AbgDAOSn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Apr 2020 10:17:54 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:26188 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732205AbgDAORy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 10:17:54 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 031EHLwk010045;
-        Wed, 1 Apr 2020 16:17:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=Z6VNMqTZ2uwRu8WKkNLiLmvYTadoYga3ntG3YOu/TiU=;
- b=axZXezGT3396UNnC/EOneTFB4Ge+MsYYlB6WJYBw23fMIBAMstAdfT5iosNkfoeWrmiG
- QjiVjJU3hWbDM+udH6oMluKvd6ANYjoRN5Ep0qtF3yLSKjb4FRctObHLpUrzACjiX6j/
- xB7anIR2pyKMRB2LJEoK8ufv/H57M24T//zkoM/cohpHmJPMzjCU3QxdSx2zKW3lTcp2
- 1qs9hBrYaFLVS3Uel2Hk3AqwX1q8m3L40579XlELlncXsvIuy1YVzRI+AtBUDOTWiqpn
- Rh8DqbHZUf8R5jzG1lFpvVykUHWDlKGkMaqPo1Mn9l1iQOsyAFN0oKxSWXR0EuPhmEsL CQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 301vkdx483-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Apr 2020 16:17:34 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C603910002A;
-        Wed,  1 Apr 2020 16:17:30 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AE0A32B0D50;
-        Wed,  1 Apr 2020 16:17:30 +0200 (CEST)
-Received: from lmecxl0912.tpe.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 1 Apr
- 2020 16:17:23 +0200
-Subject: Re: [PATCHv2 1/1] net: ethernet: stmmac: simplify phy modes
- management for stm32
-To:     Christophe Roullier <christophe.roullier@st.com>,
-        <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <peppe.cavallaro@st.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>
-References: <20200316090907.18488-1-christophe.roullier@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <cb0a5dd3-02da-7d60-7069-a8ee080ad239@st.com>
-Date:   Wed, 1 Apr 2020 16:17:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 1 Apr 2020 10:18:43 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44636 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732823AbgDAOSn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Apr 2020 10:18:43 -0400
+Received: by mail-io1-f65.google.com with SMTP id r25so13994801ioc.11;
+        Wed, 01 Apr 2020 07:18:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DrAUNTNOb+nS86WKDNkg7IGqQKQheDQgfBvXH6+K3YY=;
+        b=fMaQLhc7vjvK44eFNORxvMeUmaOzz07bDvKu3KQ2p3SPqgsQti4Kd9AtivNa1cUvqh
+         0lAosbw397LNb/McU5xV1Hd1netW7/AXVXemnXoDyUOsGgrtI9WqYOQEmu9P+KsmRU/H
+         g6pccF3S8PD9nCh/U5UQIN6foq6dlDEl8ojuvS3tpHe0NXO1BdZgfhdcyqP91Tie5QIw
+         oJLIY5c8FZ+1Q+6Pw5plKtUbCBo2P46PeaXdu4EMqKfxnTYFy+KSuuFRNX+O6PVLi4ZN
+         /ISyaajD0Cg6bXhbXNa0czm9zs+ad1TCPxeySEHQuigsrQlRNyXbMWkWLJagz7NuCxZ6
+         ybeg==
+X-Gm-Message-State: ANhLgQ0TkLdO+iyH8SQbhKEb8p97JIHqkCW3Y+M1SurNR9JUPRrWTOiX
+        4khwcGX7B/dZsYBOQRpB2RF0c2Y=
+X-Google-Smtp-Source: ADFU+vtTwR3SB801fBjpsX0NGxMyX9AE4SJJQgaUk8UNcP2AQfCZmaqz6P0qia4Kb4WvYiBEVO7O0g==
+X-Received: by 2002:a6b:db01:: with SMTP id t1mr20172381ioc.150.1585750722085;
+        Wed, 01 Apr 2020 07:18:42 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id x10sm742190ili.88.2020.04.01.07.18.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2020 07:18:41 -0700 (PDT)
+Received: (nullmailer pid 24537 invoked by uid 1000);
+        Wed, 01 Apr 2020 14:18:38 -0000
+Date:   Wed, 1 Apr 2020 08:18:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] dt-bindings: Document Loongson PCI Host Controller
+Message-ID: <20200401141838.GA7686@bogus>
+References: <20200401030658.1174045-1-jiaxun.yang@flygoat.com>
+ <20200401030658.1174045-4-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200316090907.18488-1-christophe.roullier@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-01_01:2020-03-31,2020-03-31 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401030658.1174045-4-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Christophe
-
-On 3/16/20 10:09 AM, Christophe Roullier wrote:
-> No new feature, just to simplify stm32 part to be easier to use.
-> Add by default all Ethernet clocks in DT, and activate or not in function
-> of phy mode, clock frequency, if property "st,ext-phyclk" is set or not.
-> Keep backward compatibility
-> -----------------------------------------------------------------------
-> |PHY_MODE | Normal | PHY wo crystal|   PHY wo crystal   |  No 125Mhz  |
-> |         |        |      25MHz    |        50MHz       |  from PHY   |
-> -----------------------------------------------------------------------
-> |  MII    |	 -    |     eth-ck    |       n/a          |	    n/a  |
-> |         |        | st,ext-phyclk |                    |             |
-> -----------------------------------------------------------------------
-> |  GMII   |	 -    |     eth-ck    |       n/a          |	    n/a  |
-> |         |        | st,ext-phyclk |                    |             |
-> -----------------------------------------------------------------------
-> | RGMII   |	 -    |     eth-ck    |       n/a          |      eth-ck  |
-> |         |        | st,ext-phyclk |                    |st,eth-clk-sel|
-> |         |        |               |                    |       or     |
-> |         |        |               |                    | st,ext-phyclk|
-> ------------------------------------------------------------------------
-> | RMII    |	 -    |     eth-ck    |      eth-ck        |	     n/a  |
-> |         |        | st,ext-phyclk | st,eth-ref-clk-sel |              |
-> |         |        |               | or st,ext-phyclk   |              |
-> ------------------------------------------------------------------------
+On Wed,  1 Apr 2020 11:06:47 +0800, Jiaxun Yang wrote:
 > 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> PCI host controller found on Loongson PCHs and SoCs.
 > 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
-
-Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
-
-
->   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 74 +++++++++++--------
->   1 file changed, 44 insertions(+), 30 deletions(-)
+>  .../devicetree/bindings/pci/loongson.yaml     | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/loongson.yaml
 > 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> index b2dc99289687..5d4df4c5254e 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> @@ -29,6 +29,11 @@
->   #define SYSCFG_PMCR_ETH_CLK_SEL		BIT(16)
->   #define SYSCFG_PMCR_ETH_REF_CLK_SEL	BIT(17)
->   
-> +/* CLOCK feed to PHY*/
-> +#define ETH_CK_F_25M	25000000
-> +#define ETH_CK_F_50M	50000000
-> +#define ETH_CK_F_125M	125000000
-> +
->   /*  Ethernet PHY interface selection in register SYSCFG Configuration
->    *------------------------------------------
->    * src	 |BIT(23)| BIT(22)| BIT(21)|BIT(20)|
-> @@ -58,33 +63,20 @@
->    *|         |        |      25MHz    |        50MHz       |                  |
->    * ---------------------------------------------------------------------------
->    *|  MII    |	 -   |     eth-ck    |	      n/a	  |	  n/a        |
-> - *|         |        |		     |                    |		     |
-> + *|         |        | st,ext-phyclk |                    |		     |
->    * ---------------------------------------------------------------------------
->    *|  GMII   |	 -   |     eth-ck    |	      n/a	  |	  n/a        |
-> - *|         |        |               |                    |		     |
-> + *|         |        | st,ext-phyclk |                    |		     |
->    * ---------------------------------------------------------------------------
-> - *| RGMII   |	 -   |     eth-ck    |	      n/a	  |  eth-ck (no pin) |
-> - *|         |        |               |                    |  st,eth-clk-sel  |
-> + *| RGMII   |	 -   |     eth-ck    |	      n/a	  |      eth-ck      |
-> + *|         |        | st,ext-phyclk |                    | st,eth-clk-sel or|
-> + *|         |        |               |                    | st,ext-phyclk    |
->    * ---------------------------------------------------------------------------
->    *| RMII    |	 -   |     eth-ck    |	    eth-ck        |	  n/a        |
-> - *|         |        |		     | st,eth-ref-clk-sel |		     |
-> + *|         |        | st,ext-phyclk | st,eth-ref-clk-sel |		     |
-> + *|         |        |               | or st,ext-phyclk   |		     |
->    * ---------------------------------------------------------------------------
->    *
-> - * BIT(17) : set this bit in RMII mode when you have PHY without crystal 50MHz
-> - * BIT(16) : set this bit in GMII/RGMII PHY when you do not want use 125Mhz
-> - * from PHY
-> - *-----------------------------------------------------
-> - * src	 |         BIT(17)       |       BIT(16)      |
-> - *-----------------------------------------------------
-> - * MII   |           n/a	 |         n/a        |
-> - *-----------------------------------------------------
-> - * GMII  |           n/a         |   st,eth-clk-sel   |
-> - *-----------------------------------------------------
-> - * RGMII |           n/a         |   st,eth-clk-sel   |
-> - *-----------------------------------------------------
-> - * RMII  |   st,eth-ref-clk-sel	 |         n/a        |
-> - *-----------------------------------------------------
-> - *
->    */
->   
->   struct stm32_dwmac {
-> @@ -93,6 +85,8 @@ struct stm32_dwmac {
->   	struct clk *clk_eth_ck;
->   	struct clk *clk_ethstp;
->   	struct clk *syscfg_clk;
-> +	int ext_phyclk;
-> +	int enable_eth_ck;
->   	int eth_clk_sel_reg;
->   	int eth_ref_clk_sel_reg;
->   	int irq_pwr_wakeup;
-> @@ -155,14 +149,17 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
->   		ret = clk_prepare_enable(dwmac->syscfg_clk);
->   		if (ret)
->   			return ret;
-> -		ret = clk_prepare_enable(dwmac->clk_eth_ck);
-> -		if (ret) {
-> -			clk_disable_unprepare(dwmac->syscfg_clk);
-> -			return ret;
-> +		if (dwmac->enable_eth_ck) {
-> +			ret = clk_prepare_enable(dwmac->clk_eth_ck);
-> +			if (ret) {
-> +				clk_disable_unprepare(dwmac->syscfg_clk);
-> +				return ret;
-> +			}
->   		}
->   	} else {
->   		clk_disable_unprepare(dwmac->syscfg_clk);
-> -		clk_disable_unprepare(dwmac->clk_eth_ck);
-> +		if (dwmac->enable_eth_ck)
-> +			clk_disable_unprepare(dwmac->clk_eth_ck);
->   	}
->   	return ret;
->   }
-> @@ -170,24 +167,34 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
->   static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
->   {
->   	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
-> -	u32 reg = dwmac->mode_reg;
-> +	u32 reg = dwmac->mode_reg, clk_rate;
->   	int val;
->   
-> +	clk_rate = clk_get_rate(dwmac->clk_eth_ck);
-> +	dwmac->enable_eth_ck = false;
->   	switch (plat_dat->interface) {
->   	case PHY_INTERFACE_MODE_MII:
-> +		if (clk_rate == ETH_CK_F_25M && dwmac->ext_phyclk)
-> +			dwmac->enable_eth_ck = true;
->   		val = SYSCFG_PMCR_ETH_SEL_MII;
->   		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
->   		break;
->   	case PHY_INTERFACE_MODE_GMII:
->   		val = SYSCFG_PMCR_ETH_SEL_GMII;
-> -		if (dwmac->eth_clk_sel_reg)
-> +		if (clk_rate == ETH_CK_F_25M &&
-> +		    (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
-> +			dwmac->enable_eth_ck = true;
->   			val |= SYSCFG_PMCR_ETH_CLK_SEL;
-> +		}
->   		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
->   		break;
->   	case PHY_INTERFACE_MODE_RMII:
->   		val = SYSCFG_PMCR_ETH_SEL_RMII;
-> -		if (dwmac->eth_ref_clk_sel_reg)
-> +		if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_50M) &&
-> +		    (dwmac->eth_ref_clk_sel_reg || dwmac->ext_phyclk)) {
-> +			dwmac->enable_eth_ck = true;
->   			val |= SYSCFG_PMCR_ETH_REF_CLK_SEL;
-> +		}
->   		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RMII\n");
->   		break;
->   	case PHY_INTERFACE_MODE_RGMII:
-> @@ -195,8 +202,11 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
->   	case PHY_INTERFACE_MODE_RGMII_RXID:
->   	case PHY_INTERFACE_MODE_RGMII_TXID:
->   		val = SYSCFG_PMCR_ETH_SEL_RGMII;
-> -		if (dwmac->eth_clk_sel_reg)
-> +		if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_125M) &&
-> +		    (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
-> +			dwmac->enable_eth_ck = true;
->   			val |= SYSCFG_PMCR_ETH_CLK_SEL;
-> +		}
->   		pr_debug("SYSCFG init : PHY_INTERFACE_MODE_RGMII\n");
->   		break;
->   	default:
-> @@ -294,6 +304,9 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
->   	struct device_node *np = dev->of_node;
->   	int err = 0;
->   
-> +	/* Ethernet PHY have no crystal */
-> +	dwmac->ext_phyclk = of_property_read_bool(np, "st,ext-phyclk");
-> +
->   	/* Gigabit Ethernet 125MHz clock selection. */
->   	dwmac->eth_clk_sel_reg = of_property_read_bool(np, "st,eth-clk-sel");
->   
-> @@ -431,7 +444,8 @@ static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
->   
->   	clk_disable_unprepare(dwmac->clk_tx);
->   	clk_disable_unprepare(dwmac->syscfg_clk);
-> -	clk_disable_unprepare(dwmac->clk_eth_ck);
-> +	if (dwmac->enable_eth_ck)
-> +		clk_disable_unprepare(dwmac->clk_eth_ck);
->   
->   	return ret;
->   }
-> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pci/loongson.example.dt.yaml: pcie@40000000: ranges: [[33554432, 0, 1073741824, 0, 1073741824, 0, 1073741824]] is too short
+
+See https://patchwork.ozlabs.org/patch/1265000
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
